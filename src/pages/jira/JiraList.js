@@ -2,7 +2,7 @@ import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 // @mui
-import { Card, Table, TableBody, Container, TableContainer, Chip, Grid } from '@mui/material';
+import { Card, Table, TableBody, Container, TableContainer, Chip, Grid, Typography } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 // components
@@ -86,15 +86,15 @@ export default function JiraList() {
   const [ total, setTotal ] = useState(0);
 
   useLayoutEffect(()=>{
-    dispatch(getJiraTickets(page, rowsPerPage, filterPeriodOption));
+    dispatch(getJiraTickets(filterPeriodOption));
     return ()=>{
       dispatch(resetJiraTickets());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[dispatch, page, rowsPerPage, filterPeriodOption])
+  },[dispatch, filterPeriodOption])
 
   const onRefresh = () => {
-    dispatch(getJiraTickets(page, rowsPerPage, filterPeriodOption));
+    dispatch(getJiraTickets(filterPeriodOption));
   };
 
   const [statusCounts, setStatusCounts] = useState([]);
@@ -207,14 +207,21 @@ export default function JiraList() {
             onReload={onRefresh}
           />
 
-          <Grid sx={{px:3, pb:2}} container columnGap={1}>
-            {statusCounts && statusCounts.map(({name, count, color}) => (
-                <Chip sx={color} label={<>{name} : <b>{count}</b></>}/>
-            ))}
-          </Grid>
+          {!isLoading && !isNotFound &&
+              <>
+                <Grid sx={{px:3, pb:2}} container rowGap={0.5} columnGap={0.5}>
+                  {statusCounts && statusCounts.map(({name, count, color}) => (
+                    <Chip sx={color} label={<>{name} : <b>{count}</b></>}/>
+                  ))}
+                </Grid>
+                <Grid container sx={{px:3, pb:2}}>
+                  {jiraTickets?.total>500 && <Typography color='red' variant='body2'>There are more records!</Typography>}
+                </Grid>
+              </>
+          }
 
         {!isNotFound && <TablePaginationCustom
-            count={total}
+            count={dataFiltered?.length}
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
@@ -239,15 +246,12 @@ export default function JiraList() {
 
                 <TableBody>
                   {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
-                    // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) =>
                       row ? (
                         <JiraTableRow
                         key={row._id}
                         row={row}
-                        // selected={selected.includes(row._id)}
-                        // onSelectRow={() => onSelectRow(row._id)}
-                        // onViewRow={() => handleViewRow(row._id)}
                       />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
@@ -260,7 +264,7 @@ export default function JiraList() {
           </TableContainer>
 
           {!isNotFound && <TablePaginationCustom
-            count={total}
+            count={dataFiltered?.length}
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
