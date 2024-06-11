@@ -41,17 +41,13 @@ export default function JiraTableRow({
   const { id, self, key, Organizations, fields, expand } = row;
   const smScreen = useScreenSize('sm')
   const lgScreen = useScreenSize('lg')
-  
-  // fields.customfield_10069 -> Serial No
-  // fields.customfield_10070.value -> Model Name
-  // fields.customfield_10078 -> oragnization
 
   return (
     <StyledTableRow hover selected={selected}>
       <TableCell align="left">{fDate(fields?.created)}</TableCell>
       <LinkTableCell align="left" onClick={() => onViewRow( key )} param={key || ''} />
       <TableCell align="left">{fields?.summary || ''}</TableCell>
-      <TableCell align="left">{fields?.customfield_10078 || ''}</TableCell>
+      <TableCell align="left">{fields?.customfield_10002[0]?.name || ''}</TableCell>
       <TableCell align="left">{fields?.customfield_10069 || ''}</TableCell>
       <TableCell align="left">{fields?.customfield_10070?.value || ''}</TableCell>
       <TableCell align="left">{fields?.status?.statusCategory?.name && <Chip sx={getJiraStatusSX(fields)} label={fields?.status?.name || ''} />}</TableCell>

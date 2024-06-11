@@ -15,6 +15,7 @@ const initialState = {
   machineJiras: [],
   machineJiraTotalCount: 0,
   filterBy: '',
+  filterStatus: 'Open',
   page: 0,
   rowsPerPage: 100,
   totalRows: 0,
@@ -75,6 +76,12 @@ const slice = createSlice({
     setFilterBy(state, action) {
       state.filterBy = action.payload;
     },
+
+    // SET FILTER STATUS
+    setFilterStatus(state, action){
+      state.filterStatus = action.payload;
+    },
+
     // Set PageRowCount
     ChangeRowsPerPage(state, action) {
       state.rowsPerPage = action.payload;
@@ -95,6 +102,7 @@ export const {
   resetMachineJiraRecords,
   setResponseMessage,
   setFilterBy,
+  setFilterStatus,
   ChangeRowsPerPage,
   ChangePage,
 } = slice.actions;
@@ -126,20 +134,12 @@ export function getMachineJira(machineId, page, pageSize ) {
 
 // -------------------------- GET RECORD'S ----------------------------------------------------------------------
 
-export function getMachineJiras(serialNo, page, pageSize ) {
+export function getMachineJiras(serialNo) {
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
       const params= {
         serialNo,
-      }
-      
-      if(pageSize){
-        params.maxResults = pageSize;
-      }
-
-      if(page && pageSize){
-        params.startAt = page * pageSize;
       }
       
       const response = await axios.get(`${CONFIG.SERVER_URL}jira/tickets`, { params } );

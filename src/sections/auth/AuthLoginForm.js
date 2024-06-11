@@ -37,7 +37,7 @@ export default function AuthLoginForm() {
   const defaultValues = {
     email: '',
     password: '',
-    isRemember: false,
+    remember: false,
   };
 
   const methods = useForm({
@@ -54,16 +54,16 @@ export default function AuthLoginForm() {
     formState: { errors, isSubmitting, isSubmitSuccessful },
   } = methods;
 
-  const { isRemember, email, password } = watch()
+  const { remember, email, password } = watch()
 
   useEffect(() => {
-    const storedEmail =       localStorage.getItem("HowickUserEmail");
-    const storedPassword =    localStorage.getItem("HowickUserPassword");
-    const storedRemember =    localStorage.getItem("isRemember");
+    const storedEmail =       localStorage.getItem("login");
+    const storedPassword =    localStorage.getItem("token");
+    const storedRemember =    localStorage.getItem("remember");
     if (storedEmail && storedPassword && storedRemember) {
       setValue('email',storedEmail);
-      setValue('password',storedPassword);
-      setValue('isRemember',true);
+      setValue('password',btoa(storedPassword));
+      setValue('remember',true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -71,15 +71,16 @@ export default function AuthLoginForm() {
   
   const onSubmit = async (data) => {
     try {
-      if (isRemember) {
-        localStorage.setItem("HowickUserEmail", email);
-        localStorage.setItem("HowickUserPassword", password);
-        localStorage.setItem("isRemember", isRemember);
+      if (remember) {
+        localStorage.setItem("login", email);
+        localStorage.setItem("token", atob(password));
+        localStorage.setItem("remember", remember);
       } else {
-        localStorage.removeItem("HowickUserEmail");
-        localStorage.removeItem("HowickUserPassword");
-        localStorage.removeItem("isRemember");
+        localStorage.removeItem("login");
+        localStorage.removeItem("token");
+        localStorage.removeItem("remember");
       }
+
       await login(data.email, data.password);
       if(localStorage.getItem("MFA")) {
         navigate(PATH_AUTH.authenticate);
@@ -123,7 +124,7 @@ export default function AuthLoginForm() {
         />
       </Stack>
 
-      <RHFCheckbox name="isRemember" label="Remember Me"  variant="soft"/>
+      <RHFCheckbox name="remember" label="Remember Me"  variant="soft"/>
 
       <LoadingButton
         fullWidth
@@ -131,7 +132,7 @@ export default function AuthLoginForm() {
         size="large"
         type="submit"
         variant="contained"
-        loading={isSubmitSuccessful || isSubmitting}
+        // loading={isSubmitSuccessful || isSubmitting}
         sx={{ bgcolor: '#10079F', color: 'white', '&:hover': { bgcolor: '#FFA200' }}}
       >
         Login

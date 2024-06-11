@@ -19,22 +19,17 @@ MachineJiraListTableToolbar.propTypes = {
   filterName: PropTypes.string,
   onFilterName: PropTypes.func,
   onResetFilter: PropTypes.func,
-  filterStatus: PropTypes.array,
+  filterStatus: PropTypes.string,
   onFilterStatus: PropTypes.func,
-  statusOptions: PropTypes.array,
-  isHistory: PropTypes.bool,
-  dateFrom: PropTypes.string,
-  dateTo: PropTypes.string,
 };
 
 export default function MachineJiraListTableToolbar({
   isFiltered,
   filterName,
-  filterStatus,
   onFilterName,
-  statusOptions,
-  onResetFilter,
+  filterStatus,
   onFilterStatus,
+  onResetFilter,
 }) {
 
   const navigate = useNavigate();
@@ -44,10 +39,12 @@ export default function MachineJiraListTableToolbar({
   return (
     <Stack {...options}>
       <SearchBarCombo
-        isFiltered={ isFiltered }
-        value={ filterName }
-        onChange={ onFilterName }
-        onClick={ onResetFilter }
+        isFiltered={isFiltered}
+        value={filterName}
+        onChange={onFilterName}
+        onClick={onResetFilter}
+        filterStatus={filterStatus}
+        onFilterStatus={onFilterStatus}
         transferredMachine={ machine?.status?.slug==='transferred' }
       />
     </Stack>

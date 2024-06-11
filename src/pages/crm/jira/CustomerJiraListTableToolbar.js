@@ -20,21 +20,16 @@ CustomerJiraListTableToolbar.propTypes = {
   onFilterName: PropTypes.func,
   onResetFilter: PropTypes.func,
   filterStatus: PropTypes.array,
-  onFilterStatus: PropTypes.func,
-  statusOptions: PropTypes.array,
-  isHistory: PropTypes.bool,
-  dateFrom: PropTypes.string,
-  dateTo: PropTypes.string,
+  onFilterStatus: PropTypes.func
 };
 
 export default function CustomerJiraListTableToolbar({
   isFiltered,
   filterName,
-  filterStatus,
   onFilterName,
-  statusOptions,
-  onResetFilter,
+  filterStatus,
   onFilterStatus,
+  onResetFilter,
 }) {
 
   const navigate = useNavigate();
@@ -48,6 +43,8 @@ export default function CustomerJiraListTableToolbar({
         value={ filterName }
         onChange={ onFilterName }
         onClick={ onResetFilter }
+        filterStatus={filterStatus}
+        onFilterStatus={onFilterStatus}
         transferredMachine={ machine?.status?.slug==='transferred' }
       />
     </Stack>

@@ -25,7 +25,8 @@ import {
   resetCustomerJiraRecords,
   ChangeRowsPerPage,
   ChangePage,
-  setFilterBy
+  setFilterBy,
+  setFilterStatus
 } from '../../../redux/slices/customer/customerJira';
 import { fDateTime } from '../../../utils/formatTime';
 import TableCard from '../../../components/ListTableTools/TableCard';
@@ -46,7 +47,7 @@ const TABLE_HEAD = [
 // ----------------------------------------------------------------------
 
 export default function CustomerJiraList(){
-  const { initial, customerJiras, filterBy, page, rowsPerPage, totalRows, isLoading } = useSelector((state) => state.customerJira );
+  const { initial, customerJiras, filterBy, page, rowsPerPage, filterStatus, isLoading } = useSelector((state) => state.customerJira );
   const { customer } = useSelector((state) => state.customer);
   const navigate = useNavigate();
   const { machineId } = useParams();
@@ -68,18 +69,17 @@ export default function CustomerJiraList(){
   const dispatch = useDispatch();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
-  const [filterStatus, setFilterStatus] = useState([]);
+  const [ filterStatusOption, setFilterStatusOption ] = useState('');
   const [ isCreatedAt, setIsCreatedAt ] = useState(false);
-  const [ total, setTotal ] = useState(0);
-
+  
   useLayoutEffect(() => {
     if(customer?.ref){
-      dispatch(getCustomerJiras(customer?.ref, page, rowsPerPage));
+      dispatch(getCustomerJiras(customer?.ref));
     }
     return () => {
       dispatch(resetCustomerJiraRecords());
     }
-  }, [dispatch, customer?.ref, page, rowsPerPage ]);
+  }, [dispatch, customer?.ref]);
 
   useEffect(() => {
     if (initial) {
@@ -94,7 +94,7 @@ export default function CustomerJiraList(){
     filterStatus,
   });
 
-  const isFiltered = filterName !== '' || !!filterStatus.length;
+  const isFiltered = filterName !== '';
   const isNotFound = (!dataFiltered?.length && !!filterName) || (!isLoading && !dataFiltered?.length);
   const denseHeight = 60;
 
@@ -108,21 +108,30 @@ export default function CustomerJiraList(){
     setFilterName(event.target.value)
     setPage(0);
   };
+
+  const debouncedStatus = useRef(debounce((value) => {
+    dispatch(ChangePage(0))
+    dispatch(setFilterStatus(value))
+  }, 500))
+
+  const handleFilterStatus = (event) => {
+    debouncedStatus.current(event.target.value);
+    setFilterStatusOption(event.target.value)
+    setPage(0);
+  };
   
   useEffect(() => {
       debouncedSearch.current.cancel();
-  }, [debouncedSearch]);
+      debouncedStatus.current.cancel();
+  }, [debouncedSearch, debouncedStatus]);
+
+
   
   useEffect(()=>{
       setFilterName(filterBy);
-      setTotal(totalRows);
+      setFilterStatusOption(filterStatus);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[totalRows])
-
-  const handleFilterStatus = (event) => {
-    setPage(0);
-    setFilterStatus(event.target.value);
-  };
+  },[])
 
   const handleViewRow = (key) => {
     window.open(`${CONFIG.JIRA_URL}${key}`, '_blank');
@@ -139,15 +148,15 @@ export default function CustomerJiraList(){
         <TableCard>
           <CustomerJiraListTableToolbar
             filterName={filterName}
-            filterStatus={filterStatus}
             onFilterName={handleFilterName}
+            filterStatus={filterStatusOption}
             onFilterStatus={handleFilterStatus}
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
           />
 
           {!isNotFound && <TablePaginationCustom
-            count={ total }
+            count={ dataFiltered?.length }
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
@@ -185,7 +194,7 @@ export default function CustomerJiraList(){
             </Scrollbar>
           </TableContainer>
           {!isNotFound && <TablePaginationCustom
-            count={ total }
+            count={ dataFiltered?.length }
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
@@ -208,7 +217,15 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
 
   inputData = stabilizedThis.map((el) => el[0]);
 
+  if(filterStatus==='Open'){
+    inputData = inputData.filter((jira) => jira?.fields?.status?.statusCategory?.name==='In Progress' || jira?.fields?.status?.statusCategory?.name==='To Do');
+  }else if(filterStatus!=='All'){
+    inputData = inputData.filter((jira) => jira?.fields?.status?.statusCategory?.name===filterStatus);
+  }
+
   if (filterName) {
+    filterName = filterName.trim();
+
     inputData = inputData.filter(
       (jira) =>
         jira?.id?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
@@ -219,10 +236,6 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
         jira?.fields?.customfield_10069?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         jira?.fields?.status?.statusCategory?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
-  }
-
-  if (filterStatus.length) {
-    inputData = inputData.filter((customer) => filterStatus.includes(customer.status));
   }
 
   return inputData;
