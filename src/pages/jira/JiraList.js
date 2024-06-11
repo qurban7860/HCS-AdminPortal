@@ -27,6 +27,7 @@ import TableCard from '../../components/ListTableTools/TableCard';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
 import { getJiraTickets, resetJiraTickets, setFilterStatus, ChangePage, ChangeRowsPerPage, setFilterBy, setFilterPeriod } from '../../redux/slices/jira/jira';
 import { getJiraStatusChipColor } from '../../utils/jira';
+import { CONFIG } from '../../config-global';
 
 // ----------------------------------------------------------------------
 
@@ -83,7 +84,6 @@ export default function JiraList() {
   const [ filterName, setFilterName ] = useState('');
   const [ filterStatusOption, setFilterStatusOption ] = useState('');
   const [ filterPeriodOption, setFilterPeriodOption ] = useState(3);
-  const [ total, setTotal ] = useState(0);
 
   useLayoutEffect(()=>{
     dispatch(getJiraTickets(filterPeriodOption));
@@ -182,14 +182,17 @@ export default function JiraList() {
       setFilterName(filterBy);
       setFilterStatusOption(filterStatus);
       setFilterPeriodOption(filterPeriod);
-      setTotal(totalRows);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[totalRows])
+  },[])
 
   const handleResetFilter = () => {
     dispatch(setFilterBy(''));
     setFilterName('');
   };
+
+  const handleViewRow = (key) => {
+    window.open(`${CONFIG.JIRA_URL}${key}`, '_blank');
+  }
 
   return (
       <Container maxWidth={false}>
@@ -250,9 +253,10 @@ export default function JiraList() {
                     .map((row, index) =>
                       row ? (
                         <JiraTableRow
-                        key={row._id}
-                        row={row}
-                      />
+                          key={row._id}
+                          row={row}
+                          onViewRow={handleViewRow}
+                        />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                       )
