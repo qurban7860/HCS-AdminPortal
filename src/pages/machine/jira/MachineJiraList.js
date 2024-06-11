@@ -26,7 +26,8 @@ import {
   resetMachineJiraRecords,
   ChangeRowsPerPage,
   ChangePage,
-  setFilterBy
+  setFilterBy,
+  setFilterStatus
 } from '../../../redux/slices/products/machineJira';
 import { fDateTime } from '../../../utils/formatTime';
 import TableCard from '../../../components/ListTableTools/TableCard';
@@ -44,7 +45,7 @@ const TABLE_HEAD = [
 // ----------------------------------------------------------------------
 
 export default function MachineJiraList(){
-  const { initial, machineJiras, filterBy, page, rowsPerPage, totalRows, isLoading } = useSelector((state) => state.machineJira );
+  const { initial, machineJiras, filterBy, page, rowsPerPage, isLoading, filterStatus } = useSelector((state) => state.machineJira );
   const { machine } = useSelector((state) => state.machine);
   const navigate = useNavigate();
   const { machineId } = useParams();
@@ -66,18 +67,18 @@ export default function MachineJiraList(){
   const dispatch = useDispatch();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
-  const [filterStatus, setFilterStatus] = useState([]);
+  const [ filterStatusOption, setFilterStatusOption ] = useState('');
+  
   const [ isCreatedAt, setIsCreatedAt ] = useState(false);
-  const [ total, setTotal ] = useState(0);
 
   useLayoutEffect(() => {
       if(machine?.serialNo){
-        dispatch(getMachineJiras(machine?.serialNo, page, rowsPerPage ));
+        dispatch(getMachineJiras(machine?.serialNo));
       }
       return () => {
         dispatch(resetMachineJiraRecords());
       }
-  }, [dispatch, machine?.serialNo, page, rowsPerPage ]);
+  }, [dispatch, machine?.serialNo]);
 
   useEffect(() => {
     if (initial) {
@@ -92,7 +93,7 @@ export default function MachineJiraList(){
     filterStatus,
   });
 
-  const isFiltered = filterName !== '' || !!filterStatus.length;
+  const isFiltered = filterName !== '';
   const isNotFound = (!dataFiltered?.length && !!filterName) || (!isLoading && !dataFiltered?.length);
   const denseHeight = 60;
 
@@ -106,21 +107,28 @@ export default function MachineJiraList(){
     setFilterName(event.target.value)
     setPage(0);
   };
-  
-  useEffect(() => {
-      debouncedSearch.current.cancel();
-  }, [debouncedSearch]);
-  
-  useEffect(()=>{
-      setFilterName(filterBy);
-      setTotal(totalRows);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[totalRows])
+
+  const debouncedStatus = useRef(debounce((value) => {
+    dispatch(ChangePage(0))
+    dispatch(setFilterStatus(value))
+  }, 500))
 
   const handleFilterStatus = (event) => {
+    debouncedStatus.current(event.target.value);
+    setFilterStatusOption(event.target.value)
     setPage(0);
-    setFilterStatus(event.target.value);
   };
+  
+  useEffect(() => {
+    debouncedSearch.current.cancel();
+    debouncedStatus.current.cancel();
+  }, [debouncedSearch, debouncedStatus]);
+
+  useEffect(()=>{
+      setFilterName(filterBy);
+      setFilterStatusOption(filterStatus);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[])
 
   const handleViewRow = (machineIssueKey) => {
     window.open(`${CONFIG.JIRA_URL}${machineIssueKey}`, '_blank');
@@ -139,13 +147,14 @@ export default function MachineJiraList(){
             filterName={filterName}
             filterStatus={filterStatus}
             onFilterName={handleFilterName}
+            filterStatus={filterStatusOption}
             onFilterStatus={handleFilterStatus}
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
           />
 
           {!isNotFound && <TablePaginationCustom
-            count={ total }
+            count={ dataFiltered?.length }
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
@@ -183,7 +192,7 @@ export default function MachineJiraList(){
             </Scrollbar>
           </TableContainer>
           {!isNotFound && <TablePaginationCustom
-            count={ total }
+            count={ dataFiltered?.length }
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
@@ -197,17 +206,25 @@ export default function MachineJiraList(){
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filterName, filterStatus }) {
-  const stabilizedThis =  inputData && inputData.map((el, index) => [el, index]);
+  const stabilizedThis =  inputData && inputData.map((el, index) => [el, index]); 
   stabilizedThis?.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
     return a[1] - b[1];
   });
-  
 
   inputData = stabilizedThis.map((el) => el[0]);
 
+  if(filterStatus==='Open'){
+    inputData = inputData.filter((jira) => jira?.fields?.status?.statusCategory?.name==='In Progress' || jira?.fields?.status?.statusCategory?.name==='To Do');
+  }else if(filterStatus!=='All'){
+    inputData = inputData.filter((jira) => jira?.fields?.status?.statusCategory?.name===filterStatus);
+  }
+
   if (filterName) {
+    
+    filterName = filterName.trim();
+
     inputData = inputData.filter(
       (jira) =>
       jira?.id?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
@@ -217,10 +234,6 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
       jira?.fields?.summary?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
       jira?.fields?.status?.statusCategory?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
-  }
-
-  if (filterStatus.length) {
-    inputData = inputData.filter((customer) => filterStatus.includes(customer.status));
   }
 
   return inputData;
