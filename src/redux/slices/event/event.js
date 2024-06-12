@@ -187,8 +187,8 @@ export function createEvent(params) {
     try {
       
       const data = {
-        start: params?.start_time,
-        end: params?.end_time,
+        start: params?.start_date,
+        end: params?.end_date,
         customer: params?.customer?._id || null,
         machines: params?.machines?.map((machine)=> machine?._id) || [] ,
         site: params?.site?._id || null,
@@ -228,8 +228,8 @@ export function updateEvent(id, params) {
     dispatch(slice.actions.startLoading());
     try {
       const data = {
-        start: params?.start_time,
-        end: params?.end_time,
+        start: params?.start_date,
+        end: params?.end_date,
         customer: params?.customer?._id || null,
         machines: params?.machines?.map((machine)=> machine?._id) || [] ,
         site: params?.site?._id || null,
