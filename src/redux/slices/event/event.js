@@ -45,7 +45,8 @@ const slice = createSlice({
       const newEvent = {
         id: action.payload._id,
         title: `${action.payload?.createdBy?.name || ''}, ${action.payload?.customer?.name || ''}`,
-        date: action.payload?.start,
+        start: action.payload?.start,
+        end: action.payload?.end,
         textColor: "#1890FF",
         extendedProps: { ...action.payload }
       }
@@ -61,7 +62,8 @@ const slice = createSlice({
           return {
             id: action.payload._id,
             title: `${action.payload?.createdBy?.name || ''}, ${action.payload?.customer?.name || ''}`,
-            date: action.payload?.start,
+            start: action.payload?.start,
+            end: action.payload?.end,
             textColor: "#1890FF",
             extendedProps: { ...action.payload }
           };
@@ -76,7 +78,8 @@ const slice = createSlice({
         if (event.id === id) {
           return {
             ...event,
-            date: start,
+            start,
+            end,
             extendedProps: { ...event.extendedProps, start, end }
           };
           
@@ -152,7 +155,8 @@ export function getEvents(date, customer, contact) {
       const formattedData = response?.data?.map((v) => ({
         id: v?._id,
         title: `${v?.createdBy?.name || ''}, ${v?.customer?.name || ''}`,
-        date: v?.start,
+        start: v?.start,
+        end: v?.end,
         textColor: "#1890FF",
         extendedProps: {
           ...v
