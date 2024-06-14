@@ -90,9 +90,9 @@ function EventDialog({
           
           if(startDate!==endDate){
             clearErrors('end')
-          }else{
-            return  startDate <= endDate;
           }
+          
+          return  startDate <= endDate;
 
         }
         return true; // If start_date or end_date is not defined, skip this test
