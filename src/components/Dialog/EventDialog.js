@@ -84,11 +84,16 @@ function EventDialog({
       .test('is-greater-than-start-date', 'End Date must be later than Start Date', (value, context) => {
         const start_date = context.parent.date;
         if (start_date && value) {
-          if(start_date!==value){
+          
+          const startDate = new Date(start_date).setHours(0,0,0,0);
+          const endDate = new Date(value).setHours(0,0,0,0);
+          
+          if(startDate!==endDate){
             clearErrors('end')
+          }else{
+            return  startDate <= endDate;
           }
 
-          return new Date(value)>= new Date(start_date);
         }
         return true; // If start_date or end_date is not defined, skip this test
       }),
@@ -171,17 +176,12 @@ function EventDialog({
       end_date.setHours(end_hours, end_minutes);
       data.end_date = new Date(end_date);
 
-      // console.log("date::::",start_date, end_date)
-
-      // if(start_date>end_date){
-      //   setError('end_date', 'End Date & time must be greater then start')
-      // }
-      // try {
-      //   onCreateUpdateEvent(data);
-      //   reset();
-      // } catch (error) {
-      //   console.error(error);
-      // }
+      try {
+        onCreateUpdateEvent(data);
+        reset();
+      } catch (error) {
+        console.error(error);
+      }
     };
 
     const handleCloseModel = async ()=> {
