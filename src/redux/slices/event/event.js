@@ -218,7 +218,7 @@ export function updateEventDate(id, start, end) {
   return async (dispatch) => {
     try {
       const data = { start, end };
-    dispatch(slice.actions.updateEventDateLocal({ id, start, end }));
+      dispatch(slice.actions.updateEventDateLocal({ id, start, end }));
       await axios.patch(`${CONFIG.SERVER_URL}calender/events/${id}`, data);
     } catch (error) {
       dispatch(slice.actions.hasError(error?.Message));
