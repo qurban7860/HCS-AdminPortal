@@ -160,18 +160,17 @@ export default function CalendarPage() {
     }
   };
 
-  const handleDropEvent = async ({ event }) => {
+  const handleDropEvent = async ({event}) => {
     try {
-      const newDate = new Date(event?._instance?.range?.start); 
 
-      const startDateTime = new Date(event?._def?.extendedProps?.start)
-      const endDateTime = new Date(event?._def?.extendedProps?.end)
-      const modifiedStartDateTime = new Date(newDate);
-      const modifiedEndDateTime = new Date(newDate);
+      const startDateTime = new Date(event.start)
+      const endDateTime = new Date(event?.end)
+      const modifiedStartDateTime = new Date(startDateTime);
+      const modifiedEndDateTime = new Date(endDateTime);
 
       modifiedStartDateTime.setHours(startDateTime.getHours(), startDateTime.getMinutes());
       modifiedEndDateTime.setHours(endDateTime.getHours(), endDateTime.getMinutes());
-
+      
       dispatch(updateEventDate(event.id,  modifiedStartDateTime, modifiedEndDateTime ));
     } catch (error) {
       enqueueSnackbar('Event Date Update Failed!', { variant: `error` });

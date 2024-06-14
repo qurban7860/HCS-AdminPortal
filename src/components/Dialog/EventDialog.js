@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React,{ useEffect, useLayoutEffect } from 'react';
+import React,{ useEffect, useLayoutEffect, useState } from 'react';
 import * as Yup from 'yup';
 import merge from 'lodash/merge';
 import { isBefore } from 'date-fns';
@@ -19,6 +19,7 @@ import { getActiveCustomerMachines, resetActiveCustomerMachines } from '../../re
 import { getActiveSites, resetActiveSites } from '../../redux/slices/customer/site';
 import FormProvider, { RHFDatePicker, RHFTimePicker, RHFTextField, RHFAutocomplete, RHFSwitch } from '../hook-form';
 import IconTooltip from '../Icons/IconTooltip';
+import ConfirmDialog from '../confirm-dialog/ConfirmDialog';
 
 function getTimeObjectFromISOString(dateString) {
   const date = new Date(dateString);
@@ -39,9 +40,9 @@ const getInitialValues = (selectedEvent, range) => {
   const initialEvent = {
     _id: selectedEvent ? selectedEvent?._id : null ,
     date: selectedEvent ? selectedEvent?.start : (range?.start || new Date() ) ,
+    end_date: selectedEvent ? selectedEvent?.end : (range?.start || new Date() ) ,
     start: selectedEvent ? getTimeObjectFromISOString(selectedEvent?.start) : { value: '07:30', label: '7:30 AM' },
-    end: selectedEvent ?  getTimeObjectFromISOString(selectedEvent?.end) : null,
-    allDay: selectedEvent ? selectedEvent?.allDay : false,
+    end: selectedEvent ?  getTimeObjectFromISOString(selectedEvent?.end) : { value: '18:00', label: '6:00 PM' },
     customer: selectedEvent ? selectedEvent?.customer : null,
     machines: selectedEvent ? selectedEvent?.machines :  [],
     site: selectedEvent ? selectedEvent?.site :  null,
@@ -75,17 +76,50 @@ function EventDialog({
     const { activeContacts, activeSpContacts } = useSelector((state) => state.contact);
     const { activeSites } = useSelector((state) => state.site);
     const { activeCustomerMachines } = useSelector( (state) => state.machine );
+    const [openConfirm, setOpenConfirm] = useState(false);
     
     const EventSchema = Yup.object().shape({
       date: Yup.date().nullable().label('Event Date').typeError('End Time should be a valid Date').required(),
-      start: Yup.object().nullable().label('Start').required('Start Time is required'),
-      end: Yup.object()
-        .when('allDay', {
-          is: false,
-          then: Yup.object().nullable().label('End Time').required('End Time is required'),
-          otherwise: Yup.object().nullable().label('End Time'),
-        }),
-      allDay: Yup.bool().label('All Day'),
+      end_date: Yup.date().nullable().label('Event Date').typeError('End Time should be a valid Date').required()
+      .test('is-greater-than-start-date', 'End Date must be later than Start Date', (value, context) => {
+        const start_date = context.parent.date;
+        if (start_date && value) {
+          
+          const startDate = new Date(start_date).setHours(0,0,0,0);
+          const endDate = new Date(value).setHours(0,0,0,0);
+          
+          if(startDate!==endDate){
+            clearErrors('end')
+          }
+          
+          return  startDate <= endDate;
+
+        }
+        return true; // If start_date or end_date is not defined, skip this test
+      }),
+      start: Yup.object().nullable().label('Start Time').required('Start Time is required'),
+      end: Yup.object().nullable().label('End Time').required('End Time is required')
+      .test('is-greater-than-start-time-if-same-date', 'End Time must be later than Start Time', (value, context) => {
+        const { start, date, end_date } = context.parent;
+        if (start && date && end_date && value) {
+          
+          let startDate = new Date(date);
+          let endDate = new Date(end_date);
+          const [start_hours, start_minutes] = start.value.split(':').map(Number);
+          const [end_hours, end_minutes] = value.value.split(':').map(Number);
+          
+          startDate.setHours(start_hours, start_minutes);
+          startDate = new Date(startDate);
+          
+          endDate.setHours(end_hours, end_minutes);
+          endDate = new Date(endDate);
+
+          if(startDate.getDate()===endDate.getDate()){
+            return startDate < endDate;
+          }
+        }
+        return true; // If start or end is not defined, skip this test
+      }),
       jiraTicket: Yup.string().max(200).label('Jira Ticket'),
       customer: Yup.object().nullable().label('Customer').required(),
       machines: Yup.array().nullable().label('Machines'),
@@ -112,16 +146,7 @@ function EventDialog({
       setError
     } = methods;
 
-    const handleAllDayChange = (value) => {
-      if (isSubmitted && !value) {
-        setError('end', { type: 'required', message: 'End Time is required' });
-      } else {
-        clearErrors('end');
-      }
-      setValue('allDay', value);
-    }  
-
-    const { jiraTicket, customer, start, end,  primaryTechnician, allDay } = watch();
+    const { jiraTicket, customer, start, end,  primaryTechnician } = watch();
 
     useEffect(()=>{
  
@@ -135,33 +160,21 @@ function EventDialog({
       // eslint-disable-next-line react-hooks/exhaustive-deps
     },[ dispatch, customer ])
 
-    
     useLayoutEffect(() => {
       reset(getInitialValues(selectedEvent?.extendedProps, range));
     }, [reset, range, selectedEvent]);
     
     const onSubmit = (data) => {
-
-      let [hours, minutes] = data.start.value.split(':').map(Number);
-      const start_time = new Date(data?.date);
-      start_time.setHours(hours, minutes);
-      data.start_time = new Date(start_time);
-
-      if(!data.allDay){
-        [hours, minutes] = data.end.value.split(':').map(Number);
-        const end_time = new Date(data?.date);
-        end_time.setHours(hours, minutes);
-        
-        if(start_time>end_time){
-          end_time.setDate(end_time.getDate() + 1);
-        }
-
-        data.end_time = new Date(end_time);
-      }else{
-        const end_time = new Date(start_time).setHours(18,0,0);
-        data.end_time = new Date(end_time);
-      }
-    
+      const start_date = new Date(data?.date);
+      const end_date = new Date(data?.end_date);
+      const [start_hours, start_minutes] = data.start.value.split(':').map(Number);
+      const [end_hours, end_minutes] = data.end.value.split(':').map(Number);
+      
+      start_date.setHours(start_hours, start_minutes);
+      data.start_date = new Date(start_date);
+      
+      end_date.setHours(end_hours, end_minutes);
+      data.end_date = new Date(end_date);
 
       try {
         onCreateUpdateEvent(data);
@@ -232,6 +245,7 @@ function EventDialog({
    
 
   return (
+    <>
     <Dialog
       fullWidth
       disableEnforceFocus
@@ -252,26 +266,25 @@ function EventDialog({
           <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(4, 1fr)' }} >
             <RHFDatePicker label="Event Date*" name="date" />
             <RHFAutocomplete 
-              label="Start*"
+              label="Start Time*"
               name="start"
               options={time_list}
               isOptionEqualToValue={(option, value) => option?.value===value?.value}
               getOptionLabel={(option) => `${option?.label || ''}`}
               renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.label || ''}`}</li> )}
             />
+            <RHFDatePicker label="End Date*" name="end_date" />
             <RHFAutocomplete 
-              disabled={allDay} 
-              label={allDay?"End":"End*"}
+              // disabled={allDay} 
+              label="End Time*"
               name="end"
               options={time_list}
                isOptionEqualToValue={(option, value) => option?.value===value?.value}
               getOptionLabel={(option) => `${option?.label || ''}`}
               renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.label || ''}`}</li> )}
             />
-            {/* <RHFTimePicker label="Start*" name="start" />
-            <RHFTimePicker disabled={allDay} label={allDay?"End":"End*"} name="end" /> */}
-            <Button sx={{height:'58px'}} variant={allDay?'contained':'outlined'} onClick={()=> handleAllDayChange(!allDay)} 
-            startIcon={<Iconify icon={allDay?'gravity-ui:circle-check':'gravity-ui:circle'}/>}>All Day</Button>
+            {/* <Button sx={{height:'58px'}} variant={allDay?'contained':'outlined'} onClick={()=> handleAllDayChange(!allDay)} 
+            startIcon={<Iconify icon={allDay?'gravity-ui:circle-check':'gravity-ui:circle'}/>}>All Day</Button> */}
           </Box>
             <RHFTextField name="jiraTicket" label="Jira Ticket" />
 
@@ -347,7 +360,7 @@ function EventDialog({
       </DialogContent>
       <DialogActions >
         {selectedEvent && (
-          <IconTooltip color='#FF0000' title='Delete Event' icon='eva:trash-2-outline' onClick={handleSubmit(onDeleteEvent)}/>
+          <IconTooltip color='#FF0000' title='Delete Event' icon='eva:trash-2-outline' onClick={()=> setOpenConfirm(true)}/>
         )}
         
         <Box sx={{ flexGrow: 1 }} />
@@ -357,6 +370,27 @@ function EventDialog({
           </LoadingButton>
       </DialogActions>
     </Dialog>
+
+    <ConfirmDialog
+      open={openConfirm}
+      onClose={() => setOpenConfirm(false)}
+      title="Delete"
+      content="Are you sure you want to Delete?"
+      action={
+        <LoadingButton
+          variant="contained"
+          color="error"
+          onClick={()=> {
+            onDeleteEvent()
+            setOpenConfirm(false);
+          } }
+        >
+          Delete
+        </LoadingButton>
+      }
+      />
+    </>
+    
   );
 }
 

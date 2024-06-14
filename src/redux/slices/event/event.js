@@ -45,7 +45,8 @@ const slice = createSlice({
       const newEvent = {
         id: action.payload._id,
         title: `${action.payload?.createdBy?.name || ''}, ${action.payload?.customer?.name || ''}`,
-        date: action.payload?.start,
+        start: action.payload?.start,
+        end: action.payload?.end,
         textColor: "#1890FF",
         extendedProps: { ...action.payload }
       }
@@ -61,7 +62,8 @@ const slice = createSlice({
           return {
             id: action.payload._id,
             title: `${action.payload?.createdBy?.name || ''}, ${action.payload?.customer?.name || ''}`,
-            date: action.payload?.start,
+            start: action.payload?.start,
+            end: action.payload?.end,
             textColor: "#1890FF",
             extendedProps: { ...action.payload }
           };
@@ -76,7 +78,8 @@ const slice = createSlice({
         if (event.id === id) {
           return {
             ...event,
-            date: start,
+            start,
+            end,
             extendedProps: { ...event.extendedProps, start, end }
           };
           
@@ -152,7 +155,8 @@ export function getEvents(date, customer, contact) {
       const formattedData = response?.data?.map((v) => ({
         id: v?._id,
         title: `${v?.createdBy?.name || ''}, ${v?.customer?.name || ''}`,
-        date: v?.start,
+        start: v?.start,
+        end: v?.end,
         textColor: "#1890FF",
         extendedProps: {
           ...v
@@ -187,8 +191,8 @@ export function createEvent(params) {
     try {
       
       const data = {
-        start: params?.start_time,
-        end: params?.end_time,
+        start: params?.start_date,
+        end: params?.end_date,
         customer: params?.customer?._id || null,
         machines: params?.machines?.map((machine)=> machine?._id) || [] ,
         site: params?.site?._id || null,
@@ -214,7 +218,7 @@ export function updateEventDate(id, start, end) {
   return async (dispatch) => {
     try {
       const data = { start, end };
-    dispatch(slice.actions.updateEventDateLocal({ id, start, end }));
+      dispatch(slice.actions.updateEventDateLocal({ id, start, end }));
       await axios.patch(`${CONFIG.SERVER_URL}calender/events/${id}`, data);
     } catch (error) {
       dispatch(slice.actions.hasError(error?.Message));
@@ -228,8 +232,8 @@ export function updateEvent(id, params) {
     dispatch(slice.actions.startLoading());
     try {
       const data = {
-        start: params?.start_time,
-        end: params?.end_time,
+        start: params?.start_date,
+        end: params?.end_date,
         customer: params?.customer?._id || null,
         machines: params?.machines?.map((machine)=> machine?._id) || [] ,
         site: params?.site?._id || null,
