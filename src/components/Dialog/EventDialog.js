@@ -80,9 +80,41 @@ function EventDialog({
     
     const EventSchema = Yup.object().shape({
       date: Yup.date().nullable().label('Event Date').typeError('End Time should be a valid Date').required(),
+      end_date: Yup.date().nullable().label('Event Date').typeError('End Time should be a valid Date').required()
+      .test('is-greater-than-start-date', 'End Date must be later than Start Date', (value, context) => {
+        const start_date = context.parent.date;
+        if (start_date && value) {
+          if(start_date!==value){
+            clearErrors('end')
+          }
+
+          return new Date(value)>= new Date(start_date);
+        }
+        return true; // If start_date or end_date is not defined, skip this test
+      }),
       start: Yup.object().nullable().label('Start Time').required('Start Time is required'),
-      end_date: Yup.date().nullable().label('Event Date').typeError('End Time should be a valid Date').required(),
-      end: Yup.object().nullable().label('End Time').required('End Time is required'),
+      end: Yup.object().nullable().label('End Time').required('End Time is required')
+      .test('is-greater-than-start-time-if-same-date', 'End Time must be later than Start Time', (value, context) => {
+        const { start, date, end_date } = context.parent;
+        if (start && date && end_date && value) {
+          
+          let startDate = new Date(date);
+          let endDate = new Date(end_date);
+          const [start_hours, start_minutes] = start.value.split(':').map(Number);
+          const [end_hours, end_minutes] = value.value.split(':').map(Number);
+          
+          startDate.setHours(start_hours, start_minutes);
+          startDate = new Date(startDate);
+          
+          endDate.setHours(end_hours, end_minutes);
+          endDate = new Date(endDate);
+
+          if(startDate.getDate()===endDate.getDate()){
+            return startDate < endDate;
+          }
+        }
+        return true; // If start or end is not defined, skip this test
+      }),
       jiraTicket: Yup.string().max(200).label('Jira Ticket'),
       customer: Yup.object().nullable().label('Customer').required(),
       machines: Yup.array().nullable().label('Machines'),
@@ -139,12 +171,17 @@ function EventDialog({
       end_date.setHours(end_hours, end_minutes);
       data.end_date = new Date(end_date);
 
-      try {
-        onCreateUpdateEvent(data);
-        reset();
-      } catch (error) {
-        console.error(error);
-      }
+      // console.log("date::::",start_date, end_date)
+
+      // if(start_date>end_date){
+      //   setError('end_date', 'End Date & time must be greater then start')
+      // }
+      // try {
+      //   onCreateUpdateEvent(data);
+      //   reset();
+      // } catch (error) {
+      //   console.error(error);
+      // }
     };
 
     const handleCloseModel = async ()=> {
