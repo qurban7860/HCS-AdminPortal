@@ -132,7 +132,7 @@ export default function AuthLoginForm() {
         size="large"
         type="submit"
         variant="contained"
-        // loading={isSubmitSuccessful || isSubmitting}
+        loading={isSubmitSuccessful || isSubmitting}
         sx={{ bgcolor: '#10079F', color: 'white', '&:hover': { bgcolor: '#FFA200' }}}
       >
         Login
