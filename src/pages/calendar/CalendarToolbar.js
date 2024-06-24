@@ -109,7 +109,7 @@ export default function CalendarToolbar({
           />
         }
 
-        {isAllAccessAllowed && !isSettingReadOnly && <Autocomplete 
+        {isAllAccessAllowed && <Autocomplete 
           value={ selectedCustomer || null}
           options={activeCustomers}
           isOptionEqualToValue={(option, val) => option?._id === val?._id}
