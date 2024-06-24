@@ -80,7 +80,7 @@ export const getUserAccess = ( roles, accessLevel ) => {
 
     let userRoles
     let dataAccessibilityLevel 
-
+console.log('userRoles : ',userRoles)
     if( Array.isArray( roles ) && roles.length > 0 ) {
       userRoles = roles
     } else {

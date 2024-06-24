@@ -90,7 +90,7 @@ export default function CalendarToolbar({
       </Stack>
 
       <Stack direction="row" alignItems="center" spacing={2}>
-        {isAllAccessAllowed && !isSettingReadOnly && 
+        {isAllAccessAllowed && 
           <Autocomplete 
             value={ selectedContact || null}
             options={activeSpContacts}
