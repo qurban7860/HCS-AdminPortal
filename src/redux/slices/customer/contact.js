@@ -372,18 +372,19 @@ export function getContacts(customerID, isCustomerArchived) {
 
 // ------------------------------ get Active Contacts ----------------------------------------
 
-export function getActiveSPContacts() {
+export function getActiveSPContacts(reportingTo) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-       const response = await axios.get(`${CONFIG.SERVER_URL}crm/sp/contacts`,
-        {
-          params: {
-            isActive: true,
-            isArchived: false
-          }
-        }
-        );
+      const params = {
+        isActive: true,
+        isArchived: false
+      }
+      if(reportingTo){
+        params.reportingTo = reportingTo;
+      }
+      console.log("params : ",params)
+      const response = await axios.get(`${CONFIG.SERVER_URL}crm/sp/contacts`, { params } );
       dispatch(slice.actions.getActiveSPContactsSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Contacts loaded successfully'));
     } catch (error) {

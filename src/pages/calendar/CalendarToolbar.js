@@ -51,7 +51,7 @@ export default function CalendarToolbar({
   onOpenFilter,
 }) {
   
-  const { isAllAccessAllowed, isSettingReadOnly } = useAuthContext();
+  const { isAllAccessAllowed, isSettingReadOnly, user } = useAuthContext();
   const dispatch= useDispatch();
   const isDesktop = useResponsive('up', 'sm');
   const { activeCustomers } = useSelector((state) => state.customer);
@@ -90,10 +90,11 @@ export default function CalendarToolbar({
       </Stack>
 
       <Stack direction="row" alignItems="center" spacing={2}>
-        {isAllAccessAllowed && 
+        {/* {isAllAccessAllowed &&  */}
           <Autocomplete 
             value={ selectedContact || null}
-            options={activeSpContacts}
+            // options={ activeSpContacts}
+            options={isAllAccessAllowed ? activeSpContacts : activeSpContacts?.filter((spc)=> spc?.reportingTo === user?.contact || spc?._id === user?.contact )}
             isOptionEqualToValue={(option, val) => option?._id === val?._id}
             getOptionLabel={(option) => `${option?.firstName || ''}`}
             onChange={(event, newValue) => {
@@ -107,9 +108,10 @@ export default function CalendarToolbar({
             renderOption={(props, option) => (<li {...props} key={option?._id}>{`${option?.firstName || ''}`}</li>)}
             renderInput={(params) => <TextField {...params} size='small' label="Contact" />}
           />
-        }
+        {/* } */}
 
-        {isAllAccessAllowed && <Autocomplete 
+        {/* {isAllAccessAllowed &&  */}
+        <Autocomplete 
           value={ selectedCustomer || null}
           options={activeCustomers}
           isOptionEqualToValue={(option, val) => option?._id === val?._id}
@@ -124,7 +126,8 @@ export default function CalendarToolbar({
           sx={{width: '225px'}}
           renderOption={(props, option) => (<li {...props} key={option?._id}>{`${option?.name || ''}`}</li>)}
           renderInput={(params) => <TextField {...params} size='small' label="Customer" />}
-        />}
+        />
+        {/* } */}
         <StyledTooltip title="New Event" placement="top" disableFocusListener tooltipcolor="#103996" color="#fff">
           <IconButton color="#fff" onClick={()=> {
             dispatch(setEventModel(true))
