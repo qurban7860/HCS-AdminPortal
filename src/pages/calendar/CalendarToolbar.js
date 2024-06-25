@@ -93,6 +93,7 @@ export default function CalendarToolbar({
         {/* {isAllAccessAllowed &&  */}
           <Autocomplete 
             value={ selectedContact || null}
+            // options={ activeSpContacts}
             options={isAllAccessAllowed ? activeSpContacts : activeSpContacts?.filter((spc)=> spc?.reportingTo === user?.contact || spc?._id === user?.contact )}
             isOptionEqualToValue={(option, val) => option?._id === val?._id}
             getOptionLabel={(option) => `${option?.firstName || ''}`}
