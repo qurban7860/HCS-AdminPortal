@@ -205,7 +205,7 @@ export default function CalendarPage() {
       dispatch(getEvents(date, selectedCustomer?._id, selectedContact?._id ));
     }
   };
-console.log('Event : ',events);
+// console.log('Event : ',events);
   const dataFiltered = applyFilter({
     inputData: isAllAccessAllowed ? events : 
     events.filter((ev)=>ev?.extendedProps?._id === user.contact || 
