@@ -20,6 +20,8 @@ import { getActiveSites, resetActiveSites } from '../../redux/slices/customer/si
 import FormProvider, { RHFDatePicker, RHFTimePicker, RHFTextField, RHFAutocomplete, RHFSwitch } from '../hook-form';
 import IconTooltip from '../Icons/IconTooltip';
 import ConfirmDialog from '../confirm-dialog/ConfirmDialog';
+import ViewFormAudit from '../ViewForms/ViewFormAudit';
+
 
 function getTimeObjectFromISOString(dateString) {
   const date = new Date(dateString);
@@ -51,6 +53,12 @@ const getInitialValues = (selectedEvent, range) => {
     supportingTechnicians: selectedEvent ? selectedEvent?.supportingTechnicians :  [],
     notifyContacts: selectedEvent ? selectedEvent?.notifyContacts :  [],
     description: selectedEvent ? selectedEvent?.description :  '',
+    createdAt: selectedEvent?.createdAt || '',
+    createdByFullName: selectedEvent?.createdBy?.name || '',
+    createdIP: selectedEvent?.createdIP || '',
+    updatedAt: selectedEvent?.updatedAt || '',
+    updatedByFullName: selectedEvent?.updatedBy?.name || '',
+    updatedIP: selectedEvent?.updatedIP || '',
   };
 
   return initialEvent;
@@ -352,6 +360,7 @@ function EventDialog({
           />   
           <RHFTextField name="description" label="Description" multiline rows={3} />
         </Stack>
+        {selectedEvent && <ViewFormAudit defaultValues={getInitialValues(selectedEvent?.extendedProps, range)}/> }
       </Grid>
       </FormProvider>
       </DialogContent>
