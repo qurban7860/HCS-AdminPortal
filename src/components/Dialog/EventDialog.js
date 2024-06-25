@@ -360,7 +360,7 @@ function EventDialog({
           />   
           <RHFTextField name="description" label="Description" multiline rows={3} />
         </Stack>
-        {selectedEvent && <ViewFormAudit defaultValues={getInitialValues(selectedEvent?.extendedProps, range)}/> }
+        {selectedEvent && <ViewFormAudit defaultValues={getInitialValues(selectedEvent?.extendedProps, range)} displayVariation="block"/> }
       </Grid>
       </FormProvider>
       </DialogContent>
