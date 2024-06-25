@@ -41,7 +41,7 @@ import { useAuthContext } from '../../auth/useAuthContext';
 export default function CalendarPage() {
   
   const { enqueueSnackbar } = useSnackbar();
-  const { userId } = useAuthContext();
+  const { userId, isAllAccessAllowed, user } = useAuthContext();
   const { themeStretch } = useSettingsContext();
   const dispatch = useDispatch();
   const isDesktop = useResponsive('up', 'sm');
@@ -51,8 +51,7 @@ export default function CalendarPage() {
   const { events, selectedEvent, eventModel, selectedRange } = useSelector((state) => state.event );
   const { activeCustomers } = useSelector((state) => state.customer);
   const { activeSpContacts } = useSelector((state) => state.contact);
-  const { securityUser } = useSelector((state) => state.user);
-
+  // console.log("activeSpContacts : ",activeSpContacts)
   const [ previousDate, setPreviousDate ] = useState(null);
   const [ selectedCustomer, setSelectedCustomer ] = useState(null);
   const [ selectedContact, setSelectedContact ] = useState(null);
@@ -65,12 +64,11 @@ export default function CalendarPage() {
     dispatch(setEventModel(false));
     dispatch(getActiveCustomers());
     dispatch(getActiveSPContacts());
-    dispatch(getSecurityUser(userId))
-  }, [dispatch, userId]);
+  }, [dispatch ]);
 
   useLayoutEffect(()=>{
-    setSelectedContact(securityUser?.contact)
-  },[securityUser])
+    setSelectedContact(activeSpContacts?.find(( spc ) => spc?._id === user?.contact ) )
+  },[ activeSpContacts, user?.contact ])
 
   useLayoutEffect(() => {
     if( date && previousDate 
@@ -207,9 +205,14 @@ export default function CalendarPage() {
       dispatch(getEvents(date, selectedCustomer?._id, selectedContact?._id ));
     }
   };
-
+console.log('Event : ',events);
   const dataFiltered = applyFilter({
-    inputData: events,
+    inputData: isAllAccessAllowed ? events : 
+    events.filter((ev)=>ev?.extendedProps?._id === user.contact || 
+    ev?.extendedProps?.supportingTechnicians?.some((spc)=> spc?._id === user?.contact ) ||
+    ev?.extendedProps?.notifyContacts?.some((spc)=> spc?._id === user?.contact ) ||
+    ev?.extendedProps?.createdBy?._id === userId ),
+    // inputData: events,
     selectedCustomer,
     selectedContact
   });

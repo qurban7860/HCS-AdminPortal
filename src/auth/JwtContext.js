@@ -145,9 +145,9 @@ export function AuthProvider({ children }) {
         setSession(accessToken);
         const user = {}
         user.customer = localStorage.getItem('customer')
+        user.contact = localStorage.getItem('contact')
         user.email = localStorage.getItem('email')
         user.displayName = localStorage.getItem('name')
-
 
         const userId = localStorage.getItem('userId');
 
@@ -241,6 +241,8 @@ export function AuthProvider({ children }) {
           localStorage.removeItem('name');
           localStorage.removeItem('email');
           localStorage.removeItem('userId');
+          localStorage.removeItem('customer')
+          localStorage.removeItem('contact')
           localStorage.removeItem('userRoles');
           localStorage.removeItem('accessToken');
           localStorage.removeItem("configurations");
@@ -298,6 +300,9 @@ export function AuthProvider({ children }) {
       localStorage.setItem('userId', userId);
       localStorage.setItem('userRoles', rolesArrayString);
       localStorage.setItem('dataAccessibilityLevel', user?.dataAccessibilityLevel);
+      localStorage.setItem('customer',user?.customer)
+      localStorage.setItem('contact',user?.contact)
+
 
       setSession(accessToken);
       await getConfigs();
@@ -347,8 +352,10 @@ export function AuthProvider({ children }) {
       localStorage.setItem('name', user.displayName);
       localStorage.setItem('userId', userId);
       localStorage.setItem('userRoles', rolesArrayString);
+      localStorage.setItem('customer',user?.customer)
+      localStorage.setItem('contact',user?.contact)
       localStorage.setItem('dataAccessibilityLevel', user?.dataAccessibilityLevel);
-      
+
       setSession(accessToken);
       await getConfigs();
       dispatch({
