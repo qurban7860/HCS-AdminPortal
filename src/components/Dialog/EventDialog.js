@@ -25,14 +25,14 @@ function getTimeObjectFromISOString(dateString) {
   const date = new Date(dateString);
   const hours = date.getHours();
   const minutes = date.getMinutes();
+  const formattedValueTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
   const ampm = hours >= 12 ? 'PM' : 'AM';
   const formattedHours = hours % 12 || 12;
   const formattedTime = `${formattedHours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
   const timeObject = {
-      value: formattedTime,
+      value: formattedValueTime,
       label: `${formattedTime} ${ampm}`
   };
-
   return timeObject;
 }
 
@@ -147,9 +147,7 @@ function EventDialog({
     } = methods;
 
     const { jiraTicket, customer, start, end,  primaryTechnician } = watch();
-
     useEffect(()=>{
- 
       if(customer){
         dispatch(getActiveCustomerMachines(customer?._id))
         dispatch(getActiveSites(customer?._id))
@@ -192,57 +190,56 @@ function EventDialog({
     } 
 
     const time_list = [
-      { value: '00:00', label: '12:00 AM' },
-      { value: '00:30', label: '12:30 AM' },
-      { value: '01:00', label: '1:00 AM' },
-      { value: '01:30', label: '1:30 AM' },
-      { value: '02:00', label: '2:00 AM' },
-      { value: '02:30', label: '2:30 AM' },
-      { value: '03:00', label: '3:00 AM' },
-      { value: '03:30', label: '3:30 AM' },
-      { value: '04:00', label: '4:00 AM' },
-      { value: '04:30', label: '4:30 AM' },
-      { value: '05:00', label: '5:00 AM' },
-      { value: '05:30', label: '5:30 AM' },
-      { value: '06:00', label: '6:00 AM' },
-      { value: '06:30', label: '6:30 AM' },
-      { value: '07:00', label: '7:00 AM' },
-      { value: '07:30', label: '7:30 AM' },
-      { value: '08:00', label: '8:00 AM' },
-      { value: '08:30', label: '8:30 AM' },
-      { value: '09:00', label: '9:00 AM' },
-      { value: '09:30', label: '9:30 AM' },
-      { value: '10:00', label: '10:00 AM' },
-      { value: '10:30', label: '10:30 AM' },
-      { value: '11:00', label: '11:00 AM' },
-      { value: '11:30', label: '11:30 AM' },
-      { value: '12:00', label: '12:00 PM' },
-      { value: '12:30', label: '12:30 PM' },
-      { value: '13:00', label: '1:00 PM' },
-      { value: '13:30', label: '1:30 PM' },
-      { value: '14:00', label: '2:00 PM' },
-      { value: '14:30', label: '2:30 PM' },
-      { value: '15:00', label: '3:00 PM' },
-      { value: '15:30', label: '3:30 PM' },
-      { value: '16:00', label: '4:00 PM' },
-      { value: '16:30', label: '4:30 PM' },
-      { value: '17:00', label: '5:00 PM' },
-      { value: '17:30', label: '5:30 PM' },
-      { value: '18:00', label: '6:00 PM' },
-      { value: '18:30', label: '6:30 PM' },
-      { value: '19:00', label: '7:00 PM' },
-      { value: '19:30', label: '7:30 PM' },
-      { value: '20:00', label: '8:00 PM' },
-      { value: '20:30', label: '8:30 PM' },
-      { value: '21:00', label: '9:00 PM' },
-      { value: '21:30', label: '9:30 PM' },
-      { value: '22:00', label: '10:00 PM' },
-      { value: '22:30', label: '10:30 PM' },
-      { value: '23:00', label: '11:00 PM' },
-      { value: '23:30', label: '11:30 PM' }
+      { _id:'1', value: '00:00', label: '12:00 AM' },
+      { _id:'2', value: '00:30', label: '12:30 AM' },
+      { _id:'3', value: '01:00', label: '1:00 AM' },
+      { _id:'4', value: '01:30', label: '1:30 AM' },
+      { _id:'5', value: '02:00', label: '2:00 AM' },
+      { _id:'6', value: '02:30', label: '2:30 AM' },
+      { _id:'7', value: '03:00', label: '3:00 AM' },
+      { _id:'8', value: '03:30', label: '3:30 AM' },
+      { _id:'9', value: '04:00', label: '4:00 AM' },
+      { _id:'10', value: '04:30', label: '4:30 AM' },
+      { _id:'11', value: '05:00', label: '5:00 AM' },
+      { _id:'12', value: '05:30', label: '5:30 AM' },
+      { _id:'13', value: '06:00', label: '6:00 AM' },
+      { _id:'14', value: '06:30', label: '6:30 AM' },
+      { _id:'15', value: '07:00', label: '7:00 AM' },
+      { _id:'16', value: '07:30', label: '7:30 AM' },
+      { _id:'17', value: '08:00', label: '8:00 AM' },
+      { _id:'18', value: '08:30', label: '8:30 AM' },
+      { _id:'19', value: '09:00', label: '9:00 AM' },
+      { _id:'20', value: '09:30', label: '9:30 AM' },
+      { _id:'21', value: '10:00', label: '10:00 AM' },
+      { _id:'22', value: '10:30', label: '10:30 AM' },
+      { _id:'23', value: '11:00', label: '11:00 AM' },
+      { _id:'24', value: '11:30', label: '11:30 AM' },
+      { _id:'25', value: '12:00', label: '12:00 PM' },
+      { _id:'26', value: '12:30', label: '12:30 PM' },
+      { _id:'27', value: '13:00', label: '1:00 PM' },
+      { _id:'28', value: '13:30', label: '1:30 PM' },
+      { _id:'29', value: '14:00', label: '2:00 PM' },
+      { _id:'30', value: '14:30', label: '2:30 PM' },
+      { _id:'31', value: '15:00', label: '3:00 PM' },
+      { _id:'32', value: '15:30', label: '3:30 PM' },
+      { _id:'33', value: '16:00', label: '4:00 PM' },
+      { _id:'34', value: '16:30', label: '4:30 PM' },
+      { _id:'35', value: '17:00', label: '5:00 PM' },
+      { _id:'36', value: '17:30', label: '5:30 PM' },
+      { _id:'37', value: '18:00', label: '6:00 PM' },
+      { _id:'38', value: '18:30', label: '6:30 PM' },
+      { _id:'39', value: '19:00', label: '7:00 PM' },
+      { _id:'40', value: '19:30', label: '7:30 PM' },
+      { _id:'41', value: '20:00', label: '8:00 PM' },
+      { _id:'42', value: '20:30', label: '8:30 PM' },
+      { _id:'43', value: '21:00', label: '9:00 PM' },
+      { _id:'44', value: '21:30', label: '9:30 PM' },
+      { _id:'45', value: '22:00', label: '10:00 PM' },
+      { _id:'46', value: '22:30', label: '10:30 PM' },
+      { _id:'47', value: '23:00', label: '11:00 PM' },
+      { _id:'48', value: '23:30', label: '11:30 PM' }
     ]
     
-   
 
   return (
     <>
@@ -279,7 +276,7 @@ function EventDialog({
               label="End Time*"
               name="end"
               options={time_list}
-               isOptionEqualToValue={(option, value) => option?.value===value?.value}
+              isOptionEqualToValue={(option, value) => option?.value===value?.value}
               getOptionLabel={(option) => `${option?.label || ''}`}
               renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.label || ''}`}</li> )}
             />
