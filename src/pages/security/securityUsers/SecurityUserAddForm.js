@@ -93,19 +93,13 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
     formState: { isSubmitting },
   } = methods;
 
-const { customer, contact } = watch();
+const { contact } = watch();
 
   useEffect(() => {
-    setValue('customer',allActiveCustomers.find(c => c?.type?.toUpperCase() === "SP" ));
-  },[ allActiveCustomers, setValue ])
-
-  useEffect(() => {
-    if(customer?._id){
-      dispatch(getActiveContacts(customer?._id));
-    } else {
-      dispatch(resetActiveContacts());
-    }
-  }, [ dispatch, customer?._id ]);
+    const howickCustomer = allActiveCustomers.find(c => c?.type?.toUpperCase() === "SP" )
+    setValue('customer',howickCustomer);
+    dispatch(getActiveContacts(howickCustomer?._id));
+  },[ allActiveCustomers, setValue, dispatch ])
 
   useEffect(() => {
     if(contact?._id){
@@ -152,11 +146,24 @@ const { customer, contact } = watch();
                 getOptionLabel={(option) => option?.name || ''}
                 isOptionEqualToValue={(option, value) => option?._id === value?._id}
                 renderOption={(props, option) => (<li  {...props} key={option?._id}>{option?.name || ''}</li>)}
+                onChange={(event, newValue) =>{
+                  if(newValue){
+                    setValue('customer',newValue)
+                    dispatch(getActiveContacts(newValue?._id));
+                    if(newValue?._id !== contact?.customer?._id ){
+                    setValue('contact',null )
+                    }
+                  } else {
+                    setValue('customer',null )
+                    setValue('contact',null )
+                    dispatch(resetActiveContacts());
+                  }
+                }}
               />
               
               <RHFAutocomplete
                 name='contact'
-                label="Contact"
+                label="Contact*"
                 options={activeContacts}
                 getOptionLabel={(option) => `${option?.firstName || ''} ${option?.lastName || ''}`}
                 isOptionEqualToValue={(option, value) => option?._id === value?._id}
