@@ -214,7 +214,8 @@ export default function CalendarPage() {
     ev?.extendedProps?.createdBy?._id === userId ),
     // inputData: events,
     selectedCustomer,
-    selectedContact
+    selectedContact,
+    userId
   });
   
   return (
@@ -283,7 +284,7 @@ export default function CalendarPage() {
   );
 }
 
-function applyFilter({ inputData, selectedCustomer, selectedContact }) {
+function applyFilter({ inputData, selectedCustomer, selectedContact, userId }) {
 
   const stabilizedThis = inputData?.map((el, index) => [el, index]);
 
@@ -296,7 +297,8 @@ function applyFilter({ inputData, selectedCustomer, selectedContact }) {
       (e) =>
         e?.extendedProps?.primaryTechnician?._id === selectedContact?._id ||
         e?.extendedProps?.supportingTechnicians?.some((c) => c?._id === selectedContact?._id) ||
-        e?.extendedProps?.notifyContacts?.some((c) => c?._id === selectedContact?._id)
+        e?.extendedProps?.notifyContacts?.some((c) => c?._id === selectedContact?._id) ||
+        e?.extendedProps?.createdBy?._id === userId 
     );
   }
   

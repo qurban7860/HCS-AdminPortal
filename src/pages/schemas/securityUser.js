@@ -2,7 +2,7 @@ import * as Yup from 'yup';
 
 export const addUserSchema = Yup.object().shape({
     customer: Yup.object().required().label('Customer').nullable(),
-    contact: Yup.object().nullable().label('Contact'),
+    contact: Yup.object().required().nullable().label('Contact'),
     name: Yup.string().required().max(200).label('Full Name'),
     phone: Yup.string().label('Phone Number'),
     email: Yup.string().transform(value => value?.toLowerCase()).email().label('Email Address').trim().required().max(200),
@@ -23,7 +23,7 @@ export const addUserSchema = Yup.object().shape({
 
   export const editUserSchema = Yup.object().shape({
     customer: Yup.object().required().label('Customer').nullable(),
-    contact: Yup.object().nullable().label('Contact'),
+    contact: Yup.object().required().nullable().label('Contact'),
     name: Yup.string().required().max(200).label('Full Name'),
     phone: Yup.string().label('Phone Number'),
     email: Yup.string().transform(value => value?.toLowerCase()).email().label('Email Address').required().trim().max(200),
