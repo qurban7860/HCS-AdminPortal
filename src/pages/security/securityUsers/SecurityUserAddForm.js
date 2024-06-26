@@ -160,7 +160,7 @@ const { contact } = watch();
               
               <RHFAutocomplete
                 name='contact'
-                label="Contact"
+                label="Contact*"
                 options={activeContacts}
                 getOptionLabel={(option) => `${option?.firstName || ''} ${option?.lastName || ''}`}
                 isOptionEqualToValue={(option, value) => option?._id === value?._id}

@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React,{ useEffect, useLayoutEffect, useState } from 'react';
+import React,{ useEffect, useLayoutEffect, useRef, useState } from 'react';
 import * as Yup from 'yup';
 import merge from 'lodash/merge';
 import { isBefore } from 'date-fns';
@@ -85,7 +85,7 @@ function EventDialog({
     const { activeSites } = useSelector((state) => state.site);
     const { activeCustomerMachines } = useSelector( (state) => state.machine );
     const [openConfirm, setOpenConfirm] = useState(false);
-    
+    const dialogRef = useRef(null)
     const EventSchema = Yup.object().shape({
       date: Yup.date().nullable().label('Event Date').typeError('End Time should be a valid Date').required(),
       end_date: Yup.date().nullable().label('Event Date').typeError('End Time should be a valid Date').required()
@@ -154,7 +154,28 @@ function EventDialog({
       setError
     } = methods;
 
-    const { jiraTicket, customer, start, end,  primaryTechnician } = watch();
+    useEffect(() => {
+      if (Object.keys(errors).length !== 0 && errors.constructor === Object) {
+        if(dialogRef.current){
+          dialogRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+    }, [errors]);
+
+    const { jiraTicket, customer, start, end, date, primaryTechnician } = watch();
+
+    useEffect(() => {
+      const { end_date  } = watch()
+      if (date && end_date) {
+        const startDate = new Date(date);
+        const endDate = new Date(end_date);
+        if (startDate > endDate) {
+          setValue('end_date', startDate);
+        }
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[ date ])
+
     useEffect(()=>{
       if(customer){
         dispatch(getActiveCustomerMachines(customer?._id))
@@ -248,7 +269,6 @@ function EventDialog({
       { _id:'48', value: '23:30', label: '11:30 PM' }
     ]
     
-
   return (
     <>
     <Dialog
@@ -264,9 +284,9 @@ function EventDialog({
         {selectedEvent ? 'Update Event' : 'New Event'}
       </DialogTitle>
       <Divider orientation="horizontal" flexItem />
-      <DialogContent dividers sx={{px:3}}>
+      <DialogContent dividers sx={{px:3 }} >
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Grid container >
+      <Grid container ref={dialogRef} >
         <Stack spacing={2} sx={{ pt: 2 }}>
           <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(4, 1fr)' }} >
             <RHFDatePicker label="Event Date*" name="date" />

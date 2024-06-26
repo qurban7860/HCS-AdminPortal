@@ -145,7 +145,7 @@ const onChangeContact = (contact) => {
 
               <RHFAutocomplete
                 name='contact'
-                label="Contact"
+                label="Contact*"
                 options={activeContacts}
                 onChange={(event, newValue) => onChangeContact(newValue) }
                 getOptionLabel={(option) => `${option?.firstName || ''} ${option?.lastName || ''}`}

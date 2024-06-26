@@ -96,7 +96,7 @@ export default function CalendarToolbar({
             // options={ activeSpContacts}
             options={isAllAccessAllowed ? activeSpContacts : activeSpContacts?.filter((spc)=> spc?.reportingTo === user?.contact || spc?._id === user?.contact )}
             isOptionEqualToValue={(option, val) => option?._id === val?._id}
-            getOptionLabel={(option) => `${option?.firstName || ''}`}
+            getOptionLabel={(option) => `${option?.firstName || ''} ${option?.lastName || ''}`}
             onChange={(event, newValue) => {
               if (newValue) {
                 setSelectedContact(newValue);
@@ -105,7 +105,7 @@ export default function CalendarToolbar({
               }
             }}
             sx={{width: '225px'}}
-            renderOption={(props, option) => (<li {...props} key={option?._id}>{`${option?.firstName || ''}`}</li>)}
+            renderOption={(props, option) => (<li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li>)}
             renderInput={(params) => <TextField {...params} size='small' label="Contact" />}
           />
         {/* } */}
