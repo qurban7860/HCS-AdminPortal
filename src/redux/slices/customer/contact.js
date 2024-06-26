@@ -383,7 +383,6 @@ export function getActiveSPContacts(reportingTo) {
       if(reportingTo){
         params.reportingTo = reportingTo;
       }
-      console.log("params : ",params)
       const response = await axios.get(`${CONFIG.SERVER_URL}crm/sp/contacts`, { params } );
       dispatch(slice.actions.getActiveSPContactsSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Contacts loaded successfully'));
