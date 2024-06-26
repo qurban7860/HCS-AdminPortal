@@ -61,8 +61,9 @@ export default function AuthLoginForm() {
     const storedPassword =    localStorage.getItem("token");
     const storedRemember =    localStorage.getItem("remember");
     if (storedEmail && storedPassword && storedRemember) {
+      const encodedPassword = atob(storedPassword);
       setValue('email',storedEmail);
-      setValue('password',btoa(storedPassword));
+      setValue('password',encodedPassword);
       setValue('remember',true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -72,8 +73,9 @@ export default function AuthLoginForm() {
   const onSubmit = async (data) => {
     try {
       if (remember) {
+        const encodedPassword = btoa(password);
         localStorage.setItem("login", email);
-        localStorage.setItem("token", atob(password));
+        localStorage.setItem("token", encodedPassword);
         localStorage.setItem("remember", remember);
       } else {
         localStorage.removeItem("login");
