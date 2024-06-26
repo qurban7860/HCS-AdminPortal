@@ -136,7 +136,7 @@ const onChangeContact = (contact) => {
               <RHFAutocomplete
                 disabled
                 name='customer'
-                label="Customer"
+                label="Customer*"
                 options={ allActiveCustomers }
                 getOptionLabel={(option) => option?.name || ''}
                 isOptionEqualToValue={(option, value) => option?._id === value?._id}
@@ -175,7 +175,7 @@ const onChangeContact = (contact) => {
                 disableCloseOnSelect
                 filterSelectedOptions
                 name="roles"
-                label="Roles"
+                label="Roles*"
                 options={ activeRoles }
                 getOptionLabel={(option) => `${option?.name || ''} `}
                 isOptionEqualToValue={(option, value) => option?._id === value?._id}

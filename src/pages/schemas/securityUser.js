@@ -6,13 +6,13 @@ export const addUserSchema = Yup.object().shape({
     name: Yup.string().required().max(200).label('Full Name'),
     phone: Yup.string().label('Phone Number'),
     email: Yup.string().transform(value => value?.toLowerCase()).email().label('Email Address').trim().required().max(200),
-    password: Yup.string().min(8, 'Password must be at least 8 characters').label('Password').trim(),
-    confirmPassword: Yup.string()
+    password: Yup.string().required().min(8, 'Password must be at least 8 characters').label('Password').trim(),
+    confirmPassword: Yup.string().required()
       .oneOf([Yup.ref('password'), null], 'Passwords must match')
       .label('Confirm Password')
       .trim()
       .required('Password confirmation is required'),
-    roles: Yup.array().label('Roles').nullable(),
+    roles: Yup.array().min(1,'Please select at least one option!').label('Roles').nullable().required(),
     regions: Yup.array().label('Rregions').nullable(),
     customers: Yup.array().label('Customers').nullable(),
     machines: Yup.array().label('Machines').nullable(),
@@ -28,7 +28,7 @@ export const addUserSchema = Yup.object().shape({
     phone: Yup.string().label('Phone Number'),
     email: Yup.string().transform(value => value?.toLowerCase()).email().label('Email Address').required().trim().max(200),
     loginEmail: Yup.string().transform(value => value?.toLowerCase()).email().label('Login Email Address').trim().max(200),
-    roles: Yup.array().nullable().label('Roles'),
+    roles: Yup.array().min(1,'Please select at least one option!').nullable().label('Roles').required(),
     regions: Yup.array().nullable(),
     customers: Yup.array().nullable(),
     machines: Yup.array().nullable(),
