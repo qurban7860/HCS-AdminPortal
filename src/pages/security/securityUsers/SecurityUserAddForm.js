@@ -150,6 +150,9 @@ const { contact } = watch();
                   if(newValue){
                     setValue('customer',newValue)
                     dispatch(getActiveContacts(newValue?._id));
+                    if(newValue?._id !== contact?.customer?._id ){
+                    setValue('contact',null )
+                    }
                   } else {
                     setValue('customer',null )
                     setValue('contact',null )
