@@ -14,7 +14,7 @@ import { defaultSettings } from '../config-setting';
 import { useSettingsContext } from '../SettingsContext';
 import Block from './Block';
 import BadgeDot from './BadgeDot';
-// import ToggleButton from './ToggleButton';
+import ToggleButton from './ToggleButton';
 import ModeOptions from './ModeOptions';
 import LayoutOptions from './LayoutOptions';
 import StretchOptions from './StretchOptions';
@@ -29,6 +29,7 @@ const SPACING = 2.5;
 
 export default function SettingsDrawer() {
   const {
+    toggleDrawer,
     themeMode,
     themeLayout,
     themeStretch,
@@ -36,19 +37,10 @@ export default function SettingsDrawer() {
     themeDirection,
     themeColorPresets,
     onResetSetting,
+    onChangeDrawer
   } = useSettingsContext();
 
   const theme = useTheme();
-
-  const [open, setOpen] = useState(false);
-
-  // const handleToggle = () => {
-  //   setOpen(!open);
-  // };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
 
   const notDefault =
     themeMode !== defaultSettings.themeMode ||
@@ -60,12 +52,12 @@ export default function SettingsDrawer() {
 
   return (
     <>
-      {/* {!open && <ToggleButton open={open} notDefault={notDefault} onToggle={handleToggle} />} */}
+      {/* {!toggleDrawer && <ToggleButton open={toggleDrawer} notDefault={notDefault} onToggle={onChangeDrawer} />} */}
 
       <Drawer
         anchor="right"
-        open={open}
-        onClose={handleClose}
+        open={toggleDrawer}
+        onClose={onChangeDrawer}
         BackdropProps={{ invisible: true }}
         PaperProps={{
           sx: {
@@ -84,10 +76,7 @@ export default function SettingsDrawer() {
           justifyContent="space-between"
           sx={{ py: 2, pr: 1, pl: SPACING }}
         >
-          <Typography variant="subtitle1" sx={{ flexGrow: 1 }}>
-            Settings
-          </Typography>
-
+          <Typography variant="subtitle1" sx={{ flexGrow: 1 }}>Settings</Typography>
           <Tooltip title="Reset">
             <Box sx={{ position: 'relative' }}>
               {notDefault && <BadgeDot />}
@@ -96,10 +85,7 @@ export default function SettingsDrawer() {
               </IconButton>
             </Box>
           </Tooltip>
-
-          <IconButton onClick={handleClose}>
-            <Iconify icon="eva:close-fill" />
-          </IconButton>
+          <IconButton onClick={onChangeDrawer}><Iconify icon="eva:close-fill" /></IconButton>
         </Stack>
 
         <Divider sx={{ borderStyle: 'solid' }} />

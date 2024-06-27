@@ -51,7 +51,7 @@ export default function CalendarPage() {
   const { events, selectedEvent, eventModel, selectedRange } = useSelector((state) => state.event );
   const { activeCustomers } = useSelector((state) => state.customer);
   const { activeSpContacts } = useSelector((state) => state.contact);
-  // console.log("activeSpContacts : ",activeSpContacts)
+  
   const [ previousDate, setPreviousDate ] = useState(null);
   const [ selectedCustomer, setSelectedCustomer ] = useState(null);
   const [ selectedContact, setSelectedContact ] = useState(null);
@@ -205,14 +205,9 @@ export default function CalendarPage() {
       dispatch(getEvents(date, selectedCustomer?._id, selectedContact?._id ));
     }
   };
-// console.log('Event : ',events);
+  
   const dataFiltered = applyFilter({
-    inputData: isAllAccessAllowed ? events : 
-    events.filter((ev)=>ev?.extendedProps?._id === user.contact || 
-    ev?.extendedProps?.supportingTechnicians?.some((spc)=> spc?._id === user?.contact ) ||
-    ev?.extendedProps?.notifyContacts?.some((spc)=> spc?._id === user?.contact ) ||
-    ev?.extendedProps?.createdBy?._id === userId ),
-    // inputData: events,
+    inputData: events,
     selectedCustomer,
     selectedContact,
     userId
@@ -284,7 +279,7 @@ export default function CalendarPage() {
   );
 }
 
-function applyFilter({ inputData, selectedCustomer, selectedContact, userId }) {
+function applyFilter({ inputData, selectedCustomer, selectedContact, userId}) {
 
   const stabilizedThis = inputData?.map((el, index) => [el, index]);
 

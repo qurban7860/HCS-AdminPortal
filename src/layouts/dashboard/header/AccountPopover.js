@@ -54,21 +54,9 @@ export default function AccountPopover() {
   const { user, logout } = useAuthContext();
   const email = localStorage.getItem('email')
   const displayName = localStorage.getItem('name')
-
   const { enqueueSnackbar } = useSnackbar();
-
   const [openPopover, setOpenPopover] = useState(null);
-
-  const {
-    themeMode,
-    themeLayout,
-    themeStretch,
-    themeContrast,
-    themeDirection,
-    themeColorPresets,
-    onResetSetting,
-  } = useSettingsContext();
-  
+  const { onChangeDrawer } = useSettingsContext();
   const handleOpenPopover = (event) => {
     setOpenPopover(event.currentTarget);
   };
@@ -91,34 +79,18 @@ export default function AccountPopover() {
     }
   };
 
-  // for settings drawer
-  const [open, setOpen] = useState(false);
-
   const handleToggle = () => {
-    setOpen(!open);
     handleClosePopover();
-  };
-
-  const handleClose = () => {
-    setOpen(false);
   };
 
   const handleClickItem = (path) => {
     handleClosePopover();
     if( typeof path === 'function' && user?.customer ){
-      navigate(path(user?.customer) || setOpen(!open));
+      navigate(path(user?.customer));
     } else if( typeof path === 'string' ) {
-      navigate(path || setOpen(!open));
+      navigate(path);
     }
   };
-
-  const notDefault =
-    themeMode !== defaultSettings.themeMode ||
-    themeLayout !== defaultSettings.themeLayout ||
-    themeStretch !== defaultSettings.themeStretch ||
-    themeContrast !== defaultSettings.themeContrast ||
-    themeDirection !== defaultSettings.themeDirection ||
-    themeColorPresets !== defaultSettings.themeColorPresets;
 
   return (
     <>
@@ -158,16 +130,12 @@ export default function AccountPopover() {
               {option.label}
             </MenuItem>
           ))}
-          <MenuItem
-            onClick={() => {
-              handleToggle();
-              SettingsDrawer();
-            }}
-            onClose={handleClose}
+          <MenuItem onClick={() => { 
+              handleToggle(); 
+              onChangeDrawer(); 
+            }} 
           >
-            <Typography variant="body2" noWrap>
-              {TITLES.CUSTOMIZE}
-            </Typography>
+            <Typography variant="body2" noWrap>{TITLES.CUSTOMIZE}</Typography>
           </MenuItem>
         </Stack>
 
@@ -177,82 +145,7 @@ export default function AccountPopover() {
           <MenuItem onClick={handleLogout}>{TITLES.LOGOUT}</MenuItem>
         </Stack>
       </MenuPopover>
-      {!open && <Drawer open={open} notDefault={notDefault} onToggle={handleToggle} />}
-        <Drawer
-          anchor="left"
-          open={open}
-          onClose={handleClose}
-          BackdropProps={{ invisible: true }}
-          PaperProps={{
-            sx: {
-              ...bgBlur({ color: theme.palette.background.default, opacity: 0.9 }),
-              width: NAV.W_BASE,
-              boxShadow: `-24px 12px 40px 0 ${alpha(
-                theme.palette.mode === 'light'
-                  ? theme.palette.grey[500]
-                  : theme.palette.common.black,
-                0.16
-              )}`,
-              ...(open && { '&:after': { position: 'relative', zIndex: 9999 } }),
-            },
-          }}
-        >
-          <Stack
-            direction="row"
-            alignItems="center"
-            justifyContent="space-between"
-            sx={{ py: 2, pr: 1, pl: SPACING }}
-          >
-            <Typography variant="subtitle1" sx={{ flexGrow: 1 }}>
-              {TITLES.SETTINGS}
-            </Typography>
-
-            <Tooltip title="Reset">
-              <Box sx={{ position: 'relative' }}>
-                <IconButton onClick={onResetSetting}>
-                  <Iconify icon="ic:round-refresh" />
-                </IconButton>
-              </Box>
-            </Tooltip>
-
-            <IconButton onClick={handleClose}>
-              <Iconify icon="eva:close-fill" />
-            </IconButton>
-          </Stack>
-
-          <Divider sx={{ borderStyle: 'solid' }} />
-
-          <Scrollbar sx={{ p: SPACING, pb: 0 }}>
-            <Block title={TITLES.MODE}>
-              <ModeOptions />
-            </Block>
-
-            <Block title={TITLES.CONTRAST}>
-              <ContrastOptions />
-            </Block>
-
-            <Block title={TITLES.DIRECTION}>
-              <DirectionOptions />
-            </Block>
-
-            <Block title={TITLES.LAYOUT}>
-              <LayoutOptions />
-            </Block>
-
-            <Block title={TITLES.STRETCH.label} tooltip={TITLES.STRETCH.tooltip}>
-              <StretchOptions />
-            </Block>
-
-            <Block title={TITLES.PRESETS}>
-              <ColorPresetsOptions />
-            </Block>
-          </Scrollbar>
-
-          <Box sx={{ p: SPACING, pt: 0 }}>
-            <FullScreenOptions />
-          </Box>
-        </Drawer>
-        <ChangePasswordDialog />
+      <ChangePasswordDialog />
     </>
   );
 }
