@@ -13,9 +13,6 @@ import { StyledTooltip } from '../../theme/styles/default-styles';
 import { useAuthContext } from '../../auth/useAuthContext';  
 import { getWeekRange } from './util';  
 
-
-// ----------------------------------------------------------------------
-
 const VIEW_OPTIONS = [
   { value: 'dayGridMonth', label: 'Month', icon: 'ic:round-view-module' },
   { value: 'timeGridWeek', label: 'Week', icon: 'ic:round-view-week' },
@@ -30,6 +27,8 @@ CalendarToolbar.propTypes = {
   setSelectedCustomer: PropTypes.func,
   selectedContact: PropTypes.object,
   setSelectedContact: PropTypes.func,
+  selectedUser: PropTypes.object,
+  setSelectedUser: PropTypes.func,
   onNextDate: PropTypes.func,
   onPrevDate: PropTypes.func,
   onOpenFilter: PropTypes.func,
@@ -43,6 +42,8 @@ export default function CalendarToolbar({
   setSelectedCustomer,
   selectedContact,
   setSelectedContact,
+  selectedUser,
+  setSelectedUser,
   date,
   view,
   onNextDate,
@@ -51,12 +52,13 @@ export default function CalendarToolbar({
   onOpenFilter,
 }) {
   
-  const { isAllAccessAllowed, isSettingReadOnly, user } = useAuthContext();
+  const { userId, isAllAccessAllowed, isSettingReadOnly, user } = useAuthContext();
   const dispatch= useDispatch();
   const isDesktop = useResponsive('up', 'sm');
   const { activeCustomers } = useSelector((state) => state.customer);
   const { activeSpContacts } = useSelector((state) => state.contact);
-  const { startOfWeek, endOfWeek } = getWeekRange(date)
+  const { activeSecurityUsers } = useSelector((state) => state.user);
+  const { startOfWeek, endOfWeek } = getWeekRange(date);
 
   return (
     <Stack
@@ -90,10 +92,8 @@ export default function CalendarToolbar({
       </Stack>
 
       <Stack direction="row" alignItems="center" spacing={2}>
-        {/* {isAllAccessAllowed &&  */}
           <Autocomplete 
             value={ selectedContact || null}
-            // options={ activeSpContacts}
             options={isAllAccessAllowed ? activeSpContacts : activeSpContacts?.filter((spc)=> spc?.reportingTo === user?.contact || spc?._id === user?.contact )}
             isOptionEqualToValue={(option, val) => option?._id === val?._id}
             getOptionLabel={(option) => `${option?.firstName || ''} ${option?.lastName || ''}`}
@@ -108,9 +108,7 @@ export default function CalendarToolbar({
             renderOption={(props, option) => (<li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li>)}
             renderInput={(params) => <TextField {...params} size='small' label="Contact" />}
           />
-        {/* } */}
-
-        {/* {isAllAccessAllowed &&  */}
+          
         <Autocomplete 
           value={ selectedCustomer || null}
           options={activeCustomers}
@@ -127,7 +125,26 @@ export default function CalendarToolbar({
           renderOption={(props, option) => (<li {...props} key={option?._id}>{`${option?.name || ''}`}</li>)}
           renderInput={(params) => <TextField {...params} size='small' label="Customer" />}
         />
-        {/* } */}
+
+        {isAllAccessAllowed && 
+          <Autocomplete 
+            value={ selectedUser || null}
+            options={isAllAccessAllowed?activeSecurityUsers:activeSecurityUsers?.filter((su)=> su?.contact?.reportingTo === user?.contact || su?._id === userId )}
+            isOptionEqualToValue={(option, val) => option?._id === val?._id}
+            getOptionLabel={(option) => `${option?.name || ''}`}
+            onChange={(event, newValue) => {
+              if (newValue) {
+                setSelectedUser(newValue);
+              } else {
+                setSelectedUser(null);
+              }
+            }}
+            sx={{width: '225px'}}
+            renderOption={(props, option) => (<li {...props} key={option?._id}>{`${option?.name || ''}`}</li>)}
+            renderInput={(params) => <TextField {...params} size='small' label="Added By" />}
+          />
+        }
+        
         <StyledTooltip title="New Event" placement="top" disableFocusListener tooltipcolor="#103996" color="#fff">
           <IconButton color="#fff" onClick={()=> {
             dispatch(setEventModel(true))

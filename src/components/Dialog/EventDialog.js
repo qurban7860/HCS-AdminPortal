@@ -7,7 +7,7 @@ import { isBefore } from 'date-fns';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Stack, Button, Tooltip, TextField, IconButton, DialogActions, DialogContent, Grid, Dialog, DialogTitle, Divider, MenuItem } from '@mui/material';
+import { Box, Stack, Button, Tooltip, TextField, IconButton, DialogActions, DialogContent, Grid, Dialog, DialogTitle, Divider, MenuItem, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
 
@@ -21,6 +21,8 @@ import FormProvider, { RHFDatePicker, RHFTimePicker, RHFTextField, RHFAutocomple
 import IconTooltip from '../Icons/IconTooltip';
 import ConfirmDialog from '../confirm-dialog/ConfirmDialog';
 import ViewFormAudit from '../ViewForms/ViewFormAudit';
+import ViewFormField from '../ViewForms/ViewFormField';
+import { fDateTime } from '../../utils/formatTime';
 
 
 function getTimeObjectFromISOString(dateString) {
@@ -138,9 +140,11 @@ function EventDialog({
       description: Yup.string().max(500).label('Description'),
     });
 
+    const defaultValues = getInitialValues(selectedEvent?.extendedProps, range);
+
     const methods = useForm({
       resolver: yupResolver(EventSchema),
-      defaultValues: getInitialValues(selectedEvent?.extendedProps, range)
+      defaultValues
     });
 
     const {
@@ -276,7 +280,7 @@ function EventDialog({
       disableEnforceFocus
       maxWidth="md"
       open={eventModel} 
-      onClose={ handleCloseModel }
+      // onClose={ handleCloseModel }
       keepMounted
       aria-describedby="alert-dialog-slide-description"
     >
@@ -379,8 +383,13 @@ function EventDialog({
             renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
           />   
           <RHFTextField name="description" label="Description" multiline rows={3} />
+          {selectedEvent && 
+            <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }} >
+              <Typography variant='body2' color='#919EAB' ><b>created by:</b> {`${defaultValues?.createdByFullName || ''}`} <br /> {`${fDateTime(defaultValues.createdAt)} / ${defaultValues.createdIP}`}</Typography>
+              <Typography variant='body2' color='#919EAB' ><b>updated by:</b> {`${defaultValues?.updatedByFullName || ''}`} <br /> {`${fDateTime(defaultValues.updatedAt)} / ${defaultValues.updatedIP}`}</Typography>
+            </Box>
+          }
         </Stack>
-        {selectedEvent && <ViewFormAudit defaultValues={getInitialValues(selectedEvent?.extendedProps, range)} displayVariation="block"/> }
       </Grid>
       </FormProvider>
       </DialogContent>

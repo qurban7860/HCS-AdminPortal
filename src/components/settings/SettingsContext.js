@@ -13,6 +13,8 @@ import { defaultPreset, getPresets, presetsOption } from './presets';
 const initialState = {
   ...defaultSettings,
   // Mode
+  onToggleDrawer: () => {},
+  onChangeDrawer: () => {},
   onToggleMode: () => {},
   onChangeMode: () => {},
   // Direction
@@ -68,6 +70,15 @@ export function SettingsProvider({ children }) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isArabic]);
+
+  // Open Setting Drawer
+  const onChangeDrawer = useCallback(
+    (event) => {
+      const toggleDrawer = !settings.toggleDrawer;
+      setSettings({ ...settings, toggleDrawer });
+    },
+    [setSettings, settings]
+  );
 
   // Mode
   const onToggleMode = useCallback(() => {
@@ -156,6 +167,8 @@ export function SettingsProvider({ children }) {
   const memoizedValue = useMemo(
     () => ({
       ...settings,
+      // Drawer
+      onChangeDrawer,
       // Mode
       onToggleMode,
       onChangeMode,
@@ -180,6 +193,8 @@ export function SettingsProvider({ children }) {
     }),
     [
       settings,
+      // Drawer
+      onChangeDrawer,
       // Mode
       onToggleMode,
       onChangeMode,

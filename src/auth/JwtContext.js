@@ -247,7 +247,7 @@ export function AuthProvider({ children }) {
           localStorage.removeItem('accessToken');
           localStorage.removeItem("configurations");
           const keys = Object.keys(localStorage); 
-          const reduxPersistKeys = keys.filter(  key => !(key === 'remember' || key === 'login' || key === 'token')  );
+          const reduxPersistKeys = keys.filter(  key => !(key === 'remember' || key === 'hcp-login' || key === 'hcp-pass')  );
         await Promise.all(reduxPersistKeys.map(key => storage.removeItem(key)));
       } catch (error) {
         console.error('Error clearing persisted states:', error);
