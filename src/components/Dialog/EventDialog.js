@@ -280,7 +280,7 @@ function EventDialog({
       disableEnforceFocus
       maxWidth="md"
       open={eventModel} 
-      onClose={ handleCloseModel }
+      // onClose={ handleCloseModel }
       keepMounted
       aria-describedby="alert-dialog-slide-description"
     >
