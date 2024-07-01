@@ -7,6 +7,7 @@ import { CONFIG } from '../../../config-global';
 const initialState = {
   documentTypeFormVisibility: false,
   documentTypeEditFormVisibility: false,
+  mergeDialogVisibility: false,
   intial: false,
   responseMessage: null,
   success: false,
@@ -38,6 +39,12 @@ const slice = createSlice({
     setDocumentTypeEditFormVisibility(state, action){
       state.documentTypeEditFormVisibility = action.payload;
     },
+
+    // SET MERGE DIALOG VISIBILITY
+    setMergeDialogVisibility(state, action){
+      state.mergeDialogVisibility= action.payload;
+    },
+
     // HAS ERROR
     hasError(state, action) {
       state.isLoading = false;
@@ -121,6 +128,7 @@ export default slice.reducer;
 export const {
   setDocumentTypeFormVisibility,
   setDocumentTypeEditFormVisibility,
+  setMergeDialogVisibility,
   resetDocumentType,
   resetDocumentTypes,
   resetActiveDocumentTypes,
@@ -325,3 +333,18 @@ export function deleteDocumentType(Id) {
 }
 
 
+// -------------------------------merge Document Types---------------------------------------
+
+export function mergeDocumentTypes(Id, docTypes) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.post(`${CONFIG.SERVER_URL}documents/documentType/${Id}/merge`, {docTypes});
+      dispatch(slice.actions.setResponseMessage('Document Types merged successfuly'));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
