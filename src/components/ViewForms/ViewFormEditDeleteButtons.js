@@ -91,6 +91,7 @@ function ViewFormEditDeleteButtons({
   machinePage, 
   drawingPage,
   history,
+  onMergeDocumentType
 }) {
   const { id } = useParams();
   const navigate = useNavigate()
@@ -698,6 +699,12 @@ function ViewFormEditDeleteButtons({
             icon="ooui:image-gallery"
           />
         )}
+
+        {/* onMergeDocumentType */}
+        {onMergeDocumentType && (
+          <IconTooltip title="Merge Document" onClick={onMergeDocumentType} icon="mdi:merge" />
+        )}
+
         {/* delete button */}
         {id !== userId  && !mainSite && onDelete && !archived && (
           <IconTooltip
@@ -941,4 +948,5 @@ ViewFormEditDeleteButtons.propTypes = {
   machinePage: PropTypes.bool, 
   drawingPage: PropTypes.bool,
   history: PropTypes.array,
+  onMergeDocumentType: PropTypes.func
 };
