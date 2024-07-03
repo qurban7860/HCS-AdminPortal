@@ -60,7 +60,8 @@ Upload.propTypes = {
   onChangeDisplayName: PropTypes.func,
   onChangeReferenceNumber: PropTypes.func,
   onChangeStockNumber: PropTypes.func,
-  drawingPage:PropTypes.bool
+  drawingPage:PropTypes.bool,
+  imagesOnly:PropTypes.bool
 };
 
 export default function Upload({
@@ -87,6 +88,7 @@ export default function Upload({
   onChangeReferenceNumber,
   onChangeStockNumber,
   drawingPage,
+  imagesOnly,
   sx,
   ...other
 }) {
@@ -110,6 +112,7 @@ export default function Upload({
   const isError = isDragReject || !!error;
 
   const fileExtension = file?.name?.split('.').pop().toLowerCase();
+  
   return (
     <Box sx={{ width: 1, position: 'relative', ...sx }}>
       <StyledDropZone
@@ -165,6 +168,7 @@ export default function Upload({
       <AllowedExtensionsMenuePopover
         open={verifiedAnchorEl}
         onClose={handleExtensionsPopoverClose}
+        imagesOnly={imagesOnly}
       />
       {helperText && helperText}
 

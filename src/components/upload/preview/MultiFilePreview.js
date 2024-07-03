@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useState, memo } from 'react';
+import { useState, memo, useLayoutEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { m, AnimatePresence } from 'framer-motion';
 // @mui
@@ -53,10 +53,16 @@ function MultiFilePreview({
   const { activeDocumentTypes } = useSelector((state) => state.documentType);
 
   const theme = useTheme();
-  const [selectedFile, setSelectedFile] = useState([]);
-  
+  const [slides, setSlides] = useState([]);
+  const [selectedFile, setSelectedFile] = useState(-1);
   const [fileFound, setFileFound] = useState(null);
   const [verifiedAnchorEl, setVerifiedAnchorEl] = useState(null);
+
+  useLayoutEffect(()=>{
+  
+    setSlides(files.map((file) => ({src: file?.preview, isLoaded: true })));
+  
+  },[files])
 
   const handleExtensionsPopoverOpen = (event, file) => {
       setVerifiedAnchorEl(event.currentTarget);
@@ -74,15 +80,13 @@ function MultiFilePreview({
     return null;
   }
 
-  const previewHandle = (file) => {
-    const img = [{
-          src:file?.preview,
-          isLoaded:true
-      }]
-
-    setSelectedFile(img);
+  const previewHandle = (index) => {
+    setSelectedFile(index);
   };
   
+  const handleOpenLightbox = async (index) => {
+    setSelectedFile(index);
+  }
   const FORMAT_IMG_VISIBBLE = ['jpg', 'jpeg', 'gif', 'bmp', 'png', 'svg', 'webp', 'ico', 'jpe',];
         
   return (
@@ -109,7 +113,7 @@ function MultiFilePreview({
                       height:180,
                     }}
                 >
-                  <CardMedia onClick={()=> FORMAT_IMG_VISIBBLE.some(format => fileType.match(format?.toLowerCase())) && previewHandle(file)}>
+                  <CardMedia onClick={()=> FORMAT_IMG_VISIBBLE.some(format => fileType.match(format?.toLowerCase())) && previewHandle(index)}>
                     <FileThumbnail imageView file={file} sx={{ position: 'absolute' }} imgSx={{ position: 'absolute' }}/>
                   </CardMedia>
                   <ButtonGroup
@@ -124,7 +128,7 @@ function MultiFilePreview({
                               width:'100%'
                           }}
                       >       
-                          {FORMAT_IMG_VISIBBLE.some(format => fileType.match(format))  && <Button sx={{width:'50%', borderRadius:0}} onClick={()=>previewHandle(file)}><Iconify icon="carbon:view" /></Button>}
+                          {FORMAT_IMG_VISIBBLE.some(format => fileType.match(format))  && <Button sx={{width:'50%', borderRadius:0}} onClick={()=>previewHandle(index)}><Iconify icon="carbon:view" /></Button>}
                           <Button sx={{width:FORMAT_IMG_VISIBBLE.some(format => fileType.match(format))?'50%':'100%', borderRadius:0}} color='error' onClick={() => onRemove(file)}><Iconify icon="radix-icons:cross-circled" /></Button>
                       </ButtonGroup>
                       
@@ -339,10 +343,11 @@ function MultiFilePreview({
       })}
 
       <Lightbox
-          index={0}
-          slides={selectedFile}
-          open={selectedFile?.length>0}
-          close={() => setSelectedFile(null)}
+          index={selectedFile}
+          slides={slides}
+          open={selectedFile>=0}
+          close={() => setSelectedFile(-1)}
+          onGetCurrentIndex={(index) => handleOpenLightbox(index)}
           disabledTotal
           disabledDownload
           disabledSlideshow

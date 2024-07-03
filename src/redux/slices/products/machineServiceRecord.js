@@ -22,6 +22,7 @@ const initialState = {
   activeMachineServiceRecords: [],
   sendEmailDialog:false,
   pdfViewerDialog:false,
+  addFileDialog:false,
   isHistorical: false,
   isDetailPage: false,
   filterBy: '',
@@ -129,6 +130,20 @@ const slice = createSlice({
       state.initial = true;
     },
 
+    // GET MACHINE Active SERVICE PARAM
+    updateMachineServiceRecordSuccess(state) {
+      state.isLoading = false;
+      state.success = true;
+      state.initial = true;
+    },
+
+    // GET MACHINE Active SERVICE PARAM
+    addMachineServiceRecordFilesSuccess(state) {
+      state.isLoading = false;
+      state.success = true;
+      state.initial = true;
+    },
+
     // SET SEND EMAIL DIALOG
     setSendEmailDialog(state, action) {
       state.sendEmailDialog = action.payload;
@@ -137,6 +152,12 @@ const slice = createSlice({
     // SET PDF DIALOG
     setPDFViewerDialog(state, action) {
       state.pdfViewerDialog = action.payload;
+    },
+
+    
+    // SET ADD FILE DIALOG
+    setAddFileDialog(state, action) {
+      state.addFileDialog = action.payload;
     },
 
     setResponseMessage(state, action) {
@@ -193,6 +214,7 @@ export const {
   setAllFlagsFalse,
   setSendEmailDialog,
   setPDFViewerDialog,
+  setAddFileDialog,
   resetMachineServiceRecords,
   resetMachineServiceRecord,
   setResponseMessage,
@@ -410,7 +432,9 @@ export function updateMachineServiceRecord(machineId,id, params) {
         isActive:                   params?.isActive
       }
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}`,data);
-      await dispatch(getMachineServiceRecord(machineId, response?.data?.serviceRecord?._id))
+      dispatch(slice.actions.updateMachineServiceRecordSuccess());
+      return response?.data?.serviceRecord?._id;
+      // await dispatch(getMachineServiceRecord(machineId, response?.data?.serviceRecord?._id))
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -419,3 +443,43 @@ export function updateMachineServiceRecord(machineId,id, params) {
   };
 
 }
+
+export function addMachineServiceRecordFiles(machineId, id, data) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}/files`,data);
+      dispatch(slice.actions.addMachineServiceRecordFilesSuccess());
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+
+}
+
+export function downloadFile(machineId, id, fileId) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}/files/${fileId}/download/` );
+    return response;
+  };
+}
+
+export function deleteFile(machineId, id, fileId) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}/files/${fileId}` , 
+      {
+          isArchived: true, 
+      });
+      dispatch(slice.actions.setResponseMessage(response.data));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+  }
