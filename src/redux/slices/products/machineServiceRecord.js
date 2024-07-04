@@ -444,11 +444,19 @@ export function updateMachineServiceRecord(machineId,id, params) {
 
 }
 
-export function addMachineServiceRecordFiles(machineId, id, data) {
+export function addMachineServiceRecordFiles(machineId, id, params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}/files`,data);
+      const formData = new FormData();
+      if (Array.isArray(params?.files) &&  params?.files?.length > 0) {
+        params?.files?.forEach((file, index) => {
+          if (file) {
+            formData.append('images', file );
+          }
+        });
+      }
+      const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}/upload`,formData);
       dispatch(slice.actions.addMachineServiceRecordFilesSuccess());
     } catch (error) {
       console.error(error);
@@ -456,7 +464,6 @@ export function addMachineServiceRecordFiles(machineId, id, data) {
       throw error;
     }
   };
-
 }
 
 export function downloadFile(machineId, id, fileId) {
@@ -471,7 +478,7 @@ export function deleteFile(machineId, id, fileId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}/files/${fileId}` , 
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}/files/${fileId}/delete` , 
       {
           isArchived: true, 
       });
