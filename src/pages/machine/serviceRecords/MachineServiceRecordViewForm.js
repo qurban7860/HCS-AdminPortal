@@ -52,6 +52,7 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
 
   useLayoutEffect(()=>{
     if(machineId && id ){
+      dispatch(setAddFileDialog(false));
       dispatch(getMachineServiceRecord(machineId, id));
     }
     dispatch(setPDFViewerDialog(false))
@@ -72,8 +73,8 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
   const handleEdit = () => navigate(PATH_MACHINE.machines.serviceRecords.edit(machineId, id));
 
   const handleServiceRecordHistory = () =>  navigate(PATH_MACHINE.machines.serviceRecords.history.root(
-          machineId, serviceHistoryView ? serviceId : machineServiceRecord?.serviceId 
-        ));
+    machineId, serviceHistoryView ? serviceId : machineServiceRecord?.serviceId 
+  ));
 
   const handleCurrentServiceRecord = () => navigate(PATH_MACHINE.machines.serviceRecords.view( machineId, machineServiceRecord?.currentVersion?._id ));
 

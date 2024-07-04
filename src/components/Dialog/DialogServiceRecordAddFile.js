@@ -106,24 +106,19 @@ function DialogServiceRecordAddFile() {
             <FormLabel content='Add new files'/>
           </Grid>
           <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-           <RHFUpload 
-                      multiple 
-                      thumbnail 
-                      name="files"
-                      imagesOnly
-                      // accept={imagesExtensions}
-                      onDrop={handleDropMultiFile}
-                      onRemove={(inputFile) =>
-                        files.length > 1 ?
-                        setValue(
-                          'files',
-                          files &&
-                            files?.filter((file) => file !== inputFile),
-                          { shouldValidate: true }
-                        ): setValue('files', '', { shouldValidate: true })
-                      }
-                      onRemoveAll={() => setValue('files', '', { shouldValidate: true })}
-                    />
+           <RHFUpload multiple  thumbnail name="files" imagesOnly
+                onDrop={handleDropMultiFile}
+                onRemove={(inputFile) =>
+                  files.length > 1 ?
+                  setValue(
+                    'files',
+                    files &&
+                      files?.filter((file) => file !== inputFile),
+                    { shouldValidate: true }
+                  ): setValue('files', '', { shouldValidate: true })
+                }
+                onRemoveAll={() => setValue('files', '', { shouldValidate: true })}
+              />
           </FormProvider>
       </DialogContent>
       <DialogActions>
