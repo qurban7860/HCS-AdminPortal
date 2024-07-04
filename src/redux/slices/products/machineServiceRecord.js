@@ -366,31 +366,37 @@ export function addMachineServiceRecord(machineId,params) {
     return async (dispatch) => {
       dispatch(slice.actions.startLoading());
       try {
-        const data = {
-          serviceRecordConfig:        params?.serviceRecordConfiguration?._id || null,
-          serviceDate:                params?.serviceDate,
-          versionNo:                  params?.versionNo,
-          customer:                   params?.customer || null,
-          site:                       params?.site || null,
-          machine:                    machineId,
-          decoilers:                  params?.decoilers?.map((dec)=> dec?._id) || [],
-          technician:                 params?.technician?._id || null,
-          technicianNotes:            params?.technicianNotes,
-          textBeforeCheckItems:       params?.textBeforeCheckItems,
-          textAfterCheckItems:        params?.textAfterCheckItems,
-          serviceNote:                params?.serviceNote,
-          recommendationNote:         params?.recommendationNote,
-          internalComments:           params?.internalComments,
-          suggestedSpares:            params?.suggestedSpares,
-          internalNote:               params.internalNote,
-          operators:                  params?.operators?.map((ope)=> ope?._id) || [],
-          operatorNotes:              params.operatorNotes,
-          checkItemRecordValues:      params?.checkItemRecordValues || [],
-          isActive:                   params?.isActive
-        }
-        /* eslint-disable */
+        const formData = new FormData();
+        formData.append('serviceRecordConfig', params?.serviceRecordConfiguration?._id || null);
+        formData.append('serviceDate', params?.serviceDate);
+        formData.append('versionNo', params?.versionNo);
+        formData.append('customer', params?.customer || null);
+        formData.append('site', params?.site || null);
+        formData.append('machine', machineId);
+        formData.append(`decoilers`, params?.decoilers?.map((dec) => dec?._id) || []);
+        formData.append('technician', params?.technician?._id || null);
+        formData.append('technicianNotes', params?.technicianNotes);
+        formData.append('textBeforeCheckItems', params?.textBeforeCheckItems);
+        formData.append('textAfterCheckItems', params?.textAfterCheckItems);
+        formData.append('serviceNote', params?.serviceNote);
+        formData.append('recommendationNote', params?.recommendationNote);
+        formData.append('internalComments', params?.internalComments);
+        formData.append('suggestedSpares', params?.suggestedSpares);
+        formData.append('internalNote', params.internalNote);
+        formData.append('operators', params?.operators?.map((ope)=> ope?._id) || []);
+        formData.append('operatorNotes', params.operatorNotes);
+        formData.append('checkItemRecordValues', JSON.stringify(params?.checkItemRecordValues || []));
+        formData.append('isActive', params?.isActive);
 
-        const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords`, data );
+        if (Array.isArray(params?.files) &&  params?.files?.length > 0) {
+          params?.files?.forEach((file, index) => {
+            if (file) {
+              formData.append('images', file );
+            }
+          });
+        }
+        
+        const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords`, formData );
         await dispatch(resetMachineServiceRecord());
         dispatch(slice.actions.getMachineServiceRecordSuccess(response.data.MachineTool));
       } catch (error) {
