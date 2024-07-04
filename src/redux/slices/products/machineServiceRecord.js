@@ -22,6 +22,7 @@ const initialState = {
   activeMachineServiceRecords: [],
   sendEmailDialog:false,
   pdfViewerDialog:false,
+  addFileDialog:false,
   isHistorical: false,
   isDetailPage: false,
   filterBy: '',
@@ -129,6 +130,20 @@ const slice = createSlice({
       state.initial = true;
     },
 
+    // GET MACHINE Active SERVICE PARAM
+    updateMachineServiceRecordSuccess(state) {
+      state.isLoading = false;
+      state.success = true;
+      state.initial = true;
+    },
+
+    // GET MACHINE Active SERVICE PARAM
+    addMachineServiceRecordFilesSuccess(state) {
+      state.isLoading = false;
+      state.success = true;
+      state.initial = true;
+    },
+
     // SET SEND EMAIL DIALOG
     setSendEmailDialog(state, action) {
       state.sendEmailDialog = action.payload;
@@ -137,6 +152,12 @@ const slice = createSlice({
     // SET PDF DIALOG
     setPDFViewerDialog(state, action) {
       state.pdfViewerDialog = action.payload;
+    },
+
+    
+    // SET ADD FILE DIALOG
+    setAddFileDialog(state, action) {
+      state.addFileDialog = action.payload;
     },
 
     setResponseMessage(state, action) {
@@ -193,6 +214,7 @@ export const {
   setAllFlagsFalse,
   setSendEmailDialog,
   setPDFViewerDialog,
+  setAddFileDialog,
   resetMachineServiceRecords,
   resetMachineServiceRecord,
   setResponseMessage,
@@ -344,31 +366,37 @@ export function addMachineServiceRecord(machineId,params) {
     return async (dispatch) => {
       dispatch(slice.actions.startLoading());
       try {
-        const data = {
-          serviceRecordConfig:        params?.serviceRecordConfiguration?._id || null,
-          serviceDate:                params?.serviceDate,
-          versionNo:                  params?.versionNo,
-          customer:                   params?.customer || null,
-          site:                       params?.site || null,
-          machine:                    machineId,
-          decoilers:                  params?.decoilers?.map((dec)=> dec?._id) || [],
-          technician:                 params?.technician?._id || null,
-          technicianNotes:            params?.technicianNotes,
-          textBeforeCheckItems:       params?.textBeforeCheckItems,
-          textAfterCheckItems:        params?.textAfterCheckItems,
-          serviceNote:                params?.serviceNote,
-          recommendationNote:         params?.recommendationNote,
-          internalComments:           params?.internalComments,
-          suggestedSpares:            params?.suggestedSpares,
-          internalNote:               params.internalNote,
-          operators:                  params?.operators?.map((ope)=> ope?._id) || [],
-          operatorNotes:              params.operatorNotes,
-          checkItemRecordValues:      params?.checkItemRecordValues || [],
-          isActive:                   params?.isActive
-        }
-        /* eslint-disable */
+        const formData = new FormData();
+        formData.append('serviceRecordConfig', params?.serviceRecordConfiguration?._id || null);
+        formData.append('serviceDate', params?.serviceDate);
+        formData.append('versionNo', params?.versionNo);
+        formData.append('customer', params?.customer || null);
+        formData.append('site', params?.site || null);
+        formData.append('machine', machineId);
+        formData.append(`decoilers`, params?.decoilers?.map((dec) => dec?._id) || []);
+        formData.append('technician', params?.technician?._id || null);
+        formData.append('technicianNotes', params?.technicianNotes);
+        formData.append('textBeforeCheckItems', params?.textBeforeCheckItems);
+        formData.append('textAfterCheckItems', params?.textAfterCheckItems);
+        formData.append('serviceNote', params?.serviceNote);
+        formData.append('recommendationNote', params?.recommendationNote);
+        formData.append('internalComments', params?.internalComments);
+        formData.append('suggestedSpares', params?.suggestedSpares);
+        formData.append('internalNote', params.internalNote);
+        formData.append('operators', params?.operators?.map((ope)=> ope?._id) || []);
+        formData.append('operatorNotes', params.operatorNotes);
+        formData.append('checkItemRecordValues', JSON.stringify(params?.checkItemRecordValues || []));
+        formData.append('isActive', params?.isActive);
 
-        const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords`, data );
+        if (Array.isArray(params?.files) &&  params?.files?.length > 0) {
+          params?.files?.forEach((file, index) => {
+            if (file) {
+              formData.append('images', file );
+            }
+          });
+        }
+        
+        const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords`, formData );
         await dispatch(resetMachineServiceRecord());
         dispatch(slice.actions.getMachineServiceRecordSuccess(response.data.MachineTool));
       } catch (error) {
@@ -410,7 +438,9 @@ export function updateMachineServiceRecord(machineId,id, params) {
         isActive:                   params?.isActive
       }
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}`,data);
-      await dispatch(getMachineServiceRecord(machineId, response?.data?.serviceRecord?._id))
+      dispatch(slice.actions.updateMachineServiceRecordSuccess());
+      return response?.data?.serviceRecord?._id;
+      // await dispatch(getMachineServiceRecord(machineId, response?.data?.serviceRecord?._id))
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -419,3 +449,50 @@ export function updateMachineServiceRecord(machineId,id, params) {
   };
 
 }
+
+export function addMachineServiceRecordFiles(machineId, id, params) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const formData = new FormData();
+      if (Array.isArray(params?.files) &&  params?.files?.length > 0) {
+        params?.files?.forEach((file, index) => {
+          if (file) {
+            formData.append('images', file );
+          }
+        });
+      }
+      const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}/upload`,formData);
+      dispatch(slice.actions.addMachineServiceRecordFilesSuccess());
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+export function downloadFile(machineId, id, fileId) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}/files/${fileId}/download/` );
+    return response;
+  };
+}
+
+export function deleteFile(machineId, id, fileId) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}/files/${fileId}/delete` , 
+      {
+          isArchived: true, 
+      });
+      dispatch(slice.actions.setResponseMessage(response.data));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+  }

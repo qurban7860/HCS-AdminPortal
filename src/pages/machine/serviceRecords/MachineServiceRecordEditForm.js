@@ -183,9 +183,9 @@ function MachineServiceRecordEditForm() {
       data.decoilers = decoilers;
       data.serviceId = machineServiceRecord?.serviceId || null
       data.operators = operators;
-      await dispatch(updateMachineServiceRecord(machineId ,id , data));
+      const new_id = await dispatch(updateMachineServiceRecord(machineId ,id , data));
       await reset();
-      await navigate(PATH_MACHINE.machines.serviceRecords.view(machineId, id));
+      await navigate(PATH_MACHINE.machines.serviceRecords.view(machineId, new_id));
     } catch (err) {
       enqueueSnackbar('Saving failed!', { variant: `error` });
     }

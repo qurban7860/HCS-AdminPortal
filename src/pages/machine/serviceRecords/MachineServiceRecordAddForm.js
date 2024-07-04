@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, memo } from 'react';
+import { useEffect, useMemo, useState, memo, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // form
 import { useForm } from 'react-hook-form';
@@ -20,7 +20,8 @@ import FormProvider, {
   RHFTextField,
   RHFAutocomplete,
   RHFSwitch,
-  RHFDatePicker
+  RHFDatePicker,
+  RHFUpload
 } from '../../../components/hook-form';
 import { getActiveSecurityUsers, getSecurityUser } from '../../../redux/slices/securityUser/securityUser';
 import CollapsibleCheckedItemInputRow from './CollapsibleCheckedItemInputRow';
@@ -111,7 +112,23 @@ function MachineServiceRecordAddForm() {
     formState: { isSubmitting },
   } = methods;
 
-  const { decoilers, operators, serviceRecordConfiguration, docRecordType } = watch()
+  const { files, decoilers, operators, serviceRecordConfiguration, docRecordType } = watch()
+
+  const handleDropMultiFile = useCallback(
+    async (acceptedFiles) => {
+      const docFiles = files || [];
+      
+      const newFiles = acceptedFiles.map((file, index) => 
+          Object.assign(file, {
+            preview: URL.createObjectURL(file)
+          })
+        
+      );
+      setValue('files', [...docFiles, ...newFiles], { shouldValidate: true });
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [ files ]
+  );
   
   useEffect(()=>{ 
     if(!activeSecurityUsers.some(u => u._id === userId )){
@@ -282,7 +299,7 @@ function MachineServiceRecordAddForm() {
     updatedCheckParams[index] = updatedParamObject;
   setCheckItemLists(updatedCheckParams);
   }
-  
+
   return (
     <Container maxWidth={false} >
         <MachineTabContainer currentTabValue='serviceRecords' />
@@ -342,6 +359,20 @@ function MachineServiceRecordAddForm() {
                       renderOption={(props, option) => ( <li {...props} key={option?._id}>{option.name || ''}</li>)}
                     />
                     <RHFTextField name="technicianNotes" label="Technician Notes" minRows={3} multiline/> 
+                    <RHFUpload multiple  thumbnail name="files" imagesOnly
+                      onDrop={handleDropMultiFile}
+                      onRemove={(inputFile) =>
+                        files.length > 1 ?
+                        setValue(
+                          'files',
+                          files &&
+                            files?.filter((file) => file !== inputFile),
+                          { shouldValidate: true }
+                        ): setValue('files', '', { shouldValidate: true })
+                      }
+                      onRemoveAll={() => setValue('files', '', { shouldValidate: true })}
+                    />
+                    
                     <RHFTextField name="textBeforeCheckItems" label="Text Before Check Items" minRows={3} multiline/> 
                     
                     {checkItemLists?.length > 0 && <FormLabel content={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />}
