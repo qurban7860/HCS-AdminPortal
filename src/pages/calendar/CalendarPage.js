@@ -6,7 +6,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import timelinePlugin from '@fullcalendar/timeline';
 // @mui
-import { Card, Container } from '@mui/material';
+import { Card, Container, createTheme } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -32,9 +32,10 @@ import { useDateRangePicker } from '../../components/date-range-picker';
 // sections
 import { StyledCalendar, CalendarToolbar } from '.';
 import { Cover } from '../../components/Defaults/Cover';
-import { StyledCardContainer } from '../../theme/styles/default-styles';
+import { StyledCardContainer, StyledTooltip } from '../../theme/styles/default-styles';
 import EventDialog from '../../components/Dialog/EventDialog';
 import { useAuthContext } from '../../auth/useAuthContext';
+import Iconify from '../../components/iconify';
 
 // ----------------------------------------------------------------------
 
@@ -214,7 +215,27 @@ export default function CalendarPage() {
       dispatch(getEvents(date, selectedCustomer?._id, selectedContact?._id ));
     }
   };
-  
+
+  const theme = createTheme();
+
+  const handleEventContent = (info) => {
+    const { timeText, event } = info;
+    const {customer, primaryTechnician, supportingTechnicians} = event.extendedProps;
+    const supportingTechnicianNames = supportingTechnicians.map((tech)=> ` ${tech.firstName} ${tech.lastName}`);
+    const title = `${primaryTechnician.firstName} ${primaryTechnician.lastName} ${supportingTechnicianNames.length>0?`, ${supportingTechnicianNames}`:''}, ${customer.name}`;
+    
+    return (
+      <StyledTooltip title={title} placement='top' tooltipcolor={theme.palette.primary.main}>
+        <div style={{ position: 'relative', zIndex: 10}} className="fc-event-main-frame">
+          <div className="fc-event-time">{timeText}</div>
+          <div className="fc-event-title-container">
+            <div className="fc-event-title fc-sticky">{title}</div>
+          </div>
+        </div>
+      </StyledTooltip>
+    );
+  };
+
   const dataFiltered = applyFilter({
     inputData: calendarData,
     selectedCustomer,
@@ -269,6 +290,7 @@ export default function CalendarPage() {
                 hour: 'numeric',
                 minute: '2-digit',
               }}
+              eventContent={handleEventContent}
               plugins={[
                 listPlugin,
                 dayGridPlugin,
@@ -277,9 +299,13 @@ export default function CalendarPage() {
                 interactionPlugin,
               ]}
             />
+            
           </StyledCalendar>
+          
         </Card>
       </Container>
+
+      
 
       <EventDialog
         date={date}
@@ -322,8 +348,5 @@ function applyFilter({ inputData, selectedCustomer, selectedContact, selectedUse
         e?.extendedProps?.notifyContacts?.some((c) => c?._id === selectedContact?._id)
     );
   }
-  
-  console.log("after:",inputData)
-
   return inputData;
 }
