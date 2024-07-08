@@ -40,13 +40,12 @@ export default function AuthResetPasswordForm() {
   const onSubmit = async (data) => {
     try {
       const response = await axios.post(`${CONFIG.SERVER_URL}security/forgetPassword`, data);
-      enqueueSnackbar(response.data.Message);
+      enqueueSnackbar(response.data);
       setDisable(true)
       // await new Promise((resolve) => setTimeout(resolve, 500));
       // sessionStorage.setItem('email-recovery', data.email);
       // navigate(PATH_AUTH.newPassword);
     } catch (error) {
-      console.error(error);
       if (regEx.test(error.MessageCode)) {
         reset();
         setError('afterSubmit', {
@@ -56,7 +55,7 @@ export default function AuthResetPasswordForm() {
       } else {
         setError('afterSubmit', {
           ...error,
-          message: 'Something went wrong',
+          message: typeof error === 'string' ? error :  'Something went wrong',
         });
       }
     }
