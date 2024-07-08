@@ -23,6 +23,7 @@ const initialState = {
   sendEmailDialog:false,
   pdfViewerDialog:false,
   addFileDialog:false,
+  completeDialog:false,
   isHistorical: false,
   isDetailPage: false,
   filterBy: '',
@@ -160,6 +161,14 @@ const slice = createSlice({
       state.addFileDialog = action.payload;
     },
 
+    
+    // SET COMLETE DIALOG
+    setCompleteDialog(state, action) {
+      state.completeDialog = action.payload;
+    },
+
+    
+
     setResponseMessage(state, action) {
       state.responseMessage = action.payload;
       state.isLoading = false;
@@ -215,6 +224,7 @@ export const {
   setSendEmailDialog,
   setPDFViewerDialog,
   setAddFileDialog,
+  setCompleteDialog,
   resetMachineServiceRecords,
   resetMachineServiceRecord,
   setResponseMessage,
@@ -495,4 +505,18 @@ export function deleteFile(machineId, id, fileId) {
       throw error;
     }
   };
-  }
+}
+
+export function completeServiceRecord(machineId, id) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}/complete`);
+      dispatch(slice.actions.setResponseMessage(response.data));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}

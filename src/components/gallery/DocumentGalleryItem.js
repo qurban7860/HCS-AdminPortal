@@ -29,10 +29,11 @@ DocumentGalleryItem.propTypes = {
     onDownloadFile: PropTypes.func,
     onDeleteFile: PropTypes.func,
     toolbar: PropTypes.bool,
-    customerArchived: PropTypes.bool
+    customerArchived: PropTypes.bool,
+    size: PropTypes.number,
   };
   
-export function DocumentGalleryItem({ image, isLoading, onOpenLightbox, onOpenFile, onDownloadFile, onDeleteFile, toolbar, customerArchived }) {
+export function DocumentGalleryItem({ image, isLoading, onOpenLightbox, onOpenFile, onDownloadFile, onDeleteFile, toolbar, customerArchived, size = 150 }) {
 
     const [deleteConfirm, seDeleteConfirm] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
@@ -64,7 +65,8 @@ export function DocumentGalleryItem({ image, isLoading, onOpenLightbox, onOpenFi
                         '&:hover .button-group': {
                             opacity: 1,
                         },
-                        minHeight:150,
+                        width:size,
+                        height:size
                     }}
                 >
                     

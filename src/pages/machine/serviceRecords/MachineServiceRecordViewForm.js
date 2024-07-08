@@ -3,8 +3,10 @@ import { useMemo, memo, useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // @mui
 import { Container, Card, Chip, Grid, Box } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 // routes
 import { useNavigate, useParams } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
 import download from 'downloadjs';
 import { PATH_MACHINE, PATH_CRM } from '../../../routes/paths';
 // redux
@@ -14,7 +16,8 @@ import { deleteMachineServiceRecord,
   setPDFViewerDialog,
   setAddFileDialog,
   downloadFile,
-  deleteFile} from '../../../redux/slices/products/machineServiceRecord';
+  deleteFile,
+  completeServiceRecord} from '../../../redux/slices/products/machineServiceRecord';
 import { setCardActiveIndex, setIsExpanded } from '../../../redux/slices/customer/contact';
 // components
 import { useSnackbar } from '../../../components/snackbar';
@@ -35,6 +38,7 @@ import MachineTabContainer from '../util/MachineTabContainer';
 import { ThumbnailDocButton } from '../../../components/Thumbnails';
 import DialogServiceRecordAddFile from '../../../components/Dialog/DialogServiceRecordAddFile';
 import { DocumentGalleryItem } from '../../../components/gallery/DocumentGalleryItem';
+import ConfirmDialog from '../../../components/confirm-dialog';
 
 MachineServiceParamViewForm.propTypes = {
   serviceHistoryView: PropTypes.bool,
@@ -204,7 +208,7 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
     try {
       await dispatch(deleteFile(machineId, serviceId, fileId));
       await dispatch(getMachineServiceRecord(serviceId))
-      enqueueSnackbar('File Archived successfully');
+      enqueueSnackbar('File Archived successfully!');
     } catch (err) {
       console.log(err);
       enqueueSnackbar('File Deletion failed!', { variant: `error` });
@@ -231,7 +235,30 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
         }
       });
   };
+
+  const { 
+    reset, 
+    handleSubmit, 
+    formState: { isSubmitting } 
+  } = useForm(); // or any other hook providing these methods
+
+
+  const [completeConfirm, setCompleteConfirm] = useState(false);
   
+  const handleCompleteConfirm = () => {
+    setCompleteConfirm(!completeConfirm);
+  }
+
+  const onSubmitComplete = async() => {
+    try {
+      await dispatch(completeServiceRecord(machineId, id));
+      enqueueSnackbar('Service Record Completed Successfully!');
+    } catch (err) {
+      console.log(err);
+      enqueueSnackbar('Service Record Completion failed!', { variant: `error` });
+    }
+  }
+
   return (
     <Container maxWidth={false} >
           <MachineTabContainer currentTabValue='serviceRecords' />
@@ -246,6 +273,7 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
           backLink={handleBackLink}
           handleSendPDFEmail={!machineServiceRecord?.isHistory && machineServiceRecord?._id && handleSendEmail}
           handleViewPDF={!machineServiceRecord?.isHistory && machineServiceRecord?._id && handlePDFViewer}
+          handleCompleteMSR={!machineServiceRecord?.isHistory && handleCompleteConfirm}
         />
         
         <Grid container>
@@ -295,7 +323,7 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
               <Grid item md={12} sx={{display:'flex', flexDirection:'column'}}>
                 {machineServiceRecord?.serviceRecordConfig?.checkItemLists?.length > 0 ? 
                 (machineServiceRecord?.serviceRecordConfig?.checkItemLists.map((row, index) =>
-                        <ReadableCollapsibleCheckedItemRow value={row} index={index} />
+                        <ReadableCollapsibleCheckedItemRow machineId serviceId value={row} index={index} />
                   )) : <ViewFormField isLoading={isLoading} /> }
               </Grid>
             </Grid>
@@ -318,8 +346,15 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
       </Grid>
       {pdfViewerDialog && <PDFViewerDialog machineServiceRecord={machineServiceRecord} />}
       {sendEmailDialog && <SendEmailDialog machineServiceRecord={machineServiceRecord} fileName={fileName}/>}
+      <DialogServiceRecordAddFile />
+      <ConfirmDialog open={completeConfirm} onClose={handleCompleteConfirm}
+        title='Are you sure you want to complete?' 
+        content="Email will be sent to your reporting contact?" 
+        action={
+          <LoadingButton loading={isSubmitting} variant='contained' onClick={handleSubmit(onSubmitComplete)}>Complete</LoadingButton>
+        }
+      />
     </Card>
-    <DialogServiceRecordAddFile />
   </Container>
   );
 }

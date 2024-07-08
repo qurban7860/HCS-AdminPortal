@@ -401,6 +401,8 @@ function MachineServiceRecordAddForm() {
                               handleChangeCheckItemListChecked={handleChangeCheckItemListChecked}
                               handleChangeCheckItemListCheckBoxValue={handleChangeCheckItemListCheckBoxValue}
                               handleChangeCheckItemListComment={handleChangeCheckItemListComment}
+                              machineId
+                              serviceId
                             />
                           ))}
                       </>

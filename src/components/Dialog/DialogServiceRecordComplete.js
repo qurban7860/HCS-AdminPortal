@@ -9,8 +9,8 @@ import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useSnackbar } from 'notistack';
 import {  
-  addMachineServiceRecordFiles,
-  setAddFileDialog,
+  completeServiceRecord,
+  setCompleteDialog,
 } from '../../redux/slices/products/machineServiceRecord';
 
 import FormProvider from '../hook-form/FormProvider';
@@ -21,34 +21,17 @@ import { fDate } from '../../utils/formatTime';
 import FormLabel from '../DocumentForms/FormLabel';
 import { imagesExtensions } from '../../constants/document-constants';
 
-function DialogServiceRecordAddFile() {
+function DialogServiceRecordComplete() {
     
   const dispatch = useDispatch();
-  const { addFileDialog, machineServiceRecord, isLoading } = useSelector((state) => state.machineServiceRecord);
+  const { completeDialog, machineServiceRecord, isLoading } = useSelector((state) => state.machineServiceRecord);
   
   const handleCloseDialog = ()=>{ 
-    dispatch(setAddFileDialog(false)) 
+    dispatch(setCompleteDialog(false)) 
     reset();
   }
   
   const { enqueueSnackbar } = useSnackbar();
-  
-  const MachineServiceRecordFilesSchema = Yup.object().shape({
-    files: Yup.mixed().required('File is required!')
-    .test(
-      'fileType',
-      'Only the following formats are accepted: .jpeg, .jpg, gif, .bmp, .webp',
-      validateImageFileType
-    ).nullable(true),
-  });
-
-  const defaultValues = useMemo(
-    () => ({
-      files:[]
-    }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
 
   const methods = useForm({
     resolver: yupResolver(MachineServiceRecordFilesSchema),
@@ -59,35 +42,16 @@ function DialogServiceRecordAddFile() {
 
   const {
     reset,
-    watch,
-    setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
-  const { files } = watch();
-
-  const handleDropMultiFile = useCallback(
-    async (acceptedFiles) => {
-      const docFiles = files || [];
-      
-      const newFiles = acceptedFiles.map((file, index) => 
-          Object.assign(file, {
-            preview: URL.createObjectURL(file)
-          })
-        
-      );
-      setValue('files', [...docFiles, ...newFiles], { shouldValidate: true });
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [ files ]
-  );
 
   const onSubmit = async (data) => {
     try {
-      await dispatch(addMachineServiceRecordFiles(machineServiceRecord?.machine?._id, machineServiceRecord?._id, data))
-      await dispatch(setAddFileDialog(false));
+      await dispatch(completeServiceRecord(machineServiceRecord?.machine?._id, machineServiceRecord?._id))
+      await dispatch(setCompleteDialog(false));
       await reset();
-      await enqueueSnackbar('Files uploaded successfully!');
+      await enqueueSnackbar('Completed Successfully!');
     } catch (error) {
       enqueueSnackbar('Failed file upload', { variant: `error` });
       console.error(error);
@@ -96,15 +60,15 @@ function DialogServiceRecordAddFile() {
 
   return (
     <Dialog fullWidth maxWidth="xl" open={addFileDialog} onClose={handleCloseDialog}>
-      <DialogTitle variant='h3' sx={{pb:1, pt:2}}>Add Documents</DialogTitle>
+      <DialogTitle variant='h3' sx={{pb:1, pt:2}}>Complete Documents</DialogTitle>
       <Divider orientation="horizontal" flexItem />
-      <DialogContent dividers sx={{pt:2}}>
-          {/* <Grid container sx={{pb:2}}>
+      <DialogContent dividers sx={{pt:0}}>
+          <Grid container sx={{pb:2}}>
             <ViewFormField isLoading={isLoading} variant='h4' sm={3} heading="Service Date" param={fDate(machineServiceRecord.serviceDate)} />
             <ViewFormField isLoading={isLoading} variant='h4' sm={6} heading="Service Record Configuration" param={`${machineServiceRecord?.serviceRecordConfig?.docTitle} ${machineServiceRecord?.serviceRecordConfig?.recordType ? '-' : ''} ${machineServiceRecord?.serviceRecordConfig?.recordType || ''}`} />
             <ViewFormField isLoading={isLoading} variant='h4' sm={3} heading="Version No" param={machineServiceRecord?.currentVersion?.versionNo}/>
             <FormLabel content='Add new files'/>
-          </Grid> */}
+          </Grid>
           <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
            <RHFUpload multiple  thumbnail name="files" imagesOnly
                 onDrop={handleDropMultiFile}
@@ -129,4 +93,4 @@ function DialogServiceRecordAddFile() {
   );
 }
 
-export default DialogServiceRecordAddFile;
+export default DialogServiceRecordComplete;

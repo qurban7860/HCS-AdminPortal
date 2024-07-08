@@ -5,15 +5,18 @@ import { Card, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 // components
 import Iconify from '../iconify/Iconify';
+import { StyledTooltip } from '../../theme/styles/default-styles';
 
 ThumbnailDocButton.propTypes = {
   onClick: PropTypes.func,
+  size:PropTypes.number,
 };
 
-export default function ThumbnailDocButton({ onClick }) {
+export default function ThumbnailDocButton({ onClick, size=150 }) {
   const [hovered, setHovered] = useState(false);
   const theme = useTheme();
   return (
+    <StyledTooltip placement="top" title={size>=150?"":"Add File"}>
     <Card 
         sx={{
             cursor: 'pointer',
@@ -26,8 +29,8 @@ export default function ThumbnailDocButton({ onClick }) {
                 opacity: 1,
             },
             background:theme.palette.grey[hovered?100:400],
-            minHeight:150
-            
+            width:size,
+            height:size,
           }}
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}
@@ -35,7 +38,8 @@ export default function ThumbnailDocButton({ onClick }) {
     >
 
         <Iconify icon="mdi:plus" color={theme.palette.grey[hovered?900:600]} width={50} />
-        <Typography variant="subtitle2" color={theme.palette.grey[hovered?900:600]}>Add / Upload File</Typography>
+        {size>=150 &&<Typography variant="subtitle2" color={theme.palette.grey[hovered?900:600]}>Add / Upload File</Typography>}
     </Card>
+    </StyledTooltip>
   );
 }
