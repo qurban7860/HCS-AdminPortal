@@ -70,6 +70,7 @@ function SearchBarCombo({
   onFilterStatus,
   filterPeriod,
   onFilterPeriod,
+  onCompareINI,
   ...other
 }) {
   
@@ -659,6 +660,23 @@ function SearchBarCombo({
                 </Grid>
               }
               
+              {onCompareINI && !transferredMachine && 
+                <Grid item >
+                  <StyledTooltip title="Compare" placement="top" disableFocusListener tooltipcolor="#103996" color="#fff">
+                  <IconButton color="#fff" onClick={onCompareINI} 
+                    sx={{background:"#2065D1", borderRadius:1, height:'1.7em', p:'8.5px 14px',
+                          '&:hover': {
+                            background:"#103996", 
+                            color:"#fff"
+                          }
+                        }}>
+                    <Iconify color="#fff" sx={{ height: '24px', width: '24px'}} icon='iconamoon:compare-duotone' 
+                    />
+                  </IconButton>
+                </StyledTooltip>
+              </Grid>
+              }
+              
               {addButton && !transferredMachine 
               && !(( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly )) &&
                 <Grid item >
@@ -737,7 +755,7 @@ SearchBarCombo.propTypes = {
   onFilterStatus: PropTypes.func,
   filterPeriod: PropTypes.number,
   onFilterPeriod: PropTypes.func,
-  
+  onCompareINI: PropTypes.func,
 };
 
 export default SearchBarCombo;
