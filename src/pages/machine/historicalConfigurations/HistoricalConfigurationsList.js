@@ -23,7 +23,7 @@ import Scrollbar from '../../../components/scrollbar';
 // sections
 import HistoricalConfigurationsTableRow from './HistoricalConfigurationsTableRow';
 import HistoricalConfigurationsListTableToolbar from './HistoricalConfigurationsListTableToolbar';
-import { getHistoricalConfigurationRecords, ChangeRowsPerPage, ChangePage, setFilterBy } from '../../../redux/slices/products/historicalConfiguration';
+import { getHistoricalConfigurationRecords, ChangeRowsPerPage, ChangePage, setFilterBy, setSelectedINIs } from '../../../redux/slices/products/historicalConfiguration';
 import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../../components/ListTableTools/TableCard';
 import Iconify from '../../../components/iconify';
@@ -34,7 +34,7 @@ import MachineTabContainer from '../util/MachineTabContainer';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  // { id: 'checkboxes', label: ' ', align: 'left' },
+  { id: 'checkboxes', label: ' ', align: 'left' },
   { id: 'backupid', label: 'Backup Id', align: 'left' },
   { id: 'backupDate', label: 'Backup Date', align: 'center' },
   { id: 'isManufacture', label: 'Manufacture', align: 'center' },
@@ -136,7 +136,18 @@ export default function HistoricalConfigurationsList() {
     setFilterName('');
   };
 
-  const getCompareInis = async (id1, id2) => navigate(PATH_MACHINE.machines.ini.compare(machineId, id1, id2))
+  const handleCompareINIs = async () => {
+    await dispatch(setSelectedINIs(selected));
+    await navigate(PATH_MACHINE.machines.ini.compare(machineId))
+  }
+
+  const handleSelectRow = (row) => {
+    if (selected.includes(row) || selected.length < 2) {
+      onSelectRow(row);
+    } else {
+      setOpenConfirm(true);
+    }
+  };
 
   return (
     <Container maxWidth={false} >
@@ -149,6 +160,7 @@ export default function HistoricalConfigurationsList() {
             onFilterStatus={handleFilterStatus}
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
+            onCompareINI={dataFiltered.length >0? handleCompareINIs:null}
           />
 
           {!isNotFound && <TablePaginationCustom
@@ -188,12 +200,7 @@ export default function HistoricalConfigurationsList() {
                     headLabel={TABLE_HEAD}
                     onSort={onSort}
                     numSelected={selected.length}
-                    isCompareIni
-                    compareIniOnClick={ selected?.length === 2 ? () => getCompareInis(selected[0], selected[1]) : undefined } 
-                    onSelectAllRows={(checked) =>
-                      onSelectAllRows( checked,
-                        selected.length > 1 ? [] : tableData.slice(0, 2).map((row) => row._id)
-                      )}
+                    
                   />
                   
                 <TableBody>
@@ -207,7 +214,7 @@ export default function HistoricalConfigurationsList() {
                           onViewRow={() => handleViewRow(row._id)}
                           selected={selected.includes(row._id)}
                           selectedLength={selected.length}
-                          onSelectRow={ ()=>  selected.length < 2 || selected.find((el) => el === row._id) ? onSelectRow(row._id) : setOpenConfirm(true) }
+                          onSelectRow={() => handleSelectRow(row._id)}
                           style={index % 2 ? { background: 'red' } : { background: 'green' }}
                         />
                       ) : (
@@ -231,8 +238,8 @@ export default function HistoricalConfigurationsList() {
         <ConfirmDialog
             open={openConfirm}
             onClose={ () => setOpenConfirm(false) }
-            title="Compare Two INI's"
-            content="Please select two INI's  only!"
+            title="Compare maximum 2 INI's"
+            content="Please select 2 INI's  only!"
             SubButton="Close"
           />
     </Container>
