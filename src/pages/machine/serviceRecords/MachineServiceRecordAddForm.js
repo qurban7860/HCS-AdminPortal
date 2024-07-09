@@ -9,7 +9,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import download from 'downloadjs';
 import { PATH_MACHINE } from '../../../routes/paths';
 // slice
-import { addMachineServiceRecord, deleteFile, downloadFile, setAddFileDialog } from '../../../redux/slices/products/machineServiceRecord';
+import { addMachineServiceRecord, deleteFile, downloadFile, setAddFileDialog, permanentDeleteMachineServiceRecord } from '../../../redux/slices/products/machineServiceRecord';
 import { getActiveServiceRecordConfigsForRecords, getServiceRecordConfig, resetServiceRecordConfig } from '../../../redux/slices/products/serviceRecordConfig';
 import { getActiveContacts } from '../../../redux/slices/customer/contact';
 // components
@@ -47,6 +47,7 @@ function MachineServiceRecordAddForm() {
   const { activeSecurityUsers, securityUser } = useSelector((state) => state.user);
   const { activeContacts } = useSelector((state) => state.contact);
   const { activeServiceRecordConfigsForRecords, serviceRecordConfig, recordTypes, isLoadingCheckItems } = useSelector((state) => state.serviceRecordConfig);
+  const { machineServiceRecord } = useSelector((state) => state.machineServiceRecord);
 
   const [ activeServiceRecordConfigs, setActiveServiceRecordConfigs ] = useState([]);
   const [ checkItemLists, setCheckItemLists ] = useState([]);
@@ -219,7 +220,10 @@ function MachineServiceRecordAddForm() {
     }
   };
   
-  const toggleCancel = () => navigate(PATH_MACHINE.machines.serviceRecords.root(machineId));
+  const toggleCancel = async () =>{
+    await dispatch(permanentDeleteMachineServiceRecord(machineId, machineServiceRecord?._id ))
+    navigate(PATH_MACHINE.machines.serviceRecords.root(machineId));
+  } 
 
   const handleChangeCheckItemListValue = (index, childIndex, checkItemValue) => {
       const updatedCheckParams = [...checkItemLists];
@@ -520,7 +524,7 @@ function MachineServiceRecordAddForm() {
                   <Grid container display="flex">
                     <RHFSwitch name="isActive" label="Active"/>
                   </Grid>
-                  <AddFormButtons isDisabled={docRecordType === null} isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+                  <AddFormButtons isDisabled={docRecordType === null} isSubmitting={isSubmitting} saveButtonName="Publish" saveAsDraft={toggleCancel} toggleCancel={toggleCancel} cancelButtonName="Discard" />
               </Stack>
             </Card>
           </Grid>

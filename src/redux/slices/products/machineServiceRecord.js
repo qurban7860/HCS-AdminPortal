@@ -370,6 +370,19 @@ export function deleteMachineServiceRecord(machineId, id) {
   };
 }
 
+export function permanentDeleteMachineServiceRecord(machineId, id) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.delete(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}`);
+      dispatch(slice.actions.setResponseMessage(response.data));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
 // --------------------------------------------------------------------------
 
 export function addMachineServiceRecord(machineId,params) {
