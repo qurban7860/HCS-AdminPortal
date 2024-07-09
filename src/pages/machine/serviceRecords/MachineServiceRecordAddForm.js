@@ -6,9 +6,10 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Container, Box, Card, Grid, Stack, Skeleton } from '@mui/material';
 // routes
 import { useNavigate, useParams } from 'react-router-dom';
+import download from 'downloadjs';
 import { PATH_MACHINE } from '../../../routes/paths';
 // slice
-import { addMachineServiceRecord } from '../../../redux/slices/products/machineServiceRecord';
+import { addMachineServiceRecord, deleteFile, downloadFile, setAddFileDialog } from '../../../redux/slices/products/machineServiceRecord';
 import { getActiveServiceRecordConfigsForRecords, getServiceRecordConfig, resetServiceRecordConfig } from '../../../redux/slices/products/serviceRecordConfig';
 import { getActiveContacts } from '../../../redux/slices/customer/contact';
 // components
@@ -28,6 +29,9 @@ import CollapsibleCheckedItemInputRow from './CollapsibleCheckedItemInputRow';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
 import { useAuthContext } from '../../../auth/useAuthContext';
 import MachineTabContainer from '../util/MachineTabContainer';
+import { DocumentGalleryItem } from '../../../components/gallery/DocumentGalleryItem';
+import { ThumbnailDocButton } from '../../../components/Thumbnails';
+import DialogServiceRecordAddFile from '../../../components/Dialog/DialogServiceRecordAddFile';
 
 // ----------------------------------------------------------------------
 
@@ -69,6 +73,7 @@ function MachineServiceRecordAddForm() {
   const defaultValues = useMemo(
     () => {
       const initialValues = {
+      serviceId: '',
       docRecordType:                null,
       serviceRecordConfiguration:   null,
       serviceDate:                  new Date(),
@@ -112,7 +117,7 @@ function MachineServiceRecordAddForm() {
     formState: { isSubmitting },
   } = methods;
 
-  const { files, decoilers, operators, serviceRecordConfiguration, docRecordType } = watch()
+  const { serviceId, files, decoilers, operators, serviceRecordConfiguration, docRecordType } = watch()
 
   const handleDropMultiFile = useCallback(
     async (acceptedFiles) => {
@@ -297,8 +302,83 @@ function MachineServiceRecordAddForm() {
       comments
     };
     updatedCheckParams[index] = updatedParamObject;
-  setCheckItemLists(updatedCheckParams);
+    setCheckItemLists(updatedCheckParams);
   }
+
+  // const [files, setFiles] = useState([]);
+
+  const regEx = /^[^2]*/;
+  const [selectedImage, setSelectedImage] = useState(-1);
+  const [slides, setSlides] = useState([]);
+
+  const handleAddFileDialog = ()=>{
+    dispatch(setAddFileDialog(true));
+  }
+
+  const handleOpenLightbox = async (_index) => {
+    setSelectedImage(_index);
+    const image = slides[_index];
+
+    if(!image?.isLoaded && image?.fileType?.startsWith('image')){
+      try {
+        const response = await dispatch(downloadFile(machineId, serviceId, image?._id));
+        if (regEx.test(response.status)) {
+          // Update the image property in the imagesLightbox array
+          const updatedSlides = [
+            ...slides.slice(0, _index), // copies slides before the updated slide
+            {
+              ...slides[_index],
+              src: `data:image/png;base64, ${response.data}`,
+              isLoaded: true,
+            },
+            ...slides.slice(_index + 1), // copies slides after the updated slide
+          ];
+
+          // Update the state with the new array
+          setSlides(updatedSlides);
+        }
+      } catch (error) {
+        console.error('Error loading full file:', error);
+      }
+    }
+  };
+
+  const handleCloseLightbox = () => {
+    setSelectedImage(-1);
+  };
+
+  const handleDeleteFile = async (fileId) => {
+    try {
+      await dispatch(deleteFile(machineId, serviceId, fileId));
+      // await dispatch(getMachineServiceRecord(serviceId))
+      enqueueSnackbar('File Archived successfully!');
+    } catch (err) {
+      console.log(err);
+      enqueueSnackbar('File Deletion failed!', { variant: `error` });
+    }
+  };
+
+  const handleDownloadFile = (fileId, name, extension) => {
+    dispatch(downloadFile(machineId, serviceId, fileId))
+      .then((res) => {
+        if (regEx.test(res.status)) {
+          download(atob(res.data), `${name}.${extension}`, { type: extension });
+          enqueueSnackbar(res.statusText);
+        } else {
+          enqueueSnackbar(res.statusText, { variant: `error` });
+        }
+      })
+      .catch((err) => {
+        if (err.Message) {
+          enqueueSnackbar(err.Message, { variant: `error` });
+        } else if (err.message) {
+          enqueueSnackbar(err.message, { variant: `error` });
+        } else {
+          enqueueSnackbar('Something went wrong!', { variant: `error` });
+        }
+      });
+  };
+
 
   return (
     <Container maxWidth={false} >
@@ -412,7 +492,18 @@ function MachineServiceRecordAddForm() {
                       />
 
                     <RHFTextField name="operatorNotes" label="Operator Notes" minRows={3} multiline/> 
-                    <RHFUpload multiple  thumbnail name="files" imagesOnly
+                    {files?.map((file, _index) => (
+                      <DocumentGalleryItem isLoading={!files} key={file?.id} image={file} 
+                        onOpenLightbox={()=> handleOpenLightbox(_index)}
+                        onDownloadFile={()=> handleDownloadFile(file._id, file?.name, file?.extension)}
+                        onDeleteFile={()=> handleDeleteFile(file._id)}
+                        toolbar
+                      />
+                    ))}
+
+                    <ThumbnailDocButton onClick={handleAddFileDialog}/>
+
+                    {/* <RHFUpload multiple  thumbnail name="files" imagesOnly
                       onDrop={handleDropMultiFile}
                       onRemove={(inputFile) =>
                         files.length > 1 ?
@@ -424,7 +515,8 @@ function MachineServiceRecordAddForm() {
                         ): setValue('files', '', { shouldValidate: true })
                       }
                       onRemoveAll={() => setValue('files', '', { shouldValidate: true })}
-                    />
+                    /> */}
+
                   <Grid container display="flex">
                     <RHFSwitch name="isActive" label="Active"/>
                   </Grid>
@@ -434,6 +526,7 @@ function MachineServiceRecordAddForm() {
           </Grid>
         </Grid>
       </FormProvider>
+      <DialogServiceRecordAddFile />
     </Container>
   );
 }
