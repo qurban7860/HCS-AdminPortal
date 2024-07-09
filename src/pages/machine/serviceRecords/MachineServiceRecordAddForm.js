@@ -359,20 +359,6 @@ function MachineServiceRecordAddForm() {
                       renderOption={(props, option) => ( <li {...props} key={option?._id}>{option.name || ''}</li>)}
                     />
                     <RHFTextField name="technicianNotes" label="Technician Notes" minRows={3} multiline/> 
-                    <RHFUpload multiple  thumbnail name="files" imagesOnly
-                      onDrop={handleDropMultiFile}
-                      onRemove={(inputFile) =>
-                        files.length > 1 ?
-                        setValue(
-                          'files',
-                          files &&
-                            files?.filter((file) => file !== inputFile),
-                          { shouldValidate: true }
-                        ): setValue('files', '', { shouldValidate: true })
-                      }
-                      onRemoveAll={() => setValue('files', '', { shouldValidate: true })}
-                    />
-                    
                     <RHFTextField name="textBeforeCheckItems" label="Text Before Check Items" minRows={3} multiline/> 
                     
                     {checkItemLists?.length > 0 && <FormLabel content={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />}
@@ -426,7 +412,19 @@ function MachineServiceRecordAddForm() {
                       />
 
                     <RHFTextField name="operatorNotes" label="Operator Notes" minRows={3} multiline/> 
-
+                    <RHFUpload multiple  thumbnail name="files" imagesOnly
+                      onDrop={handleDropMultiFile}
+                      onRemove={(inputFile) =>
+                        files.length > 1 ?
+                        setValue(
+                          'files',
+                          files &&
+                            files?.filter((file) => file !== inputFile),
+                          { shouldValidate: true }
+                        ): setValue('files', '', { shouldValidate: true })
+                      }
+                      onRemoveAll={() => setValue('files', '', { shouldValidate: true })}
+                    />
                   <Grid container display="flex">
                     <RHFSwitch name="isActive" label="Active"/>
                   </Grid>
