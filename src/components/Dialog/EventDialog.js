@@ -88,6 +88,12 @@ function EventDialog({
     const { activeCustomerMachines } = useSelector( (state) => state.machine );
     const [openConfirm, setOpenConfirm] = useState(false);
     const dialogRef = useRef(null)
+
+    const Default_Notify_Contacts = JSON.parse( localStorage.getItem('configurations'))?.find( ( c )=> c?.name === 'Default_Notify_Contacts');
+  
+
+    console.log("Default_Notify_Contacts::::",Default_Notify_Contacts.value)
+
     const EventSchema = Yup.object().shape({
       date: Yup.date().nullable().label('Event Date').typeError('End Time should be a valid Date').required(),
       end_date: Yup.date().nullable().label('Event Date').typeError('End Time should be a valid Date').required()
