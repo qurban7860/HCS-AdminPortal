@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Container, Box, Card, Grid, Stack, Skeleton } from '@mui/material';
+import { Container, Card, Grid, Stack } from '@mui/material';
 // routes
 import { useNavigate, useParams } from 'react-router-dom';
 import download from 'downloadjs';
@@ -14,24 +14,17 @@ import { getActiveServiceRecordConfigsForRecords, getServiceRecordConfig, resetS
 import { getActiveContacts } from '../../../redux/slices/customer/contact';
 // components
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
-import { FORMLABELS } from '../../../constants/default-constants';
 import { useSnackbar } from '../../../components/snackbar';
 import { MachineServiceRecordSchema } from '../../schemas/machine';
-import FormProvider, {
-  RHFTextField,
-  RHFAutocomplete,
-  RHFSwitch,
-  RHFDatePicker,
-  RHFUpload
-} from '../../../components/hook-form';
+import FormProvider from '../../../components/hook-form';
 import { getActiveSecurityUsers, getSecurityUser } from '../../../redux/slices/securityUser/securityUser';
-import CollapsibleCheckedItemInputRow from './CollapsibleCheckedItemInputRow';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
 import { useAuthContext } from '../../../auth/useAuthContext';
 import MachineTabContainer from '../util/MachineTabContainer';
-import { DocumentGalleryItem } from '../../../components/gallery/DocumentGalleryItem';
-import { ThumbnailDocButton } from '../../../components/Thumbnails';
 import DialogServiceRecordAddFile from '../../../components/Dialog/DialogServiceRecordAddFile';
+import MachineServiceRecordsFirstStep from './MachineServiceRecordsFirstStep';
+import MachineServiceRecordsSecondStep from './MachineServiceRecordsSecondStep';
+import MachineServiceRecordsThirdStep from './MachineServiceRecordsThirdStep';
 
 // ----------------------------------------------------------------------
 
@@ -45,8 +38,7 @@ function MachineServiceRecordAddForm() {
 
   const { machine } = useSelector((state) => state.machine)
   const { activeSecurityUsers, securityUser } = useSelector((state) => state.user);
-  const { activeContacts } = useSelector((state) => state.contact);
-  const { activeServiceRecordConfigsForRecords, serviceRecordConfig, recordTypes, isLoadingCheckItems } = useSelector((state) => state.serviceRecordConfig);
+  const { activeServiceRecordConfigsForRecords, serviceRecordConfig } = useSelector((state) => state.serviceRecordConfig);
   const { machineServiceRecord } = useSelector((state) => state.machineServiceRecord);
 
   const [ activeServiceRecordConfigs, setActiveServiceRecordConfigs ] = useState([]);
@@ -123,12 +115,10 @@ function MachineServiceRecordAddForm() {
   const handleDropMultiFile = useCallback(
     async (acceptedFiles) => {
       const docFiles = files || [];
-      
       const newFiles = acceptedFiles.map((file, index) => 
           Object.assign(file, {
             preview: URL.createObjectURL(file)
           })
-        
       );
       setValue('files', [...docFiles, ...newFiles], { shouldValidate: true });
     },
@@ -226,103 +216,61 @@ function MachineServiceRecordAddForm() {
   } 
 
   const handleChangeCheckItemListValue = (index, childIndex, checkItemValue) => {
-      const updatedCheckParams = [...checkItemLists];
-      const updatedParamObject = { 
-        ...updatedCheckParams[index],
-        checkItems: [...updatedCheckParams[index].checkItems],
-      };
-      updatedParamObject.checkItems[childIndex] = {
-        ...updatedParamObject.checkItems[childIndex],
-        checkItemValue,
-      };
+      const updatedCheckParams = [ ...checkItemLists ];
+      const updatedParamObject = { ...updatedCheckParams[index], checkItems: [...updatedCheckParams[index].checkItems] };
+      updatedParamObject.checkItems[childIndex] = { ...updatedParamObject.checkItems[childIndex], checkItemValue };
       updatedCheckParams[index] = updatedParamObject;
   setCheckItemLists(updatedCheckParams);
   }
 
   const handleChangeCheckItemListDate = (index, childIndex, date) => {
     const updatedCheckParams = [...checkItemLists];
-    const updatedParamObject = { 
-      ...updatedCheckParams[index],
-      checkItems: [...updatedCheckParams[index].checkItems],
-    };
-    updatedParamObject.checkItems[childIndex] = {
-      ...updatedParamObject.checkItems[childIndex],
-      checkItemValue: date,
-    };
+    const updatedParamObject = { ...updatedCheckParams[index], checkItems: [...updatedCheckParams[index].checkItems] };
+    updatedParamObject.checkItems[childIndex] = { ...updatedParamObject.checkItems[childIndex], checkItemValue: date };
     updatedCheckParams[index] = updatedParamObject;
   setCheckItemLists(updatedCheckParams);
   }
   
   const handleChangeCheckItemListCheckBoxValue = (index, childIndex) => {
       const updatedCheckParams = [...checkItemLists];
-        const updatedParamObject = { 
-          ...updatedCheckParams[index],
-          checkItems: [ ...updatedCheckParams[index].checkItems],
-        };
-        updatedParamObject.checkItems[childIndex] = {
-          ...updatedParamObject.checkItems[childIndex],
-          checkItemValue: !updatedParamObject.checkItems[childIndex].checkItemValue,
-        };
+        const updatedParamObject = { ...updatedCheckParams[index], checkItems: [ ...updatedCheckParams[index].checkItems] };
+        updatedParamObject.checkItems[childIndex] = { ...updatedParamObject.checkItems[childIndex], checkItemValue: !updatedParamObject.checkItems[childIndex].checkItemValue };
         updatedCheckParams[index] = updatedParamObject;
       setCheckItemLists(updatedCheckParams);
   }
 
   const handleChangeCheckItemListChecked = ( index, childIndex ) =>{
     const updatedCheckParams = [...checkItemLists];
-    const updatedParamObject = { 
-      ...updatedCheckParams[index],
-      checkItems: [ ...updatedCheckParams[index].checkItems],
-    };
-    updatedParamObject.checkItems[childIndex] = {
-      ...updatedParamObject.checkItems[childIndex],
-      checked: !updatedParamObject.checkItems[childIndex].checked,
-    };
+    const updatedParamObject = { ...updatedCheckParams[index], checkItems: [ ...updatedCheckParams[index].checkItems] };
+    updatedParamObject.checkItems[childIndex] = { ...updatedParamObject.checkItems[childIndex], checked: !updatedParamObject.checkItems[childIndex].checked };
     updatedCheckParams[index] = updatedParamObject;
   setCheckItemLists(updatedCheckParams);
   }
 
   const handleChangeCheckItemListStatus = (index, childIndex, status) => {
     const updatedCheckParams = [...checkItemLists];
-    const updatedParamObject = { 
-      ...updatedCheckParams[index],
-      checkItems: [ ...updatedCheckParams[index].checkItems ],
-    };
-    updatedParamObject.checkItems[childIndex] = {
-      ...updatedParamObject.checkItems[childIndex],
-      checkItemValue: status 
-    };
+    const updatedParamObject = { ...updatedCheckParams[index], checkItems: [ ...updatedCheckParams[index].checkItems ] };
+    updatedParamObject.checkItems[childIndex] = { ...updatedParamObject.checkItems[childIndex], checkItemValue: status };
     updatedCheckParams[index] = updatedParamObject;
   setCheckItemLists(updatedCheckParams);
   }
 
   const handleChangeCheckItemListComment = (index, childIndex, comments) => {
     const updatedCheckParams = [...checkItemLists];
-    const updatedParamObject = { 
-      ...updatedCheckParams[index],
-      checkItems: [...updatedCheckParams[index].checkItems ],
-    };
-    updatedParamObject.checkItems[childIndex] = {
-      ...updatedParamObject.checkItems[childIndex],
-      comments
-    };
+    const updatedParamObject = { ...updatedCheckParams[index], checkItems: [...updatedCheckParams[index].checkItems ] };
+    updatedParamObject.checkItems[childIndex] = { ...updatedParamObject.checkItems[childIndex], comments };
     updatedCheckParams[index] = updatedParamObject;
     setCheckItemLists(updatedCheckParams);
   }
 
-  // const [files, setFiles] = useState([]);
 
   const regEx = /^[^2]*/;
-  const [selectedImage, setSelectedImage] = useState(-1);
   const [slides, setSlides] = useState([]);
 
-  const handleAddFileDialog = ()=>{
-    dispatch(setAddFileDialog(true));
-  }
+  const handleAddFileDialog = ()=> dispatch(setAddFileDialog(true));
 
   const handleOpenLightbox = async (_index) => {
-    setSelectedImage(_index);
     const image = slides[_index];
-
     if(!image?.isLoaded && image?.fileType?.startsWith('image')){
       try {
         const response = await dispatch(downloadFile(machineId, serviceId, image?._id));
@@ -337,7 +285,6 @@ function MachineServiceRecordAddForm() {
             },
             ...slides.slice(_index + 1), // copies slides after the updated slide
           ];
-
           // Update the state with the new array
           setSlides(updatedSlides);
         }
@@ -347,14 +294,9 @@ function MachineServiceRecordAddForm() {
     }
   };
 
-  const handleCloseLightbox = () => {
-    setSelectedImage(-1);
-  };
-
   const handleDeleteFile = async (fileId) => {
     try {
       await dispatch(deleteFile(machineId, serviceId, fileId));
-      // await dispatch(getMachineServiceRecord(serviceId))
       enqueueSnackbar('File Archived successfully!');
     } catch (err) {
       console.log(err);
@@ -373,7 +315,7 @@ function MachineServiceRecordAddForm() {
         }
       })
       .catch((err) => {
-        if (err.Message) {
+        if ( err.Message) {
           enqueueSnackbar(err.Message, { variant: `error` });
         } else if (err.message) {
           enqueueSnackbar(err.message, { variant: `error` });
@@ -394,136 +336,32 @@ function MachineServiceRecordAddForm() {
               <Stack spacing={2}>
                 <FormLabel content="New Service Record" />
 
-                <Box
-                    rowGap={2}
-                    columnGap={2}
-                    display="grid"
-                    gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
-                  >
-                  <RHFAutocomplete 
-                    name="docRecordType"
-                    label="Document Type*"
-                    options={recordTypes}
-                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                    getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                    renderOption={(props, option) => (
-                      <li {...props} key={option?._id}>{`${option.name ? option.name : ''}`}</li>
-                    )}
+                  <MachineServiceRecordsFirstStep 
+                    activeServiceRecordConfigs={activeServiceRecordConfigs} 
+                    securityUsers={securityUsers} 
+                    onChange={handleParamChange}  
                   />
 
-                  <RHFAutocomplete
-                    name="serviceRecordConfiguration"
-                    label="Service Record Configuration*"
-                    options={activeServiceRecordConfigs}
-                    getOptionLabel={(option) => `${option?.docTitle || ''} ${option?.docTitle ? '-' : '' } ${option.recordType || ''} ${option?.docVersionNo ? '- v' : '' }${option?.docVersionNo || ''}`}
-                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                    renderOption={(props, option) => (
-                    <li {...props} key={option?._id}>{`${option?.docTitle || ''} ${option?.docTitle ? '-' : '' } ${option.recordType || ''} ${option?.docVersionNo ? '- v' : '' }${option?.docVersionNo || ''}`}</li>
-                    )}
-                    onChange={handleParamChange}
+                  <MachineServiceRecordsSecondStep 
+                    checkItemLists={checkItemLists}
+                    handleChangeCheckItemListDate={handleChangeCheckItemListDate}
+                    handleChangeCheckItemListValue={handleChangeCheckItemListValue}
+                    handleChangeCheckItemListStatus={handleChangeCheckItemListStatus}
+                    handleChangeCheckItemListChecked={handleChangeCheckItemListChecked}
+                    handleChangeCheckItemListCheckBoxValue={handleChangeCheckItemListCheckBoxValue}
+                    handleChangeCheckItemListComment={handleChangeCheckItemListComment}
                   />
-                </Box>       
-                <Box
-                    rowGap={2}
-                    columnGap={2}
-                    display="grid"
-                    gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
-                  >
 
-                  <RHFDatePicker inputFormat='dd/MM/yyyy' name="serviceDate" label="Service Date" />
-                  <RHFTextField name="versionNo" label="Version No" disabled/>
-                  
-                  </Box>
-                    <RHFAutocomplete
-                      name="technician"
-                      label="Technician"
-                      options={ securityUsers }
-                      getOptionLabel={(option) => option?.name || ''}
-                      isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                      renderOption={(props, option) => ( <li {...props} key={option?._id}>{option.name || ''}</li>)}
-                    />
-                    <RHFTextField name="technicianNotes" label="Technician Notes" minRows={3} multiline/> 
-                    <RHFTextField name="textBeforeCheckItems" label="Text Before Check Items" minRows={3} multiline/> 
-                    
-                    {checkItemLists?.length > 0 && <FormLabel content={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />}
+                  <MachineServiceRecordsThirdStep 
+                    serviceRecordConfig={serviceRecordConfig}
+                    docRecordType={docRecordType}
+                    files={files}
+                    handleOpenLightbox={handleOpenLightbox}
+                    handleDownloadFile={handleDownloadFile}
+                    handleDeleteFile={handleDeleteFile}
+                    handleAddFileDialog={handleAddFileDialog}
+                  />
 
-                    {isLoadingCheckItems ? 
-                    <Box sx={{ width: '100%',mt:1 }}>
-                      <Skeleton />
-                      <Skeleton animation="wave" />
-                      <Skeleton animation="wave" />
-                      <Skeleton animation="wave" />
-                      <Skeleton animation="wave" />
-                      <Skeleton animation="wave" />
-                      <Skeleton animation={false} />
-                    </Box>
-                    :<>
-                    {checkItemLists?.map((row, index) =>
-                          ( typeof row?.checkItems?.length === 'number' &&
-                            <CollapsibleCheckedItemInputRow 
-                              key={index}
-                              row={row} 
-                              index={index} 
-                              checkItemLists={checkItemLists} 
-                              handleChangeCheckItemListDate={handleChangeCheckItemListDate}
-                              handleChangeCheckItemListValue={handleChangeCheckItemListValue}
-                              handleChangeCheckItemListStatus={handleChangeCheckItemListStatus}
-                              handleChangeCheckItemListChecked={handleChangeCheckItemListChecked}
-                              handleChangeCheckItemListCheckBoxValue={handleChangeCheckItemListCheckBoxValue}
-                              handleChangeCheckItemListComment={handleChangeCheckItemListComment}
-                              machineId
-                              serviceId
-                            />
-                          ))}
-                      </>
-                    }
-
-                    <RHFTextField name="textAfterCheckItems" label="Text After Check Items" minRows={3} multiline/> 
-                    { serviceRecordConfig?.enableNote && <RHFTextField name="serviceNote" label={`${docRecordType?.name?.charAt(0).toUpperCase()||''}${docRecordType?.name?.slice(1).toLowerCase()||''} Note`} minRows={3} multiline/> }
-                    { serviceRecordConfig?.enableMaintenanceRecommendations && <RHFTextField name="recommendationNote" label="Recommendation Note" minRows={3} multiline/> }
-                    { serviceRecordConfig?.enableSuggestedSpares && <RHFTextField name="suggestedSpares" label="Suggested Spares" minRows={3} multiline/> }
-                    <RHFTextField name="internalNote" label="Internal Note" minRows={3} multiline/> 
-
-                      <RHFAutocomplete 
-                        multiple
-                        disableCloseOnSelect
-                        filterSelectedOptions
-                        name="operators" 
-                        label="Operators"
-                        options={activeContacts}
-                        getOptionLabel={(option) => `${option?.firstName ||  ''} ${option.lastName || ''}`}
-                        isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                      />
-
-                    <RHFTextField name="operatorNotes" label="Operator Notes" minRows={3} multiline/> 
-                    {files?.map((file, _index) => (
-                      <DocumentGalleryItem isLoading={!files} key={file?.id} image={file} 
-                        onOpenLightbox={()=> handleOpenLightbox(_index)}
-                        onDownloadFile={()=> handleDownloadFile(file._id, file?.name, file?.extension)}
-                        onDeleteFile={()=> handleDeleteFile(file._id)}
-                        toolbar
-                      />
-                    ))}
-
-                    <ThumbnailDocButton onClick={handleAddFileDialog}/>
-
-                    {/* <RHFUpload multiple  thumbnail name="files" imagesOnly
-                      onDrop={handleDropMultiFile}
-                      onRemove={(inputFile) =>
-                        files.length > 1 ?
-                        setValue(
-                          'files',
-                          files &&
-                            files?.filter((file) => file !== inputFile),
-                          { shouldValidate: true }
-                        ): setValue('files', '', { shouldValidate: true })
-                      }
-                      onRemoveAll={() => setValue('files', '', { shouldValidate: true })}
-                    /> */}
-
-                  <Grid container display="flex">
-                    <RHFSwitch name="isActive" label="Active"/>
-                  </Grid>
                   <AddFormButtons isDisabled={docRecordType === null} isSubmitting={isSubmitting} saveButtonName="Publish" saveAsDraft={toggleCancel} toggleCancel={toggleCancel} cancelButtonName="Discard" />
               </Stack>
             </Card>
