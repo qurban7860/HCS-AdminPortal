@@ -14,6 +14,7 @@ AddFormButtons.propTypes = {
   saveAsDraftButtonName: PropTypes.string,
   saveButtonName: PropTypes.string,
   istrigger: PropTypes.bool,
+  handleSave: PropTypes.func,
   saveTransferButtonName: PropTypes.string,
   cancelButtonName: PropTypes.string,
   toggleCancel: PropTypes.func,
@@ -26,6 +27,9 @@ AddFormButtons.propTypes = {
   customerPage: PropTypes.bool,
   drawingPage: PropTypes.bool,
   handleSubmit: PropTypes.func,
+  handleBack: PropTypes.func,
+  backButtonName: PropTypes.string,
+  isDisabledBackButton: PropTypes.bool,
 };
 
 export default function AddFormButtons({
@@ -35,6 +39,7 @@ export default function AddFormButtons({
   saveButtonName,
   saveTransferButtonName,
   istrigger,
+  handleSave,
   toggleCancel,
   isSubmitting,
   cancelButtonName,
@@ -46,6 +51,9 @@ export default function AddFormButtons({
   customerPage,
   drawingPage,
   handleSubmit,
+  handleBack,
+  backButtonName,
+  isDisabledBackButton,
 }) {
   const navigate = useNavigate()
   const [openConfirm, setOpenConfirm] = useState(false);
@@ -96,6 +104,7 @@ export default function AddFormButtons({
       <Stack justifyContent="flex-end" direction="row" spacing={2}>
         <Grid item lg={saveAsDraft ? 6 : 4} md={saveAsDraft ? 8 : 4} sm={saveAsDraft ? 10 : 6} xs={12}>
           <Stack justifyContent="flex-end" direction="row" spacing={2}>
+          
           {saveAsDraft && <Grid item sm={6}>
               <LoadingButton
                 sx={{textTransform: 'none'}}
@@ -110,6 +119,13 @@ export default function AddFormButtons({
                 {saveAsDraftButtonName || BUTTONS.SAVE_AS_DRAFT}
               </LoadingButton>
             </Grid>}
+
+            {handleBack && <Grid item sm={6}>
+              <Button onClick={handleBack} disabled={ isDisabledBackButton } fullWidth size="large" variant="outlined" >
+                {backButtonName || BUTTONS.BACK}
+              </Button>
+            </Grid>}
+            
             {!saveTransferButtonName && <Grid item sm={6}>
               <LoadingButton
                 type="submit"
@@ -117,11 +133,13 @@ export default function AddFormButtons({
                 size="large"
                 fullWidth
                 disabled={isDisabled}
+                onClick={handleSave}
                 loading={!isDraft && isSubmitting}
               >
                 {saveButtonName || BUTTONS.SAVE}
               </LoadingButton>
             </Grid>}
+
             {saveTransferButtonName && <Grid item sm={6}>
               <Button onClick={ handleOpenTransferConfirm } size='large'  
                 fullWidth

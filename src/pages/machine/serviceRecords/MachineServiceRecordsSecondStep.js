@@ -31,9 +31,7 @@ function MachineServiceRecordsSecondStep( {
 
   return (
     <>
-
-
-<RHFTextField name="textBeforeCheckItems" label="Text Before Check Items" minRows={3} multiline/> 
+                  <RHFTextField name="textBeforeCheckItems" label="Text Before Check Items" minRows={3} multiline/> 
                     
                     {checkItemLists?.length > 0 && <FormLabel content={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />}
 

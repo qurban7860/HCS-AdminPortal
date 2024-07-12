@@ -144,8 +144,42 @@ export const CheckItemsSchema = Yup.object().shape({
   isActive: Yup.boolean(),
 })
 
+export const MachineServiceRecordPart1Schema = Yup.object().shape({
+  docRecordType: Yup.object().label('Document Type').nullable().required(),
+  serviceRecordConfiguration: Yup.object().label('Service Record Configuration').nullable().required(),
+  serviceDate: Yup.date()
+  .typeError('Date Should be Valid')
+  .max(new Date(), 'Service Date must be earlier')
+  .nullable()
+  .required()
+  .label('Service Date'),
+  technician: Yup.object().label('Technician').nullable(),
+  technicianNotes: Yup.string().max(5000).label('Technician Notes'),
+});
+
+export const MachineServiceRecordPart2Schema = Yup.object().shape({
+  textBeforeCheckItems: Yup.string().max(5000).label('Text Before Check Items'),
+  textAfterCheckItems: Yup.string().max(5000).label('Text After Check Items'),
+});
+
+export const MachineServiceRecordPart3Schema = Yup.object().shape({
+  serviceNote: Yup.string().max(5000).label('Service Note'),
+  maintenanceRecommendation: Yup.string().max(5000).label('Recommendation Note'),
+  internalNote: Yup.string().max(5000).label('Internal Note'),
+  suggestedSpares: Yup.string().max(5000).label('Suggested Spares'),
+  files: Yup.mixed()
+    .test(
+      'fileType',
+      'Only the following formats are accepted: .jpeg, .jpg, gif, .bmp, .webp, .pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx',
+      NotRequiredValidateFileType
+    ).nullable(true),
+  operator: Yup.object().label('Operator').nullable(),
+  operatorNotes: Yup.string().max(5000).label('Operator Notes'),
+  isActive: Yup.boolean(),
+});
+
 export const MachineServiceRecordSchema = Yup.object().shape({
-  recordType:Yup.object().label('Record Type').nullable(),
+  recordType:Yup.object().label('Record Type').nullable().required(),
   serviceRecordConfiguration: Yup.object().label('Service Record Configuration').nullable().required(),
   // serviceDate: Yup.date().label('Service Date').nullable().required,
   serviceDate: Yup.date()

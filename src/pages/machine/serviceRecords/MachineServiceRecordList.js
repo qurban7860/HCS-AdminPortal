@@ -38,6 +38,7 @@ import MachineTabContainer from '../util/MachineTabContainer';
 const TABLE_HEAD = [
   { id: 'serviceDate', label: 'Service Date', align: 'left' },
   { id: 'serviceRecordUid', label: 'Service ID', align: 'left' },
+  { id: 'status', label: 'Status', align: 'left' },
   { id: 'serviceRecordConfig.docTitle', label: 'Service Configuration', align: 'left' },
   { id: 'versionNo', visibility: 'xs5', label: 'Version', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },

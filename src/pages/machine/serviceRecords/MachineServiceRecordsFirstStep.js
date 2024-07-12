@@ -16,7 +16,6 @@ function MachineServiceRecordsFirstStep( { activeServiceRecordConfigs, securityU
 
   return (
     <>
-
                 <Box
                     rowGap={2}
                     columnGap={2}

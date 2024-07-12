@@ -353,13 +353,14 @@ export function getMachineServiceRecord(machineId, id) {
   };
 }
 
-export function deleteMachineServiceRecord(machineId, id) {
+export function deleteMachineServiceRecord(machineId, id, status ) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}` , 
       {
           isArchived: true, 
+          status 
       });
       dispatch(slice.actions.setResponseMessage(response.data));
     } catch (error) {
@@ -370,22 +371,9 @@ export function deleteMachineServiceRecord(machineId, id) {
   };
 }
 
-export function permanentDeleteMachineServiceRecord(machineId, id) {
-  return async (dispatch) => {
-    dispatch(slice.actions.startLoading());
-    try {
-      const response = await axios.delete(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}`);
-      dispatch(slice.actions.setResponseMessage(response.data));
-    } catch (error) {
-      console.error(error);
-      dispatch(slice.actions.hasError(error.Message));
-      throw error;
-    }
-  };
-}
 // --------------------------------------------------------------------------
 
-export function addMachineServiceRecord(machineId,params) {
+export function addMachineServiceRecord(machineId, params) {
     return async (dispatch) => {
       dispatch(slice.actions.startLoading());
       try {
@@ -407,7 +395,7 @@ export function addMachineServiceRecord(machineId,params) {
           suggestedSpares:            params?.suggestedSpares,
           internalNote:               params.internalNote,
           operators:                  params?.operators?.map((ope)=> ope?._id) || [],
-          operatorNotes:              params.operatorNotes,
+          operatorNotes:              params?.operatorNotes || '',
           checkItemRecordValues:      params?.checkItemRecordValues || [],
           isActive:                   params?.isActive
         }
@@ -442,8 +430,10 @@ export function addMachineServiceRecord(machineId,params) {
         // }
         
         const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords`, data );
-        await dispatch(resetMachineServiceRecord());
-        dispatch(slice.actions.getMachineServiceRecordSuccess(response.data.MachineTool));
+        if(response?.data?.serviceRecord?._id ){
+          dispatch(getMachineServiceRecord(machineId, response?.data?.serviceRecord?._id ))
+        }
+
       } catch (error) {
         console.error(error);
         dispatch(slice.actions.hasError(error.Message));
@@ -462,7 +452,7 @@ export function updateMachineServiceRecord(machineId,id, params) {
       const data = {
         serviceRecordConfig:        params?.serviceRecordConfiguration,
         serviceDate:                params?.serviceDate,
-        versionNo:                  params?.versionNo,
+        versionNo:                  params?.versionNo ,
         customer:                   params?.customer || null,
         site:                       params?.site || null,
         machine:                    machineId,
@@ -475,17 +465,21 @@ export function updateMachineServiceRecord(machineId,id, params) {
         recommendationNote:         params?.recommendationNote,
         internalComments:           params?.internalComments,
         suggestedSpares:            params?.suggestedSpares,
-        internalNote:               params.internalNote,
+        internalNote:               params?.internalNote || '',
         operators:                  params?.operators,
-        operatorNotes:              params.operatorNotes,
+        operatorNotes:              params?.operatorNotes || '',
         checkItemRecordValues:      params?.checkItemRecordValues || [],
+        status:                     params?.status || 'DRAFT',
         serviceId:                  params?.serviceId,
+        update:                     params?.update,
         isActive:                   params?.isActive
       }
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}`,data);
-      dispatch(slice.actions.updateMachineServiceRecordSuccess());
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}`, data );
+      await dispatch(slice.actions.updateMachineServiceRecordSuccess());
+      if(params?.status?.toLocaleLowerCase() !== 'submitted' && machineId && id ){
+        dispatch(getMachineServiceRecord(machineId, id))
+      }
       return response?.data?.serviceRecord?._id;
-      // await dispatch(getMachineServiceRecord(machineId, response?.data?.serviceRecord?._id))
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));

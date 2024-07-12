@@ -12,6 +12,7 @@ import { PATH_MACHINE, PATH_CRM } from '../../../routes/paths';
 // redux
 import { deleteMachineServiceRecord,   
   getMachineServiceRecord, 
+  resetMachineServiceRecord,
   setSendEmailDialog,
   setPDFViewerDialog,
   setAddFileDialog,
@@ -61,11 +62,14 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
     }
     dispatch(setPDFViewerDialog(false))
     dispatch(setSendEmailDialog(false))
+    return ()=>{
+      dispatch(resetMachineServiceRecord());
+    }
   },[ dispatch, machineId, id ])
 
   const onDelete = async () => {
     try {
-      await dispatch(deleteMachineServiceRecord(machineId, id));
+      await dispatch(deleteMachineServiceRecord(machineId, id, machineServiceRecord?.status ));
       await enqueueSnackbar('Machine Service Record Archived Successfully!');
       await navigate(PATH_MACHINE.machines.serviceRecords.root(machineId))
     } catch (error) {

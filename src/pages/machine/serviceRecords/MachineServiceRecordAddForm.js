@@ -1,21 +1,21 @@
-import { useEffect, useMemo, useState, memo, useCallback } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useState, memo, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Container, Card, Grid, Stack } from '@mui/material';
+import { Container, Card, Grid, Stack, StepLabel, Step, Stepper, Box, StepContent, Button } from '@mui/material';
 // routes
 import { useNavigate, useParams } from 'react-router-dom';
 import download from 'downloadjs';
 import { PATH_MACHINE } from '../../../routes/paths';
 // slice
-import { addMachineServiceRecord, deleteFile, downloadFile, setAddFileDialog, permanentDeleteMachineServiceRecord } from '../../../redux/slices/products/machineServiceRecord';
+import { addMachineServiceRecord, updateMachineServiceRecord, resetMachineServiceRecord, deleteFile, downloadFile, setAddFileDialog, deleteMachineServiceRecord } from '../../../redux/slices/products/machineServiceRecord';
 import { getActiveServiceRecordConfigsForRecords, getServiceRecordConfig, resetServiceRecordConfig } from '../../../redux/slices/products/serviceRecordConfig';
 import { getActiveContacts } from '../../../redux/slices/customer/contact';
 // components
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 import { useSnackbar } from '../../../components/snackbar';
-import { MachineServiceRecordSchema } from '../../schemas/machine';
+import { MachineServiceRecordPart1Schema, MachineServiceRecordPart2Schema, MachineServiceRecordPart3Schema } from '../../schemas/machine';
 import FormProvider from '../../../components/hook-form';
 import { getActiveSecurityUsers, getSecurityUser } from '../../../redux/slices/securityUser/securityUser';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
@@ -25,6 +25,7 @@ import DialogServiceRecordAddFile from '../../../components/Dialog/DialogService
 import MachineServiceRecordsFirstStep from './MachineServiceRecordsFirstStep';
 import MachineServiceRecordsSecondStep from './MachineServiceRecordsSecondStep';
 import MachineServiceRecordsThirdStep from './MachineServiceRecordsThirdStep';
+
 
 // ----------------------------------------------------------------------
 
@@ -44,15 +45,22 @@ function MachineServiceRecordAddForm() {
   const [ activeServiceRecordConfigs, setActiveServiceRecordConfigs ] = useState([]);
   const [ checkItemLists, setCheckItemLists ] = useState([]);
   const [ securityUsers, setSecurityUsers ] = useState([]);
+  const [ activeStep, setActiveStep ] = useState(0);
+  const [ isPublish, setIsPublish ] = useState(false);
+  const [ isDraft, setIsDraft ] = useState(false);
 
 
-  useEffect( ()=>{
+
+
+  useLayoutEffect( ()=>{
+    dispatch(resetMachineServiceRecord())
     dispatch(getActiveServiceRecordConfigsForRecords(machine?._id))
     // dispatch(resetActiveContacts())
     if(machine?.customer?._id) dispatch(getActiveContacts(machine?.customer?._id))
     dispatch(getActiveSecurityUsers({roleType:['TechnicalManager','Technician']}))
     if(userId) dispatch(getSecurityUser( userId ))
     dispatch(resetServiceRecordConfig())
+    
   },[dispatch, machine, userId ])
 
 
@@ -62,44 +70,47 @@ function MachineServiceRecordAddForm() {
     serialNo: decoiler?.connectedMachine?.serialNo ?? null
   }));
 
+  console.log('machineServiceRecord : ',machineServiceRecord)
 
   const defaultValues = useMemo(
     () => {
       const initialValues = {
-      serviceId: '',
-      docRecordType:                null,
-      serviceRecordConfiguration:   null,
-      serviceDate:                  new Date(),
-      versionNo:                    1,
+      serviceId:                    machineServiceRecord?.serviceId || null,
+      docRecordType:                machineServiceRecord?.docRecordType || null,
+      serviceRecordConfiguration:   machineServiceRecord?.serviceRecordConfiguration || null,
+      serviceDate:                  machineServiceRecord?.serviceDate || new Date(),
+      versionNo:                    machineServiceRecord?.versionNo || 1,
       customer:                     machine?.customer?._id || null,
       site:                         machine?.instalationSite?._id,
       // machine:                      machine?._id || null,
-      decoilers:                    machineDecoilers || [],
-      technician:                   securityUser || null,
-      technicianNotes:              '',
-      textBeforeCheckItems:         '',
-      textAfterCheckItems:          '',
-      serviceNote:                  '',
-      recommendationNote:           '',
-      internalComments:             '',
-      suggestedSpares:              '',
-      internalNote:                 '',
-      operators:                    [],
-      files:                        [],
-      operatorNotes:                '',
-      checkItemRecordValues:        [],
-      isActive:                     true,
+      decoilers:                    machineServiceRecord?.decoilers || machineDecoilers || [],
+      technician:                   machineServiceRecord?.technician || ( securityUser || null ),
+      technicianNotes:              machineServiceRecord?.technicianNotes || '',
+      textBeforeCheckItems:         machineServiceRecord?.textBeforeCheckItems || '',
+      textAfterCheckItems:          machineServiceRecord?.textAfterCheckItems || '',
+      serviceNote:                  machineServiceRecord?.serviceNote || '',
+      recommendationNote:           machineServiceRecord?.recommendationNote || '',
+      internalComments:             machineServiceRecord?.internalComments || '',
+      suggestedSpares:              machineServiceRecord?.suggestedSpares || '',
+      internalNote:                 machineServiceRecord?.internalNote || '',
+      operators:                    machineServiceRecord?.operators || [],
+      files:                        machineServiceRecord?.files || [],
+      operatorNotes:                machineServiceRecord?.operatorNotes || '',
+      checkItemRecordValues:        machineServiceRecord?.checkItemRecordValues || [],
+      isActive:                     machineServiceRecord?.isActive || true,
     }
     return initialValues;
   },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [ machine, machineDecoilers ]
   );
-
+  const stepSchemas = [ MachineServiceRecordPart1Schema, MachineServiceRecordPart2Schema, MachineServiceRecordPart3Schema ];
+  
   const methods = useForm({
-    resolver: yupResolver(MachineServiceRecordSchema),
+    resolver: yupResolver(stepSchemas[activeStep]),
     defaultValues,
   });
+
 
   const {
     reset,
@@ -126,6 +137,10 @@ function MachineServiceRecordAddForm() {
     [ files ]
   );
   
+  useEffect(()=>{
+    reset();
+  },[ reset ])
+
   useEffect(()=>{ 
     if(!activeSecurityUsers.some(u => u._id === userId )){
       setSecurityUsers([ ...activeSecurityUsers, securityUser ]?.sort((a, b) => a?.name?.localeCompare(b?.name))) 
@@ -163,57 +178,99 @@ function MachineServiceRecordAddForm() {
   },[serviceRecordConfig])
 
   const handleParamChange = (event, newValue) => {
-    if(newValue != null){
-    if(newValue?.textBeforeCheckItems)
-      setValue('textBeforeCheckItems',newValue.textBeforeCheckItems)
-    
-    if(newValue?.textAfterCheckItems)
-      setValue('textAfterCheckItems',newValue.textAfterCheckItems)
-    
-    setValue('serviceRecordConfiguration',newValue)
-    trigger('serviceRecordConfiguration');
+    if(newValue){
+      if(newValue?.textBeforeCheckItems)
+        setValue('textBeforeCheckItems',newValue.textBeforeCheckItems)
+
+      if(newValue?.textAfterCheckItems)
+        setValue('textAfterCheckItems',newValue.textAfterCheckItems)
+
+      setValue('serviceRecordConfiguration',newValue)
+      trigger('serviceRecordConfiguration');
     }else{
       dispatch(resetServiceRecordConfig())
       setValue('serviceRecordConfiguration',null)
     }
   }
   
-
+  const handleDraftRequest = async ()=> {
+    if(isDraft){
+      await navigate(PATH_MACHINE.machines.serviceRecords.root(machineId))
+    }
+  }
   const onSubmit = async (data) => {
     try {
-      const checkItemLists_ = [];
-      if(checkItemLists && 
-        Array.isArray(checkItemLists) && 
-        checkItemLists.length>0) 
-        checkItemLists.forEach((checkParam_, index )=>{
-          if(Array.isArray(checkParam_.checkItems) && 
+      if(activeStep === 0 && !machineServiceRecord?._id ){
+        const result = await dispatch(addMachineServiceRecord( machine?._id, data ));
+        await handleDraftRequest()
+      }
+
+      if(activeStep <= 2){
+        setActiveStep(( previousStep ) => previousStep +1 )
+      }
+
+      if(isPublish){
+        data.status ="SUBMITTED"
+      } else {
+        data.status ="DRAFT"
+      }
+
+      if( activeStep === 1 ){
+        const checkItemLists_ = [];
+        if(checkItemLists && Array.isArray(checkItemLists) && checkItemLists.length > 0 ){ 
+          checkItemLists.forEach((checkParam_, index )=>{
+            if(Array.isArray(checkParam_.checkItems) && 
             checkParam_.checkItems.length>0) {
-            checkParam_.checkItems.forEach((CI,ind)=>(
-              CI?.checked && checkItemLists_.push({
-                machineCheckItem: CI?._id,
-                checkItemListId:  checkParam_?._id,
-                checkItemValue:   CI?.inputType?.toLowerCase() === 'boolean' ? CI?.checkItemValue || false : CI?.inputType?.toLowerCase() === 'status' && CI?.checkItemValue?.name || CI?.inputType?.toLowerCase() !== 'status' &&CI?.checkItemValue || '',
-                comments:CI?.comments,
-              })
-            ));
+              checkParam_.checkItems.forEach((CI,ind)=>(
+                CI?.checked && checkItemLists_.push({
+                  machineCheckItem: CI?._id,
+                  checkItemListId:  checkParam_?._id,
+                  checkItemValue:   CI?.inputType?.toLowerCase() === 'boolean' ? CI?.checkItemValue || false : CI?.inputType?.toLowerCase() === 'status' && CI?.checkItemValue?.name || CI?.inputType?.toLowerCase() !== 'status' &&CI?.checkItemValue || '',
+                  comments:CI?.comments,
+                })
+              ));
+            }
+          });
+        }
+        data.checkItemRecordValues = checkItemLists_;
+      }
+
+      if(activeStep > 0 ){
+        data.update = true;
+        data.decoilers = decoilers;
+        data.operators = operators;
+        try{
+          if(machineServiceRecord?._id){
+            await dispatch(updateMachineServiceRecord( machine?._id, machineServiceRecord?._id, data ));
+            await reset();
+            await handleDraftRequest()
           }
-        });
-      data.checkItemRecordValues = checkItemLists_;
-      data.decoilers = decoilers;
-      data.operators = operators;
-      await dispatch(addMachineServiceRecord(machine?._id,data));
-      await reset();
-      await navigate(PATH_MACHINE.machines.serviceRecords.root(machineId))
+        } catch(e){
+          console.error(e);
+        }
+        if(activeStep === 2 ){
+          await reset();
+          await navigate(PATH_MACHINE.machines.serviceRecords.root(machineId))
+        }
+      }
+      if(isDraft){
+        await navigate(PATH_MACHINE.machines.serviceRecords.root(machineId))
+      }
+
     } catch (err) {
+      console.error(err);
       enqueueSnackbar('Saving failed!', { variant: `error` });
-      console.error(err.message);
     }
   };
   
   const toggleCancel = async () =>{
-    await dispatch(permanentDeleteMachineServiceRecord(machineId, machineServiceRecord?._id ))
+    if( machineServiceRecord?._id ){
+      await dispatch(deleteMachineServiceRecord(machineId, machineServiceRecord?._id, machineServiceRecord?.status ))
+    }
     navigate(PATH_MACHINE.machines.serviceRecords.root(machineId));
   } 
+
+  const saveAsDraft = async () => setIsDraft(false); 
 
   const handleChangeCheckItemListValue = (index, childIndex, checkItemValue) => {
       const updatedCheckParams = [ ...checkItemLists ];
@@ -325,6 +382,11 @@ function MachineServiceRecordAddForm() {
       });
   };
 
+const handleSave = () => {
+    if (activeStep === 2) {
+      setIsPublish(true);
+    }
+}
 
   return (
     <Container maxWidth={false} >
@@ -334,35 +396,67 @@ function MachineServiceRecordAddForm() {
           <Grid item xs={18} md={12}>
             <Card sx={{ p: 3 }}>
               <Stack spacing={2}>
+
                 <FormLabel content="New Service Record" />
+              <Stepper activeStep={activeStep} orientation="vertical">
+                  <Step key={11111} >
+                    <StepLabel >
+                      Create Service Record
+                    </StepLabel>
+                    <StepContent>
+                      <Stack spacing={2}>
+                        <MachineServiceRecordsFirstStep 
+                          activeServiceRecordConfigs={activeServiceRecordConfigs} 
+                          securityUsers={securityUsers} 
+                          onChange={handleParamChange}  
+                        />
+                      </Stack>
+                    </StepContent>
+                  </Step>
+                  <Step key={22222} >
+                    <StepLabel >
+                    Check Items Value
+                    </StepLabel>
+                    <StepContent>
+                      <Stack spacing={2}>
+                        <MachineServiceRecordsSecondStep 
+                          checkItemLists={checkItemLists}
+                          handleChangeCheckItemListDate={handleChangeCheckItemListDate}
+                          handleChangeCheckItemListValue={handleChangeCheckItemListValue}
+                          handleChangeCheckItemListStatus={handleChangeCheckItemListStatus}
+                          handleChangeCheckItemListChecked={handleChangeCheckItemListChecked}
+                          handleChangeCheckItemListCheckBoxValue={handleChangeCheckItemListCheckBoxValue}
+                          handleChangeCheckItemListComment={handleChangeCheckItemListComment}
+                        />
+                      </Stack>
+                    </StepContent>
+                  </Step>
+                  <Step key={33333} >
+                    <StepLabel >
+                    Complete Service Record
+                    </StepLabel>
+                    <StepContent>
+                      <Stack spacing={2}>
+                        <MachineServiceRecordsThirdStep 
+                          serviceRecordConfig={serviceRecordConfig}
+                          docRecordType={docRecordType}
+                          files={files}
+                          handleOpenLightbox={handleOpenLightbox}
+                          handleDownloadFile={handleDownloadFile}
+                          handleDeleteFile={handleDeleteFile}
+                          handleAddFileDialog={handleAddFileDialog}
+                        />
+                      </Stack>
+                    </StepContent>
+                  </Step>
+              </Stepper>
 
-                  <MachineServiceRecordsFirstStep 
-                    activeServiceRecordConfigs={activeServiceRecordConfigs} 
-                    securityUsers={securityUsers} 
-                    onChange={handleParamChange}  
+                  <AddFormButtons isSubmitting={isSubmitting} 
+                    saveAsDraft={saveAsDraft} 
+                    saveButtonName={ activeStep > 1 ? "Publish" : "Next"} handleSave={ handleSave }
+                    isDisabledBackButton={activeStep === 0} backButtonName="Back" handleBack={()=> setActiveStep( preStep => preStep - 1)} 
+                    toggleCancel={toggleCancel} cancelButtonName="Discard" 
                   />
-
-                  <MachineServiceRecordsSecondStep 
-                    checkItemLists={checkItemLists}
-                    handleChangeCheckItemListDate={handleChangeCheckItemListDate}
-                    handleChangeCheckItemListValue={handleChangeCheckItemListValue}
-                    handleChangeCheckItemListStatus={handleChangeCheckItemListStatus}
-                    handleChangeCheckItemListChecked={handleChangeCheckItemListChecked}
-                    handleChangeCheckItemListCheckBoxValue={handleChangeCheckItemListCheckBoxValue}
-                    handleChangeCheckItemListComment={handleChangeCheckItemListComment}
-                  />
-
-                  <MachineServiceRecordsThirdStep 
-                    serviceRecordConfig={serviceRecordConfig}
-                    docRecordType={docRecordType}
-                    files={files}
-                    handleOpenLightbox={handleOpenLightbox}
-                    handleDownloadFile={handleDownloadFile}
-                    handleDeleteFile={handleDeleteFile}
-                    handleAddFileDialog={handleAddFileDialog}
-                  />
-
-                  <AddFormButtons isDisabled={docRecordType === null} isSubmitting={isSubmitting} saveButtonName="Publish" saveAsDraft={toggleCancel} toggleCancel={toggleCancel} cancelButtonName="Discard" />
               </Stack>
             </Card>
           </Grid>
