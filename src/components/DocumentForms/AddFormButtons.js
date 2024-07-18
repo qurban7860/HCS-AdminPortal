@@ -114,9 +114,9 @@ export default function AddFormButtons({
                 variant="contained"
                 size="large"
                 fullWidth
+                onClick={saveAsDraft}
                 disabled={isDisableSaveAsDraft}
                 loading={isDraft && isSubmitting}
-                onClick={saveAsDraft}
               >
                 {saveAsDraftButtonName || BUTTONS.SAVE_AS_DRAFT}
               </LoadingButton>

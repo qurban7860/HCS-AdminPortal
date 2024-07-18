@@ -70,7 +70,6 @@ function MachineServiceRecordAddForm() {
     serialNo: decoiler?.connectedMachine?.serialNo ?? null
   }));
 
-  console.log('machineServiceRecord : ',machineServiceRecord)
 
   const defaultValues = useMemo(
     () => {
@@ -205,10 +204,6 @@ function MachineServiceRecordAddForm() {
         await handleDraftRequest()
       }
 
-      if(isDraft){
-        await navigate(PATH_MACHINE.machines.serviceRecords.root(machineId))
-      }
-
 
       if(isPublish){
         data.status ="SUBMITTED"
@@ -236,10 +231,6 @@ function MachineServiceRecordAddForm() {
         data.checkItemRecordValues = checkItemLists_;
       }
 
-      if(activeStep < 3){
-        setActiveStep(( previousStep ) => previousStep +1 )
-      }
-
       if(activeStep > 0 ){
         data.update = true;
         data.decoilers = decoilers;
@@ -259,6 +250,9 @@ function MachineServiceRecordAddForm() {
         }
       }
 
+      if(activeStep < 2){
+        setActiveStep(( previousStep ) => previousStep +1 )
+      }
 
     } catch (err) {
       console.error(err);
@@ -273,7 +267,7 @@ function MachineServiceRecordAddForm() {
     navigate(PATH_MACHINE.machines.serviceRecords.root(machineId));
   } 
 
-  const saveAsDraft = async () => setIsDraft(false); 
+  const saveAsDraft = async () => setIsDraft(true); 
 
   const handleChangeCheckItemListValue = (index, childIndex, checkItemValue) => {
       const updatedCheckParams = [ ...checkItemLists ];
