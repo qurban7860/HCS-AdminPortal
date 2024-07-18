@@ -75,7 +75,7 @@ function MachineServiceRecordAddForm() {
   const defaultValues = useMemo(
     () => {
       const initialValues = {
-      serviceId:                    machineServiceRecord?.serviceId || null,
+      // serviceId:                    machineServiceRecord?.serviceId || null,
       docRecordType:                machineServiceRecord?.docRecordType || null,
       serviceRecordConfiguration:   machineServiceRecord?.serviceRecordConfiguration || null,
       serviceDate:                  machineServiceRecord?.serviceDate || new Date(),
@@ -205,9 +205,10 @@ function MachineServiceRecordAddForm() {
         await handleDraftRequest()
       }
 
-      if(activeStep <= 2){
-        setActiveStep(( previousStep ) => previousStep +1 )
+      if(isDraft){
+        await navigate(PATH_MACHINE.machines.serviceRecords.root(machineId))
       }
+
 
       if(isPublish){
         data.status ="SUBMITTED"
@@ -235,6 +236,10 @@ function MachineServiceRecordAddForm() {
         data.checkItemRecordValues = checkItemLists_;
       }
 
+      if(activeStep < 3){
+        setActiveStep(( previousStep ) => previousStep +1 )
+      }
+
       if(activeStep > 0 ){
         data.update = true;
         data.decoilers = decoilers;
@@ -253,9 +258,7 @@ function MachineServiceRecordAddForm() {
           await navigate(PATH_MACHINE.machines.serviceRecords.root(machineId))
         }
       }
-      if(isDraft){
-        await navigate(PATH_MACHINE.machines.serviceRecords.root(machineId))
-      }
+
 
     } catch (err) {
       console.error(err);
@@ -396,64 +399,64 @@ const handleSave = () => {
           <Grid item xs={18} md={12}>
             <Card sx={{ p: 3 }}>
               <Stack spacing={2}>
-
                 <FormLabel content="New Service Record" />
-              <Stepper activeStep={activeStep} orientation="vertical">
-                  <Step key={11111} >
-                    <StepLabel >
-                      Create Service Record
-                    </StepLabel>
-                    <StepContent>
-                      <Stack spacing={2}>
-                        <MachineServiceRecordsFirstStep 
-                          activeServiceRecordConfigs={activeServiceRecordConfigs} 
-                          securityUsers={securityUsers} 
-                          onChange={handleParamChange}  
-                        />
-                      </Stack>
-                    </StepContent>
-                  </Step>
-                  <Step key={22222} >
-                    <StepLabel >
-                    Check Items Value
-                    </StepLabel>
-                    <StepContent>
-                      <Stack spacing={2}>
-                        <MachineServiceRecordsSecondStep 
-                          checkItemLists={checkItemLists}
-                          handleChangeCheckItemListDate={handleChangeCheckItemListDate}
-                          handleChangeCheckItemListValue={handleChangeCheckItemListValue}
-                          handleChangeCheckItemListStatus={handleChangeCheckItemListStatus}
-                          handleChangeCheckItemListChecked={handleChangeCheckItemListChecked}
-                          handleChangeCheckItemListCheckBoxValue={handleChangeCheckItemListCheckBoxValue}
-                          handleChangeCheckItemListComment={handleChangeCheckItemListComment}
-                        />
-                      </Stack>
-                    </StepContent>
-                  </Step>
-                  <Step key={33333} >
-                    <StepLabel >
-                    Complete Service Record
-                    </StepLabel>
-                    <StepContent>
-                      <Stack spacing={2}>
-                        <MachineServiceRecordsThirdStep 
-                          serviceRecordConfig={serviceRecordConfig}
-                          docRecordType={docRecordType}
-                          files={files}
-                          handleOpenLightbox={handleOpenLightbox}
-                          handleDownloadFile={handleDownloadFile}
-                          handleDeleteFile={handleDeleteFile}
-                          handleAddFileDialog={handleAddFileDialog}
-                        />
-                      </Stack>
-                    </StepContent>
-                  </Step>
-              </Stepper>
-
+                <Box sx={{ width: "100%" }} >
+                  <Stepper activeStep={activeStep} >
+                      <Step key={11111} on>
+                        <StepLabel >
+                          Create Service Record
+                        </StepLabel>
+                        <StepContent>
+                          <Stack spacing={2}>
+                            <MachineServiceRecordsFirstStep 
+                              activeServiceRecordConfigs={activeServiceRecordConfigs} 
+                              securityUsers={securityUsers} 
+                              onChange={handleParamChange}  
+                            />
+                          </Stack>
+                        </StepContent>
+                      </Step>
+                      <Step key={22222} >
+                        <StepLabel >
+                        Check Items Value
+                        </StepLabel>
+                        <StepContent>
+                          <Stack spacing={2}>
+                            <MachineServiceRecordsSecondStep 
+                              checkItemLists={checkItemLists}
+                              handleChangeCheckItemListDate={handleChangeCheckItemListDate}
+                              handleChangeCheckItemListValue={handleChangeCheckItemListValue}
+                              handleChangeCheckItemListStatus={handleChangeCheckItemListStatus}
+                              handleChangeCheckItemListChecked={handleChangeCheckItemListChecked}
+                              handleChangeCheckItemListCheckBoxValue={handleChangeCheckItemListCheckBoxValue}
+                              handleChangeCheckItemListComment={handleChangeCheckItemListComment}
+                            />
+                          </Stack>
+                        </StepContent>
+                      </Step>
+                      <Step key={33333} >
+                        <StepLabel >
+                        Complete Service Record
+                        </StepLabel>
+                        <StepContent>
+                          <Stack spacing={2}>
+                            <MachineServiceRecordsThirdStep 
+                              serviceRecordConfig={serviceRecordConfig}
+                              docRecordType={docRecordType}
+                              files={files}
+                              handleOpenLightbox={handleOpenLightbox}
+                              handleDownloadFile={handleDownloadFile}
+                              handleDeleteFile={handleDeleteFile}
+                              handleAddFileDialog={handleAddFileDialog}
+                            />
+                          </Stack>
+                        </StepContent>
+                      </Step>
+                  </Stepper>
+                  </Box>
                   <AddFormButtons isSubmitting={isSubmitting} 
-                    saveAsDraft={saveAsDraft} 
-                    saveButtonName={ activeStep > 1 ? "Publish" : "Next"} handleSave={ handleSave }
+                    saveAsDraft={saveAsDraft} isDraft={isDraft}
+                    saveButtonName={ activeStep > 1 ? "Publish" : "Next"} handleSave={ handleSave } isDisableSaveAsDraft={activeStep === 0}
                     isDisabledBackButton={activeStep === 0} backButtonName="Back" handleBack={()=> setActiveStep( preStep => preStep - 1)} 
                     toggleCancel={toggleCancel} cancelButtonName="Discard" 
                   />

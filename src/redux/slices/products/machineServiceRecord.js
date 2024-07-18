@@ -450,7 +450,7 @@ export function updateMachineServiceRecord(machineId,id, params) {
     dispatch(slice.actions.startLoading());
     try {
       const data = {
-        serviceRecordConfig:        params?.serviceRecordConfiguration,
+        // serviceRecordConfig:        params?.serviceRecordConfiguration,
         serviceDate:                params?.serviceDate,
         versionNo:                  params?.versionNo ,
         customer:                   params?.customer || null,
@@ -470,7 +470,7 @@ export function updateMachineServiceRecord(machineId,id, params) {
         operatorNotes:              params?.operatorNotes || '',
         checkItemRecordValues:      params?.checkItemRecordValues || [],
         status:                     params?.status || 'DRAFT',
-        serviceId:                  params?.serviceId,
+        // serviceId:                  params?.serviceId,
         update:                     params?.update,
         isActive:                   params?.isActive
       }

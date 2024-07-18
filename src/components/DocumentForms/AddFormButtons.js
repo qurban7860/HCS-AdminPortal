@@ -10,6 +10,7 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 
 AddFormButtons.propTypes = {
   saveAsDraft: PropTypes.func,
+  isDisableSaveAsDraft: PropTypes.bool,
   isDraft: PropTypes.bool,
   saveAsDraftButtonName: PropTypes.string,
   saveButtonName: PropTypes.string,
@@ -37,6 +38,7 @@ export default function AddFormButtons({
   isDraft,
   saveAsDraftButtonName,
   saveButtonName,
+  isDisableSaveAsDraft,
   saveTransferButtonName,
   istrigger,
   handleSave,
@@ -112,7 +114,7 @@ export default function AddFormButtons({
                 variant="contained"
                 size="large"
                 fullWidth
-                // disabled
+                disabled={isDisableSaveAsDraft}
                 loading={isDraft && isSubmitting}
                 onClick={saveAsDraft}
               >
