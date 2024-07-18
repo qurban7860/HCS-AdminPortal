@@ -40,7 +40,7 @@ function getTimeObjectFromISOString(dateString) {
   return timeObject;
 }
 
-const getInitialValues = (selectedEvent, range) => {
+const getInitialValues = (selectedEvent, range, contacts) => {
   const initialEvent = {
     _id: selectedEvent ? selectedEvent?._id : null ,
     date: selectedEvent ? selectedEvent?.start : (range?.start || new Date() ) ,
@@ -53,7 +53,7 @@ const getInitialValues = (selectedEvent, range) => {
     jiraTicket: selectedEvent ? selectedEvent?.jiraTicket :  '',
     primaryTechnician: selectedEvent ? selectedEvent?.primaryTechnician :  null,
     supportingTechnicians: selectedEvent ? selectedEvent?.supportingTechnicians :  [],
-    notifyContacts: selectedEvent ? selectedEvent?.notifyContacts :  [],
+    notifyContacts: selectedEvent ? selectedEvent?.notifyContacts :  contacts,
     description: selectedEvent ? selectedEvent?.description :  '',
     createdAt: selectedEvent?.createdAt || '',
     createdByFullName: selectedEvent?.createdBy?.name || '',
@@ -71,6 +71,7 @@ EventDialog.propTypes = {
   onDeleteEvent: PropTypes.func,
   onCreateUpdateEvent: PropTypes.func,
   colorOptions: PropTypes.arrayOf(PropTypes.string),
+  contacts:PropTypes.array
 };
   
 function EventDialog({
@@ -78,6 +79,7 @@ function EventDialog({
     colorOptions,
     onCreateUpdateEvent,
     onDeleteEvent,
+    contacts
   }) {
     
     const dispatch = useDispatch();
@@ -88,11 +90,6 @@ function EventDialog({
     const { activeCustomerMachines } = useSelector( (state) => state.machine );
     const [openConfirm, setOpenConfirm] = useState(false);
     const dialogRef = useRef(null)
-
-    const Default_Notify_Contacts = JSON.parse( localStorage.getItem('configurations'))?.find( ( c )=> c?.name === 'Default_Notify_Contacts');
-  
-
-    console.log("Default_Notify_Contacts::::",Default_Notify_Contacts.value)
 
     const EventSchema = Yup.object().shape({
       date: Yup.date().nullable().label('Event Date').typeError('End Time should be a valid Date').required(),
@@ -146,8 +143,8 @@ function EventDialog({
       description: Yup.string().max(500).label('Description'),
     });
 
-    const defaultValues = getInitialValues(selectedEvent?.extendedProps, range);
-
+    const defaultValues = getInitialValues(selectedEvent?.extendedProps, range, contacts);
+  
     const methods = useForm({
       resolver: yupResolver(EventSchema),
       defaultValues
@@ -198,9 +195,9 @@ function EventDialog({
     },[ dispatch, customer ])
 
     useLayoutEffect(() => {
-      reset(getInitialValues(selectedEvent?.extendedProps, range));
-    }, [reset, range, selectedEvent]);
-    
+      reset(getInitialValues(selectedEvent?.extendedProps, range, contacts));
+    }, [reset, range, selectedEvent, contacts]);
+
     const onSubmit = (data) => {
       const start_date = new Date(data?.date);
       const end_date = new Date(data?.end_date);
