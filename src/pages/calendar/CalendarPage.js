@@ -6,7 +6,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import timelinePlugin from '@fullcalendar/timeline';
 // @mui
-import { Card, Container, createTheme } from '@mui/material';
+import { Card, Container, createTheme, Grid, Typography } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -51,6 +51,7 @@ export default function CalendarPage() {
 
   const { events, selectedEvent, eventModel, selectedRange } = useSelector((state) => state.event );
   const { securityUser } = useSelector((state) => state.user);
+  const { activeSpContacts } = useSelector((state) => state.contact);
   
   const [ previousDate, setPreviousDate ] = useState(null);
   const [ selectedCustomer, setSelectedCustomer ] = useState(null);
@@ -61,6 +62,12 @@ export default function CalendarPage() {
   const [ filterEventColor, setFilterEventColor ] = useState([]);
   const [ view, setView ] = useState(isDesktop ? 'dayGridMonth' : 'listWeek');
   const [calendarData, setCalendarData] = useState([]);
+
+  const configurations = JSON.parse(localStorage.getItem('configurations'));
+  const def_contacts = configurations?.filter(c => c?.name === 'Default_Notify_Contacts')?.map(c => c?.value)
+  ?.flatMap(value => value?.split(','))?.filter(Boolean);
+
+  const [DefaultNotifyContacts, setDefaultNotifyContacts] = useState(activeSpContacts.filter((_contact)=> def_contacts?.includes(_contact?.email)));
   
   useLayoutEffect(() => {
     dispatch(setEventModel(false));
@@ -71,9 +78,11 @@ export default function CalendarPage() {
   }, [dispatch, userId ]);
 
   useLayoutEffect(()=>{
-    setSelectedUser(securityUser);
-    setSelectedContact(securityUser?.contact)
-  },[ securityUser ])
+    if(!isAllAccessAllowed){
+      setSelectedUser(securityUser);
+      setSelectedContact(securityUser?.contact)
+    }
+  },[ securityUser, isAllAccessAllowed])
 
   useEffect(() => {
     setCalendarData(events || []);
@@ -225,7 +234,10 @@ export default function CalendarPage() {
     const title = `${primaryTechnician.firstName} ${primaryTechnician.lastName} ${supportingTechnicianNames.length>0?`, ${supportingTechnicianNames}`:''}, ${customer.name}`;
     
     return (
-      <StyledTooltip title={title} placement='top' tooltipcolor={theme.palette.primary.main}>
+      <StyledTooltip title={<Grid>
+        <Typography variant='body2'><strong>Technician:</strong> {`${primaryTechnician.firstName} ${primaryTechnician.lastName} ${supportingTechnicianNames.length>0?`, ${supportingTechnicianNames}`:''}`}</Typography>
+        <Typography variant='body2'><strong>Customer:</strong> {customer.name}</Typography>
+      </Grid>} placement='top-start' tooltipcolor={theme.palette.primary.main}>
         <div style={{ position: 'relative', zIndex: 10}} className="fc-event-main-frame">
           <div className="fc-event-time">{timeText}</div>
           <div className="fc-event-title-container">
@@ -248,9 +260,7 @@ export default function CalendarPage() {
   return (
     <>
       <Container maxWidth={false}>
-        <StyledCardContainer>
-            <Cover name="Calendar Events" />
-        </StyledCardContainer>
+        <StyledCardContainer><Cover name="Calendar Events" /></StyledCardContainer>
         <Card>
           <StyledCalendar>
             <CalendarToolbar
@@ -304,12 +314,11 @@ export default function CalendarPage() {
           
         </Card>
       </Container>
-
       
-
       <EventDialog
         date={date}
         range={selectedRange}
+        contacts={DefaultNotifyContacts}
         onCreateUpdateEvent={handleCreateUpdateEvent}
         onDeleteEvent={handleDeleteEvent}
       />
