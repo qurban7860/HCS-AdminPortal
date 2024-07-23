@@ -9,14 +9,14 @@ import { useNavigate, useParams } from 'react-router-dom';
 import download from 'downloadjs';
 import { PATH_MACHINE } from '../../../routes/paths';
 // slice
-import { addMachineServiceRecord, updateMachineServiceRecord, resetMachineServiceRecord, deleteFile, downloadFile, setAddFileDialog, deleteMachineServiceRecord, getMachineServiceRecord } from '../../../redux/slices/products/machineServiceRecord';
+import { addMachineServiceRecord, updateMachineServiceRecord, resetMachineServiceRecord, deleteFile, downloadFile, setAddFileDialog, deleteMachineServiceRecord, getMachineServiceRecord, addMachineServiceRecordFiles } from '../../../redux/slices/products/machineServiceRecord';
 import { getActiveServiceRecordConfigsForRecords, getServiceRecordConfig, resetServiceRecordConfig } from '../../../redux/slices/products/serviceRecordConfig';
 import { getActiveContacts } from '../../../redux/slices/customer/contact';
 // components
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 import { useSnackbar } from '../../../components/snackbar';
 import { MachineServiceRecordPart1Schema, MachineServiceRecordPart2Schema, MachineServiceRecordPart3Schema } from '../../schemas/machine';
-import FormProvider, { RHFAutocomplete, RHFSwitch, RHFTextField } from '../../../components/hook-form';
+import FormProvider, { RHFAutocomplete, RHFSwitch, RHFTextField, RHFUpload } from '../../../components/hook-form';
 import { getActiveSecurityUsers, getSecurityUser } from '../../../redux/slices/securityUser/securityUser';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
 import { useAuthContext } from '../../../auth/useAuthContext';
@@ -95,14 +95,12 @@ function MachineServiceRecordsThirdStep() {
 
     const onSubmit = async (data) => {
         try {
-          if(!machineServiceRecord?._id ){
-            const serviceRecord = await dispatch(addMachineServiceRecord( machine?._id, data ));
-            await handleDraftRequest();
-            await navigate(PATH_MACHINE.machines.serviceRecords.edit(machine?._id, serviceRecord?._id))
-          }else{
-            const serviceRecord = await dispatch(updateMachineServiceRecord( machine?._id, machineServiceRecord?._id, data ));
+          if(machineServiceRecord?._id){
+            await dispatch(updateMachineServiceRecord( machine?._id, machineServiceRecord?._id, data ));
             await handleDraftRequest();  
-            await navigate(PATH_MACHINE.machines.serviceRecords.edit(machine?._id, machineServiceRecord?._id))  
+            if(data?.files)
+              await dispatch(addMachineServiceRecordFiles(machine?._id, machineServiceRecord?._id, data))
+            await navigate(PATH_MACHINE.machines.serviceRecords.view(machine?._id, machineServiceRecord?._id))  
           }
 
           if(isDraft){
@@ -129,66 +127,6 @@ function MachineServiceRecordsThirdStep() {
         navigate(PATH_MACHINE.machines.serviceRecords.root(machine?._id));
       }
 
-      const regEx = /^[^2]*/;
-      const [slides, setSlides] = useState([]);
-    
-      const handleAddFileDialog = ()=> dispatch(setAddFileDialog(true));
-    
-      const handleOpenLightbox = async (_index) => {
-        const image = slides[_index];
-        if(!image?.isLoaded && image?.fileType?.startsWith('image')){
-          try {
-            const response = await dispatch(downloadFile(machine?._id, machineServiceRecord?._id, image?._id));
-            if (regEx.test(response.status)) {
-              // Update the image property in the imagesLightbox array
-              const updatedSlides = [
-                ...slides.slice(0, _index), // copies slides before the updated slide
-                {
-                  ...slides[_index],
-                  src: `data:image/png;base64, ${response.data}`,
-                  isLoaded: true,
-                },
-                ...slides.slice(_index + 1), // copies slides after the updated slide
-              ];
-              // Update the state with the new array
-              setSlides(updatedSlides);
-            }
-          } catch (error) {
-            console.error('Error loading full file:', error);
-          }
-        }
-      };
-    
-      const handleDeleteFile = async (fileId) => {
-        try {
-          await dispatch(deleteFile(machine?._id, machineServiceRecord?._id, fileId));
-          enqueueSnackbar('File Archived successfully!');
-        } catch (err) {
-          console.log(err);
-          enqueueSnackbar('File Deletion failed!', { variant: `error` });
-        }
-      };
-    
-      const handleDownloadFile = (fileId, name, extension) => {
-        dispatch(downloadFile(machine?._id, machineServiceRecord?._id, fileId))
-          .then((res) => {
-            if (regEx.test(res.status)) {
-              download(atob(res.data), `${name}.${extension}`, { type: extension });
-              enqueueSnackbar(res.statusText);
-            } else {
-              enqueueSnackbar(res.statusText, { variant: `error` });
-            }
-          })
-          .catch((err) => {
-            if ( err.Message) {
-              enqueueSnackbar(err.Message, { variant: `error` });
-            } else if (err.message) {
-              enqueueSnackbar(err.message, { variant: `error` });
-            } else {
-              enqueueSnackbar('Something went wrong!', { variant: `error` });
-            }
-          });
-      };
     
 
   return (
@@ -211,16 +149,22 @@ function MachineServiceRecordsThirdStep() {
               />
 
             <RHFTextField name="operatorNotes" label="Operator Notes" minRows={3} multiline/> 
-            {files?.map((file, _index) => (
-              <DocumentGalleryItem isLoading={!files} key={file?.id} image={file} 
-                onOpenLightbox={()=> handleOpenLightbox(_index)}
-                onDownloadFile={()=> handleDownloadFile(file._id, file?.name, file?.extension)}
-                onDeleteFile={()=> handleDeleteFile(file._id)}
-                toolbar
-              />
-            ))}
+            <RHFUpload multiple  thumbnail name="files" imagesOnly
+              onDrop={handleDropMultiFile}
+              dropZone={false}
+              onRemove={(inputFile) =>
+                files.length > 1 ?
+                setValue(
+                  'files',
+                  files &&
+                    files?.filter((file) => file !== inputFile),
+                  { shouldValidate: true }
+                ): setValue('files', '', { shouldValidate: true })
+              }
+              onRemoveAll={() => setValue('files', '', { shouldValidate: true })}
+            />
 
-            <ThumbnailDocButton onClick={handleAddFileDialog}/>
+            {/* <ThumbnailDocButton onClick={handleAddFileDialog}/> */}
 
             {/* <RHFUpload multiple  thumbnail name="files" imagesOnly
               onDrop={handleDropMultiFile}

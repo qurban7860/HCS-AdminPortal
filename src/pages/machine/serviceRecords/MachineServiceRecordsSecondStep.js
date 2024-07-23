@@ -29,8 +29,8 @@ function MachineServiceRecordsSecondStep({serviceRecord}) {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   
-  const { machineServiceRecord, machineServiceRecordCheckItems } = useSelector((state) => state.machineServiceRecord);
-  const { serviceRecordConfig, isLoadingCheckItems } = useSelector((state) => state.serviceRecordConfig);
+  const { machineServiceRecord, machineServiceRecordCheckItems, isLoading } = useSelector((state) => state.machineServiceRecord);
+  const { serviceRecordConfig } = useSelector((state) => state.serviceRecordConfig);
   const { machine } = useSelector((state) => state.machine);
   
   const [ isDraft, setIsDraft ] = useState(false);
@@ -40,11 +40,11 @@ function MachineServiceRecordsSecondStep({serviceRecord}) {
   const [ textBeforeCheckItems, setTextBeforeCheckItems] = useState('');
   const [ textAfterCheckItems, setTextAfterCheckItems] = useState('');
 
-  useLayoutEffect(() =>{
-    if(machineServiceRecord && machine){
-      dispatch(getMachineServiceRecordCheckItems(machine?._id, machineServiceRecord?._id))
-    }
-  },[dispatch, machine, machineServiceRecord])
+  // useLayoutEffect(() =>{
+  //   if(machine?._id && machineServiceRecord?._id){
+  //     dispatch(getMachineServiceRecordCheckItems(machine?._id, machineServiceRecord?._id))
+  //   }
+  // },[dispatch, machine, machineServiceRecord])
 
   useEffect(() =>{
     setCheckItemLists(machineServiceRecordCheckItems?.checkItemLists|| [])
@@ -194,7 +194,7 @@ function MachineServiceRecordsSecondStep({serviceRecord}) {
               </Stack>
             </FormProvider>
             {checkItemLists?.length > 0 && <FormLabel content={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />}
-            {isLoadingCheckItems ? 
+            {isLoading ? 
             <Box sx={{ width: '100%',mt:1 }}>
               <Skeleton />
               <Skeleton animation="wave" />

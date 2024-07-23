@@ -11,6 +11,7 @@ const initialState = {
   responseMessage: null,
   success: false,
   isLoading: false,
+  isLoadingCheckItemValues: -1,
   error: null,
   machineServiceRecord: {},
   machineServiceRecords: [],
@@ -37,6 +38,10 @@ const slice = createSlice({
     // START LOADING
     startLoading(state) {
       state.isLoading = true;
+    },
+
+    setLoadingCheckItemValues(state, action) {
+      state.isLoadingCheckItemValues = action.payload;
     },
 
     setResetFlags (state, action){
@@ -475,7 +480,7 @@ export function addMachineServiceRecordFiles(machineId, id, params) {
           }
         });
       }
-      const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}/upload`,formData);
+      const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/files/${id}/upload`,formData);
       dispatch(slice.actions.addMachineServiceRecordFilesSuccess());
     } catch (error) {
       console.error(error);
@@ -538,9 +543,9 @@ export function getMachineServiceRecordCheckItems(machineId, id) {
   };
 }
 
-export function addCheckItemValues(machineId, data) {
+export function addCheckItemValues(machineId, data, childIndex) {
   return async (dispatch) => {
-    dispatch(slice.actions.startLoading());
+    dispatch(slice.actions.setLoadingCheckItemValues(childIndex));
     try {
       const formData = new FormData();
       formData.append('serviceRecord', data.serviceRecord);
@@ -559,10 +564,11 @@ export function addCheckItemValues(machineId, data) {
       }
 
       const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecordValues/`,formData);
-      dispatch(slice.actions.getMachineServiceRecordCheckItemsSuccess(response.data));
+      dispatch(slice.actions.setLoadingCheckItemValues(-1));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      dispatch(slice.actions.setLoadingCheckItemValues(-1));
       throw error;
     }
   };

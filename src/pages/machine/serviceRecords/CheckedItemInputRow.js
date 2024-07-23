@@ -18,6 +18,7 @@ import DialogServiceRecordAddFile from '../../../components/Dialog/DialogService
 import FormProvider from '../../../components/hook-form/FormProvider';
 import { RHFAutocomplete, RHFCheckbox, RHFDatePicker, RHFTextField, RHFUpload } from '../../../components/hook-form';
 import { statusTypes } from '../util';
+import { fDate } from '../../../utils/formatTime';
 
 const CheckedItemInputRow = ({ index, row, machineId, serviceId }) => {
 
@@ -25,22 +26,29 @@ const CheckedItemInputRow = ({ index, row, machineId, serviceId }) => {
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
     
-    const { machineServiceRecord } = useSelector((state) => state.machineServiceRecord);
-    const { serviceRecordConfig, isLoadingCheckItems } = useSelector((state) => state.serviceRecordConfig);
+    const { machineServiceRecord, isLoadingCheckItemValues } = useSelector((state) => state.machineServiceRecord);
+    const { serviceRecordConfig } = useSelector((state) => state.serviceRecordConfig);
     const { machine } = useSelector((state) => state.machine);
 
     const defaultValues = useMemo(
       () => ({
         checkItems: row?.checkItems.map(item => ({
           _id:item._id,
-          comment: item.comment || '',
-          value: item?.value || null,
-          images: item?.images || []
+          comment: item?.recordValue?.comments || '',
+          value: item?.recordValue?.checkItemValue || null,
+          images: item?.recordValue?.files.map(file => ({
+            name: file?.name,
+            preview: `data:${file?.fileType};base64,${file?.thumbnail}`,
+            path: file?.path,
+            type: file?.fileType,
+            _id: file?._id
+          })) || []
         })) || [],
       }),
       [row]
     );
-  
+
+    // console.log(row?.checkItems, defaultValues)
 
     const methods = useForm({
       // resolver: yupResolver(MachineServiceRecordPart1Schema),
@@ -63,10 +71,11 @@ const CheckedItemInputRow = ({ index, row, machineId, serviceId }) => {
       control,
       name: "checkItems",
     });
+    
 
     const onSubmit = async (data, childIndex) => {
-      const checkItem = data?.checkItems[childIndex];
-      console.log("checkItem::::",checkItem)
+
+      const checkItem = data.checkItems[childIndex];
       const params = {
         serviceRecord:machineServiceRecord?._id,
         serviceId:machineServiceRecord?.serviceId,
@@ -75,15 +84,17 @@ const CheckedItemInputRow = ({ index, row, machineId, serviceId }) => {
         comments:checkItem.comment,
         images:checkItem.images
       }
-      
-      if(typeof checkItem.value==='object'){
+
+      if (checkItem.value instanceof Date) {
+        params.checkItemValue = fDate(checkItem.value, 'dd/MM/yyyy');
+      } else if(typeof checkItem.value==='object'){
         params.checkItemValue=checkItem?.value?.name;
       }else{
         params.checkItemValue=checkItem.value;
       }
 
       try {
-        const result = await dispatch(addCheckItemValues(machine?._id, params));
+        const result = await dispatch(addCheckItemValues(machine?._id,params, childIndex));
       } catch (err) {
         console.error(err);
         enqueueSnackbar('Saving failed!', { variant: `error` });
@@ -208,6 +219,9 @@ const CheckedItemInputRow = ({ index, row, machineId, serviceId }) => {
                   <Grid container sx={{m:1}} display='flex' direction='row-reverse'>
                     <LoadingButton 
                         onClick={handleSubmit((data) => onSubmit(data, childIndex))} // Pass childIndex
+                        // onClick={(event) => handleSubmit((data) => onSubmit(data, childIndex, event))(event)}
+                        // onClick={()=> onSubmit(childIndex)}
+                        loading={isLoadingCheckItemValues===childIndex}
                         variant='contained'>Save</LoadingButton>
                   </Grid>
                 </Stack>

@@ -11,7 +11,8 @@ import { PATH_MACHINE } from '../../../routes/paths';
 // slice
 import { addMachineServiceRecord, updateMachineServiceRecord, resetMachineServiceRecord, 
         deleteFile, downloadFile, setAddFileDialog, deleteMachineServiceRecord, getMachineServiceRecord, 
-        setFormActiveStep} from '../../../redux/slices/products/machineServiceRecord';
+        setFormActiveStep,
+        getMachineServiceRecordCheckItems} from '../../../redux/slices/products/machineServiceRecord';
 import { getActiveContacts } from '../../../redux/slices/customer/contact';
 // components
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
@@ -50,11 +51,12 @@ function MachineServiceRecordAddForm() {
   const [completed, setCompleted] = useState([]);
 
   useLayoutEffect( ()=>{
-    dispatch(getActiveServiceRecordConfigsForRecords(machine?._id))
-    dispatch(getActiveSecurityUsers({roleType:['TechnicalManager','Technician']}))
+    dispatch(resetMachineServiceRecord());
+    dispatch(getActiveServiceRecordConfigsForRecords(machine?._id));
+    dispatch(getActiveSecurityUsers({roleType:['TechnicalManager','Technician']}));
     
     if(machine?.customer?._id){
-      dispatch(getActiveContacts(machine?.customer?._id))
+      dispatch(getActiveContacts(machine?.customer?._id));
     } 
     
     if(userId){
@@ -65,7 +67,8 @@ function MachineServiceRecordAddForm() {
       const newCompleted = completed;
       newCompleted[0] = true;
       setCompleted(newCompleted);
-      dispatch((getMachineServiceRecord(machine?._id, id)))
+      dispatch((getMachineServiceRecord(machine?._id, id)));
+      dispatch(getMachineServiceRecordCheckItems(machine?._id, id));
     }
     
     

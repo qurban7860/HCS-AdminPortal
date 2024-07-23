@@ -113,7 +113,7 @@ function MultiFilePreview({
                       height:180,
                     }}
                 >
-                  <CardMedia onClick={()=> FORMAT_IMG_VISIBBLE.some(format => fileType.match(format?.toLowerCase())) && previewHandle(index)}>
+                  <CardMedia onClick={()=> FORMAT_IMG_VISIBBLE.some(format => fileType?.match(format?.toLowerCase())) && previewHandle(index)}>
                     <FileThumbnail imageView file={file} sx={{ position: 'absolute' }} imgSx={{ position: 'absolute' }}/>
                   </CardMedia>
                   <ButtonGroup
@@ -128,8 +128,8 @@ function MultiFilePreview({
                               width:'100%'
                           }}
                       >       
-                          {FORMAT_IMG_VISIBBLE.some(format => fileType.match(format))  && <Button sx={{width:'50%', borderRadius:0}} onClick={()=>previewHandle(index)}><Iconify icon="carbon:view" /></Button>}
-                          <Button sx={{width:FORMAT_IMG_VISIBBLE.some(format => fileType.match(format))?'50%':'100%', borderRadius:0}} color='error' onClick={() => onRemove(file)}><Iconify icon="radix-icons:cross-circled" /></Button>
+                          {FORMAT_IMG_VISIBBLE.some(format => fileType?.match(format))  && <Button sx={{width:'50%', borderRadius:0}} onClick={()=>previewHandle(index)}><Iconify icon="carbon:view" /></Button>}
+                          <Button sx={{width:FORMAT_IMG_VISIBBLE.some(format => fileType?.match(format))?'50%':'100%', borderRadius:0}} color='error' onClick={() => onRemove(file)}><Iconify icon="radix-icons:cross-circled" /></Button>
                       </ButtonGroup>
                       
                       <Stack
