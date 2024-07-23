@@ -322,8 +322,5 @@ function applyFilter({ inputData, selectedCustomer, selectedContact, selectedUse
         e?.extendedProps?.notifyContacts?.some((c) => c?._id === selectedContact?._id)
     );
   }
-  
-  console.log("after:",inputData)
-
   return inputData;
 }

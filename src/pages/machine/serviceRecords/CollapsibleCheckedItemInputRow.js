@@ -4,6 +4,7 @@ import { useSnackbar } from 'notistack';
 import PropTypes from 'prop-types';
 import download from 'downloadjs';
 import { Table, TableBody, Grid, TextField, Checkbox, Typography, Stack, Divider, Box } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 import CommentsInput from './CommentsInput';
 import ViewFormServiceRecordVersionAudit from '../../../components/ViewForms/ViewFormServiceRecordVersionAudit';
 import { StyledTableRow } from '../../../theme/styles/default-styles';
@@ -108,20 +109,6 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkItemLists, setValue,
                   {row?.checkItems?.map((childRow,childIndex) => (
                     <StyledTableRow key={childRow._id}>
                       <Grid display='flex' flexDirection='column' sx={{ m:  1}} key={childRow._id} >
-                        <Grid>
-                          {/* <Grid display="flex" alignItems="center">
-                              <Typography variant='body2' size='small'  >
-                                <b>{`${index+1}.${childIndex+1}. `}</b>{`${childRow.name}`}
-                              </Typography>
-                              <Checkbox 
-                                name={`${childRow?.name}_${childIndex}_${index}_${childIndex}`} 
-                                checked={checkItemLists[index]?.checkItems[childIndex]?.checked || false } 
-                                onChange={()=>handleChangeCheckItemListChecked(index, childIndex )} 
-                              /> 
-                              {!checkItemLists[index]?.checkItems[childIndex]?.checked && isValueAvailable && 
-                                <Typography variant='body2' size='small' sx={{ color: 'red'}}  >Please tick this box to save values</Typography>
-                              }
-                          </Grid> */}
                           <Grid>
                             <CommentsInput index={index} childIndex={childIndex} 
                               key={`${index}${childIndex}`}
@@ -136,7 +123,6 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkItemLists, setValue,
                               handleChangeCheckItemListChecked={handleChangeCheckItemListChecked}
                               handleChangeCheckItemListCheckBoxValue={handleChangeCheckItemListCheckBoxValue}
                             />
-                          </Grid>
                         </Grid>
 
                         <Grid >
@@ -188,7 +174,10 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkItemLists, setValue,
 
                     {childRow && <ThumbnailDocButton size={70} onClick={handleAddFileDialog}/>}
                   </Box>
-                    </StyledTableRow>
+                  <Grid sx={{m:1}} display='flex' direction='row-reverse'>
+                    <LoadingButton variant='contained'>Save</LoadingButton>
+                  </Grid>
+                  </StyledTableRow>
                   ))}
                 </TableBody>
               </Table>

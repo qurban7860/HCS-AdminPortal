@@ -1,27 +1,144 @@
-import React from 'react'
+import React, { useEffect, useLayoutEffect, useMemo, useState } from 'react'
 import PropTypes from 'prop-types';
-import { Box } from '@mui/material';
-import { useSelector } from 'react-redux';
+import { Box, Stack } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
+import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useSnackbar } from 'notistack';
+// import FormProvider from '../../../components/hook-form';
+import FormProvider from '../../../components/hook-form/FormProvider';
 import { RHFTextField, RHFAutocomplete, RHFDatePicker } from '../../../components/hook-form';
+import { MachineServiceRecordPart1Schema } from '../../schemas/machine';
+import { PATH_MACHINE } from '../../../routes/paths';
+import { addMachineServiceRecord, deleteMachineServiceRecord, setFormActiveStep, updateMachineServiceRecord } from '../../../redux/slices/products/machineServiceRecord';
+import { resetServiceRecordConfig } from '../../../redux/slices/products/serviceRecordConfig';
+import FormLabel from '../../../components/DocumentForms/FormLabel';
+import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 
 MachineServiceRecordsFirstStep.propTypes = {
-    activeServiceRecordConfigs: PropTypes.array,
     securityUsers: PropTypes.array,
-    onChange : PropTypes.func
+    onChangeConfig : PropTypes.func,
+    handleComplete : PropTypes.func,
 };
 
-function MachineServiceRecordsFirstStep( { activeServiceRecordConfigs, securityUsers, onChange  } ) {
+function MachineServiceRecordsFirstStep( { securityUsers, onChangeConfig, handleComplete} ) {
+    
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const { enqueueSnackbar } = useSnackbar();
+  
+    const { recordTypes, activeServiceRecordConfigsForRecords } = useSelector((state) => state.serviceRecordConfig);
+    const { machineServiceRecord } = useSelector((state) => state.machineServiceRecord);
+    const { activeSecurityUsers, securityUser } = useSelector((state) => state.user);
+    const { machine } = useSelector((state) => state.machine);
 
-    const { recordTypes } = useSelector((state) => state.serviceRecordConfig);
+    const [ isDraft, setIsDraft ] = useState(false);
+    const saveAsDraft = async () => setIsDraft(false);
+    const [ activeServiceRecordConfigs, setActiveServiceRecordConfigs ] = useState([]);
 
-  return (
-    <>
+    const defaultValues = useMemo(
+        () => {
+          const initialValues = {
+          docRecordType:                recordTypes.find(rt=> rt?.name?.toLowerCase() === machineServiceRecord?.serviceRecordConfig?.recordType?.toLowerCase()) || null,
+          serviceRecordConfiguration:   machineServiceRecord?.serviceRecordConfiguration || null,
+          serviceDate:                  machineServiceRecord?.serviceDate || new Date(),
+          versionNo:                    machineServiceRecord?.versionNo || 1,
+          technician:                   machineServiceRecord?.technician || ( securityUser || null ),
+          technicianNotes:              machineServiceRecord?.technicianNotes || '',
+          textBeforeCheckItems:         machineServiceRecord?.textBeforeCheckItems || '',
+          textAfterCheckItems:          machineServiceRecord?.textAfterCheckItems || '',
+        }
+        return initialValues;
+      },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [ machineServiceRecord ]
+      );
+
+    const methods = useForm({
+        resolver: yupResolver(MachineServiceRecordPart1Schema),
+        defaultValues,
+    });
+    
+    const {
+    reset,
+    watch,
+    setValue,
+    trigger,
+    handleSubmit,
+    formState: { isSubmitting },
+    } = methods;
+
+    const { serviceRecordConfiguration, docRecordType } = watch();
+
+    useLayoutEffect(()=>{
+        if(machineServiceRecord?._id){
+            setValue('recordType', recordTypes.find(rt=> rt?.name?.toLowerCase() === machineServiceRecord?.serviceRecordConfig?.recordType?.toLowerCase()))
+            setValue('serviceRecordConfiguration', activeServiceRecordConfigs.find(asrc=> asrc?._id === machineServiceRecord?.serviceRecordConfig?._id))
+        }
+    },[machineServiceRecord,activeServiceRecordConfigs, recordTypes, setValue])
+
+    useEffect(() => {
+        if(docRecordType?.name){
+            if(docRecordType?.name !== serviceRecordConfiguration?.recordType ){
+            dispatch(resetServiceRecordConfig())
+            }
+            setActiveServiceRecordConfigs(activeServiceRecordConfigsForRecords.filter(activeRecordConfig => activeRecordConfig?.recordType?.toLowerCase() === docRecordType?.name?.toLowerCase() ))
+        }else{
+            setActiveServiceRecordConfigs([])
+        }
+        setValue('serviceRecordConfiguration',null)
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[docRecordType, activeServiceRecordConfigsForRecords])
+
+      const onSubmit = async (data) => {
+        try {
+          if(!machineServiceRecord?._id ){
+            const serviceRecord = await dispatch(addMachineServiceRecord(machine?._id, data));
+            await dispatch(setFormActiveStep(1));
+            await handleDraftRequest();
+            await handleComplete(0);
+
+            await navigate(PATH_MACHINE.machines.serviceRecords.edit(machine?._id, serviceRecord?._id))
+          }else {
+            const serviceRecord = await dispatch(updateMachineServiceRecord(machine?._id, machineServiceRecord?._id, data));
+            await dispatch(setFormActiveStep(1));
+            await handleDraftRequest();
+            await handleComplete(0);
+            await navigate(PATH_MACHINE.machines.serviceRecords.edit(machine?._id, machineServiceRecord?._id))  
+          }
+          
+    
+        } catch (err) {
+          console.error(err);
+          enqueueSnackbar('Saving failed!', { variant: `error` });
+        }
+      };
+
+      const handleDraftRequest = async ()=> {
+        if(isDraft){
+          await navigate(PATH_MACHINE.machines.serviceRecords.root(machine?._id))
+        }
+      }
+
+      const toggleCancel = async () =>{
+        if( machineServiceRecord?._id ){
+          await dispatch(deleteMachineServiceRecord(machine?._id, machineServiceRecord?._id, machineServiceRecord?.status ))
+        }
+        navigate(PATH_MACHINE.machines.serviceRecords.root(machine?._id));
+      }
+
+return (
+    <FormProvider methods={methods}  onSubmit={handleSubmit(onSubmit)}>
+        <Stack mx={1} spacing={2}>
+        <FormLabel content="Create Service Record" />
                 <Box
                     rowGap={2}
                     columnGap={2}
                     display="grid"
+                    sx={{width:'100%'}}
                     gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
-                >
+                    >
                     <RHFAutocomplete 
                         name="docRecordType"
                         label="Document Type*"
@@ -40,30 +157,42 @@ function MachineServiceRecordsFirstStep( { activeServiceRecordConfigs, securityU
                         getOptionLabel={(option) => `${option?.docTitle || ''} ${option?.docTitle ? '-' : '' } ${option.recordType || ''} ${option?.docVersionNo ? '- v' : '' }${option?.docVersionNo || ''}`}
                         isOptionEqualToValue={(option, value) => option?._id === value?._id}
                         renderOption={(props, option) => (
-                        <li {...props} key={option?._id}>{`${option?.docTitle || ''} ${option?.docTitle ? '-' : '' } ${option.recordType || ''} ${option?.docVersionNo ? '- v' : '' }${option?.docVersionNo || ''}`}</li>
+                            <li {...props} key={option?._id}>{`${option?.docTitle || ''} ${option?.docTitle ? '-' : '' } ${option.recordType || ''} ${option?.docVersionNo ? '- v' : '' }${option?.docVersionNo || ''}`}</li>
                         )}
-                        onChange={onChange}
-                    />
+                        onChange={(option, newValue)=>{
+                            setValue('serviceRecordConfiguration',newValue);
+                            setValue('textBeforeCheckItems',newValue?.textBeforeCheckItems);
+                            setValue('textAfterCheckItems',newValue?.textAfterCheckItems);
+                            // onChangeConfig(newValue)
+                        }}
+                        />
                 </Box>       
                 <Box
                     rowGap={2}
                     columnGap={2}
                     display="grid"
                     gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
-                >
+                    >
                     <RHFDatePicker inputFormat='dd/MM/yyyy' name="serviceDate" label="Service Date" />
                     <RHFTextField name="versionNo" label="Version No" disabled/>
                 </Box>
-                    <RHFAutocomplete
-                        name="technician"
-                        label="Technician"
-                        options={ securityUsers }
-                        getOptionLabel={(option) => option?.name || ''}
-                        isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                        renderOption={(props, option) => ( <li {...props} key={option?._id}>{option.name || ''}</li>)}
+                <RHFAutocomplete
+                    name="technician"
+                    label="Technician"
+                    options={ securityUsers }
+                    getOptionLabel={(option) => option?.name || ''}
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                    renderOption={(props, option) => ( <li {...props} key={option?._id}>{option.name || ''}</li>)}
                     />
-                    <RHFTextField name="technicianNotes" label="Technician Notes" minRows={3} multiline/> 
-    </>
+                <RHFTextField name="technicianNotes" label="Technician Notes" minRows={3} multiline/> 
+                <AddFormButtons isSubmitting={isSubmitting} 
+                    saveAsDraft={saveAsDraft} 
+                    saveButtonName="Next"
+                    isDisabledBackButton handleBack backButtonName="Back" 
+                    toggleCancel={toggleCancel} cancelButtonName="Discard" 
+                />
+        </Stack>
+    </FormProvider>
 )
 }
 

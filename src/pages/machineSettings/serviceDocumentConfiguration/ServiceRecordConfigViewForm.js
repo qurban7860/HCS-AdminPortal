@@ -9,7 +9,6 @@ import { Card, Grid, Typography, TableBody, Table, TableContainer } from '@mui/m
 
 import {
   getServiceRecordConfig,
-  setServiceRecordConfigEditFormVisibility,
   approveServiceRecordConfig,
   changeConfigStatus,
   deleteServiceRecordConfig,
@@ -36,7 +35,6 @@ ServiceRecordConfigViewForm.propTypes = {
 
 export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig = null }) {
   const toggleEdit = () => {
-    dispatch(setServiceRecordConfigEditFormVisibility(true));
     navigate(PATH_MACHINE.machines.machineSettings.serviceRecordsConfig.edit(id));
   };
   const { enqueueSnackbar } = useSnackbar();
