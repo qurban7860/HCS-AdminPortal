@@ -10,8 +10,7 @@ import download from 'downloadjs';
 import { PATH_MACHINE } from '../../../routes/paths';
 // slice
 import { addMachineServiceRecord, updateMachineServiceRecord, resetMachineServiceRecord, 
-        deleteFile, downloadFile, setAddFileDialog, deleteMachineServiceRecord, getMachineServiceRecord, 
-        setFormActiveStep,
+        setAddFileDialog, deleteMachineServiceRecord, getMachineServiceRecord, setFormActiveStep,
         getMachineServiceRecordCheckItems} from '../../../redux/slices/products/machineServiceRecord';
 import { getActiveContacts } from '../../../redux/slices/customer/contact';
 // components
