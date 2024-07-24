@@ -712,7 +712,7 @@ export default function Router() {
                 {element: <MachineServiceRecordList/>, index: true},
                 {path: 'new', element: <MachineServiceRecordAdd/>},
                 {path: ':id/view', element: <MachineServiceRecordView/>},
-                {path: ':id/edit', element: <MachineServiceRecordEdit/>}, 
+                {path: ':id/edit', element: <MachineServiceRecordAdd/>}, 
                 {path: ':serviceId/history',children:[
                     {element: <MachineServiceRecordHistoryList/>, index: true}, 
                     {path: ':id/view', element: <MachineServiceRecordView serviceHistoryView />},

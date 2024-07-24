@@ -1,22 +1,105 @@
 import React, { useState, memo } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Grid, Divider, Chip, TableRow, Typography } from '@mui/material';
+import { Grid, Divider, Chip, TableRow, Typography, Box } from '@mui/material';
+import download from 'downloadjs';
+import { useSnackbar } from 'notistack';
 import { fDate } from '../../../utils/formatTime';
 import Iconify from '../../../components/iconify';
 import CopyIcon from '../../../components/Icons/CopyIcon';
 import HistoryDropDownUpIcons from '../../../components/Icons/HistoryDropDownUpIcons';
 import ViewFormServiceRecordVersionAudit from '../../../components/ViewForms/ViewFormServiceRecordVersionAudit';
+import { DocumentGalleryItem } from '../../../components/gallery/DocumentGalleryItem';
+import { deleteRecordFile, downloadRecordFile, setAddFileDialog } from '../../../redux/slices/products/machineServiceRecord';
+import { ThumbnailDocButton } from '../../../components/Thumbnails';
 
-const StatusAndComment = ({index, childIndex, childRow}) => {
+const StatusAndComment = ({index, childIndex, childRow, machineId, serviceId}) => {
 
     const [activeIndex, setActiveIndex] = useState(null);
-
+    const dispatch = useDispatch();
+    const { enqueueSnackbar } = useSnackbar();
+  
     const handleAccordianClick = (accordianIndex) => {
       if (accordianIndex === activeIndex) {
         setActiveIndex(null);
       } else {
         setActiveIndex(accordianIndex);
       }
+    };
+
+    // const { machineServiceRecord, isLoading, pdfViewerDialog, sendEmailDialog } = useSelector((state) => state.machineServiceRecord);
+    const [files, setFiles] = useState([]);
+
+    const regEx = /^[^2]*/;
+    const [selectedImage, setSelectedImage] = useState(-1);
+    const [slides, setSlides] = useState([]);
+
+    const handleAddFileDialog = ()=>{
+      dispatch(setAddFileDialog(true));
+    }
+  
+    const handleOpenLightbox = async (_index) => {
+      setSelectedImage(_index);
+      const image = slides[_index];
+  
+      if(!image?.isLoaded && image?.fileType?.startsWith('image')){
+        try {
+          const response = await dispatch(downloadRecordFile(machineId, serviceId, image?._id));
+          if (regEx.test(response.status)) {
+            // Update the image property in the imagesLightbox array
+            const updatedSlides = [
+              ...slides.slice(0, _index), // copies slides before the updated slide
+              {
+                ...slides[_index],
+                src: `data:image/png;base64, ${response.data}`,
+                isLoaded: true,
+              },
+              ...slides.slice(_index + 1), // copies slides after the updated slide
+            ];
+  
+            // Update the state with the new array
+            setSlides(updatedSlides);
+          }
+        } catch (error) {
+          console.error('Error loading full file:', error);
+        }
+      }
+    };
+  
+    const handleCloseLightbox = () => {
+      setSelectedImage(-1);
+    };
+  
+    const handledeleteRecordFile = async (fileId) => {
+      try {
+        await dispatch(deleteRecordFile(machineId, serviceId, fileId));
+        // await dispatch(getMachineServiceRecord(serviceId))
+        enqueueSnackbar('File Archived successfully!');
+      } catch (err) {
+        console.log(err);
+        enqueueSnackbar('File Deletion failed!', { variant: `error` });
+      }
+    };
+  
+    const handledownloadRecordFile = (fileId, name, extension) => {
+      dispatch(downloadRecordFile(machineId, serviceId, fileId))
+        .then((res) => {
+          if (regEx.test(res.status)) {
+            download(atob(res.data), `${name}.${extension}`, { type: extension });
+            enqueueSnackbar(res.statusText);
+          } else {
+            enqueueSnackbar(res.statusText, { variant: `error` });
+          }
+        })
+        .catch((err) => {
+          if (err.Message) {
+            enqueueSnackbar(err.Message, { variant: `error` });
+          } else if (err.message) {
+            enqueueSnackbar(err.message, { variant: `error` });
+          } else {
+            enqueueSnackbar('Something went wrong!', { variant: `error` });
+          }
+        });
     };
 
   return (
@@ -58,6 +141,30 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
                 {childRow?.recordValue?.comments?.trim() && <CopyIcon value={childRow?.recordValue?.comments || ''} />}
               </Typography>}
             </Grid>
+            <Box
+              sx={{my:1, width:'100%'}}
+              gap={2}
+              display="grid"
+              gridTemplateColumns={{
+                xs: 'repeat(1, 1fr)',
+                sm: 'repeat(3, 1fr)',
+                md: 'repeat(5, 1fr)',
+                lg: 'repeat(6, 1fr)',
+                xl: 'repeat(12, 1fr)',
+              }}
+            >
+
+          {files?.map((file, _index) => (
+            <DocumentGalleryItem size={70} isLoading={!files} key={file?.id} image={file} 
+              onOpenLightbox={()=> handleOpenLightbox(_index)}
+              ondownloadRecordFile={()=> handledownloadRecordFile(file._id, file?.name, file?.extension)}
+              ondeleteRecordFile={()=> handledeleteRecordFile(file._id)}
+              toolbar
+            />
+          ))}
+
+          {childRow && <ThumbnailDocButton size={70} onClick={handleAddFileDialog}/>}
+        </Box>
           <ViewFormServiceRecordVersionAudit value={childRow?.recordValue}/>
           </Grid>
         }
@@ -115,5 +222,7 @@ StatusAndComment.propTypes = {
     index: PropTypes.number,
     childIndex: PropTypes.number,
     childRow: PropTypes.object,
+    machineId: PropTypes.string,
+    serviceId: PropTypes.string,
   };
 export default memo(StatusAndComment)

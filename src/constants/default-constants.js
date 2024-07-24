@@ -165,6 +165,7 @@ export const BUTTONS = {
   },
   CLEAR: 'Clear',
   CANCEL: 'Cancel',
+  BACK: 'Back',
   DISCARD: 'Discard',
   TRANSFER: 'Transfer',
   CONTINUE: 'Continue',

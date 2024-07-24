@@ -6,8 +6,6 @@ import { CONFIG } from '../../../config-global';
 // ----------------------------------------------------------------------
 export const initialState = {
   intial: false,
-  serviceRecordConfigFormVisibility: false,
-  serviceRecordConfigEditFormVisibility: false,
   responseMessage: null,
   success: false,
   isLoading: false,
@@ -62,15 +60,7 @@ const slice = createSlice({
     startLoadingCheckItems(state) {
       state.isLoadingCheckItems = true;
     },
-    // SET TOGGLE
-    setServiceRecordConfigEditFormVisibility(state, action){
-      state.serviceRecordConfigEditFormVisibility = action.payload;
-    },
-    // SET TOGGLE
-    setServiceRecordConfigFormVisibility(state, action){
-      state.serviceRecordConfigFormVisibility = action.payload;
-    },
-  
+    
     // HAS ERROR
     hasError(state, action) {
       state.isLoading = false;
@@ -152,8 +142,6 @@ const slice = createSlice({
 export default slice.reducer;
 // Actions
 export const {
-  setServiceRecordConfigFormVisibility,
-  setServiceRecordConfigEditFormVisibility,
   resetServiceRecordConfig,
   resetServiceRecordConfigs,
   setResponseMessage,
