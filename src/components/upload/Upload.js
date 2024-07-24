@@ -64,6 +64,7 @@ Upload.propTypes = {
   drawingPage:PropTypes.bool,
   imagesOnly:PropTypes.bool,
   dropZone:PropTypes.bool,
+  onLoadImage:PropTypes.func
             
 };
 
@@ -91,6 +92,7 @@ export default function Upload({
   onChangeReferenceNumber,
   onChangeStockNumber,
   drawingPage,
+  onLoadImage,
   imagesOnly,
   dropZone,
   sx,
@@ -265,6 +267,7 @@ export default function Upload({
                 onChangeDisplayName={onChangeDisplayName}
                 onChangeReferenceNumber={onChangeReferenceNumber}
                 onChangeStockNumber={onChangeStockNumber}
+                onLoadImage={onLoadImage}
                 machine={machine||''} 
                 rows={rows} 
                 drawingPage 

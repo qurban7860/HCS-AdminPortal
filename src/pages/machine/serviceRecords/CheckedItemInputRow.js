@@ -11,7 +11,7 @@ import { LoadingButton } from '@mui/lab';
 import CommentsInput from './CommentsInput';
 import ViewFormServiceRecordVersionAudit from '../../../components/ViewForms/ViewFormServiceRecordVersionAudit';
 import { StyledTableRow } from '../../../theme/styles/default-styles';
-import { addCheckItemValues, deleteFile, downloadFile, setAddFileDialog } from '../../../redux/slices/products/machineServiceRecord';
+import { addCheckItemValues, deleteCheckItemFile, downloadCheckItemFile, setAddFileDialog } from '../../../redux/slices/products/machineServiceRecord';
 import { DocumentGalleryItem } from '../../../components/gallery/DocumentGalleryItem';
 import { ThumbnailDocButton } from '../../../components/Thumbnails';
 import DialogServiceRecordAddFile from '../../../components/Dialog/DialogServiceRecordAddFile';
@@ -54,8 +54,6 @@ const CheckedItemInputRow = ({ index, row, machineId, serviceId }) => {
       }),
       [row, machineId, serviceId]
     );
-
-    console.log("defaultValues:::::",defaultValues)
 
     const methods = useForm({
       // resolver: yupResolver(MachineServiceRecordPart1Schema),
@@ -124,7 +122,7 @@ const CheckedItemInputRow = ({ index, row, machineId, serviceId }) => {
     const handleRemoveFile = async (inputFile, childIndex)=>{
       
       if(inputFile?._id){
-        await dispatch(deleteFile(machineId, serviceId, inputFile?._id))
+        await dispatch(deleteCheckItemFile(machineId, serviceId, inputFile?._id))
       }
 
       setValue(
@@ -133,6 +131,29 @@ const CheckedItemInputRow = ({ index, row, machineId, serviceId }) => {
         { shouldValidate: true }
       )
     }
+
+    const regEx = /^[^2]*/;
+    const handleLoadImage = async (imageId, imageIndex, childIndex) => {
+      try {
+        const response = await dispatch(downloadCheckItemFile(machineId, serviceId, imageId));
+        if (regEx.test(response.status)) {
+          // Update the image property in the imagesLightbox array
+          const existingFiles = getValues(`checkItems[${childIndex}].images`) || [];
+          const image = existingFiles[imageIndex];
+    
+          existingFiles[imageIndex] = {
+            ...image,
+            src: `data:${image?.fileType};base64,${response.data}`,
+            preview: `data:${image?.fileType};base64,${response.data}`,
+            isLoaded: true,
+          };
+    
+          setValue(`checkItems[${childIndex}].images`, existingFiles, { shouldValidate: true });
+        }
+      } catch (error) {
+        console.error('Error loading full file:', error);
+      }
+    };
 
   return(<>
         <FormProvider key={`form-${index}`} methods={methods}>
@@ -211,6 +232,7 @@ const CheckedItemInputRow = ({ index, row, machineId, serviceId }) => {
                         imagesOnly
                         onDrop={(accepted)=> handleDropMultiFile(accepted, childIndex)}
                         onRemove={(inputFile) => handleRemoveFile(inputFile, childIndex)}
+                        onLoadImage={(imageId, imageIndex)=> handleLoadImage(imageId, imageIndex, childIndex)}
                         // onRemoveAll={() => setValue(`checkItems[${childIndex}].images`, [], { shouldValidate: true })}
                       />
                       {/* <RHFUpload

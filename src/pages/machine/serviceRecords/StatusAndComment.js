@@ -10,7 +10,7 @@ import CopyIcon from '../../../components/Icons/CopyIcon';
 import HistoryDropDownUpIcons from '../../../components/Icons/HistoryDropDownUpIcons';
 import ViewFormServiceRecordVersionAudit from '../../../components/ViewForms/ViewFormServiceRecordVersionAudit';
 import { DocumentGalleryItem } from '../../../components/gallery/DocumentGalleryItem';
-import { deleteFile, downloadFile, setAddFileDialog } from '../../../redux/slices/products/machineServiceRecord';
+import { deleteRecordFile, downloadRecordFile, setAddFileDialog } from '../../../redux/slices/products/machineServiceRecord';
 import { ThumbnailDocButton } from '../../../components/Thumbnails';
 
 const StatusAndComment = ({index, childIndex, childRow, machineId, serviceId}) => {
@@ -44,7 +44,7 @@ const StatusAndComment = ({index, childIndex, childRow, machineId, serviceId}) =
   
       if(!image?.isLoaded && image?.fileType?.startsWith('image')){
         try {
-          const response = await dispatch(downloadFile(machineId, serviceId, image?._id));
+          const response = await dispatch(downloadRecordFile(machineId, serviceId, image?._id));
           if (regEx.test(response.status)) {
             // Update the image property in the imagesLightbox array
             const updatedSlides = [
@@ -70,9 +70,9 @@ const StatusAndComment = ({index, childIndex, childRow, machineId, serviceId}) =
       setSelectedImage(-1);
     };
   
-    const handleDeleteFile = async (fileId) => {
+    const handledeleteRecordFile = async (fileId) => {
       try {
-        await dispatch(deleteFile(machineId, serviceId, fileId));
+        await dispatch(deleteRecordFile(machineId, serviceId, fileId));
         // await dispatch(getMachineServiceRecord(serviceId))
         enqueueSnackbar('File Archived successfully!');
       } catch (err) {
@@ -81,8 +81,8 @@ const StatusAndComment = ({index, childIndex, childRow, machineId, serviceId}) =
       }
     };
   
-    const handleDownloadFile = (fileId, name, extension) => {
-      dispatch(downloadFile(machineId, serviceId, fileId))
+    const handledownloadRecordFile = (fileId, name, extension) => {
+      dispatch(downloadRecordFile(machineId, serviceId, fileId))
         .then((res) => {
           if (regEx.test(res.status)) {
             download(atob(res.data), `${name}.${extension}`, { type: extension });
@@ -157,8 +157,8 @@ const StatusAndComment = ({index, childIndex, childRow, machineId, serviceId}) =
           {files?.map((file, _index) => (
             <DocumentGalleryItem size={70} isLoading={!files} key={file?.id} image={file} 
               onOpenLightbox={()=> handleOpenLightbox(_index)}
-              onDownloadFile={()=> handleDownloadFile(file._id, file?.name, file?.extension)}
-              onDeleteFile={()=> handleDeleteFile(file._id)}
+              ondownloadRecordFile={()=> handledownloadRecordFile(file._id, file?.name, file?.extension)}
+              ondeleteRecordFile={()=> handledeleteRecordFile(file._id)}
               toolbar
             />
           ))}

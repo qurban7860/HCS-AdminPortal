@@ -14,7 +14,6 @@ import { varFade } from '../../animate';
 import FileThumbnail, { fileData } from '../../file-thumbnail';
 import Lightbox from '../../lightbox/Lightbox';
 import AlreadyExistMenuPopover from '../AlreadyExistMenuPopover';
-import { downloadFile } from '../../../redux/slices/products/machineServiceRecord';
 
 // ----------------------------------------------------------------------
 
@@ -33,6 +32,7 @@ MultiFilePreview.propTypes = {
   onChangeDisplayName: PropTypes.func,
   onChangeReferenceNumber: PropTypes.func,
   onChangeStockNumber: PropTypes.func,
+  onLoadImage: PropTypes.func,
 };
 
 function MultiFilePreview({ 
@@ -44,6 +44,7 @@ function MultiFilePreview({
   onChangeDisplayName,
   onChangeReferenceNumber,
   onChangeStockNumber,
+  onLoadImage,
   files, 
   onRemove, 
   sx, 
@@ -52,7 +53,6 @@ function MultiFilePreview({
 }) {
   
   const { activeDocumentTypes } = useSelector((state) => state.documentType);
-  const regEx = /^[^2]*/;
   const dispatch = useDispatch()
   const theme = useTheme();
   const [slides, setSlides] = useState([]);
@@ -61,13 +61,9 @@ function MultiFilePreview({
   const [verifiedAnchorEl, setVerifiedAnchorEl] = useState(null);
 
   useEffect(() => {
-    const updatedSlides = files.map((file) => ({
-      ...file,
-      isLoaded: !file._id
-    }));
-    setSlides(updatedSlides);
+    setSlides(files);
   }, [files]);
-  
+
   const handleExtensionsPopoverOpen = (event, file) => {
       setVerifiedAnchorEl(event.currentTarget);
       const data = file?.found;
@@ -83,37 +79,12 @@ function MultiFilePreview({
   if (!files?.length) {
     return null;
   }
-
-  // const previewHandle = (index) => {
-  //   const image = slides[index];
-  //   setSelectedImage(index);
-  // };
   
   const handleOpenLightbox = async (index) => {
     setSelectedImage(index);
     const image = slides[index];
-    if(!image?.isLoaded && image?.fileType?.startsWith('image')){
-      try {
-        const response = await dispatch(downloadFile(image.machineId, image.serviceId, image?._id));
-        if (regEx.test(response.status)) {
-          // Update the image property in the imagesLightbox array
-          const updatedSlides = [
-            ...slides.slice(0, index), // copies slides before the updated slide
-            {
-              ...slides[index],
-              src: `data:${image?.fileType};base64, ${response.data}`,
-              preview: `data:${image?.fileType};base64, ${response.data}`,
-              isLoaded: true,
-            },
-            ...slides.slice(index + 1), // copies slides after the updated slide
-          ];
-
-          // Update the state with the new array
-          setSlides(updatedSlides);
-        }
-      } catch (error) {
-        console.error('Error loading full file:', error);
-      }
+    if(!image.isLoaded && onLoadImage){
+      await onLoadImage(image?._id, index)
     }
   };
 
@@ -128,7 +99,7 @@ function MultiFilePreview({
       {files.map(( file , index ) => {
         if(file){
         const { key, name = '', size = 0, displayName, referenceNumber, versionNo, stockNumber, docCategory, docType } = fileData(file);
-        const fileType = file?.type.split('/').pop().toLowerCase();
+        const fileType = file?.type?.split('/').pop().toLowerCase();
         const isNotFormatFile = typeof file === 'string';
         
         if (thumbnail) {

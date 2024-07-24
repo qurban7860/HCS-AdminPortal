@@ -16,8 +16,8 @@ import { deleteMachineServiceRecord,
   setSendEmailDialog,
   setPDFViewerDialog,
   setAddFileDialog,
-  downloadFile,
-  deleteFile,
+  downloadRecordFile,
+  deleteRecordFile,
   completeServiceRecord} from '../../../redux/slices/products/machineServiceRecord';
 import { setCardActiveIndex, setIsExpanded } from '../../../redux/slices/customer/contact';
 // components
@@ -182,7 +182,7 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
 
     if(!image?.isLoaded && image?.fileType?.startsWith('image')){
       try {
-        const response = await dispatch(downloadFile(machineId, serviceId, image?._id));
+        const response = await dispatch(downloadRecordFile(machineId, serviceId, image?._id));
         if (regEx.test(response.status)) {
           // Update the image property in the imagesLightbox array
           const updatedSlides = [
@@ -208,9 +208,9 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
     setSelectedImage(-1);
   };
 
-  const handleDeleteFile = async (fileId) => {
+  const handledeleteRecordFile = async (fileId) => {
     try {
-      await dispatch(deleteFile(machineId, serviceId, fileId));
+      await dispatch(deleteRecordFile(machineId, serviceId, fileId));
       await dispatch(getMachineServiceRecord(serviceId))
       enqueueSnackbar('File Archived successfully!');
     } catch (err) {
@@ -219,8 +219,8 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
     }
   };
 
-  const handleDownloadFile = (fileId, name, extension) => {
-    dispatch(downloadFile(machineId, serviceId, fileId))
+  const handledownloadRecordFile = (fileId, name, extension) => {
+    dispatch(downloadRecordFile(machineId, serviceId, fileId))
       .then((res) => {
         if (regEx.test(res.status)) {
           download(atob(res.data), `${name}.${extension}`, { type: extension });
@@ -311,8 +311,8 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
           {defaultValues?.files?.map((file, _index) => (
             <DocumentGalleryItem isLoading={isLoading} key={file?.id} image={file} 
               onOpenLightbox={()=> handleOpenLightbox(_index)}
-              onDownloadFile={()=> handleDownloadFile(file._id, file?.name, file?.extension)}
-              onDeleteFile={()=> handleDeleteFile(file._id)}
+              ondownloadRecordFile={()=> handledownloadRecordFile(file._id, file?.name, file?.extension)}
+              ondeleteRecordFile={()=> handledeleteRecordFile(file._id)}
               toolbar
             />
           ))}

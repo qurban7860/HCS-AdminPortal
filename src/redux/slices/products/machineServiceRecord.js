@@ -490,7 +490,32 @@ export function addMachineServiceRecordFiles(machineId, id, params) {
   };
 }
 
-export function downloadFile(machineId, id, fileId) {
+export function downloadRecordFile(machineId, id, fileId) {
+  return async (dispatch) => {
+    dispatch(slice.actions.setLoadingCheckItemValues());
+    const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/files/${id}/file/${fileId}/download/` );
+    return response;
+  };
+}
+
+export function deleteRecordFile(machineId, id, fileId) {
+  return async (dispatch) => {
+    dispatch(slice.actions.setLoadingCheckItemValues());
+    try {
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/files/${id}/file/${fileId}/delete/` , 
+      {
+          isArchived: true, 
+      });
+      dispatch(slice.actions.setResponseMessage(response.data));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+export function downloadCheckItemFile(machineId, id, fileId) {
   return async (dispatch) => {
     dispatch(slice.actions.setLoadingCheckItemValues());
     const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecordValues/files/${fileId}/download/` );
@@ -498,7 +523,7 @@ export function downloadFile(machineId, id, fileId) {
   };
 }
 
-export function deleteFile(machineId, id, fileId) {
+export function deleteCheckItemFile(machineId, id, fileId) {
   return async (dispatch) => {
     dispatch(slice.actions.setLoadingCheckItemValues());
     try {

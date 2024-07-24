@@ -8,7 +8,7 @@ import { LoadingButton } from '@mui/lab';
 import CommentsInput from './CommentsInput';
 import ViewFormServiceRecordVersionAudit from '../../../components/ViewForms/ViewFormServiceRecordVersionAudit';
 import { StyledTableRow } from '../../../theme/styles/default-styles';
-import { deleteFile, downloadFile, setAddFileDialog } from '../../../redux/slices/products/machineServiceRecord';
+import { deleteRecordFile, downloadRecordFile, setAddFileDialog } from '../../../redux/slices/products/machineServiceRecord';
 import { DocumentGalleryItem } from '../../../components/gallery/DocumentGalleryItem';
 import { ThumbnailDocButton } from '../../../components/Thumbnails';
 import DialogServiceRecordAddFile from '../../../components/Dialog/DialogServiceRecordAddFile';
@@ -41,7 +41,7 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkItemLists, setValue,
   
       if(!image?.isLoaded && image?.fileType?.startsWith('image')){
         try {
-          const response = await dispatch(downloadFile(machineId, serviceId, image?._id));
+          const response = await dispatch(downloadRecordFile(machineId, serviceId, image?._id));
           if (regEx.test(response.status)) {
             // Update the image property in the imagesLightbox array
             const updatedSlides = [
@@ -67,9 +67,9 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkItemLists, setValue,
       setSelectedImage(-1);
     };
   
-    const handleDeleteFile = async (fileId) => {
+    const handledeleteRecordFile = async (fileId) => {
       try {
-        await dispatch(deleteFile(machineId, serviceId, fileId));
+        await dispatch(deleteRecordFile(machineId, serviceId, fileId));
         // await dispatch(getMachineServiceRecord(serviceId))
         enqueueSnackbar('File Archived successfully!');
       } catch (err) {
@@ -78,8 +78,8 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkItemLists, setValue,
       }
     };
   
-    const handleDownloadFile = (fileId, name, extension) => {
-      dispatch(downloadFile(machineId, serviceId, fileId))
+    const handledownloadRecordFile = (fileId, name, extension) => {
+      dispatch(downloadRecordFile(machineId, serviceId, fileId))
         .then((res) => {
           if (regEx.test(res.status)) {
             download(atob(res.data), `${name}.${extension}`, { type: extension });
@@ -166,8 +166,8 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkItemLists, setValue,
                     {files?.map((file, _index) => (
                       <DocumentGalleryItem size={70} isLoading={!files} key={file?.id} image={file} 
                         onOpenLightbox={()=> handleOpenLightbox(_index)}
-                        onDownloadFile={()=> handleDownloadFile(file._id, file?.name, file?.extension)}
-                        onDeleteFile={()=> handleDeleteFile(file._id)}
+                        ondownloadRecordFile={()=> handledownloadRecordFile(file._id, file?.name, file?.extension)}
+                        ondeleteRecordFile={()=> handledeleteRecordFile(file._id)}
                         toolbar
                       />
                     ))}

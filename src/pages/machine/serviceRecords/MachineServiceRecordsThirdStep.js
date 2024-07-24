@@ -9,7 +9,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import download from 'downloadjs';
 import { PATH_MACHINE } from '../../../routes/paths';
 // slice
-import { addMachineServiceRecord, updateMachineServiceRecord, resetMachineServiceRecord, deleteFile, downloadFile, setAddFileDialog, deleteMachineServiceRecord, getMachineServiceRecord, addMachineServiceRecordFiles } from '../../../redux/slices/products/machineServiceRecord';
+import { addMachineServiceRecord, updateMachineServiceRecord, resetMachineServiceRecord, setAddFileDialog, deleteMachineServiceRecord, getMachineServiceRecord, addMachineServiceRecordFiles, deleteRecordFile, downloadRecordFile } from '../../../redux/slices/products/machineServiceRecord';
 import { getActiveServiceRecordConfigsForRecords, getServiceRecordConfig, resetServiceRecordConfig } from '../../../redux/slices/products/serviceRecordConfig';
 import { getActiveContacts } from '../../../redux/slices/customer/contact';
 // components
@@ -54,7 +54,19 @@ function MachineServiceRecordsThirdStep() {
             suggestedSpares:              machineServiceRecord?.suggestedSpares || '',
             internalNote:                 machineServiceRecord?.internalNote || '',
             operators:                    machineServiceRecord?.operators || [],
-            files:                        machineServiceRecord?.files || [],
+            files: machineServiceRecord?.files?.map(file => ({
+              key: file?._id,
+              _id: file?._id,
+              name: file?.name,
+              type: file?.fileType,
+              fileType: file?.fileType,
+              preview: `data:${file?.fileType};base64, ${file?.thumbnail}`,
+              src: `data:${file?.fileType};base64, ${file?.thumbnail}`,
+              path:`${file?.name}.${file?.extension}`,
+              downloadFilename:`${file?.name}.${file?.extension}`,
+              machineId:machineServiceRecord?.machine?._id,
+              serviceId:machineServiceRecord?._id,
+            })) || [],
             operatorNotes:                machineServiceRecord?.operatorNotes || '',
             isActive:                     machineServiceRecord?.isActive || true,
         }
@@ -73,10 +85,20 @@ function MachineServiceRecordsThirdStep() {
     reset,
     watch,
     setValue,
+    getValues,
     trigger,
     handleSubmit,
     formState: { isSubmitting },
     } = methods;
+
+    // useEffect(()=>{
+    //   const updatedFiles = []
+
+    //   machineServiceRecord.file.map((file)=> ....file, src:file.thumbnail)
+    //   console.log("defaultValues:::::",defaultValues)
+    //   ...._file, src:_file.thumbnail
+    //   setValue(file)
+    // })
 
     const { files, decoilers, operators } = watch()
     const handleDropMultiFile = useCallback(
@@ -84,7 +106,7 @@ function MachineServiceRecordsThirdStep() {
         const docFiles = files || [];
         const newFiles = acceptedFiles.map((file, index) => 
             Object.assign(file, {
-              preview: URL.createObjectURL(file)
+              preview: URL.createObjectURL(file),
             })
         );
         setValue('files', [...docFiles, ...newFiles], { shouldValidate: true });
@@ -127,6 +149,49 @@ function MachineServiceRecordsThirdStep() {
         navigate(PATH_MACHINE.machines.serviceRecords.root(machine?._id));
       }
 
+      const handleRemoveFile = async (inputFile) => {
+        if (inputFile?._id) {
+          await dispatch(deleteRecordFile(machine?._id, machineServiceRecord?._id, inputFile?._id));
+        }
+      
+        if (files.length > 1) {
+          setValue(
+            'files',
+            files.filter((file) => file !== inputFile),
+            { shouldValidate: true }
+          );
+        } else {
+          setValue('files', [], { shouldValidate: true });
+        }
+      };
+
+      const regEx = /^[^2]*/;
+      const handleLoadImage = async (imageId, imageIndex) => {
+        try {
+          const response = await dispatch(downloadRecordFile(machine?._id, machineServiceRecord?._id, imageId));
+      
+          if (regEx.test(response.status)) {
+            // Update the image property in the imagesLightbox array
+            const existingFiles = getValues('files') || [];
+            const image = existingFiles[imageIndex];
+      
+            if (image) {
+              existingFiles[imageIndex] = {
+                ...image,
+                src: `data:${image?.fileType};base64,${response.data}`,
+                preview: `data:${image?.fileType};base64,${response.data}`,
+                isLoaded: true,
+              };
+      
+              setValue('files', existingFiles, { shouldValidate: true });
+            }
+          }
+        } catch (error) {
+          console.error('Error loading full file:', error);
+        }
+      };
+      
+
     
 
   return (
@@ -152,16 +217,9 @@ function MachineServiceRecordsThirdStep() {
             <RHFUpload multiple  thumbnail name="files" imagesOnly
               onDrop={handleDropMultiFile}
               dropZone={false}
-              onRemove={(inputFile) =>
-                files.length > 1 ?
-                setValue(
-                  'files',
-                  files &&
-                    files?.filter((file) => file !== inputFile),
-                  { shouldValidate: true }
-                ): setValue('files', '', { shouldValidate: true })
-              }
-              onRemoveAll={() => setValue('files', '', { shouldValidate: true })}
+              onRemove={handleRemoveFile}
+              // onRemoveAll={() => setValue('files', '', { shouldValidate: true })}
+              onLoadImage={handleLoadImage}
             />
 
             {/* <ThumbnailDocButton onClick={handleAddFileDialog}/> */}
