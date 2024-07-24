@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
-import { useState, memo, useLayoutEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useState, memo, useLayoutEffect, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { m, AnimatePresence } from 'framer-motion';
 // @mui
 import { useTheme } from '@mui/material/styles';
@@ -14,6 +14,7 @@ import { varFade } from '../../animate';
 import FileThumbnail, { fileData } from '../../file-thumbnail';
 import Lightbox from '../../lightbox/Lightbox';
 import AlreadyExistMenuPopover from '../AlreadyExistMenuPopover';
+import { downloadFile } from '../../../redux/slices/products/machineServiceRecord';
 
 // ----------------------------------------------------------------------
 
@@ -51,19 +52,22 @@ function MultiFilePreview({
 }) {
   
   const { activeDocumentTypes } = useSelector((state) => state.documentType);
-
+  const regEx = /^[^2]*/;
+  const dispatch = useDispatch()
   const theme = useTheme();
   const [slides, setSlides] = useState([]);
-  const [selectedFile, setSelectedFile] = useState(-1);
+  const [selectedImage, setSelectedImage] = useState(-1);
   const [fileFound, setFileFound] = useState(null);
   const [verifiedAnchorEl, setVerifiedAnchorEl] = useState(null);
 
-  useLayoutEffect(()=>{
+  useEffect(() => {
+    const updatedSlides = files.map((file) => ({
+      ...file,
+      isLoaded: !file._id
+    }));
+    setSlides(updatedSlides);
+  }, [files]);
   
-    setSlides(files.map((file) => ({src: file?.preview, isLoaded: true })));
-  
-  },[files])
-
   const handleExtensionsPopoverOpen = (event, file) => {
       setVerifiedAnchorEl(event.currentTarget);
       const data = file?.found;
@@ -80,13 +84,43 @@ function MultiFilePreview({
     return null;
   }
 
-  const previewHandle = (index) => {
-    setSelectedFile(index);
-  };
+  // const previewHandle = (index) => {
+  //   const image = slides[index];
+  //   setSelectedImage(index);
+  // };
   
   const handleOpenLightbox = async (index) => {
-    setSelectedFile(index);
-  }
+    setSelectedImage(index);
+    const image = slides[index];
+    if(!image?.isLoaded && image?.fileType?.startsWith('image')){
+      try {
+        const response = await dispatch(downloadFile(image.machineId, image.serviceId, image?._id));
+        if (regEx.test(response.status)) {
+          // Update the image property in the imagesLightbox array
+          const updatedSlides = [
+            ...slides.slice(0, index), // copies slides before the updated slide
+            {
+              ...slides[index],
+              src: `data:${image?.fileType};base64, ${response.data}`,
+              preview: `data:${image?.fileType};base64, ${response.data}`,
+              isLoaded: true,
+            },
+            ...slides.slice(index + 1), // copies slides after the updated slide
+          ];
+
+          // Update the state with the new array
+          setSlides(updatedSlides);
+        }
+      } catch (error) {
+        console.error('Error loading full file:', error);
+      }
+    }
+  };
+
+  const handleCloseLightbox = () => {
+    setSelectedImage(-1);
+  };
+
   const FORMAT_IMG_VISIBBLE = ['jpg', 'jpeg', 'gif', 'bmp', 'png', 'svg', 'webp', 'ico', 'jpe',];
         
   return (
@@ -94,9 +128,9 @@ function MultiFilePreview({
       {files.map(( file , index ) => {
         if(file){
         const { key, name = '', size = 0, displayName, referenceNumber, versionNo, stockNumber, docCategory, docType } = fileData(file);
-        const fileType = file?.type?.split('/').pop()?.toLowerCase();
+        const fileType = file?.type.split('/').pop().toLowerCase();
         const isNotFormatFile = typeof file === 'string';
-
+        
         if (thumbnail) {
           return (
               <Card key={key || index} sx={{
@@ -113,7 +147,7 @@ function MultiFilePreview({
                       height:180,
                     }}
                 >
-                  <CardMedia onClick={()=> FORMAT_IMG_VISIBBLE.some(format => fileType?.match(format?.toLowerCase())) && previewHandle(index)}>
+                  <CardMedia onClick={()=> FORMAT_IMG_VISIBBLE.some(format => fileType?.match(format?.toLowerCase())) && handleOpenLightbox(index)}>
                     <FileThumbnail imageView file={file} sx={{ position: 'absolute' }} imgSx={{ position: 'absolute' }}/>
                   </CardMedia>
                   <ButtonGroup
@@ -128,7 +162,7 @@ function MultiFilePreview({
                               width:'100%'
                           }}
                       >       
-                          {FORMAT_IMG_VISIBBLE.some(format => fileType?.match(format))  && <Button sx={{width:'50%', borderRadius:0}} onClick={()=>previewHandle(index)}><Iconify icon="carbon:view" /></Button>}
+                          {FORMAT_IMG_VISIBBLE.some(format => fileType?.match(format))  && <Button sx={{width:'50%', borderRadius:0}} onClick={()=>handleOpenLightbox(index)}><Iconify icon="carbon:view" /></Button>}
                           <Button sx={{width:FORMAT_IMG_VISIBBLE.some(format => fileType?.match(format))?'50%':'100%', borderRadius:0}} color='error' onClick={() => onRemove(file)}><Iconify icon="radix-icons:cross-circled" /></Button>
                       </ButtonGroup>
                       
@@ -341,12 +375,11 @@ function MultiFilePreview({
       }
       return null;
       })}
-
       <Lightbox
-          index={selectedFile}
+          index={selectedImage}
           slides={slides}
-          open={selectedFile>=0}
-          close={() => setSelectedFile(-1)}
+          open={selectedImage>=0}
+          close={handleCloseLightbox}
           onGetCurrentIndex={(index) => handleOpenLightbox(index)}
           disabledTotal
           disabledDownload

@@ -18,7 +18,7 @@ import DialogServiceRecordAddFile from '../../../components/Dialog/DialogService
 import FormProvider from '../../../components/hook-form/FormProvider';
 import { RHFAutocomplete, RHFCheckbox, RHFDatePicker, RHFTextField, RHFUpload } from '../../../components/hook-form';
 import { statusTypes } from '../util';
-import { fDate } from '../../../utils/formatTime';
+import { fDate, stringToDate } from '../../../utils/formatTime';
 
 const CheckedItemInputRow = ({ index, row, machineId, serviceId }) => {
 
@@ -35,20 +35,27 @@ const CheckedItemInputRow = ({ index, row, machineId, serviceId }) => {
         checkItems: row?.checkItems.map(item => ({
           _id:item._id,
           comment: item?.recordValue?.comments || '',
-          value: item?.recordValue?.checkItemValue || null,
+          value:item?.inputType==='Date'?stringToDate(item?.recordValue?.checkItemValue, 'dd/MM/yyyy'):(item?.recordValue?.checkItemValue || null),
           images: item?.recordValue?.files.map(file => ({
+            key: file?._id,
+            _id: file?._id,
             name: file?.name,
-            preview: `data:${file?.fileType};base64,${file?.thumbnail}`,
-            path: file?.path,
             type: file?.fileType,
-            _id: file?._id
+            fileType: file?.fileType,
+            preview: `data:${file?.fileType};base64, ${file?.thumbnail}`,
+            src: `data:${file?.fileType};base64, ${file?.thumbnail}`,
+            path:`${file?.name}.${file?.extension}`,
+            downloadFilename:`${file?.name}.${file?.extension}`,
+            // isLoaded:!file?._id || file?.isLoaded,
+            machineId,
+            serviceId,
           })) || []
         })) || [],
       }),
-      [row]
+      [row, machineId, serviceId]
     );
 
-    // console.log(row?.checkItems, defaultValues)
+    console.log("defaultValues:::::",defaultValues)
 
     const methods = useForm({
       // resolver: yupResolver(MachineServiceRecordPart1Schema),
@@ -74,7 +81,6 @@ const CheckedItemInputRow = ({ index, row, machineId, serviceId }) => {
     
 
     const onSubmit = async (data, childIndex) => {
-
       const checkItem = data.checkItems[childIndex];
       const params = {
         serviceRecord:machineServiceRecord?._id,
@@ -82,7 +88,7 @@ const CheckedItemInputRow = ({ index, row, machineId, serviceId }) => {
         checkItemListId:row?._id,
         machineCheckItem:checkItem._id,
         comments:checkItem.comment,
-        images:checkItem.images
+        images:checkItem.images.filter(image => !image._id)
       }
 
       if (checkItem.value instanceof Date) {
@@ -107,12 +113,26 @@ const CheckedItemInputRow = ({ index, row, machineId, serviceId }) => {
         const newFiles = acceptedFiles.map(file =>
           Object.assign(file, {
             preview: URL.createObjectURL(file),
+            src: URL.createObjectURL(file),
           })
         );
         setValue(`checkItems[${childIndex}].images`, [...existingFiles, ...newFiles], { shouldValidate: true });
       },
       [getValues, setValue]
     );
+
+    const handleRemoveFile = async (inputFile, childIndex)=>{
+      
+      if(inputFile?._id){
+        await dispatch(deleteFile(machineId, serviceId, inputFile?._id))
+      }
+
+      setValue(
+        `checkItems[${childIndex}].images`,
+        getValues(`checkItems[${childIndex}].images`)?.filter((file) => file !== inputFile),
+        { shouldValidate: true }
+      )
+    }
 
   return(<>
         <FormProvider key={`form-${index}`} methods={methods}>
@@ -190,14 +210,8 @@ const CheckedItemInputRow = ({ index, row, machineId, serviceId }) => {
                         name={`checkItems[${childIndex}].images`}
                         imagesOnly
                         onDrop={(accepted)=> handleDropMultiFile(accepted, childIndex)}
-                        onRemove={(inputFile) =>
-                          setValue(
-                            `checkItems[${childIndex}].images`,
-                            getValues(`checkItems[${childIndex}].images`)?.filter((file) => file !== inputFile),
-                            { shouldValidate: true }
-                          )
-                        }
-                        onRemoveAll={() => setValue(`checkItems[${childIndex}].images`, [], { shouldValidate: true })}
+                        onRemove={(inputFile) => handleRemoveFile(inputFile, childIndex)}
+                        // onRemoveAll={() => setValue(`checkItems[${childIndex}].images`, [], { shouldValidate: true })}
                       />
                       {/* <RHFUpload
                         name={`checkItems[${childIndex}].images`}

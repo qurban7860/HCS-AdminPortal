@@ -19,10 +19,8 @@ FileThumbnail.propTypes = {
 
 export default function FileThumbnail({ file, rows, tooltip, imageView, onDownload, sx, imgSx }) {
 
-  const { name = '', path = '', preview = '' } = fileData(file);
-
-  const format = fileFormat(path.toLowerCase() || preview.toLowerCase(), rows )?.toLowerCase();
-
+  const { name = '', path = '', extension='', preview = '' } = fileData(file);
+  const format = fileFormat(path.toLowerCase() || preview.toLowerCase() || extension.toLowerCase(), rows )?.toLowerCase();
   const renderContent =
     format === 'images' && imageView ? (
           <Box

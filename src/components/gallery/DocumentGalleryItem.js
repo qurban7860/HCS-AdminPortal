@@ -33,7 +33,7 @@ DocumentGalleryItem.propTypes = {
     size: PropTypes.number,
   };
   
-export function DocumentGalleryItem({ image, isLoading, onOpenLightbox, onOpenFile, onDownloadFile, onDeleteFile, toolbar, customerArchived, size = 150 }) {
+export function DocumentGalleryItem({ image, isLoading, onOpenLightbox, onOpenFile, onDownloadFile, onDeleteFile, toolbar, customerArchived, size = 180 }) {
 
     const [deleteConfirm, seDeleteConfirm] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
@@ -111,7 +111,7 @@ export function DocumentGalleryItem({ image, isLoading, onOpenLightbox, onOpenFi
                     }}
                 >
                     <Typography variant="body2">
-                        {name.length > 14 ? name?.substring(0, 14) : name}
+                        {name?.length > 14 ? name?.substring(0, 14) : name}
                         {name?.length > 14 ? '...' : null}
                     </Typography>
                 </Stack>

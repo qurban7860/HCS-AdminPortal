@@ -492,17 +492,17 @@ export function addMachineServiceRecordFiles(machineId, id, params) {
 
 export function downloadFile(machineId, id, fileId) {
   return async (dispatch) => {
-    dispatch(slice.actions.startLoading());
-    const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}/files/${fileId}/download/` );
+    dispatch(slice.actions.setLoadingCheckItemValues());
+    const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecordValues/files/${fileId}/download/` );
     return response;
   };
 }
 
 export function deleteFile(machineId, id, fileId) {
   return async (dispatch) => {
-    dispatch(slice.actions.startLoading());
+    dispatch(slice.actions.setLoadingCheckItemValues());
     try {
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}/files/${fileId}/delete` , 
+      const response = await axios.delete(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecordValues/files/${fileId}/` , 
       {
           isArchived: true, 
       });
