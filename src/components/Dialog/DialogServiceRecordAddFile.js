@@ -10,6 +10,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useSnackbar } from 'notistack';
 import {  
   addMachineServiceRecordFiles,
+  getMachineServiceRecord,
   setAddFileDialog,
 } from '../../redux/slices/products/machineServiceRecord';
 
@@ -86,6 +87,7 @@ function DialogServiceRecordAddFile() {
     try {
       await dispatch(addMachineServiceRecordFiles(machineServiceRecord?.machine?._id, machineServiceRecord?._id, data))
       await dispatch(setAddFileDialog(false));
+      await dispatch(getMachineServiceRecord(machineServiceRecord?._id))
       await reset();
       await enqueueSnackbar('Files uploaded successfully!');
     } catch (error) {
