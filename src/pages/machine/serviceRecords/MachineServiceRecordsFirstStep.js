@@ -20,22 +20,25 @@ MachineServiceRecordsFirstStep.propTypes = {
     securityUsers: PropTypes.array,
     onChangeConfig : PropTypes.func,
     handleComplete : PropTypes.func,
+    handleDraftRequest: PropTypes.func,
+    handleDiscard: PropTypes.func,
+    handleBack: PropTypes.func
 };
 
-function MachineServiceRecordsFirstStep( { securityUsers, onChangeConfig, handleComplete} ) {
+function MachineServiceRecordsFirstStep( { securityUsers, onChangeConfig, handleComplete, handleDraftRequest, handleDiscard, handleBack} ) {
     
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
   
     const { recordTypes, activeServiceRecordConfigsForRecords } = useSelector((state) => state.serviceRecordConfig);
-    const { machineServiceRecord } = useSelector((state) => state.machineServiceRecord);
+    const { machineServiceRecord, isLoading } = useSelector((state) => state.machineServiceRecord);
     const { activeSecurityUsers, securityUser } = useSelector((state) => state.user);
     const { machine } = useSelector((state) => state.machine);
+    const [ activeServiceRecordConfigs, setActiveServiceRecordConfigs ] = useState([]);
 
     const [ isDraft, setIsDraft ] = useState(false);
-    const saveAsDraft = async () => setIsDraft(false);
-    const [ activeServiceRecordConfigs, setActiveServiceRecordConfigs ] = useState([]);
+    const saveAsDraft = async () => setIsDraft(true);
 
     const defaultValues = useMemo(
         () => {
@@ -69,6 +72,12 @@ function MachineServiceRecordsFirstStep( { securityUsers, onChangeConfig, handle
     formState: { isSubmitting },
     } = methods;
 
+    useEffect(() => {
+      if (machineServiceRecord) {
+        reset(defaultValues);
+      }
+    }, [reset, machineServiceRecord, defaultValues]);
+
     const { serviceRecordConfiguration, docRecordType } = watch();
 
     useLayoutEffect(()=>{
@@ -95,19 +104,18 @@ function MachineServiceRecordsFirstStep( { securityUsers, onChangeConfig, handle
         try {
           if(!machineServiceRecord?._id ){
             const serviceRecord = await dispatch(addMachineServiceRecord(machine?._id, data));
-            await dispatch(setFormActiveStep(1));
-            await handleDraftRequest();
-            await handleComplete(0);
-
             await navigate(PATH_MACHINE.machines.serviceRecords.edit(machine?._id, serviceRecord?._id))
           }else {
             const serviceRecord = await dispatch(updateMachineServiceRecord(machine?._id, machineServiceRecord?._id, data));
-            await dispatch(setFormActiveStep(1));
-            await handleDraftRequest();
-            await handleComplete(0);
             await navigate(PATH_MACHINE.machines.serviceRecords.edit(machine?._id, machineServiceRecord?._id))  
           }
-          
+
+          if(isDraft){
+            await handleDraftRequest(isDraft);
+          }else{
+            await dispatch(setFormActiveStep(1));
+            await handleComplete(0);
+          }
     
         } catch (err) {
           console.error(err);
@@ -115,18 +123,6 @@ function MachineServiceRecordsFirstStep( { securityUsers, onChangeConfig, handle
         }
       };
 
-      const handleDraftRequest = async ()=> {
-        if(isDraft){
-          await navigate(PATH_MACHINE.machines.serviceRecords.root(machine?._id))
-        }
-      }
-
-      const toggleCancel = async () =>{
-        if( machineServiceRecord?._id ){
-          await dispatch(deleteMachineServiceRecord(machine?._id, machineServiceRecord?._id, machineServiceRecord?.status ))
-        }
-        navigate(PATH_MACHINE.machines.serviceRecords.root(machine?._id));
-      }
 
 return (
     <FormProvider methods={methods}  onSubmit={handleSubmit(onSubmit)}>
@@ -185,11 +181,12 @@ return (
                     renderOption={(props, option) => ( <li {...props} key={option?._id}>{option.name || ''}</li>)}
                     />
                 <RHFTextField name="technicianNotes" label="Technician Notes" minRows={3} multiline/> 
-                <AddFormButtons isSubmitting={isSubmitting} 
-                    saveAsDraft={saveAsDraft} 
+                <AddFormButtons isSubmitting={isSubmitting || isLoading} 
+                    saveAsDraft={saveAsDraft}
+                    isDraft={isDraft} 
                     saveButtonName="Next"
-                    isDisabledBackButton handleBack backButtonName="Back" 
-                    toggleCancel={toggleCancel} cancelButtonName="Discard" 
+                    isDisabledBackButton handleBack={handleBack} backButtonName="Back" 
+                    toggleCancel={handleDiscard} cancelButtonName="Discard" 
                 />
         </Stack>
     </FormProvider>

@@ -1,4 +1,5 @@
-import { memo, useCallback, useEffect, useMemo, useState } from 'react'
+import { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
 import { useSnackbar } from 'notistack';
 import PropTypes, { object } from 'prop-types';
@@ -19,6 +20,7 @@ import FormProvider from '../../../components/hook-form/FormProvider';
 import { RHFAutocomplete, RHFCheckbox, RHFDatePicker, RHFTextField, RHFUpload } from '../../../components/hook-form';
 import { statusTypes } from '../util';
 import { fDate, stringToDate } from '../../../utils/formatTime';
+import { validateImageFileType } from '../../documents/util/Util';
 
 const CheckedItemInputRow = ({ index, row, machineId, serviceId }) => {
 
@@ -30,6 +32,21 @@ const CheckedItemInputRow = ({ index, row, machineId, serviceId }) => {
     const { serviceRecordConfig } = useSelector((state) => state.serviceRecordConfig);
     const { machine } = useSelector((state) => state.machine);
 
+    // Define the schema for each image
+    const CheckItemSchema = Yup.object().shape({
+      comment: Yup.string().max(5000, 'Comments cannot exceed 5000 characters'),
+      images: Yup.array().test({
+        name: 'fileType',
+        message: 'Only the following formats are accepted: .jpeg, .jpg, gif, .bmp, .webp, .pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx',
+        test: validateImageFileType
+      }),
+    });
+    
+    const MainSchema = Yup.object().shape({
+      checkItems: Yup.array().of(CheckItemSchema),
+    });
+
+
     const defaultValues = useMemo(
       () => ({
         checkItems: row?.checkItems.map(item => ({
@@ -39,14 +56,13 @@ const CheckedItemInputRow = ({ index, row, machineId, serviceId }) => {
           images: item?.recordValue?.files.map(file => ({
             key: file?._id,
             _id: file?._id,
-            name: file?.name,
+            name:`${file?.name}.${file?.extension}`,
             type: file?.fileType,
             fileType: file?.fileType,
             preview: `data:${file?.fileType};base64, ${file?.thumbnail}`,
             src: `data:${file?.fileType};base64, ${file?.thumbnail}`,
             path:`${file?.name}.${file?.extension}`,
             downloadFilename:`${file?.name}.${file?.extension}`,
-            // isLoaded:!file?._id || file?.isLoaded,
             machineId,
             serviceId,
           })) || []
@@ -56,7 +72,7 @@ const CheckedItemInputRow = ({ index, row, machineId, serviceId }) => {
     );
 
     const methods = useForm({
-      // resolver: yupResolver(MachineServiceRecordPart1Schema),
+      resolver: yupResolver(MainSchema),
       defaultValues,
     });
     
@@ -69,13 +85,17 @@ const CheckedItemInputRow = ({ index, row, machineId, serviceId }) => {
       getValues,
       trigger,
       handleSubmit,
-      formState: { isSubmitting },
+      formState: { isSubmitting, isSubmitted },
     } = methods;
-  
-    const { fields, append, remove } = useFieldArray({
-      control,
-      name: "checkItems",
-    });
+
+    const [submittedIndexes, setSubmittedIndexes] = useState([]);
+    const formValues = watch();
+
+    useEffect(() => {
+      if (machineServiceRecord) {
+        reset(defaultValues);
+      }
+    }, [reset, machineServiceRecord, defaultValues]);
     
 
     const onSubmit = async (data, childIndex) => {
@@ -99,6 +119,8 @@ const CheckedItemInputRow = ({ index, row, machineId, serviceId }) => {
 
       try {
         const result = await dispatch(addCheckItemValues(machine?._id,params, childIndex));
+        const combinedIndex = `${index}-${childIndex}`;
+        setSubmittedIndexes(prev => [...prev, combinedIndex]);
       } catch (err) {
         console.error(err);
         enqueueSnackbar('Saving failed!', { variant: `error` });
@@ -157,7 +179,7 @@ const CheckedItemInputRow = ({ index, row, machineId, serviceId }) => {
 
   return(<>
         <FormProvider key={`form-${index}`} methods={methods}>
-        {row?.checkItems?.map((childRow,childIndex) => (
+          {row?.checkItems?.map((childRow,childIndex) => (
           <Card key={`card-${index}-${childIndex}`} sx={{boxShadow:'none'}}>
             {/* <CardHeader title={`${index+1}.${childIndex+1} - ${childRow?.name}`} sx={{py:1}} />
             <CardContent> */}
@@ -255,10 +277,9 @@ const CheckedItemInputRow = ({ index, row, machineId, serviceId }) => {
                   <Grid container sx={{m:1}} display='flex' direction='row-reverse'>
                     <LoadingButton 
                         onClick={handleSubmit((data) => onSubmit(data, childIndex))} // Pass childIndex
-                        // onClick={(event) => handleSubmit((data) => onSubmit(data, childIndex, event))(event)}
-                        // onClick={()=> onSubmit(childIndex)}
+                        disabled={submittedIndexes.includes(`${index}-${childIndex}`)}
                         loading={isLoadingCheckItemValues===childIndex}
-                        variant='contained'>Save</LoadingButton>
+                        variant='contained'>{submittedIndexes.includes(`${index}-${childIndex}`)?"Saved!":"Save"}</LoadingButton>
                   </Grid>
                 </Stack>
             {/* </CardContent> */}

@@ -46,7 +46,6 @@ function MachineServiceRecordAddForm() {
 
   const [ securityUsers, setSecurityUsers ] = useState([]);
   const [ isPublish, setIsPublish ] = useState(false);
-  const [ isDraft, setIsDraft ] = useState(false);
   const [completed, setCompleted] = useState([]);
 
   useLayoutEffect( ()=>{
@@ -88,14 +87,6 @@ function MachineServiceRecordAddForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ activeSecurityUsers, securityUser, userId ]);
 
-  // const [selectedConfig, setSelectedConfig] = useState();
-  // const handleChangeConfig = async (newValue) => {
-  //   if(newValue){
-  //     setSelectedConfig(newValue);
-  //   }
-  // }
-
-
   const handleStep = (step) => async () => {
     if (formActiveStep===0 && !completed[formActiveStep]) {
       enqueueSnackbar(`Please complete step ${formActiveStep+1} to continue`, { variant: 'error' });
@@ -103,6 +94,25 @@ function MachineServiceRecordAddForm() {
       dispatch(setFormActiveStep(step));
     }
   };
+
+  const handleBack = () => {
+    if (formActiveStep) {
+      dispatch(setFormActiveStep(formActiveStep-1));
+    }
+  };
+
+  const handleDraftRequest = async (isDraft)=> {
+    if(isDraft){
+      await navigate(PATH_MACHINE.machines.serviceRecords.root(machine?._id))
+    }
+  }
+  
+  const handleDiscard = async () =>{
+    if( machineServiceRecord?._id ){
+      await dispatch(deleteMachineServiceRecord(machine?._id, machineServiceRecord?._id, machineServiceRecord?.status ))
+    }
+    navigate(PATH_MACHINE.machines.serviceRecords.root(machine?._id));
+  } 
 
   const handleComplete = (step) => {
     const newCompleted = completed;
@@ -131,16 +141,26 @@ function MachineServiceRecordAddForm() {
                     {formActiveStep===0 &&
                       <MachineServiceRecordsFirstStep 
                         securityUsers={securityUsers} 
-                        // onChangeConfig={handleChangeConfig}
                         handleComplete={handleComplete}
+                        handleDraftRequest={handleDraftRequest}
+                        handleDiscard={handleDiscard}
+                        handleBack={handleBack}
                       />
                     }
                     {formActiveStep===1 &&
-                      <MachineServiceRecordsSecondStep serviceRecord={machineServiceRecord}  />
+                      <MachineServiceRecordsSecondStep 
+                        handleDraftRequest={handleDraftRequest}
+                        handleDiscard={handleDiscard}
+                        handleBack={handleBack} 
+                        serviceRecord={machineServiceRecord} 
+                       />
                     }
 
                     {formActiveStep===2 &&
                       <MachineServiceRecordsThirdStep 
+                        handleDraftRequest={handleDraftRequest}
+                        handleDiscard={handleDiscard}
+                        handleBack={handleBack}
                       />
                     }
               </Stack>

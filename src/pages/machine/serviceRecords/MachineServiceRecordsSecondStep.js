@@ -20,10 +20,13 @@ import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 
 MachineServiceRecordsSecondStep.propTypes = {
   // checkItemLists: PropTypes.array
-  serviceRecord: PropTypes.object
+  serviceRecord: PropTypes.object,
+  handleDraftRequest: PropTypes.func,
+  handleDiscard: PropTypes.func,
+  handleBack: PropTypes.func
 };
 
-function MachineServiceRecordsSecondStep({serviceRecord}) {
+function MachineServiceRecordsSecondStep({serviceRecord, handleDraftRequest, handleDiscard, handleBack}) {
   
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -34,7 +37,7 @@ function MachineServiceRecordsSecondStep({serviceRecord}) {
   const { machine } = useSelector((state) => state.machine);
   
   const [ isDraft, setIsDraft ] = useState(false);
-  const saveAsDraft = async () => setIsDraft(false);
+  const saveAsDraft = async () => setIsDraft(true);
   const [ checkItemLists, setCheckItemLists ] = useState([]);
 
   const [ textBeforeCheckItems, setTextBeforeCheckItems] = useState('');
@@ -72,60 +75,14 @@ function MachineServiceRecordsSecondStep({serviceRecord}) {
       setTextAfterCheckItems(defaultValues?.textAfterCheckItems || '');
     },[defaultValues])
 
-  // const methods = useForm({
-  //     resolver: yupResolver(MachineServiceRecordPart2Schema),
-  //     defaultValues,
-  // });
-  
-  // const {
-  // reset,
-  // watch,
-  // setValue,
-  // trigger,
-  // handleSubmit,
-  // formState: { isSubmitting },
-  // } = methods;
-
-    // const onSubmit = async (data) => {
-    //   try {
-
-    //     const checkItemLists_ = [];
-    //     if(checkItemLists && Array.isArray(checkItemLists) && checkItemLists.length > 0 ){ 
-    //       checkItemLists.forEach((checkParam_, index )=>{
-    //         if(Array.isArray(checkParam_.checkItems) && 
-    //         checkParam_.checkItems.length>0) {
-    //           checkParam_.checkItems.forEach((CI,ind)=>(
-    //             CI?.checked && checkItemLists_.push({
-    //               machineCheckItem: CI?._id,
-    //               checkItemListId:  checkParam_?._id,
-    //               checkItemValue:   CI?.inputType?.toLowerCase() === 'boolean' ? CI?.checkItemValue || false : CI?.inputType?.toLowerCase() === 'status' && CI?.checkItemValue?.name || CI?.inputType?.toLowerCase() !== 'status' &&CI?.checkItemValue || '',
-    //               comments:CI?.comments,
-    //             })
-    //           ));
-    //         }
-    //       });
-    //     }
-    //     data.checkItemRecordValues = checkItemLists_;
-
-    //     if(isDraft){
-    //       await navigate(PATH_MACHINE.machines.serviceRecords.root(machine?._id))
-    //     }
-
-  
-    //   } catch (err) {
-    //     console.error(err);
-    //     enqueueSnackbar('Saving failed!', { variant: `error` });
-    //   }
-    // };
-
     const formMethodsBefore = useForm({defaultValues});
-    const { handleSubmit: handleSubmitBefore, formState: { isSubmitting: isSubmittingBefore } } = formMethodsBefore;
+    const { handleSubmit: handleSubmitBefore, formState: { isSubmitting: isSubmittingBefore, isSubmitted:isSubmittedBefore } } = formMethodsBefore;
 
     const formMethodsAfter = useForm({defaultValues});
-    const { handleSubmit: handleSubmitAfter, formState: { isSubmitting: isSubmittingAfter } } = formMethodsAfter;
+    const { handleSubmit: handleSubmitAfter, formState: { isSubmitting: isSubmittingAfter, isSubmitted:isSubmittedAfter } } = formMethodsAfter;
 
-    const formMethodsFinal = useForm({defaultValues});
-    const { handleSubmit: handleSubmitFinal, formState: { isSubmitting: isSubmittingFinal } } = formMethodsFinal;
+    const methods = useForm({defaultValues});
+    const { handleSubmit, formState: { isSubmitting } } = methods;
 
     const submitBefore = async (data)=> {
       const params = {
@@ -153,34 +110,34 @@ function MachineServiceRecordsSecondStep({serviceRecord}) {
       }
     }
 
-    const submitFinal = async (data)=> {
-      const params = {
+    const onSubmit = async (data)=> {
+            
+            if(isDraft){
+              data.status='DRAFT'
+            }else{
+              data.status='SUBMITTED'  
+            }
+
+            const params = {
                       textBeforeCheckItems: data.textBeforeCheckItems || '',
-                      textAfterCheckItems: data.textAfterCheckItems || ''
+                      textAfterCheckItems: data.textAfterCheckItems || '',
+                      status: data.status || 'DRAFT'
                     }
       try {
         await dispatch(updateMachineServiceRecord(machine?._id, machineServiceRecord?._id, params));
-        await dispatch(setFormActiveStep(2));
-        await handleDraftRequest();
-        await navigate(PATH_MACHINE.machines.serviceRecords.edit(machine?._id, machineServiceRecord?._id))
+        
+        if(isDraft){
+          await handleDraftRequest(isDraft);
+        }else{
+          await dispatch(setFormActiveStep(2));
+          await navigate(PATH_MACHINE.machines.serviceRecords.edit(machine?._id, machineServiceRecord?._id))
+        }
+        
       } catch (err) {
         console.error(err);
         enqueueSnackbar('Saving failed!', { variant: `error` });
       }
     }
-
-    const handleDraftRequest = async ()=> {
-      if(isDraft){
-        await navigate(PATH_MACHINE.machines.serviceRecords.root(machine?._id))
-      }
-    }
-    
-    const toggleCancel = async () =>{
-      if( machineServiceRecord?._id ){
-        await dispatch(deleteMachineServiceRecord(machine?._id, machineServiceRecord?._id, machineServiceRecord?.status ))
-      }
-      navigate(PATH_MACHINE.machines.serviceRecords.root(machine?._id));
-    } 
 
   return (
       <Stack mx={1} spacing={2}>
@@ -189,12 +146,12 @@ function MachineServiceRecordsSecondStep({serviceRecord}) {
             <Stack mx={1} spacing={2}>
               <RHFTextField name="textBeforeCheckItems" label="Text Before Check Items" minRows={3} multiline />
                 <Grid container display='flex' direction='row-reverse'>
-                  <LoadingButton type='submit' loading={isSubmittingBefore} size='small' variant='contained'>Save</LoadingButton>
+                  <LoadingButton type='submit' disabled={isSubmittedBefore} loading={isSubmittingBefore} size='small' variant='contained'>{isSubmittedBefore?"Saved!":"Save"}</LoadingButton>
                 </Grid>
               </Stack>
             </FormProvider>
             {checkItemLists?.length > 0 && <FormLabel content={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />}
-            {isLoading ? 
+            {checkItemLists?.length===0 ? 
             <Box sx={{ width: '100%',mt:1 }}>
               <Skeleton />
               <Skeleton animation="wave" />
@@ -220,19 +177,21 @@ function MachineServiceRecordsSecondStep({serviceRecord}) {
               <Stack mx={1} spacing={2}>
                 <RHFTextField name="textAfterCheckItems" label="Text After Check Items" minRows={3} multiline />
                 <Grid container display='flex' direction='row-reverse'>
-                  <LoadingButton type='submit' loading={isSubmittingAfter} size='small' variant='contained'>Save</LoadingButton>
+                  <LoadingButton type='submit' disabled={isSubmittedAfter} loading={isSubmittingAfter} size='small' variant='contained'>{isSubmittedAfter?"Saved!":"Save"}</LoadingButton>
                 </Grid>
               </Stack>
             </FormProvider>
             
-            <FormProvider methods={formMethodsFinal}  key='finalForm' onSubmit={handleSubmitFinal(submitFinal)}>
+            <FormProvider methods={methods}  key='finalForm' onSubmit={handleSubmit(onSubmit)}>
               <AddFormButtons 
-                  isSubmitting={isSubmittingFinal} 
-                  saveAsDraft={saveAsDraft} 
+                  isSubmitting={isSubmitting} 
+                  saveAsDraft={saveAsDraft}
+                  isDraft={isDraft} 
                   saveButtonName="Next"
-                  isDisabledBackButton handleBack backButtonName="Back" 
-                  toggleCancel={toggleCancel} cancelButtonName="Discard" 
+                  handleBack={handleBack} backButtonName="Back" 
+                  toggleCancel={handleDiscard} cancelButtonName="Discard" 
               />
+
             </FormProvider>
       </Stack>
 )}

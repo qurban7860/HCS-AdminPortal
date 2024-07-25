@@ -1,4 +1,4 @@
-import React, { useState, memo } from 'react'
+import React, { useState, memo, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Grid, Divider, Chip, TableRow, Typography, Box } from '@mui/material';
@@ -10,8 +10,9 @@ import CopyIcon from '../../../components/Icons/CopyIcon';
 import HistoryDropDownUpIcons from '../../../components/Icons/HistoryDropDownUpIcons';
 import ViewFormServiceRecordVersionAudit from '../../../components/ViewForms/ViewFormServiceRecordVersionAudit';
 import { DocumentGalleryItem } from '../../../components/gallery/DocumentGalleryItem';
-import { deleteRecordFile, downloadRecordFile, setAddFileDialog } from '../../../redux/slices/products/machineServiceRecord';
+import { deleteCheckItemFile, deleteRecordFile, downloadCheckItemFile, downloadRecordFile, getMachineServiceRecordCheckItems, setAddFileDialog } from '../../../redux/slices/products/machineServiceRecord';
 import { ThumbnailDocButton } from '../../../components/Thumbnails';
+import Lightbox from '../../../components/lightbox/Lightbox';
 
 const StatusAndComment = ({index, childIndex, childRow, machineId, serviceId}) => {
 
@@ -28,8 +29,6 @@ const StatusAndComment = ({index, childIndex, childRow, machineId, serviceId}) =
     };
 
     // const { machineServiceRecord, isLoading, pdfViewerDialog, sendEmailDialog } = useSelector((state) => state.machineServiceRecord);
-    const [files, setFiles] = useState([]);
-
     const regEx = /^[^2]*/;
     const [selectedImage, setSelectedImage] = useState(-1);
     const [slides, setSlides] = useState([]);
@@ -37,6 +36,17 @@ const StatusAndComment = ({index, childIndex, childRow, machineId, serviceId}) =
     const handleAddFileDialog = ()=>{
       dispatch(setAddFileDialog(true));
     }
+
+    useEffect(() => {
+      if (childRow?.recordValue?.files) {
+          const updatedFiles = childRow?.recordValue?.files?.map(file => ({
+            ...file,
+            src: `data:${file?.fileType};base64,${file?.thumbnail}`,
+            thumbnail: `data:${file?.fileType};base64,${file?.thumbnail}`
+          }));
+          setSlides(updatedFiles);
+      }
+    }, [childRow]);
   
     const handleOpenLightbox = async (_index) => {
       setSelectedImage(_index);
@@ -44,7 +54,7 @@ const StatusAndComment = ({index, childIndex, childRow, machineId, serviceId}) =
   
       if(!image?.isLoaded && image?.fileType?.startsWith('image')){
         try {
-          const response = await dispatch(downloadRecordFile(machineId, serviceId, image?._id));
+          const response = await dispatch(downloadCheckItemFile(machineId, serviceId, image?._id));
           if (regEx.test(response.status)) {
             // Update the image property in the imagesLightbox array
             const updatedSlides = [
@@ -70,10 +80,10 @@ const StatusAndComment = ({index, childIndex, childRow, machineId, serviceId}) =
       setSelectedImage(-1);
     };
   
-    const handledeleteRecordFile = async (fileId) => {
+    const handleDeleteCheckItemFile = async (fileId) => {
       try {
-        await dispatch(deleteRecordFile(machineId, serviceId, fileId));
-        // await dispatch(getMachineServiceRecord(serviceId))
+        await dispatch(deleteCheckItemFile(machineId, serviceId, fileId));
+        await dispatch(getMachineServiceRecordCheckItems(machineId, serviceId))
         enqueueSnackbar('File Archived successfully!');
       } catch (err) {
         console.log(err);
@@ -81,8 +91,8 @@ const StatusAndComment = ({index, childIndex, childRow, machineId, serviceId}) =
       }
     };
   
-    const handledownloadRecordFile = (fileId, name, extension) => {
-      dispatch(downloadRecordFile(machineId, serviceId, fileId))
+    const handleDownloadCheckItemFile = (fileId, name, extension) => {
+      dispatch(downloadCheckItemFile(machineId, serviceId, fileId))
         .then((res) => {
           if (regEx.test(res.status)) {
             download(atob(res.data), `${name}.${extension}`, { type: extension });
@@ -154,16 +164,16 @@ const StatusAndComment = ({index, childIndex, childRow, machineId, serviceId}) =
               }}
             >
 
-          {files?.map((file, _index) => (
-            <DocumentGalleryItem size={70} isLoading={!files} key={file?.id} image={file} 
+          {slides?.map((file, _index) => (
+            <DocumentGalleryItem isLoading={!slides} key={file?.id} image={file} 
               onOpenLightbox={()=> handleOpenLightbox(_index)}
-              ondownloadRecordFile={()=> handledownloadRecordFile(file._id, file?.name, file?.extension)}
-              ondeleteRecordFile={()=> handledeleteRecordFile(file._id)}
+              onDownloadFile={()=> handleDownloadCheckItemFile(file._id, file?.name, file?.extension)}
+              onDeleteFile={()=> handleDeleteCheckItemFile(file._id)}
               toolbar
             />
           ))}
 
-          {childRow && <ThumbnailDocButton size={70} onClick={handleAddFileDialog}/>}
+          {/* {childRow && <ThumbnailDocButton size={70} onClick={handleAddFileDialog}/>} */}
         </Box>
           <ViewFormServiceRecordVersionAudit value={childRow?.recordValue}/>
           </Grid>
@@ -215,6 +225,16 @@ const StatusAndComment = ({index, childIndex, childRow, machineId, serviceId}) =
           </>))}
         </Grid>}
       </Grid>
+      <Lightbox
+          index={selectedImage}
+          slides={slides}
+          open={selectedImage>=0}
+          close={handleCloseLightbox}
+          onGetCurrentIndex={handleOpenLightbox}
+          disabledTotal
+          disabledDownload
+          disabledSlideshow
+        />
     </TableRow>
   )
 }

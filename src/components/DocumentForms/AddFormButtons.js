@@ -110,13 +110,13 @@ export default function AddFormButtons({
           {saveAsDraft && <Grid item sm={6}>
               <LoadingButton
                 sx={{textTransform: 'none'}}
-                type="submit"
                 variant="contained"
                 size="large"
                 fullWidth
                 onClick={saveAsDraft}
                 disabled={isDisableSaveAsDraft}
                 loading={isDraft && isSubmitting}
+                type="submit"
               >
                 {saveAsDraftButtonName || BUTTONS.SAVE_AS_DRAFT}
               </LoadingButton>

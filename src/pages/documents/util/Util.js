@@ -62,18 +62,21 @@ const maxFiles = JSON.parse( localStorage.getItem('configurations'))?.find( ( c 
 
   export const validateImageFileType = (value, options) => {
     const { path, createError } = options;
+  
     if (value && Array.isArray(value)) {
       if (value.length > 20) {
         return createError({
-          message: `Maximum ${ Number(maxFiles?.value) || 20 } files can be uploaded at a time.`,
+          message: 'Maximum 20 files can be uploaded at a time.',
           path,
           value,
         });
       }
+  
       const invalidFiles = value.filter((file) => {
         const fileExtension = file?.name?.split('.').pop().toLowerCase();
         return !imagesExtensions.includes(fileExtension);
       });
+  
       if (invalidFiles.length > 0) {
         const invalidFileNames = invalidFiles.map((file) => file.name).join(', ');
         return createError({
@@ -84,6 +87,7 @@ const maxFiles = JSON.parse( localStorage.getItem('configurations'))?.find( ( c 
       }
       return true;
     }
+  
     return createError({
       message: 'File is required!',
       path,

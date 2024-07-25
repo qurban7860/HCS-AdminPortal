@@ -1,5 +1,7 @@
 import { useEffect, useLayoutEffect, useMemo, useState, memo, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import PropTypes from 'prop-types';
+import * as Yup from 'yup';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -15,7 +17,6 @@ import { getActiveContacts } from '../../../redux/slices/customer/contact';
 // components
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 import { useSnackbar } from '../../../components/snackbar';
-import { MachineServiceRecordPart1Schema, MachineServiceRecordPart2Schema, MachineServiceRecordPart3Schema } from '../../schemas/machine';
 import FormProvider, { RHFAutocomplete, RHFSwitch, RHFTextField, RHFUpload } from '../../../components/hook-form';
 import { getActiveSecurityUsers, getSecurityUser } from '../../../redux/slices/securityUser/securityUser';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
@@ -26,9 +27,15 @@ import Iconify from '../../../components/iconify';
 import { ColorlibConnector, ColorlibStepIcon } from '../../../theme/styles/default-styles';
 import { DocumentGalleryItem } from '../../../components/gallery/DocumentGalleryItem';
 import { ThumbnailDocButton } from '../../../components/Thumbnails';
+import { validateImageFileType } from '../../documents/util/Util';
   
+MachineServiceRecordsThirdStep.propTypes = {
+  handleDraftRequest: PropTypes.func,
+  handleDiscard: PropTypes.func,
+  handleBack: PropTypes.func
+};
 
-function MachineServiceRecordsThirdStep() {
+function MachineServiceRecordsThirdStep({handleDraftRequest, handleDiscard, handleBack}) {
   
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -42,7 +49,7 @@ function MachineServiceRecordsThirdStep() {
     const { activeServiceRecordConfigsForRecords, serviceRecordConfig } = useSelector((state) => state.serviceRecordConfig);
 
     const [ isDraft, setIsDraft ] = useState(false);
-    const saveAsDraft = async () => setIsDraft(false);
+    const saveAsDraft = async () => setIsDraft(true);
     const [ activeServiceRecordConfigs, setActiveServiceRecordConfigs ] = useState([]);
 
     const defaultValues = useMemo(
@@ -57,7 +64,7 @@ function MachineServiceRecordsThirdStep() {
             files: machineServiceRecord?.files?.map(file => ({
               key: file?._id,
               _id: file?._id,
-              name: file?.name,
+              name:`${file?.name}.${file?.extension}`,
               type: file?.fileType,
               fileType: file?.fileType,
               preview: `data:${file?.fileType};base64, ${file?.thumbnail}`,
@@ -76,8 +83,16 @@ function MachineServiceRecordsThirdStep() {
         [ machineServiceRecord ]
       );
 
+    const ValidationSchema = Yup.object().shape({
+      files: Yup.array().test({
+        name: 'fileType',
+        message: 'Only the following formats are accepted: .jpeg, .jpg, gif, .bmp, .webp, .pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx',
+        test: validateImageFileType
+      }),
+    });
+
     const methods = useForm({
-        resolver: yupResolver(MachineServiceRecordPart3Schema),
+        resolver: yupResolver(ValidationSchema),
         defaultValues,
     });
     
@@ -90,15 +105,6 @@ function MachineServiceRecordsThirdStep() {
     handleSubmit,
     formState: { isSubmitting },
     } = methods;
-
-    // useEffect(()=>{
-    //   const updatedFiles = []
-
-    //   machineServiceRecord.file.map((file)=> ....file, src:file.thumbnail)
-    //   console.log("defaultValues:::::",defaultValues)
-    //   ...._file, src:_file.thumbnail
-    //   setValue(file)
-    // })
 
     const { files, decoilers, operators } = watch()
     const handleDropMultiFile = useCallback(
@@ -116,10 +122,17 @@ function MachineServiceRecordsThirdStep() {
     );
 
     const onSubmit = async (data) => {
-        try {
+      try {
+          if(isDraft){
+            data.status='DRAFT'
+          }else{
+            data.status='SUBMITTED'  
+          }
+          
           if(machineServiceRecord?._id){
-            await dispatch(updateMachineServiceRecord( machine?._id, machineServiceRecord?._id, data ));
-            await handleDraftRequest();  
+            await dispatch(updateMachineServiceRecord( machine?._id, machineServiceRecord?._id, data, isDraft ));
+            await handleDraftRequest(isDraft);
+            setIsDraft(false);  
             if(data?.files)
               await dispatch(addMachineServiceRecordFiles(machine?._id, machineServiceRecord?._id, data))
             await navigate(PATH_MACHINE.machines.serviceRecords.view(machine?._id, machineServiceRecord?._id))  
@@ -134,20 +147,8 @@ function MachineServiceRecordsThirdStep() {
           console.error(err);
           enqueueSnackbar('Saving failed!', { variant: `error` });
         }
+        setIsDraft(false);
       };
-
-      const handleDraftRequest = async ()=> {
-        if(isDraft){
-          await navigate(PATH_MACHINE.machines.serviceRecords.root(machine?._id))
-        }
-      }
-
-      const toggleCancel = async () =>{
-        if( machineServiceRecord?._id ){
-          await dispatch(deleteMachineServiceRecord(machine?._id, machineServiceRecord?._id, machineServiceRecord?.status ))
-        }
-        navigate(PATH_MACHINE.machines.serviceRecords.root(machine?._id));
-      }
 
       const handleRemoveFile = async (inputFile) => {
         if (inputFile?._id) {
@@ -218,34 +219,18 @@ function MachineServiceRecordsThirdStep() {
               onDrop={handleDropMultiFile}
               dropZone={false}
               onRemove={handleRemoveFile}
-              // onRemoveAll={() => setValue('files', '', { shouldValidate: true })}
               onLoadImage={handleLoadImage}
             />
-
-            {/* <ThumbnailDocButton onClick={handleAddFileDialog}/> */}
-
-            {/* <RHFUpload multiple  thumbnail name="files" imagesOnly
-              onDrop={handleDropMultiFile}
-              onRemove={(inputFile) =>
-                files.length > 1 ?
-                setValue(
-                  'files',
-                  files &&
-                    files?.filter((file) => file !== inputFile),
-                  { shouldValidate: true }
-                ): setValue('files', '', { shouldValidate: true })
-              }
-              onRemoveAll={() => setValue('files', '', { shouldValidate: true })}
-            /> */}
 
           <Grid container display="flex">
             <RHFSwitch name="isActive" label="Active"/>
           </Grid>
           <AddFormButtons isSubmitting={isSubmitting} 
-              saveAsDraft={saveAsDraft} 
-              saveButtonName="Next"
-              isDisabledBackButton handleBack backButtonName="Back" 
-              toggleCancel={toggleCancel} cancelButtonName="Discard" 
+              saveAsDraft={saveAsDraft} isDraft={isDraft} 
+              handleSave={handleSubmit(onSubmit)}
+              saveButtonName="Publish"
+              handleBack={handleBack} backButtonName="Back" 
+              toggleCancel={handleDiscard} cancelButtonName="Discard" 
           />
       </Stack>
   </FormProvider>
