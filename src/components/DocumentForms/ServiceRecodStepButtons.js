@@ -11,13 +11,17 @@ import { PATH_DASHBOARD, PATH_MACHINE } from '../../routes/paths';
 import { setFormActiveStep } from '../../redux/slices/products/machineServiceRecord';
 
 ServiceRecodStepButtons.propTypes = {
+  handleDraft: PropTypes.func,
   handleSubmit: PropTypes.func,
-  isSubmitting: PropTypes.bool
+  isSubmitting: PropTypes.bool,
+  isDraft: PropTypes.bool,
 };
 
 export default function ServiceRecodStepButtons({
+  handleDraft,
   handleSubmit,
-  isSubmitting
+  isSubmitting,
+  isDraft
 }) {
 
   const navigate = useNavigate();
@@ -46,8 +50,9 @@ export default function ServiceRecodStepButtons({
             <Button size='large' onClick={handleCancle} variant="outlined">Cancel</Button>
         </Grid>
         <Grid item sm={6} display='flex' columnGap={2} justifyContent='flex-end'>
+            <LoadingButton loading={isSubmitting && isDraft} size='large' onClick={handleDraft} type='submit' variant="outlined">Draft</LoadingButton>
             <Button size='large' onClick={handleBack} disabled={ formActiveStep===0 } variant="outlined">Back</Button>
-            <LoadingButton size='large' variant="contained" onClick={handleNext} loading={isSubmitting}>
+            <LoadingButton size='large' variant="contained" onClick={handleNext} loading={isSubmitting && !isDraft}>
               {formActiveStep===2?"Submit":"Next"}
             </LoadingButton>
         </Grid>

@@ -216,7 +216,7 @@ function MachineServiceRecordsThirdStep({handleDraftRequest, handleDiscard, hand
           />
           <Grid container display="flex"><RHFSwitch name="isActive" label="Active"/></Grid>
       </Stack>
-      <ServiceRecodStepButtons isSubmitting={isSubmitting} handleSubmit={(handleSubmit(onSubmit))} />
+      <ServiceRecodStepButtons isSubmitting={isSubmitting} isDraft={isDraft} handleDraft={saveAsDraft} handleSubmit={handleSubmit(onSubmit)} />
     </FormProvider>
   )}
 

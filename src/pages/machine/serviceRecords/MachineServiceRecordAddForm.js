@@ -135,7 +135,6 @@ function MachineServiceRecordAddForm() {
                 title={`Service ID : ${machineServiceRecord?.serviceRecordUid || ''}  (${machineServiceRecord?.status || ''})`}
                 action={
                   <Grid item display='flex' direction='row' columnGap={1} pr={1}>
-                    <LoadingButton onClick={handleDraftRequest} startIcon={<Iconify icon="mdi:archive" />} variant='contained'>Draft</LoadingButton>
                     <LoadingButton onClick={handleDiscard} color='error' startIcon={<Iconify icon="mdi:archive" />} variant='outlined'>Discard</LoadingButton>
                   </Grid>
                 }

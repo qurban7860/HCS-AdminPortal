@@ -181,7 +181,7 @@ return (
                     />
                 <RHFTextField name="technicianNotes" label="Technician Notes" minRows={3} multiline/> 
         </Stack>
-        <ServiceRecodStepButtons isSubmitting={isSubmitting || isLoading} handleSubmit={handleSubmit(onSubmit)}/>
+        <ServiceRecodStepButtons handleDraft={saveAsDraft} isDraft={isDraft} isSubmitting={isSubmitting || isLoading} handleSubmit={handleSubmit(onSubmit)}/>
     </FormProvider>
 )
 }

@@ -53,7 +53,7 @@ const CheckedItemInputRow = ({ index, row, machineId, serviceId }) => {
         checkItems: row?.checkItems.map(item => ({
           _id:item._id,
           comment: item?.recordValue?.comments || '',
-          value:item?.inputType==='Date'?stringToDate(item?.recordValue?.checkItemValue, 'dd/MM/yyyy'):(item?.recordValue?.checkItemValue || null),
+          value:item?.inputType==='Date'?stringToDate(item?.recordValue?.checkItemValue, 'dd/MM/yyyy'):(item?.recordValue?.checkItemValue || ''),
           images: item?.recordValue?.files.map(file => ({
             key: file?._id,
             _id: file?._id,
