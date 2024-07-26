@@ -21,6 +21,7 @@ import { RHFAutocomplete, RHFCheckbox, RHFDatePicker, RHFTextField, RHFUpload } 
 import { statusTypes } from '../util';
 import { fDate, stringToDate } from '../../../utils/formatTime';
 import { validateImageFileType } from '../../documents/util/Util';
+import FormLabel from '../../../components/DocumentForms/FormLabel';
 
 const CheckedItemInputRow = ({ index, row, machineId, serviceId }) => {
 
@@ -88,7 +89,7 @@ const CheckedItemInputRow = ({ index, row, machineId, serviceId }) => {
       formState: { isSubmitting, isSubmitted },
     } = methods;
 
-    const [submittedIndexes, setSubmittedIndexes] = useState([]);
+    const [showMessages, setShowMessages] = useState({});
     const formValues = watch();
 
     useEffect(() => {
@@ -120,7 +121,10 @@ const CheckedItemInputRow = ({ index, row, machineId, serviceId }) => {
       try {
         const result = await dispatch(addCheckItemValues(machine?._id,params, childIndex));
         const combinedIndex = `${index}-${childIndex}`;
-        setSubmittedIndexes(prev => [...prev, combinedIndex]);
+        setShowMessages(prev => ({ ...prev, [combinedIndex]: true }));
+        setTimeout(() => {
+          setShowMessages(prev => ({ ...prev, [combinedIndex]: false }));
+        }, 3000);
       } catch (err) {
         console.error(err);
         enqueueSnackbar('Saving failed!', { variant: `error` });
@@ -177,12 +181,11 @@ const CheckedItemInputRow = ({ index, row, machineId, serviceId }) => {
       }
     };
 
-  return(<>
+  return(<Stack spacing={2} px={2}>
+        <FormLabel content={`${index+1}). ${typeof row?.ListTitle === 'string' && row?.ListTitle || ''} ( Items: ${`${row?.checkItems?.length} `})`} />          
         <FormProvider key={`form-${index}`} methods={methods}>
           {row?.checkItems?.map((childRow,childIndex) => (
           <Card key={`card-${index}-${childIndex}`} sx={{boxShadow:'none'}}>
-            {/* <CardHeader title={`${index+1}.${childIndex+1} - ${childRow?.name}`} sx={{py:1}} />
-            <CardContent> */}
                 <Stack spacing={1} mx={1} key={childRow._id}>
                   <Typography variant='body2' size='small'  >
                       <b>{`${index+1}.${childIndex+1}. `}</b>{`${childRow.name}`}
@@ -255,38 +258,20 @@ const CheckedItemInputRow = ({ index, row, machineId, serviceId }) => {
                         onDrop={(accepted)=> handleDropMultiFile(accepted, childIndex)}
                         onRemove={(inputFile) => handleRemoveFile(inputFile, childIndex)}
                         onLoadImage={(imageId, imageIndex)=> handleLoadImage(imageId, imageIndex, childIndex)}
-                        // onRemoveAll={() => setValue(`checkItems[${childIndex}].images`, [], { shouldValidate: true })}
                       />
-                      {/* <RHFUpload
-                        name={`checkItems[${childIndex}].images`}
-                        // control={control}
-                        label='Upload Images'
-                        multiple
-                        thumbnail
-                        imagesOnly
-                        onRemove={(inputFile) =>
-                          setValue(
-                            `checkItems[${childIndex}].images`,
-                            watch(`checkItems[${childIndex}].images`).filter((file) => file !== inputFile),
-                            { shouldValidate: true }
-                          )
-                        }
-                        onRemoveAll={() => setValue(`checkItems[${childIndex}].images`, [], { shouldValidate: true })}
-                      /> */}
                       
-                  <Grid container sx={{m:1}} display='flex' direction='row-reverse'>
-                    <LoadingButton 
+                  <Grid container sx={{m:1}} display='flex' direction='row' justifyContent='flex-end' gap={2}>
+                      {showMessages[`${index}-${childIndex}`] && <Typography variant='body2' color='green' sx={{mt:1}}>Saved Successfully!</Typography>}
+                      <LoadingButton 
                         onClick={handleSubmit((data) => onSubmit(data, childIndex))} // Pass childIndex
-                        disabled={submittedIndexes.includes(`${index}-${childIndex}`)}
                         loading={isLoadingCheckItemValues===childIndex}
-                        variant='contained'>{submittedIndexes.includes(`${index}-${childIndex}`)?"Saved!":"Save"}</LoadingButton>
+                        variant='contained'>Save</LoadingButton>
                   </Grid>
                 </Stack>
-            {/* </CardContent> */}
           </Card>
         ))}
     </FormProvider>
-</>)
+</Stack>)
 }
 
 CheckedItemInputRow.propTypes = {

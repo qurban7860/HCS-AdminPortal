@@ -14,7 +14,7 @@ import { PATH_MACHINE } from '../../../routes/paths';
 import { addMachineServiceRecord, deleteMachineServiceRecord, setFormActiveStep, updateMachineServiceRecord } from '../../../redux/slices/products/machineServiceRecord';
 import { resetServiceRecordConfig } from '../../../redux/slices/products/serviceRecordConfig';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
-import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
+import ServiceRecodStepButtons from '../../../components/DocumentForms/ServiceRecodStepButtons';
 
 MachineServiceRecordsFirstStep.propTypes = {
     securityUsers: PropTypes.array,
@@ -125,9 +125,8 @@ function MachineServiceRecordsFirstStep( { securityUsers, onChangeConfig, handle
 
 
 return (
-    <FormProvider methods={methods}  onSubmit={handleSubmit(onSubmit)}>
-        <Stack mx={1} spacing={2}>
-        <FormLabel content="Create Service Record" />
+    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+        <Stack px={2} spacing={2}>
                 <Box
                     rowGap={2}
                     columnGap={2}
@@ -181,14 +180,8 @@ return (
                     renderOption={(props, option) => ( <li {...props} key={option?._id}>{option.name || ''}</li>)}
                     />
                 <RHFTextField name="technicianNotes" label="Technician Notes" minRows={3} multiline/> 
-                <AddFormButtons isSubmitting={isSubmitting || isLoading} 
-                    saveAsDraft={saveAsDraft}
-                    isDraft={isDraft} 
-                    saveButtonName="Next"
-                    isDisabledBackButton handleBack={handleBack} backButtonName="Back" 
-                    toggleCancel={handleDiscard} cancelButtonName="Discard" 
-                />
         </Stack>
+        <ServiceRecodStepButtons isSubmitting={isSubmitting || isLoading} handleSubmit={handleSubmit(onSubmit)}/>
     </FormProvider>
 )
 }
