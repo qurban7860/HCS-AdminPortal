@@ -71,11 +71,12 @@ export const StyledTooltip = styled(({ className, ...props }) => (
 ))(({ theme, tooltipcolor }) => ({
   [`& .${tooltipClasses.arrow}`]: {
     color: tooltipcolor,
+    bottom:'1px !important'
   },
   [`& .${tooltipClasses.tooltip}`]: {
     fontSize: '1rem',
     backgroundColor: tooltipcolor,
-  },
+  }
 }));
 
 export const StyledTooltipSliding = styled(({ className, ...props }) => (

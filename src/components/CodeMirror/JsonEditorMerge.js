@@ -19,16 +19,7 @@ JsonEditorMerge.propTypes = {
 
 function JsonEditorMerge({value, modifiedValue, HandleChangeIniJson, readOnly }) {
 
-
-
   return  (<Grid sx={{p:1 }}>
-            <Box
-              rowGap={2} columnGap={2} display="grid"
-              gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
-            >
-              <Typography variant='h6' >{ value?.backupid || '' }</Typography>
-              <Typography variant='h6' >{ modifiedValue?.backupid || '' }</Typography>
-            </Box>
             <Typography variant='subtitle2' display="flex" alignItems="center">Note: <Typography variant='caption' sx={{ml:1}}> Ctrl + F / Cmd + F to find text in Code Editer</Typography></Typography>
               <div>
                 <CodeMirrorMerge orientation="a-b" gutter highlightChanges >
@@ -45,11 +36,11 @@ function JsonEditorMerge({value, modifiedValue, HandleChangeIniJson, readOnly })
                 </CodeMirrorMerge>
               </div>
             <Box
-              rowGap={2} columnGap={2} display="grid"
+              columnGap={2} display="grid"
               gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
             >
-              <ViewFormAuditBlock  defaultValues={value} />
-              <ViewFormAuditBlock  defaultValues={modifiedValue} />
+              {value && <ViewFormAuditBlock  defaultValues={value} />}
+              {modifiedValue && <ViewFormAuditBlock  defaultValues={modifiedValue} />}
             </Box>
           </Grid>)
 } 

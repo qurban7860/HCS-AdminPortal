@@ -725,7 +725,7 @@ export default function Router() {
                 {element: <MachineINIList/>, index: true},
                 {path: 'new', element: <MachineINIAdd/>},
                 {path: ':id/view', element: <MachineINIView/>},
-                {path: ':id1/:id2/compare', element: <MachineINICompareView/>}, 
+                {path: 'compare', element: <MachineINICompareView/>}, 
               ]
             },
             { path: ':machineId/logs',

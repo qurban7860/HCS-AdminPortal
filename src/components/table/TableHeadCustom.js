@@ -32,8 +32,6 @@ TableHeadCustom.propTypes = {
   numSelected: PropTypes.number,
   onSelectAllRows: PropTypes.func,
   order: PropTypes.oneOf(['asc', 'desc']),
-  compareIniOnClick: PropTypes.func,
-  isCompareIni: PropTypes.bool,
 };
 
 export default function TableHeadCustom({
@@ -44,8 +42,6 @@ export default function TableHeadCustom({
   numSelected = 0,
   onSort,
   onSelectAllRows,
-  compareIniOnClick,
-  isCompareIni,
   sx,
 }) {
 
@@ -67,12 +63,6 @@ export default function TableHeadCustom({
       ...sx
       }} >
       <TableRow>
-        { isCompareIni && <TableCell align='left' sx={{ alignItems: 'center' }} >
-          <StyledTooltip title="Compare INI's" placement='top' disableFocusListener tooltipcolor={compareIniOnClick ? theme.palette.primary.main : theme.palette.text.disabled } >
-            <Iconify onClick={ compareIniOnClick } color={ compareIniOnClick ? theme.palette.primary.dark : theme.palette.text.disabled } sx={{ ml: 0.2, width: '18px', height: '18px' , cursor: 'pointer' }}  icon='mdi:select-compare' />
-          </StyledTooltip>
-        </TableCell>}
-
         {headLabel.map((headCell) => {
           if( width === 'md' ) {
             displayHeadIs = mdNone.includes(headCell.id)
