@@ -109,15 +109,18 @@ function MachineServiceRecordsSecondStep({serviceRecord, handleDraftRequest, han
     }
 
     const onSubmit = async (data)=> {
-      await saveAsDraft();
       const params = {
         textBeforeCheckItems: data?.textBeforeCheckItems || '',
         textAfterCheckItems: data?.textAfterCheckItems || ''
       }
       
       try {
-        await dispatch(updateMachineServiceRecord(machine?._id, machineServiceRecord?._id, params));
-        await handleDraftRequest(isDraft);
+        if(isDraft){
+          await dispatch(updateMachineServiceRecord(machine?._id, machineServiceRecord?._id, params));
+          await handleDraftRequest(isDraft);
+        }else{
+          await dispatch(setFormActiveStep(2));
+        }
       } catch (err) {
         console.error(err);
         enqueueSnackbar('Saving failed!', { variant: `error` });
@@ -160,7 +163,9 @@ function MachineServiceRecordsSecondStep({serviceRecord, handleDraftRequest, han
                 </Grid>
               </Stack>
             </FormProvider>
-            <ServiceRecodStepButtons isDraft={isDraft} isSubmitting={isSubmitting} handleDraft={handleSubmit(onSubmit)} />
+            <FormProvider methods={methods}  key='submit' onSubmit={handleSubmit(onSubmit)}>
+              <ServiceRecodStepButtons isDraft={isDraft} isSubmitting={isSubmitting} handleDraft={saveAsDraft} />
+            </FormProvider>
       </Stack>
 )}
 
