@@ -36,6 +36,7 @@ import { StyledCardContainer, StyledTooltip } from '../../theme/styles/default-s
 import EventDialog from '../../components/Dialog/EventDialog';
 import { useAuthContext } from '../../auth/useAuthContext';
 import Iconify from '../../components/iconify';
+import { fDate, fDateTime } from '../../utils/formatTime';
 
 // ----------------------------------------------------------------------
 
@@ -229,15 +230,19 @@ export default function CalendarPage() {
 
   const handleEventContent = (info) => {
     const { timeText, event } = info;
-    const {customer, primaryTechnician, supportingTechnicians} = event.extendedProps;
+    const {start, customer, machines, primaryTechnician, supportingTechnicians} = event.extendedProps;
     const supportingTechnicianNames = supportingTechnicians.map((tech)=> ` ${tech.firstName} ${tech.lastName}`);
     const title = `${primaryTechnician.firstName} ${primaryTechnician.lastName} ${supportingTechnicianNames.length>0?`, ${supportingTechnicianNames}`:''}, ${customer.name}`;
-    
+    const machineNames = machines.map((mc)=> `${mc.name?`${mc.name} - `:''}${mc.serialNo}`).join(', ');
     return (
-      <StyledTooltip title={<Grid>
-        <Typography variant='body2'><strong>Technician:</strong> {`${primaryTechnician.firstName} ${primaryTechnician.lastName} ${supportingTechnicianNames.length>0?`, ${supportingTechnicianNames}`:''}`}</Typography>
-        <Typography variant='body2'><strong>Customer:</strong> {customer.name}</Typography>
-      </Grid>} placement='top-start' tooltipcolor={theme.palette.primary.main}>
+      <StyledTooltip title={
+          <Grid item>
+            <Typography variant='body2'><strong>Time:</strong> {fDateTime(start)}</Typography>
+            <Typography variant='body2'><strong>Technician:</strong> {`${primaryTechnician.firstName} ${primaryTechnician.lastName} ${supportingTechnicianNames.length>0?`, ${supportingTechnicianNames}`:''}`}</Typography>
+            <Typography variant='body2'><strong>Customer:</strong> {customer.name}</Typography>
+            {machines?.length>0 && <Typography variant='body2'><strong>Machines:</strong> {machineNames}</Typography>}
+          </Grid>
+        } placement='top-start' tooltipcolor={theme.palette.primary.main}>
         <div style={{ position: 'relative', zIndex: 10}} className="fc-event-main-frame">
           <div className="fc-event-time">{timeText}</div>
           <div className="fc-event-title-container">

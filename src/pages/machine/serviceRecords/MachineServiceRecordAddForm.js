@@ -3,7 +3,9 @@ import { useDispatch, useSelector } from 'react-redux';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Container, Card, Grid, Stack, StepLabel, Step, Stepper, Box, StepContent, Button, StepButton, Typography } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
+import { Container, Card, Grid, Stack, StepLabel, Step, Stepper, Box, StepContent, Button, StepButton, Typography, CardContent, CardHeader, Chip, createTheme } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 // routes
 import { useNavigate, useParams } from 'react-router-dom';
 import download from 'downloadjs';
@@ -28,7 +30,7 @@ import MachineServiceRecordsFirstStep from './MachineServiceRecordsFirstStep';
 import MachineServiceRecordsSecondStep from './MachineServiceRecordsSecondStep';
 import MachineServiceRecordsThirdStep from './MachineServiceRecordsThirdStep';
 import Iconify from '../../../components/iconify';
-import { ColorlibConnector, ColorlibStepIcon } from '../../../theme/styles/default-styles';
+import { ColorlibConnector, ColorlibStepIcon, StyledTooltip } from '../../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
 
@@ -120,14 +122,25 @@ function MachineServiceRecordAddForm() {
     setCompleted(newCompleted);
   }
 
+  const theme = useTheme();
+
+
   return (
     <Container maxWidth={false} >
       <MachineTabContainer currentTabValue='serviceRecords' />
         <Grid container spacing={3}>
           <Grid item xs={18} md={12}>
-            <Card sx={{ p: 3 }}>
-              <Stack spacing={2}>
-                <Stepper nonLinear activeStep={formActiveStep} connector={<ColorlibConnector  />}>
+            <Card>
+              <CardHeader 
+                title={`Service ID : ${machineServiceRecord?.serviceRecordUid || ''}  (${machineServiceRecord?.status || ''})`}
+                action={
+                  <Grid item display='flex' direction='row' columnGap={1} pr={1}>
+                    <LoadingButton onClick={handleDiscard} color='error' startIcon={<Iconify icon="mdi:archive" />} variant='outlined'>Discard</LoadingButton>
+                  </Grid>
+                }
+              />
+              <CardContent>
+                <Stepper nonLinear sx={{border:'1px solid lightgray', borderBottom:'none',  borderRadius:'10px 10px 0px 0px', py:1}} activeStep={formActiveStep} connector={<ColorlibConnector  />}>
                   <Step key='step_1'>
                     <StepLabel sx={{cursor:'pointer'}} onClick={handleStep(0)} icon='1/3'  StepIconComponent={ColorlibStepIcon}>Create Service Record</StepLabel>
                   </Step>
@@ -138,6 +151,7 @@ function MachineServiceRecordAddForm() {
                     <StepLabel sx={{cursor:'pointer'}} onClick={handleStep(2)} icon='3/3'  StepIconComponent={ColorlibStepIcon}>Complete Service Record</StepLabel>
                   </Step>
                 </Stepper>
+                <Box sx={{border:'1px solid lightgray', borderRadius:'0px 0px 10px 10px', py:2,marginTop:'0 !important'}}>
                     {formActiveStep===0 &&
                       <MachineServiceRecordsFirstStep 
                         securityUsers={securityUsers} 
@@ -163,7 +177,8 @@ function MachineServiceRecordAddForm() {
                         handleBack={handleBack}
                       />
                     }
-              </Stack>
+                </Box>
+              </CardContent>
             </Card>
           </Grid>
         </Grid>

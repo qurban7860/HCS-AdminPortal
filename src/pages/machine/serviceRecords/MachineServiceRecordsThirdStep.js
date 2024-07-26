@@ -15,7 +15,7 @@ import { addMachineServiceRecord, updateMachineServiceRecord, resetMachineServic
 import { getActiveServiceRecordConfigsForRecords, getServiceRecordConfig, resetServiceRecordConfig } from '../../../redux/slices/products/serviceRecordConfig';
 import { getActiveContacts } from '../../../redux/slices/customer/contact';
 // components
-import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
+import ServiceRecodStepButtons from '../../../components/DocumentForms/ServiceRecodStepButtons';
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFAutocomplete, RHFSwitch, RHFTextField, RHFUpload } from '../../../components/hook-form';
 import { getActiveSecurityUsers, getSecurityUser } from '../../../redux/slices/securityUser/securityUser';
@@ -191,50 +191,33 @@ function MachineServiceRecordsThirdStep({handleDraftRequest, handleDiscard, hand
           console.error('Error loading full file:', error);
         }
       };
-      
-
-    
-
   return (
-    <FormProvider methods={methods}  onSubmit={handleSubmit(onSubmit)}>
-        <Stack mx={1} spacing={2}>
-        <FormLabel content="Complete Service Record" />
-            {/* { serviceRecordConfig?.enableNote && <RHFTextField name="serviceNote" label={`${docRecordType?.name?.charAt(0).toUpperCase()||''}${docRecordType?.name?.slice(1).toLowerCase()||''} Note`} minRows={3} multiline/> } */}
-            { serviceRecordConfig?.enableMaintenanceRecommendations && <RHFTextField name="recommendationNote" label="Recommendation Note" minRows={3} multiline/> }
-            { serviceRecordConfig?.enableSuggestedSpares && <RHFTextField name="suggestedSpares" label="Suggested Spares" minRows={3} multiline/> }
-            <RHFTextField name="internalNote" label="Internal Note" minRows={3} multiline/> 
-              <RHFAutocomplete 
-                multiple
-                disableCloseOnSelect
-                filterSelectedOptions
-                name="operators" 
-                label="Operators"
-                options={activeContacts}
-                getOptionLabel={(option) => `${option?.firstName ||  ''} ${option.lastName || ''}`}
-                isOptionEqualToValue={(option, value) => option?._id === value?._id}
-              />
-
-            <RHFTextField name="operatorNotes" label="Operator Notes" minRows={3} multiline/> 
-            <RHFUpload multiple  thumbnail name="files" imagesOnly
-              onDrop={handleDropMultiFile}
-              dropZone={false}
-              onRemove={handleRemoveFile}
-              onLoadImage={handleLoadImage}
-            />
-
-          <Grid container display="flex">
-            <RHFSwitch name="isActive" label="Active"/>
-          </Grid>
-          <AddFormButtons isSubmitting={isSubmitting} 
-              saveAsDraft={saveAsDraft} isDraft={isDraft} 
-              handleSave={handleSubmit(onSubmit)}
-              saveButtonName="Publish"
-              handleBack={handleBack} backButtonName="Back" 
-              toggleCancel={handleDiscard} cancelButtonName="Discard" 
+      <FormProvider methods={methods}  onSubmit={handleSubmit(onSubmit)}>
+        <Stack px={2} spacing={2}>
+          { serviceRecordConfig?.enableMaintenanceRecommendations && <RHFTextField name="recommendationNote" label="Recommendation Note" minRows={3} multiline/> }
+          { serviceRecordConfig?.enableSuggestedSpares && <RHFTextField name="suggestedSpares" label="Suggested Spares" minRows={3} multiline/> }
+          <RHFTextField name="internalNote" label="Internal Note" minRows={3} multiline/> 
+          <RHFAutocomplete 
+            multiple
+            disableCloseOnSelect
+            filterSelectedOptions
+            name="operators" 
+            label="Operators"
+            options={activeContacts}
+            getOptionLabel={(option) => `${option?.firstName ||  ''} ${option.lastName || ''}`}
+            isOptionEqualToValue={(option, value) => option?._id === value?._id}
           />
+          <RHFTextField name="operatorNotes" label="Operator Notes" minRows={3} multiline/> 
+          <RHFUpload multiple  thumbnail name="files" imagesOnly
+            onDrop={handleDropMultiFile}
+            dropZone={false}
+            onRemove={handleRemoveFile}
+            onLoadImage={handleLoadImage}
+          />
+          <Grid container display="flex"><RHFSwitch name="isActive" label="Active"/></Grid>
       </Stack>
-  </FormProvider>
-)
-}
+      <ServiceRecodStepButtons isSubmitting={isSubmitting} isDraft={isDraft} handleDraft={saveAsDraft} handleSubmit={handleSubmit(onSubmit)} />
+    </FormProvider>
+  )}
 
 export default MachineServiceRecordsThirdStep
