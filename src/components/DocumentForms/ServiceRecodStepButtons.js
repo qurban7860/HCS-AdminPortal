@@ -19,7 +19,7 @@ ServiceRecodStepButtons.propTypes = {
 export default function ServiceRecodStepButtons({
   handleDraft,
   isSubmitting,
-  isDraft
+  isDraft,
 }) {
 
   const navigate = useNavigate();

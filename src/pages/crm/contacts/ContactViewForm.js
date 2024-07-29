@@ -97,9 +97,9 @@ export default function ContactViewForm({
 
   const handleSericeRecordView = async (machineId, Id) => {
     await dispatch(setMachineTab('serviceRecords'));
-    await navigate(PATH_MACHINE.machines.view(machineId));
+    await navigate(PATH_MACHINE.machines.serviceRecords.view(machineId, Id));
+    await dispatch(getMachineServiceRecord(machineId, Id));
     await dispatch(setResetFlags(false));
-    dispatch(getMachineServiceRecord(machineId, Id));
   };
 
   const operatorTraningsList = defaultValues?.serviceRecords?.map((item, index) => 

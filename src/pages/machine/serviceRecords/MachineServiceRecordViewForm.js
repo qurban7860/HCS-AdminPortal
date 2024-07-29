@@ -313,6 +313,28 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
           <ViewFormField isLoading={isLoading} sm={12} heading="Decoilers" arrayParam={defaultValues?.decoilers?.map((decoilerMachine) => ({ name: `${decoilerMachine?.serialNo ? decoilerMachine?.serialNo : ''}${decoilerMachine?.name ? '-' : ''}${decoilerMachine?.name ? decoilerMachine?.name : ''}`}))} />
           <ViewFormField isLoading={isLoading} sm={6} heading="Technician"  param={defaultValues?.technician?.name || ''} />
           <ViewFormNoteField sm={12} heading="Technician Notes" param={defaultValues.technicianNotes} />
+          <FormLabel content={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />
+          {defaultValues.textBeforeCheckItems && <ViewFormNoteField sm={12}  param={defaultValues.textBeforeCheckItems} />}
+          {machineServiceRecordCheckItems?.checkItemLists?.length > 0 && 
+            <Grid item md={12} sx={{  overflowWrap: 'break-word' }}>
+              <Grid item md={12} sx={{display:'flex', flexDirection:'column'}}>
+                {machineServiceRecordCheckItems?.checkItemLists?.length > 0 ? 
+                (machineServiceRecordCheckItems?.checkItemLists.map((row, index) =>
+                        <ReadableCollapsibleCheckedItemRow machineId serviceId value={row} index={index} />
+                  )) : <ViewFormField isLoading={isLoading} /> }
+              </Grid>
+            </Grid>
+          }
+          
+          {defaultValues.textAfterCheckItems && <ViewFormNoteField sm={12}  param={defaultValues.textAfterCheckItems} />}
+
+          {machineServiceRecord?.serviceRecordConfig?.enableNote && <ViewFormNoteField sm={12} heading={`${machineServiceRecord?.serviceRecordConfig?.recordType?.charAt(0).toUpperCase()||''}${machineServiceRecord?.serviceRecordConfig?.recordType?.slice(1).toLowerCase()||''} Note`} param={defaultValues.serviceNote} />}
+          {machineServiceRecord?.serviceRecordConfig?.enableMaintenanceRecommendations && <ViewFormNoteField sm={12} heading="Recommendation Note" param={defaultValues.recommendationNote} />}
+          {machineServiceRecord?.serviceRecordConfig?.enableSuggestedSpares && <ViewFormNoteField sm={12} heading="Suggested Spares" param={defaultValues.suggestedSpares} />}
+          <ViewFormNoteField sm={12} heading="Internal Note" param={defaultValues.internalNote} />
+          <ViewFormField isLoading={isLoading} sm={12} heading="Operators" chipDialogArrayParam={operators} />
+          {/* <ViewFormField isLoading={isLoading} sm={12} heading="Operators" arrayParam={defaultValues?.operators?.map((operator) => ({ name: `${operator?.firstName || ''} ${operator?.lastName || ''}`}))} /> */}
+          <ViewFormNoteField sm={12} heading="Operator Notes" param={defaultValues.operatorNotes} />
           <FormLabel content='Images' />
           <Box
             sx={{my:1, width:'100%'}}
@@ -338,30 +360,6 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
 
           {!machineServiceRecord?.isHistory && <ThumbnailDocButton onClick={handleAddFileDialog}/>}
         </Box>
-          <FormLabel content={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />
-          {defaultValues.textBeforeCheckItems && <ViewFormNoteField sm={12}  param={defaultValues.textBeforeCheckItems} />}
-          {machineServiceRecordCheckItems?.checkItemLists?.length > 0 && 
-            <Grid item md={12} sx={{  overflowWrap: 'break-word' }}>
-              <Grid item md={12} sx={{display:'flex', flexDirection:'column'}}>
-                {machineServiceRecordCheckItems?.checkItemLists?.length > 0 ? 
-                (machineServiceRecordCheckItems?.checkItemLists.map((row, index) =>
-                        <ReadableCollapsibleCheckedItemRow machineId serviceId value={row} index={index} />
-                  )) : <ViewFormField isLoading={isLoading} /> }
-              </Grid>
-            </Grid>
-          }
-          
-          {defaultValues.textAfterCheckItems && <ViewFormNoteField sm={12}  param={defaultValues.textAfterCheckItems} />}
-
-          {machineServiceRecord?.serviceRecordConfig?.enableNote && <ViewFormNoteField sm={12} heading={`${machineServiceRecord?.serviceRecordConfig?.recordType?.charAt(0).toUpperCase()||''}${machineServiceRecord?.serviceRecordConfig?.recordType?.slice(1).toLowerCase()||''} Note`} param={defaultValues.serviceNote} />}
-          {machineServiceRecord?.serviceRecordConfig?.enableMaintenanceRecommendations && <ViewFormNoteField sm={12} heading="Recommendation Note" param={defaultValues.recommendationNote} />}
-          {machineServiceRecord?.serviceRecordConfig?.enableSuggestedSpares && <ViewFormNoteField sm={12} heading="Suggested Spares" param={defaultValues.suggestedSpares} />}
-          <ViewFormNoteField sm={12} heading="Internal Note" param={defaultValues.internalNote} />
-          
-          <ViewFormField isLoading={isLoading} sm={12} heading="Operators" chipDialogArrayParam={operators} />
-            
-          {/* <ViewFormField isLoading={isLoading} sm={12} heading="Operators" arrayParam={defaultValues?.operators?.map((operator) => ({ name: `${operator?.firstName || ''} ${operator?.lastName || ''}`}))} /> */}
-          <ViewFormNoteField sm={12} heading="Operator Notes" param={defaultValues.operatorNotes} />
           
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>

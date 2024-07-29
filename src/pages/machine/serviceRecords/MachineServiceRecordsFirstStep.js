@@ -100,7 +100,6 @@ function MachineServiceRecordsFirstStep( { securityUsers, onChangeConfig, handle
       // eslint-disable-next-line react-hooks/exhaustive-deps
     },[docRecordType, activeServiceRecordConfigsForRecords])
       const onSubmit = async (data) => {
-        console.log('called')
         try {
           if(!machineServiceRecord?._id ){
             const serviceRecord = await dispatch(addMachineServiceRecord(machine?._id, data));

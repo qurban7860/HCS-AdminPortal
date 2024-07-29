@@ -31,6 +31,7 @@ import MachineServiceRecordsSecondStep from './MachineServiceRecordsSecondStep';
 import MachineServiceRecordsThirdStep from './MachineServiceRecordsThirdStep';
 import Iconify from '../../../components/iconify';
 import { ColorlibConnector, ColorlibStepIcon, StyledTooltip } from '../../../theme/styles/default-styles';
+import IconTooltip from '../../../components/Icons/IconTooltip';
 
 // ----------------------------------------------------------------------
 
@@ -68,7 +69,6 @@ function MachineServiceRecordAddForm() {
       newCompleted[0] = true;
       setCompleted(newCompleted);
       dispatch((getMachineServiceRecord(machine?._id, id)));
-      dispatch(getMachineServiceRecordCheckItems(machine?._id, id));
     }
     
     
@@ -132,10 +132,11 @@ function MachineServiceRecordAddForm() {
           <Grid item xs={18} md={12}>
             <Card>
               <CardHeader 
-                title={`Service ID : ${machineServiceRecord?.serviceRecordUid || ''}  (${machineServiceRecord?.status || ''})`}
+                title={machineServiceRecord?.serviceRecordUid && `Service ID : ${machineServiceRecord?.serviceRecordUid || ''}  (${machineServiceRecord?.status || ''})`}
                 action={
-                  <Grid item display='flex' direction='row' columnGap={1} pr={1}>
-                    <LoadingButton onClick={handleDiscard} color='error' startIcon={<Iconify icon="mdi:archive" />} variant='outlined'>Discard</LoadingButton>
+                  <Grid item display='flex' direction='row' columnGap={1} mr={1}>
+                    <IconTooltip title="Discard" onClick={handleDiscard} color="#FF0000" icon="mdi:archive" />
+                    {/* <LoadingButton size='large' onClick={handleDiscard} color='error' startIcon={<Iconify icon="mdi:archive" />} variant='outlined'>Discard</LoadingButton> */}
                   </Grid>
                 }
               />

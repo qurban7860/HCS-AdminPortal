@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import { forwardRef, memo, useCallback, useEffect, useImperativeHandle, useMemo, useState } from 'react';
 import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
 import { useSnackbar } from 'notistack';
@@ -23,18 +23,37 @@ import { fDate, stringToDate } from '../../../utils/formatTime';
 import { validateImageFileType } from '../../documents/util/Util';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
 
-const CheckedItemInputRow = ({ index, row, machineId, serviceId }) => {
+const CheckedItemInputRow = forwardRef(({ index, row, machineId, serviceId }, ref) => {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
     
-    const { machineServiceRecord, isLoadingCheckItemValues } = useSelector((state) => state.machineServiceRecord);
+    const { machineServiceRecord, submittingCheckItemIndex } = useSelector((state) => state.machineServiceRecord);
     const { serviceRecordConfig } = useSelector((state) => state.serviceRecordConfig);
     const { machine } = useSelector((state) => state.machine);
 
+    const validateValue = (value, inputType) => {
+      if (inputType === 'Boolean') return typeof value === 'boolean';
+      if (inputType === 'Number') return !Number.isNaN(value);
+      if (inputType === 'Date') return value instanceof Date;
+      if (inputType === 'Status') {
+        return statusTypes.some(status => status.name === value?.name);
+      }
+      return value && value.length > 0;
+    };
+
     // Define the schema for each image
     const CheckItemSchema = Yup.object().shape({
+      value: Yup.mixed()
+      .test('value-required', 'Value is required', (value, context) => {
+        if(context.type==="value-required" && !value){
+          return false;
+        }
+
+        return true;
+
+      }),
       comment: Yup.string().max(5000, 'Comments cannot exceed 5000 characters'),
       images: Yup.array().test({
         name: 'fileType',
@@ -47,13 +66,32 @@ const CheckedItemInputRow = ({ index, row, machineId, serviceId }) => {
       checkItems: Yup.array().of(CheckItemSchema),
     });
 
+    const getRecordValue = (item) => {
+      if (item?.inputType === 'Date') {
+        return stringToDate(item?.recordValue?.checkItemValue, 'dd/MM/yyyy');
+      }
+      if (item?.inputType === 'Boolean') {
+        return item?.recordValue?.checkItemValue === 'true';
+      }
+      if (item?.inputType === 'Number') {
+        const value = parseFloat(item?.recordValue?.checkItemValue);
+        return Number.isNaN(value) ? null : value;
+      }
+      if (item?.inputType === 'Text') {
+        return item?.recordValue?.checkItemValue || '';
+      }
+      if (item?.inputType === 'Status') {
+        return statusTypes.find((st) => st?.name === item?.recordValue?.checkItemValue) || null;
+      }
+      return item?.recordValue?.checkItemValue || null;
+    };
 
     const defaultValues = useMemo(
       () => ({
         checkItems: row?.checkItems.map(item => ({
           _id:item._id,
           comment: item?.recordValue?.comments || '',
-          value:item?.inputType==='Date'?stringToDate(item?.recordValue?.checkItemValue, 'dd/MM/yyyy'):(item?.recordValue?.checkItemValue || ''),
+          value:getRecordValue(item),
           images: item?.recordValue?.files.map(file => ({
             key: file?._id,
             _id: file?._id,
@@ -75,9 +113,9 @@ const CheckedItemInputRow = ({ index, row, machineId, serviceId }) => {
     const methods = useForm({
       resolver: yupResolver(MainSchema),
       defaultValues,
+      mode:'onChange',
     });
-    
-
+  
     const {
       control,
       reset,
@@ -92,6 +130,11 @@ const CheckedItemInputRow = ({ index, row, machineId, serviceId }) => {
     const [showMessages, setShowMessages] = useState({});
     const formValues = watch();
 
+    useImperativeHandle(ref, () => ({
+      triggerFormValidation: () => trigger(), // No need for await here
+      getFormValues: () => getValues(),
+    }));
+  
     useEffect(() => {
       if (machineServiceRecord) {
         reset(defaultValues);
@@ -181,9 +224,17 @@ const CheckedItemInputRow = ({ index, row, machineId, serviceId }) => {
       }
     };
 
+    const handleSave = async (childIndex) => {
+      const isValid = await trigger(`checkItems[${childIndex}].value`);
+      if(isValid){
+        const data = getValues();
+        await onSubmit(data, childIndex);
+      }
+    };
+
   return(<Stack spacing={2} px={2}>
         <FormLabel content={`${index+1}). ${typeof row?.ListTitle === 'string' && row?.ListTitle || ''} ( Items: ${`${row?.checkItems?.length} `})`} />          
-        <FormProvider key={`form-${index}`} methods={methods}>
+        <FormProvider key={`form-${index}`} methods={methods} >
           {row?.checkItems?.map((childRow,childIndex) => (
           <Card key={`card-${index}-${childIndex}`} sx={{boxShadow:'none'}}>
                 <Stack spacing={1} mx={1} key={childRow._id}>
@@ -191,16 +242,15 @@ const CheckedItemInputRow = ({ index, row, machineId, serviceId }) => {
                       <b>{`${index+1}.${childIndex+1}. `}</b>{`${childRow.name}`}
                   </Typography>
                       {childRow?.inputType === 'Boolean' &&
-                        <RHFCheckbox 
-                          label='Check'
+                        <RHFCheckbox
+                          label={`Check ${childRow?.isRequired && '*'}`}
                           name={`checkItems[${childIndex}].value`}
-
                         /> 
                       }
                       {(childRow?.inputType === 'Short Text' || childRow?.inputType === 'Long Text') &&
                         <RHFTextField 
                           multiline
-                          label={childRow?.inputType}
+                          label={`${childRow?.inputType}`}
                           name={`checkItems[${childIndex}].value`}
                           size="small" 
                           required={childRow?.isRequired}
@@ -209,7 +259,7 @@ const CheckedItemInputRow = ({ index, row, machineId, serviceId }) => {
                       }
                       {childRow?.inputType === 'Date'  && 
                         <RHFDatePicker 
-                          label='Enter Date'
+                          label={`Enter Date ${childRow?.isRequired && '*'}`}
                           name={`checkItems[${childIndex}].value`}
                           format="dd/mm/yyyy"
                           size="small" 
@@ -218,7 +268,7 @@ const CheckedItemInputRow = ({ index, row, machineId, serviceId }) => {
                       }
                       {childRow?.inputType === 'Number'  && 
                         <RHFTextField 
-                            label={`${childRow?.unitType ? childRow?.unitType : 'Enter Value'}`}
+                            label={`${childRow?.inputType}`}
                             name={`checkItems[${childIndex}].value`}
                             type="number"
                             size="small" 
@@ -226,19 +276,17 @@ const CheckedItemInputRow = ({ index, row, machineId, serviceId }) => {
                         />
                       }
                       {childRow?.inputType==="Status" &&
-                        <>
                           <RHFAutocomplete 
-                            label='Status'
+                            size="small"
+                            label={`${childRow?.inputType} ${childRow?.isRequired && '*'}`}
                             name={`checkItems[${childIndex}].value`}
                             options={statusTypes}
                             getOptionLabel={(option) => option.name}
                             isOptionEqualToValue={(option, value) => option.name === value.name}
                             renderOption={(props, option) => ( <li {...props} key={option.name}>{`${option?.name || ''}`}</li> )}
                           />
-                        </>
                       }
 
-                      
                       <RHFTextField 
                         name={`checkItems[${childIndex}].comment`}
                         label="Comments"
@@ -263,8 +311,8 @@ const CheckedItemInputRow = ({ index, row, machineId, serviceId }) => {
                   <Grid container sx={{m:1}} display='flex' direction='row' justifyContent='flex-end' gap={2}>
                       {showMessages[`${index}-${childIndex}`] && <Typography variant='body2' color='green' sx={{mt:1}}>Saved Successfully!</Typography>}
                       <LoadingButton 
-                        onClick={handleSubmit((data) => onSubmit(data, childIndex))} // Pass childIndex
-                        loading={isLoadingCheckItemValues===childIndex}
+                        onClick={()=> handleSave(childIndex)} // Pass childIndex
+                        loading={submittingCheckItemIndex===childIndex}
                         variant='contained'>Save</LoadingButton>
                   </Grid>
                 </Stack>
@@ -272,7 +320,7 @@ const CheckedItemInputRow = ({ index, row, machineId, serviceId }) => {
         ))}
     </FormProvider>
 </Stack>)
-}
+});
 
 CheckedItemInputRow.propTypes = {
     index: PropTypes.number,  

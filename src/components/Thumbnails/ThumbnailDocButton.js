@@ -12,11 +12,11 @@ ThumbnailDocButton.propTypes = {
   size:PropTypes.number,
 };
 
-export default function ThumbnailDocButton({ onClick, size=180 }) {
+export default function ThumbnailDocButton({ onClick, size=150 }) {
   const [hovered, setHovered] = useState(false);
   const theme = useTheme();
   return (
-    <StyledTooltip placement="top" title={size>=180?"":"Add File"}>
+    <StyledTooltip placement="top" title={size>=150?"":"Add File"}>
     <Card 
         sx={{
             cursor: 'pointer',

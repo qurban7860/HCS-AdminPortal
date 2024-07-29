@@ -1,5 +1,6 @@
 import * as Yup from 'yup';
 import { isNaN } from 'lodash';
+import { endOfToday } from 'date-fns';
 import { Snacks } from '../../constants/machine-constants';
 import { allowedExtensions, fileTypesMessage } from '../../constants/document-constants';
 import { NotRequiredValidateFileType } from '../documents/util/Util'
@@ -149,7 +150,7 @@ export const MachineServiceRecordPart1Schema = Yup.object().shape({
   serviceRecordConfiguration: Yup.object().label('Service Record Configuration').nullable().required(),
   serviceDate: Yup.date()
   .typeError('Date Should be Valid')
-  .max(new Date(), 'Service Date must be earlier')
+  .max(endOfToday(), 'Service Date must be earlier')
   .nullable()
   .required()
   .label('Service Date'),
