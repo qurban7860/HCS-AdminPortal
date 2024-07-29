@@ -50,6 +50,7 @@ function MachineServiceRecordsFirstStep( { securityUsers, onChangeConfig, handle
           versionNo:                    machineServiceRecord?.versionNo || 1,
           technician:                   machineServiceRecord?.technician || ( securityUser || null ),
           technicianNotes:              machineServiceRecord?.technicianNotes || '',
+          decoilers:defaultDecoilers || []
           // textBeforeCheckItems:         machineServiceRecord?.textBeforeCheckItems || '',
           // textAfterCheckItems:          machineServiceRecord?.textAfterCheckItems || '',
         }
@@ -110,7 +111,7 @@ function MachineServiceRecordsFirstStep( { securityUsers, onChangeConfig, handle
             await navigate(PATH_MACHINE.machines.serviceRecords.edit(machineId, id))  
           }
 
-          if(isDraft){
+          if(isDraft){F
             await handleDraftRequest(isDraft);
           }else{
             await dispatch(setFormActiveStep(1));
@@ -137,6 +138,7 @@ return (
                     <RHFAutocomplete 
                         name="docRecordType"
                         label="Document Type*"
+                        disabled={id}
                         options={recordTypes}
                         isOptionEqualToValue={(option, value) => option?._id === value?._id}
                         getOptionLabel={(option) => `${option.name ? option.name : ''}`}
@@ -148,6 +150,7 @@ return (
                     <RHFAutocomplete
                         name="serviceRecordConfiguration"
                         label="Service Record Configuration*"
+                        disabled={id}
                         options={activeServiceRecordConfigs}
                         getOptionLabel={(option) => `${option?.docTitle || ''} ${option?.docTitle ? '-' : '' } ${option.recordType || ''} ${option?.docVersionNo ? '- v' : '' }${option?.docVersionNo || ''}`}
                         isOptionEqualToValue={(option, value) => option?._id === value?._id}
