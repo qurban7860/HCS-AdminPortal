@@ -47,7 +47,6 @@ export default function MachineServiceRecordListTableToolbar({
   };
 
   const { machine } = useSelector((state) => state.machine);
-  
 
   return (
     <Stack {...options}>

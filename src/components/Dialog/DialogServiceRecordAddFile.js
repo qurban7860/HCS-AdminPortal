@@ -26,8 +26,6 @@ import { imagesExtensions } from '../../constants/document-constants';
 function DialogServiceRecordAddFile() {
 
   const { machineId, id } = useParams();
-
-  console.log("machineId, id::::",machineId, id)
     
   const dispatch = useDispatch();
   const { addFileDialog, isLoading } = useSelector((state) => state.machineServiceRecord);
