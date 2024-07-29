@@ -92,7 +92,8 @@ function ViewFormEditDeleteButtons({
   drawingPage,
   history,
   onMergeDocumentType,
-  handleCompleteMSR
+  handleCompleteMSR,
+  serviceRecordStatus
 }) {
   const { id } = useParams();
   const navigate = useNavigate()
@@ -652,8 +653,8 @@ function ViewFormEditDeleteButtons({
           icon="eva:swap-fill"
         />}
 
-        {handleCompleteMSR && 
-          <IconTooltip title="Complete Service Record" onClick={handleCompleteMSR} color={theme.palette.primary.main} icon="uil:file-check-alt"/>
+        {handleCompleteMSR && serviceRecordStatus && 
+          <IconTooltip title={`${serviceRecordStatus} Service Record`} onClick={handleCompleteMSR} color={theme.palette.primary.main} icon="uil:file-check-alt"/>
         }
 
         {handleViewPDF && 
@@ -954,5 +955,6 @@ ViewFormEditDeleteButtons.propTypes = {
   drawingPage: PropTypes.bool,
   history: PropTypes.array,
   onMergeDocumentType: PropTypes.func,
-  handleCompleteMSR: PropTypes.func
+  handleCompleteMSR: PropTypes.func,
+  serviceRecordStatus: PropTypes.string
 };

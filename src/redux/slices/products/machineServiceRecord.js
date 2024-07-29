@@ -459,12 +459,11 @@ export function updateMachineServiceRecord(machineId,id, params) {
         recommendationNote:         params?.recommendationNote,
         internalComments:           params?.internalComments,
         suggestedSpares:            params?.suggestedSpares,
-        internalNote:               params?.internalNote || '',
+        internalNote:               params?.internalNote,
         operators:                  params?.operators,
-        operatorNotes:              params?.operatorNotes || '',
-        checkItemRecordValues:      params?.checkItemRecordValues || [],
+        operatorNotes:              params?.operatorNotes,
+        checkItemRecordValues:      params?.checkItemRecordValues,
         status:                     params?.status || 'DRAFT',
-        // serviceId:                  params?.serviceId,
         update:                     params?.update,
         isActive:                   params?.isActive
       }
@@ -555,19 +554,6 @@ export function deleteCheckItemFile(machineId, id, fileId) {
   };
 }
 
-export function completeServiceRecord(machineId, id) {
-  return async (dispatch) => {
-    dispatch(slice.actions.startLoading());
-    try {
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}/complete`);
-      dispatch(slice.actions.setResponseMessage(response.data));
-    } catch (error) {
-      console.error(error);
-      dispatch(slice.actions.hasError(error.Message));
-      throw error;
-    }
-  };
-}
 
 export function getMachineServiceRecordCheckItems(machineId, id) {
   return async (dispatch) => {

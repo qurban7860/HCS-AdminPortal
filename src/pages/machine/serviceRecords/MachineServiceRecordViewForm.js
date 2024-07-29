@@ -18,9 +18,9 @@ import { deleteMachineServiceRecord,
   setAddFileDialog,
   downloadRecordFile,
   deleteRecordFile,
-  completeServiceRecord,
   setFormActiveStep,
-  getMachineServiceRecordCheckItems} from '../../../redux/slices/products/machineServiceRecord';
+  getMachineServiceRecordCheckItems,
+  updateMachineServiceRecord} from '../../../redux/slices/products/machineServiceRecord';
 import { setCardActiveIndex, setIsExpanded } from '../../../redux/slices/customer/contact';
 // components
 import { useSnackbar } from '../../../components/snackbar';
@@ -175,6 +175,8 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
     }
   }
   
+  const [recordStatus, setRecordStatus]= useState(null);
+
   useEffect(() => {
     if (machineServiceRecord?.files) {
         const updatedFiles = machineServiceRecord?.files?.map(file => ({
@@ -184,6 +186,12 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
         }));
         setSlides(updatedFiles);
     }
+    if(machineServiceRecord.status==="DRAFT"){
+      setRecordStatus({label:'Complete', value:'SUBMITTED'});
+    }else if(machineServiceRecord.status==="SUBMITTED"){
+      setRecordStatus({label:'Approve', value:'APPROVED'});
+    }
+    
   }, [machineServiceRecord]);
 
 
@@ -231,7 +239,7 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
     try {
       await dispatch(deleteRecordFile(machineId, machineServiceRecord?.serviceId, fileId));
       await dispatch(getMachineServiceRecord(machineId, id))
-      enqueueSnackbar('File Archived successfully!');
+      enqueueSnackbar('File deleted successfully!');
     } catch (err) {
       console.log(err);
       enqueueSnackbar('File Deletion failed!', { variant: `error` });
@@ -274,7 +282,8 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
 
   const onSubmitComplete = async() => {
     try {
-      await dispatch(completeServiceRecord(machineId, id));
+      await dispatch(updateMachineServiceRecord(machineId, id, {status:recordStatus?.value}));
+      handleCompleteConfirm();
       enqueueSnackbar('Service Record Completed Successfully!');
     } catch (err) {
       console.log(err);
@@ -297,6 +306,7 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
           handleSendPDFEmail={!machineServiceRecord?.isHistory && machineServiceRecord?._id && handleSendEmail}
           handleViewPDF={!machineServiceRecord?.isHistory && machineServiceRecord?._id && handlePDFViewer}
           handleCompleteMSR={!machineServiceRecord?.isHistory && handleCompleteConfirm}
+          serviceRecordStatus={recordStatus?.label}
         />
         
         <Grid container>
@@ -368,10 +378,10 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
       {sendEmailDialog && <SendEmailDialog machineServiceRecord={machineServiceRecord} fileName={fileName}/>}
       <DialogServiceRecordAddFile />
       <ConfirmDialog open={completeConfirm} onClose={handleCompleteConfirm}
-        title='Are you sure you want to complete?' 
+        title={`Are you sure you want to ${recordStatus?.label}?`} 
         content="Email will be sent to your reporting contact?" 
         action={
-          <LoadingButton loading={isSubmitting} variant='contained' onClick={handleSubmit(onSubmitComplete)}>Complete</LoadingButton>
+          <LoadingButton loading={isSubmitting} variant='contained' onClick={handleSubmit(onSubmitComplete)}>{recordStatus?.label}</LoadingButton>
         }
       />
     </Card>
