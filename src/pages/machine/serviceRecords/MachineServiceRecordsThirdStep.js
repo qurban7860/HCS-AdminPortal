@@ -118,6 +118,8 @@ function MachineServiceRecordsThirdStep({handleDraftRequest, handleDiscard, hand
         const newFiles = acceptedFiles.map((file, index) => 
             Object.assign(file, {
               preview: URL.createObjectURL(file),
+              src: URL.createObjectURL(file),
+              isLoaded:true
             })
         );
         setValue('files', [...docFiles, ...newFiles], { shouldValidate: true });

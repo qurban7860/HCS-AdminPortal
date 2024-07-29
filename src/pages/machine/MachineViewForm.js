@@ -175,7 +175,7 @@ export default function MachineViewForm() {
   
   const linkedMachines = machine?.machineConnections?.map((machineConnection, index) => (
       <Chip 
-        sx={{ml:index===0?0:1}} 
+        sx={{ml:index===0?0:1, my:0.2}} 
         onClick={() => handleMachineDialog(machineConnection.connectedMachine._id)} 
         deleteIcon={<Iconify icon="fluent:open-12-regular"/>}
         onDelete={()=> {
@@ -187,7 +187,7 @@ export default function MachineViewForm() {
   
   const paranetMachines = machine?.parentMachines?.map((parentMachine, index) => (  
     <Chip 
-        sx={{ml:index===0?0:1}} 
+        sx={{ml:index===0?0:1, my:0.2}} 
         onClick={() => handleMachineDialog(parentMachine.machine._id)} 
         deleteIcon={<Iconify icon="fluent:open-12-regular"/>}
         onDelete={()=> {

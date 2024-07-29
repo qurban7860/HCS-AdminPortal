@@ -41,6 +41,12 @@ function MachineServiceRecordsFirstStep( { securityUsers, onChangeConfig, handle
     const [ isDraft, setIsDraft ] = useState(false);
     const saveAsDraft = async () => setIsDraft(true);
 
+    const machineDecoilers = (machine?.machineConnections || []).map((decoiler) => ({
+      _id: decoiler?.connectedMachine?._id ?? null,
+      name: decoiler?.connectedMachine?.name ?? null,
+      serialNo: decoiler?.connectedMachine?.serialNo ?? null
+    }));
+
     const defaultValues = useMemo(
         () => {
           const initialValues = {
@@ -50,7 +56,7 @@ function MachineServiceRecordsFirstStep( { securityUsers, onChangeConfig, handle
           versionNo:                    machineServiceRecord?.versionNo || 1,
           technician:                   machineServiceRecord?.technician || ( securityUser || null ),
           technicianNotes:              machineServiceRecord?.technicianNotes || '',
-          decoilers:defaultDecoilers || []
+          decoilers:!id && (machineDecoilers || []) 
           // textBeforeCheckItems:         machineServiceRecord?.textBeforeCheckItems || '',
           // textAfterCheckItems:          machineServiceRecord?.textAfterCheckItems || '',
         }
@@ -111,7 +117,7 @@ function MachineServiceRecordsFirstStep( { securityUsers, onChangeConfig, handle
             await navigate(PATH_MACHINE.machines.serviceRecords.edit(machineId, id))  
           }
 
-          if(isDraft){F
+          if(isDraft){
             await handleDraftRequest(isDraft);
           }else{
             await dispatch(setFormActiveStep(1));

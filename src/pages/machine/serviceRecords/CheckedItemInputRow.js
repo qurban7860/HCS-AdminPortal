@@ -181,6 +181,7 @@ const CheckedItemInputRow = forwardRef(({ index, row, machineId, serviceId }, re
           Object.assign(file, {
             preview: URL.createObjectURL(file),
             src: URL.createObjectURL(file),
+            isLoaded:true
           })
         );
         setValue(`checkItems[${childIndex}].images`, [...existingFiles, ...newFiles], { shouldValidate: true });
