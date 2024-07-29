@@ -33,7 +33,7 @@ DocumentGalleryItem.propTypes = {
     size: PropTypes.number,
   };
   
-export function DocumentGalleryItem({ image, isLoading, onOpenLightbox, onOpenFile, onDownloadFile, onDeleteFile, toolbar, customerArchived, size = 180 }) {
+export function DocumentGalleryItem({ image, isLoading, onOpenLightbox, onOpenFile, onDownloadFile, onDeleteFile, toolbar, customerArchived, size = 150 }) {
 
     const [deleteConfirm, seDeleteConfirm] = useState(false);
     const [isHovered, setIsHovered] = useState(false);

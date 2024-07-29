@@ -1,10 +1,10 @@
-import React, { useEffect, useLayoutEffect, useMemo, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router';
 import { useSnackbar } from 'notistack';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
-import { Box, Grid, Skeleton, Stack, TextField, Typography } from '@mui/material';
+import { Box, Button, Grid, Skeleton, Stack, TextField, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
 import { RHFTextField } from '../../../components/hook-form';
@@ -14,7 +14,7 @@ import CheckedItemInputRow from './CheckedItemInputRow';
 import FormProvider from '../../../components/hook-form/FormProvider';
 import { PATH_MACHINE } from '../../../routes/paths';
 import { MachineServiceRecordPart2Schema } from '../../schemas/machine';
-import { deleteMachineServiceRecord, getMachineServiceRecord, getMachineServiceRecordCheckItems, setFormActiveStep, updateMachineServiceRecord } from '../../../redux/slices/products/machineServiceRecord';
+import { deleteMachineServiceRecord, getMachineServiceRecord, getMachineServiceRecordCheckItems, resetCheckItemValues, setFormActiveStep, updateMachineServiceRecord } from '../../../redux/slices/products/machineServiceRecord';
 import { getActiveServiceRecordConfigsForRecords, getServiceRecordConfig, resetServiceRecordConfig } from '../../../redux/slices/products/serviceRecordConfig';
 import ServiceRecodStepButtons from '../../../components/DocumentForms/ServiceRecodStepButtons';
 
@@ -32,20 +32,23 @@ function MachineServiceRecordsSecondStep({serviceRecord, handleDraftRequest, han
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   
-  const { machineServiceRecord, machineServiceRecordCheckItems, isLoading } = useSelector((state) => state.machineServiceRecord);
+  const { machineServiceRecord, machineServiceRecordCheckItems, isLoadingCheckItems, isLoading } = useSelector((state) => state.machineServiceRecord);
   const { serviceRecordConfig } = useSelector((state) => state.serviceRecordConfig);
   const { machine } = useSelector((state) => state.machine);
   
   const [ isDraft, setIsDraft ] = useState(false);
   const saveAsDraft = async () => setIsDraft(true);
-  const [ checkItemLists, setCheckItemLists ] = useState([]);
+  // const [ checkItemLists, setCheckItemLists ] = useState([]);
 
   const [ textBeforeCheckItems, setTextBeforeCheckItems] = useState('');
   const [ textAfterCheckItems, setTextAfterCheckItems] = useState('');
 
-  useEffect(() =>{
-    setCheckItemLists(machineServiceRecordCheckItems?.checkItemLists|| [])
-  },[dispatch, machineServiceRecordCheckItems])
+  useLayoutEffect(() =>{
+    if(machine?._id && machineServiceRecord?._id){
+      dispatch(getMachineServiceRecordCheckItems(machine?._id, machineServiceRecord?._id));
+    }
+    return(()=> resetCheckItemValues());
+  },[dispatch, machine, machineServiceRecord])
 
   const defaultValues = useMemo(
       () => {
@@ -109,20 +112,37 @@ function MachineServiceRecordsSecondStep({serviceRecord, handleDraftRequest, han
     }
 
     const onSubmit = async (data)=> {
-      await saveAsDraft();
       const params = {
         textBeforeCheckItems: data?.textBeforeCheckItems || '',
         textAfterCheckItems: data?.textAfterCheckItems || ''
       }
       
       try {
-        await dispatch(updateMachineServiceRecord(machine?._id, machineServiceRecord?._id, params));
-        await handleDraftRequest(isDraft);
+        if(await handleValidateAll()){
+          if(isDraft){
+            await dispatch(updateMachineServiceRecord(machine?._id, machineServiceRecord?._id, params));
+            await handleDraftRequest(isDraft);
+          }else{
+            await dispatch(setFormActiveStep(2));
+          }
+        }else{
+          enqueueSnackbar('Please enter required checkitem values', {variant:'warning'});
+        }
       } catch (err) {
         console.error(err);
         enqueueSnackbar('Saving failed!', { variant: `error` });
       }
     }
+
+    const checkedItemInputRowRef = useRef(null);
+    const handleValidateAll = async () => {
+      let isValid = false;
+      if (checkedItemInputRowRef.current) {
+        isValid = await checkedItemInputRowRef.current.triggerFormValidation();
+      }
+
+      return isValid;
+    };
 
   return (
       <Stack spacing={2}>
@@ -135,8 +155,8 @@ function MachineServiceRecordsSecondStep({serviceRecord, handleDraftRequest, han
                 </Grid>
               </Stack>
             </FormProvider>
-            {checkItemLists?.length===0 ? 
-            <Box sx={{ width: '100%',mt:1 }}>
+            {isLoadingCheckItems? 
+            <Stack px={2} spacing={2}>
               <Skeleton />
               <Skeleton animation="wave" />
               <Skeleton animation="wave" />
@@ -144,10 +164,12 @@ function MachineServiceRecordsSecondStep({serviceRecord, handleDraftRequest, han
               <Skeleton animation="wave" />
               <Skeleton animation="wave" />
               <Skeleton animation={false} />
-            </Box>
+            </Stack>
             :<>
-                {checkItemLists?.map((row, index) =>
-                  <CheckedItemInputRow key={`row-${row._id}-${index}`} index={index} row={row} machineId={machine?._id} serviceId={machineServiceRecord?.serviceId} />
+                {machineServiceRecordCheckItems?.checkItemLists.length>0?machineServiceRecordCheckItems?.checkItemLists?.map((row, index) =>
+                  <CheckedItemInputRow ref={checkedItemInputRowRef} key={`row-${row._id}-${index}`} index={index} row={row} machineId={machine?._id} serviceId={machineServiceRecord?.serviceId} />
+                ):(
+                  <Typography variant='body2'>No Check Item Assigned</Typography>
                 )}
               </>
             }
@@ -160,7 +182,9 @@ function MachineServiceRecordsSecondStep({serviceRecord, handleDraftRequest, han
                 </Grid>
               </Stack>
             </FormProvider>
-            <ServiceRecodStepButtons isDraft={isDraft} isSubmitting={isSubmitting} handleDraft={handleSubmit(onSubmit)} />
+            <FormProvider methods={methods}  key='submit' onSubmit={handleSubmit(onSubmit)}>
+              <ServiceRecodStepButtons isDraft={isDraft} isSubmitting={isSubmitting} handleDraft={saveAsDraft} />
+            </FormProvider>
       </Stack>
 )}
 

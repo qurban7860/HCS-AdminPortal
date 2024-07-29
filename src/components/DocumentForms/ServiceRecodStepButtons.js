@@ -12,29 +12,20 @@ import { setFormActiveStep } from '../../redux/slices/products/machineServiceRec
 
 ServiceRecodStepButtons.propTypes = {
   handleDraft: PropTypes.func,
-  handleSubmit: PropTypes.func,
   isSubmitting: PropTypes.bool,
   isDraft: PropTypes.bool,
 };
 
 export default function ServiceRecodStepButtons({
   handleDraft,
-  handleSubmit,
   isSubmitting,
-  isDraft
+  isDraft,
 }) {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { formActiveStep } = useSelector((state) => state.machineServiceRecord);
   const { machine } = useSelector((state) => state.machine);
-
-  const handleNext = async () => {
-    if(formActiveStep!==1){
-      await handleSubmit();
-    }
-    await dispatch(setFormActiveStep(formActiveStep+1));
-  } 
 
   const handleBack = async () => {
     await dispatch(setFormActiveStep(formActiveStep-1));
@@ -52,7 +43,7 @@ export default function ServiceRecodStepButtons({
         <Grid item sm={6} display='flex' columnGap={2} justifyContent='flex-end'>
             <LoadingButton loading={isSubmitting && isDraft} size='large' onClick={handleDraft} type='submit' variant="outlined">Draft</LoadingButton>
             <Button size='large' onClick={handleBack} disabled={ formActiveStep===0 } variant="outlined">Back</Button>
-            <LoadingButton size='large' variant="contained" onClick={handleNext} loading={isSubmitting && !isDraft}>
+            <LoadingButton size='large' type='submit' variant="contained"  loading={isSubmitting && !isDraft}>
               {formActiveStep===2?"Submit":"Next"}
             </LoadingButton>
         </Grid>

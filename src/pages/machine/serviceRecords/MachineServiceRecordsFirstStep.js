@@ -99,7 +99,6 @@ function MachineServiceRecordsFirstStep( { securityUsers, onChangeConfig, handle
         setValue('serviceRecordConfiguration',null)
       // eslint-disable-next-line react-hooks/exhaustive-deps
     },[docRecordType, activeServiceRecordConfigsForRecords])
-
       const onSubmit = async (data) => {
         try {
           if(!machineServiceRecord?._id ){
@@ -181,7 +180,7 @@ return (
                     />
                 <RHFTextField name="technicianNotes" label="Technician Notes" minRows={3} multiline/> 
         </Stack>
-        <ServiceRecodStepButtons handleDraft={saveAsDraft} isDraft={isDraft} isSubmitting={isSubmitting || isLoading} handleSubmit={handleSubmit(onSubmit)}/>
+        <ServiceRecodStepButtons handleDraft={saveAsDraft} isDraft={isDraft} isSubmitting={isSubmitting || isLoading} />
     </FormProvider>
 )
 }

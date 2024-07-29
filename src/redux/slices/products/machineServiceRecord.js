@@ -11,7 +11,8 @@ const initialState = {
   responseMessage: null,
   success: false,
   isLoading: false,
-  isLoadingCheckItemValues: -1,
+  isLoadingCheckItems: false,
+  submittingCheckItemIndex: -1,
   error: null,
   machineServiceRecord: {},
   machineServiceRecords: [],
@@ -40,8 +41,13 @@ const slice = createSlice({
       state.isLoading = true;
     },
 
-    setLoadingCheckItemValues(state, action) {
-      state.isLoadingCheckItemValues = action.payload;
+    // START LOADING CHECK ITEMS
+    startLoadingCheckItems(state) {
+      state.isLoadingCheckItems = true;
+    },
+
+    setSubmittingCheckItemIndex(state, action) {
+      state.submittingCheckItemIndex = action.payload;
     },
 
     setResetFlags (state, action){
@@ -102,7 +108,7 @@ const slice = createSlice({
 
 
     getMachineServiceRecordCheckItemsSuccess(state, action) {
-      state.isLoading = false;
+      state.isLoadingCheckItems = false;
       state.success = true;
       state.machineServiceRecordCheckItems = action.payload;
       state.initial = true;
@@ -166,6 +172,14 @@ const slice = createSlice({
     },
 
     // RESET MACHINE TECH PARAM
+    resetCheckItemValues(state){
+      state.checkItemRecordValues = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoadingCheckItems = false;
+    },
+
+    // RESET MACHINE TECH PARAM
     resetMachineServiceRecords(state){
       state.machineServiceRecords = [];
       state.responseMessage = null;
@@ -204,6 +218,7 @@ export const {
   setFormActiveStep,
   resetMachineServiceRecords,
   resetMachineServiceRecord,
+  resetCheckItemValues,
   setResponseMessage,
   setFilterBy,
   ChangeRowsPerPage,
@@ -492,7 +507,7 @@ export function addMachineServiceRecordFiles(machineId, id, params) {
 
 export function downloadRecordFile(machineId, id, fileId) {
   return async (dispatch) => {
-    dispatch(slice.actions.setLoadingCheckItemValues());
+    dispatch(slice.actions.setSubmittingCheckItemIndex());
     const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}/files/${fileId}/download/` );
     return response;
   };
@@ -500,7 +515,7 @@ export function downloadRecordFile(machineId, id, fileId) {
 
 export function deleteRecordFile(machineId, id, fileId) {
   return async (dispatch) => {
-    dispatch(slice.actions.setLoadingCheckItemValues());
+    dispatch(slice.actions.setSubmittingCheckItemIndex());
     try {
       const response = await axios.delete(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}/files/${fileId}/` , 
       {
@@ -517,7 +532,7 @@ export function deleteRecordFile(machineId, id, fileId) {
 
 export function downloadCheckItemFile(machineId, id, fileId) {
   return async (dispatch) => {
-    dispatch(slice.actions.setLoadingCheckItemValues());
+    dispatch(slice.actions.setSubmittingCheckItemIndex());
     const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecordValues/files/${fileId}/download/` );
     return response;
   };
@@ -525,7 +540,7 @@ export function downloadCheckItemFile(machineId, id, fileId) {
 
 export function deleteCheckItemFile(machineId, id, fileId) {
   return async (dispatch) => {
-    dispatch(slice.actions.setLoadingCheckItemValues());
+    dispatch(slice.actions.setSubmittingCheckItemIndex());
     try {
       const response = await axios.delete(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecordValues/files/${fileId}/` , 
       {
@@ -556,7 +571,7 @@ export function completeServiceRecord(machineId, id) {
 
 export function getMachineServiceRecordCheckItems(machineId, id) {
   return async (dispatch) => {
-    dispatch(slice.actions.startLoading());
+    dispatch(slice.actions.startLoadingCheckItems());
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecordValues/${id}/checkItems`);
       dispatch(slice.actions.getMachineServiceRecordCheckItemsSuccess(response.data));
@@ -570,7 +585,7 @@ export function getMachineServiceRecordCheckItems(machineId, id) {
 
 export function addCheckItemValues(machineId, data, childIndex) {
   return async (dispatch) => {
-    dispatch(slice.actions.setLoadingCheckItemValues(childIndex));
+    dispatch(slice.actions.setSubmittingCheckItemIndex(childIndex));
     try {
       const formData = new FormData();
       formData.append('serviceRecord', data.serviceRecord);
@@ -589,11 +604,11 @@ export function addCheckItemValues(machineId, data, childIndex) {
       }
 
       const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecordValues/`,formData);
-      dispatch(slice.actions.setLoadingCheckItemValues(-1));
+      dispatch(slice.actions.setSubmittingCheckItemIndex(-1));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
-      dispatch(slice.actions.setLoadingCheckItemValues(-1));
+      dispatch(slice.actions.setSubmittingCheckItemIndex(-1));
       throw error;
     }
   };
