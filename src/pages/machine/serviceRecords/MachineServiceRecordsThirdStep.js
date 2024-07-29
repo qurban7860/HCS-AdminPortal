@@ -40,6 +40,7 @@ function MachineServiceRecordsThirdStep({handleDraftRequest, handleDiscard, hand
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
+    const { machineId, id } = useParams();
       
     const { activeContacts } = useSelector((state) => state.contact);
     const { recordTypes } = useSelector((state) => state.serviceRecordConfig);
@@ -51,6 +52,13 @@ function MachineServiceRecordsThirdStep({handleDraftRequest, handleDiscard, hand
     const [ isDraft, setIsDraft ] = useState(false);
     const saveAsDraft = async () => setIsDraft(true);
     const [ activeServiceRecordConfigs, setActiveServiceRecordConfigs ] = useState([]);
+
+    useEffect(()=>{
+      if(machineId && id){
+        dispatch(getMachineServiceRecord(machineId, id))
+      }
+      return(()=> resetMachineServiceRecord());
+    },[dispatch, machineId, id])
 
     const defaultValues = useMemo(
         () => {
@@ -71,8 +79,8 @@ function MachineServiceRecordsThirdStep({handleDraftRequest, handleDiscard, hand
               src: `data:${file?.fileType};base64, ${file?.thumbnail}`,
               path:`${file?.name}.${file?.extension}`,
               downloadFilename:`${file?.name}.${file?.extension}`,
-              machineId:machineServiceRecord?.machine?._id,
-              serviceId:machineServiceRecord?._id,
+              machineId:machineServiceRecord?.machineId,
+              serviceId:id,
             })) || [],
             operatorNotes:                machineServiceRecord?.operatorNotes || '',
             isActive:                     machineServiceRecord?.isActive || true,
@@ -129,17 +137,17 @@ function MachineServiceRecordsThirdStep({handleDraftRequest, handleDiscard, hand
             data.status='SUBMITTED'  
           }
           
-          if(machineServiceRecord?._id){
-            await dispatch(updateMachineServiceRecord( machine?._id, machineServiceRecord?._id, data, isDraft ));
+          if(id){
+            await dispatch(updateMachineServiceRecord( machineId, id, data, isDraft ));
             await handleDraftRequest(isDraft);
             setIsDraft(false);  
             if(data?.files)
-              await dispatch(addMachineServiceRecordFiles(machine?._id, machineServiceRecord?._id, data))
-            await navigate(PATH_MACHINE.machines.serviceRecords.view(machine?._id, machineServiceRecord?._id))  
+              await dispatch(addMachineServiceRecordFiles(machineId, id, data))
+            await navigate(PATH_MACHINE.machines.serviceRecords.view(machineId, id))  
           }
 
           if(isDraft){
-            await navigate(PATH_MACHINE.machines.serviceRecords.root(machine?._id))
+            await navigate(PATH_MACHINE.machines.serviceRecords.root(machineId))
           }
 
     
@@ -152,7 +160,7 @@ function MachineServiceRecordsThirdStep({handleDraftRequest, handleDiscard, hand
 
       const handleRemoveFile = async (inputFile) => {
         if (inputFile?._id) {
-          await dispatch(deleteRecordFile(machine?._id, machineServiceRecord?._id, inputFile?._id));
+          await dispatch(deleteRecordFile(machineId, id, inputFile?._id));
         }
       
         if (files.length > 1) {
@@ -169,7 +177,7 @@ function MachineServiceRecordsThirdStep({handleDraftRequest, handleDiscard, hand
       const regEx = /^[^2]*/;
       const handleLoadImage = async (imageId, imageIndex) => {
         try {
-          const response = await dispatch(downloadRecordFile(machine?._id, machineServiceRecord?._id, imageId));
+          const response = await dispatch(downloadRecordFile(machineId, id, imageId));
       
           if (regEx.test(response.status)) {
             // Update the image property in the imagesLightbox array
