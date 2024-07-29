@@ -18,9 +18,9 @@ import { deleteMachineServiceRecord,
   setAddFileDialog,
   downloadRecordFile,
   deleteRecordFile,
-  completeServiceRecord,
   setFormActiveStep,
-  getMachineServiceRecordCheckItems} from '../../../redux/slices/products/machineServiceRecord';
+  getMachineServiceRecordCheckItems,
+  updateMachineServiceRecord} from '../../../redux/slices/products/machineServiceRecord';
 import { setCardActiveIndex, setIsExpanded } from '../../../redux/slices/customer/contact';
 // components
 import { useSnackbar } from '../../../components/snackbar';
@@ -231,7 +231,7 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
     try {
       await dispatch(deleteRecordFile(machineId, machineServiceRecord?.serviceId, fileId));
       await dispatch(getMachineServiceRecord(machineId, id))
-      enqueueSnackbar('File Archived successfully!');
+      enqueueSnackbar('File deleted successfully!');
     } catch (err) {
       console.log(err);
       enqueueSnackbar('File Deletion failed!', { variant: `error` });
@@ -274,7 +274,7 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
 
   const onSubmitComplete = async() => {
     try {
-      await dispatch(completeServiceRecord(machineId, id));
+      await dispatch(updateMachineServiceRecord(machineId, id, {status:"SUBMITTED"}));
       enqueueSnackbar('Service Record Completed Successfully!');
     } catch (err) {
       console.log(err);
