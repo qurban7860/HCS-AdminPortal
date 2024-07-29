@@ -12,7 +12,6 @@ import download from 'downloadjs';
 import { PATH_MACHINE } from '../../../routes/paths';
 // slice
 import { addMachineServiceRecord, updateMachineServiceRecord, resetMachineServiceRecord, setAddFileDialog, deleteMachineServiceRecord, getMachineServiceRecord, addMachineServiceRecordFiles, deleteRecordFile, downloadRecordFile } from '../../../redux/slices/products/machineServiceRecord';
-import { getActiveServiceRecordConfigsForRecords, getServiceRecordConfig, resetServiceRecordConfig } from '../../../redux/slices/products/serviceRecordConfig';
 import { getActiveContacts } from '../../../redux/slices/customer/contact';
 // components
 import ServiceRecodStepButtons from '../../../components/DocumentForms/ServiceRecodStepButtons';
@@ -43,11 +42,9 @@ function MachineServiceRecordsThirdStep({handleDraftRequest, handleDiscard, hand
     const { machineId, id } = useParams();
       
     const { activeContacts } = useSelector((state) => state.contact);
-    const { recordTypes } = useSelector((state) => state.serviceRecordConfig);
     const { machineServiceRecord } = useSelector((state) => state.machineServiceRecord);
     const { activeSecurityUsers, securityUser } = useSelector((state) => state.user);
     const { machine } = useSelector((state) => state.machine);
-    const { activeServiceRecordConfigsForRecords, serviceRecordConfig } = useSelector((state) => state.serviceRecordConfig);
 
     const [ isDraft, setIsDraft ] = useState(false);
     const saveAsDraft = async () => setIsDraft(true);
@@ -121,6 +118,8 @@ function MachineServiceRecordsThirdStep({handleDraftRequest, handleDiscard, hand
         const newFiles = acceptedFiles.map((file, index) => 
             Object.assign(file, {
               preview: URL.createObjectURL(file),
+              src: URL.createObjectURL(file),
+              isLoaded:true
             })
         );
         setValue('files', [...docFiles, ...newFiles], { shouldValidate: true });
@@ -199,11 +198,15 @@ function MachineServiceRecordsThirdStep({handleDraftRequest, handleDiscard, hand
           console.error('Error loading full file:', error);
         }
       };
+
+      console.log('serviceRecordConfig:::',machineServiceRecord?.serviceRecordConfig)
   return (
       <FormProvider methods={methods}  onSubmit={handleSubmit(onSubmit)}>
         <Stack px={2} spacing={2}>
-          { serviceRecordConfig?.enableMaintenanceRecommendations && <RHFTextField name="recommendationNote" label="Recommendation Note" minRows={3} multiline/> }
-          { serviceRecordConfig?.enableSuggestedSpares && <RHFTextField name="suggestedSpares" label="Suggested Spares" minRows={3} multiline/> }
+          { machineServiceRecord?.serviceRecordConfig?.recordType==='INSTALL' && <RHFTextField name="installNote" label="Install Note" minRows={3} multiline/> }      
+          { machineServiceRecord?.serviceRecordConfig?.enableNote && <RHFTextField name="serviceNote" label="Service Note" minRows={3} multiline/> }      
+          { machineServiceRecord?.serviceRecordConfig?.enableMaintenanceRecommendations && <RHFTextField name="recommendationNote" label="Recommendation Note" minRows={3} multiline/> }
+          { machineServiceRecord?.serviceRecordConfig?.enableSuggestedSpares && <RHFTextField name="suggestedSpares" label="Suggested Spares" minRows={3} multiline/> }
           <RHFTextField name="internalNote" label="Internal Note" minRows={3} multiline/> 
           <RHFAutocomplete 
             multiple

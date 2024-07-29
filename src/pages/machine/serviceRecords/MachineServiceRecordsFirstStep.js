@@ -41,6 +41,12 @@ function MachineServiceRecordsFirstStep( { securityUsers, onChangeConfig, handle
     const [ isDraft, setIsDraft ] = useState(false);
     const saveAsDraft = async () => setIsDraft(true);
 
+    const machineDecoilers = (machine?.machineConnections || []).map((decoiler) => ({
+      _id: decoiler?.connectedMachine?._id ?? null,
+      name: decoiler?.connectedMachine?.name ?? null,
+      serialNo: decoiler?.connectedMachine?.serialNo ?? null
+    }));
+
     const defaultValues = useMemo(
         () => {
           const initialValues = {
@@ -50,6 +56,7 @@ function MachineServiceRecordsFirstStep( { securityUsers, onChangeConfig, handle
           versionNo:                    machineServiceRecord?.versionNo || 1,
           technician:                   machineServiceRecord?.technician || ( securityUser || null ),
           technicianNotes:              machineServiceRecord?.technicianNotes || '',
+          decoilers:!id && (machineDecoilers || []) 
           // textBeforeCheckItems:         machineServiceRecord?.textBeforeCheckItems || '',
           // textAfterCheckItems:          machineServiceRecord?.textAfterCheckItems || '',
         }
@@ -137,6 +144,7 @@ return (
                     <RHFAutocomplete 
                         name="docRecordType"
                         label="Document Type*"
+                        disabled={id}
                         options={recordTypes}
                         isOptionEqualToValue={(option, value) => option?._id === value?._id}
                         getOptionLabel={(option) => `${option.name ? option.name : ''}`}
@@ -148,6 +156,7 @@ return (
                     <RHFAutocomplete
                         name="serviceRecordConfiguration"
                         label="Service Record Configuration*"
+                        disabled={id}
                         options={activeServiceRecordConfigs}
                         getOptionLabel={(option) => `${option?.docTitle || ''} ${option?.docTitle ? '-' : '' } ${option.recordType || ''} ${option?.docVersionNo ? '- v' : '' }${option?.docVersionNo || ''}`}
                         isOptionEqualToValue={(option, value) => option?._id === value?._id}

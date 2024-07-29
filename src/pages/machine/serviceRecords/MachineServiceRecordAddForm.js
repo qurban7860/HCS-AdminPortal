@@ -74,12 +74,6 @@ function MachineServiceRecordAddForm() {
     
   },[dispatch, machineId, machine, userId, id, completed])
   
-  const machineDecoilers = (machine?.machineConnections || []).map((decoiler) => ({
-    _id: decoiler?.connectedMachine?._id ?? null,
-    name: decoiler?.connectedMachine?.name ?? null,
-    serialNo: decoiler?.connectedMachine?.serialNo ?? null
-  }));
-
   useEffect(()=>{ 
     if(!activeSecurityUsers.some(u => u._id === userId )){
       setSecurityUsers([ ...activeSecurityUsers, securityUser ]?.sort((a, b) => a?.name?.localeCompare(b?.name))) 

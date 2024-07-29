@@ -653,7 +653,7 @@ function ViewFormEditDeleteButtons({
         />}
 
         {handleCompleteMSR && 
-          <IconTooltip title="Complete Server Record" onClick={handleCompleteMSR} color={theme.palette.primary.main} icon="uil:file-check-alt"/>
+          <IconTooltip title="Complete Service Record" onClick={handleCompleteMSR} color={theme.palette.primary.main} icon="uil:file-check-alt"/>
         }
 
         {handleViewPDF && 

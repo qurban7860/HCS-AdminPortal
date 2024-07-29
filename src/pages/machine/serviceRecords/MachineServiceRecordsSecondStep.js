@@ -15,7 +15,6 @@ import FormProvider from '../../../components/hook-form/FormProvider';
 import { PATH_MACHINE } from '../../../routes/paths';
 import { MachineServiceRecordPart2Schema } from '../../schemas/machine';
 import { deleteMachineServiceRecord, getMachineServiceRecord, getMachineServiceRecordCheckItems, resetCheckItemValues, setFormActiveStep, updateMachineServiceRecord } from '../../../redux/slices/products/machineServiceRecord';
-import { getActiveServiceRecordConfigsForRecords, getServiceRecordConfig, resetServiceRecordConfig } from '../../../redux/slices/products/serviceRecordConfig';
 import ServiceRecodStepButtons from '../../../components/DocumentForms/ServiceRecodStepButtons';
 
 MachineServiceRecordsSecondStep.propTypes = {
@@ -34,7 +33,6 @@ function MachineServiceRecordsSecondStep({serviceRecord, handleDraftRequest, han
   const { machineId, id } = useParams();
   
   const { machineServiceRecord, machineServiceRecordCheckItems, isLoadingCheckItems, isLoading } = useSelector((state) => state.machineServiceRecord);
-  const { serviceRecordConfig } = useSelector((state) => state.serviceRecordConfig);
   const { machine } = useSelector((state) => state.machine);
   
   const [ isDraft, setIsDraft ] = useState(false);
