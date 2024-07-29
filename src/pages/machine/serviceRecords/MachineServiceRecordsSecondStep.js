@@ -1,6 +1,6 @@
-import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import React, { createRef, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import PropTypes from 'prop-types';
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { useSnackbar } from 'notistack';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
@@ -31,6 +31,7 @@ function MachineServiceRecordsSecondStep({serviceRecord, handleDraftRequest, han
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
+  const { machineId, id } = useParams();
   
   const { machineServiceRecord, machineServiceRecordCheckItems, isLoadingCheckItems, isLoading } = useSelector((state) => state.machineServiceRecord);
   const { serviceRecordConfig } = useSelector((state) => state.serviceRecordConfig);
@@ -38,17 +39,17 @@ function MachineServiceRecordsSecondStep({serviceRecord, handleDraftRequest, han
   
   const [ isDraft, setIsDraft ] = useState(false);
   const saveAsDraft = async () => setIsDraft(true);
-  // const [ checkItemLists, setCheckItemLists ] = useState([]);
 
   const [ textBeforeCheckItems, setTextBeforeCheckItems] = useState('');
   const [ textAfterCheckItems, setTextAfterCheckItems] = useState('');
 
   useLayoutEffect(() =>{
-    if(machine?._id && machineServiceRecord?._id){
-      dispatch(getMachineServiceRecordCheckItems(machine?._id, machineServiceRecord?._id));
+    if(machineId && id){
+      dispatch(getMachineServiceRecord(machineId, id))
+      dispatch(getMachineServiceRecordCheckItems(machineId, id));
     }
     return(()=> resetCheckItemValues());
-  },[dispatch, machine, machineServiceRecord])
+  },[dispatch, machineId, id])
 
   const defaultValues = useMemo(
       () => {
@@ -87,7 +88,7 @@ function MachineServiceRecordsSecondStep({serviceRecord, handleDraftRequest, han
         textBeforeCheckItems: data.textBeforeCheckItems || ''
       }
       try {
-        await dispatch(updateMachineServiceRecord(machine?._id, machineServiceRecord?._id, params));
+        await dispatch(updateMachineServiceRecord(machineId, id, params));
         setShowMessage(true);
         setTimeout(() => {setShowMessage(false)}, 3000);
       } catch (err) {
@@ -102,7 +103,7 @@ function MachineServiceRecordsSecondStep({serviceRecord, handleDraftRequest, han
       }
       
       try {
-        await dispatch(updateMachineServiceRecord(machine?._id, machineServiceRecord?._id, params));
+        await dispatch(updateMachineServiceRecord(machineId, id, params));
         setShowMessage(true);
         setTimeout(() => {setShowMessage(false)}, 3000);
       } catch (err) {
@@ -120,7 +121,7 @@ function MachineServiceRecordsSecondStep({serviceRecord, handleDraftRequest, han
       try {
         if(await handleValidateAll()){
           if(isDraft){
-            await dispatch(updateMachineServiceRecord(machine?._id, machineServiceRecord?._id, params));
+            await dispatch(updateMachineServiceRecord(machineId, id, params));
             await handleDraftRequest(isDraft);
           }else{
             await dispatch(setFormActiveStep(2));
@@ -134,14 +135,29 @@ function MachineServiceRecordsSecondStep({serviceRecord, handleDraftRequest, han
       }
     }
 
-    const checkedItemInputRowRef = useRef(null);
-    const handleValidateAll = async () => {
-      let isValid = false;
-      if (checkedItemInputRowRef.current) {
-        isValid = await checkedItemInputRowRef.current.triggerFormValidation();
-      }
+    const checkedItemInputRowRefs = useRef([]);
+    checkedItemInputRowRefs.current = machineServiceRecordCheckItems?.checkItemLists?.map((_, i) => checkedItemInputRowRefs.current[i] ?? createRef());
 
-      return isValid;
+    const handleValidateAll = async () => {
+      if (!checkedItemInputRowRefs.current) return false;
+    
+      // Create an array of promises for all validations
+      const validationPromises = checkedItemInputRowRefs.current.map(async (ref) => {
+        if (ref.current) {
+          return ref.current.triggerFormValidation();
+        }
+        return false;
+      });
+    
+      try {
+        // Wait for all validations to complete
+        const results = await Promise.all(validationPromises);
+        // Return true only if all validations are successful
+        return results.every(result => result === true);
+      } catch (error) {
+        console.error('Validation error:', error);
+        return false;
+      }
     };
 
   return (
@@ -167,7 +183,7 @@ function MachineServiceRecordsSecondStep({serviceRecord, handleDraftRequest, han
             </Stack>
             :<>
                 {machineServiceRecordCheckItems?.checkItemLists.length>0?machineServiceRecordCheckItems?.checkItemLists?.map((row, index) =>
-                  <CheckedItemInputRow ref={checkedItemInputRowRef} key={`row-${row._id}-${index}`} index={index} row={row} machineId={machine?._id} serviceId={machineServiceRecord?.serviceId} />
+                  <CheckedItemInputRow ref={checkedItemInputRowRefs.current[index]} key={`row-${row._id}-${index}`} index={index} row={row} machineId={machine?._id} serviceId={machineServiceRecord?.serviceId} />
                 ):(
                   <Typography variant='body2'>No Check Item Assigned</Typography>
                 )}

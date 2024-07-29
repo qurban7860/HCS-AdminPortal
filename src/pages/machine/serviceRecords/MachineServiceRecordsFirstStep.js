@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Box, Stack } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useSnackbar } from 'notistack';
 // import FormProvider from '../../../components/hook-form';
@@ -30,6 +30,7 @@ function MachineServiceRecordsFirstStep( { securityUsers, onChangeConfig, handle
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
+    const { machineId, id } = useParams();
   
     const { recordTypes, activeServiceRecordConfigsForRecords } = useSelector((state) => state.serviceRecordConfig);
     const { machineServiceRecord, isLoading } = useSelector((state) => state.machineServiceRecord);
@@ -49,8 +50,8 @@ function MachineServiceRecordsFirstStep( { securityUsers, onChangeConfig, handle
           versionNo:                    machineServiceRecord?.versionNo || 1,
           technician:                   machineServiceRecord?.technician || ( securityUser || null ),
           technicianNotes:              machineServiceRecord?.technicianNotes || '',
-          textBeforeCheckItems:         machineServiceRecord?.textBeforeCheckItems || '',
-          textAfterCheckItems:          machineServiceRecord?.textAfterCheckItems || '',
+          // textBeforeCheckItems:         machineServiceRecord?.textBeforeCheckItems || '',
+          // textAfterCheckItems:          machineServiceRecord?.textAfterCheckItems || '',
         }
         return initialValues;
       },
@@ -101,12 +102,12 @@ function MachineServiceRecordsFirstStep( { securityUsers, onChangeConfig, handle
     },[docRecordType, activeServiceRecordConfigsForRecords])
       const onSubmit = async (data) => {
         try {
-          if(!machineServiceRecord?._id ){
-            const serviceRecord = await dispatch(addMachineServiceRecord(machine?._id, data));
-            await navigate(PATH_MACHINE.machines.serviceRecords.edit(machine?._id, serviceRecord?._id))
+          if(!id ){
+            const serviceRecord = await dispatch(addMachineServiceRecord(machineId, data));
+            await navigate(PATH_MACHINE.machines.serviceRecords.edit(machineId, serviceRecord?._id))
           }else {
-            const serviceRecord = await dispatch(updateMachineServiceRecord(machine?._id, machineServiceRecord?._id, data));
-            await navigate(PATH_MACHINE.machines.serviceRecords.edit(machine?._id, machineServiceRecord?._id))  
+            const serviceRecord = await dispatch(updateMachineServiceRecord(machineId, id, data));
+            await navigate(PATH_MACHINE.machines.serviceRecords.edit(machineId, id))  
           }
 
           if(isDraft){
@@ -153,12 +154,6 @@ return (
                         renderOption={(props, option) => (
                             <li {...props} key={option?._id}>{`${option?.docTitle || ''} ${option?.docTitle ? '-' : '' } ${option.recordType || ''} ${option?.docVersionNo ? '- v' : '' }${option?.docVersionNo || ''}`}</li>
                         )}
-                        onChange={(option, newValue)=>{
-                            setValue('serviceRecordConfiguration',newValue);
-                            setValue('textBeforeCheckItems',newValue?.textBeforeCheckItems);
-                            setValue('textAfterCheckItems',newValue?.textAfterCheckItems);
-                            // onChangeConfig(newValue)
-                        }}
                         />
                 </Box>       
                 <Box

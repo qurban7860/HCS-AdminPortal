@@ -53,7 +53,7 @@ function MachineServiceRecordAddForm() {
 
   useLayoutEffect( ()=>{
     dispatch(resetMachineServiceRecord());
-    dispatch(getActiveServiceRecordConfigsForRecords(machine?._id));
+    dispatch(getActiveServiceRecordConfigsForRecords(machineId));
     dispatch(getActiveSecurityUsers({roleType:['TechnicalManager','Technician']}));
     
     if(machine?.customer?._id){
@@ -64,15 +64,15 @@ function MachineServiceRecordAddForm() {
       dispatch(getSecurityUser( userId ))
     } 
 
-    if(machine?._id && id){
+    if(machineId && id){
       const newCompleted = completed;
       newCompleted[0] = true;
       setCompleted(newCompleted);
-      dispatch((getMachineServiceRecord(machine?._id, id)));
+      dispatch((getMachineServiceRecord(machineId, id)));
     }
     
     
-  },[dispatch, machine, userId, id, completed])
+  },[dispatch, machineId, machine, userId, id, completed])
   
   const machineDecoilers = (machine?.machineConnections || []).map((decoiler) => ({
     _id: decoiler?.connectedMachine?._id ?? null,
@@ -105,15 +105,15 @@ function MachineServiceRecordAddForm() {
 
   const handleDraftRequest = async (isDraft)=> {
     if(isDraft){
-      await navigate(PATH_MACHINE.machines.serviceRecords.root(machine?._id))
+      await navigate(PATH_MACHINE.machines.serviceRecords.root(machineId))
     }
   }
   
   const handleDiscard = async () =>{
     if( machineServiceRecord?._id ){
-      await dispatch(deleteMachineServiceRecord(machine?._id, machineServiceRecord?._id, machineServiceRecord?.status ))
+      await dispatch(deleteMachineServiceRecord(machineId, machineServiceRecord?._id, machineServiceRecord?.status ))
     }
-    navigate(PATH_MACHINE.machines.serviceRecords.root(machine?._id));
+    navigate(PATH_MACHINE.machines.serviceRecords.root(machineId));
   } 
 
   const handleComplete = (step) => {
