@@ -87,10 +87,10 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
     await dispatch(setFormActiveStep(0));
     if(machineServiceRecord?.status==="SUBMITTED"){
       try {
-        const response = await dispatch(createMachineServiceRecordVersion(machineId, machineServiceRecord?.serviceId, machineServiceRecord?._id));
-        enqueueSnackbar('Version created successfully');
-        if(response){
-          await navigate(PATH_MACHINE.machines.serviceRecords.edit(machineId, response?._id))
+        const srecord = await dispatch(createMachineServiceRecordVersion(machineId, id));
+        // enqueueSnackbar('Version created successfully');
+        if(srecord){
+          await navigate(PATH_MACHINE.machines.serviceRecords.edit(machineId, srecord?._id))
         }
       } catch (error) {
         enqueueSnackbar('Version creation failed', { variant: `error` });
