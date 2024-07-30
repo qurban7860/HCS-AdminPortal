@@ -37,6 +37,22 @@ const StyledDropZone = styled('div')(({ theme }) => ({
   },
 }));
 
+const StyledDropSmall = styled('div')(({ theme }) => ({
+  outline: 'none',
+  cursor: 'pointer',
+  overflow: 'hidden',
+  position: 'relative',
+  padding: theme.spacing(5),
+  borderRadius: theme.shape.borderRadius,
+  transition: theme.transitions.create('padding'),
+  backgroundColor: theme.palette.background.neutral,
+  height: 'auto',
+  border: `1px solid ${alpha(theme.palette.grey[500], 0.32)}`,
+  '&:hover': {
+    opacity: 0.72,
+  },
+}));
+
 // ----------------------------------------------------------------------
 
 Upload.propTypes = {
@@ -276,7 +292,11 @@ export default function Upload({
                 onRemove={onRemove} 
               />
             }
-            {!dropZone && <ThumbnailDocButton {...getRootProps()} />}
+            {!dropZone && <Button {...getRootProps()} variant='outlined' sx={{display:'block', height:'150px'}} >
+              <input {...getInputProps()} />
+              <Iconify icon="mdi:plus" width={50} />
+              <Typography variant="subtitle2">Add / Upload File</Typography>
+            </Button>}
           </Box>
           {hasFiles &&
             <Stack direction="row" justifyContent="flex-end" spacing={1.5} sx={{mt:1}}>
