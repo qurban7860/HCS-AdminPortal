@@ -504,11 +504,11 @@ export function addMachineServiceRecordFiles(machineId, id, params) {
 }
 
 
-export function createMachineServiceRecordVersion(machineId, serviceId, id) {
+export function createMachineServiceRecordVersion(machineId, serviceId, id ) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${serviceId}/version/`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}/version/`);
       return response?.data;
     } catch (error) {
       console.error(error);
