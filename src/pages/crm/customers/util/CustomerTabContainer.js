@@ -1,10 +1,12 @@
+import { useLayoutEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate, useParams } from 'react-router-dom';
 // @mui
 import { Tab, tabsClasses } from '@mui/material';
 import TabContainer from '../../../../components/Tabs/TabContainer';
 // redux
-import { useSelector } from '../../../../redux/store';
+import { useSelector, useDispatch } from '../../../../redux/store';
+import { getCustomer } from '../../../../redux/slices/customer/customer';
 // sections
 import { Cover } from '../../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../../theme/styles/default-styles';
@@ -20,9 +22,17 @@ CustomerTabContainer.propTypes = {
 
 export default function CustomerTabContainer({ currentTabValue }) {
 
+  const { customerId } = useParams();
   const { customer } = useSelector((state) => state.customer);
   
-  const { customerId } = useParams();
+  const dispatch = useDispatch();
+
+  useLayoutEffect(() => {
+    if( customer?._id !== customerId ){
+      dispatch(getCustomer(customerId))
+    }
+  },[ dispatch, customer?._id, customerId ])
+
   const navigate = useNavigate();
   const navigatePage = (tab)=>{
     if(tab === 'customer' && customerId ){
