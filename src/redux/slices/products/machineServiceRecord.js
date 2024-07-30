@@ -503,6 +503,21 @@ export function addMachineServiceRecordFiles(machineId, id, params) {
   };
 }
 
+
+export function createMachineServiceRecordVersion(machineId, serviceId, id) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${serviceId}/version/`);
+      return response?.data;
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
 export function downloadRecordFile(machineId, id, fileId) {
   return async (dispatch) => {
     dispatch(slice.actions.setSubmittingCheckItemIndex());

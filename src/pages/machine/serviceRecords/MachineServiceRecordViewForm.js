@@ -20,7 +20,8 @@ import { deleteMachineServiceRecord,
   deleteRecordFile,
   setFormActiveStep,
   getMachineServiceRecordCheckItems,
-  updateMachineServiceRecord} from '../../../redux/slices/products/machineServiceRecord';
+  updateMachineServiceRecord,
+  createMachineServiceRecordVersion} from '../../../redux/slices/products/machineServiceRecord';
 import { setCardActiveIndex, setIsExpanded } from '../../../redux/slices/customer/contact';
 // components
 import { useSnackbar } from '../../../components/snackbar';
@@ -84,7 +85,21 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
 
   const handleEdit = async() => {
     await dispatch(setFormActiveStep(0));
-    await navigate(PATH_MACHINE.machines.serviceRecords.edit(machineId, id))
+    if(machineServiceRecord?.status==="SUBMITTED"){
+      try {
+        const response = await dispatch(createMachineServiceRecordVersion(machineId, machineServiceRecord?.serviceId, machineServiceRecord?._id));
+        enqueueSnackbar('Version created successfully');
+        if(response){
+          await navigate(PATH_MACHINE.machines.serviceRecords.edit(machineId, response?._id))
+        }
+      } catch (error) {
+        enqueueSnackbar('Version creation failed', { variant: `error` });
+        console.error(error);
+      }
+      
+    }else{
+      await navigate(PATH_MACHINE.machines.serviceRecords.edit(machineId, id))
+    }
   };
 
   const handleServiceRecordHistory = () =>  navigate(PATH_MACHINE.machines.serviceRecords.history.root(
