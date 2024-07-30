@@ -1,4 +1,4 @@
-import React, { createRef, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import React, { createRef, useEffect, useMemo, useRef, useState } from 'react'
 import PropTypes from 'prop-types';
 import { useNavigate, useParams } from 'react-router';
 import { useSnackbar } from 'notistack';
@@ -32,16 +32,13 @@ function MachineServiceRecordsSecondStep({serviceRecord, handleDraftRequest, han
   const { enqueueSnackbar } = useSnackbar();
   const { machineId, id } = useParams();
   
-  const { machineServiceRecord, machineServiceRecordCheckItems, isLoadingCheckItems, isLoading } = useSelector((state) => state.machineServiceRecord);
+  const { machineServiceRecord, machineServiceRecordCheckItems, isLoadingCheckItems } = useSelector((state) => state.machineServiceRecord);
   const { machine } = useSelector((state) => state.machine);
   
   const [ isDraft, setIsDraft ] = useState(false);
   const saveAsDraft = async () => setIsDraft(true);
 
-  const [ textBeforeCheckItems, setTextBeforeCheckItems] = useState('');
-  const [ textAfterCheckItems, setTextAfterCheckItems] = useState('');
-
-  useLayoutEffect(() =>{
+  useEffect(() =>{
     if(machineId && id){
       dispatch(getMachineServiceRecord(machineId, id))
       dispatch(getMachineServiceRecordCheckItems(machineId, id));
@@ -58,18 +55,12 @@ function MachineServiceRecordsSecondStep({serviceRecord, handleDraftRequest, han
         technicianNotes:              machineServiceRecord?.technicianNotes || '',
         textBeforeCheckItems:         machineServiceRecord?.textBeforeCheckItems || '',
         textAfterCheckItems:          machineServiceRecord?.textAfterCheckItems || '',
-        checkItemRecordValues:        machineServiceRecord?.checkItemRecordValues || [],
       }
       return initialValues;
     },
       // eslint-disable-next-line react-hooks/exhaustive-deps
       [ machineServiceRecord ]
     );
-
-    useLayoutEffect(() =>{
-      setTextBeforeCheckItems(defaultValues?.textBeforeCheckItems || '');
-      setTextAfterCheckItems(defaultValues?.textAfterCheckItems || '');
-    },[defaultValues])
 
     const formMethodsBefore = useForm({defaultValues});
     const { handleSubmit: handleSubmitBefore, formState: { isSubmitting: isSubmittingBefore, isSubmitted:isSubmittedBefore } } = formMethodsBefore;
@@ -96,6 +87,7 @@ function MachineServiceRecordsSecondStep({serviceRecord, handleDraftRequest, han
     }
 
     const submitAfter = async (data)=> {
+
       const params = {
         textAfterCheckItems: data?.textAfterCheckItems || ''
       }
@@ -117,46 +109,19 @@ function MachineServiceRecordsSecondStep({serviceRecord, handleDraftRequest, han
       }
       
       try {
-        if(await handleValidateAll()){
+
           if(isDraft){
             await dispatch(updateMachineServiceRecord(machineId, id, params));
             await handleDraftRequest(isDraft);
           }else{
             await dispatch(setFormActiveStep(2));
-          }
-        }else{
-          enqueueSnackbar('Please enter required checkitem values', {variant:'warning'});
-        }
+          }        
+      
       } catch (err) {
         console.error(err);
         enqueueSnackbar('Saving failed!', { variant: `error` });
       }
     }
-
-    const checkedItemInputRowRefs = useRef([]);
-    checkedItemInputRowRefs.current = machineServiceRecordCheckItems?.checkItemLists?.map((_, i) => checkedItemInputRowRefs.current[i] ?? createRef());
-
-    const handleValidateAll = async () => {
-      if (!checkedItemInputRowRefs.current) return false;
-    
-      // Create an array of promises for all validations
-      const validationPromises = checkedItemInputRowRefs.current.map(async (ref) => {
-        if (ref.current) {
-          return ref.current.triggerFormValidation();
-        }
-        return false;
-      });
-    
-      try {
-        // Wait for all validations to complete
-        const results = await Promise.all(validationPromises);
-        // Return true only if all validations are successful
-        return results.every(result => result === true);
-      } catch (error) {
-        console.error('Validation error:', error);
-        return false;
-      }
-    };
 
   return (
       <Stack spacing={2}>
@@ -170,29 +135,28 @@ function MachineServiceRecordsSecondStep({serviceRecord, handleDraftRequest, han
               </Stack>
             </FormProvider>
             {isLoadingCheckItems? 
-            <Stack px={2} spacing={2}>
-              <Skeleton />
-              <Skeleton animation="wave" />
-              <Skeleton animation="wave" />
-              <Skeleton animation="wave" />
-              <Skeleton animation="wave" />
-              <Skeleton animation="wave" />
-              <Skeleton animation={false} />
-            </Stack>
-            :<>
-                {machineServiceRecordCheckItems?.checkItemLists.length>0?machineServiceRecordCheckItems?.checkItemLists?.map((row, index) =>
-                  <CheckedItemInputRow ref={checkedItemInputRowRefs.current[index]} key={`row-${row._id}-${index}`} index={index} row={row} machineId={machine?._id} serviceId={machineServiceRecord?.serviceId} />
-                ):(
-                  <Typography variant='body2'>No Check Item Assigned</Typography>
-                )}
+              <Stack px={2} spacing={2}>
+                <Skeleton />
+                <Skeleton animation="wave" />
+                <Skeleton animation="wave" />
+                <Skeleton animation="wave" />
+                <Skeleton animation="wave" />
+                <Skeleton animation="wave" />
+                <Skeleton animation={false} />
+              </Stack>
+              :<>
+                {machineServiceRecordCheckItems?.checkItemLists?.map((row, index) =>
+                    <CheckedItemInputRow key={`row-${row._id}-${index}`} index={index} row={row} />
+                )}   
               </>
             }
-            <FormProvider methods={formMethodsAfter}  key='afterForm' onSubmit={handleSubmitAfter(submitAfter)}>
+
+            <FormProvider methods={formMethodsAfter}  key='afterForm'>
               <Stack px={2} spacing={2}>
                 <RHFTextField name="textAfterCheckItems" label="Text After Check Items" minRows={3} multiline />
                 <Grid container display='flex' direction='row' justifyContent='flex-end' gap={2}>
                   {isSubmittedAfter && showMessage && <Typography variant='body2' color='green' sx={{mt:0.5}}>Saved Successfully!</Typography>}
-                  <LoadingButton type='submit' loading={isSubmittingAfter} size='small' variant='contained'>Save</LoadingButton>
+                  <LoadingButton onClick={handleSubmitAfter(submitAfter)} loading={isSubmittingAfter} size='small' variant='contained'>Save</LoadingButton>
                 </Grid>
               </Stack>
             </FormProvider>

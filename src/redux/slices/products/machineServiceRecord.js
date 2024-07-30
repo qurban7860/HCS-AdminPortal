@@ -450,7 +450,6 @@ export function updateMachineServiceRecord(machineId,id, params) {
         customer:                   params?.customer,
         site:                       params?.site,
         machine:                    machineId,
-        decoilers:                  params?.decoilers?.map((dec)=> dec?._id),
         technician:                 params?.technician?._id,
         technicianNotes:            params?.technicianNotes,
         textBeforeCheckItems:       params?.textBeforeCheckItems,
