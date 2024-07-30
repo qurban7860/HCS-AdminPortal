@@ -1,13 +1,13 @@
-import { forwardRef, memo, useCallback, useEffect, useImperativeHandle, useMemo, useState } from 'react';
+import { memo, useCallback, useEffect, useImperativeHandle, useMemo, useState } from 'react';
 import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
 import { useSnackbar } from 'notistack';
 import PropTypes, { object } from 'prop-types';
 import download from 'downloadjs';
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Table, TableBody, Grid, TextField, Checkbox, Typography, Stack, Divider, Box, Card, CardContent, CardHeader, Autocomplete } from '@mui/material';
+import { Table, TableBody, Grid, TextField, Checkbox, Typography, Stack, Divider, Box, Card, CardContent, CardHeader, Autocomplete, FormControlLabel } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import CommentsInput from './CommentsInput';
 import ViewFormServiceRecordVersionAudit from '../../../components/ViewForms/ViewFormServiceRecordVersionAudit';
@@ -22,26 +22,18 @@ import { statusTypes } from '../util';
 import { fDate, stringToDate } from '../../../utils/formatTime';
 import { validateImageFileType } from '../../documents/util/Util';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
+import { Upload } from '../../../components/upload';
 
-const CheckedItemInputRow = forwardRef(({ index, row, machineId, serviceId }, ref) => {
+const CheckedItemInputRow = memo(({ index, row }) => {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
-    
+    const { machineId, id } = useParams();
+
     const { machineServiceRecord, submittingCheckItemIndex } = useSelector((state) => state.machineServiceRecord);
     const { serviceRecordConfig } = useSelector((state) => state.serviceRecordConfig);
     const { machine } = useSelector((state) => state.machine);
-
-    const validateValue = (value, inputType) => {
-      if (inputType === 'Boolean') return typeof value === 'boolean';
-      if (inputType === 'Number') return !Number.isNaN(value);
-      if (inputType === 'Date') return value instanceof Date;
-      if (inputType === 'Status') {
-        return statusTypes.some(status => status.name === value?.name);
-      }
-      return value && value.length > 0;
-    };
 
     // Define the schema for each image
     const CheckItemSchema = Yup.object().shape({
@@ -50,9 +42,7 @@ const CheckedItemInputRow = forwardRef(({ index, row, machineId, serviceId }, re
         if(context.type==="value-required" && !value){
           return false;
         }
-
         return true;
-
       }),
       comment: Yup.string().max(5000, 'Comments cannot exceed 5000 characters'),
       images: Yup.array().test({
@@ -77,20 +67,17 @@ const CheckedItemInputRow = forwardRef(({ index, row, machineId, serviceId }, re
         const value = parseFloat(item?.recordValue?.checkItemValue);
         return Number.isNaN(value) ? null : value;
       }
-      if (item?.inputType === 'Text') {
-        return item?.recordValue?.checkItemValue || '';
-      }
       if (item?.inputType === 'Status') {
         return statusTypes.find((st) => st?.name === item?.recordValue?.checkItemValue) || null;
       }
-      return item?.recordValue?.checkItemValue || null;
+      return item?.recordValue?.checkItemValue;
     };
 
     const defaultValues = useMemo(
       () => ({
         checkItems: row?.checkItems.map(item => ({
           _id:item._id,
-          comment: item?.recordValue?.comments || '',
+          comment: item?.recordValue?.comments,
           value:getRecordValue(item),
           images: item?.recordValue?.files.map(file => ({
             key: file?._id,
@@ -103,11 +90,11 @@ const CheckedItemInputRow = forwardRef(({ index, row, machineId, serviceId }, re
             path:`${file?.name}.${file?.extension}`,
             downloadFilename:`${file?.name}.${file?.extension}`,
             machineId,
-            serviceId,
+            id,
           })) || []
         })) || [],
       }),
-      [row, machineId, serviceId]
+      [row, machineId, id]
     );
 
     const methods = useForm({
@@ -128,13 +115,7 @@ const CheckedItemInputRow = forwardRef(({ index, row, machineId, serviceId }, re
     } = methods;
 
     const [showMessages, setShowMessages] = useState({});
-    const formValues = watch();
-
-    useImperativeHandle(ref, () => ({
-      triggerFormValidation: () => trigger(), // No need for await here
-      getFormValues: () => getValues(),
-    }));
-  
+    
     useEffect(() => {
       if (machineServiceRecord) {
         reset(defaultValues);
@@ -174,25 +155,49 @@ const CheckedItemInputRow = forwardRef(({ index, row, machineId, serviceId }, re
       }
     };
 
+    const [files, setFiles] = useState([]);
+
     const handleDropMultiFile = useCallback(
       (acceptedFiles, childIndex) => {
-        const existingFiles = getValues(`checkItems[${childIndex}].images`) || [];
+        const existingFiles = files[childIndex] || [];
         const newFiles = acceptedFiles.map(file =>
           Object.assign(file, {
             preview: URL.createObjectURL(file),
             src: URL.createObjectURL(file),
-            isLoaded:true
+            isLoaded: true,
           })
         );
-        setValue(`checkItems[${childIndex}].images`, [...existingFiles, ...newFiles], { shouldValidate: true });
+        const updatedFiles = [...existingFiles, ...newFiles];
+        setFiles((prevFiles) => ({
+          ...prevFiles,
+          [childIndex]: updatedFiles,
+        }));
+        setValue(`checkItems[${childIndex}].images`, updatedFiles, { shouldValidate: true });
       },
-      [getValues, setValue]
+      [files, setValue]
     );
+
+    // const handleDropMultiFile = useCallback(
+    //   (acceptedFiles, childIndex) => {
+
+    //     console.log('aaaa',acceptedFiles)
+    //     const existingFiles = getValues(`checkItems[${childIndex}].images`) || [];
+    //     const newFiles = acceptedFiles.map(file =>
+    //       Object.assign(file, {
+    //         preview: URL.createObjectURL(file),
+    //         src: URL.createObjectURL(file),
+    //         isLoaded:true
+    //       })
+    //     );
+    //     setValue(`checkItems[${childIndex}].images`, [...existingFiles, ...newFiles], { shouldValidate: true });
+    //   },
+    //   [getValues, setValue]
+    // );
 
     const handleRemoveFile = async (inputFile, childIndex)=>{
       
       if(inputFile?._id){
-        await dispatch(deleteCheckItemFile(machineId, serviceId, inputFile?._id))
+        await dispatch(deleteCheckItemFile(machineId, id, inputFile?._id))
       }
 
       setValue(
@@ -205,7 +210,7 @@ const CheckedItemInputRow = forwardRef(({ index, row, machineId, serviceId }, re
     const regEx = /^[^2]*/;
     const handleLoadImage = async (imageId, imageIndex, childIndex) => {
       try {
-        const response = await dispatch(downloadCheckItemFile(machineId, serviceId, imageId));
+        const response = await dispatch(downloadCheckItemFile(machineId, id, imageId));
         if (regEx.test(response.status)) {
           // Update the image property in the imagesLightbox array
           const existingFiles = getValues(`checkItems[${childIndex}].images`) || [];
@@ -243,10 +248,12 @@ const CheckedItemInputRow = forwardRef(({ index, row, machineId, serviceId }, re
                       <b>{`${index+1}.${childIndex+1}. `}</b>{`${childRow.name}`}
                   </Typography>
                       {childRow?.inputType === 'Boolean' &&
-                        <RHFCheckbox
-                          label={`Check ${childRow?.isRequired && '*'}`}
-                          name={`checkItems[${childIndex}].value`}
-                        /> 
+                        <FormControlLabel 
+                          required={childRow?.isRequired} 
+                          name={`checkItems[${childIndex}].value`} 
+                          control={<Checkbox />} 
+                          label='Check'
+                        />
                       }
                       {(childRow?.inputType === 'Short Text' || childRow?.inputType === 'Long Text') &&
                         <RHFTextField 
@@ -277,14 +284,16 @@ const CheckedItemInputRow = forwardRef(({ index, row, machineId, serviceId }, re
                         />
                       }
                       {childRow?.inputType==="Status" &&
-                          <RHFAutocomplete 
+                          <Autocomplete 
                             size="small"
                             label={`${childRow?.inputType} ${childRow?.isRequired && '*'}`}
                             name={`checkItems[${childIndex}].value`}
+                            onChange={(option, newValue)=> setValue(`checkItems[${childIndex}].value`, newValue)}
                             options={statusTypes}
                             getOptionLabel={(option) => option.name}
                             isOptionEqualToValue={(option, value) => option.name === value.name}
-                            renderOption={(props, option) => ( <li {...props} key={option.name}>{`${option?.name || ''}`}</li> )}
+                            renderOption={(props, option) => ( <li {...props} key={`status-${index}-${childIndex}-${option.name}`}>{`${option?.name || ''}`}</li> )}
+                            renderInput={(params) => ( <TextField  {...params}  label="Status" placeholder="Status"  /> )}
                           />
                       }
 
@@ -304,6 +313,7 @@ const CheckedItemInputRow = forwardRef(({ index, row, machineId, serviceId }, re
                         dropZone={false}
                         name={`checkItems[${childIndex}].images`}
                         imagesOnly
+                        files={files[childIndex] || []}
                         onDrop={(accepted)=> handleDropMultiFile(accepted, childIndex)}
                         onRemove={(inputFile) => handleRemoveFile(inputFile, childIndex)}
                         onLoadImage={(imageId, imageIndex)=> handleLoadImage(imageId, imageIndex, childIndex)}
@@ -312,6 +322,7 @@ const CheckedItemInputRow = forwardRef(({ index, row, machineId, serviceId }, re
                   <Grid container sx={{m:1}} display='flex' direction='row' justifyContent='flex-end' gap={2}>
                       {showMessages[`${index}-${childIndex}`] && <Typography variant='body2' color='green' sx={{mt:1}}>Saved Successfully!</Typography>}
                       <LoadingButton 
+                        size="small"
                         onClick={()=> handleSave(childIndex)} // Pass childIndex
                         loading={submittingCheckItemIndex===childIndex}
                         variant='contained'>Save</LoadingButton>
@@ -326,8 +337,6 @@ const CheckedItemInputRow = forwardRef(({ index, row, machineId, serviceId }, re
 CheckedItemInputRow.propTypes = {
     index: PropTypes.number,  
     row: PropTypes.object,
-    machineId:PropTypes.string,
-    serviceId:PropTypes.string,
   };
 
-export default memo(CheckedItemInputRow)
+export default CheckedItemInputRow;

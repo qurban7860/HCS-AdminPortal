@@ -450,7 +450,6 @@ export function updateMachineServiceRecord(machineId,id, params) {
         customer:                   params?.customer,
         site:                       params?.site,
         machine:                    machineId,
-        decoilers:                  params?.decoilers?.map((dec)=> dec?._id),
         technician:                 params?.technician?._id,
         technicianNotes:            params?.technicianNotes,
         textBeforeCheckItems:       params?.textBeforeCheckItems,
@@ -496,6 +495,21 @@ export function addMachineServiceRecordFiles(machineId, id, params) {
       }
       const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}/files/`,formData);
       dispatch(slice.actions.addMachineServiceRecordFilesSuccess());
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+
+export function createMachineServiceRecordVersion(machineId, serviceId, id) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${serviceId}/version/`);
+      return response?.data;
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));

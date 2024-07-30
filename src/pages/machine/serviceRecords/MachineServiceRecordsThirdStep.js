@@ -199,7 +199,6 @@ function MachineServiceRecordsThirdStep({handleDraftRequest, handleDiscard, hand
         }
       };
 
-      console.log('serviceRecordConfig:::',machineServiceRecord?.serviceRecordConfig)
   return (
       <FormProvider methods={methods}  onSubmit={handleSubmit(onSubmit)}>
         <Stack px={2} spacing={2}>
