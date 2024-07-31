@@ -111,7 +111,7 @@ export function DocumentGalleryItem({ image, isLoading, onOpenLightbox, onOpenFi
                     }}
                 >
                     <Typography variant="body2">
-                        {name.length > 14 ? name?.substring(0, 14) : name}
+                        {name?.length > 14 ? name?.substring(0, 14) : name}
                         {name?.length > 14 ? '...' : null}
                     </Typography>
                 </Stack>

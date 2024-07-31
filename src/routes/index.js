@@ -712,7 +712,7 @@ export default function Router() {
                 {element: <MachineServiceRecordList/>, index: true},
                 {path: 'new', element: <MachineServiceRecordAdd/>},
                 {path: ':id/view', element: <MachineServiceRecordView/>},
-                {path: ':id/edit', element: <MachineServiceRecordEdit/>}, 
+                {path: ':id/edit', element: <MachineServiceRecordAdd/>}, 
                 {path: ':serviceId/history',children:[
                     {element: <MachineServiceRecordHistoryList/>, index: true}, 
                     {path: ':id/view', element: <MachineServiceRecordView serviceHistoryView />},
@@ -725,7 +725,7 @@ export default function Router() {
                 {element: <MachineINIList/>, index: true},
                 {path: 'new', element: <MachineINIAdd/>},
                 {path: ':id/view', element: <MachineINIView/>},
-                {path: ':id1/:id2/compare', element: <MachineINICompareView/>}, 
+                {path: 'compare', element: <MachineINICompareView/>}, 
               ]
             },
             { path: ':machineId/logs',

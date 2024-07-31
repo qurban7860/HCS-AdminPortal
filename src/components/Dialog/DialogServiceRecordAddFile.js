@@ -8,8 +8,10 @@ import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useSnackbar } from 'notistack';
+import { useParams } from 'react-router-dom';
 import {  
   addMachineServiceRecordFiles,
+  getMachineServiceRecord,
   setAddFileDialog,
 } from '../../redux/slices/products/machineServiceRecord';
 
@@ -22,9 +24,11 @@ import FormLabel from '../DocumentForms/FormLabel';
 import { imagesExtensions } from '../../constants/document-constants';
 
 function DialogServiceRecordAddFile() {
+
+  const { machineId, id } = useParams();
     
   const dispatch = useDispatch();
-  const { addFileDialog, machineServiceRecord, isLoading } = useSelector((state) => state.machineServiceRecord);
+  const { addFileDialog, isLoading } = useSelector((state) => state.machineServiceRecord);
   
   const handleCloseDialog = ()=>{ 
     dispatch(setAddFileDialog(false)) 
@@ -72,7 +76,9 @@ function DialogServiceRecordAddFile() {
       
       const newFiles = acceptedFiles.map((file, index) => 
           Object.assign(file, {
-            preview: URL.createObjectURL(file)
+            preview: URL.createObjectURL(file),
+            src: URL.createObjectURL(file),
+            isLoaded:true
           })
         
       );
@@ -84,8 +90,9 @@ function DialogServiceRecordAddFile() {
 
   const onSubmit = async (data) => {
     try {
-      await dispatch(addMachineServiceRecordFiles(machineServiceRecord?.machine?._id, machineServiceRecord?._id, data))
+      await dispatch(addMachineServiceRecordFiles(machineId, id, data))
       await dispatch(setAddFileDialog(false));
+      await dispatch(getMachineServiceRecord(machineId, id))
       await reset();
       await enqueueSnackbar('Files uploaded successfully!');
     } catch (error) {
@@ -107,18 +114,18 @@ function DialogServiceRecordAddFile() {
           </Grid> */}
           <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
            <RHFUpload multiple  thumbnail name="files" imagesOnly
-                onDrop={handleDropMultiFile}
-                onRemove={(inputFile) =>
-                  files.length > 1 ?
-                  setValue(
-                    'files',
-                    files &&
-                      files?.filter((file) => file !== inputFile),
-                    { shouldValidate: true }
-                  ): setValue('files', '', { shouldValidate: true })
-                }
-                onRemoveAll={() => setValue('files', '', { shouldValidate: true })}
-              />
+              onDrop={handleDropMultiFile}
+              onRemove={(inputFile) =>
+                files.length > 1 ?
+                setValue(
+                  'files',
+                  files &&
+                    files?.filter((file) => file !== inputFile),
+                  { shouldValidate: true }
+                ): setValue('files', '', { shouldValidate: true })
+              }
+              onRemoveAll={() => setValue('files', '', { shouldValidate: true })}
+            />
           </FormProvider>
       </DialogContent>
       <DialogActions>

@@ -229,7 +229,7 @@ export const BUTTONS = {
   ADD_CHECK_ITEM_CATEGORY: 'Add Category',
   ADD_SERVICE_CHECK_ITEM: 'Add Check Item',
   ADD_MACHINE_SERVICE_CONFIG: 'Add Configuration',
-  ADD_MACHINE_SERVICE_RECORD: 'Add Record',
+  ADD_MACHINE_SERVICE_RECORD: 'Add Service Record',
   ADD_MACHINE_INI: 'Add INI',
   ADD_MACHINE_LOGS: 'Add Log',
 

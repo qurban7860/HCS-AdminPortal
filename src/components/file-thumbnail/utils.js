@@ -132,7 +132,7 @@ export function fileData(file) {
   // Url
   if (typeof file === 'string') {
     return {
-      key: file,
+      key: file?.key || file?._id || file,
       preview: file,
       name: fileNameByUrl(file),
       type: fileTypeByUrl(file),
@@ -141,7 +141,7 @@ export function fileData(file) {
 
   // File
   return {
-    key: file.preview,
+    key: file?.key || file?._id || file.preview,
     name: file.name,
     size: file.size,
     path: file.path,

@@ -76,6 +76,8 @@ RHFUpload.propTypes = {
   onChangeStockNumber: PropTypes.func,
   drawingPage:PropTypes.bool,
   imagesOnly:PropTypes.bool,
+  dropZone:PropTypes.bool,
+  onLoadImage: PropTypes.func,
             
 };
 
@@ -86,7 +88,8 @@ export function RHFUpload({ name, multiple, rows, helperText, machine,
   onChangeDisplayName,
   onChangeReferenceNumber,
   onChangeStockNumber,
-  drawingPage, imagesOnly, ...other }) {
+  onLoadImage,
+  drawingPage, dropZone=true, imagesOnly, ...other }) {
 
   const { control } = useFormContext();
 
@@ -97,6 +100,7 @@ export function RHFUpload({ name, multiple, rows, helperText, machine,
       render={({ field, fieldState: { error } }) =>
         multiple ? (
           <Upload
+            dropZone={dropZone}
             multiple
             imagesOnly={imagesOnly}
             onChangeDocType={onChangeDocType}
@@ -105,6 +109,7 @@ export function RHFUpload({ name, multiple, rows, helperText, machine,
             onChangeDisplayName={onChangeDisplayName}
             onChangeReferenceNumber={onChangeReferenceNumber}
             onChangeStockNumber={onChangeStockNumber}
+            onLoadImage={onLoadImage}
             rows={rows}
             drawingPage
             machine={machine}
@@ -121,6 +126,7 @@ export function RHFUpload({ name, multiple, rows, helperText, machine,
           />
         ) : (
           <Upload
+            dropZone={dropZone}
             imagesOnly={imagesOnly}
             machine={machine}
             file={field.value}

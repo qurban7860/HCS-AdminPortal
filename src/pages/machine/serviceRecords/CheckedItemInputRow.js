@@ -1,0 +1,342 @@
+import { memo, useCallback, useEffect, useImperativeHandle, useMemo, useState } from 'react';
+import * as Yup from 'yup';
+import { useDispatch, useSelector } from 'react-redux';
+import { useSnackbar } from 'notistack';
+import PropTypes, { object } from 'prop-types';
+import download from 'downloadjs';
+import { useNavigate, useParams } from 'react-router';
+import { Controller, useFieldArray, useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Table, TableBody, Grid, TextField, Checkbox, Typography, Stack, Divider, Box, Card, CardContent, CardHeader, Autocomplete, FormControlLabel } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
+import CommentsInput from './CommentsInput';
+import ViewFormServiceRecordVersionAudit from '../../../components/ViewForms/ViewFormServiceRecordVersionAudit';
+import { StyledTableRow } from '../../../theme/styles/default-styles';
+import { addCheckItemValues, deleteCheckItemFile, downloadCheckItemFile, setAddFileDialog } from '../../../redux/slices/products/machineServiceRecord';
+import { DocumentGalleryItem } from '../../../components/gallery/DocumentGalleryItem';
+import { ThumbnailDocButton } from '../../../components/Thumbnails';
+import DialogServiceRecordAddFile from '../../../components/Dialog/DialogServiceRecordAddFile';
+import FormProvider from '../../../components/hook-form/FormProvider';
+import { RHFAutocomplete, RHFCheckbox, RHFDatePicker, RHFTextField, RHFUpload } from '../../../components/hook-form';
+import { statusTypes } from '../util';
+import { fDate, stringToDate } from '../../../utils/formatTime';
+import { validateImageFileType } from '../../documents/util/Util';
+import FormLabel from '../../../components/DocumentForms/FormLabel';
+import { Upload } from '../../../components/upload';
+
+const CheckedItemInputRow = memo(({ index, row }) => {
+
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const { enqueueSnackbar } = useSnackbar();
+    const { machineId, id } = useParams();
+
+    const { machineServiceRecord, submittingCheckItemIndex } = useSelector((state) => state.machineServiceRecord);
+    const { serviceRecordConfig } = useSelector((state) => state.serviceRecordConfig);
+    const { machine } = useSelector((state) => state.machine);
+
+    // Define the schema for each image
+    const CheckItemSchema = Yup.object().shape({
+      value: Yup.mixed()
+      .test('value-required', 'Value is required', (value, context) => {
+        if(context.type==="value-required" && !value){
+          return false;
+        }
+        return true;
+      }),
+      comment: Yup.string().max(5000, 'Comments cannot exceed 5000 characters'),
+      images: Yup.array().test({
+        name: 'fileType',
+        message: 'Only the following formats are accepted: .jpeg, .jpg, gif, .bmp, .webp, .pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx',
+        test: validateImageFileType
+      }),
+    });
+    
+    const MainSchema = Yup.object().shape({
+      checkItems: Yup.array().of(CheckItemSchema),
+    });
+
+    const getRecordValue = (item) => {
+      if (item?.inputType === 'Date') {
+        return stringToDate(item?.recordValue?.checkItemValue, 'dd/MM/yyyy');
+      }
+      if (item?.inputType === 'Boolean') {
+        return item?.recordValue?.checkItemValue === 'true';
+      }
+      if (item?.inputType === 'Number') {
+        const value = parseFloat(item?.recordValue?.checkItemValue);
+        return Number.isNaN(value) ? null : value;
+      }
+      if (item?.inputType === 'Status') {
+        return statusTypes.find((st) => st?.name === item?.recordValue?.checkItemValue) || null;
+      }
+      return item?.recordValue?.checkItemValue;
+    };
+
+    const defaultValues = useMemo(
+      () => ({
+        checkItems: row?.checkItems.map(item => ({
+          _id:item._id,
+          comment: item?.recordValue?.comments,
+          value:getRecordValue(item),
+          images: item?.recordValue?.files.map(file => ({
+            key: file?._id,
+            _id: file?._id,
+            name:`${file?.name}.${file?.extension}`,
+            type: file?.fileType,
+            fileType: file?.fileType,
+            preview: `data:${file?.fileType};base64, ${file?.thumbnail}`,
+            src: `data:${file?.fileType};base64, ${file?.thumbnail}`,
+            path:`${file?.name}.${file?.extension}`,
+            downloadFilename:`${file?.name}.${file?.extension}`,
+            machineId,
+            id,
+          })) || []
+        })) || [],
+      }),
+      [row, machineId, id]
+    );
+
+    const methods = useForm({
+      resolver: yupResolver(MainSchema),
+      defaultValues,
+      mode:'onChange',
+    });
+  
+    const {
+      control,
+      reset,
+      watch,
+      setValue,
+      getValues,
+      trigger,
+      handleSubmit,
+      formState: { isSubmitting, isSubmitted },
+    } = methods;
+
+    const [showMessages, setShowMessages] = useState({});
+    
+    useEffect(() => {
+      if (machineServiceRecord) {
+        reset(defaultValues);
+      }
+    }, [reset, machineServiceRecord, defaultValues]);
+    
+
+    const onSubmit = async (data, childIndex) => {
+      const checkItem = data.checkItems[childIndex];
+      const params = {
+        serviceRecord:machineServiceRecord?._id,
+        serviceId:machineServiceRecord?.serviceId,
+        checkItemListId:row?._id,
+        machineCheckItem:checkItem._id,
+        comments:checkItem.comment,
+        images:checkItem.images.filter(image => !image._id)
+      }
+
+      if (checkItem.value instanceof Date) {
+        params.checkItemValue = fDate(checkItem.value, 'dd/MM/yyyy');
+      } else if(typeof checkItem.value==='object'){
+        params.checkItemValue=checkItem?.value?.name;
+      }else{
+        params.checkItemValue=checkItem.value;
+      }
+
+      try {
+        const result = await dispatch(addCheckItemValues(machine?._id,params, childIndex));
+        const combinedIndex = `${index}-${childIndex}`;
+        setShowMessages(prev => ({ ...prev, [combinedIndex]: true }));
+        setTimeout(() => {
+          setShowMessages(prev => ({ ...prev, [combinedIndex]: false }));
+        }, 3000);
+      } catch (err) {
+        console.error(err);
+        enqueueSnackbar('Saving failed!', { variant: `error` });
+      }
+    };
+
+    const [files, setFiles] = useState([]);
+
+    const handleDropMultiFile = useCallback(
+      (acceptedFiles, childIndex) => {
+        const existingFiles = files[childIndex] || [];
+        const newFiles = acceptedFiles.map(file =>
+          Object.assign(file, {
+            preview: URL.createObjectURL(file),
+            src: URL.createObjectURL(file),
+            isLoaded: true,
+          })
+        );
+        const updatedFiles = [...existingFiles, ...newFiles];
+        setFiles((prevFiles) => ({
+          ...prevFiles,
+          [childIndex]: updatedFiles,
+        }));
+        setValue(`checkItems[${childIndex}].images`, updatedFiles, { shouldValidate: true });
+      },
+      [files, setValue]
+    );
+
+    // const handleDropMultiFile = useCallback(
+    //   (acceptedFiles, childIndex) => {
+
+    //     console.log('aaaa',acceptedFiles)
+    //     const existingFiles = getValues(`checkItems[${childIndex}].images`) || [];
+    //     const newFiles = acceptedFiles.map(file =>
+    //       Object.assign(file, {
+    //         preview: URL.createObjectURL(file),
+    //         src: URL.createObjectURL(file),
+    //         isLoaded:true
+    //       })
+    //     );
+    //     setValue(`checkItems[${childIndex}].images`, [...existingFiles, ...newFiles], { shouldValidate: true });
+    //   },
+    //   [getValues, setValue]
+    // );
+
+    const handleRemoveFile = async (inputFile, childIndex)=>{
+      
+      if(inputFile?._id){
+        await dispatch(deleteCheckItemFile(machineId, id, inputFile?._id))
+      }
+
+      setValue(
+        `checkItems[${childIndex}].images`,
+        getValues(`checkItems[${childIndex}].images`)?.filter((file) => file !== inputFile),
+        { shouldValidate: true }
+      )
+    }
+
+    const regEx = /^[^2]*/;
+    const handleLoadImage = async (imageId, imageIndex, childIndex) => {
+      try {
+        const response = await dispatch(downloadCheckItemFile(machineId, id, imageId));
+        if (regEx.test(response.status)) {
+          // Update the image property in the imagesLightbox array
+          const existingFiles = getValues(`checkItems[${childIndex}].images`) || [];
+          const image = existingFiles[imageIndex];
+    
+          existingFiles[imageIndex] = {
+            ...image,
+            src: `data:${image?.fileType};base64,${response.data}`,
+            preview: `data:${image?.fileType};base64,${response.data}`,
+            isLoaded: true,
+          };
+    
+          setValue(`checkItems[${childIndex}].images`, existingFiles, { shouldValidate: true });
+        }
+      } catch (error) {
+        console.error('Error loading full file:', error);
+      }
+    };
+
+    const handleSave = async (childIndex) => {
+      const isValid = await trigger(`checkItems[${childIndex}].value`);
+      if(isValid){
+        const data = getValues();
+        await onSubmit(data, childIndex);
+      }
+    };
+
+  return(<Stack spacing={2} px={2}>
+        <FormLabel content={`${index+1}). ${typeof row?.ListTitle === 'string' && row?.ListTitle || ''} ( Items: ${`${row?.checkItems?.length} `})`} />          
+        <FormProvider key={`form-${index}`} methods={methods} >
+          {row?.checkItems?.map((childRow,childIndex) => (
+          <Card key={`card-${index}-${childIndex}`} sx={{boxShadow:'none'}}>
+                <Stack spacing={1} mx={1} key={childRow._id}>
+                  <Typography variant='body2' size='small'  >
+                      <b>{`${index+1}.${childIndex+1}. `}</b>{`${childRow.name}`}
+                  </Typography>
+                      {childRow?.inputType === 'Boolean' &&
+                        <FormControlLabel 
+                          required={childRow?.isRequired} 
+                          name={`checkItems[${childIndex}].value`} 
+                          control={<Checkbox />} 
+                          label='Check'
+                        />
+                      }
+                      {(childRow?.inputType === 'Short Text' || childRow?.inputType === 'Long Text') &&
+                        <RHFTextField 
+                          multiline
+                          label={`${childRow?.inputType}`}
+                          name={`checkItems[${childIndex}].value`}
+                          size="small" 
+                          required={childRow?.isRequired}
+                          InputProps={{ inputProps: { maxLength:childRow?.inputType === 'Long Text'?3000:200 } }}
+                        />
+                      }
+                      {childRow?.inputType === 'Date'  && 
+                        <RHFDatePicker 
+                          label={`Enter Date ${childRow?.isRequired && '*'}`}
+                          name={`checkItems[${childIndex}].value`}
+                          format="dd/mm/yyyy"
+                          size="small" 
+                          required={childRow?.isRequired}
+                        /> 
+                      }
+                      {childRow?.inputType === 'Number'  && 
+                        <RHFTextField 
+                            label={`${childRow?.inputType}`}
+                            name={`checkItems[${childIndex}].value`}
+                            type="number"
+                            size="small" 
+                            required={childRow?.isRequired}
+                        />
+                      }
+                      {childRow?.inputType==="Status" &&
+                          <Autocomplete 
+                            size="small"
+                            label={`${childRow?.inputType} ${childRow?.isRequired && '*'}`}
+                            name={`checkItems[${childIndex}].value`}
+                            onChange={(option, newValue)=> setValue(`checkItems[${childIndex}].value`, newValue)}
+                            options={statusTypes}
+                            getOptionLabel={(option) => option.name}
+                            isOptionEqualToValue={(option, value) => option.name === value.name}
+                            renderOption={(props, option) => ( <li {...props} key={`status-${index}-${childIndex}-${option.name}`}>{`${option?.name || ''}`}</li> )}
+                            renderInput={(params) => ( <TextField  {...params}  label="Status" placeholder="Status"  /> )}
+                          />
+                      }
+
+                      <RHFTextField 
+                        name={`checkItems[${childIndex}].comment`}
+                        label="Comments"
+                        type="text"
+                        size="small"
+                        minRows={2}
+                        multiline
+                        InputProps={{ inputProps: { maxLength: 5000 } }}
+                      />
+
+                      <RHFUpload 
+                        multiple
+                        thumbnail
+                        dropZone={false}
+                        name={`checkItems[${childIndex}].images`}
+                        imagesOnly
+                        files={files[childIndex] || []}
+                        onDrop={(accepted)=> handleDropMultiFile(accepted, childIndex)}
+                        onRemove={(inputFile) => handleRemoveFile(inputFile, childIndex)}
+                        onLoadImage={(imageId, imageIndex)=> handleLoadImage(imageId, imageIndex, childIndex)}
+                      />
+                      
+                  <Grid container sx={{m:1}} display='flex' direction='row' justifyContent='flex-end' gap={2}>
+                      {showMessages[`${index}-${childIndex}`] && <Typography variant='body2' color='green' sx={{mt:1}}>Saved Successfully!</Typography>}
+                      <LoadingButton 
+                        size="small"
+                        onClick={()=> handleSave(childIndex)} // Pass childIndex
+                        loading={submittingCheckItemIndex===childIndex}
+                        variant='contained'>Save</LoadingButton>
+                  </Grid>
+                </Stack>
+          </Card>
+        ))}
+    </FormProvider>
+</Stack>)
+});
+
+CheckedItemInputRow.propTypes = {
+    index: PropTypes.number,  
+    row: PropTypes.object,
+  };
+
+export default CheckedItemInputRow;

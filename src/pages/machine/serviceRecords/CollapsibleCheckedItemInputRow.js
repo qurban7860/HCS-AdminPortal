@@ -4,10 +4,11 @@ import { useSnackbar } from 'notistack';
 import PropTypes from 'prop-types';
 import download from 'downloadjs';
 import { Table, TableBody, Grid, TextField, Checkbox, Typography, Stack, Divider, Box } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 import CommentsInput from './CommentsInput';
 import ViewFormServiceRecordVersionAudit from '../../../components/ViewForms/ViewFormServiceRecordVersionAudit';
 import { StyledTableRow } from '../../../theme/styles/default-styles';
-import { deleteFile, downloadFile, setAddFileDialog } from '../../../redux/slices/products/machineServiceRecord';
+import { deleteRecordFile, downloadRecordFile, setAddFileDialog } from '../../../redux/slices/products/machineServiceRecord';
 import { DocumentGalleryItem } from '../../../components/gallery/DocumentGalleryItem';
 import { ThumbnailDocButton } from '../../../components/Thumbnails';
 import DialogServiceRecordAddFile from '../../../components/Dialog/DialogServiceRecordAddFile';
@@ -40,7 +41,7 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkItemLists, setValue,
   
       if(!image?.isLoaded && image?.fileType?.startsWith('image')){
         try {
-          const response = await dispatch(downloadFile(machineId, serviceId, image?._id));
+          const response = await dispatch(downloadRecordFile(machineId, serviceId, image?._id));
           if (regEx.test(response.status)) {
             // Update the image property in the imagesLightbox array
             const updatedSlides = [
@@ -66,9 +67,9 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkItemLists, setValue,
       setSelectedImage(-1);
     };
   
-    const handleDeleteFile = async (fileId) => {
+    const handledeleteRecordFile = async (fileId) => {
       try {
-        await dispatch(deleteFile(machineId, serviceId, fileId));
+        await dispatch(deleteRecordFile(machineId, serviceId, fileId));
         // await dispatch(getMachineServiceRecord(serviceId))
         enqueueSnackbar('File Archived successfully!');
       } catch (err) {
@@ -77,8 +78,8 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkItemLists, setValue,
       }
     };
   
-    const handleDownloadFile = (fileId, name, extension) => {
-      dispatch(downloadFile(machineId, serviceId, fileId))
+    const handledownloadRecordFile = (fileId, name, extension) => {
+      dispatch(downloadRecordFile(machineId, serviceId, fileId))
         .then((res) => {
           if (regEx.test(res.status)) {
             download(atob(res.data), `${name}.${extension}`, { type: extension });
@@ -108,20 +109,6 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkItemLists, setValue,
                   {row?.checkItems?.map((childRow,childIndex) => (
                     <StyledTableRow key={childRow._id}>
                       <Grid display='flex' flexDirection='column' sx={{ m:  1}} key={childRow._id} >
-                        <Grid>
-                          {/* <Grid display="flex" alignItems="center">
-                              <Typography variant='body2' size='small'  >
-                                <b>{`${index+1}.${childIndex+1}. `}</b>{`${childRow.name}`}
-                              </Typography>
-                              <Checkbox 
-                                name={`${childRow?.name}_${childIndex}_${index}_${childIndex}`} 
-                                checked={checkItemLists[index]?.checkItems[childIndex]?.checked || false } 
-                                onChange={()=>handleChangeCheckItemListChecked(index, childIndex )} 
-                              /> 
-                              {!checkItemLists[index]?.checkItems[childIndex]?.checked && isValueAvailable && 
-                                <Typography variant='body2' size='small' sx={{ color: 'red'}}  >Please tick this box to save values</Typography>
-                              }
-                          </Grid> */}
                           <Grid>
                             <CommentsInput index={index} childIndex={childIndex} 
                               key={`${index}${childIndex}`}
@@ -136,7 +123,6 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkItemLists, setValue,
                               handleChangeCheckItemListChecked={handleChangeCheckItemListChecked}
                               handleChangeCheckItemListCheckBoxValue={handleChangeCheckItemListCheckBoxValue}
                             />
-                          </Grid>
                         </Grid>
 
                         <Grid >
@@ -180,15 +166,18 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkItemLists, setValue,
                     {files?.map((file, _index) => (
                       <DocumentGalleryItem size={70} isLoading={!files} key={file?.id} image={file} 
                         onOpenLightbox={()=> handleOpenLightbox(_index)}
-                        onDownloadFile={()=> handleDownloadFile(file._id, file?.name, file?.extension)}
-                        onDeleteFile={()=> handleDeleteFile(file._id)}
+                        ondownloadRecordFile={()=> handledownloadRecordFile(file._id, file?.name, file?.extension)}
+                        ondeleteRecordFile={()=> handledeleteRecordFile(file._id)}
                         toolbar
                       />
                     ))}
 
                     {childRow && <ThumbnailDocButton size={70} onClick={handleAddFileDialog}/>}
                   </Box>
-                    </StyledTableRow>
+                  <Grid sx={{m:1}} display='flex' direction='row-reverse'>
+                    <LoadingButton variant='contained'>Save</LoadingButton>
+                  </Grid>
+                  </StyledTableRow>
                   ))}
                 </TableBody>
               </Table>

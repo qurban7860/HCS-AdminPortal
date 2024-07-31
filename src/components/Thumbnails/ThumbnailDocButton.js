@@ -29,7 +29,7 @@ export default function ThumbnailDocButton({ onClick, size=150 }) {
                 opacity: 1,
             },
             background:theme.palette.grey[hovered?100:400],
-            width:size,
+            width:'100%',
             height:size,
           }}
           onMouseEnter={() => setHovered(true)}

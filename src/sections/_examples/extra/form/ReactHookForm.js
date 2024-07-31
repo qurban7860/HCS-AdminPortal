@@ -129,6 +129,8 @@ export default function ReactHookForm({ debug }) {
       const newFiles = acceptedFiles.map((file) =>
         Object.assign(file, {
           preview: URL.createObjectURL(file),
+          src: URL.createObjectURL(file),
+          isLoaded:true
         })
       );
 

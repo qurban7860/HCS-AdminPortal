@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useMemo, memo, useLayoutEffect, useState } from 'react';
+import { useMemo, memo, useLayoutEffect, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // @mui
 import { Container, Card, Chip, Grid, Box } from '@mui/material';
@@ -16,9 +16,12 @@ import { deleteMachineServiceRecord,
   setSendEmailDialog,
   setPDFViewerDialog,
   setAddFileDialog,
-  downloadFile,
-  deleteFile,
-  completeServiceRecord} from '../../../redux/slices/products/machineServiceRecord';
+  downloadRecordFile,
+  deleteRecordFile,
+  setFormActiveStep,
+  getMachineServiceRecordCheckItems,
+  updateMachineServiceRecord,
+  createMachineServiceRecordVersion} from '../../../redux/slices/products/machineServiceRecord';
 import { setCardActiveIndex, setIsExpanded } from '../../../redux/slices/customer/contact';
 // components
 import { useSnackbar } from '../../../components/snackbar';
@@ -40,6 +43,7 @@ import { ThumbnailDocButton } from '../../../components/Thumbnails';
 import DialogServiceRecordAddFile from '../../../components/Dialog/DialogServiceRecordAddFile';
 import { DocumentGalleryItem } from '../../../components/gallery/DocumentGalleryItem';
 import ConfirmDialog from '../../../components/confirm-dialog';
+import Lightbox from '../../../components/lightbox/Lightbox';
 
 MachineServiceParamViewForm.propTypes = {
   serviceHistoryView: PropTypes.bool,
@@ -47,7 +51,7 @@ MachineServiceParamViewForm.propTypes = {
 
 function MachineServiceParamViewForm( {serviceHistoryView} ) {
 
-  const { machineServiceRecord, isLoading, pdfViewerDialog, sendEmailDialog } = useSelector((state) => state.machineServiceRecord);
+  const { machineServiceRecord, machineServiceRecordCheckItems, isLoading, pdfViewerDialog, sendEmailDialog } = useSelector((state) => state.machineServiceRecord);
   const { machine } = useSelector((state) => state.machine)
 
   const dispatch = useDispatch();
@@ -59,6 +63,7 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
     if(machineId && id ){
       dispatch(setAddFileDialog(false));
       dispatch(getMachineServiceRecord(machineId, id));
+      dispatch(getMachineServiceRecordCheckItems(machineId, id));
     }
     dispatch(setPDFViewerDialog(false))
     dispatch(setSendEmailDialog(false))
@@ -78,7 +83,24 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
     }
   };
 
-  const handleEdit = () => navigate(PATH_MACHINE.machines.serviceRecords.edit(machineId, id));
+  const handleEdit = async() => {
+    await dispatch(setFormActiveStep(0));
+    if(machineServiceRecord?.status==="SUBMITTED"){
+      try {
+        const srecord = await dispatch(createMachineServiceRecordVersion(machineId, id));
+        // enqueueSnackbar('Version created successfully');
+        if(srecord){
+          await navigate(PATH_MACHINE.machines.serviceRecords.edit(machineId, srecord?._id))
+        }
+      } catch (error) {
+        enqueueSnackbar('Version creation failed', { variant: `error` });
+        console.error(error);
+      }
+      
+    }else{
+      await navigate(PATH_MACHINE.machines.serviceRecords.edit(machineId, id))
+    }
+  };
 
   const handleServiceRecordHistory = () =>  navigate(PATH_MACHINE.machines.serviceRecords.history.root(
     machineId, serviceHistoryView ? serviceId : machineServiceRecord?.serviceId 
@@ -167,6 +189,26 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
       navigate(PATH_MACHINE.machines.serviceRecords.root(machineId))
     }
   }
+  
+  const [recordStatus, setRecordStatus]= useState(null);
+
+  useEffect(() => {
+    if (machineServiceRecord?.files) {
+        const updatedFiles = machineServiceRecord?.files?.map(file => ({
+          ...file,
+          src: `data:${file?.fileType};base64,${file?.thumbnail}`,
+          thumbnail: `data:${file?.fileType};base64,${file?.thumbnail}`
+        }));
+        setSlides(updatedFiles);
+    }
+    if(machineServiceRecord.status==="DRAFT"){
+      setRecordStatus({label:'Complete', value:'SUBMITTED'});
+    }else if(machineServiceRecord.status==="SUBMITTED"){
+      setRecordStatus({label:'Approve', value:'APPROVED'});
+    }
+    
+  }, [machineServiceRecord]);
+
 
   const regEx = /^[^2]*/;
   const [selectedImage, setSelectedImage] = useState(-1);
@@ -182,7 +224,7 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
 
     if(!image?.isLoaded && image?.fileType?.startsWith('image')){
       try {
-        const response = await dispatch(downloadFile(machineId, serviceId, image?._id));
+        const response = await dispatch(downloadRecordFile(machineId, serviceId, image?._id));
         if (regEx.test(response.status)) {
           // Update the image property in the imagesLightbox array
           const updatedSlides = [
@@ -208,19 +250,19 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
     setSelectedImage(-1);
   };
 
-  const handleDeleteFile = async (fileId) => {
+  const handleDeleteRecordFile = async (fileId) => {
     try {
-      await dispatch(deleteFile(machineId, serviceId, fileId));
-      await dispatch(getMachineServiceRecord(serviceId))
-      enqueueSnackbar('File Archived successfully!');
+      await dispatch(deleteRecordFile(machineId, machineServiceRecord?.serviceId, fileId));
+      await dispatch(getMachineServiceRecord(machineId, id))
+      enqueueSnackbar('File deleted successfully!');
     } catch (err) {
       console.log(err);
       enqueueSnackbar('File Deletion failed!', { variant: `error` });
     }
   };
 
-  const handleDownloadFile = (fileId, name, extension) => {
-    dispatch(downloadFile(machineId, serviceId, fileId))
+  const handleDownloadRecordFile = (fileId, name, extension) => {
+    dispatch(downloadRecordFile(machineId, serviceId, fileId))
       .then((res) => {
         if (regEx.test(res.status)) {
           download(atob(res.data), `${name}.${extension}`, { type: extension });
@@ -255,7 +297,8 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
 
   const onSubmitComplete = async() => {
     try {
-      await dispatch(completeServiceRecord(machineId, id));
+      await dispatch(updateMachineServiceRecord(machineId, id, {status:recordStatus?.value}));
+      handleCompleteConfirm();
       enqueueSnackbar('Service Record Completed Successfully!');
     } catch (err) {
       console.log(err);
@@ -278,6 +321,7 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
           handleSendPDFEmail={!machineServiceRecord?.isHistory && machineServiceRecord?._id && handleSendEmail}
           handleViewPDF={!machineServiceRecord?.isHistory && machineServiceRecord?._id && handlePDFViewer}
           handleCompleteMSR={!machineServiceRecord?.isHistory && handleCompleteConfirm}
+          serviceRecordStatus={recordStatus?.label}
         />
         
         <Grid container>
@@ -294,7 +338,29 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
           <ViewFormField isLoading={isLoading} sm={12} heading="Decoilers" arrayParam={defaultValues?.decoilers?.map((decoilerMachine) => ({ name: `${decoilerMachine?.serialNo ? decoilerMachine?.serialNo : ''}${decoilerMachine?.name ? '-' : ''}${decoilerMachine?.name ? decoilerMachine?.name : ''}`}))} />
           <ViewFormField isLoading={isLoading} sm={6} heading="Technician"  param={defaultValues?.technician?.name || ''} />
           <ViewFormNoteField sm={12} heading="Technician Notes" param={defaultValues.technicianNotes} />
-          <FormLabel content='Documents' />
+          <FormLabel content={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />
+          {defaultValues.textBeforeCheckItems && <ViewFormNoteField sm={12}  param={defaultValues.textBeforeCheckItems} />}
+          {machineServiceRecordCheckItems?.checkItemLists?.length > 0 && 
+            <Grid item md={12} sx={{  overflowWrap: 'break-word' }}>
+              <Grid item md={12} sx={{display:'flex', flexDirection:'column'}}>
+                {machineServiceRecordCheckItems?.checkItemLists?.length > 0 ? 
+                (machineServiceRecordCheckItems?.checkItemLists.map((row, index) =>
+                        <ReadableCollapsibleCheckedItemRow machineId serviceId value={row} index={index} />
+                  )) : <ViewFormField isLoading={isLoading} /> }
+              </Grid>
+            </Grid>
+          }
+          
+          {defaultValues.textAfterCheckItems && <ViewFormNoteField sm={12}  param={defaultValues.textAfterCheckItems} />}
+
+          {machineServiceRecord?.serviceRecordConfig?.enableNote && <ViewFormNoteField sm={12} heading={`${machineServiceRecord?.serviceRecordConfig?.recordType?.charAt(0).toUpperCase()||''}${machineServiceRecord?.serviceRecordConfig?.recordType?.slice(1).toLowerCase()||''} Note`} param={defaultValues.serviceNote} />}
+          {machineServiceRecord?.serviceRecordConfig?.enableMaintenanceRecommendations && <ViewFormNoteField sm={12} heading="Recommendation Note" param={defaultValues.recommendationNote} />}
+          {machineServiceRecord?.serviceRecordConfig?.enableSuggestedSpares && <ViewFormNoteField sm={12} heading="Suggested Spares" param={defaultValues.suggestedSpares} />}
+          <ViewFormNoteField sm={12} heading="Internal Note" param={defaultValues.internalNote} />
+          <ViewFormField isLoading={isLoading} sm={12} heading="Operators" chipDialogArrayParam={operators} />
+          {/* <ViewFormField isLoading={isLoading} sm={12} heading="Operators" arrayParam={defaultValues?.operators?.map((operator) => ({ name: `${operator?.firstName || ''} ${operator?.lastName || ''}`}))} /> */}
+          <ViewFormNoteField sm={12} heading="Operator Notes" param={defaultValues.operatorNotes} />
+          <FormLabel content='Images' />
           <Box
             sx={{my:1, width:'100%'}}
             gap={2}
@@ -308,42 +374,17 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
             }}
           >
 
-          {defaultValues?.files?.map((file, _index) => (
+          {slides?.map((file, _index) => (
             <DocumentGalleryItem isLoading={isLoading} key={file?.id} image={file} 
               onOpenLightbox={()=> handleOpenLightbox(_index)}
-              onDownloadFile={()=> handleDownloadFile(file._id, file?.name, file?.extension)}
-              onDeleteFile={()=> handleDeleteFile(file._id)}
+              onDownloadFile={()=> handleDownloadRecordFile(file._id, file?.name, file?.extension)}
+              onDeleteFile={()=> handleDeleteRecordFile(file._id)}
               toolbar
             />
           ))}
 
           {!machineServiceRecord?.isHistory && <ThumbnailDocButton onClick={handleAddFileDialog}/>}
         </Box>
-
-          <FormLabel content={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />
-          {defaultValues.textBeforeCheckItems && <ViewFormNoteField sm={12}  param={defaultValues.textBeforeCheckItems} />}
-          {machineServiceRecord?.serviceRecordConfig?.checkItemLists?.length > 0 && 
-            <Grid item md={12} sx={{  overflowWrap: 'break-word' }}>
-              <Grid item md={12} sx={{display:'flex', flexDirection:'column'}}>
-                {machineServiceRecord?.serviceRecordConfig?.checkItemLists?.length > 0 ? 
-                (machineServiceRecord?.serviceRecordConfig?.checkItemLists.map((row, index) =>
-                        <ReadableCollapsibleCheckedItemRow machineId serviceId value={row} index={index} />
-                  )) : <ViewFormField isLoading={isLoading} /> }
-              </Grid>
-            </Grid>
-          }
-          
-          {defaultValues.textAfterCheckItems && <ViewFormNoteField sm={12}  param={defaultValues.textAfterCheckItems} />}
-
-          {machineServiceRecord?.serviceRecordConfig?.enableNote && <ViewFormNoteField sm={12} heading={`${machineServiceRecord?.serviceRecordConfig?.recordType?.charAt(0).toUpperCase()||''}${machineServiceRecord?.serviceRecordConfig?.recordType?.slice(1).toLowerCase()||''} Note`} param={defaultValues.serviceNote} />}
-          {machineServiceRecord?.serviceRecordConfig?.enableMaintenanceRecommendations && <ViewFormNoteField sm={12} heading="Recommendation Note" param={defaultValues.recommendationNote} />}
-          {machineServiceRecord?.serviceRecordConfig?.enableSuggestedSpares && <ViewFormNoteField sm={12} heading="Suggested Spares" param={defaultValues.suggestedSpares} />}
-          <ViewFormNoteField sm={12} heading="Internal Note" param={defaultValues.internalNote} />
-          
-          <ViewFormField isLoading={isLoading} sm={12} heading="Operators" chipDialogArrayParam={operators} />
-            
-          {/* <ViewFormField isLoading={isLoading} sm={12} heading="Operators" arrayParam={defaultValues?.operators?.map((operator) => ({ name: `${operator?.firstName || ''} ${operator?.lastName || ''}`}))} /> */}
-          <ViewFormNoteField sm={12} heading="Operator Notes" param={defaultValues.operatorNotes} />
           
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>
@@ -352,13 +393,23 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
       {sendEmailDialog && <SendEmailDialog machineServiceRecord={machineServiceRecord} fileName={fileName}/>}
       <DialogServiceRecordAddFile />
       <ConfirmDialog open={completeConfirm} onClose={handleCompleteConfirm}
-        title='Are you sure you want to complete?' 
+        title={`Are you sure you want to ${recordStatus?.label}?`} 
         content="Email will be sent to your reporting contact?" 
         action={
-          <LoadingButton loading={isSubmitting} variant='contained' onClick={handleSubmit(onSubmitComplete)}>Complete</LoadingButton>
+          <LoadingButton loading={isSubmitting} variant='contained' onClick={handleSubmit(onSubmitComplete)}>{recordStatus?.label}</LoadingButton>
         }
       />
     </Card>
+    <Lightbox
+          index={selectedImage}
+          slides={slides}
+          open={selectedImage>=0}
+          close={handleCloseLightbox}
+          onGetCurrentIndex={handleOpenLightbox}
+          disabledTotal
+          disabledDownload
+          disabledSlideshow
+        />
   </Container>
   );
 }

@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 // @mui
 import { Stack } from '@mui/material';
 // routes
@@ -11,6 +11,7 @@ import SearchBarCombo from '../../../components/ListTableTools/SearchBarCombo';
 import { BUTTONS } from '../../../constants/default-constants';
 // styles
 import { options } from '../../../theme/styles/default-styles';
+import { resetMachineServiceRecord, setFormActiveStep } from '../../../redux/slices/products/machineServiceRecord';
 
 // ----------------------------------------------------------------------
 
@@ -36,12 +37,16 @@ export default function MachineServiceRecordListTableToolbar({
   isHistory
 }) {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { machineId } = useParams();
 
-  const toggleAdd = () => navigate(PATH_MACHINE.machines.serviceRecords.new(machineId));
+  const toggleAdd = async () => {
+    await dispatch(resetMachineServiceRecord());
+    await dispatch(setFormActiveStep(0));
+    await navigate(PATH_MACHINE.machines.serviceRecords.new(machineId))
+  };
 
   const { machine } = useSelector((state) => state.machine);
-  
 
   return (
     <Stack {...options}>
