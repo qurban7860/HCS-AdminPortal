@@ -24,6 +24,8 @@ MachineServiceRecordListTableToolbar.propTypes = {
   onFilterStatus: PropTypes.func,
   statusOptions: PropTypes.array,
   isHistory: PropTypes.bool,
+  toggleStatus: PropTypes.bool,
+  onToggleStatus: PropTypes.func,
 };
 
 export default function MachineServiceRecordListTableToolbar({
@@ -34,7 +36,9 @@ export default function MachineServiceRecordListTableToolbar({
   statusOptions,
   onResetFilter,
   onFilterStatus,
-  isHistory
+  isHistory,
+  toggleStatus,
+  onToggleStatus
 }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -58,6 +62,9 @@ export default function MachineServiceRecordListTableToolbar({
         SubOnClick={toggleAdd}
         addButton={!isHistory && BUTTONS.ADD_MACHINE_SERVICE_RECORD}
         transferredMachine={machine?.status?.slug==='transferred'}
+        radioStatus={toggleStatus}
+        radioStatusLabel="Show Draft"
+        handleRadioStatus={onToggleStatus}
       />
     </Stack>
   );

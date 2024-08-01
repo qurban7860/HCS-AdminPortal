@@ -86,11 +86,17 @@ export default function MachineServiceRecordList() {
     }
   }, [machineServiceRecords, initial]);
 
+  const [draft, setDraft] = useState(false); 
+  const handleToggleDraft = (status) => {
+    setDraft(status);
+  }
+
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(order, orderBy),
     filterName,
     filterStatus,
+    draft
   });
 
   const isFiltered = filterName !== '' || !!filterStatus.length;
@@ -141,6 +147,8 @@ export default function MachineServiceRecordList() {
             onFilterStatus={handleFilterStatus}
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
+            toggleStatus={draft}
+            onToggleStatus={handleToggleDraft}
           />
 
           {!isNotFound && <TablePaginationCustom
@@ -197,7 +205,7 @@ export default function MachineServiceRecordList() {
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName, filterStatus }) {
+function applyFilter({ inputData, comparator, filterName, filterStatus, draft }) {
   const stabilizedThis = inputData.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -206,6 +214,10 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   });
 
   inputData = stabilizedThis.map((el) => el[0]);
+
+  if(!draft){
+    inputData = inputData.filter((srec) => srec?.status!=="DRAFT");
+  }
 
   if (filterName) {
     inputData = inputData.filter(
