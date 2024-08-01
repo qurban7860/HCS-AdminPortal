@@ -38,10 +38,10 @@ export default function ServiceRecodStepButtons({
   return (
       <Stack justifyContent="flex-end" direction="row" spacing={2} px={2} pt={2}>
         <Grid item sm={6} display='flex' columnGap={2}>
-            <Button size='large' onClick={handleCancle} variant="outlined">Cancel</Button>
+            <Button size='large' onClick={handleCancle} variant="outlined">Exit</Button>
         </Grid>
         <Grid item sm={6} display='flex' columnGap={2} justifyContent='flex-end'>
-            <LoadingButton loading={isSubmitting && isDraft} size='large' onClick={handleDraft} type='submit' variant="outlined">Draft</LoadingButton>
+            {handleDraft && <LoadingButton loading={isSubmitting && isDraft} size='large' onClick={handleDraft} type='submit' variant="outlined">Save & Exit</LoadingButton>}
             <Button size='large' onClick={handleBack} disabled={ formActiveStep===0 } variant="outlined">Back</Button>
             <LoadingButton size='large' type='submit' variant="contained"  loading={isSubmitting && !isDraft}>
               {formActiveStep===2?"Submit":"Next"}

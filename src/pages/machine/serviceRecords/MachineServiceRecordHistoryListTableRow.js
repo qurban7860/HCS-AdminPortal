@@ -38,10 +38,7 @@ export default function MachineServiceRecordListTableRow({
         <TableCell align="left" >{fDate(serviceDate)}</TableCell>
         <TableCell align="left" >{status || ''}</TableCell>
         <LinkTableCell align="left" onClick={onViewRow} param={`${versionNo || 1} ${isHistory ? '' : '(Current Version)'}`} />
-        <TableCell align="center">
-          {' '}
-          <Switch checked={isActive} disabled size="small" />{' '}
-        </TableCell>
+        <TableCell align="center"><Switch checked={isActive} disabled size="small" /></TableCell>
         <TableCell align="left">{createdBy.name}</TableCell>
         <TableCell align="right">{fDate(createdAt)}</TableCell>
       </StyledTableRow>

@@ -1,12 +1,14 @@
 import PropTypes from 'prop-types';
+import * as Yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { useMemo, memo, useLayoutEffect, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // @mui
-import { Container, Card, Chip, Grid, Box } from '@mui/material';
+import { Container, Card, Chip, Grid, Box, Stack, Typography, TextField, DialogContent, DialogActions, Dialog } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // routes
 import { useNavigate, useParams } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 import download from 'downloadjs';
 import { PATH_MACHINE, PATH_CRM } from '../../../routes/paths';
 // redux
@@ -21,8 +23,9 @@ import { deleteMachineServiceRecord,
   setFormActiveStep,
   getMachineServiceRecordCheckItems,
   updateMachineServiceRecord,
-  createMachineServiceRecordVersion} from '../../../redux/slices/products/machineServiceRecord';
-import { setCardActiveIndex, setIsExpanded } from '../../../redux/slices/customer/contact';
+  createMachineServiceRecordVersion,
+  setCompleteDialog} from '../../../redux/slices/products/machineServiceRecord';
+import { getActiveSPContacts, setCardActiveIndex, setIsExpanded } from '../../../redux/slices/customer/contact';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import { FORMLABELS } from '../../../constants/default-constants';
@@ -32,7 +35,7 @@ import ViewFormNoteField from '../../../components/ViewForms/ViewFormNoteField';
 import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
 import { fDate } from '../../../utils/formatTime';
-import ReadableCollapsibleCheckedItemRow from './ReadableCollapsibleCheckedItemRow';
+import CheckedItemValueRow from './CheckedItemValueRow';
 import HistoryIcon from '../../../components/Icons/HistoryIcon';
 import CurrentIcon from '../../../components/Icons/CurrentIcon';
 import SendEmailDialog from '../../../components/Dialog/SendEmailDialog';
@@ -44,6 +47,9 @@ import DialogServiceRecordAddFile from '../../../components/Dialog/DialogService
 import { DocumentGalleryItem } from '../../../components/gallery/DocumentGalleryItem';
 import ConfirmDialog from '../../../components/confirm-dialog';
 import Lightbox from '../../../components/lightbox/Lightbox';
+import SkeletonLine from '../../../components/skeleton/SkeletonLine';
+import { RHFAutocomplete } from '../../../components/hook-form';
+import DialogServiceRecordComplete from '../../../components/Dialog/DialogServiceRecordComplete';
 
 MachineServiceParamViewForm.propTypes = {
   serviceHistoryView: PropTypes.bool,
@@ -51,9 +57,10 @@ MachineServiceParamViewForm.propTypes = {
 
 function MachineServiceParamViewForm( {serviceHistoryView} ) {
 
-  const { machineServiceRecord, machineServiceRecordCheckItems, isLoading, pdfViewerDialog, sendEmailDialog } = useSelector((state) => state.machineServiceRecord);
+  const { machineServiceRecord, machineServiceRecordCheckItems, isLoadingCheckItems, isLoading, pdfViewerDialog, sendEmailDialog } = useSelector((state) => state.machineServiceRecord);
   const { machine } = useSelector((state) => state.machine)
-
+  const { activeContacts, activeSpContacts } = useSelector((state) => state.contact);
+  
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
@@ -63,14 +70,20 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
     if(machineId && id ){
       dispatch(setAddFileDialog(false));
       dispatch(getMachineServiceRecord(machineId, id));
-      dispatch(getMachineServiceRecordCheckItems(machineId, id));
     }
-    dispatch(setPDFViewerDialog(false))
-    dispatch(setSendEmailDialog(false))
+    dispatch(setPDFViewerDialog(false));
+    dispatch(setSendEmailDialog(false));
+    dispatch(getActiveSPContacts());
     return ()=>{
       dispatch(resetMachineServiceRecord());
     }
-  },[ dispatch, machineId, id ])
+  },[ dispatch, machineId, id])
+
+  useEffect(()=>{
+    if(machineServiceRecord?.serviceId){
+      dispatch(getMachineServiceRecordCheckItems(machineId, machineServiceRecord?.serviceId));
+    }
+  },[dispatch, machineId, machineServiceRecord])
 
   const onDelete = async () => {
     try {
@@ -88,7 +101,6 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
     if(machineServiceRecord?.status==="SUBMITTED"){
       try {
         const srecord = await dispatch(createMachineServiceRecordVersion(machineId, id));
-        // enqueueSnackbar('Version created successfully');
         if(srecord){
           await navigate(PATH_MACHINE.machines.serviceRecords.edit(machineId, srecord?._id))
         }
@@ -139,12 +151,14 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
       operatorNotes:                        machineServiceRecord?.operatorNotes || '',
       technicianNotes:                      machineServiceRecord?.technicianNotes ||'',
       isActive:                             machineServiceRecord?.isActive,
+      status:                               machineServiceRecord?.status,
       createdAt:                            machineServiceRecord?.createdAt || '',
       createdByFullName:                    machineServiceRecord?.createdBy?.name || '',
       createdIP:                            machineServiceRecord?.createdIP || '',
       updatedAt:                            machineServiceRecord?.updatedAt || '',
       updatedByFullName:                    machineServiceRecord?.updatedBy?.name || '',
       updatedIP:                            machineServiceRecord?.updatedIP || '',
+
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [ machineServiceRecord]
@@ -281,42 +295,22 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
         }
       });
   };
-
-  const { 
-    reset, 
-    handleSubmit, 
-    formState: { isSubmitting } 
-  } = useForm(); // or any other hook providing these methods
-
-
-  const [completeConfirm, setCompleteConfirm] = useState(false);
   
   const handleCompleteConfirm = () => {
-    setCompleteConfirm(!completeConfirm);
-  }
-
-  const onSubmitComplete = async() => {
-    try {
-      await dispatch(updateMachineServiceRecord(machineId, id, {status:recordStatus?.value}));
-      handleCompleteConfirm();
-      enqueueSnackbar('Service Record Completed Successfully!');
-    } catch (err) {
-      console.log(err);
-      enqueueSnackbar('Service Record Completion failed!', { variant: `error` });
-    }
+    dispatch(setCompleteDialog(true))
   }
 
   return (
-    <Container maxWidth={false} >
-          <MachineTabContainer currentTabValue='serviceRecords' />
+    <Container maxWidth={false}>
+      <MachineTabContainer currentTabValue='serviceRecords' />
     <Card sx={{ p: 2 }}>
       <Grid>
         <ViewFormEditDeleteButtons isLoading={isLoading} isActive={defaultValues.isActive}  
           disableEditButton={machine?.status?.slug==='transferred'}
           disableDeleteButton={machine?.status?.slug==='transferred'}
           skeletonIcon={ isLoading && !machineServiceRecord?._id }
-          handleEdit={!machineServiceRecord?.isHistory && machineServiceRecord?._id && handleEdit} 
-          onDelete={!machineServiceRecord?.isHistory && machineServiceRecord?._id && onDelete} 
+          handleEdit={(!machineServiceRecord?.isHistory || machineServiceRecord?.status==="DRAFT") && machineServiceRecord?._id && handleEdit} 
+          onDelete={(!machineServiceRecord?.isHistory || machineServiceRecord?.status==="DRAFT") && machineServiceRecord?._id && onDelete} 
           backLink={handleBackLink}
           handleSendPDFEmail={!machineServiceRecord?.isHistory && machineServiceRecord?._id && handleSendEmail}
           handleViewPDF={!machineServiceRecord?.isHistory && machineServiceRecord?._id && handlePDFViewer}
@@ -327,9 +321,10 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
         <Grid container>
           <FormLabel content={FORMLABELS.KEYDETAILS} />
           
-          <ViewFormField isLoading={isLoading} variant='h4' sm={3} heading="Service Date" param={fDate(defaultValues.serviceDate)} />
+          <ViewFormField isLoading={isLoading} variant='h4' sm={2} heading="Service Date" param={fDate(defaultValues.serviceDate)} />
           <ViewFormField isLoading={isLoading} variant='h4' sm={6} heading="Service Record Configuration" param={`${defaultValues.serviceRecordConfig} ${defaultValues.serviceRecordConfigRecordType ? '-' : ''} ${defaultValues.serviceRecordConfigRecordType ? defaultValues.serviceRecordConfigRecordType : ''}`} />
-          <ViewFormField isLoading={isLoading} variant='h4' sm={3} heading="Version No" node={
+          <ViewFormField isLoading={isLoading} variant='h4' sm={2} heading="Status" param={defaultValues.status} />
+          <ViewFormField isLoading={isLoading} variant='h4' sm={2} heading="Version No" node={
             <>{defaultValues?.versionNo}{machineServiceRecord?.isHistory && <CurrentIcon callFunction={handleCurrentServiceRecord} />}
               {!machineServiceRecord?.isHistory && (machineServiceRecord?.currentVersion?.versionNo || defaultValues?.versionNo) > 1 &&  machineServiceRecord?.serviceId && <HistoryIcon callFunction={handleServiceRecordHistory} /> }
             </>  
@@ -340,15 +335,18 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
           <ViewFormNoteField sm={12} heading="Technician Notes" param={defaultValues.technicianNotes} />
           <FormLabel content={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />
           {defaultValues.textBeforeCheckItems && <ViewFormNoteField sm={12}  param={defaultValues.textBeforeCheckItems} />}
-          {machineServiceRecordCheckItems?.checkItemLists?.length > 0 && 
+          {!isLoadingCheckItems? 
             <Grid item md={12} sx={{  overflowWrap: 'break-word' }}>
               <Grid item md={12} sx={{display:'flex', flexDirection:'column'}}>
-                {machineServiceRecordCheckItems?.checkItemLists?.length > 0 ? 
-                (machineServiceRecordCheckItems?.checkItemLists.map((row, index) =>
-                        <ReadableCollapsibleCheckedItemRow machineId serviceId value={row} index={index} />
-                  )) : <ViewFormField isLoading={isLoading} /> }
+                {machineServiceRecordCheckItems?.checkItemLists.map((row, index) =>
+                  <CheckedItemValueRow machineId serviceId value={row} index={index} />
+                )}
               </Grid>
             </Grid>
+            :
+            <Stack my={1} py={2} spacing={2} sx={{width:'100%', borderRadius:'10px', border:(theme)=> `1px solid ${theme.palette.grey[400]}`}}>
+              {Array.from({ length: 8 }).map((_, index) => (<SkeletonLine key={index} />))}
+            </Stack>
           }
           
           {defaultValues.textAfterCheckItems && <ViewFormNoteField sm={12}  param={defaultValues.textAfterCheckItems} />}
@@ -358,7 +356,6 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
           {machineServiceRecord?.serviceRecordConfig?.enableSuggestedSpares && <ViewFormNoteField sm={12} heading="Suggested Spares" param={defaultValues.suggestedSpares} />}
           <ViewFormNoteField sm={12} heading="Internal Note" param={defaultValues.internalNote} />
           <ViewFormField isLoading={isLoading} sm={12} heading="Operators" chipDialogArrayParam={operators} />
-          {/* <ViewFormField isLoading={isLoading} sm={12} heading="Operators" arrayParam={defaultValues?.operators?.map((operator) => ({ name: `${operator?.firstName || ''} ${operator?.lastName || ''}`}))} /> */}
           <ViewFormNoteField sm={12} heading="Operator Notes" param={defaultValues.operatorNotes} />
           <FormLabel content='Images' />
           <Box
@@ -392,13 +389,15 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
       {pdfViewerDialog && <PDFViewerDialog machineServiceRecord={machineServiceRecord} />}
       {sendEmailDialog && <SendEmailDialog machineServiceRecord={machineServiceRecord} fileName={fileName}/>}
       <DialogServiceRecordAddFile />
-      <ConfirmDialog open={completeConfirm} onClose={handleCompleteConfirm}
+      <DialogServiceRecordComplete recordStatus={recordStatus}/>
+      {/* <ConfirmDialog open={completeConfirm} onClose={handleCompleteConfirm}
         title={`Are you sure you want to ${recordStatus?.label}?`} 
-        content="Email will be sent to your reporting contact?" 
+        content={
+          } 
         action={
-          <LoadingButton loading={isSubmitting} variant='contained' onClick={handleSubmit(onSubmitComplete)}>{recordStatus?.label}</LoadingButton>
+          <LoadingButton loading={isSubmitting} variant='contained' onClick={handleSubmit(onSubmit)}>{recordStatus?.label}</LoadingButton>
         }
-      />
+      /> */}
     </Card>
     <Lightbox
           index={selectedImage}

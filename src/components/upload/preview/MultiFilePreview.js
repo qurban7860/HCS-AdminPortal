@@ -116,6 +116,7 @@ function MultiFilePreview({
                       },
                       width:'100%',
                       height:150,
+                      borderRadius:'10px'
                     }}
                 >
                   <CardMedia onClick={()=> FORMAT_IMG_VISIBBLE.some(format => fileType?.match(format?.toLowerCase())) && handleOpenLightbox(index)}>

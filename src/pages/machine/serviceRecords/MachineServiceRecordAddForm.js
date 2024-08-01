@@ -45,7 +45,7 @@ function MachineServiceRecordAddForm() {
 
   const { machine } = useSelector((state) => state.machine)
   const { activeSecurityUsers, securityUser } = useSelector((state) => state.user);
-  const { formActiveStep, machineServiceRecord } = useSelector((state) => state.machineServiceRecord);
+  const { formActiveStep, machineServiceRecord, isLoading } = useSelector((state) => state.machineServiceRecord);
 
   const [ securityUsers, setSecurityUsers ] = useState([]);
   const [ isPublish, setIsPublish ] = useState(false);
@@ -128,10 +128,10 @@ function MachineServiceRecordAddForm() {
               <CardHeader 
                 title={machineServiceRecord?.serviceRecordUid && `Service ID : ${machineServiceRecord?.serviceRecordUid || ''}  (${machineServiceRecord?.status || ''})`}
                 action={
-                  <Grid item display='flex' direction='row' columnGap={1} mr={1}>
-                    <IconTooltip title="Discard" onClick={handleDiscard} color="#FF0000" icon="mdi:archive" />
-                    {/* <LoadingButton size='large' onClick={handleDiscard} color='error' startIcon={<Iconify icon="mdi:archive" />} variant='outlined'>Discard</LoadingButton> */}
-                  </Grid>
+                  !isLoading &&
+                    <Grid item display='flex' direction='row' columnGap={1} mr={1}>
+                      <IconTooltip title="Discard" onClick={handleDiscard} color="#FF0000" icon="mdi:archive" />
+                    </Grid>
                 }
               />
               <CardContent>

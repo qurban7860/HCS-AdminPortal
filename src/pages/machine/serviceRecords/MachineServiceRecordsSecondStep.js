@@ -161,7 +161,7 @@ function MachineServiceRecordsSecondStep({serviceRecord, handleDraftRequest, han
               </Stack>
             </FormProvider>
             <FormProvider methods={methods}  key='submit' onSubmit={handleSubmit(onSubmit)}>
-              <ServiceRecodStepButtons isDraft={isDraft} isSubmitting={isSubmitting} handleDraft={saveAsDraft} />
+              <ServiceRecodStepButtons isSubmitting={isSubmitting} />
             </FormProvider>
       </Stack>
 )}

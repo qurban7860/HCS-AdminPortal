@@ -15,6 +15,7 @@ import { addMachineServiceRecord, deleteMachineServiceRecord, setFormActiveStep,
 import { resetServiceRecordConfig } from '../../../redux/slices/products/serviceRecordConfig';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
 import ServiceRecodStepButtons from '../../../components/DocumentForms/ServiceRecodStepButtons';
+import SkeletonLine from '../../../components/skeleton/SkeletonLine';
 
 MachineServiceRecordsFirstStep.propTypes = {
     securityUsers: PropTypes.array,
@@ -133,58 +134,70 @@ function MachineServiceRecordsFirstStep( { securityUsers, onChangeConfig, handle
 
 return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-        <Stack px={2} spacing={2}>
-                <Box
-                    rowGap={2}
-                    columnGap={2}
-                    display="grid"
-                    sx={{width:'100%'}}
-                    gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
-                    >
-                    <RHFAutocomplete 
-                        name="docRecordType"
-                        label="Document Type*"
-                        disabled={id}
-                        options={recordTypes}
-                        isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                        getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                        renderOption={(props, option) => (
-                            <li {...props} key={option?._id}>{`${option.name ? option.name : ''}`}</li>
-                        )}
-                    />
+        {isLoading?
+          <Stack px={2} spacing={2}>
+            {
+              Array.from({ length: 8 }).map((_, index) => (
+                <SkeletonLine key={index} />
+              ))
+            }
+          </Stack>
+        :
+        <>
+          <Stack px={2} spacing={2}>
+              <Box
+                  rowGap={2}
+                  columnGap={2}
+                  display="grid"
+                  sx={{width:'100%'}}
+                  gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
+                  >
+                  <RHFAutocomplete 
+                      name="docRecordType"
+                      label="Document Type*"
+                      disabled={id}
+                      options={recordTypes}
+                      isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                      getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                      renderOption={(props, option) => (
+                          <li {...props} key={option?._id}>{`${option.name ? option.name : ''}`}</li>
+                      )}
+                  />
 
-                    <RHFAutocomplete
-                        name="serviceRecordConfiguration"
-                        label="Service Record Configuration*"
-                        disabled={id}
-                        options={activeServiceRecordConfigs}
-                        getOptionLabel={(option) => `${option?.docTitle || ''} ${option?.docTitle ? '-' : '' } ${option.recordType || ''} ${option?.docVersionNo ? '- v' : '' }${option?.docVersionNo || ''}`}
-                        isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                        renderOption={(props, option) => (
-                            <li {...props} key={option?._id}>{`${option?.docTitle || ''} ${option?.docTitle ? '-' : '' } ${option.recordType || ''} ${option?.docVersionNo ? '- v' : '' }${option?.docVersionNo || ''}`}</li>
-                        )}
-                        />
-                </Box>       
-                <Box
-                    rowGap={2}
-                    columnGap={2}
-                    display="grid"
-                    gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
-                    >
-                    <RHFDatePicker inputFormat='dd/MM/yyyy' name="serviceDate" label="Service Date" />
-                    <RHFTextField name="versionNo" label="Version No" disabled/>
-                </Box>
-                <RHFAutocomplete
-                    name="technician"
-                    label="Technician"
-                    options={ securityUsers }
-                    getOptionLabel={(option) => option?.name || ''}
-                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                    renderOption={(props, option) => ( <li {...props} key={option?._id}>{option.name || ''}</li>)}
-                    />
-                <RHFTextField name="technicianNotes" label="Technician Notes" minRows={3} multiline/> 
-        </Stack>
-        <ServiceRecodStepButtons handleDraft={saveAsDraft} isDraft={isDraft} isSubmitting={isSubmitting || isLoading} />
+                  <RHFAutocomplete
+                      name="serviceRecordConfiguration"
+                      label="Service Record Configuration*"
+                      disabled={id}
+                      options={activeServiceRecordConfigs}
+                      getOptionLabel={(option) => `${option?.docTitle || ''} ${option?.docTitle ? '-' : '' } ${option.recordType || ''} ${option?.docVersionNo ? '- v' : '' }${option?.docVersionNo || ''}`}
+                      isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                      renderOption={(props, option) => (
+                          <li {...props} key={option?._id}>{`${option?.docTitle || ''} ${option?.docTitle ? '-' : '' } ${option.recordType || ''} ${option?.docVersionNo ? '- v' : '' }${option?.docVersionNo || ''}`}</li>
+                      )}
+                      />
+                  </Box>       
+                  <Box
+                      rowGap={2}
+                      columnGap={2}
+                      display="grid"
+                      gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
+                      >
+                      <RHFDatePicker inputFormat='dd/MM/yyyy' name="serviceDate" label="Service Date" />
+                      <RHFTextField name="versionNo" label="Version No" disabled/>
+                  </Box>
+                  <RHFAutocomplete
+                      name="technician"
+                      label="Technician"
+                      options={ securityUsers }
+                      getOptionLabel={(option) => option?.name || ''}
+                      isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                      renderOption={(props, option) => ( <li {...props} key={option?._id}>{option.name || ''}</li>)}
+                      />
+                  <RHFTextField name="technicianNotes" label="Technician Notes" minRows={3} multiline/> 
+          </Stack>
+          <ServiceRecodStepButtons handleDraft={saveAsDraft} isDraft={isDraft} isSubmitting={isSubmitting} />
+          </>
+        }
     </FormProvider>
 )
 }
