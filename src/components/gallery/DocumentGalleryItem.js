@@ -65,8 +65,9 @@ export function DocumentGalleryItem({ image, isLoading, onOpenLightbox, onOpenFi
                         '&:hover .button-group': {
                             opacity: 1,
                         },
-                        width:size,
-                        height:size
+                        width:'100%',
+                        height:size,
+                        borderRadius:'10px'
                     }}
                 >
                     

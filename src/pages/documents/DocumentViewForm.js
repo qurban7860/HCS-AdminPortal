@@ -324,7 +324,7 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
         <FormLabel content='Documents' />
         <Box
           sx={{mt:2, width:'100%'}}
-          gap={2}
+          gap={1}
           display="grid"
           gridTemplateColumns={{
             xs: 'repeat(1, 1fr)',
@@ -342,6 +342,7 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
               onDeleteFile={()=> handleDeleteFile(document._id, document?.documentVersions[0]._id, file._id)}
               toolbar
               customerArchived={customer?.isArchived}
+              size={150}
             />
           ))}
 

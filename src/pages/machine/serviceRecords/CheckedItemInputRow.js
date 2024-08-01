@@ -7,9 +7,8 @@ import download from 'downloadjs';
 import { useNavigate, useParams } from 'react-router';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Table, TableBody, Grid, TextField, Checkbox, Typography, Stack, Divider, Box, Card, CardContent, CardHeader, Autocomplete, FormControlLabel } from '@mui/material';
+import { Table, TableBody, Grid, TextField, Checkbox, Typography, Stack, Divider, Box, Card, CardContent, CardHeader, Autocomplete, FormControlLabel, Chip } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-import CommentsInput from './CommentsInput';
 import ViewFormServiceRecordVersionAudit from '../../../components/ViewForms/ViewFormServiceRecordVersionAudit';
 import { StyledTableRow } from '../../../theme/styles/default-styles';
 import { addCheckItemValues, deleteCheckItemFile, downloadCheckItemFile, setAddFileDialog } from '../../../redux/slices/products/machineServiceRecord';
@@ -23,6 +22,10 @@ import { fDate, stringToDate } from '../../../utils/formatTime';
 import { validateImageFileType } from '../../documents/util/Util';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
 import { Upload } from '../../../components/upload';
+import CopyIcon from '../../../components/Icons/CopyIcon';
+import Iconify from '../../../components/iconify';
+import HistoryDropDownUpIcons from '../../../components/Icons/HistoryDropDownUpIcons';
+import CheckedItemValueHistory from './CheckedItemValueHistory';
 
 const CheckedItemInputRow = memo(({ index, row }) => {
 
@@ -80,6 +83,7 @@ const CheckedItemInputRow = memo(({ index, row }) => {
           comment: item?.recordValue?.comments,
           value:getRecordValue(item),
           images: item?.recordValue?.files.map(file => ({
+            uploaded:true,
             key: file?._id,
             _id: file?._id,
             name:`${file?.name}.${file?.extension}`,
@@ -115,7 +119,7 @@ const CheckedItemInputRow = memo(({ index, row }) => {
     } = methods;
 
     const [showMessages, setShowMessages] = useState({});
-    
+
     useEffect(() => {
       if (machineServiceRecord) {
         reset(defaultValues);
@@ -131,9 +135,9 @@ const CheckedItemInputRow = memo(({ index, row }) => {
         checkItemListId:row?._id,
         machineCheckItem:checkItem._id,
         comments:checkItem.comment,
-        images:checkItem.images.filter(image => !image._id)
+        images:checkItem.images.filter(image => !image.uploaded)
       }
-
+      
       if (checkItem.value instanceof Date) {
         params.checkItemValue = fDate(checkItem.value, 'dd/MM/yyyy');
       } else if(typeof checkItem.value==='object'){
@@ -143,7 +147,15 @@ const CheckedItemInputRow = memo(({ index, row }) => {
       }
 
       try {
-        const result = await dispatch(addCheckItemValues(machine?._id,params, childIndex));
+        const serviceRecordValue = await dispatch(addCheckItemValues(machine?._id,params, childIndex));
+        const updatedCheckItems = [...getValues('checkItems')];
+        updatedCheckItems[childIndex].images = updatedCheckItems[childIndex].images.map(image => ({
+          uploaded: true,
+          name:image?.name,
+          type:image?.type,
+          ...image
+        }));
+        reset({ ...getValues(), checkItems: updatedCheckItems });
         const combinedIndex = `${index}-${childIndex}`;
         setShowMessages(prev => ({ ...prev, [combinedIndex]: true }));
         setTimeout(() => {
@@ -155,11 +167,16 @@ const CheckedItemInputRow = memo(({ index, row }) => {
       }
     };
 
-    const [files, setFiles] = useState([]);
+    // const [files, setFiles] = useState([]);
+
+    // useEffect(() => {
+    //   const newFiles = defaultValues.checkItems.flatMap(item => item.images);
+    //   setFiles(newFiles);
+    // }, [defaultValues])
 
     const handleDropMultiFile = useCallback(
       (acceptedFiles, childIndex) => {
-        const existingFiles = files[childIndex] || [];
+        const existingFiles = getValues(`checkItems[${childIndex}].images`) || [];
         const newFiles = acceptedFiles.map(file =>
           Object.assign(file, {
             preview: URL.createObjectURL(file),
@@ -168,13 +185,9 @@ const CheckedItemInputRow = memo(({ index, row }) => {
           })
         );
         const updatedFiles = [...existingFiles, ...newFiles];
-        setFiles((prevFiles) => ({
-          ...prevFiles,
-          [childIndex]: updatedFiles,
-        }));
         setValue(`checkItems[${childIndex}].images`, updatedFiles, { shouldValidate: true });
       },
-      [files, setValue]
+      [setValue, getValues]
     );
 
     // const handleDropMultiFile = useCallback(
@@ -238,6 +251,16 @@ const CheckedItemInputRow = memo(({ index, row }) => {
       }
     };
 
+    const [activeIndex, setActiveIndex] = useState(null);
+    
+    const handleAccordianClick = (accordianIndex) => {
+      if (accordianIndex === activeIndex) {
+        setActiveIndex(null);
+      } else {
+        setActiveIndex(accordianIndex);
+      }
+    };
+
   return(<Stack spacing={2} px={2}>
         <FormLabel content={`${index+1}). ${typeof row?.ListTitle === 'string' && row?.ListTitle || ''} ( Items: ${`${row?.checkItems?.length} `})`} />          
         <FormProvider key={`form-${index}`} methods={methods} >
@@ -248,12 +271,7 @@ const CheckedItemInputRow = memo(({ index, row }) => {
                       <b>{`${index+1}.${childIndex+1}. `}</b>{`${childRow.name}`}
                   </Typography>
                       {childRow?.inputType === 'Boolean' &&
-                        <FormControlLabel 
-                          required={childRow?.isRequired} 
-                          name={`checkItems[${childIndex}].value`} 
-                          control={<Checkbox />} 
-                          label='Check'
-                        />
+                        <RHFCheckbox label={`Check ${childRow?.isRequired && '*'}`} name={`checkItems[${childIndex}].value`}  /> 
                       }
                       {(childRow?.inputType === 'Short Text' || childRow?.inputType === 'Long Text') &&
                         <RHFTextField 
@@ -284,17 +302,16 @@ const CheckedItemInputRow = memo(({ index, row }) => {
                         />
                       }
                       {childRow?.inputType==="Status" &&
-                          <Autocomplete 
-                            size="small"
-                            label={`${childRow?.inputType} ${childRow?.isRequired && '*'}`}
-                            name={`checkItems[${childIndex}].value`}
-                            onChange={(option, newValue)=> setValue(`checkItems[${childIndex}].value`, newValue)}
-                            options={statusTypes}
-                            getOptionLabel={(option) => option.name}
-                            isOptionEqualToValue={(option, value) => option.name === value.name}
-                            renderOption={(props, option) => ( <li {...props} key={`status-${index}-${childIndex}-${option.name}`}>{`${option?.name || ''}`}</li> )}
-                            renderInput={(params) => ( <TextField  {...params}  label="Status" placeholder="Status"  /> )}
-                          />
+                        <RHFAutocomplete 
+                          size="small"
+                          label={`${childRow?.inputType} ${childRow?.isRequired && '*'}`}
+                          name={`checkItems[${childIndex}].value`}
+                          options={statusTypes}
+                          getOptionLabel={(option) => option.name}
+                          isOptionEqualToValue={(option, value) => option.name === value.name}
+                          renderOption={(props, option) => ( <li {...props} key={`status-${index}-${childIndex}-${option.name}`}>{`${option?.name || ''}`}</li> )}
+                          renderInput={(params) => ( <TextField  {...params}  label="Status" placeholder="Status"  /> )}
+                        />
                       }
 
                       <RHFTextField 
@@ -313,11 +330,16 @@ const CheckedItemInputRow = memo(({ index, row }) => {
                         dropZone={false}
                         name={`checkItems[${childIndex}].images`}
                         imagesOnly
-                        files={files[childIndex] || []}
+                        // files={files[childIndex] || []}
                         onDrop={(accepted)=> handleDropMultiFile(accepted, childIndex)}
                         onRemove={(inputFile) => handleRemoveFile(inputFile, childIndex)}
                         onLoadImage={(imageId, imageIndex)=> handleLoadImage(imageId, imageIndex, childIndex)}
                       />
+
+                      {childRow?.historicalData.length > 0 && (
+                        <CheckedItemValueHistory historicalData={childRow.historicalData} inputType={childRow.inputType} />
+                      )}
+
                       
                   <Grid container sx={{m:1}} display='flex' direction='row' justifyContent='flex-end' gap={2}>
                       {showMessages[`${index}-${childIndex}`] && <Typography variant='body2' color='green' sx={{mt:1}}>Saved Successfully!</Typography>}

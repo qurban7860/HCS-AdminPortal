@@ -13,6 +13,7 @@ import { DocumentGalleryItem } from '../../../components/gallery/DocumentGallery
 import { deleteCheckItemFile, deleteRecordFile, downloadCheckItemFile, downloadRecordFile, getMachineServiceRecordCheckItems, setAddFileDialog } from '../../../redux/slices/products/machineServiceRecord';
 import { ThumbnailDocButton } from '../../../components/Thumbnails';
 import Lightbox from '../../../components/lightbox/Lightbox';
+import CheckedItemValueHistory from './CheckedItemValueHistory';
 
 const StatusAndComment = ({index, childIndex, childRow, machineId, serviceId}) => {
 
@@ -160,28 +161,30 @@ const StatusAndComment = ({index, childIndex, childRow, machineId, serviceId}) =
                 sm: 'repeat(3, 1fr)',
                 md: 'repeat(5, 1fr)',
                 lg: 'repeat(6, 1fr)',
-                xl: 'repeat(12, 1fr)',
+                xl: 'repeat(8, 1fr)',
               }}
             >
 
-          {slides?.map((file, _index) => (
-            <DocumentGalleryItem isLoading={!slides} key={file?.id} image={file} 
-              onOpenLightbox={()=> handleOpenLightbox(_index)}
-              onDownloadFile={()=> handleDownloadCheckItemFile(file._id, file?.name, file?.extension)}
-              onDeleteFile={()=> handleDeleteCheckItemFile(file._id)}
-              toolbar
-            />
-          ))}
-
-          {/* {childRow && <ThumbnailDocButton size={70} onClick={handleAddFileDialog}/>} */}
-        </Box>
+            {slides?.map((file, _index) => (
+              <DocumentGalleryItem isLoading={!slides} key={file?.id} image={file} 
+                onOpenLightbox={()=> handleOpenLightbox(_index)}
+                onDownloadFile={()=> handleDownloadCheckItemFile(file._id, file?.name, file?.extension)}
+                onDeleteFile={()=> handleDeleteCheckItemFile(file._id)}
+                toolbar
+              />
+            ))}
+          </Box>
           <ViewFormServiceRecordVersionAudit value={childRow?.recordValue}/>
-          </Grid>
+        </Grid>
         }
         {childRow?.historicalData && childRow?.historicalData?.length > 0 &&
-            <HistoryDropDownUpIcons showTitle="Show History" hideTitle="Hide History" activeIndex={`${activeIndex || ''}`} indexValue={`${index}${childIndex}`} onClick={handleAccordianClick}/>
+          <HistoryDropDownUpIcons showTitle="Show History" hideTitle="Hide History" activeIndex={`${activeIndex || ''}`} indexValue={`${index}${childIndex}`} onClick={handleAccordianClick}/>
         }
       </Grid>
+
+      {childRow?.historicalData?.length > 0 && (
+        <CheckedItemValueHistory historicalData={childRow?.historicalData} inputType={childRow?.inputType} />
+      )}
 
       {activeIndex === `${index}${childIndex}` && childRow?.historicalData && childRow?.historicalData?.length > 0 && 
         <Grid item md={12} sx={{ backgroundColor: '#f3f4f594', p:1, borderRadius:'7px', border: '1px solid #e1e1e1'}} >

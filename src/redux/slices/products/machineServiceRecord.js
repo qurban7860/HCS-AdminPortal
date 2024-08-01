@@ -439,7 +439,7 @@ export function addMachineServiceRecord(machineId, params) {
 
 // --------------------------------------------------------------------------
 
-export function updateMachineServiceRecord(machineId,id, params) {
+export function updateMachineServiceRecord(machineId, id, params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -464,7 +464,9 @@ export function updateMachineServiceRecord(machineId,id, params) {
         checkItemRecordValues:      params?.checkItemRecordValues,
         status:                     params?.status || 'DRAFT',
         update:                     params?.update,
-        isActive:                   params?.isActive
+        isActive:                   params?.isActive,
+        serviceId:                  params?.serviceId,
+        emails:                  params?.emails,
       }
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}`, data );
       await dispatch(slice.actions.updateMachineServiceRecordSuccess());
@@ -597,7 +599,7 @@ export function addCheckItemValues(machineId, data, childIndex) {
 
       if (Array.isArray(data?.images) &&  data?.images?.length > 0) {
         data?.images?.forEach((image, index) => {
-          if (image) {
+          if (image && !image?._id) {
             formData.append('images', image );
           }
         });
@@ -605,6 +607,7 @@ export function addCheckItemValues(machineId, data, childIndex) {
 
       const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecordValues/`,formData);
       dispatch(slice.actions.setSubmittingCheckItemIndex(-1));
+      return response?.data;
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
