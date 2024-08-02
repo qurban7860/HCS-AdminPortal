@@ -310,7 +310,7 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
           disableDeleteButton={machine?.status?.slug==='transferred'}
           skeletonIcon={ isLoading && !machineServiceRecord?._id }
           handleEdit={!machineServiceRecord?.isHistory && machineServiceRecord?._id && handleEdit} 
-          onDelete={!machineServiceRecord?.isHistory && machineServiceRecord?._id && onDelete} 
+          onDelete={!machineServiceRecord?.isHistory && machineServiceRecord?.status==="DRAFT" && machineServiceRecord?._id && onDelete} 
           backLink={handleBackLink}
           handleSendPDFEmail={!machineServiceRecord?.isHistory && machineServiceRecord?._id && handleSendEmail}
           handleViewPDF={!machineServiceRecord?.isHistory && machineServiceRecord?._id && handlePDFViewer}

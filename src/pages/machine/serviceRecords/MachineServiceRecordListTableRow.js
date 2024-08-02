@@ -41,7 +41,7 @@ export default function MachineServiceRecordListTableRow({
   return (
       <StyledTableRow hover selected={selected}>
         <TableCell align="left">{fDate(serviceDate)}</TableCell>
-        <TableCell align="left">{serviceRecordUid}</TableCell>
+        <LinkTableCell align="left" onClick={onViewRow} param={serviceRecordUid} />
         <TableCell align="left">{status || ''}</TableCell>
         <LinkTableCell align="left" onClick={onViewRow} param={`${serviceRecordConfig?.docTitle ? serviceRecordConfig?.docTitle	: ''	} ${serviceRecordConfig?.recordType ? ' - ' : ''} ${serviceRecordConfig?.recordType ? serviceRecordConfig?.recordType : ''}`} />
         <TableCell align="left" sx={{display: 'flex', alignItems:'center'}} >{versionNo} 
