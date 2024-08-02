@@ -326,7 +326,7 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
           <ViewFormField isLoading={isLoading} variant='h4' sm={2} heading="Status" param={defaultValues.status} />
           <ViewFormField isLoading={isLoading} variant='h4' sm={2} heading="Version No" node={
             <>{defaultValues?.versionNo}{machineServiceRecord?.isHistory && <CurrentIcon callFunction={handleCurrentServiceRecord} />}
-              {!machineServiceRecord?.isHistory && (machineServiceRecord?.currentVersion?.versionNo || defaultValues?.versionNo) > 1 &&  machineServiceRecord?.serviceId && <HistoryIcon callFunction={handleServiceRecordHistory} /> }
+              {!machineServiceRecord?.isHistory && machineServiceRecord?.currentVersion?.versionNo > 1 &&  machineServiceRecord?.serviceId && <HistoryIcon callFunction={handleServiceRecordHistory} /> }
             </>  
           } />
           

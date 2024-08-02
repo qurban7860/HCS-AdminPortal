@@ -17,19 +17,9 @@ import CheckedItemValueHistory from './CheckedItemValueHistory';
 
 const StatusAndComment = ({index, childIndex, childRow, machineId, serviceId}) => {
 
-    const [activeIndex, setActiveIndex] = useState(null);
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
-  
-    const handleAccordianClick = (accordianIndex) => {
-      if (accordianIndex === activeIndex) {
-        setActiveIndex(null);
-      } else {
-        setActiveIndex(accordianIndex);
-      }
-    };
 
-    // const { machineServiceRecord, isLoading, pdfViewerDialog, sendEmailDialog } = useSelector((state) => state.machineServiceRecord);
     const regEx = /^[^2]*/;
     const [selectedImage, setSelectedImage] = useState(-1);
     const [slides, setSlides] = useState([]);
@@ -177,56 +167,14 @@ const StatusAndComment = ({index, childIndex, childRow, machineId, serviceId}) =
           <ViewFormServiceRecordVersionAudit value={childRow?.recordValue}/>
         </Grid>
         }
-        {childRow?.historicalData && childRow?.historicalData?.length > 0 &&
+        {/* {childRow?.historicalData && childRow?.historicalData?.length > 0 &&
           <HistoryDropDownUpIcons showTitle="Show History" hideTitle="Hide History" activeIndex={`${activeIndex || ''}`} indexValue={`${index}${childIndex}`} onClick={handleAccordianClick}/>
-        }
+        } */}
       </Grid>
 
       {childRow?.historicalData?.length > 0 && (
         <CheckedItemValueHistory historicalData={childRow?.historicalData} inputType={childRow?.inputType} />
       )}
-
-      {activeIndex === `${index}${childIndex}` && childRow?.historicalData && childRow?.historicalData?.length > 0 && 
-        <Grid item md={12} sx={{ backgroundColor: '#f3f4f594', p:1, borderRadius:'7px', border: '1px solid #e1e1e1'}} >
-          {childRow?.historicalData?.map((ItemHistory, ItemIndex ) => (<>
-              {ItemIndex !== 0 && <Divider  sx={{ borderStyle: 'solid', mx:-1 }} />}
-            {ItemHistory?.checkItemValue && <Grid sx={{ mt:0.5,
-              alignItems: 'center',
-              whiteSpace: 'pre-line',
-              wordBreak: 'break-word' }}>
-              <Typography variant="body2" sx={{mr:1, }}>
-                  <b>Value: </b>
-                  {childRow?.inputType?.toLowerCase() === 'boolean' && ItemHistory?.checkItemValue && <Iconify
-                    sx={{mb:-0.5}}
-                    color={ItemHistory?.checkItemValue === true || ItemHistory?.checkItemValue  === 'true' ? '#008000' : '#FF0000'} 
-                    icon={ItemHistory?.checkItemValue  === true || ItemHistory?.checkItemValue  === 'true' ? 'ph:check-square-bold' : 'charm:square-cross' } />}
-
-                  {childRow?.inputType?.toLowerCase() === 'date' ? fDate(ItemHistory?.checkItemValue) : 
-                    <> 
-                      {childRow?.inputType?.toLowerCase() === 'status' ? (ItemHistory?.checkItemValue && 
-                        <Chip size="small" label={ItemHistory?.checkItemValue || ''} /> || '') : 
-                        (childRow?.inputType?.toLowerCase() === 'number' || 
-                          childRow?.inputType?.toLowerCase() === 'long text' || 
-                          childRow?.inputType?.toLowerCase() === 'short text') && 
-                          ItemHistory?.checkItemValue  
-                      }
-                      {ItemHistory?.checkItemValue?.trim() && childRow?.inputType?.toLowerCase() !== 'boolean' && <CopyIcon value={ItemHistory?.comments} />}
-                    </> 
-                }
-              </Typography>
-            </Grid>}
-           
-            <Grid sx={{  
-              alignItems: 'center',
-              whiteSpace: 'pre-line',
-              wordBreak: 'break-word' }}>
-              {ItemHistory?.comments && <Typography variant="body2" sx={{mr:1}} ><b>Comment: </b>{` ${ItemHistory?.comments || ''}`}
-              {ItemHistory?.comments?.trim() && <CopyIcon value={childRow?.comments} /> }
-              </Typography>}
-            </Grid>
-            <ViewFormServiceRecordVersionAudit value={ItemHistory}/>
-          </>))}
-        </Grid>}
       </Grid>
       <Lightbox
           index={selectedImage}

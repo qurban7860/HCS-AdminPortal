@@ -36,7 +36,7 @@ export default function MachineServiceRecordListTableRow({
   const navigate = useNavigate();
   const { machineId } = useParams();
   const { serviceRecordConfig, serviceRecordUid, status, versionNo, serviceDate, serviceId, isActive, currentVersion, createdAt, createdBy } = row;
-  const handleServiceRecordHistory = () => navigate(PATH_MACHINE.machines.serviceRecords.history.root(machineId, serviceId ))
+  const handleServiceRecordHistory = () => navigate(PATH_MACHINE.machines.serviceRecords.history.root(machineId, serviceId));
 
   return (
       <StyledTableRow hover selected={selected}>
