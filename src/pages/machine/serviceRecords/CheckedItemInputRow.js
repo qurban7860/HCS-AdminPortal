@@ -134,6 +134,7 @@ const CheckedItemInputRow = memo(({ index, row }) => {
       const params = {
         serviceRecord:machineServiceRecord?._id,
         serviceId:machineServiceRecord?.serviceId,
+        versionNo:machineServiceRecord?.versionNo,
         checkItemListId:row?._id,
         machineCheckItem:checkItem._id,
         comments:checkItem.comment,
@@ -152,6 +153,7 @@ const CheckedItemInputRow = memo(({ index, row }) => {
       try {
         const serviceRecordValue = await dispatch(addCheckItemValues(machine?._id,params, childIndex));
         const updatedCheckItems = [...getValues('checkItems')];
+        updatedCheckItems[childIndex].recordValue = serviceRecordValue;
         updatedCheckItems[childIndex].images = updatedCheckItems[childIndex].images.map(image => ({
           uploaded: true,
           name:image?.name,

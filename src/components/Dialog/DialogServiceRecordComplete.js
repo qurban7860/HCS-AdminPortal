@@ -10,6 +10,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useSnackbar } from 'notistack';
 
 import {  
+  getMachineServiceRecord,
   sendEmail,
   setCompleteDialog,
   updateMachineServiceRecord,
@@ -83,9 +84,10 @@ function DialogServiceRecordComplete({recordStatus}) {
       }
       
       await dispatch(updateMachineServiceRecord(machineServiceRecord?.machine?._id, machineServiceRecord?._id, params))
-      await enqueueSnackbar("Email Sent Successfully");  
+      await enqueueSnackbar("Status updated successfully!");  
       await handleCloseDialog();
       await reset();
+      await dispatch(getMachineServiceRecord(machineServiceRecord?.machine?._id, machineServiceRecord?._id));
     } catch (err) {
       enqueueSnackbar("Failed Email Send", { variant: 'error' });
       console.error(err.message);
@@ -100,7 +102,7 @@ function DialogServiceRecordComplete({recordStatus}) {
       </DialogTitle>
       <Divider orientation="horizontal" flexItem />
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)} mb={5}>
-          {!isLoading?
+          {/* {!isLoading?
             <DialogContent dividers sx={{pt:3}}>
               <RHFAutocomplete 
                 multiple
@@ -115,7 +117,7 @@ function DialogServiceRecordComplete({recordStatus}) {
               />
             </DialogContent>
           :<SkeletonLine />
-          }
+          } */}
           <DialogActions>
             <Button variant='outlined' onClick={handleCloseDialog}>Cancel</Button>
             <LoadingButton type='submit' disabled={isLoading} loading={isSubmitting} variant='contained'>{recordStatus?.label}</LoadingButton>

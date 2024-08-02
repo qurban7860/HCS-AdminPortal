@@ -5,7 +5,7 @@ import { format, isValid, getTime, parseISO, formatDistanceToNow, differenceInDa
 export const stringToDate = (dateString, formatString = 'dd/MM/yyyy') => {
   try {
     const parsedDate = parse(dateString, formatString, new Date());
-    return isValid(parsedDate) ? parsedDate : '';
+    return isValid(parsedDate) ? parsedDate : null;
   } catch (error) {
     console.error('Invalid date format', error);
     return null;
