@@ -618,8 +618,15 @@ export function addCheckItemValues(machineId, data, childIndex) {
         });
       }
 
-      const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecordValues/`,formData);
-      dispatch(slice.actions.resetSubmittingCheckItemIndex());
+      let response;
+      
+      if(data?.recordValue?._id){
+        response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecordValues/${data?.recordValue?._id}`,formData);
+      }else{
+        response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecordValues/`,formData);
+      }
+
+      await dispatch(slice.actions.resetSubmittingCheckItemIndex());
       return response?.data;
     } catch (error) {
       console.error(error);

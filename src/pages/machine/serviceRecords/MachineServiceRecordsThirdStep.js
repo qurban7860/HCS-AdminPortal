@@ -137,11 +137,13 @@ function MachineServiceRecordsThirdStep({handleDraftRequest, handleDiscard, hand
           }
           
           if(id){
+            if(Array.isArray(data?.files) && data?.files?.length > 0){
+              await dispatch(addMachineServiceRecordFiles(machineId, id, data))
+            }
+            
             await dispatch(updateMachineServiceRecord( machineId, id, data, isDraft ));
             await handleDraftRequest(isDraft);
             setIsDraft(false);  
-            if(data?.files)
-              await dispatch(addMachineServiceRecordFiles(machineId, id, data))
             await navigate(PATH_MACHINE.machines.serviceRecords.view(machineId, id))  
           }
 

@@ -82,6 +82,7 @@ const CheckedItemInputRow = memo(({ index, row }) => {
           _id:item._id,
           comment: item?.recordValue?.comments,
           value:getRecordValue(item),
+          recordValue:item?.recordValue,
           images: item?.recordValue?.files.map(file => ({
             uploaded:true,
             key: file?._id,
@@ -136,6 +137,7 @@ const CheckedItemInputRow = memo(({ index, row }) => {
         checkItemListId:row?._id,
         machineCheckItem:checkItem._id,
         comments:checkItem.comment,
+        isNewValue:checkItem.isNewValue,
         images:checkItem.images.filter(image => !image.uploaded)
       }
       
