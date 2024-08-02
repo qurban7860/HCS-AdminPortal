@@ -520,7 +520,7 @@ export function createMachineServiceRecordVersion(machineId, id) {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}/version/`);
-      return response?.data?.serviceRecord;
+      return response?.data;
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -619,6 +619,8 @@ export function addCheckItemValues(machineId, data, childIndex) {
       }
 
       let response;
+
+      console.log("data?.recordValue",data?.recordValue)
       
       if(data?.recordValue?._id){
         response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecordValues/${data?.recordValue?._id}`,formData);

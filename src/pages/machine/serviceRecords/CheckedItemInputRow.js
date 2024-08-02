@@ -137,7 +137,7 @@ const CheckedItemInputRow = memo(({ index, row }) => {
         checkItemListId:row?._id,
         machineCheckItem:checkItem._id,
         comments:checkItem.comment,
-        isNewValue:checkItem.isNewValue,
+        recordValue:checkItem?.recordValue,
         images:checkItem.images.filter(image => !image.uploaded)
       }
       
