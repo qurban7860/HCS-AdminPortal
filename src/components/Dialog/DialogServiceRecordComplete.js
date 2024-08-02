@@ -10,6 +10,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useSnackbar } from 'notistack';
 
 import {  
+  getMachineServiceRecord,
   sendEmail,
   setCompleteDialog,
   updateMachineServiceRecord,
@@ -83,9 +84,10 @@ function DialogServiceRecordComplete({recordStatus}) {
       }
       
       await dispatch(updateMachineServiceRecord(machineServiceRecord?.machine?._id, machineServiceRecord?._id, params))
-      await enqueueSnackbar("Email Sent Successfully");  
+      await enqueueSnackbar("Status updated successfully!");  
       await handleCloseDialog();
       await reset();
+      await dispatch(getMachineServiceRecord(machineServiceRecord?.machine?._id, machineServiceRecord?._id));
     } catch (err) {
       enqueueSnackbar("Failed Email Send", { variant: 'error' });
       console.error(err.message);
