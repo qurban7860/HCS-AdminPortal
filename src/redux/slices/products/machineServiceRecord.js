@@ -50,6 +50,11 @@ const slice = createSlice({
       state.submittingCheckItemIndex = action.payload;
     },
 
+    // SET HISTORICAL FLAG
+    resetSubmittingCheckItemIndex(state){
+      state.submittingCheckItemIndex = -1;
+    },
+
     setResetFlags (state, action){
       state.resetFlags = action.payload;
     },
@@ -219,6 +224,7 @@ export const {
   resetMachineServiceRecords,
   resetMachineServiceRecord,
   resetCheckItemValues,
+  resetSubmittingCheckItemIndex,
   setResponseMessage,
   setFilterBy,
   ChangeRowsPerPage,
@@ -316,7 +322,10 @@ export function getMachineServiceRecords (machineId){
       {
         params: {
           isArchived: false,
-          isHistory: false,
+          $or: [
+            { isHistory: false },
+            { status: 'DRAFT' }
+          ]     
         }
       }
       );
@@ -511,7 +520,7 @@ export function createMachineServiceRecordVersion(machineId, id) {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}/version/`);
-      return response?.data?.serviceRecord;
+      return response?.data;
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -524,6 +533,7 @@ export function downloadRecordFile(machineId, id, fileId) {
   return async (dispatch) => {
     dispatch(slice.actions.setSubmittingCheckItemIndex());
     const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}/files/${fileId}/download/` );
+    dispatch(slice.actions.resetSubmittingCheckItemIndex());    
     return response;
   };
 }
@@ -537,6 +547,7 @@ export function deleteRecordFile(machineId, id, fileId) {
           isArchived: true, 
       });
       dispatch(slice.actions.setResponseMessage(response.data));
+      dispatch(slice.actions.resetSubmittingCheckItemIndex());
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -549,6 +560,7 @@ export function downloadCheckItemFile(machineId, id, fileId) {
   return async (dispatch) => {
     dispatch(slice.actions.setSubmittingCheckItemIndex());
     const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecordValues/files/${fileId}/download/` );
+    dispatch(slice.actions.resetSubmittingCheckItemIndex());
     return response;
   };
 }
@@ -562,6 +574,7 @@ export function deleteCheckItemFile(machineId, id, fileId) {
           isArchived: true, 
       });
       dispatch(slice.actions.setResponseMessage(response.data));
+      dispatch(slice.actions.resetSubmittingCheckItemIndex());
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -605,13 +618,22 @@ export function addCheckItemValues(machineId, data, childIndex) {
         });
       }
 
-      const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecordValues/`,formData);
-      dispatch(slice.actions.setSubmittingCheckItemIndex(-1));
+      let response;
+
+      console.log("data?.recordValue",data?.recordValue)
+      
+      if(data?.recordValue?._id){
+        response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecordValues/${data?.recordValue?._id}`,formData);
+      }else{
+        response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecordValues/`,formData);
+      }
+
+      await dispatch(slice.actions.resetSubmittingCheckItemIndex());
       return response?.data;
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
-      dispatch(slice.actions.setSubmittingCheckItemIndex(-1));
+      dispatch(slice.actions.resetSubmittingCheckItemIndex());
       throw error;
     }
   };

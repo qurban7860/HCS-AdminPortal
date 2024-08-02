@@ -10,6 +10,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useSnackbar } from 'notistack';
 
 import {  
+  getMachineServiceRecord,
   sendEmail,
   setSendEmailDialog,
 } from '../../redux/slices/products/machineServiceRecord';
@@ -68,12 +69,11 @@ function SendEmailDialog({machineServiceRecord, fileName}) {
       data.id = machineServiceRecord?._id;
       data.pdf = file; 
       
-      await dispatch(sendEmail(machineServiceRecord?.machine?._id, data))
-      await handleCloseDialog();
-      await reset();
+      await dispatch(sendEmail(machineServiceRecord?.machine?._id, data));
       enqueueSnackbar("Email Sent Successfully");  
-
-      
+      reset();
+      dispatch(getMachineServiceRecord(machineServiceRecord?.machine?._id, machineServiceRecord?._id))
+      handleCloseDialog();
     } catch (err) {
       enqueueSnackbar("Failed Email Send", { variant: 'error' });
       console.error(err.message);

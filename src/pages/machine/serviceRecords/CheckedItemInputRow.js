@@ -11,7 +11,7 @@ import { Table, TableBody, Grid, TextField, Checkbox, Typography, Stack, Divider
 import { LoadingButton } from '@mui/lab';
 import ViewFormServiceRecordVersionAudit from '../../../components/ViewForms/ViewFormServiceRecordVersionAudit';
 import { StyledTableRow } from '../../../theme/styles/default-styles';
-import { addCheckItemValues, deleteCheckItemFile, downloadCheckItemFile, setAddFileDialog } from '../../../redux/slices/products/machineServiceRecord';
+import { addCheckItemValues, deleteCheckItemFile, downloadCheckItemFile, resetSubmittingCheckItemIndex, setAddFileDialog } from '../../../redux/slices/products/machineServiceRecord';
 import { DocumentGalleryItem } from '../../../components/gallery/DocumentGalleryItem';
 import { ThumbnailDocButton } from '../../../components/Thumbnails';
 import DialogServiceRecordAddFile from '../../../components/Dialog/DialogServiceRecordAddFile';
@@ -82,6 +82,7 @@ const CheckedItemInputRow = memo(({ index, row }) => {
           _id:item._id,
           comment: item?.recordValue?.comments,
           value:getRecordValue(item),
+          recordValue:item?.recordValue,
           images: item?.recordValue?.files.map(file => ({
             uploaded:true,
             key: file?._id,
@@ -124,7 +125,8 @@ const CheckedItemInputRow = memo(({ index, row }) => {
       if (machineServiceRecord) {
         reset(defaultValues);
       }
-    }, [reset, machineServiceRecord, defaultValues]);
+      dispatch(resetSubmittingCheckItemIndex());
+    }, [dispatch, reset, machineServiceRecord, defaultValues]);
     
 
     const onSubmit = async (data, childIndex) => {
@@ -135,6 +137,7 @@ const CheckedItemInputRow = memo(({ index, row }) => {
         checkItemListId:row?._id,
         machineCheckItem:checkItem._id,
         comments:checkItem.comment,
+        recordValue:checkItem?.recordValue,
         images:checkItem.images.filter(image => !image.uploaded)
       }
       
@@ -251,16 +254,6 @@ const CheckedItemInputRow = memo(({ index, row }) => {
       }
     };
 
-    const [activeIndex, setActiveIndex] = useState(null);
-    
-    const handleAccordianClick = (accordianIndex) => {
-      if (accordianIndex === activeIndex) {
-        setActiveIndex(null);
-      } else {
-        setActiveIndex(accordianIndex);
-      }
-    };
-
   return(<Stack spacing={2} px={2}>
         <FormLabel content={`${index+1}). ${typeof row?.ListTitle === 'string' && row?.ListTitle || ''} ( Items: ${`${row?.checkItems?.length} `})`} />          
         <FormProvider key={`form-${index}`} methods={methods} >
@@ -336,7 +329,7 @@ const CheckedItemInputRow = memo(({ index, row }) => {
                         onLoadImage={(imageId, imageIndex)=> handleLoadImage(imageId, imageIndex, childIndex)}
                       />
 
-                      {childRow?.historicalData.length > 0 && (
+                      {childRow?.historicalData?.length > 0 && (
                         <CheckedItemValueHistory historicalData={childRow.historicalData} inputType={childRow.inputType} />
                       )}
 

@@ -309,8 +309,8 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
           disableEditButton={machine?.status?.slug==='transferred'}
           disableDeleteButton={machine?.status?.slug==='transferred'}
           skeletonIcon={ isLoading && !machineServiceRecord?._id }
-          handleEdit={(!machineServiceRecord?.isHistory || machineServiceRecord?.status==="DRAFT") && machineServiceRecord?._id && handleEdit} 
-          onDelete={(!machineServiceRecord?.isHistory || machineServiceRecord?.status==="DRAFT") && machineServiceRecord?._id && onDelete} 
+          handleEdit={!machineServiceRecord?.isHistory && machineServiceRecord?._id && handleEdit} 
+          onDelete={!machineServiceRecord?.isHistory && machineServiceRecord?._id && onDelete} 
           backLink={handleBackLink}
           handleSendPDFEmail={!machineServiceRecord?.isHistory && machineServiceRecord?._id && handleSendEmail}
           handleViewPDF={!machineServiceRecord?.isHistory && machineServiceRecord?._id && handlePDFViewer}
@@ -326,7 +326,7 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
           <ViewFormField isLoading={isLoading} variant='h4' sm={2} heading="Status" param={defaultValues.status} />
           <ViewFormField isLoading={isLoading} variant='h4' sm={2} heading="Version No" node={
             <>{defaultValues?.versionNo}{machineServiceRecord?.isHistory && <CurrentIcon callFunction={handleCurrentServiceRecord} />}
-              {!machineServiceRecord?.isHistory && (machineServiceRecord?.currentVersion?.versionNo || defaultValues?.versionNo) > 1 &&  machineServiceRecord?.serviceId && <HistoryIcon callFunction={handleServiceRecordHistory} /> }
+              {!machineServiceRecord?.isHistory && machineServiceRecord?.currentVersion?.versionNo > 1 &&  machineServiceRecord?.serviceId && <HistoryIcon callFunction={handleServiceRecordHistory} /> }
             </>  
           } />
           
