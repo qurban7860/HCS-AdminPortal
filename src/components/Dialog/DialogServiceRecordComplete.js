@@ -102,7 +102,7 @@ function DialogServiceRecordComplete({recordStatus}) {
       </DialogTitle>
       <Divider orientation="horizontal" flexItem />
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)} mb={5}>
-          {!isLoading?
+          {/* {!isLoading?
             <DialogContent dividers sx={{pt:3}}>
               <RHFAutocomplete 
                 multiple
@@ -117,7 +117,7 @@ function DialogServiceRecordComplete({recordStatus}) {
               />
             </DialogContent>
           :<SkeletonLine />
-          }
+          } */}
           <DialogActions>
             <Button variant='outlined' onClick={handleCloseDialog}>Cancel</Button>
             <LoadingButton type='submit' disabled={isLoading} loading={isSubmitting} variant='contained'>{recordStatus?.label}</LoadingButton>
