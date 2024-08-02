@@ -163,7 +163,7 @@ const CheckedItemInputRow = memo(({ index, row }) => {
         setShowMessages(prev => ({ ...prev, [combinedIndex]: true }));
         setTimeout(() => {
           setShowMessages(prev => ({ ...prev, [combinedIndex]: false }));
-        }, 3000);
+        }, 10000);
       } catch (err) {
         console.error(err);
         enqueueSnackbar('Saving failed!', { variant: `error` });

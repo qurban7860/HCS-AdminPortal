@@ -79,7 +79,7 @@ function MachineServiceRecordsSecondStep({serviceRecord, handleDraftRequest, han
       try {
         await dispatch(updateMachineServiceRecord(machineId, id, params));
         setShowMessage(true);
-        setTimeout(() => {setShowMessage(false)}, 3000);
+        setTimeout(() => {setShowMessage(false)}, 10000);
       } catch (err) {
         console.error(err);
         enqueueSnackbar('Saving failed!', { variant: `error` });
@@ -95,7 +95,7 @@ function MachineServiceRecordsSecondStep({serviceRecord, handleDraftRequest, han
       try {
         await dispatch(updateMachineServiceRecord(machineId, id, params));
         setShowMessage(true);
-        setTimeout(() => {setShowMessage(false)}, 3000);
+        setTimeout(() => {setShowMessage(false)}, 10000);
       } catch (err) {
         console.error(err);
         enqueueSnackbar('Saving failed!', { variant: `error` });
