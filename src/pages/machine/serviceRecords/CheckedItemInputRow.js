@@ -78,7 +78,7 @@ const CheckedItemInputRow = memo(({ index, row }) => {
 
     const defaultValues = useMemo(
       () => ({
-        checkItems: row?.checkItems.map(item => ({
+        checkItems: row?.checkItems?.map(item => ({
           _id:item._id,
           comment: item?.recordValue?.comments,
           value:getRecordValue(item),
@@ -136,10 +136,10 @@ const CheckedItemInputRow = memo(({ index, row }) => {
         serviceId:machineServiceRecord?.serviceId,
         versionNo:machineServiceRecord?.versionNo,
         checkItemListId:row?._id,
-        machineCheckItem:checkItem._id,
-        comments:checkItem.comment,
-        recordValue:checkItem?.recordValue,
-        images:checkItem.images.filter(image => !image.uploaded)
+        machineCheckItem:checkItem?._id,
+        comments:checkItem?.comment || '',
+        recordValue:checkItem?.recordValue || {},
+        images:checkItem?.images.filter(image => !image.uploaded)
       }
       
       if (checkItem.value instanceof Date) {
@@ -147,7 +147,7 @@ const CheckedItemInputRow = memo(({ index, row }) => {
       } else if(typeof checkItem.value==='object'){
         params.checkItemValue=checkItem?.value?.name;
       }else{
-        params.checkItemValue=checkItem.value;
+        params.checkItemValue=checkItem?.value || '';
       }
 
       try {

@@ -84,12 +84,12 @@ function DialogServiceRecordComplete({recordStatus}) {
       }
       
       await dispatch(updateMachineServiceRecord(machineServiceRecord?.machine?._id, machineServiceRecord?._id, params))
-      await enqueueSnackbar("Status updated successfully!");  
+      await enqueueSnackbar(`Service Record ${recordStatus?.value==="APPROVED"?"Approved":"Completed"} Successfully!`);  
       await handleCloseDialog();
       await reset();
       await dispatch(getMachineServiceRecord(machineServiceRecord?.machine?._id, machineServiceRecord?._id));
     } catch (err) {
-      enqueueSnackbar("Failed Email Send", { variant: 'error' });
+      enqueueSnackbar(`Failed ${recordStatus?.value==="APPROVED"?"Approving":"Completing"} Service Record `, { variant: 'error' });
       console.error(err.message);
     }
   }

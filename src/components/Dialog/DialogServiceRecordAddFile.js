@@ -56,9 +56,7 @@ function DialogServiceRecordAddFile() {
 
   const methods = useForm({
     resolver: yupResolver(MachineServiceRecordFilesSchema),
-    defaultValues:{
-      files: defaultValues?.files || []
-    },
+    defaultValues
   });
 
   const {
@@ -106,12 +104,6 @@ function DialogServiceRecordAddFile() {
       <DialogTitle variant='h3' sx={{pb:1, pt:2}}>Add Documents</DialogTitle>
       <Divider orientation="horizontal" flexItem />
       <DialogContent dividers sx={{pt:2}}>
-          {/* <Grid container sx={{pb:2}}>
-            <ViewFormField isLoading={isLoading} variant='h4' sm={3} heading="Service Date" param={fDate(machineServiceRecord.serviceDate)} />
-            <ViewFormField isLoading={isLoading} variant='h4' sm={6} heading="Service Record Configuration" param={`${machineServiceRecord?.serviceRecordConfig?.docTitle} ${machineServiceRecord?.serviceRecordConfig?.recordType ? '-' : ''} ${machineServiceRecord?.serviceRecordConfig?.recordType || ''}`} />
-            <ViewFormField isLoading={isLoading} variant='h4' sm={3} heading="Version No" param={machineServiceRecord?.currentVersion?.versionNo}/>
-            <FormLabel content='Add new files'/>
-          </Grid> */}
           <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
            <RHFUpload multiple  thumbnail name="files" imagesOnly
               onDrop={handleDropMultiFile}
