@@ -37,7 +37,7 @@ export default function MachineServiceRecordListTableRow({
   const { machineId } = useParams();
   const { serviceRecordConfig, serviceRecordUid, status, versionNo, serviceDate, serviceId, isActive, currentVersion, createdAt, createdBy } = row;
   const handleServiceRecordHistory = () => navigate(PATH_MACHINE.machines.serviceRecords.history.root(machineId, serviceId));
-
+  
   return (
       <StyledTableRow hover selected={selected}>
         <TableCell align="left">{fDate(serviceDate)}</TableCell>
@@ -45,7 +45,7 @@ export default function MachineServiceRecordListTableRow({
         <TableCell align="left">{status || ''}</TableCell>
         <LinkTableCell align="left" onClick={onViewRow} param={`${serviceRecordConfig?.docTitle ? serviceRecordConfig?.docTitle	: ''	} ${serviceRecordConfig?.recordType ? ' - ' : ''} ${serviceRecordConfig?.recordType ? serviceRecordConfig?.recordType : ''}`} />
         <TableCell align="left" sx={{display: 'flex', alignItems:'center'}} >{versionNo} 
-              {currentVersion?.versionNo > 0 && <HistoryIcon callFunction={handleServiceRecordHistory} /> }</TableCell>
+              {currentVersion?.versionNo > 1 && <HistoryIcon callFunction={handleServiceRecordHistory} /> }</TableCell>
         <TableCell align="center"><Switch checked={isActive} disabled size="small" /></TableCell>
         <TableCell align="left">{createdBy.name}</TableCell>
         <TableCell align="right">{fDate(createdAt)}</TableCell>

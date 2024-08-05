@@ -357,7 +357,9 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
           <ViewFormNoteField sm={12} heading="Internal Note" param={defaultValues.internalNote} />
           <ViewFormField isLoading={isLoading} sm={12} heading="Operators" chipDialogArrayParam={operators} />
           <ViewFormNoteField sm={12} heading="Operator Notes" param={defaultValues.operatorNotes} />
+          {slides.length>0 && !machineServiceRecord?.isHistory && 
           <FormLabel content='Images' />
+          }
           <Box
             sx={{my:1, width:'100%'}}
             gap={2}
@@ -370,7 +372,6 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
               xl: 'repeat(8, 1fr)',
             }}
           >
-
           {slides?.map((file, _index) => (
             <DocumentGalleryItem isLoading={isLoading} key={file?.id} image={file} 
               onOpenLightbox={()=> handleOpenLightbox(_index)}
