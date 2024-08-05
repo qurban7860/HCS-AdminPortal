@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { useEffect, useMemo, useState } from 'react';
 import ReactPDF from '@react-pdf/renderer';
 import { useSelector, useDispatch } from 'react-redux';
-import { Dialog, DialogContent, Button, DialogTitle, Divider, DialogActions, TextField, Typography } from '@mui/material';
+import { Dialog, DialogContent, Button, DialogTitle, Divider, DialogActions, TextField, Typography, Alert, Stack } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
@@ -64,10 +64,13 @@ function DialogServiceRecordComplete({recordStatus}) {
   const {
     control,
     reset,
+    watch,
     setValue,
     handleSubmit,
     formState: { isSubmitting, isSubmitted },
   } = methods;
+
+  const {contacts} =watch();
 
   useEffect(()=>{
     const userContact = activeSpContacts.find((spc)=> spc._id === user.contact);
@@ -97,27 +100,28 @@ function DialogServiceRecordComplete({recordStatus}) {
   return (
     <Dialog fullWidth maxWidth="sm" open={completeDialog} onClose={handleCloseDialog}>
       <DialogTitle variant='h4' sx={{pb:1, pt:2}}>
-          {`Confirm ${recordStatus?.label}?`}
+          {`Are you sure you want to ${recordStatus?.label?.toLowerCase()}?`}
       </DialogTitle>
       <Divider orientation="horizontal" flexItem />
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)} mb={5}>
-          <DialogContent dividers sx={{pt:3}}>
-            {/* <Typography variant='body2'>Are you sure you want to {recordStatus?.label}?</Typography> */}
-            {!isLoading?
-              <RHFAutocomplete 
-              multiple
-              disableCloseOnSelect
-              filterSelectedOptions
-              label="Contacts"
-              name="contacts"
-              options={activeSpContacts}
-              isOptionEqualToValue={(option, value) => option?._id === value?._id}
-              getOptionLabel={(option) => `${option.firstName || ''} ${ option.lastName || ''}`}
-              renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
-              />
-              :<SkeletonLine />
-            }
-            <Typography sx={{pt:2}} variant='body2'>Email will be sent to selected contacts?</Typography>
+          <DialogContent dividers>
+            <Stack spacing={2} pt={3}>
+              {!isLoading?
+                <RHFAutocomplete 
+                multiple
+                // disableCloseOnSelect
+                filterSelectedOptions
+                label="Notify Contacts"
+                name="contacts"
+                options={activeSpContacts}
+                isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                getOptionLabel={(option) => `${option.firstName || ''} ${ option.lastName || ''}`}
+                renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
+                />
+                :<SkeletonLine />
+              }
+              {contacts?.length>0 && <Alert severity="info" variant='filled'>Email will be sent to selected contacts?</Alert>}
+            </Stack>
           </DialogContent>
           <DialogActions>
             <Button variant='outlined' onClick={handleCloseDialog}>Cancel</Button>
