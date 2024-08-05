@@ -80,7 +80,7 @@ function MachineServiceRecordsThirdStep({handleDraftRequest, handleDiscard, hand
               serviceId:id,
             })) || [],
             operatorNotes:                machineServiceRecord?.operatorNotes || '',
-            isActive:                     machineServiceRecord?.isActive || true,
+            isActive:                     machineServiceRecord?.isActive,
         }
         return initialValues;
       },
@@ -111,7 +111,7 @@ function MachineServiceRecordsThirdStep({handleDraftRequest, handleDiscard, hand
     formState: { isSubmitting },
     } = methods;
 
-    const { files, decoilers, operators } = watch()
+    const { isActive, files, decoilers, operators } = watch()
     const handleDropMultiFile = useCallback(
       async (acceptedFiles) => {
         const docFiles = files || [];
@@ -228,7 +228,7 @@ function MachineServiceRecordsThirdStep({handleDraftRequest, handleDiscard, hand
           />
           <Grid container display="flex"><RHFSwitch name="isActive" label="Active"/></Grid>
       </Stack>
-      <ServiceRecodStepButtons isSubmitting={isSubmitting} isDraft={isDraft} handleDraft={saveAsDraft} />
+      <ServiceRecodStepButtons isActive={isActive} isSubmitting={isSubmitting} isDraft={isDraft} handleDraft={saveAsDraft} />
     </FormProvider>
   )}
 

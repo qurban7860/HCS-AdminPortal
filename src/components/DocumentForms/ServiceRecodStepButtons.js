@@ -14,12 +14,14 @@ ServiceRecodStepButtons.propTypes = {
   handleDraft: PropTypes.func,
   isSubmitting: PropTypes.bool,
   isDraft: PropTypes.bool,
+  isActive: PropTypes.bool,
 };
 
 export default function ServiceRecodStepButtons({
   handleDraft,
   isSubmitting,
   isDraft,
+  isActive
 }) {
 
   const navigate = useNavigate();
@@ -43,7 +45,7 @@ export default function ServiceRecodStepButtons({
         <Grid item sm={6} display='flex' columnGap={2} justifyContent='flex-end'>
             {handleDraft && <LoadingButton loading={isSubmitting && isDraft} size='large' onClick={handleDraft} type='submit' variant="outlined">Save & Exit</LoadingButton>}
             <Button size='large' onClick={handleBack} disabled={ formActiveStep===0 } variant="outlined">Back</Button>
-            <LoadingButton size='large' type='submit' variant="contained"  loading={isSubmitting && !isDraft}>
+            <LoadingButton disabled={!isActive && formActiveStep===2} size='large' type='submit' variant="contained"  loading={isSubmitting && !isDraft}>
               {formActiveStep===2?"Submit":"Next"}
             </LoadingButton>
         </Grid>
