@@ -27,6 +27,7 @@ const initialState = {
   isHistorical: false,
   isDetailPage: false,
   filterBy: '',
+  filterDraft:false,
   page: 0,
   rowsPerPage: 100,
 };
@@ -192,10 +193,16 @@ const slice = createSlice({
       state.isLoading = false;
     },
 
-        // Set FilterBy
+    // Set FilterBy
     setFilterBy(state, action) {
       state.filterBy = action.payload;
     },
+
+    // Set FilterDraft
+    setFilterDraft(state, action) {
+      state.filterDraft  = action.payload;
+    },
+
     // Set PageRowCount
     ChangeRowsPerPage(state, action) {
       state.rowsPerPage = action.payload;
@@ -227,6 +234,7 @@ export const {
   resetSubmittingCheckItemIndex,
   setResponseMessage,
   setFilterBy,
+  setFilterDraft,
   ChangeRowsPerPage,
   ChangePage,
 } = slice.actions;
