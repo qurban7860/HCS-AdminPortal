@@ -11,7 +11,7 @@ export default function HistoryIcon({ callFunction }) {
 
   return (
       <StyledTooltip arrow title="History" placement='top' tooltipcolor={theme.palette.primary.main} >
-        <Iconify icon="lucide:list-restart" sx={{ml:0.7, cursor: 'pointer'}} onClick={callFunction} />
+        <Iconify icon="lucide:list-restart" width={25} height={25} sx={{ml:1, cursor: 'pointer'}} onClick={callFunction} />
       </StyledTooltip>
   );
 }

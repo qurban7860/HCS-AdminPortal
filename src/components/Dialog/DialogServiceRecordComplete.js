@@ -98,26 +98,26 @@ function DialogServiceRecordComplete({recordStatus}) {
     <Dialog fullWidth maxWidth="sm" open={completeDialog} onClose={handleCloseDialog}>
       <DialogTitle variant='h4' sx={{pb:1, pt:2}}>
           {`Confirm ${recordStatus?.label}?`}
-          {/* <Typography variant='body2'>Email will be sent to your reporting contact?</Typography> */}
       </DialogTitle>
       <Divider orientation="horizontal" flexItem />
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)} mb={5}>
           <DialogContent dividers sx={{pt:3}}>
-            <Typography variant='body2'>Are you sure you want to {recordStatus?.label}?</Typography>
-            {/* {!isLoading?
+            {/* <Typography variant='body2'>Are you sure you want to {recordStatus?.label}?</Typography> */}
+            {!isLoading?
               <RHFAutocomplete 
-                multiple
-                disableCloseOnSelect
-                filterSelectedOptions
-                label="Contacts"
-                name="contacts"
-                options={activeSpContacts}
-                isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                getOptionLabel={(option) => `${option.firstName || ''} ${ option.lastName || ''}`}
-                renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
+              multiple
+              disableCloseOnSelect
+              filterSelectedOptions
+              label="Contacts"
+              name="contacts"
+              options={activeSpContacts}
+              isOptionEqualToValue={(option, value) => option?._id === value?._id}
+              getOptionLabel={(option) => `${option.firstName || ''} ${ option.lastName || ''}`}
+              renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
               />
               :<SkeletonLine />
-            } */}
+            }
+            <Typography sx={{pt:2}} variant='body2'>Email will be sent to selected contacts?</Typography>
           </DialogContent>
           <DialogActions>
             <Button variant='outlined' onClick={handleCloseDialog}>Cancel</Button>

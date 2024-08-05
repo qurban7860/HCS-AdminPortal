@@ -30,15 +30,15 @@ function DialogServiceRecordAddFile() {
   const dispatch = useDispatch();
   const { addFileDialog, isLoading } = useSelector((state) => state.machineServiceRecord);
   
-  const handleCloseDialog = ()=>{ 
-    dispatch(setAddFileDialog(false)) 
+  const handleCloseDialog = async ()=>{ 
+    await dispatch(setAddFileDialog(false)) 
     reset();
   }
   
   const { enqueueSnackbar } = useSnackbar();
   
   const MachineServiceRecordFilesSchema = Yup.object().shape({
-    files: Yup.mixed().required('File is required!')
+    files: Yup.mixed().required('Images are required!')
     .test(
       'fileType',
       'Only the following formats are accepted: .jpeg, .jpg, gif, .bmp, .webp',
@@ -89,7 +89,7 @@ function DialogServiceRecordAddFile() {
   const onSubmit = async (data) => {
     try {
       await dispatch(addMachineServiceRecordFiles(machineId, id, data))
-      await dispatch(setAddFileDialog(false));
+      await handleCloseDialog();
       await dispatch(getMachineServiceRecord(machineId, id))
       await reset();
       await enqueueSnackbar('Files uploaded successfully!');
@@ -101,7 +101,7 @@ function DialogServiceRecordAddFile() {
 
   return (
     <Dialog fullWidth maxWidth="xl" open={addFileDialog} onClose={handleCloseDialog}>
-      <DialogTitle variant='h3' sx={{pb:1, pt:2}}>Add Documents</DialogTitle>
+      <DialogTitle variant='h3' sx={{pb:1, pt:2}}>Add Images</DialogTitle>
       <Divider orientation="horizontal" flexItem />
       <DialogContent dividers sx={{pt:2}}>
           <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
