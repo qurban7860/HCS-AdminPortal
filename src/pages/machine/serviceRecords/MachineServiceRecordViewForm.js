@@ -114,11 +114,15 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
     }
   };
 
-  const handleServiceRecordHistory = () =>  navigate(PATH_MACHINE.machines.serviceRecords.history.root(
-    machineId, serviceHistoryView ? serviceId : machineServiceRecord?.serviceId 
-  ));
+  const handleServiceRecordHistory = () =>  {
+    navigate(PATH_MACHINE.machines.serviceRecords.history.root(
+      machineId, serviceHistoryView ? serviceId : machineServiceRecord?.serviceId 
+    ))
+  }
 
-  const handleCurrentServiceRecord = () => navigate(PATH_MACHINE.machines.serviceRecords.view( machineId, machineServiceRecord?.currentVersion?._id ));
+  const handleCurrentServiceRecord = () => {
+    navigate(PATH_MACHINE.machines.serviceRecords.view( machineId, machineServiceRecord?.currentVersion?._id ))
+  }
 
   const defaultValues = useMemo(
     () => ({
