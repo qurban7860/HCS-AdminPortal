@@ -97,13 +97,14 @@ function DialogServiceRecordComplete({recordStatus}) {
   return (
     <Dialog fullWidth maxWidth="sm" open={completeDialog} onClose={handleCloseDialog}>
       <DialogTitle variant='h4' sx={{pb:1, pt:2}}>
-          {`Are you sure you want to ${recordStatus?.label}?`}
-          <Typography variant='body2'>Email will be sent to your reporting contact?</Typography>
+          {`Confirm ${recordStatus?.label}?`}
+          {/* <Typography variant='body2'>Email will be sent to your reporting contact?</Typography> */}
       </DialogTitle>
       <Divider orientation="horizontal" flexItem />
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)} mb={5}>
-          {/* {!isLoading?
-            <DialogContent dividers sx={{pt:3}}>
+          <DialogContent dividers sx={{pt:3}}>
+            <Typography variant='body2'>Are you sure you want to {recordStatus?.label}?</Typography>
+            {/* {!isLoading?
               <RHFAutocomplete 
                 multiple
                 disableCloseOnSelect
@@ -115,9 +116,9 @@ function DialogServiceRecordComplete({recordStatus}) {
                 getOptionLabel={(option) => `${option.firstName || ''} ${ option.lastName || ''}`}
                 renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
               />
-            </DialogContent>
-          :<SkeletonLine />
-          } */}
+              :<SkeletonLine />
+            } */}
+          </DialogContent>
           <DialogActions>
             <Button variant='outlined' onClick={handleCloseDialog}>Cancel</Button>
             <LoadingButton type='submit' disabled={isLoading} loading={isSubmitting} variant='contained'>{recordStatus?.label}</LoadingButton>
