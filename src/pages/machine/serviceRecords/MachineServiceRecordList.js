@@ -26,7 +26,8 @@ import {
   ChangeRowsPerPage,
   ChangePage,
   setFilterBy,
-  setSendEmailDialog
+  setSendEmailDialog,
+  setFilterDraft
 } from '../../../redux/slices/products/machineServiceRecord';
 import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../../components/ListTableTools/TableCard';
@@ -48,7 +49,7 @@ const TABLE_HEAD = [
 // ----------------------------------------------------------------------
 
 export default function MachineServiceRecordList() {
-  const { machineServiceRecords, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.machineServiceRecord);
+  const { machineServiceRecords, filterBy, filterDraft, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.machineServiceRecord);
   const navigate = useNavigate();
   const { machineId } = useParams();
 
@@ -71,7 +72,8 @@ export default function MachineServiceRecordList() {
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
-
+  const [filterDraftStatus, setFilterDraftStatus] = useState(false);
+  
   useLayoutEffect(() => {
     dispatch(setSendEmailDialog(false));
     if(machineId){
@@ -86,17 +88,12 @@ export default function MachineServiceRecordList() {
     }
   }, [machineServiceRecords, initial]);
 
-  const [draft, setDraft] = useState(false); 
-  const handleToggleDraft = (status) => {
-    setDraft(status);
-  }
-
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(order, orderBy),
     filterName,
     filterStatus,
-    draft
+    filterDraftStatus
   });
 
   const isFiltered = filterName !== '' || !!filterStatus.length;
@@ -109,11 +106,23 @@ export default function MachineServiceRecordList() {
     dispatch(setFilterBy(value))
   }, 500))
 
+  const debouncedDraft = useRef(debounce((value) => {
+    dispatch(ChangePage(0))
+    dispatch(setFilterDraft(value))
+  }, 500))
+
   const handleFilterName = (event) => {
     debouncedSearch.current(event.target.value);
     setFilterName(event.target.value)
     setPage(0);
   };
+
+  const handleFilterDraft = (status) => {
+    debouncedDraft.current(status)
+    setFilterDraftStatus(status)
+    setPage(0);
+  }
+
   
   useEffect(() => {
       debouncedSearch.current.cancel();
@@ -121,6 +130,7 @@ export default function MachineServiceRecordList() {
   
   useEffect(()=>{
       setFilterName(filterBy)
+      setFilterDraftStatus(filterDraft)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 
@@ -147,8 +157,8 @@ export default function MachineServiceRecordList() {
             onFilterStatus={handleFilterStatus}
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
-            toggleStatus={draft}
-            onToggleStatus={handleToggleDraft}
+            toggleStatus={filterDraftStatus}
+            onToggleStatus={handleFilterDraft}
           />
 
           {!isNotFound && <TablePaginationCustom
@@ -205,7 +215,7 @@ export default function MachineServiceRecordList() {
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName, filterStatus, draft }) {
+function applyFilter({ inputData, comparator, filterName, filterStatus, filterDraftStatus }) {
   const stabilizedThis = inputData.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -215,7 +225,7 @@ function applyFilter({ inputData, comparator, filterName, filterStatus, draft })
 
   inputData = stabilizedThis.map((el) => el[0]);
 
-  if(!draft){
+  if(!filterDraftStatus){
     inputData = inputData.filter((srec) => srec?.status!=="DRAFT");
   }
 
