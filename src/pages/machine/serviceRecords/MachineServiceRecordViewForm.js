@@ -318,7 +318,7 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
           backLink={handleBackLink}
           handleSendPDFEmail={!machineServiceRecord?.isHistory && machineServiceRecord?._id && handleSendEmail}
           handleViewPDF={!machineServiceRecord?.isHistory && machineServiceRecord?._id && handlePDFViewer}
-          handleCompleteMSR={!machineServiceRecord?.isHistory &&  machineServiceRecord?.status!=="APPROVED" && handleCompleteConfirm}
+          handleCompleteMSR={machineServiceRecord.isActive && !machineServiceRecord?.isHistory &&  machineServiceRecord?.status!=="APPROVED" && handleCompleteConfirm}
           serviceRecordStatus={recordStatus?.label}
         />
         
