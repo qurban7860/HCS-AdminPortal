@@ -314,7 +314,7 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
           backLink={handleBackLink}
           handleSendPDFEmail={!machineServiceRecord?.isHistory && machineServiceRecord?._id && handleSendEmail}
           handleViewPDF={!machineServiceRecord?.isHistory && machineServiceRecord?._id && handlePDFViewer}
-          handleCompleteMSR={!machineServiceRecord?.isHistory && handleCompleteConfirm}
+          handleCompleteMSR={!machineServiceRecord?.isHistory &&  machineServiceRecord?.status!=="APPROVED" && handleCompleteConfirm}
           serviceRecordStatus={recordStatus?.label}
         />
         
@@ -338,7 +338,7 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
           {!isLoadingCheckItems? 
             <Grid item md={12} sx={{  overflowWrap: 'break-word' }}>
               <Grid item md={12} sx={{display:'flex', flexDirection:'column'}}>
-                {machineServiceRecordCheckItems?.checkItemLists.map((row, index) =>
+                {machineServiceRecordCheckItems?.checkItemLists?.map((row, index) =>
                   <CheckedItemValueRow machineId serviceId value={row} index={index} />
                 )}
               </Grid>
@@ -390,14 +390,6 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
       {sendEmailDialog && <SendEmailDialog machineServiceRecord={machineServiceRecord} fileName={fileName}/>}
       <DialogServiceRecordAddFile />
       <DialogServiceRecordComplete recordStatus={recordStatus}/>
-      {/* <ConfirmDialog open={completeConfirm} onClose={handleCompleteConfirm}
-        title={`Are you sure you want to ${recordStatus?.label}?`} 
-        content={
-          } 
-        action={
-          <LoadingButton loading={isSubmitting} variant='contained' onClick={handleSubmit(onSubmit)}>{recordStatus?.label}</LoadingButton>
-        }
-      /> */}
     </Card>
     <Lightbox
           index={selectedImage}
