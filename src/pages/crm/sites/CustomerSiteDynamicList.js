@@ -194,7 +194,7 @@ export default function CustomerSiteDynamicList({ siteAddForm, siteEditForm, sit
             )}
             <ContactSiteScrollbar
               onClick={(e) => e.stopPropagation()}
-              snapAlign="start"
+              // snapAlign="start"
               disabled={siteEditForm || siteAddForm}
             >
               <Grid container direction="column" gap={1}>

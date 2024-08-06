@@ -8,7 +8,7 @@ ViewPhoneComponent.propTypes = {
   heading: PropTypes.string,
   variant: PropTypes.string,
   sm: PropTypes.number,
-  value: PropTypes.array,
+  value: PropTypes.any,
   isLoading:PropTypes.bool
 };
 function ViewPhoneComponent({ heading, variant, sm, value, isLoading }) {
@@ -19,17 +19,7 @@ function ViewPhoneComponent({ heading, variant, sm, value, isLoading }) {
         {isLoading ? (
           <SkeletonViewFormField />
           ) : (
-            <Typography
-              variant={variant}
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                whiteSpace: 'pre-line',
-                wordBreak: 'break-word',
-                pb: Array.isArray(value) && value?.length > 0 ? 0 : 3,
-              }}
-            >
-              <div>
+              <Grid>
                 {Array.isArray(value) && value?.map((phoneNumber, index) => (
                   <Chip
                     key={index}
@@ -41,8 +31,7 @@ function ViewPhoneComponent({ heading, variant, sm, value, isLoading }) {
                     }
                   />
                 ))}
-              </div>
-            </Typography>
+              </Grid>
           )
         }
       </Grid>

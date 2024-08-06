@@ -118,7 +118,7 @@ export function DocumentGalleryItem({ image, isLoading, onOpenLightbox, onOpenFi
                 </Stack>
                 </Card>
             
-            ):(<SkeletonGallery  />)
+            ):(<SkeletonGallery />)
             }
 
             <ConfirmDialog

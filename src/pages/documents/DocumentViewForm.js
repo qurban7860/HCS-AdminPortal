@@ -293,7 +293,7 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
           heading="Version"
           handleAllVersion={linkDocumentView}
           handleNewVersion={handleNewVersion}
-          param={
+          node={
             <StyledVersionChip
               label={defaultValues.versionPrefix + defaultValues.documentVersion}
               size="small"
@@ -336,7 +336,7 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
         >
 
           {slides?.map((file, _index) => (
-            <DocumentGalleryItem isLoading={isLoading} key={file?.id} image={file} 
+            <DocumentGalleryItem isLoading={isLoading} key={file?._id} image={file} 
               onOpenLightbox={()=> handleOpenLightbox(_index)}
               onDownloadFile={()=> handleDownloadFile(document._id, document?.documentVersions[0]._id, file._id, file?.name, file?.extension)}
               onDeleteFile={()=> handleDeleteFile(document._id, document?.documentVersions[0]._id, file._id)}
