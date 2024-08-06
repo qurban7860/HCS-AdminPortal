@@ -343,7 +343,7 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
             <Grid item md={12} sx={{  overflowWrap: 'break-word' }}>
               <Grid item md={12} sx={{display:'flex', flexDirection:'column'}}>
                 {machineServiceRecordCheckItems?.checkItemLists?.map((row, index) =>
-                  <CheckedItemValueRow machineId serviceId value={row} index={index} />
+                  <CheckedItemValueRow machineId serviceId={machineServiceRecord._id} value={row} index={index} />
                 )}
               </Grid>
             </Grid>
