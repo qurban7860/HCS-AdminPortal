@@ -16,7 +16,7 @@ import { DocumentGalleryItem } from '../../../components/gallery/DocumentGallery
 import { ThumbnailDocButton } from '../../../components/Thumbnails';
 import DialogServiceRecordAddFile from '../../../components/Dialog/DialogServiceRecordAddFile';
 import FormProvider from '../../../components/hook-form/FormProvider';
-import { RHFAutocomplete, RHFCheckbox, RHFDatePicker, RHFTextField, RHFUpload } from '../../../components/hook-form';
+import { RHFAutocomplete, RHFCheckbox, RHFDatePicker, RHFSwitch, RHFTextField, RHFUpload } from '../../../components/hook-form';
 import { statusTypes } from '../util';
 import { fDate, stringToDate } from '../../../utils/formatTime';
 import { validateImageFileType } from '../../documents/util/Util';
@@ -59,36 +59,31 @@ const CheckedItemInputRow = memo(({ index, row }) => {
       checkItems: Yup.array().of(CheckItemSchema),
     });
 
-    const getRecordValue = (item, versionNo) => {
-      if(item?.recordValue?.serviceRecord?.versionNo===versionNo){
-        if (item?.inputType === 'Date') {
-          return stringToDate(item?.recordValue?.checkItemValue, 'dd/MM/yyyy');
-        }
-        if (item?.inputType === 'Boolean') {
-          return item?.recordValue?.checkItemValue === 'true';
-        }
-        if (item?.inputType === 'Number') {
-          const value = parseFloat(item?.recordValue?.checkItemValue);
-          return Number.isNaN(value) ? null : value;
-        }
-        if (item?.inputType === 'Status') {
-          return statusTypes.find((st) => st?.name === item?.recordValue?.checkItemValue) || null;
-        }
-        return item?.recordValue?.checkItemValue;
+    const getRecordValue = (item) => {
+      if (item?.inputType === 'Date') {
+        return stringToDate(item?.recordValue?.checkItemValue, 'dd/MM/yyyy');
       }
-      
-      return null;
-      
+      if (item?.inputType === 'Boolean') {
+        return item?.recordValue?.checkItemValue === 'true';
+      }
+      if (item?.inputType === 'Number') {
+        const value = parseFloat(item?.recordValue?.checkItemValue);
+        return Number.isNaN(value) ? null : value;
+      }
+      if (item?.inputType === 'Status') {
+        return statusTypes.find((st) => st?.name === item?.recordValue?.checkItemValue) || null;
+      }
+      return item?.recordValue?.checkItemValue;
     };
 
     const defaultValues = useMemo(
       () => ({
         checkItems: row?.checkItems?.map(item => ({
           _id:item._id,
-          comment: item?.recordValue?.serviceRecord?.versionNo===machineServiceRecord?.versionNo && item?.recordValue?.comments || '',
-          value:getRecordValue(item, machineServiceRecord?.versionNo),
+          comment: item?.recordValue?.comments,
+          value:getRecordValue(item),
           recordValue:item?.recordValue,
-          images: item?.recordValue?.files.map(file => ({
+          images: item?.recordValue?.files?.map(file => ({
             uploaded:true,
             key: file?._id,
             _id: file?._id,
@@ -104,7 +99,7 @@ const CheckedItemInputRow = memo(({ index, row }) => {
           })) || []
         })) || [],
       }),
-      [row, machineId, id, machineServiceRecord]
+      [row, machineId, id]
     );
 
     const methods = useForm({
@@ -159,7 +154,7 @@ const CheckedItemInputRow = memo(({ index, row }) => {
         const serviceRecordValue = await dispatch(addCheckItemValues(machine?._id,params, childIndex));
         const updatedCheckItems = [...getValues('checkItems')];
         updatedCheckItems[childIndex].recordValue = serviceRecordValue;
-        updatedCheckItems[childIndex].images = updatedCheckItems[childIndex].images.map(image => ({
+        updatedCheckItems[childIndex].images = updatedCheckItems[childIndex].images?.map(image => ({
           uploaded: true,
           name:image?.name,
           type:image?.type,
@@ -187,7 +182,7 @@ const CheckedItemInputRow = memo(({ index, row }) => {
     const handleDropMultiFile = useCallback(
       (acceptedFiles, childIndex) => {
         const existingFiles = getValues(`checkItems[${childIndex}].images`) || [];
-        const newFiles = acceptedFiles.map(file =>
+        const newFiles = acceptedFiles?.map(file =>
           Object.assign(file, {
             preview: URL.createObjectURL(file),
             src: URL.createObjectURL(file),
@@ -261,22 +256,6 @@ const CheckedItemInputRow = memo(({ index, row }) => {
       }
     };
 
-    const handleHistoryData = (childRow) => {
-      const {recordValue, historicalData} = childRow;
-      console.log('historicalData:::::',recordValue,historicalData)
-
-      return [];
-
-    }
-
-    const [historicalData, setHistoricalData] = useState([]);
-    useEffect(() => {
-      if (machineServiceRecord) {
-        reset(defaultValues);
-      }
-      dispatch(resetSubmittingCheckItemIndex());
-    }, [dispatch, reset, machineServiceRecord, defaultValues]);
-
   return(<Stack spacing={2} px={2}>
         <FormLabel content={`${index+1}). ${typeof row?.ListTitle === 'string' && row?.ListTitle || ''} ( Items: ${`${row?.checkItems?.length} `})`} />          
         <FormProvider key={`form-${index}`} methods={methods} >
@@ -287,7 +266,10 @@ const CheckedItemInputRow = memo(({ index, row }) => {
                       <b>{`${index+1}.${childIndex+1}. `}</b>{`${childRow.name}`}
                   </Typography>
                       {childRow?.inputType === 'Boolean' &&
-                        <RHFCheckbox label={`Check ${childRow?.isRequired && '*'}`} name={`checkItems[${childIndex}].value`}  /> 
+                        <>
+                          <RHFSwitch size="small" label={`Check ${childRow?.isRequired && '*'}`} name={`checkItems[${childIndex}].value`} />
+                          {/* <RHFCheckbox label={`Check ${childRow?.isRequired && '*'}`} name={`checkItems[${childIndex}].value`}  />  */}
+                        </>
                       }
                       {(childRow?.inputType === 'Short Text' || childRow?.inputType === 'Long Text') &&
                         <RHFTextField 
@@ -351,20 +333,19 @@ const CheckedItemInputRow = memo(({ index, row }) => {
                         onRemove={(inputFile) => handleRemoveFile(inputFile, childIndex)}
                         onLoadImage={(imageId, imageIndex)=> handleLoadImage(imageId, imageIndex, childIndex)}
                       />
-
-                      {childRow?.historicalData?.length > 0 && (
-                        <CheckedItemValueHistory historicalData={childRow?.historicalData} inputType={childRow.inputType} />
-                      )}
-
                       
-                  <Grid container sx={{m:1}} display='flex' direction='row' justifyContent='flex-end' gap={2}>
+                    <Grid container sx={{m:1}} display='flex' direction='row' justifyContent='flex-end' gap={2}>
                       {showMessages[`${index}-${childIndex}`] && <Typography variant='body2' color='green' sx={{mt:1}}>Saved Successfully!</Typography>}
                       <LoadingButton 
                         size="small"
                         onClick={()=> handleSave(childIndex)} // Pass childIndex
                         loading={submittingCheckItemIndex===childIndex}
                         variant='contained'>Save</LoadingButton>
-                  </Grid>
+                    </Grid>
+
+                    {childRow?.historicalData?.length > 0 && (
+                      <CheckedItemValueHistory historicalData={childRow.historicalData} inputType={childRow.inputType} />
+                    )}
                 </Stack>
           </Card>
         ))}

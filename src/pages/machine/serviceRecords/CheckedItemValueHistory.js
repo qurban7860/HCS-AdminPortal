@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Grid, Typography, Divider, Chip, IconButton } from '@mui/material';
+import { Grid, Typography, Divider, Chip, IconButton, Switch } from '@mui/material';
 import CopyIcon from '../../../components/Icons/CopyIcon';
 import Iconify from '../../../components/iconify';
 import { fDate } from '../../../utils/formatTime';
@@ -29,11 +29,14 @@ const CheckedItemValueHistory = ({ historicalData, inputType }) => {
                   <Typography variant="body2" sx={{ mr: 1 }}>
                     <b>Value: </b>
                     {inputType.toLowerCase() === 'boolean' && itemHistory?.checkItemValue && (
-                      <Iconify
-                        sx={{ mb: -0.5 }}
-                        color={itemHistory?.checkItemValue === true || itemHistory?.checkItemValue === 'true' ? '#008000' : '#FF0000'}
-                        icon={itemHistory?.checkItemValue === true || itemHistory?.checkItemValue === 'true' ? 'ph:check-square-bold' : 'charm:square-cross'}
-                      />
+                      <>
+                        <Switch sx={{mt:-0.5}} size='small' disabled checked={itemHistory?.checkItemValue} />
+                        <Iconify
+                          sx={{ mb: -0.5 }}
+                          color={itemHistory?.checkItemValue === true || itemHistory?.checkItemValue === 'true' ? '#008000' : '#FF0000'}
+                          icon={itemHistory?.checkItemValue === true || itemHistory?.checkItemValue === 'true' ? 'ph:check-square-bold' : 'charm:square-cross'}
+                        />
+                      </>
                     )}
                     {inputType.toLowerCase() === 'date' ? (
                       fDate(itemHistory?.checkItemValue)

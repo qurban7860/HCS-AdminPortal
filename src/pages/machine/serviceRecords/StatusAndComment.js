@@ -1,7 +1,7 @@
 import React, { useState, memo, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Grid, Divider, Chip, TableRow, Typography, Box } from '@mui/material';
+import { Grid, Divider, Chip, TableRow, Typography, Box, Switch } from '@mui/material';
 import download from 'downloadjs';
 import { useSnackbar } from 'notistack';
 import { fDate } from '../../../utils/formatTime';
@@ -116,10 +116,9 @@ const StatusAndComment = ({index, childIndex, childRow, machineId, serviceId}) =
               wordBreak: 'break-word' }}>
               <Typography variant="body2" >
                   <b>Value: </b>
-                  {childRow?.inputType.toLowerCase() === 'boolean' && childRow?.recordValue?.checkItemValue && <Iconify
-                    sx={{mb:-0.5}}
-                    color={childRow?.recordValue?.checkItemValue === true || childRow?.recordValue?.checkItemValue  === 'true' ? '#008000' : '#FF0000'} 
-                    icon={ childRow?.recordValue?.checkItemValue === true || childRow?.recordValue?.checkItemValue  === 'true' ? 'ph:check-square-bold' : 'charm:square-cross' } />}
+                  {childRow?.inputType.toLowerCase() === 'boolean' && childRow?.recordValue?.checkItemValue && 
+                    <Switch sx={{mt:-0.5}} size='small' disabled checked={childRow?.recordValue?.checkItemValue} />
+                  }                        
                   {childRow?.inputType.toLowerCase() === 'date' ? fDate(childRow?.recordValue?.checkItemValue) : 
                     <> 
                       {childRow?.inputType.toLowerCase() === 'status' ? (childRow?.recordValue?.checkItemValue && 
