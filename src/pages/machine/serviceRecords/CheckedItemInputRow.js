@@ -59,29 +59,34 @@ const CheckedItemInputRow = memo(({ index, row }) => {
       checkItems: Yup.array().of(CheckItemSchema),
     });
 
-    const getRecordValue = (item) => {
-      if (item?.inputType === 'Date') {
-        return stringToDate(item?.recordValue?.checkItemValue, 'dd/MM/yyyy');
+    const getRecordValue = (item, versionNo) => {
+      if(item?.recordValue?.serviceRecord?.versionNo===versionNo){
+        if (item?.inputType === 'Date') {
+          return stringToDate(item?.recordValue?.checkItemValue, 'dd/MM/yyyy');
+        }
+        if (item?.inputType === 'Boolean') {
+          return item?.recordValue?.checkItemValue === 'true';
+        }
+        if (item?.inputType === 'Number') {
+          const value = parseFloat(item?.recordValue?.checkItemValue);
+          return Number.isNaN(value) ? null : value;
+        }
+        if (item?.inputType === 'Status') {
+          return statusTypes.find((st) => st?.name === item?.recordValue?.checkItemValue) || null;
+        }
+        return item?.recordValue?.checkItemValue;
       }
-      if (item?.inputType === 'Boolean') {
-        return item?.recordValue?.checkItemValue === 'true';
-      }
-      if (item?.inputType === 'Number') {
-        const value = parseFloat(item?.recordValue?.checkItemValue);
-        return Number.isNaN(value) ? null : value;
-      }
-      if (item?.inputType === 'Status') {
-        return statusTypes.find((st) => st?.name === item?.recordValue?.checkItemValue) || null;
-      }
-      return item?.recordValue?.checkItemValue;
+      
+      return null;
+      
     };
 
     const defaultValues = useMemo(
       () => ({
         checkItems: row?.checkItems?.map(item => ({
           _id:item._id,
-          comment: item?.recordValue?.comments,
-          value:getRecordValue(item),
+          comment: item?.recordValue?.serviceRecord?.versionNo===machineServiceRecord?.versionNo && item?.recordValue?.comments || '',
+          value:getRecordValue(item, machineServiceRecord?.versionNo),
           recordValue:item?.recordValue,
           images: item?.recordValue?.files.map(file => ({
             uploaded:true,
@@ -99,7 +104,7 @@ const CheckedItemInputRow = memo(({ index, row }) => {
           })) || []
         })) || [],
       }),
-      [row, machineId, id]
+      [row, machineId, id, machineServiceRecord]
     );
 
     const methods = useForm({
@@ -256,6 +261,22 @@ const CheckedItemInputRow = memo(({ index, row }) => {
       }
     };
 
+    const handleHistoryData = (childRow) => {
+      const {recordValue, historicalData} = childRow;
+      console.log('historicalData:::::',recordValue,historicalData)
+
+      return [];
+
+    }
+
+    const [historicalData, setHistoricalData] = useState([]);
+    useEffect(() => {
+      if (machineServiceRecord) {
+        reset(defaultValues);
+      }
+      dispatch(resetSubmittingCheckItemIndex());
+    }, [dispatch, reset, machineServiceRecord, defaultValues]);
+
   return(<Stack spacing={2} px={2}>
         <FormLabel content={`${index+1}). ${typeof row?.ListTitle === 'string' && row?.ListTitle || ''} ( Items: ${`${row?.checkItems?.length} `})`} />          
         <FormProvider key={`form-${index}`} methods={methods} >
@@ -332,7 +353,7 @@ const CheckedItemInputRow = memo(({ index, row }) => {
                       />
 
                       {childRow?.historicalData?.length > 0 && (
-                        <CheckedItemValueHistory historicalData={childRow.historicalData} inputType={childRow.inputType} />
+                        <CheckedItemValueHistory historicalData={childRow?.historicalData} inputType={childRow.inputType} />
                       )}
 
                       
