@@ -21,7 +21,7 @@ const CheckedItemValueHistory = ({ historicalData, inputType }) => {
         </StyledTooltip>
       {showHistory && (
         <Grid item md={12} sx={{ backgroundColor: '#f3f4f594', p: 1, borderRadius: '7px', border: '1px solid #e1e1e1' }}>
-          {historicalData.map((itemHistory, itemIndex) => (
+          {historicalData?.map((itemHistory, itemIndex) => (
             <>
               {itemIndex !== 0 && <Divider sx={{ borderStyle: 'solid', mx: -1 }} />}
               {itemHistory?.checkItemValue && (

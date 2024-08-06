@@ -41,10 +41,18 @@ function MachineServiceRecordsSecondStep({serviceRecord, handleDraftRequest, han
   useEffect(() =>{
     if(machineId && id){
       dispatch(getMachineServiceRecord(machineId, id))
-      dispatch(getMachineServiceRecordCheckItems(machineId, id));
+    }
+  },[dispatch, machineId, id])
+
+
+  useEffect(() =>{
+    if(machineServiceRecord?.serviceId){
+      dispatch(getMachineServiceRecordCheckItems(machineId, machineServiceRecord?.serviceId));
     }
     return(()=> resetCheckItemValues());
-  },[dispatch, machineId, id])
+  },[dispatch, machineId, machineServiceRecord])
+
+  
 
   const defaultValues = useMemo(
       () => {
