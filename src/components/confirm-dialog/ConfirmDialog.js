@@ -13,16 +13,13 @@ ConfirmDialog.propTypes = {
   SubButton: PropTypes.node,
 };
 
-ConfirmDialog.defaultProps = {
-  SubButton: 'Cancel',
-};
 export default function ConfirmDialog({
   title,
   content,
   action,
   open,
   onClose,
-  SubButton,
+  SubButton="Cancel",
   ...other
 }) {
   return (

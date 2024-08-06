@@ -8,9 +8,9 @@ import Iconify from '../iconify';
 export default function IconTooltip({
   onDelete,
   onClick,
-  color,
   title,
-  placement,
+  color='#1976d2',
+  placement='top',
   icon,
   disabled,
 }) {
@@ -34,9 +34,4 @@ IconTooltip.propTypes = {
   title: PropTypes.string,
   placement: PropTypes.string,
   icon: PropTypes.string,
-};
-
-IconTooltip.defaultProps = {
-  placement: 'top',
-  color:'#1976d2'
 };

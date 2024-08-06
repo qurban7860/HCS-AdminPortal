@@ -35,9 +35,9 @@ export default function CustomerContactListTableRow({
   handleContactView,
   handleContactViewInNewPage,
 }) {
-  const { _id, customer, firstName, lastName, phone, email, address, isActive, createdAt } =
-    row;
+  const { _id, customer, firstName, lastName, phone, email, address, isActive, createdAt } = row;
 
+  const contactName = `${firstName || ''} ${lastName || ''}`;
   return (
     <>
       {/* Render rows with column names in bold for small screens */}
@@ -46,7 +46,7 @@ export default function CustomerContactListTableRow({
             <LinkTableCellWithIconTargetBlank style={{ width: '100%', display: 'inline-block' }}
               onViewRow={() => handleContactView(customer?._id, _id)}
               onClick={() => handleContactViewInNewPage(customer?._id, _id)}
-              param={`${firstName || ''} ${lastName || ''}`}
+              param={contactName}
             />
             {customer?.name && <TableCell style={{ width: '100%', display: 'inline-block' }} >{customer?.name || '' } </TableCell> }
             {phone && <TableCell style={{ width: '100%', display: 'inline-block' }} >{phone}</TableCell> }
@@ -60,7 +60,7 @@ export default function CustomerContactListTableRow({
           <LinkTableCellWithIconTargetBlank
             onViewRow={() => handleContactView(customer?._id, _id)}
             onClick={() => handleContactViewInNewPage(customer?._id, _id)}
-            param={<> {`${firstName || ''} ${lastName || ''}`}</>}
+            param={contactName}
           />
           <TableCell>{phone}</TableCell>
           <TableCell>{email}</TableCell>
