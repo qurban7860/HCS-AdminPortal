@@ -117,7 +117,7 @@ const StatusAndComment = ({index, childIndex, childRow, machineId, serviceId}) =
               <Typography variant="body2" >
                   <b>Value: </b>
                   {childRow?.inputType.toLowerCase() === 'boolean' && childRow?.recordValue?.checkItemValue && 
-                    <Switch sx={{mt:-0.5}} size='small' disabled checked={childRow?.recordValue?.checkItemValue} />
+                    <Switch sx={{mt:-0.5}} size='small' disabled checked={childRow?.recordValue?.checkItemValue==='true'} />
                   }                        
                   {childRow?.inputType.toLowerCase() === 'date' ? fDate(childRow?.recordValue?.checkItemValue) : 
                     <> 

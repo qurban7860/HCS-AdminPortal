@@ -129,7 +129,7 @@ function MachineServiceRecordAddForm() {
                 title={machineServiceRecord?.serviceRecordUid && `Service ID : ${machineServiceRecord?.serviceRecordUid || ''}  (${machineServiceRecord?.status || ''})`}
                 action={
                   !isLoading &&
-                    <Grid item display='flex' direction='row' columnGap={1} mr={1}>
+                    <Grid item display='flex' columnGap={1} mr={1}>
                       <IconTooltip title="Discard" onClick={handleDiscard} color="#FF0000" icon="mdi:archive" />
                     </Grid>
                 }
