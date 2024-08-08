@@ -1,4 +1,4 @@
-import { useLayoutEffect } from 'react';
+import { useLayoutEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate, useParams } from 'react-router-dom';
 // @mui
@@ -21,12 +21,10 @@ CustomerTabContainer.propTypes = {
 };
 
 export default function CustomerTabContainer({ currentTabValue }) {
-
+  const dispatch = useDispatch();
   const { customerId } = useParams();
   const { customer } = useSelector((state) => state.customer);
   
-  const dispatch = useDispatch();
-
   useLayoutEffect(() => {
     if( customer?._id !== customerId ){
       dispatch(getCustomer(customerId))
