@@ -247,8 +247,6 @@ export default function MachineViewForm() {
     window.open( url, '_blank')
   }
 
-  console.log("defaultValues?.transferredFromMachine : ",defaultValues?.transferredFromMachine)
-
   return (
     <>
       <Grid container direction="row" mt={isMobile && 2}>
