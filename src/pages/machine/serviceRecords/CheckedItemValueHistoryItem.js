@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useSnackbar } from 'notistack';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router';
@@ -15,7 +15,7 @@ import { DocumentGalleryItem } from '../../../components/gallery/DocumentGallery
 import Lightbox from '../../../components/lightbox/Lightbox';
 
 const CheckedItemValueHistoryItem = ({ historyItem, inputType }) => {
-  
+  const { machineServiceRecord } = useSelector((state) => state.machineServiceRecord);
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const { machineId, serviceId} = useParams();
@@ -69,8 +69,8 @@ const CheckedItemValueHistoryItem = ({ historyItem, inputType }) => {
 
   const handleDeleteCheckItemFile = async (fileId) => {
     try {
-      await dispatch(deleteCheckItemFile(machineId, serviceId, fileId));
-      await dispatch(getMachineServiceRecordCheckItems(machineId, serviceId))
+      await dispatch(deleteCheckItemFile(machineId, fileId));
+      await dispatch(getMachineServiceRecordCheckItems(machineId, machineServiceRecord?._id))
       enqueueSnackbar('File Archived successfully!');
     } catch (err) {
       console.log(err);

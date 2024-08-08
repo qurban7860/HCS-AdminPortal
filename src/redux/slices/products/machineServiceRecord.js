@@ -77,6 +77,7 @@ const slice = createSlice({
     // HAS ERROR
     hasError(state, action) {
       state.isLoading = false;
+      state.isLoadingCheckItems = false;
       state.error = action.payload;
       state.initial = true;
     },
@@ -115,6 +116,7 @@ const slice = createSlice({
 
     getMachineServiceRecordCheckItemsSuccess(state, action) {
       state.isLoadingCheckItems = false;
+      state.isLoading = false;
       state.success = true;
       state.machineServiceRecordCheckItems = action.payload;
       state.initial = true;
@@ -573,7 +575,7 @@ export function downloadCheckItemFile(machineId, id, fileId) {
   };
 }
 
-export function deleteCheckItemFile(machineId, id, fileId) {
+export function deleteCheckItemFile(machineId, fileId) {
   return async (dispatch) => {
     dispatch(slice.actions.setSubmittingCheckItemIndex());
     try {

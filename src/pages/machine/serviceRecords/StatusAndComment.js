@@ -16,7 +16,7 @@ import Lightbox from '../../../components/lightbox/Lightbox';
 import CheckedItemValueHistory from './CheckedItemValueHistory';
 
 const StatusAndComment = ({index, childIndex, childRow, machineId, serviceId}) => {
-
+    const { machineServiceRecord } = useSelector((state) => state.machineServiceRecord);
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
 
@@ -24,7 +24,7 @@ const StatusAndComment = ({index, childIndex, childRow, machineId, serviceId}) =
     const [selectedImage, setSelectedImage] = useState(-1);
     const [slides, setSlides] = useState([]);
 
-    const handleAddFileDialog = ()=>{
+    const handleAddFileDialog = () => {
       dispatch(setAddFileDialog(true));
     }
 
@@ -73,8 +73,12 @@ const StatusAndComment = ({index, childIndex, childRow, machineId, serviceId}) =
   
     const handleDeleteCheckItemFile = async (fileId) => {
       try {
-        await dispatch(deleteCheckItemFile(machineId, serviceId, fileId));
-        await dispatch(getMachineServiceRecordCheckItems(machineId, serviceId))
+        if( machineId && fileId ){
+          await dispatch(deleteCheckItemFile( machineId, fileId ));
+        }
+        if( machineId && machineServiceRecord?._id ){
+          await dispatch(getMachineServiceRecordCheckItems( machineId, machineServiceRecord?._id ))
+        }
         enqueueSnackbar('File Archived successfully!');
       } catch (err) {
         console.log(err);
