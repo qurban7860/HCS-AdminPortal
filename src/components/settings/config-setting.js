@@ -2,6 +2,7 @@
 // ----------------------------------------------------------------------
 
 export const defaultSettings = {
+  toggleDrawer: false,
   themeMode: 'light',
   themeDirection: 'ltr',
   themeContrast: 'default',

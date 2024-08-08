@@ -15,8 +15,9 @@ const initialState = {
   isLoading: false,
   error: null,
   historicalConfiguration: {},
-  historicalConfiguration2: {},
   historicalConfigurations: [],
+  historicalConfigurationCompare: {},
+  selectedINIs:[],
   isHistorical: false,
   isDetailPage: false,
   filterBy: '',
@@ -91,13 +92,18 @@ const slice = createSlice({
     },
 
     // GET MACHINE Active SERVICE PARAM
-    getHistoricalConfigurationRecord2Success(state, action) {
+    getHistoricalConfigurationRecordCompareSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.historicalConfiguration2 = action.payload;
+      state.historicalConfigurationCompare = action.payload;
       state.initial = true;
     },
-    
+
+    // GET MACHINE Active SERVICE PARAM
+    setSelectedINIs(state, action) {
+      state.selectedINIs = action.payload;
+    },
+
     setResponseMessage(state, action) {
       state.responseMessage = action.payload;
       state.isLoading = false;
@@ -108,7 +114,8 @@ const slice = createSlice({
 
     // RESET MACHINE TECH PARAM
     resetHistoricalConfigurationRecord(state){
-      state.historicalConfiguration = {};
+      state.historicalConfiguration = null;
+      state.historicalConfigurationCompare = null;
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
@@ -149,6 +156,7 @@ export const {
   setAllFlagFalse,
   resetHistoricalConfigurationRecords,
   resetHistoricalConfigurationRecord,
+  setSelectedINIs,
   setResponseMessage,
   setFilterBy,
   ChangeRowsPerPage,
@@ -200,9 +208,10 @@ export function getHistoricalConfigurationRecord(machineId, id) {
   };
 }
 
+
 // ----------------------------------------------------------------------
 
-export function getHistoricalConfigurationRecord2(machineId, id) {
+export function getHistoricalConfigurationRecordCompare(machineId, id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -212,7 +221,7 @@ export function getHistoricalConfigurationRecord2(machineId, id) {
           machine: machineId,
         }
       });
-      dispatch(slice.actions.getHistoricalConfigurationRecord2Success(response.data));
+      dispatch(slice.actions.getHistoricalConfigurationRecordCompareSuccess(response.data));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -220,6 +229,7 @@ export function getHistoricalConfigurationRecord2(machineId, id) {
     }
   };
 }
+
 
 // ----------------------------------------------------------------------
 

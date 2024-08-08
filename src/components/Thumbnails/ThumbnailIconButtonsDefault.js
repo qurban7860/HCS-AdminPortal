@@ -80,14 +80,7 @@ DeleteIconButton.propTypes = {
   icon: PropTypes.string,
 };
 
-DeleteIconButton.defaultProps = {
-  left: 44,
-  icon: 'material-symbols:delete',
-};
-
-// template thumbnail Iconbutton
-
-export function ThumbnailIconButtonDefault({ onClick, left, color, icon }) {
+export function ThumbnailIconButtonDefault({ onClick, left=44, color, icon='material-symbols:delete' }) {
   const theme = useTheme();
   return (
     <Link>
@@ -115,9 +108,4 @@ ThumbnailIconButtonDefault.propTypes = {
   left: PropTypes.number,
   color: PropTypes.string,
   icon: PropTypes.string,
-};
-
-ThumbnailIconButtonDefault.defaultProps = {
-  left: 44,
-  color: '#000000',
 };

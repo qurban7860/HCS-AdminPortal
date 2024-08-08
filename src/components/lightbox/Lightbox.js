@@ -150,8 +150,9 @@ export default function Lightbox({
                 </button>
               </>
           ,
-          slide: ({slide}) => <LightboxSlide slide={slide} transitionTime={transitionTime} zoomLevel={zoomLevel} rotateDeg={rotateDeg} />
-          }}
+          slide: ({slide}) => <LightboxSlide slide={slide} transitionTime={transitionTime} zoomLevel={zoomLevel} rotateDeg={rotateDeg} />,
+          thumbnail:({slide}) => <img src={slide?.src} alt="Thumbnail" />  
+        }}
         {...other}
       />
     </>

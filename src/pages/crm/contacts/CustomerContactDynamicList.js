@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
 // @mui
-import { Stack, Grid, Container, Autocomplete, TextField } from '@mui/material';
+import { Stack, Grid, Container, Autocomplete, TextField, Table, TableBody } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import { LoadingButton } from '@mui/lab';
 import { CardBase, GridBaseViewForm, StyledScrollbar } from '../../../theme/styles/customer-styles';
@@ -186,7 +186,11 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
       <Grid container spacing={1} direction="row" justifyContent="flex-end">
         {contacts.length === 0 && (
           <Grid item lg={12} sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-            <TableNoData isNotFound={isNotFound} />
+            <Table>
+              <TableBody>
+                <TableNoData isNotFound={isNotFound} />
+              </TableBody>
+            </Table>
           </Grid>
         )}
         {contacts.length > 0 && (
@@ -208,7 +212,7 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
             )}
             <ContactSiteScrollbar
               onClick={(e) => e.stopPropagation()}
-              snapAlign="start"
+              // snapAlign="start"
               disabled={contactEditForm || contactAddForm || contactMoveForm}
             >
               <Grid container direction="column" gap={1}>

@@ -7,6 +7,8 @@ import {  Card, Grid } from '@mui/material';
 // redux
 import { 
   deleteDocumentType,
+  getActiveDocumentTypes,
+  setMergeDialogVisibility
 } from '../../../../redux/slices/document/documentType';
 // paths
 import {  PATH_SETTING } from '../../../../routes/paths';
@@ -15,6 +17,7 @@ import { useSnackbar } from '../../../../components/snackbar';
 import ViewFormAudit from '../../../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../../../components/ViewForms/ViewFormField';
 import ViewFormEditDeleteButtons from '../../../../components/ViewForms/ViewFormEditDeleteButtons';
+import MergeDocumentTypeDialog from '../../../../components/Dialog/MergeDocumentTypeDialog';
 
 // ----------------------------------------------------------------------
 
@@ -39,6 +42,11 @@ export default function DocumentTypeViewForm() {
     navigate(PATH_SETTING.documentType.edit(documentType._id));
   };
 
+  const handleMergeDialog = async () => {
+    await dispatch(getActiveDocumentTypes());
+    await dispatch(setMergeDialogVisibility(true));
+  };
+
   const defaultValues = useMemo(
     () => ({
       isActive: documentType?.isActive,
@@ -59,25 +67,29 @@ export default function DocumentTypeViewForm() {
   );
 
   return (
-    <Card sx={{ p: 2 }}>
-      <Grid>
-          
-        <ViewFormEditDeleteButtons 
-          customerAccess={defaultValues?.customerAccess} 
-          isDefault={defaultValues.isDefault} 
-          isActive={defaultValues.isActive} 
-          handleEdit={handleEdit} 
-          onDelete={onDelete} 
-          backLink={() => navigate(PATH_SETTING.documentType.list)}
-          settingPage
-        />
-        <Grid container sx={{mt:2}}>
-          <ViewFormField sm={12} heading="Category" param={defaultValues.category} />
-          <ViewFormField sm={6} heading="Type Name" param={defaultValues.name} />
-          <ViewFormField sm={12} heading="Description" param={defaultValues.description} />
-          <ViewFormAudit defaultValues={defaultValues} />
+    <>
+      <Card sx={{ p: 2 }}>
+        <Grid>
+            
+          <ViewFormEditDeleteButtons 
+            customerAccess={defaultValues?.customerAccess} 
+            isDefault={defaultValues.isDefault} 
+            isActive={defaultValues.isActive} 
+            handleEdit={handleEdit} 
+            onDelete={onDelete} 
+            backLink={() => navigate(PATH_SETTING.documentType.list)}
+            settingPage
+            onMergeDocumentType={handleMergeDialog}
+          />
+          <Grid container sx={{mt:2}}>
+            <ViewFormField sm={12} heading="Category" param={defaultValues.category} />
+            <ViewFormField sm={6} heading="Type Name" param={defaultValues.name} />
+            <ViewFormField sm={12} heading="Description" param={defaultValues.description} />
+            <ViewFormAudit defaultValues={defaultValues} />
+          </Grid>
         </Grid>
-      </Grid>
-    </Card>
+      </Card>
+      <MergeDocumentTypeDialog  />
+    </>
   );
 }

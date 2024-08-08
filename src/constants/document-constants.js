@@ -128,6 +128,56 @@ export const allowedExtensions = [
   'xlsm',
 ];
 
+export const imagesExtensions = [
+  'png',
+  'jpeg',
+  'jpg',
+  'gif',
+  'bmp',
+  'webp',
+  'djvu',
+  'heic',
+  'heif',
+  'ico',
+  'jfif',
+  'jp2',
+  'jpe',
+  'jps',
+  'mng',
+  'nef',
+  'nrw',
+  'orf',
+  'pam',
+  'pbm',
+  'pcd',
+  'pcx',
+  'pef',
+  'pes',
+  'pfm',
+  'pgm',
+  'picon',
+  'pict',
+  'pnm',
+  'ppm',
+  'psd',
+  'raf',
+  'ras',
+  'rw2',
+  'sfw',
+  'sgi',
+  'svg',
+  'tga',
+  'tiff',
+  'jxr',
+  'wbmp',
+  'x3f',
+  'xbm',
+  'xcf',
+  'xpm',
+  'xwd'
+];
+
+
 // NOTE: These are the constants for the document upload radio buttons for adding a document
 
 // Values for the radio buttons

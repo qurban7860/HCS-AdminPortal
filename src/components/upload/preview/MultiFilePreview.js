@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
-import { useState, memo } from 'react';
-import { useSelector } from 'react-redux';
+import { useState, memo, useLayoutEffect, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { m, AnimatePresence } from 'framer-motion';
 // @mui
 import { useTheme } from '@mui/material/styles';
@@ -32,6 +32,7 @@ MultiFilePreview.propTypes = {
   onChangeDisplayName: PropTypes.func,
   onChangeReferenceNumber: PropTypes.func,
   onChangeStockNumber: PropTypes.func,
+  onLoadImage: PropTypes.func,
 };
 
 function MultiFilePreview({ 
@@ -43,6 +44,7 @@ function MultiFilePreview({
   onChangeDisplayName,
   onChangeReferenceNumber,
   onChangeStockNumber,
+  onLoadImage,
   files, 
   onRemove, 
   sx, 
@@ -51,12 +53,16 @@ function MultiFilePreview({
 }) {
   
   const { activeDocumentTypes } = useSelector((state) => state.documentType);
-
+  const dispatch = useDispatch()
   const theme = useTheme();
-  const [selectedFile, setSelectedFile] = useState([]);
-  
+  const [slides, setSlides] = useState([]);
+  const [selectedImage, setSelectedImage] = useState(-1);
   const [fileFound, setFileFound] = useState(null);
   const [verifiedAnchorEl, setVerifiedAnchorEl] = useState(null);
+
+  useEffect(() => {
+    setSlides(files);
+  }, [files]);
 
   const handleExtensionsPopoverOpen = (event, file) => {
       setVerifiedAnchorEl(event.currentTarget);
@@ -73,16 +79,19 @@ function MultiFilePreview({
   if (!files?.length) {
     return null;
   }
-
-  const previewHandle = (file) => {
-    const img = [{
-          src:file?.preview,
-          isLoaded:true
-      }]
-
-    setSelectedFile(img);
-  };
   
+  const handleOpenLightbox = async (index) => {
+    setSelectedImage(index);
+    const image = slides[index];
+    if(!image.isLoaded && onLoadImage){
+      await onLoadImage(image?._id, index)
+    }
+  };
+
+  const handleCloseLightbox = () => {
+    setSelectedImage(-1);
+  };
+
   const FORMAT_IMG_VISIBBLE = ['jpg', 'jpeg', 'gif', 'bmp', 'png', 'svg', 'webp', 'ico', 'jpe',];
         
   return (
@@ -90,9 +99,9 @@ function MultiFilePreview({
       {files.map(( file , index ) => {
         if(file){
         const { key, name = '', size = 0, displayName, referenceNumber, versionNo, stockNumber, docCategory, docType } = fileData(file);
-        const fileType = file?.type?.split('/').pop()?.toLowerCase();
+        const fileType = file?.type?.split('/').pop().toLowerCase();
         const isNotFormatFile = typeof file === 'string';
-
+        
         if (thumbnail) {
           return (
               <Card key={key || index} sx={{
@@ -106,10 +115,11 @@ function MultiFilePreview({
                           opacity: 1,
                       },
                       width:'100%',
-                      height:180,
+                      height:150,
+                      borderRadius:'10px'
                     }}
                 >
-                  <CardMedia onClick={()=> FORMAT_IMG_VISIBBLE.some(format => fileType.match(format?.toLowerCase())) && previewHandle(file)}>
+                  <CardMedia onClick={()=> FORMAT_IMG_VISIBBLE.some(format => fileType?.match(format?.toLowerCase())) && handleOpenLightbox(index)}>
                     <FileThumbnail imageView file={file} sx={{ position: 'absolute' }} imgSx={{ position: 'absolute' }}/>
                   </CardMedia>
                   <ButtonGroup
@@ -124,8 +134,8 @@ function MultiFilePreview({
                               width:'100%'
                           }}
                       >       
-                          {FORMAT_IMG_VISIBBLE.some(format => fileType.match(format))  && <Button sx={{width:'50%', borderRadius:0}} onClick={()=>previewHandle(file)}><Iconify icon="carbon:view" /></Button>}
-                          <Button sx={{width:FORMAT_IMG_VISIBBLE.some(format => fileType.match(format))?'50%':'100%', borderRadius:0}} color='error' onClick={() => onRemove(file)}><Iconify icon="radix-icons:cross-circled" /></Button>
+                          {FORMAT_IMG_VISIBBLE.some(format => fileType?.match(format))  && <Button sx={{width:'50%', borderRadius:0}} onClick={()=>handleOpenLightbox(index)}><Iconify icon="carbon:view" /></Button>}
+                          <Button sx={{width:FORMAT_IMG_VISIBBLE.some(format => fileType?.match(format))?'50%':'100%', borderRadius:0}} color='error' onClick={() => onRemove(file)}><Iconify icon="radix-icons:cross-circled" /></Button>
                       </ButtonGroup>
                       
                       <Stack
@@ -337,12 +347,12 @@ function MultiFilePreview({
       }
       return null;
       })}
-
       <Lightbox
-          index={0}
-          slides={selectedFile}
-          open={selectedFile?.length>0}
-          close={() => setSelectedFile(null)}
+          index={selectedImage}
+          slides={slides}
+          open={selectedImage>=0}
+          close={handleCloseLightbox}
+          onGetCurrentIndex={(index) => handleOpenLightbox(index)}
           disabledTotal
           disabledDownload
           disabledSlideshow

@@ -101,11 +101,11 @@ export default function ToolInstalledViewForm() {
         />
       <Grid container>
         <ViewFormField isLoading={isLoading} sm={6} heading="Tool" param={defaultValues?.toolName}/>
-        <ViewFormField isLoading={isLoading} sm={6} heading="Offset" param={defaultValues?.offset}/>
+        <ViewFormField isLoading={isLoading} sm={6} heading="Offset" param={`${defaultValues?.offset}`}/>
         <ViewFormSwitch isLoading={isLoading} sm={6} isActiveHeading='Apply Waste' isActive={defaultValues.isApplyWaste} />
-        <ViewFormField isLoading={isLoading} sm={6} heading="Waste Trigger Distance" param={defaultValues?.wasteTriggerDistance}/>
+        <ViewFormField isLoading={isLoading} sm={6} heading="Waste Trigger Distance" param={`${defaultValues?.wasteTriggerDistance}`}/>
         <ViewFormSwitch isLoading={isLoading} sm={6} isActiveHeading='Apply Crimp' isActive={defaultValues.isApplyCrimp} />
-        <ViewFormField isLoading={isLoading} sm={6} heading="Crimp Trigger Distance" param={defaultValues?.crimpTriggerDistance}/>
+        <ViewFormField isLoading={isLoading} sm={6} heading="Crimp Trigger Distance" param={`${defaultValues?.crimpTriggerDistance}`}/>
         <ViewFormField isLoading={isLoading} sm={6} heading="Operations" param={defaultValues?.operations}/>
         <Grid item sm={12} sx={{display:'flex'}}>
           <ViewFormSwitch isLoading={isLoading} sm={6} isActiveHeading='Back to Back Punch' isActive={defaultValues.isBackToBackPunch} />

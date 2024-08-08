@@ -13,13 +13,7 @@ SingleButton.propTypes = {
   sx: PropTypes.object,
 };
 
-SingleButton.defaultProps = {
-  variant: 'contained',
-  size: 'large',
-  type: 'submit',
-};
-
-export default function SingleButton({ loading, disabled, name, type, variant, size, m, sx }) {
+export default function SingleButton({ loading, disabled, name, type='submit', variant='contained', size='large', m, sx }) {
   return (
     <Grid item xs={18} md={3} display="flex">
       <Button

@@ -26,7 +26,8 @@ import {
   ChangeRowsPerPage,
   ChangePage,
   setFilterBy,
-  setSendEmailDialog
+  setSendEmailDialog,
+  setFilterDraft
 } from '../../../redux/slices/products/machineServiceRecord';
 import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../../components/ListTableTools/TableCard';
@@ -37,6 +38,8 @@ import MachineTabContainer from '../util/MachineTabContainer';
 
 const TABLE_HEAD = [
   { id: 'serviceDate', label: 'Service Date', align: 'left' },
+  { id: 'serviceRecordUid', label: 'Service ID', align: 'left' },
+  { id: 'status', label: 'Status', align: 'left' },
   { id: 'serviceRecordConfig.docTitle', label: 'Service Configuration', align: 'left' },
   { id: 'versionNo', visibility: 'xs5', label: 'Version', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
@@ -46,7 +49,7 @@ const TABLE_HEAD = [
 // ----------------------------------------------------------------------
 
 export default function MachineServiceRecordList() {
-  const { machineServiceRecords, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.machineServiceRecord);
+  const { machineServiceRecords, filterBy, filterDraft, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.machineServiceRecord);
   const navigate = useNavigate();
   const { machineId } = useParams();
 
@@ -69,7 +72,8 @@ export default function MachineServiceRecordList() {
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
-
+  const [filterDraftStatus, setFilterDraftStatus] = useState(false);
+  
   useLayoutEffect(() => {
     dispatch(setSendEmailDialog(false));
     if(machineId){
@@ -89,6 +93,7 @@ export default function MachineServiceRecordList() {
     comparator: getComparator(order, orderBy),
     filterName,
     filterStatus,
+    filterDraftStatus
   });
 
   const isFiltered = filterName !== '' || !!filterStatus.length;
@@ -101,11 +106,23 @@ export default function MachineServiceRecordList() {
     dispatch(setFilterBy(value))
   }, 500))
 
+  const debouncedDraft = useRef(debounce((value) => {
+    dispatch(ChangePage(0))
+    dispatch(setFilterDraft(value))
+  }, 500))
+
   const handleFilterName = (event) => {
     debouncedSearch.current(event.target.value);
     setFilterName(event.target.value)
     setPage(0);
   };
+
+  const handleFilterDraft = (status) => {
+    debouncedDraft.current(status)
+    setFilterDraftStatus(status)
+    setPage(0);
+  }
+
   
   useEffect(() => {
       debouncedSearch.current.cancel();
@@ -113,6 +130,7 @@ export default function MachineServiceRecordList() {
   
   useEffect(()=>{
       setFilterName(filterBy)
+      setFilterDraftStatus(filterDraft)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 
@@ -139,6 +157,8 @@ export default function MachineServiceRecordList() {
             onFilterStatus={handleFilterStatus}
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
+            toggleStatus={filterDraftStatus}
+            onToggleStatus={handleFilterDraft}
           />
 
           {!isNotFound && <TablePaginationCustom
@@ -195,7 +215,7 @@ export default function MachineServiceRecordList() {
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName, filterStatus }) {
+function applyFilter({ inputData, comparator, filterName, filterStatus, filterDraftStatus }) {
   const stabilizedThis = inputData.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -204,6 +224,10 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   });
 
   inputData = stabilizedThis.map((el) => el[0]);
+
+  if(!filterDraftStatus){
+    inputData = inputData.filter((srec) => srec?.status!=="DRAFT");
+  }
 
   if (filterName) {
     inputData = inputData.filter(

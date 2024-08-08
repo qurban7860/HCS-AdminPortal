@@ -31,16 +31,13 @@ export default function MachineServiceRecordListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { isHistory, versionNo, serviceDate, isActive, createdAt, createdBy } = row;
-
+  const { isHistory, versionNo, serviceDate, status, isActive, createdAt, createdBy } = row;
   return (
       <StyledTableRow hover selected={selected}>
         <TableCell align="left" >{fDate(serviceDate)}</TableCell>
-        <LinkTableCell align="left" onClick={onViewRow} param={`${versionNo || 1} ${isHistory ? '' : '(Current Version)'}`} />
-        <TableCell align="center">
-          {' '}
-          <Switch checked={isActive} disabled size="small" />{' '}
-        </TableCell>
+        <TableCell align="left" >{status}</TableCell>
+        <LinkTableCell align="left" onClick={onViewRow} param={`${versionNo || 1} ${!isHistory && status!=="DRAFT"? '(Current Version)' : ''}`} />
+        <TableCell align="center"><Switch checked={isActive} disabled size="small" /></TableCell>
         <TableCell align="left">{createdBy.name}</TableCell>
         <TableCell align="right">{fDate(createdAt)}</TableCell>
       </StyledTableRow>

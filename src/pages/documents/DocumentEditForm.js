@@ -71,8 +71,8 @@ function DocumentEditForm({ customerPage, machinePage, drawingPage, machineDrawi
 
   const defaultValues = useMemo(
     () => ({
-      documentCategory: document?.docCategory || null,
-      documentType: document?.docType || null,
+      documentCategory: document?.docCategory,
+      documentType: document?.docType,
       displayName: document?.displayName || '',
       description: document?.description || '',
       referenceNumber: document?.referenceNumber || '',

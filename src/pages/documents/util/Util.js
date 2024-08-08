@@ -1,8 +1,8 @@
-import { allowedExtensions } from '../../../constants/document-constants';
+import { allowedExtensions, imagesExtensions } from '../../../constants/document-constants';
 
 const maxFiles = JSON.parse( localStorage.getItem('configurations'))?.find( ( c )=> c?.name === 'MAX_UPLOAD_FILES' )
 
-export const validateFileType = (value, options) => {
+  export const validateFileType = (value, options) => {
     const { path, createError } = options;
     if (value && Array.isArray(value)) {
       if (value.length > 20) {
@@ -58,4 +58,39 @@ export const validateFileType = (value, options) => {
       return true;
     }
     return true;
+  };
+
+  export const validateImageFileType = (value, options) => {
+    const { path, createError } = options;
+  
+    if (value && Array.isArray(value)) {
+      if (value.length > 20) {
+        return createError({
+          message: 'Maximum 20 files can be uploaded at a time.',
+          path,
+          value,
+        });
+      }
+  
+      const invalidFiles = value.filter((file) => {
+        const fileExtension = file?.name?.split('.').pop().toLowerCase();
+        return !imagesExtensions.includes(fileExtension);
+      });
+  
+      if (invalidFiles.length > 0) {
+        const invalidFileNames = invalidFiles.map((file) => file.name).join(', ');
+        return createError({
+          message: `Invalid file(s) detected: ${invalidFileNames}`,
+          path,
+          value,
+        });
+      }
+      return true;
+    }
+  
+    return createError({
+      message: 'File is required!',
+      path,
+      value,
+    });
   };

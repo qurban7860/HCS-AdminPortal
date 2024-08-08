@@ -44,7 +44,7 @@ const slice = createSlice({
     createEventSuccess(state, action) {
       const newEvent = {
         id: action.payload._id,
-        title: `${action.payload?.createdBy?.name || ''}, ${action.payload?.customer?.name || ''}`,
+        title: `${action.payload?.primaryTechnician?.firstName || ''} ${action.payload?.primaryTechnician?.lastName || ''}, ${action.payload?.customer?.name || ''}`,
         start: action.payload?.start,
         end: action.payload?.end,
         textColor: "#1890FF",
@@ -61,7 +61,7 @@ const slice = createSlice({
         if (event.id === action.payload._id) {
           return {
             id: action.payload._id,
-            title: `${action.payload?.createdBy?.name || ''}, ${action.payload?.customer?.name || ''}`,
+            title: `${action.payload?.primaryTechnician?.firstName || ''} ${action.payload?.primaryTechnician?.lastName || ''}, ${action.payload?.customer?.name || ''}`,
             start: action.payload?.start,
             end: action.payload?.end,
             textColor: "#1890FF",
@@ -154,7 +154,7 @@ export function getEvents(date, customer, contact) {
       const response = await axios.get(`${CONFIG.SERVER_URL}calender/events`, { params } );
       const formattedData = response?.data?.map((v) => ({
         id: v?._id,
-        title: `${v?.createdBy?.name || ''}, ${v?.customer?.name || ''}`,
+        title: `${v?.primaryTechnician?.firstName || ''} ${v?.primaryTechnician?.lastName || ''}, ${v?.customer?.name || ''}`,
         start: v?.start,
         end: v?.end,
         textColor: "#1890FF",

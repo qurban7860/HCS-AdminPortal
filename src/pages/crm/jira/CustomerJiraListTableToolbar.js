@@ -19,7 +19,7 @@ CustomerJiraListTableToolbar.propTypes = {
   filterName: PropTypes.string,
   onFilterName: PropTypes.func,
   onResetFilter: PropTypes.func,
-  filterStatus: PropTypes.array,
+  filterStatus: PropTypes.string,
   onFilterStatus: PropTypes.func
 };
 

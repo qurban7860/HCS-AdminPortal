@@ -244,7 +244,7 @@ export const PATH_MACHINE = {
       root: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/ini`),
       new: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/ini/new`),
       view: (machineId, id ) => path(ROOTS_MACHINE, `/machines/${machineId}/ini/${id}/view`),
-      compare: (machineId, id1, id2 ) => path(ROOTS_MACHINE, `/machines/${machineId}/ini/${id1}/${id2}/compare`),
+      compare: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/ini/compare`),
     },    
     // --------------------- Machine Tool Installed -----------------------
     logs: {

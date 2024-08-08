@@ -1,6 +1,17 @@
-import { format, isValid, getTime, parseISO, formatDistanceToNow, differenceInDays } from 'date-fns';
+import { format, isValid, getTime, parseISO, formatDistanceToNow, differenceInDays, parse } from 'date-fns';
 
 // ----------------------------------------------------------------------
+
+export const stringToDate = (dateString, formatString = 'dd/MM/yyyy') => {
+  try {
+    const parsedDate = parse(dateString, formatString, new Date());
+    return isValid(parsedDate) ? parsedDate : null;
+  } catch (error) {
+    console.error('Invalid date format', error);
+    return null;
+  }
+};
+
 
 export function isValidDate(date) {
   if(isValid(new Date(date))){
