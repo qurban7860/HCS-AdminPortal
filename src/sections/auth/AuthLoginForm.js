@@ -57,13 +57,13 @@ export default function AuthLoginForm() {
   const { remember, email, password } = watch()
 
   useEffect(() => {
-    const storedEmail =       localStorage.getItem("login");
-    const storedPassword =    localStorage.getItem("token");
+    const storedEmail =       localStorage.getItem("hcp-login");
+    const storedPassword =    localStorage.getItem("hcp-pass");
     const storedRemember =    localStorage.getItem("remember");
     if (storedEmail && storedPassword && storedRemember) {
-      const encodedPassword = atob(storedPassword);
+      const decodedPassword = atob(storedPassword);
       setValue('email',storedEmail);
-      setValue('password',encodedPassword);
+      setValue('password',decodedPassword);
       setValue('remember',true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -74,12 +74,12 @@ export default function AuthLoginForm() {
     try {
       if (remember) {
         const encodedPassword = btoa(password);
-        localStorage.setItem("login", email);
-        localStorage.setItem("token", encodedPassword);
+        localStorage.setItem("hcp-login", email);
+        localStorage.setItem("hcp-pass", encodedPassword);
         localStorage.setItem("remember", remember);
       } else {
-        localStorage.removeItem("login");
-        localStorage.removeItem("token");
+        localStorage.removeItem("hcp-login");
+        localStorage.removeItem("hcp-pass");
         localStorage.removeItem("remember");
       }
 

@@ -259,7 +259,7 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
               </Box>
               <Grid>
                 {phoneNumbers?.map((pN, index) => (
-                  <Grid sx={{ py: 1 }} display="flex" alignItems="center" >
+                  <Grid key={pN+index} sx={{ py: 1 }} display="flex" alignItems="center" >
                     <RHFCustomPhoneInput name={`phoneNumbers[${index}]`} value={pN} label={pN?.type || 'Contact Number'} index={index} />
                     <IconButton disabled={phoneNumbers?.length === 1} onClick={() => removeContactNumber(index)} size="small" variant="contained" color='error' sx={{ mx: 1 }} >
                       <StyledTooltip title="Remove Contact Number" placement="top" disableFocusListener tooltipcolor={theme.palette.error.main} color={phoneNumbers?.length > 1 ? theme.palette.error.main : theme.palette.text.main}  >

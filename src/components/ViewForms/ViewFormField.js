@@ -50,7 +50,7 @@ function ViewFormField({
   ViewAllVersions,
   handleAllVersion,
   isLoading,
-  variant
+  variant='body1'
 }) {
   const [verifiedAnchorEl, setVerifiedAnchorEl] = useState(null);
   const [verifiedBy, setVerifiedBy] = useState([]);
@@ -83,13 +83,12 @@ function ViewFormField({
           <SkeletonViewFormField />
       ) : (
       <>
-        <Typography variant={variant}
+        <Grid 
           style={{
             display: 'flex',
             alignItems: 'center',
             whiteSpace: 'pre-line',
             wordBreak: 'break-word',
-            // color:heading?.toLowerCase()==="status" && param?.toLowerCase()==="transferred" && 'red'
           }}
         >
         <IconPopover isActive={isActive} />
@@ -109,24 +108,26 @@ function ViewFormField({
         {multiAuth !== undefined && <IconPopover multiAuth={multiAuth} />}
         {currentEmp !== undefined && <IconPopover currentEmp={currentEmp} />}
         {customerAccess !== undefined && <IconPopover customerAccess={customerAccess} />}
-        {param && typeof param === 'string' && param.trim().length > 0 && param}
-        {objectString && typeof objectString === 'string' && objectString.length > 0 && objectString}
-        {param &&
-          typeof param === 'string' &&
-          param.trim().length > 0 &&
-          secondParam &&
+        <Typography variant={variant}>
+          {param && typeof param === 'string' && param.trim().length > 0 && param}
+          {objectString && typeof objectString === 'string' && objectString.length > 0 && objectString}
+          {param &&
+            typeof param === 'string' &&
+            param.trim().length > 0 &&
+            secondParam &&
+            typeof secondParam === 'string' &&
+            secondParam.trim().length > 0 &&
+            '  '}
+          {param && typeof param !== 'string' && param}
+          {secondParam &&
           typeof secondParam === 'string' &&
           secondParam.trim().length > 0 &&
-          '  '}
-        {param && typeof param !== 'string' && param}
-        {secondParam &&
-        typeof secondParam === 'string' &&
-        secondParam.trim().length > 0 &&
-        secondParam}
+          secondParam}
+          {objectParam || ''}
+          {secondObjectParam || ''}
+          {numberParam || ''}
+        </Typography>
         {node || ''}
-        {objectParam || ''}
-        {secondObjectParam || ''}
-        {numberParam || ''}
         {ViewAllVersions && 
           <StyledTooltip title={ICONS.VIEW_VERSIONS.heading} placement="top" disableFocusListener tooltipcolor={theme.palette.primary.main} color={theme.palette.primary.main}>
             <IconButton onClick={handleAllVersion} >
@@ -149,7 +150,7 @@ function ViewFormField({
           </StyledTooltip>
         }
         &nbsp;
-      </Typography>
+      </Grid>
       {configArrayParam && typeof configArrayParam === 'object' && configArrayParam?.length > 0 && (
         <Grid container sx={{my:-3, mb:0,
               display: 'flex',
@@ -357,6 +358,3 @@ ViewFormField.propTypes = {
   variant: PropTypes.string,
 };
 
-ViewFormField.defaultProps = {
-  variant: 'body1',
-};

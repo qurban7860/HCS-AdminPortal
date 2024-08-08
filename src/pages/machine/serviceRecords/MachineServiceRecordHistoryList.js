@@ -1,7 +1,7 @@
 import debounce from 'lodash/debounce';
 import { useState, useEffect, useRef, useLayoutEffect } from 'react';
 // @mui
-import { Table, Tooltip, TableBody, IconButton, TableContainer, Grid, Container, Typography } from '@mui/material';
+import { Table, Tooltip, TableBody, IconButton, TableContainer, Grid, Container, Typography, Divider } from '@mui/material';
 // routes
 import { useNavigate, useParams } from 'react-router-dom';
 import { PATH_MACHINE } from '../../../routes/paths';
@@ -37,6 +37,7 @@ import MachineTabContainer from '../util/MachineTabContainer';
 
 const TABLE_HEAD = [
   { id: 'serviceDate', label: 'Service Date', align: 'left' },
+  { id: 'status', label: 'Status', align: 'left' },
   { id: 'versionNo', visibility: 'xs5', label: 'Version', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
   { id: 'createdBy.name', label: 'Created By', align: 'left' },
@@ -108,24 +109,24 @@ export default function MachineServiceRecordHistoryList() {
 
   return (
     <Container maxWidth={false} >
-          <MachineTabContainer currentTabValue='serviceRecords' />
+        <MachineTabContainer currentTabValue='serviceRecords' />
         <TableCard>
-        <Grid container sx={{ m: 2 }}>
-        <Grid item sm={12}
-          sx={{ display: 'flex' }}
-        >
-        <StyledStack>
-          <IconTooltip
-            title='Back'
-            color='#008000'
-            icon="mdi:arrow-left"
-            onClick={() => navigate(PATH_MACHINE.machines.serviceRecords.view(machineId, serviceId)) }
-            size="small"
-            />
-        </StyledStack>
-        </Grid> 
-            <Typography variant='h3'>{machineServiceRecordHistory?.[0]?.serviceRecordConfig?.docTitle || '' }</Typography>
-        </Grid>
+            <Grid container gap={1} p={2}>
+              <Grid item>
+                <StyledStack>
+                      <IconTooltip
+                        title='Back'
+                        onClick={() => navigate(PATH_MACHINE.machines.serviceRecords.root(machineId, serviceId)) }
+                        color='#1976d2'
+                        icon="mdi:arrow-left"
+                      />
+                      <Divider orientation="vertical" flexItem />
+                  </StyledStack>
+              </Grid>
+              <Grid item>
+                  <Typography variant='h4'>{machineServiceRecordHistory?.[0]?.serviceRecordUid || '' } - {machineServiceRecordHistory?.[0]?.serviceRecordConfig?.docTitle || '' }</Typography>
+              </Grid>
+            </Grid>
 
           {!isNotFound && <TablePaginationCustom
             count={dataFiltered.length}

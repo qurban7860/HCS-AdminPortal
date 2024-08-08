@@ -341,7 +341,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     filterSelectedOptions
                     name="machineConnectionVal"
                     id="tags-outlined"
-                    defaultValues={newConnectedMachines}
+                    defaultValue={newConnectedMachines}
                     options={connectedMachinesOption}
                     groupBy={(option) => option?.group}
                     getOptionLabel={(option) => `${option?.serialNo || ''} ${option?.name ? '-' : ''} ${option?.name || ''}`}

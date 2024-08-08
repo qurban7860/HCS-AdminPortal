@@ -11,7 +11,7 @@ import { useAuthContext } from '../../../auth/useAuthContext';
 import ViewPhoneComponent from '../../../components/ViewForms/ViewPhoneComponent';
 import { getContact, getContacts, resetContact, deleteContact, setIsExpanded, setCardActiveIndex } from '../../../redux/slices/customer/contact';
 import { setMachineTab } from '../../../redux/slices/products/machine';
-import { getMachineServiceRecord, setMachineServiceRecordViewFormVisibility, setResetFlags } from '../../../redux/slices/products/machineServiceRecord';
+import { getMachineServiceRecord, setResetFlags } from '../../../redux/slices/products/machineServiceRecord';
 import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../../components/ViewForms/ViewFormField';
 import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
@@ -97,10 +97,9 @@ export default function ContactViewForm({
 
   const handleSericeRecordView = async (machineId, Id) => {
     await dispatch(setMachineTab('serviceRecords'));
-    await navigate(PATH_MACHINE.machines.view(machineId));
+    await navigate(PATH_MACHINE.machines.serviceRecords.view(machineId, Id));
+    await dispatch(getMachineServiceRecord(machineId, Id));
     await dispatch(setResetFlags(false));
-    dispatch(getMachineServiceRecord(machineId, Id));
-    dispatch(setMachineServiceRecordViewFormVisibility(true));
   };
 
   const operatorTraningsList = defaultValues?.serviceRecords?.map((item, index) => 

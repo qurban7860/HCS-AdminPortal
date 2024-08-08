@@ -8,7 +8,6 @@ import { Box, Card, Grid, Stack, Typography } from '@mui/material';
 // slice
 import {
   updateServiceRecordConfig,
-  setServiceRecordConfigEditFormVisibility,
 } from '../../../redux/slices/products/serviceRecordConfig';
 import { getActiveMachineModels, resetActiveMachineModels } from '../../../redux/slices/products/model';
 import { getActiveServiceCategories } from '../../../redux/slices/products/serviceCategory';
@@ -114,9 +113,9 @@ export default function ServiceRecordConfigEditForm() {
   }, [serviceRecordConfig]);
 
   const toggleCancel = () => {
-    dispatch(setServiceRecordConfigEditFormVisibility(false));
     navigate(PATH_MACHINE.machines.machineSettings.serviceRecordsConfig.view(id));
   };
+  
   const onSubmit = async (data) => {
     try {
       data.checkItemLists = checkParams

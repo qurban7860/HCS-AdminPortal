@@ -387,7 +387,9 @@ function DocumentAddForm({
           return Object.assign(file, {
             preview: URL.createObjectURL(file),
             found: _files[index]?.status===200?null:_files[index],
-            machine:machineVal?._id
+            machine:machineVal?._id,
+            src: URL.createObjectURL(file),
+            isLoaded:true
           })
         }
       );

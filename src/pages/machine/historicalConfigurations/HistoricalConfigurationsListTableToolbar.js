@@ -23,6 +23,7 @@ HistoricalConfigurationsListTableToolbar.propTypes = {
   onFilterStatus: PropTypes.func,
   statusOptions: PropTypes.array,
   isHistory: PropTypes.bool,
+  onCompareINI: PropTypes.func,
 };
 
 export default function HistoricalConfigurationsListTableToolbar({
@@ -33,7 +34,8 @@ export default function HistoricalConfigurationsListTableToolbar({
   statusOptions,
   onResetFilter,
   onFilterStatus,
-  isHistory
+  isHistory,
+  onCompareINI
 }) {
   const navigate = useNavigate();
   const { machineId } = useParams();
@@ -52,6 +54,7 @@ export default function HistoricalConfigurationsListTableToolbar({
         SubOnClick={toggleAdd}
         addButton={!isHistory && BUTTONS.ADD_MACHINE_INI}
         transferredMachine={machine?.status?.slug==='transferred'}
+        onCompareINI={onCompareINI}
       />
     </Stack>
   );

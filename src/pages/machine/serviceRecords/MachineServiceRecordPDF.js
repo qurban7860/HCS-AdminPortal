@@ -4,10 +4,13 @@ import { Document, Page, Image, View, Text, StyleSheet, Font  } from '@react-pdf
 import { fDate } from '../../../utils/formatTime';
 
 MachineServiceRecordPDF.propTypes = {
-    machineServiceRecord: PropTypes.object
+    machineServiceRecord: PropTypes.object,
+    machineServiceRecordCheckItems: PropTypes.array,
 };
 
-export function MachineServiceRecordPDF({machineServiceRecord}) {
+export function MachineServiceRecordPDF({machineServiceRecord, machineServiceRecordCheckItems}) {
+
+    console.log("machineServiceRecordCheckItems::::",machineServiceRecordCheckItems)
 
     const defaultValues = useMemo(
         () => ({
@@ -51,7 +54,6 @@ export function MachineServiceRecordPDF({machineServiceRecord}) {
     );
 
     const decoilers = defaultValues?.decoilers?.map((decoilerMachine) => (`${decoilerMachine?.serialNo ? decoilerMachine?.serialNo : ''}${decoilerMachine?.name ? '-' : ''}${decoilerMachine?.name ? decoilerMachine?.name : ''}`)).join(', ');
-    const checkItemLists = machineServiceRecord?.serviceRecordConfig?.checkItemLists || [];
     const operators = machineServiceRecord?.operators?.map(operator => `${operator?.firstName || ''} ${operator?.lastName || ''}`).join(', ');
     
     const fileName = `${defaultValues?.serviceDate?.substring(0,10).replaceAll('-','')}_${defaultValues?.serviceRecordConfigRecordType}_${defaultValues?.versionNo}`;
@@ -65,7 +67,7 @@ export function MachineServiceRecordPDF({machineServiceRecord}) {
         >
     <Page style={styles.page}>
         <Image fixed src={`${origin}/assets/background/pdf-background.jpg`} style={styles.backgroundImage} />
-        {(defaultValues.headerLeftText || defaultValues.headerCenterText || defaultValues.headerRightText) &&
+        {/* {(defaultValues.headerLeftText || defaultValues.headerCenterText || defaultValues.headerRightText) &&
             <View style={styles.header} fixed>
                 <View style={styles.col_30}>
                     <Text style={styles.text_left}>{defaultValues.headerLeftText}</Text>
@@ -77,7 +79,7 @@ export function MachineServiceRecordPDF({machineServiceRecord}) {
                     <Text style={styles.text_right}>{defaultValues.headerRightText}</Text>
                 </View>
             </View>
-        }
+        } */}
         <Image fixed src={`${origin}/logo/HowickLogo.png`} style={styles.logo} />
         <View style={styles.body}>
             <Text style={styles.title}>Key Details</Text>
@@ -144,8 +146,8 @@ export function MachineServiceRecordPDF({machineServiceRecord}) {
                 </View>
             </View>
 
-            {checkItemLists.length > 0 &&
-            checkItemLists.map((row, index) => (
+            {machineServiceRecordCheckItems?.checkItemLists?.length > 0 &&
+                machineServiceRecordCheckItems?.checkItemLists?.map((row, index) => (
                 <View key={`contatiner-${index}`} style={styles.contatiner}>
                         <Text style={styles.text}>{index+1} - {row.ListTitle} ({row.checkItems?.length})</Text>
                         {row?.checkItems?.map((childRow,childIndex) => (
@@ -215,7 +217,7 @@ export function MachineServiceRecordPDF({machineServiceRecord}) {
 
         <View style={styles.footer} fixed>
             <Text style={styles.footer_line_1} fixed><Text style={styles.bold}>www.howickltd.com</Text> P: +64 9 534 5569 | 117 Vincent Street, Howick, Auckland, New Zealand</Text>
-            {(defaultValues.footerLeftText || defaultValues.footerCenterText || defaultValues.footerRightText) &&
+            {/* {(defaultValues.footerLeftText || defaultValues.footerCenterText || defaultValues.footerRightText) &&
                 <View style={styles.footer_line_2}>
                     <View style={styles.col_30}>
                         <Text style={styles.text_left}>{defaultValues.footerLeftText}</Text>
@@ -227,7 +229,7 @@ export function MachineServiceRecordPDF({machineServiceRecord}) {
                         <Text style={styles.text_right}>{defaultValues.footerRightText}</Text>
                     </View>
                 </View>
-            }
+            } */}
         </View>
 
     </Page>
@@ -255,8 +257,8 @@ export function MachineServiceRecordPDF({machineServiceRecord}) {
 
   const styles = StyleSheet.create({
     page:{
-        paddingTop:32,
-        paddingBottom:44,
+        paddingTop:10,
+        paddingBottom:25,
     },
     body: {
         paddingHorizontal: 25,

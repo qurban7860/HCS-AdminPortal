@@ -6,7 +6,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import timelinePlugin from '@fullcalendar/timeline';
 // @mui
-import { Card, Container } from '@mui/material';
+import { Card, Container, createTheme, Grid, Typography } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -22,7 +22,7 @@ import {
 } from '../../redux/slices/event/event';
 import { getActiveCustomers } from '../../redux/slices/customer/customer';
 import { getActiveSPContacts } from '../../redux/slices/customer/contact';
-import { getSecurityUser } from '../../redux/slices/securityUser/securityUser';
+import { getActiveSecurityUsers, getSecurityUser } from '../../redux/slices/securityUser/securityUser';
 // hooks
 import useResponsive from '../../hooks/useResponsive';
 // components
@@ -32,9 +32,11 @@ import { useDateRangePicker } from '../../components/date-range-picker';
 // sections
 import { StyledCalendar, CalendarToolbar } from '.';
 import { Cover } from '../../components/Defaults/Cover';
-import { StyledCardContainer } from '../../theme/styles/default-styles';
+import { StyledCardContainer, StyledTooltip } from '../../theme/styles/default-styles';
 import EventDialog from '../../components/Dialog/EventDialog';
 import { useAuthContext } from '../../auth/useAuthContext';
+import Iconify from '../../components/iconify';
+import { fDate, fDateTime } from '../../utils/formatTime';
 
 // ----------------------------------------------------------------------
 
@@ -49,26 +51,44 @@ export default function CalendarPage() {
   const picker = useDateRangePicker(null, null);
 
   const { events, selectedEvent, eventModel, selectedRange } = useSelector((state) => state.event );
-  const { activeCustomers } = useSelector((state) => state.customer);
+  const { securityUser } = useSelector((state) => state.user);
   const { activeSpContacts } = useSelector((state) => state.contact);
-  // console.log("activeSpContacts : ",activeSpContacts)
+  
   const [ previousDate, setPreviousDate ] = useState(null);
   const [ selectedCustomer, setSelectedCustomer ] = useState(null);
   const [ selectedContact, setSelectedContact ] = useState(null);
+  const [ selectedUser, setSelectedUser ] = useState(null);
   const [ date, setDate ] = useState(new Date());
   const [ openFilter, setOpenFilter ] = useState(false);
   const [ filterEventColor, setFilterEventColor ] = useState([]);
   const [ view, setView ] = useState(isDesktop ? 'dayGridMonth' : 'listWeek');
+  const [calendarData, setCalendarData] = useState([]);
 
+  const configurations = JSON.parse(localStorage.getItem('configurations'));
+  const def_contacts = configurations?.filter(c => c?.name === 'Default_Notify_Contacts')?.map(c => c?.value)
+  ?.flatMap(value => value?.split(','))?.filter(Boolean);
+
+  const [DefaultNotifyContacts, setDefaultNotifyContacts] = useState(activeSpContacts.filter((_contact)=> def_contacts?.includes(_contact?.email)));
+  
   useLayoutEffect(() => {
     dispatch(setEventModel(false));
     dispatch(getActiveCustomers());
     dispatch(getActiveSPContacts());
-  }, [dispatch ]);
+    dispatch(getActiveSecurityUsers());
+    dispatch(getSecurityUser(userId));
+  }, [dispatch, userId ]);
 
   useLayoutEffect(()=>{
-    setSelectedContact(activeSpContacts?.find(( spc ) => spc?._id === user?.contact ) )
-  },[ activeSpContacts, user?.contact ])
+    if(!isAllAccessAllowed){
+      setSelectedUser(securityUser);
+      setSelectedContact(securityUser?.contact)
+    }
+  },[ securityUser, isAllAccessAllowed])
+
+  useEffect(() => {
+    setCalendarData(events || []);
+  }, [events]);
+
 
   useLayoutEffect(() => {
     if( date && previousDate 
@@ -205,25 +225,47 @@ export default function CalendarPage() {
       dispatch(getEvents(date, selectedCustomer?._id, selectedContact?._id ));
     }
   };
-// console.log('Event : ',events);
+
+  const theme = createTheme();
+
+  const handleEventContent = (info) => {
+    const { timeText, event } = info;
+    const {start, customer, machines, primaryTechnician, supportingTechnicians} = event.extendedProps;
+    const supportingTechnicianNames = supportingTechnicians.map((tech)=> ` ${tech.firstName} ${tech.lastName}`);
+    const title = `${primaryTechnician.firstName} ${primaryTechnician.lastName} ${supportingTechnicianNames.length>0?`, ${supportingTechnicianNames}`:''}, ${customer.name}`;
+    const machineNames = machines.map((mc)=> `${mc.name?`${mc.name} - `:''}${mc.serialNo}`).join(', ');
+    return (
+      <StyledTooltip title={
+          <Grid item>
+            <Typography variant='body2'><strong>Time:</strong> {fDateTime(start)}</Typography>
+            <Typography variant='body2'><strong>Technician:</strong> {`${primaryTechnician.firstName} ${primaryTechnician.lastName} ${supportingTechnicianNames.length>0?`, ${supportingTechnicianNames}`:''}`}</Typography>
+            <Typography variant='body2'><strong>Customer:</strong> {customer.name}</Typography>
+            {machines?.length>0 && <Typography variant='body2'><strong>Machines:</strong> {machineNames}</Typography>}
+          </Grid>
+        } placement='top-start' tooltipcolor={theme.palette.primary.main}>
+        <div style={{ position: 'relative', zIndex: 10}} className="fc-event-main-frame">
+          <div className="fc-event-time">{timeText}</div>
+          <div className="fc-event-title-container">
+            <div className="fc-event-title fc-sticky">{title}</div>
+          </div>
+        </div>
+      </StyledTooltip>
+    );
+  };
+
   const dataFiltered = applyFilter({
-    inputData: isAllAccessAllowed ? events : 
-    events.filter((ev)=>ev?.extendedProps?._id === user.contact || 
-    ev?.extendedProps?.supportingTechnicians?.some((spc)=> spc?._id === user?.contact ) ||
-    ev?.extendedProps?.notifyContacts?.some((spc)=> spc?._id === user?.contact ) ||
-    ev?.extendedProps?.createdBy?._id === userId ),
-    // inputData: events,
+    inputData: calendarData,
     selectedCustomer,
     selectedContact,
-    userId
+    selectedUser,
+    isAllAccessAllowed,
+    user
   });
   
   return (
     <>
       <Container maxWidth={false}>
-        <StyledCardContainer>
-            <Cover name="Calendar Events" />
-        </StyledCardContainer>
+        <StyledCardContainer><Cover name="Calendar Events" /></StyledCardContainer>
         <Card>
           <StyledCalendar>
             <CalendarToolbar
@@ -231,6 +273,8 @@ export default function CalendarPage() {
               setSelectedCustomer={setSelectedCustomer}
               selectedContact={selectedContact}
               setSelectedContact={setSelectedContact}
+              selectedUser={selectedUser}
+              setSelectedUser={setSelectedUser}
               date={date}
               view={view}
               onNextDate={handleClickDateNext}
@@ -261,6 +305,7 @@ export default function CalendarPage() {
                 hour: 'numeric',
                 minute: '2-digit',
               }}
+              eventContent={handleEventContent}
               plugins={[
                 listPlugin,
                 dayGridPlugin,
@@ -269,13 +314,16 @@ export default function CalendarPage() {
                 interactionPlugin,
               ]}
             />
+            
           </StyledCalendar>
+          
         </Card>
       </Container>
-
+      
       <EventDialog
         date={date}
         range={selectedRange}
+        contacts={DefaultNotifyContacts}
         onCreateUpdateEvent={handleCreateUpdateEvent}
         onDeleteEvent={handleDeleteEvent}
       />
@@ -284,24 +332,35 @@ export default function CalendarPage() {
   );
 }
 
-function applyFilter({ inputData, selectedCustomer, selectedContact, userId }) {
+function applyFilter({ inputData, selectedCustomer, selectedContact, selectedUser, isAllAccessAllowed, user}) {
 
   const stabilizedThis = inputData?.map((el, index) => [el, index]);
 
   inputData = stabilizedThis.map((el) => el[0]);
+  
   if(selectedCustomer){
     inputData = inputData.filter((e) => e?.extendedProps?.customer?._id === selectedCustomer?._id);
   }
+
+  if(selectedUser){
+    inputData = inputData.filter((e) => e?.extendedProps?.createdBy?._id === selectedUser?._id);
+  } 
+
+  // if(!isAllAccessAllowed){
+  //   inputData = inputData.filter(
+  //     (e) =>  e?.extendedProps?.primaryTechnician?._id === user?.contact ||
+  //             e?.extendedProps?.supportingTechnicians?.some((c) => c?._id === user?.contact) ||
+  //             e?.extendedProps?.notifyContacts?.some((c) => c?._id === user?.contact)
+  //   );
+  // }
+  
   if (selectedContact) {
     inputData = inputData.filter(
       (e) =>
         e?.extendedProps?.primaryTechnician?._id === selectedContact?._id ||
         e?.extendedProps?.supportingTechnicians?.some((c) => c?._id === selectedContact?._id) ||
-        e?.extendedProps?.notifyContacts?.some((c) => c?._id === selectedContact?._id) ||
-        e?.extendedProps?.createdBy?._id === userId 
+        e?.extendedProps?.notifyContacts?.some((c) => c?._id === selectedContact?._id)
     );
   }
-  
-
   return inputData;
 }

@@ -12,9 +12,9 @@ function SearchInput({
   handleResetFilter,
   searchFormVisibility,
   disabled,
-  size,
-  padding,
-  display,
+  size='small',
+  padding=2,
+  display='inline-flex',
 }) {
   return (
     <Grid container rowSpacing={1} mb={1}>
@@ -60,12 +60,6 @@ SearchInput.propTypes = {
   size: PropTypes.string,
   padding: PropTypes.number,
   display: PropTypes.string,
-};
-
-SearchInput.defaultProps = {
-  padding: 2,
-  size: 'small',
-  display: 'inline-flex',
 };
 
 /**

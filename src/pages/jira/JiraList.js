@@ -214,7 +214,7 @@ export default function JiraList() {
               <>
                 <Grid sx={{px:3, pb:2}} container rowGap={0.5} columnGap={0.5}>
                   {statusCounts && statusCounts.map(({name, count, color}) => (
-                    <Chip sx={color} label={<>{name} : <b>{count}</b></>}/>
+                    <Chip key={name} sx={color} label={<>{name} : <b>{count}</b></>}/>
                   ))}
                 </Grid>
                 <Grid container sx={{px:3, pb:2}}>
@@ -229,7 +229,7 @@ export default function JiraList() {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-            statusCounts={statusCounts}
+            // statusCounts={statusCounts}
           />}
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <TableSelectedAction
@@ -253,7 +253,7 @@ export default function JiraList() {
                     .map((row, index) =>
                       row ? (
                         <JiraTableRow
-                          key={row._id}
+                          key={row.id}
                           row={row}
                           onViewRow={handleViewRow}
                         />

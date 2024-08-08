@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { IconButton, alpha } from '@mui/material';
+import { Grid, IconButton, alpha } from '@mui/material';
 import { StyledTooltip } from '../../theme/styles/default-styles';
 import Iconify from '../iconify';
 import { MachineIcon } from '../../theme/overrides/CustomIcons';
@@ -9,8 +9,8 @@ import { MachineIcon } from '../../theme/overrides/CustomIcons';
 export default function TabButtonTooltip({
   title,
   icon,
-  color,
-  placement,
+  placement='bottom',
+  color='#2b64cd',
   disabled,
   selected,
   value
@@ -18,11 +18,13 @@ export default function TabButtonTooltip({
   
     return (
       <StyledTooltip title={selected?'':title} placement={placement} disableFocusListener tooltipcolor={color} color={color}>
-            <IconButton
+            <Grid
+              display='flex'
               sx={{ cursor:'pointer', 
               border:'1px solid',
               borderRadius:1,
-              padding:'4px !important',
+              padding:0.5,
+              marginRight:0.5,
               borderColor:`${selected?color:"#dbdbdb"}`,
                 background:`${selected?color:"#fff"} !important`,
                 ':hover':  { borderColor: color},
@@ -32,7 +34,7 @@ export default function TabButtonTooltip({
                 <MachineIcon width="25px" fill={selected?'#fff':color}/>: 
                 <Iconify color={selected?'#fff':color} width="25px" icon={icon} />
               }
-            </IconButton>
+            </Grid>
       </StyledTooltip>
     );
   }
@@ -47,7 +49,3 @@ TabButtonTooltip.propTypes = {
   value: PropTypes.string,
 };
 
-TabButtonTooltip.defaultProps = {
-  placement: 'bottom',
-  color:'#2b64cd'
-};

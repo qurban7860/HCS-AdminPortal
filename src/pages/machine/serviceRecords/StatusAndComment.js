@@ -1,22 +1,110 @@
-import React, { useState, memo } from 'react'
+import React, { useState, memo, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Grid, Divider, Chip, TableRow, Typography } from '@mui/material';
+import { Grid, Divider, Chip, TableRow, Typography, Box, Switch } from '@mui/material';
+import download from 'downloadjs';
+import { useSnackbar } from 'notistack';
 import { fDate } from '../../../utils/formatTime';
 import Iconify from '../../../components/iconify';
 import CopyIcon from '../../../components/Icons/CopyIcon';
 import HistoryDropDownUpIcons from '../../../components/Icons/HistoryDropDownUpIcons';
 import ViewFormServiceRecordVersionAudit from '../../../components/ViewForms/ViewFormServiceRecordVersionAudit';
+import { DocumentGalleryItem } from '../../../components/gallery/DocumentGalleryItem';
+import { deleteCheckItemFile, deleteRecordFile, downloadCheckItemFile, downloadRecordFile, getMachineServiceRecordCheckItems, setAddFileDialog } from '../../../redux/slices/products/machineServiceRecord';
+import { ThumbnailDocButton } from '../../../components/Thumbnails';
+import Lightbox from '../../../components/lightbox/Lightbox';
+import CheckedItemValueHistory from './CheckedItemValueHistory';
 
-const StatusAndComment = ({index, childIndex, childRow}) => {
+const StatusAndComment = ({index, childIndex, childRow, machineId, serviceId}) => {
+    const { machineServiceRecord } = useSelector((state) => state.machineServiceRecord);
+    const dispatch = useDispatch();
+    const { enqueueSnackbar } = useSnackbar();
 
-    const [activeIndex, setActiveIndex] = useState(null);
+    const regEx = /^[^2]*/;
+    const [selectedImage, setSelectedImage] = useState(-1);
+    const [slides, setSlides] = useState([]);
 
-    const handleAccordianClick = (accordianIndex) => {
-      if (accordianIndex === activeIndex) {
-        setActiveIndex(null);
-      } else {
-        setActiveIndex(accordianIndex);
+    const handleAddFileDialog = () => {
+      dispatch(setAddFileDialog(true));
+    }
+
+    useEffect(() => {
+      if (childRow?.recordValue?.files) {
+          const updatedFiles = childRow?.recordValue?.files?.map(file => ({
+            ...file,
+            src: `data:${file?.fileType};base64,${file?.thumbnail}`,
+            thumbnail: `data:${file?.fileType};base64,${file?.thumbnail}`
+          }));
+          setSlides(updatedFiles);
       }
+    }, [childRow]);
+  
+    const handleOpenLightbox = async (_index) => {
+      setSelectedImage(_index);
+      const image = slides[_index];
+  
+      if(!image?.isLoaded && image?.fileType?.startsWith('image')){
+        try {
+          const response = await dispatch(downloadCheckItemFile(machineId, serviceId, image?._id));
+          if (regEx.test(response.status)) {
+            // Update the image property in the imagesLightbox array
+            const updatedSlides = [
+              ...slides.slice(0, _index), // copies slides before the updated slide
+              {
+                ...slides[_index],
+                src: `data:image/png;base64, ${response.data}`,
+                isLoaded: true,
+              },
+              ...slides.slice(_index + 1), // copies slides after the updated slide
+            ];
+  
+            // Update the state with the new array
+            setSlides(updatedSlides);
+          }
+        } catch (error) {
+          console.error('Error loading full file:', error);
+        }
+      }
+    };
+  
+    const handleCloseLightbox = () => {
+      setSelectedImage(-1);
+    };
+  
+    const handleDeleteCheckItemFile = async (fileId) => {
+      try {
+        if( machineId && fileId ){
+          await dispatch(deleteCheckItemFile( machineId, fileId ));
+        }
+        if( machineId && machineServiceRecord?._id ){
+          await dispatch(getMachineServiceRecordCheckItems( machineId, machineServiceRecord?._id ))
+        }
+        enqueueSnackbar('File Archived successfully!');
+      } catch (err) {
+        console.log(err);
+        enqueueSnackbar('File Deletion failed!', { variant: `error` });
+      }
+    };
+  
+    const handleDownloadCheckItemFile = (fileId, name, extension) => {
+      dispatch(downloadCheckItemFile(machineId, serviceId, fileId))
+        .then((res) => {
+          if (regEx.test(res.status)) {
+            download(atob(res.data), `${name}.${extension}`, { type: extension });
+            enqueueSnackbar(res.statusText);
+          } else {
+            enqueueSnackbar(res.statusText, { variant: `error` });
+          }
+        })
+        .catch((err) => {
+          if (err.Message) {
+            enqueueSnackbar(err.Message, { variant: `error` });
+          } else if (err.message) {
+            enqueueSnackbar(err.message, { variant: `error` });
+          } else {
+            enqueueSnackbar('Something went wrong!', { variant: `error` });
+          }
+        });
     };
 
   return (
@@ -32,10 +120,9 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
               wordBreak: 'break-word' }}>
               <Typography variant="body2" >
                   <b>Value: </b>
-                  {childRow?.inputType.toLowerCase() === 'boolean' && childRow?.recordValue?.checkItemValue && <Iconify
-                    sx={{mb:-0.5}}
-                    color={childRow?.recordValue?.checkItemValue === true || childRow?.recordValue?.checkItemValue  === 'true' ? '#008000' : '#FF0000'} 
-                    icon={ childRow?.recordValue?.checkItemValue === true || childRow?.recordValue?.checkItemValue  === 'true' ? 'ph:check-square-bold' : 'charm:square-cross' } />}
+                  {childRow?.inputType.toLowerCase() === 'boolean' && childRow?.recordValue?.checkItemValue && 
+                    <Switch sx={{mt:-0.5}} size='small' disabled checked={childRow?.recordValue?.checkItemValue==='true'} />
+                  }                        
                   {childRow?.inputType.toLowerCase() === 'date' ? fDate(childRow?.recordValue?.checkItemValue) : 
                     <> 
                       {childRow?.inputType.toLowerCase() === 'status' ? (childRow?.recordValue?.checkItemValue && 
@@ -58,56 +145,50 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
                 {childRow?.recordValue?.comments?.trim() && <CopyIcon value={childRow?.recordValue?.comments || ''} />}
               </Typography>}
             </Grid>
+            <Box
+              sx={{my:1, width:'100%'}}
+              gap={2}
+              display="grid"
+              gridTemplateColumns={{
+                xs: 'repeat(1, 1fr)',
+                sm: 'repeat(3, 1fr)',
+                md: 'repeat(5, 1fr)',
+                lg: 'repeat(6, 1fr)',
+                xl: 'repeat(8, 1fr)',
+              }}
+            >
+
+            {slides?.map((file, _index) => (
+              <DocumentGalleryItem isLoading={!slides} key={file?.id} image={file} 
+                onOpenLightbox={()=> handleOpenLightbox(_index)}
+                onDownloadFile={()=> handleDownloadCheckItemFile(file._id, file?.name, file?.extension)}
+                onDeleteFile={()=> handleDeleteCheckItemFile(file._id)}
+                toolbar
+              />
+            ))}
+          </Box>
           <ViewFormServiceRecordVersionAudit value={childRow?.recordValue}/>
-          </Grid>
+        </Grid>
         }
-        {childRow?.historicalData && childRow?.historicalData?.length > 0 &&
-            <HistoryDropDownUpIcons showTitle="Show History" hideTitle="Hide History" activeIndex={`${activeIndex || ''}`} indexValue={`${index}${childIndex}`} onClick={handleAccordianClick}/>
-        }
+        {/* {childRow?.historicalData && childRow?.historicalData?.length > 0 &&
+          <HistoryDropDownUpIcons showTitle="Show History" hideTitle="Hide History" activeIndex={`${activeIndex || ''}`} indexValue={`${index}${childIndex}`} onClick={handleAccordianClick}/>
+        } */}
       </Grid>
 
-      {activeIndex === `${index}${childIndex}` && childRow?.historicalData && childRow?.historicalData?.length > 0 && 
-        <Grid item md={12} sx={{ backgroundColor: '#f3f4f594', p:1, borderRadius:'7px', border: '1px solid #e1e1e1'}} >
-          {childRow?.historicalData?.map((ItemHistory, ItemIndex ) => (<>
-              {ItemIndex !== 0 && <Divider  sx={{ borderStyle: 'solid', mx:-1 }} />}
-            {ItemHistory?.checkItemValue && <Grid sx={{ mt:0.5,
-              alignItems: 'center',
-              whiteSpace: 'pre-line',
-              wordBreak: 'break-word' }}>
-              <Typography variant="body2" sx={{mr:1, }}>
-                  <b>Value: </b>
-                  {childRow?.inputType?.toLowerCase() === 'boolean' && ItemHistory?.checkItemValue && <Iconify
-                    sx={{mb:-0.5}}
-                    color={ItemHistory?.checkItemValue === true || ItemHistory?.checkItemValue  === 'true' ? '#008000' : '#FF0000'} 
-                    icon={ItemHistory?.checkItemValue  === true || ItemHistory?.checkItemValue  === 'true' ? 'ph:check-square-bold' : 'charm:square-cross' } />}
-
-                  {childRow?.inputType?.toLowerCase() === 'date' ? fDate(ItemHistory?.checkItemValue) : 
-                    <> 
-                      {childRow?.inputType?.toLowerCase() === 'status' ? (ItemHistory?.checkItemValue && 
-                        <Chip size="small" label={ItemHistory?.checkItemValue || ''} /> || '') : 
-                        (childRow?.inputType?.toLowerCase() === 'number' || 
-                          childRow?.inputType?.toLowerCase() === 'long text' || 
-                          childRow?.inputType?.toLowerCase() === 'short text') && 
-                          ItemHistory?.checkItemValue  
-                      }
-                      {ItemHistory?.checkItemValue?.trim() && childRow?.inputType?.toLowerCase() !== 'boolean' && <CopyIcon value={ItemHistory?.comments} />}
-                    </> 
-                }
-              </Typography>
-            </Grid>}
-           
-            <Grid sx={{  
-              alignItems: 'center',
-              whiteSpace: 'pre-line',
-              wordBreak: 'break-word' }}>
-              {ItemHistory?.comments && <Typography variant="body2" sx={{mr:1}} ><b>Comment: </b>{` ${ItemHistory?.comments || ''}`}
-              {ItemHistory?.comments?.trim() && <CopyIcon value={childRow?.comments} /> }
-              </Typography>}
-            </Grid>
-            <ViewFormServiceRecordVersionAudit value={ItemHistory}/>
-          </>))}
-        </Grid>}
+      {childRow?.historicalData?.length > 0 && (
+        <CheckedItemValueHistory historicalData={childRow?.historicalData} inputType={childRow?.inputType} />
+      )}
       </Grid>
+      <Lightbox
+          index={selectedImage}
+          slides={slides}
+          open={selectedImage>=0}
+          close={handleCloseLightbox}
+          onGetCurrentIndex={handleOpenLightbox}
+          disabledTotal
+          disabledDownload
+          disabledSlideshow
+        />
     </TableRow>
   )
 }
@@ -115,5 +196,7 @@ StatusAndComment.propTypes = {
     index: PropTypes.number,
     childIndex: PropTypes.number,
     childRow: PropTypes.object,
+    machineId: PropTypes.string,
+    serviceId: PropTypes.string,
   };
 export default memo(StatusAndComment)
