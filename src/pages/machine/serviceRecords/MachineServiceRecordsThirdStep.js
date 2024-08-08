@@ -116,7 +116,7 @@ function MachineServiceRecordsThirdStep({handleDraftRequest, handleDiscard, hand
         reset(defaultValues);
       }
     }, [reset, machineServiceRecord, defaultValues]);
-    
+
     const { isActive, files, decoilers, operators } = watch()
     const handleDropMultiFile = useCallback(
       async (acceptedFiles) => {
@@ -209,9 +209,8 @@ function MachineServiceRecordsThirdStep({handleDraftRequest, handleDiscard, hand
 
   return (
       <FormProvider methods={methods}  onSubmit={handleSubmit(onSubmit)}>
-        <Stack px={2} spacing={2}>
-          { machineServiceRecord?.serviceRecordConfig?.recordType==='INSTALL' && <RHFTextField name="installNote" label="Install Note" minRows={3} multiline/> }      
-          { machineServiceRecord?.serviceRecordConfig?.enableNote && <RHFTextField name="serviceNote" label="Service Note" minRows={3} multiline/> }      
+        <Stack px={2} spacing={2}>    
+          { machineServiceRecord?.serviceRecordConfig?.enableNote && <RHFTextField name="serviceNote" label={`${machineServiceRecord?.serviceRecordConfig?.recordType?.toLowerCase() === 'install' ? 'Install' : 'Service' } Note`} minRows={3} multiline/> }      
           { machineServiceRecord?.serviceRecordConfig?.enableMaintenanceRecommendations && <RHFTextField name="recommendationNote" label="Recommendation Note" minRows={3} multiline/> }
           { machineServiceRecord?.serviceRecordConfig?.enableSuggestedSpares && <RHFTextField name="suggestedSpares" label="Suggested Spares" minRows={3} multiline/> }
           <RHFTextField name="internalNote" label="Internal Note" minRows={3} multiline/> 
