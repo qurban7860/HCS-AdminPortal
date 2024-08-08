@@ -329,7 +329,7 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
           <ViewFormField isLoading={isLoading} variant='h4' sm={6} heading="Service Record Configuration" param={`${defaultValues.serviceRecordConfig} ${defaultValues.serviceRecordConfigRecordType ? '-' : ''} ${defaultValues.serviceRecordConfigRecordType ? defaultValues.serviceRecordConfigRecordType : ''}`} />
           <ViewFormField isLoading={isLoading} variant='h4' sm={2} heading="Status" param={defaultValues.status} />
           <ViewFormField isLoading={isLoading} variant='h4' sm={2} heading="Version No" node={
-            <>{defaultValues?.versionNo}{machineServiceRecord?.isHistory && <CurrentIcon callFunction={handleCurrentServiceRecord} />}
+            <>{defaultValues?.versionNo}{(machineServiceRecord?.isHistory || machineServiceRecord?.status==="DRAFT") && <CurrentIcon callFunction={handleCurrentServiceRecord} />}
               {!machineServiceRecord?.isHistory && machineServiceRecord?.currentVersion?.versionNo > 1 &&  machineServiceRecord?.serviceId && <HistoryIcon callFunction={handleServiceRecordHistory} /> }
             </>  
           } />
