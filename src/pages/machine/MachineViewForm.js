@@ -247,6 +247,8 @@ export default function MachineViewForm() {
     window.open( url, '_blank')
   }
 
+  console.log("defaultValues?.transferredFromMachine : ",defaultValues?.transferredFromMachine)
+
   return (
     <>
       <Grid container direction="row" mt={isMobile && 2}>
@@ -299,32 +301,40 @@ export default function MachineViewForm() {
                     </>
                     } />
             <ViewFormField isLoading={isLoading} sm={6} heading="De-Commissioned Date" param={fDate(defaultValues?.decommissionedDate)} />
-            {machine?.status?.slug==='transferred' && 
+            
+            {/* {machine?.status?.slug==='transferred' &&  */}
 
-            <ViewFormField isLoading={isLoading} sm={6} heading="Transfer Detail"
-              node={
-                <Grid display="flex" alignItems="center">
-                  { defaultValues?.transferredFromMachine && 
-                    <Typography variant='body2' sx={{mt: 0.5}} >
-                      {`from >`}
-                      <Link onClick={(event)=> handleCustomerDialog(event, defaultValues?.transferredFromMachine?.customer?._id)} underline="none" sx={{ cursor: 'pointer', ml:1}}>
-                        <b>{defaultValues?.transferredFromMachine?.customer?.name}</b>
-                      </Link>
-                        <OpenInNewPage onClick={()=> window.open( PATH_CRM.customers.view(defaultValues?.transferredFromMachine?.customer?._id), '_blank' ) }/>
-                    </Typography>}
-                    { defaultValues?.transferredFromMachine && defaultValues?.transferredToMachine && <Typography variant='body2'>,</Typography> }
-                    { defaultValues?.transferredToMachine && 
-                      <Typography variant='body2' sx={{mt: 0.5, ml:1 }} >
-                          {`to >  `}
-                          <Link onClick={(event)=> handleCustomerDialog(event, defaultValues?.transferredToMachine?.customer?._id)} underline="none" sx={{ cursor: 'pointer', ml:1}}>
-                            <b>{defaultValues?.transferredToMachine?.customer?.name}</b>
-                          </Link>
-                            <OpenInNewPage onClick={()=> window.open( PATH_CRM.customers.view(defaultValues?.transferredToMachine?.customer?._id), '_blank' ) }/>
-                      </Typography> }
-                </Grid>
-              }
-            />
-            }
+              <ViewFormField isLoading={isLoading} sm={6} heading="Transfer Detail"
+                node={
+                  <Grid display="flex" alignItems="center">
+                      { defaultValues?.transferredFromMachine && 
+                        <Typography variant='body2' sx={{mt: 0.5}} >
+                          {` from > `}
+                            <Link onClick={(event)=> handleCustomerDialog(event, defaultValues?.transferredFromMachine?.customer?._id)} underline="none" sx={{ cursor: 'pointer', ml:1}}>
+                              <b>{defaultValues?.transferredFromMachine?.customer?.name}</b>
+                            </Link>
+                            <OpenInNewPage onClick={()=> window.open( PATH_CRM.customers.view(defaultValues?.transferredFromMachine?.customer?._id), '_blank' ) }/>
+                        </Typography>
+                      }
+
+                      { defaultValues?.transferredFromMachine 
+                        && defaultValues?.transferredToMachine 
+                        && <Typography variant='body2'>,</Typography> 
+                      }
+
+                      { defaultValues?.transferredToMachine && 
+                        <Typography variant='body2' sx={{mt: 0.5, ml:1 }} >
+                            {` to >  `}
+                            <Link onClick={(event)=> handleCustomerDialog(event, defaultValues?.transferredToMachine?.customer?._id)} underline="none" sx={{ cursor: 'pointer', ml:1}}>
+                              <b>{defaultValues?.transferredToMachine?.customer?.name}</b>
+                            </Link>
+                              <OpenInNewPage onClick={()=> window.open( PATH_CRM.customers.view(defaultValues?.transferredToMachine?.customer?._id), '_blank' ) }/>
+                        </Typography> 
+                      }
+                  </Grid>
+                }
+              />
+            {/* } */}
             
             <ViewFormField isLoading={isLoading} sm={12} variant='h4' heading="Profiles" param={ Array.isArray(defaultValues?.machineProfiles) && defaultValues?.machineProfiles?.map( el => `${el?.defaultName} ${(el?.web && el?.flange)? `(${el?.web} X ${el?.flange})` :""}`)?.join(', ') || ''} />
                        {/* 4 FULL ROW */}
