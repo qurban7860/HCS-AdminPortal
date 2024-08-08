@@ -80,7 +80,7 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
   },[ dispatch, machineId, id])
 
   useEffect(()=>{
-    if(machineServiceRecord?._id){
+    if( machineServiceRecord?._id ){
       dispatch(getMachineServiceRecordCheckItems(machineId, machineServiceRecord?._id));
     }
   },[dispatch, machineId, machineServiceRecord])

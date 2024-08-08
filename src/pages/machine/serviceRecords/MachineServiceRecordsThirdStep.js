@@ -111,6 +111,12 @@ function MachineServiceRecordsThirdStep({handleDraftRequest, handleDiscard, hand
     formState: { isSubmitting },
     } = methods;
 
+    useEffect(() => {
+      if (machineServiceRecord) {
+        reset(defaultValues);
+      }
+    }, [reset, machineServiceRecord, defaultValues]);
+    
     const { isActive, files, decoilers, operators } = watch()
     const handleDropMultiFile = useCallback(
       async (acceptedFiles) => {

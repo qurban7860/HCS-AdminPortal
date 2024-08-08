@@ -218,7 +218,7 @@ const CheckedItemInputRow = memo(({ index, row }) => {
     const handleRemoveFile = async (inputFile, childIndex)=>{
       
       if(inputFile?._id){
-        await dispatch(deleteCheckItemFile(machineId, id, inputFile?._id))
+        await dispatch(deleteCheckItemFile(machineId, inputFile?._id))
       }
 
       setValue(
