@@ -300,7 +300,7 @@ export default function MachineViewForm() {
                     } />
             <ViewFormField isLoading={isLoading} sm={6} heading="De-Commissioned Date" param={fDate(defaultValues?.decommissionedDate)} />
             
-            {/* {machine?.status?.slug==='transferred' &&  */}
+            { ( machine?.status?.slug==='transferred' || defaultValues?.transferredFromMachine || defaultValues?.transferredToMachine ) && 
 
               <ViewFormField isLoading={isLoading} sm={6} heading="Transfer Detail"
                 node={
@@ -332,7 +332,7 @@ export default function MachineViewForm() {
                   </Grid>
                 }
               />
-            {/* } */}
+            }
             
             <ViewFormField isLoading={isLoading} sm={12} variant='h4' heading="Profiles" param={ Array.isArray(defaultValues?.machineProfiles) && defaultValues?.machineProfiles?.map( el => `${el?.defaultName} ${(el?.web && el?.flange)? `(${el?.web} X ${el?.flange})` :""}`)?.join(', ') || ''} />
                        {/* 4 FULL ROW */}
