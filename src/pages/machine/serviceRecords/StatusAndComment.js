@@ -162,7 +162,7 @@ const StatusAndComment = ({index, childIndex, childRow, machineId, serviceId}) =
               <DocumentGalleryItem isLoading={!slides} key={file?.id} image={file} 
                 onOpenLightbox={()=> handleOpenLightbox(_index)}
                 onDownloadFile={()=> handleDownloadCheckItemFile(file._id, file?.name, file?.extension)}
-                onDeleteFile={()=> handleDeleteCheckItemFile(file._id)}
+                onDeleteFile={machineServiceRecord.status === "DRAFT" ? ()=> handleDeleteCheckItemFile(file._id):undefined}
                 toolbar
               />
             ))}
