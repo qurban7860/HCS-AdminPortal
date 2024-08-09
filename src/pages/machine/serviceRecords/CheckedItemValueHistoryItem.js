@@ -67,16 +67,6 @@ const CheckedItemValueHistoryItem = ({ historyItem, inputType }) => {
     setSelectedImage(-1);
   };
 
-  const handleDeleteCheckItemFile = async (fileId) => {
-    try {
-      await dispatch(deleteCheckItemFile(machineId, fileId));
-      await dispatch(getMachineServiceRecordCheckItems(machineId, machineServiceRecord?._id))
-      enqueueSnackbar('File Archived successfully!');
-    } catch (err) {
-      console.log(err);
-      enqueueSnackbar('File Deletion failed!', { variant: `error` });
-    }
-  };
 
   const handleDownloadCheckItemFile = (fileId, name, extension) => {
     dispatch(downloadCheckItemFile(machineId, serviceId, fileId))
@@ -153,7 +143,7 @@ const CheckedItemValueHistoryItem = ({ historyItem, inputType }) => {
                 <DocumentGalleryItem isLoading={!slides} key={file?.id} image={file} 
                   onOpenLightbox={()=> handleOpenLightbox(_index)}
                   onDownloadFile={()=> handleDownloadCheckItemFile(file._id, file?.name, file?.extension)}
-                  onDeleteFile={()=> handleDeleteCheckItemFile(file._id)}
+                  // onDeleteFile={()=> handleDeleteCheckItemFile(file._id)}
                   toolbar
                 />
               ))}
