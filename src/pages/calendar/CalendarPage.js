@@ -65,10 +65,10 @@ export default function CalendarPage() {
   const [calendarData, setCalendarData] = useState([]);
 
   const configurations = JSON.parse(localStorage.getItem('configurations'));
-  const def_contacts = configurations?.filter(c => c?.name === 'Default_Notify_Contacts')?.map(c => c?.value)
+  const def_contacts = configurations?.filter(c => c?.name === 'Default_Notify_Contacts')?.map(c => c?.value?.trim()?.toLowerCase())
   ?.flatMap(value => value?.split(','))?.filter(Boolean);
 
-  const [DefaultNotifyContacts, setDefaultNotifyContacts] = useState(activeSpContacts.filter((_contact)=> def_contacts?.includes(_contact?.email)));
+  const [DefaultNotifyContacts, setDefaultNotifyContacts] = useState(activeSpContacts.filter((_contact)=> def_contacts?.includes(_contact?.email?.trim()?.toLowerCase())));
   
   useLayoutEffect(() => {
     dispatch(setEventModel(false));
