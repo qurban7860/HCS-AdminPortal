@@ -80,7 +80,7 @@ function MachineServiceRecordsThirdStep({handleDraftRequest, handleDiscard, hand
               serviceId:id,
             })) || [],
             operatorNotes:                machineServiceRecord?.operatorNotes || '',
-            isActive:                     machineServiceRecord?.isActive,
+            isActive:                     true,
         }
         return initialValues;
       },
@@ -231,7 +231,7 @@ function MachineServiceRecordsThirdStep({handleDraftRequest, handleDiscard, hand
             onRemove={handleRemoveFile}
             onLoadImage={handleLoadImage}
           />
-          <Grid container display="flex"><RHFSwitch name="isActive" label="Active"/></Grid>
+          {/* <Grid container display="flex"><RHFSwitch name="isActive" label="Active"/></Grid> */}
       </Stack>
       <ServiceRecodStepButtons isActive={isActive} isSubmitting={isSubmitting} isDraft={isDraft} handleDraft={saveAsDraft} />
     </FormProvider>
