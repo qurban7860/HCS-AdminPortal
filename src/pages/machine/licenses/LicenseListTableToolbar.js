@@ -37,7 +37,8 @@ export default function LicenseListTableToolbar({
   const { machineId } = useParams();
 
   const toggleAdd = () => navigate(PATH_MACHINE.machines.licenses.new(machineId)) ;
-  const { machine } = useSelector((state) => state.machine);
+  const { machine } = useSelector((state) => state.machine); 
+  
   return (
     <Stack
       spacing={2}
@@ -51,7 +52,7 @@ export default function LicenseListTableToolbar({
         onChange={onFilterName}
         onClick={onResetFilter}
         SubOnClick={toggleAdd}
-        addButton={BUTTONS.ADDLICENSE}
+        addButton={!machine?.isArchived ? BUTTONS.ADDLICENSE : undefined}
         transferredMachine={machine?.status?.slug==='transferred'}
       />
     </Stack>
