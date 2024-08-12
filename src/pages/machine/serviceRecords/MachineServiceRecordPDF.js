@@ -56,7 +56,6 @@ export function MachineServiceRecordPDF({machineServiceRecord, machineServiceRec
     
     const fileName = `${defaultValues?.serviceDate?.substring(0,10).replaceAll('-','')}_${defaultValues?.serviceRecordConfigRecordType}_${defaultValues?.versionNo}`;
 
-    console.log('machineServiceRecordCheckItems?.checkItemLists::::',machineServiceRecordCheckItems?.checkItemLists)
     return (
         <Document title={fileName} subject='Serevice Record'
             author={defaultValues?.createdByFullName}
@@ -156,30 +155,18 @@ export function MachineServiceRecordPDF({machineServiceRecord, machineServiceRec
                                     <>
                                         <Text style={styles.text_sm}><Text style={styles.bold}>Value:</Text>{childRow?.recordValue?.checkItemValue}</Text>
                                         <Text style={styles.text_sm}><Text style={styles.bold}>Comments:</Text>{childRow?.recordValue?.comments}</Text>    
-                                        {/* {childRow?.recordValue.files.map((file)=> 
-                                            <View key={file?._id} style={{flexDirection: "column", width:'20%', backgroundColor:'red'}}>
-                                                <Image src={`data:${file?.fileType || 'image/jpeg'};base64,${file?.thumbnail}`} />
-                                            </View>
-                                        )} */}
                                     </>
                                 }
-                                <View key={`inner_image_container-${index}`} style={{flexDirection:'row', columnGap:2}} >
-                                    <View style={styles.col_20}>
-                                        <Image style={{borderRadius:5}} src='https://images.unsplash.com/photo-1551963831-b3b1ca40c98e' />
+                                {childRow?.recordValue?.files?.length>0 &&
+                                    <View key={`inner_image_container-${index}`} style={styles.image_row} >
+                                        {childRow?.recordValue.files.map((file, fileindex)=>
+                                            <View key={file?._id} style={styles.image_column}>
+                                                <Image style={{borderRadius:5}} src='https://images.unsplash.com/photo-1551963831-b3b1ca40c98e' />
+                                                {/* <Image src={`data:${file?.fileType || 'image/jpeg'};base64,${file?.thumbnail}`} /> */}
+                                            </View>
+                                        )}
                                     </View>
-                                    <View style={styles.col_20}>
-                                        <Image style={{borderRadius:5}} src='https://images.unsplash.com/photo-1551963831-b3b1ca40c98e' />
-                                    </View>
-                                    <View style={styles.col_20}>
-                                        <Image style={{borderRadius:5}} src='https://images.unsplash.com/photo-1551963831-b3b1ca40c98e' />
-                                    </View>
-                                    <View style={styles.col_20}>
-                                        <Image style={{borderRadius:5}} src='https://images.unsplash.com/photo-1551963831-b3b1ca40c98e' />
-                                    </View>
-                                    <View style={styles.col_20}>
-                                        <Image style={{borderRadius:5}} src='https://images.unsplash.com/photo-1551963831-b3b1ca40c98e' />
-                                    </View>
-                                </View>
+                                }
                             </View>
                         ))}
                         
@@ -375,6 +362,15 @@ export function MachineServiceRecordPDF({machineServiceRecord, machineServiceRec
         padding:4,
         marginTop:5
     },
+    image_row: {
+        display:'flex',
+        flexDirection: "row",
+        marginTop:2,
+        paddingHorizontal:0,
+        width:'100%',
+        flexWrap: 'wrap',
+    },
+    image_column:{width: "20%", flexDirection: "column", padding:1},
     col:   { width: "100%", flexDirection: "column"},
     col_10: { width: "10%", flexDirection: "column"},
     col_20: { width: "20%", flexDirection: "column"},
