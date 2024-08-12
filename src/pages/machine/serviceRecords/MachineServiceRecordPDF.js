@@ -5,12 +5,10 @@ import { fDate } from '../../../utils/formatTime';
 
 MachineServiceRecordPDF.propTypes = {
     machineServiceRecord: PropTypes.object,
-    machineServiceRecordCheckItems: PropTypes.array,
+    machineServiceRecordCheckItems: PropTypes.object,
 };
 
 export function MachineServiceRecordPDF({machineServiceRecord, machineServiceRecordCheckItems}) {
-
-    console.log("machineServiceRecordCheckItems::::",machineServiceRecordCheckItems)
 
     const defaultValues = useMemo(
         () => ({
@@ -58,6 +56,7 @@ export function MachineServiceRecordPDF({machineServiceRecord, machineServiceRec
     
     const fileName = `${defaultValues?.serviceDate?.substring(0,10).replaceAll('-','')}_${defaultValues?.serviceRecordConfigRecordType}_${defaultValues?.versionNo}`;
 
+    console.log('machineServiceRecordCheckItems?.checkItemLists::::',machineServiceRecordCheckItems?.checkItemLists)
     return (
         <Document title={fileName} subject='Serevice Record'
             author={defaultValues?.createdByFullName}
@@ -157,8 +156,30 @@ export function MachineServiceRecordPDF({machineServiceRecord, machineServiceRec
                                     <>
                                         <Text style={styles.text_sm}><Text style={styles.bold}>Value:</Text>{childRow?.recordValue?.checkItemValue}</Text>
                                         <Text style={styles.text_sm}><Text style={styles.bold}>Comments:</Text>{childRow?.recordValue?.comments}</Text>    
+                                        {/* {childRow?.recordValue.files.map((file)=> 
+                                            <View key={file?._id} style={{flexDirection: "column", width:'20%', backgroundColor:'red'}}>
+                                                <Image src={`data:${file?.fileType || 'image/jpeg'};base64,${file?.thumbnail}`} />
+                                            </View>
+                                        )} */}
                                     </>
                                 }
+                                <View key={`inner_image_container-${index}`} style={{flexDirection:'row', columnGap:2}} >
+                                    <View style={styles.col_20}>
+                                        <Image style={{borderRadius:5}} src='https://images.unsplash.com/photo-1551963831-b3b1ca40c98e' />
+                                    </View>
+                                    <View style={styles.col_20}>
+                                        <Image style={{borderRadius:5}} src='https://images.unsplash.com/photo-1551963831-b3b1ca40c98e' />
+                                    </View>
+                                    <View style={styles.col_20}>
+                                        <Image style={{borderRadius:5}} src='https://images.unsplash.com/photo-1551963831-b3b1ca40c98e' />
+                                    </View>
+                                    <View style={styles.col_20}>
+                                        <Image style={{borderRadius:5}} src='https://images.unsplash.com/photo-1551963831-b3b1ca40c98e' />
+                                    </View>
+                                    <View style={styles.col_20}>
+                                        <Image style={{borderRadius:5}} src='https://images.unsplash.com/photo-1551963831-b3b1ca40c98e' />
+                                    </View>
+                                </View>
                             </View>
                         ))}
                         

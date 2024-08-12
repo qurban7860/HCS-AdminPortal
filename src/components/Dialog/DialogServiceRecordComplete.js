@@ -15,7 +15,6 @@ import {
   setCompleteDialog,
   updateMachineServiceRecord,
 } from '../../redux/slices/products/machineServiceRecord';
-import { MachineServiceRecordPDF } from '../../pages/machine/serviceRecords/MachineServiceRecordPDF';
 import FormProvider from '../hook-form/FormProvider';
 import { RHFAutocomplete, RHFTextField } from '../hook-form';
 import { useAuthContext } from '../../auth/useAuthContext';
