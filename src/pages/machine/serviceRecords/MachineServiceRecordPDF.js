@@ -57,7 +57,7 @@ export function MachineServiceRecordPDF({machineServiceRecord, machineServiceRec
     const fileName = `${defaultValues?.serviceDate?.substring(0,10).replaceAll('-','')}_${defaultValues?.serviceRecordConfigRecordType}_${defaultValues?.versionNo}`;
 
 function getImageUrl(file) {
-        return `data:image/png;base64,${file?.thumbnail || ''}`;
+        return file?.thumbnail ? `data:image/png;base64,${file?.thumbnail || ''}` : '';
     }
     
     return (
@@ -161,14 +161,16 @@ function getImageUrl(file) {
                                         <Text style={styles.text_sm}><Text style={styles.bold}>Comments:</Text>{childRow?.recordValue?.comments}</Text>    
                                     </>
                                 }
-                                {childRow?.recordValue?.files?.length>0 &&
+                                {childRow?.recordValue?.files?.length > 0 &&
                                     <View key={`inner_image_container-${index}`} style={styles.image_row} >
-                                        {childRow?.recordValue.files.map((file, fileindex)=>
+                                    {childRow?.recordValue?.files?.map((file, fileIndex) => {
+                                        const imageUrl = getImageUrl(file);
+                                        return (
                                             <View key={file?._id} style={styles.image_column}>
-                                                {/* <Image style={{borderRadius:5}} src='https://images.unsplash.com/photo-1551963831-b3b1ca40c98e' /> */}
-                                                <Image src={ getImageUrl( file )} />
+                                                { imageUrl && <Image style={{ borderRadius:5, height:"100px", objectFit: "cover" }} src={ imageUrl } />}
                                             </View>
-                                        )}
+                                        );
+                                    })}
                                     </View>
                                 }
                             </View>
