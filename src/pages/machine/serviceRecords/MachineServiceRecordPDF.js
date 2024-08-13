@@ -227,6 +227,19 @@ function getImageUrl(file) {
                     <Text style={styles.text_sm}>{defaultValues?.operatorNotes}</Text>
                 </View>
             </View>
+            <Text style={styles.title}>Images</Text>
+            <View style={styles.row}>
+                <View style={styles.image_row} >
+                    {defaultValues?.files?.map((file, fileIndex) => {
+                        const imageUrl = getImageUrl(file);
+                        return (
+                            <View key={file?._id} style={styles.image_column}>
+                                { imageUrl && <Image style={{ borderRadius:5, height:"100px", objectFit: "cover" }} src={ imageUrl } />}
+                            </View>
+                        );
+                    })}
+                </View>
+            </View>
         </View>
 
         <View style={styles.footer} fixed>
