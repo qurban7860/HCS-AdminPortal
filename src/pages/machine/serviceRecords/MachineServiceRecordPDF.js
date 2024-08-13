@@ -142,11 +142,6 @@ function getImageUrl(file) {
                 </View>
             </View>
             <Text style={styles.title}>Check Items</Text>
-            <View style={styles.row}>
-                <View style={styles.col}>
-                    <Text style={styles.text_sm}>{defaultValues?.textBeforeCheckItems}</Text>
-                </View>
-            </View>
 
             {machineServiceRecordCheckItems?.checkItemLists?.length > 0 &&
                 machineServiceRecordCheckItems?.checkItemLists?.map((row, index) => (
