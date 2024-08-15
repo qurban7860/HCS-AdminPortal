@@ -97,8 +97,10 @@ const slice = createSlice({
     // SELECT RANGE
     selectRange(state, action) {
       const { start, end } = action.payload;
+      const endDate = new Date(end);
+      endDate.setDate(end.getDate() - 1);
       state.selectedEvent = null;
-      state.selectedRange = { start, end };
+      state.selectedRange = { start, end: endDate };
       state.eventModel = true;
     },
 
@@ -191,6 +193,7 @@ export function createEvent(params) {
     try {
       
       const data = {
+        isCustomerEvent: params?.isCustomerEvent,
         start: params?.start_date,
         end: params?.end_date,
         customer: params?.customer?._id || null,
@@ -232,6 +235,7 @@ export function updateEvent(id, params) {
     dispatch(slice.actions.startLoading());
     try {
       const data = {
+        isCustomerEvent: params?.isCustomerEvent,
         start: params?.start_date,
         end: params?.end_date,
         customer: params?.customer?._id || null,
