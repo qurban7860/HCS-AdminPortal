@@ -259,11 +259,11 @@ function EventDialog({
         onClose={handleCloseModel}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle display='flex' justifyContent='space-between' alignItems='center' variant='h3' sx={{pb:0, pt:0 }}>
-          {selectedEvent ? 'Update Event' : 'New Event'}
-          <DialogActions>
-            <CustomSwitch label="Customer Visit"  checked={ isCustomerEvent } onChange={ handleCustomerEvent } /> 
-          </DialogActions>
+        <DialogTitle display='flex' justifyContent='space-between' alignItems='center' variant='h3' sx={{ pb: !selectedEvent ? 0 : '', pt: !selectedEvent ? 0 : '' }} >
+          { selectedEvent ? 'Update Event' : 'New Event'}
+          { !selectedEvent && <DialogActions >
+            <CustomSwitch label="Customer Visit"  checked={ isCustomerEvent } onChange={ handleCustomerEvent } />
+          </DialogActions>}
         </DialogTitle>
         <Divider orientation="horizontal" flexItem />
         <DialogContent dividers sx={{px:3 }} >
