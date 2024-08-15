@@ -35,48 +35,35 @@ export const isValidToken = (accessToken) => {
 
 // ----------------------------------------------------------------------
 
-export const tokenExpired = (exp) => {
-  // eslint-disable-next-line prefer-const
+export const tokenExpired = async (exp) => {
   let expiredTimer;
-
   const currentTime = Date.now();
-
-  // Test token expires after 10s
-  // const timeLeft = currentTime + 10000 - currentTime; // ~10s
   const timeLeft = exp * 1000 - currentTime;
-
   clearTimeout(expiredTimer);
-
   expiredTimer = setTimeout(() => {
     alert('Your session has expired. Please login again');
-
     localStorage.removeItem('accessToken');
-
     window.location.href = PATH_AUTH.login;
   }, timeLeft);
 };
 
 // ----------------------------------------------------------------------
 
-export const setSession = (accessToken) => {
+export const setSession = async (accessToken) => {
   if (accessToken) {
     localStorage.setItem('accessToken', accessToken);
-
     axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
-
-    // This function below will handle when token is expired
-    const { exp } = jwtDecode(accessToken); // ~3 days by minimals server
-    tokenExpired(exp);
+    const { exp } = await jwtDecode(accessToken);
+    await tokenExpired(exp);
   } else {
     localStorage.removeItem('accessToken');
-
     delete axios.defaults.headers.common.Authorization;
   }
 };
 
 // ----------------------------------------------------------------------
 
-export const getUserAccess = ( roles, accessLevel ) => {
+export const getUserAccess = async ( roles, accessLevel ) => {
 
     let userRoles
     let dataAccessibilityLevel 
