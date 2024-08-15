@@ -38,7 +38,7 @@ return timeObject;
 const getInitialValues = (selectedEvent, range, contacts) => {
   const initialEvent = {
     _id: selectedEvent ? selectedEvent?._id : null ,
-    isCustomerEvent: selectedEvent?.isCustomerEvent ? selectedEvent?.isCustomerEvent : true,
+    isCustomerEvent: selectedEvent?.isCustomerEvent ? selectedEvent?.isCustomerEvent : false,
     date: selectedEvent ? selectedEvent?.start : (range?.start || new Date() ) ,
     end_date: selectedEvent ? selectedEvent?.end : (range?.end || new Date() ) ,
     start: selectedEvent ? getTimeObjectFromISOString(selectedEvent?.start) : { value: '07:30', label: '7:30 AM' },
