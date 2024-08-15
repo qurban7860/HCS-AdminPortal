@@ -38,7 +38,7 @@ return timeObject;
 const getInitialValues = (selectedEvent, range, contacts) => {
   const initialEvent = {
     _id: selectedEvent ? selectedEvent?._id : null ,
-    isCustomerEvent: selectedEvent?.isCustomerEvent ? selectedEvent?.isCustomerEvent : false,
+    isCustomerEvent: ( selectedEvent?.isCustomerEvent || selectedEvent?.isCustomerEvent === undefined ) && true || false,
     date: selectedEvent ? selectedEvent?.start : (range?.start || new Date() ) ,
     end_date: selectedEvent ? selectedEvent?.end : (range?.end || new Date() ) ,
     start: selectedEvent ? getTimeObjectFromISOString(selectedEvent?.start) : { value: '07:30', label: '7:30 AM' },
@@ -85,7 +85,6 @@ function EventDialog({
   const { activeSites } = useSelector((state) => state.site);
   const { activeCustomerMachines } = useSelector( (state) => state.machine );
   const [ openConfirm, setOpenConfirm ] = useState(false);
-  // const [ isCustomerEvent, setIsCustomerEvent ] = useState(true);
   const dialogRef = useRef(null);
 
   const EventSchema = Yup.object().shape({
@@ -94,36 +93,28 @@ function EventDialog({
       .test('is-greater-than-start-date', 'End Date must be later than Start Date', (value, context) => {
         const start_date = context.parent.date;
         if (start_date && value) {
-          
           const startDate = new Date(start_date).setHours(0,0,0,0);
           const endDate = new Date(value).setHours(0,0,0,0);
-          
           if(startDate!==endDate){
             clearErrors('end')
           }
-          
           return  startDate <= endDate;
-
         }
-        return true; // If start_date or end_date is not defined, skip this test
+        return true; 
       }),
     start: Yup.object().nullable().label('Start Time').required('Start Time is required'),
     end: Yup.object().nullable().label('End Time').required('End Time is required')
       .test('is-greater-than-start-time-if-same-date', 'End Time must be later than Start Time', (value, context) => {
         const { start, date, end_date } = context.parent;
         if (start && date && end_date && value) {
-          
           let startDate = new Date(date);
           let endDate = new Date(end_date);
           const [start_hours, start_minutes] = start.value.split(':').map(Number);
           const [end_hours, end_minutes] = value.value.split(':').map(Number);
-          
           startDate.setHours(start_hours, start_minutes);
           startDate = new Date(startDate);
-          
           endDate.setHours(end_hours, end_minutes);
           endDate = new Date(endDate);
-
           if(startDate.getDate()===endDate.getDate()){
             return startDate < endDate;
           }
@@ -215,18 +206,24 @@ function EventDialog({
     }
   };
 
-  const handleCloseModel = async ()=> {
-    await dispatch(setEventModel(false)) 
-    await dispatch(resetActiveCustomerMachines())
-    await dispatch(resetActiveSites())
-    await setValue("isCustomerEvent", true );
-    await reset()
+  const handleCloseModel = ()=> {
+    dispatch(setEventModel(false)) 
+    dispatch(resetActiveCustomerMachines())
+    dispatch(resetActiveSites())
+    setValue("isCustomerEvent", true );
+    reset()
   };
 
-    const handleCustomerEvent = async () => {
-      await setValue( "customer", null );
-      await setValue( "primaryTechnician", null );
-      await setValue("isCustomerEvent", !isCustomerEvent);
+    const handleCustomerEvent = () => {
+      setValue( "jiraTicket", "" );
+      setValue( "customer", null );
+      setValue( "primaryTechnician", null );
+      setValue( "machines", [] );
+      setValue( "site", null );
+      setValue( "supportingTechnicians", [] );
+      setValue( "notifyContacts", [] );
+      setValue( "description", "" );
+      setValue("isCustomerEvent", !isCustomerEvent);
     };
   
     useEffect( () => {
@@ -259,11 +256,11 @@ function EventDialog({
         onClose={handleCloseModel}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle display='flex' justifyContent='space-between' alignItems='center' variant='h3' sx={{pb:0, pt:0 }}>
-          {selectedEvent ? 'Update Event' : 'New Event'}
-          <DialogActions>
-            <CustomSwitch label="Customer Visit"  checked={ isCustomerEvent } onChange={ handleCustomerEvent } /> 
-          </DialogActions>
+        <DialogTitle display='flex' justifyContent='space-between' alignItems='center' variant='h3' sx={{ pb: !selectedEvent ? 0 : '', pt: !selectedEvent ? 0 : '' }} >
+          { selectedEvent ? 'Update Event' : 'New Event'}
+          { !selectedEvent && <DialogActions >
+            <CustomSwitch label="Customer Visit"  checked={ isCustomerEvent } onChange={ handleCustomerEvent } />
+          </DialogActions>}
         </DialogTitle>
         <Divider orientation="horizontal" flexItem />
         <DialogContent dividers sx={{px:3 }} >
