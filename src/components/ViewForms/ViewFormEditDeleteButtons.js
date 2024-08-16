@@ -550,23 +550,21 @@ function ViewFormEditDeleteButtons({
               {serviceRecordStatus?.status === 'PENDING' &&
                 serviceRecordStatus?.approvingContacts?.length > 0 && (
                   <IconTooltip
-                    title="Serive Record Approval Status: Pending"
-                    color="#FFCE39"
-                    icon="mage:file-fill"
+                    title="Pending"
+                    color="#FF7900"
+                    icon="mdi:clipboard-clock-outline"
                   />
                 )}
               {(serviceRecordStatus.status === 'REJECTED' ||
                 serviceRecordStatus.status === 'APPROVED') && (
                   <Badge badgeContent={serviceRecordStatus?.approvalLogs?.length || '0'} color="info">
                     <IconTooltip
-                      title={`Serive Record Approval Status: ${
-                        serviceRecordStatus.status === 'REJECTED' ? 'Rejected' : 'Approved'
-                      }`}
+                      title={serviceRecordStatus.status === 'REJECTED' ? 'Rejected' : 'Approved'}
                       color={serviceRecordStatus.status === 'REJECTED' ? '#FF0000' : '#008000'}
                       icon={
                         serviceRecordStatus.status === 'REJECTED'
-                          ? 'mage:file-cross-fill'
-                          : 'mage:file-check-fill'
+                          ? 'mdi:clipboard-alert-outline'
+                          : 'mdi:clipboard-check-outline'
                       }
                       onClick={handleServiceRecordApprovalHistoryPopoverOpen}
                     />
