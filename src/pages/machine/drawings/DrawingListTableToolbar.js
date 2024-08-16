@@ -61,10 +61,10 @@ export default function DrawingListTableToolbar({
       value={filterName}
       onChange={onFilterName}
       onClick={onResetFilter}
-      SubOnClick={handleAdd}
-      SubOnClick2={ handleAddList }
+      SubOnClick={ !machine?.isArchived ? handleAdd : undefined }
+      SubOnClick2={ !machine?.isArchived ? handleAddList : undefined }
       addButton={!machine?.isArchived ? BUTTONS.ADDDRAWING : undefined}
-      handleAttach={handleAattach}
+      handleAttach={ !machine?.isArchived ? handleAattach : undefined}
       transferredMachine={machine?.status?.slug==='transferred'}
       categoryVal={categoryVal}
       setCategoryVal={setCategoryVal}
