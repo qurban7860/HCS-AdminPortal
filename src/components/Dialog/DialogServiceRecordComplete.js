@@ -100,7 +100,9 @@ function DialogServiceRecordComplete({ recordStatus }) {
   return (
     <Dialog fullWidth maxWidth="sm" open={completeDialog} onClose={handleCloseDialog}>
       <DialogTitle variant="h4" sx={{ pb: 1, pt: 2 }}>
-        Are you sure you want to send emails to Approve?
+        {allowApproval
+          ? 'Are you sure you want to send emails to Approve?'
+          : 'Are you sure you want to Approve?'}
       </DialogTitle>
       <Divider orientation="horizontal" flexItem />
       {allowApproval ? (
