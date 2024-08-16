@@ -100,7 +100,9 @@ function DialogServiceRecordComplete({ recordStatus }) {
   return (
     <Dialog fullWidth maxWidth="sm" open={completeDialog} onClose={handleCloseDialog}>
       <DialogTitle variant="h4" sx={{ pb: 1, pt: 2 }}>
-        {`Are you sure you want to ${recordStatus?.label?.toLowerCase()}?`}
+        {allowApproval
+          ? 'Are you sure you want to Approve?'
+          : 'Are you sure you want to send emails to Approve?'}
       </DialogTitle>
       <Divider orientation="horizontal" flexItem />
       {allowApproval ? (
@@ -221,7 +223,7 @@ const SendApprovalEmails = ({ isLoading, recordStatus, approvingContacts }) => {
           loading={isSubmitting}
           variant="contained"
         >
-          {recordStatus?.label}
+          Send Email
         </LoadingButton>
       </DialogActions>
     </FormProvider>
@@ -229,6 +231,8 @@ const SendApprovalEmails = ({ isLoading, recordStatus, approvingContacts }) => {
 };
 
 const ApproveSeviceRecord = ({ isLoading, recordStatus }) => {
+  const [approvalSubmitting, setApprovalSubmitting] = useState(false);
+  const [rejectionSubmitting, setRejectionSubmitting] = useState(false);
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const { machineServiceRecord } = useSelector((state) => state.machineServiceRecord);
@@ -265,6 +269,11 @@ const ApproveSeviceRecord = ({ isLoading, recordStatus }) => {
 
   const approveServiceRecord = async (data) => {
     try {
+      if (data?.status === 'APPROVED') {
+        setApprovalSubmitting(true);
+      } else {
+        setRejectionSubmitting(true);
+      }
       const params = {
         status: data?.status,
         comments: data?.comments,
@@ -292,6 +301,8 @@ const ApproveSeviceRecord = ({ isLoading, recordStatus }) => {
       );
       console.error(err.message);
     } finally {
+      setApprovalSubmitting(false);
+      setRejectionSubmitting(false);
       await handleCloseDialog();
     }
   };
@@ -314,26 +325,30 @@ const ApproveSeviceRecord = ({ isLoading, recordStatus }) => {
         </Stack>
       </DialogContent>
       <DialogActions>
-        <LoadingButton
-          disabled={isLoading}
-          loading={isSubmitting}
-          variant="contained"
-          color="error"
-          onClick={() => handleStatusChange('REJECTED')}
-        >
-          Reject
-        </LoadingButton>
-        <Button variant="outlined" onClick={handleCloseDialog}>
-          Cancel
-        </Button>
-        <LoadingButton
-          disabled={isLoading}
-          loading={isSubmitting}
-          variant="contained"
-          onClick={() => handleStatusChange('APPROVED')}
-        >
-          Approve
-        </LoadingButton>
+        <Stack direction="row" justifyContent="space-between" width="100%">
+          <Button variant="outlined" onClick={handleCloseDialog}>
+            Cancel
+          </Button>
+          <Stack direction="row" spacing={1}>
+            <LoadingButton
+              disabled={isSubmitting}
+              loading={rejectionSubmitting}
+              variant="contained"
+              color="error"
+              onClick={() => handleStatusChange('REJECTED')}
+            >
+              Reject
+            </LoadingButton>
+            <LoadingButton
+              disabled={isSubmitting}
+              loading={approvalSubmitting}
+              variant="contained"
+              onClick={() => handleStatusChange('APPROVED')}
+            >
+              Approve
+            </LoadingButton>
+          </Stack>
+        </Stack>
       </DialogActions>
     </FormProvider>
   );
