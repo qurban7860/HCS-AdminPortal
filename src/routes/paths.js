@@ -13,7 +13,7 @@ const ROOTS_SECURITY = '/security';
 const ROOTS_SETTING = '/settings';
 const ROOTS_DOCUMENT = '/documents';
 const ROOTS_MACHINE_DRAWING = '/machineDrawings';
-const ROOTS_SITEMAP = '/site';
+const ROOTS_SITEMAP = '/sites';
 const ROOTS_SUPPORT_TICKETS = '/supportTickets';
 
 // ----------------------------------------------------------------------
@@ -480,10 +480,10 @@ export const PATH_SECURITY = {
 export const PATH_SITEMAP = {
   root: ROOTS_SITEMAP,
   permissionDenied: path(ROOTS_SITEMAP, '/permission-denied'),
-  general: {
-    app: path(ROOTS_SITEMAP, '/app'),
-  },
-  app: path(ROOTS_SITEMAP, '/app'),
+  // general: {
+  //   app: path(ROOTS_SITEMAP, '/app'),
+  // },
+  // app: path(ROOTS_SITEMAP, '/app'),
 };
 
 // ----------------------- Documents -----------------------------------------

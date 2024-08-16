@@ -40,12 +40,12 @@ const CheckedItemInputRow = memo(({ index, row }) => {
 
     // Define the schema for each image
     const CheckItemSchema = Yup.object().shape({
-      value: Yup.mixed()
-      .test('value-required', 'Value is required', (value, context) => {
-        if(context.type==="value-required" && !value){
-          return false;
+      value: Yup.mixed().required('Value is required!')
+        .test('is-number', 'Value is required!', (value, context) => {
+        if(context.parent.inputType==='Number' && !value){
+          return false
         }
-        return true;
+        return true;        
       }),
       comment: Yup.string().max(5000, 'Comments cannot exceed 5000 characters'),
       images: Yup.array().test({
@@ -68,7 +68,7 @@ const CheckedItemInputRow = memo(({ index, row }) => {
       }
       if (item?.inputType === 'Number') {
         const value = parseFloat(item?.recordValue?.checkItemValue);
-        return Number.isNaN(value) ? null : value;
+        return Number.isNaN(value) ? '' : value;
       }
       if (item?.inputType === 'Status') {
         return statusTypes.find((st) => st?.name === item?.recordValue?.checkItemValue) || null;
@@ -83,6 +83,7 @@ const CheckedItemInputRow = memo(({ index, row }) => {
           comment: item?.recordValue?.comments,
           value:getRecordValue(item),
           recordValue:item?.recordValue,
+          inputType:item?.inputType,
           images: item?.recordValue?.files?.map(file => ({
             uploaded:true,
             key: file?._id,
@@ -146,6 +147,8 @@ const CheckedItemInputRow = memo(({ index, row }) => {
         params.checkItemValue = fDate(checkItem.value, 'dd/MM/yyyy');
       } else if(typeof checkItem.value==='object'){
         params.checkItemValue=checkItem?.value?.name;
+      } else if(typeof checkItem.value==='boolean'){
+        params.checkItemValue=checkItem?.value;
       }else{
         params.checkItemValue=checkItem?.value || '';
       }
@@ -215,7 +218,7 @@ const CheckedItemInputRow = memo(({ index, row }) => {
     const handleRemoveFile = async (inputFile, childIndex)=>{
       
       if(inputFile?._id){
-        await dispatch(deleteCheckItemFile(machineId, id, inputFile?._id))
+        await dispatch(deleteCheckItemFile(machineId, inputFile?._id))
       }
 
       setValue(
@@ -266,10 +269,7 @@ const CheckedItemInputRow = memo(({ index, row }) => {
                       <b>{`${index+1}.${childIndex+1}. `}</b>{`${childRow.name}`}
                   </Typography>
                       {childRow?.inputType === 'Boolean' &&
-                        <>
-                          <RHFSwitch size="small" label={`Check ${childRow?.isRequired && '*'}`} name={`checkItems[${childIndex}].value`} />
-                          {/* <RHFCheckbox label={`Check ${childRow?.isRequired && '*'}`} name={`checkItems[${childIndex}].value`}  />  */}
-                        </>
+                        <RHFSwitch size="small" label='Check' name={`checkItems[${childIndex}].value`} />
                       }
                       {(childRow?.inputType === 'Short Text' || childRow?.inputType === 'Long Text') &&
                         <RHFTextField 
@@ -277,7 +277,7 @@ const CheckedItemInputRow = memo(({ index, row }) => {
                           label={`${childRow?.inputType}`}
                           name={`checkItems[${childIndex}].value`}
                           size="small" 
-                          required={childRow?.isRequired}
+                          required
                           InputProps={{ inputProps: { maxLength:childRow?.inputType === 'Long Text'?3000:200 } }}
                         />
                       }
@@ -287,7 +287,7 @@ const CheckedItemInputRow = memo(({ index, row }) => {
                           name={`checkItems[${childIndex}].value`}
                           format="dd/mm/yyyy"
                           size="small" 
-                          required={childRow?.isRequired}
+                          required
                         /> 
                       }
                       {childRow?.inputType === 'Number'  && 
@@ -296,7 +296,7 @@ const CheckedItemInputRow = memo(({ index, row }) => {
                             name={`checkItems[${childIndex}].value`}
                             type="number"
                             size="small" 
-                            required={childRow?.isRequired}
+                            required
                         />
                       }
                       {childRow?.inputType==="Status" &&
@@ -305,10 +305,10 @@ const CheckedItemInputRow = memo(({ index, row }) => {
                           label={`${childRow?.inputType} ${childRow?.isRequired && '*'}`}
                           name={`checkItems[${childIndex}].value`}
                           options={statusTypes}
+                          required
                           getOptionLabel={(option) => option.name}
                           isOptionEqualToValue={(option, value) => option.name === value.name}
                           renderOption={(props, option) => ( <li {...props} key={`status-${index}-${childIndex}-${option.name}`}>{`${option?.name || ''}`}</li> )}
-                          renderInput={(params) => ( <TextField  {...params}  label="Status" placeholder="Status"  /> )}
                         />
                       }
 

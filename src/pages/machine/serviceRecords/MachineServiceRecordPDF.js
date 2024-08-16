@@ -5,12 +5,10 @@ import { fDate } from '../../../utils/formatTime';
 
 MachineServiceRecordPDF.propTypes = {
     machineServiceRecord: PropTypes.object,
-    machineServiceRecordCheckItems: PropTypes.array,
+    machineServiceRecordCheckItems: PropTypes.object,
 };
 
 export function MachineServiceRecordPDF({machineServiceRecord, machineServiceRecordCheckItems}) {
-
-    console.log("machineServiceRecordCheckItems::::",machineServiceRecordCheckItems)
 
     const defaultValues = useMemo(
         () => ({
@@ -58,6 +56,10 @@ export function MachineServiceRecordPDF({machineServiceRecord, machineServiceRec
     
     const fileName = `${defaultValues?.serviceDate?.substring(0,10).replaceAll('-','')}_${defaultValues?.serviceRecordConfigRecordType}_${defaultValues?.versionNo}`;
 
+function getImageUrl(file) {
+        return file?.thumbnail ? `data:image/png;base64,${file?.thumbnail || ''}` : '';
+    }
+    
     return (
         <Document title={fileName} subject='Serevice Record'
             author={defaultValues?.createdByFullName}
@@ -140,11 +142,6 @@ export function MachineServiceRecordPDF({machineServiceRecord, machineServiceRec
                 </View>
             </View>
             <Text style={styles.title}>Check Items</Text>
-            <View style={styles.row}>
-                <View style={styles.col}>
-                    <Text style={styles.text_sm}>{defaultValues?.textBeforeCheckItems}</Text>
-                </View>
-            </View>
 
             {machineServiceRecordCheckItems?.checkItemLists?.length > 0 &&
                 machineServiceRecordCheckItems?.checkItemLists?.map((row, index) => (
@@ -158,6 +155,18 @@ export function MachineServiceRecordPDF({machineServiceRecord, machineServiceRec
                                         <Text style={styles.text_sm}><Text style={styles.bold}>Value:</Text>{childRow?.recordValue?.checkItemValue}</Text>
                                         <Text style={styles.text_sm}><Text style={styles.bold}>Comments:</Text>{childRow?.recordValue?.comments}</Text>    
                                     </>
+                                }
+                                {childRow?.recordValue?.files?.length > 0 &&
+                                    <View key={`inner_image_container-${index}`} style={styles.image_row} >
+                                    {childRow?.recordValue?.files?.map((file, fileIndex) => {
+                                        const imageUrl = getImageUrl(file);
+                                        return (
+                                            <View key={file?._id} style={styles.image_column}>
+                                                { imageUrl && <Image style={{ borderRadius:5, height:"100px", objectFit: "cover" }} src={ imageUrl } />}
+                                            </View>
+                                        );
+                                    })}
+                                    </View>
                                 }
                             </View>
                         ))}
@@ -211,6 +220,19 @@ export function MachineServiceRecordPDF({machineServiceRecord, machineServiceRec
                 <View style={styles.col}>
                     <Text style={styles.lable}>Operators Notes</Text>
                     <Text style={styles.text_sm}>{defaultValues?.operatorNotes}</Text>
+                </View>
+            </View>
+            <Text style={styles.title}>Images</Text>
+            <View style={styles.row}>
+                <View style={styles.image_row} >
+                    {defaultValues?.files?.map((file, fileIndex) => {
+                        const imageUrl = getImageUrl(file);
+                        return (
+                            <View key={file?._id} style={styles.image_column}>
+                                { imageUrl && <Image style={{ borderRadius:5, height:"100px", objectFit: "cover" }} src={ imageUrl } />}
+                            </View>
+                        );
+                    })}
                 </View>
             </View>
         </View>
@@ -354,6 +376,15 @@ export function MachineServiceRecordPDF({machineServiceRecord, machineServiceRec
         padding:4,
         marginTop:5
     },
+    image_row: {
+        display:'flex',
+        flexDirection: "row",
+        marginTop:2,
+        paddingHorizontal:0,
+        width:'100%',
+        flexWrap: 'wrap',
+    },
+    image_column:{width: "20%", flexDirection: "column", padding:1},
     col:   { width: "100%", flexDirection: "column"},
     col_10: { width: "10%", flexDirection: "column"},
     col_20: { width: "20%", flexDirection: "column"},

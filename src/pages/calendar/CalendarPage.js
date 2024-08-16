@@ -63,13 +63,20 @@ export default function CalendarPage() {
   const [ filterEventColor, setFilterEventColor ] = useState([]);
   const [ view, setView ] = useState(isDesktop ? 'dayGridMonth' : 'listWeek');
   const [calendarData, setCalendarData] = useState([]);
+  const [DefaultNotifyContacts, setDefaultNotifyContacts] = useState([]);
 
-  const configurations = JSON.parse(localStorage.getItem('configurations'));
-  const def_contacts = configurations?.filter(c => c?.name === 'Default_Notify_Contacts')?.map(c => c?.value)
-  ?.flatMap(value => value?.split(','))?.filter(Boolean);
+  useEffect(() => {
+    const configurations = JSON.parse(localStorage.getItem('configurations'));
+    const def_contacts = configurations?.find(c => c?.name === 'Default_Notify_Contacts');
+    const emails = def_contacts?.value?.split(',')?.map(c => c?.trim()?.toLowerCase()); 
+    if(emails && activeSpContacts){
+      const filteredContacts = activeSpContacts.filter((_contact) => 
+        emails?.includes(_contact?.email?.trim()?.toLowerCase())
+      );
+      setDefaultNotifyContacts(filteredContacts);
+    }
+  }, [activeSpContacts]);
 
-  const [DefaultNotifyContacts, setDefaultNotifyContacts] = useState(activeSpContacts.filter((_contact)=> def_contacts?.includes(_contact?.email)));
-  
   useLayoutEffect(() => {
     dispatch(setEventModel(false));
     dispatch(getActiveCustomers());

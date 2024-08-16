@@ -75,12 +75,10 @@ function NavigationConfig() {
 
     if (isDocumentAccessAllowed && navConfig.some((config) => config.title?.toLowerCase() !== 'documents')) {
       updatedConfig[0].items.push({ title: 'Documents', path: PATH_DOCUMENT.root, icon: ICONS.document });
-      // updatedConfig[0].items.splice(3, 0, { title: 'Documents', path: PATH_DOCUMENT.root, icon: ICONS.document });
     }
 
     if (isDrawingAccessAllowed && navConfig.some((config) => config.title?.toLowerCase() !== 'machine drawings')) {
       updatedConfig[0].items.push({ title: 'Machine Drawings', path: PATH_MACHINE_DRAWING.root, icon: ICONS.drawing });
-      // updatedConfig[0].items.splice(4, 0, { title: 'Machine Drawings', path: PATH_MACHINE_DRAWING.root, icon: ICONS.drawing });
     }
 
     // Jira Report
@@ -88,22 +86,18 @@ function NavigationConfig() {
 
     if (isSettingAccessAllowed && navConfig.some((config) => config.title?.toLowerCase() !== 'settings')) {
       updatedConfig[0].items.push({ title: 'Settings', path: PATH_SETTING.root, icon: ICONS.setting });
-      // updatedConfig[0].items.splice(5, 0, { title: 'Settings', path: PATH_SETTING.root, icon: ICONS.setting });
     }
 
     if (navConfig.some((config) => config.title?.toLowerCase() !== 'Calendar')) {
       updatedConfig[0].items.push({ title: 'Calendar', path: PATH_CALENDAR.root, icon: ICONS.calendar });
-      // updatedConfig[0].items.splice(6, 0, { title: 'Calendar', path: PATH_CALENDAR.root, icon: ICONS.calendar });
     }
 
     if (isSecurityUserAccessAllowed && navConfig.some((config) => config?.title?.toLowerCase() !== 'security')) {
       updatedConfig[0].items.push({ title: 'Security', path: PATH_SECURITY.root, icon: ICONS.security });
-      // updatedConfig[0].items.splice(7, 0, { title: 'Security', path: PATH_SECURITY.root, icon: ICONS.security });
     }
 
     if ( navConfig.some((config) => config?.title?.toLowerCase() !== 'sites map')) {
-      updatedConfig[0].items.push({ title: 'Sites Map', path: PATH_SITEMAP.app, icon: ICONS.map });
-      // updatedConfig[0].items.splice(8, 0, { title: 'Sites Map', path: PATH_SITEMAP.app, icon: ICONS.map });
+      updatedConfig[0].items.push({ title: 'Sites Map', path: PATH_SITEMAP.root, icon: ICONS.map });
     }
 
     setConfig(updatedConfig);

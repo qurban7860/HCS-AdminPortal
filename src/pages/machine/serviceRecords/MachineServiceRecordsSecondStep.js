@@ -41,18 +41,10 @@ function MachineServiceRecordsSecondStep({serviceRecord, handleDraftRequest, han
   useEffect(() =>{
     if(machineId && id){
       dispatch(getMachineServiceRecord(machineId, id))
-      dispatch(getMachineServiceRecordCheckItems(machineId, id));
+      dispatch(getMachineServiceRecordCheckItems( machineId, id ));
     }
     return(()=> resetCheckItemValues());
   },[dispatch, machineId, id])
-
-
-  // useEffect(() =>{
-  //   if(machineServiceRecord?._id){
-  //     dispatch(getMachineServiceRecordCheckItems(machineId, machineServiceRecord?._id));
-  //   }
-  //   return(()=> resetCheckItemValues());
-  // },[dispatch, machineId, machineServiceRecord])
 
   const defaultValues = useMemo(
       () => {
@@ -70,14 +62,23 @@ function MachineServiceRecordsSecondStep({serviceRecord, handleDraftRequest, han
       [ machineServiceRecord ]
     );
 
-    const formMethodsBefore = useForm({defaultValues});
-    const { handleSubmit: handleSubmitBefore, formState: { isSubmitting: isSubmittingBefore, isSubmitted:isSubmittedBefore } } = formMethodsBefore;
-
-    const formMethodsAfter = useForm({defaultValues});
-    const { handleSubmit: handleSubmitAfter, formState: { isSubmitting: isSubmittingAfter, isSubmitted:isSubmittedAfter } } = formMethodsAfter;
-
-    const methods = useForm({defaultValues});
-    const { handleSubmit, formState: { isSubmitting } } = methods;
+    const formMethodsBefore = useForm({ defaultValues });
+    const { handleSubmit: handleSubmitBefore, reset: resetBefore, formState: { isSubmitting: isSubmittingBefore, isSubmitted:isSubmittedBefore } } = formMethodsBefore;
+    
+    const formMethodsAfter = useForm({ defaultValues });
+    const { handleSubmit: handleSubmitAfter, reset: resetAfter, formState: { isSubmitting: isSubmittingAfter, isSubmitted:isSubmittedAfter } } = formMethodsAfter;
+    
+    const methods = useForm({ defaultValues });
+    const { handleSubmit, reset, formState: { isSubmitting } } = methods;
+    
+    useEffect(() => {
+      if (machineServiceRecord) {
+        resetBefore(defaultValues);
+        resetAfter(defaultValues);   
+        reset(defaultValues); 
+      }
+    }, [resetBefore, resetAfter, reset, machineServiceRecord, defaultValues]);
+    
 
     const [showMessage, setShowMessage] = useState(false);
     const submitBefore = async (data)=> {
