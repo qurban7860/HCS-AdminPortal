@@ -50,27 +50,34 @@ function DialogServiceRecordComplete({ recordStatus }) {
 
   useEffect(() => {
     if (configs.length > 0 && activeSpContacts.length > 0) {
-      const approvingContactsArray = configs
-        .find((config) => config.name === 'Approving_Contacts')
-        ?.value.split(',')
-        .filter((configEmail) =>
-          activeSpContacts.some(
-            (activeSpUser) => activeSpUser.contact[0].email.toLowerCase() === configEmail.trim().toLowerCase()
+      let approvingContactsArray;
+      if (configs.some((config) => config.name === 'Approving_Contacts')) {
+        approvingContactsArray = configs
+          .find((config) => config.name === 'Approving_Contacts')
+          ?.value.split(',')
+          .filter((configEmail) =>
+            activeSpContacts.some(
+              (activeSpUser) =>
+                activeSpUser.contact[0].email.toLowerCase() === configEmail.trim().toLowerCase()
+            )
           )
-        )
-        .map((configEmail) => {
-          const fullContactObj = activeSpContacts.find(
-            (activeSpUser) => activeSpUser.contact[0].email.toLowerCase() === configEmail.trim().toLowerCase()
-          );
-          return fullContactObj.contact[0];
-        })
-        .sort((a, b) => {
-          const nameA = `${a.firstName} ${a.lastName}`.toLowerCase();
-          const nameB = `${b.firstName} ${b.lastName}`.toLowerCase();
-          if (nameA < nameB) return -1; // nameA comes first
-          if (nameA > nameB) return 1; // nameB comes first
-          return 0; // names are equal
-        });
+          .map((configEmail) => {
+            const fullContactObj = activeSpContacts.find(
+              (activeSpUser) =>
+                activeSpUser.contact[0].email.toLowerCase() === configEmail.trim().toLowerCase()
+            );
+            return fullContactObj.contact[0];
+          })
+          .sort((a, b) => {
+            const nameA = `${a.firstName} ${a.lastName}`.toLowerCase();
+            const nameB = `${b.firstName} ${b.lastName}`.toLowerCase();
+            if (nameA < nameB) return -1; // nameA comes first
+            if (nameA > nameB) return 1; // nameB comes first
+            return 0; // names are equal
+          });
+      } else {
+        approvingContactsArray = activeSpContacts.map((activeSpUser) => activeSpUser.contact[0]);
+      }
       setApprovingContacts(approvingContactsArray);
     }
   }, [configs, activeSpContacts]);
