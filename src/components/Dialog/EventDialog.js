@@ -1,28 +1,24 @@
 import PropTypes from 'prop-types';
 import React,{ useEffect, useLayoutEffect, useRef, useState } from 'react';
 import * as Yup from 'yup';
-import merge from 'lodash/merge';
-import { isBefore } from 'date-fns';
 // form
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Stack, Button, Tooltip, TextField, IconButton, DialogActions, DialogContent, Grid, Dialog, DialogTitle, Divider, MenuItem, Typography } from '@mui/material';
+import { Box, Stack, Button, DialogActions, DialogContent, Grid, Dialog, DialogTitle, Divider, MenuItem, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
-
 // components
 import { setEventModel } from '../../redux/slices/event/event';
-import DialogLink from './DialogLink';
-import Iconify from '../iconify';
 import { getActiveCustomerMachines, resetActiveCustomerMachines } from '../../redux/slices/products/machine';
 import { getActiveSites, resetActiveSites } from '../../redux/slices/customer/site';
-import FormProvider, { RHFDatePicker, RHFTimePicker, RHFTextField, RHFAutocomplete, RHFSwitch } from '../hook-form';
+import FormProvider, { RHFDatePicker, RHFTextField, RHFAutocomplete } from '../hook-form';
 import IconTooltip from '../Icons/IconTooltip';
 import ConfirmDialog from '../confirm-dialog/ConfirmDialog';
-import ViewFormAudit from '../ViewForms/ViewFormAudit';
-import ViewFormField from '../ViewForms/ViewFormField';
 import { fDateTime } from '../../utils/formatTime';
+import { time_list } from '../../constants/time-list';
+import { useAuthContext } from '../../auth/useAuthContext';
+import CustomSwitch from '../custom-input/CustomSwitch';
 
 function getTimeObjectFromISOString(dateString) {
   const date = new Date(dateString);
@@ -42,8 +38,9 @@ return timeObject;
 const getInitialValues = (selectedEvent, range, contacts) => {
   const initialEvent = {
     _id: selectedEvent ? selectedEvent?._id : null ,
+    isCustomerEvent: ( selectedEvent?.isCustomerEvent || selectedEvent?.isCustomerEvent === undefined ) && true || false,
     date: selectedEvent ? selectedEvent?.start : (range?.start || new Date() ) ,
-    end_date: selectedEvent ? selectedEvent?.end : (range?.start || new Date() ) ,
+    end_date: selectedEvent ? selectedEvent?.end : (range?.end || new Date() ) ,
     start: selectedEvent ? getTimeObjectFromISOString(selectedEvent?.start) : { value: '07:30', label: '7:30 AM' },
     end: selectedEvent ?  getTimeObjectFromISOString(selectedEvent?.end) : { value: '18:00', label: '6:00 PM' },
     customer: selectedEvent ? selectedEvent?.customer : null,
@@ -80,15 +77,14 @@ function EventDialog({
   onDeleteEvent,
   contacts
 }) {
-  
+  const { user } = useAuthContext();
   const dispatch = useDispatch();
   const { selectedEvent, eventModel } = useSelector((state) => state.event );
   const { activeCustomers } = useSelector((state) => state.customer);
   const { activeContacts, activeSpContacts } = useSelector((state) => state.contact);
   const { activeSites } = useSelector((state) => state.site);
   const { activeCustomerMachines } = useSelector( (state) => state.machine );
-  const [openConfirm, setOpenConfirm] = useState(false);
-  const [isPersonalMode, setIsPersonalMode] = useState(false);
+  const [ openConfirm, setOpenConfirm ] = useState(false);
   const dialogRef = useRef(null);
 
   const EventSchema = Yup.object().shape({
@@ -97,36 +93,28 @@ function EventDialog({
       .test('is-greater-than-start-date', 'End Date must be later than Start Date', (value, context) => {
         const start_date = context.parent.date;
         if (start_date && value) {
-          
           const startDate = new Date(start_date).setHours(0,0,0,0);
           const endDate = new Date(value).setHours(0,0,0,0);
-          
           if(startDate!==endDate){
             clearErrors('end')
           }
-          
           return  startDate <= endDate;
-
         }
-        return true; // If start_date or end_date is not defined, skip this test
+        return true; 
       }),
     start: Yup.object().nullable().label('Start Time').required('Start Time is required'),
     end: Yup.object().nullable().label('End Time').required('End Time is required')
       .test('is-greater-than-start-time-if-same-date', 'End Time must be later than Start Time', (value, context) => {
         const { start, date, end_date } = context.parent;
         if (start && date && end_date && value) {
-          
           let startDate = new Date(date);
           let endDate = new Date(end_date);
           const [start_hours, start_minutes] = start.value.split(':').map(Number);
           const [end_hours, end_minutes] = value.value.split(':').map(Number);
-          
           startDate.setHours(start_hours, start_minutes);
           startDate = new Date(startDate);
-          
           endDate.setHours(end_hours, end_minutes);
           endDate = new Date(endDate);
-
           if(startDate.getDate()===endDate.getDate()){
             return startDate < endDate;
           }
@@ -169,7 +157,7 @@ function EventDialog({
     }
   }, [errors]);
 
-  const { jiraTicket, customer, start, end, date, primaryTechnician } = watch();
+  const { customer, date, isCustomerEvent } = watch();
 
   useEffect(() => {
     const { end_date  } = watch()
@@ -198,106 +186,69 @@ function EventDialog({
     reset(getInitialValues(selectedEvent?.extendedProps, range, contacts));
   }, [reset, range, selectedEvent, contacts]);
 
-    const [activeButton, setActiveButton] = useState('services');
-  
-    const handleServicesClick = () => {
-      setIsPersonalMode(false);
-      setActiveButton('services');
-    };
-  
-    const handlePersonalClick = () => {
-      setIsPersonalMode(true);
-      setActiveButton('personal');
-    };
-  
+  const onSubmit = async ( data ) => {
 
-  const onSubmit = (data) => {
     const start_date = new Date(data?.date);
     const end_date = new Date(data?.end_date);
     const [start_hours, start_minutes] = data.start.value.split(':').map(Number);
     const [end_hours, end_minutes] = data.end.value.split(':').map(Number);
-    
     start_date.setHours(start_hours, start_minutes);
     data.start_date = new Date(start_date);
-    
     end_date.setHours(end_hours, end_minutes);
     data.end_date = new Date(end_date);
 
     try {
-      onCreateUpdateEvent(data);
-      reset();
+      await onCreateUpdateEvent(data);
+      await reset();
+      await setValue("isCustomerEvent", true );
     } catch (error) {
       console.error(error);
     }
   };
 
-  const handleCloseModel = async ()=> {
-    await dispatch(setEventModel(false)) 
-    await dispatch(resetActiveCustomerMachines())
-    await dispatch(resetActiveSites())
+  const handleCloseModel = ()=> {
+    dispatch(setEventModel(false)) 
+    dispatch(resetActiveCustomerMachines())
+    dispatch(resetActiveSites())
+    setValue("isCustomerEvent", true );
     reset()
   };
 
-  useEffect(() => {
-    if (eventModel) {
-      handleServicesClick(false); 
-    }
-  }, [eventModel]);
-
- const time_list = [
-      { _id:'1', value: '00:00', label: '12:00 AM' },
-      { _id:'2', value: '00:30', label: '12:30 AM' },
-      { _id:'3', value: '01:00', label: '1:00 AM' },
-      { _id:'4', value: '01:30', label: '1:30 AM' },
-      { _id:'5', value: '02:00', label: '2:00 AM' },
-      { _id:'6', value: '02:30', label: '2:30 AM' },
-      { _id:'7', value: '03:00', label: '3:00 AM' },
-      { _id:'8', value: '03:30', label: '3:30 AM' },
-      { _id:'9', value: '04:00', label: '4:00 AM' },
-      { _id:'10', value: '04:30', label: '4:30 AM' },
-      { _id:'11', value: '05:00', label: '5:00 AM' },
-      { _id:'12', value: '05:30', label: '5:30 AM' },
-      { _id:'13', value: '06:00', label: '6:00 AM' },
-      { _id:'14', value: '06:30', label: '6:30 AM' },
-      { _id:'15', value: '07:00', label: '7:00 AM' },
-      { _id:'16', value: '07:30', label: '7:30 AM' },
-      { _id:'17', value: '08:00', label: '8:00 AM' },
-      { _id:'18', value: '08:30', label: '8:30 AM' },
-      { _id:'19', value: '09:00', label: '9:00 AM' },
-      { _id:'20', value: '09:30', label: '9:30 AM' },
-      { _id:'21', value: '10:00', label: '10:00 AM' },
-      { _id:'22', value: '10:30', label: '10:30 AM' },
-      { _id:'23', value: '11:00', label: '11:00 AM' },
-      { _id:'24', value: '11:30', label: '11:30 AM' },
-      { _id:'25', value: '12:00', label: '12:00 PM' },
-      { _id:'26', value: '12:30', label: '12:30 PM' },
-      { _id:'27', value: '13:00', label: '1:00 PM' },
-      { _id:'28', value: '13:30', label: '1:30 PM' },
-      { _id:'29', value: '14:00', label: '2:00 PM' },
-      { _id:'30', value: '14:30', label: '2:30 PM' },
-      { _id:'31', value: '15:00', label: '3:00 PM' },
-      { _id:'32', value: '15:30', label: '3:30 PM' },
-      { _id:'33', value: '16:00', label: '4:00 PM' },
-      { _id:'34', value: '16:30', label: '4:30 PM' },
-      { _id:'35', value: '17:00', label: '5:00 PM' },
-      { _id:'36', value: '17:30', label: '5:30 PM' },
-      { _id:'37', value: '18:00', label: '6:00 PM' },
-      { _id:'38', value: '18:30', label: '6:30 PM' },
-      { _id:'39', value: '19:00', label: '7:00 PM' },
-      { _id:'40', value: '19:30', label: '7:30 PM' },
-      { _id:'41', value: '20:00', label: '8:00 PM' },
-      { _id:'42', value: '20:30', label: '8:30 PM' },
-      { _id:'43', value: '21:00', label: '9:00 PM' },
-      { _id:'44', value: '21:30', label: '9:30 PM' },
-      { _id:'45', value: '22:00', label: '10:00 PM' },
-      { _id:'46', value: '22:30', label: '10:30 PM' },
-      { _id:'47', value: '23:00', label: '11:00 PM' },
-      { _id:'48', value: '23:30', label: '11:30 PM' }
-    ]
+    const handleCustomerEvent = () => {
+      setValue( "jiraTicket", "" );
+      setValue( "customer", null );
+      setValue( "primaryTechnician", null );
+      setValue( "machines", [] );
+      setValue( "site", null );
+      setValue( "supportingTechnicians", [] );
+      setValue( "notifyContacts", [] );
+      setValue( "description", "" );
+      setValue("isCustomerEvent", !isCustomerEvent);
+    };
+  
+    useEffect( () => {
+      if( !isCustomerEvent ){
+        if( Array.isArray( activeCustomers ) && activeCustomers?.length > 0 ){
+          setValue( 'customer', activeCustomers.find(( cus ) => cus?._id === user?.customer ) );
+        }
+        if( Array.isArray( activeSpContacts ) && activeSpContacts?.length > 0 ){
+          setValue( 'primaryTechnician', activeSpContacts?.find(( con ) => con?._id === user?.contact ) );
+        }
+      }
+    }, [ isCustomerEvent, setValue, activeSpContacts, activeCustomers, user ] );
 
   return (
     <>
       <Dialog
+          sx={{
+    '& .MuiDialog-container': {
+      alignItems: 'flex-start', // Align the dialog to the top
+    },
+    '& .MuiPaper-root': {
+      marginTop: 4, // Remove any margin from the top
+      marginBottom: 4, // Optional: Remove margin from the bottom if needed
+    },
+  }}
         fullWidth
         disableEnforceFocus
         maxWidth="md"
@@ -305,32 +256,11 @@ function EventDialog({
         onClose={handleCloseModel}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle display='flex' justifyContent='space-between' alignItems='center' variant='h3' sx={{pb:0, pt:0 }}>
-          {selectedEvent ? 'Update Event' : 'New Event'}
-          <DialogActions>
-            <Button
-              variant="contained"
-              onClick={handleServicesClick}
-              sx={{
-                bgcolor: activeButton === 'services' ? 'primary.main' : 'grey.300',
-                color: activeButton === 'services' ? 'white' : 'black',
-                '&:hover': { bgcolor: activeButton === 'services' ? 'primary.dark' : 'grey.400' },
-              }}
-            >
-              Services
-            </Button>
-            <Button
-              variant="contained"
-              onClick={handlePersonalClick}
-              sx={{
-                bgcolor: activeButton === 'personal' ? 'primary.main' : 'grey.300',
-                color: activeButton === 'personal' ? 'white' : 'black',
-                '&:hover': { bgcolor: activeButton === 'personal' ? 'primary.dark' : 'grey.400' },
-              }}
-            >
-              Personal
-            </Button>
-          </DialogActions>
+        <DialogTitle display='flex' justifyContent='space-between' alignItems='center' variant='h3' sx={{ pb: !selectedEvent ? 0 : '', pt: !selectedEvent ? 0 : '' }} >
+          { selectedEvent ? 'Update Event' : 'New Event'}
+          { !selectedEvent && <DialogActions >
+            <CustomSwitch label="Customer Visit"  checked={ isCustomerEvent } onChange={ handleCustomerEvent } />
+          </DialogActions>}
         </DialogTitle>
         <Divider orientation="horizontal" flexItem />
         <DialogContent dividers sx={{px:3 }} >
@@ -363,11 +293,11 @@ function EventDialog({
                 </Box>
                 
                 <RHFTextField
-                  name={isPersonalMode ? 'title' : 'jiraTicket'}
-                  label={isPersonalMode ? 'Title' : 'Jira Ticket'}
+                  name="jiraTicket"
+                  label={ isCustomerEvent ? 'Jira Ticket' : 'Title' }
                 />
 
-                {!isPersonalMode && (
+                {isCustomerEvent && (
                   <>
                     <RHFAutocomplete
                       label="Customer*"
@@ -377,7 +307,7 @@ function EventDialog({
                       getOptionLabel={(option) => `${option.name || ''}`}
                       renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.name || ''}`}</li> )}
                     />
-                    {/* <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }} > */}
+
                     <RHFAutocomplete
                       multiple
                       disableCloseOnSelect
@@ -389,6 +319,7 @@ function EventDialog({
                       getOptionLabel={(option) => `${option?.serialNo || ''} ${option?.name ? '-' : ''} ${option?.name || ''}`}
                       renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.serialNo || ''} ${option?.name ? '-' : ''} ${option?.name || ''}`}</li> )}
                     />
+
                     <RHFAutocomplete
                       label="Site"
                       name="site"
@@ -397,7 +328,8 @@ function EventDialog({
                       getOptionLabel={(option) => `${option.name || ''}`}
                       renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.name || ''}`}</li> )}
                     />
-                    {/* </Box> */}
+                </>)}
+                    
                     <RHFAutocomplete
                       label="Primary Technician*"
                       name="primaryTechnician"
@@ -406,6 +338,8 @@ function EventDialog({
                       getOptionLabel={(option) => `${option.firstName || ''} ${ option.lastName || ''}`}
                       renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
                     />
+                {isCustomerEvent && ( 
+                  <>
                     <RHFAutocomplete
                       multiple
                       disableCloseOnSelect
@@ -433,9 +367,9 @@ function EventDialog({
 
                 <RHFTextField name="description" label="Description" multiline rows={3} />
                 {selectedEvent && (
-                   <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }} >
-                   <Typography variant='body2' color='#919EAB' ><b>created by:</b> {`${defaultValues?.createdByFullName || ''}`} <br /> {`${fDateTime(defaultValues.createdAt)} / ${defaultValues.createdIP}`}</Typography>
-                   <Typography variant='body2' color='#919EAB' ><b>updated by:</b> {`${defaultValues?.updatedByFullName || ''}`} <br /> {`${fDateTime(defaultValues.updatedAt)} / ${defaultValues.updatedIP}`}</Typography>
+                    <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }} >
+                    <Typography variant='body2' color='#919EAB' ><b>created by:</b> {`${defaultValues?.createdByFullName || ''}`} <br /> {`${fDateTime(defaultValues.createdAt)} / ${defaultValues.createdIP}`}</Typography>
+                    <Typography variant='body2' color='#919EAB' ><b>updated by:</b> {`${defaultValues?.updatedByFullName || ''}`} <br /> {`${fDateTime(defaultValues.updatedAt)} / ${defaultValues.updatedIP}`}</Typography>
                   </Box>
                 )}
               </Stack>

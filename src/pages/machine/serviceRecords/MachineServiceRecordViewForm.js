@@ -26,6 +26,7 @@ import { deleteMachineServiceRecord,
   createMachineServiceRecordVersion,
   setCompleteDialog} from '../../../redux/slices/products/machineServiceRecord';
 import { getActiveSPContacts, setCardActiveIndex, setIsExpanded } from '../../../redux/slices/customer/contact';
+import { getConfigs } from '../../../redux/slices/config/config';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import { FORMLABELS } from '../../../constants/default-constants';
@@ -74,6 +75,7 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
     dispatch(setPDFViewerDialog(false));
     dispatch(setSendEmailDialog(false));
     dispatch(getActiveSPContacts());
+    dispatch(getConfigs());
     return ()=>{
       dispatch(resetMachineServiceRecord());
     }
@@ -212,19 +214,18 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
 
   useEffect(() => {
     if (machineServiceRecord?.files) {
-        const updatedFiles = machineServiceRecord?.files?.map(file => ({
-          ...file,
-          src: `data:${file?.fileType};base64,${file?.thumbnail}`,
-          thumbnail: `data:${file?.fileType};base64,${file?.thumbnail}`
-        }));
-        setSlides(updatedFiles);
+      const updatedFiles = machineServiceRecord?.files?.map((file) => ({
+        ...file,
+        src: `data:${file?.fileType};base64,${file?.thumbnail}`,
+        thumbnail: `data:${file?.fileType};base64,${file?.thumbnail}`,
+      }));
+      setSlides(updatedFiles);
     }
-    if(machineServiceRecord.status==="DRAFT"){
-      setRecordStatus({label:'Complete', value:'SUBMITTED'});
-    }else if(machineServiceRecord.status==="SUBMITTED"){
-      setRecordStatus({label:'Approve', value:'APPROVED'});
+    if (machineServiceRecord.status === 'DRAFT') {
+      setRecordStatus({ label: 'Complete', value: 'SUBMITTED' });
+    } else if (machineServiceRecord.status === 'SUBMITTED') {
+      setRecordStatus({ label: 'Approve', value: 'APPROVED' });
     }
-    
   }, [machineServiceRecord]);
 
 
@@ -263,6 +264,12 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
       }
     }
   };
+
+  const serviceRecordApprovalData = {
+    status: machineServiceRecord?.currentApprovalStatus,
+    approvalLogs: machineServiceRecord?.approval?.approvalLogs,
+    approvingContacts: machineServiceRecord?.approval?.approvingContacts,
+  }
 
   const handleCloseLightbox = () => {
     setSelectedImage(-1);
@@ -309,17 +316,42 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
       <MachineTabContainer currentTabValue='serviceRecords' />
     <Card sx={{ p: 2 }}>
       <Grid>
-        <ViewFormEditDeleteButtons isLoading={isLoading} isActive={defaultValues.isActive}  
-          disableEditButton={machine?.status?.slug==='transferred'}
-          disableDeleteButton={machine?.status?.slug==='transferred'}
-          skeletonIcon={ isLoading && !machineServiceRecord?._id }
-          handleEdit={!machineServiceRecord?.isHistory && machineServiceRecord?._id && handleEdit} 
-          onDelete={!machineServiceRecord?.isHistory && machineServiceRecord?.status==="DRAFT" && machineServiceRecord?._id && onDelete} 
+        <ViewFormEditDeleteButtons
+          isLoading={isLoading}
+          isActive={defaultValues.isActive}
+          disableEditButton={
+            machine?.status?.slug === 'transferred' ||
+            machineServiceRecord.currentApprovalStatus === 'APPROVED'
+          }
+          disableDeleteButton={
+            machine?.status?.slug === 'transferred' ||
+            machineServiceRecord.currentApprovalStatus === 'APPROVED'
+          }
+          skeletonIcon={isLoading && !machineServiceRecord?._id}
+          handleEdit={!machineServiceRecord?.isHistory && machineServiceRecord?._id && handleEdit}
+          onDelete={
+            !machineServiceRecord?.isHistory &&
+            machineServiceRecord?.status === 'DRAFT' &&
+            machineServiceRecord?._id &&
+            onDelete
+          }
           backLink={handleBackLink}
           handleSendPDFEmail={!machineServiceRecord?.isHistory && machineServiceRecord?._id && handleSendEmail}
           handleViewPDF={!machineServiceRecord?.isHistory && machineServiceRecord?._id && handlePDFViewer}
-          // handleCompleteMSR={machineServiceRecord.isActive && !machineServiceRecord?.isHistory &&  machineServiceRecord?.status!=="APPROVED" && handleCompleteConfirm}
-          serviceRecordStatus={recordStatus?.label}
+          handleCompleteMSR={
+            machineServiceRecord.isActive &&
+            !machineServiceRecord?.isHistory &&
+            machineServiceRecord?.status === 'SUBMITTED' &&
+            machineServiceRecord?.currentVersion._id === machineServiceRecord?._id &&
+            machineServiceRecord.currentApprovalStatus !== 'APPROVED' &&
+            handleCompleteConfirm
+          }
+          serviceRecordStatus={
+            machineServiceRecord.isActive &&
+            !machineServiceRecord?.isHistory &&
+            machineServiceRecord?.status === 'SUBMITTED' &&
+            machineServiceRecord?.currentVersion._id === machineServiceRecord?._id &&
+            serviceRecordApprovalData}
         />
         
         <Grid container>

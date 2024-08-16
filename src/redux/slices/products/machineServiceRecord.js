@@ -646,3 +646,47 @@ export function addCheckItemValues(machineId, data, childIndex) {
     }
   };
 }
+
+export function sendMachineServiceRecordForApproval(machineId, id, params) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const data = {
+        machine: machineId,
+        ...params
+      };
+      const response = await axios.post(
+        `${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}/sendApprovalEmail`,
+        data
+      );
+      await dispatch(slice.actions.updateMachineServiceRecordSuccess());
+      return response?.data?.serviceRecord;
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+export function approveServiceRecordRequest(machineId, id, params) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const data = {
+        machine: machineId,
+        serviceRecordId: id,
+        evaluationData: params
+      };
+      const response = await axios.post(
+        `${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}/approveRecord`,
+        data
+      );
+      await dispatch(slice.actions.updateMachineServiceRecordSuccess());
+      return response?.data?.serviceRecord;
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}

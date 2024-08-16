@@ -1085,40 +1085,41 @@ export default function Router() {
         },
       ],
     },
-        // ------------------------------ Drawings ----------------------------------
-        {
-          path: 'machineDrawings',
-          element: (
-            <AuthGuard>
-              <DashboardLayout />
-            </AuthGuard>
-          ),
-          children: [
-            { element: <MachineDrawings/>, index: true  },
-            { path: 'new', element: <MachineDrawingsAdd/> },
-            { path: 'newList', element: <DocumentAddList machineDrawings /> },
-            { path: ':id/edit', element: <MachineDrawingsEdit machineDrawings /> },
-            {path: ':id/view', 
-              children:[
-                { element: <MachineDrawingsView />, index: true },
-                { path: 'addFile', element: <MachineDrawingsAddFiles /> },
-                { path: 'newVersion', element: <MachineDrawingsNewVersion /> },
-              ]
-            },
-          ],
-        },
-    // ----------------------------- Sites Report -----------------------------------
+
+    // ------------------------------ Drawings ----------------------------------
     {
-      // Sites
-      path: 'site',
+      path: 'machineDrawings',
       element: (
         <AuthGuard>
           <DashboardLayout />
         </AuthGuard>
       ),
       children: [
-        { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
-        { path: 'app', element: <SitesReport /> },
+        { element: <MachineDrawings/>, index: true  },
+        { path: 'new', element: <MachineDrawingsAdd/> },
+        { path: 'newList', element: <DocumentAddList machineDrawings /> },
+        { path: ':id/edit', element: <MachineDrawingsEdit machineDrawings /> },
+        {path: ':id/view', 
+          children:[
+            { element: <MachineDrawingsView />, index: true },
+            { path: 'addFile', element: <MachineDrawingsAddFiles /> },
+            { path: 'newVersion', element: <MachineDrawingsNewVersion /> },
+          ]
+        },
+      ],
+    },
+
+    // ----------------------------- Sites Report -----------------------------------
+    {
+      // Sites
+      path: 'sites',
+      element: (
+        <AuthGuard>
+          <DashboardLayout />
+        </AuthGuard>
+      ),
+      children: [
+        { element: <SitesReport />, index: true },
       ]
     },
 
