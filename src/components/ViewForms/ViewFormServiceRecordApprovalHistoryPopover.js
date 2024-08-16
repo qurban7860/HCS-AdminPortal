@@ -1,9 +1,9 @@
 import React, { memo } from 'react';
 import PropTypes from 'prop-types';
-import { Box, Divider, Grid, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Tooltip } from '@mui/material';
 import MenuPopover from '../menu-popover/MenuPopover';
 import FormLabel from '../DocumentForms/FormLabel';
-import { fDate, fDateTime } from '../../utils/formatTime';
+import { fDateTime } from '../../utils/formatTime';
 
 function ViewFormServiceRecordApprovalPopover({ open, onClose, ListArr, ListTitle }) {
   return (
@@ -16,7 +16,17 @@ function ViewFormServiceRecordApprovalPopover({ open, onClose, ListArr, ListTitl
               <TableRow>
                 <TableCell align='left' >Status</TableCell>
                 <TableCell align='left' >Evaluated By</TableCell>
-                <TableCell align='left' >Comments</TableCell>
+                <TableCell
+                  align="left"
+                  sx={{
+                    maxWidth: '200px',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  Comments
+                </TableCell>
                 <TableCell align='right' >Evaluation Date</TableCell>
               </TableRow>
             </TableHead>
@@ -25,7 +35,19 @@ function ViewFormServiceRecordApprovalPopover({ open, onClose, ListArr, ListTitl
                 <TableRow key={m?._id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }} >
                   <TableCell align='left'>{m?.status}</TableCell>
                   <TableCell align='left'>{`${m?.evaluatedBy?.firstName} ${m?.evaluatedBy?.lastName}` || ''}</TableCell>
-                  <TableCell align='left'>{m?.comments || ''}</TableCell>
+                  <Tooltip title={m?.comments || ''} arrow>
+                    <TableCell
+                      align="left"
+                      sx={{
+                        maxWidth: '200px',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
+                        <span>{m?.comments || ''}</span>
+                    </TableCell>
+                  </Tooltip>
                   <TableCell align='right'>{fDateTime(m?.evaluationDate) || ''}</TableCell>
                 </TableRow>
               ))}
