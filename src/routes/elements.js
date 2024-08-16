@@ -406,7 +406,7 @@ export const RoleView = Loadable(lazy(() => import('../pages/settings/securitySe
 // ----------------------------------------------------------------
 
 // SITE MAP / SITES REPORT
-export const SitesReport = Loadable(lazy(() => import('../pages/crm/reports/sites/Reports')));
+export const SitesReport = Loadable(lazy(() => import('../pages/sitesMap/Reports')));
 
 // ----------------------------------------------------------------
 

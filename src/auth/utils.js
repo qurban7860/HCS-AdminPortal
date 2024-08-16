@@ -35,7 +35,7 @@ export const isValidToken = (accessToken) => {
 
 // ----------------------------------------------------------------------
 
-export const tokenExpired = async (exp) => {
+export const tokenExpired = (exp) => {
   let expiredTimer;
   const currentTime = Date.now();
   const timeLeft = exp * 1000 - currentTime;
@@ -63,7 +63,7 @@ export const setSession = async (accessToken) => {
 
 // ----------------------------------------------------------------------
 
-export const getUserAccess = async ( roles, accessLevel ) => {
+export const getUserAccess = ( roles, accessLevel ) => {
 
     let userRoles
     let dataAccessibilityLevel 
