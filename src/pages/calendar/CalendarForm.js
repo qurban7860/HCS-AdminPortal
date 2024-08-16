@@ -24,12 +24,14 @@ const getInitialValues = (event, range) => {
   const initialEvent = {
     visitDate: new Date().toISOString(),
     customer: null,
+    priority: '',
     machine: null,
     site: null,
     jiraTicket: '',
     primaryTechnician: null,
     supportingTechnicians: [],
     notifyContacts: [],
+    files: [],
     // status: '',
     purposeOfVisit: '',
   };
@@ -71,6 +73,7 @@ export default function CalendarForm({
     visitDate: Yup.date().label('Visit Date').required(),
     jiraTicket: Yup.string().max(200).label('Jira Ticket').required(),
     customer: Yup.object().nullable().label('Customer').required(),
+    priority: Yup.string().label('Priority').required(), 
     machine: Yup.object().nullable().label('Machine').required(),
     site: Yup.object().nullable().label('Site'),
     primaryTechnician: Yup.object().nullable().label('Primary Technician').required(),
@@ -78,6 +81,7 @@ export default function CalendarForm({
     notifyContacts: Yup.array().nullable().label('Notify Contacts').required(),
     // status: Yup.string().nullable().label('Status').required(),
     purposeOfVisit: Yup.string().max(500).label('purposeOfVisit'),
+    files: Yup.array().of(Yup.mixed()).nullable().label('Files'), 
   });
 
   const methods = useForm({

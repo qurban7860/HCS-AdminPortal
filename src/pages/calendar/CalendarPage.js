@@ -64,6 +64,9 @@ export default function CalendarPage() {
   const [ view, setView ] = useState(isDesktop ? 'dayGridMonth' : 'listWeek');
   const [calendarData, setCalendarData] = useState([]);
   const [DefaultNotifyContacts, setDefaultNotifyContacts] = useState([]);
+  const [priority, setPriority] = useState('Medium'); 
+  const [files, setFiles] = useState([]); 
+
 
   useEffect(() => {
     const configurations = JSON.parse(localStorage.getItem('configurations'));
@@ -204,20 +207,26 @@ export default function CalendarPage() {
   };
 
   const handleCreateUpdateEvent = (newEvent) => {
-
-    try{
-        if(newEvent?._id){
-          dispatch(updateEvent(newEvent?._id, newEvent));
-          enqueueSnackbar('Event Updated Successfully!');
-        } else {
-          dispatch(createEvent(newEvent));
-          enqueueSnackbar('Event Created Successfully!');
-        }
-        dispatch(setEventModel(false));
-      } catch(e){
-        enqueueSnackbar('Event Update Failed!');
+    try {
+      const updatedEvent = {
+        ...newEvent,
+        priority,
+        files
+      };
+  
+      if (updatedEvent?._id) {
+        dispatch(updateEvent(updatedEvent?._id, updatedEvent));
+        enqueueSnackbar('Event Updated Successfully!');
+      } else {
+        dispatch(createEvent(updatedEvent));
+        enqueueSnackbar('Event Created Successfully!');
       }
+      dispatch(setEventModel(false));
+    } catch (e) {
+      enqueueSnackbar('Event Update Failed!');
+    }
   };
+  
 
   const handleDeleteEvent = async () => {
     try {
@@ -241,6 +250,7 @@ export default function CalendarPage() {
     const supportingTechnicianNames = supportingTechnicians.map((tech)=> ` ${tech.firstName} ${tech.lastName}`);
     const title = `${primaryTechnician.firstName} ${primaryTechnician.lastName} ${supportingTechnicianNames.length>0?`, ${supportingTechnicianNames}`:''}, ${customer.name}`;
     const machineNames = machines.map((mc)=> `${mc.name?`${mc.name} - `:''}${mc.serialNo}`).join(', ');
+
     return (
       <StyledTooltip title={
           <Grid item>
@@ -248,6 +258,12 @@ export default function CalendarPage() {
             <Typography variant='body2'><strong>Technician:</strong> {`${primaryTechnician.firstName} ${primaryTechnician.lastName} ${supportingTechnicianNames.length>0?`, ${supportingTechnicianNames}`:''}`}</Typography>
             <Typography variant='body2'><strong>Customer:</strong> {customer.name}</Typography>
             {machines?.length>0 && <Typography variant='body2'><strong>Machines:</strong> {machineNames}</Typography>}
+            <Typography variant="body2"><strong>Priority:</strong> {priority}</Typography>
+             {files?.length > 0 && (
+            <Typography variant="body2"><strong>Files:</strong> {files.map((file, index) => (
+              <span key={index}>{file.name}</span>
+            )).join(', ')}</Typography>
+          )}
           </Grid>
         } placement='top-start' tooltipcolor={theme.palette.primary.main}>
         <div style={{ position: 'relative', zIndex: 10}} className="fc-event-main-frame">
