@@ -342,7 +342,7 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId, allow
               onDownloadFile={()=> handleDownloadFile(document._id, document?.documentVersions[0]._id, file._id, file?.name, file?.extension)}
               onDeleteFile={()=> handleDeleteFile(document._id, document?.documentVersions[0]._id, file._id)}
               toolbar
-              customerArchived={customer?.isArchived}
+              isArchived={customer?.isArchived || machine?.isArchived }
               size={150}
             />
           ))}
@@ -368,7 +368,7 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId, allow
                   onDeleteFile={()=> customerPage && !customer?.isArchived && handleDeleteFile(document._id, document?.documentVersions[0]._id, file._id)}
                   onOpenFile={()=> handleOpenFile(document._id, document?.documentVersions[0]._id, file._id, file?.name, file?.extension)}
                   toolbar
-                  customerArchived={customer?.isArchived}
+                  isArchived={customer?.isArchived || machine?.isArchived }
                   />
                 }
                 return null;

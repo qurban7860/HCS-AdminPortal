@@ -493,6 +493,7 @@ const handleNewFile = async () => {
                               onOpenLightbox={()=> handleOpenLightbox(_index)}
                               onDownloadFile={()=> handleDownloadFile(documentHistory._id, version._id, file._id, file?.name, file?.extension)}
                               onDeleteFile={ !( ( !machinePage && documentHistory?.machine?._id ) || ( !customerPage && documentHistory?.customer?._id ) || ( machineDrawings && documentHistory?.productDrawings?.length > 0 ) ) && (()=> handleDeleteFile(documentHistory._id, version._id, file._id)) || undefined }
+                              isArchived={customer?.isArchived || machine?.isArchived }
                               toolbar
                             />
                           )
@@ -525,6 +526,7 @@ const handleNewFile = async () => {
                               onDownloadFile={() => handleDownloadFile(documentHistory._id, version._id, file._id, file?.name, file?.extension)}
                               onDeleteFile={ !( ( !machinePage && documentHistory?.machine?._id ) || ( !customerPage && documentHistory?.customer?._id ) || ( machineDrawings && documentHistory?.productDrawings?.length > 0 ) ) && (() => handleDeleteFile(documentHistory._id, version._id, file._id) ) || undefined }
                               onOpenFile={() => handleOpenFile(documentHistory._id, version._id, file._id, file)}
+                              isArchived={customer?.isArchived || machine?.isArchived }
                               toolbar
                             />
                           );

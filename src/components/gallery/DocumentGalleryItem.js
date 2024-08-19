@@ -29,11 +29,11 @@ DocumentGalleryItem.propTypes = {
     onDownloadFile: PropTypes.func,
     onDeleteFile: PropTypes.func,
     toolbar: PropTypes.bool,
-    customerArchived: PropTypes.bool,
+    isArchived: PropTypes.bool,
     size: PropTypes.number,
   };
   
-export function DocumentGalleryItem({ image, isLoading, onOpenLightbox, onOpenFile, onDownloadFile, onDeleteFile, toolbar, customerArchived, size = 150 }) {
+export function DocumentGalleryItem({ image, isLoading, onOpenLightbox, onOpenFile, onDownloadFile, onDeleteFile, toolbar, isArchived, size = 150 }) {
 
     const [deleteConfirm, seDeleteConfirm] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
@@ -72,9 +72,9 @@ export function DocumentGalleryItem({ image, isLoading, onOpenLightbox, onOpenFi
                 >
                     
                 {fileType?.startsWith('image') ? (
-                    <Image alt="gallery" sx={{height:'100%'}} ratio="1/1" src={src} onClick={onOpenLightbox} />
+                    <Image alt="gallery" sx={{height:'100%'}} ratio="1/1" src={src} onClick={onOpenLightbox } />
                 ):(
-                    <CardMedia sx={{height:'90%', width:'100%', backgroundSize:'40%', backgroundPosition:'center 35%'}} image={fileThumb(extension?.toLowerCase())} onClick={()=> fileType?.startsWith('application/pdf')?onOpenFile():null} />
+                    <CardMedia sx={{height:'90%', width:'100%', backgroundSize:'40%', backgroundPosition:'center 35%'}} image={fileThumb(extension?.toLowerCase())} onClick={()=> fileType?.startsWith('application/pdf') && onOpenFile ?onOpenFile():null} />
                 )}
 
                 {toolbar && 
@@ -91,9 +91,9 @@ export function DocumentGalleryItem({ image, isLoading, onOpenLightbox, onOpenFi
                             // justifyContent:'space-evenly'
                         }}
                     >       
-                        <Button sx={{width: onDeleteFile && !customerArchived ? '33%' : '50%', borderRadius:0}} disabled={!(fileType?.startsWith('image') || fileType?.startsWith('application/pdf'))} onClick={fileType?.startsWith('image')?onOpenLightbox:onOpenFile}><Iconify icon="carbon:view" /></Button>
-                        <Button sx={{width: onDeleteFile && !customerArchived ? '33%' : '50%', borderRadius:0}}><Iconify icon="solar:download-square-linear" onClick={onDownloadFile} /></Button>
-                        {onDeleteFile && !customerArchived && <Button sx={{width:'34%', borderRadius:0}} color='error' onClick={()=> seDeleteConfirm(true)}><Iconify icon="radix-icons:cross-circled" /></Button>}
+                        {onOpenFile && <Button sx={{width: onDeleteFile && !isArchived ? '33%' : '50%', borderRadius:0}} disabled={!(fileType?.startsWith('image') || fileType?.startsWith('application/pdf'))} onClick={fileType?.startsWith('image')?onOpenLightbox:onOpenFile}><Iconify icon="carbon:view" /></Button>}
+                        { onDownloadFile && <Button sx={{width: onDeleteFile && !isArchived ? '33%' : '50%', borderRadius:0}}><Iconify icon="solar:download-square-linear" onClick={onDownloadFile} /></Button>}
+                        {onDeleteFile && !isArchived && <Button sx={{width:'34%', borderRadius:0}} color='error' onClick={()=> seDeleteConfirm(true)}><Iconify icon="radix-icons:cross-circled" /></Button>}
                     </ButtonGroup>
                 }
 
