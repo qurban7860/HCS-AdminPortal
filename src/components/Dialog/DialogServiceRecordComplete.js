@@ -237,6 +237,7 @@ const ApproveSeviceRecord = ({ isLoading, recordStatus }) => {
   const { enqueueSnackbar } = useSnackbar();
   const { machineServiceRecord } = useSelector((state) => state.machineServiceRecord);
   const { user } = useAuthContext();
+  const maxLength = 500;
 
   const CompleteServiceRecordSchema = Yup.object().shape({
     comments: Yup.string().required('You need to enter a comment in order to proceed'),
@@ -254,8 +255,11 @@ const ApproveSeviceRecord = ({ isLoading, recordStatus }) => {
     handleSubmit,
     setValue,
     reset,
+    watch,
     formState: { isSubmitting },
   } = methods;
+
+  const { comments } = watch();
 
   const handleStatusChange = (status = 'APPROVED') => {
     setValue('status', status);
@@ -318,6 +322,8 @@ const ApproveSeviceRecord = ({ isLoading, recordStatus }) => {
               label="Service Record Comments"
               name="comments"
               placeholder="Add your comments here"
+              inputProps={{ maxLength }}
+              helperText={`${comments?.length}/${maxLength}`}
             />
           ) : (
             <SkeletonLine />
