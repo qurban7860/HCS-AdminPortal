@@ -71,10 +71,10 @@ export default function ProfileViewForm() {
     <Grid item md={12} mt={2}>
     <Card sx={{ p: 2 }}>
       <ViewFormEditDeleteButtons isActive={defaultValues.isActive}
-        disableEditButton={machine?.status?.slug==='transferred'}
-        disableDeleteButton={machine?.status?.slug==='transferred'}
-        handleEdit={handleEdit} 
-        onDelete={onDelete} 
+        disableEditButton={machine?.status?.slug==='transferred' || machine?.isArchived }
+        disableDeleteButton={machine?.status?.slug==='transferred' || machine?.isArchived }
+        handleEdit={ !machine?.isArchived && handleEdit} 
+        onDelete={ !machine?.isArchived && onDelete} 
         backLink={() => navigate(PATH_MACHINE.machines.profiles.root( machineId))} 
       />
       <Grid container sx={{mt:2}}>

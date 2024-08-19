@@ -87,7 +87,7 @@ export default function DrawingList() {
 
   useEffect(() => {
     if( machineId ){
-      dispatch(getDrawings( machineId ));
+      dispatch(getDrawings( machineId, machine?.isArchived  ));
       dispatch(getActiveDocumentCategories());
       dispatch(getActiveDocumentTypes());
     } 
@@ -96,7 +96,7 @@ export default function DrawingList() {
       dispatch(resetActiveDocumentCategories());
       dispatch(resetActiveDocumentTypes());
     }
-  }, [dispatch, machineId ]);
+  }, [dispatch, machineId, machine ]);
 
   useEffect(() => {
     setTableData(drawings);

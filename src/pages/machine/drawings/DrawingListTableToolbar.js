@@ -43,7 +43,7 @@ export default function DrawingListTableToolbar({
   const navigate = useNavigate();
   const { machineId } = useParams();
 
-  const { machine } = useSelector((state) => state.machine);
+  const { machine } = useSelector((state) => state.machine); 
 
   const handleAattach = () => navigate(PATH_MACHINE.machines.drawings.attach(machineId));
   const handleAdd = () => navigate(PATH_MACHINE.machines.drawings.new(machineId));
@@ -61,10 +61,10 @@ export default function DrawingListTableToolbar({
       value={filterName}
       onChange={onFilterName}
       onClick={onResetFilter}
-      SubOnClick={handleAdd}
-      SubOnClick2={ handleAddList }
-      addButton={BUTTONS.ADDDRAWING}
-      handleAttach={handleAattach}
+      SubOnClick={ !machine?.isArchived ? handleAdd : undefined }
+      SubOnClick2={ !machine?.isArchived ? handleAddList : undefined }
+      addButton={!machine?.isArchived ? BUTTONS.ADDDRAWING : undefined}
+      handleAttach={ !machine?.isArchived ? handleAattach : undefined}
       transferredMachine={machine?.status?.slug==='transferred'}
       categoryVal={categoryVal}
       setCategoryVal={setCategoryVal}

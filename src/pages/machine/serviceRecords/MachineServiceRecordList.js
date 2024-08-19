@@ -49,6 +49,7 @@ const TABLE_HEAD = [
 // ----------------------------------------------------------------------
 
 export default function MachineServiceRecordList() {
+  const { machine } = useSelector((state) => state.machine);
   const { machineServiceRecords, filterBy, filterDraft, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.machineServiceRecord);
   const navigate = useNavigate();
   const { machineId } = useParams();
@@ -77,10 +78,10 @@ export default function MachineServiceRecordList() {
   useLayoutEffect(() => {
     dispatch(setSendEmailDialog(false));
     if(machineId){
-      dispatch(getMachineServiceRecords(machineId));
+      dispatch(getMachineServiceRecords(machineId, machine?.isArchived ));
     }
     dispatch(setDetailPageFlag(false));
-  }, [dispatch, machineId]);
+  }, [dispatch, machineId, machine ]);
 
   useEffect(() => {
     if (initial) {

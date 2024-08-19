@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // @mui
-import { Card, Grid, CardHeader, Divider, IconButton } from '@mui/material';
+import { Card, Grid, CardHeader, Divider, IconButton, Container } from '@mui/material';
 // routes
 import { useNavigate, useParams } from 'react-router-dom';
 import { PATH_MACHINE } from '../../../routes/paths';
@@ -57,7 +57,7 @@ export default function MachineLogsGraphViewForm() {
     const addLogRecord = () => navigate(PATH_MACHINE.machines.logs.new(machineId))
 
     return (
-        <Grid container >
+    <Container maxWidth={false} >
             <MachineTabContainer currentTabValue='logs' />
         <Card sx={{ width: '100%'}}>
             <Grid item sx={{display: {md: 'flex', xs:'block', justifyContent: 'space-between'}}}>
@@ -76,7 +76,7 @@ export default function MachineLogsGraphViewForm() {
                         </IconButton>
                     </StyledTooltip>
                     
-                    <StyledTooltip title="Add Log" placement="top" disableFocusListener tooltipcolor="#103996" color="#103996">
+                    { !machine?.isArchived && <StyledTooltip title="Add Log" placement="top" disableFocusListener tooltipcolor="#103996" color="#103996">
                         <IconButton  disabled={disable} onClick={addLogRecord} color="#fff" sx={{background:"#2065D1", borderRadius:1, height:'1.7em', p:'8.5px 14px',
                             '&:hover': {
                                 background:"#103996", 
@@ -85,7 +85,7 @@ export default function MachineLogsGraphViewForm() {
                         }}>
                         <Iconify color="#fff" sx={{ height: '24px', width: '24px'}} icon='eva:plus-fill' />
                         </IconButton>
-                    </StyledTooltip>
+                    </StyledTooltip>}
                 </Grid>
             </Grid>
             <Divider />
@@ -110,6 +110,6 @@ export default function MachineLogsGraphViewForm() {
             </Grid>
             </Grid>
         </Card>
-    </Grid>
+    </Container>
     );
 }

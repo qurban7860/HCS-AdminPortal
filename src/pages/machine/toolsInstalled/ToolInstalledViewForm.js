@@ -94,11 +94,11 @@ export default function ToolInstalledViewForm() {
       <ViewFormEditDeleteButtons 
         isActive={defaultValues.isActive} 
         backLink={()=> navigate(PATH_MACHINE.machines.toolsInstalled.root(machineId)) } 
-        handleEdit={handleEdit} 
-        onDelete={onDelete} 
-        disableEditButton={machine?.status?.slug==="transferred"}
-        disableDeleteButton={machine?.status?.slug==="transferred"}
-        />
+        handleEdit={ !machine?.isArchived && handleEdit} 
+        onDelete={ !machine?.isArchived && onDelete} 
+        disableEditButton={machine?.status?.slug==='transferred' || machine?.isArchived }
+        disableDeleteButton={machine?.status?.slug==='transferred' || machine?.isArchived }
+      />
       <Grid container>
         <ViewFormField isLoading={isLoading} sm={6} heading="Tool" param={defaultValues?.toolName}/>
         <ViewFormField isLoading={isLoading} sm={6} heading="Offset" param={`${defaultValues?.offset}`}/>

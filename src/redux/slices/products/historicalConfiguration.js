@@ -165,18 +165,22 @@ export const {
 
 // ------------------------------------------------------------------------------------------------
 
-export function getHistoricalConfigurationRecords (machineId){
+export function getHistoricalConfigurationRecords ( machineId, isMachineArchived ){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
-      const response = await axios.get(`${CONFIG.SERVER_URL}apiclient/productConfigurations/`, 
-      {
-        params: {
-          isArchived: false,
-          machine: machineId
+      const params = {
+        isArchived: false,
+        machine: machineId,
+        orderBy : {
+          createdAt: -1
         }
       }
-      );
+    if( isMachineArchived ){
+      params.archivedByMachine = true;
+      params.isArchived = true;
+    } 
+      const response = await axios.get(`${CONFIG.SERVER_URL}apiclient/productConfigurations/`, { params } );
       dispatch(slice.actions.getHistoricalConfigurationRecordsSuccess(response.data));
     } catch (error) {
       console.log(error);

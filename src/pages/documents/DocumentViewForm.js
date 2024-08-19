@@ -32,9 +32,10 @@ DocumentViewForm.propTypes = {
   machinePage: PropTypes.bool,
   drawingPage: PropTypes.bool,
   DocId: PropTypes.string,
+  allowActions: PropTypes.bool,
 };
 
-function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
+function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId, allowActions }) {
   const { document, isLoading } = useSelector((state) => state.document);
   const { customer } = useSelector((state) => state.customer);
   const { machine } = useSelector((state) => state.machine);
@@ -275,16 +276,16 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
     <>
     <Card sx={{ p: 2 }}>
       <ViewFormEditDeleteButtons isActive={defaultValues.isActive} 
-      customerAccess={defaultValues?.customerAccess} 
-      handleEdit={handleEdit}
-      onDelete={onDelete}
-      isLoading={isLoading}
-      disableDeleteButton={machinePage && machine?.status?.slug==="transferred"}
-      backLink={ handleBackLink} 
-      disableEditButton={machine?.status?.slug==='transferred'}
-      // drawingPage={ !customerPage || !machinePage }
-      archived={customer?.isArchived}
-      customerPage={customerPage} machinePage={machinePage} drawingPage={drawingPage}
+        customerAccess={defaultValues?.customerAccess} 
+        handleEdit={ !allowActions && handleEdit}
+        onDelete={ !allowActions && onDelete}
+        isLoading={isLoading}
+        disableDeleteButton={machinePage && machine?.status?.slug==="transferred"}
+        backLink={ handleBackLink} 
+        disableEditButton={machine?.status?.slug==='transferred'}
+        // drawingPage={ !customerPage || !machinePage }
+        archived={customer?.isArchived}
+        customerPage={customerPage} machinePage={machinePage} drawingPage={drawingPage}
       />
       <Grid container>
         <ViewFormField isLoading={isLoading} sm={6} heading="Name" param={defaultValues?.displayName} />
@@ -292,7 +293,7 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
           sm={6}
           heading="Version"
           handleAllVersion={linkDocumentView}
-          handleNewVersion={handleNewVersion}
+          handleNewVersion={ !allowActions && handleNewVersion}
           node={
             <StyledVersionChip
               label={defaultValues.versionPrefix + defaultValues.documentVersion}
