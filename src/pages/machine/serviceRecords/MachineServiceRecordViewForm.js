@@ -60,7 +60,6 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
 
   const { machineServiceRecord, machineServiceRecordCheckItems, isLoadingCheckItems, isLoading, pdfViewerDialog, sendEmailDialog } = useSelector((state) => state.machineServiceRecord);
   const { machine } = useSelector((state) => state.machine)
-  const { activeContacts, activeSpContacts } = useSelector((state) => state.contact);
   
   const dispatch = useDispatch();
   const navigate = useNavigate();

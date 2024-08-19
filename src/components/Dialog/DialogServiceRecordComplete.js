@@ -50,27 +50,34 @@ function DialogServiceRecordComplete({ recordStatus }) {
 
   useEffect(() => {
     if (configs.length > 0 && activeSpContacts.length > 0) {
-      const approvingContactsArray = configs
-        .find((config) => config.name === 'Approving_Contacts')
-        ?.value.split(',')
-        .filter((configEmail) =>
-          activeSpContacts.some(
-            (activeSpUser) => activeSpUser.contact[0].email.toLowerCase() === configEmail.trim().toLowerCase()
+      let approvingContactsArray;
+      if (configs.some((config) => config.name === 'Approving_Contacts')) {
+        approvingContactsArray = configs
+          .find((config) => config.name === 'Approving_Contacts')
+          ?.value.split(',')
+          .filter((configEmail) =>
+            activeSpContacts.some(
+              (activeSpUser) =>
+                activeSpUser.contact[0].email.toLowerCase() === configEmail.trim().toLowerCase()
+            )
           )
-        )
-        .map((configEmail) => {
-          const fullContactObj = activeSpContacts.find(
-            (activeSpUser) => activeSpUser.contact[0].email.toLowerCase() === configEmail.trim().toLowerCase()
-          );
-          return fullContactObj.contact[0];
-        })
-        .sort((a, b) => {
-          const nameA = `${a.firstName} ${a.lastName}`.toLowerCase();
-          const nameB = `${b.firstName} ${b.lastName}`.toLowerCase();
-          if (nameA < nameB) return -1; // nameA comes first
-          if (nameA > nameB) return 1; // nameB comes first
-          return 0; // names are equal
-        });
+          .map((configEmail) => {
+            const fullContactObj = activeSpContacts.find(
+              (activeSpUser) =>
+                activeSpUser.contact[0].email.toLowerCase() === configEmail.trim().toLowerCase()
+            );
+            return fullContactObj.contact[0];
+          })
+          .sort((a, b) => {
+            const nameA = `${a.firstName} ${a.lastName}`.toLowerCase();
+            const nameB = `${b.firstName} ${b.lastName}`.toLowerCase();
+            if (nameA < nameB) return -1; // nameA comes first
+            if (nameA > nameB) return 1; // nameB comes first
+            return 0; // names are equal
+          });
+      } else {
+        approvingContactsArray = activeSpContacts.map((activeSpUser) => activeSpUser.contact[0]);
+      }
       setApprovingContacts(approvingContactsArray);
     }
   }, [configs, activeSpContacts]);
@@ -93,7 +100,9 @@ function DialogServiceRecordComplete({ recordStatus }) {
   return (
     <Dialog fullWidth maxWidth="sm" open={completeDialog} onClose={handleCloseDialog}>
       <DialogTitle variant="h4" sx={{ pb: 1, pt: 2 }}>
-        {`Are you sure you want to ${recordStatus?.label?.toLowerCase()}?`}
+        {allowApproval
+          ? 'Are you sure you want to Approve?'
+          : 'Are you sure you want to send emails to Approve?'}
       </DialogTitle>
       <Divider orientation="horizontal" flexItem />
       {allowApproval ? (
@@ -214,7 +223,7 @@ const SendApprovalEmails = ({ isLoading, recordStatus, approvingContacts }) => {
           loading={isSubmitting}
           variant="contained"
         >
-          {recordStatus?.label}
+          Send Email
         </LoadingButton>
       </DialogActions>
     </FormProvider>
@@ -222,10 +231,13 @@ const SendApprovalEmails = ({ isLoading, recordStatus, approvingContacts }) => {
 };
 
 const ApproveSeviceRecord = ({ isLoading, recordStatus }) => {
+  const [approvalSubmitting, setApprovalSubmitting] = useState(false);
+  const [rejectionSubmitting, setRejectionSubmitting] = useState(false);
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const { machineServiceRecord } = useSelector((state) => state.machineServiceRecord);
   const { user } = useAuthContext();
+  const maxLength = 500;
 
   const CompleteServiceRecordSchema = Yup.object().shape({
     comments: Yup.string().required('You need to enter a comment in order to proceed'),
@@ -243,8 +255,11 @@ const ApproveSeviceRecord = ({ isLoading, recordStatus }) => {
     handleSubmit,
     setValue,
     reset,
+    watch,
     formState: { isSubmitting },
   } = methods;
+
+  const { comments } = watch();
 
   const handleStatusChange = (status = 'APPROVED') => {
     setValue('status', status);
@@ -258,6 +273,11 @@ const ApproveSeviceRecord = ({ isLoading, recordStatus }) => {
 
   const approveServiceRecord = async (data) => {
     try {
+      if (data?.status === 'APPROVED') {
+        setApprovalSubmitting(true);
+      } else {
+        setRejectionSubmitting(true);
+      }
       const params = {
         status: data?.status,
         comments: data?.comments,
@@ -285,6 +305,8 @@ const ApproveSeviceRecord = ({ isLoading, recordStatus }) => {
       );
       console.error(err.message);
     } finally {
+      setApprovalSubmitting(false);
+      setRejectionSubmitting(false);
       await handleCloseDialog();
     }
   };
@@ -300,6 +322,8 @@ const ApproveSeviceRecord = ({ isLoading, recordStatus }) => {
               label="Service Record Comments"
               name="comments"
               placeholder="Add your comments here"
+              inputProps={{ maxLength }}
+              helperText={`${comments?.length}/${maxLength}`}
             />
           ) : (
             <SkeletonLine />
@@ -307,26 +331,30 @@ const ApproveSeviceRecord = ({ isLoading, recordStatus }) => {
         </Stack>
       </DialogContent>
       <DialogActions>
-        <LoadingButton
-          disabled={isLoading}
-          loading={isSubmitting}
-          variant="contained"
-          color="error"
-          onClick={() => handleStatusChange('REJECTED')}
-        >
-          Reject
-        </LoadingButton>
-        <Button variant="outlined" onClick={handleCloseDialog}>
-          Cancel
-        </Button>
-        <LoadingButton
-          disabled={isLoading}
-          loading={isSubmitting}
-          variant="contained"
-          onClick={() => handleStatusChange('APPROVED')}
-        >
-          Approve
-        </LoadingButton>
+        <Stack direction="row" justifyContent="space-between" width="100%">
+          <Button variant="outlined" onClick={handleCloseDialog}>
+            Cancel
+          </Button>
+          <Stack direction="row" spacing={1}>
+            <LoadingButton
+              disabled={isSubmitting}
+              loading={rejectionSubmitting}
+              variant="contained"
+              color="error"
+              onClick={() => handleStatusChange('REJECTED')}
+            >
+              Reject
+            </LoadingButton>
+            <LoadingButton
+              disabled={isSubmitting}
+              loading={approvalSubmitting}
+              variant="contained"
+              onClick={() => handleStatusChange('APPROVED')}
+            >
+              Approve
+            </LoadingButton>
+          </Stack>
+        </Stack>
       </DialogActions>
     </FormProvider>
   );
