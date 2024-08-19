@@ -139,17 +139,22 @@ export const {
 
 // ----------------------------------------------------------------------
 
-export function getDrawings(machineId){
+export function getDrawings( machineId, isMachineArchived ){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/drawings`, 
-      {
-        params: {
-          isArchived: false,
-          machine: machineId
-        }
-      });
+
+      const params = {
+        isArchived: false,
+        machine: machineId,
+      }
+
+      if( isMachineArchived ){
+        params.archivedByMachine = true;
+        params.isArchived = true;
+      }
+
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/drawings`, { params });
       dispatch(slice.actions.getDrawingsSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Drawings loaded successfully'));
       // dispatch(slice.actions)

@@ -42,6 +42,7 @@ const TABLE_HEAD = [
 // ----------------------------------------------------------------------
 
 export default function MachineLogsList(){
+  const { machine } = useSelector((state) => state.machine);
   const { machineErpLogs, machineErpLogstotalCount, dateFrom, dateTo, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.machineErpLogs );
   const navigate = useNavigate();
   const { machineId } = useParams();
@@ -68,12 +69,12 @@ export default function MachineLogsList(){
   useLayoutEffect(() => {
     if (machineId) {
       if (dateFrom && dateTo) {
-        dispatch(getMachineErpLogRecords(machineId, page, rowsPerPage, dateFrom, dateTo, isCreatedAt ));
+        dispatch(getMachineErpLogRecords(machineId, page, rowsPerPage, dateFrom, dateTo, isCreatedAt, machine?.isArchived ));
       } else if(!dateFrom && !dateTo) {
-        dispatch(getMachineErpLogRecords(machineId, page, rowsPerPage, null, null, isCreatedAt ));
+        dispatch(getMachineErpLogRecords(machineId, page, rowsPerPage, null, null, isCreatedAt, machine?.isArchived  ));
       } 
     }
-  }, [dispatch, machineId, page, rowsPerPage, dateFrom, dateTo, isCreatedAt ]);
+  }, [dispatch, machineId, page, rowsPerPage, dateFrom, dateTo, isCreatedAt, machine ]);
 
   useEffect(() => {
     if (initial) {

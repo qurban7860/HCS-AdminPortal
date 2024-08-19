@@ -324,21 +324,25 @@ export function getMachineServiceRecordVersion(machineId, id ){
 // ------------------------------------------------------------------------------------------------
 
 
-export function getMachineServiceRecords (machineId){
+export function getMachineServiceRecords (machineId, isMachineArchived){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords`, 
-      {
-        params: {
-          isArchived: false,
-          $or: [
+      const params = {
+        isArchived: false,
+        $or: [
             { isHistory: false },
             { status: 'DRAFT' }
-          ]     
+          ],
+        orderBy : {
+          createdAt: -1
         }
       }
-      );
+    if(isMachineArchived){
+      params.archivedByMachine = true;
+      params.isArchived = true;
+    }
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords`, { params } );
       dispatch(slice.actions.getMachineServiceRecordsSuccess(response.data));
     } catch (error) {
       console.log(error);
