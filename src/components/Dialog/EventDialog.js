@@ -7,7 +7,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { enc, MD5, lib } from 'crypto-js';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 // @mui
-import { Box, Stack, Button, DialogActions, DialogContent, Grid, Dialog, DialogTitle, Divider, MenuItem, Typography } from '@mui/material';
+import { Box, Stack, Button, DialogActions, DialogContent, Grid, Dialog, DialogTitle, Container, Divider, TextField, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
 import KeyboardDoubleArrowUpRoundedIcon from '@mui/icons-material/KeyboardDoubleArrowUpRounded';
@@ -15,10 +15,7 @@ import KeyboardArrowUpRoundedIcon from '@mui/icons-material/KeyboardArrowUpRound
 import DragHandleRoundedIcon from '@mui/icons-material/DragHandleRounded';
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
 import KeyboardDoubleArrowDownRoundedIcon from '@mui/icons-material/KeyboardDoubleArrowDownRounded';
-import TextField from '@mui/material/TextField';
 // slices
-import { checkDocument } from '../../redux/slices/document/document';
-// components
 import { setEventModel } from '../../redux/slices/event/event';
 import { getActiveCustomerMachines, resetActiveCustomerMachines } from '../../redux/slices/products/machine';
 import { getActiveSites, resetActiveSites } from '../../redux/slices/customer/site';
@@ -97,7 +94,6 @@ function EventDialog({
   const { activeSites } = useSelector((state) => state.site);
   const { activeCustomerMachines } = useSelector( (state) => state.machine );
   const [ openConfirm, setOpenConfirm ] = useState(false);
-  const [ selectedValue, setSelectedValue ] = useState('new');
   const dialogRef = useRef(null);
 
   const EventSchema = Yup.object().shape({
@@ -132,7 +128,7 @@ function EventDialog({
             return startDate < endDate;
           }
         }
-        return true; // If start or end is not defined, skip this test
+        return true;
       }),
     jiraTicket: Yup.string().max(200).label('Jira Ticket'),
     customer: Yup.object().nullable().label('Customer').required(),
@@ -157,11 +153,9 @@ function EventDialog({
     reset,
     watch,
     setValue,
-    control,
     handleSubmit,
-    formState: { isSubmitting, isSubmitted, errors },
+    formState: { isSubmitting, errors },
     clearErrors,
-    setError
   } = methods;
 
   useEffect(() => {
@@ -172,7 +166,7 @@ function EventDialog({
     }
   }, [errors]);
 
-  const { customer, date, isCustomerEvent, documentVal, files, displayName, machineVal, machineDrawings, drawingPage } = watch();
+  const { customer, date, isCustomerEvent, files } = watch();
 
   useEffect(() => {
     const { end_date  } = watch()
@@ -222,8 +216,8 @@ function EventDialog({
 
     try {
       await onCreateUpdateEvent(data);
-      await reset();
-      await setValue("isCustomerEvent", true );
+      setValue("isCustomerEvent", true );
+      reset();
     } catch (error) {
       console.error(error);
     }
@@ -280,62 +274,27 @@ function EventDialog({
       }
     };
 
-    const handleDropMultiFile = useCallback(
-      async (acceptedFiles) => {
-        let _files = [];
-        if(drawingPage || machineDrawings){
-          const _files_MD5 = await hashFilesMD5(acceptedFiles);
-          _files = await dispatch(checkDocument(_files_MD5));
-        }
-
+    const handleDropMultiFile = useCallback( async (acceptedFiles) => {
         const newFiles = acceptedFiles.map((file, index) => 
             Object.assign(file, {
               preview: URL.createObjectURL(file),
-              found: _files[index]?.status===200?null:_files[index],
-              machine:machineVal?._id,
               src: URL.createObjectURL(file),
               isLoaded:true
             })
         );
         setValue('files', [ ...newFiles], { shouldValidate: true });
-      },
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      [ files, displayName]
-    );
-  
-    const hashFilesMD5 = async (_files) => {
-      const hashPromises = _files.map((file) => new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => {
-          const arrayBuffer = reader.result;
-          const wordArray = MD5(lib.WordArray.create(arrayBuffer));
-          const hashHex = wordArray.toString(enc.Hex);
-          resolve(hashHex);
-        };
-        reader.onerror = () => {
-          reject(new Error(`Error reading file: ${file.name}`));
-        };
-        reader.readAsArrayBuffer(file);
-      }));
-      try {
-        const hashes = await Promise.all(hashPromises);
-        return hashes;
-      } catch (error) {
-        console.error(error);
-        throw error;
-      }
-    };
+      }, [ setValue ] );
 
   return (
     <>
       <Dialog
         sx={{
           '& .MuiDialog-container': {
-            alignItems: 'flex-start', // Align the dialog to the top
+            alignItems: 'flex-start',
           },
           '& .MuiPaper-root': {
-            marginTop: 4, // Remove any margin from the top
-            marginBottom: 4, // Optional: Remove margin from the bottom if needed
+            marginTop: 4, 
+            marginBottom: 4,
           },
         }}
         fullWidth
@@ -365,6 +324,7 @@ function EventDialog({
         </DialogTitle>
         <Divider orientation="horizontal" flexItem />
         <DialogContent dividers sx={{ px: 3 }}>
+        <Container maxWidth={false}>
           <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
             <Grid container ref={dialogRef}>
               <Stack spacing={2} sx={{ pt: 2 }}>
@@ -510,30 +470,23 @@ function EventDialog({
                   </>
                 )}
                 <RHFTextField name="description" label="Description" multiline rows={3} />
-
-                {(selectedValue === 'new' || documentVal) && (
-                  // <Grid item xs={12} md={6} lg={12}>
-                    <RHFUpload
-                      dropZone={false}
-                      multiple
-                      thumbnail
-                      name="files"
-                      onDrop={handleDropMultiFile}
-                      onRemove={(inputFile) =>
-                        files.length > 1
-                          ? setValue(
-                              'files',
-                              files.filter((file) => file !== inputFile),
-                              { shouldValidate: true }
-                            )
-                          : setValue('files', '', { shouldValidate: true })
-                      }
-                      onRemoveAll={() => setValue('files', '', { shouldValidate: true })}
-                      machine={machineVal}
-                      drawingPage={drawingPage || machineDrawings}
-                    />
-                  // </Grid>
-                )}
+                  <RHFUpload
+                    dropZone={false}
+                    multiple
+                    thumbnail
+                    name="files"
+                    onDrop={handleDropMultiFile}
+                    onRemove={(inputFile) =>
+                      files.length > 1
+                        ? setValue(
+                            'files',
+                            files.filter((file) => file !== inputFile),
+                            { shouldValidate: true }
+                          )
+                        : setValue('files', '', { shouldValidate: true })
+                    }
+                    onRemoveAll={() => setValue('files', '', { shouldValidate: true })}
+                  />
 
                 {selectedEvent && (
                   <Box
@@ -555,6 +508,7 @@ function EventDialog({
               </Stack>
             </Grid>
           </FormProvider>
+          </Container>
         </DialogContent>
         <DialogActions>
           {selectedEvent && (
