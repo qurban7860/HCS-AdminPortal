@@ -324,21 +324,25 @@ export function getMachineServiceRecordVersion(machineId, id ){
 // ------------------------------------------------------------------------------------------------
 
 
-export function getMachineServiceRecords (machineId){
+export function getMachineServiceRecords (machineId, isMachineArchived){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords`, 
-      {
-        params: {
-          isArchived: false,
-          $or: [
+      const params = {
+        isArchived: false,
+        $or: [
             { isHistory: false },
             { status: 'DRAFT' }
-          ]     
+          ],
+        orderBy : {
+          createdAt: -1
         }
       }
-      );
+    if(isMachineArchived){
+      params.archivedByMachine = true;
+      params.isArchived = true;
+    }
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords`, { params } );
       dispatch(slice.actions.getMachineServiceRecordsSuccess(response.data));
     } catch (error) {
       console.log(error);
@@ -642,6 +646,50 @@ export function addCheckItemValues(machineId, data, childIndex) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
       dispatch(slice.actions.resetSubmittingCheckItemIndex());
+      throw error;
+    }
+  };
+}
+
+export function sendMachineServiceRecordForApproval(machineId, id, params) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const data = {
+        machine: machineId,
+        ...params
+      };
+      const response = await axios.post(
+        `${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}/sendApprovalEmail`,
+        data
+      );
+      await dispatch(slice.actions.updateMachineServiceRecordSuccess());
+      return response?.data?.serviceRecord;
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+export function approveServiceRecordRequest(machineId, id, params) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const data = {
+        machine: machineId,
+        serviceRecordId: id,
+        evaluationData: params
+      };
+      const response = await axios.post(
+        `${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}/approveRecord`,
+        data
+      );
+      await dispatch(slice.actions.updateMachineServiceRecordSuccess());
+      return response?.data?.serviceRecord;
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
       throw error;
     }
   };

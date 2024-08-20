@@ -40,7 +40,7 @@ export default function HistoricalConfigurationsListTableToolbar({
   const navigate = useNavigate();
   const { machineId } = useParams();
 
-  const { machine } = useSelector((state) => state.machine);
+  const { machine } = useSelector((state) => state.machine); 
   
   const toggleAdd = () => navigate(PATH_MACHINE.machines.ini.new(machineId));
 
@@ -52,7 +52,7 @@ export default function HistoricalConfigurationsListTableToolbar({
         onChange={onFilterName}
         onClick={onResetFilter}
         SubOnClick={toggleAdd}
-        addButton={!isHistory && BUTTONS.ADD_MACHINE_INI}
+        addButton={!(machine?.isArchived || isHistory) ? BUTTONS.ADD_MACHINE_INI : undefined}
         transferredMachine={machine?.status?.slug==='transferred'}
         onCompareINI={onCompareINI}
       />

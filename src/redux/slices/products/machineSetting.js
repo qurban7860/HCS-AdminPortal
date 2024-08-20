@@ -155,21 +155,23 @@ export function addSetting (machineId, params){
 // ----------------------------------------------------------------------
 
 
-export function getSettings (id ){
-
+export function getSettings ( id, isMachineArchived ){
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${id}/techparamvalues` , 
-      {
-        params: {
-          isArchived: false,
-          orderBy : {
-            createdAt:-1
-          }
+
+      const params = {
+        isArchived: false,
+        orderBy : {
+          createdAt: -1
         }
       }
-      );
+    if( isMachineArchived ){
+      params.archivedByMachine = true;
+      params.isArchived = true;
+    } 
+
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${id}/techparamvalues` , { params } );
       dispatch(slice.actions.getSettingsSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Setting loaded successfully'));
     } catch (error) {

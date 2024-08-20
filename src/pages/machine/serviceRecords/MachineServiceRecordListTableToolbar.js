@@ -50,7 +50,7 @@ export default function MachineServiceRecordListTableToolbar({
     await navigate(PATH_MACHINE.machines.serviceRecords.new(machineId))
   };
 
-  const { machine } = useSelector((state) => state.machine);
+  const { machine } = useSelector((state) => state.machine); 
 
   return (
     <Stack {...options}>
@@ -60,7 +60,7 @@ export default function MachineServiceRecordListTableToolbar({
         onChange={onFilterName}
         onClick={onResetFilter}
         SubOnClick={toggleAdd}
-        addButton={!isHistory && BUTTONS.ADD_MACHINE_SERVICE_RECORD}
+        addButton={!(machine?.isArchived || isHistory) ? BUTTONS.ADD_MACHINE_SERVICE_RECORD : undefined}
         transferredMachine={machine?.status?.slug==='transferred'}
         radioStatus={toggleStatus}
         radioStatusLabel="Show Draft"

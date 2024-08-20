@@ -36,8 +36,8 @@ export default function ProfileListTableToolbar({
 
   const toggleAdd = () => navigate(PATH_MACHINE.machines.profiles.new(machineId));
 
-  const { machine } = useSelector((state) => state.machine);
-
+  const { machine } = useSelector((state) => state.machine); 
+  
   return (
     <Stack
       spacing={2}
@@ -51,7 +51,7 @@ export default function ProfileListTableToolbar({
         onChange={onFilterName}
         onClick={onResetFilter}
         SubOnClick={toggleAdd}
-        addButton={BUTTONS.ADDPROFILE}
+        addButton={!machine?.isArchived ? BUTTONS.ADDPROFILE : undefined}
         transferredMachine={machine?.status?.slug==='transferred'}
       />
   </Stack>

@@ -335,20 +335,21 @@ export function updateToolInstalled(machineId,toolInstallledId,params) {
 
 
 
-export function getToolsInstalled(machineId) {
+export function getToolsInstalled( machineId, isMachineArchived ) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/toolsinstalled` , 
-      {
-        params: {
-          isArchived: false,
-          orderBy : {
-            "tool.name":-1
-          }
+      const params = {
+        isArchived: false,
+        orderBy : {
+          createdAt: -1
         }
       }
-      );
+    if( isMachineArchived ){
+      params.archivedByMachine = true;
+      params.isArchived = true;
+    } 
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/toolsinstalled` , { params } );
       dispatch(slice.actions.getToolsInstalledSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Installed Tools loaded successfully'));
     } catch (error) {

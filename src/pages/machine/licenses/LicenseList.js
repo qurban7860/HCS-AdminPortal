@@ -48,7 +48,7 @@ export default function LicenseList() {
 
   const { machineId } = useParams();
   const navigate = useNavigate();
-
+  const { machine } = useSelector((state) => state.machine);
   const { licenses, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.license );
   const TABLE_HEAD = [
     { id: 'licenseKey', label: 'License Key', align: 'left' },
@@ -67,9 +67,9 @@ export default function LicenseList() {
 
   useEffect(() => {
     if(machineId){
-      dispatch(getLicenses(machineId));
+      dispatch(getLicenses( machineId, machine?.isArchived ));
     }
-  }, [dispatch, machineId]);
+  }, [ dispatch, machineId, machine ]);
 
   useEffect(() => {
     setTableData(licenses);
