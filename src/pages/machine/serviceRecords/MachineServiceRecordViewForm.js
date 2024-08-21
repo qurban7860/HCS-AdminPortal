@@ -51,6 +51,7 @@ import Lightbox from '../../../components/lightbox/Lightbox';
 import SkeletonLine from '../../../components/skeleton/SkeletonLine';
 import { RHFAutocomplete } from '../../../components/hook-form';
 import DialogServiceRecordComplete from '../../../components/Dialog/DialogServiceRecordComplete';
+import { StyledTooltip } from '../../../theme/styles/default-styles';
 
 MachineServiceParamViewForm.propTypes = {
   serviceHistoryView: PropTypes.bool,
@@ -157,6 +158,8 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
       technicianNotes:                      machineServiceRecord?.technicianNotes ||'',
       isActive:                             machineServiceRecord?.isActive,
       status:                               machineServiceRecord?.status,
+      approvalStatus:                       machineServiceRecord?.currentApprovalStatus || '',
+      approvalLog:                          machineServiceRecord?.approval?.approvalLogs || '',
       createdAt:                            machineServiceRecord?.createdAt || '',
       createdByFullName:                    machineServiceRecord?.createdBy?.name || '',
       createdIP:                            machineServiceRecord?.createdIP || '',
@@ -356,17 +359,40 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
         <Grid container>
           <FormLabel content={FORMLABELS.KEYDETAILS} />
           
-          <ViewFormField isLoading={isLoading} variant='h4' sm={2} heading="Service Date" param={fDate(defaultValues.serviceDate)} />
-          <ViewFormField isLoading={isLoading} variant='h4' sm={6} heading="Service Record Configuration" param={`${defaultValues.serviceRecordConfig} ${defaultValues.serviceRecordConfigRecordType ? '-' : ''} ${defaultValues.serviceRecordConfigRecordType ? defaultValues.serviceRecordConfigRecordType : ''}`} />
-          <ViewFormField isLoading={isLoading} variant='h4' sm={2} heading="Status" param={defaultValues.status} />
-          <ViewFormField isLoading={isLoading} variant='h4' sm={2} heading="Version No" node={
-            <>{defaultValues?.versionNo}{(machineServiceRecord?.isHistory || machineServiceRecord?.status==="DRAFT") && <CurrentIcon callFunction={handleCurrentServiceRecord} />}
-              {!machineServiceRecord?.isHistory && machineServiceRecord?.currentVersion?.versionNo > 1 &&  machineServiceRecord?.serviceId && <HistoryIcon callFunction={handleServiceRecordHistory} /> }
-            </>  
-          } />
+          <ViewFormField isLoading={isLoading} variant='h4' sm={2} heading="Service Date" 
+            param={fDate(defaultValues.serviceDate)} />
+          <ViewFormField isLoading={isLoading} variant='h4' sm={6} heading="Service Record Configuration" 
+            param={`${defaultValues.serviceRecordConfig} ${defaultValues.serviceRecordConfigRecordType ? '-' : ''} ${defaultValues.serviceRecordConfigRecordType ? defaultValues.serviceRecordConfigRecordType : ''}`} />
+          <ViewFormField isLoading={isLoading} variant='h4' sm={2} heading="Status" 
+            param={defaultValues.approvalStatus === "PENDING" ? defaultValues.status : defaultValues.approvalStatus} />
+          <ViewFormField isLoading={isLoading} variant='h4' sm={2} heading="Version No" 
+            node={
+              <>
+                {defaultValues?.versionNo}{(machineServiceRecord?.isHistory || machineServiceRecord?.status==="DRAFT") && 
+                  <CurrentIcon callFunction={handleCurrentServiceRecord} />}
+                {!machineServiceRecord?.isHistory && 
+                  machineServiceRecord?.currentVersion?.versionNo > 1 &&  
+                  machineServiceRecord?.serviceId && 
+                  <HistoryIcon callFunction={handleServiceRecordHistory} /> }
+              </>  
+            } />
           
           <ViewFormField isLoading={isLoading} sm={12} heading="Decoilers" arrayParam={defaultValues?.decoilers?.map((decoilerMachine) => ({ name: `${decoilerMachine?.serialNo ? decoilerMachine?.serialNo : ''}${decoilerMachine?.name ? '-' : ''}${decoilerMachine?.name ? decoilerMachine?.name : ''}`}))} />
-          <ViewFormField isLoading={isLoading} sm={6} heading="Technician"  param={defaultValues?.technician?.name || ''} />
+          <ViewFormField isLoading={isLoading} sm={4} heading="Technician"  param={defaultValues?.technician?.name || ''} />
+          {(defaultValues.approvalStatus !== "PENDING" && defaultValues?.approvalLog?.length > 0) ? (
+            <>
+              <ViewFormField isLoading={isLoading} sm={4} 
+                heading={`${defaultValues.approvalStatus === "REJECTED" ? "Rejected" : "Approved"} by`}
+                param={`${defaultValues?.approvalLog[0]?.evaluatedBy.firstName} ${defaultValues?.approvalLog[0]?.evaluatedBy.lastName} on ${fDate(defaultValues?.approvalLog[0]?.evaluationDate)}`} />
+              
+                <ViewFormField isLoading={isLoading} sm={4}
+                  heading={`${defaultValues.approvalStatus === "REJECTED" ? "Rejection" : "Approval"} Comments`}
+                  tooltipParam={defaultValues?.approvalLog[0]?.comments?.length > 40 ? 
+                    `${defaultValues?.approvalLog[0]?.comments.slice(0, 40)}...` : defaultValues?.approvalLog[0]?.comments}
+                  tooltipTitleContent={defaultValues?.approvalLog[0]?.comments}
+                />
+            </>
+          ) : null}
           <ViewFormNoteField sm={12} heading="Technician Notes" param={defaultValues.technicianNotes} />
           <FormLabel content={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />
           {defaultValues.textBeforeCheckItems && <ViewFormNoteField sm={12}  param={defaultValues.textBeforeCheckItems} />}

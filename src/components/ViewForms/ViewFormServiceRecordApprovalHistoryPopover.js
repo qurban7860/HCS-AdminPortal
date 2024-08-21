@@ -49,7 +49,7 @@ function ViewFormServiceRecordApprovalPopover({ open, onClose, ListArr, ListTitl
                   </TableCell>
                   <StyledTooltip
                     title={m?.comments || ''}
-                    placement="bottom"
+                    placement="right"
                     disableFocusListener
                     tooltipcolor="#1976d2"
                     color="#1976d2"
