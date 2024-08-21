@@ -110,7 +110,7 @@ function getImageUrl(file) {
                     <Text style={[styles.text, styles.bold]}>{defaultValues?.machine?.machineModel?.name}</Text>
                 </View>
                 
-                <View style={styles.col_30}>
+                <View style={styles.col}>
                     <Text style={styles.lable}>Decoilers</Text>
                     <Text style={[styles.text, styles.bold]}>{decoilers}</Text>
                 </View>

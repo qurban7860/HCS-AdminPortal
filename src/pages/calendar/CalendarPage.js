@@ -22,6 +22,7 @@ import {
 } from '../../redux/slices/event/event';
 import { getActiveCustomers } from '../../redux/slices/customer/customer';
 import { getActiveSPContacts } from '../../redux/slices/customer/contact';
+import { uploadFiles } from '../../redux/slices/event/eventFile';
 import { getActiveSecurityUsers, getSecurityUser } from '../../redux/slices/securityUser/securityUser';
 // hooks
 import useResponsive from '../../hooks/useResponsive';
@@ -64,8 +65,6 @@ export default function CalendarPage() {
   const [ view, setView ] = useState(isDesktop ? 'dayGridMonth' : 'listWeek');
   const [calendarData, setCalendarData] = useState([]);
   const [DefaultNotifyContacts, setDefaultNotifyContacts] = useState([]);
-  const [priority, setPriority] = useState('Medium'); 
-  const [files, setFiles] = useState([]); 
 
 
   useEffect(() => {
@@ -206,23 +205,22 @@ export default function CalendarPage() {
     }
   };
 
-  const handleCreateUpdateEvent = (newEvent) => {
+  const handleCreateUpdateEvent = async ( event ) => {
     try {
-      const updatedEvent = {
-        ...newEvent,
-        priority,
-        files
-      };
-  
-      if (updatedEvent?._id) {
-        dispatch(updateEvent(updatedEvent?._id, updatedEvent));
+      // if(Array.isArray( event?.files ) &&  event?.files?.length > 0 ){
+      //   await dispatch(uploadFiles( event?._id, event?.files ));
+      // }
+
+      if (event?._id) {
+        await dispatch(updateEvent(event?._id, event));
         enqueueSnackbar('Event Updated Successfully!');
       } else {
-        dispatch(createEvent(updatedEvent));
+        await dispatch(createEvent(event));
         enqueueSnackbar('Event Created Successfully!');
       }
-      dispatch(setEventModel(false));
+      await dispatch(setEventModel(false));
     } catch (e) {
+      console.error(e);
       enqueueSnackbar('Event Update Failed!');
     }
   };
@@ -246,7 +244,7 @@ export default function CalendarPage() {
 
   const handleEventContent = (info) => {
     const { timeText, event } = info;
-    const {start, customer, machines, primaryTechnician, supportingTechnicians} = event.extendedProps;
+    const {start, priority, customer, machines, primaryTechnician, supportingTechnicians} = event.extendedProps;
     const supportingTechnicianNames = supportingTechnicians.map((tech)=> ` ${tech.firstName} ${tech.lastName}`);
     const title = `${primaryTechnician.firstName} ${primaryTechnician.lastName} ${supportingTechnicianNames.length>0?`, ${supportingTechnicianNames}`:''}, ${customer.name}`;
     const machineNames = machines.map((mc)=> `${mc.name?`${mc.name} - `:''}${mc.serialNo}`).join(', ');
@@ -258,12 +256,7 @@ export default function CalendarPage() {
             <Typography variant='body2'><strong>Technician:</strong> {`${primaryTechnician.firstName} ${primaryTechnician.lastName} ${supportingTechnicianNames.length>0?`, ${supportingTechnicianNames}`:''}`}</Typography>
             <Typography variant='body2'><strong>Customer:</strong> {customer.name}</Typography>
             {machines?.length>0 && <Typography variant='body2'><strong>Machines:</strong> {machineNames}</Typography>}
-            <Typography variant="body2"><strong>Priority:</strong> {priority}</Typography>
-             {files?.length > 0 && (
-            <Typography variant="body2"><strong>Files:</strong> {files.map((file, index) => (
-              <span key={index}>{file.name}</span>
-            )).join(', ')}</Typography>
-          )}
+            <Typography variant="body2"><strong>Priority:</strong> { priority }</Typography>
           </Grid>
         } placement='top-start' tooltipcolor={theme.palette.primary.main}>
         <div style={{ position: 'relative', zIndex: 10}} className="fc-event-main-frame">

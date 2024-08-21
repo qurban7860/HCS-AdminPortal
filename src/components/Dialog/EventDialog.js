@@ -1,11 +1,9 @@
 import PropTypes from 'prop-types';
 import React,{ useEffect, useLayoutEffect, useRef, useState, useCallback } from 'react';
 import * as Yup from 'yup';
-// form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { enc, MD5, lib } from 'crypto-js';
-import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 // @mui
 import { Box, Stack, Button, DialogActions, DialogContent, Grid, Dialog, DialogTitle, Container, Divider, TextField, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
@@ -17,6 +15,7 @@ import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownR
 import KeyboardDoubleArrowDownRoundedIcon from '@mui/icons-material/KeyboardDoubleArrowDownRounded';
 // slices
 import { setEventModel } from '../../redux/slices/event/event';
+import { deleteEventFile } from '../../redux/slices/event/eventFile';
 import { getActiveCustomerMachines, resetActiveCustomerMachines } from '../../redux/slices/products/machine';
 import { getActiveSites, resetActiveSites } from '../../redux/slices/customer/site';
 import FormProvider, { RHFDatePicker, RHFTextField, RHFAutocomplete, RHFUpload } from '../hook-form';
@@ -51,7 +50,7 @@ const getInitialValues = (selectedEvent, range, contacts) => {
     start: selectedEvent ? getTimeObjectFromISOString(selectedEvent?.start) : { value: '07:30', label: '7:30 AM' },
     end: selectedEvent ?  getTimeObjectFromISOString(selectedEvent?.end) : { value: '18:00', label: '6:00 PM' },
     customer: selectedEvent ? selectedEvent?.customer : null,
-    priority: selectedEvent ? selectedEvent?.priority : '', 
+    priority: selectedEvent ? selectedEvent?.priority : null, 
     machines: selectedEvent ? selectedEvent?.machines :  [],
     site: selectedEvent ? selectedEvent?.site :  null,
     jiraTicket: selectedEvent ? selectedEvent?.jiraTicket :  '',
@@ -132,12 +131,12 @@ function EventDialog({
       }),
     jiraTicket: Yup.string().max(200).label('Jira Ticket'),
     customer: Yup.object().nullable().label('Customer').required(),
-    priority: Yup.string().label('Priority').required(), 
+    priority: Yup.object().label('Priority').nullable(), 
     machines: Yup.array().nullable().label('Machines'),
     site: Yup.object().nullable().label('Site'),
     primaryTechnician: Yup.object().nullable().label('Primary Technician').required(),
-    supportingTechnicians: Yup.array().nullable().label('Supporting Technicians').required(),
-    notifyContacts: Yup.array().nullable().label('Notify Contacts').required(),
+    supportingTechnicians: Yup.array().nullable().label('Supporting Technicians'),
+    notifyContacts: Yup.array().nullable().label('Notify Contacts'),
     description: Yup.string().max(500).label('Description'),
     files: Yup.array().of(Yup.mixed()).nullable().label('Files'), 
   });
@@ -204,7 +203,6 @@ function EventDialog({
   ];
 
   const onSubmit = async ( data ) => {
-
     const start_date = new Date(data?.date);
     const end_date = new Date(data?.end_date);
     const [start_hours, start_minutes] = data.start.value.split(':').map(Number);
@@ -213,7 +211,6 @@ function EventDialog({
     data.start_date = new Date(start_date);
     end_date.setHours(end_hours, end_minutes);
     data.end_date = new Date(end_date);
-
     try {
       await onCreateUpdateEvent(data);
       setValue("isCustomerEvent", true );
@@ -274,16 +271,56 @@ function EventDialog({
       }
     };
 
-    const handleDropMultiFile = useCallback( async (acceptedFiles) => {
-        const newFiles = acceptedFiles.map((file, index) => 
-            Object.assign(file, {
-              preview: URL.createObjectURL(file),
-              src: URL.createObjectURL(file),
-              isLoaded:true
-            })
-        );
-        setValue('files', [ ...newFiles], { shouldValidate: true });
-      }, [ setValue ] );
+
+  const hashFilesMD5 = async (_files) => {
+    const hashPromises = _files.map((file) => new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const arrayBuffer = reader.result;
+        const wordArray = MD5(lib.WordArray.create(arrayBuffer));
+        const hashHex = wordArray.toString(enc.Hex);
+        resolve(hashHex);
+      };
+      reader.onerror = () => {
+        reject(new Error(`Error reading file: ${file?.name || '' }`));
+      };
+      reader.readAsArrayBuffer(file);
+    }));
+    try {
+      const hashes = await Promise.all(hashPromises);
+      return hashes;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
+
+  const handleDropMultiFile = useCallback(async (acceptedFiles) => {
+    const hashes = await hashFilesMD5(acceptedFiles);
+    const uniqueHashMap = new Map();
+    const newFiles = acceptedFiles.reduce((acc, file, index) => {
+      const eTag = hashes[index];
+      if (!uniqueHashMap.has(eTag)) {
+        uniqueHashMap.set(eTag, true);
+        const newFile = Object.assign(file, {
+          preview: URL.createObjectURL(file),
+          src: URL.createObjectURL(file),
+          isLoaded: true,
+          eTag,
+        });
+        acc.push(newFile);
+      }
+      return acc;
+    }, []);
+    setValue('files', newFiles, { shouldValidate: true });
+  }, [setValue]);
+
+  const handleFileRemove = useCallback( async (inputFile) => {
+    if( inputFile?._id ){
+      await dispatch(deleteEventFile( selectedEvent?._id, inputFile?._id))
+    }
+    setValue('files', files?.filter((el) => el !== inputFile), { shouldValidate: true } )
+  }, [ dispatch, selectedEvent, setValue, files ] );
 
   return (
     <>
@@ -379,9 +416,8 @@ function EventDialog({
                       label="Priority"
                       name="priority"
                       options={priorityOptions}
-                      renderOption={(props, option) => <li {...props}> { getPriorityIcon(option.value) } <span style={{ marginLeft: 8 }}>{option.label}</span> </li>}
                       renderInput={(params) => {
-                        const selectedOption = priorityOptions.find( (option) => option.label === params.inputProps.value );
+                        const selectedOption = priorityOptions.find( (option) => option?.label === params?.inputProps?.value );
                         const selectedIcon = selectedOption ? getPriorityIcon(selectedOption.value) : null;
                         return (
                           <TextField {...params} InputProps={{ ...params.InputProps, startAdornment: selectedIcon, }}
@@ -389,7 +425,10 @@ function EventDialog({
                           />
                         );
                       }}
+                      renderOption={(props, option) => <li {...props} key={option?.value} > { getPriorityIcon(option.value) } <span style={{ marginLeft: 8 }}>{option.label}</span> </li>}
+                      isOptionEqualToValue={( option, value ) => option?.value === value?.value }
                     />
+
                     <RHFAutocomplete
                       multiple
                       disableCloseOnSelect
@@ -476,16 +515,8 @@ function EventDialog({
                     thumbnail
                     name="files"
                     onDrop={handleDropMultiFile}
-                    onRemove={(inputFile) =>
-                      files.length > 1
-                        ? setValue(
-                            'files',
-                            files.filter((file) => file !== inputFile),
-                            { shouldValidate: true }
-                          )
-                        : setValue('files', '', { shouldValidate: true })
-                    }
-                    onRemoveAll={() => setValue('files', '', { shouldValidate: true })}
+                    onRemove={ handleFileRemove } 
+                    // onRemoveAll={() => setValue('files', '', { shouldValidate: true })}
                   />
 
                 {selectedEvent && (
