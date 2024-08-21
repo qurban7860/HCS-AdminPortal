@@ -49,8 +49,7 @@ const TABLE_HEAD = [
 // ----------------------------------------------------------------------
 
 export default function MachineServiceRecordList() {
-  const { machineServiceRecords, filterBy, filterDraft, page, rowsPerPage, isLoading, initial } =
-    useSelector((state) => state.machineServiceRecord);
+  const { machineServiceRecords, filterBy, filterDraft, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.machineServiceRecord);
   const navigate = useNavigate();
   const { machineId } = useParams();
 
