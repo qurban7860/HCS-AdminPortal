@@ -102,7 +102,7 @@ export function uploadFiles( eventId, files ) {
         });
       }
       
-      const response = await axios.post(`${CONFIG.SERVER_URL}calender/events/files`, formData );
+      const response = await axios.post(`${CONFIG.SERVER_URL}calender/events/${eventId}/files`, formData );
       dispatch(slice.actions.newEventFilesSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error?.Message));

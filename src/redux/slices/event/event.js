@@ -208,6 +208,7 @@ export function createEvent(params) {
       
       const response = await axios.post(`${CONFIG.SERVER_URL}calender/events`, data);
       dispatch(slice.actions.createEventSuccess(response.data.Event));
+      return response.data.Event;
     } catch (error) {
       dispatch(slice.actions.hasError(error?.Message));
       throw error;
@@ -222,7 +223,8 @@ export function updateEventDate(id, start, end) {
     try {
       const data = { start, end };
       dispatch(slice.actions.updateEventDateLocal({ id, start, end }));
-      await axios.patch(`${CONFIG.SERVER_URL}calender/events/${id}`, data);
+      const response = await axios.patch(`${CONFIG.SERVER_URL}calender/events/${id}`, data);
+      return response.data.Event;
     } catch (error) {
       dispatch(slice.actions.hasError(error?.Message));
       throw error;
@@ -250,6 +252,7 @@ export function updateEvent(id, params) {
 
       const response = await axios.patch(`${CONFIG.SERVER_URL}calender/events/${id}`, data);
       dispatch(slice.actions.updateEventSuccess(response.data.Event));
+      return response.data.Event;
     } catch (error) {
       dispatch(slice.actions.hasError(error?.Message));
       throw error;

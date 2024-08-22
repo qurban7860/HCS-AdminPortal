@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React,{ useEffect, useLayoutEffect, useRef, useState, useCallback } from 'react';
-import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { enc, MD5, lib } from 'crypto-js';
@@ -13,6 +12,9 @@ import KeyboardArrowUpRoundedIcon from '@mui/icons-material/KeyboardArrowUpRound
 import DragHandleRoundedIcon from '@mui/icons-material/DragHandleRounded';
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
 import KeyboardDoubleArrowDownRoundedIcon from '@mui/icons-material/KeyboardDoubleArrowDownRounded';
+import { eventSchema } from '../../pages/schemas/calendarSchema';
+import { manipulateFiles } from '../../pages/documents/util/Util';
+
 // slices
 import { setEventModel } from '../../redux/slices/event/event';
 import { deleteEventFile } from '../../redux/slices/event/eventFile';
@@ -41,6 +43,7 @@ function getTimeObjectFromISOString(dateString) {
 return timeObject;
 }
 
+
 const getInitialValues = (selectedEvent, range, contacts) => {
   const initialEvent = {
     _id: selectedEvent ? selectedEvent?._id : null ,
@@ -58,7 +61,7 @@ const getInitialValues = (selectedEvent, range, contacts) => {
     supportingTechnicians: selectedEvent ? selectedEvent?.supportingTechnicians :  [],
     notifyContacts: selectedEvent ? selectedEvent?.notifyContacts :  contacts,
     description: selectedEvent ? selectedEvent?.description :  '',
-    files: selectedEvent ? selectedEvent?.files : [],
+    files: selectedEvent ? manipulateFiles(selectedEvent?.files) : [],
     createdAt: selectedEvent?.createdAt || '',
     createdByFullName: selectedEvent?.createdBy?.name || '',
     createdIP: selectedEvent?.createdIP || '',
@@ -94,67 +97,19 @@ function EventDialog({
   const { activeCustomerMachines } = useSelector( (state) => state.machine );
   const [ openConfirm, setOpenConfirm ] = useState(false);
   const dialogRef = useRef(null);
-
-  const EventSchema = Yup.object().shape({
-    date: Yup.date().nullable().label('Event Date').typeError('End Time should be a valid Date').required(),
-    end_date: Yup.date().nullable().label('Event Date').typeError('End Time should be a valid Date').required()
-      .test('is-greater-than-start-date', 'End Date must be later than Start Date', (value, context) => {
-        const start_date = context.parent.date;
-        if (start_date && value) {
-          const startDate = new Date(start_date).setHours(0,0,0,0);
-          const endDate = new Date(value).setHours(0,0,0,0);
-          if(startDate!==endDate){
-            clearErrors('end')
-          }
-          return  startDate <= endDate;
-        }
-        return true; 
-      }),
-    start: Yup.object().nullable().label('Start Time').required('Start Time is required'),
-    end: Yup.object().nullable().label('End Time').required('End Time is required')
-      .test('is-greater-than-start-time-if-same-date', 'End Time must be later than Start Time', (value, context) => {
-        const { start, date, end_date } = context.parent;
-        if (start && date && end_date && value) {
-          let startDate = new Date(date);
-          let endDate = new Date(end_date);
-          const [start_hours, start_minutes] = start.value.split(':').map(Number);
-          const [end_hours, end_minutes] = value.value.split(':').map(Number);
-          startDate.setHours(start_hours, start_minutes);
-          startDate = new Date(startDate);
-          endDate.setHours(end_hours, end_minutes);
-          endDate = new Date(endDate);
-          if(startDate.getDate()===endDate.getDate()){
-            return startDate < endDate;
-          }
-        }
-        return true;
-      }),
-    jiraTicket: Yup.string().max(200).label('Jira Ticket'),
-    customer: Yup.object().nullable().label('Customer').required(),
-    priority: Yup.object().label('Priority').nullable(), 
-    machines: Yup.array().nullable().label('Machines'),
-    site: Yup.object().nullable().label('Site'),
-    primaryTechnician: Yup.object().nullable().label('Primary Technician').required(),
-    supportingTechnicians: Yup.array().nullable().label('Supporting Technicians'),
-    notifyContacts: Yup.array().nullable().label('Notify Contacts'),
-    description: Yup.string().max(500).label('Description'),
-    files: Yup.array().of(Yup.mixed()).nullable().label('Files'), 
-  });
-
   const defaultValues = getInitialValues(selectedEvent?.extendedProps, range, contacts);
   
   const methods = useForm({
-    resolver: yupResolver(EventSchema),
+    resolver: yupResolver(eventSchema(() => methods.clearErrors())),
     defaultValues
   });
-
+  
   const {
     reset,
     watch,
     setValue,
     handleSubmit,
     formState: { isSubmitting, errors },
-    clearErrors,
   } = methods;
 
   useEffect(() => {
@@ -514,6 +469,7 @@ function EventDialog({
                     multiple
                     thumbnail
                     name="files"
+                    imagesOnly
                     onDrop={handleDropMultiFile}
                     onRemove={ handleFileRemove } 
                     // onRemoveAll={() => setValue('files', '', { shouldValidate: true })}

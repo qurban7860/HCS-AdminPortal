@@ -207,16 +207,17 @@ export default function CalendarPage() {
 
   const handleCreateUpdateEvent = async ( event ) => {
     try {
-      // if(Array.isArray( event?.files ) &&  event?.files?.length > 0 ){
-      //   await dispatch(uploadFiles( event?._id, event?.files ));
-      // }
-
+      let eventResponse
       if (event?._id) {
-        await dispatch(updateEvent(event?._id, event));
+        eventResponse = await dispatch(updateEvent(event?._id, event));
         enqueueSnackbar('Event Updated Successfully!');
       } else {
-        await dispatch(createEvent(event));
+        eventResponse = await dispatch(createEvent(event));
         enqueueSnackbar('Event Created Successfully!');
+      }
+      if(Array.isArray( event?.files ) &&  event?.files?.length > 0 ){
+        console.log('eventResponse',eventResponse?._id);
+        await dispatch(uploadFiles( eventResponse?._id, event?.files ));
       }
       await dispatch(setEventModel(false));
     } catch (e) {
