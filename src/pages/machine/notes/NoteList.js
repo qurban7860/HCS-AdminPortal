@@ -40,7 +40,7 @@ export default function NoteList() {
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
-
+  const { machine } = useSelector((state) => state.machine);
   const { notes, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.machineNote );
   const TABLE_HEAD = [
     { id: 'note', label: 'Note', align: 'left' },
@@ -57,9 +57,9 @@ export default function NoteList() {
 
   useEffect(() => {
     if(machineId){
-      dispatch(getNotes(machineId));
+      dispatch(getNotes(machineId, machine?.isArchived ));
     }
-  }, [dispatch, machineId ]);
+  }, [dispatch, machineId, machine ]);
 
   useEffect(() => {
     setTableData(notes);

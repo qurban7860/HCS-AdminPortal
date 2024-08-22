@@ -60,11 +60,12 @@ export default function SettingViewForm() {
     <Card sx={{ p: 2 }}>
       <ViewFormEditDeleteButtons isActive={defaultValues.isActive} 
         backLink={()=> navigate(PATH_MACHINE.machines.settings.root(machineId))} 
-        handleEdit={handleEdit} onDelete={onDelete}
-        disableEditButton={machine?.status?.slug==='transferred'}
-        disableDeleteButton={machine?.status?.slug==='transferred'}
+        handleEdit={ !machine?.isArchived && handleEdit} 
+        onDelete={ !machine?.isArchived && onDelete}
+        disableEditButton={machine?.status?.slug==='transferred' || machine?.isArchived }
+        disableDeleteButton={machine?.status?.slug==='transferred' || machine?.isArchived }
         history={setting?.history  || [] }
-        />
+      />
       <Grid container>
         <ViewFormField isLoading={isLoading} sm={12} heading="Category Name" param={defaultValues.techParam.category.name} />
         <ViewFormField isLoading={isLoading} sm={6} heading="Parameter Name" param={defaultValues.techParam.name} />

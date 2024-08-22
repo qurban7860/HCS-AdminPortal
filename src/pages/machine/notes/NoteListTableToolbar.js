@@ -34,7 +34,8 @@ export default function NoteListTableToolbar({
   const { machineId } = useParams();
   const navigate = useNavigate();
   const toggleAdd = () => navigate(PATH_MACHINE.machines.notes.new(machineId));
-  const { machine } = useSelector((state) => state.machine);
+  const { machine } = useSelector((state) => state.machine); 
+  
   return (
     <Stack
     spacing={2}
@@ -48,7 +49,7 @@ export default function NoteListTableToolbar({
       onChange={onFilterName}
       onClick={onResetFilter}
       SubOnClick={toggleAdd}
-      addButton={BUTTONS.ADDNOTE}
+      addButton={!machine?.isArchived ? BUTTONS.ADDNOTE : undefined}
       transferredMachine={machine?.status?.slug==='transferred'}
     />
   </Stack>

@@ -323,32 +323,42 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
           isLoading={isLoading}
           isActive={defaultValues.isActive}
           disableEditButton={
+            machine?.isArchived ||
             machine?.status?.slug === 'transferred' ||
             machineServiceRecord.currentApprovalStatus === 'APPROVED'
           }
           disableDeleteButton={
+            machine?.isArchived ||
             machine?.status?.slug === 'transferred' ||
             machineServiceRecord.currentApprovalStatus === 'APPROVED'
           }
           skeletonIcon={isLoading && !machineServiceRecord?._id}
-          handleEdit={!machineServiceRecord?.isHistory && machineServiceRecord?._id && handleEdit}
+          handleEdit={ 
+            !machine?.isArchived && 
+            !machineServiceRecord?.isHistory && 
+            machineServiceRecord?._id && handleEdit
+          }
           onDelete={
+            !machine?.isArchived &&
             !machineServiceRecord?.isHistory &&
             machineServiceRecord?.status === 'DRAFT' &&
             machineServiceRecord?._id &&
             onDelete
           }
           backLink={handleBackLink}
-          handleSendPDFEmail={!machineServiceRecord?.isHistory && machineServiceRecord?._id && handleSendEmail}
+          handleSendPDFEmail={ !machine?.isArchived && !machineServiceRecord?.isHistory && machineServiceRecord?._id && handleSendEmail}
           handleViewPDF={!machineServiceRecord?.isHistory && machineServiceRecord?._id && handlePDFViewer}
+          
           handleCompleteMSR={
-            machineServiceRecord.isActive &&
+            !machine?.isArchived &&
+            machineServiceRecord?.isActive &&
             !machineServiceRecord?.isHistory &&
             machineServiceRecord?.status === 'SUBMITTED' &&
             machineServiceRecord?.currentVersion._id === machineServiceRecord?._id &&
-            machineServiceRecord.currentApprovalStatus !== 'APPROVED' &&
+            machineServiceRecord?.currentApprovalStatus !== 'APPROVED' &&
             handleCompleteConfirm
           }
+
           serviceRecordStatus={
             ((machineServiceRecord.isActive &&
               !machineServiceRecord?.isHistory &&
@@ -437,6 +447,7 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
               xl: 'repeat(8, 1fr)',
             }}
           >
+
           {slides?.map((file, _index) => (
             <DocumentGalleryItem isLoading={isLoading} key={file?.id} image={file} 
               onOpenLightbox={()=> handleOpenLightbox(_index)}

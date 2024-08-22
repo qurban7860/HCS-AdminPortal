@@ -197,23 +197,32 @@ export function getMachineErpLogRecord(machineId, id) {
 
 // -------------------------- GET RECORD'S ----------------------------------------------------------------------
 
-export function getMachineErpLogRecords(machineId, page, pageSize, fromDate, toDate, isCreatedAt ) {
+export function getMachineErpLogRecords(machineId, page, pageSize, fromDate, toDate, isCreatedAt, isMachineArchived ) {
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
+      
       const params= {
         isArchived: false,
         machine: machineId,
         fromDate,
         toDate,
       }
+
+      if( isMachineArchived ){
+        params.archivedByMachine = true;
+        params.isArchived = true;
+      }
+
       params.pagination = {
         page,
         pageSize  
       }
+
       if(isCreatedAt){
         params.isCreatedAt = isCreatedAt
       }
+      
       const response = await axios.get(`${CONFIG.SERVER_URL}logs/erp/`, { params } );
       dispatch(slice.actions.getMachineErpLogRecordsSuccess(response.data));
     } catch (error) {

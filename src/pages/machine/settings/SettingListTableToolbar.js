@@ -35,7 +35,7 @@ export default function SettingListTableToolbar({
   const { machineId } = useParams()
   const navigate = useNavigate();
   const toggleAdd = () => navigate(PATH_MACHINE.machines.settings.new(machineId));
-  const { machine } = useSelector((state) => state.machine);
+  const { machine } = useSelector((state) => state.machine); 
   return (
     <Stack
     spacing={2}
@@ -49,7 +49,7 @@ export default function SettingListTableToolbar({
       onChange={onFilterName}
       onClick={onResetFilter}
       SubOnClick={toggleAdd}
-      addButton={BUTTONS.ADDSETTING}
+      addButton={!machine?.isArchived ? BUTTONS.ADDSETTING : undefined}
       transferredMachine={machine?.status?.slug==='transferred'}
     />
   </Stack>

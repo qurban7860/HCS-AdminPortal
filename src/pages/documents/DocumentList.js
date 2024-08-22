@@ -190,7 +190,7 @@ const onChangePage = (event, newPage) => {
       } else if(machineDrawingPage &&  machineId ){
         dispatch(getDocuments( null, machineId, null, page, machineDocumentsRowsPerPage, null, null, cancelTokenSource));
       } else if( machinePage ){
-        dispatch(getDocuments(null, machineId, null, page, machineDrawingsRowsPerPage, null, null, cancelTokenSource));
+        dispatch(getDocuments(null, machineId, null, page, machineDrawingsRowsPerPage, null, machine?.isArchived, cancelTokenSource));
       } else if( machineDrawings || machineDrawingPage ){
         dispatch(getDocuments(null, null, ( machineDrawings || machineDrawingPage ), page, machineDrawingsRowsPerPage, null, null, cancelTokenSource));
       } else if(!customerPage && !machineDrawingPage && !machinePage && !machineDrawings  ) {
@@ -207,7 +207,8 @@ const onChangePage = (event, newPage) => {
     customerDocumentsRowsPerPage, 
     machineDocumentsRowsPerPage, 
     machineDrawingsRowsPerPage, 
-    documentRowsPerPage 
+    documentRowsPerPage,
+    machine
   ]);
   
   useEffect(()=>{

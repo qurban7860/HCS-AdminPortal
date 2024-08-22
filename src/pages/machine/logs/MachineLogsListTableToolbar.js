@@ -42,7 +42,7 @@ export default function MachineLogsListTableToolbar({
 
   const navigate = useNavigate();
   const { machineId } = useParams();
-  const { machine } = useSelector((state) => state.machine);
+  const { machine } = useSelector((state) => state.machine); 
   const toggleAdd = () => navigate(PATH_MACHINE.machines.logs.new(machineId));
   const toggleGraph = () => navigate(PATH_MACHINE.machines.logs.graph(machineId));
 
@@ -58,7 +58,7 @@ export default function MachineLogsListTableToolbar({
         dateTo={ dateTo }
         isDateFromDateTo
         openGraph={ toggleGraph }
-        addButton={ !isHistory && BUTTONS.ADD_MACHINE_LOGS }
+        addButton={!(machine?.isArchived || isHistory) ? BUTTONS.ADD_MACHINE_LOGS : undefined}
         transferredMachine={ machine?.status?.slug==='transferred' }
       />
     </Stack>
