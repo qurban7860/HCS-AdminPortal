@@ -269,8 +269,9 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
 
   const serviceRecordApprovalData = {
     status: machineServiceRecord?.currentApprovalStatus,
-    approvalLogs: machineServiceRecord?.approval?.approvalLogs,
-    approvingContacts: machineServiceRecord?.approval?.approvingContacts,
+    currentApprovalLogs: machineServiceRecord?.approval?.approvalLogs,
+    currentApprovingContacts: machineServiceRecord?.approval?.approvingContacts,
+    completeHistory: machineServiceRecord?.completeEvaluationHistory,
   }
 
   const handleCloseLightbox = () => {
@@ -349,11 +350,14 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
             handleCompleteConfirm
           }
           serviceRecordStatus={
-            machineServiceRecord.isActive &&
-            !machineServiceRecord?.isHistory &&
-            machineServiceRecord?.status === 'SUBMITTED' &&
-            machineServiceRecord?.currentVersion._id === machineServiceRecord?._id &&
-            serviceRecordApprovalData}
+            ((machineServiceRecord.isActive &&
+              !machineServiceRecord?.isHistory &&
+              machineServiceRecord?.status === 'SUBMITTED' &&
+              machineServiceRecord?.currentVersion._id === machineServiceRecord?._id &&
+              machineServiceRecord?.approval?.approvingContacts?.length > 0) ||
+              machineServiceRecord?.completeEvaluationHistory?.totalLogsCount > 0) &&
+            serviceRecordApprovalData
+          }
         />
         
         <Grid container>
