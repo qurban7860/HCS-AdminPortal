@@ -22,46 +22,36 @@ import {
 } from '../../redux/slices/event/event';
 import { getActiveCustomers } from '../../redux/slices/customer/customer';
 import { getActiveSPContacts } from '../../redux/slices/customer/contact';
-import { uploadFiles } from '../../redux/slices/event/eventFile';
 import { getActiveSecurityUsers, getSecurityUser } from '../../redux/slices/securityUser/securityUser';
 // hooks
 import useResponsive from '../../hooks/useResponsive';
 // components
 import { useSnackbar } from '../../components/snackbar';
-import { useSettingsContext } from '../../components/settings';
-import { useDateRangePicker } from '../../components/date-range-picker';
 // sections
 import { StyledCalendar, CalendarToolbar } from '.';
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer, StyledTooltip } from '../../theme/styles/default-styles';
 import EventDialog from '../../components/Dialog/EventDialog';
 import { useAuthContext } from '../../auth/useAuthContext';
-import Iconify from '../../components/iconify';
-import { fDate, fDateTime } from '../../utils/formatTime';
-
+import { fDateTime } from '../../utils/formatTime';
 // ----------------------------------------------------------------------
 
 export default function CalendarPage() {
   
   const { enqueueSnackbar } = useSnackbar();
   const { userId, isAllAccessAllowed, user } = useAuthContext();
-  const { themeStretch } = useSettingsContext();
   const dispatch = useDispatch();
   const isDesktop = useResponsive('up', 'sm');
   const calendarRef = useRef(null);
-  const picker = useDateRangePicker(null, null);
 
-  const { events, selectedEvent, eventModel, selectedRange } = useSelector((state) => state.event );
+  const { events, selectedEvent, selectedRange } = useSelector((state) => state.event );
   const { securityUser } = useSelector((state) => state.user);
   const { activeSpContacts } = useSelector((state) => state.contact);
-  
   const [ previousDate, setPreviousDate ] = useState(null);
   const [ selectedCustomer, setSelectedCustomer ] = useState(null);
   const [ selectedContact, setSelectedContact ] = useState(null);
   const [ selectedUser, setSelectedUser ] = useState(null);
   const [ date, setDate ] = useState(new Date());
-  const [ openFilter, setOpenFilter ] = useState(false);
-  const [ filterEventColor, setFilterEventColor ] = useState([]);
   const [ view, setView ] = useState(isDesktop ? 'dayGridMonth' : 'listWeek');
   const [calendarData, setCalendarData] = useState([]);
   const [DefaultNotifyContacts, setDefaultNotifyContacts] = useState([]);
@@ -207,19 +197,14 @@ export default function CalendarPage() {
 
   const handleCreateUpdateEvent = async ( event ) => {
     try {
-      let eventResponse
       if (event?._id) {
-        eventResponse = await dispatch(updateEvent(event?._id, event));
+        dispatch(updateEvent(event?._id, event));
         enqueueSnackbar('Event Updated Successfully!');
       } else {
-        eventResponse = await dispatch(createEvent(event));
+        dispatch(createEvent(event));
         enqueueSnackbar('Event Created Successfully!');
       }
-      // if(Array.isArray( event?.files ) &&  event?.files?.length > 0 ){
-      //   console.log('eventResponse',eventResponse?._id);
-      //   await dispatch(uploadFiles( eventResponse?._id, event?.files ));
-      // }
-      await dispatch(setEventModel(false));
+      dispatch(setEventModel(false));
     } catch (e) {
       console.error(e);
       enqueueSnackbar('Event Update Failed!');

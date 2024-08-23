@@ -52,7 +52,7 @@ const getInitialValues = (selectedEvent, range, contacts) => {
     start: selectedEvent ? getTimeObjectFromISOString(selectedEvent?.start) : { value: '07:30', label: '7:30 AM' },
     end: selectedEvent ?  getTimeObjectFromISOString(selectedEvent?.end) : { value: '18:00', label: '6:00 PM' },
     customer: selectedEvent ? selectedEvent?.customer : null,
-    priority: selectedEvent ? selectedEvent?.priority : "", 
+    priority: selectedEvent ? selectedEvent?.priority : null, 
     machines: selectedEvent ? selectedEvent?.machines :  [],
     site: selectedEvent ? selectedEvent?.site :  null,
     jiraTicket: selectedEvent ? selectedEvent?.jiraTicket :  '',
@@ -98,7 +98,6 @@ function EventDialog({
   const [ openConfirm, setOpenConfirm ] = useState(false);
   const dialogRef = useRef(null);
   const defaultValues = getInitialValues(selectedEvent?.extendedProps, range, contacts);
-  // console.log("selectedEvent : ", selectedEvent?.extendedProps )
   const methods = useForm({
     resolver: yupResolver(eventSchema(() => methods.clearErrors())),
     defaultValues
@@ -156,7 +155,7 @@ function EventDialog({
     'Low',
     'Lowest',
   ];
-
+  
   const onSubmit = async ( data ) => {
     data.priority = priority
     const start_date = new Date(data?.date);
@@ -269,11 +268,14 @@ function EventDialog({
   }, [setValue, files]);
 
   const handleFileRemove = useCallback( async (inputFile) => {
-    // console.log("selectedEvent : ",inputFile)
-    if( inputFile?._id ){
-      dispatch(deleteEventFile( inputFile?.event, inputFile?._id))
+    try{
+      setValue('files', files?.filter((el) => ( inputFile?._id ? el?._id !== inputFile?._id : el !== inputFile )), { shouldValidate: true } )
+      if( inputFile?._id ){
+        dispatch(deleteEventFile( inputFile?.event, inputFile?._id))
+      }
+    } catch(e){
+      console.error(e)
     }
-    setValue('files', files?.filter((el) => el !== inputFile), { shouldValidate: true } )
   }, [ dispatch, setValue, files ] );
 
   return (

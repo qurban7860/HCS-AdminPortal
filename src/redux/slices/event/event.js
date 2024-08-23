@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import _ from 'lodash';
 // utils
 import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
@@ -95,19 +96,27 @@ const slice = createSlice({
     },
 
     // DELETE EVENTS FILES
-    deleteEventFileSuccess(state, action) {
+    deleteEventsFileSuccess(state, action) {
       const { eventId, _id } = action.payload;
-      console.log("state events : ",state.events);
       state.events = state.events.map((event) => {
         if (event.id === eventId) {
           return {
             ...event,
-            files: event?.files?.filter((file) => file._id !== _id),
+            extendedProps: {
+              ...event.extendedProps,
+              files: event?.extendedProps?.files?.filter(file => file._id !== _id),
+            },
           };
         }
-        state.selectedEvent = event;
         return event;
       });
+    },
+
+    // // DELETE EVENT FILES
+    deleteEventFileSuccess(state, action) {
+      const selectedEventClone = _.cloneDeep(state.selectedEvent);
+      selectedEventClone.extendedProps.files = selectedEventClone.extendedProps.files?.filter(file => file._id !== action.payload?._id);
+      state.selectedEvent = selectedEventClone;
     },
 
     // SELECT RANGE
@@ -272,7 +281,6 @@ export function updateEvent(id, params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      console.log("params : ",params)
       const formData = new FormData();
       formData.append('isCustomerEvent', params?.isCustomerEvent);
       formData.append('jiraTicket', params?.jiraTicket || '');
@@ -339,7 +347,8 @@ export function deleteEventFile( eventId, id ) {
     dispatch(slice.actions.startLoading());
     try {
       await axios.patch(`${CONFIG.SERVER_URL}calender/events/${eventId}/files/${id}`, { isActive: false, isArchived: true, });
-      await dispatch(slice.actions.deleteEventFileSuccess({ eventId, _id: id }));
+      await dispatch(slice.actions.deleteEventFileSuccess({ _id: id }));
+      await dispatch(slice.actions.deleteEventsFileSuccess({ eventId, _id: id }));
       } catch (error) {
       dispatch(slice.actions.hasError(error?.Message));
       throw error;
