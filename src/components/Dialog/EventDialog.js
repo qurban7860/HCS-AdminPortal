@@ -16,8 +16,7 @@ import { eventSchema } from '../../pages/schemas/calendarSchema';
 import { manipulateFiles } from '../../pages/documents/util/Util';
 
 // slices
-import { setEventModel } from '../../redux/slices/event/event';
-import { deleteEventFile } from '../../redux/slices/event/eventFile';
+import { setEventModel, deleteEventFile } from '../../redux/slices/event/event';
 import { getActiveCustomerMachines, resetActiveCustomerMachines } from '../../redux/slices/products/machine';
 import { getActiveSites, resetActiveSites } from '../../redux/slices/customer/site';
 import FormProvider, { RHFDatePicker, RHFTextField, RHFAutocomplete, RHFUpload } from '../hook-form';
@@ -53,7 +52,7 @@ const getInitialValues = (selectedEvent, range, contacts) => {
     start: selectedEvent ? getTimeObjectFromISOString(selectedEvent?.start) : { value: '07:30', label: '7:30 AM' },
     end: selectedEvent ?  getTimeObjectFromISOString(selectedEvent?.end) : { value: '18:00', label: '6:00 PM' },
     customer: selectedEvent ? selectedEvent?.customer : null,
-    priority: selectedEvent ? selectedEvent?.priority : null, 
+    priority: selectedEvent ? selectedEvent?.priority : "", 
     machines: selectedEvent ? selectedEvent?.machines :  [],
     site: selectedEvent ? selectedEvent?.site :  null,
     jiraTicket: selectedEvent ? selectedEvent?.jiraTicket :  '',
@@ -88,6 +87,7 @@ function EventDialog({
   onDeleteEvent,
   contacts,
 }) {
+
   const { user } = useAuthContext();
   const dispatch = useDispatch();
   const { selectedEvent, eventModel } = useSelector((state) => state.event );
@@ -98,7 +98,7 @@ function EventDialog({
   const [ openConfirm, setOpenConfirm ] = useState(false);
   const dialogRef = useRef(null);
   const defaultValues = getInitialValues(selectedEvent?.extendedProps, range, contacts);
-  
+  // console.log("selectedEvent : ", selectedEvent?.extendedProps )
   const methods = useForm({
     resolver: yupResolver(eventSchema(() => methods.clearErrors())),
     defaultValues
@@ -120,7 +120,7 @@ function EventDialog({
     }
   }, [errors]);
 
-  const { customer, date, isCustomerEvent, files } = watch();
+  const { customer, date, isCustomerEvent, files, priority } = watch();
 
   useEffect(() => {
     const { end_date  } = watch()
@@ -150,14 +150,15 @@ function EventDialog({
   }, [reset, range, selectedEvent, contacts]);
   
   const priorityOptions = [
-    { label: 'Highest', value: 'highest' },
-    { label: 'High', value: 'high' },
-    { label: 'Medium', value: 'medium' },
-    { label: 'Low', value: 'low' },
-    { label: 'Lowest', value: 'lowest' },
+    'Highest',
+    'High',
+    'Medium',
+    'Low',
+    'Lowest',
   ];
 
   const onSubmit = async ( data ) => {
+    data.priority = priority
     const start_date = new Date(data?.date);
     const end_date = new Date(data?.end_date);
     const [start_hours, start_minutes] = data.start.value.split(':').map(Number);
@@ -209,23 +210,22 @@ function EventDialog({
       }
     }, [ isCustomerEvent, setValue, activeSpContacts, activeCustomers, user ] );
     
-    const getPriorityIcon = (priority) => {
-      switch (priority) {
-        case 'highest':
+    const getPriorityIcon = ( priorityVal ) => {
+      switch ( priorityVal ) {
+        case 'Highest':
           return <KeyboardDoubleArrowUpRoundedIcon color="error" />;
-        case 'high':
+        case 'High':
           return <KeyboardArrowUpRoundedIcon color="error" />;
-        case 'medium':
+        case 'Medium':
           return <DragHandleRoundedIcon color="warning" />;
-        case 'low':
+        case 'Low':
           return <KeyboardArrowDownRoundedIcon color="success" />;
-        case 'lowest':
+        case 'Lowest':
           return <KeyboardDoubleArrowDownRoundedIcon color="success" />;
         default:
           return null;
       }
     };
-
 
   const hashFilesMD5 = async (_files) => {
     const hashPromises = _files.map((file) => new Promise((resolve, reject) => {
@@ -252,30 +252,29 @@ function EventDialog({
 
   const handleDropMultiFile = useCallback(async (acceptedFiles) => {
     const hashes = await hashFilesMD5(acceptedFiles);
-    const uniqueHashMap = new Map();
-    const newFiles = acceptedFiles.reduce((acc, file, index) => {
+    const newFiles = ( Array.isArray(files) && files?.length > 0 ) ? [ ...files ] : [];
+    acceptedFiles.forEach((file, index) => {
       const eTag = hashes[index];
-      if (!uniqueHashMap.has(eTag)) {
-        uniqueHashMap.set(eTag, true);
+      if( !newFiles?.some(( el ) => el?.eTag === eTag ) ){
         const newFile = Object.assign(file, {
           preview: URL.createObjectURL(file),
           src: URL.createObjectURL(file),
           isLoaded: true,
           eTag,
         });
-        acc.push(newFile);
+        newFiles.push(newFile);
       }
-      return acc;
-    }, []);
+    });
     setValue('files', newFiles, { shouldValidate: true });
-  }, [setValue]);
+  }, [setValue, files]);
 
   const handleFileRemove = useCallback( async (inputFile) => {
+    // console.log("selectedEvent : ",inputFile)
     if( inputFile?._id ){
-      await dispatch(deleteEventFile( selectedEvent?._id, inputFile?._id))
+      dispatch(deleteEventFile( inputFile?.event, inputFile?._id))
     }
     setValue('files', files?.filter((el) => el !== inputFile), { shouldValidate: true } )
-  }, [ dispatch, selectedEvent, setValue, files ] );
+  }, [ dispatch, setValue, files ] );
 
   return (
     <>
@@ -355,8 +354,7 @@ function EventDialog({
 
                 <RHFTextField name="jiraTicket" label={isCustomerEvent ? 'Jira Ticket' : 'Title'} />
 
-                {isCustomerEvent && (
-                  <>
+                {isCustomerEvent && 
                     <RHFAutocomplete
                       label="Customer*"
                       name="customer"
@@ -366,24 +364,27 @@ function EventDialog({
                       renderOption={(props, option) => (
                         <li {...props} key={option?._id}>{`${option.name || ''}`}</li>
                       )}
-                    />
+                    />}
+
                     <RHFAutocomplete
                       label="Priority"
                       name="priority"
-                      options={priorityOptions}
+                      options={ priorityOptions }
+                      isOptionEqualToValue={( option, value ) => option === value }
                       renderInput={(params) => {
-                        const selectedOption = priorityOptions.find( (option) => option?.label === params?.inputProps?.value );
-                        const selectedIcon = selectedOption ? getPriorityIcon(selectedOption.value) : null;
+                        const selectedOption = priorityOptions?.includes(params?.inputProps?.value) ? params?.inputProps?.value : "";
+                        const selectedIcon = selectedOption ? getPriorityIcon( selectedOption ) : null;
                         return (
                           <TextField {...params} InputProps={{ ...params.InputProps, startAdornment: selectedIcon, }}
                             label='Priority'
                           />
                         );
                       }}
-                      renderOption={(props, option) => <li {...props} key={option?.value} > { getPriorityIcon(option.value) } <span style={{ marginLeft: 8 }}>{option.label}</span> </li>}
-                      isOptionEqualToValue={( option, value ) => option?.value === value?.value }
+                      renderOption={(props, option) => <li {...props} key={option} > { getPriorityIcon( option ) } <span style={{ marginLeft: 8 }}>{option}</span> </li>}
                     />
 
+                {isCustomerEvent && (
+                  <>
                     <RHFAutocomplete
                       multiple
                       disableCloseOnSelect

@@ -111,17 +111,3 @@ export function uploadFiles( eventId, files ) {
   };
 }
 
-// ----------------------------------------------------------------------
-
-export function deleteEventFile(id) {
-  return async (dispatch) => {
-    dispatch(slice.actions.startLoading());
-    try {
-      const response = await axios.patch(`${CONFIG.SERVER_URL}calender/events/${id}`, { isArchived: true, });
-      await dispatch(slice.actions.deleteEventFileSuccess(response.data));
-      } catch (error) {
-      dispatch(slice.actions.hasError(error?.Message));
-      throw error;
-    }
-  };
-}

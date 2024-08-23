@@ -99,6 +99,7 @@ const maxFiles = JSON.parse( localStorage.getItem('configurations'))?.find( ( c 
     uploaded:true,
     key: file?._id,
     _id: file?._id,
+    event: file?.event,
     name:`${file?.name}.${file?.extension}`,
     type: file?.fileType,
     fileType: file?.fileType,

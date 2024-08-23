@@ -215,10 +215,10 @@ export default function CalendarPage() {
         eventResponse = await dispatch(createEvent(event));
         enqueueSnackbar('Event Created Successfully!');
       }
-      if(Array.isArray( event?.files ) &&  event?.files?.length > 0 ){
-        console.log('eventResponse',eventResponse?._id);
-        await dispatch(uploadFiles( eventResponse?._id, event?.files ));
-      }
+      // if(Array.isArray( event?.files ) &&  event?.files?.length > 0 ){
+      //   console.log('eventResponse',eventResponse?._id);
+      //   await dispatch(uploadFiles( eventResponse?._id, event?.files ));
+      // }
       await dispatch(setEventModel(false));
     } catch (e) {
       console.error(e);
