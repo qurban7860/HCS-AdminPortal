@@ -1,14 +1,10 @@
 import PropTypes from 'prop-types';
-import * as Yup from 'yup';
-import { yupResolver } from '@hookform/resolvers/yup';
 import React, { useMemo, memo, useLayoutEffect, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // @mui
-import { Container, Card, Chip, Grid, Box, Stack, Typography, TextField, DialogContent, DialogActions, Dialog } from '@mui/material';
-import { LoadingButton } from '@mui/lab';
+import { Container, Card, Chip, Grid, Box, Stack } from '@mui/material';
 // routes
 import { useNavigate, useParams } from 'react-router-dom';
-import { FormProvider, useForm } from 'react-hook-form';
 import download from 'downloadjs';
 import { PATH_MACHINE, PATH_CRM } from '../../../routes/paths';
 // redux
@@ -22,7 +18,6 @@ import { deleteMachineServiceRecord,
   deleteRecordFile,
   setFormActiveStep,
   getMachineServiceRecordCheckItems,
-  updateMachineServiceRecord,
   createMachineServiceRecordVersion,
   setCompleteDialog} from '../../../redux/slices/products/machineServiceRecord';
 import { getActiveSPContacts, setCardActiveIndex, setIsExpanded } from '../../../redux/slices/customer/contact';
@@ -46,12 +41,9 @@ import MachineTabContainer from '../util/MachineTabContainer';
 import { ThumbnailDocButton } from '../../../components/Thumbnails';
 import DialogServiceRecordAddFile from '../../../components/Dialog/DialogServiceRecordAddFile';
 import { DocumentGalleryItem } from '../../../components/gallery/DocumentGalleryItem';
-import ConfirmDialog from '../../../components/confirm-dialog';
 import Lightbox from '../../../components/lightbox/Lightbox';
 import SkeletonLine from '../../../components/skeleton/SkeletonLine';
-import { RHFAutocomplete } from '../../../components/hook-form';
 import DialogServiceRecordComplete from '../../../components/Dialog/DialogServiceRecordComplete';
-import { StyledTooltip } from '../../../theme/styles/default-styles';
 
 MachineServiceParamViewForm.propTypes = {
   serviceHistoryView: PropTypes.bool,
@@ -412,9 +404,10 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
               
                 <ViewFormField isLoading={isLoading} sm={4}
                   heading={`${defaultValues.approvalStatus === "REJECTED" ? "Rejection" : "Approval"} Comments`}
-                  tooltipParam={defaultValues?.approvalLog[0]?.comments?.length > 40 ? 
-                    `${defaultValues?.approvalLog[0]?.comments.slice(0, 40)}...` : defaultValues?.approvalLog[0]?.comments}
-                  tooltipTitleContent={defaultValues?.approvalLog[0]?.comments}
+                  param={defaultValues?.approvalLog[0]?.comments}
+                  // tooltipParam={defaultValues?.approvalLog[0]?.comments?.length > 40 ? 
+                  //   `${defaultValues?.approvalLog[0]?.comments.slice(0, 40)}...` : defaultValues?.approvalLog[0]?.comments}
+                  // tooltipTitleContent={defaultValues?.approvalLog[0]?.comments}
                 />
             </>
           ) : null}
