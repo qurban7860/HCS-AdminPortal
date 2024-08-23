@@ -302,7 +302,7 @@ function ViewFormEditDeleteButtons({
   };
   
   const handleServiceRecordApprovalHistoryPopoverOpen = (event) => {
-    if(serviceRecordStatus?.approvalLogs?.length > 0) {
+    if(serviceRecordStatus?.completeHistory?.totalLogsCount > 0) {
       setServiceRecordApprovalHistoryAnchorEl(event.currentTarget);
     }
   };
@@ -546,31 +546,43 @@ function ViewFormEditDeleteButtons({
           }
 
           {serviceRecordStatus && (
-            <>
-              {serviceRecordStatus?.status === 'PENDING' &&
-                serviceRecordStatus?.approvingContacts?.length > 0 && (
-                  <IconTooltip
-                    title="Pending"
-                    color="#FF7900"
-                    icon="mdi:clipboard-clock-outline"
-                  />
-                )}
-              {(serviceRecordStatus.status === 'REJECTED' ||
-                serviceRecordStatus.status === 'APPROVED') && (
-                  <Badge badgeContent={serviceRecordStatus?.approvalLogs?.length || '0'} color="info">
+            <Badge badgeContent={serviceRecordStatus?.completeHistory?.totalLogsCount || 0} color="info">
+              {serviceRecordStatus?.currentApprovingContacts?.length > 0 ? (
+                <>
+                {serviceRecordStatus?.status === 'APPROVED' && (
                     <IconTooltip
-                      title={serviceRecordStatus.status === 'REJECTED' ? 'Rejected' : 'Approved'}
-                      color={serviceRecordStatus.status === 'REJECTED' ? '#FF0000' : '#008000'}
-                      icon={
-                        serviceRecordStatus.status === 'REJECTED'
-                          ? 'mdi:clipboard-alert-outline'
-                          : 'mdi:clipboard-check-outline'
-                      }
+                      title={ICONS.SR_APPROVED.heading}
+                      color={ICONS.SR_APPROVED.color}
+                      icon={ICONS.SR_APPROVED.icon}
                       onClick={handleServiceRecordApprovalHistoryPopoverOpen}
                     />
-                  </Badge>
-                )}
-            </>
+                  )}
+                {serviceRecordStatus?.status === 'REJECTED' && (
+                    <IconTooltip
+                      title={ICONS.SR_REJECTED.heading}
+                      color={ICONS.SR_REJECTED.color}
+                      icon={ICONS.SR_REJECTED.icon}
+                      onClick={handleServiceRecordApprovalHistoryPopoverOpen}
+                    />
+                  )}
+                {serviceRecordStatus?.status === 'PENDING' && (
+                    <IconTooltip
+                      title={ICONS.SR_PENDING.heading}
+                      color={ICONS.SR_PENDING.color}
+                      icon={ICONS.SR_PENDING.icon}
+                      onClick={handleServiceRecordApprovalHistoryPopoverOpen}
+                    />
+                  )}
+                </>
+              ) : (
+                <IconTooltip
+                  title={ICONS.SR_HISTORY.heading}
+                  color={ICONS.SR_HISTORY.color}
+                  icon={ICONS.SR_HISTORY.icon}
+                  onClick={handleServiceRecordApprovalHistoryPopoverOpen}
+                />
+              )}
+            </Badge>
           )}
         </StyledStack>
       </Grid>
@@ -929,7 +941,8 @@ function ViewFormEditDeleteButtons({
       <ViewFormServiceRecordApprovalHistoryPopover
         open={serviceRecordApprovalHistoryAnchorEl}
         onClose={handleServiceRecordApprovalHistoryPopoverClose}
-        ListArr={serviceRecordStatus?.approvalLogs}
+        evaluationHistory={serviceRecordStatus?.completeHistory?.evaluationHistory}
+        ListArr={serviceRecordStatus?.currentApprovalLogs}
         ListTitle="Service Record Approval Details"
       />
     </Grid>

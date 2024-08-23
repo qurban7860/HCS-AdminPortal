@@ -50,7 +50,11 @@ function ViewFormField({
   ViewAllVersions,
   handleAllVersion,
   isLoading,
-  variant='body1'
+  variant='body1',
+  tooltipParam,
+  tooltipTitleContent,
+  tooltipPlacement,
+  tooltipColor,
 }) {
   const [verifiedAnchorEl, setVerifiedAnchorEl] = useState(null);
   const [verifiedBy, setVerifiedBy] = useState([]);
@@ -126,6 +130,17 @@ function ViewFormField({
           {objectParam || ''}
           {secondObjectParam || ''}
           {numberParam || ''}
+          {tooltipParam ? (
+            <StyledTooltip
+              title={tooltipTitleContent}
+              placement={tooltipPlacement || "bottom"}
+              disableFocusListener
+              tooltipcolor={tooltipColor || "#1976d2"}
+              color={tooltipColor || "#1976d2"}
+            >
+              {tooltipParam}
+            </StyledTooltip>
+          ) : null}
         </Typography>
         {node || ''}
         {ViewAllVersions && 
@@ -318,6 +333,10 @@ ViewFormField.propTypes = {
   heading: PropTypes.string,
   node: PropTypes.node,
   param: PropTypes.string,
+  tooltipParam: PropTypes.string,
+  tooltipTitleContent: PropTypes.string,
+  tooltipPlacement: PropTypes.string,
+  tooltipColor: PropTypes.string,
   objectString: PropTypes.string,
   arrayParam: PropTypes.array,
   configArrayParam: PropTypes.array,

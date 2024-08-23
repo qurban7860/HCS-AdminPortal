@@ -118,6 +118,28 @@ export const ICONS = {
     heading: 'Not Approved',
   },
 
+  // Service Record Approval
+  SR_APPROVED: {
+    icon: 'mdi:clipboard-check-outline',
+    color: '#008000',
+    heading: 'Approved',
+  },
+  SR_REJECTED: {
+    icon: 'mdi:clipboard-alert-outline',
+    color: '#FF0000',
+    heading: 'Rejected',
+  },
+  SR_PENDING: {
+    icon: 'mdi:clipboard-clock-outline',
+    color: '#FF7900',
+    heading: 'Pending',
+  },
+  SR_HISTORY: {
+    icon: 'mdi:clipboard-text-multiple-outline',
+    color: '#1976D2',
+    heading: 'Approval History',
+  },
+
   REQUIRED: {
     icon: 'mdi:required-circle',
     color: '#008000',

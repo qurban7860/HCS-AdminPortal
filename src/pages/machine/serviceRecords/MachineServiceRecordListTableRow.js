@@ -35,14 +35,14 @@ export default function MachineServiceRecordListTableRow({
 }) {
   const navigate = useNavigate();
   const { machineId } = useParams();
-  const { serviceRecordConfig, serviceRecordUid, status, versionNo, serviceDate, serviceId, isActive, currentVersion, createdAt, createdBy } = row;
+  const { serviceRecordConfig, serviceRecordUid, status, currentApprovalStatus, versionNo, serviceDate, serviceId, isActive, currentVersion, createdAt, createdBy } = row;
   const handleServiceRecordHistory = () => navigate(PATH_MACHINE.machines.serviceRecords.history.root(machineId, serviceId));
   
   return (
       <StyledTableRow hover selected={selected}>
         <TableCell align="left">{fDate(serviceDate)}</TableCell>
         <LinkTableCell align="left" onClick={onViewRow} param={serviceRecordUid} />
-        <TableCell align="left">{status || ''}</TableCell>
+        <TableCell align="left">{currentApprovalStatus !== "PENDING" ? currentApprovalStatus : status || ''}</TableCell>
         <LinkTableCell align="left" onClick={onViewRow} param={`${serviceRecordConfig?.docTitle ? serviceRecordConfig?.docTitle	: ''	} ${serviceRecordConfig?.recordType ? ' - ' : ''} ${serviceRecordConfig?.recordType ? serviceRecordConfig?.recordType : ''}`} />
         <TableCell align="left" sx={{display: 'flex', alignItems:'center'}} >{versionNo} 
               {currentVersion?.versionNo > 1 && <HistoryIcon callFunction={handleServiceRecordHistory} /> }</TableCell>
