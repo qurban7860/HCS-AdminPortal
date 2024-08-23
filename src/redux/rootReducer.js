@@ -405,6 +405,7 @@ export const eventPersistConfig = {
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 }
+
 export const customerJiraPersistConfig = {
   key: 'customerJira',
   storage,

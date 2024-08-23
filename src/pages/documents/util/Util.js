@@ -94,3 +94,17 @@ const maxFiles = JSON.parse( localStorage.getItem('configurations'))?.find( ( c 
       value,
     });
   };
+
+  export const manipulateFiles =( filesData )=> filesData?.map(file => ({
+    uploaded:true,
+    key: file?._id,
+    _id: file?._id,
+    event: file?.event,
+    name:`${file?.name}.${file?.extension}`,
+    type: file?.fileType,
+    fileType: file?.fileType,
+    preview: `data:${file?.fileType};base64, ${file?.thumbnail}`,
+    src: `data:${file?.fileType};base64, ${file?.thumbnail}`,
+    path:`${file?.name}.${file?.extension}`,
+    downloadFilename:`${file?.name}.${file?.extension}`,
+  }))

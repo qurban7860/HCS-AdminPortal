@@ -1,22 +1,16 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import merge from 'lodash/merge';
-import { isBefore } from 'date-fns';
 // form
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Stack, Button, Tooltip, TextField, IconButton, DialogActions, DialogContent, DialogContentText } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { Box, Stack, Button, Tooltip, IconButton, DialogActions } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // components
 import Iconify from '../../components/iconify';
-import { ColorSinglePicker } from '../../components/color-utils';
-import { getActiveCustomers } from '../../redux/slices/customer/customer';
-import { getActiveSPContacts } from '../../redux/slices/customer/contact';
-import { getActiveCustomerMachines } from '../../redux/slices/products/machine';
-import { getActiveSites } from '../../redux/slices/customer/site';
-import FormProvider, { RHFDateTimePicker, RHFTextField, RHFAutocomplete, RHFSwitch } from '../../components/hook-form';
+import FormProvider, { RHFDateTimePicker, RHFTextField, RHFAutocomplete } from '../../components/hook-form';
 
 // ----------------------------------------------------------------------
 
@@ -24,12 +18,14 @@ const getInitialValues = (event, range) => {
   const initialEvent = {
     visitDate: new Date().toISOString(),
     customer: null,
+    priority: '',
     machine: null,
     site: null,
     jiraTicket: '',
     primaryTechnician: null,
     supportingTechnicians: [],
     notifyContacts: [],
+    files: [],
     // status: '',
     purposeOfVisit: '',
   };
@@ -71,6 +67,7 @@ export default function CalendarForm({
     visitDate: Yup.date().label('Visit Date').required(),
     jiraTicket: Yup.string().max(200).label('Jira Ticket').required(),
     customer: Yup.object().nullable().label('Customer').required(),
+    priority: Yup.string().label('Priority').required(), 
     machine: Yup.object().nullable().label('Machine').required(),
     site: Yup.object().nullable().label('Site'),
     primaryTechnician: Yup.object().nullable().label('Primary Technician').required(),
@@ -78,6 +75,7 @@ export default function CalendarForm({
     notifyContacts: Yup.array().nullable().label('Notify Contacts').required(),
     // status: Yup.string().nullable().label('Status').required(),
     purposeOfVisit: Yup.string().max(500).label('purposeOfVisit'),
+    files: Yup.array().of(Yup.mixed()).nullable().label('Files'), 
   });
 
   const methods = useForm({
@@ -87,13 +85,9 @@ export default function CalendarForm({
 
   const {
     reset,
-    watch,
-    control,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
-
-  const values = watch();
 
   const onSubmit = async (data) => {
     try {
@@ -180,14 +174,6 @@ export default function CalendarForm({
           getOptionLabel={(option) => `${option.firstName || ''} ${ option.lastName || ''}`}
           renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
         />        
-      {/* <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }} >
-        <RHFAutocomplete 
-          name="status" 
-          label="Status" 
-          options={['SCHEDULED', 'IN_PROCESS', 'COMPLETED', 'CANCELLED']}
-          isOptionEqualToValue={(option, value) => option === value}
-        />
-      </Box> */}
 
         <RHFTextField name="purposeOfVisit" label="Purpose of Visit" multiline rows={3} />
 

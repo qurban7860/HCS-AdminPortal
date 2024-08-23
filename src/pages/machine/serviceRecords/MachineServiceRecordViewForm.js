@@ -479,6 +479,7 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
               onOpenLightbox={()=> handleOpenLightbox(_index)}
               onDownloadFile={()=> handleDownloadRecordFile(file._id, file?.name, file?.extension)}
               onDeleteFile={()=> handleDeleteRecordFile(file._id)}
+              isArchived={ machine?.isArchived }
               toolbar
             />
           ))}

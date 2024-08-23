@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import _ from 'lodash';
 // utils
 import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
@@ -92,6 +93,30 @@ const slice = createSlice({
     deleteEventSuccess(state, action) {
       const eventId = action.payload._id;
       state.events = state.events.filter((event) => event.id !== eventId);
+    },
+
+    // DELETE EVENTS FILES
+    deleteEventsFileSuccess(state, action) {
+      const { eventId, _id } = action.payload;
+      state.events = state.events.map((event) => {
+        if (event.id === eventId) {
+          return {
+            ...event,
+            extendedProps: {
+              ...event.extendedProps,
+              files: event?.extendedProps?.files?.filter(file => file._id !== _id),
+            },
+          };
+        }
+        return event;
+      });
+    },
+
+    // // DELETE EVENT FILES
+    deleteEventFileSuccess(state, action) {
+      const selectedEventClone = _.cloneDeep(state.selectedEvent);
+      selectedEventClone.extendedProps.files = selectedEventClone.extendedProps.files?.filter(file => file._id !== action.payload?._id);
+      state.selectedEvent = selectedEventClone;
     },
 
     // SELECT RANGE
@@ -192,22 +217,43 @@ export function createEvent(params) {
     dispatch(slice.actions.startLoading());
     try {
       
-      const data = {
-        isCustomerEvent: params?.isCustomerEvent,
-        start: params?.start_date,
-        end: params?.end_date,
-        customer: params?.customer?._id || null,
-        machines: params?.machines?.map((machine)=> machine?._id) || [] ,
-        site: params?.site?._id || null,
-        jiraTicket: params?.jiraTicket || '',
-        primaryTechnician: params?.primaryTechnician?._id || '',
-        supportingTechnicians: params?.supportingTechnicians?.map((el)=> el?._id) || [] ,
-        notifyContacts: params?.notifyContacts?.map((el)=> el?._id) || [],
-        description: params?.description || '',
+      const formData = new FormData();
+
+      formData.append('isCustomerEvent', params?.isCustomerEvent);
+      formData.append('jiraTicket', params?.jiraTicket || '');
+      formData.append('start', params?.start_date);
+      formData.append('end', params?.end_date);
+      if( params?.priority){ 
+        formData.append('priority', params?.priority );
+      }
+      formData.append('customer', params?.customer?._id || null);
+      if( params?.site?._id ){ 
+        formData.append('site', params?.site?._id || null);
+      }
+      if( params?.primaryTechnician?._id ){ 
+        formData.append('primaryTechnician', params?.primaryTechnician?._id || '')
       };
+      formData.append('description', params?.description || '');
       
-      const response = await axios.post(`${CONFIG.SERVER_URL}calender/events`, data);
-      dispatch(slice.actions.createEventSuccess(response.data.Event));
+      (params?.machines || []).forEach((machine, index) => {
+          formData.append(`machines[]`, machine?._id);
+      });
+      
+      (params?.supportingTechnicians || []).forEach((tech, index) => {
+          formData.append(`supportingTechnicians[]`, tech?._id);
+      });
+      
+      (params?.notifyContacts || []).forEach((contact, index) => {
+          formData.append(`notifyContacts[]`, contact?._id);
+      });
+      
+      (params?.files || []).forEach((file, index) => {
+          formData.append(`images`, file);
+      });
+
+      const response = await axios.post(`${CONFIG.SERVER_URL}calender/events`, formData);
+      await dispatch(slice.actions.createEventSuccess(response.data.Event));
+      return response.data.Event;
     } catch (error) {
       dispatch(slice.actions.hasError(error?.Message));
       throw error;
@@ -222,7 +268,8 @@ export function updateEventDate(id, start, end) {
     try {
       const data = { start, end };
       dispatch(slice.actions.updateEventDateLocal({ id, start, end }));
-      await axios.patch(`${CONFIG.SERVER_URL}calender/events/${id}`, data);
+      const response = await axios.patch(`${CONFIG.SERVER_URL}calender/events/${id}`, data);
+      return response.data.Event;
     } catch (error) {
       dispatch(slice.actions.hasError(error?.Message));
       throw error;
@@ -234,22 +281,42 @@ export function updateEvent(id, params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const data = {
-        isCustomerEvent: params?.isCustomerEvent,
-        start: params?.start_date,
-        end: params?.end_date,
-        customer: params?.customer?._id || null,
-        machines: params?.machines?.map((machine)=> machine?._id) || [] ,
-        site: params?.site?._id || null,
-        jiraTicket: params?.jiraTicket || '',
-        primaryTechnician: params?.primaryTechnician?._id || '',
-        supportingTechnicians: params?.supportingTechnicians?.map((el)=> el?._id) || [] ,
-        notifyContacts: params?.notifyContacts?.map((el)=> el?._id) || [],
-        description: params?.description || '',
+      const formData = new FormData();
+      formData.append('isCustomerEvent', params?.isCustomerEvent);
+      formData.append('jiraTicket', params?.jiraTicket || '');
+      formData.append('start', params?.start_date);
+      formData.append('end', params?.end_date);
+      if( params?.priority ){ 
+        formData.append('priority', params?.priority );
+      }
+      formData.append('customer', params?.customer?._id || null);
+      if( params?.site?._id ){ 
+        formData.append('site', params?.site?._id || null);
+      }
+      if( params?.primaryTechnician?._id ){ 
+        formData.append('primaryTechnician', params?.primaryTechnician?._id || '')
       };
+      formData.append('description', params?.description || '');
+      
+      (params?.machines || []).forEach((machine, index) => {
+          formData.append(`machines[]`, machine?._id);
+      });
+      
+      (params?.supportingTechnicians || []).forEach((tech, index) => {
+          formData.append(`supportingTechnicians[]`, tech?._id);
+      });
+      
+      (params?.notifyContacts || []).forEach((contact, index) => {
+          formData.append(`notifyContacts[]`, contact?._id);
+      });
+      
+      (params?.files || []).forEach((file, index) => {
+          formData.append(`images`, file);
+      });
 
-      const response = await axios.patch(`${CONFIG.SERVER_URL}calender/events/${id}`, data);
-      dispatch(slice.actions.updateEventSuccess(response.data.Event));
+      const response = await axios.patch(`${CONFIG.SERVER_URL}calender/events/${id}`, formData);
+      await dispatch(slice.actions.updateEventSuccess(response.data.Event));
+      return response.data.Event;
     } catch (error) {
       dispatch(slice.actions.hasError(error?.Message));
       throw error;
@@ -265,6 +332,23 @@ export function deleteEvent(id) {
     try {
       const response = await axios.patch(`${CONFIG.SERVER_URL}calender/events/${id}`, { isArchived: true, });
       await dispatch(slice.actions.deleteEventSuccess(response.data.Event));
+      } catch (error) {
+      dispatch(slice.actions.hasError(error?.Message));
+      throw error;
+    }
+  };
+}
+
+
+// ----------------------------------------------------------------------
+
+export function deleteEventFile( eventId, id ) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      await axios.patch(`${CONFIG.SERVER_URL}calender/events/${eventId}/files/${id}`, { isActive: false, isArchived: true, });
+      await dispatch(slice.actions.deleteEventFileSuccess({ _id: id }));
+      await dispatch(slice.actions.deleteEventsFileSuccess({ eventId, _id: id }));
       } catch (error) {
       dispatch(slice.actions.hasError(error?.Message));
       throw error;

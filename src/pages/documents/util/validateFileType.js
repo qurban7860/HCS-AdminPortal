@@ -1,11 +1,15 @@
 import { Snacks, allowedExtensions } from '../../../constants/document-constants';
 
-const maxFiles = JSON.parse( localStorage.getItem('configurations'))?.find( ( c )=> c?.name === 'MAX_UPLOAD_FILES' )
+const maxFiles = () => {
+  const configurations = JSON.parse(localStorage.getItem('configurations'));
+  if (!configurations) return 20;
+  return configurations.find(c => c?.name.toUpperCase() === 'MAX_UPLOAD_FILES')?.value;
+};
 
 const validateFileType = (value, options) => {
   const { path, createError } = options;
   if (value && Array.isArray(value)) {
-    if (value?.length > ( Number(maxFiles?.value) || 20 ) ) {
+    if (value?.filter((el)=> !el?._id)?.length > ( Number(maxFiles()) ) ) {
       return createError({
         message: Snacks.fileMaxCount,
         path,

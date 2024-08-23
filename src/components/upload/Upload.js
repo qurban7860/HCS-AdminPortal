@@ -264,9 +264,9 @@ export default function Upload({
       {(hasFiles || !dropZone) && (
         <>
           <Box
-            sx={{mt:2, width:'100%'}}
             gap={2}
             display={rows ? "" : "grid"}
+            sx={{ width:'100%',  alignItems: 'center' }}
             gridTemplateColumns={{
               xs: 'repeat(1, 1fr)',
               sm: 'repeat(3, 1fr)',

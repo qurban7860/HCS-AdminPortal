@@ -221,8 +221,9 @@ function MachineServiceRecordsThirdStep({handleDraftRequest, handleDiscard, hand
             name="operators" 
             label="Operators"
             options={activeContacts}
-            getOptionLabel={(option) => `${option?.firstName ||  ''} ${option.lastName || ''}`}
+            getOptionLabel={(option) => `${option?.firstName ||  ''} ${option?.lastName || ''}`}
             isOptionEqualToValue={(option, value) => option?._id === value?._id}
+            renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}` }</li> )}
           />
           <RHFTextField name="operatorNotes" label="Operator Notes" minRows={3} multiline/> 
           <RHFUpload multiple  thumbnail name="files" imagesOnly
