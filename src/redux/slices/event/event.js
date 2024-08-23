@@ -252,7 +252,7 @@ export function createEvent(params) {
       });
 
       const response = await axios.post(`${CONFIG.SERVER_URL}calender/events`, formData);
-      dispatch(slice.actions.createEventSuccess(response.data.Event));
+      await dispatch(slice.actions.createEventSuccess(response.data.Event));
       return response.data.Event;
     } catch (error) {
       dispatch(slice.actions.hasError(error?.Message));
@@ -315,7 +315,7 @@ export function updateEvent(id, params) {
       });
 
       const response = await axios.patch(`${CONFIG.SERVER_URL}calender/events/${id}`, formData);
-      dispatch(slice.actions.updateEventSuccess(response.data.Event));
+      await dispatch(slice.actions.updateEventSuccess(response.data.Event));
       return response.data.Event;
     } catch (error) {
       dispatch(slice.actions.hasError(error?.Message));

@@ -12,10 +12,8 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import {
  getEvents,
- createEvent,
  updateEventDate,
  updateEvent,
- deleteEvent,
  selectRange,
  setEventModel,
  setSelectedEvent
@@ -44,7 +42,7 @@ export default function CalendarPage() {
   const isDesktop = useResponsive('up', 'sm');
   const calendarRef = useRef(null);
 
-  const { events, selectedEvent, selectedRange } = useSelector((state) => state.event );
+  const { events, selectedRange } = useSelector((state) => state.event );
   const { securityUser } = useSelector((state) => state.user);
   const { activeSpContacts } = useSelector((state) => state.contact);
   const [ previousDate, setPreviousDate ] = useState(null);
@@ -165,7 +163,7 @@ export default function CalendarPage() {
 
   const handleResizeEvent = async ({ event }) => {
     try {
-      dispatch(
+      await dispatch(
         updateEvent(event.id, {
           allDay: event.allDay,
           start: event.start,
@@ -179,49 +177,16 @@ export default function CalendarPage() {
 
   const handleDropEvent = async ({event}) => {
     try {
-
       const startDateTime = new Date(event.start)
       const endDateTime = new Date(event?.end)
       const modifiedStartDateTime = new Date(startDateTime);
       const modifiedEndDateTime = new Date(endDateTime);
-
       modifiedStartDateTime.setHours(startDateTime.getHours(), startDateTime.getMinutes());
       modifiedEndDateTime.setHours(endDateTime.getHours(), endDateTime.getMinutes());
       
-      dispatch(updateEventDate(event.id,  modifiedStartDateTime, modifiedEndDateTime ));
+      await dispatch(updateEventDate(event.id,  modifiedStartDateTime, modifiedEndDateTime ));
     } catch (error) {
       enqueueSnackbar('Event Date Update Failed!', { variant: `error` });
-      dispatch(getEvents(date, selectedCustomer?._id, selectedContact?._id ));
-    }
-  };
-
-  const handleCreateUpdateEvent = async ( event ) => {
-    try {
-      if (event?._id) {
-        dispatch(updateEvent(event?._id, event));
-        enqueueSnackbar('Event Updated Successfully!');
-      } else {
-        dispatch(createEvent(event));
-        enqueueSnackbar('Event Created Successfully!');
-      }
-      dispatch(setEventModel(false));
-    } catch (e) {
-      console.error(e);
-      enqueueSnackbar('Event Update Failed!');
-    }
-  };
-  
-
-  const handleDeleteEvent = async () => {
-    try {
-      if (selectedEvent && selectedEvent?.extendedProps?._id) {
-        await dispatch(setEventModel(false));
-        await dispatch(deleteEvent(selectedEvent?.extendedProps?._id));
-        // await dispatch(getEvents(date, selectedCustomer?._id, selectedContact?._id ));
-      }
-      enqueueSnackbar('Event Deleted Successfully!');
-    } catch (error) {
-      enqueueSnackbar('Event Delete Failed!', { variant: 'error'});
       dispatch(getEvents(date, selectedCustomer?._id, selectedContact?._id ));
     }
   };
@@ -326,8 +291,6 @@ export default function CalendarPage() {
         date={date}
         range={selectedRange}
         contacts={DefaultNotifyContacts}
-        onCreateUpdateEvent={handleCreateUpdateEvent}
-        onDeleteEvent={handleDeleteEvent}
       />
 
     </>

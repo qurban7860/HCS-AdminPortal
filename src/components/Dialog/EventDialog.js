@@ -14,9 +14,8 @@ import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownR
 import KeyboardDoubleArrowDownRoundedIcon from '@mui/icons-material/KeyboardDoubleArrowDownRounded';
 import { eventSchema } from '../../pages/schemas/calendarSchema';
 import { manipulateFiles } from '../../pages/documents/util/Util';
-
 // slices
-import { setEventModel, deleteEventFile } from '../../redux/slices/event/event';
+import { setEventModel, createEvent, updateEvent, deleteEvent, deleteEventFile } from '../../redux/slices/event/event';
 import { getActiveCustomerMachines, resetActiveCustomerMachines } from '../../redux/slices/products/machine';
 import { getActiveSites, resetActiveSites } from '../../redux/slices/customer/site';
 import FormProvider, { RHFDatePicker, RHFTextField, RHFAutocomplete, RHFUpload } from '../hook-form';
@@ -26,6 +25,8 @@ import { fDateTime } from '../../utils/formatTime';
 import { time_list } from '../../constants/time-list';
 import { useAuthContext } from '../../auth/useAuthContext';
 import CustomSwitch from '../custom-input/CustomSwitch';
+import { useSnackbar } from '../snackbar';
+
 
 function getTimeObjectFromISOString(dateString) {
   const date = new Date(dateString);
@@ -74,8 +75,6 @@ const getInitialValues = (selectedEvent, range, contacts) => {
 
 EventDialog.propTypes = {
   range: PropTypes.object,
-  onDeleteEvent: PropTypes.func,
-  onCreateUpdateEvent: PropTypes.func,
   colorOptions: PropTypes.arrayOf(PropTypes.string),
   contacts:PropTypes.array
 };
@@ -83,14 +82,13 @@ EventDialog.propTypes = {
 function EventDialog({
   range,
   colorOptions,
-  onCreateUpdateEvent,
-  onDeleteEvent,
   contacts,
 }) {
 
   const { user } = useAuthContext();
   const dispatch = useDispatch();
-  const { selectedEvent, eventModel } = useSelector((state) => state.event );
+  const { enqueueSnackbar } = useSnackbar();
+  const { selectedEvent, eventModel, isLoading } = useSelector((state) => state.event );
   const { activeCustomers } = useSelector((state) => state.customer);
   const { activeContacts, activeSpContacts } = useSelector((state) => state.contact);
   const { activeSites } = useSelector((state) => state.site);
@@ -157,22 +155,32 @@ function EventDialog({
   ];
   
   const onSubmit = async ( data ) => {
-    data.priority = priority
-    const start_date = new Date(data?.date);
-    const end_date = new Date(data?.end_date);
-    const [start_hours, start_minutes] = data.start.value.split(':').map(Number);
-    const [end_hours, end_minutes] = data.end.value.split(':').map(Number);
-    start_date.setHours(start_hours, start_minutes);
-    data.start_date = new Date(start_date);
-    end_date.setHours(end_hours, end_minutes);
-    data.end_date = new Date(end_date);
     try {
-      await onCreateUpdateEvent(data);
-      setValue("isCustomerEvent", true );
-      reset();
-    } catch (error) {
-      console.error(error);
+      data.priority = priority
+      const start_date = new Date(data?.date);
+      const end_date = new Date(data?.end_date);
+      const [start_hours, start_minutes] = data.start.value.split(':').map(Number);
+      const [end_hours, end_minutes] = data.end.value.split(':').map(Number);
+      start_date.setHours(start_hours, start_minutes);
+      data.start_date = new Date(start_date);
+      end_date.setHours(end_hours, end_minutes);
+      data.end_date = new Date(end_date);
+      if (selectedEvent?._id) {
+        await dispatch(updateEvent(selectedEvent?._id, data));
+        enqueueSnackbar('Event Updated Successfully!');
+      } else {
+        await dispatch(createEvent(data));
+        enqueueSnackbar('Event Created Successfully!');
+      }
+      await setValue("isCustomerEvent", true );
+      await reset();
+      await dispatch(setEventModel(false));
+    } catch (e) {
+      if(typeof e === 'string'){
+        enqueueSnackbar(e, { variant: 'error'});
+      }
     }
+
   };
   
 
@@ -277,6 +285,19 @@ function EventDialog({
       console.error(e)
     }
   }, [ dispatch, setValue, files ] );
+
+  const handleDeleteEvent =  async (inputFile) => {
+    try {
+      if (selectedEvent && selectedEvent?.extendedProps?._id) {
+        await dispatch(deleteEvent(selectedEvent?.extendedProps?._id));
+        await setOpenConfirm(false);
+        await dispatch(setEventModel(false));
+      }
+      enqueueSnackbar('Event Deleted Successfully!');
+    } catch (error) {
+      enqueueSnackbar('Event Delete Failed!', { variant: 'error'});
+    }
+  };
 
   return (
     <>
@@ -532,10 +553,8 @@ function EventDialog({
           <LoadingButton
             variant="contained"
             color="error"
-            onClick={() => {
-              onDeleteEvent();
-              setOpenConfirm(false);
-            }}
+            onClick={ handleDeleteEvent}
+            loading={ isLoading || isSubmitting}
           >
             Delete
           </LoadingButton>

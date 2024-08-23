@@ -1,22 +1,16 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import merge from 'lodash/merge';
-import { isBefore } from 'date-fns';
 // form
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Stack, Button, Tooltip, TextField, IconButton, DialogActions, DialogContent, DialogContentText } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { Box, Stack, Button, Tooltip, IconButton, DialogActions } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // components
 import Iconify from '../../components/iconify';
-import { ColorSinglePicker } from '../../components/color-utils';
-import { getActiveCustomers } from '../../redux/slices/customer/customer';
-import { getActiveSPContacts } from '../../redux/slices/customer/contact';
-import { getActiveCustomerMachines } from '../../redux/slices/products/machine';
-import { getActiveSites } from '../../redux/slices/customer/site';
-import FormProvider, { RHFDateTimePicker, RHFTextField, RHFAutocomplete, RHFSwitch } from '../../components/hook-form';
+import FormProvider, { RHFDateTimePicker, RHFTextField, RHFAutocomplete } from '../../components/hook-form';
 
 // ----------------------------------------------------------------------
 
@@ -91,13 +85,9 @@ export default function CalendarForm({
 
   const {
     reset,
-    watch,
-    control,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
-
-  const values = watch();
 
   const onSubmit = async (data) => {
     try {
@@ -184,14 +174,6 @@ export default function CalendarForm({
           getOptionLabel={(option) => `${option.firstName || ''} ${ option.lastName || ''}`}
           renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
         />        
-      {/* <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }} >
-        <RHFAutocomplete 
-          name="status" 
-          label="Status" 
-          options={['SCHEDULED', 'IN_PROCESS', 'COMPLETED', 'CANCELLED']}
-          isOptionEqualToValue={(option, value) => option === value}
-        />
-      </Box> */}
 
         <RHFTextField name="purposeOfVisit" label="Purpose of Visit" multiline rows={3} />
 
