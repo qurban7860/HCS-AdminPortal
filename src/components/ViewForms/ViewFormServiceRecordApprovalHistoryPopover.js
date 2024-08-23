@@ -69,13 +69,7 @@ function ViewFormServiceRecordApprovalPopover({ open, onClose, ListTitle, evalua
                               disableFocusListener
                               tooltipcolor="#1976d2"
                               color="#1976d2"
-                              PopperProps={{
-                                sx: {
-                                  '& .MuiTooltip-tooltip': {
-                                    maxWidth: '500px',
-                                  },
-                                },
-                              }}
+                              sx={{ maxWidth: '1000px' }}
                             >
                               <TableCell
                                 align="left"

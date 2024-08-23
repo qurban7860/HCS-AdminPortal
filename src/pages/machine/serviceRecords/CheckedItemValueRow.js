@@ -12,9 +12,16 @@ const CheckedItemValueRow = ({value, index, machineId, serviceId }) => (
       <TableContainer >
         <Table size="small" aria-label="simple table" >
           <TableBody  >
-            {value?.checkItems?.map((childRow,childIndex) => (
-              <StatusAndComment machineId serviceId index={index} childIndex={childIndex} childRow={childRow}/>
-            ))}
+          {value?.checkItems?.map((childRow, childIndex) => (
+            <StatusAndComment
+              machineId={machineId}
+              serviceId={serviceId}
+              index={index}
+              childIndex={childIndex}
+              key={childRow._id}
+              childRow={childRow}
+            />
+          ))}
           </TableBody>
         </Table>
         </TableContainer>

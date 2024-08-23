@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useMemo, memo, useLayoutEffect, useState, useEffect } from 'react';
+import React, { useMemo, memo, useLayoutEffect, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // @mui
 import { Container, Card, Chip, Grid, Box, Stack, Typography, TextField, DialogContent, DialogActions, Dialog } from '@mui/material';
@@ -198,6 +198,7 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
     <Chip 
         onClick={() => handleContactView(operator?._id)} 
         sx={{m:0.2}}
+        key={operator?._id}
         deleteIcon={<Iconify icon="fluent:open-12-regular"/>}
         onDelete={()=> handleContactViewInNewPage(operator?._id)}
         label={`${operator?.firstName || ''} ${operator?.lastName || ''}`} 
@@ -342,8 +343,9 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
             !machine?.isArchived &&
             !machineServiceRecord?.isHistory &&
             machineServiceRecord?.status === 'DRAFT' &&
-            machineServiceRecord?._id &&
-            onDelete
+            machineServiceRecord?._id
+              ? onDelete
+              : null
           }
           backLink={handleBackLink}
           handleSendPDFEmail={ !machine?.isArchived && !machineServiceRecord?.isHistory && machineServiceRecord?._id && handleSendEmail}
@@ -365,8 +367,8 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
               machineServiceRecord?.status === 'SUBMITTED' &&
               machineServiceRecord?.currentVersion._id === machineServiceRecord?._id &&
               machineServiceRecord?.approval?.approvingContacts?.length > 0) ||
-              machineServiceRecord?.completeEvaluationHistory?.totalLogsCount > 0) &&
-            serviceRecordApprovalData
+              machineServiceRecord?.completeEvaluationHistory?.totalLogsCount > 0) ?
+            serviceRecordApprovalData : null
           }
         />
         
@@ -391,7 +393,16 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
               </>  
             } />
           
-          <ViewFormField isLoading={isLoading} sm={12} heading="Decoilers" arrayParam={defaultValues?.decoilers?.map((decoilerMachine) => ({ name: `${decoilerMachine?.serialNo ? decoilerMachine?.serialNo : ''}${decoilerMachine?.name ? '-' : ''}${decoilerMachine?.name ? decoilerMachine?.name : ''}`}))} />
+          <ViewFormField
+            isLoading={isLoading}
+            sm={12}
+            heading="Decoilers"
+            arrayParam={defaultValues?.decoilers?.map((decoilerMachine) => ({
+              name: `${decoilerMachine?.serialNo ? decoilerMachine?.serialNo : ''}${
+                decoilerMachine?.name ? '-' : ''
+              }${decoilerMachine?.name ? decoilerMachine?.name : ''}`,
+            }))}
+          />
           <ViewFormField isLoading={isLoading} sm={4} heading="Technician"  param={defaultValues?.technician?.name || ''} />
           {(defaultValues.approvalStatus !== "PENDING" && defaultValues?.approvalLog?.length > 0) ? (
             <>
@@ -410,17 +421,32 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
           <ViewFormNoteField sm={12} heading="Technician Notes" param={defaultValues.technicianNotes} />
           <FormLabel content={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />
           {defaultValues.textBeforeCheckItems && <ViewFormNoteField sm={12}  param={defaultValues.textBeforeCheckItems} />}
-          {!isLoadingCheckItems? 
+          {!isLoadingCheckItems ? 
             <Grid item md={12} sx={{  overflowWrap: 'break-word' }}>
               <Grid item md={12} sx={{display:'flex', flexDirection:'column'}}>
-                {machineServiceRecordCheckItems?.checkItemLists?.map((row, index) =>
-                  <CheckedItemValueRow machineId serviceId={machineServiceRecord._id} value={row} index={index} />
-                )}
+              {machineServiceRecordCheckItems?.checkItemLists?.map((row, index) => (
+                <CheckedItemValueRow
+                  machineId={machineId}
+                  serviceId={machineServiceRecord._id}
+                  value={row}
+                  index={index}
+                  key={row._id}
+                />
+              ))}
               </Grid>
             </Grid>
             :
-            <Stack my={1} py={2} spacing={2} sx={{width:'100%', borderRadius:'10px', border:(theme)=> `1px solid ${theme.palette.grey[400]}`}}>
-              {Array.from({ length: 8 }).map((_, index) => (<SkeletonLine key={index} />))}
+            <Stack
+              my={1} py={2} spacing={2}
+              sx={{
+                width: '100%',
+                borderRadius: '10px',
+                border: (theme) => `1px solid ${theme.palette.grey[400]}`,
+              }}
+            >
+              {Array.from({ length: 8 }).map((_, index) => (
+                <SkeletonLine key={index} />
+              ))}
             </Stack>
           }
           

@@ -1014,5 +1014,5 @@ ViewFormEditDeleteButtons.propTypes = {
   history: PropTypes.array,
   onMergeDocumentType: PropTypes.func,
   handleCompleteMSR: PropTypes.func,
-  serviceRecordStatus: PropTypes.string
+  serviceRecordStatus: PropTypes.object
 };
