@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useEffect, useLayoutEffect, useMemo } from 'react';
+import { useState, useEffect, useLayoutEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
@@ -36,7 +36,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
   const { activeRegions } = useSelector((state) => state.region);
   const { activeContacts } = useSelector((state) => state.contact);
   const { allMachines } = useSelector((state) => state.machine);
-
+  const [ isDisabled, setDisabled ] =useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
@@ -93,13 +93,26 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
     formState: { isSubmitting },
   } = methods;
 
-const { contact } = watch();
+const { contact, customer } = watch();
 
   useEffect(() => {
     const howickCustomer = allActiveCustomers.find(c => c?.type?.toUpperCase() === "SP" )
     setValue('customer',howickCustomer);
     dispatch(getActiveContacts(howickCustomer?._id));
   },[ allActiveCustomers, setValue, dispatch ])
+
+  useEffect(() => {
+    if( customer?.type?.toUpperCase() === 'SP' ){
+      setDisabled(true);
+      setValue('customers',[]);
+      setValue('machines',[]);
+      setValue('regions',[]); 
+      setValue('dataAccessibilityLevel','GLOBAL' ); 
+    } else {
+      setDisabled(false);
+      setValue('dataAccessibilityLevel','RESTRICTED' ); 
+    }
+  },[ customer, setValue ])
 
   useEffect(() => {
     if(contact?._id){
@@ -199,7 +212,9 @@ const { contact } = watch();
                 filterSelectedOptions
                 name="roles"
                 label="Roles*"
-                options={ activeRoles }
+                options={ activeRoles.filter(role => 
+                (customer?.type?.toUpperCase() === 'SP' && role?.roleType?.toUpperCase() !== 'CUSTOMER') 
+                || role?.roleType?.toUpperCase() === 'CUSTOMER' ) }
                 getOptionLabel={(option) => `${option?.name || ''} `}
                 isOptionEqualToValue={(option, value) => option?._id === value?._id}
                 renderOption={(props, option, { selected }) => ( <li {...props}> <Checkbox checked={selected} />{option?.name || ''}</li> )}
@@ -207,6 +222,7 @@ const { contact } = watch();
 
               <RHFAutocomplete
                 disableClearable
+                disable={ isDisabled }
                 name="dataAccessibilityLevel"
                 label="Data Accessibility Level"
                 options={ [ 'RESTRICTED', 'GLOBAL' ] }
@@ -220,6 +236,7 @@ const { contact } = watch();
             >
               <RHFAutocomplete
                 multiple
+                disable={ isDisabled }
                 disableCloseOnSelect
                 filterSelectedOptions
                 name="regions" 
@@ -233,6 +250,7 @@ const { contact } = watch();
 
               <RHFAutocomplete
                 multiple
+                disable={ isDisabled }
                 disableCloseOnSelect
                 filterSelectedOptions
                 name="customers" 
@@ -246,6 +264,7 @@ const { contact } = watch();
 
               <RHFAutocomplete
                 multiple
+                disable={ isDisabled }
                 disableCloseOnSelect
                 filterSelectedOptions
                 name="machines" 
@@ -265,7 +284,6 @@ const { contact } = watch();
                   <RHFSwitch name="multiFactorAuthentication" label="Multi-Factor Authentication" />
                   </>
               ))}
-              {/* <RHFSwitch name="currentEmployee" label="Current Employee" /> */}
             </Grid>
             <Stack sx={{ mt: 3 }}>
               <AddFormButtons securityUserPage saveButtonName={isInvite?"Invite":"Save"} isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
