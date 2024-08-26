@@ -363,19 +363,6 @@ export function deleteEventFile( eventId, id ) {
   };
 }
 
-export function loadEventFile( eventId, fileId, index ) {
-  return async (dispatch) => {
-    try {
-      dispatch(slice.actions.startLoading());
-      const data = await axios.get(`${CONFIG.SERVER_URL}calender/events/${eventId}/files/${fileId}`);
-      dispatch(slice.actions.stopLoading());
-      return data;
-      } catch (error) {
-      dispatch(slice.actions.hasError(error?.Message));
-      throw error;
-    }
-  };
-}
 
 export function downloadEventFile( eventId, id ) {
   return async (dispatch) => {

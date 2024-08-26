@@ -33,6 +33,7 @@ MultiFilePreview.propTypes = {
   onChangeReferenceNumber: PropTypes.func,
   onChangeStockNumber: PropTypes.func,
   onLoadImage: PropTypes.func,
+  onDownload: PropTypes.func,
 };
 
 function MultiFilePreview({ 
@@ -45,6 +46,7 @@ function MultiFilePreview({
   onChangeReferenceNumber,
   onChangeStockNumber,
   onLoadImage,
+  onDownload,
   files, 
   onRemove, 
   sx, 
@@ -135,8 +137,9 @@ function MultiFilePreview({
                               width:'100%'
                           }}
                       >       
-                          {FORMAT_IMG_VISIBBLE.some(format => fileType?.match(format))  && <Button sx={{width:'50%', borderRadius:0}} onClick={()=>handleOpenLightbox(index)}><Iconify icon="carbon:view" /></Button>}
-                          <Button sx={{width:FORMAT_IMG_VISIBBLE.some(format => fileType?.match(format))?'50%':'100%', borderRadius:0}} color='error' onClick={() => onRemove(file)}><Iconify icon="radix-icons:cross-circled" /></Button>
+                          {FORMAT_IMG_VISIBBLE.some(format => fileType?.match(format))  && <Button sx={{width:'50%', borderRadius:0}} onClick={()=>handleOpenLightbox(index)}><Iconify sx={{ width: '25px'}} icon="carbon:view" /></Button>}
+                          { file?.uploaded && onDownload && <Button sx={{width:'50%', borderRadius:0}} onClick={ ()=>onDownload( file ) }><Iconify sx={{ width: '25px'}} icon="solar:download-square-linear" /></Button>}
+                          <Button sx={{width: FORMAT_IMG_VISIBBLE.some(format => fileType?.match(format)) || ( file?.uploaded && onDownload ) ? '50%' : '100%', borderRadius:0}} color='error' onClick={() => onRemove(file)}><Iconify sx={{ width: '25px'}} icon="radix-icons:cross-circled" /></Button>
                       </ButtonGroup>
                       
                       <Stack

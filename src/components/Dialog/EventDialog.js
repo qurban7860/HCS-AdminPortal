@@ -3,6 +3,7 @@ import React,{ useEffect, useLayoutEffect, useRef, useState, useCallback } from 
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { enc, MD5, lib } from 'crypto-js';
+import download from 'downloadjs';
 // @mui
 import { Box, Stack, Button, DialogActions, DialogContent, Grid, Dialog, DialogTitle, Container, Divider, TextField, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
@@ -88,6 +89,7 @@ function EventDialog({
   const { user } = useAuthContext();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
+  const regEx = /^[^2]*/;
   const { selectedEvent, eventModel, isLoading } = useSelector((state) => state.event );
   const { activeCustomers } = useSelector((state) => state.customer);
   const { activeContacts, activeSpContacts } = useSelector((state) => state.contact);
@@ -278,7 +280,7 @@ function EventDialog({
 
   const handleFileRemove = useCallback( async (inputFile) => {
     try{
-      setValue('files', files?.filter((el) => ( inputFile?._id ? el?._id !== inputFile?._id : el !== inputFile )), { shouldValidate: true } )
+      setValue('files', files?.filter( ( el ) => ( inputFile?._id ? el?._id !== inputFile?._id : el !== inputFile )), { shouldValidate: true } )
       if( inputFile?._id ){
         dispatch(deleteEventFile( inputFile?.event, inputFile?._id))
       }
@@ -287,7 +289,7 @@ function EventDialog({
     }
   }, [ dispatch, setValue, files ] );
 
-  const handleDownloadFile = useCallback( async ( fileId, index ) => {
+  const handleLoadFile = useCallback( async ( fileId, index ) => {
     try{
       const response = await dispatch(downloadEventFile( selectedEvent?.extendedProps?._id, fileId, index ))
       const allFiles = getValues('files') || [];
@@ -303,6 +305,22 @@ function EventDialog({
       console.error(e)
     }
   }, [ dispatch, getValues, setValue, selectedEvent ] );
+
+  const handleDownload = ( file ) => {
+    console.log("file : ",file)
+    dispatch(downloadEventFile( selectedEvent?.extendedProps?._id, file?._id ))
+      .then((res) => {
+        if (regEx.test(res.status)) {
+          download(atob(res.data), `${file?.fileName}.${file?.fileExtension}`, { type: file?.fileExtension });
+          enqueueSnackbar("File downloaded successfully!");
+        } else {
+          enqueueSnackbar("Something went wrong!", { variant: `error` });
+        }
+      })
+      .catch((err) => {
+        enqueueSnackbar( typeof err === 'string' ? err : "Something went wrong!", { variant: `error` } );
+      });
+  };
 
   const handleDeleteEvent =  async () => {
     try {
@@ -514,7 +532,8 @@ function EventDialog({
                     imagesOnly
                     onDrop={ handleDropMultiFile }
                     onRemove={ handleFileRemove } 
-                    onLoadImage={ handleDownloadFile }
+                    onLoadImage={ handleLoadFile }
+                    onDownload={ handleDownload }
                     // onRemoveAll={() => setValue('files', [], { shouldValidate: true })}
                   />
 
