@@ -332,9 +332,9 @@ function EventDialog({
         await setOpenConfirm(false);
         await dispatch(setEventModel(false));
       }
-      enqueueSnackbar('Event Deleted Successfully!');
+      enqueueSnackbar('Event Archived Successfully!');
     } catch (error) {
-      enqueueSnackbar('Event Delete Failed!', { variant: 'error'});
+      enqueueSnackbar('Event Archive Failed!', { variant: 'error'});
     }
   };
 
@@ -566,8 +566,8 @@ function EventDialog({
           {selectedEvent && (
             <IconTooltip
               color="#FF0000"
-              title="Delete Event"
-              icon="eva:trash-2-outline"
+              title="Archive Event"
+              icon="mdi:archive"
               onClick={() => setOpenConfirm(true)}
             />
           )}
@@ -588,8 +588,8 @@ function EventDialog({
       <ConfirmDialog
         open={openConfirm}
         onClose={() => setOpenConfirm(false)}
-        title="Delete"
-        content="Are you sure you want to Delete?"
+        title="Archive"
+        content="Are you sure you want to Archive?"
         action={
           <LoadingButton
             variant="contained"
@@ -597,7 +597,7 @@ function EventDialog({
             onClick={ handleDeleteEvent}
             loading={ isLoading || isSubmitting}
           >
-            Delete
+            Archive
           </LoadingButton>
         }
       />
