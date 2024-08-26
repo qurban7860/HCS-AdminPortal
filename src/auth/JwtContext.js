@@ -271,7 +271,7 @@ export function AuthProvider({ children }) {
   // LOGIN
   const login = useCallback(async (uEmail, uPassword) => {
     await dispatch(clearAllPersistedStates());
-    const response = await axios.post(`${CONFIG.SERVER_URL}security/getToken`, { email: uEmail, password : uPassword, })
+    const response = await axios.post(`${CONFIG.SERVER_URL}customer/getToken`, { email: uEmail, password : uPassword, })
     if (response.data.multiFactorAuthentication){
       localStorage.setItem("userId", response.data.userId);
       localStorage.setItem("MFA", true);
@@ -305,7 +305,7 @@ export function AuthProvider({ children }) {
 
 
       setSession(accessToken);
-      await getConfigs();
+      // await getConfigs();
       dispatch({
         type: 'LOGIN',
         payload: { 

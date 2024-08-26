@@ -107,9 +107,11 @@ const { contact, customer } = watch();
       setValue('customers',[]);
       setValue('machines',[]);
       setValue('regions',[]); 
+      setValue('roles',[]); 
       setValue('dataAccessibilityLevel','GLOBAL' ); 
     } else {
       setDisabled(false);
+      setValue('roles',[]); 
       setValue('dataAccessibilityLevel','RESTRICTED' ); 
     }
   },[ customer, setValue ])
