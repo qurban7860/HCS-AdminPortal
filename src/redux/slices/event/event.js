@@ -23,6 +23,12 @@ const slice = createSlice({
     startLoading(state) {
       state.isLoading = true;
     },
+
+    // STOP LOADING
+    stopLoading(state) {
+      state.isLoading = true;
+    },
+
     // HAS ERROR
     hasError(state, action) {
       state.isLoading = false;
@@ -269,6 +275,7 @@ export function updateEventDate(id, start, end) {
       const data = { start, end };
       dispatch(slice.actions.updateEventDateLocal({ id, start, end }));
       const response = await axios.patch(`${CONFIG.SERVER_URL}calender/events/${id}`, data);
+      dispatch(slice.actions.stopLoading());
       return response.data.Event;
     } catch (error) {
       dispatch(slice.actions.hasError(error?.Message));
@@ -349,6 +356,34 @@ export function deleteEventFile( eventId, id ) {
       await axios.patch(`${CONFIG.SERVER_URL}calender/events/${eventId}/files/${id}`, { isActive: false, isArchived: true, });
       await dispatch(slice.actions.deleteEventFileSuccess({ _id: id }));
       await dispatch(slice.actions.deleteEventsFileSuccess({ eventId, _id: id }));
+      } catch (error) {
+      dispatch(slice.actions.hasError(error?.Message));
+      throw error;
+    }
+  };
+}
+
+export function loadEventFile( eventId, fileId, index ) {
+  return async (dispatch) => {
+    try {
+      dispatch(slice.actions.startLoading());
+      const data = await axios.get(`${CONFIG.SERVER_URL}calender/events/${eventId}/files/${fileId}`);
+      dispatch(slice.actions.stopLoading());
+      return data;
+      } catch (error) {
+      dispatch(slice.actions.hasError(error?.Message));
+      throw error;
+    }
+  };
+}
+
+export function downloadEventFile( eventId, id ) {
+  return async (dispatch) => {
+    try {
+      dispatch(slice.actions.startLoading());
+      const response = await axios.get(`${CONFIG.SERVER_URL}calender/events/${eventId}/files/${id}`);
+      dispatch(slice.actions.stopLoading());
+      return response;
       } catch (error) {
       dispatch(slice.actions.hasError(error?.Message));
       throw error;

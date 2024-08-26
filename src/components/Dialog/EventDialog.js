@@ -15,7 +15,7 @@ import KeyboardDoubleArrowDownRoundedIcon from '@mui/icons-material/KeyboardDoub
 import { eventSchema } from '../../pages/schemas/calendarSchema';
 import { manipulateFiles } from '../../pages/documents/util/Util';
 // slices
-import { setEventModel, createEvent, updateEvent, deleteEvent, deleteEventFile } from '../../redux/slices/event/event';
+import { setEventModel, createEvent, updateEvent, downloadEventFile, deleteEvent, deleteEventFile } from '../../redux/slices/event/event';
 import { getActiveCustomerMachines, resetActiveCustomerMachines } from '../../redux/slices/products/machine';
 import { getActiveSites, resetActiveSites } from '../../redux/slices/customer/site';
 import FormProvider, { RHFDatePicker, RHFTextField, RHFAutocomplete, RHFUpload } from '../hook-form';
@@ -104,6 +104,7 @@ function EventDialog({
   const {
     reset,
     watch,
+    getValues,
     setValue,
     handleSubmit,
     formState: { isSubmitting, errors },
@@ -165,8 +166,8 @@ function EventDialog({
       data.start_date = new Date(start_date);
       end_date.setHours(end_hours, end_minutes);
       data.end_date = new Date(end_date);
-      if (selectedEvent?._id) {
-        await dispatch(updateEvent(selectedEvent?._id, data));
+      if ( selectedEvent?.extendedProps?._id ) {
+        await dispatch(updateEvent( selectedEvent?.extendedProps?._id, data ));
         enqueueSnackbar('Event Updated Successfully!');
       } else {
         await dispatch(createEvent(data));
@@ -286,7 +287,24 @@ function EventDialog({
     }
   }, [ dispatch, setValue, files ] );
 
-  const handleDeleteEvent =  async (inputFile) => {
+  const handleDownloadFile = useCallback( async ( fileId, index ) => {
+    try{
+      const response = await dispatch(downloadEventFile( selectedEvent?.extendedProps?._id, fileId, index ))
+      const allFiles = getValues('files') || [];
+      const file = allFiles[index];
+      allFiles[index] = {
+        ...file,
+          src: `data:${file?.fileType};base64,${response.data}`,
+          preview: `data:${file?.fileType};base64,${response.data}`,
+          isLoaded: true,
+        };
+        setValue('files', allFiles, { shouldValidate: true });
+    } catch(e){
+      console.error(e)
+    }
+  }, [ dispatch, getValues, setValue, selectedEvent ] );
+
+  const handleDeleteEvent =  async () => {
     try {
       if (selectedEvent && selectedEvent?.extendedProps?._id) {
         await dispatch(deleteEvent(selectedEvent?.extendedProps?._id));
@@ -494,9 +512,10 @@ function EventDialog({
                     thumbnail
                     name="files"
                     imagesOnly
-                    onDrop={handleDropMultiFile}
+                    onDrop={ handleDropMultiFile }
                     onRemove={ handleFileRemove } 
-                    // onRemoveAll={() => setValue('files', '', { shouldValidate: true })}
+                    onLoadImage={ handleDownloadFile }
+                    // onRemoveAll={() => setValue('files', [], { shouldValidate: true })}
                   />
 
                 {selectedEvent && (

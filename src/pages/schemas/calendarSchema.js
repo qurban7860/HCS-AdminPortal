@@ -50,5 +50,5 @@ export const eventSchema = ( clearErrors ) =>  Yup.object().shape({
       'fileType',
       'Only the following formats are accepted: .jpeg, .jpg, gif, .bmp, .webp, .pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx',
       validateFileType
-    ).nullable(true),
+    ).nullable(),
   });
