@@ -1,6 +1,6 @@
 import React, { useEffect, useState, memo } from 'react';
 import PropTypes from 'prop-types';
-import { Typography, Grid, Chip, createTheme, IconButton } from '@mui/material';
+import { Typography, Grid, Chip, createTheme, IconButton, TextField } from '@mui/material';
 import { green } from '@mui/material/colors';
 import IconPopover from '../Icons/IconPopover';
 import ViewFormMenuPopover from './ViewFormMenuPopover';
@@ -51,10 +51,8 @@ function ViewFormField({
   handleAllVersion,
   isLoading,
   variant='body1',
-  tooltipParam,
-  tooltipTitleContent,
-  tooltipPlacement,
-  tooltipColor,
+  disabledInputField,
+  inputFieldHelperContent,
 }) {
   const [verifiedAnchorEl, setVerifiedAnchorEl] = useState(null);
   const [verifiedBy, setVerifiedBy] = useState([]);
@@ -130,18 +128,26 @@ function ViewFormField({
           {objectParam || ''}
           {secondObjectParam || ''}
           {numberParam || ''}
-          {tooltipParam ? (
-            <StyledTooltip
-              title={tooltipTitleContent}
-              placement={tooltipPlacement || "bottom"}
-              disableFocusListener
-              tooltipcolor={tooltipColor || "#1976d2"}
-              color={tooltipColor || "#1976d2"}
-            >
-              {tooltipParam}
-            </StyledTooltip>
-          ) : null}
         </Typography>
+        {disabledInputField ? (
+          <TextField
+            disabled
+            fullWidth
+            defaultValue={disabledInputField}
+            variant="standard"
+            helperText={inputFieldHelperContent}
+            multiline
+            minRows={1}
+            maxRows={3}
+            FormHelperTextProps={{
+              sx: {
+                textAlign: 'right',
+                marginLeft: 'auto',
+                marginRight: "0",
+              },
+            }}
+          />
+        ) : null}
         {node || ''}
         {ViewAllVersions && 
           <StyledTooltip title={ICONS.VIEW_VERSIONS.heading} placement="top" disableFocusListener tooltipcolor={theme.palette.primary.main} color={theme.palette.primary.main}>
@@ -333,10 +339,6 @@ ViewFormField.propTypes = {
   heading: PropTypes.string,
   node: PropTypes.node,
   param: PropTypes.string,
-  tooltipParam: PropTypes.string,
-  tooltipTitleContent: PropTypes.string,
-  tooltipPlacement: PropTypes.string,
-  tooltipColor: PropTypes.string,
   objectString: PropTypes.string,
   arrayParam: PropTypes.array,
   configArrayParam: PropTypes.array,
@@ -375,5 +377,7 @@ ViewFormField.propTypes = {
   backLink: PropTypes.func,
   isLoading: PropTypes.bool,
   variant: PropTypes.string,
+  disabledInputField: PropTypes.string,
+  inputFieldHelperContent: PropTypes.string,
 };
 
