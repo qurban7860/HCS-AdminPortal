@@ -16,7 +16,7 @@ import KeyboardDoubleArrowDownRoundedIcon from '@mui/icons-material/KeyboardDoub
 import { eventSchema } from '../../pages/schemas/calendarSchema';
 import { manipulateFiles } from '../../pages/documents/util/Util';
 // slices
-import { setEventModel, createEvent, updateEvent, downloadEventFile, deleteEvent, deleteEventFile } from '../../redux/slices/event/event';
+import { setSelectedEvent, setEventModel, createEvent, updateEvent, downloadEventFile, deleteEvent, deleteEventFile } from '../../redux/slices/event/event';
 import { getActiveCustomerMachines, resetActiveCustomerMachines } from '../../redux/slices/products/machine';
 import { getActiveSites, resetActiveSites } from '../../redux/slices/customer/site';
 import FormProvider, { RHFDatePicker, RHFTextField, RHFAutocomplete, RHFUpload } from '../hook-form';
@@ -176,6 +176,7 @@ function EventDialog({
         enqueueSnackbar('Event Created Successfully!');
       }
       await setValue("isCustomerEvent", true );
+      await dispatch(setSelectedEvent(null));
       await reset();
       await dispatch(setEventModel(false));
     } catch (e) {
@@ -187,7 +188,8 @@ function EventDialog({
   };
   
 
-  const handleCloseModel = ()=> {
+  const handleCloseModel = async () => {
+    await dispatch(setSelectedEvent(null));
     dispatch(setEventModel(false)) 
     dispatch(resetActiveCustomerMachines())
     dispatch(resetActiveSites())
@@ -326,6 +328,7 @@ function EventDialog({
     try {
       if (selectedEvent && selectedEvent?.extendedProps?._id) {
         await dispatch(deleteEvent(selectedEvent?.extendedProps?._id));
+        await dispatch(setSelectedEvent(null));
         await setOpenConfirm(false);
         await dispatch(setEventModel(false));
       }
