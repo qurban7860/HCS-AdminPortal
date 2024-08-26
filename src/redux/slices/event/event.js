@@ -80,6 +80,7 @@ const slice = createSlice({
     },
     // UPDATE EVENT
     updateEventDateLocal(state, action) {
+      state.isLoading = false;
       const { id, start, end } = action.payload;
       state.events = state.events.map((event) => {
         if (event.id === id) {
@@ -97,12 +98,14 @@ const slice = createSlice({
 
     // DELETE EVENTS
     deleteEventSuccess(state, action) {
+      state.isLoading = false;
       const eventId = action.payload._id;
       state.events = state.events.filter((event) => event.id !== eventId);
     },
 
     // DELETE EVENTS FILES
     deleteEventsFileSuccess(state, action) {
+      state.isLoading = false;
       const { eventId, _id } = action.payload;
       state.events = state.events.map((event) => {
         if (event.id === eventId) {
@@ -120,6 +123,7 @@ const slice = createSlice({
 
     // // DELETE EVENT FILES
     deleteEventFileSuccess(state, action) {
+      state.isLoading = false;
       const selectedEventClone = _.cloneDeep(state.selectedEvent);
       selectedEventClone.extendedProps.files = selectedEventClone.extendedProps.files?.filter(file => file._id !== action.payload?._id);
       state.selectedEvent = selectedEventClone;
