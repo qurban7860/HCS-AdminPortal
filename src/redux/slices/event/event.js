@@ -354,7 +354,7 @@ export function deleteEventFile( eventId, id ) {
     dispatch(slice.actions.startLoading());
     try {
       await axios.patch(`${CONFIG.SERVER_URL}calender/events/${eventId}/files/${id}`, { isActive: false, isArchived: true, });
-      await dispatch(slice.actions.deleteEventFileSuccess({ _id: id }));
+      // await dispatch(slice.actions.deleteEventFileSuccess({ _id: id }));
       await dispatch(slice.actions.deleteEventsFileSuccess({ eventId, _id: id }));
       } catch (error) {
       dispatch(slice.actions.hasError(error?.Message));
