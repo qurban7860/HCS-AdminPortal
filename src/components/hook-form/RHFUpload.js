@@ -78,7 +78,7 @@ RHFUpload.propTypes = {
   imagesOnly:PropTypes.bool,
   dropZone:PropTypes.bool,
   onLoadImage: PropTypes.func,
-            
+  onDownload: PropTypes.func,
 };
 
 export function RHFUpload({ name, multiple, rows, helperText, machine,
@@ -89,6 +89,7 @@ export function RHFUpload({ name, multiple, rows, helperText, machine,
   onChangeReferenceNumber,
   onChangeStockNumber,
   onLoadImage,
+  onDownload,
   drawingPage, dropZone=true, imagesOnly, ...other }) {
 
   const { control } = useFormContext();
@@ -109,7 +110,8 @@ export function RHFUpload({ name, multiple, rows, helperText, machine,
             onChangeDisplayName={onChangeDisplayName}
             onChangeReferenceNumber={onChangeReferenceNumber}
             onChangeStockNumber={onChangeStockNumber}
-            onLoadImage={onLoadImage}
+            onLoadImage={ onLoadImage }
+            onDownload={ onDownload }
             rows={rows}
             drawingPage
             machine={machine}

@@ -3,6 +3,7 @@ import React,{ useEffect, useLayoutEffect, useRef, useState, useCallback } from 
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { enc, MD5, lib } from 'crypto-js';
+import download from 'downloadjs';
 // @mui
 import { Box, Stack, Button, DialogActions, DialogContent, Grid, Dialog, DialogTitle, Container, Divider, TextField, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
@@ -15,7 +16,7 @@ import KeyboardDoubleArrowDownRoundedIcon from '@mui/icons-material/KeyboardDoub
 import { eventSchema } from '../../pages/schemas/calendarSchema';
 import { manipulateFiles } from '../../pages/documents/util/Util';
 // slices
-import { setEventModel, createEvent, updateEvent, deleteEvent, deleteEventFile } from '../../redux/slices/event/event';
+import { setEventModel, createEvent, updateEvent, downloadEventFile, deleteEvent, deleteEventFile } from '../../redux/slices/event/event';
 import { getActiveCustomerMachines, resetActiveCustomerMachines } from '../../redux/slices/products/machine';
 import { getActiveSites, resetActiveSites } from '../../redux/slices/customer/site';
 import FormProvider, { RHFDatePicker, RHFTextField, RHFAutocomplete, RHFUpload } from '../hook-form';
@@ -88,6 +89,7 @@ function EventDialog({
   const { user } = useAuthContext();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
+  const regEx = /^[^2]*/;
   const { selectedEvent, eventModel, isLoading } = useSelector((state) => state.event );
   const { activeCustomers } = useSelector((state) => state.customer);
   const { activeContacts, activeSpContacts } = useSelector((state) => state.contact);
@@ -104,6 +106,7 @@ function EventDialog({
   const {
     reset,
     watch,
+    getValues,
     setValue,
     handleSubmit,
     formState: { isSubmitting, errors },
@@ -165,8 +168,8 @@ function EventDialog({
       data.start_date = new Date(start_date);
       end_date.setHours(end_hours, end_minutes);
       data.end_date = new Date(end_date);
-      if (selectedEvent?._id) {
-        await dispatch(updateEvent(selectedEvent?._id, data));
+      if ( selectedEvent?.extendedProps?._id ) {
+        await dispatch(updateEvent( selectedEvent?.extendedProps?._id, data ));
         enqueueSnackbar('Event Updated Successfully!');
       } else {
         await dispatch(createEvent(data));
@@ -277,7 +280,7 @@ function EventDialog({
 
   const handleFileRemove = useCallback( async (inputFile) => {
     try{
-      setValue('files', files?.filter((el) => ( inputFile?._id ? el?._id !== inputFile?._id : el !== inputFile )), { shouldValidate: true } )
+      setValue('files', files?.filter( ( el ) => ( inputFile?._id ? el?._id !== inputFile?._id : el !== inputFile )), { shouldValidate: true } )
       if( inputFile?._id ){
         dispatch(deleteEventFile( inputFile?.event, inputFile?._id))
       }
@@ -286,7 +289,40 @@ function EventDialog({
     }
   }, [ dispatch, setValue, files ] );
 
-  const handleDeleteEvent =  async (inputFile) => {
+  const handleLoadFile = useCallback( async ( fileId, index ) => {
+    try{
+      const response = await dispatch(downloadEventFile( selectedEvent?.extendedProps?._id, fileId, index ))
+      const allFiles = getValues('files') || [];
+      const file = allFiles[index];
+      allFiles[index] = {
+        ...file,
+          src: `data:${file?.fileType};base64,${response.data}`,
+          preview: `data:${file?.fileType};base64,${response.data}`,
+          isLoaded: true,
+        };
+        setValue('files', allFiles, { shouldValidate: true });
+    } catch(e){
+      console.error(e)
+    }
+  }, [ dispatch, getValues, setValue, selectedEvent ] );
+
+  const handleDownload = ( file ) => {
+    console.log("file : ",file)
+    dispatch(downloadEventFile( selectedEvent?.extendedProps?._id, file?._id ))
+      .then((res) => {
+        if (regEx.test(res.status)) {
+          download(atob(res.data), `${file?.fileName}.${file?.fileExtension}`, { type: file?.fileExtension });
+          enqueueSnackbar("File downloaded successfully!");
+        } else {
+          enqueueSnackbar("Something went wrong!", { variant: `error` });
+        }
+      })
+      .catch((err) => {
+        enqueueSnackbar( typeof err === 'string' ? err : "Something went wrong!", { variant: `error` } );
+      });
+  };
+
+  const handleDeleteEvent =  async () => {
     try {
       if (selectedEvent && selectedEvent?.extendedProps?._id) {
         await dispatch(deleteEvent(selectedEvent?.extendedProps?._id));
@@ -494,9 +530,11 @@ function EventDialog({
                     thumbnail
                     name="files"
                     imagesOnly
-                    onDrop={handleDropMultiFile}
+                    onDrop={ handleDropMultiFile }
                     onRemove={ handleFileRemove } 
-                    // onRemoveAll={() => setValue('files', '', { shouldValidate: true })}
+                    onLoadImage={ handleLoadFile }
+                    onDownload={ handleDownload }
+                    // onRemoveAll={() => setValue('files', [], { shouldValidate: true })}
                   />
 
                 {selectedEvent && (
