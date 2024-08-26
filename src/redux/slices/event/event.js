@@ -341,8 +341,8 @@ export function deleteEvent(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.patch(`${CONFIG.SERVER_URL}calender/events/${id}`, { isArchived: true, });
-      await dispatch(slice.actions.deleteEventSuccess(response.data.Event));
+      await axios.delete(`${CONFIG.SERVER_URL}calender/events/${id}`);
+      await dispatch(slice.actions.deleteEventSuccess({ _id : id}));
       } catch (error) {
       dispatch(slice.actions.hasError(error?.Message));
       throw error;
