@@ -138,7 +138,7 @@ function ViewFormField({
             helperText={inputFieldHelperContent}
             multiline
             minRows={1}
-            maxRows={3}
+            maxRows={6}
             FormHelperTextProps={{
               sx: {
                 textAlign: 'right',
