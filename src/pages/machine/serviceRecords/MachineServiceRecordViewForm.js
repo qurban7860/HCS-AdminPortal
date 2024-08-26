@@ -393,22 +393,16 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
             />
           <ViewFormField isLoading={isLoading} variant='h4' sm={2} heading="Status" 
             param={defaultValues.approvalStatus === "PENDING" ? defaultValues.status : defaultValues.approvalStatus} />
-          {(defaultValues.approvalStatus !== "PENDING" && defaultValues?.approvalLog?.length > 0) ? (
-            <>
-              {/* <ViewFormField isLoading={isLoading} sm={4} 
-                heading={`${defaultValues.approvalStatus === "REJECTED" ? "Rejected" : "Approved"} by`}
-                param={`${defaultValues?.approvalLog[0]?.evaluatedBy.firstName} ${defaultValues?.approvalLog[0]?.evaluatedBy.lastName} on ${fDate(defaultValues?.approvalLog[0]?.evaluationDate)}`} /> */}
-              
-              <ViewFormField isLoading={isLoading} sm={12}
-                heading={`${defaultValues.approvalStatus === "REJECTED" ? "Rejection" : "Approval"} Comments`}
-                disabledInputField={defaultValues?.approvalLog[0]?.comments}
-                inputFieldHelperContent={`By ${
-                    defaultValues?.approvalLog[0]?.evaluatedBy.firstName
-                  } ${defaultValues?.approvalLog[0]?.evaluatedBy.lastName} on ${fDate(
-                    defaultValues?.approvalLog[0]?.evaluationDate
-                  )}`}
-              />
-            </>
+          {(defaultValues.approvalStatus !== "PENDING" && defaultValues?.approvalLog?.length > 0) ? (              
+            <ViewFormField isLoading={isLoading} sm={12}
+              heading={`${defaultValues.approvalStatus === "REJECTED" ? "Rejection" : "Approval"} Comments`}
+              disabledInputField={defaultValues?.approvalLog[0]?.comments}
+              inputFieldHelperContent={`By ${
+                  defaultValues?.approvalLog[0]?.evaluatedBy.firstName
+                } ${defaultValues?.approvalLog[0]?.evaluatedBy.lastName} on ${fDate(
+                  defaultValues?.approvalLog[0]?.evaluationDate
+                )}`}
+            />
           ) : null}
           <ViewFormField
             isLoading={isLoading}
