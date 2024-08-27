@@ -179,7 +179,7 @@ export function getEvents(date, customer, contact) {
         params.year = date?.getFullYear()
       }
       const response = await axios.get(`${CONFIG.SERVER_URL}calender/events`, { params } );
-      const formattedData = response?.data?.map((v) => ({
+      const formattedData = await response?.data?.map((v) => ({
         id: v?._id,
         title: `${v?.primaryTechnician?.firstName || ''} ${v?.primaryTechnician?.lastName || ''}, ${v?.customer?.name || ''}`,
         start: v?.start,
@@ -190,6 +190,7 @@ export function getEvents(date, customer, contact) {
         }
       }));
       dispatch(slice.actions.getEventsSuccess(formattedData));
+      return response;
     } catch (error) {
       dispatch(slice.actions.hasError(error?.Message));
       throw error;

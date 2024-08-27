@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useState, useRef, useEffect, useLayoutEffect } from 'react';
+import { useState, useRef, useMemo, memo, useEffect } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import interactionPlugin from '@fullcalendar/interaction';
 import listPlugin from '@fullcalendar/list';
@@ -18,9 +18,6 @@ import {
  setEventModel,
  setSelectedEvent
 } from '../../redux/slices/event/event';
-import { getActiveCustomers } from '../../redux/slices/customer/customer';
-import { getActiveSPContacts } from '../../redux/slices/customer/contact';
-import { getActiveSecurityUsers, getSecurityUser } from '../../redux/slices/securityUser/securityUser';
 // hooks
 import useResponsive from '../../hooks/useResponsive';
 // components
@@ -39,55 +36,30 @@ CalendarPage.propTypes = {
   previousDate: PropTypes.object,
   setDate: PropTypes.func,
   setPreviousDate: PropTypes.func,
+  defaultNotifyContacts: PropTypes.array
 };
-export default function CalendarPage({ date, setDate, previousDate, setPreviousDate }) {
+function CalendarPage({ date, setDate, previousDate, setPreviousDate, defaultNotifyContacts }) {
   
   const { enqueueSnackbar } = useSnackbar();
-  const { userId, isAllAccessAllowed, user } = useAuthContext();
+  const { isAllAccessAllowed, user } = useAuthContext();
   const dispatch = useDispatch();
   const isDesktop = useResponsive('up', 'sm');
   const calendarRef = useRef(null);
 
-  const { events, selectedRange } = useSelector((state) => state.event );
+  const { events, eventModel, selectedRange } = useSelector((state) => state.event );
   const { securityUser } = useSelector((state) => state.user);
-  const { activeSpContacts } = useSelector((state) => state.contact);
   const [ selectedCustomer, setSelectedCustomer ] = useState(null);
   const [ selectedContact, setSelectedContact ] = useState(null);
   const [ selectedUser, setSelectedUser ] = useState(null);
   const [ view, setView ] = useState(isDesktop ? 'dayGridMonth' : 'listWeek');
-  const [ calendarData, setCalendarData ] = useState([]);
-  const [ defaultNotifyContacts, setDefaultNotifyContacts ] = useState([]);
 
-  useEffect(() => {
-    const configurations = JSON.parse(localStorage.getItem('configurations'));
-    const def_contacts = configurations?.find(c => c?.name === 'Default_Notify_Contacts');
-    const emails = def_contacts?.value?.split(',')?.map(c => c?.trim()?.toLowerCase()); 
-    if(emails && activeSpContacts){
-      const filteredContacts = activeSpContacts.filter((_contact) => 
-        emails?.includes(_contact?.email?.trim()?.toLowerCase())
-      );
-      setDefaultNotifyContacts(filteredContacts);
-    }
-  }, [activeSpContacts]);
-
-  useLayoutEffect(() => {
-    dispatch(setEventModel(false));
-    dispatch(getActiveCustomers());
-    dispatch(getActiveSPContacts());
-    dispatch(getActiveSecurityUsers());
-    dispatch(getSecurityUser(userId));
-  }, [dispatch, userId ]);
-
-  useLayoutEffect(()=>{
+  useEffect(()=>{
     if(!isAllAccessAllowed){
       setSelectedUser(securityUser);
       setSelectedContact(securityUser?.contact)
     }
   },[ securityUser, isAllAccessAllowed])
 
-  useEffect(() => {
-    setCalendarData(events || []);
-  }, [events]);
 
   useEffect(() => {
     const calendarEl = calendarRef.current;
@@ -97,7 +69,7 @@ export default function CalendarPage({ date, setDate, previousDate, setPreviousD
       calendarApi.changeView(newView);
       setView(newView);
     }
-  }, [isDesktop]);
+  }, [ isDesktop ]);
 
   const handleChangeView = (newView) => {
     const calendarEl = calendarRef.current;
@@ -111,9 +83,9 @@ export default function CalendarPage({ date, setDate, previousDate, setPreviousD
     }
   };
 
-  const handleSelectEvent = async (_event) => {
-    await dispatch(setSelectedEvent(_event.event));
-    await dispatch(setEventModel(true));
+  const handleSelectEvent =  (_event) => {
+    dispatch(setSelectedEvent(_event.event));
+    dispatch(setEventModel(true));
   };
 
   const handleClickDatePrev = () => {
@@ -170,7 +142,6 @@ export default function CalendarPage({ date, setDate, previousDate, setPreviousD
       const modifiedEndDateTime = new Date(endDateTime);
       modifiedStartDateTime.setHours(startDateTime.getHours(), startDateTime.getMinutes());
       modifiedEndDateTime.setHours(endDateTime.getHours(), endDateTime.getMinutes());
-      
       await dispatch(updateEventDate(event.id,  modifiedStartDateTime, modifiedEndDateTime ));
     } catch (error) {
       enqueueSnackbar('Event Date Update Failed!', { variant: `error` });
@@ -207,15 +178,16 @@ export default function CalendarPage({ date, setDate, previousDate, setPreviousD
     );
   };
 
-  const dataFiltered = applyFilter({
-    inputData: calendarData,
+
+  const dataFiltered = useMemo(() => applyFilter({
+    inputData: events || [],
     selectedCustomer,
     selectedContact,
     selectedUser,
     isAllAccessAllowed,
     user
-  });
-  
+  }), [events, selectedCustomer, selectedContact, selectedUser, isAllAccessAllowed, user]);
+
   return (
     <>
       <Container maxWidth={false}>
@@ -274,11 +246,11 @@ export default function CalendarPage({ date, setDate, previousDate, setPreviousD
         </Card>
       </Container>
       
-      <EventDialog
+      { eventModel && <EventDialog
         date={date}
         range={selectedRange}
         contacts={defaultNotifyContacts}
-      />
+      />}
 
     </>
   );
@@ -307,3 +279,5 @@ function applyFilter({ inputData, selectedCustomer, selectedContact, selectedUse
   }
   return inputData;
 }
+
+export default  memo(CalendarPage);
