@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { Stack, Grid, Container, Autocomplete, TextField, Table, TableBody } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import { LoadingButton } from '@mui/lab';
-import { CardBase, GridBaseViewForm, StyledScrollbar } from '../../../theme/styles/customer-styles';
+import { CardBase, GridBaseViewForm } from '../../../theme/styles/customer-styles';
 import AddButtonAboveAccordion from '../../../components/Defaults/AddButtonAboveAcoordion';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';

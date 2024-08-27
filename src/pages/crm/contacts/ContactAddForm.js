@@ -67,19 +67,24 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
   const navigate = useNavigate();
 
   const theme = createTheme({ palette: { success: green } });
+  
   const systemConfig= JSON.parse( localStorage.getItem('configurations'))
   
-  const sPContactTypes = systemConfig?.find( ( c )=> c?.name?.trim() === 'SP_CONTACT_TYPES' )?.value?.split(',')?.map(item => item?.trim());
-  const CustomerContactTypes = systemConfig?.find( ( c )=> c?.name?.trim() === 'CUSTOMER_CONTACT_TYPES')?.value?.split(',')?.map(item => item?.trim());
-
   useEffect(()=>{
-    if( customer?.type?.toLowerCase() === 'sp'){
-      setContactTypes(sPContactTypes)
-    } else {
-      setContactTypes(CustomerContactTypes)
+    if( customer?.type?.toLowerCase() === 'sp' && systemConfig ){
+      const configSPContactTypes = systemConfig?.find( ( c )=> c?.name?.trim() === 'SP_CONTACT_TYPES' )?.value?.split(',');
+      const sPContactTypes = configSPContactTypes?.map(item => item?.trim())?.sort();
+      if( Array.isArray(sPContactTypes) && sPContactTypes?.length > 0 ){
+        setContactTypes(sPContactTypes)
+      }
+    } else if( customer?.type?.toLowerCase() !== 'sp' && systemConfig ) {
+      const configCustomerContactTypes = systemConfig?.find( ( c )=> c?.name?.trim() === 'CUSTOMER_CONTACT_TYPES')?.value?.split(',');
+      const CustomerContactTypes = configCustomerContactTypes?.map(item => item?.trim())?.sort()
+      if( Array.isArray(CustomerContactTypes) && CustomerContactTypes?.length > 0 ){
+        setContactTypes(CustomerContactTypes)
+      }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[ customer?.type ])
+  },[ customer?.type, systemConfig ])
 
   const PHONE_TYPES_ = systemConfig?.find( ( c )=> c?.name === 'PHONE_TYPES' )
   let PHONE_TYPES = ['Mobile', 'Home', 'Work', 'Fax', 'Others'];
@@ -212,7 +217,7 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
                 filterSelectedOptions
                 name={FORMLABELS.CONTACT_TYPES.name}
                 label={FORMLABELS.CONTACT_TYPES.label}
-                options={contactTypes?.sort() || []}
+                options={ contactTypes }
                 isOptionEqualToValue={(option, value) => option === value}
               />
 
