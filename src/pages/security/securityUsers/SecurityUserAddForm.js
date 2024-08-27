@@ -93,8 +93,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
     formState: { isSubmitting },
   } = methods;
 
-const { contact, customer, customers } = watch();
-console.log("customer, customers : ",customer, customers)
+const { contact, customer } = watch();
 
   useEffect(() => {
     const howickCustomer = allActiveCustomers.find(c => c?.type?.toUpperCase() === "SP" )

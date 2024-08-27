@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useMemo } from 'react';
+import { useState, useEffect, useLayoutEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
@@ -31,6 +31,7 @@ export default function SecurityUserEditForm() {
   const { allMachines } = useSelector((state) => state.machine)
   const { allActiveCustomers } = useSelector((state) => state.customer);
   const { activeContacts } = useSelector((state) => state.contact);
+  const [ isDisabled, setIsDisabled ] =useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -94,6 +95,13 @@ useEffect(() => {
   }
 }, [ dispatch,customer?._id ]);
 
+useEffect(() => {
+  if( customer && customer?.type?.toUpperCase() !== 'SP' ){
+    setIsDisabled(true);
+  } else {
+    setIsDisabled(false);
+  }
+},[ customer, setValue ])
 
 const onChangeContact = (contact) => {
   if(contact?._id){
@@ -176,7 +184,9 @@ const onChangeContact = (contact) => {
                 filterSelectedOptions
                 name="roles"
                 label="Roles*"
-                options={ activeRoles }
+                options={ activeRoles.filter(role => 
+                ( customer?.type?.toUpperCase() === 'SP' && role?.roleType?.toUpperCase() !== 'CUSTOMER') 
+                || ( role?.roleType?.toUpperCase() === 'CUSTOMER' && customer?.type?.toUpperCase() !== 'SP') ) }
                 getOptionLabel={(option) => `${option?.name || ''} `}
                 isOptionEqualToValue={(option, value) => option?._id === value?._id}
                 renderOption={(props, option, { selected }) => ( <li {...props}> <Checkbox checked={selected} />{option?.name || ''}</li> )}
@@ -184,6 +194,7 @@ const onChangeContact = (contact) => {
               
               <RHFAutocomplete
                 disableClearable
+                disabled={ isDisabled }
                 name="dataAccessibilityLevel"
                 label="Data Accessibility Level"
                 options={ [ 'RESTRICTED', 'GLOBAL' ] }
@@ -206,6 +217,7 @@ const onChangeContact = (contact) => {
                 multiple
                 disableCloseOnSelect
                 filterSelectedOptions
+                disabled={ isDisabled }
                 name="regions" 
                 label="Regions"
                 options={activeRegions}
@@ -219,6 +231,7 @@ const onChangeContact = (contact) => {
                 multiple
                 disableCloseOnSelect
                 filterSelectedOptions
+                disabled={ isDisabled }
                 name="customers" 
                 label="Customers"
                 options={allActiveCustomers}
@@ -232,6 +245,7 @@ const onChangeContact = (contact) => {
                 multiple
                 disableCloseOnSelect
                 filterSelectedOptions
+                disabled={ isDisabled }
                 name="machines" 
                 label="Machines"
                 options={allMachines}
@@ -245,7 +259,6 @@ const onChangeContact = (contact) => {
             <Grid item md={12} display="flex">
               <RHFSwitch name="isActive" label="Active" />
               <RHFSwitch name="multiFactorAuthentication" label="Multi-Factor Authentication" />
-              {/* <RHFSwitch name="currentEmployee" label="Current Employee" /> */}
             </Grid>
 
             <Stack sx={{ mt: 3 }}>
