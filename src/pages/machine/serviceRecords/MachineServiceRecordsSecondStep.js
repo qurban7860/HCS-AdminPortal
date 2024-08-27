@@ -1,20 +1,15 @@
-import React, { createRef, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import PropTypes from 'prop-types';
 import { useNavigate, useParams } from 'react-router';
 import { useSnackbar } from 'notistack';
-import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
-import { Box, Button, Grid, Skeleton, Stack, TextField, Typography } from '@mui/material';
+import { Grid, Skeleton, Stack, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
 import { RHFTextField } from '../../../components/hook-form';
-import FormLabel from '../../../components/DocumentForms/FormLabel';
-import { FORMLABELS } from '../../../constants/default-constants';
 import CheckedItemInputRow from './CheckedItemInputRow';
 import FormProvider from '../../../components/hook-form/FormProvider';
-import { PATH_MACHINE } from '../../../routes/paths';
-import { MachineServiceRecordPart2Schema } from '../../schemas/machine';
-import { deleteMachineServiceRecord, getMachineServiceRecord, getMachineServiceRecordCheckItems, resetCheckItemValues, setFormActiveStep, updateMachineServiceRecord } from '../../../redux/slices/products/machineServiceRecord';
+import { getMachineServiceRecord, getMachineServiceRecordCheckItems, resetCheckItemValues, setFormActiveStep, updateMachineServiceRecord } from '../../../redux/slices/products/machineServiceRecord';
 import ServiceRecodStepButtons from '../../../components/DocumentForms/ServiceRecodStepButtons';
 
 MachineServiceRecordsSecondStep.propTypes = {
@@ -81,56 +76,61 @@ function MachineServiceRecordsSecondStep({serviceRecord, handleDraftRequest, han
     
 
     const [showMessage, setShowMessage] = useState(false);
-    const submitBefore = async (data)=> {
+    const submitBefore = async (data) => {
       const params = {
-        textBeforeCheckItems: data.textBeforeCheckItems || ''
-      }
+        textBeforeCheckItems: data.textBeforeCheckItems || '',
+      };
       try {
         await dispatch(updateMachineServiceRecord(machineId, id, params));
         setShowMessage(true);
-        setTimeout(() => {setShowMessage(false)}, 10000);
+        setTimeout(() => {
+          setShowMessage(false);
+        }, 10000);
       } catch (err) {
         console.error(err);
         enqueueSnackbar('Saving failed!', { variant: `error` });
+      } finally {
+        dispatch(getMachineServiceRecordCheckItems(machineId, id));
       }
-    }
+    };
 
-    const submitAfter = async (data)=> {
-
+    const submitAfter = async (data) => {
       const params = {
-        textAfterCheckItems: data?.textAfterCheckItems || ''
-      }
-      
+        textAfterCheckItems: data?.textAfterCheckItems || '',
+      };
+
       try {
         await dispatch(updateMachineServiceRecord(machineId, id, params));
         setShowMessage(true);
-        setTimeout(() => {setShowMessage(false)}, 10000);
+        setTimeout(() => {
+          setShowMessage(false);
+        }, 10000);
       } catch (err) {
         console.error(err);
         enqueueSnackbar('Saving failed!', { variant: `error` });
+      } finally {
+        dispatch(getMachineServiceRecordCheckItems(machineId, id));
       }
-    }
+    };
 
-    const onSubmit = async (data)=> {
+    const onSubmit = async (data) => {
       const params = {
         textBeforeCheckItems: data?.textBeforeCheckItems || '',
-        textAfterCheckItems: data?.textAfterCheckItems || ''
-      }
-      
-      try {
+        textAfterCheckItems: data?.textAfterCheckItems || '',
+      };
 
-          if(isDraft){
-            await dispatch(updateMachineServiceRecord(machineId, id, params));
-            await handleDraftRequest(isDraft);
-          }else{
-            await dispatch(setFormActiveStep(2));
-          }        
-      
+      try {
+        if (isDraft) {
+          await dispatch(updateMachineServiceRecord(machineId, id, params));
+          await handleDraftRequest(isDraft);
+        } else {
+          await dispatch(setFormActiveStep(2));
+        }
       } catch (err) {
         console.error(err);
         enqueueSnackbar('Saving failed!', { variant: `error` });
       }
-    }
+    };
 
   return (
       <Stack spacing={2}>

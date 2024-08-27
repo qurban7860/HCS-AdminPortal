@@ -634,10 +634,19 @@ export function addCheckItemValues(machineId, data, childIndex) {
 
       let response;
 
-      if(data?.recordValue?._id && data?.recordValue?.serviceRecord?.versionNo === data?.versionNo){
-        response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecordValues/${data?.recordValue?._id}`,formData);
-      }else{
-        response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecordValues/`,formData);
+      if (
+        data?.recordValue?._id &&
+        data?.recordValue?.serviceRecord?.versionNo === data?.versionNo
+      ) {
+        response = await axios.patch(
+          `${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecordValues/${data?.recordValue?._id}`,
+          formData
+        );
+      } else {
+        response = await axios.post(
+          `${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecordValues/`,
+          formData
+        );
       }
 
       await dispatch(slice.actions.resetSubmittingCheckItemIndex());
