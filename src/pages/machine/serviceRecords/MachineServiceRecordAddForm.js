@@ -1,36 +1,28 @@
-import { useEffect, useLayoutEffect, useMemo, useState, memo, useCallback } from 'react';
+import { useEffect, useLayoutEffect, useState, memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-// form
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { LoadingButton } from '@mui/lab';
-import { Container, Card, Grid, Stack, StepLabel, Step, Stepper, Box, StepContent, Button, StepButton, Typography, CardContent, CardHeader, Chip, createTheme } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
+import { Container, Card, Grid, StepLabel, Step, Stepper, Box, CardContent, CardHeader } from '@mui/material';
 // routes
 import { useNavigate, useParams } from 'react-router-dom';
-import download from 'downloadjs';
 import { PATH_MACHINE } from '../../../routes/paths';
 // slice
-import { addMachineServiceRecord, updateMachineServiceRecord, resetMachineServiceRecord, 
-        setAddFileDialog, deleteMachineServiceRecord, getMachineServiceRecord, setFormActiveStep,
-        getMachineServiceRecordCheckItems} from '../../../redux/slices/products/machineServiceRecord';
+import {
+  resetMachineServiceRecord,
+  deleteMachineServiceRecord,
+  getMachineServiceRecord,
+  setFormActiveStep,
+} from '../../../redux/slices/products/machineServiceRecord';
 import { getActiveContacts } from '../../../redux/slices/customer/contact';
 // components
-import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 import { useSnackbar } from '../../../components/snackbar';
-import { MachineServiceRecordPart1Schema, MachineServiceRecordPart2Schema, MachineServiceRecordPart3Schema } from '../../schemas/machine';
-import FormProvider from '../../../components/hook-form';
 import { getActiveSecurityUsers, getSecurityUser } from '../../../redux/slices/securityUser/securityUser';
-import { getActiveServiceRecordConfigsForRecords, getServiceRecordConfig, resetServiceRecordConfig } from '../../../redux/slices/products/serviceRecordConfig';
-import FormLabel from '../../../components/DocumentForms/FormLabel';
+import { getActiveServiceRecordConfigsForRecords } from '../../../redux/slices/products/serviceRecordConfig';
 import { useAuthContext } from '../../../auth/useAuthContext';
 import MachineTabContainer from '../util/MachineTabContainer';
 import DialogServiceRecordAddFile from '../../../components/Dialog/DialogServiceRecordAddFile';
 import MachineServiceRecordsFirstStep from './MachineServiceRecordsFirstStep';
 import MachineServiceRecordsSecondStep from './MachineServiceRecordsSecondStep';
 import MachineServiceRecordsThirdStep from './MachineServiceRecordsThirdStep';
-import Iconify from '../../../components/iconify';
-import { ColorlibConnector, ColorlibStepIcon, StyledTooltip } from '../../../theme/styles/default-styles';
+import { ColorlibConnector, ColorlibStepIcon } from '../../../theme/styles/default-styles';
 import IconTooltip from '../../../components/Icons/IconTooltip';
 
 // ----------------------------------------------------------------------
@@ -48,8 +40,7 @@ function MachineServiceRecordAddForm() {
   const { formActiveStep, machineServiceRecord, isLoading } = useSelector((state) => state.machineServiceRecord);
 
   const [ securityUsers, setSecurityUsers ] = useState([]);
-  const [ isPublish, setIsPublish ] = useState(false);
-  const [completed, setCompleted] = useState([]);
+  const [ completed, setCompleted ] = useState([]);
 
   useLayoutEffect( ()=>{
     dispatch(resetMachineServiceRecord());
@@ -115,8 +106,6 @@ function MachineServiceRecordAddForm() {
     newCompleted[step] = true;
     setCompleted(newCompleted);
   }
-
-  const theme = useTheme();
 
 
   return (
