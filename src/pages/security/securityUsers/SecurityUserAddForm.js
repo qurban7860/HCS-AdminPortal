@@ -36,7 +36,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
   const { activeRegions } = useSelector((state) => state.region);
   const { activeContacts } = useSelector((state) => state.contact);
   const { allMachines } = useSelector((state) => state.machine);
-  const [ isDisabled, setDisabled ] =useState(false);
+  const [ isDisabled, setIsDisabled ] =useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
@@ -93,7 +93,8 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
     formState: { isSubmitting },
   } = methods;
 
-const { contact, customer } = watch();
+const { contact, customer, customers } = watch();
+console.log("customer, customers : ",customer, customers)
 
   useEffect(() => {
     const howickCustomer = allActiveCustomers.find(c => c?.type?.toUpperCase() === "SP" )
@@ -102,18 +103,18 @@ const { contact, customer } = watch();
   },[ allActiveCustomers, setValue, dispatch ])
 
   useEffect(() => {
-    if( customer?.type?.toUpperCase() === 'SP' ){
-      setDisabled(true);
-      setValue('customers',[]);
-      setValue('machines',[]);
-      setValue('regions',[]); 
-      setValue('roles',[]); 
-      setValue('dataAccessibilityLevel','GLOBAL' ); 
+    if( customer && customer?.type?.toUpperCase() !== 'SP' ){
+      setIsDisabled(true);
+      setValue('dataAccessibilityLevel','RESTRICTED' ); 
+      setValue('customers',[ { _id: customer?._id, name: customer?.name } ]);
     } else {
-      setDisabled(false);
-      setValue('roles',[]); 
+      setIsDisabled(false);
+      setValue('customers',[]);
       setValue('dataAccessibilityLevel','RESTRICTED' ); 
     }
+    setValue('machines',[]);
+    setValue('regions',[]); 
+    setValue('roles',[]); 
   },[ customer, setValue ])
 
   useEffect(() => {
@@ -215,8 +216,8 @@ const { contact, customer } = watch();
                 name="roles"
                 label="Roles*"
                 options={ activeRoles.filter(role => 
-                (customer?.type?.toUpperCase() === 'SP' && role?.roleType?.toUpperCase() !== 'CUSTOMER') 
-                || role?.roleType?.toUpperCase() === 'CUSTOMER' ) }
+                ( customer?.type?.toUpperCase() === 'SP' && role?.roleType?.toUpperCase() !== 'CUSTOMER') 
+                || ( role?.roleType?.toUpperCase() === 'CUSTOMER' && customer?.type?.toUpperCase() !== 'SP') ) }
                 getOptionLabel={(option) => `${option?.name || ''} `}
                 isOptionEqualToValue={(option, value) => option?._id === value?._id}
                 renderOption={(props, option, { selected }) => ( <li {...props}> <Checkbox checked={selected} />{option?.name || ''}</li> )}
@@ -224,7 +225,7 @@ const { contact, customer } = watch();
 
               <RHFAutocomplete
                 disableClearable
-                disable={ isDisabled }
+                disabled={ isDisabled }
                 name="dataAccessibilityLevel"
                 label="Data Accessibility Level"
                 options={ [ 'RESTRICTED', 'GLOBAL' ] }
@@ -238,13 +239,13 @@ const { contact, customer } = watch();
             >
               <RHFAutocomplete
                 multiple
-                disable={ isDisabled }
+                disabled={ isDisabled }
                 disableCloseOnSelect
                 filterSelectedOptions
                 name="regions" 
                 label="Regions"
                 options={activeRegions}
-                getOptionLabel={(option) => option.name}
+                getOptionLabel={(option) => option?.name || '' }
                 isOptionEqualToValue={(option, value) => option?._id === value?._id}
                 renderOption={(props, option) => ( <li {...props} key={option?._id}> {option?.name || ''} </li>)}
                 ChipProps={{ size: 'small' }}
@@ -252,13 +253,13 @@ const { contact, customer } = watch();
 
               <RHFAutocomplete
                 multiple
-                disable={ isDisabled }
+                disabled={ isDisabled }
                 disableCloseOnSelect
                 filterSelectedOptions
                 name="customers" 
                 label="Customers"
                 options={allActiveCustomers}
-                getOptionLabel={(option) => option.name}
+                getOptionLabel={(option) => option?.name || '' }
                 isOptionEqualToValue={(option, value) => option?._id === value?._id}
                 renderOption={(props, option) => ( <li {...props} key={option?._id}> {option?.name || ''} </li> )}
                 ChipProps={{ size: 'small' }}
@@ -266,13 +267,13 @@ const { contact, customer } = watch();
 
               <RHFAutocomplete
                 multiple
-                disable={ isDisabled }
+                disabled={ isDisabled }
                 disableCloseOnSelect
                 filterSelectedOptions
                 name="machines" 
                 label="Machines"
                 options={allMachines}
-                getOptionLabel={(option) => `${option.serialNo} ${option.name ? '-' : ''} ${option?.name || ''}`}
+                getOptionLabel={(option) => `${option?.serialNo || '' } ${option?.name ? '-' : ''} ${option?.name || ''}`}
                 isOptionEqualToValue={(option, value) => option?._id === value?._id}
                 renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.serialNo || ''} ${option.name ? '-' : ''} ${option.name || ''}`}</li>)}
                 ChipProps={{ size: 'small' }}
