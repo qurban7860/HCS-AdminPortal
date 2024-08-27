@@ -277,7 +277,6 @@ export function AuthProvider({ children }) {
       localStorage.setItem("MFA", true);
     } else{
       const { accessToken, user, userId} = response.data;
-      
       localStorage.setItem("customer", user?.customer);
 
       const {
@@ -303,9 +302,8 @@ export function AuthProvider({ children }) {
       localStorage.setItem('customer',user?.customer)
       localStorage.setItem('contact',user?.contact)
 
-
       setSession(accessToken);
-      // await getConfigs();
+      await getConfigs();
       dispatch({
         type: 'LOGIN',
         payload: { 
@@ -375,7 +373,6 @@ export function AuthProvider({ children }) {
         },
       });
       await getConfigs();
-
   }, []);
 
 
@@ -401,7 +398,6 @@ export function AuthProvider({ children }) {
   // LOGOUT
   const logout = useCallback( async () => {
     const userId  = localStorage.getItem("userId")
-    const id = initialState.userId
     try{
       await dispatch(clearStorageAndNaviagteToLogin());
       await axios.post(`${CONFIG.SERVER_URL}security/logout/${userId}`)
