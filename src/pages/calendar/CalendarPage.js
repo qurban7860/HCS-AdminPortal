@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -9,7 +10,6 @@ import timelinePlugin from '@fullcalendar/timeline';
 import { Card, Container, createTheme, Grid, Typography } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from 'react-redux';
-
 import {
  getEvents,
  updateEventDate,
@@ -34,7 +34,13 @@ import { useAuthContext } from '../../auth/useAuthContext';
 import { fDateTime } from '../../utils/formatTime';
 // ----------------------------------------------------------------------
 
-export default function CalendarPage() {
+CalendarPage.propTypes = {
+  date: PropTypes.object,
+  previousDate: PropTypes.object,
+  setDate: PropTypes.func,
+  setPreviousDate: PropTypes.func,
+};
+export default function CalendarPage({ date, setDate, previousDate, setPreviousDate }) {
   
   const { enqueueSnackbar } = useSnackbar();
   const { userId, isAllAccessAllowed, user } = useAuthContext();
@@ -45,15 +51,12 @@ export default function CalendarPage() {
   const { events, selectedRange } = useSelector((state) => state.event );
   const { securityUser } = useSelector((state) => state.user);
   const { activeSpContacts } = useSelector((state) => state.contact);
-  const [ previousDate, setPreviousDate ] = useState(null);
   const [ selectedCustomer, setSelectedCustomer ] = useState(null);
   const [ selectedContact, setSelectedContact ] = useState(null);
   const [ selectedUser, setSelectedUser ] = useState(null);
-  const [ date, setDate ] = useState(new Date());
   const [ view, setView ] = useState(isDesktop ? 'dayGridMonth' : 'listWeek');
-  const [calendarData, setCalendarData] = useState([]);
-  const [DefaultNotifyContacts, setDefaultNotifyContacts] = useState([]);
-
+  const [ calendarData, setCalendarData ] = useState([]);
+  const [ defaultNotifyContacts, setDefaultNotifyContacts ] = useState([]);
 
   useEffect(() => {
     const configurations = JSON.parse(localStorage.getItem('configurations'));
@@ -85,22 +88,6 @@ export default function CalendarPage() {
   useEffect(() => {
     setCalendarData(events || []);
   }, [events]);
-
-
-  useLayoutEffect(() => {
-    if( date && previousDate 
-        && (( date?.getFullYear() !== previousDate?.getFullYear()) 
-        || ( Number(date?.getMonth()) !== Number(previousDate?.getMonth())))
-      )
-    {
-      setPreviousDate(date);
-      dispatch(getEvents(date));
-    } else if( !previousDate && date ){
-      setPreviousDate(date);
-      dispatch(getEvents(date));
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, date,]);
 
   useEffect(() => {
     const calendarEl = calendarRef.current;
@@ -290,7 +277,7 @@ export default function CalendarPage() {
       <EventDialog
         date={date}
         range={selectedRange}
-        contacts={DefaultNotifyContacts}
+        contacts={defaultNotifyContacts}
       />
 
     </>
@@ -310,21 +297,12 @@ function applyFilter({ inputData, selectedCustomer, selectedContact, selectedUse
   if(selectedUser){
     inputData = inputData.filter((e) => e?.extendedProps?.createdBy?._id === selectedUser?._id);
   } 
-
-  // if(!isAllAccessAllowed){
-  //   inputData = inputData.filter(
-  //     (e) =>  e?.extendedProps?.primaryTechnician?._id === user?.contact ||
-  //             e?.extendedProps?.supportingTechnicians?.some((c) => c?._id === user?.contact) ||
-  //             e?.extendedProps?.notifyContacts?.some((c) => c?._id === user?.contact)
-  //   );
-  // }
   
   if (selectedContact) {
     inputData = inputData.filter(
       (e) =>
         e?.extendedProps?.primaryTechnician?._id === selectedContact?._id ||
-        e?.extendedProps?.supportingTechnicians?.some((c) => c?._id === selectedContact?._id) ||
-        e?.extendedProps?.notifyContacts?.some((c) => c?._id === selectedContact?._id)
+        e?.extendedProps?.supportingTechnicians?.some((c) => c?._id === selectedContact?._id)
     );
   }
   return inputData;
