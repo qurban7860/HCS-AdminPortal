@@ -48,11 +48,11 @@ const slice = createSlice({
         title: `${action.payload?.primaryTechnician?.firstName || ''} ${action.payload?.primaryTechnician?.lastName || ''}, ${action.payload?.customer?.name || ''}`,
         start: action.payload?.start,
         end: action.payload?.end,
-        textColor: "#1890FF",
+        textColor: action.payload?.isCustomerEvent ? "#1890FF" : "#003768",
         extendedProps: { ...action.payload }
       }
       state.isLoading = false;
-      state.events = [...state.events, newEvent];
+      state.events = [ ...state.events, newEvent ];
     },
 
     // UPDATE EVENT
@@ -65,7 +65,7 @@ const slice = createSlice({
             title: `${action.payload?.primaryTechnician?.firstName || ''} ${action.payload?.primaryTechnician?.lastName || ''}, ${action.payload?.customer?.name || ''}`,
             start: action.payload?.start,
             end: action.payload?.end,
-            textColor: "#1890FF",
+            textColor: action.payload?.isCustomerEvent ? "#1890FF" : "#003768",
             extendedProps: { ...action.payload }
           };
         }
@@ -184,7 +184,7 @@ export function getEvents(date, customer, contact) {
         title: `${v?.primaryTechnician?.firstName || ''} ${v?.primaryTechnician?.lastName || ''}, ${v?.customer?.name || ''}`,
         start: v?.start,
         end: v?.end,
-        textColor: "#1890FF",
+        textColor: v?.isCustomerEvent ? "#1890FF" : "#003768",
         extendedProps: {
           ...v
         }
