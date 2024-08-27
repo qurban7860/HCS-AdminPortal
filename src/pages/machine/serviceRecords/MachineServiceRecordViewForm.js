@@ -396,12 +396,12 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
           {(defaultValues.approvalStatus !== "PENDING" && defaultValues?.approvalLog?.length > 0) ? (              
             <ViewFormField isLoading={isLoading} sm={12}
               heading={`${defaultValues.approvalStatus === "REJECTED" ? "Rejection" : "Approval"} Comments`}
-              disabledInputField={defaultValues?.approvalLog[0]?.comments}
-              inputFieldHelperContent={`By ${
-                  defaultValues?.approvalLog[0]?.evaluatedBy.firstName
-                } ${defaultValues?.approvalLog[0]?.evaluatedBy.lastName} on ${fDate(
-                  defaultValues?.approvalLog[0]?.evaluationDate
-                )}`}
+              srEvaluationComment={{
+                comment: defaultValues?.approvalLog[0]?.comments,
+                helperText: `By ${defaultValues?.approvalLog[0]?.evaluatedBy.firstName} ${
+                  defaultValues?.approvalLog[0]?.evaluatedBy.lastName
+                } on ${fDate(defaultValues?.approvalLog[0]?.evaluationDate)}`,
+              }}
             />
           ) : null}
           <ViewFormField

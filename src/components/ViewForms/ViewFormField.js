@@ -51,8 +51,7 @@ function ViewFormField({
   handleAllVersion,
   isLoading,
   variant='body1',
-  disabledInputField,
-  inputFieldHelperContent,
+  srEvaluationComment,
 }) {
   const [verifiedAnchorEl, setVerifiedAnchorEl] = useState(null);
   const [verifiedBy, setVerifiedBy] = useState([]);
@@ -129,21 +128,31 @@ function ViewFormField({
           {secondObjectParam || ''}
           {numberParam || ''}
         </Typography>
-        {disabledInputField ? (
+        {srEvaluationComment ? (
           <TextField
             disabled
             fullWidth
-            defaultValue={disabledInputField}
+            defaultValue={srEvaluationComment?.comment}
             variant="standard"
-            helperText={inputFieldHelperContent}
+            helperText={srEvaluationComment?.helperText}
             multiline
             minRows={1}
             maxRows={6}
+            size="small"
             FormHelperTextProps={{
               sx: {
                 textAlign: 'right',
                 marginLeft: 'auto',
                 marginRight: "0",
+              },
+            }}
+            InputProps={{
+              sx: {
+                typography: 'body2',
+                '& .MuiInputBase-input.Mui-disabled': {
+                  color: theme.palette.text.primary,
+                  WebkitTextFillColor: theme.palette.text.primary,
+                },
               },
             }}
           />
@@ -377,7 +386,6 @@ ViewFormField.propTypes = {
   backLink: PropTypes.func,
   isLoading: PropTypes.bool,
   variant: PropTypes.string,
-  disabledInputField: PropTypes.string,
-  inputFieldHelperContent: PropTypes.string,
+  srEvaluationComment: PropTypes.object,
 };
 
