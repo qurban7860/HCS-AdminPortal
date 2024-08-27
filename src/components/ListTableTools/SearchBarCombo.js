@@ -488,13 +488,13 @@ function SearchBarCombo({
           {handleExcludeRepoting &&
             <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
               <Stack alignItems="flex-start">
-              <FormControl fullWidth={isMobile} sx={{ml:2, width:'200px'}}>
+              <FormControl fullWidth>
                 <InputLabel id="demo-simple-select-label">Reporting</InputLabel>
                 <Select
-                  sx={{width:'200px'}}
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
                   size="small"
+                  name="Reporting"
                   value={filterExcludeRepoting}
                   label="Reporting"
                   onChange={handleExcludeRepoting}
@@ -516,7 +516,7 @@ function SearchBarCombo({
           }
 
           <Grid item xs={12} sm={6} md={4} lg={2} xl={2} sx={{ml:'auto'}}>
-            <Grid container rowSpacing={1} columnSpacing={2} sx={{display:'flex', justifyContent:'flex-end'}}>
+            <Grid container rowSpacing={1}  spacing={1} sx={{display:'flex', justifyContent:'flex-end'}}>
               {onReload && 
                   <Grid item>
                     <StyledTooltip title='Reload' placement="top" disableFocusListener tooltipcolor="#103996" color="#103996">
@@ -548,7 +548,7 @@ function SearchBarCombo({
                     </StyledTooltip>
                   </Grid>
                 }
-              
+                
               {handleAttach && !transferredMachine &&
                 <Grid item>
                   <StyledTooltip title="Attach Existing Drawing" placement="top" disableFocusListener tooltipcolor="#103996" color="#103996">
@@ -676,9 +676,8 @@ function SearchBarCombo({
                 </StyledTooltip>
               </Grid>
               }
-              
               {addButton && !transferredMachine 
-              && !(( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly )) &&
+                && !(( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly )) &&
                 <Grid item >
                     <StyledTooltip title={addButton} placement="top" disableFocusListener tooltipcolor="#103996" color="#fff">
                     <IconButton color="#fff" onClick={SubOnClick} 
@@ -688,8 +687,7 @@ function SearchBarCombo({
                               color:"#fff"
                             }
                           }}>
-                      <Iconify color="#fff" sx={{ height: '24px', width: '24px'}} icon={buttonIcon || 'eva:plus-fill'} 
-                      />
+                      <Iconify color="#fff" sx={{ height: '24px', width: '24px'}} icon={buttonIcon || 'eva:plus-fill'} />
                     </IconButton>
                   </StyledTooltip>
                 </Grid>

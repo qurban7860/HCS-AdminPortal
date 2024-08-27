@@ -220,7 +220,8 @@ export const StyledCardContainer = styled(Card)(({ theme }) => ({
   height: 160,
   position: 'sticky',
   top:'60px',
-  zIndex:'2'
+  zIndex:'2',
+  [theme.breakpoints.down('sm')]: { height: 140 },
 }));
 
 // @root - MachineEditForm - spacing
