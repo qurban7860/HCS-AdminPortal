@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React,{ useEffect, useLayoutEffect, useRef, useState, useCallback } from 'react';
+import React,{ useEffect, useLayoutEffect, useRef, memo, useState, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { enc, MD5, lib } from 'crypto-js';
@@ -605,5 +605,5 @@ function EventDialog({
   );
 }
 
-export default EventDialog;
+export default memo( EventDialog );
 

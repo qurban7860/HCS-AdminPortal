@@ -1,6 +1,7 @@
+import { memo } from 'react';
 import PropTypes from 'prop-types';
 // @mui
-import { Stack, Tooltip, Typography, IconButton, ToggleButton, Autocomplete, TextField } from '@mui/material';
+import { Stack, Typography, IconButton, ToggleButton, Autocomplete, TextField } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 // utils
 import { fDate } from '../../utils/formatTime';
@@ -37,7 +38,7 @@ CalendarToolbar.propTypes = {
   view: PropTypes.oneOf(['dayGridMonth', 'timeGridWeek', 'timeGridDay', 'listMonth']),
 };
 
-export default function CalendarToolbar({
+function CalendarToolbar({
   selectedCustomer,
   setSelectedCustomer,
   selectedContact,
@@ -52,9 +53,9 @@ export default function CalendarToolbar({
   onOpenFilter,
 }) {
   
-  const { userId, isAllAccessAllowed, isSettingReadOnly, user } = useAuthContext();
   const dispatch= useDispatch();
   const isDesktop = useResponsive('up', 'sm');
+  const { userId, isAllAccessAllowed, user } = useAuthContext();
   const { activeCustomers } = useSelector((state) => state.customer);
   const { activeSpContacts } = useSelector((state) => state.contact);
   const { activeSecurityUsers } = useSelector((state) => state.user);
@@ -159,3 +160,5 @@ export default function CalendarToolbar({
     </Stack>
   );
 }
+
+export default memo( CalendarToolbar );
