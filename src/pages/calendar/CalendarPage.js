@@ -161,7 +161,6 @@ function CalendarPage({ calendarRef, view, date, previousDate, selectedUser, sel
               allDayMaintainDuration
               eventResizableFromStart
               events={dataFiltered}
-              initialEvents={dataFiltered}
               ref={calendarRef}
               initialDate={date}
               initialView={view}
