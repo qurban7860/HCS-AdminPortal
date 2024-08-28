@@ -40,7 +40,7 @@ export default function LoadingScreen() {
 
   const { themeLayout } = useSettingsContext();
 
-  const isDashboard = isInitialized && pathname.includes('/dashboard') && isDesktop;
+  const isDashboard = isInitialized && ( pathname.includes('/dashboard') || pathname.includes('/calendar') ) && isDesktop;
 
   const size =
     (themeLayout === 'mini' && NAV.W_DASHBOARD_MINI) ||

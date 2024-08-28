@@ -7,6 +7,7 @@ import { CONFIG } from '../../../config-global';
 
 const initialState = {
   isLoading: false,
+  isLoadingList: false,
   error: null,
   event: {},
   events: [],
@@ -24,6 +25,11 @@ const slice = createSlice({
       state.isLoading = true;
     },
 
+    // START LOADING
+    startLoadingList(state) {
+      state.isLoadingList = true;
+    },
+
     // STOP LOADING
     stopLoading(state) {
       state.isLoading = true;
@@ -38,6 +44,7 @@ const slice = createSlice({
     // GET EVENTS
     getEventsSuccess(state, action) {
       state.isLoading = false;
+      state.isLoadingList = false;
       state.events = action.payload;
     },
 
@@ -177,6 +184,7 @@ export function getEvents(date, customer, contact) {
   return async (dispatch) => {
     dispatch(resetEvents());
     dispatch(slice.actions.startLoading());
+    dispatch(slice.actions.startLoadingList());
     try {
       const params= {
         isArchived: false,
