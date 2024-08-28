@@ -46,6 +46,7 @@ export default function DepartmentViewForm() {
   const defaultValues = useMemo(
     () => ({
       departmentName: department?.departmentName || '',
+      departmentType: department?.departmentType || 'NA',
       isActive: department?.isActive,
       isDefault: department?.isDefault,
       forCustomer: department?.forCustomer || false,
@@ -83,6 +84,7 @@ export default function DepartmentViewForm() {
       />
       <Grid container sx={{mt:2}}>
         <ViewFormField isLoading={isLoading} sm={12} heading="Department Name" param={defaultValues?.departmentName} />
+        <ViewFormField isLoading={isLoading} sm={12} heading="Department Type" param={defaultValues?.departmentType} />
         <Grid display="flex" >
           <FormControlLabel control={<Switch disabled checked={defaultValues?.isDefault} />} label={<Typography variant='body2'sx={{fontWeight:'bold'}}>Default</Typography>} />
           <FormControlLabel control={<Switch disabled checked={defaultValues?.forCustomer} />} label={<Typography variant='body2'sx={{fontWeight:'bold'}}> Customers</Typography>} />
