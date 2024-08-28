@@ -1,19 +1,20 @@
 import { useLayoutEffect, useState, useRef } from 'react' 
 import { useDispatch, useSelector } from 'react-redux';
-import CalendarPage from './CalendarPage'
 import { useAuthContext } from '../../auth/useAuthContext';
-// hooks
-import useResponsive from '../../hooks/useResponsive';
 import { getEvents, setEventModel } from '../../redux/slices/event/event';
 import { getActiveCustomers } from '../../redux/slices/customer/customer';
 import { getActiveSPContacts } from '../../redux/slices/customer/contact';
 import { getActiveSecurityUsers, getSecurityUser } from '../../redux/slices/securityUser/securityUser';
+import LoadingScreen from '../../components/loading-screen';
+import useResponsive from '../../hooks/useResponsive';
+import CalendarPage from './CalendarPage';
 
 export default function CalendarView() {
     const dispatch = useDispatch();
     const calendarRef = useRef(null);
     const isDesktop = useResponsive('up', 'sm');
     const { userId, isAllAccessAllowed } = useAuthContext();
+    const { isLoading } = useSelector((state) => state.event );
     const { activeSpContacts } = useSelector((state) => state.contact);
     const { securityUser } = useSelector((state) => state.user);
     const [ date, setDate ] = useState(new Date());
@@ -76,6 +77,10 @@ export default function CalendarView() {
             setView(newView);
         }
     }, [ isDesktop ]);
+
+    if (isLoading) {
+        return <LoadingScreen />;
+    }
 
     return (
         <CalendarPage 
