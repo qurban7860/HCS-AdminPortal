@@ -39,9 +39,9 @@ const StyledCalendar = styled('div')(({ theme }) => ({
   '& .fc .fc-event .fc-event-main': {
     padding: '2px 4px',
     borderRadius: 4,
-    backgroundColor: theme.palette.common.white,
-    transition: theme.transitions.create('filter'),
-    '&:hover': { filter: 'brightness(0.92)' },
+    // backgroundColor: theme.palette.common.white,
+    // transition: theme.transitions.create('filter'),
+    // '&:hover': { filter: 'brightness(0.92)' },
     '&:before,&:after': {
       top: 0,
       left: 0,
@@ -85,7 +85,7 @@ const StyledCalendar = styled('div')(({ theme }) => ({
     overflow: 'hidden',
     boxShadow: theme.customShadows.z20,
     borderRadius: theme.shape.borderRadius,
-    backgroundColor: theme.palette.background.paper,
+    // backgroundColor: theme.palette.background.paper,
   },
   '& .fc .fc-popover-header': {
     ...theme.typography.subtitle2,
