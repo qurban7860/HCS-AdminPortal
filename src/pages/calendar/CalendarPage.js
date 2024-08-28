@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useState, useRef, useMemo, memo, useEffect } from 'react';
+import { useState, useMemo, memo } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import interactionPlugin from '@fullcalendar/interaction';
 import listPlugin from '@fullcalendar/list';
@@ -11,8 +11,6 @@ import { Card, Container} from '@mui/material';
 // redux
 import { useDispatch, useSelector } from 'react-redux';
 import { getEvents, updateEventDate, updateEvent, selectRange, setEventModel, setSelectedEvent } from '../../redux/slices/event/event';
-// hooks
-import useResponsive from '../../hooks/useResponsive';
 // components
 import { useSnackbar } from '../../components/snackbar';
 // sections
@@ -27,44 +25,27 @@ import EventContent from './utils/EventContent';
 // ----------------------------------------------------------------------
 
 CalendarPage.propTypes = {
+  calendarRef: PropTypes.any,
   date: PropTypes.object,
+  view: PropTypes.string,
   previousDate: PropTypes.object,
+  selectedUser: PropTypes.object,
+  selectedContact: PropTypes.object,
   setDate: PropTypes.func,
+  setView: PropTypes.func,
   setPreviousDate: PropTypes.func,
+  setSelectedUser: PropTypes.func,
+  setSelectedContact: PropTypes.func,
   defaultNotifyContacts: PropTypes.array
 };
-function CalendarPage({ date, setDate, previousDate, setPreviousDate, defaultNotifyContacts }) {
+function CalendarPage({ calendarRef, view, date, previousDate, selectedUser, selectedContact, setDate, setView, setPreviousDate, setSelectedUser, setSelectedContact, defaultNotifyContacts }) {
   
   const { enqueueSnackbar } = useSnackbar();
   const { isAllAccessAllowed, user } = useAuthContext();
   const dispatch = useDispatch();
-  const isDesktop = useResponsive('up', 'sm');
-  const calendarRef = useRef(null);
 
   const { events, eventModel, selectedRange } = useSelector((state) => state.event );
-  const { securityUser } = useSelector((state) => state.user);
   const [ selectedCustomer, setSelectedCustomer ] = useState(null);
-  const [ selectedContact, setSelectedContact ] = useState(null);
-  const [ selectedUser, setSelectedUser ] = useState(null);
-  const [ view, setView ] = useState(isDesktop ? 'dayGridMonth' : 'listWeek');
-
-  useEffect(()=>{
-    if(!isAllAccessAllowed){
-      setSelectedUser(securityUser);
-      setSelectedContact(securityUser?.contact)
-    }
-  },[ securityUser, isAllAccessAllowed])
-
-
-  useEffect(() => {
-    const calendarEl = calendarRef.current;
-    if (calendarEl) {
-      const calendarApi = calendarEl.getApi();
-      const newView = isDesktop ? 'dayGridMonth' : 'listWeek';
-      calendarApi.changeView(newView);
-      setView(newView);
-    }
-  }, [ isDesktop ]);
 
   const handleChangeView = (newView) => {
     const calendarEl = calendarRef.current;
@@ -191,7 +172,7 @@ function CalendarPage({ date, setDate, previousDate, setPreviousDate, defaultNot
               eventDrop={handleDropEvent}
               eventClick={handleSelectEvent}
               eventResize={handleResizeEvent}
-              height={isDesktop ? 720 : 'auto'}
+              height= 'auto'
               eventTimeFormat={{ hour: 'numeric', minute: '2-digit' }}
               eventContent={(info) => <EventContent info={info} />}
               plugins={[
