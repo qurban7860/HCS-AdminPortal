@@ -46,7 +46,7 @@ export default function DepartmentViewForm() {
   const defaultValues = useMemo(
     () => ({
       departmentName: department?.departmentName || '',
-      departmentType: department?.departmentType || 'NA',
+      departmentType: department?.departmentType || '',
       isActive: department?.isActive,
       isDefault: department?.isDefault,
       forCustomer: department?.forCustomer || false,
