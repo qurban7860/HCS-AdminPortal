@@ -22,7 +22,7 @@ import { useAuthContext } from '../../auth/useAuthContext';
 import CustomSwitch from '../custom-input/CustomSwitch';
 import { useSnackbar } from '../snackbar';
 import PriorityIcon from '../../pages/calendar/utils/PriorityIcon';
-import RenderPriorityInput from '../../pages/calendar/utils/RenderPriorityInput';
+import RenderCustomInput from '../custom-input/RenderCustomInput';
 
 
 function getTimeObjectFromISOString(dateString) {
@@ -141,9 +141,8 @@ function EventDialog({
   }, [reset, range, selectedEvent, contacts]);
   
   const priorityOptions = [
+    'Highest',
     'High',
-    'Medium',
-    'Low',
   ];
   
   const onSubmit = async ( data ) => {
@@ -369,7 +368,7 @@ function EventDialog({
                       name="priority"
                       options={ priorityOptions }
                       isOptionEqualToValue={( option, value ) => option === value }
-                      renderInput={(params) => <RenderPriorityInput  params={params} />}
+                      renderInput={(params) => <RenderCustomInput label="Priority"  params={params} />}
                       renderOption={(props, option) => 
                       <li {...props} key={option} > 
                         <PriorityIcon priority={option} />
