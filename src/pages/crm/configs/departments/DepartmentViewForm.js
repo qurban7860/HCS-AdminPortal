@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 // @mui
-import { Card, Grid, Switch, Typography, FormControlLabel } from '@mui/material';
+import { Card, Grid } from '@mui/material';
 // redux
 import { deleteDepartment } from '../../../../redux/slices/department/department';
 import { useSnackbar } from '../../../../components/snackbar';
