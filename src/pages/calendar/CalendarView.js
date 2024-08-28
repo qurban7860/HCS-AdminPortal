@@ -1,7 +1,7 @@
 import { useLayoutEffect, useState, useRef } from 'react' 
 import { useDispatch, useSelector } from 'react-redux';
 import { useAuthContext } from '../../auth/useAuthContext';
-import { getEvents, setEventModel } from '../../redux/slices/event/event';
+import { getEvents, resetEvents, setEventModel } from '../../redux/slices/event/event';
 import { getActiveCustomers } from '../../redux/slices/customer/customer';
 import { getActiveSPContacts } from '../../redux/slices/customer/contact';
 import { getActiveSecurityUsers, getSecurityUser } from '../../redux/slices/securityUser/securityUser';
@@ -46,6 +46,9 @@ export default function CalendarView() {
             ]);
         };
         fetchData();
+        return () => {
+            dispatch(resetEvents());
+        };
     }, [dispatch, date, previousDate, userId]);
 
     useLayoutEffect(() => {
