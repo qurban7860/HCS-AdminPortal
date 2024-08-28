@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { useLayoutEffect, useMemo } from 'react';
+import { useLayoutEffect, useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
@@ -29,7 +29,7 @@ export default function DepartmentAddForm() {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const { configs } = useSelector((state) => state.config);
-
+  const [ departmentTypes, setDepartmentTypes ] = useState([])
 
   const defaultValues = useMemo(
     () => ({
@@ -41,14 +41,12 @@ export default function DepartmentAddForm() {
     []
   );
 
-  const defaultDepartmentTypes = useMemo(
-    () =>
-      configs
-        .find((item) => item.name === 'Department_Types')
-        ?.value.split(',')
-        .map((type) => type.trim()),
-    [configs]
-  );
+  useLayoutEffect(() =>{
+      const departTypes = configs?.find((item) => item.name === 'Department_Types')?.value.split(',').map((type) => type.trim())
+      if(Array.isArray(departTypes) &&  departTypes.length > 0){
+        setDepartmentTypes(departTypes)
+      }
+  }, [ configs ] );
 
   useLayoutEffect(() => {
     dispatch(getConfigs());
@@ -99,9 +97,9 @@ export default function DepartmentAddForm() {
                 <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)'}}>
                   <RHFTextField name="departmentName" label="Name*" />
                   <RHFAutocomplete
-                    label="Select Department Type*"
+                    label="Department Type*"
                     name="departmentType"
-                    options={defaultDepartmentTypes}
+                    options={departmentTypes}
                   />
                 </Box>
                 <Grid display="flex" justifyContent="flex-start">
