@@ -10,14 +10,7 @@ import timelinePlugin from '@fullcalendar/timeline';
 import { Card, Container, createTheme, Grid, Typography } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from 'react-redux';
-import {
- getEvents,
- updateEventDate,
- updateEvent,
- selectRange,
- setEventModel,
- setSelectedEvent
-} from '../../redux/slices/event/event';
+import { getEvents, updateEventDate, updateEvent, selectRange, setEventModel, setSelectedEvent } from '../../redux/slices/event/event';
 // hooks
 import useResponsive from '../../hooks/useResponsive';
 // components
@@ -29,6 +22,8 @@ import { StyledCardContainer, StyledTooltip } from '../../theme/styles/default-s
 import EventDialog from '../../components/Dialog/EventDialog';
 import { useAuthContext } from '../../auth/useAuthContext';
 import { fDateTime } from '../../utils/formatTime';
+import PriorityIcon from './utils/PriorityIcon';
+
 // ----------------------------------------------------------------------
 
 CalendarPage.propTypes = {
@@ -168,7 +163,9 @@ function CalendarPage({ date, setDate, previousDate, setPreviousDate, defaultNot
             <Typography variant="body2"><strong>Priority:</strong> { priority }</Typography>
           </Grid>
         } placement='top-start' tooltipcolor={theme.palette.primary.main}>
-        <div style={{ position: 'relative', zIndex: 10}} className="fc-event-main-frame">
+        <div style={{ position: 'relative', zIndex: 10, justifyContent: 'center', alignItems: "center"}} className="fc-event-main-frame">
+        
+          <div className="fc-event-time"><PriorityIcon priority={priority} /></div>
           <div className="fc-event-time">{timeText}</div>
           <div className="fc-event-title-container">
             <div className="fc-event-title fc-sticky">{title}</div>

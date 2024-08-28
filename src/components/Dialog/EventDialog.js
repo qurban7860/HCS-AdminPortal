@@ -139,7 +139,6 @@ function EventDialog({
       dispatch(resetActiveCustomerMachines())
       dispatch(resetActiveSites())
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   },[ dispatch, customer ])
 
   useLayoutEffect(() => {
@@ -165,8 +164,8 @@ function EventDialog({
       data.start_date = new Date(start_date);
       end_date.setHours(end_hours, end_minutes);
       data.end_date = new Date(end_date);
-      if (selectedEvent?._id) {
-        await dispatch(updateEvent(selectedEvent?._id, data));
+      if (data?._id) {
+        await dispatch(updateEvent(data?._id, data));
         enqueueSnackbar('Event Updated Successfully!');
       } else {
         await dispatch(createEvent(data));
