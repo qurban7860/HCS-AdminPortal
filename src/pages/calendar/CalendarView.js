@@ -1,7 +1,7 @@
-import { useLayoutEffect, useState, useRef } from 'react' 
+import { useLayoutEffect, useState, useRef, memo } from 'react' 
 import { useDispatch, useSelector } from 'react-redux';
 import { useAuthContext } from '../../auth/useAuthContext';
-import { getEvents, resetEvents, setEventModel } from '../../redux/slices/event/event';
+import { getEvents, setEventModel } from '../../redux/slices/event/event';
 import { getActiveCustomers } from '../../redux/slices/customer/customer';
 import { getActiveSPContacts } from '../../redux/slices/customer/contact';
 import { getActiveSecurityUsers, getSecurityUser } from '../../redux/slices/securityUser/securityUser';
@@ -9,7 +9,7 @@ import LoadingScreen from '../../components/loading-screen';
 import useResponsive from '../../hooks/useResponsive';
 import CalendarPage from './CalendarPage';
 
-export default function CalendarView() {
+function CalendarView() {
     const dispatch = useDispatch();
     const calendarRef = useRef(null);
     const isDesktop = useResponsive('up', 'sm');
@@ -36,21 +36,18 @@ export default function CalendarView() {
                 setPreviousDate(date);
                 await dispatch(getEvents(date));
             }
-
-            await Promise.all([
-                dispatch(setEventModel(false)),
-                dispatch(getActiveCustomers()),
-                dispatch(getActiveSPContacts()),
-                dispatch(getActiveSecurityUsers()),
-                dispatch(getSecurityUser(userId)),
-            ]);
         };
         fetchData();
-        return () => {
-            dispatch(resetEvents());
-        };
     }, [dispatch, date, previousDate, userId]);
 
+    useLayoutEffect(() => {
+        dispatch(setEventModel(false));
+        dispatch(getActiveCustomers());
+        dispatch(getActiveSPContacts());
+        dispatch(getActiveSecurityUsers());
+        dispatch(getSecurityUser(userId));
+    },[ dispatch, userId ]);
+    
     useLayoutEffect(() => {
         const configurations = JSON.parse(localStorage.getItem('configurations'));
         const def_contacts = configurations?.find(c => c.name === 'Default_Notify_Contacts');
@@ -102,3 +99,5 @@ export default function CalendarView() {
         />
     );
 }
+
+export default  memo(CalendarView)
