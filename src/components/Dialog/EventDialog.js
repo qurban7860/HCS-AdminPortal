@@ -3,20 +3,14 @@ import React,{ useEffect, useLayoutEffect, useRef, memo, useState, useCallback }
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { enc, MD5, lib } from 'crypto-js';
-import download from 'downloadjs';
 // @mui
 import { Box, Stack, Button, DialogActions, DialogContent, Grid, Dialog, DialogTitle, Container, Divider, TextField, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
-import KeyboardDoubleArrowUpRoundedIcon from '@mui/icons-material/KeyboardDoubleArrowUpRounded';
-import KeyboardArrowUpRoundedIcon from '@mui/icons-material/KeyboardArrowUpRounded';
-import DragHandleRoundedIcon from '@mui/icons-material/DragHandleRounded';
-import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
-import KeyboardDoubleArrowDownRoundedIcon from '@mui/icons-material/KeyboardDoubleArrowDownRounded';
 import { eventSchema } from '../../pages/schemas/calendarSchema';
 import { manipulateFiles } from '../../pages/documents/util/Util';
 // slices
-import { setSelectedEvent, setEventModel, createEvent, updateEvent, downloadEventFile, deleteEvent, deleteEventFile } from '../../redux/slices/event/event';
+import { setEventModel, createEvent, updateEvent, deleteEvent, deleteEventFile } from '../../redux/slices/event/event';
 import { getActiveCustomerMachines, resetActiveCustomerMachines } from '../../redux/slices/products/machine';
 import { getActiveSites, resetActiveSites } from '../../redux/slices/customer/site';
 import FormProvider, { RHFDatePicker, RHFTextField, RHFAutocomplete, RHFUpload } from '../hook-form';
@@ -27,6 +21,8 @@ import { time_list } from '../../constants/time-list';
 import { useAuthContext } from '../../auth/useAuthContext';
 import CustomSwitch from '../custom-input/CustomSwitch';
 import { useSnackbar } from '../snackbar';
+import PriorityIcon from '../../pages/calendar/utils/PriorityIcon';
+import RenderPriorityInput from '../../pages/calendar/utils/RenderPriorityInput';
 
 
 function getTimeObjectFromISOString(dateString) {
@@ -54,7 +50,7 @@ const getInitialValues = (selectedEvent, range, contacts) => {
     start: selectedEvent ? getTimeObjectFromISOString(selectedEvent?.start) : { value: '07:30', label: '7:30 AM' },
     end: selectedEvent ?  getTimeObjectFromISOString(selectedEvent?.end) : { value: '18:00', label: '6:00 PM' },
     customer: selectedEvent ? selectedEvent?.customer : null,
-    priority: selectedEvent ? selectedEvent?.priority : null, 
+    priority: selectedEvent?.priority?.trim() ? selectedEvent?.priority : null, 
     machines: selectedEvent ? selectedEvent?.machines :  [],
     site: selectedEvent ? selectedEvent?.site :  null,
     jiraTicket: selectedEvent ? selectedEvent?.jiraTicket :  '',
@@ -76,23 +72,20 @@ const getInitialValues = (selectedEvent, range, contacts) => {
 
 EventDialog.propTypes = {
   range: PropTypes.object,
-  colorOptions: PropTypes.arrayOf(PropTypes.string),
   contacts:PropTypes.array
 };
 
 function EventDialog({
   range,
-  colorOptions,
   contacts,
 }) {
 
   const { user } = useAuthContext();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
-  const regEx = /^[^2]*/;
   const { selectedEvent, eventModel, isLoading } = useSelector((state) => state.event );
   const { activeCustomers } = useSelector((state) => state.customer);
-  const { activeContacts, activeSpContacts } = useSelector((state) => state.contact);
+  const { activeSpContacts } = useSelector((state) => state.contact);
   const { activeSites } = useSelector((state) => state.site);
   const { activeCustomerMachines } = useSelector( (state) => state.machine );
   const [ openConfirm, setOpenConfirm ] = useState(false);
@@ -106,7 +99,6 @@ function EventDialog({
   const {
     reset,
     watch,
-    getValues,
     setValue,
     handleSubmit,
     formState: { isSubmitting, errors },
@@ -142,7 +134,6 @@ function EventDialog({
       dispatch(resetActiveCustomerMachines())
       dispatch(resetActiveSites())
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   },[ dispatch, customer ])
 
   useLayoutEffect(() => {
@@ -150,16 +141,14 @@ function EventDialog({
   }, [reset, range, selectedEvent, contacts]);
   
   const priorityOptions = [
-    'Highest',
     'High',
     'Medium',
     'Low',
-    'Lowest',
   ];
   
   const onSubmit = async ( data ) => {
     try {
-      data.priority = priority
+      data.priority = priority || '';
       const start_date = new Date(data?.date);
       const end_date = new Date(data?.end_date);
       const [start_hours, start_minutes] = data.start.value.split(':').map(Number);
@@ -168,15 +157,14 @@ function EventDialog({
       data.start_date = new Date(start_date);
       end_date.setHours(end_hours, end_minutes);
       data.end_date = new Date(end_date);
-      if ( selectedEvent?.extendedProps?._id ) {
-        await dispatch(updateEvent( selectedEvent?.extendedProps?._id, data ));
+      if (data?._id) {
+        await dispatch(updateEvent(data?._id, data));
         enqueueSnackbar('Event Updated Successfully!');
       } else {
         await dispatch(createEvent(data));
         enqueueSnackbar('Event Created Successfully!');
       }
       await setValue("isCustomerEvent", true );
-      await dispatch(setSelectedEvent(null));
       await reset();
       await dispatch(setEventModel(false));
     } catch (e) {
@@ -188,8 +176,7 @@ function EventDialog({
   };
   
 
-  const handleCloseModel = async () => {
-    await dispatch(setSelectedEvent(null));
+  const handleCloseModel = ()=> {
     dispatch(setEventModel(false)) 
     dispatch(resetActiveCustomerMachines())
     dispatch(resetActiveSites())
@@ -222,23 +209,6 @@ function EventDialog({
       }
     }, [ isCustomerEvent, setValue, activeSpContacts, activeCustomers, user ] );
     
-    const getPriorityIcon = ( priorityVal ) => {
-      switch ( priorityVal ) {
-        case 'Highest':
-          return <KeyboardDoubleArrowUpRoundedIcon color="error" />;
-        case 'High':
-          return <KeyboardArrowUpRoundedIcon color="error" />;
-        case 'Medium':
-          return <DragHandleRoundedIcon color="warning" />;
-        case 'Low':
-          return <KeyboardArrowDownRoundedIcon color="success" />;
-        case 'Lowest':
-          return <KeyboardDoubleArrowDownRoundedIcon color="success" />;
-        default:
-          return null;
-      }
-    };
-
   const hashFilesMD5 = async (_files) => {
     const hashPromises = _files.map((file) => new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -282,7 +252,7 @@ function EventDialog({
 
   const handleFileRemove = useCallback( async (inputFile) => {
     try{
-      setValue('files', files?.filter( ( el ) => ( inputFile?._id ? el?._id !== inputFile?._id : el !== inputFile )), { shouldValidate: true } )
+      setValue('files', files?.filter((el) => ( inputFile?._id ? el?._id !== inputFile?._id : el !== inputFile )), { shouldValidate: true } )
       if( inputFile?._id ){
         dispatch(deleteEventFile( inputFile?.event, inputFile?._id))
       }
@@ -291,50 +261,16 @@ function EventDialog({
     }
   }, [ dispatch, setValue, files ] );
 
-  const handleLoadFile = useCallback( async ( fileId, index ) => {
-    try{
-      const response = await dispatch(downloadEventFile( selectedEvent?.extendedProps?._id, fileId, index ))
-      const allFiles = getValues('files') || [];
-      const file = allFiles[index];
-      allFiles[index] = {
-        ...file,
-          src: `data:${file?.fileType};base64,${response.data}`,
-          preview: `data:${file?.fileType};base64,${response.data}`,
-          isLoaded: true,
-        };
-        setValue('files', allFiles, { shouldValidate: true });
-    } catch(e){
-      console.error(e)
-    }
-  }, [ dispatch, getValues, setValue, selectedEvent ] );
-
-  const handleDownload = ( file ) => {
-    console.log("file : ",file)
-    dispatch(downloadEventFile( selectedEvent?.extendedProps?._id, file?._id ))
-      .then((res) => {
-        if (regEx.test(res.status)) {
-          download(atob(res.data), `${file?.fileName}.${file?.fileExtension}`, { type: file?.fileExtension });
-          enqueueSnackbar("File downloaded successfully!");
-        } else {
-          enqueueSnackbar("Something went wrong!", { variant: `error` });
-        }
-      })
-      .catch((err) => {
-        enqueueSnackbar( typeof err === 'string' ? err : "Something went wrong!", { variant: `error` } );
-      });
-  };
-
-  const handleDeleteEvent =  async () => {
+  const handleDeleteEvent =  async (inputFile) => {
     try {
       if (selectedEvent && selectedEvent?.extendedProps?._id) {
         await dispatch(deleteEvent(selectedEvent?.extendedProps?._id));
-        await dispatch(setSelectedEvent(null));
         await setOpenConfirm(false);
         await dispatch(setEventModel(false));
       }
-      enqueueSnackbar('Event Archived Successfully!');
+      enqueueSnackbar('Event Deleted Successfully!');
     } catch (error) {
-      enqueueSnackbar('Event Archive Failed!', { variant: 'error'});
+      enqueueSnackbar('Event Delete Failed!', { variant: 'error'});
     }
   };
 
@@ -433,16 +369,12 @@ function EventDialog({
                       name="priority"
                       options={ priorityOptions }
                       isOptionEqualToValue={( option, value ) => option === value }
-                      renderInput={(params) => {
-                        const selectedOption = priorityOptions?.includes(params?.inputProps?.value) ? params?.inputProps?.value : "";
-                        const selectedIcon = selectedOption ? getPriorityIcon( selectedOption ) : null;
-                        return (
-                          <TextField {...params} InputProps={{ ...params.InputProps, startAdornment: selectedIcon, }}
-                            label='Priority'
-                          />
-                        );
-                      }}
-                      renderOption={(props, option) => <li {...props} key={option} > { getPriorityIcon( option ) } <span style={{ marginLeft: 8 }}>{option}</span> </li>}
+                      renderInput={(params) => <RenderPriorityInput  params={params} />}
+                      renderOption={(props, option) => 
+                      <li {...props} key={option} > 
+                        <PriorityIcon priority={option} />
+                        <span style={{ marginLeft: 8 }}>{option}</span> 
+                      </li>}
                     />
 
                 {isCustomerEvent && (
@@ -533,11 +465,9 @@ function EventDialog({
                     thumbnail
                     name="files"
                     imagesOnly
-                    onDrop={ handleDropMultiFile }
+                    onDrop={handleDropMultiFile}
                     onRemove={ handleFileRemove } 
-                    onLoadImage={ handleLoadFile }
-                    onDownload={ handleDownload }
-                    // onRemoveAll={() => setValue('files', [], { shouldValidate: true })}
+                    // onRemoveAll={() => setValue('files', '', { shouldValidate: true })}
                   />
 
                 {selectedEvent && (
@@ -566,8 +496,8 @@ function EventDialog({
           {selectedEvent && (
             <IconTooltip
               color="#FF0000"
-              title="Archive Event"
-              icon="mdi:archive"
+              title="Delete Event"
+              icon="eva:trash-2-outline"
               onClick={() => setOpenConfirm(true)}
             />
           )}
@@ -588,8 +518,8 @@ function EventDialog({
       <ConfirmDialog
         open={openConfirm}
         onClose={() => setOpenConfirm(false)}
-        title="Archive"
-        content="Are you sure you want to Archive?"
+        title="Delete"
+        content="Are you sure you want to Delete?"
         action={
           <LoadingButton
             variant="contained"
@@ -597,7 +527,7 @@ function EventDialog({
             onClick={ handleDeleteEvent}
             loading={ isLoading || isSubmitting}
           >
-            Archive
+            Delete
           </LoadingButton>
         }
       />

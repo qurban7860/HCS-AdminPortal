@@ -12,7 +12,7 @@ import Iconify from '../../components/iconify';
 import { setEventModel, setSelectedEvent } from '../../redux/slices/event/event';
 import { StyledTooltip } from '../../theme/styles/default-styles';
 import { useAuthContext } from '../../auth/useAuthContext';  
-import { getWeekRange } from './util';  
+import { getWeekRange } from './utils/util';  
 
 const VIEW_OPTIONS = [
   { value: 'dayGridMonth', label: 'Month', icon: 'ic:round-view-module' },

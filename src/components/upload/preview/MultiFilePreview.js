@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
-import { useState, memo, useLayoutEffect, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useState, memo, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { m, AnimatePresence } from 'framer-motion';
 // @mui
 import { useTheme } from '@mui/material/styles';
@@ -55,7 +55,6 @@ function MultiFilePreview({
 }) {
   
   const { activeDocumentTypes } = useSelector((state) => state.documentType);
-  const dispatch = useDispatch()
   const theme = useTheme();
   const [slides, setSlides] = useState([]);
   const [selectedImage, setSelectedImage] = useState(-1);
