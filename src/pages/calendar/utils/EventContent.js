@@ -20,19 +20,17 @@ const EventContent = ({ info }) => {
                 <Typography variant='body2'><strong>Time:</strong> {fDateTime(start)}</Typography>
                 <Typography variant='body2'><strong>Technician:</strong> {`${primaryTechnician?.firstName || '' } ${primaryTechnician?.lastName || '' }`}</Typography>
                 <Typography variant='body2'><strong>Customer:</strong> {customer.name}</Typography>
-                {machines?.length > 0 && ( <Typography variant='body2'><strong>Machines:</strong> {machineNames}</Typography>)}
-                <Typography variant="body2"><strong>Priority:</strong> {priority}</Typography>
+                { machines?.length > 0 && ( <Typography variant='body2'><strong>Machines:</strong> {machineNames}</Typography>)}
+                { priority?.trim() && <Typography variant="body2"><strong>Priority:</strong> {priority}</Typography>}
             </Grid>
         }
         placement='top-start'
         tooltipcolor={theme.palette.primary.main}
     >
-        <div style={{ display: 'flex', alignItems: 'center', position: 'relative', zIndex: 10 }} className="fc-event-main-frame">
-            <div style={{ display: 'flex', alignItems: 'center', marginRight: 4 }} className="fc-event-icon">
-                <PriorityIcon priority={priority} />
-            </div>
+        <div className="fc-event-main-frame" style={{ display: 'flex', alignItems: 'center', position: 'relative', zIndex: 10 }} >
+            <PriorityIcon priority={priority} />
             <div className="fc-event-time" style={{ marginRight: 4 }}>{timeText}</div>
-            <div className="fc-event-title-container">
+            <div className="fc-event-title-container" >
                 <div className="fc-event-title fc-sticky">{title}</div>
             </div>
         </div>
