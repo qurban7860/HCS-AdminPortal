@@ -23,6 +23,12 @@ const slice = createSlice({
     startLoading(state) {
       state.isLoading = true;
     },
+
+    // STOP LOADING
+    stopLoading(state) {
+      state.isLoading = true;
+    },
+
     // HAS ERROR
     hasError(state, action) {
       state.isLoading = false;
@@ -74,6 +80,7 @@ const slice = createSlice({
     },
     // UPDATE EVENT
     updateEventDateLocal(state, action) {
+      state.isLoading = false;
       const { id, start, end } = action.payload;
       state.events = state.events.map((event) => {
         if (event.id === id) {
@@ -91,12 +98,14 @@ const slice = createSlice({
 
     // DELETE EVENTS
     deleteEventSuccess(state, action) {
+      state.isLoading = false;
       const eventId = action.payload._id;
       state.events = state.events.filter((event) => event.id !== eventId);
     },
 
     // DELETE EVENTS FILES
     deleteEventsFileSuccess(state, action) {
+      state.isLoading = false;
       const { eventId, _id } = action.payload;
       state.events = state.events.map((event) => {
         if (event.id === eventId) {
@@ -114,6 +123,7 @@ const slice = createSlice({
 
     // // DELETE EVENT FILES
     deleteEventFileSuccess(state, action) {
+      state.isLoading = false;
       const selectedEventClone = _.cloneDeep(state.selectedEvent);
       selectedEventClone.extendedProps.files = selectedEventClone.extendedProps.files?.filter(file => file._id !== action.payload?._id);
       state.selectedEvent = selectedEventClone;
@@ -270,6 +280,7 @@ export function updateEventDate(id, start, end) {
       const data = { start, end };
       dispatch(slice.actions.updateEventDateLocal({ id, start, end }));
       const response = await axios.patch(`${CONFIG.SERVER_URL}calender/events/${id}`, data);
+      dispatch(slice.actions.stopLoading());
       return response.data.Event;
     } catch (error) {
       dispatch(slice.actions.hasError(error?.Message));
@@ -331,8 +342,8 @@ export function deleteEvent(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.patch(`${CONFIG.SERVER_URL}calender/events/${id}`, { isArchived: true, });
-      await dispatch(slice.actions.deleteEventSuccess(response.data.Event));
+      await axios.delete(`${CONFIG.SERVER_URL}calender/events/${id}`);
+      await dispatch(slice.actions.deleteEventSuccess({ _id : id}));
       } catch (error) {
       dispatch(slice.actions.hasError(error?.Message));
       throw error;
@@ -348,8 +359,23 @@ export function deleteEventFile( eventId, id ) {
     dispatch(slice.actions.startLoading());
     try {
       await axios.patch(`${CONFIG.SERVER_URL}calender/events/${eventId}/files/${id}`, { isActive: false, isArchived: true, });
-      await dispatch(slice.actions.deleteEventFileSuccess({ _id: id }));
+      // await dispatch(slice.actions.deleteEventFileSuccess({ _id: id }));
       await dispatch(slice.actions.deleteEventsFileSuccess({ eventId, _id: id }));
+      } catch (error) {
+      dispatch(slice.actions.hasError(error?.Message));
+      throw error;
+    }
+  };
+}
+
+
+export function downloadEventFile( eventId, id ) {
+  return async (dispatch) => {
+    try {
+      dispatch(slice.actions.startLoading());
+      const response = await axios.get(`${CONFIG.SERVER_URL}calender/events/${eventId}/files/${id}`);
+      dispatch(slice.actions.stopLoading());
+      return response;
       } catch (error) {
       dispatch(slice.actions.hasError(error?.Message));
       throw error;
