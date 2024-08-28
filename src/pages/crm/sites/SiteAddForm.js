@@ -137,7 +137,7 @@ export default function SiteAddForm() {
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container >
-        <Grid item xs={18} md={12}>
+        <Grid item xs={12} md={12}>
           <Card sx={{ p: 3 }}>
             <Stack spacing={2}>
               <RHFTextField name="name" label="Name*" />

@@ -79,10 +79,10 @@ export function Cover({
           {backLink && <Button size='small' startIcon={<Iconify icon="mdi:arrow-left" />} variant='outlined' sx={{float:'left'}} onClick={handleBackLink}>Back</Button>}
         </Grid>
         <Grid item>
-        <Box sx={{ display: 'flex', flexDirection: 'row',  alignItems: 'flex-start' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'row',  alignItems: 'flex-start', justifyContent: isMobile ? 'center' : 'flex-start',  textAlign: 'center', '& .MuiButton-startIcon': { marginRight: 0 } }}>
           { !isArchived && customerSites && (<Button size='small' startIcon={<Iconify icon="mdi:map-legend" />} variant='outlined' sx={{ mr: 1 }} onClick={() => handleOnClick('sites', linkCustomerSites)}> {(!isMobile || expandedButton === 'sites') && ( <Typography variant="caption" sx={{ fontWeight: 'bold' }}>Sites</Typography> )}</Button> )}
           { !isArchived && customerContacts && (<Button size='small' startIcon={<Iconify icon="mdi:account-multiple" />} variant='outlined' sx={{ mr: 1 }}  onClick={() => handleOnClick('contacts', linkCustomerContacts)}> {(!isMobile || expandedButton === 'contacts') && ( <Typography variant="caption" sx={{ fontWeight: 'bold' }}>Contacts</Typography> )}</Button> )}
-          { isAllAccessAllowed && !isSettingReadOnly && isArchivedCustomers && (<Button size='small' startIcon={<Iconify icon="fa6-solid:users-slash" />} variant='outlined' onClick={() => handleOnClick('archivedCustomers', linkArchivedCustomers)}> {(!isMobile || expandedButton === 'archivedCustomers') && ( <Typography variant="caption" sx={{ fontWeight: 'bold', fontSize: { xs: '0.65rem', sm: '0.75rem' }, }}>Archived Customers</Typography> )}</Button> )}
+          { isAllAccessAllowed && !isSettingReadOnly && isArchivedCustomers && (<Button size='small' startIcon={<Iconify icon="fa6-solid:users-slash" sx={{ mr: 0.5 }}/>} variant='outlined' onClick={() => handleOnClick('archivedCustomers', linkArchivedCustomers)}> {(!isMobile || expandedButton === 'archivedCustomers') && ( <Typography variant="caption" sx={{ fontWeight: 'bold', fontSize: { xs: '0.65rem', sm: '0.75rem' }, }}>Archived Customers</Typography> )}</Button> )}
           { isAllAccessAllowed && !isSettingReadOnly && isArchivedMachines && <Button size='small' startIcon={<Iconify icon="fluent:table-delete-column-16-filled" />} variant='outlined' sx={{ml:2}} onClick={linkArchivedMachines}>Archived Machines</Button>}
         </Box>
         </Grid>

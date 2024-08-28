@@ -170,7 +170,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Card sx={{ mb: 3, height: 160, position: 'relative' }} >
+      <Card sx={{ mb: 3, height: 160, position: 'sticky',  top:'60px', zIndex:'2', [theme.breakpoints.down('sm')]: { height: 130 }, }} >
         <Cover name="New Customer" icon="mdi:user" />
       </Card>
       <Grid sx={{ mt: 3 }}>
