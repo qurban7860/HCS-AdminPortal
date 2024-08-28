@@ -14,7 +14,7 @@ export default function CalendarView() {
     const calendarRef = useRef(null);
     const isDesktop = useResponsive('up', 'sm');
     const { userId, isAllAccessAllowed } = useAuthContext();
-    const { isLoading } = useSelector((state) => state.event );
+    const { isLoadingList } = useSelector((state) => state.event );
     const { activeSpContacts } = useSelector((state) => state.contact);
     const { securityUser } = useSelector((state) => state.user);
     const [ date, setDate ] = useState(new Date());
@@ -78,7 +78,7 @@ export default function CalendarView() {
         }
     }, [ isDesktop ]);
 
-    if (isLoading) {
+    if ( isLoadingList ) {
         return <LoadingScreen />;
     }
 
