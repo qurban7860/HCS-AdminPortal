@@ -66,7 +66,7 @@ const StyledCalendar = styled('div')(({ theme }) => ({
   '& .fc .fc-event .fc-event-main-frame': {
     fontSize: 13,
     lineHeight: '20px',
-    // filter: 'brightness(0.24)',
+    filter: 'brightness(0.84)',
   },
   '& .fc .fc-daygrid-event .fc-event-title': {
     overflow: 'hidden',
@@ -147,7 +147,7 @@ const StyledCalendar = styled('div')(({ theme }) => ({
   '& .fc .fc-list-event': {
     ...theme.typography.body2,
     '& .fc-list-event-time': {
-      // color: theme.palette.text.secondary,
+      color: theme.palette.text.secondary,
     },
   },
   '& .fc .fc-list-table': {
