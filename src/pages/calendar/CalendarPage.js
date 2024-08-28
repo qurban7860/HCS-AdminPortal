@@ -7,7 +7,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import timelinePlugin from '@fullcalendar/timeline';
 // @mui
-import { Card, Container, createTheme, Grid, Typography } from '@mui/material';
+import { Card, Container} from '@mui/material';
 // redux
 import { useDispatch, useSelector } from 'react-redux';
 import { getEvents, updateEventDate, updateEvent, selectRange, setEventModel, setSelectedEvent } from '../../redux/slices/event/event';
@@ -18,11 +18,11 @@ import { useSnackbar } from '../../components/snackbar';
 // sections
 import { StyledCalendar, CalendarToolbar } from '.';
 import { Cover } from '../../components/Defaults/Cover';
-import { StyledCardContainer, StyledTooltip } from '../../theme/styles/default-styles';
+import { StyledCardContainer } from '../../theme/styles/default-styles';
 import EventDialog from '../../components/Dialog/EventDialog';
 import { useAuthContext } from '../../auth/useAuthContext';
-import { fDateTime } from '../../utils/formatTime';
-import PriorityIcon from './utils/PriorityIcon';
+import EventContent from './utils/EventContent';
+
 
 // ----------------------------------------------------------------------
 
@@ -144,38 +144,6 @@ function CalendarPage({ date, setDate, previousDate, setPreviousDate, defaultNot
     }
   };
 
-  const theme = createTheme();
-
-  const handleEventContent = (info) => {
-    const { timeText, event } = info;
-    const {start, priority, customer, machines, primaryTechnician, supportingTechnicians} = event.extendedProps;
-    const supportingTechnicianNames = supportingTechnicians.map((tech)=> ` ${tech.firstName} ${tech.lastName}`);
-    const title = `${primaryTechnician.firstName} ${primaryTechnician.lastName} ${supportingTechnicianNames.length>0?`, ${supportingTechnicianNames}`:''}, ${customer.name}`;
-    const machineNames = machines.map((mc)=> `${mc.name?`${mc.name} - `:''}${mc.serialNo}`).join(', ');
-
-    return (
-      <StyledTooltip title={
-          <Grid item>
-            <Typography variant='body2'><strong>Time:</strong> {fDateTime(start)}</Typography>
-            <Typography variant='body2'><strong>Technician:</strong> {`${primaryTechnician.firstName} ${primaryTechnician.lastName} ${supportingTechnicianNames.length>0?`, ${supportingTechnicianNames}`:''}`}</Typography>
-            <Typography variant='body2'><strong>Customer:</strong> {customer.name}</Typography>
-            {machines?.length>0 && <Typography variant='body2'><strong>Machines:</strong> {machineNames}</Typography>}
-            <Typography variant="body2"><strong>Priority:</strong> { priority }</Typography>
-          </Grid>
-        } placement='top-start' tooltipcolor={theme.palette.primary.main}>
-        <div style={{ position: 'relative', zIndex: 10, justifyContent: 'center', alignItems: "center"}} className="fc-event-main-frame">
-        
-          <div className="fc-event-time"><PriorityIcon priority={priority} /></div>
-          <div className="fc-event-time">{timeText}</div>
-          <div className="fc-event-title-container">
-            <div className="fc-event-title fc-sticky">{title}</div>
-          </div>
-        </div>
-      </StyledTooltip>
-    );
-  };
-
-
   const dataFiltered = useMemo(() => applyFilter({
     inputData: events || [],
     selectedCustomer,
@@ -224,11 +192,8 @@ function CalendarPage({ date, setDate, previousDate, setPreviousDate, defaultNot
               eventClick={handleSelectEvent}
               eventResize={handleResizeEvent}
               height={isDesktop ? 720 : 'auto'}
-              eventTimeFormat={{
-                hour: 'numeric',
-                minute: '2-digit',
-              }}
-              eventContent={handleEventContent}
+              eventTimeFormat={{ hour: 'numeric', minute: '2-digit' }}
+              eventContent={(info) => <EventContent info={info} />}
               plugins={[
                 listPlugin,
                 dayGridPlugin,
@@ -237,14 +202,11 @@ function CalendarPage({ date, setDate, previousDate, setPreviousDate, defaultNot
                 interactionPlugin,
               ]}
             />
-            
           </StyledCalendar>
-          
         </Card>
       </Container>
       
       { eventModel && <EventDialog
-        date={date}
         range={selectedRange}
         contacts={defaultNotifyContacts}
       />}

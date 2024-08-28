@@ -7,11 +7,6 @@ import { enc, MD5, lib } from 'crypto-js';
 import { Box, Stack, Button, DialogActions, DialogContent, Grid, Dialog, DialogTitle, Container, Divider, TextField, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
-import KeyboardDoubleArrowUpRoundedIcon from '@mui/icons-material/KeyboardDoubleArrowUpRounded';
-import KeyboardArrowUpRoundedIcon from '@mui/icons-material/KeyboardArrowUpRounded';
-import DragHandleRoundedIcon from '@mui/icons-material/DragHandleRounded';
-import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
-import KeyboardDoubleArrowDownRoundedIcon from '@mui/icons-material/KeyboardDoubleArrowDownRounded';
 import { eventSchema } from '../../pages/schemas/calendarSchema';
 import { manipulateFiles } from '../../pages/documents/util/Util';
 // slices
@@ -26,6 +21,8 @@ import { time_list } from '../../constants/time-list';
 import { useAuthContext } from '../../auth/useAuthContext';
 import CustomSwitch from '../custom-input/CustomSwitch';
 import { useSnackbar } from '../snackbar';
+import PriorityIcon from '../../pages/calendar/utils/PriorityIcon';
+import RenderPriorityInput from '../../pages/calendar/utils/RenderPriorityInput';
 
 
 function getTimeObjectFromISOString(dateString) {
@@ -53,7 +50,7 @@ const getInitialValues = (selectedEvent, range, contacts) => {
     start: selectedEvent ? getTimeObjectFromISOString(selectedEvent?.start) : { value: '07:30', label: '7:30 AM' },
     end: selectedEvent ?  getTimeObjectFromISOString(selectedEvent?.end) : { value: '18:00', label: '6:00 PM' },
     customer: selectedEvent ? selectedEvent?.customer : null,
-    priority: selectedEvent ? selectedEvent?.priority : null, 
+    priority: selectedEvent?.priority?.trim() ? selectedEvent?.priority : null, 
     machines: selectedEvent ? selectedEvent?.machines :  [],
     site: selectedEvent ? selectedEvent?.site :  null,
     jiraTicket: selectedEvent ? selectedEvent?.jiraTicket :  '',
@@ -75,13 +72,11 @@ const getInitialValues = (selectedEvent, range, contacts) => {
 
 EventDialog.propTypes = {
   range: PropTypes.object,
-  colorOptions: PropTypes.arrayOf(PropTypes.string),
   contacts:PropTypes.array
 };
 
 function EventDialog({
   range,
-  colorOptions,
   contacts,
 }) {
 
@@ -90,7 +85,7 @@ function EventDialog({
   const { enqueueSnackbar } = useSnackbar();
   const { selectedEvent, eventModel, isLoading } = useSelector((state) => state.event );
   const { activeCustomers } = useSelector((state) => state.customer);
-  const { activeContacts, activeSpContacts } = useSelector((state) => state.contact);
+  const { activeSpContacts } = useSelector((state) => state.contact);
   const { activeSites } = useSelector((state) => state.site);
   const { activeCustomerMachines } = useSelector( (state) => state.machine );
   const [ openConfirm, setOpenConfirm ] = useState(false);
@@ -146,16 +141,14 @@ function EventDialog({
   }, [reset, range, selectedEvent, contacts]);
   
   const priorityOptions = [
-    'Highest',
     'High',
     'Medium',
     'Low',
-    'Lowest',
   ];
   
   const onSubmit = async ( data ) => {
     try {
-      data.priority = priority
+      data.priority = priority || '';
       const start_date = new Date(data?.date);
       const end_date = new Date(data?.end_date);
       const [start_hours, start_minutes] = data.start.value.split(':').map(Number);
@@ -216,23 +209,6 @@ function EventDialog({
       }
     }, [ isCustomerEvent, setValue, activeSpContacts, activeCustomers, user ] );
     
-    const getPriorityIcon = ( priorityVal ) => {
-      switch ( priorityVal ) {
-        case 'Highest':
-          return <KeyboardDoubleArrowUpRoundedIcon color="error" />;
-        case 'High':
-          return <KeyboardArrowUpRoundedIcon color="error" />;
-        case 'Medium':
-          return <DragHandleRoundedIcon color="warning" />;
-        case 'Low':
-          return <KeyboardArrowDownRoundedIcon color="success" />;
-        case 'Lowest':
-          return <KeyboardDoubleArrowDownRoundedIcon color="success" />;
-        default:
-          return null;
-      }
-    };
-
   const hashFilesMD5 = async (_files) => {
     const hashPromises = _files.map((file) => new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -393,16 +369,12 @@ function EventDialog({
                       name="priority"
                       options={ priorityOptions }
                       isOptionEqualToValue={( option, value ) => option === value }
-                      renderInput={(params) => {
-                        const selectedOption = priorityOptions?.includes(params?.inputProps?.value) ? params?.inputProps?.value : "";
-                        const selectedIcon = selectedOption ? getPriorityIcon( selectedOption ) : null;
-                        return (
-                          <TextField {...params} InputProps={{ ...params.InputProps, startAdornment: selectedIcon, }}
-                            label='Priority'
-                          />
-                        );
-                      }}
-                      renderOption={(props, option) => <li {...props} key={option} > { getPriorityIcon( option ) } <span style={{ marginLeft: 8 }}>{option}</span> </li>}
+                      renderInput={(params) => <RenderPriorityInput  params={params} />}
+                      renderOption={(props, option) => 
+                      <li {...props} key={option} > 
+                        <PriorityIcon priority={option} />
+                        <span style={{ marginLeft: 8 }}>{option}</span> 
+                      </li>}
                     />
 
                 {isCustomerEvent && (

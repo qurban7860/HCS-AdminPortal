@@ -7,24 +7,18 @@ import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownR
 import KeyboardDoubleArrowDownRoundedIcon from '@mui/icons-material/KeyboardDoubleArrowDownRounded';
 
 const PriorityIcon = ({ priority }) => {
-  switch (priority) {
-    case 'Highest':
-      return <KeyboardDoubleArrowUpRoundedIcon color="error" />;
-    case 'High':
-      return <KeyboardArrowUpRoundedIcon color="error" />;
-    case 'Medium':
-      return <DragHandleRoundedIcon color="warning" />;
-    case 'Low':
-      return <KeyboardArrowDownRoundedIcon color="success" />;
-    case 'Lowest':
-      return <KeyboardDoubleArrowDownRoundedIcon color="success" />;
-    default:
-      return null;
-  }
+    switch (priority) {
+        case 'High':
+            return <KeyboardArrowUpRoundedIcon color="error" />;
+        case 'Low':
+            return <KeyboardArrowDownRoundedIcon color="success" />;
+        default:
+            return '';
+    }
 };
 
 PriorityIcon.propTypes = {
-  priority: PropTypes.string.isRequired,
+    priority: PropTypes.string,
 };
 
 export default PriorityIcon;

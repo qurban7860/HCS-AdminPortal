@@ -234,9 +234,7 @@ export function createEvent(params) {
       formData.append('jiraTicket', params?.jiraTicket || '');
       formData.append('start', params?.start_date);
       formData.append('end', params?.end_date);
-      if( params?.priority){ 
-        formData.append('priority', params?.priority );
-      }
+      formData.append('priority', params?.priority );
       formData.append('customer', params?.customer?._id || null);
       if( params?.site?._id ){ 
         formData.append('site', params?.site?._id || null);
@@ -298,9 +296,7 @@ export function updateEvent(id, params) {
       formData.append('jiraTicket', params?.jiraTicket || '');
       formData.append('start', params?.start_date);
       formData.append('end', params?.end_date);
-      if( params?.priority ){ 
-        formData.append('priority', params?.priority );
-      }
+      formData.append('priority', params?.priority );
       formData.append('customer', params?.customer?._id || null);
       if( params?.site?._id ){ 
         formData.append('site', params?.site?._id || null);
