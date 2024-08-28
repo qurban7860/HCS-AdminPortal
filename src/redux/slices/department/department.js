@@ -130,6 +130,7 @@ export function addDepartment(params) {
       /* eslint-disable */
       let data = {
         departmentName: params.departmentName,
+        departmentType: params.departmentType,
         isActive: params.isActive,
         isDefault: params.isDefault,
         forCustomer: params.forCustomer,
@@ -161,6 +162,7 @@ export function updateDepartment(params, Id) {
       /* eslint-disable */
       let data = {
         departmentName: params.departmentName,
+        departmentType: params.departmentType,
         isActive: params.isActive,
         isDefault: params.isDefault,
         forCustomer: params.forCustomer,
