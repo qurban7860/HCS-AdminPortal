@@ -42,13 +42,11 @@ function DialogServiceRecordComplete({ recordStatus }) {
   );
   const { activeSpContacts, isLoading } = useSelector((state) => state.contact);
   const { user } = useAuthContext();
-  const { configs } = useSelector((state) => state.config);
 
-  // To get the approving contacts from the configs
-  // Filter to find if the config email is in the activeSpContacts array to avoid errors
-  // Map to get the full contact object from the activeSpContacts array
-
+console.log("activeSpContacts : ",activeSpContacts)
   useEffect(() => {
+    const configs = JSON.parse( localStorage.getItem('configurations'))
+
     if (configs.length > 0 && activeSpContacts.length > 0) {
       let approvingContactsArray = [];
 
@@ -74,11 +72,9 @@ function DialogServiceRecordComplete({ recordStatus }) {
       }
       setApprovingContacts(approvingContactsArray);
     }
-  }, [configs, activeSpContacts]);
+  }, [ activeSpContacts ] );
 
   useEffect(() => {
-    // // eslint-disable-next-line no-debugger
-    // debugger
     if (
       machineServiceRecord?.approval?.approvingContacts?.length > 0 &&
       machineServiceRecord?.approval?.approvingContacts?.includes(user?.contact)

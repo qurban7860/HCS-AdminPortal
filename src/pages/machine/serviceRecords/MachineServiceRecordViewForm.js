@@ -21,7 +21,6 @@ import { deleteMachineServiceRecord,
   createMachineServiceRecordVersion,
   setCompleteDialog} from '../../../redux/slices/products/machineServiceRecord';
 import { getActiveSPContacts, setCardActiveIndex, setIsExpanded } from '../../../redux/slices/customer/contact';
-import { getConfigs } from '../../../redux/slices/config/config';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import { FORMLABELS } from '../../../constants/default-constants';
@@ -67,7 +66,6 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
     dispatch(setPDFViewerDialog(false));
     dispatch(setSendEmailDialog(false));
     dispatch(getActiveSPContacts());
-    dispatch(getConfigs());
     return ()=>{
       dispatch(resetMachineServiceRecord());
     }
@@ -414,7 +412,7 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
               }${decoilerMachine?.name ? decoilerMachine?.name : ''}`,
             }))}
           />
-          <ViewFormField isLoading={isLoading} sm={4} heading="Technician"  param={defaultValues?.technician?.name || ''} />
+          <ViewFormField isLoading={isLoading} sm={4} heading="Technician"  param={`${defaultValues?.technician?.firstName || ''} ${defaultValues?.technician?.lastName || ''} `} />
           <ViewFormNoteField sm={12} heading="Technician Notes" param={defaultValues.technicianNotes} />
           <FormLabel content={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />
           {defaultValues.textBeforeCheckItems && <ViewFormNoteField sm={12}  param={defaultValues.textBeforeCheckItems} />}

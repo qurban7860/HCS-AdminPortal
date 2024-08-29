@@ -17,7 +17,7 @@ import ServiceRecodStepButtons from '../../../components/DocumentForms/ServiceRe
 import SkeletonLine from '../../../components/skeleton/SkeletonLine';
 
 MachineServiceRecordsFirstStep.propTypes = {
-    securityUsers: PropTypes.array,
+    technicians: PropTypes.array,
     onChangeConfig : PropTypes.func,
     handleComplete : PropTypes.func,
     handleDraftRequest: PropTypes.func,
@@ -25,7 +25,7 @@ MachineServiceRecordsFirstStep.propTypes = {
     handleBack: PropTypes.func
 };
 
-function MachineServiceRecordsFirstStep( { securityUsers, onChangeConfig, handleComplete, handleDraftRequest, handleDiscard, handleBack} ) {
+function MachineServiceRecordsFirstStep( { technicians, onChangeConfig, handleComplete, handleDraftRequest, handleDiscard, handleBack} ) {
     
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -54,7 +54,7 @@ function MachineServiceRecordsFirstStep( { securityUsers, onChangeConfig, handle
           serviceRecordConfiguration:   machineServiceRecord?.serviceRecordConfiguration || null,
           serviceDate:                  machineServiceRecord?.serviceDate || new Date(),
           versionNo:                    machineServiceRecord?.versionNo || 1,
-          technician:                   machineServiceRecord?.technician || ( securityUser || null ),
+          technician:                   machineServiceRecord?.technician || null,
           technicianNotes:              machineServiceRecord?.technicianNotes || '',
           decoilers:!id && (machineDecoilers || []) 
           // textBeforeCheckItems:         machineServiceRecord?.textBeforeCheckItems || '',
@@ -75,7 +75,6 @@ function MachineServiceRecordsFirstStep( { securityUsers, onChangeConfig, handle
     reset,
     watch,
     setValue,
-    trigger,
     handleSubmit,
     formState: { isSubmitting },
     } = methods;
@@ -113,7 +112,7 @@ function MachineServiceRecordsFirstStep( { securityUsers, onChangeConfig, handle
             const serviceRecord = await dispatch(addMachineServiceRecord(machineId, data));
             await navigate(PATH_MACHINE.machines.serviceRecords.edit(machineId, serviceRecord?._id))
           }else {
-            const serviceRecord = await dispatch(updateMachineServiceRecord(machineId, id, data));
+            await dispatch(updateMachineServiceRecord(machineId, id, data));
             await navigate(PATH_MACHINE.machines.serviceRecords.edit(machineId, id))  
           }
 
@@ -187,10 +186,10 @@ return (
                   <RHFAutocomplete
                       name="technician"
                       label="Technician"
-                      options={ securityUsers }
-                      getOptionLabel={(option) => option?.name || ''}
+                      options={ technicians }
+                      getOptionLabel={(option) => `${option?.firstName || ''} ${option?.lastName || ''}`}
                       isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                      renderOption={(props, option) => ( <li {...props} key={option?._id}>{option.name || ''}</li>)}
+                      renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li>)}
                       />
                   <RHFTextField name="technicianNotes" label="Technician Notes" minRows={3} multiline/> 
           </Stack>
