@@ -113,6 +113,14 @@ const slice = createSlice({
       state.activeSecurityUsers = action.payload;
       state.initial = true;
     },
+
+    // GET Active SP Technical users
+    getActiveSPTechnicalSecurityUsersSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.activeSPTechnicalSecurityUsers = action.payload;
+      state.initial = true;
+    },
     
     getLoggedInSecurityUserSuccess(state, action) {
       state.isLoading = false;
@@ -317,6 +325,38 @@ export function getActiveSecurityUsers(type) {
       const response = await axios.get(`${CONFIG.SERVER_URL}security/users`,query);
       if(regEx.test(response.status)){
         dispatch(slice.actions.getActiveSecurityUsersSuccess(response.data));
+      }
+      return response;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+}
+
+export function getActiveSPTechnicalSecurityUsers(type) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try{ 
+
+      const query = {
+        params: {
+          isArchived: false,
+          isActive: true,
+          invitationStatus: false,
+          customer: {
+            type: "SP"
+          },
+          contact: {
+            department: {departmentType: "Technical"}
+          }
+        }
+      }
+      const fields = {fields: "contact,customer,email,name"}
+      Object.assign(query.params, type, fields)
+      const response = await axios.get(`${CONFIG.SERVER_URL}security/users`,query);
+      if(regEx.test(response.status)){
+        dispatch(slice.actions.getActiveSPTechnicalSecurityUsersSuccess(response.data));
       }
       return response;
     } catch (error) {
