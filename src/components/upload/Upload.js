@@ -80,7 +80,8 @@ Upload.propTypes = {
   drawingPage:PropTypes.bool,
   imagesOnly:PropTypes.bool,
   dropZone:PropTypes.bool,
-  onLoadImage:PropTypes.func
+  onLoadImage: PropTypes.func,
+  onDownload: PropTypes.func,
             
 };
 
@@ -109,6 +110,7 @@ export default function Upload({
   onChangeStockNumber,
   drawingPage,
   onLoadImage,
+  onDownload,
   imagesOnly,
   dropZone,
   sx,
@@ -264,9 +266,9 @@ export default function Upload({
       {(hasFiles || !dropZone) && (
         <>
           <Box
-            sx={{mt:2, width:'100%'}}
             gap={2}
             display={rows ? "" : "grid"}
+            sx={{ width:'100%',  alignItems: 'center' }}
             gridTemplateColumns={{
               xs: 'repeat(1, 1fr)',
               sm: 'repeat(3, 1fr)',
@@ -283,7 +285,8 @@ export default function Upload({
                 onChangeDisplayName={onChangeDisplayName}
                 onChangeReferenceNumber={onChangeReferenceNumber}
                 onChangeStockNumber={onChangeStockNumber}
-                onLoadImage={onLoadImage}
+                onLoadImage={ onLoadImage }
+                onDownload={ onDownload }
                 machine={machine||''} 
                 rows={rows} 
                 drawingPage 

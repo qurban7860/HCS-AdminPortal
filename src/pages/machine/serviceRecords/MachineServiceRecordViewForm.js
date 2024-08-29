@@ -1,14 +1,10 @@
 import PropTypes from 'prop-types';
-import * as Yup from 'yup';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { useMemo, memo, useLayoutEffect, useState, useEffect } from 'react';
+import React, { useMemo, memo, useLayoutEffect, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // @mui
-import { Container, Card, Chip, Grid, Box, Stack, Typography, TextField, DialogContent, DialogActions, Dialog } from '@mui/material';
-import { LoadingButton } from '@mui/lab';
+import { Container, Card, Chip, Grid, Box, Stack } from '@mui/material';
 // routes
 import { useNavigate, useParams } from 'react-router-dom';
-import { FormProvider, useForm } from 'react-hook-form';
 import download from 'downloadjs';
 import { PATH_MACHINE, PATH_CRM } from '../../../routes/paths';
 // redux
@@ -22,7 +18,6 @@ import { deleteMachineServiceRecord,
   deleteRecordFile,
   setFormActiveStep,
   getMachineServiceRecordCheckItems,
-  updateMachineServiceRecord,
   createMachineServiceRecordVersion,
   setCompleteDialog} from '../../../redux/slices/products/machineServiceRecord';
 import { getActiveSPContacts, setCardActiveIndex, setIsExpanded } from '../../../redux/slices/customer/contact';
@@ -45,10 +40,8 @@ import MachineTabContainer from '../util/MachineTabContainer';
 import { ThumbnailDocButton } from '../../../components/Thumbnails';
 import DialogServiceRecordAddFile from '../../../components/Dialog/DialogServiceRecordAddFile';
 import { DocumentGalleryItem } from '../../../components/gallery/DocumentGalleryItem';
-import ConfirmDialog from '../../../components/confirm-dialog';
 import Lightbox from '../../../components/lightbox/Lightbox';
 import SkeletonLine from '../../../components/skeleton/SkeletonLine';
-import { RHFAutocomplete } from '../../../components/hook-form';
 import DialogServiceRecordComplete from '../../../components/Dialog/DialogServiceRecordComplete';
 
 MachineServiceParamViewForm.propTypes = {
@@ -59,7 +52,6 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
 
   const { machineServiceRecord, machineServiceRecordCheckItems, isLoadingCheckItems, isLoading, pdfViewerDialog, sendEmailDialog } = useSelector((state) => state.machineServiceRecord);
   const { machine } = useSelector((state) => state.machine)
-  const { activeContacts, activeSpContacts } = useSelector((state) => state.contact);
   
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -156,6 +148,8 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
       technicianNotes:                      machineServiceRecord?.technicianNotes ||'',
       isActive:                             machineServiceRecord?.isActive,
       status:                               machineServiceRecord?.status,
+      approvalStatus:                       machineServiceRecord?.currentApprovalStatus || '',
+      approvalLog:                          machineServiceRecord?.approval?.approvalLogs || '',
       createdAt:                            machineServiceRecord?.createdAt || '',
       createdByFullName:                    machineServiceRecord?.createdBy?.name || '',
       createdIP:                            machineServiceRecord?.createdIP || '',
@@ -194,6 +188,7 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
     <Chip 
         onClick={() => handleContactView(operator?._id)} 
         sx={{m:0.2}}
+        key={operator?._id}
         deleteIcon={<Iconify icon="fluent:open-12-regular"/>}
         onDelete={()=> handleContactViewInNewPage(operator?._id)}
         label={`${operator?.firstName || ''} ${operator?.lastName || ''}`} 
@@ -212,19 +207,18 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
 
   useEffect(() => {
     if (machineServiceRecord?.files) {
-        const updatedFiles = machineServiceRecord?.files?.map(file => ({
-          ...file,
-          src: `data:${file?.fileType};base64,${file?.thumbnail}`,
-          thumbnail: `data:${file?.fileType};base64,${file?.thumbnail}`
-        }));
-        setSlides(updatedFiles);
+      const updatedFiles = machineServiceRecord?.files?.map((file) => ({
+        ...file,
+        src: `data:${file?.fileType};base64,${file?.thumbnail}`,
+        thumbnail: `data:${file?.fileType};base64,${file?.thumbnail}`,
+      }));
+      setSlides(updatedFiles);
     }
-    if(machineServiceRecord.status==="DRAFT"){
-      setRecordStatus({label:'Complete', value:'SUBMITTED'});
-    }else if(machineServiceRecord.status==="SUBMITTED"){
-      setRecordStatus({label:'Approve', value:'APPROVED'});
+    if (machineServiceRecord.status === 'DRAFT') {
+      setRecordStatus({ label: 'Complete', value: 'SUBMITTED' });
+    } else if (machineServiceRecord.status === 'SUBMITTED') {
+      setRecordStatus({ label: 'Approve', value: 'APPROVED' });
     }
-    
   }, [machineServiceRecord]);
 
 
@@ -263,6 +257,13 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
       }
     }
   };
+
+  const serviceRecordApprovalData = {
+    status: machineServiceRecord?.currentApprovalStatus,
+    currentApprovalLogs: machineServiceRecord?.approval?.approvalLogs,
+    currentApprovingContacts: machineServiceRecord?.approval?.approvingContacts,
+    completeHistory: machineServiceRecord?.completeEvaluationHistory,
+  }
 
   const handleCloseLightbox = () => {
     setSelectedImage(-1);
@@ -309,47 +310,138 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
       <MachineTabContainer currentTabValue='serviceRecords' />
     <Card sx={{ p: 2 }}>
       <Grid>
-        <ViewFormEditDeleteButtons isLoading={isLoading} isActive={defaultValues.isActive}  
-          disableEditButton={machine?.status?.slug==='transferred'}
-          disableDeleteButton={machine?.status?.slug==='transferred'}
-          skeletonIcon={ isLoading && !machineServiceRecord?._id }
-          handleEdit={!machineServiceRecord?.isHistory && machineServiceRecord?._id && handleEdit} 
-          onDelete={!machineServiceRecord?.isHistory && machineServiceRecord?.status==="DRAFT" && machineServiceRecord?._id && onDelete} 
+        <ViewFormEditDeleteButtons
+          isLoading={isLoading}
+          isActive={defaultValues.isActive}
+          disableEditButton={
+            machine?.isArchived ||
+            machine?.status?.slug === 'transferred' ||
+            machineServiceRecord.currentApprovalStatus === 'APPROVED'
+          }
+          disableDeleteButton={
+            machine?.isArchived ||
+            machine?.status?.slug === 'transferred' ||
+            machineServiceRecord.currentApprovalStatus === 'APPROVED'
+          }
+          skeletonIcon={isLoading && !machineServiceRecord?._id}
+          handleEdit={ 
+            !machine?.isArchived && 
+            !machineServiceRecord?.isHistory && 
+            machineServiceRecord?._id && handleEdit
+          }
+          onDelete={
+            !machine?.isArchived &&
+            !machineServiceRecord?.isHistory &&
+            machineServiceRecord?.status === 'DRAFT' &&
+            machineServiceRecord?._id
+              ? onDelete
+              : null
+          }
           backLink={handleBackLink}
-          handleSendPDFEmail={!machineServiceRecord?.isHistory && machineServiceRecord?._id && handleSendEmail}
+          handleSendPDFEmail={ !machine?.isArchived && !machineServiceRecord?.isHistory && machineServiceRecord?._id && handleSendEmail}
           handleViewPDF={!machineServiceRecord?.isHistory && machineServiceRecord?._id && handlePDFViewer}
-          // handleCompleteMSR={machineServiceRecord.isActive && !machineServiceRecord?.isHistory &&  machineServiceRecord?.status!=="APPROVED" && handleCompleteConfirm}
-          serviceRecordStatus={recordStatus?.label}
+          
+          handleCompleteMSR={
+            !machine?.isArchived &&
+            machineServiceRecord?.isActive &&
+            !machineServiceRecord?.isHistory &&
+            machineServiceRecord?.status === 'SUBMITTED' &&
+            machineServiceRecord?.currentVersion._id === machineServiceRecord?._id &&
+            machineServiceRecord?.currentApprovalStatus !== 'APPROVED' &&
+            handleCompleteConfirm
+          }
+
+          serviceRecordStatus={
+            ((machineServiceRecord.isActive &&
+              !machineServiceRecord?.isHistory &&
+              machineServiceRecord?.status === 'SUBMITTED' &&
+              machineServiceRecord?.currentVersion._id === machineServiceRecord?._id &&
+              machineServiceRecord?.approval?.approvingContacts?.length > 0) ||
+              machineServiceRecord?.completeEvaluationHistory?.totalLogsCount > 0) ?
+            serviceRecordApprovalData : null
+          }
         />
         
         <Grid container>
           <FormLabel content={FORMLABELS.KEYDETAILS} />
           
-          <ViewFormField isLoading={isLoading} variant='h4' sm={2} heading="Service Date" param={fDate(defaultValues.serviceDate)} />
-          <ViewFormField isLoading={isLoading} variant='h4' sm={6} heading="Service Record Configuration" param={`${defaultValues.serviceRecordConfig} ${defaultValues.serviceRecordConfigRecordType ? '-' : ''} ${defaultValues.serviceRecordConfigRecordType ? defaultValues.serviceRecordConfigRecordType : ''}`} />
-          <ViewFormField isLoading={isLoading} variant='h4' sm={2} heading="Status" param={defaultValues.status} />
-          <ViewFormField isLoading={isLoading} variant='h4' sm={2} heading="Version No" node={
-            <>{defaultValues?.versionNo}{(machineServiceRecord?.isHistory || machineServiceRecord?.status==="DRAFT") && <CurrentIcon callFunction={handleCurrentServiceRecord} />}
-              {!machineServiceRecord?.isHistory && machineServiceRecord?.currentVersion?.versionNo > 1 &&  machineServiceRecord?.serviceId && <HistoryIcon callFunction={handleServiceRecordHistory} /> }
-            </>  
-          } />
-          
-          <ViewFormField isLoading={isLoading} sm={12} heading="Decoilers" arrayParam={defaultValues?.decoilers?.map((decoilerMachine) => ({ name: `${decoilerMachine?.serialNo ? decoilerMachine?.serialNo : ''}${decoilerMachine?.name ? '-' : ''}${decoilerMachine?.name ? decoilerMachine?.name : ''}`}))} />
-          <ViewFormField isLoading={isLoading} sm={6} heading="Technician"  param={defaultValues?.technician?.name || ''} />
+          <ViewFormField isLoading={isLoading} variant='h4' sm={2} heading="Service Date" 
+            param={fDate(defaultValues.serviceDate)} />
+          <ViewFormField isLoading={isLoading} variant='h4' sm={6} heading="Service Record Configuration" 
+            param={`${defaultValues.serviceRecordConfig} ${defaultValues.serviceRecordConfigRecordType ? '-' : ''} ${defaultValues.serviceRecordConfigRecordType ? defaultValues.serviceRecordConfigRecordType : ''}`} />
+          <ViewFormField
+              isLoading={isLoading}
+              variant="h4"
+              sm={2}
+              heading="Version No"
+              node={
+                <>
+                  {defaultValues?.versionNo}
+                  {(machineServiceRecord?.isHistory ||
+                    machineServiceRecord?.status === 'DRAFT') && (
+                    <CurrentIcon callFunction={handleCurrentServiceRecord} />
+                  )}
+                  {!machineServiceRecord?.isHistory &&
+                    machineServiceRecord?.currentVersion?.versionNo > 1 &&
+                    machineServiceRecord?.serviceId && (
+                      <HistoryIcon callFunction={handleServiceRecordHistory} />
+                    )}
+                </>
+              }
+            />
+          <ViewFormField isLoading={isLoading} variant='h4' sm={2} heading="Status" 
+            param={defaultValues.approvalStatus === "PENDING" ? defaultValues.status : defaultValues.approvalStatus} />
+          {(defaultValues.approvalStatus !== "PENDING" && defaultValues?.approvalLog?.length > 0) ? (              
+            <ViewFormField isLoading={isLoading} sm={12}
+              heading={`${defaultValues.approvalStatus === "REJECTED" ? "Rejection" : "Approval"} Comments`}
+              srEvaluationComment={{
+                comment: defaultValues?.approvalLog[0]?.comments,
+                helperText: `By ${defaultValues?.approvalLog[0]?.evaluatedBy.firstName} ${
+                  defaultValues?.approvalLog[0]?.evaluatedBy.lastName
+                } on ${fDate(defaultValues?.approvalLog[0]?.evaluationDate)}`,
+              }}
+            />
+          ) : null}
+          <ViewFormField
+            isLoading={isLoading}
+            sm={12}
+            heading="Decoilers"
+            arrayParam={defaultValues?.decoilers?.map((decoilerMachine) => ({
+              name: `${decoilerMachine?.serialNo ? decoilerMachine?.serialNo : ''}${
+                decoilerMachine?.name ? '-' : ''
+              }${decoilerMachine?.name ? decoilerMachine?.name : ''}`,
+            }))}
+          />
+          <ViewFormField isLoading={isLoading} sm={4} heading="Technician"  param={`${defaultValues?.technician?.firstName || ''} ${defaultValues?.technician?.lastName || ''} `} />
           <ViewFormNoteField sm={12} heading="Technician Notes" param={defaultValues.technicianNotes} />
           <FormLabel content={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />
           {defaultValues.textBeforeCheckItems && <ViewFormNoteField sm={12}  param={defaultValues.textBeforeCheckItems} />}
-          {!isLoadingCheckItems? 
+          {!isLoadingCheckItems ? 
             <Grid item md={12} sx={{  overflowWrap: 'break-word' }}>
               <Grid item md={12} sx={{display:'flex', flexDirection:'column'}}>
-                {machineServiceRecordCheckItems?.checkItemLists?.map((row, index) =>
-                  <CheckedItemValueRow machineId serviceId={machineServiceRecord._id} value={row} index={index} />
-                )}
+              {machineServiceRecordCheckItems?.checkItemLists?.map((row, index) => (
+                <CheckedItemValueRow
+                  machineId={machineId}
+                  serviceId={machineServiceRecord._id}
+                  value={row}
+                  index={index}
+                  key={row._id}
+                />
+              ))}
               </Grid>
             </Grid>
             :
-            <Stack my={1} py={2} spacing={2} sx={{width:'100%', borderRadius:'10px', border:(theme)=> `1px solid ${theme.palette.grey[400]}`}}>
-              {Array.from({ length: 8 }).map((_, index) => (<SkeletonLine key={index} />))}
+            <Stack
+              my={1} py={2} spacing={2}
+              sx={{
+                width: '100%',
+                borderRadius: '10px',
+                border: (theme) => `1px solid ${theme.palette.grey[400]}`,
+              }}
+            >
+              {Array.from({ length: 8 }).map((_, index) => (
+                <SkeletonLine key={index} />
+              ))}
             </Stack>
           }
           
@@ -376,11 +468,13 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
               xl: 'repeat(8, 1fr)',
             }}
           >
+
           {slides?.map((file, _index) => (
             <DocumentGalleryItem isLoading={isLoading} key={file?.id} image={file} 
               onOpenLightbox={()=> handleOpenLightbox(_index)}
               onDownloadFile={()=> handleDownloadRecordFile(file._id, file?.name, file?.extension)}
               onDeleteFile={()=> handleDeleteRecordFile(file._id)}
+              isArchived={ machine?.isArchived }
               toolbar
             />
           ))}

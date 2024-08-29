@@ -204,7 +204,7 @@ const toggleCancel = () => navigate(PATH_MACHINE.machines.logs.root(machineId));
               <Stack spacing={2}>
                 <Grid >
                   <Grid item md={12} sx={{ display: 'flex', justifyContent: 'flex-end' }} >
-                      <Button variant="contained" component="label" startIcon={<Iconify icon={ICONS.UPLOAD_FILE.icon} />} > Import Files  
+                      <Button variant="contained" component="label" startIcon={<Iconify icon={ICONS.UPLOAD_FILE.icon} />} sx={{ mb:1 }} > Import Files  
                         <input type="file" accept='.txt' multiple hidden onChange={handleFileChange} /> 
                       </Button>
                   </Grid>

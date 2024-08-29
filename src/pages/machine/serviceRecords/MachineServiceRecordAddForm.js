@@ -1,36 +1,28 @@
-import { useEffect, useLayoutEffect, useMemo, useState, memo, useCallback } from 'react';
+import { useEffect, useState, memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-// form
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { LoadingButton } from '@mui/lab';
-import { Container, Card, Grid, Stack, StepLabel, Step, Stepper, Box, StepContent, Button, StepButton, Typography, CardContent, CardHeader, Chip, createTheme } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
+import { Container, Card, Grid, StepLabel, Step, Stepper, Box, CardContent, CardHeader } from '@mui/material';
 // routes
 import { useNavigate, useParams } from 'react-router-dom';
-import download from 'downloadjs';
 import { PATH_MACHINE } from '../../../routes/paths';
 // slice
-import { addMachineServiceRecord, updateMachineServiceRecord, resetMachineServiceRecord, 
-        setAddFileDialog, deleteMachineServiceRecord, getMachineServiceRecord, setFormActiveStep,
-        getMachineServiceRecordCheckItems} from '../../../redux/slices/products/machineServiceRecord';
-import { getActiveContacts } from '../../../redux/slices/customer/contact';
+import {
+  resetMachineServiceRecord,
+  deleteMachineServiceRecord,
+  getMachineServiceRecord,
+  setFormActiveStep,
+} from '../../../redux/slices/products/machineServiceRecord';
+import { getActiveContacts, getActiveSPContacts } from '../../../redux/slices/customer/contact';
 // components
-import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 import { useSnackbar } from '../../../components/snackbar';
-import { MachineServiceRecordPart1Schema, MachineServiceRecordPart2Schema, MachineServiceRecordPart3Schema } from '../../schemas/machine';
-import FormProvider from '../../../components/hook-form';
-import { getActiveSecurityUsers, getSecurityUser } from '../../../redux/slices/securityUser/securityUser';
-import { getActiveServiceRecordConfigsForRecords, getServiceRecordConfig, resetServiceRecordConfig } from '../../../redux/slices/products/serviceRecordConfig';
-import FormLabel from '../../../components/DocumentForms/FormLabel';
+import { getSecurityUser } from '../../../redux/slices/securityUser/securityUser';
+import { getActiveServiceRecordConfigsForRecords } from '../../../redux/slices/products/serviceRecordConfig';
 import { useAuthContext } from '../../../auth/useAuthContext';
 import MachineTabContainer from '../util/MachineTabContainer';
 import DialogServiceRecordAddFile from '../../../components/Dialog/DialogServiceRecordAddFile';
 import MachineServiceRecordsFirstStep from './MachineServiceRecordsFirstStep';
 import MachineServiceRecordsSecondStep from './MachineServiceRecordsSecondStep';
 import MachineServiceRecordsThirdStep from './MachineServiceRecordsThirdStep';
-import Iconify from '../../../components/iconify';
-import { ColorlibConnector, ColorlibStepIcon, StyledTooltip } from '../../../theme/styles/default-styles';
+import { ColorlibConnector, ColorlibStepIcon } from '../../../theme/styles/default-styles';
 import IconTooltip from '../../../components/Icons/IconTooltip';
 
 // ----------------------------------------------------------------------
@@ -38,55 +30,59 @@ import IconTooltip from '../../../components/Icons/IconTooltip';
 function MachineServiceRecordAddForm() {
 
   const dispatch = useDispatch();
-  const { userId } = useAuthContext()
+  const { user, userId } = useAuthContext()
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const { machineId, id } = useParams();
-
+  const { activeSpContacts } = useSelector((state) => state.contact);
   const { machine } = useSelector((state) => state.machine)
-  const { activeSecurityUsers, securityUser } = useSelector((state) => state.user);
   const { formActiveStep, machineServiceRecord, isLoading } = useSelector((state) => state.machineServiceRecord);
+  const [ technicians, setTechnicians ] = useState([]);
+  const [ userTechnician, setUserTechnician ] = useState( null );
+  const [ completed, setCompleted ] = useState([]);
 
-  const [ securityUsers, setSecurityUsers ] = useState([]);
-  const [ isPublish, setIsPublish ] = useState(false);
-  const [completed, setCompleted] = useState([]);
-
-  useLayoutEffect( ()=>{
+  useEffect(() => {
     dispatch(resetMachineServiceRecord());
     dispatch(getActiveServiceRecordConfigsForRecords(machineId));
-    dispatch(getActiveSecurityUsers({roleType:['TechnicalManager','Technician']}));
-    
-    if(machine?.customer?._id){
+    dispatch(getActiveSPContacts());
+    if (machine?.customer?._id) {
       dispatch(getActiveContacts(machine?.customer?._id));
-    } 
-    
-    if(userId){
-      dispatch(getSecurityUser( userId ))
-    } 
+    }
 
-    if(machineId && id){
+    if (userId) {
+      dispatch(getSecurityUser(userId));
+    }
+
+    if (machineId && id) {
       const newCompleted = completed;
       newCompleted[0] = true;
       setCompleted(newCompleted);
-      dispatch((getMachineServiceRecord(machineId, id)));
+      dispatch(getMachineServiceRecord(machineId, id));
     }
-    
-    
-  },[dispatch, machineId, machine, userId, id, completed])
-  
-  useEffect(()=>{ 
-    if(!activeSecurityUsers.some(u => u._id === userId )){
-      setSecurityUsers([ ...activeSecurityUsers, securityUser ]?.sort((a, b) => a?.name?.localeCompare(b?.name))) 
-    }else {
-      setSecurityUsers([ ...activeSecurityUsers ]?.sort((a, b) => a?.name?.localeCompare(b?.name))) 
-    }  
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ activeSecurityUsers, securityUser, userId ]);
+  }, [dispatch, machineId, machine, userId, id, completed]);
+
+  useEffect(() => {
+    if (activeSpContacts?.length > 0) {
+      const sPContactUser = activeSpContacts?.find( ( el )=> el?._id === user?.contact );
+      if( !machineServiceRecord?._id ){
+        setUserTechnician( sPContactUser )
+      }
+      let techniciansList = activeSpContacts?.filter( ( el ) => el?.departmentDetails?.departmentType?.toLowerCase() === 'technical');
+      if ( machineServiceRecord?.technician && !techniciansList?.some( ( el ) => ( el?._id === machineServiceRecord?.technician?._id ) ) ) {
+        techniciansList = [ machineServiceRecord?.technician, ...techniciansList ];
+      }
+      if ( !techniciansList?.some( ( el ) => el?._id === user?.contact ) ) {
+        techniciansList = [ sPContactUser, ...techniciansList ]
+      }
+      techniciansList = techniciansList?.sort((a, b) => a?.firstName.localeCompare(b?.firstName) );
+      setTechnicians(techniciansList);
+    }
+  }, [ activeSpContacts, machineServiceRecord, user?.contact ]);
 
   const handleStep = (step) => async () => {
-    if (formActiveStep===0 && !completed[formActiveStep]) {
+    if (formActiveStep === 0 && !completed[formActiveStep]) {
       enqueueSnackbar(`Please complete step ${formActiveStep+1} to continue`, { variant: 'error' });
-    }else{
+    } else {
       dispatch(setFormActiveStep(step));
     }
   };
@@ -115,8 +111,6 @@ function MachineServiceRecordAddForm() {
     newCompleted[step] = true;
     setCompleted(newCompleted);
   }
-
-  const theme = useTheme();
 
 
   return (
@@ -149,7 +143,8 @@ function MachineServiceRecordAddForm() {
                 <Box sx={{border:'1px solid lightgray', borderRadius:'0px 0px 10px 10px', py:2,marginTop:'0 !important'}}>
                     {formActiveStep===0 &&
                       <MachineServiceRecordsFirstStep 
-                        securityUsers={securityUsers} 
+                        userTechnician={ userTechnician }
+                        technicians={ technicians } 
                         handleComplete={handleComplete}
                         handleDraftRequest={handleDraftRequest}
                         handleDiscard={handleDiscard}
@@ -162,7 +157,7 @@ function MachineServiceRecordAddForm() {
                         handleDiscard={handleDiscard}
                         handleBack={handleBack} 
                         serviceRecord={machineServiceRecord} 
-                       />
+                      />
                     }
 
                     {formActiveStep===2 &&

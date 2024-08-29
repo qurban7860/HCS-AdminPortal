@@ -23,7 +23,6 @@ import Iconify from '../../../components/iconify';
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, {
   RHFAutocomplete,
-  RHFMultiSelect,
   RHFTextField,
   RHFCountryAutocomplete,
   RHFCustomPhoneInput,
@@ -36,7 +35,7 @@ import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 // schema
 import { ContactSchema } from '../../schemas/customer';
 // constants
-import { FORMLABELS, Snacks } from '../../../constants/customer-constants';
+import { FORMLABELS } from '../../../constants/customer-constants';
 import { FORMLABELS as formLABELS } from '../../../constants/default-constants';
 import { StyledTooltip } from '../../../theme/styles/default-styles';
 import { PATH_CRM } from '../../../routes/paths';
@@ -67,18 +66,22 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
   const navigate = useNavigate()
 
   const systemConfig= JSON.parse( localStorage.getItem('configurations'))
-  
-  const sPContactTypes = systemConfig?.find( ( c )=> c?.name?.trim() === 'SP_CONTACT_TYPES' )?.value?.split(',')?.map(item => item?.trim());
-  const CustomerContactTypes = systemConfig?.find( ( c )=> c?.name?.trim() === 'CUSTOMER_CONTACT_TYPES')?.value?.split(',')?.map(item => item?.trim());
 
   useEffect(()=>{
-    if( customer?.type?.toLowerCase() === 'sp'){
-      setContactTypes(sPContactTypes)
-    } else {
-      setContactTypes(CustomerContactTypes)
+    if( customer?.type?.toLowerCase() === 'sp' && systemConfig ){
+      const configSPContactTypes = systemConfig?.find( ( c )=> c?.name?.trim() === 'SP_CONTACT_TYPES' )?.value?.split(',');
+      const sPContactTypes = configSPContactTypes?.map(item => item?.trim())?.sort();
+      if( Array.isArray(sPContactTypes) && sPContactTypes?.length > 0 ){
+        setContactTypes(sPContactTypes)
+      }
+    } else if( customer?.type?.toLowerCase() !== 'sp' && systemConfig ) {
+      const configCustomerContactTypes = systemConfig?.find( ( c )=> c?.name?.trim() === 'CUSTOMER_CONTACT_TYPES')?.value?.split(',');
+      const CustomerContactTypes = configCustomerContactTypes?.map(item => item?.trim())?.sort()
+      if( Array.isArray(CustomerContactTypes) && CustomerContactTypes?.length > 0 ){
+        setContactTypes(CustomerContactTypes)
+      }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[ customer?.type ])
+  },[ customer?.type, systemConfig ])
   
   // --------------------------------hooks----------------------------------
   const defaultValues = useMemo(
@@ -195,7 +198,7 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
                   filterSelectedOptions
                   name={FORMLABELS.CONTACT_TYPES.name}
                   label={FORMLABELS.CONTACT_TYPES.label}
-                  options={contactTypes?.sort() || []}
+                  options={ contactTypes }
                   isOptionEqualToValue={(option, value) => option === value}
                 />
               </Box>

@@ -40,7 +40,7 @@ export default function SettingList() {
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
-  
+  const { machine } = useSelector((state) => state.machine);
   const { settings, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.machineSetting );
   const TABLE_HEAD = [
     { id: 'techParam.category.name', label: 'Category Name', align: 'left' },
@@ -57,9 +57,9 @@ export default function SettingList() {
 
   useEffect(() => {
     if(machineId){
-      dispatch(getSettings( machineId ));
+      dispatch(getSettings( machineId, machine?.isArchived ));
     }
-  }, [dispatch, machineId]);
+  }, [dispatch, machineId, machine ]);
 
   useEffect(() => {
     setTableData(settings);

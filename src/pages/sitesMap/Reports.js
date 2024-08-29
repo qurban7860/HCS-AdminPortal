@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 import { Container, Grid, Card } from '@mui/material';
-import { getMachineLatLongData } from '../../../../redux/slices/products/machine';
-import { useDispatch, useSelector } from '../../../../redux/store';
-import { Cover } from '../../../../components/Defaults/Cover';
-import GoogleMaps from '../../../../assets/GoogleMaps';
-import { StyledCardContainer } from '../../../../theme/styles/default-styles';
+import { getMachineLatLongData } from '../../redux/slices/products/machine';
+import { useDispatch, useSelector } from '../../redux/store';
+import { Cover } from '../../components/Defaults/Cover';
+import GoogleMaps from '../../assets/GoogleMaps';
+import { StyledCardContainer } from '../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
 

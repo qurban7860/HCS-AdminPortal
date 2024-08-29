@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
-import { useState, memo, useLayoutEffect, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useState, memo, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { m, AnimatePresence } from 'framer-motion';
 // @mui
 import { useTheme } from '@mui/material/styles';
@@ -33,6 +33,7 @@ MultiFilePreview.propTypes = {
   onChangeReferenceNumber: PropTypes.func,
   onChangeStockNumber: PropTypes.func,
   onLoadImage: PropTypes.func,
+  onDownload: PropTypes.func,
 };
 
 function MultiFilePreview({ 
@@ -45,6 +46,7 @@ function MultiFilePreview({
   onChangeReferenceNumber,
   onChangeStockNumber,
   onLoadImage,
+  onDownload,
   files, 
   onRemove, 
   sx, 
@@ -53,7 +55,6 @@ function MultiFilePreview({
 }) {
   
   const { activeDocumentTypes } = useSelector((state) => state.documentType);
-  const dispatch = useDispatch()
   const theme = useTheme();
   const [slides, setSlides] = useState([]);
   const [selectedImage, setSelectedImage] = useState(-1);
@@ -116,7 +117,8 @@ function MultiFilePreview({
                       },
                       width:'100%',
                       height:150,
-                      borderRadius:'10px'
+                      borderRadius:'10px',
+                      my:'0px !important',
                     }}
                 >
                   <CardMedia onClick={()=> FORMAT_IMG_VISIBBLE.some(format => fileType?.match(format?.toLowerCase())) && handleOpenLightbox(index)}>
@@ -134,8 +136,9 @@ function MultiFilePreview({
                               width:'100%'
                           }}
                       >       
-                          {FORMAT_IMG_VISIBBLE.some(format => fileType?.match(format))  && <Button sx={{width:'50%', borderRadius:0}} onClick={()=>handleOpenLightbox(index)}><Iconify icon="carbon:view" /></Button>}
-                          <Button sx={{width:FORMAT_IMG_VISIBBLE.some(format => fileType?.match(format))?'50%':'100%', borderRadius:0}} color='error' onClick={() => onRemove(file)}><Iconify icon="radix-icons:cross-circled" /></Button>
+                          {FORMAT_IMG_VISIBBLE.some(format => fileType?.match(format))  && <Button sx={{width:'50%', borderRadius:0}} onClick={()=>handleOpenLightbox(index)}><Iconify sx={{ width: '25px'}} icon="carbon:view" /></Button>}
+                          { file?.uploaded && onDownload && <Button sx={{width:'50%', borderRadius:0}} onClick={ ()=>onDownload( file ) }><Iconify sx={{ width: '25px'}} icon="solar:download-square-linear" /></Button>}
+                          <Button sx={{width: FORMAT_IMG_VISIBBLE.some(format => fileType?.match(format)) || ( file?.uploaded && onDownload ) ? '50%' : '100%', borderRadius:0}} color='error' onClick={() => onRemove(file)}><Iconify sx={{ width: '25px'}} icon="radix-icons:cross-circled" /></Button>
                       </ButtonGroup>
                       
                       <Stack

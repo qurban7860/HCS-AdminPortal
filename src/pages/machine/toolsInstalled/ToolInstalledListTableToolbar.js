@@ -32,7 +32,7 @@ export default function ToolInstalledListTableToolbar({
   const { machineId } = useParams()
   const navigate = useNavigate();
   const toggleAdd = () => navigate(PATH_MACHINE.machines.toolsInstalled.new(machineId));
-  const { machine } = useSelector((state) => state.machine);
+  const { machine } = useSelector((state) => state.machine); 
   return (
     <Stack
       spacing={2}
@@ -46,7 +46,7 @@ export default function ToolInstalledListTableToolbar({
         onChange={onFilterName}
         onClick={onResetFilter}
         SubOnClick={toggleAdd}
-        addButton={BUTTONS.ADDTOOLINSTALLED}
+        addButton={!machine?.isArchived ? BUTTONS.ADDTOOLINSTALLED : undefined}
         transferredMachine={machine?.status?.slug==='transferred'}
       />
     </Stack>

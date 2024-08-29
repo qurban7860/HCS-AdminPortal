@@ -54,9 +54,10 @@ DocumentHistoryViewForm.propTypes = {
   machinePage: PropTypes.bool,
   machineDrawingPage: PropTypes.bool,
   machineDrawings: PropTypes.bool,
+  allowActions: PropTypes.bool,
 };
 
-function DocumentHistoryViewForm({ customerPage, machinePage, machineDrawingPage, machineDrawings }) {
+function DocumentHistoryViewForm({ customerPage, machinePage, machineDrawingPage, machineDrawings, allowActions }) {
   
   const dispatch = useDispatch();
   const { customerId, machineId, id } = useParams();
@@ -380,24 +381,24 @@ const handleNewFile = async () => {
         <Grid item md={12} mt={2}>
           <Card sx={{ p: 3 }}>
           <ViewFormEditDeleteButtons
-          customerPage={customerPage} 
-          machinePage={machinePage} 
-          drawingPage={machineDrawingPage}
-          customerAccess={defaultValues?.customerAccess}
-          isActive={defaultValues.isActive}
-          handleEdit={( machineDrawingPage || ( machineDrawings && !documentHistory?.machine && documentHistory?.productDrawings?.length === 0 ) ) && handleEditDrawing }
-          onDelete={machineDrawingPage ? handleDeleteDrawing : !( ( !machinePage && documentHistory?.machine?._id ) || ( !customerPage && documentHistory?.customer?._id ) || ( machineDrawings && documentHistory?.productDrawings?.length > 0 ) ) && handleDelete || undefined }
-          disableDeleteButton={machineDrawingPage && machine?.status?.slug==="transferred"}
-          disableEditButton={machineDrawingPage && machine?.status?.slug==="transferred"}
-          backLink={handleBackLink}
-      />
+            customerPage={customerPage} 
+            machinePage={machinePage} 
+            drawingPage={machineDrawingPage}
+            customerAccess={defaultValues?.customerAccess}
+            isActive={defaultValues.isActive}
+            handleEdit={ ( machineDrawingPage || ( machineDrawings && !documentHistory?.machine && documentHistory?.productDrawings?.length === 0 ) ) && !allowActions && handleEditDrawing }
+            onDelete={machineDrawingPage ? !allowActions && handleDeleteDrawing : !( ( !machinePage && documentHistory?.machine?._id ) || ( !customerPage && documentHistory?.customer?._id ) || ( machineDrawings && documentHistory?.productDrawings?.length > 0 ) ) && !allowActions && handleDelete || undefined }
+            disableDeleteButton={machineDrawingPage && machine?.status?.slug==="transferred" }
+            disableEditButton={machineDrawingPage && machine?.status?.slug==="transferred" }
+            backLink={handleBackLink}
+          />
             <Grid container sx={{mt:2}}>
               <ViewFormField isLoading={isLoading} sm={6} heading="Name" param={defaultValues?.displayName} />
               <ViewFormField isLoading={isLoading}
                 sm={6}
                 NewVersion={!defaultValues.isArchived}
-                handleNewVersion={ !( ( !machinePage && documentHistory?.machine?._id ) || ( !customerPage && documentHistory?.customer?._id ) || ( machineDrawings && documentHistory?.productDrawings?.length > 0 ) ) && handleNewVersion || undefined } 
-                handleUpdateVersion={ !( ( !machinePage && documentHistory?.machine?._id ) || ( !customerPage && documentHistory?.customer?._id ) || ( machineDrawings && documentHistory?.productDrawings?.length > 0 ) ) && handleUpdateVersion || undefined }
+                handleNewVersion={ !( ( !machinePage && documentHistory?.machine?._id ) || ( !customerPage && documentHistory?.customer?._id ) || ( machineDrawings && documentHistory?.productDrawings?.length > 0 ) ) && !allowActions && handleNewVersion || undefined } 
+                handleUpdateVersion={ !( ( !machinePage && documentHistory?.machine?._id ) || ( !customerPage && documentHistory?.customer?._id ) || ( machineDrawings && documentHistory?.productDrawings?.length > 0 ) ) && !allowActions && handleUpdateVersion || undefined }
                 heading="Active Version"
                 node={
                   defaultValues.documentVersion && (
@@ -492,6 +493,7 @@ const handleNewFile = async () => {
                               onOpenLightbox={()=> handleOpenLightbox(_index)}
                               onDownloadFile={()=> handleDownloadFile(documentHistory._id, version._id, file._id, file?.name, file?.extension)}
                               onDeleteFile={ !( ( !machinePage && documentHistory?.machine?._id ) || ( !customerPage && documentHistory?.customer?._id ) || ( machineDrawings && documentHistory?.productDrawings?.length > 0 ) ) && (()=> handleDeleteFile(documentHistory._id, version._id, file._id)) || undefined }
+                              isArchived={customer?.isArchived || machine?.isArchived }
                               toolbar
                             />
                           )
@@ -524,6 +526,7 @@ const handleNewFile = async () => {
                               onDownloadFile={() => handleDownloadFile(documentHistory._id, version._id, file._id, file?.name, file?.extension)}
                               onDeleteFile={ !( ( !machinePage && documentHistory?.machine?._id ) || ( !customerPage && documentHistory?.customer?._id ) || ( machineDrawings && documentHistory?.productDrawings?.length > 0 ) ) && (() => handleDeleteFile(documentHistory._id, version._id, file._id) ) || undefined }
                               onOpenFile={() => handleOpenFile(documentHistory._id, version._id, file._id, file)}
+                              isArchived={customer?.isArchived || machine?.isArchived }
                               toolbar
                             />
                           );

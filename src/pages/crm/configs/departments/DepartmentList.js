@@ -34,7 +34,8 @@ import { FORMLABELS } from '../../../../constants/default-constants';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Name', align: 'left' },
+  { id: 'departmentName', label: 'Name', align: 'left' },
+  { id: 'departmentType', label: 'Type', align: 'center' },
   { id: 'isActive', label: 'Active', align: 'center' },
   { id: 'forCustomer', label: 'Customer', align: 'center' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
@@ -229,8 +230,8 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   if (filterName) {
     inputData = inputData.filter(
       (category) =>
-        category?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        // (category.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+        category?.departmentName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        category.departmentType?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
         fDate(category?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }

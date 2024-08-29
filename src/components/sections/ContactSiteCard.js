@@ -17,7 +17,7 @@ ContactSiteCard.propTypes = {
   name: PropTypes.string,
   title: PropTypes.string,
   email: PropTypes.string,
-  phone: PropTypes.object,
+  phone: PropTypes.any,
   image: PropTypes.string,
   isMain: PropTypes.bool,
   isFormerEmployee: PropTypes.bool,

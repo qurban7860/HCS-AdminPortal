@@ -1,26 +1,17 @@
-import { useLayoutEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-
 // @mui
-import { Card, Grid, Switch, Typography, FormControlLabel } from '@mui/material';
-// import { RHFSwitch } from '../../../components/hook-form';
+import { Card, Grid } from '@mui/material';
 // redux
-import {
-  getDepartment,
-  deleteDepartment,
-} from '../../../../redux/slices/department/department';
+import { deleteDepartment } from '../../../../redux/slices/department/department';
 import { useSnackbar } from '../../../../components/snackbar';
 // paths
 import { PATH_SETTING } from '../../../../routes/paths';
-// Iconify
-// import Iconify from '../../../components/iconify/Iconify';
 //  components
 import ViewFormAudit from '../../../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../../../components/ViewForms/ViewFormField';
-// import ViewFormSwitch from '../../components/ViewForms/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../../../../components/ViewForms/ViewFormEditDeleteButtons';
-// import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 
 // ----------------------------------------------------------------------
 
@@ -37,15 +28,10 @@ export default function DepartmentViewForm() {
 
   const { department, isLoading } = useSelector((state) => state.department);
 
-  useLayoutEffect(() => {
-    if (id != null) {
-      dispatch(getDepartment(id));
-    }
-  }, [dispatch, id ]);
-
   const defaultValues = useMemo(
     () => ({
       departmentName: department?.departmentName || '',
+      departmentType: department?.departmentType || '',
       isActive: department?.isActive,
       isDefault: department?.isDefault,
       forCustomer: department?.forCustomer || false,
@@ -74,8 +60,8 @@ export default function DepartmentViewForm() {
     <Card sx={{ p: 2 }}>
       <ViewFormEditDeleteButtons 
         isActive={defaultValues.isActive} 
-        // isDefault={defaultValues.isDefault} 
-        // forCustomer={defaultValues.forCustomer}
+        isDefault={defaultValues.isDefault} 
+        forCustomer={defaultValues.forCustomer}
         handleEdit={toggleEdit} 
         onDelete={onDelete} 
         backLink={() => navigate(PATH_SETTING.departments.list)}
@@ -83,10 +69,7 @@ export default function DepartmentViewForm() {
       />
       <Grid container sx={{mt:2}}>
         <ViewFormField isLoading={isLoading} sm={12} heading="Department Name" param={defaultValues?.departmentName} />
-        <Grid display="flex" >
-          <FormControlLabel control={<Switch disabled checked={defaultValues?.isDefault} />} label={<Typography variant='body2'sx={{fontWeight:'bold'}}>Default</Typography>} />
-          <FormControlLabel control={<Switch disabled checked={defaultValues?.forCustomer} />} label={<Typography variant='body2'sx={{fontWeight:'bold'}}> Customers</Typography>} />
-        </Grid>
+        <ViewFormField isLoading={isLoading} sm={12} heading="Department Type" param={defaultValues?.departmentType} />
         <ViewFormAudit defaultValues={defaultValues} />
       </Grid>
     </Card>

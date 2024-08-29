@@ -263,7 +263,7 @@ export default function MachineViewForm() {
               // handleJiraNaviagte={handleJiraNaviagte}
               onDelete={ machine?.isArchived ? undefined : onDelete}
               handleTransfer={ machine?.isArchived ? undefined : () => navigate(PATH_MACHINE.machines.transfer(machine?._id))}
-              backLink={() => navigate(PATH_MACHINE.machines.root)}
+              backLink={() => navigate( machine?.isArchived ? PATH_MACHINE.machines.archived.root : PATH_MACHINE.machines.root)}
               machineSupportDate={ machine?.isArchived ? undefined : defaultValues?.supportExpireDate}
               transferredHistory={ machine?.isArchived ? undefined : machine?.transferredHistory || []}
             />
@@ -295,7 +295,7 @@ export default function MachineViewForm() {
                   node={ 
                     <>
                       <Typography variant='h4' sx={{mr: 1,color: machine?.status?.slug === "transferred" && 'red'  }}>{ defaultValues?.status }</Typography> 
-                      { machine?.status?.slug!=='transferred' && <IconButtonTooltip title='Change Status' icon="grommet-icons:sync" onClick={handleStatusChangeDialog} />}
+                      { machine?.status?.slug!=='transferred' && !machine?.isArchived && <IconButtonTooltip title='Change Status' icon="grommet-icons:sync" onClick={handleStatusChangeDialog} />}
                     </>
                     } />
             <ViewFormField isLoading={isLoading} sm={6} heading="De-Commissioned Date" param={fDate(defaultValues?.decommissionedDate)} />

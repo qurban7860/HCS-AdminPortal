@@ -1,31 +1,20 @@
-import { useEffect, useLayoutEffect, useMemo, useState, memo, useCallback } from 'react';
+import { useEffect, useMemo, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Container, Card, Grid, Stack, StepLabel, Step, Stepper, Box, StepContent, Button, StepButton, Typography } from '@mui/material';
+import { Stack } from '@mui/material';
 // routes
 import { useNavigate, useParams } from 'react-router-dom';
-import download from 'downloadjs';
 import { PATH_MACHINE } from '../../../routes/paths';
 // slice
-import { addMachineServiceRecord, updateMachineServiceRecord, resetMachineServiceRecord, setAddFileDialog, deleteMachineServiceRecord, getMachineServiceRecord, addMachineServiceRecordFiles, deleteRecordFile, downloadRecordFile } from '../../../redux/slices/products/machineServiceRecord';
-import { getActiveContacts } from '../../../redux/slices/customer/contact';
+import { updateMachineServiceRecord, resetMachineServiceRecord, getMachineServiceRecord, addMachineServiceRecordFiles, deleteRecordFile, downloadRecordFile } from '../../../redux/slices/products/machineServiceRecord';
 // components
 import ServiceRecodStepButtons from '../../../components/DocumentForms/ServiceRecodStepButtons';
 import { useSnackbar } from '../../../components/snackbar';
-import FormProvider, { RHFAutocomplete, RHFSwitch, RHFTextField, RHFUpload } from '../../../components/hook-form';
-import { getActiveSecurityUsers, getSecurityUser } from '../../../redux/slices/securityUser/securityUser';
-import FormLabel from '../../../components/DocumentForms/FormLabel';
-import { useAuthContext } from '../../../auth/useAuthContext';
-import MachineTabContainer from '../util/MachineTabContainer';
-import DialogServiceRecordAddFile from '../../../components/Dialog/DialogServiceRecordAddFile';
-import Iconify from '../../../components/iconify';
-import { ColorlibConnector, ColorlibStepIcon } from '../../../theme/styles/default-styles';
-import { DocumentGalleryItem } from '../../../components/gallery/DocumentGalleryItem';
-import { ThumbnailDocButton } from '../../../components/Thumbnails';
+import FormProvider, { RHFAutocomplete, RHFTextField, RHFUpload } from '../../../components/hook-form';
 import { validateImageFileType } from '../../documents/util/Util';
   
 MachineServiceRecordsThirdStep.propTypes = {
@@ -43,12 +32,9 @@ function MachineServiceRecordsThirdStep({handleDraftRequest, handleDiscard, hand
       
     const { activeContacts } = useSelector((state) => state.contact);
     const { machineServiceRecord } = useSelector((state) => state.machineServiceRecord);
-    const { activeSecurityUsers, securityUser } = useSelector((state) => state.user);
-    const { machine } = useSelector((state) => state.machine);
 
     const [ isDraft, setIsDraft ] = useState(false);
     const saveAsDraft = async () => setIsDraft(true);
-    const [ activeServiceRecordConfigs, setActiveServiceRecordConfigs ] = useState([]);
 
     useEffect(()=>{
       if(machineId && id){
@@ -106,7 +92,6 @@ function MachineServiceRecordsThirdStep({handleDraftRequest, handleDiscard, hand
     watch,
     setValue,
     getValues,
-    trigger,
     handleSubmit,
     formState: { isSubmitting },
     } = methods;
@@ -117,7 +102,7 @@ function MachineServiceRecordsThirdStep({handleDraftRequest, handleDiscard, hand
       }
     }, [reset, machineServiceRecord, defaultValues]);
 
-    const { isActive, files, decoilers, operators } = watch()
+    const { isActive, files } = watch()
     const handleDropMultiFile = useCallback(
       async (acceptedFiles) => {
         const docFiles = files || [];
@@ -221,8 +206,9 @@ function MachineServiceRecordsThirdStep({handleDraftRequest, handleDiscard, hand
             name="operators" 
             label="Operators"
             options={activeContacts}
-            getOptionLabel={(option) => `${option?.firstName ||  ''} ${option.lastName || ''}`}
+            getOptionLabel={(option) => `${option?.firstName ||  ''} ${option?.lastName || ''}`}
             isOptionEqualToValue={(option, value) => option?._id === value?._id}
+            renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}` }</li> )}
           />
           <RHFTextField name="operatorNotes" label="Operator Notes" minRows={3} multiline/> 
           <RHFUpload multiple  thumbnail name="files" imagesOnly

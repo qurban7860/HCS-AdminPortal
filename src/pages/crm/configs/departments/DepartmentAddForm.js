@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { useMemo } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
@@ -14,7 +14,7 @@ import { addDepartment } from '../../../../redux/slices/department/department';
 import { PATH_SETTING } from '../../../../routes/paths';
 // components
 import { useSnackbar } from '../../../../components/snackbar';
-import FormProvider, { RHFTextField, RHFSwitch } from '../../../../components/hook-form';
+import FormProvider, { RHFTextField, RHFSwitch, RHFAutocomplete } from '../../../../components/hook-form';
 // util
 import { Cover } from '../../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../../theme/styles/default-styles';
@@ -27,6 +27,7 @@ export default function DepartmentAddForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+  const [ departmentTypes, setDepartmentTypes ] = useState([])
 
   const defaultValues = useMemo(
     () => ({
@@ -37,9 +38,18 @@ export default function DepartmentAddForm() {
     }),
     []
   );
+  
+  useEffect(() =>{
+    const configs = JSON.parse( localStorage.getItem('configurations'))
+      const departTypes = configs?.find((item) => item.name === 'Department_Types')?.value.split(',').map((type) => type.trim())
+      if(Array.isArray(departTypes) &&  departTypes.length > 0){
+        setDepartmentTypes(departTypes)
+      }
+  }, [ ] );
 
   const DepartmentSchema = Yup.object().shape({
     departmentName: Yup.string().min(2, 'Name must be at least 2 characters long').max(50).required('Name is required').trim(),
+    departmentType: Yup.string().min(2).max(50).required('Type is required').trim(),
     isActive: Yup.boolean(),
     isDefault: Yup.boolean(),
     forCustomer: Yup.boolean(),
@@ -81,6 +91,11 @@ export default function DepartmentAddForm() {
               <Stack spacing={2}>
                 <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)'}}>
                   <RHFTextField name="departmentName" label="Name*" />
+                  <RHFAutocomplete
+                    label="Department Type*"
+                    name="departmentType"
+                    options={departmentTypes}
+                  />
                 </Box>
                 <Grid display="flex" justifyContent="flex-start">
                   <RHFSwitch name="isActive" label="Active"/>

@@ -46,7 +46,7 @@ export default function ProfileList() {
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
-
+  const { machine } = useSelector((state) => state.machine);
   const { profiles, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.profile );
 
   const TABLE_HEAD = [
@@ -68,9 +68,9 @@ export default function ProfileList() {
 
   useEffect(() => {
     if(machineId){
-      dispatch(getProfiles(machineId));
+      dispatch(getProfiles(machineId, machine?.isArchived ));
     }
-  }, [dispatch, machineId]);
+  }, [ dispatch, machineId, machine ]);
 
   useEffect(() => {
     setTableData(profiles);

@@ -80,10 +80,13 @@ export default function LicenseViewForm() {
       <MachineTabContainer currentTabValue='license' />
     <Grid item md={12} mt={2}>
     <Card sx={{ p: 2 }}>
-      <ViewFormEditDeleteButtons isActive={defaultValues.isActive}  handleEdit={handleEdit} onDelete={onDelete} 
-      backLink={() => navigate(PATH_MACHINE.machines.licenses.root(machineId, id)) } 
-      disableEditButton={machine?.status?.slug==='transferred'}
-      disableDeleteButton={machine?.status?.slug==='transferred'}
+      <ViewFormEditDeleteButtons 
+        isActive={defaultValues.isActive}  
+        handleEdit={ !machine?.isArchived && handleEdit} 
+        onDelete={ !machine?.isArchived && onDelete} 
+        backLink={() => navigate(PATH_MACHINE.machines.licenses.root(machineId, id)) } 
+        disableEditButton={machine?.status?.slug==='transferred' || machine?.isArchived }
+        disableDeleteButton={machine?.status?.slug==='transferred' || machine?.isArchived }
       />
       <Grid container sx={{mt:2}}>
         <ViewFormField isLoading={isLoading} sm={6} heading="Device GUID" param={defaultValues.licenseDetail.deviceGUID} />

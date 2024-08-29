@@ -176,20 +176,22 @@ export function updateNote(machineId,noteId,params) {
   }
 }
 
-export function getNotes(id) {
+export function getNotes( id, isMachineArchived) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${id}/notes` , 
-      {
-        params: {
-          isArchived: false,
-          orderBy : {
-            createdAt:-1
-          }
+      const params = {
+        isArchived: false,
+        orderBy : {
+          createdAt: -1
         }
       }
-      );
+    if( isMachineArchived ){
+      params.archivedByMachine = true;
+      params.isArchived = true;
+    } 
+      
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${id}/notes`, { params });
       dispatch(slice.actions.getNotesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Notes loaded successfully'));
     } catch (error) {

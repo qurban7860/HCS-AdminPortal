@@ -24,6 +24,7 @@ import { ICONS } from '../../constants/icons/default-icons';
 import { fDate, fDateTime, GetDifferenceInDays } from '../../utils/formatTime';
 import { useAuthContext } from '../../auth/useAuthContext';
 import { PATH_DASHBOARD } from '../../routes/paths';
+import ViewFormServiceRecordApprovalHistoryPopover from './ViewFormServiceRecordApprovalHistoryPopover';
 
 function ViewFormEditDeleteButtons({
   backLink,
@@ -270,7 +271,9 @@ function ViewFormEditDeleteButtons({
 
   const [ transferHistoryAnchorEl, setTransferHistoryAnchorEl ] = useState(null);
   const [ transferHistory, setTransferHistory ] = useState([]);
-
+  
+  const [ serviceRecordApprovalHistoryAnchorEl, setServiceRecordApprovalHistoryAnchorEl ] = useState(null);
+  
   const [ machineSettingHistoryAnchorEl, setMachineSettingHistoryAnchorEl ] = useState(null);
 
   const [approvedAnchorEl, setApprovedAnchorEl] = useState(null);
@@ -296,6 +299,16 @@ function ViewFormEditDeleteButtons({
   const handleTransferHistoryPopoverClose = () => {
     setTransferHistoryAnchorEl(null);
     setTransferHistory([])
+  };
+  
+  const handleServiceRecordApprovalHistoryPopoverOpen = (event) => {
+    if(serviceRecordStatus?.completeHistory?.totalLogsCount > 0) {
+      setServiceRecordApprovalHistoryAnchorEl(event.currentTarget);
+    }
+  };
+
+  const handleServiceRecordApprovalHistoryPopoverClose = () => {
+    setServiceRecordApprovalHistoryAnchorEl(null);
   };
 
   const handleMachineSettingHistoryPopoverOpen = (event) => {
@@ -532,8 +545,45 @@ function ViewFormEditDeleteButtons({
           />
           }
 
-
-
+          {serviceRecordStatus && (
+            <Badge badgeContent={serviceRecordStatus?.completeHistory?.totalLogsCount || 0} color="info">
+              {serviceRecordStatus?.currentApprovingContacts?.length > 0 ? (
+                <>
+                {serviceRecordStatus?.status === 'APPROVED' && (
+                    <IconTooltip
+                      title={ICONS.SR_APPROVED.heading}
+                      color={ICONS.SR_APPROVED.color}
+                      icon={ICONS.SR_APPROVED.icon}
+                      onClick={handleServiceRecordApprovalHistoryPopoverOpen}
+                    />
+                  )}
+                {serviceRecordStatus?.status === 'REJECTED' && (
+                    <IconTooltip
+                      title={ICONS.SR_REJECTED.heading}
+                      color={ICONS.SR_REJECTED.color}
+                      icon={ICONS.SR_REJECTED.icon}
+                      onClick={handleServiceRecordApprovalHistoryPopoverOpen}
+                    />
+                  )}
+                {serviceRecordStatus?.status === 'PENDING' && (
+                    <IconTooltip
+                      title={ICONS.SR_PENDING.heading}
+                      color={ICONS.SR_PENDING.color}
+                      icon={ICONS.SR_PENDING.icon}
+                      onClick={handleServiceRecordApprovalHistoryPopoverOpen}
+                    />
+                  )}
+                </>
+              ) : (
+                <IconTooltip
+                  title={ICONS.SR_HISTORY.heading}
+                  color={ICONS.SR_HISTORY.color}
+                  icon={ICONS.SR_HISTORY.icon}
+                  onClick={handleServiceRecordApprovalHistoryPopoverOpen}
+                />
+              )}
+            </Badge>
+          )}
         </StyledStack>
       </Grid>
 
@@ -653,8 +703,8 @@ function ViewFormEditDeleteButtons({
           icon="eva:swap-fill"
         />}
 
-        {handleCompleteMSR && serviceRecordStatus && 
-          <IconTooltip title={`${serviceRecordStatus} Service Record`} onClick={handleCompleteMSR} color={theme.palette.primary.main} icon="uil:file-check-alt"/>
+        {handleCompleteMSR && 
+          <IconTooltip title="Service Record Approval" onClick={handleCompleteMSR} color={theme.palette.primary.main} icon="uil:file-check-alt"/>
         }
 
         {handleViewPDF && 
@@ -887,6 +937,14 @@ function ViewFormEditDeleteButtons({
         ListArr={approvedBy}
         ListTitle= "Approved By"
       />
+
+      <ViewFormServiceRecordApprovalHistoryPopover
+        open={serviceRecordApprovalHistoryAnchorEl}
+        onClose={handleServiceRecordApprovalHistoryPopoverClose}
+        evaluationHistory={serviceRecordStatus?.completeHistory?.evaluationHistory}
+        ListArr={serviceRecordStatus?.currentApprovalLogs}
+        ListTitle="Service Record Approval Details"
+      />
     </Grid>
 
     </Grid>
@@ -956,5 +1014,5 @@ ViewFormEditDeleteButtons.propTypes = {
   history: PropTypes.array,
   onMergeDocumentType: PropTypes.func,
   handleCompleteMSR: PropTypes.func,
-  serviceRecordStatus: PropTypes.string
+  serviceRecordStatus: PropTypes.object
 };

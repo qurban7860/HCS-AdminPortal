@@ -15,7 +15,6 @@ import { PATH_MACHINE } from '../../../routes/paths';
 import { getMachine, resetMachine } from '../../../redux/slices/products/machine';
 import TabButtonTooltip from '../../../components/Tabs/TabButtonTooltip';
 import Iconify from '../../../components/iconify';
-
 // ----------------------------------------------------------------------
 
 MachineTabContainer.propTypes = {
@@ -34,6 +33,7 @@ export default function MachineTabContainer({ currentTabValue }) {
   }, [dispatch, machine?._id, machineId]);
 
   const navigate = useNavigate();
+
   const navigatePage = (tab)=>{
     if(tab === 'machine' && machineId ){
       navigate( PATH_MACHINE.machines.view(machineId) )
@@ -61,11 +61,13 @@ export default function MachineTabContainer({ currentTabValue }) {
       navigate( PATH_MACHINE.machines.jira.root(machineId) )
     }
   }
+  
 
   return (
-      <StyledCardContainer>
+    <StyledCardContainer>
         <Cover name={machine ? `${machine?.serialNo ? machine?.serialNo : ''} ${machine?.machineModel?.name ? `- ${machine?.machineModel?.name}` : '' }` : 'New Machine'} setting isArchived={machine?.isArchived}  />
-        {!machine?.isArchived && !isLoading && <TabContainer
+      {!isLoading && (
+        <TabContainer
           tabsClasses={tabsClasses.scrollButtons}
           currentTab={currentTabValue}
           setCurrentTab={(tab)=>  navigatePage(tab) }
@@ -77,9 +79,10 @@ export default function MachineTabContainer({ currentTabValue }) {
               value={tab.value}
               label={tab?.value===currentTabValue?tab.label:""}
               icon={<TabButtonTooltip value={tab.value} selected={tab?.value===currentTabValue} title={tab.label} icon={tab.icon}/>}
-              />
+            />
           ))}
-        </TabContainer>}
-      </StyledCardContainer>
+        </TabContainer>
+      )}
+    </StyledCardContainer>
   );
 }

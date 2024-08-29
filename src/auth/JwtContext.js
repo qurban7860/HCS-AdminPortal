@@ -277,7 +277,6 @@ export function AuthProvider({ children }) {
       localStorage.setItem("MFA", true);
     } else{
       const { accessToken, user, userId} = response.data;
-      
       localStorage.setItem("customer", user?.customer);
 
       const {
@@ -302,7 +301,6 @@ export function AuthProvider({ children }) {
       localStorage.setItem('dataAccessibilityLevel', user?.dataAccessibilityLevel);
       localStorage.setItem('customer',user?.customer)
       localStorage.setItem('contact',user?.contact)
-
 
       setSession(accessToken);
       await getConfigs();
@@ -332,7 +330,7 @@ export function AuthProvider({ children }) {
   const muliFactorAuthentication = useCallback(async (code, userID) => {
     const response = await axios.post(`${CONFIG.SERVER_URL}security/multifactorverifyCode`, {code, userID})
       const { accessToken, user, userId } = response.data;
-
+      await setSession(accessToken);
       const {
         isAllAccessAllowed,
         isDisableDelete,
@@ -356,8 +354,6 @@ export function AuthProvider({ children }) {
       localStorage.setItem('contact',user?.contact)
       localStorage.setItem('dataAccessibilityLevel', user?.dataAccessibilityLevel);
 
-      setSession(accessToken);
-      await getConfigs();
       dispatch({
         type: 'LOGIN',
         payload: { 
@@ -376,6 +372,7 @@ export function AuthProvider({ children }) {
           isDeveloper,
         },
       });
+      await getConfigs();
   }, []);
 
 
@@ -401,8 +398,6 @@ export function AuthProvider({ children }) {
   // LOGOUT
   const logout = useCallback( async () => {
     const userId  = localStorage.getItem("userId")
-    const id = initialState.userId
-    console.log("id : ",id, userId,userId)
     try{
       await dispatch(clearStorageAndNaviagteToLogin());
       await axios.post(`${CONFIG.SERVER_URL}security/logout/${userId}`)

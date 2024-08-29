@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import * as Yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { Link as RouterLink } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
@@ -21,13 +22,23 @@ import FormProvider, { RHFTextField} from '../../components/hook-form';
 export default function AuthLoginForm() {
   const { muliFactorAuthentication } = useAuthContext();
   const regEx = /^[4][0-9][0-9]$/
-  const [code, setCode] = useState("");
   const { enqueueSnackbar } = useSnackbar();
 
   const userId = localStorage.getItem('userId');
 
 
-  const methods = useForm();
+  const VerifyCodeSchema = Yup.object().shape({
+    code: Yup.number().min(1).label("Code").required(),
+  });
+
+  const defaultValues = {
+    code: '',
+  };
+
+  const methods = useForm({
+    resolver: yupResolver(VerifyCodeSchema),
+    defaultValues,
+  });
 
   const {
     setError,
@@ -36,11 +47,8 @@ export default function AuthLoginForm() {
   } = methods;
 
   const onSubmit = async (data) => {
-    if (code) {
-      // data.multiFactorAuthenticationCode = code;
-    }
     try {
-      await muliFactorAuthentication(code, userId);
+      await muliFactorAuthentication(data?.code, userId);
     } catch (error) {
       enqueueSnackbar('Unable to Login!', { variant: 'error' });
       console.error("error: ", error);
@@ -64,14 +72,7 @@ export default function AuthLoginForm() {
       <Stack spacing={3} sx={{ mt: 1 }}>
         {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
           
-        <RHFTextField
-          type="number"
-          name="code"
-          value={code}
-          onChange={(e) => setCode(e.target.value)}
-          label="Code"
-          required
-        />
+        <RHFTextField type="number" name="code" label="Code*" />
 
         <LoadingButton
           fullWidth

@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 // @mui
-import { Switch, TableRow, TableCell } from '@mui/material';
+import { Switch, TableRow, TableCell, Chip } from '@mui/material';
 // components
 import LinkTableCell from '../../../../components/ListTableTools/LinkTableCell';
 // utils
@@ -25,11 +25,12 @@ export default function DepartmentListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { departmentName, isActive, forCustomer, isDefault, createdAt } = row;
+  const { departmentName, departmentType, isActive, forCustomer, isDefault, createdAt } = row;
   
   return (
       <TableRow hover selected={selected}>
         <LinkTableCell align="left" onClick={onViewRow} param={departmentName} isDefault={isDefault}/>
+        <TableCell align="center">{departmentType ? <Chip label={departmentType} /> : ""}</TableCell>
         <TableCell align="center">
           <Switch checked={isActive} disabled sx={{ my: -1 }} />{' '}
         </TableCell>        

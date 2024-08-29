@@ -505,7 +505,10 @@ export function getDocuments(customerId, machineId, drawing, page, pageSize, isC
     if(isCustomerArchived){
       params.archivedByCustomer = true;
       params.isArchived = true;
-    }else{
+    } else if( isMachineArchived ){
+      params.archivedByMachine = true;
+      params.isArchived = true;
+    } else {
       params.isArchived = false;
     }
 

@@ -46,6 +46,7 @@ const TABLE_HEAD = [
 // ----------------------------------------------------------------------
 
 export default function HistoricalConfigurationsList() {
+  const { machine } = useSelector((state) => state.machine);
   const { historicalConfigurations, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.historicalConfiguration );
   const navigate = useNavigate();
   const { machineId } = useParams();
@@ -82,9 +83,9 @@ export default function HistoricalConfigurationsList() {
 
   useLayoutEffect(() => {
     if(machineId){
-      dispatch(getHistoricalConfigurationRecords(machineId)); 
+      dispatch(getHistoricalConfigurationRecords(machineId, machine?.isArchived )); 
     }
-  }, [dispatch, machineId]);
+  }, [dispatch, machineId, machine ]);
 
   useEffect(() => {
     if (initial) {
