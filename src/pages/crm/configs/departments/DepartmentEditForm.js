@@ -1,6 +1,5 @@
-/* eslint-disable import/no-unresolved */
 import * as Yup from 'yup';
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 // form
@@ -26,9 +25,8 @@ export default function DepartmentEditForm() {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const { department } = useSelector((state) => state.department);
-  const { configs } = useSelector((state) => state.config);
   const [ departmentTypes, setDepartmentTypes ] = useState([])
-
+  
   const defaultValues = useMemo(
     () => ({
       departmentName: department?.departmentName || '',
@@ -37,16 +35,16 @@ export default function DepartmentEditForm() {
       isDefault: department?.isDefault || false,
       forCustomer: department?.forCustomer || false,
     }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [department]
+    [ department ]
   );
   
-  useLayoutEffect(() =>{
+  useEffect(() =>{
+    const configs = JSON.parse( localStorage.getItem('configurations'))
     const departTypes = configs?.find((item) => item.name === 'Department_Types')?.value.split(',').map((type) => type.trim())
     if(Array.isArray(departTypes) &&  departTypes.length > 0){
       setDepartmentTypes(departTypes)
     }
-}, [ configs ] );
+  }, [ ] );
 
   const departmentSchema = Yup.object().shape({
     departmentName: Yup.string().min(2).max(50).required('Name is required').trim(),

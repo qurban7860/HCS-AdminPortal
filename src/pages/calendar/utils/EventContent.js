@@ -43,7 +43,7 @@ EventContent.propTypes = {
         timeText: PropTypes.string,
         event: PropTypes.shape({
             extendedProps: PropTypes.shape({
-                start: PropTypes.string.isRequired,
+                start: PropTypes.any.isRequired,
                 priority: PropTypes.string,
                 customer: PropTypes.shape({ name: PropTypes.string.isRequired }).isRequired,
                 machines: PropTypes.array,
