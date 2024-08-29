@@ -71,7 +71,6 @@ function MachineServiceRecordAddForm() {
         techniciansList = [ sPContactUser, ...techniciansList ]
       }
       techniciansList = techniciansList?.sort((a, b) => a?.firstName.localeCompare(b?.firstName) );
-      console.log("techniciansList : ",techniciansList);
       setTechnicians(techniciansList);
     }
   }, [ activeSpContacts, machineServiceRecord, user?.contact ]);

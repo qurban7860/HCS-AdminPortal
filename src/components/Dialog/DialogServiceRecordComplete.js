@@ -43,7 +43,6 @@ function DialogServiceRecordComplete({ recordStatus }) {
   const { activeSpContacts, isLoading } = useSelector((state) => state.contact);
   const { user } = useAuthContext();
 
-console.log("activeSpContacts : ",activeSpContacts)
   useEffect(() => {
     const configs = JSON.parse( localStorage.getItem('configurations'))
 
