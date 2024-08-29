@@ -50,30 +50,24 @@ function DialogServiceRecordComplete({ recordStatus }) {
 
   useEffect(() => {
     if (configs.length > 0 && activeSpContacts.length > 0) {
-      let approvingContactsArray;
-      if (configs.some((config) => config.name === 'Approving_Contacts')) {
-        approvingContactsArray = configs
-          .find((config) => config.name === 'Approving_Contacts')
-          ?.value.split(',')
-          .filter((configEmail) =>
-            activeSpContacts.some(
-              (activeSpUser) =>
-                activeSpUser.contact[0].email.toLowerCase() === configEmail.trim().toLowerCase()
-            )
-          )
-          .map((configEmail) => {
-            const fullContactObj = activeSpContacts.find(
-              (activeSpUser) =>
-                activeSpUser.contact[0].email.toLowerCase() === configEmail.trim().toLowerCase()
-            );
-            return fullContactObj.contact[0];
-          })
+      let approvingContactsArray = [];
+
+      const approvingContactsConfig = configs.find(
+        (config) => config?.name === 'Approving_Contacts'
+      );
+
+      if (approvingContactsConfig?.value) {
+        const configEmails = approvingContactsConfig.value
+        ?.split(',')
+        .map((email) => email.trim().toLowerCase());
+
+        approvingContactsArray = activeSpContacts
+          .map((activeSpUser) => activeSpUser?.contact[0])
+          .filter((contact) => contact?.email && configEmails.includes(contact.email.toLowerCase()))
           .sort((a, b) => {
             const nameA = `${a.firstName} ${a.lastName}`.toLowerCase();
             const nameB = `${b.firstName} ${b.lastName}`.toLowerCase();
-            if (nameA < nameB) return -1; // nameA comes first
-            if (nameA > nameB) return 1; // nameB comes first
-            return 0; // names are equal
+            return nameA.localeCompare(nameB);
           });
       } else {
         approvingContactsArray = activeSpContacts.map((activeSpUser) => activeSpUser.contact[0]);
