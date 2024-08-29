@@ -62,7 +62,7 @@ function DialogServiceRecordComplete({ recordStatus }) {
         .map((email) => email.trim().toLowerCase());
 
         approvingContactsArray = activeSpContacts
-          .map((activeSpUser) => activeSpUser?.contact[0])
+          .map((activeSpUser) => activeSpUser?.contact)
           .filter((contact) => contact?.email && configEmails.includes(contact.email.toLowerCase()))
           .sort((a, b) => {
             const nameA = `${a.firstName} ${a.lastName}`.toLowerCase();
@@ -70,7 +70,7 @@ function DialogServiceRecordComplete({ recordStatus }) {
             return nameA.localeCompare(nameB);
           });
       } else {
-        approvingContactsArray = activeSpContacts.map((activeSpUser) => activeSpUser.contact[0]);
+        approvingContactsArray = activeSpContacts.map((activeSpUser) => activeSpUser.contact);
       }
       setApprovingContacts(approvingContactsArray);
     }
