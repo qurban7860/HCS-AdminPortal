@@ -141,8 +141,9 @@ function EventDialog({
   }, [reset, range, selectedEvent, contacts]);
   
   const priorityOptions = [
-    'Highest',
     'High',
+    'Medium',
+    'Low',
   ];
   
   const onSubmit = async ( data ) => {

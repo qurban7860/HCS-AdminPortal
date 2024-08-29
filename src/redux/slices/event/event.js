@@ -38,6 +38,7 @@ const slice = createSlice({
     // HAS ERROR
     hasError(state, action) {
       state.isLoading = false;
+      state.isLoadingList = false;
       state.error = action.payload;
     },
 
