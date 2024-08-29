@@ -11,9 +11,8 @@ import FormProvider from '../../../components/hook-form/FormProvider';
 import { RHFTextField, RHFAutocomplete, RHFDatePicker } from '../../../components/hook-form';
 import { MachineServiceRecordPart1Schema } from '../../schemas/machine';
 import { PATH_MACHINE } from '../../../routes/paths';
-import { addMachineServiceRecord, deleteMachineServiceRecord, setFormActiveStep, updateMachineServiceRecord } from '../../../redux/slices/products/machineServiceRecord';
+import { addMachineServiceRecord, setFormActiveStep, updateMachineServiceRecord } from '../../../redux/slices/products/machineServiceRecord';
 import { resetServiceRecordConfig } from '../../../redux/slices/products/serviceRecordConfig';
-import FormLabel from '../../../components/DocumentForms/FormLabel';
 import ServiceRecodStepButtons from '../../../components/DocumentForms/ServiceRecodStepButtons';
 import SkeletonLine from '../../../components/skeleton/SkeletonLine';
 
@@ -35,7 +34,7 @@ function MachineServiceRecordsFirstStep( { securityUsers, onChangeConfig, handle
   
     const { recordTypes, activeServiceRecordConfigsForRecords } = useSelector((state) => state.serviceRecordConfig);
     const { machineServiceRecord, isLoading } = useSelector((state) => state.machineServiceRecord);
-    const { activeSecurityUsers, securityUser } = useSelector((state) => state.user);
+    const { securityUser } = useSelector((state) => state.user);
     const { machine } = useSelector((state) => state.machine);
     const [ activeServiceRecordConfigs, setActiveServiceRecordConfigs ] = useState([]);
 

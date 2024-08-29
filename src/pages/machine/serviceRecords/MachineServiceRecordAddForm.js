@@ -14,7 +14,7 @@ import {
 import { getActiveContacts } from '../../../redux/slices/customer/contact';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import { getActiveSecurityUsers, getSecurityUser } from '../../../redux/slices/securityUser/securityUser';
+import { getActiveSPTechnicalSecurityUsers, getSecurityUser } from '../../../redux/slices/securityUser/securityUser';
 import { getActiveServiceRecordConfigsForRecords } from '../../../redux/slices/products/serviceRecordConfig';
 import { useAuthContext } from '../../../auth/useAuthContext';
 import MachineTabContainer from '../util/MachineTabContainer';
@@ -36,48 +36,57 @@ function MachineServiceRecordAddForm() {
   const { machineId, id } = useParams();
 
   const { machine } = useSelector((state) => state.machine)
-  const { activeSecurityUsers, securityUser } = useSelector((state) => state.user);
+  const { activeSPTechnicalSecurityUsers, securityUser } = useSelector((state) => state.user);
   const { formActiveStep, machineServiceRecord, isLoading } = useSelector((state) => state.machineServiceRecord);
 
   const [ securityUsers, setSecurityUsers ] = useState([]);
   const [ completed, setCompleted ] = useState([]);
 
-  useLayoutEffect( ()=>{
+  useLayoutEffect(() => {
     dispatch(resetMachineServiceRecord());
     dispatch(getActiveServiceRecordConfigsForRecords(machineId));
-    dispatch(getActiveSecurityUsers({roleType:['TechnicalManager','Technician']}));
-    
-    if(machine?.customer?._id){
+    if (machine?.customer?._id) {
       dispatch(getActiveContacts(machine?.customer?._id));
-    } 
-    
-    if(userId){
-      dispatch(getSecurityUser( userId ))
-    } 
+    }
 
-    if(machineId && id){
+    if (userId) {
+      dispatch(getSecurityUser(userId));
+    }
+
+    if (machineId && id) {
       const newCompleted = completed;
       newCompleted[0] = true;
       setCompleted(newCompleted);
-      dispatch((getMachineServiceRecord(machineId, id)));
+      dispatch(getMachineServiceRecord(machineId, id));
+      dispatch(getActiveSPTechnicalSecurityUsers());
     }
-    
-    
-  },[dispatch, machineId, machine, userId, id, completed])
-  
-  useEffect(()=>{ 
-    if(!activeSecurityUsers.some(u => u._id === userId )){
-      setSecurityUsers([ ...activeSecurityUsers, securityUser ]?.sort((a, b) => a?.name?.localeCompare(b?.name))) 
-    }else {
-      setSecurityUsers([ ...activeSecurityUsers ]?.sort((a, b) => a?.name?.localeCompare(b?.name))) 
-    }  
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ activeSecurityUsers, securityUser, userId ]);
+  }, [dispatch, machineId, machine, userId, id, completed]);
+
+  useEffect(() => {
+    if (activeSPTechnicalSecurityUsers?.length > 0) {
+      let techniciansList = [...activeSPTechnicalSecurityUsers];
+      if (
+        machineServiceRecord?.technician &&
+        !activeSPTechnicalSecurityUsers.some(
+          (user) => user._id === machineServiceRecord?.technician?._id
+        )
+      ) {
+        techniciansList = [...techniciansList, machineServiceRecord?.technician];
+      }
+      if (
+        securityUser &&
+        !activeSPTechnicalSecurityUsers.some((user) => user._id === securityUser?._id)
+      ) {
+        techniciansList = [...techniciansList, securityUser];
+      }
+      setSecurityUsers(techniciansList);
+    }
+  }, [activeSPTechnicalSecurityUsers, machineServiceRecord, securityUser]);
 
   const handleStep = (step) => async () => {
-    if (formActiveStep===0 && !completed[formActiveStep]) {
+    if (formActiveStep === 0 && !completed[formActiveStep]) {
       enqueueSnackbar(`Please complete step ${formActiveStep+1} to continue`, { variant: 'error' });
-    }else{
+    } else {
       dispatch(setFormActiveStep(step));
     }
   };
