@@ -42,9 +42,10 @@ function MachineServiceRecordAddForm() {
   const [ securityUsers, setSecurityUsers ] = useState([]);
   const [ completed, setCompleted ] = useState([]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     dispatch(resetMachineServiceRecord());
     dispatch(getActiveServiceRecordConfigsForRecords(machineId));
+    dispatch(getActiveSPTechnicalSecurityUsers());
     if (machine?.customer?._id) {
       dispatch(getActiveContacts(machine?.customer?._id));
     }
@@ -58,7 +59,6 @@ function MachineServiceRecordAddForm() {
       newCompleted[0] = true;
       setCompleted(newCompleted);
       dispatch(getMachineServiceRecord(machineId, id));
-      dispatch(getActiveSPTechnicalSecurityUsers());
     }
   }, [dispatch, machineId, machine, userId, id, completed]);
 
