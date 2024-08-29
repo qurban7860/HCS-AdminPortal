@@ -71,13 +71,17 @@ function MachineServiceRecordAddForm() {
           (user) => user._id === machineServiceRecord?.technician?._id
         )
       ) {
-        techniciansList = [...techniciansList, machineServiceRecord?.technician];
+        techniciansList = [machineServiceRecord?.technician, ...techniciansList].sort((a, b) =>
+          a.name.localeCompare(b.name)
+        );
       }
       if (
         securityUser &&
         !activeSPTechnicalSecurityUsers.some((user) => user._id === securityUser?._id)
       ) {
-        techniciansList = [...techniciansList, securityUser];
+        techniciansList = [securityUser, ...techniciansList].sort((a, b) =>
+          a.name.localeCompare(b.name)
+        );
       }
       setSecurityUsers(techniciansList);
     }
