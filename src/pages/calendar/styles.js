@@ -66,7 +66,7 @@ const StyledCalendar = styled('div')(({ theme }) => ({
   '& .fc .fc-event .fc-event-main-frame': {
     fontSize: 13,
     lineHeight: '20px',
-    filter: 'brightness(0.84)',
+    filter: 'brightness(0.94)',
   },
   '& .fc .fc-daygrid-event .fc-event-title': {
     overflow: 'hidden',

@@ -28,7 +28,7 @@ const EventContent = ({ info }) => {
         tooltipcolor={theme.palette.primary.main}
     >
         <div className="fc-event-main-frame" style={{ display: 'flex', alignItems: 'center', position: 'relative', zIndex: 10 }} >
-            <PriorityIcon priority={priority} />
+            <PriorityIcon priority={priority} noMediumIcon />
             <div className="fc-event-time" style={{ marginRight: 4 }}>{timeText}</div>
             <div className="fc-event-title-container" >
                 <div className="fc-event-title fc-sticky">{title}</div>
