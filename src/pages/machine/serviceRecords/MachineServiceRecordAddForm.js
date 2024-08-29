@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useState, memo } from 'react';
+import { useEffect, useState, memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Container, Card, Grid, StepLabel, Step, Stepper, Box, CardContent, CardHeader } from '@mui/material';
 // routes
@@ -11,10 +11,10 @@ import {
   getMachineServiceRecord,
   setFormActiveStep,
 } from '../../../redux/slices/products/machineServiceRecord';
-import { getActiveContacts } from '../../../redux/slices/customer/contact';
+import { getActiveContacts, getActiveSPContacts } from '../../../redux/slices/customer/contact';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import { getActiveSPTechnicalSecurityUsers, getSecurityUser } from '../../../redux/slices/securityUser/securityUser';
+import { getSecurityUser } from '../../../redux/slices/securityUser/securityUser';
 import { getActiveServiceRecordConfigsForRecords } from '../../../redux/slices/products/serviceRecordConfig';
 import { useAuthContext } from '../../../auth/useAuthContext';
 import MachineTabContainer from '../util/MachineTabContainer';
@@ -30,22 +30,20 @@ import IconTooltip from '../../../components/Icons/IconTooltip';
 function MachineServiceRecordAddForm() {
 
   const dispatch = useDispatch();
-  const { userId } = useAuthContext()
+  const { user, userId } = useAuthContext()
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const { machineId, id } = useParams();
-
+  const { activeSpContacts } = useSelector((state) => state.contact);
   const { machine } = useSelector((state) => state.machine)
-  const { activeSPTechnicalSecurityUsers, securityUser } = useSelector((state) => state.user);
   const { formActiveStep, machineServiceRecord, isLoading } = useSelector((state) => state.machineServiceRecord);
-
-  const [ securityUsers, setSecurityUsers ] = useState([]);
+  const [ technicians, setTechnicians ] = useState([]);
   const [ completed, setCompleted ] = useState([]);
 
   useEffect(() => {
     dispatch(resetMachineServiceRecord());
     dispatch(getActiveServiceRecordConfigsForRecords(machineId));
-    dispatch(getActiveSPTechnicalSecurityUsers());
+    dispatch(getActiveSPContacts());
     if (machine?.customer?._id) {
       dispatch(getActiveContacts(machine?.customer?._id));
     }
@@ -63,29 +61,19 @@ function MachineServiceRecordAddForm() {
   }, [dispatch, machineId, machine, userId, id, completed]);
 
   useEffect(() => {
-    if (activeSPTechnicalSecurityUsers?.length > 0) {
-      let techniciansList = [...activeSPTechnicalSecurityUsers];
-      if (
-        machineServiceRecord?.technician &&
-        !activeSPTechnicalSecurityUsers.some(
-          (user) => user._id === machineServiceRecord?.technician?._id
-        )
-      ) {
-        techniciansList = [machineServiceRecord?.technician, ...techniciansList].sort((a, b) =>
-          a.name.localeCompare(b.name)
-        );
+    if (activeSpContacts?.length > 0) {
+      const userSPContact = activeSpContacts?.find( ( el )=> el?._id === user?.contact );
+      let techniciansList = activeSpContacts?.filter( ( el ) => el?.departmentDetails?.departmentType?.toLowerCase() === 'technical');
+      if ( machineServiceRecord?.technician && techniciansList?.some( ( el ) => ( el?._id !== machineServiceRecord?.technician?._id ) ) ) {
+        techniciansList = [ machineServiceRecord?.technician, ...techniciansList ];
       }
-      if (
-        securityUser &&
-        !activeSPTechnicalSecurityUsers.some((user) => user._id === securityUser?._id)
-      ) {
-        techniciansList = [securityUser, ...techniciansList].sort((a, b) =>
-          a.name.localeCompare(b.name)
-        );
+      if ( techniciansList?.some( ( el ) => el?._id !== user?.contact ) ) {
+        techniciansList = [ userSPContact, ...techniciansList ]
       }
-      setSecurityUsers(techniciansList);
+      techniciansList = techniciansList?.sort((a, b) => a?.firstName.localeCompare(b?.firstName) );
+      setTechnicians(techniciansList);
     }
-  }, [activeSPTechnicalSecurityUsers, machineServiceRecord, securityUser]);
+  }, [ activeSpContacts, machineServiceRecord, user?.contact ]);
 
   const handleStep = (step) => async () => {
     if (formActiveStep === 0 && !completed[formActiveStep]) {
@@ -151,7 +139,7 @@ function MachineServiceRecordAddForm() {
                 <Box sx={{border:'1px solid lightgray', borderRadius:'0px 0px 10px 10px', py:2,marginTop:'0 !important'}}>
                     {formActiveStep===0 &&
                       <MachineServiceRecordsFirstStep 
-                        securityUsers={securityUsers} 
+                        technicians={ technicians } 
                         handleComplete={handleComplete}
                         handleDraftRequest={handleDraftRequest}
                         handleDiscard={handleDiscard}
@@ -164,7 +152,7 @@ function MachineServiceRecordAddForm() {
                         handleDiscard={handleDiscard}
                         handleBack={handleBack} 
                         serviceRecord={machineServiceRecord} 
-                       />
+                      />
                     }
 
                     {formActiveStep===2 &&
