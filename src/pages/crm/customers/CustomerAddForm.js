@@ -228,64 +228,45 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
               </IconButton>
               <Typography variant='body2' sx={{ color:'gray'}}>Update country code in phone/fax.</Typography>
             </Box>
-              <Grid>
-                {phoneNumbers?.map((pN, index) => (
-                  <Grid sx={{ py: 1 }} display="flex" alignItems="center">
-                    <RHFCustomPhoneInput
-                      name={`phoneNumbers[${index}]`}
-                      value={pN}
-                      label={pN?.type || 'Contact Number'}
-                      index={index}
-                    />
-                    <IconButton
-                      disabled={phoneNumbers?.length === 1}
-                      onClick={() => removeContactNumber(index)}
-                      size="small"
-                      variant="contained"
-                      color="error"
-                      sx={{ mx: 1 }}
-                    >
-                      <StyledTooltip
-                        title="Remove Contact Number"
-                        placement="top"
-                        disableFocusListener
-                        tooltipcolor={theme.palette.error.main}
-                        color={
-                          phoneNumbers?.length > 1
-                            ? theme.palette.error.main
-                            : theme.palette.text.main
-                        }
-                      >
-                        <Iconify icon="icons8:minus" sx={{ width: 25, height: 25 }} />
-                      </StyledTooltip>
-                    </IconButton>
-                  </Grid>
-                ))}
-                <Grid>
-                  <IconButton
-                    disabled={phoneNumbers?.length > 9}
-                    onClick={addContactNumber}
-                    size="small"
-                    variant="contained"
-                    color="success"
-                    sx={{ ml: 'auto', mr: 1 }}
-                  >
-                    <StyledTooltip
-                      title="Add Contact Number"
-                      placement="top"
-                      disableFocusListener
-                      tooltipcolor={theme.palette.success.dark}
-                      color={
-                        phoneNumbers?.length < 10
-                        ? theme.palette.success.dark
-                        : theme.palette.text.main
-                      }
-                    >
-                      <Iconify icon="icons8:plus" sx={{ width: 25, height: 25 }} />
-                    </StyledTooltip>
-                  </IconButton>
-                </Grid>
-              </Grid>
+
+            <Box sx={{ width: '100%', overflowX: { xs: 'auto', sm: 'hidden', }, maxWidth: '100%', display: 'flex', flexDirection: 'column' }} >
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, flexWrap: { xs: 'nowrap', sm: 'wrap', }, }} >
+                  {phoneNumbers?.map((pN, index) => (
+                    <Box sx={{ display: 'flex', alignItems: 'center', flex: '1 1 auto', minWidth: 300, ml: { xs: 'auto',  sm: 0 }, mt: 1 }} >
+                      <RHFCustomPhoneInput
+                        name={`phoneNumbers[${index}]`}
+                        value={pN}
+                        label={pN?.type || 'Contact Number'}
+                        index={index}
+                        sx={{ flex: 1 }}
+                      />
+                      <IconButton disabled={phoneNumbers?.length === 1} onClick={ () => removeContactNumber(index) } size="small" variant="contained" color='error' sx={{ mx: 1 }} >
+                        <StyledTooltip
+                          title="Remove Contact Number"
+                          placement="top"
+                          disableFocusListener
+                          tooltipcolor={theme.palette.error.main}
+                          color={
+                            phoneNumbers?.length > 1
+                              ? theme.palette.error.main
+                              : theme.palette.text.main
+                          }
+                        >
+                          <Iconify icon="icons8:minus" sx={{ width: 25, height: 25 }} />
+                        </StyledTooltip>
+                      </IconButton>
+                    </Box>
+                  ))}
+                  <Box>
+                  <IconButton disabled={ phoneNumbers?.length > 9 } onClick={ addContactNumber } size="small" variant="contained" color='success' sx={{ ml: 'auto', mr:1 }} >
+                        <StyledTooltip title="Add Contact Number" placement="top" disableFocusListener tooltipcolor={theme.palette.success.dark} color={ phoneNumbers?.length < 10 ? theme.palette.success.dark : theme.palette.text.main }  >
+                          <Iconify icon="icons8:plus" sx={{width: 25, height: 25}}  />
+                        </StyledTooltip>
+                      </IconButton>
+                  </Box>
+                </Box>
+              </Box>
+
             <Box
               rowGap={2} columnGap={2} display="grid"
               gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
@@ -306,7 +287,9 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
               <RHFTextField name="billingContactFirstName" label="First Name" />
               <RHFTextField name="billingContactLastName" label="Last Name" />
               <RHFTextField name="billingContactTitle" label="Billing Contact Title" />
-              <RHFCustomPhoneInput name="billingContactPhone" label="Billing Contact Phone Number" value={billingContactPhone} />
+              <Box sx={{ width: '100%', overflowX: { xs: 'auto', sm: 'hidden', }, maxWidth: '100%', display: 'flex', flexDirection: 'column' }} >
+              <Box sx={{ display: 'flex', alignItems: 'center', flex: '1 1 auto', minWidth: 300, ml: { xs: 'auto',  sm: 0 }, mt: 1 }} >
+              <RHFCustomPhoneInput name="billingContactPhone" label="Billing Contact Phone Number" value={billingContactPhone} /> </Box> </Box>
               {/* <RHFPhoneInput name="billingContactPhone" label="Billing Contact Phone Number" /> */}
               <RHFTextField name="billingContactEmail" label="Billing Contact Email" />
             </Box>

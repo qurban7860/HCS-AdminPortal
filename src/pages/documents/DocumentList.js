@@ -26,7 +26,6 @@ import Scrollbar from '../../components/scrollbar';
 // sections
 import DocumentListTableRow from './DocumentListTableRow';
 import DocumentListTableToolbar from './DocumentListTableToolbar';
-import useResponsive from '../../hooks/useResponsive';
 import {
   getDocument,
   resetDocument,
@@ -280,7 +279,6 @@ const onChangePage = (event, newPage) => {
       debouncedSearch.current.cancel();
   }, [debouncedSearch]);
 
-  const isMobile = useResponsive('down', 'sm');
 
   useEffect(()=>{
     if(machineDrawingPage){
@@ -371,13 +369,13 @@ const onChangePage = (event, newPage) => {
           setTypeVal={setTypeVal}
           handleGalleryView={!isNotFound && (customerPage || machinePage) ? handleGalleryView:undefined}
         />
-        { !isMobile && (<TablePaginationCustom
+        <TablePaginationCustom
           count={ documentRowsTotal }
           page={page}
           rowsPerPage={rowsPerPage}
           onPageChange={onChangePage}
           onRowsPerPageChange={onChangeRowsPerPage}
-        />)}
+        />
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
           <Scrollbar>
             <Table size="small" sx={{ minWidth: 360 }}>

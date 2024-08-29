@@ -204,29 +204,29 @@ export default function CustomerList({ isArchived }) {
     <Container maxWidth={false}>
       <StyledCardContainer>
         <Cover
-          name={ isArchived ? FORMLABELS.COVER.ARCHIVED_CUSTOMERS : FORMLABELS.COVER.CUSTOMERS}
+          name={isArchived ? FORMLABELS.COVER.ARCHIVED_CUSTOMERS : FORMLABELS.COVER.CUSTOMERS}
           customerSites
           customerContacts
           isArchivedCustomers={!isArchived}
           isArchived={isArchived}
         />
       </StyledCardContainer>
-      <TableCard >
+      <TableCard>
         <CustomerListTableToolbar
           filterName={filterName}
           onFilterName={handleFilterName}
-          filterVerify={ isArchived ? undefined : filterVerify}
-          onFilterVerify={ isArchived ? undefined : handleFilterVerify}
-          filterStatus={ isArchived ? undefined : filterStatus}
-          onFilterStatus={ isArchived ? undefined : handleFilterStatus}
+          filterVerify={isArchived ? undefined : filterVerify}
+          onFilterVerify={isArchived ? undefined : handleFilterVerify}
+          filterStatus={isArchived ? undefined : filterStatus}
+          onFilterStatus={isArchived ? undefined : handleFilterStatus}
           isFiltered={isFiltered}
           onResetFilter={handleResetFilter}
           customerDocList
           machineDocList
           onExportCSV={onExportCSV}
           onExportLoading={exportingCSV}
-          filterExcludeRepoting={ isArchived ? undefined : filterExcludeRepoting}
-          handleExcludeRepoting={ isArchived ? undefined : handleExcludeRepoting}
+          filterExcludeRepoting={isArchived ? undefined : filterExcludeRepoting}
+          handleExcludeRepoting={isArchived ? undefined : handleExcludeRepoting}
           isArchived={isArchived}
         />
 
@@ -235,7 +235,17 @@ export default function CustomerList({ isArchived }) {
             columns={TABLE_HEAD}
             hiddenColumns={reportHiddenColumns}
             handleHiddenColumns={handleHiddenColumns}
-            count={customers?customers.length : 0}
+            count={customers ? customers.length : 0}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
+          />
+        )}
+
+        {!isNotFound && isMobile && (
+          <TablePaginationCustom
+            count={customers ? customers.length : 0}
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}

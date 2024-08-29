@@ -17,7 +17,6 @@ import {
   TablePaginationCustom,
 } from '../../../../components/table';
 import Scrollbar from '../../../../components/scrollbar';
-import useResponsive from '../../../../hooks/useResponsive';
 // sections
 import MachineListTableRow from './MachineListTableRow';
 import MachineListTableToolbar from './MachineListTableToolbar';
@@ -107,7 +106,6 @@ export default function MachineList() {
       debouncedSearch.current.cancel();
   }, [debouncedSearch]);
   
-  const isMobile = useResponsive('down', 'sm');
   
   const handleFilterStatus = (event) => {
     setPage(0);
@@ -151,13 +149,13 @@ export default function MachineList() {
           transferStatus={transferStatus}
           handleTransferStatus={handleTransferStatus}
         />
-          {!isNotFound && !isMobile && (<TablePaginationCustom
+          {!isNotFound && <TablePaginationCustom
             count={dataFiltered.length}
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-          />)}
+          />}
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
           <Scrollbar>
             <Table size="small" sx={{ minWidth: 360 }}>

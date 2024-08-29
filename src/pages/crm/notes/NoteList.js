@@ -4,7 +4,6 @@ import debounce from 'lodash/debounce';
 // @mui
 import { Container, Table, TableBody, TableContainer } from '@mui/material';
 // redux
-import useResponsive from '../../../hooks/useResponsive';
 import { useDispatch, useSelector } from '../../../redux/store';
 // routes
 // components
@@ -64,7 +63,6 @@ export default function NoteList() {
   };
   
   const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
-  const isMobile = useResponsive('down', 'sm');
 
   useEffect(() => {
     if(customerId){
@@ -126,13 +124,13 @@ export default function NoteList() {
           isFiltered={isFiltered}
           // onResetFilter={handleResetFilter}
         />
-          {!isNotFound && !isMobile && (<TablePaginationCustom
+          {!isNotFound && <TablePaginationCustom
             count={dataFiltered.length}
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-          />)}
+          />}
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
           <Scrollbar>
             <Table size="small" sx={{ minWidth: 360 }}>
