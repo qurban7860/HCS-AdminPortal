@@ -18,6 +18,7 @@ import SkeletonLine from '../../../components/skeleton/SkeletonLine';
 
 MachineServiceRecordsFirstStep.propTypes = {
     technicians: PropTypes.array,
+    userTechnician: PropTypes.object,
     onChangeConfig : PropTypes.func,
     handleComplete : PropTypes.func,
     handleDraftRequest: PropTypes.func,
@@ -25,7 +26,7 @@ MachineServiceRecordsFirstStep.propTypes = {
     handleBack: PropTypes.func
 };
 
-function MachineServiceRecordsFirstStep( { technicians, onChangeConfig, handleComplete, handleDraftRequest, handleDiscard, handleBack} ) {
+function MachineServiceRecordsFirstStep( { technicians, userTechnician, onChangeConfig, handleComplete, handleDraftRequest, handleDiscard, handleBack} ) {
     
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -40,7 +41,6 @@ function MachineServiceRecordsFirstStep( { technicians, onChangeConfig, handleCo
 
     const [ isDraft, setIsDraft ] = useState(false);
     const saveAsDraft = async () => setIsDraft(true);
-
     const machineDecoilers = (machine?.machineConnections || []).map((decoiler) => ({
       _id: decoiler?.connectedMachine?._id ?? null,
       name: decoiler?.connectedMachine?.name ?? null,
@@ -54,7 +54,7 @@ function MachineServiceRecordsFirstStep( { technicians, onChangeConfig, handleCo
           serviceRecordConfiguration:   machineServiceRecord?.serviceRecordConfiguration || null,
           serviceDate:                  machineServiceRecord?.serviceDate || new Date(),
           versionNo:                    machineServiceRecord?.versionNo || 1,
-          technician:                   machineServiceRecord?.technician || null,
+          technician:                   machineServiceRecord?.technician || ( userTechnician || null ),
           technicianNotes:              machineServiceRecord?.technicianNotes || '',
           decoilers:!id && (machineDecoilers || []) 
           // textBeforeCheckItems:         machineServiceRecord?.textBeforeCheckItems || '',
@@ -63,7 +63,7 @@ function MachineServiceRecordsFirstStep( { technicians, onChangeConfig, handleCo
         return initialValues;
       },
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [ machineServiceRecord ]
+        [ machineServiceRecord , userTechnician ]
       );
 
     const methods = useForm({

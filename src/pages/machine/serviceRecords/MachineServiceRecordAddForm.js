@@ -38,6 +38,7 @@ function MachineServiceRecordAddForm() {
   const { machine } = useSelector((state) => state.machine)
   const { formActiveStep, machineServiceRecord, isLoading } = useSelector((state) => state.machineServiceRecord);
   const [ technicians, setTechnicians ] = useState([]);
+  const [ userTechnician, setUserTechnician ] = useState( null );
   const [ completed, setCompleted ] = useState([]);
 
   useEffect(() => {
@@ -63,6 +64,9 @@ function MachineServiceRecordAddForm() {
   useEffect(() => {
     if (activeSpContacts?.length > 0) {
       const sPContactUser = activeSpContacts?.find( ( el )=> el?._id === user?.contact );
+      if( !machineServiceRecord?._id ){
+        setUserTechnician( sPContactUser )
+      }
       let techniciansList = activeSpContacts?.filter( ( el ) => el?.departmentDetails?.departmentType?.toLowerCase() === 'technical');
       if ( machineServiceRecord?.technician && !techniciansList?.some( ( el ) => ( el?._id === machineServiceRecord?.technician?._id ) ) ) {
         techniciansList = [ machineServiceRecord?.technician, ...techniciansList ];
@@ -139,6 +143,7 @@ function MachineServiceRecordAddForm() {
                 <Box sx={{border:'1px solid lightgray', borderRadius:'0px 0px 10px 10px', py:2,marginTop:'0 !important'}}>
                     {formActiveStep===0 &&
                       <MachineServiceRecordsFirstStep 
+                        userTechnician={ userTechnician }
                         technicians={ technicians } 
                         handleComplete={handleComplete}
                         handleDraftRequest={handleDraftRequest}
