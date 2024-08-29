@@ -62,13 +62,13 @@ function MachineServiceRecordAddForm() {
 
   useEffect(() => {
     if (activeSpContacts?.length > 0) {
-      const userSPContact = activeSpContacts?.find( ( el )=> el?._id === user?.contact );
+      const sPContactUser = activeSpContacts?.find( ( el )=> el?._id === user?.contact );
       let techniciansList = activeSpContacts?.filter( ( el ) => el?.departmentDetails?.departmentType?.toLowerCase() === 'technical');
-      if ( machineServiceRecord?.technician && techniciansList?.some( ( el ) => ( el?._id !== machineServiceRecord?.technician?._id ) ) ) {
+      if ( machineServiceRecord?.technician && !techniciansList?.some( ( el ) => ( el?._id === machineServiceRecord?.technician?._id ) ) ) {
         techniciansList = [ machineServiceRecord?.technician, ...techniciansList ];
       }
-      if ( techniciansList?.some( ( el ) => el?._id !== user?.contact ) ) {
-        techniciansList = [ userSPContact, ...techniciansList ]
+      if ( !techniciansList?.some( ( el ) => el?._id === user?.contact ) ) {
+        techniciansList = [ sPContactUser, ...techniciansList ]
       }
       techniciansList = techniciansList?.sort((a, b) => a?.firstName.localeCompare(b?.firstName) );
       setTechnicians(techniciansList);
