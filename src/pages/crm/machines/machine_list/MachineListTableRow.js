@@ -9,6 +9,7 @@ import LinkTableCellButtons from '../../../../components/ListTableTools/LinkTabl
 import LinkDialogTableCellTargetBlank from '../../../../components/ListTableTools/LinkDialogTableCellTargetBlank';
 import { StyledTableRow, StyledTooltip } from '../../../../theme/styles/default-styles'
 import { useAuthContext } from '../../../../auth/useAuthContext';
+import { useScreenSize } from '../../../../hooks/useResponsive';
 import { fDate } from '../../../../utils/formatTime';
 import Iconify from '../../../../components/iconify';
 
@@ -17,7 +18,8 @@ MachineListTableRow.propTypes = {
   selected: PropTypes.bool,
   onViewRow: PropTypes.func,
   onClick: PropTypes.func,
-  onMoveMachine: PropTypes.func
+  onMoveMachine: PropTypes.func,
+  hiddenColumns: PropTypes.object,
 };
 
 
@@ -27,6 +29,7 @@ export default function MachineListTableRow({
   onViewRow,
   onClick,
   onMoveMachine,
+  hiddenColumns
 }) {
   const {
     serialNo,
@@ -49,7 +52,7 @@ export default function MachineListTableRow({
   return (
       <StyledTableRow hover selected={selected}>
         <LinkDialogTableCellTargetBlank align="left" param={serialNo} onViewRow={onViewRow} onClick={onClick} />
-        <TableCell>{name || ''}</TableCell>
+        { useScreenSize('sm') && !hiddenColumns?.name && <TableCell>{name || ''}</TableCell>}
         <TableCell>{machineModel?.name || ''}</TableCell>
         <TableCell>
           <span style={{color:row?.status?.slug==='transferred'?'red':''}}>{status?.name || ''} </span>

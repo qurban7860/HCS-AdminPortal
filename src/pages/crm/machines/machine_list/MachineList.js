@@ -106,7 +106,7 @@ export default function MachineList() {
       debouncedSearch.current.cancel();
   }, [debouncedSearch]);
   
-
+  
   const handleFilterStatus = (event) => {
     setPage(0);
     setFilterStatus(event.target.value);

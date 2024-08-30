@@ -136,40 +136,56 @@ export default function CustomerSiteDynamicList({ siteAddForm, siteEditForm, sit
   return (
     <Container maxWidth={ false }>
       <CustomerTabContainer currentTabValue="sites" />
-      <Grid container direction="row" justifyContent="space-between" alignItems="center" sx={{mb:2}}>
-        <Grid item xs={12} md={6}>
-          <BreadcrumbsProvider>
-            <BreadcrumbsLink to={PATH_CRM.customers.list} name={BREADCRUMBS.CUSTOMERS} />
-            <BreadcrumbsLink to={PATH_CRM.customers.view(customerId)} name={customer.name} />
-            <BreadcrumbsLink
-              to={PATH_CRM.customers.sites.root(customerId)}
-              name={
-                <Stack>
-                  {!siteAddForm && !siteEditForm && !isExpanded && 'Sites'}
-                  {siteEditForm ? `Edit ${site?.name}` : isExpanded && site?.name}
-                  {siteAddForm && !isExpanded && 'New Site Form'} 
-                </Stack>
-              }
-            />
-          </BreadcrumbsProvider>
-        </Grid>
-        <Grid item xs={12} md={6} style={{display:'flex', justifyContent:'flex-end'}}>
-          <Stack direction='row' alignContent='flex-end' spacing={1} >
-            {!customer?.isArchived && isAllAccessAllowed && sites.length>0 &&
-              <LoadingButton variant='contained' onClick={onExportCSV} loading={exportingCSV} startIcon={<Iconify icon={BUTTONS.EXPORT.icon} />} >
-                  {BUTTONS.EXPORT.label}
-              </LoadingButton>
-            }
-            {!customer?.isArchived && <AddButtonAboveAccordion
-              name={BUTTONS.NEWSITE}
-              toggleChecked={toggleChecked}
-              FormVisibility={siteAddForm}
-              toggleCancel={toggleCancel}
-              disabled={siteEditForm}
-            />}
+      <Grid container direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
+  <Grid item xs={12} md={6}>
+    <BreadcrumbsProvider>
+      <BreadcrumbsLink to={PATH_CRM.customers.list} name={BREADCRUMBS.CUSTOMERS} />
+      <BreadcrumbsLink to={PATH_CRM.customers.view(customerId)} name={customer.name} />
+      <BreadcrumbsLink
+        to={PATH_CRM.customers.sites.root(customerId)}
+        name={
+          <Stack>
+            {!siteAddForm && !siteEditForm && !isExpanded && 'Sites'}
+            {siteEditForm ? `Edit ${site?.name}` : isExpanded && site?.name}
+            {siteAddForm && !isExpanded && 'New Site Form'}
           </Stack>
-        </Grid>
-      </Grid>
+        }
+      />
+    </BreadcrumbsProvider>
+  </Grid>
+  <Grid item xs={12} md={6} style={{ display: 'flex', justifyContent: 'flex-end' }}>
+    <Stack direction="row" alignContent="flex-end" spacing={1}>
+      {!customer?.isArchived && isAllAccessAllowed && sites.length > 0 && (
+        <LoadingButton
+          variant="contained"
+          onClick={onExportCSV}
+          loading={exportingCSV}
+          startIcon={<Iconify icon={BUTTONS.EXPORT.icon} />}
+          sx={{
+            justifyContent: isMobile ? 'center' : 'flex-start',  textAlign: 'center',
+            '& .MuiButton-startIcon': {
+              marginRight: 0, 
+            },
+          }}
+        >
+          {!isMobile && BUTTONS.EXPORT.label} 
+        </LoadingButton>
+      )}
+      {!customer?.isArchived && (
+        <AddButtonAboveAccordion
+          name={BUTTONS.NEWSITE}
+          toggleChecked={toggleChecked}
+          FormVisibility={siteAddForm}
+          toggleCancel={toggleCancel}
+          disabled={siteEditForm}
+        >
+          {!isMobile && BUTTONS.NEWSITE.label} 
+        </AddButtonAboveAccordion>
+      )}
+    </Stack>
+  </Grid>
+</Grid>
+
 
       <Grid container spacing={1} direction="row" justifyContent="flex-start">
       <Grid item xs={12} sm={12} md={12} lg={5} xl={4} 

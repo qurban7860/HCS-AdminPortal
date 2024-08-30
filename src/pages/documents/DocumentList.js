@@ -279,6 +279,7 @@ const onChangePage = (event, newPage) => {
       debouncedSearch.current.cancel();
   }, [debouncedSearch]);
 
+
   useEffect(()=>{
     if(machineDrawingPage){
       setFilterName(machineDocumentsFilterBy)
