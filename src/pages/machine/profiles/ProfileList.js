@@ -51,7 +51,7 @@ export default function ProfileList() {
 
   const TABLE_HEAD = [
     { id: 'defaultName', label: 'Default Name', align: 'left' },
-    { id: 'names', label: 'Other Names', align: 'left' },
+    { id: 'names', visibility: 'xs1', label: 'Other Names', align: 'left' },
     { id: 'type', label: 'Type', align: 'left' },
     { id: 'web', label: 'Web X Flange', align: 'left'},
     { id: 'thicknessStart', label: 'Thickness', align: 'left'},
