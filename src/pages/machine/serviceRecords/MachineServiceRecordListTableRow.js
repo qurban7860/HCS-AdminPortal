@@ -10,7 +10,6 @@ import { fDate } from '../../../utils/formatTime';
 import LinkTableCell from '../../../components/ListTableTools/LinkTableCell';
 import HistoryIcon from '../../../components/Icons/HistoryIcon';
 import { StyledTableRow } from '../../../theme/styles/default-styles'
-import { useScreenSize } from '../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -22,7 +21,6 @@ MachineServiceRecordListTableRow.propTypes = {
   onViewRow: PropTypes.func,
   onSelectRow: PropTypes.func,
   onDeleteRow: PropTypes.func,
-  hiddenColumns: PropTypes.object,
 };
 
 
@@ -34,7 +32,6 @@ export default function MachineServiceRecordListTableRow({
   onDeleteRow,
   onEditRow,
   onViewRow,
-  hiddenColumns
 }) {
   const navigate = useNavigate();
   const { machineId } = useParams();
@@ -47,8 +44,8 @@ export default function MachineServiceRecordListTableRow({
         <LinkTableCell align="left" onClick={onViewRow} param={serviceRecordUid} />
         <TableCell align="left">{currentApprovalStatus !== "PENDING" ? currentApprovalStatus : status || ''}</TableCell>
         <LinkTableCell align="left" onClick={onViewRow} param={`${serviceRecordConfig?.docTitle ? serviceRecordConfig?.docTitle	: ''	} ${serviceRecordConfig?.recordType ? ' - ' : ''} ${serviceRecordConfig?.recordType ? serviceRecordConfig?.recordType : ''}`} />
-        { useScreenSize('sm') && !hiddenColumns?.isHistory && <TableCell align="left" sx={{display: 'flex', alignItems:'center'}} >{versionNo} 
-              {currentVersion?.versionNo > 1 && <HistoryIcon callFunction={handleServiceRecordHistory} /> }</TableCell> }
+        <TableCell align="left" sx={{display: 'flex', alignItems:'center'}} >{versionNo} 
+              {currentVersion?.versionNo > 1 && <HistoryIcon callFunction={handleServiceRecordHistory} /> }</TableCell>
         <TableCell align="center"><Switch checked={isActive} disabled size="small" /></TableCell> 
         <TableCell align="left">{createdBy.name}</TableCell>
         <TableCell align="right">{fDate(createdAt)}</TableCell>

@@ -41,17 +41,20 @@ export default function ServiceRecodStepButtons({
   } 
   
   return (
-      <Stack justifyContent="flex-end" direction="row" spacing={2} px={2} pt={2}>
-        <Grid item sm={6} display='flex' columnGap={2}>
-        <Button size={isMobile ? 'medium' : 'large'} onClick={handleCancle} variant="outlined">Exit</Button> 
-        </Grid>
-        <Grid item sm={6} display='flex' columnGap={2} justifyContent='flex-end'>
-            {handleDraft && !isMobile && (<LoadingButton loading={isSubmitting && isDraft} size='large' onClick={handleDraft} type='submit' variant="outlined">Save & Exit</LoadingButton> )}
-            <Button size={isMobile ? 'medium' : 'large'} onClick={handleBack} disabled={ formActiveStep===0 } variant="outlined">Back</Button>
-            <LoadingButton disabled={!isActive && formActiveStep===2} size={isMobile ? 'medium' : 'large'} type='submit' variant="contained"  loading={isSubmitting && !isDraft}>
+  <Stack justifyContent="flex-end" direction={isMobile ? 'column' : 'row'} spacing={2} pr={3} pt={2}>
+    <Grid container spacing={2}>
+     <Grid item xs={12} sm={6} display='flex' columnGap={2}>
+       <Button size={isMobile ? 'medium' : 'large'} onClick={handleCancle} variant="outlined">Exit</Button> 
+     </Grid>
+      <Grid item xs={12} sm={6} display='flex' columnGap={2} justifyContent='flex-end'>
+        {handleDraft && (<LoadingButton loading={isSubmitting && isDraft} size={isMobile ? 'medium' : 'large'} onClick={handleDraft} type='submit' variant="outlined" sx={{ fontSize: isMobile ? '0.62rem' : '1rem' }} fullWidth={isMobile}>Save & Exit</LoadingButton> )}
+        <Button size={isMobile ? 'medium' : 'large'} onClick={handleBack} disabled={ formActiveStep===0 } variant="outlined">Back</Button>
+         <LoadingButton disabled={!isActive && formActiveStep===2} size={isMobile ? 'medium' : 'large'} type='submit' variant="contained"  loading={isSubmitting && !isDraft}>
               {formActiveStep===2?"Submit":"Next"}
-            </LoadingButton>
-        </Grid>
-      </Stack>
+          </LoadingButton>
+      </Grid>
+    </Grid>
+  </Stack>
+  
   );
 }
