@@ -7,6 +7,7 @@ import ConfirmDialog from '../confirm-dialog';
 import { BUTTONS, DIALOGS } from '../../constants/default-constants';
 import { useAuthContext } from '../../auth/useAuthContext';
 import { PATH_DASHBOARD } from '../../routes/paths';
+import useResponsive from '../../hooks/useResponsive';
 
 AddFormButtons.propTypes = {
   saveAsDraft: PropTypes.func,
@@ -63,6 +64,8 @@ export default function AddFormButtons({
 // console.log("istrigger : ",istrigger)
   const { isSettingReadOnly, isSecurityReadOnly, isDocumentAccessAllowed, isDrawingAccessAllowed } = useAuthContext();
   
+  const isMobile = useResponsive('down', 'sm');
+
   const handleOpenConfirm = () => {
     setOpenConfirm(true);
   };
@@ -111,7 +114,7 @@ export default function AddFormButtons({
               <LoadingButton
                 sx={{textTransform: 'none'}}
                 variant="contained"
-                size="large"
+                size={isMobile ? "medium" : "large"}
                 fullWidth
                 onClick={saveAsDraft}
                 disabled={isDisableSaveAsDraft}
@@ -123,7 +126,7 @@ export default function AddFormButtons({
             </Grid>}
 
             {handleBack && <Grid item sm={6}>
-              <Button onClick={handleBack} disabled={ isDisabledBackButton } fullWidth size="large" variant="outlined" >
+              <Button onClick={handleBack} disabled={ isDisabledBackButton } fullWidth size={isMobile ? 'small' : 'large'} variant="outlined" >
                 {backButtonName || BUTTONS.BACK}
               </Button>
             </Grid>}
@@ -132,7 +135,7 @@ export default function AddFormButtons({
               <LoadingButton
                 type="submit"
                 variant="contained"
-                size="large"
+                size={isMobile ? "medium" : "large"}
                 fullWidth
                 disabled={isDisabled}
                 onClick={handleSave}
@@ -143,7 +146,7 @@ export default function AddFormButtons({
             </Grid>}
 
             {saveTransferButtonName && <Grid item sm={6}>
-              <Button onClick={ handleOpenTransferConfirm } size='large'  
+              <Button onClick={ handleOpenTransferConfirm } size={isMobile ? "medium" : "large"}  
                 fullWidth
                 variant={ !istrigger ? "outlined" : "contained" }
                 color={ istrigger ? undefined : "error"  }
@@ -153,7 +156,7 @@ export default function AddFormButtons({
             </Grid>}
 
             {toggleCancel && <Grid item sm={6}>
-              <Button onClick={handleOpenConfirm} fullWidth size="large" variant="outlined" >
+              <Button onClick={handleOpenConfirm} fullWidth size={isMobile ? "medium" : "large"} variant="outlined" >
                 {cancelButtonName || BUTTONS.CANCEL}
               </Button>
             </Grid>}
