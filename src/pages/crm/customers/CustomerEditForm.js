@@ -204,6 +204,9 @@ export default function CustomerEditForm() {
               <Stack spacing={2}>
                 <FormLabel content={FORMLABELS.CUSTOMER.HOWICKRESOURCESS} />
                 {/* account manager */}
+                <Box rowGap={2} columnGap={2} display="grid"
+                  gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)'}}
+                >
                 <RHFAutocomplete
                   multiple
                   disableCloseOnSelect
@@ -272,7 +275,8 @@ export default function CustomerEditForm() {
                     checked={defaultValues?.isActive}
                   />
                 </Box>
-
+                </Box>
+                
                 <Grid sx={{ display: { md: 'flex' } }}>
                   <RHFSwitch name="isActive" label="Active" checked={defaultValues?.isActive} />
                   <RHFSwitch
