@@ -5,7 +5,6 @@ import debounce from 'lodash/debounce';
 // @mui
 import {
   Table,
-  Button,
   TableBody,
   Container,
   TableContainer,
@@ -22,7 +21,6 @@ import {
   getComparator,
   TableNoData,
   TableSkeleton,
-  TableHeadCustom,
   TablePaginationCustom,
   TablePaginationFilter,
   TableHeadFilter,
@@ -86,8 +84,6 @@ export default function CustomerList({ isArchived }) {
   const { enqueueSnackbar } = useSnackbar();
   const axiosToken = () => axios.CancelToken.source();
   const cancelTokenSource = axiosToken();
-
-  const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
   const { customers, reportHiddenColumns, filterBy, verified, excludeReporting, page, rowsPerPage, isLoading } = useSelector((state) => state.customer);
   const [filterVerify, setFilterVerify] = useState(verified);
@@ -108,12 +104,8 @@ export default function CustomerList({ isArchived }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, isArchived ]);
 
-  useEffect(() => {
-    setTableData(customers || []);
-  }, [customers]);
-
   const dataFiltered = applyFilter({
-    inputData: tableData,
+    inputData: customers,
     comparator: getComparator(order, orderBy),
     filterName,
     filterVerify,

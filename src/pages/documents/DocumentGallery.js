@@ -11,12 +11,12 @@ import { bgBlur } from '../../utils/cssStyles';
 import Image from '../../components/image';
 import Lightbox from '../../components/lightbox';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
-import { getDocumentGallery, setDocumentGalleryVisibility } from '../../redux/slices/document/document';
+import { getDocumentGallery } from '../../redux/slices/document/document';
 import { downloadFile } from '../../redux/slices/document/documentFile';
 import { FORMLABELS } from '../../constants/default-constants';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
 import { Cover } from '../../components/Defaults/Cover';
-import { PATH_CRM, PATH_DOCUMENT, PATH_MACHINE } from '../../routes/paths';
+import { PATH_CRM, PATH_MACHINE } from '../../routes/paths';
 import EmptyContent from '../../components/empty-content/EmptyContent';
 import { DocumentGalleryItem } from '../../components/gallery/DocumentGalleryItem';
 
@@ -31,7 +31,7 @@ export default function DocumentGallery({customerPage, machinePage}) {
   
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { machineId, customerId } = useParams();
+  const { machineId } = useParams();
   const regEx = /^[^2]*/;
   
   const { machine } = useSelector((state) => state.machine);
