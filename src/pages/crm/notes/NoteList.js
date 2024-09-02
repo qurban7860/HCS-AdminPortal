@@ -61,7 +61,7 @@ export default function NoteList() {
     dispatch(ChangePage(0));
     dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
   };
-
+  
   const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
 
   useEffect(() => {
@@ -74,7 +74,7 @@ export default function NoteList() {
   useEffect(() => {
     setTableData(notes);
   }, [notes]);
-
+  
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(order, orderBy),

@@ -17,6 +17,7 @@ import {
   TablePaginationCustom,
   TablePaginationFilter
 } from '../../components/table';
+import useResponsive from '../../hooks/useResponsive';
 import Scrollbar from '../../components/scrollbar';
 import Iconify from '../../components/iconify';
 import MachineListTableRow from './MachineListTableRow';
@@ -118,6 +119,7 @@ export default function MachineList({ isArchived }) {
 
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+  const isMobile = useResponsive('down', 'sm');
 
   useLayoutEffect(() => {
     dispatch(resetMachine());
@@ -193,8 +195,7 @@ export default function MachineList({ isArchived }) {
     setFilterVerify(event.target.value)
     setPage(0);
   };
-
-
+  
   const debouncedAccountManager = useRef(debounce((value) => {
     dispatch(ChangePage(0))
   }, 500))
@@ -260,29 +261,30 @@ export default function MachineList({ isArchived }) {
 
   return (
     <Container maxWidth={false}>
-        <StyledCardContainer>
-          <Cover name={ isArchived ? "Archived Machines" : "Machines" } icon="arcticons:materialistic" setting isArchivedMachines={!isArchived} isArchived={isArchived} />
-        </StyledCardContainer>
-        <TableCard>
-          <MachineListTableToolbar
-            filterName={filterName}
-            onFilterName={handleFilterName}
-            filterVerify={ isArchived ? undefined : filterVerify}
-            onFilterVerify={ isArchived ? undefined : handleFilterVerify}
-            filterStatus={ isArchived ? undefined : filterStatus}
-            onFilterStatus={ isArchived ? undefined : handleFilterStatus}
-            isFiltered={isFiltered}
-            onResetFilter={handleResetFilter}
-            onExportCSV={onExportCSV}
-            onExportLoading={exportingCSV}
-            accountManagerFilter={accountManager}
-            setAccountManagerFilter={ isArchived ? undefined : setAccountManagerFilter}
-            supportManagerFilter={supportManager}
-            setSupportManagerFilter={ isArchived ? undefined : setSupportManagerFilter}
-            isArchived={isArchived}
-          />
+      <StyledCardContainer>
+      <Cover name={ isArchived ? "Archived Machines" : "Machines" } icon="arcticons:materialistic" setting isArchivedMachines={!isArchived} isArchived={isArchived} />
+      </StyledCardContainer>
+      <TableCard>
+        <MachineListTableToolbar
+          filterName={filterName}
+          onFilterName={handleFilterName}
+          filterVerify={ isArchived ? undefined : filterVerify}
+          onFilterVerify={ isArchived ? undefined : handleFilterVerify}
+          filterStatus={ isArchived ? undefined : filterStatus}
+          onFilterStatus={ isArchived ? undefined : handleFilterStatus}
+          isFiltered={isFiltered}
+          onResetFilter={handleResetFilter}
+          onExportCSV={onExportCSV}
+          onExportLoading={exportingCSV}
+          accountManagerFilter={accountManager}
+          setAccountManagerFilter={ isArchived ? undefined : setAccountManagerFilter}
+          supportManagerFilter={supportManager}
+          setSupportManagerFilter={ isArchived ? undefined : setSupportManagerFilter}
+          isArchived={isArchived}
+        />
 
-          {!isNotFound && <TablePaginationFilter
+        {!isNotFound && !isMobile &&(
+          <TablePaginationFilter
             columns={TABLE_HEAD}
             hiddenColumns={reportHiddenColumns}
             handleHiddenColumns={handleHiddenColumns}
@@ -291,11 +293,22 @@ export default function MachineList({ isArchived }) {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-          />}
-          
-          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            <Scrollbar>
-              <Table stickyHeader size="small" sx={{ minWidth: 360 }}>
+          />
+        )}
+
+        {!isNotFound && isMobile && (
+          <TablePaginationCustom
+            count={machines ? machines.length : 0}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
+          />
+        )}
+
+        <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+          <Scrollbar>
+            <Table stickyHeader size="small" sx={{ minWidth: 360 }}>
               <TableHeadFilter
                 order={order}
                 orderBy={orderBy}
@@ -324,22 +337,21 @@ export default function MachineList({ isArchived }) {
                       !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                     )
                   )}
-                  <TableNoData isNotFound={isNotFound} />
+                <TableNoData isNotFound={isNotFound} />
               </TableBody>
-              </Table>
-            </Scrollbar>
-          </TableContainer>
+            </Table>
+          </Scrollbar>
+        </TableContainer>
 
-          {!isNotFound && <TablePaginationCustom
+        {!isNotFound && <TablePaginationCustom
             count={machines? machines.length : 0}
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
           />}
-
-        </TableCard>
-        <CustomerDialog />
+      </TableCard>
+      <CustomerDialog />
     </Container>
   );
 }

@@ -24,6 +24,7 @@ import MachineServiceRecordsSecondStep from './MachineServiceRecordsSecondStep';
 import MachineServiceRecordsThirdStep from './MachineServiceRecordsThirdStep';
 import { ColorlibConnector, ColorlibStepIcon } from '../../../theme/styles/default-styles';
 import IconTooltip from '../../../components/Icons/IconTooltip';
+import useResponsive from '../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -40,6 +41,8 @@ function MachineServiceRecordAddForm() {
   const [ technicians, setTechnicians ] = useState([]);
   const [ userTechnician, setUserTechnician ] = useState( null );
   const [ completed, setCompleted ] = useState([]);
+  
+  const isMobile = useResponsive('down', 'sm');
 
   useEffect(() => {
     dispatch(resetMachineServiceRecord());
@@ -117,7 +120,7 @@ function MachineServiceRecordAddForm() {
     <Container maxWidth={false} >
       <MachineTabContainer currentTabValue='serviceRecords' />
         <Grid container spacing={3}>
-          <Grid item xs={18} md={12}>
+          <Grid item xs={12} md={12}>
             <Card>
               <CardHeader 
                 title={machineServiceRecord?.serviceRecordUid && `Service ID : ${machineServiceRecord?.serviceRecordUid || ''}  (${machineServiceRecord?.status || ''})`}
@@ -131,13 +134,13 @@ function MachineServiceRecordAddForm() {
               <CardContent>
                 <Stepper nonLinear sx={{border:'1px solid lightgray', borderBottom:'none',  borderRadius:'10px 10px 0px 0px', py:1}} activeStep={formActiveStep} connector={<ColorlibConnector  />}>
                   <Step key='step_1'>
-                    <StepLabel sx={{cursor:'pointer'}} onClick={handleStep(0)} icon='1/3'  StepIconComponent={ColorlibStepIcon}>Create Service Record</StepLabel>
+                    <StepLabel sx={{cursor:'pointer'}} onClick={handleStep(0)} icon='1/3'  StepIconComponent={ColorlibStepIcon}>{!isMobile && 'Create Service Record'}</StepLabel>
                   </Step>
                   <Step key='step_2' >
-                    <StepLabel sx={{cursor:'pointer'}} onClick={handleStep(1)} icon='2/3'  StepIconComponent={ColorlibStepIcon}>Check Items Value</StepLabel>
+                    <StepLabel sx={{cursor:'pointer'}} onClick={handleStep(1)} icon='2/3'  StepIconComponent={ColorlibStepIcon}>{!isMobile && 'Check Items Value'}</StepLabel>
                   </Step>
                   <Step key='step_3' >
-                    <StepLabel sx={{cursor:'pointer'}} onClick={handleStep(2)} icon='3/3'  StepIconComponent={ColorlibStepIcon}>Complete Service Record</StepLabel>
+                    <StepLabel sx={{cursor:'pointer'}} onClick={handleStep(2)} icon='3/3'  StepIconComponent={ColorlibStepIcon}>{!isMobile && 'Complete Service Record'}</StepLabel>
                   </Step>
                 </Stepper>
                 <Box sx={{border:'1px solid lightgray', borderRadius:'0px 0px 10px 10px', py:2,marginTop:'0 !important'}}>
