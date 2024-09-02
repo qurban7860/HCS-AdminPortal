@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useLayoutEffect, useEffect, useRef, useCallback, useMemo, memo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 import PropTypes from 'prop-types';
@@ -27,11 +27,8 @@ import Scrollbar from '../../components/scrollbar';
 import DocumentListTableRow from './DocumentListTableRow';
 import DocumentListTableToolbar from './DocumentListTableToolbar';
 import {
-  getDocument,
-  resetDocument,
   getDocuments,
   resetDocuments,
-  resetDocumentHistory,
   setFilterBy,
   ChangePage,
   ChangeRowsPerPage,
@@ -71,13 +68,12 @@ DocumentList.propTypes = {
 function DocumentList({ customerPage, machinePage, machineDrawingPage, machineDrawings }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { customerId, machineId, id } = useParams();
+  const { customerId, machineId } = useParams();
   const axiosToken = () => axios.CancelToken.source();
   const cancelTokenSource = axiosToken();
   const [filterName, setFilterName] = useState('');
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(100);
-  const [tableData, setTableData] = useState([]);
   const [categoryVal, setCategoryVal] = useState(null);
   const [typeVal, setTypeVal] = useState(null);
   const [filterStatus, setFilterStatus] = useState([]);
@@ -89,9 +85,9 @@ function DocumentList({ customerPage, machinePage, machineDrawingPage, machineDr
     customerDocumentsFilterBy, customerDocumentsRowsPerPage,
     machineDocumentsFilterBy, machineDocumentsRowsPerPage,
     isLoading } = useSelector((state) => state.document );
+    console.log("isLoading : ",isLoading)
   const { activeDocumentCategories } = useSelector((state) => state.documentCategory );
   const { activeDocumentTypes } = useSelector((state) => state.documentType );
-
   const [totalRows, setTotalRows] = useState( documentRowsTotal );
 
   const {
@@ -130,31 +126,35 @@ const onChangePage = (event, newPage) => {
   }
 }
 
-  const TABLE_HEAD = [
+const TABLE_HEAD = useMemo(() => {
+  const baseHeaders = [
     { id: 'displayName', label: 'Name', align: 'left' },
     { id: 'referenceNumber', visibility: 'xs2', label: 'Ref. No.', align: 'left' },
     { id: 'docCategory.name', visibility: 'xs1', label: 'Category', align: 'left' },
     { id: 'docType.name', visibility: 'xs2', label: 'Type', align: 'left' },
-    // { id: 'documentVersions.versionNo.[]', visibility: 'md1', label: 'Version', align: 'center' },
     { id: 'createdAt', label: 'Created At', align: 'right' },
   ];
-  
+
   if (machineDrawings) {
-    const insertIndex = 4; // Index after which you want to insert the new objects
-    TABLE_HEAD.splice(insertIndex, 0,// 0 indicates that we're not removing any elements
-    { id: 'stockNumber', visibility: 'xs2', label: 'Stock No.', align: 'left' },
-    { id: 'productDrawings', visibility: 'xs2', label: 'Machines', align: 'left' },
-    );
+    return [
+      ...baseHeaders.slice(0, 4),
+      { id: 'stockNumber', visibility: 'xs2', label: 'Stock No.', align: 'left' },
+      { id: 'productDrawings', visibility: 'xs2', label: 'Machines', align: 'left' },
+      ...baseHeaders.slice(4),
+    ];
   }
 
   if (!customerPage && !machineDrawingPage && !machineDrawings) {
-    const insertIndex = 4; // Index after which you want to insert the new objects
-    TABLE_HEAD.splice(insertIndex, 0,// 0 indicates that we're not removing any elements
-      { id: 'machine.serialNo', visibility: 'md4', label: 'Machine', align: 'left' }
-    );
+    return [
+      ...baseHeaders.slice(0, 4),
+      { id: 'machine.serialNo', visibility: 'md4', label: 'Machine', align: 'left' },
+      ...baseHeaders.slice(4),
+    ];
   }
+  return baseHeaders;
+}, [customerPage, machineDrawingPage, machineDrawings]);
 
-  useEffect(() => {
+useLayoutEffect(() => {
     if(machineDrawingPage || machineDrawings || machinePage ){
 
       if(machineDrawings){
@@ -211,11 +211,11 @@ const onChangePage = (event, newPage) => {
     machine
   ]);
   
-  useEffect(()=>{
+  useLayoutEffect(()=>{
     setTotalRows( documentRowsTotal || 0 );
   },[ documentRowsTotal ])
 
-  useEffect(()=>{
+  useLayoutEffect(()=>{
     if(machineDrawingPage || customerPage){
       setPage(0)
     }else if(machineDrawings){
@@ -223,9 +223,9 @@ const onChangePage = (event, newPage) => {
     }else if(!customerPage && !machineDrawingPage && !machineDrawings){
       setPage(documentPage)
     }
-  },[customerPage, machineDrawingPage, machineDrawings, machineDrawingsPage, documentPage])
+  },[ customerPage, machineDrawingPage, machineDrawings, machineDrawingsPage, documentPage ] )
 
-  useEffect(()=>{
+  useLayoutEffect(()=>{
     if(machineDrawingPage){
       setRowsPerPage(machineDocumentsRowsPerPage)
     }else if(customerPage){
@@ -235,14 +235,19 @@ const onChangePage = (event, newPage) => {
     }else{
       setRowsPerPage(documentRowsPerPage)
     }
-  },[customerPage, machineDrawingPage, machineDrawings, machineDocumentsRowsPerPage, customerDocumentsRowsPerPage, machineDrawingsRowsPerPage, documentRowsPerPage])
+  },[ 
+    customerPage, 
+    machineDrawingPage, 
+    machineDrawings, 
+    machineDocumentsRowsPerPage, 
+    customerDocumentsRowsPerPage, 
+    machineDrawingsRowsPerPage, 
+    documentRowsPerPage 
+  ] )
 
-  useEffect(() => {
-    setTableData(documents?.data || []);
-  }, [documents]);
 
   const dataFiltered = applyFilter({
-    inputData: tableData,
+    inputData: documents?.data || [],
     comparator: getComparator(order, orderBy),
     orderBy,
     filterName,
@@ -251,9 +256,8 @@ const onChangePage = (event, newPage) => {
     typeVal,
   });
   
-  const denseHeight = 60;
   const isFiltered = filterName !== '' || !!filterStatus.length;
-  const isNotFound = (!dataFiltered?.length && !!filterName) || (!isLoading && !dataFiltered?.length);
+  const isNotFound = (!isLoading && !dataFiltered?.length);
 
   const filterNameDebounce = (value) => {
     if(machineDrawingPage){
@@ -266,21 +270,22 @@ const onChangePage = (event, newPage) => {
       dispatch(setFilterBy(value))
     }
   }
+
   const debouncedSearch = useRef(debounce(async (criteria) => {
       filterNameDebounce(criteria);
-    }, 500))
+  }, 500))
 
-  const handleFilterName = (event) => {
-    debouncedSearch.current(event.target.value);
-    setFilterName(event.target.value)
-  };
+  const handleFilterName = useCallback((event) => {
+    const { value } = event.target;
+    debouncedSearch.current(value);
+    setFilterName(value);
+  }, []);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
       debouncedSearch.current.cancel();
   }, [debouncedSearch]);
 
-
-  useEffect(()=>{
+  useLayoutEffect(()=>{
     if(machineDrawingPage){
       setFilterName(machineDocumentsFilterBy)
     }else if(customerPage){
@@ -292,7 +297,6 @@ const onChangePage = (event, newPage) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[ ])
-  // customerPage, machinePage, machineDrawings, documentFilterBy, machineDocumentsFilterBy, customerDocumentsFilterBy, machineDrawingsFilterBy
 
   const handleFilterStatus = (event) => {
     // setPage(0);
@@ -403,7 +407,7 @@ const onChangePage = (event, newPage) => {
                         handleMachineDialog={(e)=> row?.machine && handleMachineDialog(e,row?.machine?._id)}
                       />
                     ) : (
-                      !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
+                      !isNotFound && <TableSkeleton key={index} sx={{ height: 60 }} />
                     )
                   )}
                   <TableNoData isNotFound={isNotFound} />
@@ -478,4 +482,4 @@ function applyFilter({ inputData, comparator, orderBy, filterName, filterStatus,
   return inputData;
 }
 
-export default DocumentList
+export default memo( DocumentList )

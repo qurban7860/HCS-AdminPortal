@@ -1,10 +1,8 @@
 import debounce from 'lodash/debounce';
 import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 // @mui
-import { Container, Table, Checkbox, TableBody, TableContainer, TableRow, TableCell, TableHead, TableSortLabel } from '@mui/material';
-// routes
-import { useNavigate, useParams } from 'react-router-dom';
-import { PATH_MACHINE } from '../../../routes/paths';
+import { Container, Table, TableBody, TableContainer } from '@mui/material';
+
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 import { CONFIG } from '../../../config-global';
@@ -45,11 +43,8 @@ const TABLE_HEAD = [
 // ----------------------------------------------------------------------
 
 export default function MachineJiraList(){
-  const { initial, machineJiras, filterBy, page, rowsPerPage, isLoading, filterStatus } = useSelector((state) => state.machineJira );
+  const { machineJiras, filterBy, page, rowsPerPage, isLoading, filterStatus } = useSelector((state) => state.machineJira );
   const { machine } = useSelector((state) => state.machine);
-  const navigate = useNavigate();
-  const { machineId } = useParams();
-  
   const {
     order,
     orderBy,
@@ -66,11 +61,7 @@ export default function MachineJiraList(){
   const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
   const dispatch = useDispatch();
   const [filterName, setFilterName] = useState('');
-  const [tableData, setTableData] = useState([]);
-  const [ filterStatusOption, setFilterStatusOption ] = useState('');
   
-  const [ isCreatedAt, setIsCreatedAt ] = useState(false);
-
   useLayoutEffect(() => {
       if(machine?.serialNo){
         dispatch(getMachineJiras(machine?.serialNo));
@@ -78,16 +69,10 @@ export default function MachineJiraList(){
       return () => {
         dispatch(resetMachineJiraRecords());
       }
-  }, [dispatch, machine?.serialNo]);
-
-  useEffect(() => {
-    if (initial) {
-      setTableData(machineJiras?.issues || []);
-    }
-  }, [machineJiras, initial]);
+  }, [dispatch, machine ]);
 
   const dataFiltered = applyFilter({
-    inputData: tableData,
+    inputData: machineJiras || [],
     comparator: getComparator(order, orderBy),
     filterName,
     filterStatus,
@@ -107,26 +92,18 @@ export default function MachineJiraList(){
     setFilterName(event.target.value)
     setPage(0);
   };
-
-  const debouncedStatus = useRef(debounce((value) => {
-    dispatch(ChangePage(0))
-    dispatch(setFilterStatus(value))
-  }, 500))
-
+  
   const handleFilterStatus = (event) => {
-    debouncedStatus.current(event.target.value);
-    setFilterStatusOption(event.target.value)
+    dispatch(setFilterStatus(event.target.value))
     setPage(0);
   };
   
   useEffect(() => {
     debouncedSearch.current.cancel();
-    debouncedStatus.current.cancel();
-  }, [debouncedSearch, debouncedStatus]);
+  }, [ debouncedSearch ]);
 
   useEffect(()=>{
       setFilterName(filterBy);
-      setFilterStatusOption(filterStatus);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 
@@ -147,7 +124,6 @@ export default function MachineJiraList(){
             filterName={filterName}
             filterStatus={filterStatus}
             onFilterName={handleFilterName}
-            filterStatus={filterStatusOption}
             onFilterStatus={handleFilterStatus}
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}

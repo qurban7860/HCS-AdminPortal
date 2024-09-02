@@ -44,12 +44,17 @@ const slice = createSlice({
     startLoading(state) {
       state.isLoading = true;
     },
+    // STOP LOADING
+    stopLoading(state) {
+      state.isLoading = false;
+    },
     // START LOADING
     startLoadingResetPasswordEmail(state) {
       state.isLoadingResetPasswordEmail = true;
     },
     // HAS ERROR
     hasError(state, action) {
+      state.isLoadingResetPasswordEmail = false;
       state.isLoading = false;
       state.error = action.payload;
       state.initial = true;
@@ -101,9 +106,7 @@ const slice = createSlice({
     // GET users
     getSecurityUsersSuccess(state, action) {
       state.isLoading = false;
-      state.success = true;
       state.securityUsers = action.payload;
-      state.initial = true;
     },
 
     // GET Active users
@@ -263,8 +266,10 @@ export function addSecurityUser(param, isInvite) {
         dispatch(setSecurityUserFormVisibility(false))
         dispatch(getSecurityUsers());
       }
+      dispatch(slice.actions.stopLoading());
       return response;
     } catch (error) {
+      dispatch(slice.actions.hasError(error.Message));
       console.error(error);
       throw error;
     }
@@ -297,8 +302,10 @@ export function  updateSecurityUser(param,id) {
             data.password = param.password 
         }
       const response = await axios.patch(`${CONFIG.SERVER_URL}security/users/${id}`, data);
+      dispatch(slice.actions.stopLoading());
       return response;
     } catch (error) {
+      dispatch(slice.actions.hasError(error.Message));
       console.error(error);
       throw error;
     }
@@ -320,7 +327,6 @@ export function getActiveSecurityUsers(type) {
         }
       }
 
-      
       Object.assign(query.params, type)
       const response = await axios.get(`${CONFIG.SERVER_URL}security/users`,query);
       if(regEx.test(response.status)){
@@ -328,6 +334,7 @@ export function getActiveSecurityUsers(type) {
       }
       return response;
     } catch (error) {
+      dispatch(slice.actions.hasError(error.Message));
       console.error(error);
       throw error;
     }
@@ -360,6 +367,7 @@ export function getActiveSPTechnicalSecurityUsers(type) {
       }
       return response;
     } catch (error) {
+      dispatch(slice.actions.hasError(error.Message));
       console.error(error);
       throw error;
     }
@@ -386,6 +394,7 @@ export function getSecurityUsers() {
       }
       return response;
     } catch (error) {
+      dispatch(slice.actions.hasError(error.Message));
       console.error(error);
       throw error;
     }
@@ -409,6 +418,7 @@ export function getAssignedSecurityUsers(roleId) {
         dispatch(slice.actions.getAssignedSecurityUserSuccess(response.data));
       return response;
     } catch (error) {
+      dispatch(slice.actions.hasError(error.Message));
       console.error(error);
       throw error;
     }
@@ -426,6 +436,7 @@ export function getSecurityUser(id) {
       }
       return response;
     } catch (error) {
+      dispatch(slice.actions.hasError(error.Message));
       console.error(error);
       throw error;
     }
@@ -452,6 +463,7 @@ export function getLoggedInSecurityUser(id) {
         }
         return response;
       } catch (error) {
+        dispatch(slice.actions.hasError(error.Message));
         console.error(error);
         throw error;
       }
@@ -469,13 +481,13 @@ export function deleteSecurityUser(id) {
         isArchived: true, 
       }
       );
-      // state.responseMessage = response.data;
       if(regEx.test(response.status)){
         dispatch(slice.actions.setResponseMessage(response.data));
         dispatch(resetSecurityUser())
       }
       return response;
     } catch (error) {
+      dispatch(slice.actions.hasError(error.Message));
       console.error(error);
       throw error;
     }
@@ -499,9 +511,9 @@ export function SecurityUserPasswordUpdate(data, Id, isAdmin) {
       }
       return response; // eslint-disable-line
     } catch (error) {
+      dispatch(slice.actions.hasError(error.Message));
       console.error(error);
       throw error;
-      // dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
@@ -595,6 +607,7 @@ export function updateInvitedUser(data, Id) {
       }
       return response; // eslint-disable-line
     } catch (error) {
+      dispatch(slice.actions.hasError(error.Message));
       console.error(error);
       throw error;
       // dispatch(slice.actions.hasError(error.Message));
