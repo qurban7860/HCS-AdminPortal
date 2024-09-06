@@ -72,7 +72,7 @@ export default function MachineJiraList(){
   }, [dispatch, machine ]);
 
   const dataFiltered = applyFilter({
-    inputData: machineJiras || [],
+    inputData: machineJiras?.issues || [],
     comparator: getComparator(order, orderBy),
     filterName,
     filterStatus,
@@ -182,7 +182,7 @@ export default function MachineJiraList(){
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filterName, filterStatus }) {
-  const stabilizedThis =  inputData && inputData.map((el, index) => [el, index]); 
+  const stabilizedThis =  inputData && inputData?.map((el, index) => [el, index]); 
   stabilizedThis?.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
