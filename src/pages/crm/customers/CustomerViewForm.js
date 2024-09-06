@@ -10,6 +10,7 @@ import { useSnackbar } from '../../../components/snackbar';
 import useResponsive from '../../../hooks/useResponsive';
 // slices
 import {
+  updateCustomer,
   deleteCustomer,
   setCustomerVerification,
 } from '../../../redux/slices/customer/customer';
@@ -21,7 +22,6 @@ import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEdi
 import FormLabel from '../../../components/DocumentForms/FormLabel';
 import { FORMLABELS } from '../../../constants/default-constants';
 import { FORMLABELS as formLABELS } from '../../../constants/customer-constants';
-import { MachineIcon } from '../../../theme/overrides/CustomIcons';
 
 // ----------------------------------------------------------------------
 
@@ -72,7 +72,38 @@ export default function CustomerViewForm() {
       enqueueSnackbar(err, { variant: `error` });
       console.log('Error:', err);
     }
+  };  
+  
+const onArchive = async () => {
+    try {
+      const data = {
+        ...defaultValues,
+        isActive: false,
+        isArchived: true,
+      }
+      await dispatch(updateCustomer( data ));
+      navigate(PATH_CRM.customers.list);
+    } catch (err) {
+      enqueueSnackbar(err, { variant: `error` });
+      console.log('Error:', err);
+    }
   };
+
+  const onRestore = async () => {
+    try {
+      const data = {
+        ...defaultValues,
+        isActive: true,
+        isArchived: false,
+      }
+      await dispatch(updateCustomer( data ));
+      navigate(PATH_CRM.customers.list);
+    } catch (err) {
+      enqueueSnackbar(err, { variant: `error` });
+      console.log('Error:', err);
+    }
+  };
+
   const handleVerification = async () => {
     try {
       await dispatch(setCustomerVerification(customerId));
@@ -92,7 +123,9 @@ export default function CustomerViewForm() {
               handleVerification={ customer?.isArchived ? undefined : handleVerification}
               financingCompany={ customer?.isArchived ? undefined : defaultValues.isFinancialCompany}
               handleEdit={ customer?.isArchived ? undefined : handleEdit }
-              onDelete={ customer?.isArchived ? undefined : onDelete }
+              onArchive={ customer?.isArchived ? undefined : onArchive }
+              onRestore={ customer?.isArchived ? onRestore : undefined }
+              onDelete={ customer?.isArchived ? onDelete : undefined }
               supportSubscription={ customer?.isArchived ? undefined : defaultValues.supportSubscription}
               backLink={() => customer?.isArchived ? navigate(PATH_CRM.customers.archived.root):navigate(PATH_CRM.customers.list)}
               excludeReports={ customer?.isArchived ? undefined : defaultValues.excludeReports}

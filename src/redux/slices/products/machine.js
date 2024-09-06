@@ -631,7 +631,7 @@ export function deleteMachine(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${id}`,
+      const response = await axios.delete(`${CONFIG.SERVER_URL}products/machines/${id}`,
       {
         isArchived: true, 
       });
@@ -723,11 +723,12 @@ export function updateMachine(machineId, params) {
         supportManager: params?.supportManager,
         description: params?.description,
         customerTags: params?.customerTags,
-        machineConnections: params?.machineConnectionVal.map(obj => obj._id),
-        isActive: params?.isActive,
+        machineConnections: params?.machineConnectionVal?.map(obj => obj._id),
         supportExpireDate : params?.supportExpireDate,
         decommissionedDate : params?.decommissionedDate,
         financialCompany: params?.financialCompany?._id, 
+        isActive: params?.isActive,
+        isArchived: params?.isArchived,
       };
      /* eslint-enable */
       await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}`, data );
