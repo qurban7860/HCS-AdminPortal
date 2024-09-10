@@ -724,16 +724,15 @@ export function updateMachine(machineId, params) {
         description: params?.description,
         customerTags: params?.customerTags,
         machineConnections: params?.machineConnectionVal?.map(obj => obj._id),
+        isUpdateConnectedMachines: params?.isUpdateConnectedMachines,
         supportExpireDate : params?.supportExpireDate,
         decommissionedDate : params?.decommissionedDate,
         financialCompany: params?.financialCompany?._id, 
         isActive: params?.isActive,
         isArchived: params?.isArchived,
       };
-     /* eslint-enable */
       await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}`, data );
       dispatch(slice.actions.setMachineEditFormVisibility(false));
-      // this.updateCustomerSuccess(response);
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -777,17 +776,14 @@ export function transferMachine( machineId, params ) {
         machineDocuments: params?.machineDocuments?.length > 0 && params?.machineDocuments || [],
       };
         
-     /* eslint-enable */
       const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/transferMachine`,
         data
       );
       return response; 
-
     } catch (error) {
       dispatch(slice.actions.stopLoading());
       console.error(error);
       throw error;
-      // dispatch(slice.actions.hasError(error.Message));
     }
   };
 
@@ -803,18 +799,16 @@ export function moveMachine(params) {
         billingSite: params?.billingSite?._id,
         installationSite: params?.installationSite?._id,
       };
-     /* eslint-enable */
       const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/moveMachine`,
         data
       );
       dispatch(slice.actions.setMachineMoveFormVisibility(false));
-      return response; // eslint-disable-line
+      return response; 
 
     } catch (error) {
       dispatch(slice.actions.stopLoading());
       console.error(error);
       throw error;
-      // dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
@@ -824,7 +818,7 @@ export function changeMachineStatus(machineId, params) {
     dispatch(slice.actions.startLoading());
     try {
       const data = {dated: params?.date, updateConnectedMachines:params?.updateConnectedMachines};
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/updateStatus/${params?.status?._id}`,data);
+      await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/updateStatus/${params?.status?._id}`,data);
     } catch (error) {
       dispatch(slice.actions.stopLoading());
       console.error(error);
