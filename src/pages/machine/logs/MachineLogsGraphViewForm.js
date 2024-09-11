@@ -36,8 +36,8 @@ export default function MachineLogsGraphViewForm() {
         }
     }, [dispatch, machineId ]);
     
-    if (erpLogs.length !== 0) {
-        erpLogs.map((log) => {
+    if (Array.isArray(erpLogs) && erpLogs?.length !== 0) {
+        erpLogs?.map((log) => {
             erpLogsTime.push(fQuarterYearDate(log._id,'MMM yyyy'));
             erpLogsLength.push(log.componentLength);
             erpLogsWaste.push(log.waste);

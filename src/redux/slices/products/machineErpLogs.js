@@ -148,23 +148,22 @@ export function addMachineErpLogRecord( machine, customer, csvData, action) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      let response
-      let data = {}
+      const data = {}
+      data.type = "erp"
       if(Array.isArray(csvData)){
         data.machine = machine
         data.customer = customer
-        data.csvData = csvData
+        data.logs = csvData
         data.skipExistingRecords = action?.skipExistingRecords
         data.updateExistingRecords = action?.updateExistingRecords
-        response = await axios.post(`${CONFIG.SERVER_URL}logs/erp/multi/`,data );
       }else if(Object.keys(csvData).length !== 0){
-        data = csvData
+        data.logs = [ csvData ]
         data.skipExistingRecords = action?.skipExistingRecords
         data.updateExistingRecords = action?.updateExistingRecords
         data.machine = machine
         data.customer = customer
-        response = await axios.post(`${CONFIG.SERVER_URL}logs/erp/`,data );
       }
+      const response = await axios.post(`${CONFIG.SERVER_URL}productLogs/`,data );
       dispatch(slice.actions.setResponseMessage(response?.data || ''));
     } catch (error) {
       console.error(error);
@@ -180,9 +179,10 @@ export function getMachineErpLogRecord(machineId, id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}logs/erp/${id}`,
+      const response = await axios.get(`${CONFIG.SERVER_URL}productLogs/${id}`,
       {
         params: {
+          type: "erp",
           machine: machineId,
         }
       });
@@ -207,6 +207,7 @@ export function getMachineErpLogRecords(machineId, page, pageSize, fromDate, toD
         machine: machineId,
         fromDate,
         toDate,
+        type: "erp",
       }
 
       if( isMachineArchived ){
@@ -223,7 +224,7 @@ export function getMachineErpLogRecords(machineId, page, pageSize, fromDate, toD
         params.isCreatedAt = isCreatedAt
       }
       
-      const response = await axios.get(`${CONFIG.SERVER_URL}logs/erp/`, { params } );
+      const response = await axios.get(`${CONFIG.SERVER_URL}productLogs/`, { params } );
       dispatch(slice.actions.getMachineErpLogRecordsSuccess(response.data));
     } catch (error) {
       console.log(error);

@@ -1,5 +1,4 @@
 import * as Yup from 'yup';
-import { isNaN } from 'lodash';
 import { endOfToday } from 'date-fns';
 import { Snacks } from '../../constants/machine-constants';
 import { allowedExtensions, fileTypesMessage } from '../../constants/document-constants';
@@ -9,8 +8,7 @@ import { fDate } from '../../utils/formatTime';
 
 export const machineSchema = Yup.object().shape({
   serialNo: Yup.string().trim().required('Serial Number is required')
-            .matches(/^[0-9]+$/, 'Must be a number')
-            .max(6, 'Serial Number at most 6 digits').label('Serial Number'),
+  .matches(/^[0-9]+$/, 'Must be a number').max(6, 'Serial Number at most 6 digits').label('Serial Number'),
   name: Yup.string().max(250),
   parentSerialNo: Yup.object().shape({
     serialNo: Yup.string()
@@ -73,7 +71,7 @@ export const machineTransferSchema = Yup.object().shape({
 
   shippingDate: Yup.date().typeError('Date Should be Valid').max(future5yearDate,`Shipping Date field must be at earlier than ${fDate(future5yearDate)}`)
   .min(pastDate,`Shipping Date field must be at after than ${fDate(pastDate)}`).nullable().label('Shipping Date'),
-  
+
   installationDate: Yup.date()
   .typeError('Date Should be Valid')
   .max(future5yearDate,`Shipping Date field must be at earlier than ${fDate(future5yearDate)}`)
@@ -86,31 +84,50 @@ export const machineTransferSchema = Yup.object().shape({
   status: Yup.object().shape({
     name: Yup.string()
   }).nullable().required("Status Is Required"),
-
   machineConnection: Yup.array().nullable(),
-
   machineDocuments: Yup.array().nullable(),
-
 });
 
-export const EditMachineSchema = Yup.object().shape({
-  serialNo: Yup.string().required(Snacks.serialNoRequired).max(6),
-  name: Yup.string().max(50),
-  // parentMachine: Yup.string(),
-  // parentSerialNo: Yup.string(),
-  // supplier: Yup.string(),
-  // machineModel: Yup.string(),
-  // status: Yup.string(),
+export const editMachineSchema = Yup.object().shape({
+  serialNo: Yup.string().trim().required('Serial Number is required')
+  .matches(/^[0-9]+$/, 'Must be a number').max(6, 'Serial Number at most 6 digits').label('Serial Number'),
+  name: Yup.string().max(250),
+  parentSerialNo: Yup.object().shape({
+    serialNo: Yup.string()
+  }).nullable(),
+  previousMachine: Yup.string(),
+  supplier: Yup.object().shape({
+    serialNo: Yup.string()
+  }).nullable(),
+  machineModel: Yup.object().shape({
+    name: Yup.string()
+  }).nullable(),
+  customer: Yup.object().shape({
+    name: Yup.string()
+  }).nullable().required("Customer Is Required"),
   workOrderRef: Yup.string().max(50),
-  // customer:Yup.string(),
-  // instalationSite: Yup.string(),
-  // billingSite: Yup.string(),
-  // accountManager: Yup.string(),
-  // projectManager: Yup.string(),
-  // supportManager: Yup.string(),
+  purchaseDate: Yup.date().typeError('Date Should be Valid').nullable().label('Purchase Date'),
+  shippingDate: Yup.date().typeError('Date Should be Valid').max(future5yearDate,`Shipping Date field must be at earlier than ${fDate(future5yearDate)}`)
+  .min(pastDate,`Shipping Date field must be at after than ${fDate(pastDate)}`).nullable().label('Shipping Date'),
+  installationDate: Yup.date()
+  .typeError('Date Should be Valid')
+  .max(future5yearDate,`Shipping Date field must be at earlier than ${fDate(future5yearDate)}`)
+  .min(pastDate,`Shipping Date field must be at after than ${fDate(pastDate)}`).nullable().label('Installation Date'),
+  supportExpireDate: Yup.date()
+  .typeError('Date Should be Valid')
+  // .min(today,`Support Expiry Date field must be at after than ${fDate(today)}`)
+  .nullable().label('Support Expiry Date'),
+  installationSite: Yup.object().shape({
+    name: Yup.string()
+  }).nullable(),
+  billingSite: Yup.object().shape({
+    name: Yup.string()
+  }).nullable(),
+  accountManager: Yup.array(),
+  projectManager: Yup.array(),
+  supportManager: Yup.array(),
   siteMilestone: Yup.string().max(1500),
   description: Yup.string().max(5000),
-  customerTags: Yup.array(),
   isActive: Yup.boolean(),
 });
 
