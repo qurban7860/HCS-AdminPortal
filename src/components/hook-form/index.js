@@ -15,6 +15,7 @@ export { default as RHFRadioGroup } from './RHFRadioGroup';
 export { default as RHFAutocomplete } from './RHFAutocomplete';
 export { default as RHFDatePicker } from './RHFDatePicker';
 export { default as RHFTimePicker } from './RHFTimePicker';
+export { default as RHFToggleButton } from './RHFToggleButton';
 export { default as RHFDateTimePicker } from './RHFDateTimePicker';
 export { default as RHFAutocompleteLableName } from './RHFAutocomplete';
 export { default as RHFPhoneInput } from './RHFPhoneInput';
