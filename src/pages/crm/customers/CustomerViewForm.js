@@ -67,7 +67,7 @@ export default function CustomerViewForm() {
   const onDelete = async () => {
     try {
       await dispatch(deleteCustomer(customerId));
-      navigate(PATH_CRM.customers.list);
+      navigate(PATH_CRM.customers.archived.root);
     } catch (err) {
       enqueueSnackbar(err, { variant: `error` });
       console.log('Error:', err);
