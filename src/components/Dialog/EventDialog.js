@@ -113,7 +113,15 @@ function EventDialog({
     }
   }, [errors]);
 
-  const { customer, date, isCustomerEvent, files, priority, eventType } = watch();
+  const { customer, machines, date, isCustomerEvent, files, priority, eventType } = watch();
+
+  useEffect(() => {
+    if ( Array.isArray(machines) && machines?.length > 0 && machines?.length < 2 ) {
+      setValue("site", machines[0]?.instalationSite)
+    } else if( machines?.length < 1 ){
+      setValue("site", null )
+    }
+  },[ machines, setValue ])
 
   useEffect(() => {
     const { end_date  } = watch()
@@ -128,15 +136,17 @@ function EventDialog({
   },[ date ])
 
   useEffect(()=>{
-    if(customer){
-      setValue("site", customer?.mainSite	|| null )
+
+    if( customer && Array.isArray(machines) && ( machines?.length < 1 || ( customer?._id !== machines[0]?.customer._id ) ) ){
       dispatch(getActiveCustomerMachines(customer?._id))
       dispatch(getActiveSites(customer?._id))
     } else {
       setValue("site", null )
+      setValue("machines", [] )
       dispatch(resetActiveCustomerMachines())
       dispatch(resetActiveSites())
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   },[ dispatch, customer, setValue ])
 
   useLayoutEffect(() => {
