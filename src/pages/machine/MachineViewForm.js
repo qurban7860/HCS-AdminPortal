@@ -242,7 +242,7 @@ export default function MachineViewForm() {
       enqueueSnackbar('Machine Archived Successfully!');
       navigate(PATH_MACHINE.machines.root);
     } catch (err) {
-      enqueueSnackbar(Snacks.machineFailedDelete, { variant: `error` });
+      enqueueSnackbar( typeof err === 'string' ? err : Snacks.machineFailedArchive, { variant: `error` });
       console.log('Error:', err);
     }
   };
@@ -258,7 +258,7 @@ export default function MachineViewForm() {
       enqueueSnackbar('Machine Restored Successfully!');
       navigate(PATH_MACHINE.machines.root);
     } catch (err) {
-      enqueueSnackbar(Snacks.machineFailedDelete, { variant: `error` });
+      enqueueSnackbar( typeof err === 'string' ? err : Snacks.machineFailedRestore, { variant: `error` });
       console.log('Error:', err);
     }
   };
@@ -268,9 +268,8 @@ export default function MachineViewForm() {
       await dispatch(deleteMachine(machine._id));
       enqueueSnackbar('Machine Deleted Successfully!');
       navigate(PATH_MACHINE.machines.archived.root);
-      window.location.reload();
     } catch (err) {
-      enqueueSnackbar(Snacks.machineFailedDelete, { variant: `error` });
+      enqueueSnackbar( typeof err === 'string' ? err : Snacks.machineFailedDelete, { variant: `error` });
       console.log('Error:', err);
     }
   };
