@@ -9,7 +9,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { PATH_MACHINE } from '../../../routes/paths';
 // slice
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
-import { addMachineErpLogRecord } from '../../../redux/slices/products/machineErpLogs';
+import { addMachineLogRecord } from '../../../redux/slices/products/machineErpLogs';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFAutocomplete } from '../../../components/hook-form';
@@ -20,7 +20,7 @@ import { ICONS } from '../../../constants/icons/default-icons';
 import { HeaderArr, unitHeaders } from './Index';
 import MachineTabContainer from '../util/MachineTabContainer';
 import { isValidDate } from '../../../utils/formatTime';
-import { machineLogs } from '../../../constants/machineLogs';
+import { machineLogTypeFormats } from '../../../constants/machineLogTypeFormats';
 
 
 // ----------------------------------------------------------------------
@@ -119,10 +119,12 @@ export default function MachineLogsAddForm() {
         action.updateExistingRecords = true;
       }
   
-      await dispatch(addMachineErpLogRecord(machineId, machine?.customer?._id, csvData, action));
-      enqueueSnackbar("Logs uploaded successfully!");
-      navigate(PATH_MACHINE.machines.logs.root(machineId));
-      reset();
+      const response = await dispatch(addMachineLogRecord(machineId, machine?.customer?._id, csvData, action, logVersion ,logType?.type));
+      if (response.success) {
+        enqueueSnackbar("Logs uploaded successfully!");
+        navigate(PATH_MACHINE.machines.logs.root(machineId));
+        reset();
+      } else throw new Error(response.message);
     } catch (err) {
       enqueueSnackbar(err.message || 'JSON validation failed!', { variant: 'error' });
     }
@@ -238,7 +240,8 @@ const toggleCancel = () => navigate(PATH_MACHINE.machines.logs.root(machineId));
                       <RHFAutocomplete
                         label="Select Log Type"
                         name="logType"
-                        options={machineLogs}
+                        options={machineLogTypeFormats}
+                        size="small"
                         getOptionLabel={(option) => option.type}
                         isOptionEqualToValue={(option, value) => option?.type === value?.type}
                         renderOption={(props, option) => (
@@ -257,6 +260,7 @@ const toggleCancel = () => navigate(PATH_MACHINE.machines.logs.root(machineId));
                           options={logType?.versions}
                           getOptionLabel={(option) => option}
                           value={logVersion}
+                          size="small"
                           // defaultValue={watch('logType')?.versions?.[0] || null}
                           // isOptionEqualToValue={(option, value) => option?.type === value?.type}
                           // renderOption={(props, option) => (
@@ -272,7 +276,6 @@ const toggleCancel = () => navigate(PATH_MACHINE.machines.logs.root(machineId));
                         variant="contained"
                         component="label"
                         disabled={!logType || !logVersion}
-                        size="large"
                         startIcon={<Iconify icon={ICONS.UPLOAD_FILE.icon} />}
                       >
                         {' '}

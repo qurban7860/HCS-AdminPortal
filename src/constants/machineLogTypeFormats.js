@@ -1,4 +1,4 @@
-export const machineLogs = [
+export const machineLogTypeFormats = [
   {
     type: "ERP",
     disabled: false,
