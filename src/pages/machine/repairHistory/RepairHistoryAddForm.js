@@ -91,7 +91,7 @@ export default function RepairHistoryAddForm() {
   }, [dispatch]);
 
   const onChange = (event) => {
-    const value = event.target.value;
+    const {value} = event.target;
   };
 
   const onSubmit = async (data) => {
