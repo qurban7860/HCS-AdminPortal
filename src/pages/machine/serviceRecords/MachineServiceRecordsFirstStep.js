@@ -17,7 +17,8 @@ import ServiceRecodStepButtons from '../../../components/DocumentForms/ServiceRe
 import SkeletonLine from '../../../components/skeleton/SkeletonLine';
 
 MachineServiceRecordsFirstStep.propTypes = {
-    securityUsers: PropTypes.array,
+    technicians: PropTypes.array,
+    userTechnician: PropTypes.object,
     onChangeConfig : PropTypes.func,
     handleComplete : PropTypes.func,
     handleDraftRequest: PropTypes.func,
@@ -25,7 +26,7 @@ MachineServiceRecordsFirstStep.propTypes = {
     handleBack: PropTypes.func
 };
 
-function MachineServiceRecordsFirstStep( { securityUsers, onChangeConfig, handleComplete, handleDraftRequest, handleDiscard, handleBack} ) {
+function MachineServiceRecordsFirstStep( { technicians, userTechnician, onChangeConfig, handleComplete, handleDraftRequest, handleDiscard, handleBack} ) {
     
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -40,7 +41,6 @@ function MachineServiceRecordsFirstStep( { securityUsers, onChangeConfig, handle
 
     const [ isDraft, setIsDraft ] = useState(false);
     const saveAsDraft = async () => setIsDraft(true);
-
     const machineDecoilers = (machine?.machineConnections || []).map((decoiler) => ({
       _id: decoiler?.connectedMachine?._id ?? null,
       name: decoiler?.connectedMachine?.name ?? null,
@@ -54,7 +54,7 @@ function MachineServiceRecordsFirstStep( { securityUsers, onChangeConfig, handle
           serviceRecordConfiguration:   machineServiceRecord?.serviceRecordConfiguration || null,
           serviceDate:                  machineServiceRecord?.serviceDate || new Date(),
           versionNo:                    machineServiceRecord?.versionNo || 1,
-          technician:                   machineServiceRecord?.technician || ( securityUser || null ),
+          technician:                   machineServiceRecord?.technician || ( userTechnician || null ),
           technicianNotes:              machineServiceRecord?.technicianNotes || '',
           decoilers:!id && (machineDecoilers || []) 
           // textBeforeCheckItems:         machineServiceRecord?.textBeforeCheckItems || '',
@@ -63,7 +63,7 @@ function MachineServiceRecordsFirstStep( { securityUsers, onChangeConfig, handle
         return initialValues;
       },
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [ machineServiceRecord ]
+        [ machineServiceRecord , userTechnician ]
       );
 
     const methods = useForm({
@@ -75,7 +75,6 @@ function MachineServiceRecordsFirstStep( { securityUsers, onChangeConfig, handle
     reset,
     watch,
     setValue,
-    trigger,
     handleSubmit,
     formState: { isSubmitting },
     } = methods;
@@ -113,7 +112,7 @@ function MachineServiceRecordsFirstStep( { securityUsers, onChangeConfig, handle
             const serviceRecord = await dispatch(addMachineServiceRecord(machineId, data));
             await navigate(PATH_MACHINE.machines.serviceRecords.edit(machineId, serviceRecord?._id))
           }else {
-            const serviceRecord = await dispatch(updateMachineServiceRecord(machineId, id, data));
+            await dispatch(updateMachineServiceRecord(machineId, id, data));
             await navigate(PATH_MACHINE.machines.serviceRecords.edit(machineId, id))  
           }
 
@@ -187,10 +186,10 @@ return (
                   <RHFAutocomplete
                       name="technician"
                       label="Technician"
-                      options={ securityUsers }
-                      getOptionLabel={(option) => option?.name || ''}
+                      options={ technicians }
+                      getOptionLabel={(option) => `${option?.firstName || ''} ${option?.lastName || ''}`}
                       isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                      renderOption={(props, option) => ( <li {...props} key={option?._id}>{option.name || ''}</li>)}
+                      renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li>)}
                       />
                   <RHFTextField name="technicianNotes" label="Technician Notes" minRows={3} multiline/> 
           </Stack>

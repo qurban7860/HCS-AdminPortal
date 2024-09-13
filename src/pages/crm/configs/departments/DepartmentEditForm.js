@@ -1,6 +1,5 @@
-/* eslint-disable import/no-unresolved */
 import * as Yup from 'yup';
-import { useEffect, useLayoutEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 // form
@@ -8,11 +7,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Card, Grid, Stack } from '@mui/material';
 // slice
-import { getConfigs } from '../../../../redux/slices/config/config';
-import {
-  updateDepartment,
-  getDepartment,
-} from '../../../../redux/slices/department/department';
+import { updateDepartment } from '../../../../redux/slices/department/department';
 // routes
 import { PATH_SETTING } from '../../../../routes/paths';
 // components
@@ -25,13 +20,13 @@ import { FORMLABELS } from '../../../../constants/default-constants';
 // ----------------------------------------------------------------------
 
 export default function DepartmentEditForm() {
-  const { department } = useSelector((state) => state.department);
-  const { configs } = useSelector((state) => state.config);
+  const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const { id } = useParams();
-
+  const { department } = useSelector((state) => state.department);
+  const [ departmentTypes, setDepartmentTypes ] = useState([])
+  
   const defaultValues = useMemo(
     () => ({
       departmentName: department?.departmentName || '',
@@ -40,18 +35,16 @@ export default function DepartmentEditForm() {
       isDefault: department?.isDefault || false,
       forCustomer: department?.forCustomer || false,
     }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [department]
+    [ department ]
   );
   
-  const defaultDepartmentTypes = useMemo(
-    () =>
-      configs
-        .find((item) => item.name === 'Department_Types')
-        ?.value.split(',')
-        .map((type) => type.trim()),
-    [configs]
-  );
+  useEffect(() =>{
+    const configs = JSON.parse( localStorage.getItem('configurations'))
+    const departTypes = configs?.find((item) => item.name === 'Department_Types')?.value.split(',').map((type) => type.trim())
+    if(Array.isArray(departTypes) &&  departTypes.length > 0){
+      setDepartmentTypes(departTypes)
+    }
+  }, [ ] );
 
   const departmentSchema = Yup.object().shape({
     departmentName: Yup.string().min(2).max(50).required('Name is required').trim(),
@@ -69,17 +62,10 @@ export default function DepartmentEditForm() {
 
   const {
     reset,
-    watch,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
-    watch();
-
-  useLayoutEffect(() => {
-    dispatch(getDepartment(id));
-    dispatch(getConfigs());
-  }, [dispatch, id]);
 
   useEffect(() => {
     if (department) {
@@ -112,9 +98,9 @@ export default function DepartmentEditForm() {
                 <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}>
                   <RHFTextField name="departmentName" label="Name*" />
                   <RHFAutocomplete
-                    label="Select Department Type*"
+                    label="Department Type*"
                     name="departmentType"
-                    options={defaultDepartmentTypes}
+                    options={departmentTypes}
                   />
                   <Grid display="flex">
                     <RHFSwitch name="isActive" label="Active"/>

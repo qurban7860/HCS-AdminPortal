@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useState, memo } from 'react';
+import { useEffect, useState, memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Container, Card, Grid, StepLabel, Step, Stepper, Box, CardContent, CardHeader } from '@mui/material';
 // routes
@@ -11,10 +11,10 @@ import {
   getMachineServiceRecord,
   setFormActiveStep,
 } from '../../../redux/slices/products/machineServiceRecord';
-import { getActiveContacts } from '../../../redux/slices/customer/contact';
+import { getActiveContacts, getActiveSPContacts } from '../../../redux/slices/customer/contact';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import { getActiveSPTechnicalSecurityUsers, getSecurityUser } from '../../../redux/slices/securityUser/securityUser';
+import { getSecurityUser } from '../../../redux/slices/securityUser/securityUser';
 import { getActiveServiceRecordConfigsForRecords } from '../../../redux/slices/products/serviceRecordConfig';
 import { useAuthContext } from '../../../auth/useAuthContext';
 import MachineTabContainer from '../util/MachineTabContainer';
@@ -24,28 +24,30 @@ import MachineServiceRecordsSecondStep from './MachineServiceRecordsSecondStep';
 import MachineServiceRecordsThirdStep from './MachineServiceRecordsThirdStep';
 import { ColorlibConnector, ColorlibStepIcon } from '../../../theme/styles/default-styles';
 import IconTooltip from '../../../components/Icons/IconTooltip';
+import useResponsive from '../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
 function MachineServiceRecordAddForm() {
 
   const dispatch = useDispatch();
-  const { userId } = useAuthContext()
+  const { user, userId } = useAuthContext()
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const { machineId, id } = useParams();
-
+  const { activeSpContacts } = useSelector((state) => state.contact);
   const { machine } = useSelector((state) => state.machine)
-  const { activeSPTechnicalSecurityUsers, securityUser } = useSelector((state) => state.user);
   const { formActiveStep, machineServiceRecord, isLoading } = useSelector((state) => state.machineServiceRecord);
-
-  const [ securityUsers, setSecurityUsers ] = useState([]);
+  const [ technicians, setTechnicians ] = useState([]);
+  const [ userTechnician, setUserTechnician ] = useState( null );
   const [ completed, setCompleted ] = useState([]);
+  
+  const isMobile = useResponsive('down', 'sm');
 
   useEffect(() => {
     dispatch(resetMachineServiceRecord());
     dispatch(getActiveServiceRecordConfigsForRecords(machineId));
-    dispatch(getActiveSPTechnicalSecurityUsers());
+    dispatch(getActiveSPContacts());
     if (machine?.customer?._id) {
       dispatch(getActiveContacts(machine?.customer?._id));
     }
@@ -63,29 +65,22 @@ function MachineServiceRecordAddForm() {
   }, [dispatch, machineId, machine, userId, id, completed]);
 
   useEffect(() => {
-    if (activeSPTechnicalSecurityUsers?.length > 0) {
-      let techniciansList = [...activeSPTechnicalSecurityUsers];
-      if (
-        machineServiceRecord?.technician &&
-        !activeSPTechnicalSecurityUsers.some(
-          (user) => user._id === machineServiceRecord?.technician?._id
-        )
-      ) {
-        techniciansList = [machineServiceRecord?.technician, ...techniciansList].sort((a, b) =>
-          a.name.localeCompare(b.name)
-        );
+    if (activeSpContacts?.length > 0) {
+      const sPContactUser = activeSpContacts?.find( ( el )=> el?._id === user?.contact );
+      if( !machineServiceRecord?._id ){
+        setUserTechnician( sPContactUser )
       }
-      if (
-        securityUser &&
-        !activeSPTechnicalSecurityUsers.some((user) => user._id === securityUser?._id)
-      ) {
-        techniciansList = [securityUser, ...techniciansList].sort((a, b) =>
-          a.name.localeCompare(b.name)
-        );
+      let techniciansList = activeSpContacts?.filter( ( el ) => el?.departmentDetails?.departmentType?.toLowerCase() === 'technical');
+      if ( machineServiceRecord?.technician && !techniciansList?.some( ( el ) => ( el?._id === machineServiceRecord?.technician?._id ) ) ) {
+        techniciansList = [ machineServiceRecord?.technician, ...techniciansList ];
       }
-      setSecurityUsers(techniciansList);
+      if ( !techniciansList?.some( ( el ) => el?._id === user?.contact ) ) {
+        techniciansList = [ sPContactUser, ...techniciansList ]
+      }
+      techniciansList = techniciansList?.sort((a, b) => a?.firstName.localeCompare(b?.firstName) );
+      setTechnicians(techniciansList);
     }
-  }, [activeSPTechnicalSecurityUsers, machineServiceRecord, securityUser]);
+  }, [ activeSpContacts, machineServiceRecord, user?.contact ]);
 
   const handleStep = (step) => async () => {
     if (formActiveStep === 0 && !completed[formActiveStep]) {
@@ -125,7 +120,7 @@ function MachineServiceRecordAddForm() {
     <Container maxWidth={false} >
       <MachineTabContainer currentTabValue='serviceRecords' />
         <Grid container spacing={3}>
-          <Grid item xs={18} md={12}>
+          <Grid item xs={12} md={12}>
             <Card>
               <CardHeader 
                 title={machineServiceRecord?.serviceRecordUid && `Service ID : ${machineServiceRecord?.serviceRecordUid || ''}  (${machineServiceRecord?.status || ''})`}
@@ -139,19 +134,20 @@ function MachineServiceRecordAddForm() {
               <CardContent>
                 <Stepper nonLinear sx={{border:'1px solid lightgray', borderBottom:'none',  borderRadius:'10px 10px 0px 0px', py:1}} activeStep={formActiveStep} connector={<ColorlibConnector  />}>
                   <Step key='step_1'>
-                    <StepLabel sx={{cursor:'pointer'}} onClick={handleStep(0)} icon='1/3'  StepIconComponent={ColorlibStepIcon}>Create Service Record</StepLabel>
+                    <StepLabel sx={{cursor:'pointer'}} onClick={handleStep(0)} icon='1/3'  StepIconComponent={ColorlibStepIcon}>{!isMobile && 'Create Service Record'}</StepLabel>
                   </Step>
                   <Step key='step_2' >
-                    <StepLabel sx={{cursor:'pointer'}} onClick={handleStep(1)} icon='2/3'  StepIconComponent={ColorlibStepIcon}>Check Items Value</StepLabel>
+                    <StepLabel sx={{cursor:'pointer'}} onClick={handleStep(1)} icon='2/3'  StepIconComponent={ColorlibStepIcon}>{!isMobile && 'Check Items Value'}</StepLabel>
                   </Step>
                   <Step key='step_3' >
-                    <StepLabel sx={{cursor:'pointer'}} onClick={handleStep(2)} icon='3/3'  StepIconComponent={ColorlibStepIcon}>Complete Service Record</StepLabel>
+                    <StepLabel sx={{cursor:'pointer'}} onClick={handleStep(2)} icon='3/3'  StepIconComponent={ColorlibStepIcon}>{!isMobile && 'Complete Service Record'}</StepLabel>
                   </Step>
                 </Stepper>
                 <Box sx={{border:'1px solid lightgray', borderRadius:'0px 0px 10px 10px', py:2,marginTop:'0 !important'}}>
                     {formActiveStep===0 &&
                       <MachineServiceRecordsFirstStep 
-                        securityUsers={securityUsers} 
+                        userTechnician={ userTechnician }
+                        technicians={ technicians } 
                         handleComplete={handleComplete}
                         handleDraftRequest={handleDraftRequest}
                         handleDiscard={handleDiscard}
@@ -164,7 +160,7 @@ function MachineServiceRecordAddForm() {
                         handleDiscard={handleDiscard}
                         handleBack={handleBack} 
                         serviceRecord={machineServiceRecord} 
-                       />
+                      />
                     }
 
                     {formActiveStep===2 &&

@@ -16,6 +16,7 @@ export default function AddButtonAboveAccordion({
 }) {
   const [openConfirm, setOpenConfirm] = useState(false);
   const isMobile = useResponsive('down', 'sm');
+
   const handleOpenConfirm = () => {
     if (FormVisibility) {
       setOpenConfirm(true);
@@ -26,12 +27,14 @@ export default function AddButtonAboveAccordion({
 
   const handleCloseConfirm = () => {
     setOpenConfirm(false);
-    // toggleCancel();
+    // toggleCancel(); 
   };
+
   const onConfirm = () => {
     setOpenConfirm(false);
     toggleCancel();
   };
+
   return (
     <>
       <Button
@@ -49,9 +52,13 @@ export default function AddButtonAboveAccordion({
           ...(isMobile && { width: '100%' }),
           opacity: isCustomer ? 0 : 1,
           display: isCustomer && isMobile ? 'none' : 'flex',
+          justifyContent: isMobile ? 'center' : 'flex-start',  textAlign: 'center',
+          '& .MuiButton-startIcon': {
+            marginRight: 0, 
+          },
         }}
       >
-        {!FormVisibility ? name : 'Close Add'}
+        {!isMobile && (FormVisibility ? 'Close Add' : name)}
       </Button>
       <ConfirmDialog
         open={openConfirm}

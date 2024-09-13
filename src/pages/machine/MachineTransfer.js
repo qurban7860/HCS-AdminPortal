@@ -188,7 +188,7 @@ useEffect(()=>{
           <Cover name="Machine Transfer" setting />
         </StyledCardContainer>
           <Grid container >
-          <Grid item xs={18} md={12} >
+          <Grid item xs={12} md={12} >
           <Card sx={{ p: 3 }} >
             <Stack spacing={2} >
               <FormLabel content='Machine Information'/>
@@ -306,10 +306,6 @@ useEffect(()=>{
                     renderInput={(params) => ( <TextField  {...params}  label="Connected Machines"   placeholder="Search"  /> )}
                   />
 
-                <Box rowGap={2} columnGap={2} display="grid"
-                  gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
-                >
-
                   <RHFAutocomplete
                     multiple
                     disableCloseOnSelect
@@ -351,8 +347,7 @@ useEffect(()=>{
                     ChipProps={{ size: 'small' }}
                     id="controllable-states-demo"
                   />
-
-                </Box>
+                  
                   <RHFTextField name="description" label="Description" minRows={3} multiline />
 
                   <Grid container direction="row" alignItems="center" spacing={2}  sx={{

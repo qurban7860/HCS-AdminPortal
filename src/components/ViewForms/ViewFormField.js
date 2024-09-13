@@ -137,7 +137,7 @@ function ViewFormField({
             helperText={srEvaluationComment?.helperText}
             multiline
             minRows={1}
-            maxRows={6}
+            // maxRows={6}
             size="small"
             FormHelperTextProps={{
               sx: {

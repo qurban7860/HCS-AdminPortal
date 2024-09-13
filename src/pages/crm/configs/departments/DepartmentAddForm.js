@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
-import { useLayoutEffect, useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useState, useMemo } from 'react';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
@@ -9,7 +9,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Card, Grid, Stack, Container } from '@mui/material';
 // slice
 import AddFormButtons from '../../../../components/DocumentForms/AddFormButtons';
-import { getConfigs } from '../../../../redux/slices/config/config';
 import { addDepartment } from '../../../../redux/slices/department/department';
 // routes
 import { PATH_SETTING } from '../../../../routes/paths';
@@ -28,8 +27,7 @@ export default function DepartmentAddForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const { configs } = useSelector((state) => state.config);
-
+  const [ departmentTypes, setDepartmentTypes ] = useState([])
 
   const defaultValues = useMemo(
     () => ({
@@ -40,19 +38,14 @@ export default function DepartmentAddForm() {
     }),
     []
   );
-
-  const defaultDepartmentTypes = useMemo(
-    () =>
-      configs
-        .find((item) => item.name === 'Department_Types')
-        ?.value.split(',')
-        .map((type) => type.trim()),
-    [configs]
-  );
-
-  useLayoutEffect(() => {
-    dispatch(getConfigs());
-  }, [dispatch]);
+  
+  useEffect(() =>{
+    const configs = JSON.parse( localStorage.getItem('configurations'))
+      const departTypes = configs?.find((item) => item.name === 'Department_Types')?.value.split(',').map((type) => type.trim())
+      if(Array.isArray(departTypes) &&  departTypes.length > 0){
+        setDepartmentTypes(departTypes)
+      }
+  }, [ ] );
 
   const DepartmentSchema = Yup.object().shape({
     departmentName: Yup.string().min(2, 'Name must be at least 2 characters long').max(50).required('Name is required').trim(),
@@ -99,9 +92,9 @@ export default function DepartmentAddForm() {
                 <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)'}}>
                   <RHFTextField name="departmentName" label="Name*" />
                   <RHFAutocomplete
-                    label="Select Department Type*"
+                    label="Department Type*"
                     name="departmentType"
-                    options={defaultDepartmentTypes}
+                    options={departmentTypes}
                   />
                 </Box>
                 <Grid display="flex" justifyContent="flex-start">

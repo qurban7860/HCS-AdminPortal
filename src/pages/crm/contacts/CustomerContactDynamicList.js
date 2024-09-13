@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { Stack, Grid, Container, Autocomplete, TextField, Table, TableBody } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import { LoadingButton } from '@mui/lab';
-import { CardBase, GridBaseViewForm, StyledScrollbar } from '../../../theme/styles/customer-styles';
+import { CardBase, GridBaseViewForm } from '../../../theme/styles/customer-styles';
 import AddButtonAboveAccordion from '../../../components/Defaults/AddButtonAboveAcoordion';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
@@ -150,39 +150,63 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
             />
           </BreadcrumbsProvider>
         </Grid>
-        <Grid item xs={12} md={6} style={{display:'flex', justifyContent:"flex-end"}}>
-          <Stack direction='row' alignContent='flex-end' spacing={1}>
-            <Autocomplete 
-              freeSolo
-              disableClearable
-              value={ filterFormer }
-              options={[ 'All', 'Former Employee', 'Current Employee' ]}
-              isOptionEqualToValue={(option, val) => option === val}
-              onChange={(event, newValue) => {
-                if (newValue) {
-                  setFilterFormer(newValue);
-                } else {
-                  setFilterFormer('');
-                }
-              }}
-              sx={{ width: '240px' }}
-              renderInput={(params) => <TextField {...params} size='small' label="Filter Contacts" />}
-            />  
-            {!customer?.isArchived && isAllAccessAllowed && contacts.length>0 &&
-              <LoadingButton variant='contained' onClick={onExportCSV} loading={exportingCSV} startIcon={<Iconify icon={BUTTONS.EXPORT.icon} />} >
-                  {BUTTONS.EXPORT.label}
-              </LoadingButton>
-            }
-            {!customer?.isArchived && <AddButtonAboveAccordion
-              name={BUTTONS.NEWCONTACT}
-              toggleChecked={toggleChecked}
-              FormVisibility={contactAddForm}
-              toggleCancel={toggleCancel}
-              disabled={contactEditForm || contactMoveForm}
-            />}
-          </Stack>            
+        <Grid item xs={12} md={6} style={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
+      <Stack direction={isMobile ? 'column' : 'row'} alignItems={isMobile ? 'flex-start' : 'center'} spacing={1} sx={{ width: '100%' }} >
+        <Grid item xs={12} sx={{ width: '100%' }}>
+          <Autocomplete
+            freeSolo
+            disableClearable
+            value={ filterFormer }
+            options={[ 'All', 'Former Employee', 'Current Employee' ]}
+            isOptionEqualToValue={(option, val) => option === val}
+            onChange={(event, newValue) => {
+              if (newValue) {
+                setFilterFormer(newValue);
+              } else {
+                setFilterFormer('');
+              }
+            }}
+            sx={{ width: '100%' }} 
+            renderInput={(params) => (
+              <TextField {...params} size="small" label="Filter Contacts" />
+            )}
+          />
         </Grid>
-      </Grid>
+        <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
+          <Stack direction="row" alignItems="center" spacing={1}>
+            {!customer?.isArchived && isAllAccessAllowed && contacts.length > 0 && (
+              <LoadingButton
+                variant="contained"
+                onClick={onExportCSV}
+                loading={exportingCSV}
+                startIcon={<Iconify icon={BUTTONS.EXPORT.icon} />}
+                sx={{
+                  justifyContent: 'center',
+                  textAlign: 'center',
+                  '& .MuiButton-startIcon': {
+                    marginRight: 0,
+                  },
+                }}
+              >
+                {!isMobile && BUTTONS.EXPORT.label}
+              </LoadingButton>
+            )}
+            {!customer?.isArchived && (
+              <AddButtonAboveAccordion
+                name={BUTTONS.NEWCONTACT}
+                toggleChecked={toggleChecked}
+                FormVisibility={contactAddForm}
+                toggleCancel={toggleCancel}
+                disabled={contactEditForm || contactMoveForm}
+              >
+                {!isMobile && BUTTONS.NEWCONTACT.label}
+              </AddButtonAboveAccordion>
+            )}
+          </Stack>
+        </Grid>
+      </Stack>
+    </Grid>
+    </Grid>
       <Grid container spacing={1} direction="row" justifyContent="flex-end">
         {contacts.length === 0 && (
           <Grid item lg={12} sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>

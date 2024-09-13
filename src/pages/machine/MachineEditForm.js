@@ -22,12 +22,12 @@ import { getActiveCategories, resetActiveCategories } from '../../redux/slices/p
 // hooks
 import { useSnackbar } from '../../components/snackbar';
 // components
-import FormProvider, { RHFTextField, RHFAutocomplete, RHFDatePicker, RHFChipsInput } from '../../components/hook-form';
+import FormProvider, { RHFTextField, RHFAutocomplete, RHFSwitch, RHFDatePicker, RHFChipsInput } from '../../components/hook-form';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 // constants
 import { FORMLABELS } from '../../constants/default-constants';
-import { machineSchema } from '../schemas/machine'
+import { editMachineSchema } from '../schemas/machine'
 
 // ----------------------------------------------------------------------
 
@@ -46,7 +46,7 @@ export default function MachineEditForm() {
   const { activeCategories } = useSelector((state) => state.category);
 
   const methods = useForm({
-    resolver: yupResolver(machineSchema),
+    resolver: yupResolver( editMachineSchema ),
     defaultValues: {
       serialNo: machine.serialNo || '',
       name: machine.name || '',
@@ -71,6 +71,7 @@ export default function MachineEditForm() {
       projectManager: machine?.projectManager || [],
       supportManager: machine?.supportManager || [],
       accountManager: machine?.accountManager || [],
+      isUpdateConnectedMachines: false,
       supportExpireDate: machine.supportExpireDate || null,
       decommissionedDate: machine.decommissionedDate || null,
       description: machine.description || '',
@@ -83,16 +84,15 @@ export default function MachineEditForm() {
     watch,
     handleSubmit,
     setError,
-    formState: { isSubmitting },
+    formState: { isSubmitting, errors },
     setValue,
   } = methods
-
   const {
     parentSerialNo,
     category,
     customer,
   } = watch();
-
+  
   useEffect(() => {
     if(customer?._id ){
       dispatch(getActiveSites(customer?._id));
@@ -129,12 +129,6 @@ export default function MachineEditForm() {
   const toggleCancel = () => navigate(PATH_MACHINE.machines.view(machine._id));
 
   const onSubmit = async (data) => {
-    if (data?.status?.slug === 'intransfer') {
-      setError('status', {
-        type: 'manual',
-        message: 'Please change status In-Transfer is not acceptable',
-      });
-    }else{
       try {
         await dispatch(updateMachine(machine._id ,data));
         await dispatch(getMachine(machine._id));
@@ -145,13 +139,12 @@ export default function MachineEditForm() {
         enqueueSnackbar('Saving failed!', { variant: `error` });
         console.error(error);
       }
-    }
   };
   
   return (
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)} >
         <Grid container>
-          <Grid item xs={18} md={12} >
+          <Grid item xs={12} md={12} >
             <Card sx={{ p: 3 }}>
               <Stack spacing={2}>
                 <Box rowGap={2} columnGap={2} display="grid"
@@ -311,9 +304,6 @@ export default function MachineEditForm() {
                     getOptionLabel={(option) => `${option?.connectedMachine?.serialNo ? option?.connectedMachine?.serialNo : option?.serialNo} ${option?.name ? '-' : ''} ${option?.name ? option.name : ''}`}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
                   />
-                <Box rowGap={2} columnGap={2} display="grid"
-                  gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
-                >
                   {/* <RHFAutocomplete
                     name="status"
                     label="Status" 
@@ -370,10 +360,10 @@ export default function MachineEditForm() {
                     ChipProps={{ size: 'small' }}
                     id="controllable-states-demo"
                   />
+                  <RHFSwitch name="isUpdateConnectedMachines" label="Update Connected Machines" />
                   <RHFDatePicker inputFormat='dd/MM/yyyy' name="supportExpireDate" label="Support Expiry Date" />
-                </Box>
                   <RHFTextField name="description" label="Description" minRows={3} multiline />
-                <ToggleButtons name={FORMLABELS.isACTIVE.name} isMachine />
+                  <RHFSwitch name={FORMLABELS.isACTIVE.name} label={FORMLABELS.isACTIVE.label} />
               </Stack>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
             </Card>

@@ -9,6 +9,7 @@ import { PATH_CRM, PATH_MACHINE } from '../../routes/paths';
 import {
   getMachines,
   getMachine,
+  updateMachine,
   deleteMachine,
   setMachineEditFormVisibility,
   setMachineVerification,
@@ -120,7 +121,6 @@ export default function MachineViewForm() {
     if (machine?.status?.slug === 'transferred') {
       setDisableTransferButton(true);
       setDisableEditButton(true);
-      // setDisableDeleteButton(true);
     } else {
       setDisableTransferButton(false);
       setDisableEditButton(false);
@@ -132,18 +132,6 @@ export default function MachineViewForm() {
   const handleEdit = () => {
     if(machine._id){
       navigate(PATH_MACHINE.machines.edit(machine._id));
-    }
-  };
-
-  const onDelete = async () => {
-    try {
-      await dispatch(deleteMachine(machine._id));
-      dispatch(getMachines());
-      enqueueSnackbar('Machine Archived Successfully!');
-      navigate(PATH_MACHINE.machines.root);
-    } catch (err) {
-      enqueueSnackbar(Snacks.machineFailedDelete, { variant: `error` });
-      console.log('Error:', err);
     }
   };
 
@@ -242,6 +230,49 @@ export default function MachineViewForm() {
     [machine]
   );
   
+
+  const onArchive = async () => {
+    try {
+      const data = {
+        ...machine,
+        isActive: true,
+        isArchived: true,
+      }
+      await dispatch(updateMachine(machine._id, data ));
+      enqueueSnackbar('Machine Archived Successfully!');
+      navigate(PATH_MACHINE.machines.root);
+    } catch (err) {
+      enqueueSnackbar( typeof err === 'string' ? err : Snacks.machineFailedArchive, { variant: `error` });
+      console.log('Error:', err);
+    }
+  };
+
+  const onRestore = async () => {
+    try {
+      const data = {
+        ...machine,
+        isActive: true,
+        isArchived: false,
+      }
+      await dispatch(updateMachine(machine._id, data ));
+      enqueueSnackbar('Machine Restored Successfully!');
+      dispatch(getMachine(machine._id));
+    } catch (err) {
+      enqueueSnackbar( typeof err === 'string' ? err : Snacks.machineFailedRestore, { variant: `error` });
+    }
+  };
+  
+  const onDelete = async () => {
+    try {
+      await dispatch(deleteMachine(machine._id));
+      enqueueSnackbar('Machine Deleted Successfully!');
+      navigate(PATH_MACHINE.machines.archived.root);
+    } catch (err) {
+      enqueueSnackbar( typeof err === 'string' ? err : Snacks.machineFailedDelete, { variant: `error` });
+      console.log('Error:', err);
+    }
+  };
+
   const handleJiraNaviagte = ( )=>{
     const url = `https://howickltd.atlassian.net/jira/servicedesk/projects/HWKSC/queues/custom/3/HWKSC-492`
     window.open( url, '_blank')
@@ -261,7 +292,9 @@ export default function MachineViewForm() {
               disableDeleteButton={disableDeleteButton}
               handleEdit={ machine?.isArchived ? undefined : handleEdit}
               // handleJiraNaviagte={handleJiraNaviagte}
-              onDelete={ machine?.isArchived ? undefined : onDelete}
+              onArchive={ machine?.isArchived ? undefined : onArchive }
+              onRestore={ machine?.isArchived ? onRestore : undefined }
+              onDelete={ machine?.isArchived ? onDelete : undefined }
               handleTransfer={ machine?.isArchived ? undefined : () => navigate(PATH_MACHINE.machines.transfer(machine?._id))}
               backLink={() => navigate( machine?.isArchived ? PATH_MACHINE.machines.archived.root : PATH_MACHINE.machines.root)}
               machineSupportDate={ machine?.isArchived ? undefined : defaultValues?.supportExpireDate}

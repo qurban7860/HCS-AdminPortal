@@ -55,10 +55,10 @@ export const MachineByYearsView = Loadable(lazy(() => import('../pages/dashboard
 // ----------------------------------------------------------------
 
 // DASHBOARD
-export const Visits = Loadable(lazy(() => import('../pages/calendar/CalendarPage')));
-export const NewVisits = Loadable(lazy(() => import('../pages/calendar/CalendarPage')));
-export const EditVisits = Loadable(lazy(() => import('../pages/calendar/CalendarPage')));
-export const ViewVisits = Loadable(lazy(() => import('../pages/calendar/CalendarPage')));
+export const Visits = Loadable(lazy(() => import('../pages/calendar/CalendarView')));
+export const NewVisits = Loadable(lazy(() => import('../pages/calendar/CalendarView')));
+export const EditVisits = Loadable(lazy(() => import('../pages/calendar/CalendarView')));
+export const ViewVisits = Loadable(lazy(() => import('../pages/calendar/CalendarView')));
 
 // JIRA REPORT
 export const SupportTickets = Loadable(lazy(() => import('../pages/jira/JiraList')));

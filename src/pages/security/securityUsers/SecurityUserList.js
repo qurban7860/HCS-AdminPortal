@@ -2,13 +2,12 @@ import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 // @mui
-import { Card, Table, TableBody, Container, TableContainer } from '@mui/material';
+import { Table, TableBody, Container, TableContainer } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // routes
 import { PATH_SECURITY } from '../../../routes/paths';
 // components
-import { useSnackbar } from '../../../components/snackbar';
 import Scrollbar from '../../../components/scrollbar';
 import { Cover } from '../../../components/Defaults/Cover';
 import {
@@ -41,8 +40,6 @@ import { StyledCardContainer } from '../../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
 
-// const STATUS_OPTIONS = ['all', 'active', 'banned'];
-
 const ROLE_OPTIONS = ['Administrator', 'Normal User', 'Guest User', 'Restriced User'];
 
 const TABLE_HEAD = [
@@ -50,9 +47,6 @@ const TABLE_HEAD = [
   { id: 'login', visibility: 'xs1', label: 'Login', align: 'left' },
   { id: 'phone', visibility: 'xs2', label: 'Phone Number', align: 'left' },
   { id: 'roles.name.[]', visibility: 'md1', label: 'Roles', align: 'left' },
-  // { id: 'regions.name.[]', visibility: 'md1', label: 'Regions', align: 'left' },
-  // { id: 'isOnline', label: 'Online', align: 'center' },
-  // { id: 'currentEmployee', label: 'Employed', align: 'center' },
   { id: 'contact.firstName', label: 'Contact', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
@@ -76,11 +70,6 @@ export default function SecurityUserList() {
   const dispatch = useDispatch();
   const {
     securityUsers,
-    error,
-    responseMessage,
-    initial,
-    securityUserEditFormVisibility,
-    securityUserFormVisibility,
     filterBy, 
     employeeFilterList, 
     filterRegion,
@@ -89,23 +78,19 @@ export default function SecurityUserList() {
     rowsPerPage, 
     isLoading
   } = useSelector((state) => state.user);
-
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));
     dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
   };
   const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
   
-  const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
-  const [ tableData, setTableData ] = useState([]);
   const [ filterName, setFilterName ] = useState('');
   const [ filterRole, setFilterRole ] = useState('all');
   const [ filterStatus, setFilterStatus ] = useState('all');
   const [ activeFilterListBy, setActiveFilterListBy ] = useState(activeFilterList);
   const [ employeeFilterListBy, setEmployeeFilterListBy ] = useState(employeeFilterList);
   const [ filterByRegion, setFilterByRegion ] = useState(filterRegion);
-
 
   useLayoutEffect(() => {
     dispatch(getSecurityUsers());
@@ -114,17 +99,10 @@ export default function SecurityUserList() {
       dispatch(resetSecurityUsers());
       dispatch(resetActiveRegions());
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, securityUserEditFormVisibility, securityUserFormVisibility]);
-
-  useEffect(() => {
-    if (initial) {
-      setTableData(securityUsers);
-    }
-  }, [securityUsers, error, enqueueSnackbar, responseMessage, initial]);
+  }, [ dispatch ]);
 
   const dataFiltered = applyFilter({
-    inputData: tableData,
+    inputData: securityUsers,
     comparator: getComparator(order, orderBy),
     filterName,
     filterRole,
@@ -134,16 +112,10 @@ export default function SecurityUserList() {
     filterByRegion,
   });
   
-
-  
   const denseHeight = 60;
   const isFiltered = filterName !== '' || filterRole !== 'all' || filterStatus !== 'all';
-  const isNotFound =
-    (!dataFiltered.length && !!filterName) ||
-    (!dataFiltered.length && !!filterRole) ||
-    (!dataFiltered.length && !!filterStatus) || 
-    (!dataFiltered.length && !isLoading);
-
+  const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
+    
   const debouncedSearch = useRef(debounce((value) => {
     dispatch(ChangePage(0))
     dispatch(setFilterBy(value))
@@ -197,8 +169,7 @@ useEffect(() => {
 
 useEffect(()=>{
     setFilterName(filterBy)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-},[])
+},[ filterBy ] )
 
   const handleFilterRole = (event) => {
     setPage(0);
@@ -206,7 +177,6 @@ useEffect(()=>{
   };
 
   const handleViewRow = (id) => {
-    // dispatch(getSecurityUser(id))
     navigate(PATH_SECURITY.users.view(id));
   };
 
@@ -255,7 +225,7 @@ useEffect(()=>{
             <TableSelectedAction
               dense={dense}
               numSelected={selected.length}
-              rowCount={tableData.length}
+              rowCount={securityUsers?.length || 0 }
             />
 
             <Scrollbar>

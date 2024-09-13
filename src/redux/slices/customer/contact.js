@@ -347,7 +347,7 @@ export function getContacts(customerID, isCustomerArchived) {
     try {
       const params = {
         orderBy : {
-          createdAt: -1
+          firstName: 1
         }
       }
 

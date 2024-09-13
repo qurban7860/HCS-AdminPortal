@@ -91,7 +91,7 @@ export function DocumentGalleryItem({ image, isLoading, onOpenLightbox, onOpenFi
                             // justifyContent:'space-evenly'
                         }}
                     >       
-                        {onOpenFile && <Button sx={{width: onDeleteFile && !isArchived ? '33%' : '50%', borderRadius:0}} disabled={!(fileType?.startsWith('image') || fileType?.startsWith('application/pdf'))} onClick={fileType?.startsWith('image')?onOpenLightbox:onOpenFile}><Iconify icon="carbon:view" /></Button>}
+                        <Button sx={{width: onDeleteFile && !isArchived ? '33%' : '50%', borderRadius:0}} disabled={!(fileType?.startsWith('image') || fileType?.startsWith('application/pdf'))} onClick={fileType?.startsWith('image')?onOpenLightbox:onOpenFile}><Iconify icon="carbon:view" /></Button>
                         { onDownloadFile && <Button sx={{width: onDeleteFile && !isArchived ? '33%' : '50%', borderRadius:0}}><Iconify icon="solar:download-square-linear" onClick={onDownloadFile} /></Button>}
                         {onDeleteFile && !isArchived && <Button sx={{width:'34%', borderRadius:0}} color='error' onClick={()=> seDeleteConfirm(true)}><Iconify icon="radix-icons:cross-circled" /></Button>}
                     </ButtonGroup>

@@ -47,6 +47,8 @@ function ViewFormEditDeleteButtons({
   // Handlers
   handleVerification,
   handleVerificationTitle,
+  onArchive,
+  onRestore,
   onDelete,
   handleEdit,
   handleJiraNaviagte,
@@ -110,7 +112,9 @@ function ViewFormEditDeleteButtons({
     isSecurityUserAccessAllowed, } = useAuthContext();
 
   const dispatch = useDispatch();
+  
   const [openConfirm, setOpenConfirm] = useState(false);
+  const [ openRestoreConfirm, setOpenRestoreConfirm ] = useState(false);
   const [openUserInviteConfirm, setOpenUserInviteConfirm] = useState(false);
   const [openVerificationConfirm, setOpenVerificationConfirm] = useState(false);
   const [openUserStatuConfirm, setOpenUserStatuConfirm] = useState(false);
@@ -191,8 +195,12 @@ function ViewFormEditDeleteButtons({
       setOpenVerificationConfirm(true);
     }
 
-    if (dialogType === 'delete' && ( !isDisableDelete || !disableDeleteButton ) ) {
+    if ( dialogType === 'delete' && ( !isDisableDelete || !disableDeleteButton ) ) {
       setOpenConfirm(true);
+    }
+    
+    if ( dialogType === 'restore' && !isDisableDelete ) {
+      setOpenRestoreConfirm(true);
     }
 
     if (dialogType === 'transfer') {
@@ -229,10 +237,16 @@ function ViewFormEditDeleteButtons({
       reset();
       setOpenVerificationConfirm(false);
     }
-    if (dialogType === 'delete') {
+    if (dialogType === 'delete' || dialogType === 'restore' ) {
       reset();
       setOpenConfirm(false);
     }
+
+    if ( dialogType === 'restore' ) {
+      reset();
+      setOpenRestoreConfirm(false);
+    }
+
     if (dialogType === 'transfer') {
       dispatch(setTransferDialogBoxVisibility(false));
     }
@@ -266,6 +280,12 @@ function ViewFormEditDeleteButtons({
     await handleCloseConfirm('delete');
   };
 
+  const handleArchive = async () => {
+    await onArchive();
+    await handleCloseConfirm('delete');
+  };
+
+  
   const [verifiedAnchorEl, setVerifiedAnchorEl] = useState(null);
   const [verifiedBy, setVerifiedBy] = useState([]);
 
@@ -762,13 +782,22 @@ function ViewFormEditDeleteButtons({
         )}
 
         {/* delete button */}
-        {id !== userId  && !mainSite && onDelete && !archived && (
+        {id !== userId  && !mainSite && ( onArchive || onDelete ) && !archived && (
           <IconTooltip
-            title="Archive"
+            title={ onArchive ? "Archive" : "Delete" }
             disabled={ isDisableDelete || disableDeleteButton }
             onClick={() => {  handleOpenConfirm('delete') }}
             color={( isDisableDelete || disableDeleteButton ) ? "#c3c3c3":"#FF0000"}
-            icon="mdi:archive"
+            icon={ onArchive ? "mdi:archive" : "mdi:delete" } 
+          />
+        )}
+        { onRestore && isSecurityUserAccessAllowed && !isSecurityReadOnly && (
+          <IconTooltip
+            title="Restore"
+            disabled={ isDisableDelete }
+            onClick={() => {  handleOpenConfirm('restore') }}
+            color={ isDisableDelete ? "#c3c3c3":"#FF0000"}
+            icon="mdi:restore"
           />
         )}
       </StyledStack>
@@ -895,17 +924,37 @@ function ViewFormEditDeleteButtons({
         onClose={() => {
           handleCloseConfirm('delete');
         }}
-        title="Archive"
-        content="Are you sure you want to Archive?"
+        title={ onArchive ? "Archive" : "Delete" }
+        content={`Are you sure you want to ${ onArchive ? "Archive" : "Delete" }?`}
         action={
           <LoadingButton
             variant="contained"
             color="error"
             loading={isSubmitted || isSubmitting || isLoading}
             disabled={isSubmitted || isSubmitting || isLoading}
-            onClick={handleSubmit(handleDelete)}
+            onClick={handleSubmit( onArchive ? handleArchive : handleDelete )}
           >
-            Archive
+            { onArchive ? "Archive" : "Delete" }
+          </LoadingButton>
+        }
+      />
+
+      <ConfirmDialog
+        open={ openRestoreConfirm && !isSubmitSuccessful }
+        onClose={() => {
+          handleCloseConfirm('restore');
+        }}
+        title="Restore"
+        content="Are you sure you want to Restore?"
+        action={
+          <LoadingButton
+            variant="contained"
+            color="error"
+            loading={isSubmitted || isSubmitting || isLoading}
+            disabled={isSubmitted || isSubmitting || isLoading}
+            onClick={ handleSubmit( onRestore ) }
+          >
+            Restore
           </LoadingButton>
         }
       />
@@ -981,6 +1030,8 @@ ViewFormEditDeleteButtons.propTypes = {
   isInviteLoading:PropTypes.bool,
   handleEdit: PropTypes.func,
   handleJiraNaviagte: PropTypes.func,
+  onArchive: PropTypes.func,
+  onRestore: PropTypes.func,
   onDelete: PropTypes.func,
   type: PropTypes.string,
   sites: PropTypes.bool,

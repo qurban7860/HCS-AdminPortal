@@ -41,7 +41,7 @@ const TABLE_HEAD = [
   { id: 'serviceRecordUid', label: 'Service ID', align: 'left' },
   { id: 'status', label: 'Status', align: 'left' },
   { id: 'serviceRecordConfig.docTitle', label: 'Service Configuration', align: 'left' },
-  { id: 'versionNo', visibility: 'xs5', label: 'Version', align: 'left' },
+  { id: 'versionNo', label: 'Version', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
   { id: 'createdBy.name', label: 'Created By', align: 'left' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
