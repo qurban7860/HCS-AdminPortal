@@ -76,7 +76,7 @@ const LogGraphReport = () => {
       </StyledCardContainer>
     </Container>
       <MachineLogsList logs={logs} />
-    <Container maxWidth={false}>
+    {/* <Container maxWidth={false}>
       <Grid container mt={1} spacing={3}>
         <Grid item xs={12} md={6}>
           <Card sx={{ p: 3, boxShadow: 3 }}>
@@ -108,7 +108,6 @@ const LogGraphReport = () => {
           </Card>
         </Grid>
 
-        {/* Bar Chart */}
         <Grid item xs={12} md={6}>
           <Card sx={{ p: 3, boxShadow: 3 }}>
             <Typography variant="h6" gutterBottom>
@@ -137,7 +136,7 @@ const LogGraphReport = () => {
           </Card>
         </Grid>
       </Grid>
-    </Container>
+    </Container> */}
     </>
   );
 };

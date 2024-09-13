@@ -6,13 +6,11 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
 import FormProvider, { RHFTextField, RHFAutocomplete } from '../../components/hook-form';
-// routes
 import { PATH_MACHINE_LOGS } from '../../routes/paths';
 import { getActiveCustomerMachines, resetActiveCustomerMachines } from '../../redux/slices/products/machine';
 import { getActiveCustomers } from '../../redux/slices/customer/customer';
 import { machineSchema } from '../schemas/machine'; 
 import useResponsive from '../../hooks/useResponsive';
-
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
 
@@ -61,38 +59,15 @@ function AllMachineLogs() {
     setLogType(event.target.value);
   };
 
-  const fetchLogs = async (formData) => {
-    try {
-      const response = await fetch('{{baseUrl}}/productLogs/graph', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-  
-      if (!response.ok) {
-        throw new Error('Failed to fetch logs');
-      }
-  
-      const logsData = await response.json();
-      return logsData;
-    } catch (error) {
-      console.error('Error fetching logs:', error);
-      return [];
-    }
-  };
-  
-
-  const onSubmit = async (data) => {
+  const onSubmit = (data) => {
     const formData = {
       ...data,
       dates: [isDateFrom, isDateTo],
       customerId: selectedCustomer ? selectedCustomer._id : null,
+      logType,
     };
-  
-    const logs = await fetchLogs(formData);
-    navigate(PATH_MACHINE_LOGS.machineLogs.LogGraphReport, { state: { logs } });
+
+    navigate(PATH_MACHINE_LOGS.machineLogs.LogGraphReport, { state: { logs: formData } });
   };
 
   const handleCustomerChange = useCallback((newCustomer) => {
