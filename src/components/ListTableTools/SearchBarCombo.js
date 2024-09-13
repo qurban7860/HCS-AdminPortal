@@ -83,7 +83,7 @@ function SearchBarCombo({
   const { selectedLogType } = useSelector((state) => state.machineErpLogs);
   const [ isDateFrom, setIsDateFrom ] = useState(new Date( Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]);
   const [ isDateTo, setIsDateTo ] = useState(new Date(Date.now()).toISOString().split('T')[0]);
-  const [ selectedLogTypeState, setSelectedLogTypeState ] = useState(selectedLogType || logTypes[0]);
+  const [ selectedLogTypeState, setSelectedLogTypeState ] = useState(selectedLogType || logTypes?.[0]);
   const isMobile = useResponsive('sm', 'down');
   const dispatch = useDispatch()
 
