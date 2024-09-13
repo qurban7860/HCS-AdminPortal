@@ -33,9 +33,7 @@ export default function RepairHistoryEdit() {
 
 
   return (
-    <>
-
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+    <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
           heading="Edit Site"
           links={[
@@ -50,6 +48,5 @@ export default function RepairHistoryEdit() {
 
         <SiteEditForm />
       </Container>
-    </>
   );
 }

@@ -1,7 +1,7 @@
 import debounce from 'lodash/debounce';
 import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 // @mui
-import { Container, Table, Checkbox, TableBody, TableContainer, TableRow, TableCell, TableHead, TableSortLabel } from '@mui/material';
+import { Container, Table, TableBody, TableContainer, TableRow, TableCell, TableHead, TableSortLabel } from '@mui/material';
 // routes
 import { useNavigate, useParams } from 'react-router-dom';
 import { PATH_MACHINE } from '../../../routes/paths';

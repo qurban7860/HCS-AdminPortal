@@ -8,11 +8,9 @@ ViewFormSubtitle.propTypes = {
   };
 function ViewFormSubtitle({heading,sm}) {
     return (
-      <>
-        <Grid item xs={12} sm={sm} sx={{ pt:2, overflowWrap: "break-word", }}>
+      <Grid item xs={12} sm={sm} sx={{ pt:2, overflowWrap: "break-word", }}>
                 <Typography variant="subtitle2" sx={{ color: '#131414' }}>{heading}</Typography>
         </Grid>
-      </>
     )
 }
 export default memo(ViewFormSubtitle)

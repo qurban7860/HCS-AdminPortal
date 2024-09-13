@@ -80,9 +80,10 @@ function SearchBarCombo({
   const { pm2Logs, pm2Environment, pm2Environments ,pm2LogType, pm2Lines } = useSelector((state) => state.pm2Logs);
   const { spContacts } = useSelector((state) => state.contact);
   const { activeRegions } = useSelector((state) => state.region);
+  const { selectedLogType } = useSelector((state) => state.machineErpLogs);
   const [ isDateFrom, setIsDateFrom ] = useState(new Date( Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]);
   const [ isDateTo, setIsDateTo ] = useState(new Date(Date.now()).toISOString().split('T')[0]);
-  const [ selectedLogTypeState, setSelectedLogTypeState ] = useState(logTypes[0]);
+  const [ selectedLogTypeState, setSelectedLogTypeState ] = useState(selectedLogType || logTypes[0]);
   const isMobile = useResponsive('sm', 'down');
   const dispatch = useDispatch()
 
@@ -212,7 +213,6 @@ function SearchBarCombo({
             <Autocomplete
               disableClearable
               value={selectedLogTypeState}
-              defaultValue={logTypes[0]}
               options={logTypes}
               getOptionLabel={(option) => option.type}
               isOptionEqualToValue={(option, val) => option?.type === val?.type}

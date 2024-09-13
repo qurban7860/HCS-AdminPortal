@@ -138,8 +138,7 @@ export default function SecurityUserProfile() {
                 },
               },
             }}
-          >
-          </Tabs>
+           />
         </Card>
         <Card sx={{ p: 3 }}>
           <ViewFormEditDeleteButtons handleEdit={handleEdit} />

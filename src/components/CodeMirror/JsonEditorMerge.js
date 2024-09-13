@@ -7,8 +7,8 @@ import './style.css';
 import ViewFormAuditBlock from '../ViewForms/ViewFormAuditBlock';
 
 // Please don't destrcture below code! It will not work properly.
-const Original = CodeMirrorMerge.Original;
-const Modified = CodeMirrorMerge.Modified;
+const {Original} = CodeMirrorMerge;
+const {Modified} = CodeMirrorMerge;
 
 JsonEditorMerge.propTypes = {
   value: PropTypes.object,
