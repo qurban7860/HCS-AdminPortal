@@ -215,8 +215,8 @@ const { contact, customer } = watch();
                 name="roles"
                 label="Roles*"
                 options={ activeRoles.filter(role => 
-                ( customer?.type?.toUpperCase() === 'SP' && role?.roleType?.toUpperCase() !== 'CUSTOMER') 
-                || ( role?.roleType?.toUpperCase() === 'CUSTOMER' && customer?.type?.toUpperCase() !== 'SP') ) }
+                ( customer?.type?.toUpperCase() === 'SP' && role?.roleType?.toUpperCase() === 'CUSTOMER') 
+                || ( role?.roleType?.toUpperCase() !== 'CUSTOMER' && customer?.type?.toUpperCase() !== 'SP') ) }
                 getOptionLabel={(option) => `${option?.name || ''} `}
                 isOptionEqualToValue={(option, value) => option?._id === value?._id}
                 renderOption={(props, option, { selected }) => ( <li {...props}> <Checkbox checked={selected} />{option?.name || ''}</li> )}

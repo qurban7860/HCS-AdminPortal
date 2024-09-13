@@ -259,7 +259,6 @@ export default function MachineViewForm() {
       dispatch(getMachine(machine._id));
     } catch (err) {
       enqueueSnackbar( typeof err === 'string' ? err : Snacks.machineFailedRestore, { variant: `error` });
-      throw new Error(err);
     }
   };
   
