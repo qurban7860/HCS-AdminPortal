@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router';
 import { Button, Grid, Typography, Box } from '@mui/material';
 import { StyledRoot, StyledInfo } from '../../theme/styles/default-styles';
 // utils
-import { PATH_CRM, PATH_MACHINE, PATH_SETTING } from '../../routes/paths';
+import { PATH_CRM, PATH_MACHINE, PATH_SETTING, PATH_MACHINE_LOGS } from '../../routes/paths';
 // auth
 import CoverSettingsIcons from './CoverSettingsIcons';
 import CoverTitles from './CoverTitles';
@@ -27,6 +27,9 @@ Cover.propTypes = {
   isArchived: PropTypes.bool,
   isArchivedCustomers: PropTypes.bool,
   isArchivedMachines: PropTypes.bool,
+  productionLog: PropTypes.bool,
+  coilLog: PropTypes.bool,
+  erpLog: PropTypes.bool,
 };
 
 export function Cover({
@@ -41,6 +44,9 @@ export function Cover({
   isArchived,
   isArchivedCustomers,
   isArchivedMachines,
+  productionLog,
+  coilLog,
+  erpLog
 }) {
   const navigate = useNavigate();
   const handleSettingsNavigate = () => navigate(PATH_SETTING.root);
@@ -49,6 +55,9 @@ export function Cover({
   const linkArchivedCustomers = () =>  navigate(PATH_CRM.customers.archived.root);
   const linkArchivedMachines = () =>  navigate(PATH_MACHINE.machines.archived.root);
   const handleBackLink = () => window.history.back();
+  const handleCoilLog = () => navigate(PATH_MACHINE_LOGS.machineLogs.CoilGraph);
+  const handleErpLog = () => navigate(PATH_MACHINE_LOGS.machineLogs.ErpGraph);
+  const handleProductionLog = () => navigate(PATH_MACHINE_LOGS.machineLogs.ProductionGraph);
   const { isAllAccessAllowed, isSettingReadOnly } = useAuthContext();
   const isMobile = useResponsive('down', 'sm');
   const [expandedButton, setExpandedButton] = useState(null);
@@ -80,10 +89,13 @@ export function Cover({
         </Grid>
         <Grid item>
         <Box sx={{ display: 'flex', flexDirection: 'row',  alignItems: 'flex-start', justifyContent: isMobile ? 'center' : 'flex-start',  textAlign: 'center', '& .MuiButton-startIcon': { marginRight: 0 } }}>
-          { !isArchived && customerSites && (<Button size='small' startIcon={<Iconify icon="mdi:map-legend" />} variant='outlined' sx={{ mr: 1 }} onClick={() => handleOnClick('sites', linkCustomerSites)}> {(!isMobile || expandedButton === 'sites') && ( <Typography variant="caption" sx={{ fontWeight: 'bold' }}>Sites</Typography> )}</Button> )}
-          { !isArchived && customerContacts && (<Button size='small' startIcon={<Iconify icon="mdi:account-multiple" />} variant='outlined' sx={{ mr: 1 }}  onClick={() => handleOnClick('contacts', linkCustomerContacts)}> {(!isMobile || expandedButton === 'contacts') && ( <Typography variant="caption" sx={{ fontWeight: 'bold' }}>Contacts</Typography> )}</Button> )}
+          { !isArchived && customerSites && (<Button size='small' startIcon={<Iconify icon="mdi:map-legend" sx={{ mr: 0.3 }}/>} variant='outlined' sx={{ mr: 1 }} onClick={() => handleOnClick('sites', linkCustomerSites)}> {(!isMobile || expandedButton === 'sites') && ( <Typography variant="caption" sx={{ fontWeight: 'bold' }}>Sites</Typography> )}</Button> )}
+          { !isArchived && customerContacts && (<Button size='small' startIcon={<Iconify icon="mdi:account-multiple" sx={{ mr: 0.3 }}/>} variant='outlined' sx={{ mr: 1 }}  onClick={() => handleOnClick('contacts', linkCustomerContacts)}> {(!isMobile || expandedButton === 'contacts') && ( <Typography variant="caption" sx={{ fontWeight: 'bold' }}>Contacts</Typography> )}</Button> )}
           { isAllAccessAllowed && !isSettingReadOnly && isArchivedCustomers && (<Button size='small' startIcon={<Iconify icon="fa6-solid:users-slash" sx={{ mr: 0.5 }}/>} variant='outlined' onClick={() => handleOnClick('archivedCustomers', linkArchivedCustomers)}> {(!isMobile || expandedButton === 'archivedCustomers') && ( <Typography variant="caption" sx={{ fontWeight: 'bold', fontSize: { xs: '0.65rem', sm: '0.75rem' }, }}>Archived Customers</Typography> )}</Button> )}
           { isAllAccessAllowed && !isSettingReadOnly && isArchivedMachines && <Button size='small' startIcon={<Iconify icon="fluent:table-delete-column-16-filled" sx={{ mr: 0.3 }}/>} variant='outlined' sx={{ml:2}} onClick={linkArchivedMachines}>Archived Machines</Button>}
+          {erpLog && (<Button size='small' startIcon={<Iconify icon="mdi:report" sx={{ mr: 0.3 }}/>} variant='outlined' sx={{ mr: 1 }} onClick={() => handleOnClick('erpLog', handleErpLog)}> {(!isMobile || expandedButton === 'coilLog') && ( <Typography variant="caption" sx={{ fontWeight: 'bold', fontSize: { xs: '0.65rem', sm: '0.75rem' }, }}>Erp Log</Typography> )}</Button> )}
+          {coilLog && (<Button size='small' startIcon={<Iconify icon="mdi:graph-bar" sx={{ mr: 0.3 }}/>} variant='outlined' sx={{ mr: 1 }} onClick={() => handleOnClick('coilLog', handleCoilLog)}> {(!isMobile || expandedButton === 'coilLog') && ( <Typography variant="caption" sx={{ fontWeight: 'bold', fontSize: { xs: '0.65rem', sm: '0.75rem' }, }}>Coil Log</Typography> )}</Button> )}
+          {productionLog && (<Button size='small' startIcon={<Iconify icon="mdi:chart-line" sx={{ mr: 0.3 }}/>} variant='outlined' onClick={() => handleOnClick('productionLog', handleProductionLog)}> {(!isMobile || expandedButton === 'productionLog') && ( <Typography variant="caption" sx={{ fontWeight: 'bold', fontSize: { xs: '0.65rem', sm: '0.75rem' }, }}>Production Log</Typography> )}</Button> )}
         </Box>
         </Grid>
       </Grid>

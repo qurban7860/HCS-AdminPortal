@@ -3,8 +3,8 @@ import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 // @mui
 import { Container, Table, Checkbox, TableBody, TableContainer, TableRow, TableCell, TableHead, TableSortLabel } from '@mui/material';
 // routes
-import { useNavigate, useParams } from 'react-router-dom';
-import { PATH_MACHINE } from '../../../routes/paths';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { PATH_MACHINE, PATH_MACHINE_LOGS } from '../../../routes/paths';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // components
@@ -61,6 +61,7 @@ export default function MachineLogsList(){
 
   const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
   const dispatch = useDispatch();
+  const location = useLocation();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
@@ -126,7 +127,7 @@ export default function MachineLogsList(){
 
   return (
     <Container maxWidth={false} >
-          <MachineTabContainer currentTabValue='logs' />
+     { location.pathname !== PATH_MACHINE_LOGS.machineLogs.LogGraphReport ? <MachineTabContainer currentTabValue='logs' /> : undefined } 
         <TableCard>
           <MachineLogsListTableToolbar
             filterName={filterName}
@@ -150,7 +151,7 @@ export default function MachineLogsList(){
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <Scrollbar>
               <Table size="small" sx={{ minWidth: 360 }}>
-<TableHead >
+    <TableHead >
       <TableRow>
         {TABLE_HEAD.map((headCell, index ) => 
           (

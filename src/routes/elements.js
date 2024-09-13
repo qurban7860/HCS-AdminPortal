@@ -220,6 +220,16 @@ export const MachineJiraList = Loadable(lazy(() => import('../pages/machine/jira
 
 export const MachineSetting = Loadable(lazy(() => import('../pages/machineSettings/Machine')));
 
+// ---------------------  MACHINE LOGS -------------------------------------------
+
+export const MachineLogList = Loadable(lazy(() => import('../pages/machineLogs/AllMachinesLogs')));
+export const LogGraphReport = Loadable(lazy(() => import('../pages/machineLogs/LogGraphReport')));
+export const CoilGraph = Loadable(lazy(() => import('../pages/machineLogs/CoilLog')));
+export const ErpGraph = Loadable(lazy(() => import('../pages/machineLogs/ErpLog')));
+export const ProductionGraph = Loadable(lazy(() => import('../pages/machineLogs/ProductionLog')));
+
+
+
 // --------------------- Categories & Models ----------------------
 
 // MACHINE SETTINGS Machine Groups
