@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Container, Typography, Card, Grid, Box, Skeleton } from '@mui/material';
+import React, { useState } from 'react';
+import { Container, Typography, Card, Grid, Box } from '@mui/material';
 import { Line } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -11,7 +11,6 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import axios from 'axios';
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
 
@@ -35,57 +34,23 @@ const Data = {
 };
 
 const CoilLogGraph = () => {
-  const [chartData, setChartData] = useState(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get('/api/1.0.0/logs/coil/graph');
-        const { timestamps, measurements } = response.data;
-        if (Array.isArray(timestamps)) {
-          setChartData({
-            labels: timestamps,
-            datasets: [
-              {
-                label: 'Coil Measurement (mm)',
-                data: measurements,
-                borderColor: '#1e88e5',
-                backgroundColor: 'rgba(30, 136, 229, 0.2)',
-                fill: true,
-                borderWidth: 2,
-                tension: 0.3,
-                pointRadius: 4,
-                pointBorderColor: '#1e88e5',
-                pointBackgroundColor: '#fff',
-              },
-            ],
-          });
-        } else {
-          throw new Error('Invalid data structure');
-        }
-      } catch (err) {
-        console.error('Error fetching Coil logs data, using example data:', err);
-        setChartData({
-          labels: Data.timestamps,
-          datasets: [
-            {
-              label: 'Coil Measurement (mm)',
-              data: Data.measurements,
-              borderColor: '#1e88e5',
-              backgroundColor: 'rgba(30, 136, 229, 0.2)',
-              fill: true,
-              borderWidth: 2,
-              tension: 0.3,
-              pointRadius: 4,
-              pointBorderColor: '#1e88e5',
-              pointBackgroundColor: '#fff',
-            },
-          ],
-        });
-      }
-    };
-    fetchData();
-  }, []);
+  const [chartData, setChartData] = useState({
+    labels: Data.timestamps,
+    datasets: [
+      {
+        label: 'Coil Measurement (mm)',
+        data: Data.measurements,
+        borderColor: '#1e88e5',
+        backgroundColor: 'rgba(30, 136, 229, 0.2)',
+        fill: true,
+        borderWidth: 2,
+        tension: 0.3,
+        pointRadius: 4,
+        pointBorderColor: '#1e88e5',
+        pointBackgroundColor: '#fff',
+      },
+    ],
+  });
 
   return (
     <Container maxWidth={false}>
@@ -99,16 +64,15 @@ const CoilLogGraph = () => {
               Coil Log Data
             </Typography>
             <div style={{ position: 'relative', width: '100%', height: '500px' }}>
-            {!chartData ? (
-            <Skeleton variant="rectangular" width="100%" height={500} />
-          ) : (
               <Line
                 data={chartData}
-                options={{ responsive: true, maintainAspectRatio: true,
+                options={{
+                  responsive: true,
+                  maintainAspectRatio: true,
                   scales: {
                     x: {
                       title: { display: true, text: 'Timestamp', font: { size: 14, weight: 'bold' }, color: '#616161' },
-                      ticks: { autoSkip: true, maxTicksLimit: 10, color: '#616161' }
+                      ticks: { autoSkip: true, maxTicksLimit: 10, color: '#616161' },
                     },
                     y: {
                       title: { display: true, text: 'Measurement (mm)', font: { size: 14, weight: 'bold' }, color: '#616161' },
@@ -116,13 +80,12 @@ const CoilLogGraph = () => {
                     },
                   },
                   plugins: {
-                    legend: { display: true, position: 'top', labels: { font: { size: 14 }, color: '#424242' }},
+                    legend: { display: true, position: 'top', labels: { font: { size: 14 }, color: '#424242' } },
                     tooltip: { mode: 'index', intersect: false },
-                    title: { display: true, text: 'Coil Log Overview', font: { size: 18, weight: 'bold' }, color: '#424242' }
+                    title: { display: true, text: 'Coil Log Overview', font: { size: 18, weight: 'bold' }, color: '#424242' },
                   },
                 }}
               />
-          )};
             </div>
           </Card>
         </Grid>

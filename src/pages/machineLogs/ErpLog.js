@@ -11,7 +11,6 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import axios from 'axios';
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
 
@@ -38,92 +37,41 @@ const ErpLog = () => {
   const [chartData, setChartData] = useState(null);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get('/api/1.0.0/logs/erp/graph');
-        const { timestamps, thicknesses, wastes, durations } = response.data;
-
-        if (Array.isArray(timestamps)) {
-          setChartData({
-            labels: timestamps,
-            datasets: [
-              {
-                label: 'Material Thickness (mm)',
-                data: thicknesses,
-                borderColor: '#42a5f5',
-                backgroundColor: 'rgba(66, 165, 245, 0.3)',
-                fill: true,
-                borderWidth: 2,
-                tension: 0.4,
-                yAxisID: 'y',
-              },
-              {
-                label: 'Waste Length (mm)',
-                data: wastes,
-                borderColor: '#ff7043',
-                backgroundColor: 'rgba(255, 112, 67, 0.3)',
-                fill: true,
-                borderWidth: 2,
-                tension: 0.4,
-                yAxisID: 'y1',
-              },
-              {
-                label: 'Production Duration (s)',
-                data: durations,
-                borderColor: '#66bb6a',
-                backgroundColor: 'rgba(102, 187, 106, 0.3)',
-                fill: true,
-                borderWidth: 2,
-                tension: 0.4,
-                yAxisID: 'y2',
-              },
-            ],
-          });
-        } else {
-          throw new Error('Invalid data structure');
-        }
-      } catch (err) {
-        console.error('Error fetching ERP logs data, using example data:', err);
-
-        setChartData({
-          labels: Data.timestamps,
-          datasets: [
-            {
-              label: 'Material Thickness (mm)',
-              data: Data.thicknesses,
-              borderColor: '#42a5f5',
-              backgroundColor: 'rgba(66, 165, 245, 0.3)',
-              fill: true,
-              borderWidth: 2,
-              tension: 0.4,
-              yAxisID: 'y',
-            },
-            {
-              label: 'Waste Length (mm)',
-              data: Data.wastes,
-              borderColor: '#ff7043',
-              backgroundColor: 'rgba(255, 112, 67, 0.3)',
-              fill: true,
-              borderWidth: 2,
-              tension: 0.4,
-              yAxisID: 'y1',
-            },
-            {
-              label: 'Production Duration (s)',
-              data: Data.durations,
-              borderColor: '#66bb6a',
-              backgroundColor: 'rgba(102, 187, 106, 0.3)',
-              fill: true,
-              borderWidth: 2,
-              tension: 0.4,
-              yAxisID: 'y2',
-            },
-          ],
-        });
-      }
-    };
-
-    fetchData();
+    setChartData({
+      labels: Data.timestamps,
+      datasets: [
+        {
+          label: 'Material Thickness (mm)',
+          data: Data.thicknesses,
+          borderColor: '#42a5f5',
+          backgroundColor: 'rgba(66, 165, 245, 0.3)',
+          fill: true,
+          borderWidth: 2,
+          tension: 0.4,
+          yAxisID: 'y',
+        },
+        {
+          label: 'Waste Length (mm)',
+          data: Data.wastes,
+          borderColor: '#ff7043',
+          backgroundColor: 'rgba(255, 112, 67, 0.3)',
+          fill: true,
+          borderWidth: 2,
+          tension: 0.4,
+          yAxisID: 'y1',
+        },
+        {
+          label: 'Production Duration (s)',
+          data: Data.durations,
+          borderColor: '#66bb6a',
+          backgroundColor: 'rgba(102, 187, 106, 0.3)',
+          fill: true,
+          borderWidth: 2,
+          tension: 0.4,
+          yAxisID: 'y2',
+        },
+      ],
+    });
   }, []);
 
   return (
@@ -143,14 +91,17 @@ const ErpLog = () => {
               data={chartData}
               options={{ responsive: true, maintainAspectRatio: true,
                 scales: {
-                  y: { 
-                    type: 'linear', position: 'left', title: { display: true, text: 'Thickness (mm)', font: { size: 14, weight: 'bold', }, color: '#616161' },
+                  y: {
+                    type: 'linear', position: 'left',
+                    title: { display: true, text: 'Thickness (mm)', font: { size: 14, weight: 'bold' }, color: '#616161' },
                   },
-                  y1: { 
-                    type: 'linear', position: 'right', grid: { drawOnChartArea: false }, title: { display: true, text: 'Waste Length (mm)', font: { size: 14, weight: 'bold' }, color: '#616161' },
+                  y1: {
+                    type: 'linear', position: 'right', grid: { drawOnChartArea: false },
+                    title: { display: true, text: 'Waste Length (mm)', font: { size: 14, weight: 'bold' }, color: '#616161' },
                   },
-                  y2: { 
-                    type: 'linear', position: 'right', grid: { drawOnChartArea: false }, title: { display: true, text: 'Production Duration (s)', font: { size: 14, weight: 'bold' }, color: '#616161' },
+                  y2: {
+                    type: 'linear', position: 'right', grid: { drawOnChartArea: false },
+                    title: { display: true, text: 'Production Duration (s)', font: { size: 14, weight: 'bold' }, color: '#616161' },
                   },
                 },
                 plugins: {
