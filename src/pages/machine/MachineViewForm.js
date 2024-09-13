@@ -256,10 +256,10 @@ export default function MachineViewForm() {
       }
       await dispatch(updateMachine(machine._id, data ));
       enqueueSnackbar('Machine Restored Successfully!');
-      navigate(PATH_MACHINE.machines.root);
+      dispatch(getMachine(machine._id));
     } catch (err) {
       enqueueSnackbar( typeof err === 'string' ? err : Snacks.machineFailedRestore, { variant: `error` });
-      console.log('Error:', err);
+      throw new Error(err);
     }
   };
   

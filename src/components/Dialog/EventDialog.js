@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { enc, MD5, lib } from 'crypto-js';
 // @mui
-import { Box, Stack, Button, DialogActions, DialogContent, Grid, Dialog, DialogTitle, Container, Divider, Typography } from '@mui/material';
+import { Box, Stack, Button, DialogActions, DialogContent, Grid, Dialog, DialogTitle, Divider, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
 import { eventSchema } from '../../pages/schemas/calendarSchema';
@@ -45,7 +45,7 @@ const getInitialValues = (selectedEvent, range, contacts) => {
   const initialEvent = {
     _id: selectedEvent ? selectedEvent?._id : null ,
     isCustomerEvent: ( selectedEvent?.isCustomerEvent || selectedEvent?.isCustomerEvent === undefined ) && true || false,
-    eventType: "customerVisit",
+    eventType: selectedEvent && ( selectedEvent?.isCustomerEvent ? "customerVisit" : "InternalTask" ) || "customerVisit",
     date: selectedEvent ? selectedEvent?.start : (range?.start || new Date() ) ,
     end_date: selectedEvent ? selectedEvent?.end : (range?.end || new Date() ) ,
     start: selectedEvent ? getTimeObjectFromISOString(selectedEvent?.start) : { value: '07:30', label: '7:30 AM' },
@@ -136,8 +136,7 @@ function EventDialog({
   },[ date ])
 
   useEffect(()=>{
-
-    if( customer && Array.isArray(machines) && ( machines?.length < 1 || ( customer?._id !== machines[0]?.customer._id ) ) ){
+    if( customer && Array.isArray(machines) && ( machines?.length < 1 || ( customer?._id !== machines[0]?.customer?._id ) ) ){
       dispatch(getActiveCustomerMachines(customer?._id))
       dispatch(getActiveSites(customer?._id))
     } else {
@@ -199,7 +198,7 @@ function EventDialog({
   };
 
     const handleCustomerEvent = ( event, val ) => {
-      if( val ){
+      if( val && val !== eventType && !selectedEvent ){
         setValue( "jiraTicket", "" );
         setValue( "customer", null );
         setValue( "priority", "" );
@@ -315,19 +314,16 @@ function EventDialog({
           justifyContent="center"
           alignItems="center"
           variant="h3"
-          sx={{ pb: !selectedEvent ? 0 : '', pt: !selectedEvent ? 0 : '', mx: 2, position: 'relative', }}
+          sx={{ my: -2,mx: 3, position: 'relative', }}
         >
-          <span style={{ position: 'absolute', left: 2 }} >{selectedEvent ? 'Update Event' : 'New Event'}</span>
-          {!selectedEvent && (
-              <EventToggleButton
-                value={eventType}
-                handleChange={handleCustomerEvent}
-              />
-          )}
+          <span style={{ position: 'absolute', left: 0 }} >{selectedEvent ? 'Update Event' : 'New Event'}</span>
+          <EventToggleButton
+            value={eventType}
+            handleChange={handleCustomerEvent}
+          />
         </DialogTitle>
         <Divider orientation="horizontal" flexItem />
-        <DialogContent dividers sx={{ px: 2 }}>
-        <Container maxWidth={false}>
+        <DialogContent dividers >
           <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
             <Grid container ref={dialogRef}>
               <Stack spacing={2} sx={{ pt: 2 }}>
@@ -506,9 +502,10 @@ function EventDialog({
               </Stack>
             </Grid>
           </FormProvider>
-          </Container>
         </DialogContent>
-        <DialogActions>
+        <DialogActions 
+          sx={{ py:-2 }}
+        >
           {selectedEvent && (
             <IconTooltip
               color="#FF0000"

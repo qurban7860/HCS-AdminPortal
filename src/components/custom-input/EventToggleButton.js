@@ -9,39 +9,36 @@ EventToggleButton.propTypes = {
 
 function EventToggleButton( { value, handleChange } ) {
   return (
-    <ToggleButtonGroup
-    size="small"
+  <ToggleButtonGroup
     value={value}
-    onChange={handleChange}
-    sx={{
-      m: 1,
-    }}
     exclusive
-    aria-label="Platform"
+    onChange={handleChange}
+    size="small"
+    aria-label="event-type"
   >
-    <ToggleButton 
-      value="customerVisit" 
-      sx={{ 
+    <ToggleButton value="customerVisit" 
+      sx={(theme)=>({ 
         fontSize: '1.1rem',
         fontWeight: 'bold',
         '&.Mui-selected': {
-          backgroundColor: 'rgba(0, 123, 255, 0.3)',
+          backgroundColor: theme.palette.primary.main,
+          color: 'white',
         },
-        py:-2
-      }}
+      })}
+      aria-label="customer-event"
     >
       Customer Visit
     </ToggleButton>
-    <ToggleButton 
-      value="InternalTask" 
-      sx={{ 
+    <ToggleButton value="InternalTask" 
+      sx={(theme)=>({ 
         fontSize: '1.1rem',
         fontWeight: 'bold',
         '&.Mui-selected': {
-          backgroundColor: 'rgba(0, 123, 255, 0.3)',
+          backgroundColor: theme.palette.primary.main,
+          color: 'white',
         },
-        py:-2
-      }}
+      })}
+      aria-label="Internal-event"
     >
       Internal Task
     </ToggleButton>
