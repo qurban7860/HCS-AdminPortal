@@ -220,7 +220,9 @@ const { contact, customer } = watch();
                 name="roles"
                 label="Roles*"
                 options={ activeRoles.filter(role => 
-                  ( customer?.type?.toLowerCase() === 'sp' ? role?.roleType?.toLowerCase() !== 'customer' : ( role?.roleType?.toLowerCase() === 'customer' ) ) 
+                  ( customer?.type?.toLowerCase() === 'sp' ? 
+                  role?.roleType?.toLowerCase() !== 'customer' 
+                  : role?.roleType?.toLowerCase() === 'customer' ) 
                 ) }
                 getOptionLabel={(option) => `${option?.name || ''} `}
                 isOptionEqualToValue={(option, value) => option?._id === value?._id}
