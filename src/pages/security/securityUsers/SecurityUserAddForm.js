@@ -111,10 +111,15 @@ const { contact, customer } = watch();
       setValue('customers',[]);
       setValue('dataAccessibilityLevel','RESTRICTED' ); 
     }
+    if(customer?._id !== contact?.customer?._id ){
+      setValue( 'name', '' );
+      setValue( 'phone', '' );
+      setValue( 'email', '' );
+    }
     setValue('machines',[]);
     setValue('regions',[]); 
     setValue('roles',[]); 
-  },[ customer, setValue ])
+  },[ customer, contact, setValue ])
 
   useEffect(() => {
     if(contact?._id){
@@ -215,8 +220,10 @@ const { contact, customer } = watch();
                 name="roles"
                 label="Roles*"
                 options={ activeRoles.filter(role => 
-                ( customer?.type?.toUpperCase() === 'SP' && role?.roleType?.toUpperCase() === 'CUSTOMER') 
-                || ( role?.roleType?.toUpperCase() !== 'CUSTOMER' && customer?.type?.toUpperCase() !== 'SP') ) }
+                  ( customer?.type?.toLowerCase() === 'sp' ? 
+                  role?.roleType?.toLowerCase() !== 'customer' 
+                  : role?.roleType?.toLowerCase() === 'customer' ) 
+                ) }
                 getOptionLabel={(option) => `${option?.name || ''} `}
                 isOptionEqualToValue={(option, value) => option?._id === value?._id}
                 renderOption={(props, option, { selected }) => ( <li {...props}> <Checkbox checked={selected} />{option?.name || ''}</li> )}
