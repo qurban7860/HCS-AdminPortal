@@ -940,7 +940,7 @@ function ViewFormEditDeleteButtons({
       />
 
       <ConfirmDialog
-        open={ openRestoreConfirm }
+        open={ openRestoreConfirm && !isSubmitSuccessful }
         onClose={() => {
           handleCloseConfirm('restore');
         }}
@@ -952,7 +952,7 @@ function ViewFormEditDeleteButtons({
             color="error"
             loading={isSubmitted || isSubmitting || isLoading}
             disabled={isSubmitted || isSubmitting || isLoading}
-            onClick={handleSubmit( onRestore )}
+            onClick={ handleSubmit( onRestore ) }
           >
             Restore
           </LoadingButton>
