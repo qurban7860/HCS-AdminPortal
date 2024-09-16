@@ -9,10 +9,16 @@ RHFAutocomplete.propTypes = {
   label: PropTypes.string,
   helperText: PropTypes.node,
   Error: PropTypes.bool,
+  nonEditable: PropTypes.bool,
 };
 
-export default function RHFAutocomplete({ name, label, helperText, Error, ...other }) {
+export default function RHFAutocomplete({ name, label, helperText, Error, nonEditable, ...other }) {
   const { control, setValue } = useFormContext();
+
+  const nonEditableProperties = {
+    readOnly: true,
+    style: { cursor: 'pointer' }
+  };
 
   return (
     <Controller
@@ -27,6 +33,10 @@ export default function RHFAutocomplete({ name, label, helperText, Error, ...oth
               label={label}
               error={!!error || !!Error}
               helperText={error ? error?.message : helperText}
+              inputProps={{
+                ...params.inputProps,
+                ...(nonEditable && nonEditableProperties),
+              }}
               {...params}
             />
           )}

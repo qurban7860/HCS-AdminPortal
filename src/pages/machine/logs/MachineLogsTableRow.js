@@ -18,6 +18,7 @@ MachineLogsTableRow.propTypes = {
   onViewRow: PropTypes.func,
   onSelectRow: PropTypes.func,
   onDeleteRow: PropTypes.func,
+  columnsToShow: PropTypes.array,
 };
 
 
@@ -30,17 +31,28 @@ export default function MachineLogsTableRow({
   onDeleteRow,
   onEditRow,
   onViewRow,
+  columnsToShow
 }) {
 
-  const { date, waste, componentLength, createdAt, createdBy } = row;
+  const { date, createdAt, createdBy } = row;
 
   return (
-      <StyledTableRow hover selected={selected}>
-        <LinkTableCell align="left" onClick={onViewRow} param={fDateTime(date)} />
-        <TableCell align="left">{waste || ''}</TableCell>
-        <TableCell align="left">{componentLength || ''}</TableCell>
-        <TableCell align="left">{createdBy?.name || ''}</TableCell>
-        <TableCell align="right">{fDateTime(createdAt)}</TableCell>
-      </StyledTableRow>
+    <StyledTableRow hover selected={selected}>
+      <LinkTableCell
+        align="left"
+        onClick={onViewRow}
+        param={fDateTime(date)}
+      />
+      {columnsToShow?.map((column, index) => {
+        if (['date', 'createdBy.name', 'createdAt'].includes(column.id)) return null;
+        return (
+          <TableCell key={index} align={column.align}>
+            {row?.[column.id] || ''}
+          </TableCell>
+        );
+      })}
+      <TableCell align="left">{createdBy?.name || ''}</TableCell>
+      <TableCell align="right">{fDateTime(createdAt)}</TableCell>
+    </StyledTableRow>
   );
 }

@@ -74,7 +74,8 @@ function JsonEditor({
             {formatButton && (
               <Button
                 onClick={() => formatButtonOnClick(value)}
-                sx={{ mx: 1 }}
+                sx={{ mx: 1, my: 0.5 }}
+                size="small"
                 title="Click to format the text to JSON"
                 startIcon={<Iconify icon="mdi:code-json" />}
               >
