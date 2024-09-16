@@ -11,8 +11,8 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import { Cover } from '../../components/Defaults/Cover';
-import { StyledCardContainer } from '../../theme/styles/default-styles';
+import { Cover } from '../../../components/Defaults/Cover';
+import { StyledCardContainer } from '../../../theme/styles/default-styles';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 

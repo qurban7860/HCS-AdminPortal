@@ -114,6 +114,12 @@ export const EditMachineSchema = Yup.object().shape({
   isActive: Yup.boolean(),
 });
 
+export const AddMachineLogSchema = Yup.object().shape({
+  customer: Yup.object().nullable().required('Customer is required'),
+  machine: Yup.object().nullable(),
+  serialNo: Yup.string().nullable(),
+});
+
 export const AddMachineDocumentSchema = Yup.object().shape({
   displayName: Yup.string().max(50),
   description: Yup.string().max(10000),

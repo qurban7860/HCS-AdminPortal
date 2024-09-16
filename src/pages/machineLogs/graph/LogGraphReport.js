@@ -14,9 +14,9 @@ import {
   Legend,
 } from 'chart.js';
 
-import { Cover } from '../../components/Defaults/Cover';
-import { StyledCardContainer } from '../../theme/styles/default-styles';
-import MachineLogsList from '../machine/logs/MachineLogsList';
+import { Cover } from '../../../components/Defaults/Cover';
+import { StyledCardContainer } from '../../../theme/styles/default-styles';
+import MachineLogsList from '../../machine/logs/MachineLogsList';
 
 ChartJS.register(
   CategoryScale,
