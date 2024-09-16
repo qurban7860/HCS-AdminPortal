@@ -8,6 +8,7 @@ import CompactLayout from '../layouts/compact';
 import DashboardLayout from '../layouts/dashboard';
 // config
 import { PATH_AFTER_LOGIN } from '../config-global';
+import { PATH_MACHINE_LOGS } from './paths';
 //
 import {
   // Auth
@@ -244,7 +245,14 @@ import {
   MachineStatusAdd, 
   MachineStatusView,
   MachineStatusEdit,
-
+  
+  // --------------------------- MACHINE LOG -------------------------------------
+  MachineLogList,
+  LogGraphReport,
+  CoilGraph,
+  ErpGraph,
+  ProductionGraph,
+  
   // --------------------- Machine Settings --------------------------
 
   // MACHINE SETTINGS: MACHINE Technical Parameters 
@@ -944,6 +952,7 @@ export default function Router() {
             { path: ':id/view', element: <DocumentCategoryView />}
           ],
         },
+
         // ------------------------------ document Type ----------------------------------
         {
           path: 'documentType',
@@ -1108,7 +1117,22 @@ export default function Router() {
         },
       ],
     },
-
+    // ----------------------------- MACHINE LOGS  -----------------------------------
+    {
+      path: PATH_MACHINE_LOGS.root, 
+      element: (
+        <AuthGuard>
+          <DashboardLayout />
+        </AuthGuard>
+      ),
+      children: [
+        { path: '', element: <MachineLogList />, index: true },
+        { path: 'LogGraphReport', element: <LogGraphReport /> },
+        { path: 'CoilGraph', element: <CoilGraph /> },
+        { path: 'ErpGraph', element: <ErpGraph /> },
+        { path: 'Productiongraph', element: <ProductionGraph /> },
+      ],
+    },    
     // ----------------------------- Sites Report -----------------------------------
     {
       // Sites

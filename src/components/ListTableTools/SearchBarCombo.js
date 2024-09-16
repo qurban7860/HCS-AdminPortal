@@ -11,7 +11,7 @@ import { StyledTooltip } from '../../theme/styles/default-styles';
 import { getActiveDocumentTypesWithCategory } from '../../redux/slices/document/documentType';
 import { setPm2Environment, setPm2LogType, setPm2LinesPerPage } from '../../redux/slices/logs/pm2Logs';
 import { fDate } from '../../utils/formatTime';
-import { setDateFrom, setDateTo } from '../../redux/slices/products/machineErpLogs';
+import { setDateFrom, setDateTo, setSelectedLogType } from '../../redux/slices/products/machineErpLogs';
 import { useAuthContext } from '../../auth/useAuthContext';
 import { useDebouncedEffect } from '../../hooks/useDebouncedEffect';
 
@@ -71,6 +71,7 @@ function SearchBarCombo({
   filterPeriod,
   onFilterPeriod,
   onCompareINI,
+  logTypes,
   ...other
 }) {
   
@@ -79,8 +80,10 @@ function SearchBarCombo({
   const { pm2Logs, pm2Environment, pm2Environments ,pm2LogType, pm2Lines } = useSelector((state) => state.pm2Logs);
   const { spContacts } = useSelector((state) => state.contact);
   const { activeRegions } = useSelector((state) => state.region);
+  const { selectedLogType } = useSelector((state) => state.machineErpLogs);
   const [ isDateFrom, setIsDateFrom ] = useState(new Date( Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]);
   const [ isDateTo, setIsDateTo ] = useState(new Date(Date.now()).toISOString().split('T')[0]);
+  const [ selectedLogTypeState, setSelectedLogTypeState ] = useState(selectedLogType || logTypes?.[0]);
   const isMobile = useResponsive('sm', 'down');
   const dispatch = useDispatch()
 
@@ -98,12 +101,18 @@ function SearchBarCombo({
     // }
   }, [ isDateTo ], 1000 )
 
+  useDebouncedEffect(() => {
+    dispatch(setSelectedLogType(selectedLogTypeState));
+  }, [selectedLogTypeState], 1000);
+
+  const onLogTypeChange = (newValue) => setSelectedLogTypeState(newValue);
+
   const onChangeStartDate = (e) => setIsDateFrom(e.target.value);
 
   const onChangeEndDate = (e) => setIsDateTo(e.target.value);
 
   return (
-    <Grid container rowSpacing={1} columnSpacing={1} sx={{display:'flex', }}>
+    <Grid container rowSpacing={logTypes?.length > 0 ? 2:1} columnSpacing={1} sx={{display:'flex', }}>
           { onChange && <Grid item xs={12} sm={12} md={12} lg={setAccountManagerFilter && setSupportManagerFilter ? 4:6} xl={setAccountManagerFilter && setSupportManagerFilter ? 4:6}>
             <TextField
               fullWidth
@@ -198,6 +207,37 @@ function SearchBarCombo({
             />  
           
           </Grid>}
+
+          {logTypes?.length > 0 && 
+            <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
+            <Autocomplete
+              disableClearable
+              value={selectedLogTypeState}
+              options={logTypes}
+              getOptionLabel={(option) => option.type}
+              isOptionEqualToValue={(option, val) => option?.type === val?.type}
+              onChange={(event, newValue) => onLogTypeChange(newValue)}
+              renderInput={(params) => (
+                <TextField 
+                  {...params} 
+                  size='small' 
+                  label="Select Log Type" 
+                  inputProps={{
+                    ...params.inputProps,
+                    readOnly: true,
+                    style: { cursor: 'pointer' }
+                  }} 
+                />
+              )}
+              renderOption={(props, option) => (
+                <li {...props} key={option?.type}>
+                  {option?.type || ''}
+                </li>
+              )}
+              getOptionDisabled={(option) => option?.disabled}
+            />
+            </Grid>
+          }
 
           { isDateFromDateTo && 
             <Grid item xs={12} sm={6} md={4} lg={2} xl={2}  >
@@ -754,6 +794,7 @@ SearchBarCombo.propTypes = {
   filterPeriod: PropTypes.number,
   onFilterPeriod: PropTypes.func,
   onCompareINI: PropTypes.func,
+  logTypes: PropTypes.array,
 };
 
 export default SearchBarCombo;

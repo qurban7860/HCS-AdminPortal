@@ -1,10 +1,10 @@
 import debounce from 'lodash/debounce';
 import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 // @mui
-import { Container, Table, Checkbox, TableBody, TableContainer, TableRow, TableCell, TableHead, TableSortLabel } from '@mui/material';
+import { Container, Table, TableBody, TableContainer, TableRow, TableCell, TableHead, TableSortLabel } from '@mui/material';
 // routes
-import { useNavigate, useParams } from 'react-router-dom';
-import { PATH_MACHINE } from '../../../routes/paths';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { PATH_MACHINE, PATH_MACHINE_LOGS } from '../../../routes/paths';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // components
@@ -20,7 +20,7 @@ import Scrollbar from '../../../components/scrollbar';
 import MachineLogsListTableToolbar from './MachineLogsListTableToolbar';
 import MachineLogsTableRow from './MachineLogsTableRow';
 import {
-  getMachineErpLogRecords,
+  getMachineLogRecords,
   ChangeRowsPerPage,
   ChangePage,
   setFilterBy
@@ -28,6 +28,7 @@ import {
 import { fDateTime } from '../../../utils/formatTime';
 import TableCard from '../../../components/ListTableTools/TableCard';
 import MachineTabContainer from '../util/MachineTabContainer';
+import { machineLogTypeFormats } from '../../../constants/machineLogTypeFormats';
 
 // ----------------------------------------------------------------------
 
@@ -43,7 +44,19 @@ const TABLE_HEAD = [
 
 export default function MachineLogsList(){
   const { machine } = useSelector((state) => state.machine);
-  const { machineErpLogs, machineErpLogstotalCount, dateFrom, dateTo, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.machineErpLogs );
+  const {
+    machineErpLogs,
+    machineErpLogstotalCount,
+    dateFrom,
+    dateTo,
+    filterBy,
+    page,
+    rowsPerPage,
+    isLoading,
+    initial,
+    selectedLogType,
+  } = useSelector((state) => state.machineErpLogs);
+
   const navigate = useNavigate();
   const { machineId } = useParams();
   const {
@@ -61,20 +74,23 @@ export default function MachineLogsList(){
 
   const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
   const dispatch = useDispatch();
+  const location = useLocation();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
   const [ isCreatedAt, setIsCreatedAt ] = useState(false);
+  const [ selectedLogTypeTableColumns, setSelectedLogTypeTableColumns ] = useState([]);
 
   useLayoutEffect(() => {
-    if (machineId) {
+    if (machineId && selectedLogType) {
+      setSelectedLogTypeTableColumns(machineLogTypeFormats.find(logType => logType.type === selectedLogType.type)?.tableColumns);
       if (dateFrom && dateTo) {
-        dispatch(getMachineErpLogRecords(machineId, page, rowsPerPage, dateFrom, dateTo, isCreatedAt, machine?.isArchived ));
+        dispatch(getMachineLogRecords(machineId, page, rowsPerPage, dateFrom, dateTo, isCreatedAt, machine?.isArchived, selectedLogType.type ));
       } else if(!dateFrom && !dateTo) {
-        dispatch(getMachineErpLogRecords(machineId, page, rowsPerPage, null, null, isCreatedAt, machine?.isArchived  ));
-      } 
+        dispatch(getMachineLogRecords(machineId, page, rowsPerPage, null, null, isCreatedAt, machine?.isArchived, selectedLogType.type ));
+      }
     }
-  }, [dispatch, machineId, page, rowsPerPage, dateFrom, dateTo, isCreatedAt, machine ]);
+  }, [dispatch, machineId, page, rowsPerPage, dateFrom, dateTo, isCreatedAt, machine, selectedLogType ]);
 
   useEffect(() => {
     if (initial) {
@@ -117,7 +133,7 @@ export default function MachineLogsList(){
     setFilterStatus(event.target.value);
   };
 
-  const handleViewRow = async (id) => navigate(PATH_MACHINE.machines.logs.view(machineId, id));
+  const handleViewRow = async (id) => navigate(PATH_MACHINE.machines.logs.view(machineId, `${selectedLogType?.type}_${id}`));
 
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
@@ -125,111 +141,92 @@ export default function MachineLogsList(){
   };
 
   return (
-    <Container maxWidth={false} >
-          <MachineTabContainer currentTabValue='logs' />
-        <TableCard>
-          <MachineLogsListTableToolbar
-            filterName={filterName}
-            filterStatus={filterStatus}
-            onFilterName={handleFilterName}
-            onFilterStatus={handleFilterStatus}
-            isFiltered={isFiltered}
-            onResetFilter={handleResetFilter}
-            dateFrom={dateFrom}
-            dateTo={dateTo}
+    <Container maxWidth={false}>
+      { location.pathname !== PATH_MACHINE_LOGS.machineLogs.LogGraphReport ? <MachineTabContainer currentTabValue='logs' /> : undefined } 
+      <TableCard>
+        <MachineLogsListTableToolbar
+          filterName={filterName}
+          filterStatus={filterStatus}
+          onFilterName={handleFilterName}
+          onFilterStatus={handleFilterStatus}
+          isFiltered={isFiltered}
+          onResetFilter={handleResetFilter}
+          dateFrom={dateFrom}
+          dateTo={dateTo}
+          logTypes={machineLogTypeFormats}
+        />
+
+        {!isNotFound && (
+          <TablePaginationCustom
+            count={machineErpLogstotalCount || 0}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
           />
+        )}
 
-          {!isNotFound && <TablePaginationCustom
-            count={ machineErpLogstotalCount || 0 }
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-          />}
-
-          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            <Scrollbar>
-              <Table size="small" sx={{ minWidth: 360 }}>
-<TableHead >
-      <TableRow>
-        {TABLE_HEAD.map((headCell, index ) => 
-          (
-          <TableCell
-            key={headCell.id}
-            align={headCell.align || 'left'}
-            sortDirection={orderBy === headCell.id ? order : false}
-            sx={{ width: headCell.width, 
-              minWidth: headCell.minWidth, }}
-            >
-            {onSort ? (
-              <TableSortLabel
-                hideSortIcon
-                active={orderBy === headCell.id}
-                direction={orderBy === headCell.id ? order : 'asc'}
-                onClick={() => onSort(headCell.id)}
-                sx={{ textTransform: 'capitalize' }}
-              >
-                {headCell.label}
-
-              
-              </TableSortLabel>
-            ) : (
-              headCell.label
-            )
-            }
-              {/* { index+1 === TABLE_HEAD?.length  &&
-                <Checkbox
-                  checked={isCreatedAt}
-                  onChange={(event) => setIsCreatedAt(!isCreatedAt)}
-                />
-              }    */}
-          </TableCell>
-        ))}
-      </TableRow>
-    </TableHead>
-                {/* <Grid  >
-                  <TableHeadCustom
-                    order={order}
-                    orderBy={orderBy}
-                    headLabel={TABLE_HEAD}
-                    onSort={onSort}
-                    numSelected={selected.length}
-                  />
-                  <Checkbox
-                    checked={isCreatedAt}
-                    onChange={(event) => setIsCreatedAt(!isCreatedAt)}
-                  />
-                </Grid> */}
-                <TableBody>
-                  {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
-                    .map((row, index) =>
-                      row ? (
-                        <MachineLogsTableRow
-                          key={row._id}
-                          row={row}
-                          onViewRow={() => handleViewRow(row._id)}
-                          selected={selected.includes(row._id)}
-                          selectedLength={selected.length}
-                          style={index % 2 ? { background: 'red' } : { background: 'green' }}
-                        />
+        <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+          <Scrollbar>
+            <Table size="small" sx={{ minWidth: 360 }}>
+              <TableHead>
+                <TableRow>
+                  {selectedLogTypeTableColumns?.map((headCell, index) => (
+                    <TableCell
+                      key={headCell.id}
+                      align={headCell.align || 'left'}
+                      sortDirection={orderBy === headCell.id ? order : false}
+                      sx={{ width: headCell.width, minWidth: headCell.minWidth }}
+                    >
+                      {onSort ? (
+                        <TableSortLabel
+                          hideSortIcon
+                          active={orderBy === headCell.id}
+                          direction={orderBy === headCell.id ? order : 'asc'}
+                          onClick={() => onSort(headCell.id)}
+                          sx={{ textTransform: 'capitalize' }}
+                        >
+                          {headCell.label}
+                        </TableSortLabel>
                       ) : (
-                        !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
-                      )
-                    )}
-                  <TableNoData isNotFound={isNotFound} />
-                </TableBody>
-              </Table>
-            </Scrollbar>
-          </TableContainer>
-          {!isNotFound && <TablePaginationCustom
-            count={ machineErpLogstotalCount || 0 }
+                        headCell.label
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {(isLoading ? [...Array(rowsPerPage)] : dataFiltered).map((row, index) =>
+                  row ? (
+                    <MachineLogsTableRow
+                      key={row._id}
+                      columnsToShow={selectedLogTypeTableColumns}
+                      row={row}
+                      onViewRow={() => handleViewRow(row._id)}
+                      selected={selected.includes(row._id)}
+                      selectedLength={selected.length}
+                      style={index % 2 ? { background: 'red' } : { background: 'green' }}
+                    />
+                  ) : (
+                    !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
+                  )
+                )}
+                <TableNoData isNotFound={isNotFound} />
+              </TableBody>
+            </Table>
+          </Scrollbar>
+        </TableContainer>
+        {!isNotFound && (
+          <TablePaginationCustom
+            count={machineErpLogstotalCount || 0}
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-          />}
-        </TableCard>
-      </Container>
+          />
+        )}
+      </TableCard>
+    </Container>
   );
 }
 

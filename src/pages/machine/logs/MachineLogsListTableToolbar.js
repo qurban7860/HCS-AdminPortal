@@ -3,8 +3,8 @@ import { useSelector } from 'react-redux';
 // @mui
 import { Stack } from '@mui/material';
 // routes
-import { useNavigate, useParams } from 'react-router-dom';
-import { PATH_MACHINE } from '../../../routes/paths';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { PATH_MACHINE, PATH_MACHINE_LOGS } from '../../../routes/paths';
 // components
 import SearchBarCombo from '../../../components/ListTableTools/SearchBarCombo';
 // constants
@@ -25,6 +25,7 @@ MachineLogsListTableToolbar.propTypes = {
   isHistory: PropTypes.bool,
   dateFrom: PropTypes.string,
   dateTo: PropTypes.string,
+  logTypes: PropTypes.array,
 };
 
 export default function MachineLogsListTableToolbar({
@@ -38,11 +39,13 @@ export default function MachineLogsListTableToolbar({
   isHistory,
   dateFrom,
   dateTo,
+  logTypes,
 }) {
 
   const navigate = useNavigate();
   const { machineId } = useParams();
   const { machine } = useSelector((state) => state.machine); 
+  const location = useLocation();
   const toggleAdd = () => navigate(PATH_MACHINE.machines.logs.new(machineId));
   const toggleGraph = () => navigate(PATH_MACHINE.machines.logs.graph(machineId));
 
@@ -53,12 +56,13 @@ export default function MachineLogsListTableToolbar({
         value={ filterName }
         onChange={ onFilterName }
         onClick={ onResetFilter }
+        logTypes={logTypes}
         SubOnClick={ toggleAdd }
         dateFrom={ dateFrom }
         dateTo={ dateTo }
         isDateFromDateTo
-        openGraph={ toggleGraph }
-        addButton={!(machine?.isArchived || isHistory) ? BUTTONS.ADD_MACHINE_LOGS : undefined}
+        openGraph={ location.pathname !== PATH_MACHINE_LOGS.machineLogs.LogGraphReport ? toggleGraph : undefined }
+        addButton={!(machine?.isArchived || isHistory) && location.pathname !== PATH_MACHINE_LOGS.machineLogs.LogGraphReport? BUTTONS.ADD_MACHINE_LOGS : undefined}
         transferredMachine={ machine?.status?.slug==='transferred' }
       />
     </Stack>

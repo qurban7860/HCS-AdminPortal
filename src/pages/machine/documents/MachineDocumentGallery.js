@@ -9,11 +9,9 @@ import MachineTabContainer from '../util/MachineTabContainer';
 
 export default function MachineDocumentGallery() {
     return (
-        <>
-            <Container maxWidth={false }>
+        <Container maxWidth={false }>
             <MachineTabContainer currentTabValue='documents' />
                 <DocumentGallery machinePage />
             </Container>
-        </>
     );
 }

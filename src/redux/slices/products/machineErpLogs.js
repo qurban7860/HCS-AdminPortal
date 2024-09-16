@@ -65,6 +65,10 @@ const slice = createSlice({
     setDateTo(state, action){
       state.dateTo = action.payload;
     },
+    // SET LOG TYPE
+    setSelectedLogType(state, action){
+      state.selectedLogType = action.payload;
+    },
     // HAS ERROR
     hasError(state, action) {
       state.isLoading = false;
@@ -89,6 +93,13 @@ const slice = createSlice({
     // RESPONSE MESSAGE
     setResponseMessage(state, action) {
       state.responseMessage = action.payload;
+      state.isLoading = false;
+      state.success = true;
+      state.initial = true;
+    },
+    // LOGS GRAPH DATA
+    setMachineLogsGraphData(state, action) {
+      state.machineLogsGraphData = action.payload;
       state.isLoading = false;
       state.success = true;
       state.initial = true;
@@ -132,11 +143,13 @@ export const {
   setMachineErpLogViewFormVisibility,
   setMachineErpLogListViewFormVisibility,
   setDateFrom,
+  setSelectedLogType,
   setDateTo,
   setAllVisibilityFalse,
   resetMachineErpLogRecords,
   resetMachineErpLogRecord,
   setResponseMessage,
+  setMachineLogsGraphData,
   setFilterBy,
   ChangeRowsPerPage,
   ChangePage,
@@ -144,45 +157,74 @@ export const {
 
 // ------------------------- ADD RECORD ---------------------------------------------
 
-export function addMachineErpLogRecord( machine, customer, csvData, action) {
+export function addMachineLogRecord(machine, customer, logs, action, version, type = "ERP") {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const data = {}
-      data.type = "erp"
-      if(Array.isArray(csvData)){
-        data.machine = machine
-        data.customer = customer
-        data.logs = csvData
-        data.skipExistingRecords = action?.skipExistingRecords
-        data.updateExistingRecords = action?.updateExistingRecords
-      }else if(Object.keys(csvData).length !== 0){
-        data.logs = [ csvData ]
-        data.skipExistingRecords = action?.skipExistingRecords
-        data.updateExistingRecords = action?.updateExistingRecords
-        data.machine = machine
-        data.customer = customer
-      }
-      const response = await axios.post(`${CONFIG.SERVER_URL}productLogs/`,data );
+      const data = {
+        type,
+        customer,
+        machine,
+        version,
+        skipExistingRecords: action?.skipExistingRecords,
+        updateExistingRecords: action?.updateExistingRecords,
+        logs: [...logs],
+      };
+      const response = await axios.post(`${CONFIG.SERVER_URL}productLogs/`, data);
       dispatch(slice.actions.setResponseMessage(response?.data || ''));
+      return {
+        success: true,
+        message: 'Successfully added',
+      };
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
-      throw error;
+      return {
+        success: false,
+        message: error || "Something went wrong",
+      };
+    }
+  };
+}
+
+// ------------------------- GET LOGS GRAPH DATA ---------------------------------------------
+
+export function getMachineLogGraphData(machine, type = "ERP", year) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const params = {
+        machine,
+        type,
+        year,
+      };
+      const response = await axios.get(`${CONFIG.SERVER_URL}productLogs/graph`, { params });
+      dispatch(slice.actions.setMachineLogsGraphData(response?.data || ''));
+      return {
+        success: true,
+        message: 'Graph Data Successfully fetched',
+      };
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      return {
+        success: false,
+        message: error || "Something went wrong",
+      };
     }
   };
 }
 
 // --------------------------- GET RECORD -------------------------------------------
 
-export function getMachineErpLogRecord(machineId, id) {
+export function getMachineLogRecord(machineId, id, logType) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}productLogs/${id}`,
       {
         params: {
-          type: "erp",
+          type: logType,
           machine: machineId,
         }
       });
@@ -197,38 +239,26 @@ export function getMachineErpLogRecord(machineId, id) {
 
 // -------------------------- GET RECORD'S ----------------------------------------------------------------------
 
-export function getMachineErpLogRecords(machineId, page, pageSize, fromDate, toDate, isCreatedAt, isMachineArchived ) {
+export function getMachineLogRecords(machineId, page, pageSize, fromDate, toDate, isCreatedAt, isMachineArchived, selectedLogType ) {
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
-      
-      const params= {
-        isArchived: false,
+      const params = {
+        type: selectedLogType,
         machine: machineId,
         fromDate,
         toDate,
-        type: "erp",
-      }
-
-      if( isMachineArchived ){
-        params.archivedByMachine = true;
-        params.isArchived = true;
-      }
-
-      params.pagination = {
-        page,
-        pageSize  
-      }
-
-      if(isCreatedAt){
-        params.isCreatedAt = isCreatedAt
-      }
+        isArchived: isMachineArchived,
+        pagination: { page, pageSize },
+        ...(isMachineArchived && { archivedByMachine: true }),
+        ...(isCreatedAt && { isCreatedAt }),
+      };
       
       const response = await axios.get(`${CONFIG.SERVER_URL}productLogs/`, { params } );
       dispatch(slice.actions.getMachineErpLogRecordsSuccess(response.data));
     } catch (error) {
-      console.log(error);
-      dispatch(slice.actions.hasError(error.Message));
+      console.error('Error fetching machine log records:', error);
+      dispatch(slice.actions.hasError(error.message || 'An error occurred'));
       throw error;
     }
   }
