@@ -218,8 +218,17 @@ function SearchBarCombo({
               isOptionEqualToValue={(option, val) => option?.type === val?.type}
               onChange={(event, newValue) => onLogTypeChange(newValue)}
               renderInput={(params) => (
-                <TextField {...params} size='small' label="Select Log Type" />
-                )}
+                <TextField 
+                  {...params} 
+                  size='small' 
+                  label="Select Log Type" 
+                  inputProps={{
+                    ...params.inputProps,
+                    readOnly: true,
+                    style: { cursor: 'pointer' }
+                  }} 
+                />
+              )}
               renderOption={(props, option) => (
                 <li {...props} key={option?.type}>
                   {option?.type || ''}

@@ -79,14 +79,16 @@ export default function MachineLogsList(){
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
   const [ isCreatedAt, setIsCreatedAt ] = useState(false);
+  const [ selectedLogTypeTableColumns, setSelectedLogTypeTableColumns ] = useState([]);
 
   useLayoutEffect(() => {
     if (machineId && selectedLogType) {
+      setSelectedLogTypeTableColumns(machineLogTypeFormats.find(logType => logType.type === selectedLogType.type)?.tableColumns);
       if (dateFrom && dateTo) {
         dispatch(getMachineLogRecords(machineId, page, rowsPerPage, dateFrom, dateTo, isCreatedAt, machine?.isArchived, selectedLogType.type ));
       } else if(!dateFrom && !dateTo) {
         dispatch(getMachineLogRecords(machineId, page, rowsPerPage, null, null, isCreatedAt, machine?.isArchived, selectedLogType.type ));
-      } 
+      }
     }
   }, [dispatch, machineId, page, rowsPerPage, dateFrom, dateTo, isCreatedAt, machine, selectedLogType ]);
 
@@ -169,7 +171,7 @@ export default function MachineLogsList(){
             <Table size="small" sx={{ minWidth: 360 }}>
               <TableHead>
                 <TableRow>
-                  {TABLE_HEAD.map((headCell, index) => (
+                  {selectedLogTypeTableColumns?.map((headCell, index) => (
                     <TableCell
                       key={headCell.id}
                       align={headCell.align || 'left'}
@@ -198,6 +200,7 @@ export default function MachineLogsList(){
                   row ? (
                     <MachineLogsTableRow
                       key={row._id}
+                      columnsToShow={selectedLogTypeTableColumns}
                       row={row}
                       onViewRow={() => handleViewRow(row._id)}
                       selected={selected.includes(row._id)}

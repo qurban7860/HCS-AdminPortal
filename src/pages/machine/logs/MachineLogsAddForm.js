@@ -244,6 +244,7 @@ const toggleCancel = () => navigate(PATH_MACHINE.machines.logs.root(machineId));
                         size="small"
                         getOptionLabel={(option) => option.type}
                         isOptionEqualToValue={(option, value) => option?.type === value?.type}
+                        nonEditable
                         renderOption={(props, option) => (
                           <li {...props} key={option?.type}>
                             {option.type || ''}
@@ -261,6 +262,7 @@ const toggleCancel = () => navigate(PATH_MACHINE.machines.logs.root(machineId));
                           getOptionLabel={(option) => option}
                           value={logVersion}
                           size="small"
+                          nonEditable
                           // defaultValue={watch('logType')?.versions?.[0] || null}
                           // isOptionEqualToValue={(option, value) => option?.type === value?.type}
                           // renderOption={(props, option) => (

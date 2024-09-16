@@ -97,6 +97,13 @@ const slice = createSlice({
       state.success = true;
       state.initial = true;
     },
+    // LOGS GRAPH DATA
+    setMachineLogsGraphData(state, action) {
+      state.machineLogsGraphData = action.payload;
+      state.isLoading = false;
+      state.success = true;
+      state.initial = true;
+    },
     // RESET MACHINE TECH PARAM
     resetMachineErpLogRecord(state){
       state.machineErpLog = {};
@@ -142,6 +149,7 @@ export const {
   resetMachineErpLogRecords,
   resetMachineErpLogRecord,
   setResponseMessage,
+  setMachineLogsGraphData,
   setFilterBy,
   ChangeRowsPerPage,
   ChangePage,
@@ -167,6 +175,34 @@ export function addMachineLogRecord(machine, customer, logs, action, version, ty
       return {
         success: true,
         message: 'Successfully added',
+      };
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      return {
+        success: false,
+        message: error || "Something went wrong",
+      };
+    }
+  };
+}
+
+// ------------------------- GET LOGS GRAPH DATA ---------------------------------------------
+
+export function getMachineLogGraphData(machine, type = "ERP", year) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const params = {
+        machine,
+        type,
+        year,
+      };
+      const response = await axios.get(`${CONFIG.SERVER_URL}productLogs/graph`, { params });
+      dispatch(slice.actions.setMachineLogsGraphData(response?.data || ''));
+      return {
+        success: true,
+        message: 'Graph Data Successfully fetched',
       };
     } catch (error) {
       console.error(error);
