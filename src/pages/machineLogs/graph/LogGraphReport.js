@@ -72,7 +72,7 @@ const LogGraphReport = () => {
     <>
     <Container maxWidth={false}>
       <StyledCardContainer>
-        <Cover name="Logs Graph Report" />
+        <Cover name="Logs Graph Report" coilLog erpLog productionLog/>
       </StyledCardContainer>
     </Container>
       <MachineLogsList logs={logs} />

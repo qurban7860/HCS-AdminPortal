@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { Box, Grid, Stack, Card, TextField, Container, FormControl, Select, InputLabel, MenuItem } from '@mui/material';
+import { Box, Grid, Stack, Card, TextField, Container } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
@@ -13,6 +13,7 @@ import { AddMachineLogSchema } from '../schemas/machine';
 import useResponsive from '../../hooks/useResponsive';
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
+import { machineLogTypeFormats } from '../../constants/machineLogTypeFormats';
 
 function AllMachineLogs() {
   const dispatch = useDispatch();
@@ -21,7 +22,6 @@ function AllMachineLogs() {
   const [isDateFrom, setIsDateFrom] = useState(new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]);
   const [isDateTo, setIsDateTo] = useState(new Date(Date.now()).toISOString().split('T')[0]);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
-  const [logType, setLogType] = useState('');
   const isMobile = useResponsive('down', 'sm');
   const navigate = useNavigate();
 
@@ -54,16 +54,11 @@ function AllMachineLogs() {
     }
   }, [dispatch, customer]);
 
-  const handleLogTypeChange = (event) => {
-    setLogType(event.target.value);
-  };
-
   const onSubmit = (data) => {
     const formData = {
       ...data,
       dates: [isDateFrom, isDateTo],
       customerId: selectedCustomer ? selectedCustomer._id : null,
-      logType,
     };
 
     navigate(PATH_MACHINE_LOGS.machineLogs.LogGraphReport, { state: { logs: formData } });
@@ -98,52 +93,43 @@ function AllMachineLogs() {
                     name="customer"
                     label="Select Customer*"
                     options={activeCustomers || []}
-                    isOptionEqualToValue={( option, value ) => option._id === value._id }
+                    isOptionEqualToValue={(option, value) => option._id === value._id}
                     getOptionLabel={(option) => `${option?.name || ''}`}
-                    renderOption={(props, option) => ( <li {...props} key={option?._id}>{option?.name || ''}</li> )}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option?._id}>
+                        {option?.name || ''}
+                      </li>
+                    )}
                     onChange={(e, newValue) => handleCustomerChange(newValue)}
                   />
-                </Box>
-                <Box
-                  display="grid"
-                  gap={2}
-                  gridTemplateColumns={{ xs: '1fr', sm: 'repeat(3, 1fr)' }}
-                >
-                  <RHFAutocomplete
-                    name="machine"
-                    label="Select Machine"
-                    options={activeCustomerMachines || []}
-                    isOptionEqualToValue={( option, value ) => option._id === value._id }
-                    getOptionLabel={(option) => `${ option.serialNo || '' } ${option?.name ? '-' : ''} ${option?.name || ''}`}
-                    renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.serialNo || ''} ${option?.name ? '-' : ''} ${option?.name || ''}`}</li> )}
-                    onChange={(e, newValue) => handleMachineChange(newValue)}
-                    sx={{ flex: 1, minWidth: '200px' }}
-                  />
-                  <RHFTextField
-                    name="serialNo"
-                    label="Serial No."
-                    sx={{ flex: 1, minWidth: '200px' }}
-                  />
-                  <FormControl sx={{ flex: 1, minWidth: '200px' }}>
-                    <InputLabel id="log-type-label">Log Type</InputLabel>
-                    <Select
-                      labelId="log-type-label"
-                      id="log-type"
-                      value={logType}
-                      onChange={handleLogTypeChange}
-                      label="Log Type"
-                    >
-                      <MenuItem value="erp-log">ERP Log</MenuItem>
-                      <MenuItem value="coil-log">Coil Log</MenuItem>
-                      <MenuItem value="production-log">Production Log</MenuItem>
-                    </Select>
-                  </FormControl>
                 </Box>
                 <Box
                   rowGap={2}
                   columnGap={2}
                   display="grid"
                   gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
+                >
+                  <RHFAutocomplete
+                    name="machine"
+                    label="Select Machine"
+                    options={activeCustomerMachines || []}
+                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    getOptionLabel={(option) =>
+                      `${option.serialNo || ''} ${option?.name ? '-' : ''} ${option?.name || ''}`
+                    }
+                    renderOption={(props, option) => (
+                      <li {...props} key={option?._id}>{`${option.serialNo || ''} ${
+                        option?.name ? '-' : ''
+                      } ${option?.name || ''}`}</li>
+                    )}
+                    onChange={(e, newValue) => handleMachineChange(newValue)}
+                  />
+                  <RHFTextField name="serialNo" label="Serial No." />
+                </Box>
+                <Box
+                  display="grid"
+                  gap={2}
+                  gridTemplateColumns={{ xs: '1fr', sm: 'repeat(3, 1fr)' }}
                 >
                   <TextField
                     value={isDateFrom}
@@ -174,6 +160,20 @@ function AllMachineLogs() {
                     }
                     InputLabelProps={{ shrink: true }}
                     size="small"
+                  />
+                  <RHFAutocomplete
+                    label="Select Log Type"
+                    name="logType"
+                    options={machineLogTypeFormats}
+                    size="small"
+                    getOptionLabel={(option) => option.type}
+                    isOptionEqualToValue={(option, value) => option?.type === value?.type}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option?.type}>
+                        {option.type || ''}
+                      </li>
+                    )}
+                    getOptionDisabled={(option) => option?.disabled}
                   />
                 </Box>
               </Stack>
