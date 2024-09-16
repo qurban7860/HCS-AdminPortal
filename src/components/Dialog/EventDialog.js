@@ -314,7 +314,7 @@ function EventDialog({
           justifyContent="center"
           alignItems="center"
           variant="h3"
-          sx={{ my: -2,mx: 3, position: 'relative', }}
+          sx={{ my: -1,mx: 3, position: 'relative', }}
         >
           <span style={{ position: 'absolute', left: 0 }} >{selectedEvent ? 'Update Event' : 'New Event'}</span>
           <EventToggleButton
