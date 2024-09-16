@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { enc, MD5, lib } from 'crypto-js';
 // @mui
-import { Box, Stack, Button, DialogActions, DialogContent, Grid, Dialog, DialogTitle, Container, Divider, Typography } from '@mui/material';
+import { Box, Stack, Button, DialogActions, DialogContent, Grid, Dialog, DialogTitle, Divider, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
 import { eventSchema } from '../../pages/schemas/calendarSchema';
@@ -19,10 +19,10 @@ import ConfirmDialog from '../confirm-dialog/ConfirmDialog';
 import { fDateTime } from '../../utils/formatTime';
 import { time_list } from '../../constants/time-list';
 import { useAuthContext } from '../../auth/useAuthContext';
-import CustomSwitch from '../custom-input/CustomSwitch';
 import { useSnackbar } from '../snackbar';
 import PriorityIcon from '../../pages/calendar/utils/PriorityIcon';
 import RenderCustomInput from '../custom-input/RenderCustomInput';
+import EventToggleButton from '../custom-input/EventToggleButton';
 
 
 function getTimeObjectFromISOString(dateString) {
@@ -45,6 +45,7 @@ const getInitialValues = (selectedEvent, range, contacts) => {
   const initialEvent = {
     _id: selectedEvent ? selectedEvent?._id : null ,
     isCustomerEvent: ( selectedEvent?.isCustomerEvent || selectedEvent?.isCustomerEvent === undefined ) && true || false,
+    eventType: selectedEvent && ( selectedEvent?.isCustomerEvent ? "customerVisit" : "InternalTask" ) || "customerVisit",
     date: selectedEvent ? selectedEvent?.start : (range?.start || new Date() ) ,
     end_date: selectedEvent ? selectedEvent?.end : (range?.end || new Date() ) ,
     start: selectedEvent ? getTimeObjectFromISOString(selectedEvent?.start) : { value: '07:30', label: '7:30 AM' },
@@ -112,7 +113,15 @@ function EventDialog({
     }
   }, [errors]);
 
-  const { customer, date, isCustomerEvent, files, priority } = watch();
+  const { customer, machines, date, isCustomerEvent, files, priority, eventType } = watch();
+
+  useEffect(() => {
+    if ( Array.isArray(machines) && machines?.length > 0 && machines?.length < 2 ) {
+      setValue("site", machines[0]?.instalationSite)
+    } else if( machines?.length < 1 ){
+      setValue("site", null )
+    }
+  },[ machines, setValue ])
 
   useEffect(() => {
     const { end_date  } = watch()
@@ -127,14 +136,17 @@ function EventDialog({
   },[ date ])
 
   useEffect(()=>{
-    if(customer){
+    if( customer && Array.isArray(machines) && ( machines?.length < 1 || ( customer?._id !== machines[0]?.customer?._id ) ) ){
       dispatch(getActiveCustomerMachines(customer?._id))
       dispatch(getActiveSites(customer?._id))
     } else {
+      setValue("site", null )
+      setValue("machines", [] )
       dispatch(resetActiveCustomerMachines())
       dispatch(resetActiveSites())
     }
-  },[ dispatch, customer ])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[ dispatch, customer, setValue ])
 
   useLayoutEffect(() => {
     reset(getInitialValues(selectedEvent?.extendedProps, range, contacts));
@@ -181,22 +193,26 @@ function EventDialog({
     dispatch(resetActiveCustomerMachines())
     dispatch(resetActiveSites())
     setValue("isCustomerEvent", true );
+    setValue("eventType", "customerVisit" );
     reset()
   };
 
-    const handleCustomerEvent = () => {
-      setValue( "jiraTicket", "" );
-      setValue( "customer", null );
-      setValue( "priority", "" );
-      setValue( "primaryTechnician", null );
-      setValue( "machines", [] );
-      setValue( "site", null );
-      setValue( "supportingTechnicians", [] );
-      setValue( "notifyContacts", [] );
-      setValue( "description", "" );
-      setValue( "files", [] );
-      setValue("isCustomerEvent", !isCustomerEvent);
-    };
+    const handleCustomerEvent = ( event, val ) => {
+      if( val && val !== eventType && !selectedEvent ){
+        setValue( "jiraTicket", "" );
+        setValue( "customer", null );
+        setValue( "priority", "" );
+        setValue( "primaryTechnician", null );
+        setValue( "machines", [] );
+        setValue( "site", null );
+        setValue( "supportingTechnicians", [] );
+        setValue( "notifyContacts", [] );
+        setValue( "description", "" );
+        setValue( "files", [] );
+        setValue("eventType", val );
+        setValue("isCustomerEvent", val === "customerVisit" );
+      };
+    }
   
     useEffect( () => {
       if( !isCustomerEvent ){
@@ -295,25 +311,19 @@ function EventDialog({
       >
         <DialogTitle
           display="flex"
-          justifyContent="space-between"
+          justifyContent="center"
           alignItems="center"
           variant="h3"
-          sx={{ pb: !selectedEvent ? 0 : '', pt: !selectedEvent ? 0 : '' }}
+          sx={{ my: -2,mx: 3, position: 'relative', }}
         >
-          {selectedEvent ? 'Update Event' : 'New Event'}
-          {!selectedEvent && (
-            <DialogActions>
-              <CustomSwitch
-                label="Customer Visit"
-                checked={isCustomerEvent}
-                onChange={handleCustomerEvent}
-              />
-            </DialogActions>
-          )}
+          <span style={{ position: 'absolute', left: 0 }} >{selectedEvent ? 'Update Event' : 'New Event'}</span>
+          <EventToggleButton
+            value={eventType}
+            handleChange={handleCustomerEvent}
+          />
         </DialogTitle>
         <Divider orientation="horizontal" flexItem />
-        <DialogContent dividers sx={{ px: 3 }}>
-        <Container maxWidth={false}>
+        <DialogContent dividers >
           <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
             <Grid container ref={dialogRef}>
               <Stack spacing={2} sx={{ pt: 2 }}>
@@ -364,19 +374,6 @@ function EventDialog({
                       )}
                     />}
 
-                    <RHFAutocomplete
-                      label="Priority"
-                      name="priority"
-                      options={ priorityOptions }
-                      isOptionEqualToValue={( option, value ) => option === value }
-                      renderInput={(params) => <RenderCustomInput label="Priority"  params={params} />}
-                      renderOption={(props, option) => 
-                      <li {...props} key={option} > 
-                        <PriorityIcon priority={option} />
-                        <span style={{ marginLeft: 8 }}>{option}</span> 
-                      </li>}
-                    />
-
                 {isCustomerEvent && (
                   <>
                     <RHFAutocomplete
@@ -409,7 +406,7 @@ function EventDialog({
                   </>
                 )}
                 <RHFAutocomplete
-                  label="Primary Technician*"
+                  label={ isCustomerEvent ? "Primary Technician*" : "Assignee*"}
                   name="primaryTechnician"
                   options={activeSpContacts}
                   isOptionEqualToValue={(option, value) => option?._id === value?._id}
@@ -458,7 +455,22 @@ function EventDialog({
                     />
                   </>
                 )}
+
                 <RHFTextField name="description" label="Description" multiline rows={3} />
+
+                <RHFAutocomplete
+                  label="Priority"
+                  name="priority"
+                  options={ priorityOptions }
+                  isOptionEqualToValue={( option, value ) => option === value }
+                  renderInput={(params) => <RenderCustomInput label="Priority"  params={params} />}
+                  renderOption={(props, option) => 
+                  <li {...props} key={option} > 
+                    <PriorityIcon priority={option} />
+                    <span style={{ marginLeft: 8 }}>{option}</span> 
+                  </li>}
+                />
+
                   <RHFUpload
                     dropZone={false}
                     multiple
@@ -490,9 +502,10 @@ function EventDialog({
               </Stack>
             </Grid>
           </FormProvider>
-          </Container>
         </DialogContent>
-        <DialogActions>
+        <DialogActions 
+          sx={{ py:-2 }}
+        >
           {selectedEvent && (
             <IconTooltip
               color="#FF0000"

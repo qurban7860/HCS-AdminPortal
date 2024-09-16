@@ -178,9 +178,9 @@ export function getERPLogs(machineId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}logs/erp/graph`, 
+      const response = await axios.get(`${CONFIG.SERVER_URL}productLogs/graph`, 
       {
-        params: {machine: machineId}
+        params: { machine: machineId, type: 'erp' }
       });
 
       dispatch(slice.actions.getERPLogsSuccess(response.data));

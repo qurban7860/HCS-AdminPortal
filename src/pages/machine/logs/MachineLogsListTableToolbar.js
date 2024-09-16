@@ -25,6 +25,7 @@ MachineLogsListTableToolbar.propTypes = {
   isHistory: PropTypes.bool,
   dateFrom: PropTypes.string,
   dateTo: PropTypes.string,
+  logTypes: PropTypes.array,
 };
 
 export default function MachineLogsListTableToolbar({
@@ -38,6 +39,7 @@ export default function MachineLogsListTableToolbar({
   isHistory,
   dateFrom,
   dateTo,
+  logTypes,
 }) {
 
   const navigate = useNavigate();
@@ -54,6 +56,7 @@ export default function MachineLogsListTableToolbar({
         value={ filterName }
         onChange={ onFilterName }
         onClick={ onResetFilter }
+        logTypes={logTypes}
         SubOnClick={ toggleAdd }
         dateFrom={ dateFrom }
         dateTo={ dateTo }

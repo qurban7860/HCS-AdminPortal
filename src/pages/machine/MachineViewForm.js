@@ -2,12 +2,11 @@ import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // @mui
-import { Card, Grid, Link, Chip, Typography, IconButton, Tab, tabsClasses} from '@mui/material';
+import { Card, Grid, Link, Chip, Typography } from '@mui/material';
 // routes
 import { PATH_CRM, PATH_MACHINE } from '../../routes/paths';
 // slices
 import {
-  getMachines,
   getMachine,
   updateMachine,
   deleteMachine,
@@ -242,7 +241,7 @@ export default function MachineViewForm() {
       enqueueSnackbar('Machine Archived Successfully!');
       navigate(PATH_MACHINE.machines.root);
     } catch (err) {
-      enqueueSnackbar(Snacks.machineFailedDelete, { variant: `error` });
+      enqueueSnackbar( typeof err === 'string' ? err : Snacks.machineFailedArchive, { variant: `error` });
       console.log('Error:', err);
     }
   };
@@ -256,10 +255,9 @@ export default function MachineViewForm() {
       }
       await dispatch(updateMachine(machine._id, data ));
       enqueueSnackbar('Machine Restored Successfully!');
-      navigate(PATH_MACHINE.machines.root);
+      dispatch(getMachine(machine._id));
     } catch (err) {
-      enqueueSnackbar(Snacks.machineFailedDelete, { variant: `error` });
-      console.log('Error:', err);
+      enqueueSnackbar( typeof err === 'string' ? err : Snacks.machineFailedRestore, { variant: `error` });
     }
   };
   
@@ -267,17 +265,12 @@ export default function MachineViewForm() {
     try {
       await dispatch(deleteMachine(machine._id));
       enqueueSnackbar('Machine Deleted Successfully!');
-      navigate(PATH_MACHINE.machines.root);
+      navigate(PATH_MACHINE.machines.archived.root);
     } catch (err) {
-      enqueueSnackbar(Snacks.machineFailedDelete, { variant: `error` });
+      enqueueSnackbar( typeof err === 'string' ? err : Snacks.machineFailedDelete, { variant: `error` });
       console.log('Error:', err);
     }
   };
-
-  const handleJiraNaviagte = ( )=>{
-    const url = `https://howickltd.atlassian.net/jira/servicedesk/projects/HWKSC/queues/custom/3/HWKSC-492`
-    window.open( url, '_blank')
-  }
 
   return (
     <>
