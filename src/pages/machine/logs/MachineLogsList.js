@@ -140,7 +140,7 @@ export default function MachineLogsList(){
 
   return (
     <Container maxWidth={false}>
-      <MachineTabContainer currentTabValue="logs" />
+      { location.pathname !== PATH_MACHINE_LOGS.machineLogs.LogGraphReport ? <MachineTabContainer currentTabValue='logs' /> : undefined } 
       <TableCard>
         <MachineLogsListTableToolbar
           filterName={filterName}
