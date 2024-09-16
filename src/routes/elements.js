@@ -223,10 +223,10 @@ export const MachineSetting = Loadable(lazy(() => import('../pages/machineSettin
 // ---------------------  MACHINE LOGS -------------------------------------------
 
 export const MachineLogList = Loadable(lazy(() => import('../pages/machineLogs/AllMachinesLogs')));
-export const LogGraphReport = Loadable(lazy(() => import('../pages/machineLogs/LogGraphReport')));
-export const CoilGraph = Loadable(lazy(() => import('../pages/machineLogs/CoilLog')));
-export const ErpGraph = Loadable(lazy(() => import('../pages/machineLogs/ErpLog')));
-export const ProductionGraph = Loadable(lazy(() => import('../pages/machineLogs/ProductionLog')));
+export const LogGraphReport = Loadable(lazy(() => import('../pages/machineLogs/graph/LogGraphReport')));
+export const CoilGraph = Loadable(lazy(() => import('../pages/machineLogs/graph/CoilLog')));
+export const ErpGraph = Loadable(lazy(() => import('../pages/machineLogs/graph/ErpLog')));
+export const ProductionGraph = Loadable(lazy(() => import('../pages/machineLogs/graph/ProductionLog')));
 
 
 

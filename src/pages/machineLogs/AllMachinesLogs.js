@@ -9,7 +9,7 @@ import FormProvider, { RHFTextField, RHFAutocomplete } from '../../components/ho
 import { PATH_MACHINE_LOGS } from '../../routes/paths';
 import { getActiveCustomerMachines, resetActiveCustomerMachines } from '../../redux/slices/products/machine';
 import { getActiveCustomers } from '../../redux/slices/customer/customer';
-import { machineSchema } from '../schemas/machine'; 
+import { AddMachineLogSchema } from '../schemas/machine'; 
 import useResponsive from '../../hooks/useResponsive';
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
@@ -18,7 +18,6 @@ function AllMachineLogs() {
   const dispatch = useDispatch();
   const { activeCustomerMachines } = useSelector((state) => state.machine);
   const { activeCustomers } = useSelector((state) => state.customer);
-
   const [isDateFrom, setIsDateFrom] = useState(new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]);
   const [isDateTo, setIsDateTo] = useState(new Date(Date.now()).toISOString().split('T')[0]);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
@@ -29,17 +28,17 @@ function AllMachineLogs() {
   const defaultValues = {
     customer: null,
     machine: null,
-    logDescription: ''
+    serialNo: '',
   };
 
   const methods = useForm({
-    resolver: yupResolver(machineSchema),
+    resolver: yupResolver(AddMachineLogSchema),
     defaultValues,
   });
 
-  const { watch, setValue, handleSubmit } = methods;
-  const { customer } = watch();
-  
+  const { watch, setValue, handleSubmit, trigger } = methods;
+  const { customer, machine } = watch();
+
   const onChangeStartDate = (e) => setIsDateFrom(e.target.value);
   const onChangeEndDate = (e) => setIsDateTo(e.target.value);
 
@@ -54,7 +53,7 @@ function AllMachineLogs() {
       dispatch(resetActiveCustomerMachines());
     }
   }, [dispatch, customer]);
-  
+
   const handleLogTypeChange = (event) => {
     setLogType(event.target.value);
   };
@@ -69,12 +68,20 @@ function AllMachineLogs() {
 
     navigate(PATH_MACHINE_LOGS.machineLogs.LogGraphReport, { state: { logs: formData } });
   };
-
+  
   const handleCustomerChange = useCallback((newCustomer) => {
     setSelectedCustomer(newCustomer);
     setValue('customer', newCustomer);
-    setValue('machine', null);
-  }, [setValue]);
+    setValue('machine', null); 
+    setValue('serialNo')
+    trigger(['customer', 'machine']);
+  }, [setValue, trigger]);
+
+  const handleMachineChange = useCallback((newMachine) => {
+    setValue('machine', newMachine);
+    setValue('serialNo', newMachine ? newMachine.serialNo : ''); 
+    trigger('serialNo');
+  }, [setValue, trigger]);
 
   return (
     <Container maxWidth={false}>
@@ -89,9 +96,11 @@ function AllMachineLogs() {
                 <Box display="flex" flexDirection="column" width="100%">
                   <RHFAutocomplete
                     name="customer"
-                    label="Select Customer"
+                    label="Select Customer*"
                     options={activeCustomers || []}
-                    getOptionLabel={(option) => option.name || ''}
+                    isOptionEqualToValue={( option, value ) => option._id === value._id }
+                    getOptionLabel={(option) => `${option?.name || ''}`}
+                    renderOption={(props, option) => ( <li {...props} key={option?._id}>{option?.name || ''}</li> )}
                     onChange={(e, newValue) => handleCustomerChange(newValue)}
                   />
                 </Box>
@@ -104,13 +113,15 @@ function AllMachineLogs() {
                     name="machine"
                     label="Select Machine"
                     options={activeCustomerMachines || []}
-                    getOptionLabel={(option) => option.name || ''}
-                    disabled={!customer}
+                    isOptionEqualToValue={( option, value ) => option._id === value._id }
+                    getOptionLabel={(option) => `${ option.serialNo || '' } ${option?.name ? '-' : ''} ${option?.name || ''}`}
+                    renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.serialNo || ''} ${option?.name ? '-' : ''} ${option?.name || ''}`}</li> )}
+                    onChange={(e, newValue) => handleMachineChange(newValue)}
                     sx={{ flex: 1, minWidth: '200px' }}
                   />
                   <RHFTextField
                     name="serialNo"
-                    label="Serial No.*"
+                    label="Serial No."
                     sx={{ flex: 1, minWidth: '200px' }}
                   />
                   <FormControl sx={{ flex: 1, minWidth: '200px' }}>

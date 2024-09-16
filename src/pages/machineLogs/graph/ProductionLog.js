@@ -1,8 +1,8 @@
 import {React, memo } from 'react'
 import { Grid, Container} from '@mui/material';
-import { StyledBg, StyledCardContainer } from '../../theme/styles/default-styles';
-import ProductionGraph from '../../components/Charts/ProductionLog';
-import { Cover } from '../../components/Defaults/Cover';
+import { StyledBg, StyledCardContainer } from '../../../theme/styles/default-styles';
+import ProductionGraph from '../../../components/Charts/ProductionLog';
+import { Cover } from '../../../components/Defaults/Cover';
 
 const ProductionLog = () => (
     <Container maxWidth={false}>
