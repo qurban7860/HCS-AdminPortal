@@ -56,13 +56,13 @@ export default function MachineLogsListTableToolbar({
         value={ filterName }
         onChange={ onFilterName }
         onClick={ onResetFilter }
-        logTypes={logTypes}
+        logTypes={ location.pathname !== PATH_MACHINE_LOGS.root ? logTypes : undefined }
         SubOnClick={ toggleAdd }
         dateFrom={ dateFrom }
         dateTo={ dateTo }
         isDateFromDateTo
-        openGraph={ location.pathname !== PATH_MACHINE_LOGS.machineLogs.LogGraphReport ? toggleGraph : undefined }
-        addButton={!(machine?.isArchived || isHistory) && location.pathname !== PATH_MACHINE_LOGS.machineLogs.LogGraphReport? BUTTONS.ADD_MACHINE_LOGS : undefined}
+        openGraph={ location.pathname !== PATH_MACHINE_LOGS.root ? toggleGraph : undefined }
+        addButton={!(machine?.isArchived || isHistory) && location.pathname !== PATH_MACHINE_LOGS.root? BUTTONS.ADD_MACHINE_LOGS : undefined}
         transferredMachine={ machine?.status?.slug==='transferred' }
       />
     </Stack>

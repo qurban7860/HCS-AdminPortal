@@ -33,7 +33,7 @@ const Data = {
   durations: [25.408, 4.513, 5.183, 4.505, 5.171, 82.859, 1139.618, 1193.875, 1227.623],
 };
 
-const ErpLog = () => {
+const ErpLogs = () => {
   const [chartData, setChartData] = useState(null);
 
   useEffect(() => {
@@ -77,12 +77,12 @@ const ErpLog = () => {
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
-        <Cover name="ERP Logs" backLink coilLog erpLog productionLog />
+        <Cover name="ERP Logs" backLink coilLogs erpLogs productionLogs />
       </StyledCardContainer>
       <Grid item xs={12} sm={12} md={12} lg={12} xl={6}>
         <Card sx={{ p: 4, boxShadow: 3 }}>
           <Typography variant="h6" color="primary" gutterBottom>
-            ERP Production Data
+            ERP Logs Data
           </Typography>
           {!chartData ? (
             <Skeleton variant="rectangular" width="100%" height={120} />
@@ -107,7 +107,7 @@ const ErpLog = () => {
                 plugins: {
                   legend: { display: true, position: 'top', labels: { font: { size: 14 }, color: '#424242' }},
                   tooltip: { mode: 'index', intersect: false },
-                  title: { display: true, text: 'ERP Production Overview', font: { size: 18, weight: 'bold' }, color: '#424242' },
+                  title: { display: true, text: 'ERP Logs Overview', font: { size: 18, weight: 'bold' }, color: '#424242' },
                 },
               }}
               height={120}
@@ -119,4 +119,4 @@ const ErpLog = () => {
   );
 };
 
-export default ErpLog;
+export default ErpLogs;

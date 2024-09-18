@@ -4,14 +4,14 @@ import { StyledBg, StyledCardContainer } from '../../../theme/styles/default-sty
 import ProductionGraph from '../../../components/Charts/ProductionLog';
 import { Cover } from '../../../components/Defaults/Cover';
 
-const ProductionLog = () => (
+const ProductionLogs = () => (
     <Container maxWidth={false}>
       <StyledCardContainer>
-      <Cover name= "Production Logs" backLink coilLog erpLog productionLog/>
+      <Cover name= "Production Logs" backLink coilLogs erpLogs productionLogs/>
       </StyledCardContainer>
       <Grid item xs={12} md={6} lg={8} my={4}>
         <ProductionGraph machineLogs
-          title="Production Log"
+          title="Production Logs"
           chart={{
             categories: [
               '2:00:00PM',
@@ -39,4 +39,4 @@ const ProductionLog = () => (
     </Container>
   )
 
-export default memo( ProductionLog)
+export default memo( ProductionLogs)

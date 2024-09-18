@@ -27,9 +27,9 @@ Cover.propTypes = {
   isArchived: PropTypes.bool,
   isArchivedCustomers: PropTypes.bool,
   isArchivedMachines: PropTypes.bool,
-  productionLog: PropTypes.bool,
-  coilLog: PropTypes.bool,
-  erpLog: PropTypes.bool,
+  productionLogs: PropTypes.bool,
+  coilLogs: PropTypes.bool,
+  erpLogs: PropTypes.bool,
 };
 
 export function Cover({
@@ -44,9 +44,9 @@ export function Cover({
   isArchived,
   isArchivedCustomers,
   isArchivedMachines,
-  productionLog,
-  coilLog,
-  erpLog
+  productionLogs,
+  coilLogs,
+  erpLogs
 }) {
   const navigate = useNavigate();
   const handleSettingsNavigate = () => navigate(PATH_SETTING.root);
@@ -93,9 +93,9 @@ export function Cover({
           { !isArchived && customerContacts && (<Button size='small' startIcon={<Iconify icon="mdi:account-multiple" sx={{ mr: 0.3 }}/>} variant='outlined' sx={{ mr: 1 }}  onClick={() => handleOnClick('contacts', linkCustomerContacts)}> {(!isMobile || expandedButton === 'contacts') && ( <Typography variant="caption" sx={{ fontWeight: 'bold' }}>Contacts</Typography> )}</Button> )}
           { isAllAccessAllowed && !isSettingReadOnly && isArchivedCustomers && (<Button size='small' startIcon={<Iconify icon="fa6-solid:users-slash" sx={{ mr: 0.5 }}/>} variant='outlined' onClick={() => handleOnClick('archivedCustomers', linkArchivedCustomers)}> {(!isMobile || expandedButton === 'archivedCustomers') && ( <Typography variant="caption" sx={{ fontWeight: 'bold', fontSize: { xs: '0.65rem', sm: '0.75rem' }, }}>Archived Customers</Typography> )}</Button> )}
           { isAllAccessAllowed && !isSettingReadOnly && isArchivedMachines && <Button size='small' startIcon={<Iconify icon="fluent:table-delete-column-16-filled" sx={{ mr: 0.3 }}/>} variant='outlined' sx={{ml:2}} onClick={linkArchivedMachines}>Archived Machines</Button>}
-          {erpLog && (<Button size='small' startIcon={<Iconify icon="mdi:report" sx={{ mr: 0.3 }}/>} variant='outlined' sx={{ mr: 1 }} onClick={() => handleOnClick('erpLog', handleErpLog)}> {(!isMobile || expandedButton === 'erpLog') && ( <Typography variant="caption" sx={{ fontWeight: 'bold', fontSize: { xs: '0.65rem', sm: '0.75rem' }, }}>Erp Log</Typography> )}</Button> )}
-          {coilLog && (<Button size='small' startIcon={<Iconify icon="mdi:graph-bar" sx={{ mr: 0.3 }}/>} variant='outlined' sx={{ mr: 1 }} onClick={() => handleOnClick('coilLog', handleCoilLog)}> {(!isMobile || expandedButton === 'coilLog') && ( <Typography variant="caption" sx={{ fontWeight: 'bold', fontSize: { xs: '0.65rem', sm: '0.75rem' }, }}>Coil Log</Typography> )}</Button> )}
-          {productionLog && (<Button size='small' startIcon={<Iconify icon="mdi:chart-line" sx={{ mr: 0.3 }}/>} variant='outlined' onClick={() => handleOnClick('productionLog', handleProductionLog)}> {(!isMobile || expandedButton === 'productionLog') && ( <Typography variant="caption" sx={{ fontWeight: 'bold', fontSize: { xs: '0.65rem', sm: '0.75rem' }, }}>Production Log</Typography> )}</Button> )}
+          {erpLogs && (<Button size='small' startIcon={<Iconify icon="mdi:report" sx={{ mr: 0.3 }}/>} variant='outlined' sx={{ mr: 1 }} onClick={() => handleOnClick('erpLog', handleErpLog)}> {(!isMobile || expandedButton === 'erpLog') && ( <Typography variant="caption" sx={{ fontWeight: 'bold', fontSize: { xs: '0.65rem', sm: '0.75rem' }, }}>Erp Logs</Typography> )}</Button> )}
+          {coilLogs && (<Button size='small' startIcon={<Iconify icon="mdi:graph-bar" sx={{ mr: 0.3 }}/>} variant='outlined' sx={{ mr: 1 }} onClick={() => handleOnClick('coilLog', handleCoilLog)}> {(!isMobile || expandedButton === 'coilLog') && ( <Typography variant="caption" sx={{ fontWeight: 'bold', fontSize: { xs: '0.65rem', sm: '0.75rem' }, }}>Coil Logs</Typography> )}</Button> )}
+          {productionLogs && (<Button size='small' startIcon={<Iconify icon="mdi:chart-line" sx={{ mr: 0.3 }}/>} variant='outlined' onClick={() => handleOnClick('productionLog', handleProductionLog)}> {(!isMobile || expandedButton === 'productionLog') && ( <Typography variant="caption" sx={{ fontWeight: 'bold', fontSize: { xs: '0.65rem', sm: '0.75rem' }, }}>Production Logs</Typography> )}</Button> )}
         </Box>
         </Grid>
       </Grid>

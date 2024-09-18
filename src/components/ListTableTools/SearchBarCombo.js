@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import { LoadingButton } from '@mui/lab';
 import { Grid, TextField, InputAdornment, Button, Stack, 
   FormControl, Select, InputLabel, MenuItem, IconButton, Switch, FormControlLabel, Autocomplete } from '@mui/material';
 import { BUTTONS } from '../../constants/default-constants';
 import Iconify from '../iconify';
+import { PATH_MACHINE_LOGS } from '../../routes/paths';
 import useResponsive from '../../hooks/useResponsive';
 import { StyledTooltip } from '../../theme/styles/default-styles';
 import { getActiveDocumentTypesWithCategory } from '../../redux/slices/document/documentType';
@@ -85,6 +87,7 @@ function SearchBarCombo({
   const [ isDateTo, setIsDateTo ] = useState(new Date(Date.now()).toISOString().split('T')[0]);
   const [ selectedLogTypeState, setSelectedLogTypeState ] = useState(selectedLogType || logTypes?.[0]);
   const isMobile = useResponsive('sm', 'down');
+  const location = useLocation();
   const dispatch = useDispatch()
 
   const { isAllAccessAllowed, isSettingReadOnly, isSecurityReadOnly } = useAuthContext();
@@ -230,7 +233,7 @@ function SearchBarCombo({
             </Grid>
           }
 
-          { isDateFromDateTo && 
+          { location.pathname !== PATH_MACHINE_LOGS.root && isDateFromDateTo && 
             <Grid item xs={12} sm={6} md={4} lg={2} xl={2}  >
                 <TextField  
                   value={isDateFrom} 
@@ -247,7 +250,7 @@ function SearchBarCombo({
             </Grid>
           }
 
-          { isDateFromDateTo && 
+          { location.pathname !== PATH_MACHINE_LOGS.root && isDateFromDateTo && 
             <Grid item xs={12} sm={6} md={4} lg={2} xl={2} >
                 <TextField  
                   value={isDateTo} 

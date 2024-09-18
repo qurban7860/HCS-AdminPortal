@@ -47,7 +47,7 @@ function NavigationConfig() {
     machines: <MachineIcon key="machine"/>,
     users: <Iconify icon="mdi:account-group" />,
     security: <Iconify icon="mdi:security-account" />,
-    machineLogs: <Iconify icon="mdi:clipboard-list-outline" />
+    machineLogs: <Iconify icon="lucide:list-end" />
   };
 
   const { 
