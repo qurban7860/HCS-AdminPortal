@@ -64,11 +64,17 @@ function AllMachineLogs() {
     }
   
     if (customerId) {
-      if (data.dateFrom && data.dateTo) {
-        dispatch(getMachineLogRecords(machineId, page, rowsPerPage, data.dateFrom, data.dateTo, isCreatedAt, data.machine?.isArchived, selectedLogType.type, customerId));
-      } else if (!data.dateFrom && !data.dateTo) {
-        dispatch(getMachineLogRecords(machineId, page, rowsPerPage, null, null, isCreatedAt, data.machine?.isArchived, selectedLogType.type, customerId));
-      }
+      dispatch(
+        getMachineLogRecords({
+          machineId,
+          page,
+          pageSize: rowsPerPage,
+          fromDate: data.dateFrom,
+          toDate: data.dateTo,
+          isMachineArchived: data.machine?.isArchived,
+          selectedLogType: selectedLogType.type,
+        })
+      );
     }
   
     setLogsData(data); 

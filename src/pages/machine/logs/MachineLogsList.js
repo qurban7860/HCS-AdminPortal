@@ -88,11 +88,17 @@ export default function MachineLogsList(){
   useLayoutEffect(() => {
     if (machineId && selectedLogType) {
       setSelectedLogTypeTableColumns(machineLogTypeFormats.find(logType => logType.type === selectedLogType.type)?.tableColumns);
-      if (dateFrom && dateTo) {
-        dispatch(getMachineLogRecords(machineId, page, rowsPerPage, dateFrom, dateTo, archivedLogs, selectedLogType.type ));
-      } else if(!dateFrom && !dateTo) {
-        dispatch(getMachineLogRecords(machineId, page, rowsPerPage, null, null, archivedLogs, selectedLogType.type ));
-      }
+      dispatch(
+        getMachineLogRecords({
+          machineId,
+          page,
+          pageSize: rowsPerPage,
+          fromDate: dateFrom,
+          toDate: dateTo,
+          isMachineArchived: archivedLogs,
+          selectedLogType: selectedLogType.type,
+        })
+      );
     }
   }, [dispatch, machineId, page, rowsPerPage, dateFrom, dateTo, selectedLogType, archivedLogs ]);
 
