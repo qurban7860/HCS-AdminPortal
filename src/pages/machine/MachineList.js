@@ -6,20 +6,18 @@ import axios from 'axios';
 import debounce from 'lodash/debounce';
 // form
 // @mui
-import { Container, Table, TableBody, TableContainer , Tooltip, IconButton, Autocomplete, TextField, TableHead, TableRow, TableCell, Checkbox, Chip} from '@mui/material';
+import { Container, Table, TableBody, TableContainer } from '@mui/material';
 import {
   useTable,
   getComparator,
   TableNoData,
   TableSkeleton,
   TableHeadFilter,
-  TableSelectedAction,
   TablePaginationCustom,
   TablePaginationFilter
 } from '../../components/table';
 import useResponsive from '../../hooks/useResponsive';
 import Scrollbar from '../../components/scrollbar';
-import Iconify from '../../components/iconify';
 import MachineListTableRow from './MachineListTableRow';
 import MachineListTableToolbar from './MachineListTableToolbar';
 
@@ -86,7 +84,6 @@ export default function MachineList({ isArchived }) {
     orderBy,
     setPage,
     onSelectRow,
-    onSelectAllRows,
     onSort,
   } = useTable({ defaultOrderBy: 'serialNo', defaultOrder: 'desc' });
 

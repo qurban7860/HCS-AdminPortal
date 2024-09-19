@@ -14,8 +14,8 @@ export const machineLogTypeFormats = [
       { id: 'componentLength', label: 'Length', align: 'left' },
       { id: 'waste', label: 'Waste', align: 'left' },
       { id: 'operator', label: 'Operator', align: 'left' },
-      { id: 'createdBy.name', label: 'Created By', align: 'left' },
-      { id: 'createdAt', label: 'Created At', align: 'right' },
+      // { id: 'createdBy.name', label: 'Created By', align: 'left' },
+      // { id: 'createdAt', label: 'Created At', align: 'right' },
     ],
   },
   {
@@ -31,8 +31,8 @@ export const machineLogTypeFormats = [
       { id: 'componentName', label: 'Component Name', align: 'left' },
       { id: 'componentLength', label: 'Length', align: 'left' },
       { id: 'waste', label: 'Waste', align: 'left' },
-      { id: 'createdBy.name', label: 'Created By', align: 'left' },
-      { id: 'createdAt', label: 'Created At', align: 'right' },
+      // { id: 'createdBy.name', label: 'Created By', align: 'left' },
+      // { id: 'createdAt', label: 'Created At', align: 'right' },
     ],
   },
   {
@@ -48,8 +48,8 @@ export const machineLogTypeFormats = [
       { id: 'coilBatchName', label: 'Coil Batch Name', align: 'left' },
       { id: 'coilLength', label: 'Coil Length', align: 'left' },
       { id: 'operator', label: 'Operator', align: 'left' },
-      { id: 'createdBy.name', label: 'Created By', align: 'left' },
-      { id: 'createdAt', label: 'Created At', align: 'right' },
+      // { id: 'createdBy.name', label: 'Created By', align: 'left' },
+      // { id: 'createdAt', label: 'Created At', align: 'right' },
     ],
   },
   {

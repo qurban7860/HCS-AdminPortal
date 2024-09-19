@@ -1,12 +1,14 @@
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 // @mui
-import { Stack } from '@mui/material';
+import { Button, Divider, Stack, Typography, useTheme } from '@mui/material';
 // routes
 import { useNavigate, useParams } from 'react-router-dom';
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import SearchBarCombo from '../../../components/ListTableTools/SearchBarCombo';
+import Iconify from '../../../components/iconify';
+import IconTooltip from '../../../components/Icons/IconTooltip';
 // constants
 import { BUTTONS } from '../../../constants/default-constants';
 // styles
@@ -26,6 +28,8 @@ MachineLogsListTableToolbar.propTypes = {
   dateFrom: PropTypes.string,
   dateTo: PropTypes.string,
   logTypes: PropTypes.array,
+  toggleArchivedLogs: PropTypes.func,
+  archivedLogs: PropTypes.bool,
 };
 
 export default function MachineLogsListTableToolbar({
@@ -40,29 +44,55 @@ export default function MachineLogsListTableToolbar({
   dateFrom,
   dateTo,
   logTypes,
+  toggleArchivedLogs,
+  archivedLogs
 }) {
 
   const navigate = useNavigate();
   const { machineId } = useParams();
   const { machine } = useSelector((state) => state.machine); 
   const toggleAdd = () => navigate(PATH_MACHINE.machines.logs.new(machineId));
-  const toggleGraph = () => navigate(PATH_MACHINE.machines.logs.graph(machineId));
+  // const toggleGraph = () => navigate(PATH_MACHINE.machines.logs.graph(machineId));
+
+  const theme = useTheme();
 
   return (
-    <Stack {...options}>
+    <Stack {...options} direction="column" spacing={1} sx={{ px: 2.5, py: 3, pt: 1.5}}>
+      {!archivedLogs ? (
+        <Button
+          size="small"
+          startIcon={<Iconify icon="fluent:table-delete-column-16-filled" sx={{ mr: 0.3 }} />}
+          variant="outlined"
+          sx={{ alignSelf: 'flex-end' }}
+          onClick={toggleArchivedLogs}
+        >
+          Archived Logs
+        </Button>
+      ) : (
+        <Stack direction="row" spacing={1} sx={{ alignSelf: 'flex-start', alignItems: 'center' }}>
+          <IconTooltip
+            title='Back'
+            onClick={toggleArchivedLogs}
+            color={theme.palette.primary.main}
+            icon="mdi:arrow-left"
+          />
+          <Divider orientation="vertical" flexItem />
+          <Typography variant='h4' sx={{ alignSelf: 'flex-start' }}>Archived Logs</Typography>
+        </Stack>
+      )}
       <SearchBarCombo
-        isFiltered={ isFiltered }
-        value={ filterName }
-        onChange={ onFilterName }
-        onClick={ onResetFilter }
+        isFiltered={isFiltered}
+        value={filterName}
+        onChange={onFilterName}
+        onClick={onResetFilter}
         logTypes={logTypes}
-        SubOnClick={ toggleAdd }
-        dateFrom={ dateFrom }
-        dateTo={ dateTo }
+        SubOnClick={toggleAdd}
+        dateFrom={dateFrom}
+        dateTo={dateTo}
         isDateFromDateTo
-        openGraph={ toggleGraph }
+        // openGraph={ toggleGraph }
         addButton={!(machine?.isArchived || isHistory) ? BUTTONS.ADD_MACHINE_LOGS : undefined}
-        transferredMachine={ machine?.status?.slug==='transferred' }
+        transferredMachine={machine?.status?.slug === 'transferred'}
       />
     </Stack>
   );

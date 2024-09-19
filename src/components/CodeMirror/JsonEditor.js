@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 import CodeMirror from '@uiw/react-codemirror';
 import { langs } from '@uiw/codemirror-extensions-langs';
 import { search } from '@codemirror/search';
-import { Grid, Typography, useTheme, Button } from '@mui/material';
+import { Grid, Typography, useTheme, Button, IconButton } from '@mui/material';
 import Iconify from '../iconify';
 import JsonEditorPopover from './JsonEditorPopover';
+import { StyledTooltip } from '../../theme/styles/default-styles';
 
 JsonEditor.propTypes = {
   value: PropTypes.string,
@@ -72,15 +73,24 @@ function JsonEditor({
               <Iconify onClick={handlePopoverOpen} icon="iconamoon:question-mark-circle-bold" sx={{ cursor: 'pointer' }} />
             </Typography>}
             {formatButton && (
-              <Button
-                onClick={() => formatButtonOnClick(value)}
-                sx={{ mx: 1, my: 0.5 }}
-                size="small"
+              <StyledTooltip
                 title="Click to format the text to JSON"
-                startIcon={<Iconify icon="mdi:code-json" />}
+                placement="top"
+                disableFocusListener
+                tooltipcolor={theme?.palette?.primary?.main} 
+                color={theme?.palette?.primary?.main}
               >
-                Format
-              </Button>
+                <Button
+                  onClick={() => formatButtonOnClick(value)}
+                  sx={{ mx: 0.5, my: 0.5 }}
+                  size="small"
+                  variant="outlined"
+                  color="primary"
+                  endIcon={<Iconify icon="mdi:code-json" />}
+                >
+                  Format JSON
+                </Button>
+              </StyledTooltip>
             )}
           </Grid>
           <CodeMirror 

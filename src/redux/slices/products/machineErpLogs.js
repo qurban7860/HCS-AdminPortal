@@ -237,9 +237,30 @@ export function getMachineLogRecord(machineId, id, logType) {
   };
 }
 
+// --------------------------- DELETE RECORD -------------------------------------------
+
+export function deleteMachineLogRecord(id, logType) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.delete(`${CONFIG.SERVER_URL}productLogs/${id}`,
+      {
+        params: {
+          type: logType
+        }
+      });
+      dispatch(slice.actions.setResponseMessage(response.data));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
 // -------------------------- GET RECORD'S ----------------------------------------------------------------------
 
-export function getMachineLogRecords(machineId, page, pageSize, fromDate, toDate, isCreatedAt, isMachineArchived, selectedLogType ) {
+export function getMachineLogRecords(machineId, page, pageSize, fromDate, toDate, isMachineArchived, selectedLogType ) {
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
@@ -251,7 +272,6 @@ export function getMachineLogRecords(machineId, page, pageSize, fromDate, toDate
         isArchived: isMachineArchived,
         pagination: { page, pageSize },
         ...(isMachineArchived && { archivedByMachine: true }),
-        ...(isCreatedAt && { isCreatedAt }),
       };
       
       const response = await axios.get(`${CONFIG.SERVER_URL}productLogs/`, { params } );
