@@ -15,6 +15,8 @@ const ROOTS_DOCUMENT = '/documents';
 const ROOTS_MACHINE_DRAWING = '/machineDrawings';
 const ROOTS_SITEMAP = '/sites';
 const ROOTS_SUPPORT_TICKETS = '/supportTickets';
+const ROOTS_MACHINE_LOGS = '/machine-logs';
+
 
 // ----------------------------------------------------------------------
 
@@ -521,6 +523,19 @@ export const PATH_MACHINE_DRAWING = {
       newVersion: ( id ) => path(ROOTS_MACHINE_DRAWING, `/${id}/view/newVersion`),
     },
   }
+};
+
+// ----------------------- MACHINE LOGS -----------------------------------------
+export const PATH_MACHINE_LOGS = {
+  root: ROOTS_MACHINE_LOGS,
+  permissionDenied: path(ROOTS_MACHINE_LOGS, '/permission-denied'),
+  machineLogs: {
+    list: path(ROOTS_MACHINE_LOGS, '/list'),
+    LogGraphReport: path(ROOTS_MACHINE_LOGS, '/LogGraphReport'),
+    CoilGraph: path(ROOTS_MACHINE_LOGS, '/CoilGraph'),
+    ErpGraph: path(ROOTS_MACHINE_LOGS, '/ErpGraph'),
+    ProductionGraph: path(ROOTS_MACHINE_LOGS, '/ProductionGraph'),   
+  },
 };
 
 // ----------------------- JIRA REPORT -----------------------------------------

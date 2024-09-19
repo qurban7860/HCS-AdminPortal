@@ -4,8 +4,8 @@ import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { Container, Table, TableBody, TableContainer, TableRow, TableCell, TableHead, TableSortLabel } from '@mui/material';
 
 // routes
-import { useParams, useSearchParams } from 'react-router-dom';
-import { PATH_MACHINE } from '../../../routes/paths';
+import { useNavigate, useLocation, useParams, useSearchParams } from 'react-router-dom';
+import { PATH_MACHINE, PATH_MACHINE_LOGS } from '../../../routes/paths';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // components
@@ -83,6 +83,7 @@ export default function MachineLogsList(){
 
   const onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
   const dispatch = useDispatch();
+  const location = useLocation();
 
   useLayoutEffect(() => {
     if (machineId && selectedLogType) {
@@ -160,7 +161,7 @@ export default function MachineLogsList(){
   return (
     <>
     <Container maxWidth={false}>
-      <MachineTabContainer currentTabValue="logs" />
+      { location.pathname !== PATH_MACHINE_LOGS.machineLogs.LogGraphReport ? <MachineTabContainer currentTabValue='logs' /> : undefined } 
       <TableCard>
         <MachineLogsListTableToolbar
           filterName={filterName}

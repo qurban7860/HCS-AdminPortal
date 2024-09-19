@@ -3,8 +3,8 @@ import { useSelector } from 'react-redux';
 // @mui
 import { Button, Divider, Stack, Typography, useTheme } from '@mui/material';
 // routes
-import { useNavigate, useParams } from 'react-router-dom';
-import { PATH_MACHINE } from '../../../routes/paths';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { PATH_MACHINE, PATH_MACHINE_LOGS } from '../../../routes/paths';
 // components
 import SearchBarCombo from '../../../components/ListTableTools/SearchBarCombo';
 import Iconify from '../../../components/iconify';
@@ -51,8 +51,9 @@ export default function MachineLogsListTableToolbar({
   const navigate = useNavigate();
   const { machineId } = useParams();
   const { machine } = useSelector((state) => state.machine); 
+  const location = useLocation();
   const toggleAdd = () => navigate(PATH_MACHINE.machines.logs.new(machineId));
-  // const toggleGraph = () => navigate(PATH_MACHINE.machines.logs.graph(machineId));
+  const toggleGraph = () => navigate(PATH_MACHINE.machines.logs.graph(machineId));
 
   const theme = useTheme();
 
@@ -90,9 +91,9 @@ export default function MachineLogsListTableToolbar({
         dateFrom={dateFrom}
         dateTo={dateTo}
         isDateFromDateTo
-        // openGraph={ toggleGraph }
-        addButton={!(machine?.isArchived || isHistory) ? BUTTONS.ADD_MACHINE_LOGS : undefined}
-        transferredMachine={machine?.status?.slug === 'transferred'}
+        openGraph={ location.pathname !== PATH_MACHINE_LOGS.machineLogs.LogGraphReport ? toggleGraph : undefined }
+        addButton={!(machine?.isArchived || isHistory) && location.pathname !== PATH_MACHINE_LOGS.machineLogs.LogGraphReport? BUTTONS.ADD_MACHINE_LOGS : undefined}
+        transferredMachine={ machine?.status?.slug==='transferred' }
       />
     </Stack>
   );

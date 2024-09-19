@@ -15,15 +15,24 @@ function EventToggleButton( { value, handleChange } ) {
     onChange={handleChange}
     size="small"
     aria-label="event-type"
+    sx={{
+        p:0,
+    }}
   >
     <ToggleButton value="customerVisit" 
       sx={(theme)=>({ 
+        m: '0 !important',
+        borderRadiusTopRight: 'none !important',
+        borderRadiusBottomRight: 'none !important',
         fontSize: '1.1rem',
         fontWeight: 'bold',
         '&.Mui-selected': {
           backgroundColor: theme.palette.primary.main,
           color: 'white',
         },
+        '&:hover': {
+        color: 'black',
+      },
       })}
       aria-label="customer-event"
     >
@@ -31,11 +40,17 @@ function EventToggleButton( { value, handleChange } ) {
     </ToggleButton>
     <ToggleButton value="InternalTask" 
       sx={(theme)=>({ 
+        m: '0 !important',
+        borderRadiusTopLeft: '0 !important',
+        borderRadiusBottomLeft: '0 !important',
         fontSize: '1.1rem',
         fontWeight: 'bold',
         '&.Mui-selected': {
           backgroundColor: theme.palette.primary.main,
           color: 'white',
+        },
+          '&:hover': {
+          color: 'black',
         },
       })}
       aria-label="Internal-event"

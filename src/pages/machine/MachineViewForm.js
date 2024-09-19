@@ -2,12 +2,11 @@ import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // @mui
-import { Card, Grid, Link, Chip, Typography, IconButton, Tab, tabsClasses} from '@mui/material';
+import { Card, Grid, Link, Chip, Typography } from '@mui/material';
 // routes
 import { PATH_CRM, PATH_MACHINE } from '../../routes/paths';
 // slices
 import {
-  getMachines,
   getMachine,
   updateMachine,
   deleteMachine,
@@ -272,11 +271,6 @@ export default function MachineViewForm() {
       console.log('Error:', err);
     }
   };
-
-  const handleJiraNaviagte = ( )=>{
-    const url = `https://howickltd.atlassian.net/jira/servicedesk/projects/HWKSC/queues/custom/3/HWKSC-492`
-    window.open( url, '_blank')
-  }
 
   return (
     <>
