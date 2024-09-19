@@ -55,9 +55,9 @@ export function Cover({
   const linkArchivedCustomers = () =>  navigate(PATH_CRM.customers.archived.root);
   const linkArchivedMachines = () =>  navigate(PATH_MACHINE.machines.archived.root);
   const handleBackLink = () => window.history.back();
-  const handleCoilLog = () => navigate(PATH_MACHINE_LOGS.machineLogs.CoilGraph);
-  const handleErpLog = () => navigate(PATH_MACHINE_LOGS.machineLogs.ErpGraph);
-  const handleProductionLog = () => navigate(PATH_MACHINE_LOGS.machineLogs.ProductionGraph);
+  const handleCoilLog = () => navigate(PATH_MACHINE_LOGS.machineLogs.CoilLogs);
+  const handleErpLog = () => navigate(PATH_MACHINE_LOGS.machineLogs.ErpLogs);
+  const handleProductionLog = () => navigate(PATH_MACHINE_LOGS.machineLogs.ProductionLogs);
   const { isAllAccessAllowed, isSettingReadOnly } = useAuthContext();
   const isMobile = useResponsive('down', 'sm');
   const [expandedButton, setExpandedButton] = useState(null);

@@ -248,7 +248,6 @@ import {
   
   // --------------------------- MACHINE LOG -------------------------------------
   AllMachinesLogs,
-  LogsViewForm,
   CoilLogs,
   ErpLogs,
   ProductionLogs,
@@ -1127,7 +1126,6 @@ export default function Router() {
       ),
       children: [
         { path: '', element: <AllMachinesLogs />, index: true },
-        { path: 'view', element: <LogsViewForm /> },
         { path: 'coilLogs', element: <CoilLogs /> },
         { path: 'erpLogs', element: <ErpLogs /> },
         { path: 'productionLogs', element: <ProductionLogs /> },

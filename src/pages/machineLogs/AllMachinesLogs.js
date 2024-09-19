@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import { Box, Grid, Stack, Card, TextField, Container } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -8,6 +7,7 @@ import { LoadingButton } from '@mui/lab';
 import FormProvider, { RHFAutocomplete } from '../../components/hook-form';
 import { getActiveCustomerMachines, resetActiveCustomerMachines } from '../../redux/slices/products/machine';
 import { getActiveCustomers } from '../../redux/slices/customer/customer';
+import { getMachineLogRecords } from '../../redux/slices/products/machineErpLogs'; 
 import { AddMachineLogSchema } from '../schemas/machine'; 
 import useResponsive from '../../hooks/useResponsive';
 import { Cover } from '../../components/Defaults/Cover';
@@ -19,9 +19,7 @@ function AllMachineLogs() {
   const dispatch = useDispatch();
   const { activeCustomerMachines } = useSelector((state) => state.machine);
   const { activeCustomers } = useSelector((state) => state.customer);
-  const [isDateFrom, setIsDateFrom] = useState(new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]);
-  const [isDateTo, setIsDateTo] = useState(new Date(Date.now()).toISOString().split('T')[0]);
-  const [selectedCustomer, setSelectedCustomer] = useState(null);
+  const { selectedLogType } = useSelector((state) => state.machineErpLogs);
   const isMobile = useResponsive('down', 'sm');
   const [logsData, setLogsData] = useState(null);
 
@@ -29,18 +27,17 @@ function AllMachineLogs() {
     customer: null,
     machine: null,
     logType: null,
+    dateFrom: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+    dateTo: new Date(Date.now()).toISOString().split('T')[0],
   };
-
+  
   const methods = useForm({
     resolver: yupResolver(AddMachineLogSchema),
     defaultValues,
   });
 
   const { watch, setValue, handleSubmit, trigger } = methods;
-  const { customer, machine } = watch();
-
-  const onChangeStartDate = (e) => setIsDateFrom(e.target.value);
-  const onChangeEndDate = (e) => setIsDateTo(e.target.value);
+  const { customer, machine, logType, dateFrom, dateTo } = watch();
 
   useEffect(() => {
     dispatch(getActiveCustomers());
@@ -55,31 +52,44 @@ function AllMachineLogs() {
   }, [dispatch, customer]);
 
   const onSubmit = (data) => {
-    const formData = {
-      ...data,
-      dates: [isDateFrom, isDateTo],
-      customerId: selectedCustomer ? selectedCustomer._id : null,
-    };
-    setLogsData(formData);
+    const machineId = data.machine?._id;
+    const isCreatedAt = false;
+    const page = 0; 
+    const rowsPerPage = 100; 
+    const customerId = data.customer?._id;
+  
+    if (!selectedLogType) {
+      console.error("Log type is not defined!");
+      return;
+    }
+  
+    if (customerId) {
+      if (data.dateFrom && data.dateTo) {
+        dispatch(getMachineLogRecords(machineId, page, rowsPerPage, data.dateFrom, data.dateTo, isCreatedAt, data.machine?.isArchived, selectedLogType.type, customerId));
+      } else if (!data.dateFrom && !data.dateTo) {
+        dispatch(getMachineLogRecords(machineId, page, rowsPerPage, null, null, isCreatedAt, data.machine?.isArchived, selectedLogType.type, customerId));
+      }
+    }
+  
+    setLogsData(data); 
   };
   
   const handleCustomerChange = useCallback((newCustomer) => {
-    setSelectedCustomer(newCustomer);
     setValue('customer', newCustomer);
     setValue('machine', null); 
-    trigger(['customer', 'machine']);
+    trigger(['customer', 'machine']); 
   }, [setValue, trigger]);
 
   const handleMachineChange = useCallback((newMachine) => {
     setValue('machine', newMachine);
-    trigger('machine');
+    trigger('machine'); 
   }, [setValue, trigger]);
 
   return (
     <>
       <Container maxWidth={false}>
         <StyledCardContainer>
-          <Cover name="Machine Logs" coilLogs erpLogs productionLogs />
+          <Cover name="Machine Logs" />
         </StyledCardContainer>
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={2}>
@@ -129,34 +139,32 @@ function AllMachineLogs() {
                     gridTemplateColumns={{ xs: '1fr', sm: 'repeat(3, 1fr)' }}
                   >
                     <TextField
-                      value={isDateFrom}
+                      {...methods.register('dateFrom')}
                       type="date"
                       label="Start Date"
                       sx={{ width: '100%' }}
-                      onChange={onChangeStartDate}
-                      error={isDateFrom && isDateTo && isDateFrom > isDateTo}
+                      InputLabelProps={{ shrink: true }}
+                      size="small"
+                      error={dateFrom && dateTo && dateFrom > dateTo}
                       helperText={
-                        isDateFrom && isDateTo && isDateFrom > isDateTo
+                        dateFrom && dateTo && dateFrom > dateTo
                           ? 'Start Date should be before End Date'
                           : ''
                       }
-                      InputLabelProps={{ shrink: true }}
-                      size="small"
                     />
                     <TextField
-                      value={isDateTo}
+                      {...methods.register('dateTo')}
                       type="date"
                       label="End Date"
                       sx={{ width: '100%' }}
-                      onChange={onChangeEndDate}
-                      error={isDateFrom && isDateTo && isDateFrom > isDateTo}
+                      InputLabelProps={{ shrink: true }}
+                      size="small"
+                      error={dateFrom && dateTo && dateFrom > dateTo}
                       helperText={
-                        isDateFrom && isDateTo && isDateFrom > isDateTo
+                        dateFrom && dateTo && dateFrom > dateTo
                           ? 'End Date should be after Start Date'
                           : ''
                       }
-                      InputLabelProps={{ shrink: true }}
-                      size="small"
                     />
                     <RHFAutocomplete
                       label="Select Log Type*"

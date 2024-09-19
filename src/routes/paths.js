@@ -530,10 +530,9 @@ export const PATH_MACHINE_LOGS = {
   root: ROOTS_MACHINE_LOGS,
   permissionDenied: path(ROOTS_MACHINE_LOGS, '/permission-denied'),
   machineLogs: {
-    LogsViewForm: path(ROOTS_MACHINE_LOGS, '/view'),
-    CoilGraph: path(ROOTS_MACHINE_LOGS, '/coilLogs'),
-    ErpGraph: path(ROOTS_MACHINE_LOGS, '/erpLogs'),
-    ProductionGraph: path(ROOTS_MACHINE_LOGS, '/productionLogs'),   
+    CoilLogs: path(ROOTS_MACHINE_LOGS, '/coilLogs'),
+    ErpLogs: path(ROOTS_MACHINE_LOGS, '/erpLogs'),
+    ProductionLogs: path(ROOTS_MACHINE_LOGS, '/productionLogs'),   
   },
 };
 
