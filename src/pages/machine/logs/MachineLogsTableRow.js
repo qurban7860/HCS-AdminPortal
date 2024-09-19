@@ -38,21 +38,17 @@ export default function MachineLogsTableRow({
 
   return (
     <StyledTableRow hover selected={selected}>
-      <LinkTableCell
-        align="left"
-        onClick={onViewRow}
-        param={fDateTime(date)}
-      />
+      <LinkTableCell align="left" onClick={onViewRow} param={fDateTime(date)} />
       {columnsToShow?.map((column, index) => {
         if (['date', 'createdBy.name', 'createdAt'].includes(column.id)) return null;
         return (
-          <TableCell key={index} align={column.align}>
+          <TableCell key={index} align={column.align} onClick={onViewRow} sx={{cursor: 'pointer',}}>
             {row?.[column.id] || ''}
           </TableCell>
         );
       })}
-      <TableCell align="left">{createdBy?.name || ''}</TableCell>
-      <TableCell align="right">{fDateTime(createdAt)}</TableCell>
+      {/* <TableCell align="left">{createdBy?.name || ''}</TableCell>
+      <TableCell align="right">{fDateTime(createdAt)}</TableCell> */}
     </StyledTableRow>
   );
 }

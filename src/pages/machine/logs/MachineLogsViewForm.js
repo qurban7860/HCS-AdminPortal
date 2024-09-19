@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { memo, useEffect, useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // @mui
@@ -13,28 +14,37 @@ import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
 import MachineTabContainer from '../util/MachineTabContainer';
 
+MachineLogsViewForm.propTypes = {
+  logsDetails: PropTypes.object,
+};
 
-function MachineLogsViewForm() {
+function MachineLogsViewForm({ logsDetails }) {
 
-  const { machineErpLog, isLoading } = useSelector((state) => state.machineErpLogs);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const { machineId, id: combinedId } = useParams();
-  const [logType, logId] = combinedId.split('_');
+  // const { machineErpLog, isLoading } = useSelector((state) => state.machineErpLogs);
+  // const dispatch = useDispatch();
+  // const navigate = useNavigate();
+  // const { machineId, id: combinedId } = useParams();
+  // const [logType, logId] = combinedId.split('_');
   const [logsToShow, setLogsToShow] = useState([]);
 
-  useLayoutEffect(()=>{
-    if(machineId && logId){
-      dispatch(getMachineLogRecord(machineId, logId, logType))
-    }
-  },[ dispatch, machineId, logId, logType ])
+  // useLayoutEffect(()=>{
+  //   if(machineId && logId){
+  //     dispatch(getMachineLogRecord(machineId, logId, logType))
+  //   }
+  // },[ dispatch, machineId, logId, logType ])
 
   useEffect(() => {
-    if (machineErpLog) {
-      const formattedLog = formatMachineErpLog(machineErpLog);
+    if (logsDetails) {
+      const formattedLog = formatMachineErpLog(logsDetails);
       setLogsToShow(formattedLog);
     }
-  }, [machineErpLog]);
+  }, [logsDetails]);
+  // useEffect(() => {
+  //   if (machineErpLog) {
+  //     const formattedLog = formatMachineErpLog(machineErpLog);
+  //     setLogsToShow(formattedLog);
+  //   }
+  // }, [machineErpLog]);
 
   const formatMachineErpLog = (log) => {
     const { _id, createdIP, updatedIP, __v, ...rest } = log;
@@ -52,14 +62,14 @@ function MachineLogsViewForm() {
 
   return (
     <Container maxWidth={false}>
-      <MachineTabContainer currentTabValue="logs" />
+      {/* <MachineTabContainer currentTabValue="logs" /> */}
       <Card sx={{ p: 2 }}>
         <Grid>
-          <ViewFormEditDeleteButtons
+          {/* <ViewFormEditDeleteButtons
             backLink={() => navigate(PATH_MACHINE.machines.logs.root(machineId))}
-          />
+          /> */}
           <Stack spacing={2} sx={{ p: 1 }}>
-            {isLoading ? (
+            {/* {isLoading ? (
               <>
                 <Skeleton />
                 <Skeleton />
@@ -73,9 +83,10 @@ function MachineLogsViewForm() {
               </>
             ) : (
               <JsonEditor value={JSON.stringify(logsToShow, null, 2)} readOnly />
-            )}
+            )} */}
+            <JsonEditor value={JSON.stringify(logsToShow, null, 2)} readOnly />
           </Stack>
-          <ViewFormAudit defaultValues={machineErpLog} />
+          {/* <ViewFormAudit defaultValues={logsDetails} /> */}
         </Grid>
       </Card>
     </Container>

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 // form
 import { useForm } from 'react-hook-form';
 // @mui
-import { Container ,Card, Grid, Stack, Button, FormHelperText, Checkbox, Typography, Box } from '@mui/material';
+import { Container ,Card, Grid, Stack, Button, FormHelperText, Checkbox, Typography, Box, useTheme, Chip } from '@mui/material';
 // routes
 import { useNavigate, useParams } from 'react-router-dom';
 import { PATH_MACHINE } from '../../../routes/paths';
@@ -17,9 +17,7 @@ import FormProvider, { RHFAutocomplete } from '../../../components/hook-form';
 import CodeMirror from '../../../components/CodeMirror/JsonEditor';
 import Iconify from '../../../components/iconify/Iconify';
 import { ICONS } from '../../../constants/icons/default-icons';
-import { HeaderArr, unitHeaders } from './Index';
 import MachineTabContainer from '../util/MachineTabContainer';
-import { isValidDate } from '../../../utils/formatTime';
 import { machineLogTypeFormats } from '../../../constants/machineLogTypeFormats';
 
 
@@ -35,8 +33,9 @@ export default function MachineLogsAddForm() {
   const { enqueueSnackbar } = useSnackbar();
   const [ error, setError ] = useState(false);
   const [fileInputKey, setFileInputKey] = useState(0);
-
   const [selectedCheckbox, setSelectedCheckbox] = useState(null);
+
+  const theme = useTheme();
 
   const handleCheckboxChange = (index) => {
     setSelectedCheckbox(index === selectedCheckbox ? null : index);
@@ -133,13 +132,21 @@ export default function MachineLogsAddForm() {
 
   const formatTxtToJson = (data = logTextValue) => {
     if (typeof data === 'string' && data.trim() !== '') {
-      txtToJson(data).then(result => {
-        if(result.length > 0) {
-        const stringifyJSON = JSON.stringify(result, null, 2)
-          setValue('logTextValue', stringifyJSON )
+      try {
+        const parsedData = JSON.parse(data)
+        if (Array.isArray(parsedData) && parsedData.every(item => typeof item === 'object')) {
+          enqueueSnackbar("Data already in JSON Format");
         }
-      })
+      } catch {
+        txtToJson(data).then(result => {
+          if(result.length > 0) {
+            const stringifyJSON = JSON.stringify(result, null, 2)
+            setValue('logTextValue', stringifyJSON )
+          }
+        })
+      }
     }
+    return null;
   }
 
   const txtToJson = async (data) => {
@@ -293,6 +300,20 @@ const toggleCancel = () => navigate(PATH_MACHINE.machines.logs.root(machineId));
                       </Button>
                     </Grid>
                   </Grid>
+                  {logType && logVersion && (
+                    <Grid item xs={12}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                        <Chip 
+                          label={<Typography variant="overline">Log Format</Typography>}
+                          icon={<Iconify icon="tabler:logs" color={theme.palette.primary.main} />}
+                          sx={{ mr: 1 }}
+                        />
+                        <Typography variant="body2" color="text.secondary">
+                          {logType?.formats?.[logVersion]?.map((format) => format).join(', ')}
+                        </Typography>
+                      </Box>
+                    </Grid>
+                  )}
                   <CodeMirror
                     value={logTextValue}
                     HandleChangeIniJson={HandleChangeIniJson}

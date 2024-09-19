@@ -1,8 +1,7 @@
-import { memo, useEffect, useState } from 'react'
+import { memo, useState } from 'react'
 import PropTypes from 'prop-types';
-import { useDispatch } from 'react-redux';
 // @mui
-import { Box, Switch, TablePagination, FormControlLabel, Button, Grid, Select, OutlinedInput, MenuItem, Checkbox, ListItemText, Menu, IconButton } from '@mui/material';
+import { Box, TablePagination, Button, Grid, MenuItem, Checkbox, Menu } from '@mui/material';
 import Iconify from '../iconify';
 
 // ----------------------------------------------------------------------
@@ -25,8 +24,6 @@ function TablePaginationFilter({
   sx,
   ...other
 }) {
-
-  const dispatch = useDispatch();
   
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedColumns, setSelectedColumns] = useState(columns.filter(head => hiddenColumns[head.id]));

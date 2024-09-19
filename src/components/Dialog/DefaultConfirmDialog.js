@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button } from '@mui/material';
 import ConfirmDialog from '../confirm-dialog';
-import { FORMLABELS, BUTTONS } from '../../constants/default-constants';
+import { DIALOGS, BUTTONS } from '../../constants/default-constants';
 
 DefaultConfirmDialog.propTypes = {
   open: PropTypes.bool,
@@ -20,8 +20,8 @@ function DefaultConfirmDialog({ open, onClose }) {
     <ConfirmDialog
       open={openDialog}
       onClose={handleCloseDialog}
-      title={FORMLABELS.DIALOGS.DELETE.title}
-      content={FORMLABELS.DIALOGS.DELETE.content}
+      title={DIALOGS.DELETE.title}
+      content={DIALOGS.DELETE.content}
       action={
         <Button
           variant="contained"
