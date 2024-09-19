@@ -29,7 +29,7 @@ ChartJS.register(
   Legend
 );
 
-const LogGraphReport = () => {
+const LogsGraphReport = () => {
   const location = useLocation();
   const { logs } = location.state || {};
   const [chartData, setChartData] = useState(null);
@@ -72,7 +72,7 @@ const LogGraphReport = () => {
     <>
     <Container maxWidth={false}>
       <StyledCardContainer>
-        <Cover name="Logs Graph Report" coilLog erpLog productionLog/>
+        <Cover name="Logs Graph Report" coilLogs erpLogs productionLogs/>
       </StyledCardContainer>
     </Container>
       <MachineLogsList logs={logs} />
@@ -141,4 +141,4 @@ const LogGraphReport = () => {
   );
 };
 
-export default LogGraphReport;
+export default LogsGraphReport;

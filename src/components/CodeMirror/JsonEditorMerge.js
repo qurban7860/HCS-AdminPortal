@@ -6,33 +6,34 @@ import CodeMirrorMerge from 'react-codemirror-merge';
 import './style.css';
 import ViewFormAuditBlock from '../ViewForms/ViewFormAuditBlock';
 
-// Please don't destrcture below code! It will not work properly.
-const {Original} = CodeMirrorMerge;
-const {Modified} = CodeMirrorMerge;
+const { Original } = CodeMirrorMerge;
+const { Modified } = CodeMirrorMerge;
 
 JsonEditorMerge.propTypes = {
+  isLoadingOriginal: PropTypes.bool,
+  isLoadingModified: PropTypes.bool,
   value: PropTypes.object,
   modifiedValue: PropTypes.object,
   HandleChangeIniJson: PropTypes.func,
   readOnly: PropTypes.bool,
 };
 
-function JsonEditorMerge({value, modifiedValue, HandleChangeIniJson, readOnly }) {
+function JsonEditorMerge({ isLoadingOriginal, value, isLoadingModified, modifiedValue, HandleChangeIniJson, readOnly }) {
 
   return  (<Grid sx={{p:1 }}>
             <Typography variant='subtitle2' display="flex" alignItems="center">Note: <Typography variant='caption' sx={{ml:1}}> Ctrl + F / Cmd + F to find text in Code Editer</Typography></Typography>
               <div>
-                <CodeMirrorMerge orientation="a-b" gutter highlightChanges >
-                  <Original 
-                    readOnly
-                    value={ JSON.stringify( value?.configuration, null, 2 ) }  
-                    extensions={[ langs.json(), search({top: true, searchPanelOpen: true }) ]} 
-                  />
-                  <Modified
-                    readOnly
-                    value={ JSON.stringify( modifiedValue?.configuration, null, 2 ) }
-                    extensions={[ langs.json(), search({top: true, searchPanelOpen: true }) ]} 
-                  />
+                <CodeMirrorMerge  >
+                    <Original
+                      readOnly
+                      value={JSON.stringify( isLoadingOriginal && !value?.configuration ? 'Loading...' : value?.configuration, null, 2)}
+                      extensions={[langs.json(), search({ top: true, searchPanelOpen: true })]}
+                    />
+                    <Modified
+                      readOnly
+                      value={JSON.stringify( isLoadingModified && !modifiedValue?.configuration ? 'Loading...' : modifiedValue?.configuration , null, 2)}
+                      extensions={[langs.json(), search({ top: true, searchPanelOpen: true })]}
+                    />
                 </CodeMirrorMerge>
               </div>
             <Box

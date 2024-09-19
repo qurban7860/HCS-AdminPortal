@@ -15,6 +15,7 @@ const initialState = {
   responseMessage: null,
   success: false,
   isLoading: false,
+  isLoadingMachines: false,
   error: null,
   machine: {},
   machineForDialog: {},
@@ -57,6 +58,7 @@ const slice = createSlice({
     // START LOADING
     startLoading(state) {
       state.isLoading = true;
+      state.isLoadingMachines = true;
     },
 
     // STOP LOADING
@@ -106,6 +108,7 @@ const slice = createSlice({
     // HAS ERROR
     hasError(state, action) {
       state.isLoading = false;
+      state.isLoadingMachines = false;
       state.error = action.payload;
       state.initial = true;
     },
@@ -143,6 +146,7 @@ const slice = createSlice({
     // GET Customer Machines
     getCustomerMachinesSuccess(state, action) {
       state.isLoading = false;
+      state.isLoadingMachines = false;
       state.success = true;
       state.customerMachines = action.payload;
       state.initial = true;

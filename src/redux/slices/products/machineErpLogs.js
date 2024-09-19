@@ -260,7 +260,7 @@ export function deleteMachineLogRecord(id, logType) {
 
 // -------------------------- GET RECORD'S ----------------------------------------------------------------------
 
-export function getMachineLogRecords(machineId, page, pageSize, fromDate, toDate, isMachineArchived, selectedLogType ) {
+export function getMachineLogRecords(machineId, page, pageSize, fromDate, toDate, isCreatedAt, isMachineArchived, selectedLogType, customer ) {
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
@@ -272,8 +272,9 @@ export function getMachineLogRecords(machineId, page, pageSize, fromDate, toDate
         isArchived: isMachineArchived,
         pagination: { page, pageSize },
         ...(isMachineArchived && { archivedByMachine: true }),
+        ...(isCreatedAt && { isCreatedAt }),
+        ...(customer && { customer })
       };
-      
       const response = await axios.get(`${CONFIG.SERVER_URL}productLogs/`, { params } );
       dispatch(slice.actions.getMachineErpLogRecordsSuccess(response.data));
     } catch (error) {

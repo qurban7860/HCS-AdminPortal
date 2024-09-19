@@ -33,7 +33,7 @@ const Data = {
   measurements: [1.6, 1.6, 1.6, 1.15, 0.95, 0.95, 0.95, 1.57, 0.95, 0.75, 1.57],
 };
 
-const CoilLogGraph = () => {
+const CoilLogs = () => {
   const [chartData, setChartData] = useState({
     labels: Data.timestamps,
     datasets: [
@@ -55,13 +55,13 @@ const CoilLogGraph = () => {
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
-        <Cover name="Coil Logs" backLink coilLog erpLog productionLog />
+        <Cover name="Coil Logs" backLink coilLogs erpLogs productionLogs />
       </StyledCardContainer>
       <Box display="flex" flexDirection="column" width="100%">
         <Grid item xs={12} sm={12} md={12} lg={12} xl={6}>
           <Card sx={{ p: 4, boxShadow: 3 }}>
             <Typography variant="h6" color="primary" gutterBottom>
-              Coil Log Data
+              Coil Logs Data
             </Typography>
             <div style={{ position: 'relative', width: '100%', height: '500px' }}>
               <Line
@@ -82,7 +82,7 @@ const CoilLogGraph = () => {
                   plugins: {
                     legend: { display: true, position: 'top', labels: { font: { size: 14 }, color: '#424242' } },
                     tooltip: { mode: 'index', intersect: false },
-                    title: { display: true, text: 'Coil Log Overview', font: { size: 18, weight: 'bold' }, color: '#424242' },
+                    title: { display: true, text: 'Coil Logs Overview', font: { size: 18, weight: 'bold' }, color: '#424242' },
                   },
                 }}
               />
@@ -94,4 +94,4 @@ const CoilLogGraph = () => {
   );
 };
 
-export default CoilLogGraph;
+export default CoilLogs;

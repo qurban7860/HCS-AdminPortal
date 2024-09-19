@@ -161,7 +161,7 @@ export default function MachineLogsList(){
   return (
     <>
     <Container maxWidth={false}>
-      { location.pathname !== PATH_MACHINE_LOGS.machineLogs.LogGraphReport ? <MachineTabContainer currentTabValue='logs' /> : undefined } 
+      { location.pathname !== PATH_MACHINE_LOGS.root ? <MachineTabContainer currentTabValue='logs' /> : undefined } 
       <TableCard>
         <MachineLogsListTableToolbar
           filterName={filterName}
@@ -210,7 +210,7 @@ export default function MachineLogsList(){
                       key={headCell.id}
                       align={headCell.align || 'left'}
                       sortDirection={orderBy === headCell.id ? order : false}
-                      sx={{ width: headCell.width, minWidth: headCell.minWidth }}
+                      sx={{ position: 'sticky', top: 0, width: headCell.width, minWidth: headCell.minWidth }}
                     >
                       {onSort ? (
                         <TableSortLabel

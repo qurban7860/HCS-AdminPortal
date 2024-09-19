@@ -247,11 +247,10 @@ import {
   MachineStatusEdit,
   
   // --------------------------- MACHINE LOG -------------------------------------
-  MachineLogList,
-  LogGraphReport,
-  CoilGraph,
-  ErpGraph,
-  ProductionGraph,
+  AllMachinesLogs,
+  CoilLogs,
+  ErpLogs,
+  ProductionLogs,
   
   // --------------------- Machine Settings --------------------------
 
@@ -1126,11 +1125,10 @@ export default function Router() {
         </AuthGuard>
       ),
       children: [
-        { path: '', element: <MachineLogList />, index: true },
-        { path: 'LogGraphReport', element: <LogGraphReport /> },
-        { path: 'CoilGraph', element: <CoilGraph /> },
-        { path: 'ErpGraph', element: <ErpGraph /> },
-        { path: 'Productiongraph', element: <ProductionGraph /> },
+        { path: '', element: <AllMachinesLogs />, index: true },
+        { path: 'coilLogs', element: <CoilLogs /> },
+        { path: 'erpLogs', element: <ErpLogs /> },
+        { path: 'productionLogs', element: <ProductionLogs /> },
       ],
     },    
     // ----------------------------- Sites Report -----------------------------------

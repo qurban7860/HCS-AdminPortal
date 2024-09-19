@@ -30,7 +30,7 @@ function HistoricalConfigurationsViewForm() {
     () => ({
       backupDate:                           historicalConfiguration?.backupDate,
       isActive:                             historicalConfiguration?.isActive,
-      isManufacture:                        historicalConfiguration.isManufacture, 
+      isManufacture:                        historicalConfiguration?.isManufacture, 
       createdAt:                            historicalConfiguration?.createdAt || '',
       createdByFullName:                    historicalConfiguration?.createdBy?.name || '',
       createdIP:                            historicalConfiguration?.createdIP || '',
@@ -38,11 +38,9 @@ function HistoricalConfigurationsViewForm() {
       updatedByFullName:                    historicalConfiguration?.updatedBy?.name || '',
       updatedIP:                            historicalConfiguration?.updatedIP || '',
     }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [ historicalConfiguration]
+    [ historicalConfiguration ]
   );
   
-
   return (
     <Container maxWidth={false} >
     <MachineTabContainer currentTabValue='ini' />

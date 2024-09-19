@@ -203,7 +203,7 @@ export const MachineServiceRecordHistoryList = Loadable(lazy(() => import('../pa
 export const MachineINIList = Loadable(lazy(() => import('../pages/machine/historicalConfigurations/HistoricalConfigurationsList')));
 export const MachineINIAdd = Loadable(lazy(() => import('../pages/machine/historicalConfigurations/HistoricalConfigurationsAddForm')));
 export const MachineINIView = Loadable(lazy(() => import('../pages/machine/historicalConfigurations/HistoricalConfigurationsViewForm')));
-export const MachineINICompareView = Loadable(lazy(() => import('../pages/machine/historicalConfigurations/HistoricalConfigurationsCompareViewForm')));
+export const MachineINICompareView = Loadable(lazy(() => import('../pages/machine/historicalConfigurations/HistoricalConfigurationsCompareView')));
 
 // --------------------------- MACHINE LOGS -------------------------------------
 
@@ -222,11 +222,10 @@ export const MachineSetting = Loadable(lazy(() => import('../pages/machineSettin
 
 // ---------------------  MACHINE LOGS -------------------------------------------
 
-export const MachineLogList = Loadable(lazy(() => import('../pages/machineLogs/AllMachinesLogs')));
-export const LogGraphReport = Loadable(lazy(() => import('../pages/machineLogs/graph/LogGraphReport')));
-export const CoilGraph = Loadable(lazy(() => import('../pages/machineLogs/graph/CoilLog')));
-export const ErpGraph = Loadable(lazy(() => import('../pages/machineLogs/graph/ErpLog')));
-export const ProductionGraph = Loadable(lazy(() => import('../pages/machineLogs/graph/ProductionLog')));
+export const AllMachinesLogs = Loadable(lazy(() => import('../pages/machineLogs/AllMachinesLogs')));
+export const CoilLogs = Loadable(lazy(() => import('../pages/machineLogs/graph/CoilLogs')));
+export const ErpLogs = Loadable(lazy(() => import('../pages/machineLogs/graph/ErpLogs')));
+export const ProductionLogs = Loadable(lazy(() => import('../pages/machineLogs/graph/ProductionLogs')));
 
 
 
