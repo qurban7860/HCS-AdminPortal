@@ -35,7 +35,7 @@ function AllMachineLogs() {
     defaultValues,
   });
 
-  const { watch, setValue, handleSubmit, trigger } = methods;
+  const { watch, setValue, handleSubmit, trigger, formState: { errors } } = methods;
   const { customer, machine, logType, dateFrom, dateTo } = watch();
 
   useEffect(() => {
@@ -172,21 +172,34 @@ function AllMachineLogs() {
                       }
                     />
                     <RHFAutocomplete
-                      label="Select Log Type*"
                       name="logType"
                       options={machineLogTypeFormats}
-                      size="small"
-                      getOptionLabel={(option) => option.type}
+                      getOptionLabel={(option) => option.type || ''}
                       isOptionEqualToValue={(option, value) => option?.type === value?.type}
+                      onChange={(e, newValue) => handleLogTypeChange(newValue)}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          size="small"
+                          label="Select Log Type*"
+                          error={!!errors.logType}
+                          helperText={errors.logType?.message}
+                          inputProps={{
+                            ...params.inputProps,
+                            readOnly: true,
+                            style: { cursor: 'pointer' },
+                          }}
+                        />
+                      )}
                       renderOption={(props, option) => (
                         <li {...props} key={option?.type}>
                           {option.type || ''}
                         </li>
                       )}
-                      onChange={(e, newValue) => handleLogTypeChange(newValue)}
                       disableClearable
                       autoSelect
                       openOnFocus
+                      getOptionDisabled={(option) => option?.disabled}
                     />
                   </Box>
                 </Stack>

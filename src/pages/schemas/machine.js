@@ -134,8 +134,14 @@ export const editMachineSchema = Yup.object().shape({
 export const AddMachineLogSchema = Yup.object().shape({
   customer: Yup.object().nullable().required('Customer is required'),
   machine: Yup.object().nullable(),
-  logType: Yup.object().nullable().required('Log Type is required')
+  logType: Yup.object()
+    .nullable()
+    .required('Log Type is required')
+    .shape({
+      type: Yup.string().required('Log Type is required')
+    }),
 });
+
 
 export const AddMachineDocumentSchema = Yup.object().shape({
   displayName: Yup.string().max(50),
