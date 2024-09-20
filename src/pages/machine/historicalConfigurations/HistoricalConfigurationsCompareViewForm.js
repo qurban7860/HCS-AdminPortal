@@ -74,11 +74,11 @@ function HistoricalConfigurationsViewForm() {
     });
   }, [machine, historicalConfiguration, compareHistoricalConfiguration, selectedINIs, reset]);
 
-console.log("INI : ",INI,"compareINI : ", compareINI)
   const handleChangeMachine = (option, newValue) => {
     if( newValue?._id ){
       if(customerMachine?._id !== newValue?._id){
         setValue('compareINI',null )
+        dispatch(resetCompareHistoricalConfigurationRecords());
       }
       dispatch(getHistoricalConfigurationRecords(newValue._id, false , true ));
       setValue('customerMachine',newValue)
