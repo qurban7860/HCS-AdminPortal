@@ -7,13 +7,14 @@ import { Autocomplete, TextField } from '@mui/material';
 RHFAutocomplete.propTypes = {
   name: PropTypes.string,
   label: PropTypes.string,
+  placeholder: PropTypes.string,
   loading: PropTypes.bool,
   helperText: PropTypes.node,
   Error: PropTypes.bool,
   nonEditable: PropTypes.bool,
 };
 
-export default function RHFAutocomplete({ name, label, loading = false, helperText, Error, nonEditable, ...other }) {
+export default function RHFAutocomplete({ name, label, loading = false, helperText, Error, nonEditable, placeholder, ...other }) {
   const { control, setValue } = useFormContext();
   
   const nonEditableProperties = {
@@ -33,6 +34,7 @@ export default function RHFAutocomplete({ name, label, loading = false, helperTe
           renderInput={(params) => (
             <TextField
               label={label}
+              placeholder={placeholder || null}
               error={!!error || !!Error}
               helperText={error ? error?.message : helperText}
               inputProps={{

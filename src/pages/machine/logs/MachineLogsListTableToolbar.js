@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 // @mui
-import { Button, Divider, Stack, Typography, useTheme } from '@mui/material';
+import { Box, Button, Divider, Stack, Typography, useTheme } from '@mui/material';
 // routes
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { PATH_MACHINE, PATH_MACHINE_LOGS } from '../../../routes/paths';
@@ -21,8 +21,6 @@ MachineLogsListTableToolbar.propTypes = {
   filterName: PropTypes.string,
   onFilterName: PropTypes.func,
   onResetFilter: PropTypes.func,
-  filterStatus: PropTypes.array,
-  onFilterStatus: PropTypes.func,
   statusOptions: PropTypes.array,
   isHistory: PropTypes.bool,
   dateFrom: PropTypes.string,
@@ -35,11 +33,9 @@ MachineLogsListTableToolbar.propTypes = {
 export default function MachineLogsListTableToolbar({
   isFiltered,
   filterName,
-  filterStatus,
   onFilterName,
   statusOptions,
   onResetFilter,
-  onFilterStatus,
   isHistory,
   dateFrom,
   dateTo,
@@ -57,21 +53,20 @@ export default function MachineLogsListTableToolbar({
 
   const theme = useTheme();
 
+//   <Button
+//   size="small"
+//   startIcon={<Iconify icon="tabler:graph-off" sx={{ mr: 0.3 }} />}
+//   variant="outlined"
+//   sx={{ alignSelf: 'flex-end' }}
+//   onClick={toggleArchivedLogs}
+// >
+//   Archived Logs
+// </Button>
+
   return (
     <Stack {...options} direction="column" spacing={1} sx={{ px: 2.5, py: 3, pt: 1.5}}>
-      {location.pathname !== PATH_MACHINE_LOGS.root && (
-     <>
-      {!archivedLogs ? (
-        <Button
-          size="small"
-          startIcon={<Iconify icon="fluent:table-delete-column-16-filled" sx={{ mr: 0.3 }} />}
-          variant="outlined"
-          sx={{ alignSelf: 'flex-end' }}
-          onClick={toggleArchivedLogs}
-        >
-          Archived Logs
-        </Button>
-      ) : (
+      {!archivedLogs ? null
+      : (
         <Stack direction="row" spacing={1} sx={{ alignSelf: 'flex-start', alignItems: 'center' }}>
           <IconTooltip
             title='Back'
@@ -80,7 +75,9 @@ export default function MachineLogsListTableToolbar({
             icon="mdi:arrow-left"
           />
           <Divider orientation="vertical" flexItem />
-          <Typography variant='h4' sx={{ alignSelf: 'flex-start' }}>Archived Logs</Typography>
+          <Box sx={{ borderBottom: 2, borderColor: 'primary.main', pb: 1 }}>
+            <Typography variant="h5" color="text.primary">Archived Logs</Typography>
+          </Box>
         </Stack>
       )}
      </>
@@ -95,7 +92,7 @@ export default function MachineLogsListTableToolbar({
         dateFrom={ dateFrom }
         dateTo={ dateTo }
         isDateFromDateTo
-        openGraph={ location.pathname !== PATH_MACHINE_LOGS.root ? toggleGraph : undefined }
+        // openGraph={ location.pathname !== PATH_MACHINE_LOGS.root ? toggleGraph : undefined }
         addButton={!(machine?.isArchived || isHistory) && location.pathname !== PATH_MACHINE_LOGS.root? BUTTONS.ADD_MACHINE_LOGS : undefined}
         transferredMachine={ machine?.status?.slug==='transferred' }
       />

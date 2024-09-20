@@ -34,10 +34,12 @@ function DialogViewMachineLogDetails({
   setOpenLogDetailsDialog,
 }) {
   const [logsToShow, setLogsToShow] = useState([]);
-  const [deleteConfirmationDialog, setDeleteConfirmationDialog] = useState(false);
+  const [deleteConfirmationDialog, setDeleteConfirmationDialog] = useState(null);
   const [logstoEdit, setLogstoEdit] = useState(null);
   const { isLoading } = useSelector((state) => state.machineErpLogs);
   const dispatch = useDispatch();
+
+  const isArchived = logDetails?.isArchived
 
   useEffect(() => {
     if (logDetails) {
@@ -60,7 +62,7 @@ function DialogViewMachineLogDetails({
     return formatted;
   };
 
-  const handleDelete = async () => {
+  const handleDeleteArchiveAction = async () => {
     await dispatch(deleteMachineLogRecord(logDetails._id, logType));
     setDeleteConfirmationDialog(false);
   };
@@ -73,8 +75,8 @@ function DialogViewMachineLogDetails({
     setOpenLogDetailsDialog(false);
   };
 
-  const handleDeleteConfirm = () => {
-    setDeleteConfirmationDialog(true);
+  const handleArchiveDeleteConfirm = (type) => {
+    setDeleteConfirmationDialog(type);
   };
 
   const theme = useTheme();
@@ -97,13 +99,10 @@ function DialogViewMachineLogDetails({
                 icon="mdi:pencil-outline"
               />
               <IconTooltip
-                title="Delete"
-                // disabled={ isDisableDelete || disableDeleteButton }
-                onClick={() => {
-                  handleDeleteConfirm('delete');
-                }}
+                title={ isArchived ? "Delete" : "Archive"}
+                onClick={() => handleArchiveDeleteConfirm(isArchived ? "Delete" : "Archive")}
                 color="#FF0000"
-                icon="mdi:delete"
+                icon={ isArchived ? "mdi:delete" : "mdi:archive" } 
               />
             </Stack> */}
           </Stack>
@@ -120,20 +119,20 @@ function DialogViewMachineLogDetails({
       </Dialog>
       {deleteConfirmationDialog ? (
         <ConfirmDialog
-          title="Delete Log Confirmation"
-          content="Are you sure you want to delete this log?"
+          title={`${deleteConfirmationDialog} Log Confirmation`}
+          content={`Are you sure you want to ${deleteConfirmationDialog.toLowerCase()} this log?`}
           action={
             <LoadingButton
               color="error"
               loading={isLoading}
               variant="contained"
-              onClick={handleDelete}
+              onClick={handleDeleteArchiveAction}
             >
-              Delete
+              {deleteConfirmationDialog}
             </LoadingButton>
           }
           open={deleteConfirmationDialog}
-          onClose={() => setDeleteConfirmationDialog(false)}
+          onClose={() => setDeleteConfirmationDialog(null)}
         />
       ) : null}
     </>

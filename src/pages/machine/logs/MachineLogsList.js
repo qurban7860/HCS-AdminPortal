@@ -4,8 +4,8 @@ import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { Container, Table, TableBody, TableContainer, TableRow, TableCell, TableHead, TableSortLabel } from '@mui/material';
 
 // routes
-import { useNavigate, useLocation, useParams, useSearchParams } from 'react-router-dom';
-import { PATH_MACHINE, PATH_MACHINE_LOGS } from '../../../routes/paths';
+import { useLocation, useParams, useSearchParams } from 'react-router-dom';
+import { PATH_MACHINE_LOGS } from '../../../routes/paths';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // components
@@ -15,9 +15,7 @@ import {
   TableNoData,
   TableSkeleton,
   TablePaginationCustom,
-  TablePaginationFilter,
 } from '../../../components/table';
-import MachineLogsViewForm from './MachineLogsViewForm';
 import Scrollbar from '../../../components/scrollbar';
 // sections
 import MachineLogsListTableToolbar from './MachineLogsListTableToolbar';
@@ -47,7 +45,6 @@ const TABLE_HEAD = [
 export default function MachineLogsList(){
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
-  const [filterStatus, setFilterStatus] = useState([]);
   const [selectedLogTypeTableColumns, setSelectedLogTypeTableColumns] = useState([]);
   const [openLogDetailsDialog, setOpenLogDetailsDialog] = useState(false);
   const [selectedLog, setSelectedLog] = useState(null);
@@ -119,10 +116,9 @@ export default function MachineLogsList(){
     inputData: tableData,
     comparator: getComparator(order, orderBy),
     filterName,
-    filterStatus,
   });
 
-  const isFiltered = filterName !== '' || !!filterStatus.length;
+  const isFiltered = filterName !== '';
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
   const denseHeight = 60;
   const debouncedSearch = useRef(debounce((value) => {
@@ -153,12 +149,8 @@ export default function MachineLogsList(){
     }
   };
 
-  const handleFilterStatus = (event) => {
-    setPage(0);
-    setFilterStatus(event.target.value);
-  };
-
   // const handleViewRow = async (id) => navigate(PATH_MACHINE.machines.logs.view(machineId, `${selectedLogType?.type}_${id}`));
+
   const handleViewRow = (id) => {
     const log = dataFiltered.find((item) => item._id === id);
     setSelectedLog(log);
@@ -178,9 +170,7 @@ export default function MachineLogsList(){
       <TableCard>
         <MachineLogsListTableToolbar
           filterName={filterName}
-          filterStatus={filterStatus}
           onFilterName={handleFilterName}
-          onFilterStatus={handleFilterStatus}
           isFiltered={isFiltered}
           onResetFilter={handleResetFilter}
           dateFrom={dateFrom}
@@ -288,7 +278,7 @@ export default function MachineLogsList(){
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName, filterStatus }) {
+function applyFilter({ inputData, comparator, filterName }) {
   const stabilizedThis =  inputData && inputData.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -299,18 +289,28 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   inputData = stabilizedThis.map((el) => el[0]);
   // (customer) => customer.name.toLowerCase().indexOf(filterName.toLowerCase()) || customer.tradingName.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.city.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.country.toLowerCase().indexOf(filterName.toLowerCase()) || customer.createdAt.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
 
+  // if (filterName) {
+  //   inputData = inputData.filter(
+  //     (log) => 
+  //     fDateTime(log?.date)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+  //       log?.createdBy?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+  //       // (log?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+  //       fDateTime(log?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+  //   );
+  // }
   if (filterName) {
-    inputData = inputData.filter(
-      (log) =>
-      fDateTime(log?.date)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        log?.createdBy?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        // (log?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
-        fDateTime(log?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
-    );
-  }
-
-  if (filterStatus.length) {
-    inputData = inputData.filter((customer) => filterStatus.includes(customer.status));
+    inputData = inputData.filter((log) => {
+      const searchValue = filterName.toLowerCase();
+      return Object.values(log).some((value) => {
+        if (typeof value === 'string') {
+          return value.toLowerCase().includes(searchValue);
+        }
+        if (value && typeof value === 'object') {
+          return JSON.stringify(value).toLowerCase().includes(searchValue);
+        }
+        return false;
+      });
+    });
   }
 
   return inputData;

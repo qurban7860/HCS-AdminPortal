@@ -272,6 +272,13 @@ export const ICONS = {
     heading: 'Machine Setting History',
   },
 
+  MACHINESETTINGEDIT: {
+    icon: 'mdi:pencil-outline',
+    color: '#1976D2',
+    heading: 'Edit',
+  },
+  
+
   // Machine Support 
   SUPPORT_VALLID: {
     icon: 'bx:support',
