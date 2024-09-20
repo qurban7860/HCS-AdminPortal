@@ -43,9 +43,9 @@ export default function SettingList() {
   const { machine } = useSelector((state) => state.machine);
   const { settings, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.machineSetting );
   const TABLE_HEAD = [
-    { id: 'techParam.category.name', label: 'Category Name', align: 'left' },
     { id: 'techParam.name', label: 'Parameter Name', align: 'left' },
     { id: 'techParamValue', label: 'Parameter Value', align: 'left' },
+    { id: 'techParam.category.name', label: 'Category', align: 'left' },
     { id: 'createdAt', visibility: 'xs1',  label: 'Created At', align: 'right' },
   ];
   const onChangeRowsPerPage = (event) => {

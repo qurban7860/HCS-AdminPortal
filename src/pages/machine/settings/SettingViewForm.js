@@ -67,7 +67,7 @@ export default function SettingViewForm() {
         history={setting?.history  || [] }
       />
       <Grid container>
-        <ViewFormField isLoading={isLoading} sm={12} heading="Category Name" param={defaultValues.techParam.category.name} />
+        <ViewFormField isLoading={isLoading} sm={12} heading="Category" param={defaultValues.techParam.category.name} />
         <ViewFormField isLoading={isLoading} sm={6} heading="Parameter Name" param={defaultValues.techParam.name} />
         <ViewFormField isLoading={isLoading} sm={6} heading="Parameter Value" param={defaultValues.techParamValue} />
         <ViewFormAudit defaultValues={defaultValues} /> 

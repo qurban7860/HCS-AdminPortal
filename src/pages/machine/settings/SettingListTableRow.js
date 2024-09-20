@@ -52,10 +52,7 @@ export default function SettingListTableRow({
   return (
     <>
       <StyledTableRow hover selected={selected}>
-        <LinkTableCell align="left" param={category?.name||""} onClick={onViewRow} />
-        <TableCell align="left">
-          {name||""}
-        </TableCell>
+        <LinkTableCell align="left" param={name||""} onClick={onViewRow} />
         <TableCell align="left"  >
             {techParamValue || ""}
             {history !== undefined && history?.length > 1 &&
@@ -68,6 +65,9 @@ export default function SettingListTableRow({
                 />
               </StyledBadge>
             }
+        </TableCell>
+        <TableCell align="left">
+          {category?.name||""}
         </TableCell>
         { smScreen && <TableCell align="right">{fDate(createdAt)}</TableCell>}
       </StyledTableRow>
