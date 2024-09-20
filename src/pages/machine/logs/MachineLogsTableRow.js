@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { useLocation } from 'react-router-dom';
 // @mui
 import { TableCell } from '@mui/material';
 // utils
@@ -6,6 +7,7 @@ import { fDateTime } from '../../../utils/formatTime';
 // components
 import LinkTableCell from '../../../components/ListTableTools/LinkTableCell';
 import { StyledTableRow } from '../../../theme/styles/default-styles'
+import { PATH_MACHINE_LOGS } from '../../../routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -33,12 +35,14 @@ export default function MachineLogsTableRow({
   onViewRow,
   columnsToShow
 }) {
-
-  const { date, createdAt, createdBy } = row;
+  const location = useLocation();
+  const { date, componentLength, waste, createdAt, createdBy } = row;
 
   return (
     <StyledTableRow hover selected={selected}>
       <LinkTableCell align="left" onClick={onViewRow} param={fDateTime(date)} />
+      { location.pathname === PATH_MACHINE_LOGS.root && <TableCell align="left">{componentLength || ''}</TableCell>}
+      { location.pathname === PATH_MACHINE_LOGS.root && <TableCell align="left">{waste || ''}</TableCell>}
       {columnsToShow?.map((column, index) => {
         if (['date', 'createdBy.name', 'createdAt'].includes(column.id)) return null;
         return (
