@@ -83,8 +83,8 @@ function SearchBarCombo({
   const { spContacts } = useSelector((state) => state.contact);
   const { activeRegions } = useSelector((state) => state.region);
   const { selectedLogType } = useSelector((state) => state.machineErpLogs);
-  const [ isDateFrom, setIsDateFrom ] = useState(dateFrom);
-  const [ isDateTo, setIsDateTo ] = useState(dateTo);
+  const [ isDateFrom, setIsDateFrom ] = useState(dateFrom || new Date( Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]);
+  const [ isDateTo, setIsDateTo ] = useState(dateTo || new Date(Date.now()).toISOString().split('T')[0]);
   const [ selectedLogTypeState, setSelectedLogTypeState ] = useState(selectedLogType || logTypes?.[0]);
 
   const isMobile = useResponsive('sm', 'down');
