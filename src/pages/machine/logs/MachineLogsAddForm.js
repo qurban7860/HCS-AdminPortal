@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 // form
 import { useForm } from 'react-hook-form';
 // @mui
-import { Container ,Card, Grid, Stack, Button, FormHelperText, Checkbox, Typography, Box, useTheme, Chip } from '@mui/material';
+import { Container ,Card, Grid, Stack, Button, FormHelperText, Checkbox, Typography, Box, useTheme, Chip, Divider } from '@mui/material';
 // routes
 import { useNavigate, useParams } from 'react-router-dom';
 import { PATH_MACHINE } from '../../../routes/paths';
@@ -19,6 +19,7 @@ import Iconify from '../../../components/iconify/Iconify';
 import { ICONS } from '../../../constants/icons/default-icons';
 import MachineTabContainer from '../util/MachineTabContainer';
 import { machineLogTypeFormats } from '../../../constants/machineLogTypeFormats';
+import IconTooltip from '../../../components/Icons/IconTooltip';
 
 
 // ----------------------------------------------------------------------
@@ -235,13 +236,19 @@ const toggleCancel = () => navigate(PATH_MACHINE.machines.logs.root(machineId));
           <Grid item xs={18} md={12}>
             <Card sx={{ p: 3 }}>
               <Stack spacing={2}>
+              <Stack direction="row" spacing={1} sx={{ alignSelf: 'flex-start', alignItems: 'center', mb: 1 }}>
+                <IconTooltip
+                  title='Back'
+                  onClick={() => navigate(PATH_MACHINE.machines.logs.root(machineId))}
+                  color={theme.palette.primary.main}
+                  icon="mdi:arrow-left"
+                />
+                <Divider orientation="vertical" flexItem />
+                <Box sx={{ borderBottom: 2, borderColor: 'primary.main', pb: 1 }}>
+                  <Typography variant="h5" color="text.primary">Add New Logs</Typography>
+                </Box>
+              </Stack>
                 <Grid>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <Iconify icon="mdi:information" sx={{ mr: 1, color: 'info.main' }} />
-                    <Typography variant="body2" color="text.secondary">
-                      You need to select Log Type before you can import any log Files
-                    </Typography>
-                  </Box>
                   <Grid container spacing={2} sx={{ alignItems: 'flex-end', mb: 1 }}>
                     <Grid item md={4}>
                       <RHFAutocomplete
@@ -252,6 +259,7 @@ const toggleCancel = () => navigate(PATH_MACHINE.machines.logs.root(machineId));
                         getOptionLabel={(option) => option.type}
                         isOptionEqualToValue={(option, value) => option?.type === value?.type}
                         nonEditable
+                        helperText="You need to select Log Type before you can import any log Files"
                         renderOption={(props, option) => (
                           <li {...props} key={option?.type}>
                             {option.type || ''}
@@ -268,6 +276,7 @@ const toggleCancel = () => navigate(PATH_MACHINE.machines.logs.root(machineId));
                           options={logType?.versions}
                           getOptionLabel={(option) => option}
                           value={logVersion}
+                          helperText={" "}
                           size="small"
                           nonEditable
                           // defaultValue={watch('logType')?.versions?.[0] || null}
@@ -303,7 +312,7 @@ const toggleCancel = () => navigate(PATH_MACHINE.machines.logs.root(machineId));
                   {logType && logVersion && (
                     <Grid item xs={12}>
                       <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                        <Chip 
+                        <Chip
                           label={<Typography variant="overline">Log Format</Typography>}
                           icon={<Iconify icon="tabler:logs" color={theme.palette.primary.main} />}
                           sx={{ mr: 1 }}
@@ -338,11 +347,7 @@ const toggleCancel = () => navigate(PATH_MACHINE.machines.logs.root(machineId));
                     ))}
                   </Grid>
                 </Grid>
-                {error && (
-                  <FormHelperText error>
-                    {error}
-                  </FormHelperText>
-                )}
+                {error && <FormHelperText error>{error}</FormHelperText>}
                 <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Stack>
             </Card>

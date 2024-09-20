@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 // @mui
-import { Button, Divider, Stack, Typography, useTheme } from '@mui/material';
+import { Box, Button, Divider, Stack, Typography, useTheme } from '@mui/material';
 // routes
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { PATH_MACHINE, PATH_MACHINE_LOGS } from '../../../routes/paths';
@@ -21,8 +21,6 @@ MachineLogsListTableToolbar.propTypes = {
   filterName: PropTypes.string,
   onFilterName: PropTypes.func,
   onResetFilter: PropTypes.func,
-  filterStatus: PropTypes.array,
-  onFilterStatus: PropTypes.func,
   statusOptions: PropTypes.array,
   isHistory: PropTypes.bool,
   dateFrom: PropTypes.string,
@@ -35,11 +33,9 @@ MachineLogsListTableToolbar.propTypes = {
 export default function MachineLogsListTableToolbar({
   isFiltered,
   filterName,
-  filterStatus,
   onFilterName,
   statusOptions,
   onResetFilter,
-  onFilterStatus,
   isHistory,
   dateFrom,
   dateTo,
@@ -78,7 +74,10 @@ export default function MachineLogsListTableToolbar({
             icon="mdi:arrow-left"
           />
           <Divider orientation="vertical" flexItem />
-          <Typography variant='h4' sx={{ alignSelf: 'flex-start' }}>Archived Logs</Typography>
+          <Box sx={{ borderBottom: 2, borderColor: 'primary.main', pb: 1 }}>
+                  <Typography variant="h5" color="text.primary">Archived Logs</Typography>
+                </Box>
+          {/* <Typography variant='h4' sx={{ alignSelf: 'flex-start' }}>Archived Logs</Typography> */}
         </Stack>
       )}
       <SearchBarCombo
