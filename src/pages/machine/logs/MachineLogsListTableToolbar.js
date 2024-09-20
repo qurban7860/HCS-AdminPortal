@@ -53,19 +53,20 @@ export default function MachineLogsListTableToolbar({
 
   const theme = useTheme();
 
+//   <Button
+//   size="small"
+//   startIcon={<Iconify icon="tabler:graph-off" sx={{ mr: 0.3 }} />}
+//   variant="outlined"
+//   sx={{ alignSelf: 'flex-end' }}
+//   onClick={toggleArchivedLogs}
+// >
+//   Archived Logs
+// </Button>
+
   return (
     <Stack {...options} direction="column" spacing={1} sx={{ px: 2.5, py: 3, pt: 1.5}}>
-      {!archivedLogs ? (
-        <Button
-          size="small"
-          startIcon={<Iconify icon="fluent:table-delete-column-16-filled" sx={{ mr: 0.3 }} />}
-          variant="outlined"
-          sx={{ alignSelf: 'flex-end' }}
-          onClick={toggleArchivedLogs}
-        >
-          Archived Logs
-        </Button>
-      ) : (
+      {!archivedLogs ? null
+      : (
         <Stack direction="row" spacing={1} sx={{ alignSelf: 'flex-start', alignItems: 'center' }}>
           <IconTooltip
             title='Back'
@@ -75,9 +76,8 @@ export default function MachineLogsListTableToolbar({
           />
           <Divider orientation="vertical" flexItem />
           <Box sx={{ borderBottom: 2, borderColor: 'primary.main', pb: 1 }}>
-                  <Typography variant="h5" color="text.primary">Archived Logs</Typography>
-                </Box>
-          {/* <Typography variant='h4' sx={{ alignSelf: 'flex-start' }}>Archived Logs</Typography> */}
+            <Typography variant="h5" color="text.primary">Archived Logs</Typography>
+          </Box>
         </Stack>
       )}
       <SearchBarCombo

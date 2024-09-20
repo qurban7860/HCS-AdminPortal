@@ -50,6 +50,8 @@ export default function MachineLogsAddForm() {
   const defaultValues = useMemo(
     () => ({
       logTextValue: '',
+      logType: null,
+      logVersion: null,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -132,23 +134,39 @@ export default function MachineLogsAddForm() {
   
 
   const formatTxtToJson = (data = logTextValue) => {
-    if (typeof data === 'string' && data.trim() !== '') {
-      try {
-        const parsedData = JSON.parse(data)
-        if (Array.isArray(parsedData) && parsedData.every(item => typeof item === 'object')) {
-          enqueueSnackbar("Data already in JSON Format");
-        }
-      } catch {
-        txtToJson(data).then(result => {
-          if(result.length > 0) {
-            const stringifyJSON = JSON.stringify(result, null, 2)
-            setValue('logTextValue', stringifyJSON )
-          }
-        })
+    if (typeof data !== 'string' || data.trim() === '') return null;
+  
+    try {
+      const parsedData = JSON.parse(data);
+      if (Array.isArray(parsedData) && parsedData.every(item => typeof item === 'object')) {
+        enqueueSnackbar("Data already in JSON Format");
+        return null;
       }
+    } catch {
+      // Not valid JSON, continue to CSV check
     }
+  
+    const lines = data.trim().split('\n');
+    const isCSV = lines.length > 1 && lines.every(line => {
+      const columns = line.split(',');
+      return columns.length > 1 && columns.length === lines[0].split(',').length;
+    });
+  
+    if (!isCSV) {
+      enqueueSnackbar("Data is not in CSV format", { variant: 'error' });
+      return null;
+    }
+  
+    txtToJson(data).then(result => {
+      if (result.length > 0) {
+        setValue('logTextValue', JSON.stringify(result, null, 2));
+      }
+    });
+  
     return null;
-  }
+  };
+  
+  
 
   const txtToJson = async (data) => {
     const csvData = [];
@@ -236,30 +254,43 @@ const toggleCancel = () => navigate(PATH_MACHINE.machines.logs.root(machineId));
           <Grid item xs={18} md={12}>
             <Card sx={{ p: 3 }}>
               <Stack spacing={2}>
-              <Stack direction="row" spacing={1} sx={{ alignSelf: 'flex-start', alignItems: 'center', mb: 1 }}>
-                <IconTooltip
-                  title='Back'
-                  onClick={() => navigate(PATH_MACHINE.machines.logs.root(machineId))}
-                  color={theme.palette.primary.main}
-                  icon="mdi:arrow-left"
-                />
-                <Divider orientation="vertical" flexItem />
-                <Box sx={{ borderBottom: 2, borderColor: 'primary.main', pb: 1 }}>
-                  <Typography variant="h5" color="text.primary">Add New Logs</Typography>
-                </Box>
-              </Stack>
+                <Stack
+                  direction="row"
+                  spacing={1}
+                  sx={{ alignSelf: 'flex-start', alignItems: 'center', mb: 1 }}
+                >
+                  <IconTooltip
+                    title="Back"
+                    onClick={() => navigate(PATH_MACHINE.machines.logs.root(machineId))}
+                    color={theme.palette.primary.main}
+                    icon="mdi:arrow-left"
+                  />
+                  <Divider orientation="vertical" flexItem />
+                  <Box sx={{ borderBottom: 2, borderColor: 'primary.main', pb: 1 }}>
+                    <Typography variant="h5" color="text.primary">
+                      Add New Logs
+                    </Typography>
+                  </Box>
+                </Stack>
+                <Stack spacing={0.5} direction="row" sx={{ alignItems: 'center' }}>
+                  <Iconify icon="mdi:information-outline" color={theme.palette.text.secondary} />
+                  <Typography variant="caption" color='text.secondary'>
+                    You need to select Log Type before you can import any Log Files
+                  </Typography>
+                </Stack>
                 <Grid>
                   <Grid container spacing={2} sx={{ alignItems: 'flex-end', mb: 1 }}>
                     <Grid item md={4}>
                       <RHFAutocomplete
-                        label="Select Log Type"
+                        label="Log Type"
+                        placeholder="Select Log Type"
                         name="logType"
                         options={machineLogTypeFormats}
                         size="small"
                         getOptionLabel={(option) => option.type}
                         isOptionEqualToValue={(option, value) => option?.type === value?.type}
                         nonEditable
-                        helperText="You need to select Log Type before you can import any log Files"
+                        // helperText="You need to select Log Type before you can import any log Files"
                         renderOption={(props, option) => (
                           <li {...props} key={option?.type}>
                             {option.type || ''}
@@ -271,12 +302,12 @@ const toggleCancel = () => navigate(PATH_MACHINE.machines.logs.root(machineId));
                     <Grid item md={2}>
                       {logType && (
                         <RHFAutocomplete
-                          label="Select Version"
+                          label="Version"
+                          placeholder="Select Version"
                           name="logVersion"
                           options={logType?.versions}
                           getOptionLabel={(option) => option}
                           value={logVersion}
-                          helperText={" "}
                           size="small"
                           nonEditable
                           // defaultValue={watch('logType')?.versions?.[0] || null}
@@ -310,7 +341,7 @@ const toggleCancel = () => navigate(PATH_MACHINE.machines.logs.root(machineId));
                     </Grid>
                   </Grid>
                   {logType && logVersion && (
-                    <Grid item xs={12}>
+                    <Grid item xs={10}>
                       <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                         <Chip
                           label={<Typography variant="overline">Log Format</Typography>}

@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 import CodeMirror from '@uiw/react-codemirror';
 import { langs } from '@uiw/codemirror-extensions-langs';
 import { search } from '@codemirror/search';
-import { Grid, Typography, useTheme, Button, IconButton } from '@mui/material';
+import * as events from '@uiw/codemirror-extensions-events';
+import { Grid, Typography, useTheme, Button } from '@mui/material';
+
 import Iconify from '../iconify';
 import JsonEditorPopover from './JsonEditorPopover';
 import { StyledTooltip } from '../../theme/styles/default-styles';
@@ -58,6 +60,12 @@ function JsonEditor({
     mode: 'application/json',
   };
 
+  const preventPaste = (canEdit) => events.content({
+    paste: (event) => {
+      if (!canEdit) event.preventDefault();
+    },
+  });
+  
   const handlePopoverOpen = (event) => setAnchorEl(event.currentTarget);
   const handlePopoverClose = () => setAnchorEl(null);
   const theme = useTheme();
@@ -98,7 +106,11 @@ function JsonEditor({
             onChange={(e) => HandleChangeIniJson(e)}
             height={!autoHeight && 'calc(100vh - 400px)'} 
             width='auto' 
-            extensions={[langs.json(), search({top: true, searchPanelOpen: true,})]} 
+            extensions={[
+              langs.json(), 
+              search({top: true, searchPanelOpen: true}),
+              preventPaste(editable)
+            ]} 
             options={codeMirrorOptions}
             readOnly={readOnly}
             editable={editable}

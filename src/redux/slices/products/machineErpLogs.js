@@ -166,8 +166,8 @@ export function addMachineLogRecord(machine, customer, logs, action, version, ty
         customer,
         machine,
         version,
-        skipExistingRecords: action?.skipExistingRecords,
-        updateExistingRecords: action?.updateExistingRecords,
+        skip: action?.skipExistingRecords,
+        update: action?.updateExistingRecords,
         logs: [...logs],
       };
       const response = await axios.post(`${CONFIG.SERVER_URL}productLogs/`, data);
@@ -222,6 +222,28 @@ export function getMachineLogRecord(machineId, id, logType) {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}productLogs/${id}`,
+      {
+        params: {
+          type: logType,
+          machine: machineId,
+        }
+      });
+      dispatch(slice.actions.getMachineErpLogRecordSuccess(response.data));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+// --------------------------- UPDATE RECORD -------------------------------------------
+
+export function updateMachineLogRecord(machineId, id, logType) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.patch(`${CONFIG.SERVER_URL}productLogs/${id}`,
       {
         params: {
           type: logType,
