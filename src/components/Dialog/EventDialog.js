@@ -135,22 +135,11 @@ function EventDialog({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[ date ])
 
-  useEffect(()=>{
-    if( customer && Array.isArray(machines) && ( machines?.length < 1 || ( customer?._id !== machines[0]?.customer?._id ) ) ){
-      dispatch(getActiveCustomerMachines(customer?._id))
-      dispatch(getActiveSites(customer?._id))
-    } else {
-      setValue("site", null )
-      setValue("machines", [] )
-      dispatch(resetActiveCustomerMachines())
-      dispatch(resetActiveSites())
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[ dispatch, customer, setValue ])
-
   useLayoutEffect(() => {
+    dispatch(getActiveCustomerMachines(selectedEvent?.extendedProps?.customer?._id));
     reset(getInitialValues(selectedEvent?.extendedProps, range, contacts));
-  }, [reset, range, selectedEvent, contacts]);
+  }, [ dispatch, reset, range, selectedEvent, contacts]);
+
   
   const priorityOptions = [
     'High',
@@ -219,11 +208,11 @@ function EventDialog({
         if( Array.isArray( activeCustomers ) && activeCustomers?.length > 0 ){
           setValue( 'customer', activeCustomers.find(( cus ) => cus?._id === user?.customer ) );
         }
-        if( Array.isArray( activeSpContacts ) && activeSpContacts?.length > 0 ){
+        if( !selectedEvent && Array.isArray( activeSpContacts ) && activeSpContacts?.length > 0 ){
           setValue( 'primaryTechnician', activeSpContacts?.find(( con ) => con?._id === user?.contact ) );
         }
       }
-    }, [ isCustomerEvent, setValue, activeSpContacts, activeCustomers, user ] );
+    }, [ isCustomerEvent, setValue, activeSpContacts, activeCustomers, user, selectedEvent ] );
     
   const hashFilesMD5 = async (_files) => {
     const hashPromises = _files.map((file) => new Promise((resolve, reject) => {
@@ -289,6 +278,25 @@ function EventDialog({
       enqueueSnackbar('Event Delete Failed!', { variant: 'error'});
     }
   };
+
+  const handleChangeCustomer = ( option, newValue ) => {
+    if( newValue ){
+      if( newValue?._id !== customer?._id ){
+        setValue("site", null )
+        setValue("machines", [] )
+        dispatch(resetActiveCustomerMachines())
+      }
+      setValue("customer", newValue )
+      dispatch(getActiveCustomerMachines(newValue?._id))
+      dispatch(getActiveSites(newValue?._id))
+    } else {
+      setValue("customer", null )
+      setValue("site", null )
+      setValue("machines", [] )
+      dispatch(resetActiveCustomerMachines())
+      dispatch(resetActiveSites())
+    }
+  }
 
   return (
     <>
@@ -372,6 +380,7 @@ function EventDialog({
                       renderOption={(props, option) => (
                         <li {...props} key={option?._id}>{`${option.name || ''}`}</li>
                       )}
+                      onChange={handleChangeCustomer}
                     />}
 
                 {isCustomerEvent && (
@@ -410,11 +419,9 @@ function EventDialog({
                   name="primaryTechnician"
                   options={activeSpContacts}
                   isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                  getOptionLabel={(option) => `${option.firstName || ''} ${option.lastName || ''}`}
+                  getOptionLabel={(option) => `${option?.firstName || ''} ${option?.lastName || ''}`}
                   renderOption={(props, option) => (
-                    <li {...props} key={option?._id}>{`${option?.firstName || ''} ${
-                      option?.lastName || ''
-                    }`}</li>
+                    <li {...props} key={option?._id}>{`${option?.firstName || ''} ${ option?.lastName || '' }`}</li>
                   )}
                 />
                 {isCustomerEvent && (
