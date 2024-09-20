@@ -53,20 +53,19 @@ export default function MachineLogsListTableToolbar({
 
   const theme = useTheme();
 
-//   <Button
-//   size="small"
-//   startIcon={<Iconify icon="tabler:graph-off" sx={{ mr: 0.3 }} />}
-//   variant="outlined"
-//   sx={{ alignSelf: 'flex-end' }}
-//   onClick={toggleArchivedLogs}
-// >
-//   Archived Logs
-// </Button>
-
   return (
     <Stack {...options} direction="column" spacing={1} sx={{ px: 2.5, py: 3, pt: 1.5}}>
-      {!archivedLogs ? null
-      : (
+      {!archivedLogs ? (
+        <Button
+          size="small"
+          startIcon={<Iconify icon="tabler:graph-off" sx={{ mr: 0.3 }} />}
+          variant="outlined"
+          sx={{ alignSelf: 'flex-end' }}
+          onClick={toggleArchivedLogs}
+        >
+          Archived Logs
+        </Button>
+      ) : (
         <Stack direction="row" spacing={1} sx={{ alignSelf: 'flex-start', alignItems: 'center' }}>
           <IconTooltip
             title='Back'
@@ -81,18 +80,22 @@ export default function MachineLogsListTableToolbar({
         </Stack>
       )}
       <SearchBarCombo
-        isFiltered={ isFiltered }
-        value={ filterName }
-        onChange={ onFilterName }
-        onClick={ onResetFilter }
-        logTypes={ location.pathname !== PATH_MACHINE_LOGS.root ? logTypes : undefined }
-        SubOnClick={ toggleAdd }
-        dateFrom={ dateFrom }
-        dateTo={ dateTo }
+        isFiltered={isFiltered}
+        value={filterName}
+        onChange={onFilterName}
+        onClick={onResetFilter}
+        logTypes={location.pathname !== PATH_MACHINE_LOGS.root ? logTypes : undefined}
+        SubOnClick={toggleAdd}
+        dateFrom={dateFrom}
+        dateTo={dateTo}
         isDateFromDateTo
         // openGraph={ location.pathname !== PATH_MACHINE_LOGS.root ? toggleGraph : undefined }
-        addButton={!(machine?.isArchived || isHistory) && location.pathname !== PATH_MACHINE_LOGS.root? BUTTONS.ADD_MACHINE_LOGS : undefined}
-        transferredMachine={ machine?.status?.slug==='transferred' }
+        addButton={
+          !(machine?.isArchived || isHistory || archivedLogs) && location.pathname !== PATH_MACHINE_LOGS.root
+            ? BUTTONS.ADD_MACHINE_LOGS
+            : undefined
+        }
+        transferredMachine={machine?.status?.slug === 'transferred'}
       />
     </Stack>
   );

@@ -11,6 +11,7 @@ ConfirmDialog.propTypes = {
   content: PropTypes.node,
   onClose: PropTypes.func,
   SubButton: PropTypes.node,
+  SubButtonDisabled: PropTypes.bool,
 };
 
 export default function ConfirmDialog({
@@ -20,6 +21,7 @@ export default function ConfirmDialog({
   open,
   onClose,
   SubButton="Cancel",
+  SubButtonDisabled=false,
   ...other
 }) {
   return (
@@ -28,7 +30,7 @@ export default function ConfirmDialog({
       <Divider orientation="horizontal" flexItem />
       {content && <DialogContent sx={{ typography: 'body2', pt:2 }}> {content} </DialogContent>}
       <DialogActions>
-        <Button variant="outlined" color="inherit" onClick={onClose}>{SubButton}</Button>
+        <Button variant="outlined" color="inherit" onClick={onClose} disabled={SubButtonDisabled}>{SubButton}</Button>
         {action}
       </DialogActions>
     </Dialog>
