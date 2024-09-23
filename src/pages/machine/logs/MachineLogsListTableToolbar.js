@@ -54,30 +54,30 @@ export default function MachineLogsListTableToolbar({
   const theme = useTheme();
 
   return (
-    <Stack {...options} direction="column" spacing={1} sx={{ px: 2.5, py: 3, pt: 1.5}}>
-      {!archivedLogs ? (
-        <Button
-          size="small"
-          startIcon={<Iconify icon="tabler:graph-off" sx={{ mr: 0.3 }} />}
-          variant="outlined"
-          sx={{ alignSelf: 'flex-end' }}
-          onClick={toggleArchivedLogs}
-        >
-          Archived Logs
-        </Button>
-      ) : (
-        <Stack direction="row" spacing={1} sx={{ alignSelf: 'flex-start', alignItems: 'center' }}>
-          <IconTooltip
-            title='Back'
-            onClick={toggleArchivedLogs}
-            color={theme.palette.primary.main}
-            icon="mdi:arrow-left"
-          />
-          <Divider orientation="vertical" flexItem />
-          <Box sx={{ borderBottom: 2, borderColor: 'primary.main', pb: 1 }}>
-            <Typography variant="h5" color="text.primary">Archived Logs</Typography>
-          </Box>
-        </Stack>
+    <Stack {...options} direction="column" spacing={1} sx={{ px: 2.5, py: 3, pt: 1.5 }}>
+      {location.pathname !== PATH_MACHINE_LOGS.root && (
+        <>
+          {!archivedLogs ? null : (
+            <Stack
+              direction="row"
+              spacing={1}
+              sx={{ alignSelf: 'flex-start', alignItems: 'center' }}
+            >
+              <IconTooltip
+                title="Back"
+                onClick={toggleArchivedLogs}
+                color={theme.palette.primary.main}
+                icon="mdi:arrow-left"
+              />
+              <Divider orientation="vertical" flexItem />
+              <Box sx={{ borderBottom: 2, borderColor: 'primary.main', pb: 1 }}>
+                <Typography variant="h5" color="text.primary">
+                  Archived Logs
+                </Typography>
+              </Box>
+            </Stack>
+          )}
+        </>
       )}
       <SearchBarCombo
         isFiltered={isFiltered}

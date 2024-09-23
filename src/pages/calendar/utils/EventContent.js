@@ -8,7 +8,7 @@ import PriorityIcon from './PriorityIcon';
 const EventContent = ({ info }) => {
     const theme = createTheme(); 
     const { timeText, event } = info;
-    const { start, priority, customer, machines, primaryTechnician, supportingTechnicians } = event.extendedProps;
+    const { isCustomerEvent, start, priority, customer, machines, primaryTechnician, supportingTechnicians } = event.extendedProps;
     const supportingTechnicianNames = supportingTechnicians.map( (tech) => `${tech?.firstName || '' } ${tech?.lastName || '' }` ).join(', ');
     const title = `${primaryTechnician?.firstName || '' } ${primaryTechnician?.lastName || '' }${supportingTechnicianNames || '' }, ${customer?.name || '' }`;
     const machineNames = machines.map( (mc) => `${mc?.name ? `${mc?.name || '' } - ` : ''}${mc?.serialNo || '' }` ).join(', ');
@@ -18,9 +18,9 @@ const EventContent = ({ info }) => {
         title={
             <Grid item>
                 <Typography variant='body2'><strong>Time:</strong> {fDateTime(start)}</Typography>
-                <Typography variant='body2'><strong>Technician:</strong> {`${primaryTechnician?.firstName || '' } ${primaryTechnician?.lastName || '' }`}</Typography>
-                <Typography variant='body2'><strong>Customer:</strong> {customer.name}</Typography>
-                { machines?.length > 0 && ( <Typography variant='body2'><strong>Machines:</strong> {machineNames}</Typography>)}
+                <Typography variant='body2'><strong>{isCustomerEvent ? 'Technician:' : 'Assignee:'}</strong> {`${primaryTechnician?.firstName || '' } ${primaryTechnician?.lastName || '' }`}</Typography>
+                { isCustomerEvent && <Typography variant='body2'><strong>Customer:</strong> {customer.name}</Typography>}
+                { machines?.length > 0 && isCustomerEvent && ( <Typography variant='body2'><strong>Machines:</strong> {machineNames}</Typography>)}
                 { priority?.trim() && <Typography variant="body2"><strong>Priority:</strong> {priority}</Typography>}
             </Grid>
         }
@@ -43,6 +43,7 @@ EventContent.propTypes = {
         timeText: PropTypes.string,
         event: PropTypes.shape({
             extendedProps: PropTypes.shape({
+                isCustomerEvent: PropTypes.bool.isRequired,
                 start: PropTypes.any.isRequired,
                 priority: PropTypes.string,
                 customer: PropTypes.shape({ name: PropTypes.string.isRequired }).isRequired,

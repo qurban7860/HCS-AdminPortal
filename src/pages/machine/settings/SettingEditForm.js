@@ -55,7 +55,7 @@ export default function SettingEditForm() {
   
   const onSubmit = async (data) => {
     try {
-      await dispatch(await updateSetting(machineId, id, data));
+      await dispatch( updateSetting(machineId, id, data));
       await navigate(PATH_MACHINE.machines.settings.view( machineId, id ));
       reset();
     } catch (err) {

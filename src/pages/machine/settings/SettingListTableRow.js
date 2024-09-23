@@ -12,19 +12,20 @@ import ViewFormMachineSettingHistoryMenuPopover from '../../../components/ViewFo
 import IconButtonTooltip from '../../../components/Icons/IconButtonTooltip';
 import { ICONS } from '../../../constants/icons/default-icons';
 
-
 // ----------------------------------------------------------------------
 
 SettingListTableRow.propTypes = {
   row: PropTypes.object,
   selected: PropTypes.bool,
   onViewRow: PropTypes.func,
+  handleDialog: PropTypes.func
 };
 
 export default function SettingListTableRow({
   row,
   selected,
   onViewRow,
+  handleDialog,
 }) {
   const {
     techParam: {
@@ -52,10 +53,7 @@ export default function SettingListTableRow({
   return (
     <>
       <StyledTableRow hover selected={selected}>
-        <LinkTableCell align="left" param={category?.name||""} onClick={onViewRow} />
-        <TableCell align="left">
-          {name||""}
-        </TableCell>
+        <LinkTableCell align="left" param={name||""} onClick={onViewRow} />
         <TableCell align="left"  >
             {techParamValue || ""}
             {history !== undefined && history?.length > 1 &&
@@ -68,6 +66,15 @@ export default function SettingListTableRow({
                 />
               </StyledBadge>
             }
+            <IconButtonTooltip
+              title={ ICONS.MACHINESETTINGEDIT.heading }
+              color={ ICONS.MACHINESETTINGEDIT.color }
+              icon={ ICONS.MACHINESETTINGEDIT.icon }
+              onClick={ handleDialog }
+            />
+        </TableCell>
+        <TableCell align="left">
+          {category?.name||""}
         </TableCell>
         { smScreen && <TableCell align="right">{fDate(createdAt)}</TableCell>}
       </StyledTableRow>
@@ -78,7 +85,6 @@ export default function SettingListTableRow({
         ListArr={history}
         ListTitle="History"
       />
-
     </>
   );
 }

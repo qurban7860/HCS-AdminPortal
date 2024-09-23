@@ -36,17 +36,6 @@ function HistoricalConfigurationsViewForm() {
   } = useSelector((state) => state.historicalConfiguration, shallowEqual );
 
   const { machine, customerMachines, isLoadingMachines } = useSelector((state) => state.machine);
-  // console.log( 
-  //   "isLoading : ",isLoading,
-  //   "isLoadingINI : ",isLoadingINI,
-  //   "selectedINIs : ",selectedINIs, 
-  //   "isLoadingCompareINI : ",isLoadingCompareINI,
-  //   "isLoadingCompareINIs : ",isLoadingCompareINIs,
-  //   "historicalConfiguration : ",historicalConfiguration,
-  //   "historicalConfigurations : ",historicalConfigurations,
-  //   "compareHistoricalConfiguration : ",compareHistoricalConfiguration,
-  //   "compareHistoricalConfigurations : ",compareHistoricalConfigurations,
-  // )
 
   const methods = useForm({
     defaultValues: {
@@ -74,11 +63,11 @@ function HistoricalConfigurationsViewForm() {
     });
   }, [machine, historicalConfiguration, compareHistoricalConfiguration, selectedINIs, reset]);
 
-console.log("INI : ",INI,"compareINI : ", compareINI)
   const handleChangeMachine = (option, newValue) => {
     if( newValue?._id ){
       if(customerMachine?._id !== newValue?._id){
         setValue('compareINI',null )
+        dispatch(resetCompareHistoricalConfigurationRecords());
       }
       dispatch(getHistoricalConfigurationRecords(newValue._id, false , true ));
       setValue('customerMachine',newValue)
@@ -116,7 +105,7 @@ console.log("INI : ",INI,"compareINI : ", compareINI)
 
               <RHFAutocomplete 
                 name="INI"
-                label="INIs"
+                label="INI"
                 size='small'
                 loading={ isLoading }
                 options={ historicalConfigurations }
@@ -127,7 +116,7 @@ console.log("INI : ",INI,"compareINI : ", compareINI)
 
               <RHFAutocomplete 
                 name="customerMachine"
-                label="Machines"
+                label="Machine"
                 size='small'
                 options={ customerMachines }
                 loading={ isLoadingMachines }
@@ -140,7 +129,7 @@ console.log("INI : ",INI,"compareINI : ", compareINI)
               <RHFAutocomplete 
                 name="compareINI"
                 size='small'
-                label="INIs"
+                label="INI"
                 loading={ isLoadingCompareINIs }
                 options={ compareHistoricalConfigurations }
                 isOptionEqualToValue={(option, value) => option?._id === value?._id}
