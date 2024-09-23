@@ -126,7 +126,7 @@ function getImageUrl(file) {
             <View style={styles.row}>
                 <View style={styles.col}>
                     <Text style={styles.lable}>TECHNICIAN</Text>
-                    <Text style={styles.text}>{defaultValues?.technician?.name || ' '}</Text>
+                    <Text style={styles.text}>{defaultValues?.technician?.firstName || ' '} {defaultValues?.technician?.lastName || ' '}</Text>
                 </View>
             </View>
 
@@ -156,18 +156,26 @@ function getImageUrl(file) {
                                         <Text style={styles.text_sm}><Text style={styles.bold}>Comments:</Text>{childRow?.recordValue?.comments}</Text>    
                                     </>
                                 }
-                                {childRow?.recordValue?.files?.length > 0 &&
-                                    <View key={`inner_image_container-${index}`} style={styles.image_row} >
-                                    {childRow?.recordValue?.files?.map((file, fileIndex) => {
-                                        const imageUrl = getImageUrl(file);
-                                        return (
-                                            <View key={file?._id} style={styles.image_column}>
-                                                { imageUrl && <Image style={{ borderRadius:5, height:"100px", objectFit: "cover" }} src={ imageUrl } />}
-                                            </View>
-                                        );
-                                    })}
-                                    </View>
-                                }
+                                {(childRow?.recordValue?.files?.length > 0 || childRow?.historicalData?.some(data => data.files?.length > 0)) && (
+    <View key={`inner_image_container-${index}`} style={styles.image_row}>
+        {[
+            ...(childRow?.recordValue?.files || []),
+            ...(childRow?.historicalData ?? []).flatMap(data => data?.files || [] )
+        ].map((file, fileIndex) => {
+            const imageUrl = getImageUrl(file);
+            return (
+                <View key={file?._id || `file-${fileIndex}`} style={styles.image_column}>
+                    {imageUrl && (
+                        <Image 
+                            style={{ borderRadius: 5, height: "100px", objectFit: "cover" }} 
+                            src={imageUrl} 
+                        />
+                    )}
+                </View>
+            );
+        })}
+    </View>
+)}
                             </View>
                         ))}
                         
