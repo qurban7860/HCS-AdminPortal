@@ -57,7 +57,17 @@ export default function MachineLogsListTableToolbar({
     <Stack {...options} direction="column" spacing={1} sx={{ px: 2.5, py: 3, pt: 1.5 }}>
       {location.pathname !== PATH_MACHINE_LOGS.root && (
         <>
-          {!archivedLogs ? null : (
+          {!archivedLogs ? (
+            <Button
+          size="small"
+          startIcon={<Iconify icon="tabler:graph-off" sx={{ mr: 0.3 }} />}
+          variant="outlined"
+          sx={{ alignSelf: 'flex-end' }}
+          onClick={toggleArchivedLogs}
+        >
+          Archived Logs
+        </Button>
+          ) : (
             <Stack
               direction="row"
               spacing={1}
