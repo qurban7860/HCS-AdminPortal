@@ -31,7 +31,7 @@ function MachineSettingValueDialog() {
   );
   
   const machineSettingSchema = Yup.object().shape({
-    techParamValue: Yup.number().label('Parameter Value').required("Value is required").typeError('Parameter Value must be a Number!').nullable(),
+    techParamValue: Yup.string().max(200).label('Parameter Value').required("Value is required"),
   });
   
   
@@ -66,12 +66,12 @@ function MachineSettingValueDialog() {
   }
 
   return (
-    <Dialog fullWidth maxWidth="xs" open={ settingValueDialog } onClose={handleCloseDialog}>
+    <Dialog fullWidth maxWidth="sm" open={ settingValueDialog } onClose={handleCloseDialog}>
       <DialogTitle variant='h3' sx={{pb:1, pt:2}}>Update Parameter Value</DialogTitle>
       <Divider orientation="horizontal" flexItem />
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)} mb={5}>
         <DialogContent dividers sx={{pt:3}}>
-          <RHFTextField name="techParamValue" label="Parameter Value"/>
+          <RHFTextField name="techParamValue" label="Parameter Value" />
         </DialogContent>
         <DialogActions>
           <Button variant='outlined' onClick={handleCloseDialog}>Cancel</Button>

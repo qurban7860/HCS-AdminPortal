@@ -110,6 +110,7 @@ export const {
   setSettingValueDialog,
   resetSetting,
   resetSettings,
+  getSettingSuccess,
   setResponseMessage,
   setFilterBy,
   ChangeRowsPerPage,
