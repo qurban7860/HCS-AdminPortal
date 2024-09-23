@@ -99,7 +99,8 @@ export default function MachineLogsList(){
           pageSize: rowsPerPage,
           fromDate: dateFrom,
           toDate: dateTo,
-          isMachineArchived: archivedLogs,
+          isArchived: archivedLogs,
+          isMachineArchived: false,
           selectedLogType: selectedLogType.type,
         })
       );
@@ -157,11 +158,23 @@ export default function MachineLogsList(){
     setOpenLogDetailsDialog(true);
   };
   
-
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
     setFilterName('');
   };
+
+  const refreshLogsList = () => {
+    dispatch(getMachineLogRecords({
+      machineId,
+      page,
+      pageSize: rowsPerPage,
+      fromDate: dateFrom,
+      toDate: dateTo,
+      isArchived: archivedLogs,
+      isMachineArchived: false,
+      selectedLogType: selectedLogType.type,
+    }))
+  }
 
   return (
     <>
@@ -270,6 +283,7 @@ export default function MachineLogsList(){
         openLogDetailsDialog={openLogDetailsDialog}
         setOpenLogDetailsDialog={setOpenLogDetailsDialog}
         logType={selectedLogType?.type}
+        refreshLogsList={refreshLogsList}
       />
     ) : null}
     </>

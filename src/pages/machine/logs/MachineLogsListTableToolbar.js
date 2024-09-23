@@ -53,21 +53,21 @@ export default function MachineLogsListTableToolbar({
 
   const theme = useTheme();
 
-//   <Button
-//   size="small"
-//   startIcon={<Iconify icon="tabler:graph-off" sx={{ mr: 0.3 }} />}
-//   variant="outlined"
-//   sx={{ alignSelf: 'flex-end' }}
-//   onClick={toggleArchivedLogs}
-// >
-//   Archived Logs
-// </Button>
-
   return (
     <Stack {...options} direction="column" spacing={1} sx={{ px: 2.5, py: 3, pt: 1.5 }}>
       {location.pathname !== PATH_MACHINE_LOGS.root && (
         <>
-          {!archivedLogs ? null : (
+          {!archivedLogs ? (
+            <Button
+          size="small"
+          startIcon={<Iconify icon="tabler:graph-off" sx={{ mr: 0.3 }} />}
+          variant="outlined"
+          sx={{ alignSelf: 'flex-end' }}
+          onClick={toggleArchivedLogs}
+        >
+          Archived Logs
+        </Button>
+          ) : (
             <Stack
               direction="row"
               spacing={1}
@@ -101,7 +101,7 @@ export default function MachineLogsListTableToolbar({
         isDateFromDateTo
         // openGraph={ location.pathname !== PATH_MACHINE_LOGS.root ? toggleGraph : undefined }
         addButton={
-          !(machine?.isArchived || isHistory) && location.pathname !== PATH_MACHINE_LOGS.root
+          !(machine?.isArchived || isHistory || archivedLogs) && location.pathname !== PATH_MACHINE_LOGS.root
             ? BUTTONS.ADD_MACHINE_LOGS
             : undefined
         }

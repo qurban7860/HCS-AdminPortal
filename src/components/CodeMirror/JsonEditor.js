@@ -18,6 +18,7 @@ JsonEditor.propTypes = {
   autoHeight: PropTypes.bool,
   formatButton: PropTypes.bool,
   formatButtonOnClick: PropTypes.func,
+  disableTopBar: PropTypes.bool,
 };
 
 function JsonEditor({
@@ -28,9 +29,9 @@ function JsonEditor({
   editable = true,
   formatButton = false,
   formatButtonOnClick = () => {},
+  disableTopBar = false,
 }) {
-
-  const [ anchorEl, setAnchorEl ] = useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const codeMirrorOptions = {
     lineNumbers: true,
@@ -60,64 +61,101 @@ function JsonEditor({
     mode: 'application/json',
   };
 
-  const preventPaste = (canEdit) => events.content({
-    paste: (event) => {
-      if (!canEdit) event.preventDefault();
-    },
-  });
-  
+  const preventPaste = (canEdit) =>
+    events.content({
+      paste: (event) => {
+        if (!canEdit) event.preventDefault();
+      },
+    });
+
   const handlePopoverOpen = (event) => setAnchorEl(event.currentTarget);
   const handlePopoverClose = () => setAnchorEl(null);
   const theme = useTheme();
-  
-  return  <Grid item md={12}>
-          <Grid sx={{ display: { sm: 'block', md: 'flex', position:'sticky', borderBottom:'1px solid #cfcfcf',borderTop:'1px solid #cfcfcf', top:0, background:'#f5f5f5', zIndex:1 },  justifyContent: 'space-between' }} >
-            <Typography variant='subtitle2' sx={{ml:1}} display="flex" alignItems="center">
-              Note:
-              <Typography variant='caption' sx={{ml:0.5}}>Ctrl + F / Cmd + F to find text in Code Editor</Typography>
+
+  return (
+    <Grid item md={12}>
+      {!disableTopBar && (
+        <Grid
+          sx={{
+            display: {
+              sm: 'block',
+              md: 'flex',
+              position: 'sticky',
+              borderBottom: '1px solid #cfcfcf',
+              borderTop: '1px solid #cfcfcf',
+              top: 0,
+              background: '#f5f5f5',
+              zIndex: 1,
+            },
+            justifyContent: 'space-between',
+          }}
+        >
+          <Typography variant="subtitle2" sx={{ ml: 1 }} display="flex" alignItems="center">
+            Note:
+            <Typography variant="caption" sx={{ ml: 0.5 }}>
+              Ctrl + F / Cmd + F to find text in Code Editor
             </Typography>
-            {!readOnly && !formatButton && <Typography variant="body2" sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center', ml: 2, mt: 0.5, mr:2 }}>
+          </Typography>
+          {!readOnly && !formatButton && (
+            <Typography
+              variant="body2"
+              sx={{
+                display: 'flex',
+                justifyContent: 'start',
+                alignItems: 'center',
+                ml: 2,
+                mt: 0.5,
+                mr: 2,
+              }}
+            >
               Format:
-              <Iconify onClick={handlePopoverOpen} icon="iconamoon:question-mark-circle-bold" sx={{ cursor: 'pointer' }} />
-            </Typography>}
-            {formatButton && (
-              <StyledTooltip
-                title="Click to format the text to JSON"
-                placement="top"
-                disableFocusListener
-                tooltipcolor={theme?.palette?.primary?.main} 
-                color={theme?.palette?.primary?.main}
+              <Iconify
+                onClick={handlePopoverOpen}
+                icon="iconamoon:question-mark-circle-bold"
+                sx={{ cursor: 'pointer' }}
+              />
+            </Typography>
+          )}
+          {formatButton && (
+            <StyledTooltip
+              title="Click to format the text to JSON"
+              placement="top"
+              disableFocusListener
+              tooltipcolor={theme?.palette?.primary?.main}
+              color={theme?.palette?.primary?.main}
+            >
+              <Button
+                onClick={() => formatButtonOnClick(value)}
+                sx={{ mx: 0.5, my: 0.5 }}
+                size="small"
+                variant="outlined"
+                color="primary"
+                endIcon={<Iconify icon="mdi:code-json" />}
               >
-                <Button
-                  onClick={() => formatButtonOnClick(value)}
-                  sx={{ mx: 0.5, my: 0.5 }}
-                  size="small"
-                  variant="outlined"
-                  color="primary"
-                  endIcon={<Iconify icon="mdi:code-json" />}
-                >
-                  Format JSON
-                </Button>
-              </StyledTooltip>
-            )}
-          </Grid>
-          <CodeMirror 
-            value={value} 
-            onChange={(e) => HandleChangeIniJson(e)}
-            height={!autoHeight && 'calc(100vh - 400px)'} 
-            width='auto' 
-            extensions={[
-              langs.json(), 
-              search({top: true, searchPanelOpen: true}),
-              preventPaste(editable)
-            ]} 
-            options={codeMirrorOptions}
-            readOnly={readOnly}
-            editable={editable}
-            theme={theme?.palette?.mode}
-          />
-          <JsonEditorPopover open={anchorEl} onClose={handlePopoverClose} />
+                Format JSON
+              </Button>
+            </StyledTooltip>
+          )}
+        </Grid>
+      )}
+      <CodeMirror
+        value={value}
+        onChange={(e) => HandleChangeIniJson(e)}
+        height={!autoHeight && 'calc(100vh - 400px)'}
+        width="auto"
+        extensions={[
+          langs.json(),
+          search({ top: true, searchPanelOpen: true }),
+          preventPaste(editable),
+        ]}
+        options={codeMirrorOptions}
+        readOnly={readOnly}
+        editable={editable}
+        theme={theme?.palette?.mode}
+      />
+      <JsonEditorPopover open={anchorEl} onClose={handlePopoverClose} />
     </Grid>
+  );
 }
 
 export default JsonEditor;

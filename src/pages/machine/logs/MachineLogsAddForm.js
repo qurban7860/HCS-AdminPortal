@@ -366,7 +366,7 @@ const toggleCancel = () => navigate(PATH_MACHINE.machines.logs.root(machineId));
                       Action to perform on existing records?{' '}
                     </Typography>
                     {checkboxes.map((checkbox, index) => (
-                      <Typography variant="subtitle2" sx={{ ml: 2 }}>
+                      <Typography variant="subtitle2" sx={{ ml: 2 }} key={checkbox.value}>
                         {checkbox.label}
                         <Checkbox
                           key={index}

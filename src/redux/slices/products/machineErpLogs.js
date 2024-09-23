@@ -152,7 +152,7 @@ export const {
   setMachineLogsGraphData,
   setFilterBy,
   ChangeRowsPerPage,
-  ChangePage,
+  ChangePage
 } = slice.actions;
 
 // ------------------------- ADD RECORD ---------------------------------------------
@@ -239,17 +239,15 @@ export function getMachineLogRecord(machineId, id, logType) {
 
 // --------------------------- UPDATE RECORD -------------------------------------------
 
-export function updateMachineLogRecord(machineId, id, logType) {
+export function updateMachineLogRecord(id, logType, logData) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.patch(`${CONFIG.SERVER_URL}productLogs/${id}`,
-      {
-        params: {
-          type: logType,
-          machine: machineId,
-        }
-      });
+      const data = {
+        type: logType,
+        ...logData
+      };
+      const response = await axios.patch(`${CONFIG.SERVER_URL}productLogs/${id}`, data);
       dispatch(slice.actions.getMachineErpLogRecordSuccess(response.data));
     } catch (error) {
       console.error(error);
@@ -283,7 +281,7 @@ export function deleteMachineLogRecord(id, logType) {
 // -------------------------- GET RECORD'S ----------------------------------------------------------------------
 
 export function getMachineLogRecords({
-  customerId,
+  customerId = undefined,
   machineId,
   page,
   pageSize,
@@ -292,6 +290,7 @@ export function getMachineLogRecords({
   isCreatedAt,
   isMachineArchived,
   selectedLogType,
+  isArchived,
 }) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
@@ -302,7 +301,7 @@ export function getMachineLogRecords({
         machine: machineId,
         fromDate,
         toDate,
-        isArchived: isMachineArchived,
+        isArchived,
         pagination: { page, pageSize },
         ...(isMachineArchived && { archivedByMachine: true }),
         ...(isCreatedAt && { isCreatedAt }),
