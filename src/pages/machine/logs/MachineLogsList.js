@@ -34,6 +34,13 @@ import DialogViewMachineLogDetails from '../../../components/Dialog/DialogViewMa
 import useResponsive from '../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
+const TABLE_HEAD = [
+  { id: 'date', label: 'Date', align: 'left' },
+  { id: 'componentLength', label: 'Length', align: 'left' },
+  { id: 'waste', label: 'Waste', align: 'left' },
+  // { id: 'createdBy.name', label: 'Created By', align: 'left' },
+  // { id: 'createdAt', label: 'Created At', align: 'right' },
+]
 
 export default function MachineLogsList(){
   const [filterName, setFilterName] = useState('');
@@ -201,7 +208,7 @@ export default function MachineLogsList(){
             <Table size="small" sx={{ minWidth: 360 }}>
               <TableHead>
                 <TableRow>
-                  {selectedLogTypeTableColumns?.map((headCell, index) => (
+                  {(location.pathname === PATH_MACHINE_LOGS.root ? TABLE_HEAD : undefined || selectedLogTypeTableColumns)?.map((headCell, index) => (
                     <TableCell
                       key={headCell.id}
                       align={headCell.align || 'left'}

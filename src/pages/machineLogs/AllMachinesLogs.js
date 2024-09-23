@@ -19,7 +19,6 @@ function AllMachineLogs() {
   const dispatch = useDispatch();
   const { activeCustomerMachines } = useSelector((state) => state.machine);
   const { activeCustomers } = useSelector((state) => state.customer);
-  const { selectedLogType } = useSelector((state) => state.machineErpLogs);
   const isMobile = useResponsive('down', 'sm');
   const [logsData, setLogsData] = useState(null);
 
@@ -36,7 +35,7 @@ function AllMachineLogs() {
     defaultValues,
   });
 
-  const { watch, setValue, handleSubmit, trigger } = methods;
+  const { watch, setValue, handleSubmit, trigger, formState: { errors } } = methods;
   const { customer, machine, logType, dateFrom, dateTo } = watch();
 
   useEffect(() => {
@@ -52,32 +51,26 @@ function AllMachineLogs() {
   }, [dispatch, customer]);
 
   const onSubmit = (data) => {
-    const machineId = data.machine?._id;
+    const customerId = data.customer?._id; 
+    const machineId = data.machine?._id || undefined; 
     const isCreatedAt = false;
-    const page = 0; 
-    const rowsPerPage = 100; 
-    const customerId = data.customer?._id;
+    const page = 0;
+    const rowsPerPage = 100;
   
-    if (!selectedLogType) {
-      console.error("Log type is not defined!");
-      return;
-    }
-  
-    if (customerId) {
-      dispatch(
-        getMachineLogRecords({
-          machineId,
-          page,
-          pageSize: rowsPerPage,
-          fromDate: data.dateFrom,
-          toDate: data.dateTo,
-          isMachineArchived: data.machine?.isArchived,
-          selectedLogType: selectedLogType.type,
-        })
-      );
-    }
-  
-    setLogsData(data); 
+    dispatch(
+      getMachineLogRecords({
+        customerId, 
+        machineId, 
+        page,
+        pageSize: rowsPerPage,
+        fromDate: data.dateFrom,
+        toDate: data.dateTo,
+        isCreatedAt,
+        isMachineArchived: data.machine?.isArchived,
+        selectedLogType: data.logType?.type, 
+      })
+    );
+    setLogsData(data);
   };
   
   const handleCustomerChange = useCallback((newCustomer) => {
@@ -85,11 +78,17 @@ function AllMachineLogs() {
     setValue('machine', null); 
     trigger(['customer', 'machine']); 
   }, [setValue, trigger]);
-
+  
   const handleMachineChange = useCallback((newMachine) => {
     setValue('machine', newMachine);
     trigger('machine'); 
   }, [setValue, trigger]);
+  
+  const handleLogTypeChange = useCallback((newLogType) => {
+    setValue('logType', newLogType);
+    trigger('logType'); 
+  }, [setValue, trigger]);
+  
 
   return (
     <>
@@ -173,22 +172,34 @@ function AllMachineLogs() {
                       }
                     />
                     <RHFAutocomplete
-                      label="Select Log Type*"
                       name="logType"
                       options={machineLogTypeFormats}
-                      size="small"
-                      getOptionLabel={(option) => option.type}
+                      getOptionLabel={(option) => option.type || ''}
                       isOptionEqualToValue={(option, value) => option?.type === value?.type}
+                      onChange={(e, newValue) => handleLogTypeChange(newValue)}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          size="small"
+                          label="Select Log Type*"
+                          error={!!errors.logType}
+                          helperText={errors.logType?.message}
+                          inputProps={{
+                            ...params.inputProps,
+                            readOnly: true,
+                            style: { cursor: 'pointer' },
+                          }}
+                        />
+                      )}
                       renderOption={(props, option) => (
                         <li {...props} key={option?.type}>
                           {option.type || ''}
                         </li>
                       )}
-                      getOptionDisabled={(option) => option?.disabled}
                       disableClearable
-                      filterOptions={(options) => options}
                       autoSelect
                       openOnFocus
+                      getOptionDisabled={(option) => option?.disabled}
                     />
                   </Box>
                 </Stack>
