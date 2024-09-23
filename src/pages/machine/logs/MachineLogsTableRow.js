@@ -36,11 +36,12 @@ export default function MachineLogsTableRow({
   columnsToShow
 }) {
   const location = useLocation();
-  const { date, frameSet, componentLabel, componentLength, waste, operator, createdAt, createdBy } = row;
+  const { date, machine, frameSet, componentLabel, componentLength, waste, operator, createdAt, createdBy } = row;
 
   return (
-    <StyledTableRow hover selected={selected}>
+    <StyledTableRow hover selected={selected} onClick={onViewRow} sx={{cursor: 'pointer'}}>
       <LinkTableCell align="left" onClick={onViewRow} param={fDateTime(date)} />
+      { location.pathname === PATH_MACHINE_LOGS.root && (<TableCell align="left">{machine?.serialNo || ''}</TableCell>)}
       { location.pathname === PATH_MACHINE_LOGS.root && <TableCell align="left">{frameSet || ''}</TableCell>}
       { location.pathname === PATH_MACHINE_LOGS.root && <TableCell align="left">{componentLabel || ''}</TableCell>}
       { location.pathname === PATH_MACHINE_LOGS.root && <TableCell align="left">{componentLength || ''}</TableCell>}
@@ -49,7 +50,7 @@ export default function MachineLogsTableRow({
       {columnsToShow?.map((column, index) => {
         if (['date', 'createdBy.name', 'createdAt'].includes(column.id)) return null;
         return (
-          <TableCell key={index} align={column.align} onClick={onViewRow} sx={{cursor: 'pointer',}}>
+          <TableCell key={index} align={column.align} onClick={onViewRow} sx={{cursor: 'pointer'}}>
             {row?.[column.id] || ''}
           </TableCell>
         );

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Box, Grid, Stack, Card, TextField, Container } from '@mui/material';
+import { Box, Grid, Stack, Card, Container } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
@@ -35,8 +35,8 @@ function AllMachineLogs() {
     defaultValues,
   });
 
-  const { watch, setValue, handleSubmit, trigger, formState: { errors } } = methods;
-  const { customer, machine, logType, dateFrom, dateTo } = watch();
+  const { watch, setValue, handleSubmit, trigger } = methods;
+  const { customer, dateFrom, dateTo } = watch();
 
   useEffect(() => {
     dispatch(getActiveCustomers());

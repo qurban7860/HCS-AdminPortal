@@ -36,6 +36,7 @@ import useResponsive from '../../../hooks/useResponsive';
 // ----------------------------------------------------------------------
 const TABLE_HEAD = [
   { id: 'date', label: 'Date', align: 'left' },
+  { id: 'machine', label: 'Machine', align: 'left' },
   { id: 'frameSet', label: 'Frame Set', align: 'left' },
   { id: 'componentLabel', label: 'Component Label', align: 'left' },
   { id: 'componentLength', label: 'Length', align: 'left' },
