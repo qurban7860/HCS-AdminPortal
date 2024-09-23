@@ -36,13 +36,16 @@ export default function MachineLogsTableRow({
   columnsToShow
 }) {
   const location = useLocation();
-  const { date, componentLength, waste, createdAt, createdBy } = row;
+  const { date, frameSet, componentLabel, componentLength, waste, operator, createdAt, createdBy } = row;
 
   return (
     <StyledTableRow hover selected={selected}>
       <LinkTableCell align="left" onClick={onViewRow} param={fDateTime(date)} />
+      { location.pathname === PATH_MACHINE_LOGS.root && <TableCell align="left">{frameSet || ''}</TableCell>}
+      { location.pathname === PATH_MACHINE_LOGS.root && <TableCell align="left">{componentLabel || ''}</TableCell>}
       { location.pathname === PATH_MACHINE_LOGS.root && <TableCell align="left">{componentLength || ''}</TableCell>}
       { location.pathname === PATH_MACHINE_LOGS.root && <TableCell align="left">{waste || ''}</TableCell>}
+      { location.pathname === PATH_MACHINE_LOGS.root && <TableCell align="left">{operator || ''}</TableCell>}
       {columnsToShow?.map((column, index) => {
         if (['date', 'createdBy.name', 'createdAt'].includes(column.id)) return null;
         return (
