@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState, useCallback, useMemo } from 'react'
 import PropTypes from 'prop-types';
 import { Box, Stack } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
@@ -6,65 +6,79 @@ import { useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useSnackbar } from 'notistack';
-// import FormProvider from '../../../components/hook-form';
 import FormProvider from '../../../components/hook-form/FormProvider';
-import { RHFTextField, RHFAutocomplete, RHFDatePicker } from '../../../components/hook-form';
+import { RHFTextField, RHFAutocomplete, RHFDatePicker, RHFUpload } from '../../../components/hook-form';
 import { MachineServiceRecordPart1Schema } from '../../schemas/machine';
+import { useAuthContext } from '../../../auth/useAuthContext';
 import { PATH_MACHINE } from '../../../routes/paths';
-import { addMachineServiceRecord, setFormActiveStep, updateMachineServiceRecord } from '../../../redux/slices/products/machineServiceRecord';
-import { resetServiceRecordConfig } from '../../../redux/slices/products/serviceRecordConfig';
+import { getActiveSPContacts, resetActiveSPContacts } from '../../../redux/slices/customer/contact';
+import { addMachineServiceRecord, setFormActiveStep, updateMachineServiceRecord, addMachineServiceRecordFiles, deleteRecordFile, downloadRecordFile  } from '../../../redux/slices/products/machineServiceRecord';
+import { getActiveServiceRecordConfigsForRecords, resetServiceRecordConfig } from '../../../redux/slices/products/serviceRecordConfig';
 import ServiceRecodStepButtons from '../../../components/DocumentForms/ServiceRecodStepButtons';
 import SkeletonLine from '../../../components/skeleton/SkeletonLine';
 
 MachineServiceRecordsFirstStep.propTypes = {
-    technicians: PropTypes.array,
-    userTechnician: PropTypes.object,
-    onChangeConfig : PropTypes.func,
     handleComplete : PropTypes.func,
     handleDraftRequest: PropTypes.func,
     handleDiscard: PropTypes.func,
-    handleBack: PropTypes.func
 };
 
-function MachineServiceRecordsFirstStep( { technicians, userTechnician, onChangeConfig, handleComplete, handleDraftRequest, handleDiscard, handleBack} ) {
+function MachineServiceRecordsFirstStep( { handleComplete, handleDraftRequest, handleDiscard } ) {
     
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
     const { machineId, id } = useParams();
-  
+    const { user  } = useAuthContext()
     const { recordTypes, activeServiceRecordConfigsForRecords } = useSelector((state) => state.serviceRecordConfig);
+    const { activeSpContacts } = useSelector((state) => state.contact);
     const { machineServiceRecord, isLoading } = useSelector((state) => state.machineServiceRecord);
-    const { securityUser } = useSelector((state) => state.user);
     const { machine } = useSelector((state) => state.machine);
-    const [ activeServiceRecordConfigs, setActiveServiceRecordConfigs ] = useState([]);
-
+    const [ technicians, setTechnicians ] = useState([]);
     const [ isDraft, setIsDraft ] = useState(false);
     const saveAsDraft = async () => setIsDraft(true);
-    const machineDecoilers = (machine?.machineConnections || []).map((decoiler) => ({
+    const machineDecoilers = (machine?.machineConnections || [])?.map((decoiler) => ({
       _id: decoiler?.connectedMachine?._id ?? null,
       name: decoiler?.connectedMachine?.name ?? null,
       serialNo: decoiler?.connectedMachine?.serialNo ?? null
     }));
 
+    useEffect(() => {
+      dispatch(getActiveServiceRecordConfigsForRecords(machineId));
+      dispatch(getActiveSPContacts());
+      return () =>{
+          dispatch(resetActiveSPContacts());
+          dispatch(resetServiceRecordConfig())
+      }
+    }, [ dispatch, machineId ]);
+
     const defaultValues = useMemo(
-        () => {
-          const initialValues = {
-          docRecordType:                recordTypes.find(rt=> rt?.name?.toLowerCase() === machineServiceRecord?.serviceRecordConfig?.recordType?.toLowerCase()) || null,
-          serviceRecordConfiguration:   machineServiceRecord?.serviceRecordConfiguration || null,
-          serviceDate:                  machineServiceRecord?.serviceDate || new Date(),
-          versionNo:                    machineServiceRecord?.versionNo || 1,
-          technician:                   machineServiceRecord?.technician || ( userTechnician || null ),
-          technicianNotes:              machineServiceRecord?.technicianNotes || '',
-          decoilers:!id && (machineDecoilers || []) 
-          // textBeforeCheckItems:         machineServiceRecord?.textBeforeCheckItems || '',
-          // textAfterCheckItems:          machineServiceRecord?.textAfterCheckItems || '',
-        }
-        return initialValues;
-      },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [ machineServiceRecord , userTechnician ]
-      );
+      () => {
+        const initialValues = {
+        docRecordType:                recordTypes.find(rt=> rt?.name?.toLowerCase() === machineServiceRecord?.serviceRecordConfig?.recordType?.toLowerCase()) || null,
+        serviceRecordConfiguration:   machineServiceRecord?.serviceRecordConfig || null,
+        serviceDate:                  machineServiceRecord?.serviceDate || new Date(),
+        versionNo:                    machineServiceRecord?.versionNo || 1,
+        technician:                   machineServiceRecord?.technician || null ,
+        technicianNotes:              machineServiceRecord?.technicianNotes || '',
+        textBeforeCheckItems:         machineServiceRecord?.textBeforeCheckItems || '',
+        textAfterCheckItems:          machineServiceRecord?.textAfterCheckItems || '',
+        files: machineServiceRecord?.files?.map(file => ({
+          key: file?._id,
+          _id: file?._id,
+          name:`${file?.name}.${file?.extension}`,
+          type: file?.fileType,
+          fileType: file?.fileType,
+          preview: `data:${file?.fileType};base64, ${file?.thumbnail}`,
+          src: `data:${file?.fileType};base64, ${file?.thumbnail}`,
+          path:`${file?.name}.${file?.extension}`,
+          downloadFilename:`${file?.name}.${file?.extension}`,
+          machineId:machineServiceRecord?.machineId,
+          serviceId: id,
+        })) || [],
+      }
+      return initialValues;
+    }, [ machineServiceRecord, recordTypes, id ] );
 
     const methods = useForm({
         resolver: yupResolver(MachineServiceRecordPart1Schema),
@@ -75,44 +89,49 @@ function MachineServiceRecordsFirstStep( { technicians, userTechnician, onChange
     reset,
     watch,
     setValue,
+    getValues,
     handleSubmit,
     formState: { isSubmitting },
     } = methods;
+
+  useEffect(() => {
+    if (!activeSpContacts?.length) return;
+    const sPContactUser = activeSpContacts?.find( ( el )=> el?._id === user?.contact );
+    let techniciansList = activeSpContacts?.filter( ( el ) => el?.departmentDetails?.departmentType?.toLowerCase() === 'technical');
+    if ( techniciansList?.some( ( el ) => el?._id !== sPContactUser?._id ) ) {
+      techniciansList = [ sPContactUser, ...techniciansList ]
+    }
+    if( !machineServiceRecord?._id ){
+      setValue('technician', sPContactUser || null );
+    }
+    if ( machineServiceRecord?.technician && techniciansList?.some( ( el ) => ( el?._id !== machineServiceRecord?.technician?._id ) ) ) {
+      techniciansList = [ machineServiceRecord?.technician, ...techniciansList ];
+      setValue('technician', machineServiceRecord?.technician || null );
+    }
+    techniciansList = techniciansList?.sort((a, b) => a?.firstName.localeCompare(b?.firstName) );
+    setTechnicians(techniciansList);
+  }, [activeSpContacts, setValue, machineServiceRecord, user?.contact, id ]);
 
     useEffect(() => {
       if (machineServiceRecord) {
         reset(defaultValues);
       }
-    }, [reset, machineServiceRecord, defaultValues]);
-
-    const { serviceRecordConfiguration, docRecordType } = watch();
-
-    useLayoutEffect(()=>{
-        if(machineServiceRecord?._id){
-            setValue('recordType', recordTypes.find(rt=> rt?.name?.toLowerCase() === machineServiceRecord?.serviceRecordConfig?.recordType?.toLowerCase()))
-            setValue('serviceRecordConfiguration', activeServiceRecordConfigs.find(asrc=> asrc?._id === machineServiceRecord?.serviceRecordConfig?._id))
-        }
-    },[machineServiceRecord,activeServiceRecordConfigs, recordTypes, setValue])
-
-    useEffect(() => {
-        if(docRecordType?.name){
-            if(docRecordType?.name !== serviceRecordConfiguration?.recordType ){
-            dispatch(resetServiceRecordConfig())
-            }
-            setActiveServiceRecordConfigs(activeServiceRecordConfigsForRecords.filter(activeRecordConfig => activeRecordConfig?.recordType?.toLowerCase() === docRecordType?.name?.toLowerCase() ))
-        }else{
-            setActiveServiceRecordConfigs([])
-        }
-        setValue('serviceRecordConfiguration',null)
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[docRecordType, activeServiceRecordConfigsForRecords])
+    }, [reset, machineServiceRecord ]);
+
+    const { docRecordType, serviceRecordConfiguration, technician, files } = watch();
+
+    console.log("files : ",files,'technician : ',technician,"technicians : ", technicians )
       const onSubmit = async (data) => {
         try {
           if(!id ){
+            data.decoilers = machineDecoilers;
             const serviceRecord = await dispatch(addMachineServiceRecord(machineId, data));
+            dispatchFiles( serviceRecord?._id, data );
             await navigate(PATH_MACHINE.machines.serviceRecords.edit(machineId, serviceRecord?._id))
           }else {
             await dispatch(updateMachineServiceRecord(machineId, id, data));
+            dispatchFiles( id, data );
             await navigate(PATH_MACHINE.machines.serviceRecords.edit(machineId, id))  
           }
 
@@ -128,7 +147,72 @@ function MachineServiceRecordsFirstStep( { technicians, userTechnician, onChange
           enqueueSnackbar('Saving failed!', { variant: `error` });
         }
       };
+    const dispatchFiles = async ( serviceID,data )  => {
+      if(Array.isArray(data?.files) && data?.files?.length > 0){
+        const filteredFiles = data?.files?.filter((ff)=> !ff?._id)
+        if(Array.isArray(filteredFiles) && filteredFiles?.length > 0){
+          await dispatch(addMachineServiceRecordFiles(machineId, serviceID, { files: filteredFiles } ))
+        }
+      }
+    }
+      const handleDropMultiFile = useCallback(
+        async (acceptedFiles) => {
+          const docFiles = files || [];
+          const newFiles = acceptedFiles.map((file, index) => 
+              Object.assign(file, {
+                preview: URL.createObjectURL(file),
+                src: URL.createObjectURL(file),
+                isLoaded:true
+              })
+          );
+          setValue('files', [...docFiles, ...newFiles], { shouldValidate: true });
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [ files ]
+      );
 
+
+      const handleRemoveFile = async (inputFile) => {
+        if (inputFile?._id) {
+          await dispatch(deleteRecordFile(machineId, id, inputFile?._id));
+        }
+      
+        if (files.length > 1) {
+          setValue(
+            'files',
+            files.filter((file) => file !== inputFile),
+            { shouldValidate: true }
+          );
+        } else {
+          setValue('files', [], { shouldValidate: true });
+        }
+      };
+
+      const regEx = /^[^2]*/;
+      const handleLoadImage = async (imageId, imageIndex) => {
+        try {
+          const response = await dispatch(downloadRecordFile(machineId, id, imageId));
+      
+          if (regEx.test(response.status)) {
+            // Update the image property in the imagesLightbox array
+            const existingFiles = getValues('files') || [];
+            const image = existingFiles[imageIndex];
+      
+            if (image) {
+              existingFiles[imageIndex] = {
+                ...image,
+                src: `data:${image?.fileType};base64,${response.data}`,
+                preview: `data:${image?.fileType};base64,${response.data}`,
+                isLoaded: true,
+              };
+      
+              setValue('files', existingFiles, { shouldValidate: true });
+            }
+          }
+        } catch (error) {
+          console.error('Error loading full file:', error);
+        }
+      };
 
 return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -160,18 +244,45 @@ return (
                       renderOption={(props, option) => (
                           <li {...props} key={option?._id}>{`${option.name ? option.name : ''}`}</li>
                       )}
+                      onChange={(event, newValue) =>{
+                          if(newValue){
+                            setValue('docRecordType',newValue)
+                            if( serviceRecordConfiguration?.recordType?.toUpperCase() !== newValue?.name?.toUpperCase() ){
+                              setValue('serviceRecordConfiguration',null)
+                            }
+                          } else {
+                            setValue('serviceRecordConfiguration',null )
+                            setValue('docRecordType', null )
+                          }
+                        }
+                      }
                   />
 
                   <RHFAutocomplete
                       name="serviceRecordConfiguration"
                       label="Service Record Configuration*"
                       disabled={id}
-                      options={activeServiceRecordConfigs}
+                      options={activeServiceRecordConfigsForRecords.filter( src => !docRecordType || src?.recordType?.toLowerCase() === docRecordType?.name?.toLowerCase() )}
                       getOptionLabel={(option) => `${option?.docTitle || ''} ${option?.docTitle ? '-' : '' } ${option.recordType || ''} ${option?.docVersionNo ? '- v' : '' }${option?.docVersionNo || ''}`}
                       isOptionEqualToValue={(option, value) => option?._id === value?._id}
                       renderOption={(props, option) => (
                           <li {...props} key={option?._id}>{`${option?.docTitle || ''} ${option?.docTitle ? '-' : '' } ${option.recordType || ''} ${option?.docVersionNo ? '- v' : '' }${option?.docVersionNo || ''}`}</li>
                       )}
+                      onChange={(event, newValue) =>{
+                          if(newValue){
+                            setValue('serviceRecordConfiguration',newValue)
+                            if(!docRecordType || newValue?.recordType?.toUpperCase() !== docRecordType?.name?.toUpperCase() ){
+                              setValue('docRecordType',recordTypes?.find((rt)=> rt?.name?.toUpperCase() === newValue?.recordType?.toUpperCase()))
+                            }
+                            setValue('textBeforeCheckItems',newValue?.textBeforeCheckItems || '')
+                            setValue('textAfterCheckItems',newValue?.textAfterCheckItems || '')
+                          } else {
+                            setValue('serviceRecordConfiguration',null )
+                            setValue('textBeforeCheckItems', '')
+                            setValue('textAfterCheckItems', '')
+                          }
+                        }
+                      }
                       />
                   </Box>       
                   <Box
@@ -192,6 +303,13 @@ return (
                       renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li>)}
                       />
                   <RHFTextField name="technicianNotes" label="Technician Notes" minRows={3} multiline/> 
+
+                  <RHFUpload multiple  thumbnail name="files" imagesOnly
+                    onDrop={handleDropMultiFile}
+                    dropZone={false}
+                    onRemove={handleRemoveFile}
+                    onLoadImage={handleLoadImage}
+                  />
           </Stack>
           <ServiceRecodStepButtons handleDraft={saveAsDraft} isDraft={isDraft} isSubmitting={isSubmitting} />
           </>
