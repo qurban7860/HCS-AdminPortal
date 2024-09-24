@@ -41,7 +41,7 @@ export default function MachineLogsTableRow({
   return (
     <StyledTableRow hover selected={selected} onClick={onViewRow} sx={{cursor: 'pointer'}}>
       <LinkTableCell align="left" onClick={onViewRow} param={fDateTime(date)} />
-      { location.pathname === PATH_MACHINE_LOGS.root && (<TableCell align="left">{machine?.serialNo || ''}</TableCell>)}
+      { location.pathname === PATH_MACHINE_LOGS.root && (<TableCell align="left">{machine?.name || ''}</TableCell>)}
       { location.pathname === PATH_MACHINE_LOGS.root && <TableCell align="left">{frameSet || ''}</TableCell>}
       { location.pathname === PATH_MACHINE_LOGS.root && <TableCell align="left">{componentLabel || ''}</TableCell>}
       { location.pathname === PATH_MACHINE_LOGS.root && <TableCell align="left">{componentLength || ''}</TableCell>}

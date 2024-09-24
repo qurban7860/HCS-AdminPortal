@@ -228,7 +228,7 @@ export default function MachineLogsList(){
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <Scrollbar>
-              <Table size="small" sx={{ minWidth: 360 }}>
+              <Table stickyHeader size="small" sx={{ minWidth: 360 }}>
                 <TableHead>
                   <TableRow>
                   {(location.pathname === PATH_MACHINE_LOGS.root ? TABLE_HEAD : undefined || selectedLogTypeTableColumns)?.map((headCell, index) => (
@@ -236,7 +236,7 @@ export default function MachineLogsList(){
                         key={headCell.id}
                         align={headCell.align || 'left'}
                         sortDirection={orderBy === headCell.id ? order : false}
-                        sx={{ position: 'sticky', top: 0, width: headCell.width, minWidth: headCell.minWidth }}
+                        sx={{ width: headCell.width, minWidth: headCell.minWidth }}
                       >
                         {onSort ? (
                           <TableSortLabel
