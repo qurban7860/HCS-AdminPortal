@@ -117,9 +117,19 @@ export default function MachineLogsAddForm() {
         setError("JSON size should not be greater than 5000 objects.");
         return;
       }
+      // Convert inches data to mm
       let logData = csvData;
       if (csvData.some((item) => item?.measurementUnit === "in")) {
         logData = convertAllInchesBitsToMM(csvData);
+      }
+
+      if (logData.some((item) => item?.timestamp && !item?.date)) {
+        logData = logData.map((item) => {
+          if (item?.timestamp && !item?.date) {
+            return { ...item, date: item.timestamp };
+          }
+          return item;
+        });
       }
   
       setError(null);

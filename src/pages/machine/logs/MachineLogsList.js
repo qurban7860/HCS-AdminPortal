@@ -24,9 +24,10 @@ import {
   getMachineLogRecords,
   ChangeRowsPerPage,
   ChangePage,
-  setFilterBy
+  setFilterBy,
+  setDateFrom,
+  setDateTo
 } from '../../../redux/slices/products/machineErpLogs';
-import { fDateTime } from '../../../utils/formatTime';
 import TableCard from '../../../components/ListTableTools/TableCard';
 import MachineTabContainer from '../util/MachineTabContainer';
 import { machineLogTypeFormats } from '../../../constants/machineLogTypeFormats';
@@ -34,6 +35,11 @@ import DialogViewMachineLogDetails from '../../../components/Dialog/DialogViewMa
 import useResponsive from '../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
+const defaultDates = {
+  dateFrom: new Date( Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+  dateTo: new Date(Date.now()).toISOString().split('T')[0],
+}
+
 const TABLE_HEAD = [
   { id: 'date', label: 'Date', align: 'left' },
   { id: 'componentLength', label: 'Length', align: 'left' },
@@ -143,6 +149,8 @@ export default function MachineLogsList(){
   },[])
 
   const toggleArchivedLogs = () => {
+    dispatch(setFilterBy(''))
+    setFilterName('');
     if (archivedLogs) {
       setSearchParams({ status: 'active' });
     } else {
