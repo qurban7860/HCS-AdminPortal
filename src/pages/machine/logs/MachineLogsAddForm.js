@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 // form
 import { useForm } from 'react-hook-form';
 // @mui
-import { Container ,Card, Grid, Stack, Button, FormHelperText, Checkbox, Typography, Box, useTheme, Chip, Divider } from '@mui/material';
+import { Container ,Card, Grid, Stack, Button, FormHelperText, Checkbox, Typography, Box, useTheme, Chip, Divider, Alert } from '@mui/material';
 // routes
 import { useNavigate, useParams } from 'react-router-dom';
 import { PATH_MACHINE } from '../../../routes/paths';
@@ -23,6 +23,7 @@ import IconTooltip from '../../../components/Icons/IconTooltip';
 
 
 // ----------------------------------------------------------------------
+const numericalProperties = ["coilLength", "coilWidth", "coilThickness", "coilLength", "flangeHeight", "webWidth", "componentLength", "waste", ]
 
 export default function MachineLogsAddForm() {
 
@@ -35,6 +36,7 @@ export default function MachineLogsAddForm() {
   const [ error, setError ] = useState(false);
   const [fileInputKey, setFileInputKey] = useState(0);
   const [selectedCheckbox, setSelectedCheckbox] = useState(null);
+  const [inchesMeasurementExists, setInchesMeasurementExists] = useState(false);
 
   const theme = useTheme();
 
@@ -74,6 +76,7 @@ export default function MachineLogsAddForm() {
 
   useEffect(() => {
     setValue('logTextValue', "" )
+    setInchesMeasurementExists(false);
     if (logType?.versions?.length > 0) {
       setValue('logVersion', logType.versions[0]);
     } else {
@@ -84,6 +87,7 @@ export default function MachineLogsAddForm() {
 
   useEffect(() => {
     setValue('logTextValue', "" )
+    setInchesMeasurementExists(false);
   },[ logVersion, setValue ]);
 
   useEffect(() => {
@@ -108,9 +112,14 @@ export default function MachineLogsAddForm() {
   
     try {
       const csvData = JSON.parse(data.logTextValue);
+      
       if (Array.isArray(csvData) && csvData.length > 5000) {
         setError("JSON size should not be greater than 5000 objects.");
         return;
+      }
+      let logData = csvData;
+      if (csvData.some((item) => item?.measurementUnit === "in")) {
+        logData = convertAllInchesBitsToMM(csvData);
       }
   
       setError(null);
@@ -121,7 +130,7 @@ export default function MachineLogsAddForm() {
         action.updateExistingRecords = true;
       }
   
-      const response = await dispatch(addMachineLogRecord(machineId, machine?.customer?._id, csvData, action, logVersion ,logType?.type));
+      const response = await dispatch(addMachineLogRecord(machineId, machine?.customer?._id, logData, action, logVersion ,logType?.type));
       if (response.success) {
         enqueueSnackbar("Logs uploaded successfully!");
         navigate(PATH_MACHINE.machines.logs.root(machineId));
@@ -160,13 +169,29 @@ export default function MachineLogsAddForm() {
     txtToJson(data).then(result => {
       if (result.length > 0) {
         setValue('logTextValue', JSON.stringify(result, null, 2));
+        if (result.some((item) => item?.measurementUnit === "in")) setInchesMeasurementExists(true)
       }
     });
   
     return null;
   };
   
-  
+  const convertAllInchesBitsToMM = (csvData) => {
+    const convertedData = csvData.map((row) => {
+      const dataInInches = {}
+      if (row?.measurementUnit === "in") {
+        Object.entries(row).forEach(([key, value]) => {
+          if (numericalProperties.includes(key)) {
+            dataInInches[`${key}InInches`] = value;
+            row[key] = (value * 25.4).toFixed(3).toString();
+          }
+        });
+        row = { ...row, ...dataInInches, measurementUnit: "mm" };
+      }
+      return row;
+    });
+    return convertedData;
+  };
 
   const txtToJson = async (data) => {
     const csvData = [];
@@ -361,6 +386,13 @@ const toggleCancel = () => navigate(PATH_MACHINE.machines.logs.root(machineId));
                     formatButton
                     formatButtonOnClick={formatTxtToJson}
                   />
+                  {inchesMeasurementExists && (
+                    <Grid item xs={12} sx={{ mt: 2 }}>
+                      <Alert severity="info" variant="filled">
+                        Logs contain measurements in inches. These will be converted to millimeters.
+                      </Alert>
+                    </Grid>
+                  )}
                   <Grid sx={{ display: 'flex', alignItems: 'center' }}>
                     <Typography variant="subtitle2">
                       Action to perform on existing records?{' '}
