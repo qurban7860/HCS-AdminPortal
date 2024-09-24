@@ -154,7 +154,13 @@ export default function MachineLogsList(){
 
   const handleViewRow = (id) => {
     const log = dataFiltered.find((item) => item._id === id);
-    setSelectedLog(log);
+    setSelectedLog({
+      ...log,
+      customer: log.customer?.name || '',
+      machine: log.machine?.name || '',
+      createdBy: log.createdBy?.name || '',
+      updatedBy: log.updatedBy?.name || '',
+    });
     setOpenLogDetailsDialog(true);
   };
   
