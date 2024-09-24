@@ -166,7 +166,7 @@ function AllMachineLogs() {
             <Accordion>
               <AccordionSummary
                 expandIcon={<Iconify icon="ep:arrow-down-bold" color={theme.palette.text.secondary} /> } >
-                <Typography variant="h4">Available Machines</Typography>
+                <Typography variant="h6">Available Machines</Typography>
               </AccordionSummary>
               <AccordionDetails>
                 <Box sx={{ display: 'grid', gap: 2 }}>

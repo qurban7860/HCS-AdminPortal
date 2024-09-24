@@ -22,6 +22,8 @@ import { styled } from '@mui/material/styles';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
+// Routes
+import { useLocation } from 'react-router-dom';
 // Redux
 import { deleteMachineLogRecord, updateMachineLogRecord } from '../../redux/slices/products/machineErpLogs';
 // Components
@@ -29,6 +31,7 @@ import IconTooltip from '../Icons/IconTooltip';
 import ConfirmDialog from '../confirm-dialog/ConfirmDialog';
 import CodeMirror from '../CodeMirror/JsonEditor';
 import Iconify from '../iconify';
+import { PATH_MACHINE_LOGS } from '../../routes/paths';
 
 const ResponsiveGrid = styled(Grid)(({ theme }) => ({
   [theme.breakpoints.down('sm')]: {
@@ -62,6 +65,7 @@ function DialogViewMachineLogDetails({
   const [editedLogs, setEditedLogs] = useState({});
   const { isLoading } = useSelector((state) => state.machineErpLogs);
   const dispatch = useDispatch();
+  const location = useLocation();
 
   const isArchivedStatus = logDetails?.isArchived
 
@@ -151,6 +155,8 @@ function DialogViewMachineLogDetails({
               {logEditState && 'Edit '}Log Details
             </Typography>
             <Stack direction="row" spacing={1.5} alignItems="center">
+            {location.pathname !== PATH_MACHINE_LOGS.root && (
+             <>
               {isArchivedStatus ? (
                 <IconTooltip
                   title="Restore"
@@ -181,6 +187,8 @@ function DialogViewMachineLogDetails({
                   />
                 </>
               ) : null}
+              </>
+            )}
             </Stack>
           </Stack>
         </DialogTitle>
