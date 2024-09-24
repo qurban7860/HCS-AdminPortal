@@ -123,9 +123,10 @@ const slice = createSlice({
     },
 
     // GET MACHINE Active SERVICE PARAM
-    updateMachineServiceRecordSuccess(state) {
+    updateMachineServiceRecordSuccess( state, action ) {
       state.isLoading = false;
       state.success = true;
+      state.machineServiceRecord = action.payload;
       state.initial = true;
     },
 
@@ -133,6 +134,7 @@ const slice = createSlice({
     addMachineServiceRecordFilesSuccess(state) {
       state.isLoading = false;
       state.success = true;
+      
       state.initial = true;
     },
 
@@ -445,9 +447,7 @@ export function addMachineServiceRecord(machineId, params) {
         // }
         
         const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords`, data );
-        if(response?.data?.serviceRecord?._id ){
-          dispatch(getMachineServiceRecord(machineId, response?.data?.serviceRecord?._id ))
-        }
+        dispatch(slice.actions.getMachineServiceRecordSuccess(response.data));
 
         return response?.data?.serviceRecord;
 
@@ -492,10 +492,7 @@ export function updateMachineServiceRecord(machineId, id, params) {
         emails:                  params?.emails,
       }
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}`, data );
-      await dispatch(slice.actions.updateMachineServiceRecordSuccess());
-      if(params?.status?.toLocaleLowerCase() !== 'submitted' && machineId && id ){
-        dispatch(getMachineServiceRecord(machineId, id))
-      }
+      await dispatch(slice.actions.updateMachineServiceRecordSuccess(response?.data));
       return response?.data?.serviceRecord;
     } catch (error) {
       console.error(error);
@@ -519,7 +516,7 @@ export function addMachineServiceRecordFiles(machineId, id, params) {
         });
       }
       const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}/files/`,formData);
-      dispatch(slice.actions.addMachineServiceRecordFilesSuccess());
+      dispatch(slice.actions.getMachineServiceRecordSuccess(response?.data));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -672,8 +669,7 @@ export function sendMachineServiceRecordForApproval(machineId, id, params) {
         `${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}/sendApprovalEmail`,
         data
       );
-      await dispatch(slice.actions.updateMachineServiceRecordSuccess());
-      return response?.data?.serviceRecord;
+      return response?.data
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -694,8 +690,7 @@ export function approveServiceRecordRequest(machineId, id, params) {
         `${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}/approveRecord`,
         data
       );
-      await dispatch(slice.actions.updateMachineServiceRecordSuccess());
-      return response?.data?.serviceRecord;
+      return response?.data;
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));

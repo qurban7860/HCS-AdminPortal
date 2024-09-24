@@ -159,13 +159,6 @@ const CheckedItemInputRow = memo(({ index, row }) => {
       }
     };
 
-    // const [files, setFiles] = useState([]);
-
-    // useEffect(() => {
-    //   const newFiles = defaultValues.checkItems.flatMap(item => item.images);
-    //   setFiles(newFiles);
-    // }, [defaultValues])
-
     const handleDropMultiFile = useCallback(
       (acceptedFiles, childIndex) => {
         const existingFiles = getValues(`checkItems[${childIndex}].images`) || [];
@@ -294,7 +287,7 @@ const CheckedItemInputRow = memo(({ index, row }) => {
               {childRow?.inputType === 'Status' && (
                 <RHFAutocomplete
                   size="small"
-                  label={`${childRow?.inputType} ${childRow?.isRequired && '*'}`}
+                  label={`${childRow?.inputType} ${childRow?.isRequired ? '*' : ''}`}
                   name={`checkItems[${childIndex}].value`}
                   options={statusTypes}
                   required

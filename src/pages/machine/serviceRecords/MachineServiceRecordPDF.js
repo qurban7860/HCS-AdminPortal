@@ -20,6 +20,8 @@ export function MachineServiceRecordPDF({machineServiceRecord, machineServiceRec
             serviceRecordConfigRecordType:        machineServiceRecord?.serviceRecordConfig?.recordType || '',
             serviceDate:                          machineServiceRecord?.serviceDate || null,
             versionNo:                            machineServiceRecord?.versionNo || null,
+            status:                               machineServiceRecord?.status || '',
+            approvalStatus:                       machineServiceRecord?.currentApprovalStatus || '',
             decoilers:                            machineServiceRecord?.decoilers ,
             technician:                           machineServiceRecord?.technician || null,
             textBeforeCheckItems:                 machineServiceRecord?.textBeforeCheckItems || '',
@@ -90,26 +92,38 @@ function getImageUrl(file) {
                     <Text style={styles.lable}>SERVICE DATE</Text>
                     <Text style={[styles.text, styles.bold]}>{fDate(defaultValues?.serviceDate)}</Text>
                 </View>
-                <View style={styles.col_40}>
+                <View style={styles.col_30}>
                     <Text style={styles.lable}>RECORD TYPE</Text>
                     <Text style={[styles.text, styles.bold]}>{defaultValues?.serviceRecordConfigRecordType}</Text>
                 </View>
                 
-                <View style={styles.col_30}>
+                <View style={styles.col_20}>
                     <Text style={styles.lable}>VERSION</Text>
                     <Text style={[styles.text, styles.bold]}>{defaultValues?.versionNo}</Text>
+                </View>
+
+                <View style={styles.col_20}>
+                    <Text style={styles.lable}>STATUS</Text>
+                    <Text style={[styles.text, styles.bold]}>{defaultValues.approvalStatus === "PENDING" ? defaultValues.status : defaultValues.approvalStatus}</Text>
                 </View>
             </View>
             <View style={styles.row}>
                 <View style={styles.col_30}>
-                    <Text style={styles.lable}>Serial No</Text>
+                    <Text style={styles.lable}>Machine Serial No</Text>
                     <Text style={[styles.text, styles.bold]}>{defaultValues?.machine?.serialNo}</Text>
                 </View>
                 <View style={styles.col_40}>
+                    <Text style={styles.lable}>Machine Name</Text>
+                    <Text style={[styles.text, styles.bold]}>{defaultValues?.machine?.name  || "" }</Text>
+                </View>
+                <View style={styles.col_30}>
                     <Text style={styles.lable}>Machine Model</Text>
                     <Text style={[styles.text, styles.bold]}>{defaultValues?.machine?.machineModel?.name}</Text>
                 </View>
                 
+            </View>
+
+            <View style={styles.row}>
                 <View style={styles.col}>
                     <Text style={styles.lable}>Decoilers</Text>
                     <Text style={[styles.text, styles.bold]}>{decoilers}</Text>
@@ -126,7 +140,7 @@ function getImageUrl(file) {
             <View style={styles.row}>
                 <View style={styles.col}>
                     <Text style={styles.lable}>TECHNICIAN</Text>
-                    <Text style={styles.text}>{defaultValues?.technician?.name || ' '}</Text>
+                    <Text style={styles.text}>{defaultValues?.technician?.firstName || ' '} {defaultValues?.technician?.lastName || ' '}</Text>
                 </View>
             </View>
 
@@ -156,18 +170,26 @@ function getImageUrl(file) {
                                         <Text style={styles.text_sm}><Text style={styles.bold}>Comments:</Text>{childRow?.recordValue?.comments}</Text>    
                                     </>
                                 }
-                                {childRow?.recordValue?.files?.length > 0 &&
-                                    <View key={`inner_image_container-${index}`} style={styles.image_row} >
-                                    {childRow?.recordValue?.files?.map((file, fileIndex) => {
-                                        const imageUrl = getImageUrl(file);
-                                        return (
-                                            <View key={file?._id} style={styles.image_column}>
-                                                { imageUrl && <Image style={{ borderRadius:5, height:"100px", objectFit: "cover" }} src={ imageUrl } />}
-                                            </View>
-                                        );
-                                    })}
+                                {(childRow?.recordValue?.files?.length > 0 || childRow?.historicalData?.some(data => data.files?.length > 0)) && (
+                                    <View key={`inner_image_container-${index}`} style={styles.image_row}>
+                                        {[
+                                        ...(childRow?.recordValue?.files || []),
+                                        ...(childRow?.historicalData ?? []).flatMap(data => data?.files || [] )
+                                        ].map((file, fileIndex) => {
+                                            const imageUrl = getImageUrl(file);
+                                            return (
+                                                <View key={file?._id || `file-${fileIndex}`} style={styles.image_column}>
+                                                    {imageUrl && (
+                                                        <Image 
+                                                            style={{ borderRadius: 5, height: "100px", objectFit: "cover" }} 
+                                                            src={imageUrl} 
+                                                        />
+                                                    )}
+                                                </View>
+                                            );
+                                        })}
                                     </View>
-                                }
+                                )}
                             </View>
                         ))}
                         

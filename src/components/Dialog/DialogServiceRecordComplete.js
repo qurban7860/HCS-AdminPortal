@@ -9,7 +9,6 @@ import {
   DialogTitle,
   Divider,
   DialogActions,
-  Alert,
   Stack,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
@@ -120,7 +119,7 @@ const SendApprovalEmails = ({ isLoading, recordStatus, approvingContacts }) => {
   const { user } = useAuthContext();
 
   const CompleteServiceRecordSchema = Yup.object().shape({
-    contacts: Yup.array().min(1, 'At least one contact is required').required(),
+    contacts: Yup.array().min(1).label("Contacts").required(),
   });
 
   const methods = useForm({
@@ -132,12 +131,9 @@ const SendApprovalEmails = ({ isLoading, recordStatus, approvingContacts }) => {
 
   const {
     handleSubmit,
-    watch,
     reset,
     formState: { isSubmitting },
   } = methods;
-
-  const { contacts } = watch();
 
   const handleCloseDialog = () => {
     dispatch(setCompleteDialog(false));
@@ -179,9 +175,9 @@ const SendApprovalEmails = ({ isLoading, recordStatus, approvingContacts }) => {
           {!isLoading ? (
             <RHFAutocomplete
               multiple
-              // disableCloseOnSelect
+              disableCloseOnSelect
               filterSelectedOptions
-              label="Send Approval Email to Contacts"
+              label="Contacts*"
               name="contacts"
               options={approvingContacts}
               isOptionEqualToValue={(option, value) => option?._id === value?._id}
@@ -194,11 +190,6 @@ const SendApprovalEmails = ({ isLoading, recordStatus, approvingContacts }) => {
             />
           ) : (
             <SkeletonLine />
-          )}
-          {contacts?.length > 0 && (
-            <Alert severity="info" variant="filled">
-              Email will be sent to selected contacts?
-            </Alert>
           )}
         </Stack>
       </DialogContent>
@@ -338,6 +329,7 @@ const ApproveSeviceRecord = ({ isLoading, recordStatus }) => {
               disabled={isSubmitting}
               loading={approvalSubmitting}
               variant="contained"
+              color="primary"
               onClick={() => handleStatusChange('APPROVED')}
             >
               Approve
