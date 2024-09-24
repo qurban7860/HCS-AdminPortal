@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Box, Grid, Stack, Card, TextField, Container } from '@mui/material';
+import { Box, Grid, Stack, Card, Container } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
-import FormProvider, { RHFAutocomplete } from '../../components/hook-form';
+import FormProvider, { RHFAutocomplete, RHFDatePicker } from '../../components/hook-form';
 import { getActiveCustomerMachines, resetActiveCustomerMachines } from '../../redux/slices/products/machine';
 import { getActiveCustomers } from '../../redux/slices/customer/customer';
 import { getMachineLogRecords } from '../../redux/slices/products/machineErpLogs'; 
@@ -25,9 +25,9 @@ function AllMachineLogs() {
   const defaultValues = {
     customer: null,
     machine: null,
-    logType: null,
-    dateFrom: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-    dateTo: new Date(Date.now()).toISOString().split('T')[0],
+    logType: machineLogTypeFormats.find(option => option.type === 'ERP') || null,
+    dateFrom: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000), 
+    dateTo: new Date(), 
   };
   
   const methods = useForm({
@@ -35,8 +35,8 @@ function AllMachineLogs() {
     defaultValues,
   });
 
-  const { watch, setValue, handleSubmit, trigger, formState: { errors } } = methods;
-  const { customer, machine, logType, dateFrom, dateTo } = watch();
+  const { watch, setValue, handleSubmit, trigger } = methods;
+  const { customer, dateFrom, dateTo } = watch();
 
   useEffect(() => {
     dispatch(getActiveCustomers());
@@ -143,62 +143,23 @@ function AllMachineLogs() {
                     gap={2}
                     gridTemplateColumns={{ xs: '1fr', sm: 'repeat(3, 1fr)' }}
                   >
-                    <TextField
-                      {...methods.register('dateFrom')}
-                      type="date"
-                      label="Start Date"
-                      sx={{ width: '100%' }}
-                      InputLabelProps={{ shrink: true }}
-                      size="small"
-                      error={dateFrom && dateTo && dateFrom > dateTo}
-                      helperText={
-                        dateFrom && dateTo && dateFrom > dateTo
-                          ? 'Start Date should be before End Date'
-                          : ''
-                      }
-                    />
-                    <TextField
-                      {...methods.register('dateTo')}
-                      type="date"
-                      label="End Date"
-                      sx={{ width: '100%' }}
-                      InputLabelProps={{ shrink: true }}
-                      size="small"
-                      error={dateFrom && dateTo && dateFrom > dateTo}
-                      helperText={
-                        dateFrom && dateTo && dateFrom > dateTo
-                          ? 'End Date should be after Start Date'
-                          : ''
-                      }
-                    />
+                    <RHFDatePicker label="Start Date" name="dateFrom" size="small" value={dateFrom} onChange={(newValue) => {setValue('dateFrom', newValue); trigger('dateFrom'); trigger('dateTo') }} />
+                    <RHFDatePicker label="End Date" name="dateTo" size="small" value={dateTo} onChange={(newValue) => {setValue('dateTo', newValue); trigger('dateFrom'); trigger('dateTo') }} />
+
                     <RHFAutocomplete
                       name="logType"
+                      size="small"
+                      label="Select Log Type*"
                       options={machineLogTypeFormats}
                       getOptionLabel={(option) => option.type || ''}
                       isOptionEqualToValue={(option, value) => option?.type === value?.type}
                       onChange={(e, newValue) => handleLogTypeChange(newValue)}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          size="small"
-                          label="Select Log Type*"
-                          error={!!errors.logType}
-                          helperText={errors.logType?.message}
-                          inputProps={{
-                            ...params.inputProps,
-                            readOnly: true,
-                            style: { cursor: 'pointer' },
-                          }}
-                        />
-                      )}
                       renderOption={(props, option) => (
                         <li {...props} key={option?.type}>
                           {option.type || ''}
                         </li>
                       )}
-                      disableClearable
-                      autoSelect
-                      openOnFocus
+                      disableClearable autoSelect openOnFocus
                       getOptionDisabled={(option) => option?.disabled}
                     />
                   </Box>
@@ -210,7 +171,7 @@ function AllMachineLogs() {
                     variant="contained"
                     size={isMobile ? 'medium' : 'large'}
                   >
-                    Get Log
+                    Get Logs
                   </LoadingButton>
                 </Stack>
               </Card>
