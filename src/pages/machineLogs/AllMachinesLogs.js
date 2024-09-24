@@ -161,7 +161,7 @@ function AllMachineLogs() {
       </Container>
       
       {showMachines && activeCustomerMachines?.length > 0 && (
-        <Container sx={{ mt: 3 }}>
+        <Container maxWidth={false} sx={{ mt: 3 }}>
           <Card sx={{ p: 2 }}>
             <Accordion>
               <AccordionSummary
