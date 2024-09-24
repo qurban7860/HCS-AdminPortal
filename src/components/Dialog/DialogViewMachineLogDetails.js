@@ -67,14 +67,14 @@ function DialogViewMachineLogDetails({
 
   useEffect(() => {
     if (logDetails) {
-      const formattedLog = formatMachineErpLog(logDetails);
+      const formattedLog = formatMachineLogToShow(logDetails);
       setLogsToShow(formattedLog);
     }
   }, [logDetails]);
 
-  const formatMachineErpLog = (log) => {
+  const formatMachineLogToShow = (log) => {
     // eslint-disable-next-line no-unused-vars
-    const { _id, createdIP, updatedIP, __v, machine, customer, updatedBy, createdBy, archivedByMachine, createdAt, updatedAt, isActive, isArchived, ...rest } = log;
+    const { _id, createdIP, updatedIP, __v, machine, customer, updatedBy, createdBy, archivedByMachine, createdAt, updatedAt, isActive, isArchived, type, version, ...rest } = log;
 
     const formatted = {
       ...rest,
@@ -127,7 +127,7 @@ function DialogViewMachineLogDetails({
 
   const handleEdit = () => {
     // eslint-disable-next-line no-unused-vars
-    const { archivedByMachine, createdAt, createdBy, createdIP, customer, machine, type, updatedAt, updatedBy, updatedIP, __v, _id, isActive, isArchived, ...rest } = { ...logsToShow };
+    const { archivedByMachine, createdAt, createdBy, createdIP, customer, machine, type, version, updatedAt, updatedBy, updatedIP, __v, _id, isActive, isArchived, ...rest } = { ...logsToShow };
     setEditedLogs(rest);
     setLogEditState(true);
   };
