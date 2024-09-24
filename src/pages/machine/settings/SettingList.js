@@ -21,7 +21,7 @@ import Scrollbar from '../../../components/scrollbar';
 import SettingListTableRow from './SettingListTableRow';
 import SettingListTableToolbar from './SettingListTableToolbar';
 import MachineTabContainer from '../util/MachineTabContainer';
-import { getSettings, getSetting, setSettingValueDialog, ChangeRowsPerPage, ChangePage, setFilterBy } from '../../../redux/slices/products/machineSetting';
+import { getSettings, getSettingSuccess, setSettingValueDialog, ChangeRowsPerPage, ChangePage, setFilterBy } from '../../../redux/slices/products/machineSetting';
 import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../../components/ListTableTools/TableCard';
 import MachineSettingValueDialog from '../../../components/Dialog/MachineSettingValueDialog';
@@ -102,9 +102,10 @@ export default function SettingList() {
   };
 
   const handleViewRow = (id) => navigate(PATH_MACHINE.machines.settings.view( machineId, id));
-  const handleMachineSettingValueDialog = async (rowId ) => {
+
+  const handleMachineSettingValueDialog = async (row ) => {
     await dispatch(setSettingValueDialog(true));
-    await dispatch(getSetting( machineId, rowId));
+    await dispatch(getSettingSuccess( row ));
   };
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
@@ -150,7 +151,7 @@ export default function SettingList() {
                         key={row._id}
                         row={row}
                         onViewRow={() => handleViewRow(row?._id)}
-                        handleDialog={ () => handleMachineSettingValueDialog( row?._id ) }
+                        handleDialog={ () => handleMachineSettingValueDialog( row ) }
                         style={index % 2 ? { background: 'red' } : { background: 'green' }}
                       />
                     ) : (

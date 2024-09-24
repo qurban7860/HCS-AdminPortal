@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import PropTypes from 'prop-types';
-import { useNavigate, useParams } from 'react-router';
+import { useParams } from 'react-router';
 import { useSnackbar } from 'notistack';
 import { useForm } from 'react-hook-form';
 import { Grid, Skeleton, Stack, Typography } from '@mui/material';
@@ -22,20 +22,18 @@ MachineServiceRecordsSecondStep.propTypes = {
 
 function MachineServiceRecordsSecondStep({serviceRecord, handleDraftRequest, handleDiscard, handleBack}) {
   
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const { machineId, id } = useParams();
   
   const { machineServiceRecord, machineServiceRecordCheckItems, isLoadingCheckItems } = useSelector((state) => state.machineServiceRecord);
-  const { machine } = useSelector((state) => state.machine);
   
   const [ isDraft, setIsDraft ] = useState(false);
   const saveAsDraft = async () => setIsDraft(true);
 
   useEffect(() =>{
     if(machineId && id){
-      dispatch(getMachineServiceRecord(machineId, id))
+      // dispatch(getMachineServiceRecord(machineId, id))
       dispatch(getMachineServiceRecordCheckItems( machineId, id ));
     }
     return(()=> resetCheckItemValues());
@@ -68,8 +66,8 @@ function MachineServiceRecordsSecondStep({serviceRecord, handleDraftRequest, han
     
     useEffect(() => {
       if (machineServiceRecord) {
-        resetBefore(defaultValues);
-        resetAfter(defaultValues);   
+        // resetBefore(defaultValues);
+        // resetAfter(defaultValues);   
         reset(defaultValues); 
       }
     }, [resetBefore, resetAfter, reset, machineServiceRecord, defaultValues]);
@@ -89,8 +87,6 @@ function MachineServiceRecordsSecondStep({serviceRecord, handleDraftRequest, han
       } catch (err) {
         console.error(err);
         enqueueSnackbar('Saving failed!', { variant: `error` });
-      } finally {
-        dispatch(getMachineServiceRecordCheckItems(machineId, id));
       }
     };
 
@@ -108,8 +104,6 @@ function MachineServiceRecordsSecondStep({serviceRecord, handleDraftRequest, han
       } catch (err) {
         console.error(err);
         enqueueSnackbar('Saving failed!', { variant: `error` });
-      } finally {
-        dispatch(getMachineServiceRecordCheckItems(machineId, id));
       }
     };
 
@@ -169,8 +163,8 @@ function MachineServiceRecordsSecondStep({serviceRecord, handleDraftRequest, han
                 </Grid>
               </Stack>
             </FormProvider>
-            <FormProvider methods={methods}  key='submit' onSubmit={handleSubmit(onSubmit)}>
-              <ServiceRecodStepButtons isSubmitting={isSubmitting} />
+            <FormProvider methods={methods}  key='submit' onSubmit={handleSubmit(onSubmit)} >
+              <ServiceRecodStepButtons handleDraft={saveAsDraft} isDraft={isDraft} isSubmitting={isSubmitting} />
             </FormProvider>
       </Stack>
 )}

@@ -479,7 +479,7 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
             />
           ))}
 
-          {!machineServiceRecord?.isHistory && <ThumbnailDocButton onClick={handleAddFileDialog}/>}
+          {!machineServiceRecord?.isHistory && machineServiceRecord?.status === 'DRAFT' && <ThumbnailDocButton onClick={handleAddFileDialog}/>}
         </Box>
           
           <ViewFormAudit defaultValues={defaultValues} />
