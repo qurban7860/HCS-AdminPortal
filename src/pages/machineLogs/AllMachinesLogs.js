@@ -82,13 +82,8 @@ function AllMachineLogs() {
     setValue('logType', newLogType);
     trigger('logType'); 
   }, [setValue, trigger]);
-  
-  const handleAccordionChange = (event, isExpanded) => {
-    setExpanded(isExpanded); 
-  };
 
   const [showMachines, setShowMachines] = useState(false); 
-  const [expanded, setExpanded] = useState(false);
 
   return (
     <>
@@ -168,7 +163,7 @@ function AllMachineLogs() {
       {showMachines && activeCustomerMachines?.length > 0 && (
         <Container sx={{ mt: 3 }}>
           <Card sx={{ p: 2 }}>
-            <Accordion expanded={expanded} onChange={handleAccordionChange}>
+            <Accordion>
               <AccordionSummary
                 expandIcon={<Iconify icon="ep:arrow-down-bold" color={theme.palette.text.secondary} /> } >
                 <Typography variant="h4">Available Machines</Typography>
