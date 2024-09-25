@@ -61,8 +61,6 @@ export default function MachineLogsList({ allMachineLogsPage = false, allMachine
     setArchivedLogs(searchParams.get('status') === 'archived');
   }, [searchParams])
 
-  const isMobile = useResponsive('down', 'sm');
-
   const {
     machineErpLogs,
     machineErpLogstotalCount,
@@ -75,6 +73,7 @@ export default function MachineLogsList({ allMachineLogsPage = false, allMachine
     initial,
     selectedLogType,
   } = useSelector((state) => state.machineErpLogs);
+  const { machine } = useSelector((state) => state.machine);
 
   const { machineId } = useParams();
   const {
@@ -105,6 +104,7 @@ export default function MachineLogsList({ allMachineLogsPage = false, allMachine
       setSelectedLogTypeTableColumns(machineLogTypeFormats.find(logType => logType.type === selectedLogType.type)?.tableColumns);
       dispatch(
         getMachineLogRecords({
+          customerId: machine?.customer?._id,
           machineId,
           page,
           pageSize: rowsPerPage,
@@ -116,7 +116,7 @@ export default function MachineLogsList({ allMachineLogsPage = false, allMachine
         })
       );
     }
-  }, [dispatch, machineId, page, rowsPerPage, dateFrom, dateTo, selectedLogType, archivedLogs, allMachineLogsPage ]);
+  }, [dispatch, machineId, page, rowsPerPage, dateFrom, dateTo, selectedLogType, archivedLogs, machine, allMachineLogsPage ]);
 
   useEffect(() => {
     if (initial) {
@@ -184,6 +184,7 @@ export default function MachineLogsList({ allMachineLogsPage = false, allMachine
 
   const refreshLogsList = () => {
     dispatch(getMachineLogRecords({
+      customerId: machine?.customer?._id,
       machineId,
       page,
       pageSize: rowsPerPage,
