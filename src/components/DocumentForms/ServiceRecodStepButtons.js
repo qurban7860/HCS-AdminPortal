@@ -10,6 +10,7 @@ import useResponsive from '../../hooks/useResponsive';
 ServiceRecodStepButtons.propTypes = {
   handleDraft: PropTypes.func,
   isSubmitting: PropTypes.bool,
+  finalSubmit: PropTypes.func,
   isDraft: PropTypes.bool,
   isActive: PropTypes.bool,
 };
@@ -17,6 +18,7 @@ ServiceRecodStepButtons.propTypes = {
 export default function ServiceRecodStepButtons({
   handleDraft,
   isSubmitting,
+  finalSubmit,
   isDraft,
   isActive
 }) {
@@ -37,16 +39,17 @@ export default function ServiceRecodStepButtons({
   } 
   
   return (
-  <Stack justifyContent="flex-end" direction={isMobile ? 'column' : 'row'} spacing={2} pr={3} pt={2}>
+  <Stack justifyContent="flex-end" direction={isMobile ? 'column' : 'row'} spacing={2} >
     <Grid container spacing={2}>
       <Grid item xs={12} sm={3.5} display='flex' columnGap={2}>
         <Button size={isMobile ? 'medium' : 'large'} onClick={handleCancle} variant="outlined">Exit</Button> 
+        { handleDraft && (<LoadingButton loading={isSubmitting && isDraft} size={isMobile ? 'medium' : 'large'} onClick={handleDraft} type='submit' variant="outlined" fullWidth={isMobile}>Save as draft</LoadingButton> )}
+        { finalSubmit && formActiveStep === 0 && <LoadingButton size={isMobile ? 'medium' : 'large'} onClick={finalSubmit} type='submit' variant="contained"  loading={isSubmitting && !isDraft}>Submit</LoadingButton>}
       </Grid>
-      <Grid item xs={12} sm={8.5} display='flex' columnGap={2} justifyContent='flex-end'>
-        {handleDraft && (<LoadingButton loading={isSubmitting && isDraft} size={isMobile ? 'medium' : 'large'} onClick={handleDraft} type='submit' variant="outlined" fullWidth={isMobile}>Save & Exit</LoadingButton> )}
+      <Grid item xs={12} sm={8.5} display='flex' columnGap={2} justifyContent='flex-end' pr={2} >
         <Button size={isMobile ? 'medium' : 'large'} onClick={handleBack} disabled={ formActiveStep===0 } variant="outlined">Back</Button>
-         <LoadingButton disabled={!isActive && formActiveStep===2} size={isMobile ? 'medium' : 'large'} type='submit' variant="contained"  loading={isSubmitting && !isDraft}>
-              {formActiveStep===2?"Submit":"Next"}
+          <LoadingButton disabled={!isActive && formActiveStep===2} size={isMobile ? 'medium' : 'large'} type='submit' variant="contained"  loading={isSubmitting && !isDraft}>
+            {formActiveStep===2?"Submit":"Next"}
           </LoadingButton>
       </Grid>
     </Grid>

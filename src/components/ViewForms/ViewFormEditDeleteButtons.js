@@ -724,7 +724,7 @@ function ViewFormEditDeleteButtons({
         />}
 
         {handleCompleteMSR && 
-          <IconTooltip title="Service Record Approval" onClick={handleCompleteMSR} color={theme.palette.primary.main} icon="uil:file-check-alt"/>
+          <IconTooltip title="Record Approval" onClick={handleCompleteMSR} color={theme.palette.primary.main} icon="uil:file-check-alt"/>
         }
 
         {handleViewPDF && 

@@ -13,9 +13,9 @@ import FormProvider from '../../../components/hook-form/FormProvider';
 import { RHFAutocomplete, RHFDatePicker, RHFSwitch, RHFTextField, RHFUpload } from '../../../components/hook-form';
 import { statusTypes } from '../util';
 import { fDate, stringToDate } from '../../../utils/formatTime';
-import { validateImageFileType } from '../../documents/util/Util';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
 import CheckedItemValueHistory from './CheckedItemValueHistory';
+import { CheckItemSchema } from '../../schemas/machine';
 
 const CheckedItemInputRow = memo(({ index, row }) => {
 
@@ -25,23 +25,6 @@ const CheckedItemInputRow = memo(({ index, row }) => {
 
     const { machineServiceRecord, submittingCheckItemIndex } = useSelector((state) => state.machineServiceRecord);
     const { machine } = useSelector((state) => state.machine);
-
-    // Define the schema for each image
-    const CheckItemSchema = Yup.object().shape({
-      value: Yup.mixed().required('Value is required!')
-        .test('is-number', 'Value is required!', (value, context) => {
-        if(context.parent.inputType==='Number' && !value){
-          return false
-        }
-        return true;
-      }),
-      comment: Yup.string().max(5000, 'Comments cannot exceed 5000 characters'),
-      images: Yup.array().test({
-        name: 'fileType',
-        message: 'Only the following formats are accepted: .jpeg, .jpg, gif, .bmp, .webp, .pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx',
-        test: validateImageFileType
-      }),
-    });
     
     const MainSchema = Yup.object().shape({
       checkItems: Yup.array().of(CheckItemSchema),
@@ -90,7 +73,7 @@ const CheckedItemInputRow = memo(({ index, row }) => {
       }),
       [row, machineId, id]
     );
-
+console.log("checkItems defaultValues : ",defaultValues)
     const methods = useForm({
       resolver: yupResolver(MainSchema),
       defaultValues,
@@ -115,30 +98,31 @@ const CheckedItemInputRow = memo(({ index, row }) => {
     
 
     const onSubmit = async (data, childIndex) => {
-      const checkItem = data.checkItems[childIndex];
-      const params = {
-        serviceRecord:machineServiceRecord?._id,
-        serviceId:machineServiceRecord?.serviceId,
-        versionNo:machineServiceRecord?.versionNo,
-        checkItemListId:row?._id,
-        machineCheckItem:checkItem?._id,
-        comments:checkItem?.comment || '',
-        recordValue:checkItem?.recordValue || {},
-        images:checkItem?.images.filter(image => !image.uploaded)
-      }
-      
-      if (checkItem.value instanceof Date) {
-        params.checkItemValue = fDate(checkItem.value, 'dd/MM/yyyy');
-      } else if(typeof checkItem.value==='object'){
-        params.checkItemValue=checkItem?.value?.name;
-      } else if(typeof checkItem.value==='boolean'){
-        params.checkItemValue=checkItem?.value;
-      }else{
-        params.checkItemValue=checkItem?.value || '';
-      }
-
       try {
+        const checkItem = data.checkItems[childIndex];
+        const params = {
+          serviceRecord:machineServiceRecord?._id,
+          serviceId:machineServiceRecord?.serviceId,
+          versionNo:machineServiceRecord?.versionNo,
+          checkItemListId:row?._id,
+          machineCheckItem:checkItem?._id,
+          comments:checkItem?.comment || '',
+          recordValue:checkItem?.recordValue || {},
+          images:checkItem?.images.filter(image => !image.uploaded)
+        }
+
+        if (checkItem.value instanceof Date) {
+          params.checkItemValue = fDate(checkItem.value, 'dd/MM/yyyy');
+        } else if(typeof checkItem.value==='object'){
+          params.checkItemValue=checkItem?.value?.name;
+        } else if(typeof checkItem.value==='boolean'){
+          params.checkItemValue=checkItem?.value;
+        }else{
+          params.checkItemValue=checkItem?.value || '';
+        }
+
         const serviceRecordValue = await dispatch(addCheckItemValues(machine?._id,params, childIndex));
+        console.log("data Saved  on submit serviceRecordValue : ", serviceRecordValue)
         const updatedCheckItems = [...getValues('checkItems')];
         updatedCheckItems[childIndex].recordValue = serviceRecordValue;
         updatedCheckItems[childIndex].images = updatedCheckItems[childIndex].images?.map(image => ({
@@ -152,7 +136,7 @@ const CheckedItemInputRow = memo(({ index, row }) => {
         setShowMessages(prev => ({ ...prev, [combinedIndex]: true }));
         setTimeout(() => {
           setShowMessages(prev => ({ ...prev, [combinedIndex]: false }));
-        }, 10000);
+        }, 20000);
       } catch (err) {
         console.error(err);
         enqueueSnackbar('Saving failed!', { variant: `error` });
@@ -174,23 +158,6 @@ const CheckedItemInputRow = memo(({ index, row }) => {
       },
       [setValue, getValues]
     );
-
-    // const handleDropMultiFile = useCallback(
-    //   (acceptedFiles, childIndex) => {
-
-    //     console.log('aaaa',acceptedFiles)
-    //     const existingFiles = getValues(`checkItems[${childIndex}].images`) || [];
-    //     const newFiles = acceptedFiles.map(file =>
-    //       Object.assign(file, {
-    //         preview: URL.createObjectURL(file),
-    //         src: URL.createObjectURL(file),
-    //         isLoaded:true
-    //       })
-    //     );
-    //     setValue(`checkItems[${childIndex}].images`, [...existingFiles, ...newFiles], { shouldValidate: true });
-    //   },
-    //   [getValues, setValue]
-    // );
 
     const handleRemoveFile = async (inputFile, childIndex)=>{
       
@@ -316,7 +283,6 @@ const CheckedItemInputRow = memo(({ index, row }) => {
                 thumbnail
                 dropZone={false}
                 name={`checkItems[${childIndex}].images`}
-                imagesOnly
                 // files={files[childIndex] || []}
                 onDrop={(accepted) => handleDropMultiFile(accepted, childIndex)}
                 onRemove={(inputFile) => handleRemoveFile(inputFile, childIndex)}
