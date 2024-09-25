@@ -43,13 +43,14 @@ const defaultDates = {
 const TABLE_HEAD = [
   { id: 'date', label: 'Date', align: 'left' },
   { id: 'machine', label: 'Machine', align: 'left' },
-  { id: 'frameSet', label: 'Frame Set', align: 'left' },
+  { id: 'frameset', label: 'Frame Set', align: 'left' },
   { id: 'componentLabel', label: 'Component Label', align: 'left' },
   { id: 'componentLength', label: 'Length', align: 'left' },
   { id: 'waste', label: 'Waste', align: 'left' },
-  { id: 'operator', label: 'Operator', align: 'left' },
-  // { id: 'createdBy.name', label: 'Created By', align: 'left' },
-  // { id: 'createdAt', label: 'Created At', align: 'right' },
+  { id: 'flangeHeight', label: 'Flange', align: 'left' },
+  { id: 'webWidth', label: 'Web Width', align: 'left' },
+  { id: 'profileShape', label: 'Profile', align: 'left' },
+  { id: 'coilLength', label: 'Coil Length', align: 'left' },
 ]
 
 export default function MachineLogsList(){

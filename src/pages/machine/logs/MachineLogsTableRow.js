@@ -36,17 +36,20 @@ export default function MachineLogsTableRow({
   columnsToShow
 }) {
   const location = useLocation();
-  const { date, machine, frameSet, componentLabel, componentLength, waste, operator, createdAt, createdBy } = row;
+  const { date, machine, frameset, componentLabel, componentLength, waste, flangeHeight, webWidth, profileShape, coilLength } = row;
 
   return (
     <StyledTableRow hover selected={selected} onClick={onViewRow} sx={{cursor: 'pointer'}}>
       <LinkTableCell align="left" onClick={onViewRow} param={fDateTime(date)} />
-      { location.pathname === PATH_MACHINE_LOGS.root && (<TableCell align="left">{machine?.name || ''}</TableCell>)}
-      { location.pathname === PATH_MACHINE_LOGS.root && <TableCell align="left">{frameSet || ''}</TableCell>}
+      { location.pathname === PATH_MACHINE_LOGS.root && (<TableCell align="left">{machine?.serialNo || ''}</TableCell>)}
+      { location.pathname === PATH_MACHINE_LOGS.root && <TableCell align="left">{frameset || ''}</TableCell>}
       { location.pathname === PATH_MACHINE_LOGS.root && <TableCell align="left">{componentLabel || ''}</TableCell>}
       { location.pathname === PATH_MACHINE_LOGS.root && <TableCell align="left">{componentLength || ''}</TableCell>}
       { location.pathname === PATH_MACHINE_LOGS.root && <TableCell align="left">{waste || ''}</TableCell>}
-      { location.pathname === PATH_MACHINE_LOGS.root && <TableCell align="left">{operator || ''}</TableCell>}
+      { location.pathname === PATH_MACHINE_LOGS.root && <TableCell align="left">{flangeHeight || ''}</TableCell>}
+      { location.pathname === PATH_MACHINE_LOGS.root && <TableCell align="left">{webWidth || ''}</TableCell>}
+      { location.pathname === PATH_MACHINE_LOGS.root && <TableCell align="left">{profileShape || ''}</TableCell>}
+      { location.pathname === PATH_MACHINE_LOGS.root && <TableCell align="left">{coilLength || ''}</TableCell>}
       {columnsToShow?.map((column, index) => {
         if (['date', 'createdBy.name', 'createdAt'].includes(column.id)) return null;
         return (

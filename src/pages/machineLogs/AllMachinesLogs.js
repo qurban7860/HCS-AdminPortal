@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Box, Grid, Stack, Card, Container, Typography, useTheme, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
+import { Box, Grid, Stack, Card, Container } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
@@ -22,7 +22,6 @@ function AllMachineLogs() {
   const { activeCustomers } = useSelector((state) => state.customer);
   const isMobile = useResponsive('down', 'sm');
   const [logsData, setLogsData] = useState(null);
-  const theme = useTheme();
 
   const defaultValues = {
     customer: null,
@@ -47,7 +46,6 @@ function AllMachineLogs() {
   useEffect(() => {
     if (customer) {
       dispatch(getActiveCustomerMachines(customer._id));
-      setShowMachines(false);
     } else {
       dispatch(resetActiveCustomerMachines());
     }
@@ -64,7 +62,6 @@ function AllMachineLogs() {
       getMachineLogRecords({customerId, machineId, page, pageSize: rowsPerPage, fromDate: data.dateFrom, toDate: data.dateTo, isCreatedAt, isMachineArchived: data.machine?.isArchived, selectedLogType: data.logType?.type })
     );
     setLogsData(data);
-    setShowMachines(true); 
   };
   
   const handleCustomerChange = useCallback((newCustomer) => {
@@ -83,7 +80,6 @@ function AllMachineLogs() {
     trigger('logType'); 
   }, [setValue, trigger]);
 
-  const [showMachines, setShowMachines] = useState(false); 
 
   return (
     <>
@@ -159,30 +155,7 @@ function AllMachineLogs() {
           </Grid>
         </FormProvider>
       </Container>
-      
-      {showMachines && activeCustomerMachines?.length > 0 && (
-        <Container maxWidth={false} sx={{ mt: 3 }}>
-          <Card sx={{ p: 2 }}>
-            <Accordion>
-              <AccordionSummary
-                expandIcon={<Iconify icon="ep:arrow-down-bold" color={theme.palette.text.secondary} /> } >
-                <Typography variant="h6">Available Machines</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Box sx={{ display: 'grid', gap: 2 }}>
-                  {activeCustomerMachines.map((machine) => (
-                    <Box key={machine._id} sx={{ display: 'flex', alignItems: 'center' }}>
-                      <Typography variant="body1">
-                        {machine.serialNo} - {machine.name}
-                      </Typography>
-                    </Box>
-                  ))}
-                </Box>
-              </AccordionDetails>
-            </Accordion>
-          </Card>
-        </Container>
-      )}
+
       {logsData && <MachineLogsList logsData={logsData} />}
     </>
   );
