@@ -50,6 +50,7 @@ DialogViewMachineLogDetails.propTypes = {
   setOpenLogDetailsDialog: PropTypes.func,
   refreshLogsList: PropTypes.func,
   logType: PropTypes.string,
+  allMachineLogsPage: PropTypes.bool,
 };
 
 function DialogViewMachineLogDetails({
@@ -57,7 +58,8 @@ function DialogViewMachineLogDetails({
   logType,
   openLogDetailsDialog,
   setOpenLogDetailsDialog,
-  refreshLogsList
+  refreshLogsList,
+  allMachineLogsPage
 }) {
   const [logsToShow, setLogsToShow] = useState([]);
   const [deleteConfirmationDialog, setDeleteConfirmationDialog] = useState(null);
@@ -154,42 +156,40 @@ function DialogViewMachineLogDetails({
             <Typography variant="h4" sx={{ flexGrow: 1 }}>
               {logEditState && 'Edit '}Log Details
             </Typography>
-            <Stack direction="row" spacing={1.5} alignItems="center">
-            {location.pathname !== PATH_MACHINE_LOGS.root && (
-             <>
-              {isArchivedStatus ? (
-                <IconTooltip
-                  title="Restore"
-                  onClick={() => handleLogAction('restore')}
-                  color={theme.palette.primary.main}
-                  icon="clarity:unarchive-solid"
-                />
-              ) : null}
-              {!logEditState ? (
-                <>
-                  {!isArchivedStatus ? (
-                    <IconTooltip
-                      title="Edit"
-                      onClick={() => {
-                        handleEdit();
-                      }}
-                      color={theme.palette.primary.main}
-                      icon="mdi:pencil-outline"
-                    />
-                  ) : null}
+            {!allMachineLogsPage ? (
+              <Stack direction="row" spacing={1.5} alignItems="center">
+                {isArchivedStatus ? (
                   <IconTooltip
-                    title={isArchivedStatus ? 'Delete' : 'Archive'}
-                    onClick={() =>
-                      handleArchiveDeleteConfirm(isArchivedStatus ? 'Delete' : 'Archive')
-                    }
-                    color="#FF0000"
-                    icon={isArchivedStatus ? 'mdi:delete' : 'mdi:archive'}
+                    title="Restore"
+                    onClick={() => handleLogAction('restore')}
+                    color={theme.palette.primary.main}
+                    icon="clarity:unarchive-solid"
                   />
-                </>
-              ) : null}
-              </>
-            )}
-            </Stack>
+                ) : null}
+                {!logEditState ? (
+                  <>
+                    {!isArchivedStatus ? (
+                      <IconTooltip
+                        title="Edit"
+                        onClick={() => {
+                          handleEdit();
+                        }}
+                        color={theme.palette.primary.main}
+                        icon="mdi:pencil-outline"
+                      />
+                    ) : null}
+                    <IconTooltip
+                      title={isArchivedStatus ? 'Delete' : 'Archive'}
+                      onClick={() =>
+                        handleArchiveDeleteConfirm(isArchivedStatus ? 'Delete' : 'Archive')
+                      }
+                      color="#FF0000"
+                      icon={isArchivedStatus ? 'mdi:delete' : 'mdi:archive'}
+                    />
+                  </>
+                ) : null}
+              </Stack>
+            ) : null}
           </Stack>
         </DialogTitle>
         <Divider orientation="horizontal" flexItem sx={{ mb: 2 }} />

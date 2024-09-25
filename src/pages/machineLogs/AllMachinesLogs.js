@@ -4,11 +4,10 @@ import { Box, Grid, Stack, Card, Container } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
-import Iconify from '../../components/iconify';
 import FormProvider, { RHFAutocomplete, RHFDatePicker } from '../../components/hook-form';
 import { getActiveCustomerMachines, resetActiveCustomerMachines } from '../../redux/slices/products/machine';
 import { getActiveCustomers } from '../../redux/slices/customer/customer';
-import { getMachineLogRecords } from '../../redux/slices/products/machineErpLogs'; 
+import { getMachineLogRecords, ChangePage } from '../../redux/slices/products/machineErpLogs'; 
 import { AddMachineLogSchema } from '../schemas/machine'; 
 import useResponsive from '../../hooks/useResponsive';
 import { Cover } from '../../components/Defaults/Cover';
@@ -20,8 +19,11 @@ function AllMachineLogs() {
   const dispatch = useDispatch();
   const { activeCustomerMachines } = useSelector((state) => state.machine);
   const { activeCustomers } = useSelector((state) => state.customer);
+  const { page, rowsPerPage } = useSelector((state) => state.machineErpLogs);
+  const [selectedLogTypeTableColumns, setSelectedLogTypeTableColumns] = useState([]);
+
   const isMobile = useResponsive('down', 'sm');
-  const [logsData, setLogsData] = useState(null);
+
 
   const defaultValues = {
     customer: null,
@@ -37,11 +39,12 @@ function AllMachineLogs() {
   });
 
   const { watch, setValue, handleSubmit, trigger } = methods;
-  const { customer, dateFrom, dateTo } = watch();
+  const { customer, machine, dateFrom, dateTo, logType } = watch();
 
   useEffect(() => {
     dispatch(getActiveCustomers());
-  }, [dispatch]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (customer) {
@@ -51,17 +54,44 @@ function AllMachineLogs() {
     }
   }, [dispatch, customer]);
 
+  useEffect(() => {
+    const customerId = customer?._id || undefined;
+    const machineId = machine?._id || undefined; 
+    if (customerId && logType) {
+      dispatch(
+        getMachineLogRecords({
+          customerId,
+          machineId,
+          page,
+          pageSize: rowsPerPage,
+          fromDate: dateFrom,
+          toDate: dateTo,
+          isArchived: machine?.isArchived,
+          isMachineArchived: false,
+          selectedLogType: logType.type,
+        })
+      );
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page, rowsPerPage]);
+
   const onSubmit = (data) => {
-    const customerId = data.customer?._id; 
-    const machineId = data.machine?._id || undefined; 
-    const isCreatedAt = false;
-    const page = 0;
-    const rowsPerPage = 100;
-  
+    const customerId = customer._id; 
+    const machineId = machine?._id || undefined;
+    dispatch(ChangePage(0));
+    setSelectedLogTypeTableColumns(machineLogTypeFormats.find(logTypeItem => logTypeItem.type === logType.type)?.tableColumns);
     dispatch(
-      getMachineLogRecords({customerId, machineId, page, pageSize: rowsPerPage, fromDate: data.dateFrom, toDate: data.dateTo, isCreatedAt, isMachineArchived: data.machine?.isArchived, selectedLogType: data.logType?.type })
+      getMachineLogRecords({
+        customerId,
+        machineId,
+        page: 0,
+        pageSize: rowsPerPage,
+        fromDate: dateFrom,
+        toDate: dateTo,
+        isMachineArchived: machine?.isArchived,
+        selectedLogType: logType.type,
+      })
     );
-    setLogsData(data);
   };
   
   const handleCustomerChange = useCallback((newCustomer) => {
@@ -79,7 +109,6 @@ function AllMachineLogs() {
     setValue('logType', newLogType);
     trigger('logType'); 
   }, [setValue, trigger]);
-
 
   return (
     <>
@@ -115,19 +144,25 @@ function AllMachineLogs() {
                     />
                   </Box>
                   <Box display="grid" gap={2} gridTemplateColumns={{ xs: '1fr', sm: 'repeat(3, 1fr)' }}>
-                    <RHFDatePicker
-                      label="Start Date"
-                      name="dateFrom"
-                      size="small"
-                      value={dateFrom}
-                      onChange={(newValue) => { setValue('dateFrom', newValue); trigger('dateFrom'); trigger('dateTo') }}
-                    />
+                  <RHFDatePicker
+                    label="Start Date"
+                    name="dateFrom"
+                    size="small"
+                    value={dateFrom}
+                    onChange={(newValue) => {
+                      setValue('dateFrom', newValue);
+                      trigger(['dateFrom', 'dateTo']);
+                    }}
+                  />
                     <RHFDatePicker
                       label="End Date"
                       name="dateTo"
                       size="small"
                       value={dateTo}
-                      onChange={(newValue) => { setValue('dateTo', newValue); trigger('dateFrom'); trigger('dateTo') }}
+                      onChange={(newValue) => {
+                        setValue('dateTo', newValue);
+                        trigger(['dateFrom', 'dateTo']);
+                      }}
                     />
                     <RHFAutocomplete
                       name="logType"
@@ -155,8 +190,9 @@ function AllMachineLogs() {
           </Grid>
         </FormProvider>
       </Container>
-
-      {logsData && <MachineLogsList logsData={logsData} />}
+      {/* {logsData && ( */}
+        <MachineLogsList allMachineLogsPage allMachineLogsColumns={selectedLogTypeTableColumns} />
+      {/* )} */}
     </>
   );
 }
