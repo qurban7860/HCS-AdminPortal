@@ -9,18 +9,16 @@ import { LoadingButton } from '@mui/lab';
 import { RHFTextField } from '../../../components/hook-form';
 import CheckedItemInputRow from './CheckedItemInputRow';
 import FormProvider from '../../../components/hook-form/FormProvider';
-import { getMachineServiceRecord, getMachineServiceRecordCheckItems, resetCheckItemValues, setFormActiveStep, updateMachineServiceRecord } from '../../../redux/slices/products/machineServiceRecord';
+import { getMachineServiceRecordCheckItems, resetCheckItemValues, setFormActiveStep, updateMachineServiceRecord } from '../../../redux/slices/products/machineServiceRecord';
 import ServiceRecodStepButtons from '../../../components/DocumentForms/ServiceRecodStepButtons';
 
 MachineServiceRecordsSecondStep.propTypes = {
-  // checkItemLists: PropTypes.array
-  serviceRecord: PropTypes.object,
   handleDraftRequest: PropTypes.func,
   handleDiscard: PropTypes.func,
   handleBack: PropTypes.func
 };
 
-function MachineServiceRecordsSecondStep({serviceRecord, handleDraftRequest, handleDiscard, handleBack}) {
+function MachineServiceRecordsSecondStep({ handleDraftRequest, handleDiscard, handleBack}) {
   
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
@@ -33,7 +31,6 @@ function MachineServiceRecordsSecondStep({serviceRecord, handleDraftRequest, han
 
   useEffect(() =>{
     if(machineId && id){
-      // dispatch(getMachineServiceRecord(machineId, id))
       dispatch(getMachineServiceRecordCheckItems( machineId, id ));
     }
     return(()=> resetCheckItemValues());

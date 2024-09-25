@@ -10,7 +10,8 @@ import { Stack } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import { PATH_MACHINE } from '../../../routes/paths';
 // slice
-import { updateMachineServiceRecord, resetMachineServiceRecord, getMachineServiceRecord, addMachineServiceRecordFiles, deleteRecordFile, downloadRecordFile } from '../../../redux/slices/products/machineServiceRecord';
+import { updateMachineServiceRecord, resetMachineServiceRecord, addMachineServiceRecordFiles, deleteRecordFile, downloadRecordFile } from '../../../redux/slices/products/machineServiceRecord';
+import { getActiveContacts, resetActiveContacts } from '../../../redux/slices/customer/contact';
 // components
 import ServiceRecodStepButtons from '../../../components/DocumentForms/ServiceRecodStepButtons';
 import { useSnackbar } from '../../../components/snackbar';
@@ -29,19 +30,21 @@ function MachineServiceRecordsThirdStep({handleDraftRequest, handleDiscard, hand
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
     const { machineId, id } = useParams();
-      
+    const { machine } = useSelector((state) => state.machine);
     const { activeContacts } = useSelector((state) => state.contact);
     const { machineServiceRecord } = useSelector((state) => state.machineServiceRecord);
 
     const [ isDraft, setIsDraft ] = useState(false);
     const saveAsDraft = async () => setIsDraft(true);
 
-    useEffect(()=>{
-      if(machineId && id){
-        dispatch(getMachineServiceRecord(machineId, id))
+    useEffect(() => {
+      if (machine?.customer?._id) {
+        dispatch(getActiveContacts(machine?.customer?._id));
       }
-      return(()=> resetMachineServiceRecord());
-    },[dispatch, machineId, id])
+      return () =>{
+          dispatch(resetActiveContacts());
+      }
+    }, [ dispatch, machine ]);
 
     const defaultValues = useMemo(
         () => {
@@ -100,9 +103,11 @@ function MachineServiceRecordsThirdStep({handleDraftRequest, handleDiscard, hand
       if (machineServiceRecord) {
         reset(defaultValues);
       }
+      return(()=> resetMachineServiceRecord());
     }, [reset, machineServiceRecord, defaultValues]);
 
     const { isActive, files } = watch()
+    
     const handleDropMultiFile = useCallback(
       async (acceptedFiles) => {
         const docFiles = files || [];
@@ -128,7 +133,7 @@ function MachineServiceRecordsThirdStep({handleDraftRequest, handleDiscard, hand
           }
           
           if(id){
-            if(Array.isArray(data?.files) && data?.files?.length > 0){
+            if(Array.isArray(data?.files) && data?.files?.filter((f)=>!f?._id)?.length > 0){
               await dispatch(addMachineServiceRecordFiles(machineId, id, data))
             }
             

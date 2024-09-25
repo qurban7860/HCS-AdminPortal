@@ -449,7 +449,7 @@ export function addMachineServiceRecord(machineId, params) {
         const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords`, data );
         dispatch(slice.actions.getMachineServiceRecordSuccess(response.data));
 
-        return response?.data?.serviceRecord;
+        return response?.data;
 
       } catch (error) {
         console.error(error);

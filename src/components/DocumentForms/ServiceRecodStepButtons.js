@@ -1,13 +1,9 @@
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
-import { useState, useLayoutEffect } from 'react';
 import { Button, Grid, Stack } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import ConfirmDialog from '../confirm-dialog';
-import { BUTTONS, DIALOGS } from '../../constants/default-constants';
-import { useAuthContext } from '../../auth/useAuthContext';
-import { PATH_DASHBOARD, PATH_MACHINE } from '../../routes/paths';
+import { PATH_MACHINE } from '../../routes/paths';
 import { setFormActiveStep } from '../../redux/slices/products/machineServiceRecord';
 import useResponsive from '../../hooks/useResponsive';
 
@@ -43,11 +39,11 @@ export default function ServiceRecodStepButtons({
   return (
   <Stack justifyContent="flex-end" direction={isMobile ? 'column' : 'row'} spacing={2} pr={3} pt={2}>
     <Grid container spacing={2}>
-     <Grid item xs={12} sm={6} display='flex' columnGap={2}>
-       <Button size={isMobile ? 'medium' : 'large'} onClick={handleCancle} variant="outlined">Exit</Button> 
-     </Grid>
-      <Grid item xs={12} sm={6} display='flex' columnGap={2} justifyContent='flex-end'>
-        {handleDraft && (<LoadingButton loading={isSubmitting && isDraft} size={isMobile ? 'medium' : 'large'} onClick={handleDraft} type='submit' variant="outlined" sx={{ fontSize: isMobile ? '0.62rem' : '1rem' }} fullWidth={isMobile}>Save & Exit</LoadingButton> )}
+      <Grid item xs={12} sm={3.5} display='flex' columnGap={2}>
+        <Button size={isMobile ? 'medium' : 'large'} onClick={handleCancle} variant="outlined">Exit</Button> 
+      </Grid>
+      <Grid item xs={12} sm={8.5} display='flex' columnGap={2} justifyContent='flex-end'>
+        {handleDraft && (<LoadingButton loading={isSubmitting && isDraft} size={isMobile ? 'medium' : 'large'} onClick={handleDraft} type='submit' variant="outlined" fullWidth={isMobile}>Save & Exit</LoadingButton> )}
         <Button size={isMobile ? 'medium' : 'large'} onClick={handleBack} disabled={ formActiveStep===0 } variant="outlined">Back</Button>
          <LoadingButton disabled={!isActive && formActiveStep===2} size={isMobile ? 'medium' : 'large'} type='submit' variant="contained"  loading={isSubmitting && !isDraft}>
               {formActiveStep===2?"Submit":"Next"}
