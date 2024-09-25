@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useMemo } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import PropTypes from 'prop-types';
 import { Box, Stack } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
@@ -119,9 +119,7 @@ function MachineServiceRecordsFirstStep( { handleComplete, handleDraftRequest, h
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [reset, machineServiceRecord ]);
 
-    const { docRecordType, serviceRecordConfiguration, technician, files } = watch();
-
-    console.log("files : ",files,'technician : ',technician,"technicians : ", technicians )
+    const { docRecordType, serviceRecordConfiguration, files } = watch();
       const onSubmit = async (data) => {
         try {
           if(!id ){
@@ -139,7 +137,7 @@ function MachineServiceRecordsFirstStep( { handleComplete, handleDraftRequest, h
             await handleDraftRequest(isDraft);
           }else{
             await dispatch(setFormActiveStep(1));
-            await handleComplete(0);
+            // await handleComplete(0);
           }
     
         } catch (err) {
@@ -155,22 +153,6 @@ function MachineServiceRecordsFirstStep( { handleComplete, handleDraftRequest, h
         }
       }
     }
-      const handleDropMultiFile = useCallback(
-        async (acceptedFiles) => {
-          const docFiles = files || [];
-          const newFiles = acceptedFiles.map((file, index) => 
-              Object.assign(file, {
-                preview: URL.createObjectURL(file),
-                src: URL.createObjectURL(file),
-                isLoaded:true
-              })
-          );
-          setValue('files', [...docFiles, ...newFiles], { shouldValidate: true });
-        },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [ files ]
-      );
-
 
       const handleRemoveFile = async (inputFile) => {
         if (inputFile?._id) {
@@ -259,53 +241,56 @@ return (
                   />
 
                   <RHFAutocomplete
-                      name="serviceRecordConfiguration"
-                      label="Service Record Configuration*"
-                      disabled={id}
-                      options={activeServiceRecordConfigsForRecords.filter( src => !docRecordType || src?.recordType?.toLowerCase() === docRecordType?.name?.toLowerCase() )}
-                      getOptionLabel={(option) => `${option?.docTitle || ''} ${option?.docTitle ? '-' : '' } ${option.recordType || ''} ${option?.docVersionNo ? '- v' : '' }${option?.docVersionNo || ''}`}
-                      isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                      renderOption={(props, option) => (
-                          <li {...props} key={option?._id}>{`${option?.docTitle || ''} ${option?.docTitle ? '-' : '' } ${option.recordType || ''} ${option?.docVersionNo ? '- v' : '' }${option?.docVersionNo || ''}`}</li>
-                      )}
-                      onChange={(event, newValue) =>{
-                          if(newValue){
-                            setValue('serviceRecordConfiguration',newValue)
-                            if(!docRecordType || newValue?.recordType?.toUpperCase() !== docRecordType?.name?.toUpperCase() ){
-                              setValue('docRecordType',recordTypes?.find((rt)=> rt?.name?.toUpperCase() === newValue?.recordType?.toUpperCase()))
-                            }
-                            setValue('textBeforeCheckItems',newValue?.textBeforeCheckItems || '')
-                            setValue('textAfterCheckItems',newValue?.textAfterCheckItems || '')
-                          } else {
-                            setValue('serviceRecordConfiguration',null )
-                            setValue('textBeforeCheckItems', '')
-                            setValue('textAfterCheckItems', '')
+                    name="serviceRecordConfiguration"
+                    label="Service Record Configuration*"
+                    disabled={id}
+                    options={activeServiceRecordConfigsForRecords.filter( src => !docRecordType || src?.recordType?.toLowerCase() === docRecordType?.name?.toLowerCase() )}
+                    getOptionLabel={(option) => `${option?.docTitle || ''} ${option?.docTitle ? '-' : '' } ${option.recordType || ''} ${option?.docVersionNo ? '- v' : '' }${option?.docVersionNo || ''}`}
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                    renderOption={(props, option) => (
+                        <li {...props} key={option?._id}>{`${option?.docTitle || ''} ${option?.docTitle ? '-' : '' } ${option.recordType || ''} ${option?.docVersionNo ? '- v' : '' }${option?.docVersionNo || ''}`}</li>
+                    )}
+                    onChange={(event, newValue) =>{
+                        if(newValue){
+                          setValue('serviceRecordConfiguration',newValue)
+                          if(!docRecordType || newValue?.recordType?.toUpperCase() !== docRecordType?.name?.toUpperCase() ){
+                            setValue('docRecordType',recordTypes?.find((rt)=> rt?.name?.toUpperCase() === newValue?.recordType?.toUpperCase()))
                           }
+                          setValue('textBeforeCheckItems',newValue?.textBeforeCheckItems || '')
+                          setValue('textAfterCheckItems',newValue?.textAfterCheckItems || '')
+                        } else {
+                          setValue('serviceRecordConfiguration',null )
+                          setValue('textBeforeCheckItems', '')
+                          setValue('textAfterCheckItems', '')
                         }
                       }
-                      />
-                  </Box>       
+                    }
+                  />
+
+                  </Box> 
+
                   <Box
-                      rowGap={2}
-                      columnGap={2}
-                      display="grid"
-                      gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
-                      >
-                      <RHFDatePicker inputFormat='dd/MM/yyyy' name="serviceDate" label="Service Date" />
-                      <RHFTextField name="versionNo" label="Version No" disabled/>
+                    rowGap={2}
+                    columnGap={2}
+                    display="grid"
+                    gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
+                  >
+                    <RHFDatePicker inputFormat='dd/MM/yyyy' name="serviceDate" label="Service Date" />
+                    <RHFTextField name="versionNo" label="Version No" disabled/>
                   </Box>
+
                   <RHFAutocomplete
-                      name="technician"
-                      label="Technician"
-                      options={ technicians }
-                      getOptionLabel={(option) => `${option?.firstName || ''} ${option?.lastName || ''}`}
-                      isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                      renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li>)}
-                      />
+                    name="technician"
+                    label="Technician"
+                    options={ technicians }
+                    getOptionLabel={(option) => `${option?.firstName || ''} ${option?.lastName || ''}`}
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                    renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li>)}
+                  />
+
                   <RHFTextField name="technicianNotes" label="Technician Notes" minRows={3} multiline/> 
 
                   <RHFUpload multiple  thumbnail name="files" imagesOnly
-                    onDrop={handleDropMultiFile}
                     dropZone={false}
                     onRemove={handleRemoveFile}
                     onLoadImage={handleLoadImage}

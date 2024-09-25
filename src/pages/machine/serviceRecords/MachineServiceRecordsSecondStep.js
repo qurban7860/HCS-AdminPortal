@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { useParams } from 'react-router';
 import { useSnackbar } from 'notistack';
 import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { Grid, Skeleton, Stack, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
@@ -11,6 +12,7 @@ import CheckedItemInputRow from './CheckedItemInputRow';
 import FormProvider from '../../../components/hook-form/FormProvider';
 import { getMachineServiceRecordCheckItems, resetCheckItemValues, setFormActiveStep, updateMachineServiceRecord } from '../../../redux/slices/products/machineServiceRecord';
 import ServiceRecodStepButtons from '../../../components/DocumentForms/ServiceRecodStepButtons';
+import { MachineServiceRecordPart2TBCISchema, MachineServiceRecordPart2TACISchema } from '../../schemas/machine';
 
 MachineServiceRecordsSecondStep.propTypes = {
   handleDraftRequest: PropTypes.func,
@@ -30,11 +32,11 @@ function MachineServiceRecordsSecondStep({ handleDraftRequest, handleDiscard, ha
   const saveAsDraft = async () => setIsDraft(true);
 
   useEffect(() =>{
-    if(machineId && id){
-      dispatch(getMachineServiceRecordCheckItems( machineId, id ));
+    if( machineServiceRecord?._id ){
+      dispatch(getMachineServiceRecordCheckItems(machineServiceRecord?.machine?._id, machineServiceRecord?._id));
     }
-    return(()=> resetCheckItemValues());
-  },[dispatch, machineId, id])
+    return ()=> dispatch(resetCheckItemValues())
+  },[dispatch, machineServiceRecord ])
 
   const defaultValues = useMemo(
       () => {
@@ -52,10 +54,16 @@ function MachineServiceRecordsSecondStep({ handleDraftRequest, handleDiscard, ha
       [ machineServiceRecord ]
     );
 
-    const formMethodsBefore = useForm({ defaultValues });
+    const formMethodsBefore = useForm({
+      resolver: yupResolver(MachineServiceRecordPart2TBCISchema),
+      defaultValues,
+    });
     const { handleSubmit: handleSubmitBefore, reset: resetBefore, formState: { isSubmitting: isSubmittingBefore, isSubmitted:isSubmittedBefore } } = formMethodsBefore;
     
-    const formMethodsAfter = useForm({ defaultValues });
+    const formMethodsAfter = useForm({
+      resolver: yupResolver(MachineServiceRecordPart2TACISchema),
+      defaultValues,
+    });
     const { handleSubmit: handleSubmitAfter, reset: resetAfter, formState: { isSubmitting: isSubmittingAfter, isSubmitted:isSubmittedAfter } } = formMethodsAfter;
     
     const methods = useForm({ defaultValues });

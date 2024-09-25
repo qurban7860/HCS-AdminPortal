@@ -179,27 +179,48 @@ export const MachineServiceRecordPart1Schema = Yup.object().shape({
   .label('Service Date'),
   technician: Yup.object().label('Technician').nullable(),
   technicianNotes: Yup.string().max(5000).label('Technician Notes'),
+  files: Yup.mixed()
+  .required(Snacks.fileRequired)
+  .test('fileType', fileTypesMessage, NotRequiredValidateFileType)
+  .nullable(true),
 });
 
-export const MachineServiceRecordPart2Schema = Yup.object().shape({
+export const MachineServiceRecordPart2TBCISchema = Yup.object().shape({
   textBeforeCheckItems: Yup.string().max(5000).label('Text Before Check Items'),
+});
+
+export const MachineServiceRecordPart2TACISchema = Yup.object().shape({
   textAfterCheckItems: Yup.string().max(5000).label('Text After Check Items'),
 });
 
 export const MachineServiceRecordPart3Schema = Yup.object().shape({
   serviceNote: Yup.string().max(5000).label('Service Note'),
-  maintenanceRecommendation: Yup.string().max(5000).label('Recommendation Note'),
-  internalNote: Yup.string().max(5000).label('Internal Note'),
+  recommendationNote: Yup.string().max(5000).label('Recommendation Note'),
+  internalComments: Yup.string().max(5000).label('Internal Note'),
   suggestedSpares: Yup.string().max(5000).label('Suggested Spares'),
-  files: Yup.mixed()
-    .test(
-      'fileType',
-      'Only the following formats are accepted: .jpeg, .jpg, gif, .bmp, .webp, .pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx',
-      NotRequiredValidateFileType
-    ).nullable(true),
-  operator: Yup.object().label('Operator').nullable(),
+  internalNote: Yup.string().max(5000).label('Internal Note'),
+  operators: Yup.object().label('Operator').nullable(),
   operatorNotes: Yup.string().max(5000).label('Operator Notes'),
+  files: Yup.mixed()
+  .required(Snacks.fileRequired)
+  .test('fileType', fileTypesMessage, NotRequiredValidateFileType)
+  .nullable(true),
   isActive: Yup.boolean(),
+});
+
+export const CheckItemSchema = Yup.object().shape({
+  value: Yup.mixed().required('Value is required!')
+    .test('is-number', 'Value is required!', (value, context) => {
+    if(context.parent.inputType==='Number' && !value){
+      return false
+    }
+    return true;
+  }),
+  comment: Yup.string().max(5000, 'Comments cannot exceed 5000 characters'),
+  images: Yup.mixed()
+  .required(Snacks.fileRequired)
+  .test('fileType', fileTypesMessage, NotRequiredValidateFileType)
+  .nullable(true),
 });
 
 export const MachineServiceRecordSchema = Yup.object().shape({

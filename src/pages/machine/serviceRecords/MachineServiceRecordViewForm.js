@@ -18,6 +18,7 @@ import { deleteMachineServiceRecord,
   deleteRecordFile,
   setFormActiveStep,
   getMachineServiceRecordCheckItems,
+  resetCheckItemValues,
   createMachineServiceRecordVersion,
   setCompleteDialog} from '../../../redux/slices/products/machineServiceRecord';
 import { getActiveSPContacts, setCardActiveIndex, setIsExpanded } from '../../../redux/slices/customer/contact';
@@ -65,7 +66,6 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
     }
     dispatch(setPDFViewerDialog(false));
     dispatch(setSendEmailDialog(false));
-    dispatch(getActiveSPContacts());
     return ()=>{
       dispatch(resetMachineServiceRecord());
     }
@@ -73,9 +73,10 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
 
   useEffect(()=>{
     if( machineServiceRecord?._id ){
-      dispatch(getMachineServiceRecordCheckItems(machineId, machineServiceRecord?._id));
+      dispatch(getMachineServiceRecordCheckItems(machineServiceRecord?.machine?._id, machineServiceRecord?._id));
     }
-  },[dispatch, machineId, machineServiceRecord])
+    return ()=> dispatch(resetCheckItemValues())
+  },[dispatch, machineServiceRecord])
 
   const onDelete = async () => {
     try {
@@ -302,6 +303,7 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
   };
   
   const handleCompleteConfirm = () => {
+    dispatch(getActiveSPContacts());
     dispatch(setCompleteDialog(true))
   }
 
