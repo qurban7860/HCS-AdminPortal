@@ -4,6 +4,11 @@ const parseFraction = (fractionStr) => {
 };
 
 const parseComplexInches = (value) => {
+  // Handle decimal inches
+  if (!Number.isNaN(parseFloat(value))) {
+    return parseFloat(value);
+  }
+
   const regex = /(\d+)'?\s*(\d+)?\s*(\d+\/\d+)?"/;
   const match = value.match(regex);
   if (!match) return null;
@@ -14,5 +19,6 @@ const parseComplexInches = (value) => {
 
   return feet * 12 + inches + fraction;
 };
+
 
 export { parseComplexInches };
