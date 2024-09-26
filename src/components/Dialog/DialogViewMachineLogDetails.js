@@ -31,6 +31,7 @@ import IconTooltip from '../Icons/IconTooltip';
 import ConfirmDialog from '../confirm-dialog/ConfirmDialog';
 import CodeMirror from '../CodeMirror/JsonEditor';
 import Iconify from '../iconify';
+import { camelCaseToNormalText } from '../Utils/textHelpers';
 
 const ResponsiveGrid = styled(Grid)(({ theme }) => ({
   [theme.breakpoints.down('sm')]: {
@@ -236,7 +237,7 @@ function DialogViewMachineLogDetails({
                                 color={theme.palette.text.secondary}
                                 sx={{ fontWeight: 'bold' }}
                               >
-                                {info}:
+                                {camelCaseToNormalText(info)}:
                               </Typography>
                               <Typography variant="body2" color={theme.palette.text.secondary}>
                                 {JSON.stringify(logDetails[info])?.replaceAll('"', '')}
