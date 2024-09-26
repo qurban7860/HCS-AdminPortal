@@ -16,10 +16,9 @@ import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useSnackbar } from 'notistack';
-
+import { resetActiveSPContacts } from '../../redux/slices/customer/contact';
 import {
   approveServiceRecordRequest,
-  getMachineServiceRecord,
   sendMachineServiceRecordForApproval,
   setCompleteDialog,
 } from '../../redux/slices/products/machineServiceRecord';
@@ -79,7 +78,10 @@ function DialogServiceRecordComplete({ recordStatus }) {
     ) {
       setAllowApproval(true);
     }
-  }, [machineServiceRecord, user]);
+    return () => {
+      dispatch(resetActiveSPContacts());
+    }
+  }, [ dispatch, machineServiceRecord, user ]);
 
   const handleCloseDialog = () => {
     dispatch(setCompleteDialog(false));
@@ -157,11 +159,9 @@ const SendApprovalEmails = ({ isLoading, recordStatus, approvingContacts }) => {
           params
         )
       );
+      
       await enqueueSnackbar(`Service Record Approval Email Sent Successfully!`);
       await handleCloseDialog();
-      await dispatch(
-        getMachineServiceRecord(machineServiceRecord?.machine?._id, machineServiceRecord?._id)
-      );
     } catch (err) {
       enqueueSnackbar(`Service Record Approval Email Failed to Send! `, { variant: 'error' });
       console.error(err.message);
@@ -274,9 +274,6 @@ const ApproveSeviceRecord = ({ isLoading, recordStatus }) => {
       );
       await enqueueSnackbar(
         `Service Record ${data?.status === 'APPROVED' ? 'Approved' : 'Rejected'} Successfully!`
-      );
-      await dispatch(
-        getMachineServiceRecord(machineServiceRecord?.machine?._id, machineServiceRecord?._id)
       );
     } catch (err) {
       enqueueSnackbar(

@@ -464,7 +464,7 @@ export function addMachineServiceRecord(machineId, params) {
 
 export function updateMachineServiceRecord(machineId, id, params) {
   return async (dispatch) => {
-    dispatch(slice.actions.startLoading());
+    // dispatch(slice.actions.startLoading());
     try {
       const data = {
         // serviceRecordConfig:        params?.serviceRecordConfiguration,
@@ -669,6 +669,7 @@ export function sendMachineServiceRecordForApproval(machineId, id, params) {
         `${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}/sendApprovalEmail`,
         data
       );
+      dispatch(slice.actions.getMachineServiceRecordSuccess(response?.data));
       return response?.data
     } catch (error) {
       console.error(error);
@@ -690,6 +691,7 @@ export function approveServiceRecordRequest(machineId, id, params) {
         `${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}/approveRecord`,
         data
       );
+      dispatch(slice.actions.getMachineServiceRecordSuccess(response?.data));
       return response?.data;
     } catch (error) {
       console.error(error);

@@ -36,6 +36,10 @@ export default function MachineLogsTableRow({
   allMachineLogsPage
 }) {
   const { date, machine } = row;
+  const lowercaseRow = {};
+  Object.entries(row).forEach(([key, value]) => {
+    if (typeof key === "string") lowercaseRow[key.toLocaleLowerCase()] = value
+  })
 
   return (
     <StyledTableRow hover selected={selected} onClick={onViewRow} sx={{cursor: 'pointer'}}>
@@ -45,7 +49,7 @@ export default function MachineLogsTableRow({
         if (['date', 'machineSerialNo', 'createdBy.name', 'createdAt'].includes(column.id)) return null;
         return (
           <TableCell key={index} align={column.align} onClick={onViewRow} sx={{cursor: 'pointer'}}>
-            {row?.[column.id] || ''}
+            {lowercaseRow?.[column.id.toLocaleLowerCase()] || ''}
           </TableCell>
         );
       })}

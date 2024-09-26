@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-import * as Yup from 'yup';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -16,8 +15,8 @@ import { getActiveContacts, resetActiveContacts } from '../../../redux/slices/cu
 import ServiceRecodStepButtons from '../../../components/DocumentForms/ServiceRecodStepButtons';
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFAutocomplete, RHFTextField, RHFUpload } from '../../../components/hook-form';
-import { validateImageFileType } from '../../documents/util/Util';
-  
+import { MachineServiceRecordPart3Schema } from '../../schemas/machine';
+
 MachineServiceRecordsThirdStep.propTypes = {
   handleDraftRequest: PropTypes.func,
   handleDiscard: PropTypes.func,
@@ -55,6 +54,7 @@ function MachineServiceRecordsThirdStep({handleDraftRequest, handleDiscard, hand
             suggestedSpares:              machineServiceRecord?.suggestedSpares || '',
             internalNote:                 machineServiceRecord?.internalNote || '',
             operators:                    machineServiceRecord?.operators || [],
+            operatorNotes:                machineServiceRecord?.operatorNotes || '',
             files: machineServiceRecord?.files?.map(file => ({
               key: file?._id,
               _id: file?._id,
@@ -68,7 +68,6 @@ function MachineServiceRecordsThirdStep({handleDraftRequest, handleDiscard, hand
               machineId:machineServiceRecord?.machineId,
               serviceId:id,
             })) || [],
-            operatorNotes:                machineServiceRecord?.operatorNotes || '',
             isActive:                     true,
         }
         return initialValues;
@@ -77,16 +76,8 @@ function MachineServiceRecordsThirdStep({handleDraftRequest, handleDiscard, hand
         [ machineServiceRecord ]
       );
 
-    const ValidationSchema = Yup.object().shape({
-      files: Yup.array().test({
-        name: 'fileType',
-        message: 'Only the following formats are accepted: .jpeg, .jpg, gif, .bmp, .webp, .pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx',
-        test: validateImageFileType
-      }),
-    });
-
     const methods = useForm({
-        resolver: yupResolver(ValidationSchema),
+        resolver: yupResolver(MachineServiceRecordPart3Schema),
         defaultValues,
     });
     
