@@ -150,7 +150,19 @@ function DialogViewMachineLogDetails({
     setEditedLogs((prev) => ({ ...prev, [key]: value }));
   };
 
+  const showEditButton = () => !logEditState && !isArchivedStatus
+
   const theme = useTheme();
+
+  const renderDialogContent = () => {
+    if (logEditState) {
+      return <EditMachineLogDetails logsToShow={editedLogs} handleChange={handleLogChange} />;
+    }
+    if (isLoading) {
+      return <LoadingSkeletons />;
+    }
+    return <LogDetailsContent logsToShow={logsToShow} logDetails={logDetails} />;
+  };
 
   return (
     <>
@@ -170,27 +182,25 @@ function DialogViewMachineLogDetails({
                     icon="clarity:unarchive-solid"
                   />
                 ) : null}
+                {showEditButton() && (
+                  <IconTooltip
+                    title="Edit"
+                    onClick={() => {
+                      handleEdit();
+                    }}
+                    color={theme.palette.primary.main}
+                    icon="mdi:pencil-outline"
+                  />
+                )}
                 {!logEditState ? (
-                  <>
-                    {!isArchivedStatus ? (
-                      <IconTooltip
-                        title="Edit"
-                        onClick={() => {
-                          handleEdit();
-                        }}
-                        color={theme.palette.primary.main}
-                        icon="mdi:pencil-outline"
-                      />
-                    ) : null}
-                    <IconTooltip
-                      title={isArchivedStatus ? 'Delete' : 'Archive'}
-                      onClick={() =>
-                        handleArchiveDeleteConfirm(isArchivedStatus ? 'Delete' : 'Archive')
-                      }
-                      color="#FF0000"
-                      icon={isArchivedStatus ? 'mdi:delete' : 'mdi:archive'}
-                    />
-                  </>
+                  <IconTooltip
+                    title={isArchivedStatus ? 'Delete' : 'Archive'}
+                    onClick={() =>
+                      handleArchiveDeleteConfirm(isArchivedStatus ? 'Delete' : 'Archive')
+                    }
+                    color="#FF0000"
+                    icon={isArchivedStatus ? 'mdi:delete' : 'mdi:archive'}
+                  />
                 ) : null}
               </Stack>
             ) : null}
@@ -198,61 +208,7 @@ function DialogViewMachineLogDetails({
         </DialogTitle>
         <Divider orientation="horizontal" flexItem sx={{ mb: 2 }} />
         <DialogContent>
-          {logEditState ? (
-            <EditMachineLogDetails logsToShow={editedLogs} handleChange={handleLogChange} />
-          ) : (
-            <>
-              {isLoading ? (
-                <>
-                  <Skeleton variant="rectangular" width="100%" height={200} />
-                  <Skeleton variant="rectangular" width="100%" height={50} sx={{ mt: 2 }} />
-                  <Skeleton variant="rectangular" width="100%" height={100} sx={{ mt: 2 }} />
-                </>
-              ) : (
-                <>
-                  <CodeMirror
-                    value={JSON.stringify(logsToShow, null, 2)}
-                    HandleChangeIniJson={() => {}}
-                    editable={false}
-                    disableTopBar
-                    autoHeight
-                  />
-                  <Accordion>
-                    <AccordionSummary
-                      aria-controls="panel1-content"
-                      id="panel1-header"
-                      expandIcon={
-                        <Iconify icon="ep:arrow-down-bold" color={theme.palette.text.secondary} />
-                      }
-                    >
-                      <Typography variant="body2">Additional Details</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                      <ResponsiveGrid container spacing={2}>
-                        {extraInfo.map((info, index) => (
-                          <Grid item xs={12} sm={6} key={index}>
-                            <Box sx={{ mb: 2 }}>
-                              <Typography
-                                variant="body2"
-                                color={theme.palette.text.secondary}
-                                sx={{ fontWeight: 'bold' }}
-                              >
-                                {camelCaseToNormalText(info)}:
-                              </Typography>
-                              <Typography variant="body2" color={theme.palette.text.secondary}>
-                                {JSON.stringify(logDetails[info])?.replaceAll('"', '')}
-                              </Typography>
-                            </Box>
-                          </Grid>
-                        ))}
-                      </ResponsiveGrid>
-                    </AccordionDetails>
-                  </Accordion>
-                </>
-              )}
-              {/* <pre>{JSON.stringify(logsToShow, null, 2)}</pre> */}
-            </>
-          )}
+          {renderDialogContent()}
         </DialogContent>
         <DialogActions>
           {logEditState ? (
@@ -330,3 +286,58 @@ function EditMachineLogDetails({ logsToShow, handleChange }) {
     </Box>
   );
 }
+
+const LoadingSkeletons = () => (
+  <>
+    <Skeleton variant="rectangular" width="100%" height={200} />
+    <Skeleton variant="rectangular" width="100%" height={50} sx={{ mt: 2 }} />
+    <Skeleton variant="rectangular" width="100%" height={100} sx={{ mt: 2 }} />
+  </>
+);
+
+LogDetailsContent.propTypes = {
+  logsToShow: PropTypes.object,
+  logDetails: PropTypes.object,
+};
+const LogDetailsContent = ({ logsToShow, logDetails }) => {
+  const theme = useTheme();
+  return (
+  <>
+    <CodeMirror
+      value={JSON.stringify(logsToShow, null, 2)}
+      HandleChangeIniJson={() => {}}
+      editable={false}
+      disableTopBar
+      autoHeight
+    />
+    <Accordion>
+      <AccordionSummary
+        aria-controls="panel1-content"
+        id="panel1-header"
+        expandIcon={<Iconify icon="ep:arrow-down-bold" color={theme.palette.text.secondary} />}
+      >
+        <Typography variant="body2">Additional Details</Typography>
+      </AccordionSummary>
+      <AccordionDetails>
+        <ResponsiveGrid container spacing={2}>
+          {extraInfo.map((info, index) => (
+            <Grid item xs={12} sm={6} key={index}>
+              <Box sx={{ mb: 2 }}>
+                <Typography
+                  variant="body2"
+                  color={theme.palette.text.secondary}
+                  sx={{ fontWeight: 'bold' }}
+                >
+                  {camelCaseToNormalText(info)}:
+                </Typography>
+                <Typography variant="body2" color={theme.palette.text.secondary}>
+                  {JSON.stringify(logDetails[info])?.replaceAll('"', '')}
+                </Typography>
+              </Box>
+            </Grid>
+          ))}
+        </ResponsiveGrid>
+      </AccordionDetails>
+    </Accordion>
+  </>
+)};
