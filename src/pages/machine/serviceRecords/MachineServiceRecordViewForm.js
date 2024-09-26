@@ -303,9 +303,13 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
   };
   
   const handleCompleteConfirm = () => {
-    dispatch(getActiveSPContacts());
     dispatch(setCompleteDialog(true))
+    if(!machineServiceRecord?.approval?.approvingContacts?.length > 0){
+      dispatch(getActiveSPContacts());
+    }
   }
+
+
 
   return (
     <Container maxWidth={false}>
@@ -408,11 +412,17 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
             isLoading={isLoading}
             sm={12}
             heading="Decoilers"
-            arrayParam={defaultValues?.decoilers?.map((decoilerMachine) => ({
-              name: `${decoilerMachine?.serialNo ? decoilerMachine?.serialNo : ''}${
-                decoilerMachine?.name ? '-' : ''
-              }${decoilerMachine?.name ? decoilerMachine?.name : ''}`,
-            }))}
+            chipDialogArrayParam={defaultValues?.decoilers?.map(( decoilerMachine ) => (
+              <Chip 
+                key={decoilerMachine?._id}
+                sx={{ m:0.2 }} 
+                deleteIcon={<Iconify icon="fluent:open-12-regular"/>}
+                onDelete={()=> {
+                  window.open(PATH_MACHINE.machines.view(decoilerMachine?._id), '_blank');
+                }}
+                label={`${decoilerMachine?.serialNo || ''} ${decoilerMachine?.name  ? '-' : '' } ${decoilerMachine?.name || ''} `} 
+              />
+            ))} 
           />
           <ViewFormField isLoading={isLoading} sm={4} heading="Technician"  param={`${defaultValues?.technician?.firstName || ''} ${defaultValues?.technician?.lastName || ''} `} />
           <ViewFormNoteField sm={12} heading="Technician Notes" param={defaultValues.technicianNotes} />

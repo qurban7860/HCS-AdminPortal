@@ -39,8 +39,8 @@ export default function ServiceRecodStepButtons({
   } 
   
   return (
-  <Stack justifyContent="flex-end" direction={isMobile ? 'column' : 'row'} spacing={2}  >
-    <Grid container spacing={2} sx={{ px: 2 }}>
+  <Stack justifyContent="flex-end" direction={isMobile ? 'column' : 'row'}  >
+    <Grid container sx={{ px: 2, pt:2 }} >
       <Grid item xs={12} sm={3.5} display='flex' columnGap={2}>
         <Button size={isMobile ? 'medium' : 'large'} onClick={handleCancle} variant="outlined">Exit</Button> 
         { handleDraft && (<LoadingButton loading={isSubmitting && isDraft} size={isMobile ? 'medium' : 'large'} onClick={handleDraft} type='submit' variant="outlined" fullWidth={isMobile}>Save as draft</LoadingButton> )}
