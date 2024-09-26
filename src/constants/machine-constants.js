@@ -51,4 +51,10 @@ export const Snacks = {
   
   // @root - machine - EditMachineSchema
   serialNoRequired: 'Serial Number is Required',
+
+  // @root - MachineLogsList and MachineLogsPage
+  machineLogArchived: 'Machine Log Archived Successfully',
+  machineLogRestored: 'Machine Log Restored Successfully',
+  machineLogDeleted: 'Machine Log Deleted Successfully',
+  machineLogUpdated: 'Machine Log Updated Successfully',
 };

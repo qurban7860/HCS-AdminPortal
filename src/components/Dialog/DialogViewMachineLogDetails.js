@@ -22,16 +22,15 @@ import { styled } from '@mui/material/styles';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
-// Routes
-import { useLocation } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
 // Redux
 import { deleteMachineLogRecord, updateMachineLogRecord } from '../../redux/slices/products/machineErpLogs';
 // Components
+import { Snacks } from '../../constants/machine-constants'
 import IconTooltip from '../Icons/IconTooltip';
 import ConfirmDialog from '../confirm-dialog/ConfirmDialog';
 import CodeMirror from '../CodeMirror/JsonEditor';
 import Iconify from '../iconify';
-import { PATH_MACHINE_LOGS } from '../../routes/paths';
 
 const ResponsiveGrid = styled(Grid)(({ theme }) => ({
   [theme.breakpoints.down('sm')]: {
@@ -40,7 +39,7 @@ const ResponsiveGrid = styled(Grid)(({ theme }) => ({
 }));
 
 const extraInfo = [
-  "customer",  "machine",  "createdBy",  "createdAt",  "updatedBy",  "updatedAt",  "isActive",  "isArchived", "createdIP",  "updatedIP", "archivedByMachine"
+  "customer",  "machine",  "createdBy",  "createdAt",  "updatedBy",  "updatedAt",  "isActive",  "isArchived", "createdIP",  "updatedIP", "archivedByMachine", "batchId"
 ]
 
 
@@ -67,7 +66,7 @@ function DialogViewMachineLogDetails({
   const [editedLogs, setEditedLogs] = useState({});
   const { isLoading } = useSelector((state) => state.machineErpLogs);
   const dispatch = useDispatch();
-  const location = useLocation();
+  const { enqueueSnackbar } = useSnackbar();
 
   const isArchivedStatus = logDetails?.isArchived
 
@@ -80,13 +79,9 @@ function DialogViewMachineLogDetails({
 
   const formatMachineLogToShow = (log) => {
     // eslint-disable-next-line no-unused-vars
-    const { _id, createdIP, updatedIP, __v, machine, customer, updatedBy, createdBy, archivedByMachine, createdAt, updatedAt, isActive, isArchived, type, version, ...rest } = log;
+    const { _id, createdIP, updatedIP, __v, machine, customer, updatedBy, createdBy, archivedByMachine, createdAt, updatedAt, isActive, isArchived, type, version, batchId, ...rest } = log;
 
-    const formatted = {
-      ...rest,
-    };
-
-    return formatted;
+    return {...rest};
   };
 
   const handleLogAction = async (action) => {
@@ -96,21 +91,29 @@ function DialogViewMachineLogDetails({
     let dataToSend;
     
     switch (action) {
-      case 'update':
+      case 'update': {
         dataToSend = { ...editedLogs, isActive: true, isArchived: false };
-        await dispatch(updateMachineLogRecord(logDetails._id, logType, dataToSend));
+        const res = await dispatch(updateMachineLogRecord(logDetails._id, logType, dataToSend));
+        if (res?.success) enqueueSnackbar(Snacks.machineLogUpdated);
         break;
-      case 'archive':
+      }
+      case 'archive': {
         dataToSend = { ...rest, isActive: false, isArchived: true };
-        await dispatch(updateMachineLogRecord(logDetails._id, logType, dataToSend));
+        const res = await dispatch(updateMachineLogRecord(logDetails._id, logType, dataToSend));
+        if (res?.success) enqueueSnackbar(Snacks.machineLogArchived);
         break;
-      case 'restore':
+      }
+      case 'restore': {
         dataToSend = { ...rest, isActive: true, isArchived: false };
-        await dispatch(updateMachineLogRecord(logDetails._id, logType, dataToSend));
+        const res = await dispatch(updateMachineLogRecord(logDetails._id, logType, dataToSend));
+        if (res?.success) enqueueSnackbar(Snacks.machineLogRestored);
         break;
-      case 'delete':
-        await dispatch(deleteMachineLogRecord(logDetails._id, logType));
+      }
+      case 'delete': {
+        const res = await dispatch(deleteMachineLogRecord(logDetails._id, logType));
+        if (res?.success) enqueueSnackbar(Snacks.machineLogDeleted);
         break;
+      }
       default:
         return;
     }
@@ -133,7 +136,7 @@ function DialogViewMachineLogDetails({
 
   const handleEdit = () => {
     // eslint-disable-next-line no-unused-vars
-    const { archivedByMachine, createdAt, createdBy, createdIP, customer, machine, type, version, updatedAt, updatedBy, updatedIP, __v, _id, isActive, isArchived, ...rest } = { ...logsToShow };
+    const { archivedByMachine, createdAt, createdBy, createdIP, customer, machine, type, version, updatedAt, updatedBy, updatedIP, __v, _id, isActive, isArchived, batchId, ...rest } = { ...logsToShow };
     setEditedLogs(rest);
     setLogEditState(true);
   };
