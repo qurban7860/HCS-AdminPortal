@@ -25,7 +25,7 @@ export const machineLogTypeFormats = [
   },
   {
     type: "PRODUCTION",
-    disabled: false,
+    disabled: true,
     versions: ["v1.4.5"],
     formats: {
       "v1.4.5": ["date", "frameSet", "componentName", "componentLength", "flangeHeight", "webWidth", "unitOfMeasurement", "muClassifier"],
@@ -42,7 +42,7 @@ export const machineLogTypeFormats = [
   },
   {
     type: "COIL",
-    disabled: false,
+    disabled: true,
     versions: ["v1.4.5", "v1.1.X"],
     formats: {
       "v1.1.X": ["date", "coilBatchName", "coilLength", "coilLengthUnit", "coilThickness", "coilThicknessUnit", "coilWidth", "coilWeight", "coilDensity"],

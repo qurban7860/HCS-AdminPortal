@@ -52,7 +52,7 @@ export default function MachineLogsAddForm() {
   const defaultValues = useMemo(
     () => ({
       logTextValue: '',
-      logType: null,
+      logType: machineLogTypeFormats.find(option => option.type === 'ERP') || null,
       logVersion: null,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
