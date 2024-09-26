@@ -1,19 +1,23 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Box, Grid, Stack, Card, Container } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+// @mui
+import { Box, Grid, Stack, Card, Container } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
+// redux
+import { useDispatch, useSelector } from 'react-redux';
+// components
+import MachineLogsList from '../machine/logs/MachineLogsList';
+import { machineLogTypeFormats } from '../../constants/machineLogTypeFormats';
+import { Cover } from '../../components/Defaults/Cover';
+import useResponsive from '../../hooks/useResponsive';
+// sections
 import FormProvider, { RHFAutocomplete, RHFDatePicker } from '../../components/hook-form';
 import { getActiveCustomerMachines, resetActiveCustomerMachines } from '../../redux/slices/products/machine';
 import { getActiveCustomers } from '../../redux/slices/customer/customer';
-import { getMachineLogRecords, ChangePage } from '../../redux/slices/products/machineErpLogs'; 
+import { getMachineLogRecords, ChangePage, resetMachineErpLogRecords } from '../../redux/slices/products/machineErpLogs'; 
 import { AddMachineLogSchema } from '../schemas/machine'; 
-import useResponsive from '../../hooks/useResponsive';
-import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
-import { machineLogTypeFormats } from '../../constants/machineLogTypeFormats';
-import MachineLogsList from '../machine/logs/MachineLogsList';
 
 function AllMachineLogs() {
   const dispatch = useDispatch();
@@ -71,10 +75,12 @@ function AllMachineLogs() {
           selectedLogType: logType.type,
         })
       );
+    } else {
+      dispatch(resetMachineErpLogRecords());
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, rowsPerPage]);
-
+  
   const onSubmit = (data) => {
     const customerId = customer._id; 
     const machineId = machine?._id || undefined;
@@ -93,7 +99,7 @@ function AllMachineLogs() {
       })
     );
   };
-  
+
   const handleCustomerChange = useCallback((newCustomer) => {
     setValue('customer', newCustomer);
     setValue('machine', null); 
@@ -190,9 +196,8 @@ function AllMachineLogs() {
           </Grid>
         </FormProvider>
       </Container>
-      {/* {logsData && ( */}
-        <MachineLogsList allMachineLogsPage allMachineLogsColumns={selectedLogTypeTableColumns} />
-      {/* )} */}
+
+      <MachineLogsList allMachineLogsPage allMachineLogsColumns={selectedLogTypeTableColumns} />
     </>
   );
 }
