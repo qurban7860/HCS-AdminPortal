@@ -26,6 +26,7 @@ import {
   ChangeRowsPerPage,
   ChangePage,
   setFilterBy,
+  resetMachineErpLogDates,
 } from '../../../redux/slices/products/machineErpLogs';
 import TableCard from '../../../components/ListTableTools/TableCard';
 import MachineTabContainer from '../util/MachineTabContainer';
@@ -54,6 +55,7 @@ export default function MachineLogsList({ allMachineLogsPage = false, allMachine
 
   useEffect(() => {
     dispatch(ChangePage(0));
+    dispatch(resetMachineErpLogDates());
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -155,6 +157,7 @@ export default function MachineLogsList({ allMachineLogsPage = false, allMachine
 
   const toggleArchivedLogs = () => {
     dispatch(setFilterBy(''))
+    dispatch(resetMachineErpLogDates());
     setFilterName('');
     if (archivedLogs) {
       setSearchParams({ status: 'active' });

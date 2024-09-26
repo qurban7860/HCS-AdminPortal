@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
@@ -89,6 +89,12 @@ function SearchBarCombo({
   const dispatch = useDispatch()
 
   const { isAllAccessAllowed, isSettingReadOnly, isSecurityReadOnly } = useAuthContext();
+
+  useEffect(() => {
+    if (dateTo !== isDateTo) setIsDateTo(dateTo);
+    if (dateFrom !== isDateFrom) setIsDateFrom(dateFrom);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dateTo, dateFrom])
 
   useDebouncedEffect(()=>{
     // if( isDateFrom ){

@@ -119,6 +119,11 @@ const slice = createSlice({
       state.machineErpLogstotalCount = 0;
       // state.isLoading = false;
     },
+    // RESET MACHINE LOG DATES
+    resetMachineErpLogDates(state){
+      state.dateFrom = new Date( Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+      state.dateTo = new Date(Date.now()).toISOString().split('T')[0];
+    },
     // Set FilterBy
     setFilterBy(state, action) {
       state.filterBy = action.payload;
@@ -148,6 +153,7 @@ export const {
   setAllVisibilityFalse,
   resetMachineErpLogRecords,
   resetMachineErpLogRecord,
+  resetMachineErpLogDates,
   setResponseMessage,
   setMachineLogsGraphData,
   setFilterBy,
