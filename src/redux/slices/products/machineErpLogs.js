@@ -249,6 +249,10 @@ export function updateMachineLogRecord(id, logType, logData) {
       };
       const response = await axios.patch(`${CONFIG.SERVER_URL}productLogs/${id}`, data);
       dispatch(slice.actions.getMachineErpLogRecordSuccess(response.data));
+      return {
+        success: response.status === 202,
+        message: 'Successfully updated',
+      };
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -270,6 +274,10 @@ export function deleteMachineLogRecord(id, logType) {
         }
       });
       dispatch(slice.actions.setResponseMessage(response.data));
+      return {
+        success: response.status === 200,
+        message: 'Deleted Successfully',
+      }; 
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
