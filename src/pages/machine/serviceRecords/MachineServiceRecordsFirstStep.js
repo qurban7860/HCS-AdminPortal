@@ -83,6 +83,8 @@ function MachineServiceRecordsFirstStep( { handleComplete, handleDraftRequest, h
     const methods = useForm({
         resolver: yupResolver(MachineServiceRecordPart1Schema),
         defaultValues,
+        mode: 'onBlur',
+        reValidateMode: 'onSubmit',
     });
     
     const {
@@ -90,6 +92,7 @@ function MachineServiceRecordsFirstStep( { handleComplete, handleDraftRequest, h
     watch,
     setValue,
     getValues,
+    trigger,
     handleSubmit,
     formState: { isSubmitting },
     } = methods;
@@ -252,6 +255,8 @@ return (
                             setValue('serviceRecordConfiguration',null )
                             setValue('docRecordType', null )
                           }
+                          trigger('serviceRecordConfiguration')
+                          trigger('docRecordType')
                         }
                       }
                   />
@@ -279,6 +284,8 @@ return (
                           setValue('textBeforeCheckItems', '')
                           setValue('textAfterCheckItems', '')
                         }
+                        trigger('docRecordType')
+                        trigger('serviceRecordConfiguration')
                       }
                     }
                   />

@@ -659,7 +659,7 @@ export function addCheckItemValues(machineId, data, childIndex) {
 
 export function sendMachineServiceRecordForApproval(machineId, id, params) {
   return async (dispatch) => {
-    dispatch(slice.actions.startLoading());
+    // dispatch(slice.actions.startLoading());
     try {
       const data = {
         machine: machineId,
@@ -680,7 +680,7 @@ export function sendMachineServiceRecordForApproval(machineId, id, params) {
 }
 export function approveServiceRecordRequest(machineId, id, params) {
   return async (dispatch) => {
-    dispatch(slice.actions.startLoading());
+    // dispatch(slice.actions.startLoading());
     try {
       const data = {
         machine: machineId,
