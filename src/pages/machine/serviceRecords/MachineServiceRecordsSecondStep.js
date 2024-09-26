@@ -32,10 +32,11 @@ function MachineServiceRecordsSecondStep({ handleDraftRequest, handleDiscard, ha
   const saveAsDraft = async () => setIsDraft(true);
 
   useEffect(() =>{
-    if( machineServiceRecord?._id ){
+    if(machineServiceRecord?._id && machineServiceRecordCheckItems?.serviceId !== machineServiceRecord?._id ){
       dispatch(getMachineServiceRecordCheckItems(machineServiceRecord?.machine?._id, machineServiceRecord?._id));
     }
     return ()=> dispatch(resetCheckItemValues())
+      // eslint-disable-next-line react-hooks/exhaustive-deps
   },[dispatch, machineServiceRecord ])
 
   const defaultValues = useMemo(
@@ -57,12 +58,16 @@ function MachineServiceRecordsSecondStep({ handleDraftRequest, handleDiscard, ha
     const formMethodsBefore = useForm({
       resolver: yupResolver(MachineServiceRecordPart2TBCISchema),
       defaultValues,
+      mode: 'onChange',
+      reValidateMode: 'onChange',
     });
     const { handleSubmit: handleSubmitBefore, reset: resetBefore, formState: { isSubmitting: isSubmittingBefore, isSubmitted:isSubmittedBefore } } = formMethodsBefore;
     
     const formMethodsAfter = useForm({
       resolver: yupResolver(MachineServiceRecordPart2TACISchema),
       defaultValues,
+      mode: 'onBlur',
+      reValidateMode: 'onSubmit',
     });
     const { handleSubmit: handleSubmitAfter, reset: resetAfter, formState: { isSubmitting: isSubmittingAfter, isSubmitted:isSubmittedAfter } } = formMethodsAfter;
     

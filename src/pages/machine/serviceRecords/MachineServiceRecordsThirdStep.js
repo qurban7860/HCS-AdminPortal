@@ -79,6 +79,8 @@ function MachineServiceRecordsThirdStep({handleDraftRequest, handleDiscard, hand
     const methods = useForm({
         resolver: yupResolver(MachineServiceRecordPart3Schema),
         defaultValues,
+        mode: 'onChange',
+        reValidateMode: 'onChange',
     });
     
     const {

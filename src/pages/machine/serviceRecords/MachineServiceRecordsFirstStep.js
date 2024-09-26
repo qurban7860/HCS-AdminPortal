@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useState, useMemo, useCallback } from 'react'
 import PropTypes from 'prop-types';
 import { Box, Stack } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
@@ -83,6 +83,8 @@ function MachineServiceRecordsFirstStep( { handleComplete, handleDraftRequest, h
     const methods = useForm({
         resolver: yupResolver(MachineServiceRecordPart1Schema),
         defaultValues,
+        mode: 'onBlur',
+        reValidateMode: 'onSubmit',
     });
     
     const {
@@ -90,6 +92,7 @@ function MachineServiceRecordsFirstStep( { handleComplete, handleDraftRequest, h
     watch,
     setValue,
     getValues,
+    trigger,
     handleSubmit,
     formState: { isSubmitting },
     } = methods;
@@ -196,6 +199,22 @@ function MachineServiceRecordsFirstStep( { handleComplete, handleDraftRequest, h
         }
       };
 
+      const handleDropMultiFile = useCallback(
+        async (acceptedFiles) => {
+          const docFiles = files || [];
+          const newFiles = acceptedFiles.map((file, index) => 
+              Object.assign(file, {
+                preview: URL.createObjectURL(file),
+                src: URL.createObjectURL(file),
+                isLoaded:true
+              })
+          );
+          setValue('files', [...docFiles, ...newFiles], { shouldValidate: true });
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [ files ]
+      );
+
 return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         {isLoading?
@@ -236,6 +255,8 @@ return (
                             setValue('serviceRecordConfiguration',null )
                             setValue('docRecordType', null )
                           }
+                          trigger('serviceRecordConfiguration')
+                          trigger('docRecordType')
                         }
                       }
                   />
@@ -263,6 +284,8 @@ return (
                           setValue('textBeforeCheckItems', '')
                           setValue('textAfterCheckItems', '')
                         }
+                        trigger('docRecordType')
+                        trigger('serviceRecordConfiguration')
                       }
                     }
                   />
@@ -291,6 +314,7 @@ return (
                   <RHFTextField name="technicianNotes" label="Technician Notes" minRows={3} multiline/> 
 
                   <RHFUpload multiple  thumbnail name="files" imagesOnly
+                    onDrop={handleDropMultiFile}
                     dropZone={false}
                     onRemove={handleRemoveFile}
                     onLoadImage={handleLoadImage}
