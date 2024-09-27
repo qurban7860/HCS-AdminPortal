@@ -356,11 +356,15 @@ export function getMachineServiceRecords (machineId, isMachineArchived){
 
 
 // ----------------------------------------------------------------------
-export function getMachineServiceRecord(machineId, id) {
+export function getMachineServiceRecord(machineId, id, isHighQuality ) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}`);
+      const params = {};
+      if(isHighQuality){
+        params.isHighQuality = true;
+      }
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}`,{ params });
       dispatch(slice.actions.getMachineServiceRecordSuccess(response.data));
     } catch (error) {
       console.error(error);

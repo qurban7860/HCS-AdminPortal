@@ -169,6 +169,7 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
   }
 
   const handlePDFViewer = async() => {
+    await dispatch(getMachineServiceRecord(machineId, id, true ));
     await dispatch(getMachineServiceRecordCheckItems(machineServiceRecord?.machine?._id, machineServiceRecord?._id, true ))
     await dispatch(setPDFViewerDialog(true))
   }
