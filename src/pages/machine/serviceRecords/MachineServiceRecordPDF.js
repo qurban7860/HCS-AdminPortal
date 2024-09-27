@@ -59,7 +59,7 @@ export function MachineServiceRecordPDF({machineServiceRecord, machineServiceRec
     const fileName = `${defaultValues?.serviceDate?.substring(0,10).replaceAll('-','')}_${defaultValues?.serviceRecordConfigRecordType}_${defaultValues?.versionNo}`;
 
 function getImageUrl(file) {
-        return file?.thumbnail ? `data:image/${ file?.src ? file?.extension : 'png'};base64,${file?.src  || file?.thumbnail }` : '';
+        return file?.src  ? `data:image/${ file?.extension };base64,${file?.src  }` : '';
     }
     
     return (
@@ -177,7 +177,7 @@ function getImageUrl(file) {
                                         ...(childRow?.historicalData ?? []).flatMap(data => data?.files || [] )
                                         ].filter( f => f?.src )?.map((file, fileIndex) => {
                                             const imageUrl = getImageUrl(file);
-                                            return (
+                                            return ( file?.src && 
                                                 <View key={file?._id || `file-${fileIndex}`} style={styles.image_column}>
                                                     {imageUrl && (
                                                         <Image 
@@ -186,7 +186,7 @@ function getImageUrl(file) {
                                                         />
                                                     )}
                                                 </View>
-                                            );
+                                            || '' );
                                         })}
                                     </View>
                                 )}
@@ -250,9 +250,9 @@ function getImageUrl(file) {
                     {defaultValues?.files?.filter( f => f?.src )?.map((file, fileIndex) => {
                         const imageUrl = getImageUrl(file);
                         return (
-                            <View key={file?._id} style={styles.image_column}>
+                            ( file?.src && <View key={file?._id} style={styles.image_column}>
                                 { imageUrl && <Image style={{ borderRadius:5, height:"372px", objectFit: "cover" }} src={ imageUrl } />}
-                            </View>
+                            </View> || '' )
                         );
                     })}
                 </View>
