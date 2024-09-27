@@ -5,7 +5,7 @@ import { TableCell } from '@mui/material';
 import { fDateTime } from '../../../utils/formatTime';
 // components
 import LinkTableCell from '../../../components/ListTableTools/LinkTableCell';
-import { StyledTableRow } from '../../../theme/styles/default-styles'
+import { StyledTableRow } from '../../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
 
@@ -22,7 +22,6 @@ MachineLogsTableRow.propTypes = {
   allMachineLogsPage: PropTypes.bool,
 };
 
-
 export default function MachineLogsTableRow({
   row,
   style,
@@ -33,22 +32,28 @@ export default function MachineLogsTableRow({
   onEditRow,
   onViewRow,
   columnsToShow,
-  allMachineLogsPage
+  allMachineLogsPage,
 }) {
-  const { date, machine } = row;
+  row = {...row, machineSerialNo: row?.machine?.serialNo}
+  const { date } = row;
   const lowercaseRow = {};
   Object.entries(row).forEach(([key, value]) => {
-    if (typeof key === "string") lowercaseRow[key.toLocaleLowerCase()] = value
-  })
+    if (typeof key === 'string') lowercaseRow[key.toLocaleLowerCase()] = value;
+  });
 
   return (
-    <StyledTableRow hover selected={selected} onClick={onViewRow} sx={{cursor: 'pointer'}}>
+    <StyledTableRow hover selected={selected} onClick={onViewRow} sx={{ cursor: 'pointer' }}>
       <LinkTableCell align="left" onClick={onViewRow} param={fDateTime(date)} />
-      {allMachineLogsPage ? (<TableCell align="left">{machine?.serialNo || ''}</TableCell>) : null}
       {columnsToShow?.map((column, index) => {
-        if (['date', 'machineSerialNo', 'createdBy.name', 'createdAt'].includes(column.id)) return null;
+        if (['date', 'createdBy.name', 'createdAt'].includes(column.id) || !column?.checked)
+          return null;
         return (
-          <TableCell key={index} align={column.align} onClick={onViewRow} sx={{cursor: 'pointer'}}>
+          <TableCell
+            key={index}
+            align={column.align}
+            onClick={onViewRow}
+            sx={{ cursor: 'pointer' }}
+          >
             {lowercaseRow?.[column.id.toLocaleLowerCase()] || ''}
           </TableCell>
         );

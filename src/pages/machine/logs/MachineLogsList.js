@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import debounce from 'lodash/debounce';
-import { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef, useReducer } from 'react';
 // @mui
 import { Container, Table, TableBody, TableContainer, TableRow, TableCell, TableHead, TableSortLabel } from '@mui/material';
 
@@ -15,7 +15,6 @@ import {
   TableNoData,
   TableSkeleton,
   TablePaginationCustom,
-  TablePaginationFilter,
 } from '../../../components/table';
 import Scrollbar from '../../../components/scrollbar';
 // sections
@@ -27,27 +26,60 @@ import {
   ChangePage,
   setFilterBy,
   resetMachineErpLogDates,
+  resetMachineErpLogRecords,
 } from '../../../redux/slices/products/machineErpLogs';
 import TableCard from '../../../components/ListTableTools/TableCard';
 import MachineTabContainer from '../util/MachineTabContainer';
 import { machineLogTypeFormats } from '../../../constants/machineLogTypeFormats';
 import DialogViewMachineLogDetails from '../../../components/Dialog/DialogViewMachineLogDetails';
-import useResponsive from '../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
+function tableColumnsReducer(state, action) {
+  switch (action.type) {
+    case 'setUpInitialColumns': {
+      let columns = [...state]
+      if (!action.allMachineLogsPage) {
+        columns = columns.filter((column) => column.page !== 'allMachineLogs');
+      }
+      columns = columns.map((column) => ({...column, checked: column?.defaultShow || false}));
+      return [...columns];
+    }
+    case 'updateColumnCheck': {
+      const columns = [...state]
+      const columnIndex = state.findIndex((columnItem) => columnItem.id === action.columnId);
+      if (columnIndex !== -1) {
+        columns[columnIndex].checked = action.newCheckState;
+      }
+      return [...columns];
+    }
+    // case 'handleLogTypeChange': {
+    //   // eslint-disable-next-line no-debugger
+    //   debugger
+    //   let columns = action.newColumns
+    //   if (!action.allMachineLogsPage) {
+    //     columns = columns.filter((column) => column.page !== 'allMachineLogs');
+    //   }
+    //   return [...columns];
+    // }
+    default: {
+      throw Error(`Unknown action:  ${action.type}`);
+    }
+  }
+}
+
 MachineLogsList.propTypes = {
   allMachineLogsPage: PropTypes.bool,
-  allMachineLogsColumns: PropTypes.array
+  allMachineLogsType: PropTypes.object
 };
 
-export default function MachineLogsList({ allMachineLogsPage = false, allMachineLogsColumns }){
+export default function MachineLogsList({ allMachineLogsPage = false, allMachineLogsType }){
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
-  const [selectedLogTypeTableColumns, setSelectedLogTypeTableColumns] = useState([]);
   const [openLogDetailsDialog, setOpenLogDetailsDialog] = useState(false);
   const [selectedLog, setSelectedLog] = useState(null);
   const [archivedLogs, setArchivedLogs] = useState(false);
+  const [tableColumns, dispatchTableColumns] = useReducer(tableColumnsReducer, machineLogTypeFormats[0]?.tableColumns);
   // const [localPagination, setLocalPagination] = useState({page: 0, rowsPerPage: 10})
 
   const dispatch = useDispatch();
@@ -56,6 +88,9 @@ export default function MachineLogsList({ allMachineLogsPage = false, allMachine
   useEffect(() => {
     dispatch(ChangePage(0));
     dispatch(resetMachineErpLogDates());
+    dispatch(resetMachineErpLogRecords());
+    handleResetFilter();
+    dispatchTableColumns({ type: 'setUpInitialColumns', allMachineLogsPage });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -87,23 +122,24 @@ export default function MachineLogsList({ allMachineLogsPage = false, allMachine
   } = useTable({ defaultOrderBy: 'date', defaultOrder: 'asc' });
 
   const onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
-  // const onChangePage = (event, newPage) => {
-  //   const lastLocalDataPage = Math.floor(tableData.length / localPagination.rowsPerPage);
-  //   if (lastLocalDataPage === newPage && tableData?.length < machineErpLogstotalCount) {
-  //     dispatch(ChangePage(page + 1));
-  //   }
-  //   setLocalPagination({ ...localPagination, page: newPage });
-  // };
 
   const onChangeRowsPerPage = (event) => {
-    // setLocalPagination({ page: 0, rowsPerPage: parseInt(event.target.value, 10) });
     dispatch(ChangePage(0));
     dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10)));
   };
 
+  // useEffect(() => {
+  //   // eslint-disable-next-line no-debugger
+  //   debugger
+  //   dispatchTableColumns({
+  //     type: 'handleLogTypeChange',
+  //     newColumns: (allMachineLogsType || selectedLogType)?.tableColumns,
+  //     allMachineLogsPage
+  //   });
+  // }, [allMachineLogsPage, allMachineLogsType, selectedLogType]);
+
   useLayoutEffect(() => {
     if (machineId && selectedLogType && !allMachineLogsPage) {
-      setSelectedLogTypeTableColumns(machineLogTypeFormats.find(logType => logType.type === selectedLogType.type)?.tableColumns);
       dispatch(
         getMachineLogRecords({
           customerId: machine?.customer?._id,
@@ -199,6 +235,10 @@ export default function MachineLogsList({ allMachineLogsPage = false, allMachine
     }))
   }
 
+  const handleColumnButtonClick = (columnId, newCheckState) => {
+    dispatchTableColumns({ type: 'updateColumnCheck', columnId, newCheckState });
+  };
+
   return (
     <>
       <Container maxWidth={false}>
@@ -237,6 +277,8 @@ export default function MachineLogsList({ allMachineLogsPage = false, allMachine
               rowsPerPage={rowsPerPage}
               onPageChange={onChangePage}
               onRowsPerPageChange={onChangeRowsPerPage}
+              columnFilterButtonData={tableColumns}
+              columnButtonClickHandler={handleColumnButtonClick}
             />
           )}
 
@@ -245,15 +287,12 @@ export default function MachineLogsList({ allMachineLogsPage = false, allMachine
               <Table stickyHeader size="small" sx={{ minWidth: 360 }}>
                 <TableHead>
                   <TableRow>
-                    {(allMachineLogsPage
-                      ? allMachineLogsColumns
-                      : selectedLogTypeTableColumns
-                    )?.map((headCell, index) => {
-                      if (headCell.label === 'Machine' && !allMachineLogsPage) return null;
+                    {tableColumns?.map((headCell, index) => {
+                      if (!headCell?.checked) return null;
                       return (
                         <TableCell
                           key={headCell.id}
-                          align={headCell.align || 'left'}
+                          align='left'
                           sortDirection={orderBy === headCell.id ? order : false}
                           sx={{ width: headCell.width, minWidth: headCell.minWidth }}
                         >
@@ -271,8 +310,8 @@ export default function MachineLogsList({ allMachineLogsPage = false, allMachine
                             headCell.label
                           )}
                         </TableCell>
-                      );
-                    })}
+                      )}
+                    )}
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -280,9 +319,7 @@ export default function MachineLogsList({ allMachineLogsPage = false, allMachine
                     row ? (
                       <MachineLogsTableRow
                         key={row._id}
-                        columnsToShow={
-                          allMachineLogsPage ? allMachineLogsColumns : selectedLogTypeTableColumns
-                        }
+                        columnsToShow={tableColumns}
                         allMachineLogsPage={allMachineLogsPage}
                         row={row}
                         onViewRow={() => handleViewRow(row._id)}
@@ -323,9 +360,11 @@ export default function MachineLogsList({ allMachineLogsPage = false, allMachine
     </>
   );
 }
-
 // ----------------------------------------------------------------------
 
+const FilterColumnsButton = () => {
+
+}
 function applyFilter({ inputData, comparator, filterName }) {
   const stabilizedThis =  inputData && inputData.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {

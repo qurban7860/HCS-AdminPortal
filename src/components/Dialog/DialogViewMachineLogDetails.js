@@ -295,10 +295,6 @@ const LoadingSkeletons = () => (
   </>
 );
 
-LogDetailsContent.propTypes = {
-  logsToShow: PropTypes.object,
-  logDetails: PropTypes.object,
-};
 const LogDetailsContent = ({ logsToShow, logDetails }) => {
   const theme = useTheme();
   return (
@@ -341,3 +337,8 @@ const LogDetailsContent = ({ logsToShow, logDetails }) => {
     </Accordion>
   </>
 )};
+
+LogDetailsContent.propTypes = {
+  logsToShow: PropTypes.object,
+  logDetails: PropTypes.object,
+};
