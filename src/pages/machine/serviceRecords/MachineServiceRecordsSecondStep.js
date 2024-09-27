@@ -41,7 +41,6 @@ function MachineServiceRecordsSecondStep({ handleDraftRequest, handleDiscard, ha
   const defaultValues = useMemo(
       () => {
         const initialValues = {
-        serviceRecordConfiguration:   machineServiceRecord?.serviceRecordConfig || null,
         serviceDate:                  machineServiceRecord?.serviceDate || new Date(),
         versionNo:                    machineServiceRecord?.versionNo || 1,
         technicianNotes:              machineServiceRecord?.technicianNotes || '',
@@ -71,13 +70,13 @@ function MachineServiceRecordsSecondStep({ handleDraftRequest, handleDiscard, ha
     const methods = useForm({ defaultValues });
     const { handleSubmit, reset, formState: { isSubmitting } } = methods;
     
-    useEffect(() => {
-      if (machineServiceRecord) {
-        // resetBefore(defaultValues);
-        // resetAfter(defaultValues);   
-        reset(defaultValues); 
-      }
-    }, [resetBefore, resetAfter, reset, machineServiceRecord, defaultValues]);
+    // useEffect(() => {
+    //   if (machineServiceRecord) {
+    //     // resetBefore(defaultValues);
+    //     // resetAfter(defaultValues);   
+    //     reset(defaultValues); 
+    //   }
+    // }, [resetBefore, resetAfter, reset, machineServiceRecord, defaultValues]);
     
 
     const [showMessage, setShowMessage] = useState(false);
@@ -115,14 +114,14 @@ function MachineServiceRecordsSecondStep({ handleDraftRequest, handleDiscard, ha
     };
 
     const onSubmit = async (data) => {
-      const params = {
-        textBeforeCheckItems: data?.textBeforeCheckItems || '',
-        textAfterCheckItems: data?.textAfterCheckItems || '',
-      };
-
       try {
+      // const params = {
+      //   textBeforeCheckItems: data?.textBeforeCheckItems || '',
+      //   textAfterCheckItems: data?.textAfterCheckItems || '',
+      // };
+
         if (isDraft) {
-          await dispatch(updateMachineServiceRecord(machineId, id, params));
+          // await dispatch(updateMachineServiceRecord(machineId, id, params));
           await handleDraftRequest(isDraft);
         } else {
           await dispatch(setFormActiveStep(2));

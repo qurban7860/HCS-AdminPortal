@@ -22,9 +22,7 @@ const CheckedItemInputRow = memo(({ index, row }) => {
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
     const { machineId, id } = useParams();
-
     const { machineServiceRecord, submittingCheckItemIndex } = useSelector((state) => state.machineServiceRecord);
-    const { machine } = useSelector((state) => state.machine);
     
     const MainSchema = Yup.object().shape({
       checkItems: Yup.array().of(CheckItemSchema),
@@ -73,7 +71,7 @@ const CheckedItemInputRow = memo(({ index, row }) => {
       }),
       [row, machineId, id]
     );
-console.log("checkItems defaultValues : ",defaultValues)
+    
     const methods = useForm({
       resolver: yupResolver(MainSchema),
       defaultValues,
@@ -90,11 +88,9 @@ console.log("checkItems defaultValues : ",defaultValues)
     const [showMessages, setShowMessages] = useState({});
 
     useEffect(() => {
-      if (machineServiceRecord) {
         reset(defaultValues);
-      }
-      dispatch(resetSubmittingCheckItemIndex());
-    }, [dispatch, reset, machineServiceRecord, defaultValues]);
+        dispatch(resetSubmittingCheckItemIndex());
+    }, [dispatch, reset, defaultValues]);
     
 
     const onSubmit = async (data, childIndex) => {
@@ -121,7 +117,7 @@ console.log("checkItems defaultValues : ",defaultValues)
           params.checkItemValue=checkItem?.value || '';
         }
 
-        const serviceRecordValue = await dispatch(addCheckItemValues(machine?._id,params, childIndex));
+        const serviceRecordValue = await dispatch(addCheckItemValues(machineId,params, childIndex));
         console.log("data Saved  on submit serviceRecordValue : ", serviceRecordValue)
         const updatedCheckItems = [...getValues('checkItems')];
         updatedCheckItems[childIndex].recordValue = serviceRecordValue;
