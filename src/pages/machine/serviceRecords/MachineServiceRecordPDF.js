@@ -175,7 +175,7 @@ function getImageUrl(file) {
                                         {[
                                         ...(childRow?.recordValue?.files || []),
                                         ...(childRow?.historicalData ?? []).flatMap(data => data?.files || [] )
-                                        ].map((file, fileIndex) => {
+                                        ].filter( f => f?.src )?.map((file, fileIndex) => {
                                             const imageUrl = getImageUrl(file);
                                             return (
                                                 <View key={file?._id || `file-${fileIndex}`} style={styles.image_column}>
@@ -247,7 +247,7 @@ function getImageUrl(file) {
             <Text style={styles.title}>Images</Text>
             <View style={styles.row}>
                 <View style={styles.image_row} >
-                    {defaultValues?.files?.map((file, fileIndex) => {
+                    {defaultValues?.files?.filter( f => f?.src )?.map((file, fileIndex) => {
                         const imageUrl = getImageUrl(file);
                         return (
                             <View key={file?._id} style={styles.image_column}>

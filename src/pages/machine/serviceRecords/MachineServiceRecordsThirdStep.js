@@ -124,7 +124,6 @@ function MachineServiceRecordsThirdStep({handleDraftRequest, handleDiscard, hand
           }else{
             data.status='SUBMITTED'  
           }
-          
           if(id){
             if(Array.isArray(data?.files) && data?.files?.filter((f)=>!f?._id)?.length > 0){
               await dispatch(addMachineServiceRecordFiles(machineId, id, data))

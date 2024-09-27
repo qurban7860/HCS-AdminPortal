@@ -132,11 +132,10 @@ function MachineServiceRecordsFirstStep( { handleComplete, handleDraftRequest, h
           }
 
           if(!id ){
-            console.log("isSubmit : ",isSubmit)
             data.decoilers = machineDecoilers;
             const serviceRecord = await dispatch(addMachineServiceRecord(machineId, data));
             dispatchFiles( serviceRecord?._id, data );
-            if(isSubmit){
+            if( isSubmit ){
               await navigate(PATH_MACHINE.machines.serviceRecords.view(machineId, serviceRecord?._id))
             } else {
               await navigate(PATH_MACHINE.machines.serviceRecords.edit(machineId, serviceRecord?._id))
@@ -144,7 +143,11 @@ function MachineServiceRecordsFirstStep( { handleComplete, handleDraftRequest, h
           }else {
             await dispatch(updateMachineServiceRecord(machineId, id, data));
             dispatchFiles( id, data );
-            await navigate(PATH_MACHINE.machines.serviceRecords.edit(machineId, id))  
+            if( isSubmit ){
+              await navigate(PATH_MACHINE.machines.serviceRecords.view(machineId, id))
+            } else {
+              await navigate(PATH_MACHINE.machines.serviceRecords.edit(machineId, id))  
+            }
           }
 
           if(isDraft){
@@ -331,7 +334,7 @@ return (
                     onLoadImage={handleLoadImage}
                   />
           </Stack>
-          <ServiceRecodStepButtons handleSubmit={saveAsSubmit} handleDraft={saveAsDraft} isDraft={isDraft} isSubmitting={isSubmitting} />
+          <ServiceRecodStepButtons handleSubmit={saveAsSubmit} isSubmitted={isSubmit} handleDraft={saveAsDraft} isDraft={isDraft} isSubmitting={isSubmitting} />
           </>
         }
     </FormProvider>

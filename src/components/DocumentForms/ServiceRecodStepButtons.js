@@ -13,7 +13,7 @@ ServiceRecodStepButtons.propTypes = {
   handleSubmit: PropTypes.func,
   isDraft: PropTypes.bool,
   isActive: PropTypes.bool,
-  finalReqest: PropTypes.bool,
+  isSubmitted: PropTypes.bool,
 };
 
 export default function ServiceRecodStepButtons({
@@ -22,7 +22,7 @@ export default function ServiceRecodStepButtons({
   handleSubmit,
   isDraft,
   isActive,
-  finalReqest
+  isSubmitted
 }) {
 
   const navigate = useNavigate();
@@ -46,11 +46,11 @@ export default function ServiceRecodStepButtons({
       <Grid item sm={12} md={6} display='flex' columnGap={2}>
         <Button size={isMobile ? 'medium' : 'large'} onClick={handleCancle} variant="outlined">Exit</Button> 
         { handleDraft && (<LoadingButton loading={isSubmitting && isDraft} size={isMobile ? 'medium' : 'large'} onClick={handleDraft} type='submit' variant="outlined" fullWidth={isMobile}>Save as draft</LoadingButton> )}
-        { handleSubmit && formActiveStep === 0 && <LoadingButton onClick={handleSubmit} size={isMobile ? 'medium' : 'large'} type='submit' variant="contained"  loading={isSubmitting && !isDraft && finalReqest }>Submit</LoadingButton>}
+        { handleSubmit && formActiveStep === 0 && <LoadingButton onClick={handleSubmit} size={isMobile ? 'medium' : 'large'} type='submit' variant="contained"  loading={isSubmitting && !isDraft && isSubmitted }>Submit</LoadingButton>}
       </Grid>
       <Grid item sm={12} md={6} display='flex' columnGap={2} justifyContent='flex-end'  >
         <Button size={isMobile ? 'medium' : 'large'} onClick={handleBack} disabled={ formActiveStep===0 } variant="outlined">Back</Button>
-          <LoadingButton disabled={!isActive && formActiveStep===2} size={isMobile ? 'medium' : 'large'} type='submit' variant="contained"  loading={isSubmitting && !isDraft && !finalReqest }>
+          <LoadingButton disabled={!isActive && formActiveStep===2} size={isMobile ? 'medium' : 'large'} type='submit' variant="contained"  loading={isSubmitting && !isDraft && !isSubmitted }>
             {formActiveStep===2?"Submit":"Next"}
           </LoadingButton>
       </Grid>
