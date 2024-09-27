@@ -59,7 +59,7 @@ export function MachineServiceRecordPDF({machineServiceRecord, machineServiceRec
     const fileName = `${defaultValues?.serviceDate?.substring(0,10).replaceAll('-','')}_${defaultValues?.serviceRecordConfigRecordType}_${defaultValues?.versionNo}`;
 
 function getImageUrl(file) {
-        return file?.thumbnail ? `data:image/png;base64,${file?.thumbnail || ''}` : '';
+        return file?.thumbnail ? `data:image/${ file?.src ? file?.extension : 'png'};base64,${file?.src  || file?.thumbnail }` : '';
     }
     
     return (
@@ -181,7 +181,7 @@ function getImageUrl(file) {
                                                 <View key={file?._id || `file-${fileIndex}`} style={styles.image_column}>
                                                     {imageUrl && (
                                                         <Image 
-                                                            style={{ borderRadius: 5, height: "100px", objectFit: "cover" }} 
+                                                            style={{ borderRadius: 5, height: "372px", objectFit: "cover" }} 
                                                             src={imageUrl} 
                                                         />
                                                     )}
@@ -251,7 +251,7 @@ function getImageUrl(file) {
                         const imageUrl = getImageUrl(file);
                         return (
                             <View key={file?._id} style={styles.image_column}>
-                                { imageUrl && <Image style={{ borderRadius:5, height:"100px", objectFit: "cover" }} src={ imageUrl } />}
+                                { imageUrl && <Image style={{ borderRadius:5, height:"372px", objectFit: "cover" }} src={ imageUrl } />}
                             </View>
                         );
                     })}
@@ -406,7 +406,7 @@ function getImageUrl(file) {
         width:'100%',
         flexWrap: 'wrap',
     },
-    image_column:{width: "20%", flexDirection: "column", padding:1},
+    image_column:{width: "100%", flexDirection: "column", paddingHorizontal: 1, paddingTop: 1, paddingBottom: 5},
     col:   { width: "100%", flexDirection: "column"},
     col_10: { width: "10%", flexDirection: "column"},
     col_20: { width: "20%", flexDirection: "column"},

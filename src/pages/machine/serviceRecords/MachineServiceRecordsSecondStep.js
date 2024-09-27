@@ -32,7 +32,7 @@ function MachineServiceRecordsSecondStep({ handleDraftRequest, handleDiscard, ha
   const saveAsDraft = async () => setIsDraft(true);
 
   useEffect(() =>{
-    if(machineServiceRecord?._id && machineServiceRecordCheckItems?.serviceId !== machineServiceRecord?._id ){
+    if( machineServiceRecord?._id ){
       dispatch(getMachineServiceRecordCheckItems(machineServiceRecord?.machine?._id, machineServiceRecord?._id));
     }
     return ()=> dispatch(resetCheckItemValues())
