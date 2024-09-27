@@ -72,11 +72,12 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
   },[ dispatch, machineId, id])
 
   useEffect(()=>{
-    if( machineServiceRecord?._id ){
+    if( machineServiceRecord?._id && !isLoading ){
       dispatch(getMachineServiceRecordCheckItems(machineServiceRecord?.machine?._id, machineServiceRecord?._id));
     }
     return ()=> dispatch(resetCheckItemValues())
-  },[dispatch, machineServiceRecord])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[dispatch, machineServiceRecord ] )
 
   const onDelete = async () => {
     try {
@@ -126,7 +127,7 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
       serviceRecordConfig:                  machineServiceRecord?.serviceRecordConfig?.docTitle	 || '',
       serviceRecordConfigRecordType:        machineServiceRecord?.serviceRecordConfig?.recordType || '',
       serviceDate:                          machineServiceRecord?.serviceDate || null,
-      versionNo:                            machineServiceRecord?.versionNo || null, 
+      versionNo:                            machineServiceRecord?.versionNo || 1, 
       decoilers:                            machineServiceRecord?.decoilers ,
       technician:                           machineServiceRecord?.technician || null,
       textBeforeCheckItems:                 machineServiceRecord?.textBeforeCheckItems || '',
@@ -168,7 +169,8 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
   }
 
   const handlePDFViewer = async() => {
-    dispatch(setPDFViewerDialog(true))
+    await dispatch(getMachineServiceRecordCheckItems(machineServiceRecord?.machine?._id, machineServiceRecord?._id, true ))
+    await dispatch(setPDFViewerDialog(true))
   }
 
   const fileName = `${defaultValues?.serviceDate?.substring(0,10).replaceAll('-','')}_${defaultValues?.serviceRecordConfigRecordType}_${defaultValues?.versionNo}.pdf`
@@ -352,7 +354,7 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
             machineServiceRecord?.isActive &&
             !machineServiceRecord?.isHistory &&
             machineServiceRecord?.status === 'SUBMITTED' &&
-            machineServiceRecord?.currentVersion._id === machineServiceRecord?._id &&
+            machineServiceRecord?.currentVersion?._id === machineServiceRecord?._id &&
             machineServiceRecord?.currentApprovalStatus !== 'APPROVED' &&
             handleCompleteConfirm
           }
@@ -361,7 +363,7 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
             ((machineServiceRecord.isActive &&
               !machineServiceRecord?.isHistory &&
               machineServiceRecord?.status === 'SUBMITTED' &&
-              machineServiceRecord?.currentVersion._id === machineServiceRecord?._id &&
+              machineServiceRecord?.currentVersion?._id === machineServiceRecord?._id &&
               machineServiceRecord?.approval?.approvingContacts?.length > 0) ||
               machineServiceRecord?.completeEvaluationHistory?.totalLogsCount > 0) ?
             serviceRecordApprovalData : null

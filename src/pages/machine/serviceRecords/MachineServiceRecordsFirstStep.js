@@ -36,7 +36,9 @@ function MachineServiceRecordsFirstStep( { handleComplete, handleDraftRequest, h
     const { machine } = useSelector((state) => state.machine);
     const [ technicians, setTechnicians ] = useState([]);
     const [ isDraft, setIsDraft ] = useState(false);
+    const [ isSubmit, setIsSubmit ] = useState(false);
     const saveAsDraft = async () => setIsDraft(true);
+    const saveAsSubmit = async () => setIsSubmit(true);
     const machineDecoilers = (machine?.machineConnections || [])?.map((decoiler) => ({
       _id: decoiler?.connectedMachine?._id ?? null,
       name: decoiler?.connectedMachine?.name ?? null,
@@ -125,11 +127,20 @@ function MachineServiceRecordsFirstStep( { handleComplete, handleDraftRequest, h
     const { docRecordType, serviceRecordConfiguration, files } = watch();
       const onSubmit = async (data) => {
         try {
+          if(isSubmit){
+            data.status = 'SUBMITTED'
+          }
+
           if(!id ){
+            console.log("isSubmit : ",isSubmit)
             data.decoilers = machineDecoilers;
             const serviceRecord = await dispatch(addMachineServiceRecord(machineId, data));
             dispatchFiles( serviceRecord?._id, data );
-            await navigate(PATH_MACHINE.machines.serviceRecords.edit(machineId, serviceRecord?._id))
+            if(isSubmit){
+              await navigate(PATH_MACHINE.machines.serviceRecords.view(machineId, serviceRecord?._id))
+            } else {
+              await navigate(PATH_MACHINE.machines.serviceRecords.edit(machineId, serviceRecord?._id))
+            }
           }else {
             await dispatch(updateMachineServiceRecord(machineId, id, data));
             dispatchFiles( id, data );
@@ -138,9 +149,9 @@ function MachineServiceRecordsFirstStep( { handleComplete, handleDraftRequest, h
 
           if(isDraft){
             await handleDraftRequest(isDraft);
-          }else{
+          }else if(!isSubmit){
             await dispatch(setFormActiveStep(1));
-            // await handleComplete(0);
+            await handleComplete(0);
           }
     
         } catch (err) {
@@ -320,7 +331,7 @@ return (
                     onLoadImage={handleLoadImage}
                   />
           </Stack>
-          <ServiceRecodStepButtons handleDraft={saveAsDraft} isDraft={isDraft} isSubmitting={isSubmitting} />
+          <ServiceRecodStepButtons handleSubmit={saveAsSubmit} handleDraft={saveAsDraft} isDraft={isDraft} isSubmitting={isSubmitting} />
           </>
         }
     </FormProvider>

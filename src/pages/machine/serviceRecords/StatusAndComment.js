@@ -1,17 +1,14 @@
 import React, { useState, memo, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Grid, Divider, Chip, TableRow, Typography, Box, Switch } from '@mui/material';
+import { Grid, Chip, TableRow, Typography, Box, Switch } from '@mui/material';
 import download from 'downloadjs';
 import { useSnackbar } from 'notistack';
 import { fDate } from '../../../utils/formatTime';
-import Iconify from '../../../components/iconify';
 import CopyIcon from '../../../components/Icons/CopyIcon';
-import HistoryDropDownUpIcons from '../../../components/Icons/HistoryDropDownUpIcons';
 import ViewFormServiceRecordVersionAudit from '../../../components/ViewForms/ViewFormServiceRecordVersionAudit';
 import { DocumentGalleryItem } from '../../../components/gallery/DocumentGalleryItem';
-import { deleteCheckItemFile, deleteRecordFile, downloadCheckItemFile, downloadRecordFile, getMachineServiceRecordCheckItems, setAddFileDialog } from '../../../redux/slices/products/machineServiceRecord';
-import { ThumbnailDocButton } from '../../../components/Thumbnails';
+import { deleteCheckItemFile, downloadCheckItemFile, getMachineServiceRecordCheckItems, setAddFileDialog } from '../../../redux/slices/products/machineServiceRecord';
 import Lightbox from '../../../components/lightbox/Lightbox';
 import CheckedItemValueHistory from './CheckedItemValueHistory';
 
