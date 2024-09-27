@@ -214,7 +214,7 @@ export const MachineServiceRecordPart3Schema = Yup.object().shape({
   internalComments: Yup.string().max(5000).label('Internal Note'),
   suggestedSpares: Yup.string().max(5000).label('Suggested Spares'),
   internalNote: Yup.string().max(5000).label('Internal Note'),
-  operators: Yup.object().label('Operator').nullable(),
+  operators: Yup.array().label('Operator').nullable(),
   operatorNotes: Yup.string().max(5000).label('Operator Notes'),
   files: Yup.mixed()
   .required(Snacks.fileRequired)

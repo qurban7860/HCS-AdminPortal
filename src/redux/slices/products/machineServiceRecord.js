@@ -495,7 +495,7 @@ export function updateMachineServiceRecord(machineId, id, params) {
         update:                     params?.update,
         isActive:                   params?.isActive,
         serviceId:                  params?.serviceId,
-        emails:                  params?.emails,
+        emails:                     params?.emails,
       }
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}`, data );
       await dispatch(slice.actions.updateMachineServiceRecordSuccess(response?.data));

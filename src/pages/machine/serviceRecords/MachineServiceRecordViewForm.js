@@ -72,12 +72,12 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
   },[ dispatch, machineId, id])
 
   useEffect(()=>{
-    if( machineServiceRecord?._id && !isLoading ){
-      dispatch(getMachineServiceRecordCheckItems(machineServiceRecord?.machine?._id, machineServiceRecord?._id));
+    if( machineId && id && !pdfViewerDialog ){
+      dispatch(getMachineServiceRecordCheckItems( machineId, id ));
     }
     return ()=> dispatch(resetCheckItemValues())
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[dispatch, machineServiceRecord ] )
+  },[dispatch, machineId, id ] )
 
   const onDelete = async () => {
     try {
@@ -169,8 +169,6 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
   }
 
   const handlePDFViewer = async() => {
-    await dispatch(getMachineServiceRecord(machineId, id, true ));
-    await dispatch(getMachineServiceRecordCheckItems(machineServiceRecord?.machine?._id, machineServiceRecord?._id, true ))
     await dispatch(setPDFViewerDialog(true))
   }
 

@@ -32,12 +32,11 @@ function MachineServiceRecordsSecondStep({ handleDraftRequest, handleDiscard, ha
   const saveAsDraft = async () => setIsDraft(true);
 
   useEffect(() =>{
-    if( machineServiceRecord?._id ){
-      dispatch(getMachineServiceRecordCheckItems(machineServiceRecord?.machine?._id, machineServiceRecord?._id));
+    if( machineId && id ){
+      dispatch(getMachineServiceRecordCheckItems( machineId, id ));
     }
-    return ()=> dispatch(resetCheckItemValues())
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[dispatch, machineServiceRecord ])
+    // return ()=> dispatch(resetCheckItemValues())
+  },[ dispatch, machineId, id ])
 
   const defaultValues = useMemo(
       () => {
