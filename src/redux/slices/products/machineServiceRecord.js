@@ -377,6 +377,7 @@ export function deleteMachineServiceRecord(machineId, id, status ) {
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}` , 
       {
           isArchived: true, 
+          isActive: false,
           status 
       });
       dispatch(slice.actions.setResponseMessage(response.data));
@@ -392,7 +393,7 @@ export function deleteMachineServiceRecord(machineId, id, status ) {
 
 export function addMachineServiceRecord(machineId, params) {
     return async (dispatch) => {
-      dispatch(slice.actions.startLoading());
+      // dispatch(slice.actions.startLoading());
       try {
         const data = {
           serviceRecordConfig:        params?.serviceRecordConfiguration?._id || null,
@@ -400,6 +401,7 @@ export function addMachineServiceRecord(machineId, params) {
           versionNo:                  params?.versionNo,
           customer:                   params?.customer || null,
           site:                       params?.site || null,
+          status:                     params?.status || 'DRAFT',
           machine:                    machineId,
           decoilers:                  params?.decoilers?.map((dec)=> dec?._id),
           technician:                 params?.technician?._id || null,
@@ -505,7 +507,7 @@ export function updateMachineServiceRecord(machineId, id, params) {
 
 export function addMachineServiceRecordFiles(machineId, id, params) {
   return async (dispatch) => {
-    dispatch(slice.actions.startLoading());
+    // dispatch(slice.actions.startLoading());
     try {
       const formData = new FormData();
       if (Array.isArray(params?.files) &&  params?.files?.length > 0) {
@@ -595,11 +597,16 @@ export function deleteCheckItemFile(machineId, fileId) {
 }
 
 
-export function getMachineServiceRecordCheckItems(machineId, id) {
+export function getMachineServiceRecordCheckItems(machineId, id, highQuality) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoadingCheckItems());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecordValues/${id}/checkItems`);
+      const params = { }
+      if( highQuality ){
+        params.highQuality = true;
+      }
+      
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecordValues/${id}/checkItems`,{ params } );
       dispatch(slice.actions.getMachineServiceRecordCheckItemsSuccess(response.data));
     } catch (error) {
       console.error(error);

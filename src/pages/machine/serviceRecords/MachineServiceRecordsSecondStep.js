@@ -58,18 +58,16 @@ function MachineServiceRecordsSecondStep({ handleDraftRequest, handleDiscard, ha
     const formMethodsBefore = useForm({
       resolver: yupResolver(MachineServiceRecordPart2TBCISchema),
       defaultValues,
-      mode: 'onChange',
-      reValidateMode: 'onChange',
     });
-    const { handleSubmit: handleSubmitBefore, reset: resetBefore, formState: { isSubmitting: isSubmittingBefore, isSubmitted:isSubmittedBefore } } = formMethodsBefore;
+    const { handleSubmit: handleSubmitBefore, watch: watchBefore, reset: resetBefore, formState: { isSubmitting: isSubmittingBefore, isSubmitted:isSubmittedBefore } } = formMethodsBefore;
+    const { textBeforeCheckItems } = watchBefore();
     
     const formMethodsAfter = useForm({
       resolver: yupResolver(MachineServiceRecordPart2TACISchema),
       defaultValues,
-      mode: 'onBlur',
-      reValidateMode: 'onSubmit',
     });
-    const { handleSubmit: handleSubmitAfter, reset: resetAfter, formState: { isSubmitting: isSubmittingAfter, isSubmitted:isSubmittedAfter } } = formMethodsAfter;
+    const { handleSubmit: handleSubmitAfter, watch: watchAfter, reset: resetAfter, formState: { isSubmitting: isSubmittingAfter, isSubmitted:isSubmittedAfter } } = formMethodsAfter;
+    const { textAfterCheckItems } = watchAfter();
     
     const methods = useForm({ defaultValues });
     const { handleSubmit, reset, formState: { isSubmitting } } = methods;
@@ -143,7 +141,7 @@ function MachineServiceRecordsSecondStep({ handleDraftRequest, handleDiscard, ha
               <RHFTextField name="textBeforeCheckItems" label="Text Before Check Items" minRows={3} multiline />
                 <Grid container display='flex' direction='row' justifyContent='flex-end' gap={2}>
                   {isSubmittedBefore && showMessage && <Typography variant='body2' color='green' sx={{mt:0.5}}>Saved Successfully!</Typography>}
-                  <LoadingButton type='submit' loading={isSubmittingBefore} size='small' variant='contained'>Save</LoadingButton>
+                  <LoadingButton disabled={textBeforeCheckItems?.trim() === machineServiceRecord?.textBeforeCheckItems?.trim()} type='submit' loading={isSubmittingBefore} size='small' variant='contained'>Save</LoadingButton>
                 </Grid>
               </Stack>
             </FormProvider>
@@ -169,7 +167,7 @@ function MachineServiceRecordsSecondStep({ handleDraftRequest, handleDiscard, ha
                 <RHFTextField name="textAfterCheckItems" label="Text After Check Items" minRows={3} multiline />
                 <Grid container display='flex' direction='row' justifyContent='flex-end' gap={2}>
                   {isSubmittedAfter && showMessage && <Typography variant='body2' color='green' sx={{mt:0.5}}>Saved Successfully!</Typography>}
-                  <LoadingButton onClick={handleSubmitAfter(submitAfter)} loading={isSubmittingAfter} size='small' variant='contained'>Save</LoadingButton>
+                  <LoadingButton disabled={textAfterCheckItems?.trim() === machineServiceRecord?.textAfterCheckItems?.trim()} onClick={handleSubmitAfter(submitAfter)} loading={isSubmittingAfter} size='small' variant='contained'>Save</LoadingButton>
                 </Grid>
               </Stack>
             </FormProvider>
