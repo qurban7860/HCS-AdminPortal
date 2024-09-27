@@ -193,7 +193,7 @@ function AllMachineLogs() {
         </FormProvider>
       </Container>
       {/* {logsData && ( */}
-        <MachineLogsList allMachineLogsPage allMachineLogsColumns={selectedLogTypeTableColumns} />
+        <MachineLogsList allMachineLogsPage allMachineLogsType={logType} />
       {/* )} */}
     </>
   );
