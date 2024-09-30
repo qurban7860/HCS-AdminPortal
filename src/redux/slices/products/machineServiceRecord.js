@@ -420,6 +420,7 @@ export function addMachineServiceRecord(machineId, params) {
           operators:                  params?.operators?.map((ope)=> ope?._id) || [],
           operatorNotes:              params?.operatorNotes || '',
           checkItemRecordValues:      params?.checkItemRecordValues || [],
+          isReportDocsOnly:           params?.isReportDocsOnly,
           isActive:                   params?.isActive
         }
         // const formData = new FormData();
@@ -479,7 +480,7 @@ export function updateMachineServiceRecord(machineId, id, params) {
         customer:                   params?.customer,
         site:                       params?.site,
         machine:                    machineId,
-        technician:                 params?.technician?._id,
+        technician:                 params?.technician?._id || null,
         technicianNotes:            params?.technicianNotes,
         textBeforeCheckItems:       params?.textBeforeCheckItems,
         textAfterCheckItems:        params?.textAfterCheckItems,
@@ -493,6 +494,7 @@ export function updateMachineServiceRecord(machineId, id, params) {
         checkItemRecordValues:      params?.checkItemRecordValues,
         status:                     params?.status || 'DRAFT',
         update:                     params?.update,
+        isReportDocsOnly:           params?.isReportDocsOnly,
         isActive:                   params?.isActive,
         serviceId:                  params?.serviceId,
         emails:                     params?.emails,
@@ -515,6 +517,9 @@ export function addMachineServiceRecordFiles(machineId, id, params) {
     try {
       const formData = new FormData();
       if (Array.isArray(params?.files) &&  params?.files?.length > 0) {
+        if(params?.isReportDoc){
+          formData.append('isReportDoc', params?.isReportDoc );
+        }
         params?.files?.forEach((file, index) => {
           if (file) {
             formData.append('images', file );
