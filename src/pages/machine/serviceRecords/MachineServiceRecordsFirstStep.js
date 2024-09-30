@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useCallback } from 'react'
+import React, { useEffect, useLayoutEffect, useState, useMemo, useCallback } from 'react'
 import PropTypes from 'prop-types';
 import { Box, Stack } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
@@ -45,7 +45,7 @@ function MachineServiceRecordsFirstStep( { handleComplete, handleDraftRequest, h
       serialNo: decoiler?.connectedMachine?.serialNo ?? null
     }));
 
-    useEffect(() => {
+    useLayoutEffect(() => {
       dispatch(getActiveServiceRecordConfigsForRecords(machineId));
       dispatch(getActiveSPContacts());
       return () =>{
@@ -100,22 +100,22 @@ function MachineServiceRecordsFirstStep( { handleComplete, handleDraftRequest, h
     } = methods;
 
   useEffect(() => {
-    if (!activeSpContacts?.length) return;
     const sPContactUser = activeSpContacts?.find( ( el )=> el?._id === user?.contact );
     let techniciansList = activeSpContacts?.filter( ( el ) => el?.departmentDetails?.departmentType?.toLowerCase() === 'technical');
-    if ( techniciansList?.some( ( el ) => el?._id !== sPContactUser?._id ) ) {
+    if ( sPContactUser && !techniciansList?.some( ( el ) => el?._id === user?.contact ) ) {
       techniciansList = [ sPContactUser, ...techniciansList ]
     }
     if( !machineServiceRecord?._id ){
       setValue('technician', sPContactUser || null );
     }
-    if ( machineServiceRecord?.technician && techniciansList?.some( ( el ) => ( el?._id !== machineServiceRecord?.technician?._id ) ) ) {
+    if ( machineServiceRecord?.technician?._id && techniciansList?.some( ( el ) => ( el?._id !== machineServiceRecord?.technician?._id ) ) ) {
       techniciansList = [ machineServiceRecord?.technician, ...techniciansList ];
       setValue('technician', machineServiceRecord?.technician || null );
     }
     techniciansList = techniciansList?.sort((a, b) => a?.firstName.localeCompare(b?.firstName) );
     setTechnicians(techniciansList);
-  }, [activeSpContacts, setValue, machineServiceRecord, user?.contact, id ]);
+   // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ activeSpContacts, setValue, user?.contact, id ]);
 
     useEffect(() => {
       if (machineServiceRecord) {
@@ -130,8 +130,9 @@ function MachineServiceRecordsFirstStep( { handleComplete, handleDraftRequest, h
           if(isSubmit){
             data.status = 'SUBMITTED'
           }
-
+          data.isReportDoc = true
           if(!id ){
+            data.isReportDocsOnly = true;
             data.decoilers = machineDecoilers;
             const serviceRecord = await dispatch(addMachineServiceRecord(machineId, data));
             dispatchFiles( serviceRecord?._id, data );
@@ -166,7 +167,7 @@ function MachineServiceRecordsFirstStep( { handleComplete, handleDraftRequest, h
       if(Array.isArray(data?.files) && data?.files?.length > 0){
         const filteredFiles = data?.files?.filter((ff)=> !ff?._id)
         if(Array.isArray(filteredFiles) && filteredFiles?.length > 0){
-          await dispatch(addMachineServiceRecordFiles(machineId, serviceID, { files: filteredFiles } ))
+            await dispatch(addMachineServiceRecordFiles(machineId, serviceID, { files: filteredFiles, isReportDoc: data?.isReportDoc } ))
         }
       }
     }
@@ -252,7 +253,7 @@ return (
                   <RHFAutocomplete 
                       name="docRecordType"
                       label="Document Type*"
-                      disabled={id}
+                      disabled={id && true }
                       options={recordTypes}
                       isOptionEqualToValue={(option, value) => option?._id === value?._id}
                       getOptionLabel={(option) => `${option.name ? option.name : ''}`}
@@ -278,7 +279,7 @@ return (
                   <RHFAutocomplete
                     name="serviceRecordConfiguration"
                     label="Service Record Configuration*"
-                    disabled={id}
+                    disabled={id && true }
                     options={activeServiceRecordConfigsForRecords.filter( src => !docRecordType || src?.recordType?.toLowerCase() === docRecordType?.name?.toLowerCase() )}
                     getOptionLabel={(option) => `${option?.docTitle || ''} ${option?.docTitle ? '-' : '' } ${option.recordType || ''} ${option?.docVersionNo ? '- v' : '' }${option?.docVersionNo || ''}`}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
@@ -313,7 +314,7 @@ return (
                     gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
                   >
                     <RHFDatePicker inputFormat='dd/MM/yyyy' name="serviceDate" label="Service Date" />
-                    <RHFTextField name="versionNo" label="Version No" disabled/>
+                    <RHFTextField name="versionNo" label="Version No" disabled />
                   </Box>
 
                   <RHFAutocomplete

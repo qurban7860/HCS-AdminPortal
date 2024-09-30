@@ -83,6 +83,7 @@ function MachineServiceRecordsSecondStep({ handleDraftRequest, handleDiscard, ha
     const submitBefore = async (data) => {
       const params = {
         textBeforeCheckItems: data.textBeforeCheckItems || '',
+        isReportDocsOnly: false,
       };
       try {
         await dispatch(updateMachineServiceRecord(machineId, id, params));
@@ -99,6 +100,7 @@ function MachineServiceRecordsSecondStep({ handleDraftRequest, handleDiscard, ha
     const submitAfter = async (data) => {
       const params = {
         textAfterCheckItems: data?.textAfterCheckItems || '',
+        isReportDocsOnly: false,
       };
 
       try {
@@ -115,13 +117,14 @@ function MachineServiceRecordsSecondStep({ handleDraftRequest, handleDiscard, ha
 
     const onSubmit = async (data) => {
       try {
-      // const params = {
-      //   textBeforeCheckItems: data?.textBeforeCheckItems || '',
-      //   textAfterCheckItems: data?.textAfterCheckItems || '',
-      // };
+      const params = {
+        textBeforeCheckItems: data?.textBeforeCheckItems || '',
+        textAfterCheckItems: data?.textAfterCheckItems || '',
+        isReportDocsOnly: true
+      };
 
         if (isDraft) {
-          // await dispatch(updateMachineServiceRecord(machineId, id, params));
+          await dispatch(updateMachineServiceRecord(machineId, id, params));
           await handleDraftRequest(isDraft);
         } else {
           await dispatch(setFormActiveStep(2));

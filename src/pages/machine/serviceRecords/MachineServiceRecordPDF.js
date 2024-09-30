@@ -37,10 +37,12 @@ export function MachineServiceRecordPDF({machineServiceRecord, machineServiceRec
             recommendationNote:                   machineServiceRecord?.recommendationNote || '',
             suggestedSpares:                      machineServiceRecord?.suggestedSpares || '',
             internalNote:                         machineServiceRecord?.internalNote || '',
+            reportDocs:                           machineServiceRecord?.reportDocs || [],
             files:                                machineServiceRecord?.files || [],
             operators:                            machineServiceRecord?.operators || [],
             operatorNotes:                        machineServiceRecord?.operatorNotes || '',
             technicianNotes:                      machineServiceRecord?.technicianNotes ||'',
+            isReportDocsOnly:                     machineServiceRecord?.isReportDocsOnly,
             isActive:                             machineServiceRecord?.isActive,
             createdAt:                            machineServiceRecord?.createdAt || '',
             createdByFullName:                    machineServiceRecord?.createdBy?.name || '',
@@ -150,6 +152,22 @@ function getImageUrl(file) {
                     <Text style={styles.text_sm}>{defaultValues?.technicianNotes || ' '}</Text>
                 </View>
             </View>
+            <Text style={styles.title}>Documents</Text>
+            <View style={styles.row}>
+                <View style={styles.image_row} >
+                    {defaultValues?.reportDocs?.filter( f => f?.src )?.map((file, fileIndex) => {
+                        const imageUrl = getImageUrl(file);
+                        return (
+                            ( file?.src && <View key={file?._id} style={styles.image_column}>
+                                { imageUrl && <Image style={{ borderRadius:5, height:"372px", objectFit: "cover" }} src={ imageUrl } />}
+                            </View> || '' )
+                        );
+                    })}
+                </View>
+            </View>
+
+            { !defaultValues?.isReportDocsOnly && <>
+
             <View style={styles.row}>
                 <View style={styles.col}>
                     <Text style={styles.text_sm}>{defaultValues?.textBeforeCheckItems}</Text>
@@ -244,7 +262,7 @@ function getImageUrl(file) {
                     <Text style={styles.text_sm}>{defaultValues?.operatorNotes}</Text>
                 </View>
             </View>
-            <Text style={styles.title}>Images</Text>
+            <Text style={styles.title}>Documents</Text>
             <View style={styles.row}>
                 <View style={styles.image_row} >
                     {defaultValues?.files?.filter( f => f?.src )?.map((file, fileIndex) => {
@@ -257,6 +275,7 @@ function getImageUrl(file) {
                     })}
                 </View>
             </View>
+        </>}
         </View>
 
         <View style={styles.footer} fixed>

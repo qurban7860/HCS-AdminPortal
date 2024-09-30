@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, memo } from 'react';
+import { useLayoutEffect, useState, useCallback, memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Container, Card, Grid, StepLabel, Step, Stepper, Box, CardContent, CardHeader } from '@mui/material';
 // routes
@@ -33,7 +33,7 @@ function MachineServiceRecordAddForm() {
   const { formActiveStep, machineServiceRecord, isLoading } = useSelector((state) => state.machineServiceRecord);
   const [ completed, setCompleted ] = useState([]);
   const isMobile = useResponsive('down', 'sm');
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (machineId && id) {
       setCompleted((prev) => {
         const newCompleted = [...prev];
@@ -116,7 +116,7 @@ function MachineServiceRecordAddForm() {
               <CardContent>
                 <Stepper nonLinear sx={{border:'1px solid lightgray', borderBottom:'none',  borderRadius:'10px 10px 0px 0px', py:1}} activeStep={formActiveStep} connector={<ColorlibConnector  />}>
                   <Step key='step_1'>
-                    <StepLabel sx={{cursor:'pointer'}} onClick={handleStep(0)} icon='1/3'  StepIconComponent={ColorlibStepIcon}>{!isMobile && 'Create Service Record'}</StepLabel>
+                    <StepLabel sx={{cursor:'pointer'}} onClick={handleStep(0)} icon='1/3'  StepIconComponent={ColorlibStepIcon}>{!isMobile && 'Report Document'}</StepLabel>
                   </Step>
                   <Step key='step_2' >
                     <StepLabel sx={{cursor:'pointer'}} onClick={handleStep(1)} icon='2/3'  StepIconComponent={ColorlibStepIcon}>{!isMobile && 'Check Items Value'}</StepLabel>

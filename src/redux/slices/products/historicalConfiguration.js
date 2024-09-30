@@ -217,11 +217,13 @@ export function addHistoricalConfigurationRecord( params) {
     dispatch(slice.actions.startLoading());
     try {
         const data = {
-          backupDate: params.backupDate,
-          configuration: params.configuration,
-          inputGUID: params.inputGUID,
-          inputSerialNo: params.inputSerialNo,
-          isManufacture: params.isManufacture,
+          configuration: params?.configuration,
+          inputGUID: params?.inputGUID,
+          inputSerialNo: params?.inputSerialNo,
+          isManufacture: params?.isManufacture,
+        }
+        if(params?.backupDate){
+          data.backupDate= params.backupDate;
         }
       const response = await axios.post(`${CONFIG.SERVER_URL}apiclient/productConfigurations/`, data );
       dispatch(slice.actions.setResponseMessage(response?.data || ''));
