@@ -13,6 +13,7 @@ import FormProvider from '../../../components/hook-form/FormProvider';
 import { getMachineServiceRecordCheckItems, resetCheckItemValues, setFormActiveStep, updateMachineServiceRecord } from '../../../redux/slices/products/machineServiceRecord';
 import ServiceRecodStepButtons from '../../../components/DocumentForms/ServiceRecodStepButtons';
 import { MachineServiceRecordPart2TBCISchema, MachineServiceRecordPart2TACISchema } from '../../schemas/machine';
+import FormLabel from '../../../components/DocumentForms/FormLabel';
 
 MachineServiceRecordsSecondStep.propTypes = {
   handleDraftRequest: PropTypes.func,
@@ -134,7 +135,7 @@ function MachineServiceRecordsSecondStep({ handleDraftRequest, handleDiscard, ha
         enqueueSnackbar('Saving failed!', { variant: `error` });
       }
     };
-
+  
   return (
       <Stack spacing={2}>
             <FormProvider key='beforeForm' methods={formMethodsBefore} onSubmit={handleSubmitBefore(submitBefore)}>
@@ -156,10 +157,24 @@ function MachineServiceRecordsSecondStep({ handleDraftRequest, handleDiscard, ha
                 <Skeleton animation="wave" />
                 <Skeleton animation={false} />
               </Stack>
-              :<>
-                {machineServiceRecordCheckItems?.checkItemLists?.map((row, index) =>
-                    <CheckedItemInputRow key={`row-${row._id}-${index}`} index={index} row={row} />
-                )}   
+              :
+              <>
+                {machineServiceRecordCheckItems?.checkItemLists?.map((row, index) => (
+                  <React.Fragment key={`check-item-list-${row._id}`}>
+                    <Stack sx={{ px: 1 }}>
+                      <FormLabel content={`${index + 1}). ${row?.ListTitle || ''} (Items: ${row?.checkItems?.length})`} />
+                    </Stack>
+                    {row?.checkItems?.map((childRow, childIndex) => (
+                      <CheckedItemInputRow
+                        index={index}
+                        rowData={childRow}
+                        childIndex={childIndex}
+                        checkItemListId={row?._id}
+                        key={`row-${row._id}-${index}-${childIndex}`}
+                      />
+                    ))}
+                  </React.Fragment>
+                ))}
               </>
             }
 

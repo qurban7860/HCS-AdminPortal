@@ -224,14 +224,14 @@ export const MachineServiceRecordPart3Schema = Yup.object().shape({
 });
 
 export const CheckItemSchema = Yup.object().shape({
-  value: Yup.mixed().required('Value is required!')
+  checkItemValue: Yup.mixed().required('Value is required!')
     .test('is-number', 'Value is required!', (value, context) => {
     if(context.parent.inputType==='Number' && !value){
       return false
     }
     return true;
   }),
-  comment: Yup.string().max(5000, 'Comments cannot exceed 5000 characters'),
+  comments: Yup.string().trim().max(5000, 'Comments cannot exceed 5000 characters'),
   images: Yup.mixed()
   .required(Snacks.fileRequired)
   .test('fileType', fileTypesMessage, NotRequiredValidateFileType)

@@ -25,7 +25,7 @@ const CheckedItemValueHistory = ({ historicalData, inputType }) => {
           {historicalData?.map((itemHistory, itemIndex) => (
             <>
               {itemIndex !== 0 && <Divider sx={{ borderStyle: 'solid', mx: -1 }} />}
-              <CheckedItemValueHistoryItem historyItem={itemHistory} inputType={inputType} />
+              <CheckedItemValueHistoryItem key={itemIndex} historyItem={itemHistory} inputType={inputType} />
             </>
           ))}
         </Grid>
