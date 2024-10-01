@@ -122,6 +122,18 @@ const slice = createSlice({
       state.initial = true;
     },
 
+    UpdateMachineServiceRecordCheckItems(state, action) {
+      const { Index, childIndex, checkItem } = action.payload;
+      state.machineServiceRecordCheckItems.checkItemLists[Index].checkItems[childIndex].recordValue = {
+        ...state.machineServiceRecordCheckItems.checkItemLists[Index].checkItems[childIndex].recordValue,
+        comments: checkItem.comments	,
+        checkItemValue: checkItem.checkItemValue,
+        files: [ ...state.machineServiceRecordCheckItems.checkItemLists[Index].checkItems[childIndex].recordValue.files,
+        ...checkItem.files
+        ]
+      };
+    },
+
     // GET MACHINE Active SERVICE PARAM
     updateMachineServiceRecordSuccess( state, action ) {
       state.isLoading = false;
@@ -625,9 +637,8 @@ export function getMachineServiceRecordCheckItems(machineId, id, highQuality) {
   };
 }
 
-export function addCheckItemValues(machineId, data, childIndex) {
+export function addCheckItemValues(machineId, data, Index, childIndex) {
   return async (dispatch) => {
-    dispatch(slice.actions.setSubmittingCheckItemIndex(childIndex));
     try {
       const formData = new FormData();
       formData.append('serviceRecord', data.serviceRecord);
@@ -636,7 +647,7 @@ export function addCheckItemValues(machineId, data, childIndex) {
       formData.append('machineCheckItem', data.machineCheckItem);
       formData.append('checkItemValue', data.checkItemValue);
       formData.append('comments', data.comments);
-
+      
       if (Array.isArray(data?.images) &&  data?.images?.length > 0) {
         data?.images?.forEach((image, index) => {
           if (image && !image?._id) {
@@ -646,7 +657,7 @@ export function addCheckItemValues(machineId, data, childIndex) {
       }
 
       let response;
-
+      
       if (
         data?.recordValue?._id &&
         data?.recordValue?.serviceRecord?.versionNo === data?.versionNo
@@ -661,8 +672,7 @@ export function addCheckItemValues(machineId, data, childIndex) {
           formData
         );
       }
-
-      await dispatch(slice.actions.resetSubmittingCheckItemIndex());
+      dispatch(slice.actions.UpdateMachineServiceRecordCheckItems({ Index, childIndex, checkItem: { ...response.data } }));
       return response?.data;
     } catch (error) {
       console.error(error);
