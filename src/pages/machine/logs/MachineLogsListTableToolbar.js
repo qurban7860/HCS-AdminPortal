@@ -3,8 +3,8 @@ import { useSelector } from 'react-redux';
 // @mui
 import { Box, Button, Divider, Stack, Typography, useTheme } from '@mui/material';
 // routes
-import { useNavigate, useParams, useLocation } from 'react-router-dom';
-import { PATH_MACHINE, PATH_MACHINE_LOGS } from '../../../routes/paths';
+import { useNavigate, useParams } from 'react-router-dom';
+import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import SearchBarCombo from '../../../components/ListTableTools/SearchBarCombo';
 import Iconify from '../../../components/iconify';
@@ -28,6 +28,7 @@ MachineLogsListTableToolbar.propTypes = {
   logTypes: PropTypes.array,
   toggleArchivedLogs: PropTypes.func,
   archivedLogs: PropTypes.bool,
+  allMachineLogsPage: PropTypes.bool,
 };
 
 export default function MachineLogsListTableToolbar({
@@ -41,58 +42,77 @@ export default function MachineLogsListTableToolbar({
   dateTo,
   logTypes,
   toggleArchivedLogs,
-  archivedLogs
+  archivedLogs,
+  allMachineLogsPage = false,
 }) {
-
   const navigate = useNavigate();
   const { machineId } = useParams();
-  const { machine } = useSelector((state) => state.machine); 
-  const location = useLocation();
+  const { machine } = useSelector((state) => state.machine);
   const toggleAdd = () => navigate(PATH_MACHINE.machines.logs.new(machineId));
   const toggleGraph = () => navigate(PATH_MACHINE.machines.logs.graph(machineId));
+
+  const showAddbutton = () => {
+    if (allMachineLogsPage) return false;
+    if (machine?.isArchived || isHistory || archivedLogs) return false;
+    return BUTTONS.ADD_MACHINE_LOGS;
+  };
+
+  const showArchiveButton = () => {
+    if (allMachineLogsPage) return false;
+    if (archivedLogs) return false;
+    return true;
+  };
+
+  const showArchiveLogsHeader = () => {
+    if (allMachineLogsPage) return false;
+    if (!archivedLogs) return false;
+    return true;
+  };
 
   const theme = useTheme();
 
   return (
-    <Stack {...options} direction="column" spacing={1} sx={{ px: 2.5, py: 3, pt: 1.5}}>
-      {!archivedLogs ? (
+    <Stack {...options} direction="column" spacing={1} sx={{ px: 2.5, py: 3, pt: 1.5 }}>
+      {showArchiveButton() ? (
         <Button
           size="small"
-          startIcon={<Iconify icon="fluent:table-delete-column-16-filled" sx={{ mr: 0.3 }} />}
+          startIcon={<Iconify icon="tabler:graph-off" sx={{ mr: 0.3 }} />}
           variant="outlined"
           sx={{ alignSelf: 'flex-end' }}
           onClick={toggleArchivedLogs}
         >
           Archived Logs
         </Button>
-      ) : (
+      ) : null}
+      {showArchiveLogsHeader() ? (
         <Stack direction="row" spacing={1} sx={{ alignSelf: 'flex-start', alignItems: 'center' }}>
           <IconTooltip
-            title='Back'
+            title="Back"
             onClick={toggleArchivedLogs}
             color={theme.palette.primary.main}
             icon="mdi:arrow-left"
           />
           <Divider orientation="vertical" flexItem />
           <Box sx={{ borderBottom: 2, borderColor: 'primary.main', pb: 1 }}>
-                  <Typography variant="h5" color="text.primary">Archived Logs</Typography>
-                </Box>
-          {/* <Typography variant='h4' sx={{ alignSelf: 'flex-start' }}>Archived Logs</Typography> */}
+            <Typography variant="h5" color="text.primary">
+              Archived Logs
+            </Typography>
+          </Box>
         </Stack>
-      )}
+      ) : null}
       <SearchBarCombo
-        isFiltered={ isFiltered }
-        value={ filterName }
-        onChange={ onFilterName }
-        onClick={ onResetFilter }
-        logTypes={ location.pathname !== PATH_MACHINE_LOGS.root ? logTypes : undefined }
-        SubOnClick={ toggleAdd }
-        dateFrom={ dateFrom }
-        dateTo={ dateTo }
-        isDateFromDateTo
+        isFiltered={isFiltered}
+        value={filterName}
+        onChange={onFilterName}
+        onClick={onResetFilter}
+        logTypes={!allMachineLogsPage ? logTypes : undefined}
+        SubOnClick={toggleAdd}
+        dateFrom={dateFrom}
+        dateTo={dateTo}
+        isDateFromDateTo={!allMachineLogsPage}
         // openGraph={ location.pathname !== PATH_MACHINE_LOGS.root ? toggleGraph : undefined }
-        addButton={!(machine?.isArchived || isHistory) && location.pathname !== PATH_MACHINE_LOGS.root? BUTTONS.ADD_MACHINE_LOGS : undefined}
-        transferredMachine={ machine?.status?.slug==='transferred' }
+        addButton={showAddbutton()}
+        transferredMachine={machine?.status?.slug === 'transferred'}
       />
     </Stack>
   );

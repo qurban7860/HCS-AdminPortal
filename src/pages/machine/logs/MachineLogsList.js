@@ -1,11 +1,11 @@
+import PropTypes from 'prop-types';
 import debounce from 'lodash/debounce';
-import { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef, useReducer } from 'react';
 // @mui
 import { Container, Table, TableBody, TableContainer, TableRow, TableCell, TableHead, TableSortLabel } from '@mui/material';
 
 // routes
-import { useLocation, useParams, useSearchParams } from 'react-router-dom';
-import { PATH_MACHINE_LOGS } from '../../../routes/paths';
+import { useParams, useSearchParams } from 'react-router-dom';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // components
@@ -24,32 +24,79 @@ import {
   getMachineLogRecords,
   ChangeRowsPerPage,
   ChangePage,
-  setFilterBy
+  setFilterBy,
+  resetMachineErpLogDates,
+  resetMachineErpLogRecords,
 } from '../../../redux/slices/products/machineErpLogs';
-import { fDateTime } from '../../../utils/formatTime';
 import TableCard from '../../../components/ListTableTools/TableCard';
 import MachineTabContainer from '../util/MachineTabContainer';
 import { machineLogTypeFormats } from '../../../constants/machineLogTypeFormats';
 import DialogViewMachineLogDetails from '../../../components/Dialog/DialogViewMachineLogDetails';
-import useResponsive from '../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
-export default function MachineLogsList(){
+function tableColumnsReducer(state, action) {
+  switch (action.type) {
+    case 'setUpInitialColumns': {
+      let columns = [...state]
+      if (!action.allMachineLogsPage) {
+        columns = columns.filter((column) => column.page !== 'allMachineLogs');
+      }
+      columns = columns.map((column) => ({...column, checked: column?.defaultShow || false}));
+      return [...columns];
+    }
+    case 'updateColumnCheck': {
+      const columns = [...state]
+      const columnIndex = state.findIndex((columnItem) => columnItem.id === action.columnId);
+      if (columnIndex !== -1) {
+        columns[columnIndex].checked = action.newCheckState;
+      }
+      return [...columns];
+    }
+    // case 'handleLogTypeChange': {
+    //   // eslint-disable-next-line no-debugger
+    //   debugger
+    //   let columns = action.newColumns
+    //   if (!action.allMachineLogsPage) {
+    //     columns = columns.filter((column) => column.page !== 'allMachineLogs');
+    //   }
+    //   return [...columns];
+    // }
+    default: {
+      throw Error(`Unknown action:  ${action.type}`);
+    }
+  }
+}
+
+MachineLogsList.propTypes = {
+  allMachineLogsPage: PropTypes.bool,
+  allMachineLogsType: PropTypes.object
+};
+
+export default function MachineLogsList({ allMachineLogsPage = false, allMachineLogsType }){
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
-  const [selectedLogTypeTableColumns, setSelectedLogTypeTableColumns] = useState([]);
   const [openLogDetailsDialog, setOpenLogDetailsDialog] = useState(false);
   const [selectedLog, setSelectedLog] = useState(null);
   const [archivedLogs, setArchivedLogs] = useState(false);
+  const [tableColumns, dispatchTableColumns] = useReducer(tableColumnsReducer, machineLogTypeFormats[0]?.tableColumns);
+  // const [localPagination, setLocalPagination] = useState({page: 0, rowsPerPage: 10})
 
+  const dispatch = useDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    dispatch(ChangePage(0));
+    dispatch(resetMachineErpLogDates());
+    dispatch(resetMachineErpLogRecords());
+    handleResetFilter();
+    dispatchTableColumns({ type: 'setUpInitialColumns', allMachineLogsPage });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   useEffect(() => {
     setArchivedLogs(searchParams.get('status') === 'archived');
   }, [searchParams])
-
-  const isMobile = useResponsive('down', 'sm');
 
   const {
     machineErpLogs,
@@ -63,6 +110,7 @@ export default function MachineLogsList(){
     initial,
     selectedLogType,
   } = useSelector((state) => state.machineErpLogs);
+  const { machine } = useSelector((state) => state.machine);
 
   const { machineId } = useParams();
   const {
@@ -73,31 +121,40 @@ export default function MachineLogsList(){
     onSort,
   } = useTable({ defaultOrderBy: 'date', defaultOrder: 'asc' });
 
+  const onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
+
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));
-    dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
+    dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10)));
   };
 
-  const onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
-  const dispatch = useDispatch();
-  const location = useLocation();
+  // useEffect(() => {
+  //   // eslint-disable-next-line no-debugger
+  //   debugger
+  //   dispatchTableColumns({
+  //     type: 'handleLogTypeChange',
+  //     newColumns: (allMachineLogsType || selectedLogType)?.tableColumns,
+  //     allMachineLogsPage
+  //   });
+  // }, [allMachineLogsPage, allMachineLogsType, selectedLogType]);
 
   useLayoutEffect(() => {
-    if (machineId && selectedLogType) {
-      setSelectedLogTypeTableColumns(machineLogTypeFormats.find(logType => logType.type === selectedLogType.type)?.tableColumns);
+    if (machineId && selectedLogType && !allMachineLogsPage) {
       dispatch(
         getMachineLogRecords({
+          customerId: machine?.customer?._id,
           machineId,
           page,
           pageSize: rowsPerPage,
           fromDate: dateFrom,
           toDate: dateTo,
-          isMachineArchived: archivedLogs,
+          isArchived: archivedLogs,
+          isMachineArchived: false,
           selectedLogType: selectedLogType.type,
         })
       );
     }
-  }, [dispatch, machineId, page, rowsPerPage, dateFrom, dateTo, selectedLogType, archivedLogs ]);
+  }, [dispatch, machineId, page, rowsPerPage, dateFrom, dateTo, selectedLogType, archivedLogs, machine, allMachineLogsPage ]);
 
   useEffect(() => {
     if (initial) {
@@ -110,7 +167,7 @@ export default function MachineLogsList(){
     comparator: getComparator(order, orderBy),
     filterName,
   });
-
+  
   const isFiltered = filterName !== '';
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
   const denseHeight = 60;
@@ -135,6 +192,9 @@ export default function MachineLogsList(){
   },[])
 
   const toggleArchivedLogs = () => {
+    dispatch(setFilterBy(''))
+    dispatch(resetMachineErpLogDates());
+    setFilterName('');
     if (archivedLogs) {
       setSearchParams({ status: 'active' });
     } else {
@@ -146,39 +206,63 @@ export default function MachineLogsList(){
 
   const handleViewRow = (id) => {
     const log = dataFiltered.find((item) => item._id === id);
-    setSelectedLog(log);
+    setSelectedLog({
+      ...log,
+      customer: log.customer?.name || '',
+      machine: log.machine?.serialNo || '',
+      createdBy: log.createdBy?.name || '',
+      updatedBy: log.updatedBy?.name || '',
+    });
     setOpenLogDetailsDialog(true);
   };
   
-
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
     setFilterName('');
   };
 
+  const refreshLogsList = () => {
+    dispatch(getMachineLogRecords({
+      customerId: machine?.customer?._id,
+      machineId,
+      page,
+      pageSize: rowsPerPage,
+      fromDate: dateFrom,
+      toDate: dateTo,
+      isArchived: archivedLogs,
+      isMachineArchived: false,
+      selectedLogType: selectedLogType.type,
+    }))
+  }
+
+  const handleColumnButtonClick = (columnId, newCheckState) => {
+    dispatchTableColumns({ type: 'updateColumnCheck', columnId, newCheckState });
+  };
+
   return (
     <>
-    <Container maxWidth={false}>
-      { location.pathname !== PATH_MACHINE_LOGS.root ? <MachineTabContainer currentTabValue='logs' /> : undefined } 
-      <TableCard>
-        <MachineLogsListTableToolbar
-          filterName={filterName}
-          onFilterName={handleFilterName}
-          isFiltered={isFiltered}
-          onResetFilter={handleResetFilter}
-          dateFrom={dateFrom}
-          dateTo={dateTo}
-          logTypes={machineLogTypeFormats}
-          toggleArchivedLogs={toggleArchivedLogs}
-          archivedLogs={archivedLogs}
-        />
+      <Container maxWidth={false}>
+        {!allMachineLogsPage ? <MachineTabContainer currentTabValue="logs" /> : null}
+        <TableCard>
+          <MachineLogsListTableToolbar
+            filterName={filterName}
+            onFilterName={handleFilterName}
+            isFiltered={isFiltered}
+            onResetFilter={handleResetFilter}
+            dateFrom={dateFrom}
+            dateTo={dateTo}
+            logTypes={machineLogTypeFormats}
+            toggleArchivedLogs={toggleArchivedLogs}
+            archivedLogs={archivedLogs}
+            allMachineLogsPage={allMachineLogsPage}
+          />
 
-        {/* {!isNotFound && !isMobile &&(
+          {/* {!isNotFound && !isMobile &&(
           <TablePaginationFilter
             columns={selectedLogTypeTableColumns?.map((column) => column.label)}
-            hiddenColumns={reportHiddenColumns}
-            handleHiddenColumns={handleHiddenColumns}
-            count={machines? machines.length : 0}
+            // hiddenColumns={reportHiddenColumns}
+            // handleHiddenColumns={handleHiddenColumns}
+            count={machineErpLogstotalCount || 0}
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
@@ -186,91 +270,101 @@ export default function MachineLogsList(){
           />
         )} */}
 
-        {!isNotFound && (
-          <TablePaginationCustom
-            count={machineErpLogstotalCount || 0}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-          />
-        )}
+          {!isNotFound && (
+            <TablePaginationCustom
+              count={machineErpLogstotalCount || 0}
+              page={page}
+              rowsPerPage={rowsPerPage}
+              onPageChange={onChangePage}
+              onRowsPerPageChange={onChangeRowsPerPage}
+              columnFilterButtonData={tableColumns}
+              columnButtonClickHandler={handleColumnButtonClick}
+            />
+          )}
 
-        <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-          <Scrollbar>
-            <Table size="small" sx={{ minWidth: 360 }}>
-              <TableHead>
-                <TableRow>
-                  {selectedLogTypeTableColumns?.map((headCell, index) => (
-                    <TableCell
-                      key={headCell.id}
-                      align={headCell.align || 'left'}
-                      sortDirection={orderBy === headCell.id ? order : false}
-                      sx={{ position: 'sticky', top: 0, width: headCell.width, minWidth: headCell.minWidth }}
-                    >
-                      {onSort ? (
-                        <TableSortLabel
-                          hideSortIcon
-                          active={orderBy === headCell.id}
-                          direction={orderBy === headCell.id ? order : 'asc'}
-                          onClick={() => onSort(headCell.id)}
-                          sx={{ textTransform: 'capitalize' }}
+          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+            <Scrollbar>
+              <Table stickyHeader size="small" sx={{ minWidth: 360 }}>
+                <TableHead>
+                  <TableRow>
+                    {tableColumns?.map((headCell, index) => {
+                      if (!headCell?.checked) return null;
+                      return (
+                        <TableCell
+                          key={headCell.id}
+                          align='left'
+                          sortDirection={orderBy === headCell.id ? order : false}
+                          sx={{ width: headCell.width, minWidth: headCell.minWidth }}
                         >
-                          {headCell.label}
-                        </TableSortLabel>
-                      ) : (
-                        headCell.label
+                          {onSort ? (
+                            <TableSortLabel
+                              hideSortIcon
+                              active={orderBy === headCell.id}
+                              direction={orderBy === headCell.id ? order : 'asc'}
+                              onClick={() => onSort(headCell.id)}
+                              sx={{ textTransform: 'capitalize' }}
+                            >
+                              {headCell.label}
+                            </TableSortLabel>
+                          ) : (
+                            headCell.label
+                          )}
+                        </TableCell>
                       )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {(isLoading ? [...Array(rowsPerPage)] : dataFiltered).map((row, index) =>
-                  row ? (
-                    <MachineLogsTableRow
-                      key={row._id}
-                      columnsToShow={selectedLogTypeTableColumns}
-                      row={row}
-                      onViewRow={() => handleViewRow(row._id)}
-                      selected={selected.includes(row._id)}
-                      selectedLength={selected.length}
-                      style={index % 2 ? { background: 'red' } : { background: 'green' }}
-                    />
-                  ) : (
-                    !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
-                  )
-                )}
-                <TableNoData isNotFound={isNotFound} />
-              </TableBody>
-            </Table>
-          </Scrollbar>
-        </TableContainer>
-        {!isNotFound && (
-          <TablePaginationCustom
-            count={machineErpLogstotalCount || 0}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-          />
-        )}
-      </TableCard>
-    </Container>
-    {openLogDetailsDialog ? (
-      <DialogViewMachineLogDetails
-        logDetails={selectedLog}
-        openLogDetailsDialog={openLogDetailsDialog}
-        setOpenLogDetailsDialog={setOpenLogDetailsDialog}
-        logType={selectedLogType?.type}
-      />
-    ) : null}
+                    )}
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {(isLoading ? [...Array(rowsPerPage)] : dataFiltered).map((row, index) =>
+                    row ? (
+                      <MachineLogsTableRow
+                        key={row._id}
+                        columnsToShow={tableColumns}
+                        allMachineLogsPage={allMachineLogsPage}
+                        row={row}
+                        onViewRow={() => handleViewRow(row._id)}
+                        selected={selected.includes(row._id)}
+                        selectedLength={selected.length}
+                        style={index % 2 ? { background: 'red' } : { background: 'green' }}
+                      />
+                    ) : (
+                      !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
+                    )
+                  )}
+                  <TableNoData isNotFound={isNotFound} />
+                </TableBody>
+              </Table>
+            </Scrollbar>
+          </TableContainer>
+          {!isNotFound && (
+            <TablePaginationCustom
+              count={machineErpLogstotalCount || 0}
+              page={page}
+              rowsPerPage={rowsPerPage}
+              onPageChange={onChangePage}
+              onRowsPerPageChange={onChangeRowsPerPage}
+            />
+          )}
+        </TableCard>
+      </Container>
+      {openLogDetailsDialog ? (
+        <DialogViewMachineLogDetails
+          logDetails={selectedLog}
+          allMachineLogsPage={allMachineLogsPage}
+          openLogDetailsDialog={openLogDetailsDialog}
+          setOpenLogDetailsDialog={setOpenLogDetailsDialog}
+          logType={selectedLogType?.type}
+          refreshLogsList={refreshLogsList}
+        />
+      ) : null}
     </>
   );
 }
-
 // ----------------------------------------------------------------------
 
+const FilterColumnsButton = () => {
+
+}
 function applyFilter({ inputData, comparator, filterName }) {
   const stabilizedThis =  inputData && inputData.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
@@ -280,17 +374,6 @@ function applyFilter({ inputData, comparator, filterName }) {
   });
 
   inputData = stabilizedThis.map((el) => el[0]);
-  // (customer) => customer.name.toLowerCase().indexOf(filterName.toLowerCase()) || customer.tradingName.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.city.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.country.toLowerCase().indexOf(filterName.toLowerCase()) || customer.createdAt.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
-
-  // if (filterName) {
-  //   inputData = inputData.filter(
-  //     (log) => 
-  //     fDateTime(log?.date)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-  //       log?.createdBy?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-  //       // (log?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
-  //       fDateTime(log?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
-  //   );
-  // }
   if (filterName) {
     inputData = inputData.filter((log) => {
       const searchValue = filterName.toLowerCase();

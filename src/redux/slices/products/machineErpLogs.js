@@ -119,6 +119,11 @@ const slice = createSlice({
       state.machineErpLogstotalCount = 0;
       // state.isLoading = false;
     },
+    // RESET MACHINE LOG DATES
+    resetMachineErpLogDates(state){
+      state.dateFrom = new Date( Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+      state.dateTo = new Date(Date.now()).toISOString().split('T')[0];
+    },
     // Set FilterBy
     setFilterBy(state, action) {
       state.filterBy = action.payload;
@@ -148,11 +153,12 @@ export const {
   setAllVisibilityFalse,
   resetMachineErpLogRecords,
   resetMachineErpLogRecord,
+  resetMachineErpLogDates,
   setResponseMessage,
   setMachineLogsGraphData,
   setFilterBy,
   ChangeRowsPerPage,
-  ChangePage,
+  ChangePage
 } = slice.actions;
 
 // ------------------------- ADD RECORD ---------------------------------------------
@@ -166,8 +172,8 @@ export function addMachineLogRecord(machine, customer, logs, action, version, ty
         customer,
         machine,
         version,
-        skipExistingRecords: action?.skipExistingRecords,
-        updateExistingRecords: action?.updateExistingRecords,
+        skip: action?.skipExistingRecords,
+        update: action?.updateExistingRecords,
         logs: [...logs],
       };
       const response = await axios.post(`${CONFIG.SERVER_URL}productLogs/`, data);
@@ -237,6 +243,30 @@ export function getMachineLogRecord(machineId, id, logType) {
   };
 }
 
+// --------------------------- UPDATE RECORD -------------------------------------------
+
+export function updateMachineLogRecord(id, logType, logData) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const data = {
+        type: logType,
+        ...logData
+      };
+      const response = await axios.patch(`${CONFIG.SERVER_URL}productLogs/${id}`, data);
+      dispatch(slice.actions.getMachineErpLogRecordSuccess(response.data));
+      return {
+        success: response.status === 202,
+        message: 'Successfully updated',
+      };
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
 // --------------------------- DELETE RECORD -------------------------------------------
 
 export function deleteMachineLogRecord(id, logType) {
@@ -250,6 +280,10 @@ export function deleteMachineLogRecord(id, logType) {
         }
       });
       dispatch(slice.actions.setResponseMessage(response.data));
+      return {
+        success: response.status === 200,
+        message: 'Deleted Successfully',
+      }; 
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -261,6 +295,7 @@ export function deleteMachineLogRecord(id, logType) {
 // -------------------------- GET RECORD'S ----------------------------------------------------------------------
 
 export function getMachineLogRecords({
+  customerId = undefined,
   machineId,
   page,
   pageSize,
@@ -269,21 +304,21 @@ export function getMachineLogRecords({
   isCreatedAt,
   isMachineArchived,
   selectedLogType,
-  customer,
+  isArchived,
 }) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const params = {
+        customer: customerId,
         type: selectedLogType,
         machine: machineId,
         fromDate,
         toDate,
-        isArchived: isMachineArchived,
+        isArchived,
         pagination: { page, pageSize },
         ...(isMachineArchived && { archivedByMachine: true }),
-        ...(isCreatedAt && { isCreatedAt }),
-        ...(customer && { customer }),
+        ...(!!isCreatedAt && { isCreatedAt }),
       };
       const response = await axios.get(`${CONFIG.SERVER_URL}productLogs/`, { params });
       dispatch(slice.actions.getMachineErpLogRecordsSuccess(response.data));

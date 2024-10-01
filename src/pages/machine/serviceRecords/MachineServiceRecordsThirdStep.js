@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
+import b64toBlob from 'b64-to-blob';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Stack } from '@mui/material';
+import { Button, Dialog, DialogTitle, Divider, Stack } from '@mui/material';
 // routes
 import { useNavigate, useParams } from 'react-router-dom';
 import { PATH_MACHINE } from '../../../routes/paths';
@@ -16,6 +17,7 @@ import ServiceRecodStepButtons from '../../../components/DocumentForms/ServiceRe
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFAutocomplete, RHFTextField, RHFUpload } from '../../../components/hook-form';
 import { MachineServiceRecordPart3Schema } from '../../schemas/machine';
+import SkeletonPDF from '../../../components/skeleton/SkeletonPDF';
 
 MachineServiceRecordsThirdStep.propTypes = {
   handleDraftRequest: PropTypes.func,
@@ -190,7 +192,39 @@ function MachineServiceRecordsThirdStep({handleDraftRequest, handleDiscard, hand
         }
       };
 
+      const [pdf, setPDF] = useState(null);
+      const [PDFName, setPDFName] = useState('');
+      const [PDFViewerDialog, setPDFViewerDialog] = useState(false);
+
+      const handleOpenFile = async (file, fileName) => {
+        setPDFName(fileName);
+        setPDFViewerDialog(true);
+        setPDF(null);
+        try {
+          if(!file?.isLoaded){
+            const response = await dispatch(downloadRecordFile(machineId, id, file._id));
+            if (regEx.test(response.status)) {
+              const pdfData = `data:application/pdf;base64,${encodeURI(response.data)}`;
+              const blob = b64toBlob(encodeURI(response.data), 'application/pdf')
+              const url = URL.createObjectURL(blob);
+              setPDF(url);
+            } else {
+              enqueueSnackbar(response.statusText, { variant: 'error' });
+            }
+          }else{
+            setPDF(file?.src);
+          }
+        } catch (error) {
+          if (error.message) {
+            enqueueSnackbar(error.message, { variant: 'error' });
+          } else {
+            enqueueSnackbar('Something went wrong!', { variant: 'error' });
+          }
+        }
+      };
+  
   return (
+    <>
       <FormProvider methods={methods}  onSubmit={handleSubmit(onSubmit)}>
         <Stack px={2} spacing={2}>    
           { machineServiceRecord?.serviceRecordConfig?.enableNote && <RHFTextField name="serviceNote" label={`${machineServiceRecord?.serviceRecordConfig?.recordType?.toLowerCase() === 'install' ? 'Install' : 'Service' } Note`} minRows={3} multiline/> }      
@@ -214,11 +248,27 @@ function MachineServiceRecordsThirdStep({handleDraftRequest, handleDiscard, hand
             dropZone={false}
             onRemove={handleRemoveFile}
             onLoadImage={handleLoadImage}
+            onLoadPDF={handleOpenFile}
           />
           {/* <Grid container display="flex"><RHFSwitch name="isActive" label="Active"/></Grid> */}
       </Stack>
       <ServiceRecodStepButtons isActive={isActive} isSubmitting={isSubmitting} isDraft={isDraft} handleDraft={saveAsDraft} />
     </FormProvider>
-  )}
+    {PDFViewerDialog && (
+      <Dialog fullScreen open={PDFViewerDialog} onClose={()=> setPDFViewerDialog(false)}>
+        <DialogTitle variant='h3' sx={{pb:1, pt:2, display:'flex', justifyContent:'space-between'}}>
+            PDF View
+              <Button variant='outlined' onClick={()=> setPDFViewerDialog(false)}>Close</Button>
+        </DialogTitle>
+        <Divider variant='fullWidth' />
+          {pdf?(
+              <iframe title={PDFName} src={pdf} style={{paddingBottom:10}} width='100%' height='842px'/>
+            ):(
+              <SkeletonPDF />
+            )}
+      </Dialog>
+    )}
+  </>
+)}
 
 export default MachineServiceRecordsThirdStep

@@ -21,7 +21,6 @@ export default function RHFDatePicker({ name, label, size, helperText, Error, ..
     <Controller
       name={name}
       control={control}
-      control={control}
       render={({ field, fieldState: { error } }) => (
         <DatePicker
           {...field}

@@ -2,24 +2,29 @@ import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useSnackbar } from 'notistack';
 import PropTypes from 'prop-types';
+import b64toBlob from 'b64-to-blob';
 import { useParams } from 'react-router';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Grid, Typography, Stack } from '@mui/material';
+import { Grid, Typography, Stack, Dialog, DialogTitle, Button, Divider } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-import { addCheckItemValues, deleteCheckItemFile, downloadCheckItemFile, resetSubmittingCheckItemIndex } from '../../../redux/slices/products/machineServiceRecord';
+import { addCheckItemValues, deleteCheckItemFile, downloadCheckItemFile } from '../../../redux/slices/products/machineServiceRecord';
 import FormProvider from '../../../components/hook-form/FormProvider';
 import { RHFAutocomplete, RHFDatePicker, RHFSwitch, RHFTextField, RHFUpload } from '../../../components/hook-form';
 import { statusTypes } from '../util';
 import { fDate, stringToDate } from '../../../utils/formatTime';
 import CheckedItemValueHistory from './CheckedItemValueHistory';
 import { CheckItemSchema } from '../../schemas/machine';
+import SkeletonPDF from '../../../components/skeleton/SkeletonPDF';
 
 const CheckedItemInputRow = memo(({ index, childIndex, checkItemListId, rowData }) => {
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
     const { machineId, id } = useParams();
     const { machineServiceRecord } = useSelector((state) => state.machineServiceRecord);
+    const [pdf, setPDF] = useState(null);
+    const [PDFName, setPDFName] = useState('');
+    const [PDFViewerDialog, setPDFViewerDialog] = useState(false);
 
     const getRecordValue = (item) => {
       if (item?.inputType === 'Date') {
@@ -162,6 +167,33 @@ const CheckedItemInputRow = memo(({ index, childIndex, checkItemListId, rowData 
       }
     };
 
+    const handleOpenFile = async (file, fileName) => {
+      setPDFName(fileName);
+      setPDFViewerDialog(true);
+      setPDF(null);
+      try {
+        if(!file?.isLoaded){
+          const response = await dispatch(downloadCheckItemFile(machineId, id, file._id));
+          if (regEx.test(response.status)) {
+            const pdfData = `data:application/pdf;base64,${encodeURI(response.data)}`;
+            const blob = b64toBlob(encodeURI(response.data), 'application/pdf')
+            const url = URL.createObjectURL(blob);
+            setPDF(url);
+          } else {
+            enqueueSnackbar(response.statusText, { variant: 'error' });
+          }
+        }else{
+          setPDF(file?.src);
+        }
+      } catch (error) {
+        if (error.message) {
+          enqueueSnackbar(error.message, { variant: 'error' });
+        } else {
+          enqueueSnackbar('Something went wrong!', { variant: 'error' });
+        }
+      }
+    };
+
   return (
     <Stack spacing={2} px={2}>
       <FormProvider key={`form-${index}`} methods={methods}  onSubmit={handleSubmit(onSubmit)} >
@@ -233,6 +265,7 @@ const CheckedItemInputRow = memo(({ index, childIndex, checkItemListId, rowData 
                 name="images"
                 onDrop={(accepted) => handleDropMultiFile( accepted )}
                 onRemove={(inputFile) => handleRemoveFile( inputFile )}
+                onLoadPDF={ handleOpenFile }
                 onLoadImage={(imageId, imageIndex) =>
                   handleLoadImage(imageId, imageIndex )
                 }
@@ -270,6 +303,20 @@ const CheckedItemInputRow = memo(({ index, childIndex, checkItemListId, rowData 
               )}
             </Stack>
       </FormProvider>
+      {PDFViewerDialog && (
+      <Dialog fullScreen open={PDFViewerDialog} onClose={()=> setPDFViewerDialog(false)}>
+        <DialogTitle variant='h3' sx={{pb:1, pt:2, display:'flex', justifyContent:'space-between'}}>
+            PDF View
+              <Button variant='outlined' onClick={()=> setPDFViewerDialog(false)}>Close</Button>
+        </DialogTitle>
+        <Divider variant='fullWidth' />
+          {pdf?(
+              <iframe title={PDFName} src={pdf} style={{paddingBottom:10}} width='100%' height='842px'/>
+            ):(
+              <SkeletonPDF />
+            )}
+      </Dialog>
+    )}
     </Stack>
   );
 });

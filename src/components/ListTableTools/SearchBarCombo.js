@@ -1,13 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
-import { useLocation } from 'react-router-dom';
 import { LoadingButton } from '@mui/lab';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Grid, TextField, InputAdornment, Button, Stack, 
   FormControl, Select, InputLabel, MenuItem, IconButton, Switch, FormControlLabel, Autocomplete } from '@mui/material';
 import { BUTTONS } from '../../constants/default-constants';
 import Iconify from '../iconify';
-import { PATH_MACHINE_LOGS } from '../../routes/paths';
 import useResponsive from '../../hooks/useResponsive';
 import { StyledTooltip } from '../../theme/styles/default-styles';
 import { getActiveDocumentTypesWithCategory } from '../../redux/slices/document/documentType';
@@ -88,10 +87,15 @@ function SearchBarCombo({
   const [ selectedLogTypeState, setSelectedLogTypeState ] = useState(selectedLogType || logTypes?.[0]);
 
   const isMobile = useResponsive('sm', 'down');
-  const location = useLocation();
   const dispatch = useDispatch()
 
   const { isAllAccessAllowed, isSettingReadOnly, isSecurityReadOnly } = useAuthContext();
+
+  useEffect(() => {
+    if (dateTo !== isDateTo) setIsDateTo(dateTo);
+    if (dateFrom !== isDateFrom) setIsDateFrom(dateFrom);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dateTo, dateFrom])
 
   useDebouncedEffect(()=>{
     // if( isDateFrom ){
@@ -111,9 +115,9 @@ function SearchBarCombo({
 
   const onLogTypeChange = (newValue) => setSelectedLogTypeState(newValue);
 
-  const onChangeStartDate = (e) => setIsDateFrom(e.target.value);
+  // const onChangeStartDate = (e) => setIsDateFrom(e.target.value);
 
-  const onChangeEndDate = (e) => setIsDateTo(e.target.value);
+  // const onChangeEndDate = (e) => setIsDateTo(e.target.value);
 
   return (
     <Grid container rowSpacing={logTypes?.length > 0 ? 2:1} columnSpacing={1} sx={{display:'flex', }}>
@@ -243,12 +247,27 @@ function SearchBarCombo({
             </Grid>
           }
 
-          { location.pathname !== PATH_MACHINE_LOGS.root && isDateFromDateTo && 
+          { isDateFromDateTo && 
             <Grid item xs={12} sm={6} md={4} lg={2} xl={2}  >
-                <TextField  
+              <DatePicker
+                label="Start date"
+                value={isDateFrom}
+                onChange={(newValue) => setIsDateFrom(newValue)}
+                inputFormat="dd/MM/yyyy"
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    fullWidth
+                    size="small"
+                    error={isDateFrom && isDateTo && new Date(isDateTo) < new Date(isDateFrom)}
+                    helperText={isDateFrom && isDateTo && new Date(isDateTo) < new Date(isDateFrom) && `Start Date should be earlier than End date ${fDate(isDateTo)}`}
+                  />
+                )}
+              />
+                {/* <TextField  
                   value={isDateFrom} 
                   type="date"
-                  format={isDateFrom ?? "dd/mm/yyyy"}
+                  format="dd/mm/yyyy"
                   label="Start date"
                   sx={{width: '100%'}}
                   onChange={onChangeStartDate} 
@@ -256,16 +275,31 @@ function SearchBarCombo({
                   helperText={ isDateFrom && dateTo && dateTo < isDateFrom && `Start Date should be less than End date ${fDate(isDateTo)}`} 
                   size="small" 
                   InputLabelProps={{ shrink: true }}
-                />
+                /> */}
             </Grid>
           }
 
-          { location.pathname !== PATH_MACHINE_LOGS.root && isDateFromDateTo && 
+          { isDateFromDateTo && 
             <Grid item xs={12} sm={6} md={4} lg={2} xl={2} >
-                <TextField  
+              <DatePicker
+                label="End date"
+                value={isDateTo}
+                onChange={(newValue) => setIsDateTo(newValue)}
+                inputFormat="dd/MM/yyyy"
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    fullWidth
+                    size="small"
+                    error={isDateFrom && isDateTo && isDateFrom > isDateTo}
+                    helperText={isDateFrom && isDateTo && new Date(isDateFrom) > new Date(isDateTo) && `End Date should be later than Start date ${fDate(isDateFrom)}`}
+                  />
+                )}
+              />
+                {/* <TextField  
                   value={isDateTo} 
                   type="date"
-                  format={ isDateTo ?? "dd/mm/yyyy"} 
+                  format="dd/mm/yyyy"
                   label="End date"
                   sx={{width: '100%'}}
                   onChange={onChangeEndDate} 
@@ -273,7 +307,7 @@ function SearchBarCombo({
                   helperText={isDateFrom && isDateTo && isDateFrom > dateTo && `End Date should be greater than Start date ${fDate(isDateFrom)}`} 
                   size="small" 
                   InputLabelProps={{ shrink: true }}
-                />
+                /> */}
             </Grid>
           }
 
@@ -749,7 +783,7 @@ SearchBarCombo.propTypes = {
   value: PropTypes.string,
   SubOnClick: PropTypes.func,
   SubOnClick2: PropTypes.func,
-  addButton: PropTypes.string,
+  addButton: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   inviteOnClick: PropTypes.func,
   inviteButton: PropTypes.string,
   buttonIcon: PropTypes.string,
