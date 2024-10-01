@@ -76,32 +76,33 @@ const CheckedItemInputRow = memo(({ index, childIndex, checkItemListId, rowData 
       defaultValues,
       shouldUnregister: false,
     });
-  
     const {
       reset,
       setValue,
       getValues,
       watch,
-      formState: { isDirty, isSubmitting },
+      formState: { isSubmitting },
       handleSubmit
     } = methods;
-
-  const watchedValues = watch();
+    
+    const watchedValues = watch();
+    console.log("defaultValues : ",defaultValues,"watchedValues : ",watchedValues)
 
   const isChanged = useMemo(() => 
-    JSON.stringify(watchedValues) !== JSON.stringify(defaultValues)
+    JSON.stringify(defaultValues.checkItemValue) !== JSON.stringify(watchedValues.checkItemValue) ||
+    JSON.stringify(defaultValues.comments ) !== JSON.stringify(watchedValues.comments ) ||
+    watchedValues?.images?.filter( f => !f?.uploaded )?.length > 0 
   ,[watchedValues, defaultValues]);
   
     const [showMessages, setShowMessages] = useState( false );
 
     useEffect(() => {
         reset(defaultValues);
-    }, [ reset, defaultValues ]);
+    }, [ reset, defaultValues, rowData ]);
     
 
     const onSubmit = async ( data ) => {
       try {
-
         if (data.checkItemValue instanceof Date) {
           data.checkItemValue = fDate(data.checkItemValue, 'dd/MM/yyyy');
         } else if(typeof data.checkItemValue === 'object'){
@@ -111,7 +112,7 @@ const CheckedItemInputRow = memo(({ index, childIndex, checkItemListId, rowData 
         }
 
         await dispatch( addCheckItemValues( machineId, data, index, childIndex ));
-        // reset(data);
+        reset()
         setShowMessages( true );
         setTimeout(() => {
           setShowMessages( false );
@@ -289,7 +290,7 @@ const CheckedItemInputRow = memo(({ index, childIndex, checkItemListId, rowData 
                   size="small"
                   loading={ isSubmitting }
                   variant="contained"
-                  disabled={!( isChanged ||  isDirty )} 
+                  disabled={!( isChanged )} 
                 >
                   Save
                 </LoadingButton>
