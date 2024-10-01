@@ -65,7 +65,7 @@ function MachineServiceRecordsFirstStep( { handleComplete, handleDraftRequest, h
         technicianNotes:              machineServiceRecord?.technicianNotes || '',
         textBeforeCheckItems:         machineServiceRecord?.textBeforeCheckItems || '',
         textAfterCheckItems:          machineServiceRecord?.textAfterCheckItems || '',
-        files: machineServiceRecord?.files?.map(file => ({
+        files: machineServiceRecord?.reportDocs?.map(file => ({
           key: file?._id,
           _id: file?._id,
           name:`${file?.name}.${file?.extension}`,
