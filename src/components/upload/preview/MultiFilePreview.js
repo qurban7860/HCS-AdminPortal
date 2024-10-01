@@ -33,6 +33,7 @@ MultiFilePreview.propTypes = {
   onChangeReferenceNumber: PropTypes.func,
   onChangeStockNumber: PropTypes.func,
   onLoadImage: PropTypes.func,
+  onLoadPDF: PropTypes.func,
   onDownload: PropTypes.func,
 };
 
@@ -46,6 +47,7 @@ function MultiFilePreview({
   onChangeReferenceNumber,
   onChangeStockNumber,
   onLoadImage,
+  onLoadPDF,
   onDownload,
   files, 
   onRemove, 
@@ -61,8 +63,8 @@ function MultiFilePreview({
   const [fileFound, setFileFound] = useState(null);
   const [verifiedAnchorEl, setVerifiedAnchorEl] = useState(null);
 
-  useEffect(() => {
-    setSlides(files);
+  useEffect(() => {      
+    setSlides(files.filter((file => file?.fileType && file.fileType.startsWith("image"))));
   }, [files]);
 
   const handleExtensionsPopoverOpen = (event, file) => {
@@ -93,7 +95,7 @@ function MultiFilePreview({
     setSelectedImage(-1);
   };
 
-  const FORMAT_IMG_VISIBBLE = ['jpg', 'jpeg', 'gif', 'bmp', 'png', 'svg', 'webp', 'ico', 'jpe',];
+  const FORMAT_IMG_VISIBBLE = ['jpg', 'jpeg', 'gif', 'bmp', 'png', 'svg', 'webp', 'ico', 'jpe','pdf'];
         
   return (
     <AnimatePresence initial={false}>
@@ -102,7 +104,7 @@ function MultiFilePreview({
         const { key, name = '', size = 0, displayName, referenceNumber, versionNo, stockNumber, docCategory, docType } = fileData(file);
         const fileType = file?.type?.split('/').pop().toLowerCase();
         const isNotFormatFile = typeof file === 'string';
-        
+        const fileName = name || displayName;
         if (thumbnail) {
           return (
               <Card key={key || index} sx={{
@@ -136,7 +138,7 @@ function MultiFilePreview({
                               width:'100%'
                           }}
                       >       
-                          {FORMAT_IMG_VISIBBLE.some(format => fileType?.match(format))  && <Button sx={{width:'50%', borderRadius:0}} onClick={()=>handleOpenLightbox(index)}><Iconify sx={{ width: '25px'}} icon="carbon:view" /></Button>}
+                          {FORMAT_IMG_VISIBBLE.some(format => fileType?.match(format))  && <Button sx={{width:'50%', borderRadius:0}} onClick={()=> fileType==='pdf'?onLoadPDF(file,fileName):handleOpenLightbox(index)}><Iconify sx={{ width: '25px'}} icon="carbon:view" /></Button>}
                           { file?.uploaded && onDownload && <Button sx={{width:'50%', borderRadius:0}} onClick={ ()=>onDownload( file ) }><Iconify sx={{ width: '25px'}} icon="solar:download-square-linear" /></Button>}
                           <Button sx={{width: FORMAT_IMG_VISIBBLE.some(format => fileType?.match(format)) || ( file?.uploaded && onDownload ) ? '50%' : '100%', borderRadius:0}} color='error' onClick={() => onRemove(file)}><Iconify sx={{ width: '25px'}} icon="radix-icons:cross-circled" /></Button>
                       </ButtonGroup>
