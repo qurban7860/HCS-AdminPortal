@@ -46,6 +46,7 @@ import Lightbox from '../../../components/lightbox/Lightbox';
 import SkeletonLine from '../../../components/skeleton/SkeletonLine';
 import DialogServiceRecordComplete from '../../../components/Dialog/DialogServiceRecordComplete';
 import SkeletonPDF from '../../../components/skeleton/SkeletonPDF';
+import IconButtonTooltip from '../../../components/Icons/IconButtonTooltip';
 
 MachineServiceParamViewForm.propTypes = {
   serviceHistoryView: PropTypes.bool,
@@ -417,6 +418,7 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
             machineServiceRecord?.status === 'SUBMITTED' &&
             machineServiceRecord?.currentVersion?._id === machineServiceRecord?._id &&
             machineServiceRecord?.currentApprovalStatus !== 'APPROVED' &&
+            machineServiceRecord?.approval?.approvingContacts?.length < 1 &&
             handleCompleteConfirm
           }
 
@@ -458,7 +460,15 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
               }
             />
           <ViewFormField isLoading={isLoading} variant='h4' sm={2} heading="Status" 
-            param={defaultValues.approvalStatus === "PENDING" ? defaultValues.status : defaultValues.approvalStatus} />
+            param={defaultValues.approvalStatus === "PENDING" ? defaultValues.status : defaultValues.approvalStatus}
+            node={ <>
+              { machineServiceRecord?.approval?.approvingContacts?.length > 0 &&
+              <IconButtonTooltip title='Record Approval' icon="uil:file-check-alt" onClick={handleCompleteConfirm} /> }
+            </>
+            }
+          />
+
+
           {(defaultValues.approvalStatus !== "PENDING" && defaultValues?.approvalLog?.length > 0) ? (              
             <ViewFormField isLoading={isLoading} sm={12}
               heading={`${defaultValues.approvalStatus === "REJECTED" ? "Rejection" : "Approval"} Comments`}

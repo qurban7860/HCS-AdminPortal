@@ -318,6 +318,12 @@ const ApproveSeviceRecord = ({ isLoading, recordStatus }) => {
               loading={rejectionSubmitting}
               variant="contained"
               color="error"
+              sx={{
+                backgroundColor: 'red', 
+                '&:hover': {
+                  backgroundColor: 'darkred', 
+                },
+              }}
               onClick={() => handleStatusChange('REJECTED')}
             >
               Reject
@@ -326,7 +332,12 @@ const ApproveSeviceRecord = ({ isLoading, recordStatus }) => {
               disabled={isSubmitting}
               loading={approvalSubmitting}
               variant="contained"
-              color="primary"
+              sx={{
+                backgroundColor: 'green', 
+                '&:hover': {
+                  backgroundColor: 'darkgreen', 
+                },
+              }}
               onClick={() => handleStatusChange('APPROVED')}
             >
               Approve

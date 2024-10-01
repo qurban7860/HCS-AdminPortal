@@ -649,7 +649,7 @@ export function addCheckItemValues(machineId, data, Index, childIndex) {
       formData.append('comments', data.comments);
       
       if (Array.isArray(data?.images) &&  data?.images?.length > 0) {
-        data?.images?.forEach((image, index) => {
+        data?.images?.filter(image => !image.uploaded)?.forEach((image, index) => {
           if (image && !image?._id) {
             formData.append('images', image );
           }
