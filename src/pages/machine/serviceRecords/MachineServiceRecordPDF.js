@@ -152,21 +152,26 @@ function getImageUrl(file) {
                     <Text style={styles.text_sm}>{defaultValues?.technicianNotes || ' '}</Text>
                 </View>
             </View>
-            <Text style={styles.title}>Documents</Text>
-            <View style={styles.row}>
-                <View style={styles.image_row} >
-                    {defaultValues?.reportDocs?.filter( f => f?.src )?.map((file, fileIndex) => {
-                        const imageUrl = getImageUrl(file);
-                        return (
-                            ( file?.src && <View key={file?._id} style={styles.image_column}>
-                                { imageUrl && <Image style={{ borderRadius:5, height:"372px", objectFit: "cover" }} src={ imageUrl } />}
-                            </View> || '' )
-                        );
-                    })}
+            
+            {/* {Array.isArray(defaultValues?.reportDocs) && 
+            defaultValues?.reportDocs?.length > 0 && 
+            <> */}
+                <Text style={styles.title}>Documents</Text>
+                <View style={styles.row}>
+                    <View style={styles.image_row} >
+                        {defaultValues?.reportDocs?.filter( f => f?.src )?.map((file, fileIndex) => {
+                            const imageUrl = getImageUrl(file);
+                            return (
+                                ( file?.src && <View key={file?._id} style={styles.image_column}>
+                                    { imageUrl && <Image style={{ borderRadius:5, height:"372px", objectFit: "cover" }} src={ imageUrl } />}
+                                </View> || '' )
+                            );
+                        })}
+                    </View>
                 </View>
-            </View>
+            {/* </>} */}
 
-            { !defaultValues?.isReportDocsOnly && <>
+            {/* { !defaultValues?.isReportDocsOnly && <> */}
 
             <View style={styles.row}>
                 <View style={styles.col}>
@@ -275,7 +280,7 @@ function getImageUrl(file) {
                     })}
                 </View>
             </View>
-        </>}
+        {/* </>} */}
         </View>
 
         <View style={styles.footer} fixed>
