@@ -5,8 +5,9 @@ import { useSnackbar } from 'notistack';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router';
 import { useForm } from 'react-hook-form';
+import b64toBlob from 'b64-to-blob';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Grid, Typography, Stack, Card } from '@mui/material';
+import { Grid, Typography, Stack, Card, Dialog, DialogTitle, Button, Divider } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { addCheckItemValues, deleteCheckItemFile, downloadCheckItemFile, resetSubmittingCheckItemIndex } from '../../../redux/slices/products/machineServiceRecord';
 import FormProvider from '../../../components/hook-form/FormProvider';
@@ -16,6 +17,7 @@ import { fDate, stringToDate } from '../../../utils/formatTime';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
 import CheckedItemValueHistory from './CheckedItemValueHistory';
 import { CheckItemSchema } from '../../schemas/machine';
+import SkeletonPDF from '../../../components/skeleton/SkeletonPDF';
 
 const CheckedItemInputRow = memo(({ index, row }) => {
 
@@ -191,6 +193,37 @@ const CheckedItemInputRow = memo(({ index, row }) => {
       }
     };
 
+    const [pdf, setPDF] = useState(null);
+    const [PDFName, setPDFName] = useState('');
+    const [PDFViewerDialog, setPDFViewerDialog] = useState(false);
+
+    const handleOpenFile = async (file, fileName) => {
+      setPDFName(fileName);
+      setPDFViewerDialog(true);
+      setPDF(null);
+      try {
+        if(!file?.isLoaded){
+          const response = await dispatch(downloadCheckItemFile(machineId, id, file._id));
+          if (regEx.test(response.status)) {
+            const pdfData = `data:application/pdf;base64,${encodeURI(response.data)}`;
+            const blob = b64toBlob(encodeURI(response.data), 'application/pdf')
+            const url = URL.createObjectURL(blob);
+            setPDF(url);
+          } else {
+            enqueueSnackbar(response.statusText, { variant: 'error' });
+          }
+        }else{
+          setPDF(file?.src);
+        }
+      } catch (error) {
+        if (error.message) {
+          enqueueSnackbar(error.message, { variant: 'error' });
+        } else {
+          enqueueSnackbar('Something went wrong!', { variant: 'error' });
+        }
+      }
+    };
+
     const handleSave = async (childIndex) => {
       const isValid = await trigger(`checkItems[${childIndex}].value`);
       if(isValid){
@@ -285,6 +318,7 @@ const CheckedItemInputRow = memo(({ index, row }) => {
                 onLoadImage={(imageId, imageIndex) =>
                   handleLoadImage(imageId, imageIndex, childIndex)
                 }
+                onLoadPDF={handleOpenFile}
               />
 
               <Grid
@@ -320,6 +354,20 @@ const CheckedItemInputRow = memo(({ index, row }) => {
           </Card>
         ))}
       </FormProvider>
+      {PDFViewerDialog && (
+      <Dialog fullScreen open={PDFViewerDialog} onClose={()=> setPDFViewerDialog(false)}>
+        <DialogTitle variant='h3' sx={{pb:1, pt:2, display:'flex', justifyContent:'space-between'}}>
+            PDF View
+              <Button variant='outlined' onClick={()=> setPDFViewerDialog(false)}>Close</Button>
+        </DialogTitle>
+        <Divider variant='fullWidth' />
+          {pdf?(
+              <iframe title={PDFName} src={pdf} style={{paddingBottom:10}} width='100%' height='842px'/>
+            ):(
+              <SkeletonPDF />
+            )}
+      </Dialog>
+    )}
     </Stack>
   );
 });

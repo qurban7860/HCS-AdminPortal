@@ -1,6 +1,7 @@
 import React, { useEffect, useLayoutEffect, useState, useMemo, useCallback } from 'react'
 import PropTypes from 'prop-types';
-import { Box, Stack } from '@mui/material';
+import b64toBlob from 'b64-to-blob';
+import { Box, Button, Dialog, DialogTitle, Divider, Stack } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router';
@@ -16,6 +17,7 @@ import { addMachineServiceRecord, setFormActiveStep, updateMachineServiceRecord,
 import { getActiveServiceRecordConfigsForRecords, resetServiceRecordConfig } from '../../../redux/slices/products/serviceRecordConfig';
 import ServiceRecodStepButtons from '../../../components/DocumentForms/ServiceRecodStepButtons';
 import SkeletonLine from '../../../components/skeleton/SkeletonLine';
+import SkeletonPDF from '../../../components/skeleton/SkeletonPDF';
 
 MachineServiceRecordsFirstStep.propTypes = {
     handleComplete : PropTypes.func,
@@ -214,6 +216,37 @@ function MachineServiceRecordsFirstStep( { handleComplete, handleDraftRequest, h
         }
       };
 
+      const [pdf, setPDF] = useState(null);
+      const [PDFName, setPDFName] = useState('');
+      const [PDFViewerDialog, setPDFViewerDialog] = useState(false);
+
+      const handleOpenFile = async (file, fileName) => {
+        setPDFName(fileName);
+        setPDFViewerDialog(true);
+        setPDF(null);
+        try {
+          if(!file?.isLoaded){
+            const response = await dispatch(downloadRecordFile(machineId, id, file._id));
+            if (regEx.test(response.status)) {
+              const pdfData = `data:application/pdf;base64,${encodeURI(response.data)}`;
+              const blob = b64toBlob(encodeURI(response.data), 'application/pdf')
+              const url = URL.createObjectURL(blob);
+              setPDF(url);
+            } else {
+              enqueueSnackbar(response.statusText, { variant: 'error' });
+            }
+          }else{
+            setPDF(file?.src);
+          }
+        } catch (error) {
+          if (error.message) {
+            enqueueSnackbar(error.message, { variant: 'error' });
+          } else {
+            enqueueSnackbar('Something went wrong!', { variant: 'error' });
+          }
+        }
+      };
+
       const handleDropMultiFile = useCallback(
         async (acceptedFiles) => {
           const docFiles = files || [];
@@ -231,6 +264,7 @@ function MachineServiceRecordsFirstStep( { handleComplete, handleDraftRequest, h
       );
 
 return (
+  <>
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         {isLoading?
           <Stack px={2} spacing={2}>
@@ -258,10 +292,10 @@ return (
                       isOptionEqualToValue={(option, value) => option?._id === value?._id}
                       getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                       renderOption={(props, option) => (
-                          <li {...props} key={option?._id}>{`${option.name ? option.name : ''}`}</li>
+                        <li {...props} key={option?._id}>{`${option.name ? option.name : ''}`}</li>
                       )}
                       onChange={(event, newValue) =>{
-                          if(newValue){
+                        if(newValue){
                             setValue('docRecordType',newValue)
                             if( serviceRecordConfiguration?.recordType?.toUpperCase() !== newValue?.name?.toUpperCase() ){
                               setValue('serviceRecordConfiguration',null)
@@ -285,8 +319,8 @@ return (
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     renderOption={(props, option) => (
                         <li {...props} key={option?._id}>{`${option?.docTitle || ''} ${option?.docTitle ? '-' : '' } ${option.recordType || ''} ${option?.docVersionNo ? '- v' : '' }${option?.docVersionNo || ''}`}</li>
-                    )}
-                    onChange={(event, newValue) =>{
+                      )}
+                      onChange={(event, newValue) =>{
                         if(newValue){
                           setValue('serviceRecordConfiguration',newValue)
                           if(!docRecordType || newValue?.recordType?.toUpperCase() !== docRecordType?.name?.toUpperCase() ){
@@ -303,7 +337,7 @@ return (
                         trigger('serviceRecordConfiguration')
                       }
                     }
-                  />
+                    />
 
                   </Box> 
 
@@ -312,7 +346,7 @@ return (
                     columnGap={2}
                     display="grid"
                     gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
-                  >
+                    >
                     <RHFDatePicker inputFormat='dd/MM/yyyy' name="serviceDate" label="Service Date" />
                     <RHFTextField name="versionNo" label="Version No" disabled />
                   </Box>
@@ -333,12 +367,28 @@ return (
                     dropZone={false}
                     onRemove={handleRemoveFile}
                     onLoadImage={handleLoadImage}
+                    onLoadPDF={handleOpenFile}
                   />
           </Stack>
           <ServiceRecodStepButtons handleSubmit={saveAsSubmit} isSubmitted={isSubmit} handleDraft={saveAsDraft} isDraft={isDraft} isSubmitting={isSubmitting} />
           </>
         }
     </FormProvider>
+    {PDFViewerDialog && (
+      <Dialog fullScreen open={PDFViewerDialog} onClose={()=> setPDFViewerDialog(false)}>
+        <DialogTitle variant='h3' sx={{pb:1, pt:2, display:'flex', justifyContent:'space-between'}}>
+            PDF View
+              <Button variant='outlined' onClick={()=> setPDFViewerDialog(false)}>Close</Button>
+        </DialogTitle>
+        <Divider variant='fullWidth' />
+          {pdf?(
+              <iframe title={PDFName} src={pdf} style={{paddingBottom:10}} width='100%' height='842px'/>
+            ):(
+              <SkeletonPDF />
+            )}
+      </Dialog>
+    )}
+  </>
 )
 }
 
