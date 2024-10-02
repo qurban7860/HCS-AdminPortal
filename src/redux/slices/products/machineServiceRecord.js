@@ -412,15 +412,15 @@ export function addMachineServiceRecord(machineId, params) {
       // dispatch(slice.actions.startLoading());
       try {
         const data = {
-          serviceRecordConfig:        params?.serviceRecordConfiguration?._id || null,
+          serviceRecordConfig:        params?.serviceRecordConfiguration?._id,
           serviceDate:                params?.serviceDate,
           versionNo:                  params?.versionNo,
-          customer:                   params?.customer || null,
-          site:                       params?.site || null,
+          customer:                   params?.customer,
+          site:                       params?.site,
           status:                     params?.status || 'DRAFT',
           machine:                    machineId,
           decoilers:                  params?.decoilers?.map((dec)=> dec?._id),
-          technician:                 params?.technician?._id || null,
+          technician:                 params?.technician?._id,
           technicianNotes:            params?.technicianNotes,
           textBeforeCheckItems:       params?.textBeforeCheckItems,
           textAfterCheckItems:        params?.textAfterCheckItems,
