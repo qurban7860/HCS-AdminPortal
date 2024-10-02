@@ -61,7 +61,7 @@ export function MachineServiceRecordPDF({machineServiceRecord, machineServiceRec
     const fileName = `${defaultValues?.serviceDate?.substring(0,10).replaceAll('-','')}_${defaultValues?.serviceRecordConfigRecordType}_${defaultValues?.versionNo}`;
 
 function getImageUrl(file) {
-        return file?.src  ? `data:image/${ file?.extension };base64,${file?.src  }` : '';
+        return file?.src  ? `data:image/${ !file?.extension?.toLowerCase()?.includes('png') ? file?.extension : 'jpg' };base64,${file?.src  }` : '';
     }
     
     return (
@@ -92,21 +92,21 @@ function getImageUrl(file) {
             <View style={styles.row}>
                 <View style={styles.col_30}>
                     <Text style={styles.lable}>SERVICE DATE</Text>
-                    <Text style={[styles.text, styles.bold]}>{fDate(defaultValues?.serviceDate)}</Text>
+                    <Text style={[styles.text]}>{fDate(defaultValues?.serviceDate)}</Text>
                 </View>
                 <View style={styles.col_30}>
                     <Text style={styles.lable}>RECORD TYPE</Text>
-                    <Text style={[styles.text, styles.bold]}>{defaultValues?.serviceRecordConfigRecordType}</Text>
+                    <Text style={[styles.text]}>{defaultValues?.serviceRecordConfigRecordType}</Text>
                 </View>
                 
                 <View style={styles.col_20}>
                     <Text style={styles.lable}>VERSION</Text>
-                    <Text style={[styles.text, styles.bold]}>{defaultValues?.versionNo}</Text>
+                    <Text style={[styles.text]}>{defaultValues?.versionNo}</Text>
                 </View>
 
                 <View style={styles.col_20}>
                     <Text style={styles.lable}>STATUS</Text>
-                    <Text style={[styles.text, styles.bold]}>{defaultValues.approvalStatus === "PENDING" ? defaultValues.status : defaultValues.approvalStatus}</Text>
+                    <Text style={[styles.text]}>{defaultValues.approvalStatus === "PENDING" ? defaultValues.status : defaultValues.approvalStatus}</Text>
                 </View>
             </View>
             <View style={styles.row}>
@@ -116,11 +116,11 @@ function getImageUrl(file) {
                 </View>
                 <View style={styles.col_40}>
                     <Text style={styles.lable}>Machine Name</Text>
-                    <Text style={[styles.text, styles.bold]}>{defaultValues?.machine?.name  || "" }</Text>
+                    <Text style={[styles.text]}>{defaultValues?.machine?.name  || "" }</Text>
                 </View>
                 <View style={styles.col_30}>
                     <Text style={styles.lable}>Machine Model</Text>
-                    <Text style={[styles.text, styles.bold]}>{defaultValues?.machine?.machineModel?.name}</Text>
+                    <Text style={[styles.text]}>{defaultValues?.machine?.machineModel?.name}</Text>
                 </View>
                 
             </View>
@@ -128,14 +128,14 @@ function getImageUrl(file) {
             <View style={styles.row}>
                 <View style={styles.col}>
                     <Text style={styles.lable}>Decoilers</Text>
-                    <Text style={[styles.text, styles.bold]}>{decoilers}</Text>
+                    <Text style={[styles.text]}>{decoilers}</Text>
                 </View>
             </View>
             
             <View style={styles.row}>
                 <View style={styles.col}>
                     <Text style={styles.lable}>Customer</Text>
-                    <Text style={[styles.text, styles.bold]}>{defaultValues?.customer?.name || 'Invo Traders 20230717'}</Text>
+                    <Text style={[styles.text]}>{defaultValues?.customer?.name || 'Invo Traders 20230717'}</Text>
                 </View>
             </View>
 
@@ -156,7 +156,7 @@ function getImageUrl(file) {
             {/* {Array.isArray(defaultValues?.reportDocs) && 
             defaultValues?.reportDocs?.length > 0 && 
             <> */}
-                <Text style={styles.title}>Documents</Text>
+                <Text style={styles.title}>Reporting Documents</Text>
                 <View style={styles.row}>
                     <View style={styles.image_row} >
                         {defaultValues?.reportDocs?.filter( f => f?.src )?.map((file, fileIndex) => {
@@ -267,7 +267,7 @@ function getImageUrl(file) {
                     <Text style={styles.text_sm}>{defaultValues?.operatorNotes}</Text>
                 </View>
             </View>
-            <Text style={styles.title}>Documents</Text>
+            <Text style={styles.title}>Documents / Images</Text>
             <View style={styles.row}>
                 <View style={styles.image_row} >
                     {defaultValues?.files?.filter( f => f?.src )?.map((file, fileIndex) => {
