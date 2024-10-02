@@ -47,14 +47,15 @@ export default function MachineLogsTableRow({
       {columnsToShow?.map((column, index) => {
         if (['date', 'createdBy.name', 'createdAt'].includes(column.id) || !column?.checked)
           return null;
+        const cellValue = lowercaseRow?.[column.id.toLocaleLowerCase()] || '';
         return (
           <TableCell
             key={index}
-            align={column.align}
             onClick={onViewRow}
             sx={{ cursor: 'pointer' }}
+            align={column?.numerical ? 'right' : 'left'}
           >
-            {lowercaseRow?.[column.id.toLocaleLowerCase()] || ''}
+            {cellValue}
           </TableCell>
         );
       })}

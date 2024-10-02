@@ -23,7 +23,6 @@ import IconTooltip from '../../../components/Icons/IconTooltip';
 
 
 // ----------------------------------------------------------------------
-const numericalProperties = ["coilLength", "coilWidth", "coilThickness", "coilLength", "flangeHeight", "webWidth", "componentLength", "waste", ]
 
 export default function MachineLogsAddForm() {
 
@@ -121,12 +120,20 @@ export default function MachineLogsAddForm() {
       let logData = csvData;
       if (csvData.some((item) => item?.measurementUnit === "in")) {
         logData = convertAllInchesBitsToMM(csvData);
+        if (!logData) {
+          throw new Error("Error converting inches to mm. Inches data format is Invalid!");
+        }
       }
 
       if (logData.some((item) => item?.timestamp && !item?.date)) {
         logData = logData.map((item) => {
           if (item?.timestamp && !item?.date) {
-            return { ...item, date: item.timestamp };
+            const { timestamp, srcInfo, ...rest } = item;
+            return {
+              date: timestamp,
+              ...rest,
+              srcInfo: { timestamp, ...srcInfo },
+            };
           }
           return item;
         });
@@ -150,11 +157,38 @@ export default function MachineLogsAddForm() {
       enqueueSnackbar(err.message || 'JSON validation failed!', { variant: 'error' });
     }
   };
-  
 
-  const formatTxtToJson = (data = logTextValue) => {
+  const convertAllInchesBitsToMM = (csvData) => {
+    let inchesError = false;
+    const convertedData = csvData.map((row) => {
+      const dataInInches = {};
+      if (row?.measurementUnit === 'in') {
+        Object.entries(row).forEach(([key, value]) => {
+          if (logType?.numericalLengthValues?.includes(key)) {
+            const numValue = Number(value);
+            if (Number.isNaN(numValue)) {
+              inchesError = true
+            }
+            dataInInches[key] = numValue;
+            const mmValue = (numValue * 25.4).toFixed(2);
+            row[key] = Number(mmValue).toLocaleString('en-US', { maximumFractionDigits: 2 });
+          }
+        });
+        row = {
+          ...row,
+          srcInfo: { measurementUnit: 'in', ...dataInInches },
+          measurementUnit: 'mm',
+        };
+      }
+      return row;
+    });
+    if (inchesError) return null
+    return convertedData;
+  };
+
+  const formatTxtToJson = async (data = logTextValue) => {
     if (typeof data !== 'string' || data.trim() === '') return null;
-  
+
     try {
       const parsedData = JSON.parse(data);
       if (Array.isArray(parsedData) && parsedData.every(item => typeof item === 'object')) {
@@ -168,118 +202,97 @@ export default function MachineLogsAddForm() {
     const lines = data.trim().split('\n');
     const isCSV = lines.length > 1 && lines.every(line => {
       const columns = line.split(',');
-      return columns.length > 1 && columns.length === lines[0].split(',').length;
+      return columns.length > 1 && Math.abs(columns.length - lines[0].split(',').length) <= 2;
     });
-  
+
     if (!isCSV) {
-      enqueueSnackbar("Data is not in CSV format", { variant: 'error' });
+      enqueueSnackbar("Data is not in correct format", { variant: 'error' });
       return null;
     }
   
-    txtToJson(data).then(result => {
-      if (result.length > 0) {
-        setValue('logTextValue', JSON.stringify(result, null, 2));
-        if (result.some((item) => item?.measurementUnit === "in")) setInchesMeasurementExists(true)
-      }
-    });
-  
-    return null;
-  };
-  
-  const convertAllInchesBitsToMM = (csvData) => {
-    const convertedData = csvData.map((row) => {
-      const dataInInches = {}
-      if (row?.measurementUnit === "in") {
-        Object.entries(row).forEach(([key, value]) => {
-          if (numericalProperties.includes(key)) {
-            dataInInches[`${key}InInches`] = value;
-            row[key] = (value * 25.4).toFixed(3).toString();
-          }
-        });
-        row = { ...row, ...dataInInches, measurementUnit: "mm" };
-      }
-      return row;
-    });
-    return convertedData;
-  };
-
-  const txtToJson = async (data) => {
     const csvData = [];
     try {
-      if (typeof data === 'string' && data.trim() !== '') {
-        const rows = data.trim().split('\n');
-        rows?.map((row) => {
-          const columns = row.trim().split(',');
-          if (Array.isArray(columns) && columns.length > 2) {
-            const Obj = {};
-            logType.formats[logVersion]?.map((header, index) => {
-              Obj[[header]] = columns[index];
-              return header;
-            });
-            csvData.push(Obj);
-          } else {
-            throw new Error('Invalid Data Format');
-          }
-          return null;
-        });
-      }
+      lines.forEach((row) => {
+        const columns = row.trim().split(',');
+        if (Array.isArray(columns)) {
+          const Obj = {};
+          logType.formats[logVersion]?.forEach((header, index) => {
+            Obj[header] = columns[index];
+          });
+          csvData.push(Obj);
+        } else {
+          throw new Error('Invalid Data Format');
+        }
+      });
+
     } catch (e) {
-      enqueueSnackbar(e || 'Found error While Converting text to json!', { variant: `error` });
+      enqueueSnackbar(e.message || 'Found error While Converting text to json!', { variant: 'error' });
+      return null;
     }
+  
+    if (csvData.some((item) => item?.measurementUnit === "in")) {
+      setInchesMeasurementExists(true);
+    }
+  
     return csvData;
-  };  
+  };
 
   // TEXT FILE READER
-const readFile = (selectedFile) => 
-  new Promise((resolve, reject) => {
+  const readFile = (selectedFile) =>
+    new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = (e) => {
-          const content = e.target.result;
-          resolve(content);
+        const content = e.target.result;
+        resolve(content);
       };
       reader.onerror = (err) => {
-          console.log(err);
-        enqueueSnackbar( "Found error while Reading File!",{ variant: `error` } )
+        console.log(err);
+        enqueueSnackbar('Found error while Reading File!', { variant: `error` });
       };
       reader.readAsText(selectedFile);
     });
-    // STRINGIFY JSON FORMATED FILE
 
   // FILE HANDLER FUNCTION
   const handleFileChange = async (event) => {
     setValue('logTextValue', '');
     const files = Array.from(event.target.files);
-    
     if (files.length === 0) {
       return;
     }
 
     try {
-      const fileContents = await Promise.all(files.map(file => readFile(file)));
-  
-      const allResults = await fileContents.reduce(async (accPromise, content) => {
-        const acc = await accPromise;
-        const result = await txtToJson(content);
-        return [...acc, ...result];
-      }, Promise.resolve([]));
-  
-      if (allResults.length > 0) {
-        const stringifyJSON = JSON.stringify(allResults, null, 2);
+      const fileContents = await Promise.all(files.map((file) => readFile(file)));
+
+      const allResults = await Promise.all(fileContents.map((content) => formatTxtToJson(content)));
+      const flattenedResults = allResults.filter(result => result !== null).flat();
+
+      if (flattenedResults.length > 0) {
+        const stringifyJSON = JSON.stringify(flattenedResults, null, 2);
         setValue('logTextValue', stringifyJSON);
+        if (flattenedResults.some((item) => item?.measurementUnit === 'in'))
+          setInchesMeasurementExists(true);
       } else {
-        enqueueSnackbar("No Data Found to Import!", { variant: "error" });
+        enqueueSnackbar('No Data Found to Import!', { variant: 'error' });
       }
     } catch (err) {
-      enqueueSnackbar("Found error while processing files!", { variant: "error" });
+      console.log(err);
+      enqueueSnackbar('Found error while processing files!', { variant: 'error' });
     }
-  
-    setFileInputKey(prevKey => prevKey + 1);
+
+    setFileInputKey((prevKey) => prevKey + 1);
   };
   
+  const handleFormatButtonClick = async (unformattedData) => {
+    const formattedData = await formatTxtToJson(unformattedData);
+    if (formattedData) {
+      const stringifyJSON = JSON.stringify(formattedData, null, 2);
+      setValue('logTextValue', stringifyJSON);
+    }
+  }
 
-const HandleChangeIniJson = async (e) => { setValue('logTextValue', e) }
+  const HandleChangeIniJson = async (e) => { setValue('logTextValue', e) }
 
-const toggleCancel = () => navigate(PATH_MACHINE.machines.logs.root(machineId));
+  const toggleCancel = () => navigate(PATH_MACHINE.machines.logs.root(machineId));
 
   return (
     <Container maxWidth={false}>
@@ -394,12 +407,12 @@ const toggleCancel = () => navigate(PATH_MACHINE.machines.logs.root(machineId));
                     HandleChangeIniJson={HandleChangeIniJson}
                     editable={!!logType && !!logVersion}
                     formatButton
-                    formatButtonOnClick={formatTxtToJson}
+                    formatButtonOnClick={handleFormatButtonClick}
                   />
                   {inchesMeasurementExists && (
                     <Grid item xs={12} sx={{ mt: 2 }}>
                       <Alert severity="info" variant="filled">
-                        Logs contain measurements in inches. These will be converted to millimeters.
+                        Logs contain some measurements in inches. These will be converted to millimeters.
                       </Alert>
                     </Grid>
                   )}
