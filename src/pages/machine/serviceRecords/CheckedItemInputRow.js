@@ -86,7 +86,7 @@ const CheckedItemInputRow = memo(({ index, childIndex, checkItemListId, rowData 
     } = methods;
     
     const watchedValues = watch();
-    console.log("defaultValues : ",defaultValues,"watchedValues : ",watchedValues)
+    // console.log("defaultValues : ",defaultValues,"watchedValues : ",watchedValues)
 
   const isChanged = useMemo(() => 
     JSON.stringify(defaultValues.checkItemValue) !== JSON.stringify(watchedValues.checkItemValue) ||
@@ -141,10 +141,16 @@ const CheckedItemInputRow = memo(({ index, childIndex, checkItemListId, rowData 
 
     const handleRemoveFile = async ( inputFile )=>{
       
+      let images = getValues(`images`);
       if(inputFile?._id){
-        await dispatch(deleteCheckItemFile(machineId, inputFile?._id))
+        await dispatch(deleteCheckItemFile(machineId, inputFile?._id, index, childIndex ))
+        images = await images?.filter((file) => ( file?._id !== inputFile?._id ))
+        console.log("images dispatch : ",images);
+      } else {
+        images = await images?.filter((file) => ( file !== inputFile ))
+        console.log("images : ",images);
       }
-      setValue(`images`, getValues(`images`)?.filter((file) => file !== inputFile), { shouldValidate: true } )
+      setValue(`images`, images, { shouldValidate: true } )
     }
 
     const regEx = /^[^2]*/;
