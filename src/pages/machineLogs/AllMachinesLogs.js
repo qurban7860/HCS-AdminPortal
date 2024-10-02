@@ -9,27 +9,27 @@ import { getActiveCustomerMachines, resetActiveCustomerMachines } from '../../re
 import { getActiveCustomers } from '../../redux/slices/customer/customer';
 import { getMachineLogRecords, ChangePage, resetMachineErpLogRecords } from '../../redux/slices/products/machineErpLogs'; 
 import { AddMachineLogSchema } from '../schemas/machine'; 
-import useResponsive from '../../hooks/useResponsive';
+// import useResponsive from '../../hooks/useResponsive';
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
 import { machineLogTypeFormats } from '../../constants/machineLogTypeFormats';
-import MachineLogsList from '../machine/logs/MachineLogsList';
+import RHFFilteredSearchBar from '../../components/hook-form/RHFFilteredSearchBar';
+import MachineLogsDataTable from '../machine/logs/MachineLogsDataTable';
 
 function AllMachineLogs() {
   const dispatch = useDispatch();
   const { activeCustomerMachines } = useSelector((state) => state.machine);
   const { activeCustomers } = useSelector((state) => state.customer);
   const { page, rowsPerPage } = useSelector((state) => state.machineErpLogs);
-  const [selectedLogTypeTableColumns, setSelectedLogTypeTableColumns] = useState([]);
+  const [selectedSearchFilter, setSelectedSearchFilter] = useState('');
 
-  const isMobile = useResponsive('down', 'sm');
-
+  // const isMobile = useResponsive('down', 'sm');
 
   const defaultValues = {
     customer: null,
     machine: null,
     logType: machineLogTypeFormats.find(option => option.type === 'ERP') || null,
-    dateFrom: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000), 
+    dateFrom: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), 
     dateTo: new Date(), 
   };
   
@@ -39,7 +39,7 @@ function AllMachineLogs() {
   });
 
   const { watch, setValue, handleSubmit, trigger } = methods;
-  const { customer, machine, dateFrom, dateTo, logType } = watch();
+  const { customer, machine, dateFrom, dateTo, logType, filteredSearchKey } = watch();
 
   useEffect(() => {
     dispatch(getActiveCustomers());
@@ -54,34 +54,10 @@ function AllMachineLogs() {
     }
   }, [dispatch, customer]);
 
-  useEffect(() => {
-    const customerId = customer?._id || undefined;
-    const machineId = machine?._id || undefined; 
-    if (customerId && logType) {
-      dispatch(
-        getMachineLogRecords({
-          customerId,
-          machineId,
-          page,
-          pageSize: rowsPerPage,
-          fromDate: dateFrom,
-          toDate: dateTo,
-          isArchived: machine?.isArchived,
-          isMachineArchived: false,
-          selectedLogType: logType.type,
-        })
-      );
-    } else {
-      dispatch(resetMachineErpLogRecords());
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, rowsPerPage]);
-  
   const onSubmit = (data) => {
     const customerId = customer._id; 
     const machineId = machine?._id || undefined;
     dispatch(ChangePage(0));
-    setSelectedLogTypeTableColumns(machineLogTypeFormats.find(logTypeItem => logTypeItem.type === logType.type)?.tableColumns);
     dispatch(
       getMachineLogRecords({
         customerId,
@@ -91,7 +67,10 @@ function AllMachineLogs() {
         fromDate: dateFrom,
         toDate: dateTo,
         isMachineArchived: machine?.isArchived,
+        isArchived: false,
         selectedLogType: logType.type,
+        searchKey: filteredSearchKey,
+        searchColumn: selectedSearchFilter,
       })
     );
   };
@@ -112,6 +91,20 @@ function AllMachineLogs() {
     trigger('logType'); 
   }, [setValue, trigger]);
 
+  const dataForApi = {
+    customerId: machine?.customer?._id,
+    machineId: machine?._id || undefined,
+    page,
+    pageSize: rowsPerPage,
+    fromDate: dateFrom,
+    toDate: dateTo,
+    isArchived: false,
+    isMachineArchived: false,
+    selectedLogType: logType?.type,
+    searchKey: filteredSearchKey,
+    searchColumn: selectedSearchFilter,
+  };
+
   return (
     <>
       <Container maxWidth={false}>
@@ -123,14 +116,24 @@ function AllMachineLogs() {
             <Grid item xs={12}>
               <Card sx={{ p: 3 }}>
                 <Stack spacing={2}>
-                  <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}>
+                  <Box
+                    rowGap={2}
+                    columnGap={2}
+                    display="grid"
+                    gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
+                  >
                     <RHFAutocomplete
                       name="customer"
                       label="Customer*"
                       options={activeCustomers || []}
                       isOptionEqualToValue={(option, value) => option._id === value._id}
                       getOptionLabel={(option) => `${option?.name || ''}`}
-                      renderOption={(props, option) => (<li {...props} key={option?._id}> {option?.name || ''} </li> )}
+                      renderOption={(props, option) => (
+                        <li {...props} key={option?._id}>
+                          {' '}
+                          {option?.name || ''}{' '}
+                        </li>
+                      )}
                       onChange={(e, newValue) => handleCustomerChange(newValue)}
                       size="small"
                     />
@@ -139,23 +142,34 @@ function AllMachineLogs() {
                       label="Machine"
                       options={activeCustomerMachines || []}
                       isOptionEqualToValue={(option, value) => option._id === value._id}
-                      getOptionLabel={(option) => `${option.serialNo || ''} ${option?.name ? '-' : ''} ${option?.name || ''}`}
-                      renderOption={(props, option) => (<li {...props} key={option?._id}>{`${option.serialNo || ''} ${ option?.name ? '-' : '' } ${option?.name || ''}`}</li> )}
+                      getOptionLabel={(option) =>
+                        `${option.serialNo || ''} ${option?.name ? '-' : ''} ${option?.name || ''}`
+                      }
+                      renderOption={(props, option) => (
+                        <li {...props} key={option?._id}>{`${option.serialNo || ''} ${
+                          option?.name ? '-' : ''
+                        } ${option?.name || ''}`}</li>
+                      )}
                       onChange={(e, newValue) => handleMachineChange(newValue)}
                       size="small"
                     />
                   </Box>
-                  <Box display="grid" gap={2} gridTemplateColumns={{ xs: '1fr', sm: 'repeat(3, 1fr)' }}>
-                  <RHFDatePicker
-                    label="Start Date"
-                    name="dateFrom"
-                    size="small"
-                    value={dateFrom}
-                    onChange={(newValue) => {
-                      setValue('dateFrom', newValue);
-                      trigger(['dateFrom', 'dateTo']);
-                    }}
-                  />
+                  <Box
+                    display="grid"
+                    gap={2}
+                    gridTemplateColumns={{ xs: '1fr', sm: 'repeat(3, 1fr)' }}
+                    sx={{ flexGrow: 1 }}
+                  >
+                    <RHFDatePicker
+                      label="Start Date"
+                      name="dateFrom"
+                      size="small"
+                      value={dateFrom}
+                      onChange={(newValue) => {
+                        setValue('dateFrom', newValue);
+                        trigger(['dateFrom', 'dateTo']);
+                      }}
+                    />
                     <RHFDatePicker
                       label="End Date"
                       name="dateTo"
@@ -174,26 +188,50 @@ function AllMachineLogs() {
                       getOptionLabel={(option) => option.type || ''}
                       isOptionEqualToValue={(option, value) => option?.type === value?.type}
                       onChange={(e, newValue) => handleLogTypeChange(newValue)}
-                      renderOption={(props, option) => (<li {...props} key={option?.type}> {option.type || ''} </li> )}
+                      renderOption={(props, option) => (
+                        <li {...props} key={option?.type}>
+                          {option.type || ''}
+                        </li>
+                      )}
                       disableClearable
                       autoSelect
                       openOnFocus
                       getOptionDisabled={(option) => option?.disabled}
                     />
                   </Box>
-                </Stack>
-                <Stack direction="row" spacing={2} sx={{ mt: 2, justifyContent: 'flex-end' }}>
-                  <LoadingButton type="submit" variant="contained" size={isMobile ? 'medium' : 'large'}>
-                    Get Logs
-                  </LoadingButton>
+                  <Stack
+                    direction={{ xs: 'column', sm: 'row' }}
+                    spacing={2}
+                    sx={{
+                      justifyContent: 'space-between',
+                      alignItems: 'flex-start',
+                    }}
+                  >
+                    <Box sx={{ flexGrow: 1, width: { xs: '100%', sm: 'auto' } }}>
+                      <RHFFilteredSearchBar
+                        name="filteredSearchKey"
+                        filterOptions={logType?.tableColumns}
+                        setSelectedFilter={setSelectedSearchFilter}
+                        selectedFilter={selectedSearchFilter}
+                        placeholder="Enter Search here..."
+                        fullWidth
+                      />
+                    </Box>
+                    <Box sx={{ justifyContent: 'flex-end' }}>
+                      <LoadingButton type="submit" variant="contained" size="large">
+                        Get Logs
+                      </LoadingButton>
+                    </Box>
+                  </Stack>
                 </Stack>
               </Card>
             </Grid>
           </Grid>
         </FormProvider>
+        <MachineLogsDataTable allMachineLogsPage dataForApi={dataForApi} logType={logType} />
       </Container>
       {/* {logsData && ( */}
-        <MachineLogsList allMachineLogsPage allMachineLogsType={logType} />
+      {/* <MachineLogsList allMachineLogsPage allMachineLogsType={selectedLogType} /> */}
       {/* )} */}
     </>
   );

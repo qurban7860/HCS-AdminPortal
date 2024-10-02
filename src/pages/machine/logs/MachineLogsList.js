@@ -1,72 +1,32 @@
 import PropTypes from 'prop-types';
-import debounce from 'lodash/debounce';
-import { useState, useEffect, useLayoutEffect, useRef, useReducer } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 // @mui
-import { Container, Table, TableBody, TableContainer, TableRow, TableCell, TableHead, TableSortLabel } from '@mui/material';
+import { Container, Card, Stack, Box, Typography, IconButton, MenuItem } from '@mui/material';
+import { FormProvider, useForm } from 'react-hook-form';
+import { LoadingButton } from '@mui/lab';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 // routes
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // components
 import {
-  useTable,
-  getComparator,
-  TableNoData,
-  TableSkeleton,
-  TablePaginationCustom,
-} from '../../../components/table';
-import Scrollbar from '../../../components/scrollbar';
-// sections
-import MachineLogsListTableToolbar from './MachineLogsListTableToolbar';
-import MachineLogsTableRow from './MachineLogsTableRow';
-import {
   getMachineLogRecords,
-  ChangeRowsPerPage,
   ChangePage,
-  setFilterBy,
-  resetMachineErpLogDates,
-  resetMachineErpLogRecords,
 } from '../../../redux/slices/products/machineErpLogs';
-import TableCard from '../../../components/ListTableTools/TableCard';
 import MachineTabContainer from '../util/MachineTabContainer';
 import { machineLogTypeFormats } from '../../../constants/machineLogTypeFormats';
-import DialogViewMachineLogDetails from '../../../components/Dialog/DialogViewMachineLogDetails';
+import { RHFAutocomplete, RHFDatePicker, RHFSelect } from '../../../components/hook-form';
+import RHFFilteredSearchBar from '../../../components/hook-form/RHFFilteredSearchBar';
+import { fetchIndMachineLogSchema } from '../../schemas/machine';
+import { BUTTONS } from '../../../constants/default-constants';
+import Iconify from '../../../components/iconify';
+import { StyledTooltip } from '../../../theme/styles/default-styles';
+import { PATH_MACHINE } from '../../../routes/paths';
+import MachineLogsDataTable from './MachineLogsDataTable';
 
 // ----------------------------------------------------------------------
-
-function tableColumnsReducer(state, action) {
-  switch (action.type) {
-    case 'setUpInitialColumns': {
-      let columns = [...state]
-      if (!action.allMachineLogsPage) {
-        columns = columns.filter((column) => column.page !== 'allMachineLogs');
-      }
-      columns = columns.map((column) => ({...column, checked: column?.defaultShow || false}));
-      return [...columns];
-    }
-    case 'updateColumnCheck': {
-      const columns = [...state]
-      const columnIndex = state.findIndex((columnItem) => columnItem.id === action.columnId);
-      if (columnIndex !== -1) {
-        columns[columnIndex].checked = action.newCheckState;
-      }
-      return [...columns];
-    }
-    // case 'handleLogTypeChange': {
-    //   // eslint-disable-next-line no-debugger
-    //   debugger
-    //   let columns = action.newColumns
-    //   if (!action.allMachineLogsPage) {
-    //     columns = columns.filter((column) => column.page !== 'allMachineLogs');
-    //   }
-    //   return [...columns];
-    // }
-    default: {
-      throw Error(`Unknown action:  ${action.type}`);
-    }
-  }
-}
 
 MachineLogsList.propTypes = {
   allMachineLogsPage: PropTypes.bool,
@@ -74,202 +34,235 @@ MachineLogsList.propTypes = {
 };
 
 export default function MachineLogsList({ allMachineLogsPage = false, allMachineLogsType }){
-  const [filterName, setFilterName] = useState('');
-  const [tableData, setTableData] = useState([]);
-  const [openLogDetailsDialog, setOpenLogDetailsDialog] = useState(false);
-  const [selectedLog, setSelectedLog] = useState(null);
-  const [archivedLogs, setArchivedLogs] = useState(false);
-  const [tableColumns, dispatchTableColumns] = useReducer(tableColumnsReducer, machineLogTypeFormats[0]?.tableColumns);
-  // const [localPagination, setLocalPagination] = useState({page: 0, rowsPerPage: 10})
+  const [selectedSearchFilter, setSelectedSearchFilter] = useState('');
 
   const dispatch = useDispatch();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const { machineId } = useParams();
+  
+  const methods = useForm({
+    defaultValues: {
+      logType: machineLogTypeFormats.find(option => option.type === 'ERP') || null,
+      dateFrom: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), 
+      dateTo: new Date(), 
+      filteredSearchKey: '',
+      activeStatus: 'active',
+    },
+    resolver: yupResolver(fetchIndMachineLogSchema),
+  });
+
+  const { watch, setValue, handleSubmit, trigger } = methods;
+  const { dateFrom, dateTo, logType, filteredSearchKey, activeStatus } = watch();
 
   useEffect(() => {
-    dispatch(ChangePage(0));
-    dispatch(resetMachineErpLogDates());
-    dispatch(resetMachineErpLogRecords());
     handleResetFilter();
-    dispatchTableColumns({ type: 'setUpInitialColumns', allMachineLogsPage });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  useEffect(() => {
-    setArchivedLogs(searchParams.get('status') === 'archived');
-  }, [searchParams])
-
-  const {
-    machineErpLogs,
-    machineErpLogstotalCount,
-    dateFrom,
-    dateTo,
-    filterBy,
-    page,
-    rowsPerPage,
-    isLoading,
-    initial,
-    selectedLogType,
-  } = useSelector((state) => state.machineErpLogs);
+  const { page, rowsPerPage } = useSelector((state) => state.machineErpLogs);
   const { machine } = useSelector((state) => state.machine);
-
-  const { machineId } = useParams();
-  const {
-    order,
-    orderBy,
-    setPage,
-    selected,
-    onSort,
-  } = useTable({ defaultOrderBy: 'date', defaultOrder: 'asc' });
-
-  const onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
-
-  const onChangeRowsPerPage = (event) => {
-    dispatch(ChangePage(0));
-    dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10)));
-  };
-
-  // useEffect(() => {
-  //   // eslint-disable-next-line no-debugger
-  //   debugger
-  //   dispatchTableColumns({
-  //     type: 'handleLogTypeChange',
-  //     newColumns: (allMachineLogsType || selectedLogType)?.tableColumns,
-  //     allMachineLogsPage
-  //   });
-  // }, [allMachineLogsPage, allMachineLogsType, selectedLogType]);
-
-  useLayoutEffect(() => {
-    if (machineId && selectedLogType && !allMachineLogsPage) {
-      dispatch(
-        getMachineLogRecords({
-          customerId: machine?.customer?._id,
-          machineId,
-          page,
-          pageSize: rowsPerPage,
-          fromDate: dateFrom,
-          toDate: dateTo,
-          isArchived: archivedLogs,
-          isMachineArchived: false,
-          selectedLogType: selectedLogType.type,
-        })
-      );
-    }
-  }, [dispatch, machineId, page, rowsPerPage, dateFrom, dateTo, selectedLogType, archivedLogs, machine, allMachineLogsPage ]);
-
-  useEffect(() => {
-    if (initial) {
-      setTableData(machineErpLogs?.data || [] );
-    }
-  }, [machineErpLogs, initial]);
-
-  const dataFiltered = applyFilter({
-    inputData: tableData,
-    comparator: getComparator(order, orderBy),
-    filterName,
-  });
-  
-  const isFiltered = filterName !== '';
-  const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
-  const denseHeight = 60;
-  const debouncedSearch = useRef(debounce((value) => {
-    dispatch(ChangePage(0))
-    dispatch(setFilterBy(value))
-  }, 500))
-
-  const handleFilterName = (event) => {
-    debouncedSearch.current(event.target.value);
-    setFilterName(event.target.value)
-    setPage(0);
-  };
-  
-  useEffect(() => {
-      debouncedSearch.current.cancel();
-  }, [debouncedSearch]);
-  
-  useEffect(()=>{
-      setFilterName(filterBy)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[])
-
-  const toggleArchivedLogs = () => {
-    dispatch(setFilterBy(''))
-    dispatch(resetMachineErpLogDates());
-    setFilterName('');
-    if (archivedLogs) {
-      setSearchParams({ status: 'active' });
-    } else {
-      setSearchParams({ status: 'archived' });
-    }
-  };
-
-  // const handleViewRow = async (id) => navigate(PATH_MACHINE.machines.logs.view(machineId, `${selectedLogType?.type}_${id}`));
-
-  const handleViewRow = (id) => {
-    const log = dataFiltered.find((item) => item._id === id);
-    setSelectedLog({
-      ...log,
-      customer: log.customer?.name || '',
-      machine: log.machine?.serialNo || '',
-      createdBy: log.createdBy?.name || '',
-      updatedBy: log.updatedBy?.name || '',
-    });
-    setOpenLogDetailsDialog(true);
-  };
   
   const handleResetFilter = () => {
-    dispatch(setFilterBy(''))
-    setFilterName('');
+    setValue(filteredSearchKey, '')
+    setSelectedSearchFilter('')
   };
 
-  const refreshLogsList = () => {
-    dispatch(getMachineLogRecords({
-      customerId: machine?.customer?._id,
-      machineId,
-      page,
-      pageSize: rowsPerPage,
-      fromDate: dateFrom,
-      toDate: dateTo,
-      isArchived: archivedLogs,
-      isMachineArchived: false,
-      selectedLogType: selectedLogType.type,
-    }))
-  }
-
-  const handleColumnButtonClick = (columnId, newCheckState) => {
-    dispatchTableColumns({ type: 'updateColumnCheck', columnId, newCheckState });
+  const dataForApi = {
+    customerId: machine?.customer?._id,
+    machineId,
+    page,
+    pageSize: rowsPerPage,
+    fromDate: dateFrom,
+    toDate: dateTo,
+    isArchived: activeStatus === 'archived',
+    isMachineArchived: false,
+    selectedLogType: logType?.type,
+    searchKey: filteredSearchKey,
+    searchColumn: selectedSearchFilter,
   };
+
+  // const handleColumnButtonClick = (columnId, newCheckState) => {
+  //   dispatchTableColumns({ type: 'updateColumnCheck', columnId, newCheckState });
+  // };
+
+  const onSubmit = (data) => {
+    dispatch(ChangePage(0));
+    dispatch(
+      getMachineLogRecords({
+        customerId: machine?.customer?._id,
+        machineId,
+        page: 0,
+        pageSize: rowsPerPage,
+        fromDate: dateFrom,
+        toDate: dateTo,
+        isArchived: activeStatus === "archived",
+        isMachineArchived: machine?.isArchived,
+        selectedLogType: logType.type,
+        searchKey: filteredSearchKey,
+        searchColumn: selectedSearchFilter,
+      })
+    );
+  };
+  
+  const handleLogTypeChange = useCallback((newLogType) => {
+    setValue('logType', newLogType);
+    trigger('logType'); 
+  }, [setValue, trigger]);
+
+  const showAddbutton = () => {
+    if (machine?.status?.slug === 'transferred') return false;
+    if (allMachineLogsPage) return false;
+    if (machine?.isArchived) return false;
+    return BUTTONS.ADD_MACHINE_LOGS;
+  };
+
+  const returnSearchFilterColumnOptions = () =>
+    logType?.tableColumns.filter((item) => item?.searchable && item?.page !== "allMachineLogs")
 
   return (
     <>
       <Container maxWidth={false}>
         {!allMachineLogsPage ? <MachineTabContainer currentTabValue="logs" /> : null}
-        <TableCard>
-          <MachineLogsListTableToolbar
-            filterName={filterName}
-            onFilterName={handleFilterName}
-            isFiltered={isFiltered}
-            onResetFilter={handleResetFilter}
-            dateFrom={dateFrom}
-            dateTo={dateTo}
-            logTypes={machineLogTypeFormats}
-            toggleArchivedLogs={toggleArchivedLogs}
-            archivedLogs={archivedLogs}
-            allMachineLogsPage={allMachineLogsPage}
-          />
-
-          {/* {!isNotFound && !isMobile &&(
-          <TablePaginationFilter
-            columns={selectedLogTypeTableColumns?.map((column) => column.label)}
-            // hiddenColumns={reportHiddenColumns}
-            // handleHiddenColumns={handleHiddenColumns}
-            count={machineErpLogstotalCount || 0}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-          />
-        )} */}
-
+        {!allMachineLogsPage && (
+          <FormProvider {...methods}>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <Card sx={{ p: 3 }}>
+                <Stack spacing={2}>
+                  <Stack
+                    direction="row"
+                    spacing={1}
+                    sx={{ justifyContent: 'space-between', mb: 3 }}
+                  >
+                    <Stack
+                      direction="row"
+                      spacing={1}
+                      sx={{ alignSelf: 'flex-start', alignItems: 'center' }}
+                    >
+                      <Box sx={{ pb: 1 }}>
+                        <Typography variant="h5" color="text.primary">
+                          Logs Filter
+                        </Typography>
+                      </Box>
+                    </Stack>
+                    {showAddbutton() && (
+                      <StyledTooltip
+                        title={showAddbutton()}
+                        placement="top"
+                        disableFocusListener
+                        tooltipcolor="#103996"
+                        color="#fff"
+                      >
+                        <IconButton
+                          color="#fff"
+                          onClick={() => navigate(PATH_MACHINE.machines.logs.new(machineId))}
+                          sx={{
+                            background: '#2065D1',
+                            alignSelf: 'flex-end',
+                            borderRadius: 1,
+                            height: '1.7em',
+                            p: '8.5px 14px',
+                            '&:hover': {
+                              background: '#103996',
+                              color: '#fff',
+                            },
+                          }}
+                        >
+                          <Iconify
+                            color="#fff"
+                            sx={{ height: '24px', width: '24px' }}
+                            icon="eva:plus-fill"
+                          />
+                        </IconButton>
+                      </StyledTooltip>
+                    )}
+                  </Stack>
+                  {/* <Divider variant="middle" /> */}
+                  <Box
+                    display="grid"
+                    gap={2}
+                    gridTemplateColumns={{ xs: '1fr', sm: 'repeat(3, 1fr)' }}
+                    sx={{ flexGrow: 1 }}
+                  >
+                    <RHFDatePicker
+                      label="Start Date"
+                      name="dateFrom"
+                      size="small"
+                      value={dateFrom}
+                      onChange={(newValue) => {
+                        setValue('dateFrom', newValue);
+                        trigger(['dateFrom', 'dateTo']);
+                      }}
+                    />
+                    <RHFDatePicker
+                      label="End Date"
+                      name="dateTo"
+                      size="small"
+                      value={dateTo}
+                      onChange={(newValue) => {
+                        setValue('dateTo', newValue);
+                        trigger(['dateFrom', 'dateTo']);
+                      }}
+                    />
+                    <RHFAutocomplete
+                      name="logType"
+                      size="small"
+                      label="Log Type*"
+                      options={machineLogTypeFormats}
+                      getOptionLabel={(option) => option.type || ''}
+                      isOptionEqualToValue={(option, value) => option?.type === value?.type}
+                      onChange={(e, newValue) => handleLogTypeChange(newValue)}
+                      renderOption={(props, option) => (
+                        <li {...props} key={option?.type}>
+                          {option.type || ''}
+                        </li>
+                      )}
+                      disableClearable
+                      autoSelect
+                      openOnFocus
+                      getOptionDisabled={(option) => option?.disabled}
+                    />
+                  </Box>
+                  <Stack
+                    direction={{ xs: 'column', sm: 'row' }}
+                    spacing={2}
+                    sx={{ justifyContent: 'space-between', alignItems: { xs: 'stretch', sm: 'flex-start' } }}
+                  >
+                    <Box sx={{ flexGrow: 1, width: { xs: '100%', sm: 'auto' } }}>
+                      <RHFFilteredSearchBar
+                        name="filteredSearchKey"
+                        filterOptions={returnSearchFilterColumnOptions()}
+                        setSelectedFilter={setSelectedSearchFilter}
+                        selectedFilter={selectedSearchFilter}
+                        placeholder="Enter Search here..."
+                        helperText={selectedSearchFilter === "_id" ? "To search by ID, you must enter the complete Log ID" : ""}
+                        fullWidth
+                      />
+                    </Box>
+                    <Box sx={{ width: { xs: '100%', sm: 'auto' } }}>
+                      <RHFSelect
+                        name="activeStatus"
+                        size="small"
+                        label="Status"
+                        sx={{ width: { xs: '100%', sm: 150 } }}
+                        onChange={(e) => setValue('activeStatus', e.target.value)}
+                      >
+                        <MenuItem value="active">Active</MenuItem>
+                        <MenuItem value="archived">Archived</MenuItem>
+                      </RHFSelect>
+                    </Box>
+                    <Box sx={{ width: { xs: '100%', sm: 'auto' } }}>
+                      <LoadingButton type="submit" variant="contained" size="large" fullWidth>
+                        Get Logs
+                      </LoadingButton>
+                    </Box>
+                  </Stack>
+                </Stack>
+              </Card>
+            </form>
+          </FormProvider>
+        )}
+        <MachineLogsDataTable allMachineLogsPage={allMachineLogsPage} dataForApi={dataForApi} logType={logType} />
+        {/* <TableCard>
           {!isNotFound && (
             <TablePaginationCustom
               count={machineErpLogstotalCount || 0}
@@ -287,31 +280,32 @@ export default function MachineLogsList({ allMachineLogsPage = false, allMachine
               <Table stickyHeader size="small" sx={{ minWidth: 360 }}>
                 <TableHead>
                   <TableRow>
-                    {tableColumns?.map((headCell, index) => {
-                      if (!headCell?.checked) return null;
-                      return (
-                        <TableCell
-                          key={headCell.id}
-                          align='left'
-                          sortDirection={orderBy === headCell.id ? order : false}
-                          sx={{ width: headCell.width, minWidth: headCell.minWidth }}
-                        >
-                          {onSort ? (
-                            <TableSortLabel
-                              hideSortIcon
-                              active={orderBy === headCell.id}
-                              direction={orderBy === headCell.id ? order : 'asc'}
-                              onClick={() => onSort(headCell.id)}
-                              sx={{ textTransform: 'capitalize' }}
-                            >
-                              {headCell.label}
-                            </TableSortLabel>
-                          ) : (
-                            headCell.label
-                          )}
-                        </TableCell>
-                      )}
-                    )}
+                    {dataFiltered.length > 0 &&
+                      tableColumns?.map((headCell, index) => {
+                        if (!headCell?.checked) return null;
+                        return (
+                          <TableCell
+                            key={headCell.id}
+                            align="left"
+                            sortDirection={orderBy === headCell.id ? order : false}
+                            sx={{ width: headCell.width, minWidth: headCell.minWidth }}
+                          >
+                            {onSort ? (
+                              <TableSortLabel
+                                hideSortIcon
+                                active={orderBy === headCell.id}
+                                direction={orderBy === headCell.id ? order : 'asc'}
+                                onClick={() => onSort(headCell.id)}
+                                sx={{ textTransform: 'capitalize' }}
+                              >
+                                {headCell.label}
+                              </TableSortLabel>
+                            ) : (
+                              headCell.label
+                            )}
+                          </TableCell>
+                        );
+                      })}
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -345,49 +339,46 @@ export default function MachineLogsList({ allMachineLogsPage = false, allMachine
               onRowsPerPageChange={onChangeRowsPerPage}
             />
           )}
-        </TableCard>
+        </TableCard> */}
       </Container>
-      {openLogDetailsDialog ? (
+      {/* {openLogDetailsDialog ? (
         <DialogViewMachineLogDetails
           logDetails={selectedLog}
           allMachineLogsPage={allMachineLogsPage}
           openLogDetailsDialog={openLogDetailsDialog}
           setOpenLogDetailsDialog={setOpenLogDetailsDialog}
-          logType={selectedLogType?.type}
+          logType={logType?.type}
           refreshLogsList={refreshLogsList}
         />
-      ) : null}
+      ) : null} */}
     </>
   );
 }
 // ----------------------------------------------------------------------
 
-const FilterColumnsButton = () => {
+// function applyFilter({ inputData, comparator }) {
+//   const stabilizedThis =  inputData && inputData.map((el, index) => [el, index]);
+//   stabilizedThis.sort((a, b) => {
+//     const order = comparator(a[0], b[0]);
+//     if (order !== 0) return order;
+//     return a[1] - b[1];
+//   });
 
-}
-function applyFilter({ inputData, comparator, filterName }) {
-  const stabilizedThis =  inputData && inputData.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
+//   inputData = stabilizedThis.map((el) => el[0]);
+//   // if (filterName) {
+//   //   inputData = inputData.filter((log) => {
+//   //     const searchValue = filterName.toLowerCase();
+//   //     return Object.values(log).some((value) => {
+//   //       if (typeof value === 'string') {
+//   //         return value.toLowerCase().includes(searchValue);
+//   //       }
+//   //       if (value && typeof value === 'object') {
+//   //         return JSON.stringify(value).toLowerCase().includes(searchValue);
+//   //       }
+//   //       return false;
+//   //     });
+//   //   });
+//   // }
 
-  inputData = stabilizedThis.map((el) => el[0]);
-  if (filterName) {
-    inputData = inputData.filter((log) => {
-      const searchValue = filterName.toLowerCase();
-      return Object.values(log).some((value) => {
-        if (typeof value === 'string') {
-          return value.toLowerCase().includes(searchValue);
-        }
-        if (value && typeof value === 'object') {
-          return JSON.stringify(value).toLowerCase().includes(searchValue);
-        }
-        return false;
-      });
-    });
-  }
-
-  return inputData;
-}
+//   return inputData;
+// }
