@@ -1,6 +1,7 @@
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useLayoutEffect, useState, useMemo, useCallback } from 'react'
 import PropTypes from 'prop-types';
-import { Box, Stack } from '@mui/material';
+import b64toBlob from 'b64-to-blob';
+import { Box, Button, Dialog, DialogTitle, Divider, Stack } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router';
@@ -16,6 +17,7 @@ import { addMachineServiceRecord, setFormActiveStep, updateMachineServiceRecord,
 import { getActiveServiceRecordConfigsForRecords, resetServiceRecordConfig } from '../../../redux/slices/products/serviceRecordConfig';
 import ServiceRecodStepButtons from '../../../components/DocumentForms/ServiceRecodStepButtons';
 import SkeletonLine from '../../../components/skeleton/SkeletonLine';
+import SkeletonPDF from '../../../components/skeleton/SkeletonPDF';
 
 MachineServiceRecordsFirstStep.propTypes = {
     handleComplete : PropTypes.func,
@@ -36,14 +38,16 @@ function MachineServiceRecordsFirstStep( { handleComplete, handleDraftRequest, h
     const { machine } = useSelector((state) => state.machine);
     const [ technicians, setTechnicians ] = useState([]);
     const [ isDraft, setIsDraft ] = useState(false);
+    const [ isSubmit, setIsSubmit ] = useState(false);
     const saveAsDraft = async () => setIsDraft(true);
+    const saveAsSubmit = async () => setIsSubmit(true);
     const machineDecoilers = (machine?.machineConnections || [])?.map((decoiler) => ({
       _id: decoiler?.connectedMachine?._id ?? null,
       name: decoiler?.connectedMachine?.name ?? null,
       serialNo: decoiler?.connectedMachine?.serialNo ?? null
     }));
 
-    useEffect(() => {
+    useLayoutEffect(() => {
       dispatch(getActiveServiceRecordConfigsForRecords(machineId));
       dispatch(getActiveSPContacts());
       return () =>{
@@ -63,7 +67,7 @@ function MachineServiceRecordsFirstStep( { handleComplete, handleDraftRequest, h
         technicianNotes:              machineServiceRecord?.technicianNotes || '',
         textBeforeCheckItems:         machineServiceRecord?.textBeforeCheckItems || '',
         textAfterCheckItems:          machineServiceRecord?.textAfterCheckItems || '',
-        files: machineServiceRecord?.files?.map(file => ({
+        files: machineServiceRecord?.reportDocs?.map(file => ({
           key: file?._id,
           _id: file?._id,
           name:`${file?.name}.${file?.extension}`,
@@ -83,6 +87,8 @@ function MachineServiceRecordsFirstStep( { handleComplete, handleDraftRequest, h
     const methods = useForm({
         resolver: yupResolver(MachineServiceRecordPart1Schema),
         defaultValues,
+        mode: 'onBlur',
+        reValidateMode: 'onSubmit',
     });
     
     const {
@@ -90,27 +96,28 @@ function MachineServiceRecordsFirstStep( { handleComplete, handleDraftRequest, h
     watch,
     setValue,
     getValues,
+    trigger,
     handleSubmit,
     formState: { isSubmitting },
     } = methods;
 
   useEffect(() => {
-    if (!activeSpContacts?.length) return;
     const sPContactUser = activeSpContacts?.find( ( el )=> el?._id === user?.contact );
     let techniciansList = activeSpContacts?.filter( ( el ) => el?.departmentDetails?.departmentType?.toLowerCase() === 'technical');
-    if ( techniciansList?.some( ( el ) => el?._id !== sPContactUser?._id ) ) {
+    if ( sPContactUser && !techniciansList?.some( ( el ) => el?._id === user?.contact ) ) {
       techniciansList = [ sPContactUser, ...techniciansList ]
     }
     if( !machineServiceRecord?._id ){
       setValue('technician', sPContactUser || null );
     }
-    if ( machineServiceRecord?.technician && techniciansList?.some( ( el ) => ( el?._id !== machineServiceRecord?.technician?._id ) ) ) {
+    if ( machineServiceRecord?.technician?._id && techniciansList?.some( ( el ) => ( el?._id !== machineServiceRecord?.technician?._id ) ) ) {
       techniciansList = [ machineServiceRecord?.technician, ...techniciansList ];
       setValue('technician', machineServiceRecord?.technician || null );
     }
     techniciansList = techniciansList?.sort((a, b) => a?.firstName.localeCompare(b?.firstName) );
     setTechnicians(techniciansList);
-  }, [activeSpContacts, setValue, machineServiceRecord, user?.contact, id ]);
+   // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ activeSpContacts, setValue, user?.contact, id ]);
 
     useEffect(() => {
       if (machineServiceRecord) {
@@ -122,22 +129,35 @@ function MachineServiceRecordsFirstStep( { handleComplete, handleDraftRequest, h
     const { docRecordType, serviceRecordConfiguration, files } = watch();
       const onSubmit = async (data) => {
         try {
+          if(isSubmit){
+            data.status = 'SUBMITTED'
+          }
+          data.isReportDoc = true
           if(!id ){
+            data.isReportDocsOnly = true;
             data.decoilers = machineDecoilers;
             const serviceRecord = await dispatch(addMachineServiceRecord(machineId, data));
             dispatchFiles( serviceRecord?._id, data );
-            await navigate(PATH_MACHINE.machines.serviceRecords.edit(machineId, serviceRecord?._id))
+            if( isSubmit ){
+              await navigate(PATH_MACHINE.machines.serviceRecords.view(machineId, serviceRecord?._id))
+            } else {
+              await navigate(PATH_MACHINE.machines.serviceRecords.edit(machineId, serviceRecord?._id))
+            }
           }else {
             await dispatch(updateMachineServiceRecord(machineId, id, data));
             dispatchFiles( id, data );
-            await navigate(PATH_MACHINE.machines.serviceRecords.edit(machineId, id))  
+            if( isSubmit ){
+              await navigate(PATH_MACHINE.machines.serviceRecords.view(machineId, id))
+            } else {
+              await navigate(PATH_MACHINE.machines.serviceRecords.edit(machineId, id))  
+            }
           }
 
           if(isDraft){
             await handleDraftRequest(isDraft);
-          }else{
+          }else if(!isSubmit){
             await dispatch(setFormActiveStep(1));
-            // await handleComplete(0);
+            await handleComplete(0);
           }
     
         } catch (err) {
@@ -149,7 +169,7 @@ function MachineServiceRecordsFirstStep( { handleComplete, handleDraftRequest, h
       if(Array.isArray(data?.files) && data?.files?.length > 0){
         const filteredFiles = data?.files?.filter((ff)=> !ff?._id)
         if(Array.isArray(filteredFiles) && filteredFiles?.length > 0){
-          await dispatch(addMachineServiceRecordFiles(machineId, serviceID, { files: filteredFiles } ))
+            await dispatch(addMachineServiceRecordFiles(machineId, serviceID, { files: filteredFiles, isReportDoc: data?.isReportDoc } ))
         }
       }
     }
@@ -196,7 +216,55 @@ function MachineServiceRecordsFirstStep( { handleComplete, handleDraftRequest, h
         }
       };
 
+      const [pdf, setPDF] = useState(null);
+      const [PDFName, setPDFName] = useState('');
+      const [PDFViewerDialog, setPDFViewerDialog] = useState(false);
+
+      const handleOpenFile = async (file, fileName) => {
+        setPDFName(fileName);
+        setPDFViewerDialog(true);
+        setPDF(null);
+        try {
+          if(!file?.isLoaded){
+            const response = await dispatch(downloadRecordFile(machineId, id, file._id));
+            if (regEx.test(response.status)) {
+              const pdfData = `data:application/pdf;base64,${encodeURI(response.data)}`;
+              const blob = b64toBlob(encodeURI(response.data), 'application/pdf')
+              const url = URL.createObjectURL(blob);
+              setPDF(url);
+            } else {
+              enqueueSnackbar(response.statusText, { variant: 'error' });
+            }
+          }else{
+            setPDF(file?.src);
+          }
+        } catch (error) {
+          if (error.message) {
+            enqueueSnackbar(error.message, { variant: 'error' });
+          } else {
+            enqueueSnackbar('Something went wrong!', { variant: 'error' });
+          }
+        }
+      };
+
+      const handleDropMultiFile = useCallback(
+        async (acceptedFiles) => {
+          const docFiles = files || [];
+          const newFiles = acceptedFiles.map((file, index) => 
+              Object.assign(file, {
+                preview: URL.createObjectURL(file),
+                src: URL.createObjectURL(file),
+                isLoaded:true
+              })
+          );
+          setValue('files', [...docFiles, ...newFiles], { shouldValidate: true });
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [ files ]
+      );
+
 return (
+  <>
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         {isLoading?
           <Stack px={2} spacing={2}>
@@ -219,15 +287,15 @@ return (
                   <RHFAutocomplete 
                       name="docRecordType"
                       label="Document Type*"
-                      disabled={id}
+                      disabled={id && true }
                       options={recordTypes}
                       isOptionEqualToValue={(option, value) => option?._id === value?._id}
                       getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                       renderOption={(props, option) => (
-                          <li {...props} key={option?._id}>{`${option.name ? option.name : ''}`}</li>
+                        <li {...props} key={option?._id}>{`${option.name ? option.name : ''}`}</li>
                       )}
                       onChange={(event, newValue) =>{
-                          if(newValue){
+                        if(newValue){
                             setValue('docRecordType',newValue)
                             if( serviceRecordConfiguration?.recordType?.toUpperCase() !== newValue?.name?.toUpperCase() ){
                               setValue('serviceRecordConfiguration',null)
@@ -236,6 +304,8 @@ return (
                             setValue('serviceRecordConfiguration',null )
                             setValue('docRecordType', null )
                           }
+                          trigger('serviceRecordConfiguration')
+                          trigger('docRecordType')
                         }
                       }
                   />
@@ -243,14 +313,14 @@ return (
                   <RHFAutocomplete
                     name="serviceRecordConfiguration"
                     label="Service Record Configuration*"
-                    disabled={id}
+                    disabled={id && true }
                     options={activeServiceRecordConfigsForRecords.filter( src => !docRecordType || src?.recordType?.toLowerCase() === docRecordType?.name?.toLowerCase() )}
                     getOptionLabel={(option) => `${option?.docTitle || ''} ${option?.docTitle ? '-' : '' } ${option.recordType || ''} ${option?.docVersionNo ? '- v' : '' }${option?.docVersionNo || ''}`}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     renderOption={(props, option) => (
                         <li {...props} key={option?._id}>{`${option?.docTitle || ''} ${option?.docTitle ? '-' : '' } ${option.recordType || ''} ${option?.docVersionNo ? '- v' : '' }${option?.docVersionNo || ''}`}</li>
-                    )}
-                    onChange={(event, newValue) =>{
+                      )}
+                      onChange={(event, newValue) =>{
                         if(newValue){
                           setValue('serviceRecordConfiguration',newValue)
                           if(!docRecordType || newValue?.recordType?.toUpperCase() !== docRecordType?.name?.toUpperCase() ){
@@ -263,9 +333,11 @@ return (
                           setValue('textBeforeCheckItems', '')
                           setValue('textAfterCheckItems', '')
                         }
+                        trigger('docRecordType')
+                        trigger('serviceRecordConfiguration')
                       }
                     }
-                  />
+                    />
 
                   </Box> 
 
@@ -274,9 +346,9 @@ return (
                     columnGap={2}
                     display="grid"
                     gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
-                  >
+                    >
                     <RHFDatePicker inputFormat='dd/MM/yyyy' name="serviceDate" label="Service Date" />
-                    <RHFTextField name="versionNo" label="Version No" disabled/>
+                    <RHFTextField name="versionNo" label="Version No" disabled />
                   </Box>
 
                   <RHFAutocomplete
@@ -291,15 +363,32 @@ return (
                   <RHFTextField name="technicianNotes" label="Technician Notes" minRows={3} multiline/> 
 
                   <RHFUpload multiple  thumbnail name="files" imagesOnly
+                    onDrop={handleDropMultiFile}
                     dropZone={false}
                     onRemove={handleRemoveFile}
                     onLoadImage={handleLoadImage}
+                    onLoadPDF={handleOpenFile}
                   />
           </Stack>
-          <ServiceRecodStepButtons handleDraft={saveAsDraft} isDraft={isDraft} isSubmitting={isSubmitting} />
+          <ServiceRecodStepButtons handleSubmit={saveAsSubmit} isSubmitted={isSubmit} handleDraft={saveAsDraft} isDraft={isDraft} isSubmitting={isSubmitting} />
           </>
         }
     </FormProvider>
+    {PDFViewerDialog && (
+      <Dialog fullScreen open={PDFViewerDialog} onClose={()=> setPDFViewerDialog(false)}>
+        <DialogTitle variant='h3' sx={{pb:1, pt:2, display:'flex', justifyContent:'space-between'}}>
+            PDF View
+              <Button variant='outlined' onClick={()=> setPDFViewerDialog(false)}>Close</Button>
+        </DialogTitle>
+        <Divider variant='fullWidth' />
+          {pdf?(
+              <iframe title={PDFName} src={pdf} style={{paddingBottom:10}} width='100%' height='842px'/>
+            ):(
+              <SkeletonPDF />
+            )}
+      </Dialog>
+    )}
+  </>
 )
 }
 

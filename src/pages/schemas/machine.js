@@ -308,7 +308,7 @@ export const MachineServiceRecordPart3Schema = Yup.object().shape({
   internalComments: Yup.string().max(5000).label('Internal Note'),
   suggestedSpares: Yup.string().max(5000).label('Suggested Spares'),
   internalNote: Yup.string().max(5000).label('Internal Note'),
-  operators: Yup.object().label('Operator').nullable(),
+  operators: Yup.array().label('Operator').nullable(),
   operatorNotes: Yup.string().max(5000).label('Operator Notes'),
   files: Yup.mixed()
     .required(Snacks.fileRequired)
@@ -318,15 +318,14 @@ export const MachineServiceRecordPart3Schema = Yup.object().shape({
 });
 
 export const CheckItemSchema = Yup.object().shape({
-  value: Yup.mixed()
-    .required('Value is required!')
+  checkItemValue: Yup.mixed().required('Value is required!')
     .test('is-number', 'Value is required!', (value, context) => {
-      if (context.parent.inputType === 'Number' && !value) {
-        return false;
-      }
-      return true;
-    }),
-  comment: Yup.string().max(5000, 'Comments cannot exceed 5000 characters'),
+    if(context.parent.inputType==='Number' && !value){
+      return false
+    }
+    return true;
+  }),
+  comments: Yup.string().trim().max(5000, 'Comments cannot exceed 5000 characters'),
   images: Yup.mixed()
     .required(Snacks.fileRequired)
     .test('fileType', fileTypesMessage, NotRequiredValidateFileType)

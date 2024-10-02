@@ -7,7 +7,7 @@ import { LoadingButton } from '@mui/lab';
 import FormProvider, { RHFAutocomplete, RHFDatePicker } from '../../components/hook-form';
 import { getActiveCustomerMachines, resetActiveCustomerMachines } from '../../redux/slices/products/machine';
 import { getActiveCustomers } from '../../redux/slices/customer/customer';
-import { getMachineLogRecords, ChangePage } from '../../redux/slices/products/machineErpLogs'; 
+import { getMachineLogRecords, ChangePage, resetMachineErpLogRecords } from '../../redux/slices/products/machineErpLogs'; 
 import { AddMachineLogSchema } from '../schemas/machine'; 
 // import useResponsive from '../../hooks/useResponsive';
 import { Cover } from '../../components/Defaults/Cover';
@@ -74,7 +74,7 @@ function AllMachineLogs() {
       })
     );
   };
-  
+
   const handleCustomerChange = useCallback((newCustomer) => {
     setValue('customer', newCustomer);
     setValue('machine', null); 

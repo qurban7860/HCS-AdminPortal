@@ -13,6 +13,7 @@ import FormProvider from '../../../components/hook-form/FormProvider';
 import { getMachineServiceRecordCheckItems, resetCheckItemValues, setFormActiveStep, updateMachineServiceRecord } from '../../../redux/slices/products/machineServiceRecord';
 import ServiceRecodStepButtons from '../../../components/DocumentForms/ServiceRecodStepButtons';
 import { MachineServiceRecordPart2TBCISchema, MachineServiceRecordPart2TACISchema } from '../../schemas/machine';
+import FormLabel from '../../../components/DocumentForms/FormLabel';
 
 MachineServiceRecordsSecondStep.propTypes = {
   handleDraftRequest: PropTypes.func,
@@ -32,16 +33,15 @@ function MachineServiceRecordsSecondStep({ handleDraftRequest, handleDiscard, ha
   const saveAsDraft = async () => setIsDraft(true);
 
   useEffect(() =>{
-    if( machineServiceRecord?._id ){
-      dispatch(getMachineServiceRecordCheckItems(machineServiceRecord?.machine?._id, machineServiceRecord?._id));
+    if( machineId && id ){
+      dispatch(getMachineServiceRecordCheckItems( machineId, id ));
     }
-    return ()=> dispatch(resetCheckItemValues())
-  },[dispatch, machineServiceRecord ])
+    // return ()=> dispatch(resetCheckItemValues())
+  },[ dispatch, machineId, id ])
 
   const defaultValues = useMemo(
       () => {
         const initialValues = {
-        serviceRecordConfiguration:   machineServiceRecord?.serviceRecordConfig || null,
         serviceDate:                  machineServiceRecord?.serviceDate || new Date(),
         versionNo:                    machineServiceRecord?.versionNo || 1,
         technicianNotes:              machineServiceRecord?.technicianNotes || '',
@@ -58,30 +58,33 @@ function MachineServiceRecordsSecondStep({ handleDraftRequest, handleDiscard, ha
       resolver: yupResolver(MachineServiceRecordPart2TBCISchema),
       defaultValues,
     });
-    const { handleSubmit: handleSubmitBefore, reset: resetBefore, formState: { isSubmitting: isSubmittingBefore, isSubmitted:isSubmittedBefore } } = formMethodsBefore;
+    const { handleSubmit: handleSubmitBefore, watch: watchBefore, reset: resetBefore, formState: { isSubmitting: isSubmittingBefore, isSubmitted:isSubmittedBefore } } = formMethodsBefore;
+    const { textBeforeCheckItems } = watchBefore();
     
     const formMethodsAfter = useForm({
       resolver: yupResolver(MachineServiceRecordPart2TACISchema),
       defaultValues,
     });
-    const { handleSubmit: handleSubmitAfter, reset: resetAfter, formState: { isSubmitting: isSubmittingAfter, isSubmitted:isSubmittedAfter } } = formMethodsAfter;
+    const { handleSubmit: handleSubmitAfter, watch: watchAfter, reset: resetAfter, formState: { isSubmitting: isSubmittingAfter, isSubmitted:isSubmittedAfter } } = formMethodsAfter;
+    const { textAfterCheckItems } = watchAfter();
     
     const methods = useForm({ defaultValues });
     const { handleSubmit, reset, formState: { isSubmitting } } = methods;
     
-    useEffect(() => {
-      if (machineServiceRecord) {
-        // resetBefore(defaultValues);
-        // resetAfter(defaultValues);   
-        reset(defaultValues); 
-      }
-    }, [resetBefore, resetAfter, reset, machineServiceRecord, defaultValues]);
+    // useEffect(() => {
+    //   if (machineServiceRecord) {
+    //     // resetBefore(defaultValues);
+    //     // resetAfter(defaultValues);   
+    //     reset(defaultValues); 
+    //   }
+    // }, [resetBefore, resetAfter, reset, machineServiceRecord, defaultValues]);
     
 
     const [showMessage, setShowMessage] = useState(false);
     const submitBefore = async (data) => {
       const params = {
         textBeforeCheckItems: data.textBeforeCheckItems || '',
+        isReportDocsOnly: false,
       };
       try {
         await dispatch(updateMachineServiceRecord(machineId, id, params));
@@ -98,6 +101,7 @@ function MachineServiceRecordsSecondStep({ handleDraftRequest, handleDiscard, ha
     const submitAfter = async (data) => {
       const params = {
         textAfterCheckItems: data?.textAfterCheckItems || '',
+        isReportDocsOnly: false,
       };
 
       try {
@@ -113,12 +117,13 @@ function MachineServiceRecordsSecondStep({ handleDraftRequest, handleDiscard, ha
     };
 
     const onSubmit = async (data) => {
+      try {
       const params = {
         textBeforeCheckItems: data?.textBeforeCheckItems || '',
         textAfterCheckItems: data?.textAfterCheckItems || '',
+        isReportDocsOnly: true
       };
 
-      try {
         if (isDraft) {
           await dispatch(updateMachineServiceRecord(machineId, id, params));
           await handleDraftRequest(isDraft);
@@ -130,7 +135,7 @@ function MachineServiceRecordsSecondStep({ handleDraftRequest, handleDiscard, ha
         enqueueSnackbar('Saving failed!', { variant: `error` });
       }
     };
-
+  console.log("machineServiceRecordCheckItems : ",machineServiceRecordCheckItems)
   return (
       <Stack spacing={2}>
             <FormProvider key='beforeForm' methods={formMethodsBefore} onSubmit={handleSubmitBefore(submitBefore)}>
@@ -138,7 +143,7 @@ function MachineServiceRecordsSecondStep({ handleDraftRequest, handleDiscard, ha
               <RHFTextField name="textBeforeCheckItems" label="Text Before Check Items" minRows={3} multiline />
                 <Grid container display='flex' direction='row' justifyContent='flex-end' gap={2}>
                   {isSubmittedBefore && showMessage && <Typography variant='body2' color='green' sx={{mt:0.5}}>Saved Successfully!</Typography>}
-                  <LoadingButton type='submit' loading={isSubmittingBefore} size='small' variant='contained'>Save</LoadingButton>
+                  <LoadingButton disabled={textBeforeCheckItems?.trim() === machineServiceRecord?.textBeforeCheckItems?.trim()} type='submit' loading={isSubmittingBefore} size='small' variant='contained'>Save</LoadingButton>
                 </Grid>
               </Stack>
             </FormProvider>
@@ -152,10 +157,24 @@ function MachineServiceRecordsSecondStep({ handleDraftRequest, handleDiscard, ha
                 <Skeleton animation="wave" />
                 <Skeleton animation={false} />
               </Stack>
-              :<>
-                {machineServiceRecordCheckItems?.checkItemLists?.map((row, index) =>
-                    <CheckedItemInputRow key={`row-${row._id}-${index}`} index={index} row={row} />
-                )}   
+              :
+              <>
+                {machineServiceRecordCheckItems?.checkItemLists?.map((row, index) => (
+                  <React.Fragment key={`check-item-list-${row._id}`}>
+                    <Stack sx={{ px: 1 }}>
+                      <FormLabel content={`${index + 1}). ${row?.ListTitle || ''} (Items: ${row?.checkItems?.length})`} />
+                    </Stack>
+                    {row?.checkItems?.map((childRow, childIndex) => (
+                      <CheckedItemInputRow
+                        index={index}
+                        rowData={childRow}
+                        childIndex={childIndex}
+                        checkItemListId={row?._id}
+                        key={`row-${row._id}-${index}-${childIndex}`}
+                      />
+                    ))}
+                  </React.Fragment>
+                ))}
               </>
             }
 
@@ -164,7 +183,7 @@ function MachineServiceRecordsSecondStep({ handleDraftRequest, handleDiscard, ha
                 <RHFTextField name="textAfterCheckItems" label="Text After Check Items" minRows={3} multiline />
                 <Grid container display='flex' direction='row' justifyContent='flex-end' gap={2}>
                   {isSubmittedAfter && showMessage && <Typography variant='body2' color='green' sx={{mt:0.5}}>Saved Successfully!</Typography>}
-                  <LoadingButton onClick={handleSubmitAfter(submitAfter)} loading={isSubmittingAfter} size='small' variant='contained'>Save</LoadingButton>
+                  <LoadingButton disabled={textAfterCheckItems?.trim() === machineServiceRecord?.textAfterCheckItems?.trim()} onClick={handleSubmitAfter(submitAfter)} loading={isSubmittingAfter} size='small' variant='contained'>Save</LoadingButton>
                 </Grid>
               </Stack>
             </FormProvider>

@@ -21,13 +21,13 @@ export default function IconButtonTooltip({
             variant="outlined"
             sx={{ ml:1, cursor: 'default', color, borderColor: color, ':hover': { borderColor: alpha(color, 0.5),},}}
           >
-              <Iconify color={color} sx={{ height: '20px', width: '20px' }} icon={icon} />
+              <Iconify color={color} sx={{ height: '25px', width: '25px' }} icon={icon} />
           </IconButton>
         ) : (
           <IconButton onClick={onClick}
             sx={{ ml:1, cursor: onClick ? 'pointer' : 'default', color, borderColor: color, ':hover': { borderColor: alpha(color, 0.5)}}}
           >
-            <Iconify color={color} sx={{ height: '20px', width: '20px' }} icon={icon} />
+            <Iconify color={color} sx={{ height: '25px', width: '25px' }} icon={icon} />
           </IconButton>
         )}
       </StyledTooltip>

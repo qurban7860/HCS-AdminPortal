@@ -81,6 +81,7 @@ Upload.propTypes = {
   imagesOnly:PropTypes.bool,
   dropZone:PropTypes.bool,
   onLoadImage: PropTypes.func,
+  onLoadPDF: PropTypes.func,
   onDownload: PropTypes.func,
             
 };
@@ -110,6 +111,7 @@ export default function Upload({
   onChangeStockNumber,
   drawingPage,
   onLoadImage,
+  onLoadPDF,
   onDownload,
   imagesOnly,
   dropZone,
@@ -286,6 +288,7 @@ export default function Upload({
                 onChangeReferenceNumber={onChangeReferenceNumber}
                 onChangeStockNumber={onChangeStockNumber}
                 onLoadImage={ onLoadImage }
+                onLoadPDF={onLoadPDF}
                 onDownload={ onDownload }
                 machine={machine||''} 
                 rows={rows} 

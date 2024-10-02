@@ -122,6 +122,18 @@ const slice = createSlice({
       state.initial = true;
     },
 
+    UpdateMachineServiceRecordCheckItems(state, action) {
+      const { Index, childIndex, checkItem } = action.payload;
+      state.machineServiceRecordCheckItems.checkItemLists[Index].checkItems[childIndex].recordValue = {
+        ...state.machineServiceRecordCheckItems.checkItemLists[Index].checkItems[childIndex].recordValue,
+        comments: checkItem.comments	,
+        checkItemValue: checkItem.checkItemValue,
+        files: [ ...state.machineServiceRecordCheckItems.checkItemLists[Index].checkItems[childIndex].recordValue.files,
+        ...checkItem.files
+        ]
+      };
+    },
+
     // GET MACHINE Active SERVICE PARAM
     updateMachineServiceRecordSuccess( state, action ) {
       state.isLoading = false;
@@ -356,11 +368,15 @@ export function getMachineServiceRecords (machineId, isMachineArchived){
 
 
 // ----------------------------------------------------------------------
-export function getMachineServiceRecord(machineId, id) {
+export function getMachineServiceRecord(machineId, id, isHighQuality ) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}`);
+      const params = {};
+      if(isHighQuality){
+        params.isHighQuality = true;
+      }
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}`,{ params });
       dispatch(slice.actions.getMachineServiceRecordSuccess(response.data));
     } catch (error) {
       console.error(error);
@@ -377,6 +393,7 @@ export function deleteMachineServiceRecord(machineId, id, status ) {
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}` , 
       {
           isArchived: true, 
+          isActive: false,
           status 
       });
       dispatch(slice.actions.setResponseMessage(response.data));
@@ -392,7 +409,7 @@ export function deleteMachineServiceRecord(machineId, id, status ) {
 
 export function addMachineServiceRecord(machineId, params) {
     return async (dispatch) => {
-      dispatch(slice.actions.startLoading());
+      // dispatch(slice.actions.startLoading());
       try {
         const data = {
           serviceRecordConfig:        params?.serviceRecordConfiguration?._id || null,
@@ -400,6 +417,7 @@ export function addMachineServiceRecord(machineId, params) {
           versionNo:                  params?.versionNo,
           customer:                   params?.customer || null,
           site:                       params?.site || null,
+          status:                     params?.status || 'DRAFT',
           machine:                    machineId,
           decoilers:                  params?.decoilers?.map((dec)=> dec?._id),
           technician:                 params?.technician?._id || null,
@@ -414,6 +432,7 @@ export function addMachineServiceRecord(machineId, params) {
           operators:                  params?.operators?.map((ope)=> ope?._id) || [],
           operatorNotes:              params?.operatorNotes || '',
           checkItemRecordValues:      params?.checkItemRecordValues || [],
+          isReportDocsOnly:           params?.isReportDocsOnly,
           isActive:                   params?.isActive
         }
         // const formData = new FormData();
@@ -473,7 +492,7 @@ export function updateMachineServiceRecord(machineId, id, params) {
         customer:                   params?.customer,
         site:                       params?.site,
         machine:                    machineId,
-        technician:                 params?.technician?._id,
+        technician:                 params?.technician?._id || null,
         technicianNotes:            params?.technicianNotes,
         textBeforeCheckItems:       params?.textBeforeCheckItems,
         textAfterCheckItems:        params?.textAfterCheckItems,
@@ -487,9 +506,10 @@ export function updateMachineServiceRecord(machineId, id, params) {
         checkItemRecordValues:      params?.checkItemRecordValues,
         status:                     params?.status || 'DRAFT',
         update:                     params?.update,
+        isReportDocsOnly:           params?.isReportDocsOnly,
         isActive:                   params?.isActive,
         serviceId:                  params?.serviceId,
-        emails:                  params?.emails,
+        emails:                     params?.emails,
       }
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}`, data );
       await dispatch(slice.actions.updateMachineServiceRecordSuccess(response?.data));
@@ -505,10 +525,13 @@ export function updateMachineServiceRecord(machineId, id, params) {
 
 export function addMachineServiceRecordFiles(machineId, id, params) {
   return async (dispatch) => {
-    dispatch(slice.actions.startLoading());
+    // dispatch(slice.actions.startLoading());
     try {
       const formData = new FormData();
       if (Array.isArray(params?.files) &&  params?.files?.length > 0) {
+        if(params?.isReportDoc){
+          formData.append('isReportDoc', params?.isReportDoc );
+        }
         params?.files?.forEach((file, index) => {
           if (file) {
             formData.append('images', file );
@@ -595,11 +618,16 @@ export function deleteCheckItemFile(machineId, fileId) {
 }
 
 
-export function getMachineServiceRecordCheckItems(machineId, id) {
+export function getMachineServiceRecordCheckItems(machineId, id, highQuality) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoadingCheckItems());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecordValues/${id}/checkItems`);
+      const params = { }
+      if( highQuality ){
+        params.highQuality = true;
+      }
+      
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecordValues/${id}/checkItems`,{ params } );
       dispatch(slice.actions.getMachineServiceRecordCheckItemsSuccess(response.data));
     } catch (error) {
       console.error(error);
@@ -609,9 +637,8 @@ export function getMachineServiceRecordCheckItems(machineId, id) {
   };
 }
 
-export function addCheckItemValues(machineId, data, childIndex) {
+export function addCheckItemValues(machineId, data, Index, childIndex) {
   return async (dispatch) => {
-    dispatch(slice.actions.setSubmittingCheckItemIndex(childIndex));
     try {
       const formData = new FormData();
       formData.append('serviceRecord', data.serviceRecord);
@@ -620,9 +647,9 @@ export function addCheckItemValues(machineId, data, childIndex) {
       formData.append('machineCheckItem', data.machineCheckItem);
       formData.append('checkItemValue', data.checkItemValue);
       formData.append('comments', data.comments);
-
+      
       if (Array.isArray(data?.images) &&  data?.images?.length > 0) {
-        data?.images?.forEach((image, index) => {
+        data?.images?.filter(image => !image.uploaded)?.forEach((image, index) => {
           if (image && !image?._id) {
             formData.append('images', image );
           }
@@ -630,7 +657,7 @@ export function addCheckItemValues(machineId, data, childIndex) {
       }
 
       let response;
-
+      
       if (
         data?.recordValue?._id &&
         data?.recordValue?.serviceRecord?.versionNo === data?.versionNo
@@ -645,8 +672,7 @@ export function addCheckItemValues(machineId, data, childIndex) {
           formData
         );
       }
-
-      await dispatch(slice.actions.resetSubmittingCheckItemIndex());
+      dispatch(slice.actions.UpdateMachineServiceRecordCheckItems({ Index, childIndex, checkItem: { ...response.data } }));
       return response?.data;
     } catch (error) {
       console.error(error);
@@ -659,7 +685,7 @@ export function addCheckItemValues(machineId, data, childIndex) {
 
 export function sendMachineServiceRecordForApproval(machineId, id, params) {
   return async (dispatch) => {
-    dispatch(slice.actions.startLoading());
+    // dispatch(slice.actions.startLoading());
     try {
       const data = {
         machine: machineId,
@@ -680,7 +706,7 @@ export function sendMachineServiceRecordForApproval(machineId, id, params) {
 }
 export function approveServiceRecordRequest(machineId, id, params) {
   return async (dispatch) => {
-    dispatch(slice.actions.startLoading());
+    // dispatch(slice.actions.startLoading());
     try {
       const data = {
         machine: machineId,

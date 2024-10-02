@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types';
 import React, { useMemo, memo, useLayoutEffect, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import b64toBlob from 'b64-to-blob';
 // @mui
-import { Container, Card, Chip, Grid, Box, Stack } from '@mui/material';
+import { Container, Card, Chip, Grid, Box, Stack, Dialog, DialogTitle, Divider, Button } from '@mui/material';
 // routes
 import { useNavigate, useParams } from 'react-router-dom';
 import download from 'downloadjs';
@@ -44,6 +45,8 @@ import { DocumentGalleryItem } from '../../../components/gallery/DocumentGallery
 import Lightbox from '../../../components/lightbox/Lightbox';
 import SkeletonLine from '../../../components/skeleton/SkeletonLine';
 import DialogServiceRecordComplete from '../../../components/Dialog/DialogServiceRecordComplete';
+import SkeletonPDF from '../../../components/skeleton/SkeletonPDF';
+import IconButtonTooltip from '../../../components/Icons/IconButtonTooltip';
 
 MachineServiceParamViewForm.propTypes = {
   serviceHistoryView: PropTypes.bool,
@@ -59,6 +62,12 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
   const { enqueueSnackbar } = useSnackbar();
   const { machineId, serviceId, id } = useParams();
 
+  const [selectedImage, setSelectedImage] = useState(-1);
+  const [slides, setSlides] = useState([]);
+
+  const [selectedReportingImage, setSelectedReportingImage] = useState(-1);
+  const [slidesReporting, setSlidesReporting] = useState([]);
+
   useLayoutEffect(()=>{
     if(machineId && id ){
       dispatch(setAddFileDialog(false));
@@ -72,11 +81,12 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
   },[ dispatch, machineId, id])
 
   useEffect(()=>{
-    if( machineServiceRecord?._id ){
-      dispatch(getMachineServiceRecordCheckItems(machineServiceRecord?.machine?._id, machineServiceRecord?._id));
+    if( machineId && id && !pdfViewerDialog ){
+      dispatch(getMachineServiceRecordCheckItems( machineId, id ));
     }
     return ()=> dispatch(resetCheckItemValues())
-  },[dispatch, machineServiceRecord])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[dispatch, machineId, id ] )
 
   const onDelete = async () => {
     try {
@@ -126,7 +136,7 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
       serviceRecordConfig:                  machineServiceRecord?.serviceRecordConfig?.docTitle	 || '',
       serviceRecordConfigRecordType:        machineServiceRecord?.serviceRecordConfig?.recordType || '',
       serviceDate:                          machineServiceRecord?.serviceDate || null,
-      versionNo:                            machineServiceRecord?.versionNo || null, 
+      versionNo:                            machineServiceRecord?.versionNo || 1, 
       decoilers:                            machineServiceRecord?.decoilers ,
       technician:                           machineServiceRecord?.technician || null,
       textBeforeCheckItems:                 machineServiceRecord?.textBeforeCheckItems || '',
@@ -168,7 +178,7 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
   }
 
   const handlePDFViewer = async() => {
-    dispatch(setPDFViewerDialog(true))
+    await dispatch(setPDFViewerDialog(true))
   }
 
   const fileName = `${defaultValues?.serviceDate?.substring(0,10).replaceAll('-','')}_${defaultValues?.serviceRecordConfigRecordType}_${defaultValues?.versionNo}.pdf`
@@ -207,14 +217,29 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
   const [recordStatus, setRecordStatus]= useState(null);
 
   useEffect(() => {
-    if (machineServiceRecord?.files) {
-      const updatedFiles = machineServiceRecord?.files?.map((file) => ({
+
+    if ( machineServiceRecord?.files && Array.isArray( machineServiceRecord?.files ) ) {
+      const updatedSildes = machineServiceRecord?.files
+      ?.filter(file => file?.fileType && file.fileType.startsWith("image"))
+      ?.map((file) => ({
         ...file,
         src: `data:${file?.fileType};base64,${file?.thumbnail}`,
         thumbnail: `data:${file?.fileType};base64,${file?.thumbnail}`,
       }));
-      setSlides(updatedFiles);
+      setSlides(updatedSildes);
     }
+
+    if ( machineServiceRecord?.reportDocs && Array.isArray( machineServiceRecord?.reportDocs ) ) {
+      const updatedSildes = machineServiceRecord?.reportDocs
+      ?.filter(file => file?.fileType && file.fileType.startsWith("image"))
+      ?.map((file) => ({
+        ...file,
+        src: `data:${file?.fileType};base64,${file?.thumbnail}`,
+        thumbnail: `data:${file?.fileType};base64,${file?.thumbnail}`,
+      }));
+      setSlidesReporting(updatedSildes);
+    }
+
     if (machineServiceRecord.status === 'DRAFT') {
       setRecordStatus({ label: 'Complete', value: 'SUBMITTED' });
     } else if (machineServiceRecord.status === 'SUBMITTED') {
@@ -224,8 +249,6 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
 
 
   const regEx = /^[^2]*/;
-  const [selectedImage, setSelectedImage] = useState(-1);
-  const [slides, setSlides] = useState([]);
 
   const handleAddFileDialog = ()=>{
     dispatch(setAddFileDialog(true));
@@ -233,29 +256,47 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
 
   const handleOpenLightbox = async (index) => {
     setSelectedImage(index);
-    const image = slides[index];
+    const file = slides[index];
+    try {
+      const response = await dispatch(downloadRecordFile(machineId, serviceId, file?._id));
+      if (regEx.test(response.status)) {
+        const updatedItems = [
+          ...slides.slice(0, index),
+          {
+            ...slides[index],
+            src: `data:image/png;base64, ${response.data}`,
+            isLoaded: true,
+          },
+          ...slides.slice(index + 1),
+        ];
+        setSlides(updatedItems);
+      }
+    } catch (error) {
+      console.error('Error loading full file:', error);
+    }
+  };
 
-    if(!image?.isLoaded && image?.fileType?.startsWith('image')){
-      try {
-        const response = await dispatch(downloadRecordFile(machineId, serviceId, image?._id));
+  const handleOpenReportingLightbox = async (index) => {
+    setSelectedReportingImage(index);
+    const file = slidesReporting[index];
+    try {
+      if(!file.isLoaded){
+        const response = await dispatch(downloadRecordFile(machineId, serviceId, file?._id));
         if (regEx.test(response.status)) {
-          // Update the image property in the imagesLightbox array
-          const updatedSlides = [
-            ...slides.slice(0, index), // copies slides before the updated slide
+          const updatedItems = [
+            ...slidesReporting.slice(0, index),
             {
-              ...slides[index],
+              ...slidesReporting[index],
               src: `data:image/png;base64, ${response.data}`,
               isLoaded: true,
             },
-            ...slides.slice(index + 1), // copies slides after the updated slide
+            ...slidesReporting.slice(index + 1),
           ];
-
-          // Update the state with the new array
-          setSlides(updatedSlides);
+          setSlidesReporting(updatedItems);
         }
-      } catch (error) {
-        console.error('Error loading full file:', error);
       }
+    } catch (error) {
+      console.error('Error loading full file:', error);
     }
   };
 
@@ -265,10 +306,6 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
     currentApprovingContacts: machineServiceRecord?.approval?.approvingContacts,
     completeHistory: machineServiceRecord?.completeEvaluationHistory,
   }
-
-  const handleCloseLightbox = () => {
-    setSelectedImage(-1);
-  };
 
   const handleDeleteRecordFile = async (fileId) => {
     try {
@@ -303,9 +340,40 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
   };
   
   const handleCompleteConfirm = () => {
-    dispatch(getActiveSPContacts());
     dispatch(setCompleteDialog(true))
+    if(!machineServiceRecord?.approval?.approvingContacts?.length > 0){
+      dispatch(getActiveSPContacts());
+    }
   }
+
+  const [pdf, setPDF] = useState(null);
+  const [PDFName, setPDFName] = useState('');
+  const [AttachedPDFViewerDialog, setAttachedPDFViewerDialog] = useState(false);
+
+  const handleOpenFile = async (fileId, _fileName, fileExtension) => {
+    setPDFName(`${_fileName}.${fileExtension}`);
+    setAttachedPDFViewerDialog(true);
+    setPDF(null);
+    try {
+      const response = await dispatch(downloadRecordFile(machineId, serviceId, fileId));
+      if (regEx.test(response.status)) {
+        const pdfData = `data:application/pdf;base64,${encodeURI(response.data)}`;
+        const blob = b64toBlob(encodeURI(response.data), 'application/pdf')
+        const url = URL.createObjectURL(blob);
+        setPDF(url);
+      } else {
+        enqueueSnackbar(response.statusText, { variant: 'error' });
+      }
+    } catch (error) {
+      if (error.message) {
+        enqueueSnackbar(error.message, { variant: 'error' });
+      } else {
+        enqueueSnackbar('Something went wrong!', { variant: 'error' });
+      }
+    }
+  };
+
+
 
   return (
     <Container maxWidth={false}>
@@ -348,8 +416,9 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
             machineServiceRecord?.isActive &&
             !machineServiceRecord?.isHistory &&
             machineServiceRecord?.status === 'SUBMITTED' &&
-            machineServiceRecord?.currentVersion._id === machineServiceRecord?._id &&
+            machineServiceRecord?.currentVersion?._id === machineServiceRecord?._id &&
             machineServiceRecord?.currentApprovalStatus !== 'APPROVED' &&
+            machineServiceRecord?.approval?.approvingContacts?.length < 1 &&
             handleCompleteConfirm
           }
 
@@ -357,7 +426,7 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
             ((machineServiceRecord.isActive &&
               !machineServiceRecord?.isHistory &&
               machineServiceRecord?.status === 'SUBMITTED' &&
-              machineServiceRecord?.currentVersion._id === machineServiceRecord?._id &&
+              machineServiceRecord?.currentVersion?._id === machineServiceRecord?._id &&
               machineServiceRecord?.approval?.approvingContacts?.length > 0) ||
               machineServiceRecord?.completeEvaluationHistory?.totalLogsCount > 0) ?
             serviceRecordApprovalData : null
@@ -366,7 +435,6 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
         
         <Grid container>
           <FormLabel content={FORMLABELS.KEYDETAILS} />
-          
           <ViewFormField isLoading={isLoading} variant='h4' sm={2} heading="Service Date" 
             param={fDate(defaultValues.serviceDate)} />
           <ViewFormField isLoading={isLoading} variant='h4' sm={6} heading="Service Record Configuration" 
@@ -392,7 +460,15 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
               }
             />
           <ViewFormField isLoading={isLoading} variant='h4' sm={2} heading="Status" 
-            param={defaultValues.approvalStatus === "PENDING" ? defaultValues.status : defaultValues.approvalStatus} />
+            param={defaultValues.approvalStatus === "PENDING" ? defaultValues.status : defaultValues.approvalStatus}
+            node={ <>
+              { machineServiceRecord?.approval?.approvingContacts?.length > 0 &&
+              <IconButtonTooltip title='Record Approval' icon="uil:file-check-alt" onClick={handleCompleteConfirm} /> }
+            </>
+            }
+          />
+
+
           {(defaultValues.approvalStatus !== "PENDING" && defaultValues?.approvalLog?.length > 0) ? (              
             <ViewFormField isLoading={isLoading} sm={12}
               heading={`${defaultValues.approvalStatus === "REJECTED" ? "Rejection" : "Approval"} Comments`}
@@ -408,14 +484,54 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
             isLoading={isLoading}
             sm={12}
             heading="Decoilers"
-            arrayParam={defaultValues?.decoilers?.map((decoilerMachine) => ({
-              name: `${decoilerMachine?.serialNo ? decoilerMachine?.serialNo : ''}${
-                decoilerMachine?.name ? '-' : ''
-              }${decoilerMachine?.name ? decoilerMachine?.name : ''}`,
-            }))}
+            chipDialogArrayParam={defaultValues?.decoilers?.map(( decoilerMachine ) => (
+              <Chip 
+                key={decoilerMachine?._id}
+                sx={{ m:0.2 }} 
+                deleteIcon={<Iconify icon="fluent:open-12-regular"/>}
+                onDelete={()=> {
+                  window.open(PATH_MACHINE.machines.view(decoilerMachine?._id), '_blank');
+                }}
+                label={`${decoilerMachine?.serialNo || ''} ${decoilerMachine?.name  ? '-' : '' } ${decoilerMachine?.name || ''} `} 
+              />
+            ))} 
           />
           <ViewFormField isLoading={isLoading} sm={4} heading="Technician"  param={`${defaultValues?.technician?.firstName || ''} ${defaultValues?.technician?.lastName || ''} `} />
           <ViewFormNoteField sm={12} heading="Technician Notes" param={defaultValues.technicianNotes} />
+          {machineServiceRecord?.reportDocs?.length>0 && !machineServiceRecord?.isHistory && 
+          <FormLabel content='Documents' />
+          }
+          <Box
+            sx={{my:1, width:'100%'}}
+            gap={2}
+            display="grid"
+            gridTemplateColumns={{
+              xs: 'repeat(1, 1fr)',
+              sm: 'repeat(3, 1fr)',
+              md: 'repeat(5, 1fr)',
+              lg: 'repeat(6, 1fr)',
+              xl: 'repeat(8, 1fr)',
+            }}
+          >
+            {slidesReporting?.map((file, _index) => (
+              <DocumentGalleryItem isLoading={isLoading} key={file?.id} image={file} 
+                onOpenLightbox={()=> handleOpenReportingLightbox(_index)}
+                onDownloadFile={()=> handleDownloadRecordFile(file._id, file?.name, file?.extension)}
+                onDeleteFile={()=> handleDeleteRecordFile(file._id)}
+                isArchived={ machine?.isArchived }
+                toolbar
+              />
+            ))}
+            {machineServiceRecord?.reportDocs?.map((file, _index) => !file.fileType.startsWith("image") && (
+              <DocumentGalleryItem isLoading={isLoading} key={file?.id} image={file} 
+                onOpenFile={()=> handleOpenFile(file._id, file?.name, file?.extension)}
+                onDownloadFile={()=> handleDownloadRecordFile(file._id, file?.name, file?.extension)}
+                onDeleteFile={()=> handleDeleteRecordFile(file._id)}
+                isArchived={ machine?.isArchived }
+                toolbar
+              />
+            ))}
+          </Box>
           <FormLabel content={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />
           {defaultValues.textBeforeCheckItems && <ViewFormNoteField sm={12}  param={defaultValues.textBeforeCheckItems} />}
           {!isLoadingCheckItems ? 
@@ -456,7 +572,7 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
           <ViewFormField isLoading={isLoading} sm={12} heading="Operators" chipDialogArrayParam={operators} />
           <ViewFormNoteField sm={12} heading="Operator Notes" param={defaultValues.operatorNotes} />
           {slides.length>0 && !machineServiceRecord?.isHistory && 
-          <FormLabel content='Images' />
+          <FormLabel content='Documents' />
           }
           <Box
             sx={{my:1, width:'100%'}}
@@ -481,6 +597,16 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
             />
           ))}
 
+          {machineServiceRecord?.files?.map((file, _index) => !file.fileType.startsWith("image") && (
+              <DocumentGalleryItem isLoading={isLoading} key={file?.id} image={file} 
+                onOpenFile={()=> handleOpenFile(file._id, file?.name, file?.extension)}
+                onDownloadFile={()=> handleDownloadRecordFile(file._id, file?.name, file?.extension)}
+                onDeleteFile={()=> handleDeleteRecordFile(file._id)}
+                isArchived={ machine?.isArchived }
+                toolbar
+              />
+            ))}
+
           {!machineServiceRecord?.isHistory && machineServiceRecord?.status === 'DRAFT' && <ThumbnailDocButton onClick={handleAddFileDialog}/>}
         </Box>
           
@@ -492,16 +618,43 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
       <DialogServiceRecordAddFile />
       <DialogServiceRecordComplete recordStatus={recordStatus}/>
     </Card>
+
     <Lightbox
-          index={selectedImage}
-          slides={slides}
-          open={selectedImage>=0}
-          close={handleCloseLightbox}
-          onGetCurrentIndex={handleOpenLightbox}
-          disabledTotal
-          disabledDownload
-          disabledSlideshow
-        />
+        index={selectedImage}
+        slides={slides}
+        open={selectedImage>=0}
+        close={()=> setSelectedImage(-1)}
+        onGetCurrentIndex={handleOpenLightbox}
+        disabledTotal
+        disabledDownload
+        disabledSlideshow
+      />
+
+      <Lightbox
+        index={selectedReportingImage}
+        slides={slidesReporting}
+        open={selectedReportingImage>=0}
+        close={()=> setSelectedReportingImage(-1)}
+        onGetCurrentIndex={handleOpenReportingLightbox}
+        disabledTotal
+        disabledDownload
+        disabledSlideshow
+      />
+
+      {AttachedPDFViewerDialog && (
+        <Dialog fullScreen open={AttachedPDFViewerDialog} onClose={()=> setAttachedPDFViewerDialog(false)}>
+          <DialogTitle variant='h3' sx={{pb:1, pt:2, display:'flex', justifyContent:'space-between'}}>
+              PDF View
+                <Button variant='outlined' onClick={()=> setAttachedPDFViewerDialog(false)}>Close</Button>
+          </DialogTitle>
+          <Divider variant='fullWidth' />
+            {pdf?(
+                <iframe title={PDFName} src={pdf} style={{paddingBottom:10}} width='100%' height='842px'/>
+              ):(
+                <SkeletonPDF />
+              )}
+        </Dialog>
+      )}
   </Container>
   );
 }

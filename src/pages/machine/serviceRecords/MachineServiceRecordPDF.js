@@ -37,10 +37,12 @@ export function MachineServiceRecordPDF({machineServiceRecord, machineServiceRec
             recommendationNote:                   machineServiceRecord?.recommendationNote || '',
             suggestedSpares:                      machineServiceRecord?.suggestedSpares || '',
             internalNote:                         machineServiceRecord?.internalNote || '',
+            reportDocs:                           machineServiceRecord?.reportDocs || [],
             files:                                machineServiceRecord?.files || [],
             operators:                            machineServiceRecord?.operators || [],
             operatorNotes:                        machineServiceRecord?.operatorNotes || '',
             technicianNotes:                      machineServiceRecord?.technicianNotes ||'',
+            isReportDocsOnly:                     machineServiceRecord?.isReportDocsOnly,
             isActive:                             machineServiceRecord?.isActive,
             createdAt:                            machineServiceRecord?.createdAt || '',
             createdByFullName:                    machineServiceRecord?.createdBy?.name || '',
@@ -59,7 +61,7 @@ export function MachineServiceRecordPDF({machineServiceRecord, machineServiceRec
     const fileName = `${defaultValues?.serviceDate?.substring(0,10).replaceAll('-','')}_${defaultValues?.serviceRecordConfigRecordType}_${defaultValues?.versionNo}`;
 
 function getImageUrl(file) {
-        return file?.thumbnail ? `data:image/png;base64,${file?.thumbnail || ''}` : '';
+        return file?.src  ? `data:image/${ file?.extension };base64,${file?.src  }` : '';
     }
     
     return (
@@ -150,6 +152,27 @@ function getImageUrl(file) {
                     <Text style={styles.text_sm}>{defaultValues?.technicianNotes || ' '}</Text>
                 </View>
             </View>
+            
+            {/* {Array.isArray(defaultValues?.reportDocs) && 
+            defaultValues?.reportDocs?.length > 0 && 
+            <> */}
+                <Text style={styles.title}>Documents</Text>
+                <View style={styles.row}>
+                    <View style={styles.image_row} >
+                        {defaultValues?.reportDocs?.filter( f => f?.src )?.map((file, fileIndex) => {
+                            const imageUrl = getImageUrl(file);
+                            return (
+                                ( file?.src && <View key={file?._id} style={styles.image_column}>
+                                    { imageUrl && <Image style={{ borderRadius:5, height:"372px", objectFit: "cover" }} src={ imageUrl } />}
+                                </View> || '' )
+                            );
+                        })}
+                    </View>
+                </View>
+            {/* </>} */}
+
+            {/* { !defaultValues?.isReportDocsOnly && <> */}
+
             <View style={styles.row}>
                 <View style={styles.col}>
                     <Text style={styles.text_sm}>{defaultValues?.textBeforeCheckItems}</Text>
@@ -175,18 +198,18 @@ function getImageUrl(file) {
                                         {[
                                         ...(childRow?.recordValue?.files || []),
                                         ...(childRow?.historicalData ?? []).flatMap(data => data?.files || [] )
-                                        ].map((file, fileIndex) => {
+                                        ].filter( f => f?.src )?.map((file, fileIndex) => {
                                             const imageUrl = getImageUrl(file);
-                                            return (
+                                            return ( file?.src && 
                                                 <View key={file?._id || `file-${fileIndex}`} style={styles.image_column}>
                                                     {imageUrl && (
                                                         <Image 
-                                                            style={{ borderRadius: 5, height: "100px", objectFit: "cover" }} 
+                                                            style={{ borderRadius: 5, height: "372px", objectFit: "cover" }} 
                                                             src={imageUrl} 
                                                         />
                                                     )}
                                                 </View>
-                                            );
+                                            || '' );
                                         })}
                                     </View>
                                 )}
@@ -244,19 +267,20 @@ function getImageUrl(file) {
                     <Text style={styles.text_sm}>{defaultValues?.operatorNotes}</Text>
                 </View>
             </View>
-            <Text style={styles.title}>Images</Text>
+            <Text style={styles.title}>Documents</Text>
             <View style={styles.row}>
                 <View style={styles.image_row} >
-                    {defaultValues?.files?.map((file, fileIndex) => {
+                    {defaultValues?.files?.filter( f => f?.src )?.map((file, fileIndex) => {
                         const imageUrl = getImageUrl(file);
                         return (
-                            <View key={file?._id} style={styles.image_column}>
-                                { imageUrl && <Image style={{ borderRadius:5, height:"100px", objectFit: "cover" }} src={ imageUrl } />}
-                            </View>
+                            ( file?.src && <View key={file?._id} style={styles.image_column}>
+                                { imageUrl && <Image style={{ borderRadius:5, height:"372px", objectFit: "cover" }} src={ imageUrl } />}
+                            </View> || '' )
                         );
                     })}
                 </View>
             </View>
+        {/* </>} */}
         </View>
 
         <View style={styles.footer} fixed>
@@ -406,7 +430,7 @@ function getImageUrl(file) {
         width:'100%',
         flexWrap: 'wrap',
     },
-    image_column:{width: "20%", flexDirection: "column", padding:1},
+    image_column:{width: "100%", flexDirection: "column", paddingHorizontal: 1, paddingTop: 1, paddingBottom: 5},
     col:   { width: "100%", flexDirection: "column"},
     col_10: { width: "10%", flexDirection: "column"},
     col_20: { width: "20%", flexDirection: "column"},
