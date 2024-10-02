@@ -35,9 +35,7 @@ function DialogServiceRecordComplete({ recordStatus }) {
   const [approvingContacts, setApprovingContacts] = useState([]);
   const [allowApproval, setAllowApproval] = useState(false);
   const dispatch = useDispatch();
-  const { machineServiceRecord, completeDialog } = useSelector(
-    (state) => state.machineServiceRecord
-  );
+  const { machineServiceRecord, completeDialog } = useSelector( (state) => state.machineServiceRecord );
   const { activeSpContacts, isLoading } = useSelector((state) => state.contact);
   const { user } = useAuthContext();
 

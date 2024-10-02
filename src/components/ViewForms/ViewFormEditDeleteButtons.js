@@ -95,7 +95,6 @@ function ViewFormEditDeleteButtons({
   drawingPage,
   history,
   onMergeDocumentType,
-  handleCompleteMSR,
   serviceRecordStatus
 }) {
   const { id } = useParams();
@@ -723,10 +722,6 @@ function ViewFormEditDeleteButtons({
           icon="eva:swap-fill"
         />}
 
-        {handleCompleteMSR && 
-          <IconTooltip title="Record Approval" onClick={handleCompleteMSR} color={theme.palette.primary.main} icon="uil:file-check-alt"/>
-        }
-
         {handleViewPDF && 
           <IconTooltip
             title="View PDF"
@@ -1064,6 +1059,5 @@ ViewFormEditDeleteButtons.propTypes = {
   drawingPage: PropTypes.bool,
   history: PropTypes.array,
   onMergeDocumentType: PropTypes.func,
-  handleCompleteMSR: PropTypes.func,
   serviceRecordStatus: PropTypes.object
 };

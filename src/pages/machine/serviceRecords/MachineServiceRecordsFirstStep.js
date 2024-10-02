@@ -132,6 +132,9 @@ function MachineServiceRecordsFirstStep( { handleComplete, handleDraftRequest, h
           if(isSubmit){
             data.status = 'SUBMITTED'
           }
+          if(!data.technician){
+            data.technician = null;
+          }
           data.isReportDoc = true
           if(!id ){
             data.isReportDocsOnly = true;
