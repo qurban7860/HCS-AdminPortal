@@ -10,7 +10,7 @@ import {
   resetCompareHistoricalConfigurationRecord,
   resetCompareHistoricalConfigurationRecords
 } from '../../../redux/slices/products/historicalConfiguration';
-import { getCustomerMachines } from '../../../redux/slices/products/machine';
+import { getActiveMachines } from '../../../redux/slices/products/machine';
 import HistoricalConfigurationsCompareViewForm from './HistoricalConfigurationsCompareViewForm';
 
 function HistoricalConfigurationsView() {
@@ -18,13 +18,10 @@ function HistoricalConfigurationsView() {
   const { machineId } = useParams();
 
   const { selectedINIs } = useSelector((state) => state.historicalConfiguration, shallowEqual);
-  const { machine } = useSelector((state) => state.machine, shallowEqual);
 
   const loadCustomerMachines = useCallback(() => {
-    if (machine?.customer?._id) {
-      dispatch(getCustomerMachines(machine?.customer?._id));
-    }
-  }, [dispatch, machine]);
+      dispatch(getActiveMachines());
+  }, [dispatch]);
 
   const loadHistoricalConfigurations = useCallback(() => {
     if (machineId) {

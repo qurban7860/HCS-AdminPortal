@@ -469,13 +469,13 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
                 machineServiceRecord?.currentVersion?._id === machineServiceRecord?._id &&
                 machineServiceRecord?.currentApprovalStatus !== 'APPROVED' &&
                 machineServiceRecord?.approval?.approvingContacts?.length < 1 &&
-                <IconButtonTooltip title='Record Approval' icon="mdi:file-settings-cog" onClick={handleCompleteConfirm} /> 
+                <IconButtonTooltip title='Request Approval' icon="streamline:send-email-solid" onClick={handleCompleteConfirm} /> 
               }
               { Array.isArray(machineServiceRecord?.approval?.approvingContacts) &&
                 machineServiceRecord?.approval?.approvingContacts?.length > 0 &&
                 machineServiceRecord?.approval?.approvingContacts?.find(( c => c === user.contact)) && 
                 machineServiceRecord?.currentApprovalStatus !== 'APPROVED' &&
-              <IconButtonTooltip title='Approve / Reject' icon="mdi:comment-text" onClick={handleCompleteConfirm} /> }
+              <IconButtonTooltip title='Approve / Reject' icon="mdi:stamper" onClick={handleCompleteConfirm} /> }
             </>
             }
           />
