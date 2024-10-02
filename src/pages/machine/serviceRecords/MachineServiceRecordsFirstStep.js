@@ -27,6 +27,7 @@ MachineServiceRecordsFirstStep.propTypes = {
 
 function MachineServiceRecordsFirstStep( { handleComplete, handleDraftRequest, handleDiscard } ) {
     
+    const regEx = /^[^2]*/;
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
@@ -193,14 +194,14 @@ function MachineServiceRecordsFirstStep( { handleComplete, handleDraftRequest, h
         }
       };
 
-      const regEx = /^[^2]*/;
       const handleLoadImage = async (imageId, imageIndex) => {
         try {
+          console.log("imageId, imageIndex : ",imageId, imageIndex)
           const response = await dispatch(downloadRecordFile(machineId, id, imageId));
       
           if (regEx.test(response.status)) {
             // Update the image property in the imagesLightbox array
-            const existingFiles = getValues('files') || [];
+            const existingFiles = getValues('files');
             const image = existingFiles[imageIndex];
       
             if (image) {
