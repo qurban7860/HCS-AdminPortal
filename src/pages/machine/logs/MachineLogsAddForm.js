@@ -123,9 +123,6 @@ export default function MachineLogsAddForm() {
         logData = convertAllInchesBitsToMM(csvData);
       }
 
-      // eslint-disable-next-line no-debugger
-      debugger
-
       if (logData.some((item) => item?.timestamp && !item?.date)) {
         logData = logData.map((item) => {
           if (item?.timestamp && !item?.date) {
@@ -415,7 +412,6 @@ const toggleCancel = () => navigate(PATH_MACHINE.machines.logs.root(machineId));
                         {checkbox.label}
                         <Checkbox
                           key={index}
-                          defaultChecked={checkbox?.default === 'checked'}
                           checked={index === selectedCheckbox}
                           onChange={() => handleCheckboxChange(index)}
                           label={checkbox.label}
