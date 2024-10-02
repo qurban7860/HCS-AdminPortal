@@ -35,7 +35,7 @@ function HistoricalConfigurationsViewForm() {
     compareHistoricalConfigurations,
   } = useSelector((state) => state.historicalConfiguration, shallowEqual );
 
-  const { machine, customerMachines, isLoadingMachines } = useSelector((state) => state.machine);
+  const { machine, activeMachines, isLoadingMachines } = useSelector((state) => state.machine);
 
   const methods = useForm({
     defaultValues: {
@@ -68,9 +68,9 @@ function HistoricalConfigurationsViewForm() {
       if(customerMachine?._id !== newValue?._id){
         setValue('compareINI',null )
         dispatch(resetCompareHistoricalConfigurationRecords());
+        dispatch(getHistoricalConfigurationRecords(newValue._id, false , true ));
+        setValue('customerMachine',newValue)
       }
-      dispatch(getHistoricalConfigurationRecords(newValue._id, false , true ));
-      setValue('customerMachine',newValue)
     }else{
       setValue('customerMachine',null )
       setValue('compareINI',null )
@@ -118,7 +118,7 @@ function HistoricalConfigurationsViewForm() {
                 name="customerMachine"
                 label="Machine"
                 size='small'
-                options={ customerMachines }
+                options={ activeMachines }
                 loading={ isLoadingMachines }
                 isOptionEqualToValue={(option, value) => option?._id === value?._id}
                 getOptionLabel={(option) => `${option?.serialNo || ''} ${option?.name ? '-' : ''} ${option?.name || ''}`}

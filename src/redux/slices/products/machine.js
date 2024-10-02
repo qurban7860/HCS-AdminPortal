@@ -123,6 +123,7 @@ const slice = createSlice({
     // GET Active Machines
     getActiveMachinesSuccess(state, action) {
       state.isLoading = false;
+      state.isLoadingMachines = false;
       state.success = true;
       state.activeMachines = action.payload;
       state.initial = true;

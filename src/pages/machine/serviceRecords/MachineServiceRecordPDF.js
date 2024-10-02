@@ -153,9 +153,9 @@ function getImageUrl(file) {
                 </View>
             </View>
             
-            {/* {Array.isArray(defaultValues?.reportDocs) && 
+            {Array.isArray(defaultValues?.reportDocs) && 
             defaultValues?.reportDocs?.length > 0 && 
-            <> */}
+            <>
                 <Text style={styles.title}>Reporting Documents</Text>
                 <View style={styles.row}>
                     <View style={styles.image_row} >
@@ -169,7 +169,7 @@ function getImageUrl(file) {
                         })}
                     </View>
                 </View>
-            {/* </>} */}
+            </>}
 
             {/* { !defaultValues?.isReportDocsOnly && <> */}
 
@@ -267,19 +267,21 @@ function getImageUrl(file) {
                     <Text style={styles.text_sm}>{defaultValues?.operatorNotes}</Text>
                 </View>
             </View>
-            <Text style={styles.title}>Documents / Images</Text>
-            <View style={styles.row}>
-                <View style={styles.image_row} >
-                    {defaultValues?.files?.filter( f => f?.src )?.map((file, fileIndex) => {
-                        const imageUrl = getImageUrl(file);
-                        return (
-                            ( file?.src && <View key={file?._id} style={styles.image_column}>
-                                { imageUrl && <Image style={{ borderRadius:5, height:"372px", objectFit: "cover" }} src={ imageUrl } />}
-                            </View> || '' )
-                        );
-                    })}
+            { Array.isArray(defaultValues?.files) && defaultValues?.files?.length > 0 && <>
+                <Text style={styles.title}>Documents / Images</Text>
+                <View style={styles.row}>
+                    <View style={styles.image_row} >
+                        {defaultValues?.files?.filter( f => f?.src )?.map((file, fileIndex) => {
+                            const imageUrl = getImageUrl(file);
+                            return (
+                                ( file?.src && <View key={file?._id} style={styles.image_column}>
+                                    { imageUrl && <Image style={{ borderRadius:5, height:"372px", objectFit: "cover" }} src={ imageUrl } />}
+                                </View> || '' )
+                            );
+                        })}
+                    </View>
                 </View>
-            </View>
+            </>}
         {/* </>} */}
         </View>
 

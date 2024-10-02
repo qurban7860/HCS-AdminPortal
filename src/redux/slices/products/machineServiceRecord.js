@@ -492,7 +492,7 @@ export function updateMachineServiceRecord(machineId, id, params) {
         customer:                   params?.customer,
         site:                       params?.site,
         machine:                    machineId,
-        technician:                 params?.technician?._id || null,
+        technician:                 params?.technician?._id,
         technicianNotes:            params?.technicianNotes,
         textBeforeCheckItems:       params?.textBeforeCheckItems,
         textAfterCheckItems:        params?.textAfterCheckItems,
