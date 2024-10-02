@@ -236,11 +236,11 @@ function AllMachineLogs() {
                       />
                     </Box>
                     <Box sx={{ justifyContent: 'flex-end', display: 'flex' }}>
-                      <LoadingButton type="button" onClick={handleSubmit(onGetReport)} variant="contained" size="large" sx={{ mr: 2 }}>
-                        Get Report
-                      </LoadingButton>
-                      <LoadingButton type="button" onClick={handleSubmit(onGetLogs)} variant="contained" size="large">
+                      <LoadingButton type="button" onClick={handleSubmit(onGetLogs)} variant="contained" size="large" sx={{ mr: 2 }}>
                         Get Logs
+                      </LoadingButton>
+                      <LoadingButton type="button" onClick={handleSubmit(onGetReport)} variant="contained" size="large">
+                        Get Graph
                       </LoadingButton>
                     </Box>
                   </Stack>
