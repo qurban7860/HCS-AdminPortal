@@ -61,7 +61,7 @@ function DialogViewMachineLogDetails({
   refreshLogsList,
   allMachineLogsPage
 }) {
-  const [logsToShow, setLogsToShow] = useState([]);
+  const [logsToShow, setLogsToShow] = useState({});
   const [deleteConfirmationDialog, setDeleteConfirmationDialog] = useState(null);
   const [logEditState, setLogEditState] = useState(false);
   const [editedLogs, setEditedLogs] = useState({});
