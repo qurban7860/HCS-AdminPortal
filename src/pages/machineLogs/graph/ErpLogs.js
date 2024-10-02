@@ -111,7 +111,7 @@ const ErpLogs = () => {
       labels: groupedData.timestamps,
       datasets: [
         { label: 'Produced Length (m)', data: groupedData.producedLength, backgroundColor: '#1976D2', borderColor: '#000', borderWidth: 1 },
-        { label: 'Waste Length (m)', data: groupedData.wasteLength, backgroundColor: '#008000', borderColor: '#000', borderWidth: 1 },
+        { label: 'Waste Length (m)', data: groupedData.wasteLength, backgroundColor: '#FFAB00', borderColor: '#000', borderWidth: 1 },
       ],
     };
   };
