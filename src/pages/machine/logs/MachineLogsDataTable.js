@@ -184,7 +184,7 @@ const MachineLogsDataTable = ({
                       return (
                         <TableCell
                           key={headCell.id}
-                          align="left"
+                          align={headCell?.numerical ? "right" : "left"}
                           sortDirection={orderBy === headCell.id ? order : false}
                           sx={{ width: headCell.width, minWidth: headCell.minWidth }}
                         >

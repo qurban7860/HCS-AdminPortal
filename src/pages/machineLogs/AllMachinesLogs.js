@@ -7,13 +7,14 @@ import { LoadingButton } from '@mui/lab';
 import FormProvider, { RHFAutocomplete, RHFDatePicker } from '../../components/hook-form';
 import { getActiveCustomerMachines, resetActiveCustomerMachines } from '../../redux/slices/products/machine';
 import { getActiveCustomers } from '../../redux/slices/customer/customer';
-import { getMachineLogRecords, ChangePage, resetMachineErpLogRecords } from '../../redux/slices/products/machineErpLogs'; 
+import { getMachineLogRecords, ChangePage, resetMachineErpLogRecords, getMachineLogGraphData } from '../../redux/slices/products/machineErpLogs'; 
 import { AddMachineLogSchema } from '../schemas/machine'; 
 // import useResponsive from '../../hooks/useResponsive';
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
 import { machineLogTypeFormats } from '../../constants/machineLogTypeFormats';
 import RHFFilteredSearchBar from '../../components/hook-form/RHFFilteredSearchBar';
+import ErpLogs from './graph/ErpLogs';
 import MachineLogsDataTable from '../machine/logs/MachineLogsDataTable';
 
 function AllMachineLogs() {
@@ -22,6 +23,8 @@ function AllMachineLogs() {
   const { activeCustomers } = useSelector((state) => state.customer);
   const { page, rowsPerPage } = useSelector((state) => state.machineErpLogs);
   const [selectedSearchFilter, setSelectedSearchFilter] = useState('');
+  const [showMachineLogs, setShowMachineLogs] = useState(true);
+  const [showErpLogs, setShowErpLogs] = useState(false);
 
   // const isMobile = useResponsive('down', 'sm');
 
@@ -54,9 +57,11 @@ function AllMachineLogs() {
     }
   }, [dispatch, customer]);
 
-  const onSubmit = (data) => {
+  const onGetLogs = (data) => {
     const customerId = customer._id; 
     const machineId = machine?._id || undefined;
+    setShowMachineLogs(true); 
+    setShowErpLogs(false); 
     dispatch(ChangePage(0));
     dispatch(
       getMachineLogRecords({
@@ -74,7 +79,20 @@ function AllMachineLogs() {
       })
     );
   };
-
+  
+  const onGetReport = (data) => {
+    setShowErpLogs(true);
+    setShowMachineLogs(false);
+    const customerId = customer._id;
+    const machineId = machine?._id || undefined;
+    const LogType = ['erp'];
+    const validLogUnit = ['quarterly', 'monthly', 'yearly'];
+    const logTypeUnit = validLogUnit.includes(LogType) ? LogType : 'monthly'; 
+    dispatch(
+      getMachineLogGraphData(customerId, machineId, dateFrom, dateTo, LogType.type, logTypeUnit ) 
+    );
+  };
+  
   const handleCustomerChange = useCallback((newCustomer) => {
     setValue('customer', newCustomer);
     setValue('machine', null); 
@@ -111,7 +129,7 @@ function AllMachineLogs() {
         <StyledCardContainer>
           <Cover name="Machine Logs" />
         </StyledCardContainer>
-        <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+        <FormProvider methods={methods} onSubmit={handleSubmit(onGetLogs)}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <Card sx={{ p: 3 }}>
@@ -217,9 +235,12 @@ function AllMachineLogs() {
                         fullWidth
                       />
                     </Box>
-                    <Box sx={{ justifyContent: 'flex-end' }}>
-                      <LoadingButton type="submit" variant="contained" size="large">
+                    <Box sx={{ justifyContent: 'flex-end', display: 'flex' }}>
+                      <LoadingButton type="button" onClick={handleSubmit(onGetLogs)} variant="contained" size="large" sx={{ mr: 2 }}>
                         Get Logs
+                      </LoadingButton>
+                      <LoadingButton type="button" onClick={handleSubmit(onGetReport)} variant="contained" size="large">
+                        Get Graph
                       </LoadingButton>
                     </Box>
                   </Stack>
@@ -228,11 +249,9 @@ function AllMachineLogs() {
             </Grid>
           </Grid>
         </FormProvider>
-        <MachineLogsDataTable allMachineLogsPage dataForApi={dataForApi} logType={logType} />
+        {showMachineLogs && (<MachineLogsDataTable allMachineLogsPage dataForApi={dataForApi} logType={logType} />)}
       </Container>
-      {/* {logsData && ( */}
-      {/* <MachineLogsList allMachineLogsPage allMachineLogsType={selectedLogType} /> */}
-      {/* )} */}
+      {showErpLogs && (<ErpLogs /> )}
     </>
   );
 }

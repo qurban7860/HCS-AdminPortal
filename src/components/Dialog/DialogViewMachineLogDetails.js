@@ -137,7 +137,7 @@ function DialogViewMachineLogDetails({
 
   const handleEdit = () => {
     // eslint-disable-next-line no-unused-vars
-    const { archivedByMachine, createdAt, createdBy, createdIP, customer, machine, type, version, updatedAt, updatedBy, updatedIP, __v, _id, isActive, isArchived, batchId, ...rest } = { ...logsToShow };
+    const { archivedByMachine, createdAt, createdBy, createdIP, customer, machine, type, version, updatedAt, updatedBy, updatedIP, __v, _id, isActive, isArchived, batchId, srcInfo, ...rest } = { ...logsToShow };
     setEditedLogs(rest);
     setLogEditState(true);
   };
@@ -156,7 +156,7 @@ function DialogViewMachineLogDetails({
 
   const renderDialogContent = () => {
     if (logEditState) {
-      return <EditMachineLogDetails logsToShow={editedLogs} handleChange={handleLogChange} />;
+      return <EditMachineLogDetails logsToEdit={editedLogs} handleChange={handleLogChange} />;
     }
     if (isLoading) {
       return <LoadingSkeletons />;
@@ -261,20 +261,22 @@ function DialogViewMachineLogDetails({
 export default DialogViewMachineLogDetails;
 
 EditMachineLogDetails.propTypes = {
-  logsToShow: PropTypes.object,
+  logsToEdit: PropTypes.object,
   handleChange: PropTypes.func,
 };
-function EditMachineLogDetails({ logsToShow, handleChange }) {
+function EditMachineLogDetails({ logsToEdit, handleChange }) {
+  const disabledFields = ['measurementUnit']
   return (
     <Box sx={{ mt: 2 }}>
       <Grid container spacing={2}>
-        {Object.entries(logsToShow).map(([key, value]) => (
+        {Object.entries(logsToEdit).map(([key, value]) => (
           <Grid item xs={12} sm={6} key={key}>
             <Typography variant="subtitle2" gutterBottom>
               {key}
             </Typography>
             <TextField
               fullWidth
+              disabled={disabledFields.includes(key)}
               size='small'
               variant="outlined"
               value={value}

@@ -1,117 +1,174 @@
-import React, { useState, useEffect } from 'react';
-import { Container, Typography, Card, Grid, Skeleton } from '@mui/material';
-import { Line } from 'react-chartjs-2';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-} from 'chart.js';
-import { Cover } from '../../../components/Defaults/Cover';
-import { StyledCardContainer } from '../../../theme/styles/default-styles';
+/* eslint-disable no-nested-ternary */
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { Container, Typography, Card, Grid, Skeleton, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
+import { Bar } from 'react-chartjs-2';
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+   
+const dummyData = [
+  { _id: '2024-01-01', componentLength: 150, waste: 20 },
+  { _id: '2024-02-01', componentLength: 180, waste: 25 },
+  { _id: '2024-03-01', componentLength: 130, waste: 18 },
+  { _id: '2024-04-01', componentLength: 200, waste: 30 },
+  { _id: '2024-05-01', componentLength: 220, waste: 40 },
+];
 
-const Data = {
-  timestamps: [
-    '2019-10-25T11:19:17',
-    '2019-10-30T09:34:57',
-    '2019-10-30T09:35:02',
-    '2019-10-30T10:27:29',
-    '2019-10-30T10:27:34',
-    '2019-10-30T10:28:47',
-    '2019-10-30T10:46:24',
-    '2019-10-30T10:47:18',
-    '2019-10-30T10:47:52',
-  ],
-  thicknesses: [0.84, 0.84, 0.84, 0.84, 0.84, 0.84, 0.84, 0.84, 0.84],
-  wastes: [0.0, 0.0, 2000.0, 0.0, 2000.0, 0.0, 0.0, 0.0, 0.0],
-  durations: [25.408, 4.513, 5.183, 4.505, 5.171, 82.859, 1139.618, 1193.875, 1227.623],
+const calculateCumulativeData = (data) => data.reduce((acc, curr) => {
+  if (acc.length === 0) {
+    acc.push(curr);
+  } else {
+    acc.push(acc[acc.length - 1] + curr);
+  }
+  return acc;
+}, []);
+
+const groupDataByTime = (timestamps, producedLength, wasteLength, period) => {
+  const groupedData = {
+    timestamps: [],
+    producedLength: [],
+    wasteLength: [],
+  };
+
+  let currentPeriod = null;
+  let cumulativeProduced = 0;
+  let cumulativeWaste = 0;
+
+  for (let i = 0; i < timestamps.length; i += 1) {
+    const date = new Date(timestamps[i]);
+    let periodLabel;
+
+    if (period === 'monthly') {
+      periodLabel = `${date.getFullYear()}-${date.getMonth() + 1}`;
+    } else if (period === 'quarterly') {
+      const quarter = Math.floor(date.getMonth() / 3) + 1;
+      periodLabel = `${date.getFullYear()}-Q${quarter}`;
+    } else if (period === 'yearly') {
+      periodLabel = `${date.getFullYear()}`;
+    }
+
+    if (currentPeriod !== periodLabel) {
+      if (currentPeriod) {
+        groupedData.timestamps.push(currentPeriod);
+        groupedData.producedLength.push(cumulativeProduced);
+        groupedData.wasteLength.push(cumulativeWaste);
+      }
+      currentPeriod = periodLabel;
+      cumulativeProduced = 0;
+      cumulativeWaste = 0;
+    }
+
+    cumulativeProduced += producedLength[i];
+    cumulativeWaste += wasteLength[i];
+  }
+
+  groupedData.timestamps.push(currentPeriod);
+  groupedData.producedLength.push(cumulativeProduced);
+  groupedData.wasteLength.push(cumulativeWaste);
+
+  return groupedData;
 };
 
 const ErpLogs = () => {
-  const [chartData, setChartData] = useState(null);
+  const [timePeriod, setTimePeriod] = useState('monthly');
+  const [graphData] = useState(dummyData);
+  const { isLoading } = useSelector((state) => state.machineErpLogs);
 
-  useEffect(() => {
-    setChartData({
-      labels: Data.timestamps,
+  const handleTimePeriodChange = (event) => {
+    const selectedPeriod = event.target.value.toLowerCase(); 
+    setTimePeriod(selectedPeriod);
+  };
+  
+  const processGraphData = () => {
+    if (!graphData || graphData.length === 0) {
+      return null;
+    }
+
+    const validData = graphData.filter(
+      (data) => data._id && (data.componentLength !== 0 || data.waste !== 0)
+    );
+    
+    if (validData.length === 0) {
+      return null;
+    }
+
+    const timestamps = validData.map((data) => data._id);
+    const producedLength = validData.map((data) => data.componentLength);
+    const wasteLength = validData.map((data) => data.waste);
+
+    const cumulativeProduced = calculateCumulativeData(producedLength);
+    const cumulativeWaste = calculateCumulativeData(wasteLength);
+
+    const groupedData = groupDataByTime(
+      timestamps,
+      cumulativeProduced,
+      cumulativeWaste,
+      timePeriod
+    );
+
+    return {
+      labels: groupedData.timestamps,
       datasets: [
-        {
-          label: 'Material Thickness (mm)',
-          data: Data.thicknesses,
-          borderColor: '#42a5f5',
-          backgroundColor: 'rgba(66, 165, 245, 0.3)',
-          fill: true,
-          borderWidth: 2,
-          tension: 0.4,
-          yAxisID: 'y',
-        },
-        {
-          label: 'Waste Length (mm)',
-          data: Data.wastes,
-          borderColor: '#ff7043',
-          backgroundColor: 'rgba(255, 112, 67, 0.3)',
-          fill: true,
-          borderWidth: 2,
-          tension: 0.4,
-          yAxisID: 'y1',
-        },
-        {
-          label: 'Production Duration (s)',
-          data: Data.durations,
-          borderColor: '#66bb6a',
-          backgroundColor: 'rgba(102, 187, 106, 0.3)',
-          fill: true,
-          borderWidth: 2,
-          tension: 0.4,
-          yAxisID: 'y2',
-        },
+        { label: 'Produced Length (m)', data: groupedData.producedLength, backgroundColor: '#1976D2', borderColor: '#000', borderWidth: 1 },
+        { label: 'Waste Length (m)', data: groupedData.wasteLength, backgroundColor: '#FFAB00', borderColor: '#000', borderWidth: 1 },
       ],
-    });
-  }, []);
+    };
+  };
+
+  const chartData = processGraphData();
 
   return (
-    <Container maxWidth={false}>
-      <StyledCardContainer>
-        <Cover name="ERP Logs" backLink coilLogs erpLogs productionLogs />
-      </StyledCardContainer>
+    <Container maxWidth={false} sx={{ mt: 3 }}>
       <Grid item xs={12} sm={12} md={12} lg={12} xl={6}>
         <Card sx={{ p: 4, boxShadow: 3 }}>
           <Typography variant="h6" color="primary" gutterBottom>
-            ERP Logs Data
+            Produced & Waste Length Over Time
           </Typography>
-          {!chartData ? (
+
+          <FormControl fullWidth sx={{ mb: 4 }}>
+            <InputLabel>Time Period</InputLabel>
+            <Select value={timePeriod} label="Time Period" onChange={handleTimePeriodChange}>
+              <MenuItem value="monthly">Monthly</MenuItem>
+              <MenuItem value="quarterly">Quarterly</MenuItem>
+              <MenuItem value="yearly">Yearly</MenuItem>
+            </Select>
+          </FormControl>
+
+          {isLoading ? (
             <Skeleton variant="rectangular" width="100%" height={120} />
           ) : (
-            <Line
-              data={chartData}
-              options={{ responsive: true, maintainAspectRatio: true,
-                scales: {
-                  y: {
-                    type: 'linear', position: 'left',
-                    title: { display: true, text: 'Thickness (mm)', font: { size: 14, weight: 'bold' }, color: '#616161' },
+            chartData ? (   
+            <>
+              {dummyData && (
+                <Typography variant="body1" color="textSecondary" gutterBottom>
+                  No valid data available for this time period. Showing dummy data.
+                </Typography>
+              )}      
+              <Bar
+                data={chartData}
+                options={{ responsive: true, maintainAspectRatio: true,
+                  scales: {
+                    y: {
+                      beginAtZero: true,
+                      title: { display: true, text: 'Meters', font: { size: 14, weight: 'bold' }, color: '#616161' },
+                    },
+                    x: {
+                      title: { display: true, text: 'Time Period', font: { size: 14, weight: 'bold' }, color: '#616161' },
+                    },
                   },
-                  y1: {
-                    type: 'linear', position: 'right', grid: { drawOnChartArea: false },
-                    title: { display: true, text: 'Waste Length (mm)', font: { size: 14, weight: 'bold' }, color: '#616161' },
+                  plugins: {
+                    legend: { display: true, position: 'top', labels: { font: { size: 14 }, color: '#424242' } },
+                    title: { display: true, text: `Produced & Waste Length (${timePeriod})`, font: { size: 18, weight: 'bold' } },
                   },
-                  y2: {
-                    type: 'linear', position: 'right', grid: { drawOnChartArea: false },
-                    title: { display: true, text: 'Production Duration (s)', font: { size: 14, weight: 'bold' }, color: '#616161' },
-                  },
-                },
-                plugins: {
-                  legend: { display: true, position: 'top', labels: { font: { size: 14 }, color: '#424242' }},
-                  tooltip: { mode: 'index', intersect: false },
-                  title: { display: true, text: 'ERP Logs Overview', font: { size: 18, weight: 'bold' }, color: '#424242' },
-                },
-              }}
-              height={120}
-            />
+                }}
+              />
+              </>
+            ) : (
+              <Typography variant="body1" color="textSecondary">
+                No valid data available for this time period.
+              </Typography>
+            )
           )}
         </Card>
       </Grid>
