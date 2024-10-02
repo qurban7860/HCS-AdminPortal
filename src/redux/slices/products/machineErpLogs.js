@@ -195,15 +195,18 @@ export function addMachineLogRecord(machine, customer, logs, action, version, ty
 
 // ------------------------- GET LOGS GRAPH DATA ---------------------------------------------
 
-export function getMachineLogGraphData(machine, type = "ERP", year) {
+export function getMachineLogGraphData(customerId, machineId, fromDate, toDate, type = "erp", logTypeUnit) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const params = {
-        machine,
-        type,
-        year,
-      };
+        customer: customerId,
+        machine: machineId,
+        fromDate,
+        toDate,
+        type, 
+        unit: logTypeUnit, 
+      };     
       const response = await axios.get(`${CONFIG.SERVER_URL}productLogs/graph`, { params });
       dispatch(slice.actions.setMachineLogsGraphData(response?.data || ''));
       return {
@@ -212,14 +215,15 @@ export function getMachineLogGraphData(machine, type = "ERP", year) {
       };
     } catch (error) {
       console.error(error);
-      dispatch(slice.actions.hasError(error.Message));
+      dispatch(slice.actions.hasError(error.message || 'Something went wrong'));
       return {
         success: false,
-        message: error || "Something went wrong",
+        message: error.message || 'Something went wrong',
       };
     }
   };
 }
+
 
 // --------------------------- GET RECORD -------------------------------------------
 
