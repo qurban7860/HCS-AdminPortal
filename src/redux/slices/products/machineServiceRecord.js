@@ -134,6 +134,16 @@ const slice = createSlice({
       };
     },
 
+    deleteMachineServiceRecordCheckItemSuccess(state, action) {
+      const { Index, childIndex, checkItem } = action.payload;
+      const checkItemFiles = [ ...state.machineServiceRecordCheckItems.checkItemLists[Index].checkItems[childIndex].recordValue.files ] 
+      state.machineServiceRecordCheckItems.checkItemLists[Index].checkItems[childIndex].recordValue = {
+        ...state.machineServiceRecordCheckItems.checkItemLists[Index].checkItems[childIndex].recordValue,
+        files: checkItemFiles?.filter(file => file._id !== checkItem )
+      };
+    },
+
+    
     // GET MACHINE Active SERVICE PARAM
     updateMachineServiceRecordSuccess( state, action ) {
       state.isLoading = false;
@@ -492,7 +502,7 @@ export function updateMachineServiceRecord(machineId, id, params) {
         customer:                   params?.customer,
         site:                       params?.site,
         machine:                    machineId,
-        technician:                 params?.technician?._id || null,
+        technician:                 params?.technician?._id,
         technicianNotes:            params?.technicianNotes,
         textBeforeCheckItems:       params?.textBeforeCheckItems,
         textAfterCheckItems:        params?.textAfterCheckItems,
@@ -599,16 +609,15 @@ export function downloadCheckItemFile(machineId, id, fileId) {
   };
 }
 
-export function deleteCheckItemFile(machineId, fileId) {
+export function deleteCheckItemFile(machineId, fileId, Index, childIndex ) {
   return async (dispatch) => {
     dispatch(slice.actions.setSubmittingCheckItemIndex());
     try {
-      const response = await axios.delete(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecordValues/files/${fileId}/` , 
+      await axios.delete(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecordValues/files/${fileId}/` , 
       {
           isArchived: true, 
       });
-      dispatch(slice.actions.setResponseMessage(response.data));
-      dispatch(slice.actions.resetSubmittingCheckItemIndex());
+      dispatch(slice.actions.deleteMachineServiceRecordCheckItemSuccess({ Index, childIndex, checkItem: fileId }));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));

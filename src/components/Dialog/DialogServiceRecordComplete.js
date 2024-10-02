@@ -26,6 +26,7 @@ import FormProvider from '../hook-form/FormProvider';
 import { RHFAutocomplete, RHFTextField } from '../hook-form';
 import { useAuthContext } from '../../auth/useAuthContext';
 import SkeletonLine from '../skeleton/SkeletonLine';
+import Iconify from '../iconify';
 
 DialogServiceRecordComplete.propTypes = {
   recordStatus: PropTypes.object,
@@ -200,6 +201,7 @@ const SendApprovalEmails = ({ isLoading, recordStatus, approvingContacts }) => {
           disabled={isLoading}
           loading={isSubmitting}
           variant="contained"
+          endIcon={<Iconify icon="streamline:send-email-solidmdi:send" />}
         >
           Send Email
         </LoadingButton>

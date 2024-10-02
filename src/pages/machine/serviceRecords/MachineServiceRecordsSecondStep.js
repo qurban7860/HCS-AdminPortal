@@ -135,7 +135,7 @@ function MachineServiceRecordsSecondStep({ handleDraftRequest, handleDiscard, ha
         enqueueSnackbar('Saving failed!', { variant: `error` });
       }
     };
-  console.log("machineServiceRecordCheckItems : ",machineServiceRecordCheckItems)
+    
   return (
       <Stack spacing={2}>
             <FormProvider key='beforeForm' methods={formMethodsBefore} onSubmit={handleSubmitBefore(submitBefore)}>

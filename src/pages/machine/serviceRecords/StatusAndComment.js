@@ -1,16 +1,18 @@
 import React, { useState, memo, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Grid, Chip, TableRow, Typography, Box, Switch } from '@mui/material';
+import { Grid, Chip, TableRow, Typography, Box, Switch, Divider, Button, Dialog, DialogTitle } from '@mui/material';
 import download from 'downloadjs';
 import { useSnackbar } from 'notistack';
+import b64toBlob from 'b64-to-blob';
 import { fDate } from '../../../utils/formatTime';
 import CopyIcon from '../../../components/Icons/CopyIcon';
 import ViewFormServiceRecordVersionAudit from '../../../components/ViewForms/ViewFormServiceRecordVersionAudit';
 import { DocumentGalleryItem } from '../../../components/gallery/DocumentGalleryItem';
-import { deleteCheckItemFile, downloadCheckItemFile, getMachineServiceRecordCheckItems, setAddFileDialog } from '../../../redux/slices/products/machineServiceRecord';
+import { deleteCheckItemFile, downloadCheckItemFile, setAddFileDialog } from '../../../redux/slices/products/machineServiceRecord';
 import Lightbox from '../../../components/lightbox/Lightbox';
 import CheckedItemValueHistory from './CheckedItemValueHistory';
+import SkeletonPDF from '../../../components/skeleton/SkeletonPDF';
 
 const StatusAndComment = ({index, childIndex, childRow, machineId, serviceId}) => {
     const { machineServiceRecord } = useSelector((state) => state.machineServiceRecord);
@@ -20,14 +22,17 @@ const StatusAndComment = ({index, childIndex, childRow, machineId, serviceId}) =
     const regEx = /^[^2]*/;
     const [selectedImage, setSelectedImage] = useState(-1);
     const [slides, setSlides] = useState([]);
+    const [pdf, setPDF] = useState(null);
+    const [PDFName, setPDFName] = useState('');
+    const [AttachedPDFViewerDialog, setAttachedPDFViewerDialog] = useState(false);
 
     const handleAddFileDialog = () => {
       dispatch(setAddFileDialog(true));
     }
 
     useEffect(() => {
-      if (childRow?.recordValue?.files) {
-          const updatedFiles = childRow?.recordValue?.files?.map(file => ({
+      if ( childRow?.recordValue?.files ){
+          const updatedFiles = childRow?.recordValue?.files?.filter(file => file?.fileType && file.fileType.startsWith("image"))?.map(file => ({
             ...file,
             src: `data:${file?.fileType};base64,${file?.thumbnail}`,
             thumbnail: `data:${file?.fileType};base64,${file?.thumbnail}`
@@ -71,11 +76,11 @@ const StatusAndComment = ({index, childIndex, childRow, machineId, serviceId}) =
     const handleDeleteCheckItemFile = async (fileId) => {
       try {
         if( machineId && fileId ){
-          await dispatch(deleteCheckItemFile( machineId, fileId ));
+          await dispatch(deleteCheckItemFile( machineId, fileId, index, childIndex ));
         }
-        if( machineId && machineServiceRecord?._id ){
-          await dispatch(getMachineServiceRecordCheckItems( machineId, machineServiceRecord?._id ))
-        }
+        // if( machineId && machineServiceRecord?._id ){
+        //   await dispatch(getMachineServiceRecordCheckItems( machineId, machineServiceRecord?._id ))
+        // }
         enqueueSnackbar('File Archived successfully!');
       } catch (err) {
         console.log(err);
@@ -103,6 +108,30 @@ const StatusAndComment = ({index, childIndex, childRow, machineId, serviceId}) =
           }
         });
     };
+
+
+  const handleOpenFile = async (file) => {
+    try {
+      setPDFName(`${file?.name}.${file?.extension}`);
+      setAttachedPDFViewerDialog(true);
+      setPDF(null);
+      const response = await dispatch(downloadCheckItemFile(machineId, file.serviceRecord, file._id));
+      if (regEx.test(response.status)) {
+        const blob = b64toBlob(encodeURI(response.data), 'application/pdf')
+        const url = URL.createObjectURL(blob);
+        setPDF(url);
+      } else {
+        enqueueSnackbar(response.statusText, { variant: 'error' });
+      }
+    } catch (error) {
+      setAttachedPDFViewerDialog(false);
+      if (error?.message || error?.Message) {
+        enqueueSnackbar((error?.message || '' ) || (error?.Message || ''), { variant: 'error' });
+      } else {
+        enqueueSnackbar('File Download Failed!', { variant: 'error' });
+      }
+    }
+  };
 
   return (
     <TableRow key={childRow._id} sx={{ backgroundColor: 'none',}} >
@@ -163,6 +192,14 @@ const StatusAndComment = ({index, childIndex, childRow, machineId, serviceId}) =
                 toolbar
               />
             ))}
+            { childRow?.recordValue?.files?.map((file, _index) => !file.fileType.startsWith("image") && (
+              <DocumentGalleryItem key={file?.id} image={file} 
+                onOpenFile={()=> handleOpenFile(file)}
+                onDownloadFile={()=> handleDownloadCheckItemFile(file._id, file?.name, file?.extension)}
+                onDeleteFile={machineServiceRecord.status === "DRAFT" ? ()=> handleDeleteCheckItemFile(file._id):undefined}
+                toolbar
+              />
+            ))}
           </Box>
           <ViewFormServiceRecordVersionAudit value={childRow?.recordValue}/>
         </Grid>
@@ -186,6 +223,20 @@ const StatusAndComment = ({index, childIndex, childRow, machineId, serviceId}) =
           disabledDownload
           disabledSlideshow
         />
+            {AttachedPDFViewerDialog && (
+              <Dialog fullScreen open={AttachedPDFViewerDialog} onClose={()=> setAttachedPDFViewerDialog(false)}>
+                <DialogTitle variant='h3' sx={{pb:1, pt:2, display:'flex', justifyContent:'space-between'}}>
+                    PDF View
+                      <Button variant='outlined' onClick={()=> setAttachedPDFViewerDialog(false)}>Close</Button>
+                </DialogTitle>
+                <Divider variant='fullWidth' />
+                  {pdf?(
+                      <iframe title={PDFName} src={pdf} style={{paddingBottom:10}} width='100%' height='842px'/>
+                    ):(
+                      <SkeletonPDF />
+                    )}
+              </Dialog>
+            )}
     </TableRow>
   )
 }
