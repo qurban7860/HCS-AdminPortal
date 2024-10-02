@@ -80,7 +80,7 @@ function DialogViewMachineLogDetails({
 
   const formatMachineLogToShow = (log) => {
     // eslint-disable-next-line no-unused-vars
-    const { _id, createdIP, updatedIP, __v, machine, customer, updatedBy, createdBy, archivedByMachine, createdAt, updatedAt, isActive, isArchived, type, version, batchId, ...rest } = log;
+    const { createdIP, updatedIP, __v, machine, customer, updatedBy, createdBy, archivedByMachine, createdAt, updatedAt, isActive, isArchived, type, version, batchId, ...rest } = log;
 
     return {...rest};
   };

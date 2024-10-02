@@ -305,6 +305,8 @@ export function getMachineLogRecords({
   isMachineArchived,
   selectedLogType,
   isArchived,
+  searchKey,
+  searchColumn,
 }) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
@@ -319,6 +321,7 @@ export function getMachineLogRecords({
         pagination: { page, pageSize },
         ...(isMachineArchived && { archivedByMachine: true }),
         ...(!!isCreatedAt && { isCreatedAt }),
+        ...(searchKey?.length > 0 && { searchKey, searchColumn })
       };
       const response = await axios.get(`${CONFIG.SERVER_URL}productLogs/`, { params });
       dispatch(slice.actions.getMachineErpLogRecordsSuccess(response.data));

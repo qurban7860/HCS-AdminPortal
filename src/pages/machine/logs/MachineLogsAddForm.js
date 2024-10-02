@@ -35,7 +35,7 @@ export default function MachineLogsAddForm() {
   const { enqueueSnackbar } = useSnackbar();
   const [ error, setError ] = useState(false);
   const [fileInputKey, setFileInputKey] = useState(0);
-  const [selectedCheckbox, setSelectedCheckbox] = useState(null);
+  const [selectedCheckbox, setSelectedCheckbox] = useState(1);
   const [inchesMeasurementExists, setInchesMeasurementExists] = useState(false);
 
   const theme = useTheme();
@@ -46,7 +46,7 @@ export default function MachineLogsAddForm() {
 
   const checkboxes = [
     { label: 'Skip', value: 'skip' },
-    { label: 'Update', value: 'update' },
+    { label: 'Update', value: 'update', default: 'checked' },
   ];
 
   const defaultValues = useMemo(
@@ -122,6 +122,9 @@ export default function MachineLogsAddForm() {
       if (csvData.some((item) => item?.measurementUnit === "in")) {
         logData = convertAllInchesBitsToMM(csvData);
       }
+
+      // eslint-disable-next-line no-debugger
+      debugger
 
       if (logData.some((item) => item?.timestamp && !item?.date)) {
         logData = logData.map((item) => {
@@ -412,6 +415,7 @@ const toggleCancel = () => navigate(PATH_MACHINE.machines.logs.root(machineId));
                         {checkbox.label}
                         <Checkbox
                           key={index}
+                          defaultChecked={checkbox?.default === 'checked'}
                           checked={index === selectedCheckbox}
                           onChange={() => handleCheckboxChange(index)}
                           label={checkbox.label}
