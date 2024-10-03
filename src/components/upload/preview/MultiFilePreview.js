@@ -114,7 +114,18 @@ function MultiFilePreview({
         
   return (
     <AnimatePresence initial={false}>
-      {files.map(( file , index ) => {
+      {files?.sort((a, b) => {
+  const isImageA = a.fileType?.startsWith('image') || a.type?.startsWith('image');
+  const isImageB = b.fileType?.startsWith('image') || b.type?.startsWith('image');
+
+  if (isImageA && !isImageB) {
+    return -1; 
+  }
+  if (!isImageA && isImageB) {
+    return 1; 
+  }
+  return 0;
+})?.map(( file , index ) => {
         if(file){
         const { key, name = '', size = 0, displayName, referenceNumber, versionNo, stockNumber, docCategory, docType } = fileData(file);
         const fileType = file?.type?.split('/').pop().toLowerCase();

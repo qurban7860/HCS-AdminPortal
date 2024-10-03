@@ -192,11 +192,8 @@ function MachineServiceRecordsFirstStep( { handleComplete, handleDraftRequest, h
 
       const handleLoadImage = async (imageId, imageIndex) => {
         try {
-          console.log("imageId, imageIndex : ",imageId, imageIndex)
           const response = await dispatch(downloadRecordFile(machineId, id, imageId));
-      
           if (regEx.test(response.status)) {
-            // Update the image property in the imagesLightbox array
             const existingFiles = getValues('files');
             const image = existingFiles[imageIndex];
       
