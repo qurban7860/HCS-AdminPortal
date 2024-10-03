@@ -85,7 +85,7 @@ function DialogServiceRecordAddFile( ) {
 
   return (
     <Dialog fullWidth maxWidth="xl" open={ addFileDialog || addReportDocsDialog } onClose={handleCloseDialog}>
-      <DialogTitle variant='h3' sx={{pb:1, pt:2}}>Add Images</DialogTitle>
+      <DialogTitle variant='h3' sx={{pb:1, pt:2}}>Add Documents / Images</DialogTitle>
       <Divider orientation="horizontal" flexItem />
       <DialogContent dividers sx={{pt:2}}>
           <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>

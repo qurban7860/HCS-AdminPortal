@@ -152,20 +152,22 @@ const CheckedItemInputRow = memo(({ index, childIndex, checkItemListId, rowData 
       setValue(`images`, images, { shouldValidate: true } )
     }
 
-    const handleLoadImage = async ( imageId, imageIndex ) => {
+    const handleLoadImage = async (imageId) => {
       try {
         const response = await dispatch(downloadCheckItemFile(machineId, id, imageId));
         if (regEx.test(response.status)) {
-          const existingFiles = getValues(`images`) || [];
-          const image = existingFiles[imageIndex];
-    
-          existingFiles[imageIndex] = {
-            ...image,
-            src: `data:${image?.fileType};base64,${response.data}`,
-            preview: `data:${image?.fileType};base64,${response.data}`,
-            isLoaded: true,
-          };
-          setValue(`images`, existingFiles, { shouldValidate: true });
+          const existingFiles = getValues('images');
+          const imageIndex = existingFiles.findIndex(image => image?._id === imageId);
+          if (imageIndex !== -1) {
+            const image = existingFiles[imageIndex];
+            existingFiles[imageIndex] = {
+              ...image,
+              src: `data:${image?.fileType};base64,${response.data}`,
+              preview: `data:${image?.fileType};base64,${response.data}`,
+              isLoaded: true,
+            };
+            setValue('images', existingFiles, { shouldValidate: true });
+          }
         }
       } catch (error) {
         console.error('Error loading full file:', error);
@@ -190,6 +192,7 @@ const CheckedItemInputRow = memo(({ index, childIndex, checkItemListId, rowData 
           setPDF(file?.src);
         }
       } catch (error) {
+        setPDFViewerDialog(false)
         if (error.message) {
           enqueueSnackbar(error.message, { variant: 'error' });
         } else {

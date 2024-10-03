@@ -155,7 +155,7 @@ function ViewFormField({
                 typography: 'body2',
                 '& .MuiInputBase-input.Mui-disabled': {
                   color: theme.palette.text.primary,
-                  WebkitTextFillColor: heading?.toLowerCase()?.includes('reject') ? "red" : "green",
+                  WebkitTextFillColor: theme.palette.text.primary,
                 },
               },
             }}
