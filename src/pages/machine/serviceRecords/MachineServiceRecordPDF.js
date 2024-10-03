@@ -154,7 +154,7 @@ function getImageUrl(file) {
             </View>
             
             {Array.isArray(defaultValues?.reportDocs) && 
-            defaultValues?.reportDocs?.length > 0 && 
+            defaultValues?.reportDocs?.filter( f => f?.src )?.length > 0 && 
             <>
                 <Text style={styles.title}>Reporting Documents</Text>
                 <View style={styles.row}>
@@ -267,7 +267,7 @@ function getImageUrl(file) {
                     <Text style={styles.text_sm}>{defaultValues?.operatorNotes}</Text>
                 </View>
             </View>
-            { Array.isArray(defaultValues?.files) && defaultValues?.files?.length > 0 && <>
+            { Array.isArray(defaultValues?.files) && defaultValues?.files?.filter( f => f?.src )?.length > 0 && <>
                 <Text style={styles.title}>Documents / Images</Text>
                 <View style={styles.row}>
                     <View style={styles.image_row} >

@@ -163,23 +163,20 @@ function MachineServiceRecordsThirdStep({handleDraftRequest, handleDiscard, hand
       };
 
       const regEx = /^[^2]*/;
-      const handleLoadImage = async (imageId, imageIndex) => {
+      const handleLoadImage = async (imageId) => {
         try {
           const response = await dispatch(downloadRecordFile(machineId, id, imageId));
-      
           if (regEx.test(response.status)) {
-            // Update the image property in the imagesLightbox array
-            const existingFiles = getValues('files') || [];
-            const image = existingFiles[imageIndex];
-      
-            if (image) {
+            const existingFiles = getValues('files');
+            const imageIndex = existingFiles.findIndex(image => image?._id === imageId);
+            if (imageIndex !== -1) {
+              const image = existingFiles[imageIndex];
               existingFiles[imageIndex] = {
                 ...image,
                 src: `data:${image?.fileType};base64,${response.data}`,
                 preview: `data:${image?.fileType};base64,${response.data}`,
                 isLoaded: true,
               };
-      
               setValue('files', existingFiles, { shouldValidate: true });
             }
           }
@@ -187,7 +184,7 @@ function MachineServiceRecordsThirdStep({handleDraftRequest, handleDiscard, hand
           console.error('Error loading full file:', error);
         }
       };
-
+      
       const [pdf, setPDF] = useState(null);
       const [PDFName, setPDFName] = useState('');
       const [PDFViewerDialog, setPDFViewerDialog] = useState(false);
@@ -210,6 +207,7 @@ function MachineServiceRecordsThirdStep({handleDraftRequest, handleDiscard, hand
             setPDF(file?.src);
           }
         } catch (error) {
+          setPDFViewerDialog(false)
           if (error.message) {
             enqueueSnackbar(error.message, { variant: 'error' });
           } else {

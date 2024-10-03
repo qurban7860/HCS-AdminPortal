@@ -190,21 +190,20 @@ function MachineServiceRecordsFirstStep( { handleComplete, handleDraftRequest, h
         setValue(`files`, images, { shouldValidate: true } )
       };
 
-      const handleLoadImage = async (imageId, imageIndex) => {
+      const handleLoadImage = async (imageId) => {
         try {
           const response = await dispatch(downloadRecordFile(machineId, id, imageId));
           if (regEx.test(response.status)) {
             const existingFiles = getValues('files');
-            const image = existingFiles[imageIndex];
-      
-            if (image) {
+            const imageIndex = existingFiles.findIndex(image => image?._id === imageId);
+            if (imageIndex !== -1) {
+              const image = existingFiles[imageIndex];
               existingFiles[imageIndex] = {
                 ...image,
                 src: `data:${image?.fileType};base64,${response.data}`,
                 preview: `data:${image?.fileType};base64,${response.data}`,
                 isLoaded: true,
               };
-      
               setValue('files', existingFiles, { shouldValidate: true });
             }
           }

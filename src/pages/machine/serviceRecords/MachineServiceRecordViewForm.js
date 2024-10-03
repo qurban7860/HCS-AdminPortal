@@ -3,7 +3,7 @@ import React, { useMemo, memo, useLayoutEffect, useState, useEffect } from 'reac
 import { useDispatch, useSelector } from 'react-redux';
 import b64toBlob from 'b64-to-blob';
 // @mui
-import { Container, Card, Chip, Grid, Box, Stack, Dialog, DialogTitle, Divider, Button } from '@mui/material';
+import { Container, Card, Chip, Grid, Box, Stack, Dialog, DialogTitle, Divider, Button, Typography } from '@mui/material';
 // routes
 import { useNavigate, useParams } from 'react-router-dom';
 import download from 'downloadjs';
@@ -370,6 +370,7 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
         enqueueSnackbar(response.statusText, { variant: 'error' });
       }
     } catch (error) {
+      setAttachedPDFViewerDialog(false);
       if (error.message) {
         enqueueSnackbar(error.message, { variant: 'error' });
       } else {
@@ -463,8 +464,17 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
               }
             />
           <ViewFormField isLoading={isLoading} variant='h4' sm={2} heading="Status" 
-            param={machineServiceRecord?.currentApprovalStatus === "PENDING" ? machineServiceRecord?.status : machineServiceRecord?.currentApprovalStatus}
+            // param={machineServiceRecord?.currentApprovalStatus === "PENDING" ? machineServiceRecord?.status : machineServiceRecord?.currentApprovalStatus}
             node={ <>
+              <Typography variant='h4' sx={{mr: 1,
+                color: (
+                  machineServiceRecord?.currentApprovalStatus === 'REJECTED' && 'red' || 
+                  machineServiceRecord?.currentApprovalStatus === 'APPROVED' && 'green'
+                ) || 'inherit'
+                }}
+              >
+                {machineServiceRecord?.currentApprovalStatus === "PENDING" ? machineServiceRecord?.status : machineServiceRecord?.currentApprovalStatus}
+              </Typography> 
               {
                 !machine?.isArchived &&
                 machineServiceRecord?.isActive &&
