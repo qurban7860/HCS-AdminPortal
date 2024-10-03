@@ -9,22 +9,22 @@ import { useParams } from 'react-router-dom';
 import {  
   addMachineServiceRecordFiles,
   setAddFileDialog,
+  setAddReportDocsDialog
 } from '../../redux/slices/products/machineServiceRecord';
 
 import FormProvider from '../hook-form/FormProvider';
 import { RHFUpload } from '../hook-form';
 import { MachineServiceRecordPart3Schema } from '../../pages/schemas/machine';
 
-
-function DialogServiceRecordAddFile() {
+function DialogServiceRecordAddFile( ) {
 
   const { machineId, id } = useParams();
-    
   const dispatch = useDispatch();
-  const { addFileDialog } = useSelector((state) => state.machineServiceRecord);
+  const { addFileDialog, addReportDocsDialog } = useSelector((state) => state.machineServiceRecord);
   
   const handleCloseDialog = async ()=>{ 
     await dispatch(setAddFileDialog(false)) 
+    await dispatch(setAddReportDocsDialog(false))
     reset();
   }
   
@@ -72,6 +72,7 @@ function DialogServiceRecordAddFile() {
 
   const onSubmit = async (data) => {
     try {
+      data.isReportDoc = addReportDocsDialog;
       await dispatch(addMachineServiceRecordFiles(machineId, id, data))
       await handleCloseDialog();
       await reset();
@@ -83,12 +84,12 @@ function DialogServiceRecordAddFile() {
   };
 
   return (
-    <Dialog fullWidth maxWidth="xl" open={addFileDialog} onClose={handleCloseDialog}>
+    <Dialog fullWidth maxWidth="xl" open={ addFileDialog || addReportDocsDialog } onClose={handleCloseDialog}>
       <DialogTitle variant='h3' sx={{pb:1, pt:2}}>Add Images</DialogTitle>
       <Divider orientation="horizontal" flexItem />
       <DialogContent dividers sx={{pt:2}}>
           <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-           <RHFUpload multiple  thumbnail name="files" imagesOnly
+            <RHFUpload multiple  thumbnail name="files" imagesOnly
               onDrop={handleDropMultiFile}
               onRemove={(inputFile) =>
                 files.length > 1 ?

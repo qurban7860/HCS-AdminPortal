@@ -15,6 +15,7 @@ import { deleteMachineServiceRecord,
   setSendEmailDialog,
   setPDFViewerDialog,
   setAddFileDialog,
+  setAddReportDocsDialog,
   downloadRecordFile,
   deleteRecordFile,
   setFormActiveStep,
@@ -255,6 +256,10 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
     dispatch(setAddFileDialog(true));
   }
 
+  const handleAddReportDocsDialog = ()=>{
+    dispatch(setAddReportDocsDialog(true));
+  }
+
   const handleOpenLightbox = async (index) => {
     setSelectedImage(index);
     const file = slides[index];
@@ -358,7 +363,6 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
     try {
       const response = await dispatch(downloadRecordFile(machineId, serviceId, fileId));
       if (regEx.test(response.status)) {
-        const pdfData = `data:application/pdf;base64,${encodeURI(response.data)}`;
         const blob = b64toBlob(encodeURI(response.data), 'application/pdf')
         const url = URL.createObjectURL(blob);
         setPDF(url);
@@ -538,7 +542,7 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
                   toolbar
                 />
               ))}
-              {!machineServiceRecord?.isHistory && machineServiceRecord?.status === 'DRAFT' && <ThumbnailDocButton onClick={handleAddFileDialog}/>}
+              {!machineServiceRecord?.isHistory && machineServiceRecord?.status === 'DRAFT' && <ThumbnailDocButton onClick={handleAddReportDocsDialog}/>}
             </Box>
           </>}
           <FormLabel content={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />

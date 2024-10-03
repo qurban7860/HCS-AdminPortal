@@ -22,6 +22,7 @@ const initialState = {
   sendEmailDialog:false,
   pdfViewerDialog:false,
   addFileDialog:false,
+  addReportDocsDialog: false,
   completeDialog:false,
   formActiveStep:0,
   isHistorical: false,
@@ -176,6 +177,10 @@ const slice = createSlice({
       state.addFileDialog = action.payload;
     },
 
+    // SET ADD FILE DIALOG
+    setAddReportDocsDialog(state, action) {
+      state.addReportDocsDialog = action.payload;
+    },
     
     // SET COMLETE DIALOG
     setCompleteDialog(state, action) {
@@ -252,6 +257,7 @@ export const {
   setSendEmailDialog,
   setPDFViewerDialog,
   setAddFileDialog,
+  setAddReportDocsDialog,
   setCompleteDialog,
   setFormActiveStep,
   resetMachineServiceRecords,
@@ -535,7 +541,6 @@ export function updateMachineServiceRecord(machineId, id, params) {
 
 export function addMachineServiceRecordFiles(machineId, id, params) {
   return async (dispatch) => {
-    // dispatch(slice.actions.startLoading());
     try {
       const formData = new FormData();
       if (Array.isArray(params?.files) &&  params?.files?.length > 0) {

@@ -18,6 +18,7 @@ import { CheckItemSchema } from '../../schemas/machine';
 import SkeletonPDF from '../../../components/skeleton/SkeletonPDF';
 
 const CheckedItemInputRow = memo(({ index, childIndex, checkItemListId, rowData }) => {
+    const regEx = /^[^2]*/;
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
     const { machineId, id } = useParams();
@@ -76,6 +77,7 @@ const CheckedItemInputRow = memo(({ index, childIndex, checkItemListId, rowData 
       defaultValues,
       shouldUnregister: false,
     });
+
     const {
       reset,
       setValue,
@@ -86,7 +88,6 @@ const CheckedItemInputRow = memo(({ index, childIndex, checkItemListId, rowData 
     } = methods;
     
     const watchedValues = watch();
-    // console.log("defaultValues : ",defaultValues,"watchedValues : ",watchedValues)
 
   const isChanged = useMemo(() => 
     JSON.stringify(defaultValues.checkItemValue) !== JSON.stringify(watchedValues.checkItemValue) ||
@@ -100,7 +101,6 @@ const CheckedItemInputRow = memo(({ index, childIndex, checkItemListId, rowData 
         reset(defaultValues);
     }, [ reset, defaultValues, rowData ]);
     
-
     const onSubmit = async ( data ) => {
       try {
         if (data.checkItemValue instanceof Date) {
@@ -140,7 +140,6 @@ const CheckedItemInputRow = memo(({ index, childIndex, checkItemListId, rowData 
     );
 
     const handleRemoveFile = async ( inputFile )=>{
-      
       let images = getValues(`images`);
       if(inputFile?._id){
         await dispatch(deleteCheckItemFile(machineId, inputFile?._id, index, childIndex ))
@@ -153,7 +152,6 @@ const CheckedItemInputRow = memo(({ index, childIndex, checkItemListId, rowData 
       setValue(`images`, images, { shouldValidate: true } )
     }
 
-    const regEx = /^[^2]*/;
     const handleLoadImage = async ( imageId, imageIndex ) => {
       try {
         const response = await dispatch(downloadCheckItemFile(machineId, id, imageId));
@@ -182,7 +180,6 @@ const CheckedItemInputRow = memo(({ index, childIndex, checkItemListId, rowData 
         if(!file?.isLoaded){
           const response = await dispatch(downloadCheckItemFile(machineId, id, file._id));
           if (regEx.test(response.status)) {
-            const pdfData = `data:application/pdf;base64,${encodeURI(response.data)}`;
             const blob = b64toBlob(encodeURI(response.data), 'application/pdf')
             const url = URL.createObjectURL(blob);
             setPDF(url);

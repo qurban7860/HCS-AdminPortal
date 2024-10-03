@@ -9,6 +9,7 @@ import { Button, Dialog, DialogTitle, Divider, Stack } from '@mui/material';
 // routes
 import { useNavigate, useParams } from 'react-router-dom';
 import { PATH_MACHINE } from '../../../routes/paths';
+import FormLabel from '../../../components/DocumentForms/FormLabel';
 // slice
 import { updateMachineServiceRecord, resetMachineServiceRecord, addMachineServiceRecordFiles, deleteRecordFile, downloadRecordFile } from '../../../redux/slices/products/machineServiceRecord';
 import { getActiveContacts, resetActiveContacts } from '../../../redux/slices/customer/contact';
@@ -151,19 +152,14 @@ function MachineServiceRecordsThirdStep({handleDraftRequest, handleDiscard, hand
       };
 
       const handleRemoveFile = async (inputFile) => {
-        if (inputFile?._id) {
+        let images = getValues(`files`);
+        if(inputFile?._id){
           await dispatch(deleteRecordFile(machineId, id, inputFile?._id));
-        }
-      
-        if (files.length > 1) {
-          setValue(
-            'files',
-            files.filter((file) => file !== inputFile),
-            { shouldValidate: true }
-          );
+          images = await images?.filter((file) => ( file?._id !== inputFile?._id ))
         } else {
-          setValue('files', [], { shouldValidate: true });
+          images = await images?.filter((file) => ( file !== inputFile ))
         }
+        setValue(`files`, images, { shouldValidate: true } )
       };
 
       const regEx = /^[^2]*/;
@@ -204,7 +200,6 @@ function MachineServiceRecordsThirdStep({handleDraftRequest, handleDiscard, hand
           if(!file?.isLoaded){
             const response = await dispatch(downloadRecordFile(machineId, id, file._id));
             if (regEx.test(response.status)) {
-              const pdfData = `data:application/pdf;base64,${encodeURI(response.data)}`;
               const blob = b64toBlob(encodeURI(response.data), 'application/pdf')
               const url = URL.createObjectURL(blob);
               setPDF(url);
@@ -243,6 +238,7 @@ function MachineServiceRecordsThirdStep({handleDraftRequest, handleDiscard, hand
             renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}` }</li> )}
           />
           <RHFTextField name="operatorNotes" label="Operator Notes" minRows={3} multiline/> 
+          <FormLabel content='Documents / Images' />
           <RHFUpload multiple  thumbnail name="files" imagesOnly
             onDrop={handleDropMultiFile}
             dropZone={false}
