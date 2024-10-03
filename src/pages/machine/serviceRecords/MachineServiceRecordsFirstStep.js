@@ -8,6 +8,7 @@ import { useNavigate, useParams } from 'react-router';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useSnackbar } from 'notistack';
 import FormProvider from '../../../components/hook-form/FormProvider';
+import FormLabel from '../../../components/DocumentForms/FormLabel';
 import { RHFTextField, RHFAutocomplete, RHFDatePicker, RHFUpload } from '../../../components/hook-form';
 import { MachineServiceRecordPart1Schema } from '../../schemas/machine';
 import { useAuthContext } from '../../../auth/useAuthContext';
@@ -179,19 +180,14 @@ function MachineServiceRecordsFirstStep( { handleComplete, handleDraftRequest, h
     }
 
       const handleRemoveFile = async (inputFile) => {
-        if (inputFile?._id) {
+        let images = getValues(`files`);
+        if(inputFile?._id){
           await dispatch(deleteRecordFile(machineId, id, inputFile?._id));
-        }
-      
-        if (files.length > 1) {
-          setValue(
-            'files',
-            files.filter((file) => file !== inputFile),
-            { shouldValidate: true }
-          );
+          images = await images?.filter((file) => ( file?._id !== inputFile?._id ))
         } else {
-          setValue('files', [], { shouldValidate: true });
+          images = await images?.filter((file) => ( file !== inputFile ))
         }
+        setValue(`files`, images, { shouldValidate: true } )
       };
 
       const handleLoadImage = async (imageId, imageIndex) => {
@@ -225,14 +221,13 @@ function MachineServiceRecordsFirstStep( { handleComplete, handleDraftRequest, h
       const [PDFViewerDialog, setPDFViewerDialog] = useState(false);
 
       const handleOpenFile = async (file, fileName) => {
+        try {
         setPDFName(fileName);
         setPDFViewerDialog(true);
         setPDF(null);
-        try {
           if(!file?.isLoaded){
             const response = await dispatch(downloadRecordFile(machineId, id, file._id));
             if (regEx.test(response.status)) {
-              const pdfData = `data:application/pdf;base64,${encodeURI(response.data)}`;
               const blob = b64toBlob(encodeURI(response.data), 'application/pdf')
               const url = URL.createObjectURL(blob);
               setPDF(url);
@@ -243,6 +238,7 @@ function MachineServiceRecordsFirstStep( { handleComplete, handleDraftRequest, h
             setPDF(file?.src);
           }
         } catch (error) {
+          setPDFViewerDialog(false);
           if (error.message) {
             enqueueSnackbar(error.message, { variant: 'error' });
           } else {
@@ -365,7 +361,7 @@ return (
                   />
 
                   <RHFTextField name="technicianNotes" label="Technician Notes" minRows={3} multiline/> 
-
+                  <FormLabel content='Reporting Documents' />
                   <RHFUpload multiple  thumbnail name="files" imagesOnly
                     onDrop={handleDropMultiFile}
                     dropZone={false}
