@@ -525,7 +525,7 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
               }}
             >
               {slidesReporting?.map((file, _index) => (
-                <DocumentGalleryItem isLoading={isLoading} key={file?.id} image={file} 
+                <DocumentGalleryItem isLoading={isLoading} key={file?._id} image={file} 
                   onOpenLightbox={()=> handleOpenReportingLightbox(_index)}
                   onDownloadFile={()=> handleDownloadRecordFile(file._id, file?.name, file?.extension)}
                   onDeleteFile={()=> handleDeleteRecordFile(file._id)}
@@ -534,7 +534,7 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
                 />
               ))}
               {machineServiceRecord?.reportDocs?.map((file, _index) => !file.fileType.startsWith("image") && (
-                <DocumentGalleryItem isLoading={isLoading} key={file?.id} image={file} 
+                <DocumentGalleryItem isLoading={isLoading} key={file?._id} image={file} 
                   onOpenFile={()=> handleOpenFile(file._id, file?.name, file?.extension)}
                   onDownloadFile={()=> handleDownloadRecordFile(file._id, file?.name, file?.extension)}
                   onDeleteFile={()=> handleDeleteRecordFile(file._id)}
@@ -601,7 +601,7 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
           >
 
           {slides?.map((file, _index) => (
-            <DocumentGalleryItem isLoading={isLoading} key={file?.id} image={file} 
+            <DocumentGalleryItem isLoading={isLoading} key={file?._id} image={file} 
               onOpenLightbox={()=> handleOpenLightbox(_index)}
               onDownloadFile={()=> handleDownloadRecordFile(file._id, file?.name, file?.extension)}
               onDeleteFile={()=> handleDeleteRecordFile(file._id)}
@@ -611,7 +611,7 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
           ))}
 
           {machineServiceRecord?.files?.map((file, _index) => !file.fileType.startsWith("image") && (
-              <DocumentGalleryItem isLoading={isLoading} key={file?.id} image={file} 
+              <DocumentGalleryItem isLoading={isLoading} key={file?._id} image={file} 
                 onOpenFile={()=> handleOpenFile(file._id, file?.name, file?.extension)}
                 onDownloadFile={()=> handleDownloadRecordFile(file._id, file?.name, file?.extension)}
                 onDeleteFile={()=> handleDeleteRecordFile(file._id)}
