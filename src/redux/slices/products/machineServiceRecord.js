@@ -691,7 +691,6 @@ export function addCheckItemValues(machineId, data, Index, childIndex) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
-      dispatch(slice.actions.resetSubmittingCheckItemIndex());
       throw error;
     }
   };
