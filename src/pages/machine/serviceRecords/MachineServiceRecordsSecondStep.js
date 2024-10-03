@@ -69,7 +69,7 @@ function MachineServiceRecordsSecondStep({ handleDraftRequest, handleDiscard, ha
     const { textAfterCheckItems } = watchAfter();
     
     const methods = useForm({ defaultValues });
-    const { handleSubmit, reset, formState: { isSubmitting } } = methods;
+    const { handleSubmit, formState: { isSubmitting } } = methods;
     
     // useEffect(() => {
     //   if (machineServiceRecord) {
