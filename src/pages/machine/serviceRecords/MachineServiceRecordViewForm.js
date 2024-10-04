@@ -459,12 +459,11 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
                     machineServiceRecord?.currentVersion?.versionNo > 1 &&
                     machineServiceRecord?.serviceId && (
                       <HistoryIcon callFunction={handleServiceRecordHistory} />
-                    )}
+                  )}
                 </>
               }
             />
           <ViewFormField isLoading={isLoading} variant='h4' sm={2} heading="Status" 
-            // param={machineServiceRecord?.currentApprovalStatus === "PENDING" ? machineServiceRecord?.status : machineServiceRecord?.currentApprovalStatus}
             node={ <>
               <Typography variant='h4' sx={{mr: 1,
                 color: (
@@ -494,7 +493,6 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
             }
           />
 
-
           {(machineServiceRecord?.currentApprovalStatus !== "PENDING" && machineServiceRecord?.approval?.approvalLogs?.length > 0) ? (              
             <ViewFormField isLoading={isLoading} sm={12}
               heading={`${machineServiceRecord?.currentApprovalStatus === "REJECTED" ? "Rejection" : "Approval"} Comments`}
@@ -519,7 +517,7 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
           />
           <ViewFormField isLoading={isLoading} sm={4} heading="Technician"  param={`${defaultValues?.technician?.firstName || ''} ${defaultValues?.technician?.lastName || ''} `} />
           <ViewFormNoteField sm={12} heading="Technician Notes" param={defaultValues.technicianNotes} />
-          {machineServiceRecord?.reportDocs?.length>0 && !machineServiceRecord?.isHistory && 
+          { machineServiceRecord?.reportDocs?.length > 0 && !machineServiceRecord?.isHistory && 
           <>
             <FormLabel content='Reporting Documents' />
             <Box
@@ -594,7 +592,7 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
           <ViewFormNoteField sm={12} heading="Internal Note" param={defaultValues.internalNote} />
           <ViewFormField isLoading={isLoading} sm={12} heading="Operators" chipDialogArrayParam={operators} />
           <ViewFormNoteField sm={12} heading="Operator Notes" param={defaultValues.operatorNotes} />
-          {slides.length>0 && !machineServiceRecord?.isHistory && 
+          {machineServiceRecord?.files?.length > 0 && !machineServiceRecord?.isHistory && 
           <FormLabel content='Documents / Images' />
           }
           <Box
