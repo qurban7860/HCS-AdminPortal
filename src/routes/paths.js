@@ -248,7 +248,7 @@ export const PATH_MACHINE = {
       view: (machineId, id ) => path(ROOTS_MACHINE, `/machines/${machineId}/ini/${id}/view`),
       compare: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/ini/compare`),
     },    
-    // --------------------- Machine Tool Installed -----------------------
+    // --------------------- Machine Logs -----------------------
     logs: {
       root: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/logs`),
       new: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/logs/new`),
@@ -529,11 +529,11 @@ export const PATH_MACHINE_DRAWING = {
 export const PATH_MACHINE_LOGS = {
   root: ROOTS_MACHINE_LOGS,
   permissionDenied: path(ROOTS_MACHINE_LOGS, '/permission-denied'),
-  machineLogs: {
-    CoilLogs: path(ROOTS_MACHINE_LOGS, '/coilLogs'),
-    ErpLogs: path(ROOTS_MACHINE_LOGS, '/erpLogs'),
-    ProductionLogs: path(ROOTS_MACHINE_LOGS, '/productionLogs'),   
-  },
+  // machineLogs: {
+  //   CoilLogs: path(ROOTS_MACHINE_LOGS, '/coilLogs'),
+  //   ErpLogs: path(ROOTS_MACHINE_LOGS, '/erpLogs'),
+  //   ProductionLogs: path(ROOTS_MACHINE_LOGS, '/productionLogs'),   
+  // },
 };
 
 // ----------------------- JIRA REPORT -----------------------------------------

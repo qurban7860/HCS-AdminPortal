@@ -200,7 +200,7 @@ export default function MachineLogsAddForm() {
     }
   
     const lines = data.trim().split('\n');
-    const isCSV = lines.length > 1 && lines.every(line => {
+    const isCSV = lines.length >= 1 && lines.every(line => {
       const columns = line.split(',');
       return columns.length > 1 && Math.abs(columns.length - lines[0].split(',').length) <= 2;
     });
