@@ -64,6 +64,16 @@ function AllMachineLogs() {
     }
   }, [dispatch, customer]);
 
+  useEffect(() => {
+    if (isGraphPage() && customer && logPeriod) {
+      const customerId = customer._id;
+      const machineId = machine?._id || undefined;
+      const LogType = 'erp';
+      dispatch(getMachineLogGraphData(customerId, machineId, LogType, logPeriod));
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [customer, machine, logPeriod, searchParams]);
+
   const onGetLogs = (data) => {
     const customerId = customer._id; 
     const machineId = machine?._id || undefined;
@@ -85,16 +95,6 @@ function AllMachineLogs() {
       })
     );
   };
-  
-  useEffect(() => {
-    if (isGraphPage() && customer && logPeriod) {
-      const customerId = customer._id;
-      const machineId = machine?._id || undefined;
-      const LogType = 'erp';
-      dispatch(getMachineLogGraphData(customerId, machineId, LogType, logPeriod));
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [customer, machine, logPeriod]);
   
   const handleCustomerChange = useCallback((newCustomer) => {
     setValue('customer', newCustomer);
