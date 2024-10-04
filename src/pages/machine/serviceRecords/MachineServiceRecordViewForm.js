@@ -517,7 +517,7 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
           />
           <ViewFormField isLoading={isLoading} sm={4} heading="Technician"  param={`${defaultValues?.technician?.firstName || ''} ${defaultValues?.technician?.lastName || ''} `} />
           <ViewFormNoteField sm={12} heading="Technician Notes" param={defaultValues.technicianNotes} />
-          { machineServiceRecord?.reportDocs?.length > 0 && !machineServiceRecord?.isHistory && 
+          { machineServiceRecord?.reportDocs?.length > 0 &&
           <>
             <FormLabel content='Reporting Documents' />
             <Box
@@ -592,7 +592,7 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
           <ViewFormNoteField sm={12} heading="Internal Note" param={defaultValues.internalNote} />
           <ViewFormField isLoading={isLoading} sm={12} heading="Operators" chipDialogArrayParam={operators} />
           <ViewFormNoteField sm={12} heading="Operator Notes" param={defaultValues.operatorNotes} />
-          {machineServiceRecord?.files?.length > 0 && !machineServiceRecord?.isHistory && 
+          {machineServiceRecord?.files?.length > 0 && 
           <FormLabel content='Documents / Images' />
           }
           <Box
