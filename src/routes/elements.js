@@ -210,7 +210,7 @@ export const MachineINICompareView = Loadable(lazy(() => import('../pages/machin
 export const MachineLogsList = Loadable(lazy(() => import('../pages/machine/logs/MachineLogsList')));
 export const MachineLogsAdd = Loadable(lazy(() => import('../pages/machine/logs/MachineLogsAddForm')));
 // export const MachineLogsView = Loadable(lazy(() => import('../pages/machine/logs/MachineLogsViewForm')));
-export const MachineLogsGraphView = Loadable(lazy(() => import('../pages/machine/logs/MachineLogsGraphViewForm')));
+// export const MachineLogsGraphView = Loadable(lazy(() => import('../pages/machine/logs/MachineLogsGraphViewForm')));
 
 // --------------------------- MACHINE JIRA -------------------------------------
 
@@ -223,9 +223,9 @@ export const MachineSetting = Loadable(lazy(() => import('../pages/machineSettin
 // ---------------------  MACHINE LOGS -------------------------------------------
 
 export const AllMachinesLogs = Loadable(lazy(() => import('../pages/machineLogs/AllMachinesLogs')));
-export const CoilLogs = Loadable(lazy(() => import('../pages/machineLogs/graph/CoilLogs')));
-export const ErpLogs = Loadable(lazy(() => import('../pages/machineLogs/graph/ErpLogs')));
-export const ProductionLogs = Loadable(lazy(() => import('../pages/machineLogs/graph/ProductionLogs')));
+// export const CoilLogs = Loadable(lazy(() => import('../pages/machineLogs/graph/CoilLogs')));
+// export const ErpLogs = Loadable(lazy(() => import('../pages/machineLogs/graph/ErpLogs')));
+// export const ProductionLogs = Loadable(lazy(() => import('../pages/machineLogs/graph/ProductionLogs')));
 
 
 

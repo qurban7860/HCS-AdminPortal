@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { useEffect, useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // @mui
@@ -19,15 +20,18 @@ import { machineLogTypeFormats } from '../../../constants/machineLogTypeFormats'
 
 // ----------------------------------------------------------------------
 
+MachineLogsGraphViewForm.propTypes = {
+  machineId: PropTypes.bool,
+};
+
 export default function MachineLogsGraphViewForm() {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const dispatch = useDispatch();  
   const { machineId } = useParams();
   const { machineLogsGraphData, selectedLogType, isLoading } = useSelector(
     (state) => state.machineErpLogs
   );
   const { machine } = useSelector((state) => state.machine);
-  const [disable, setDisable] = useState(false);
+  // const [disable, setDisable] = useState(false);
   const [logYearState, setLogYearState] = useState(new Date().getFullYear());
   const erpLogsTime = [];
   const erpLogsLength = [];
@@ -51,22 +55,20 @@ export default function MachineLogsGraphViewForm() {
     });
   }
 
-  useLayoutEffect(() => {
-    if (machine?.status?.slug === 'transferred') {
-      setDisable(true);
-    } else {
-      setDisable(false);
-    }
-  }, [dispatch, machine]);
+  // useLayoutEffect(() => {
+  //   if (machine?.status?.slug === 'transferred') {
+  //     setDisable(true);
+  //   } else {
+  //     setDisable(false);
+  //   }
+  // }, [dispatch, machine]);
 
-  const openRecordsList = () => navigate(PATH_MACHINE.machines.logs.root(machineId));
-  const addLogRecord = () => navigate(PATH_MACHINE.machines.logs.new(machineId));
+  // const openRecordsList = () => navigate(PATH_MACHINE.machines.logs.root(machineId));
+  // const addLogRecord = () => navigate(PATH_MACHINE.machines.logs.new(machineId));
 
   const onLogTypeChange = (newValue) => dispatch(setSelectedLogType(newValue));
 
   return (
-    <Container maxWidth={false}>
-      <MachineTabContainer currentTabValue="logs" />
       <Card sx={{ width: '100%' }}>
         <CardHeader titleTypographyProps={{ variant: 'h4' }} sx={{ mb: 2}} title="Logs Graph" />
         <Grid container spacing={2} sx={{ mb: 2, px: 2 }}>
@@ -120,7 +122,7 @@ export default function MachineLogsGraphViewForm() {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={12} md={4} lg={6} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+          {/* <Grid item xs={12} md={4} lg={6} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
             <StyledTooltip
               title="Log List"
               placement="top"
@@ -183,7 +185,7 @@ export default function MachineLogsGraphViewForm() {
                 </IconButton>
               </StyledTooltip>
             )}
-          </Grid>
+          </Grid> */}
         </Grid>
         <Divider />
         <Grid container display="flex" direction="row">
@@ -211,6 +213,5 @@ export default function MachineLogsGraphViewForm() {
           </Grid>
         </Grid>
       </Card>
-    </Container>
   );
 }

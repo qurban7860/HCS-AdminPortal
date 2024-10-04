@@ -16,6 +16,7 @@ const initialState = {
   error: null,
   machineErpLog: {},
   machineErpLogs: [],
+  machineLogsGraphData: [],
   machineErpLogstotalCount: 0,
   dateFrom: new Date( Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
   dateTo: new Date(Date.now()).toISOString().split('T')[0],
@@ -104,6 +105,13 @@ const slice = createSlice({
       state.success = true;
       state.initial = true;
     },
+    // RESET GRAPH DATA
+    resetMachineLogsGraphData(state){
+      state.machineLogsGraphData = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
     // RESET MACHINE TECH PARAM
     resetMachineErpLogRecord(state){
       state.machineErpLog = {};
@@ -153,6 +161,7 @@ export const {
   setAllVisibilityFalse,
   resetMachineErpLogRecords,
   resetMachineErpLogRecord,
+  resetMachineLogsGraphData,
   resetMachineErpLogDates,
   setResponseMessage,
   setMachineLogsGraphData,
@@ -195,18 +204,16 @@ export function addMachineLogRecord(machine, customer, logs, action, version, ty
 
 // ------------------------- GET LOGS GRAPH DATA ---------------------------------------------
 
-export function getMachineLogGraphData(customerId, machineId, fromDate, toDate, type = "erp", logTypeUnit) {
+export function getMachineLogGraphData(customerId, machineId, type = "erp", periodType) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const params = {
         customer: customerId,
         machine: machineId,
-        fromDate,
-        toDate,
         type, 
-        unit: logTypeUnit, 
-      };     
+        periodType,
+      };
       const response = await axios.get(`${CONFIG.SERVER_URL}productLogs/graph`, { params });
       dispatch(slice.actions.setMachineLogsGraphData(response?.data || ''));
       return {

@@ -176,7 +176,7 @@ import {
   MachineLogsList,
   MachineLogsAdd,
   // MachineLogsView,
-  MachineLogsGraphView,
+  // MachineLogsGraphView,
 
   // --------------------------- MACHINE Jira --------------------------------
   MachineJiraList,
@@ -248,9 +248,9 @@ import {
   
   // --------------------------- MACHINE LOG -------------------------------------
   AllMachinesLogs,
-  CoilLogs,
-  ErpLogs,
-  ProductionLogs,
+  // CoilLogs,
+  // ErpLogs,
+  // ProductionLogs,
   
   // --------------------- Machine Settings --------------------------
 
@@ -738,7 +738,7 @@ export default function Router() {
               children:[
                 {element: <MachineLogsList/>, index: true},
                 {path: 'new', element: <MachineLogsAdd/>},
-                {path: 'graph', element: <MachineLogsGraphView/>}, 
+                // {path: 'graph', element: <MachineLogsGraphView/>}, 
                 // {path: ':id/view', element: <MachineLogsView/>},
               ]
             },
@@ -1126,9 +1126,9 @@ export default function Router() {
       ),
       children: [
         { path: '', element: <AllMachinesLogs />, index: true },
-        { path: 'coilLogs', element: <CoilLogs /> },
-        { path: 'erpLogs', element: <ErpLogs /> },
-        { path: 'productionLogs', element: <ProductionLogs /> },
+        // { path: 'coilLogs', element: <CoilLogs /> },
+        // { path: 'erpLogs', element: <ErpLogs /> },
+        // { path: 'productionLogs', element: <ProductionLogs /> },
       ],
     },    
     // ----------------------------- Sites Report -----------------------------------
