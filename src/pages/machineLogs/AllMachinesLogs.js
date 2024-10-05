@@ -24,7 +24,6 @@ function AllMachineLogs() {
   const { activeCustomers } = useSelector((state) => state.customer);
   const { page, rowsPerPage } = useSelector((state) => state.machineErpLogs);
   const [selectedSearchFilter, setSelectedSearchFilter] = useState('');
-  const [currentLogPage, setCurrentLogPage] = useState("");
   const [searchParams] = useSearchParams();
 
   // const isMobile = useResponsive('down', 'sm');
@@ -47,11 +46,6 @@ function AllMachineLogs() {
   const { customer, machine, dateFrom, dateTo, logType, filteredSearchKey, logPeriod } = watch();
 
   useEffect(() => {
-    setCurrentLogPage(searchParams.get('type'))
-    dispatch(resetMachineLogsGraphData())
-  }, [dispatch, searchParams])
-
-  useEffect(() => {
     dispatch(getActiveCustomers());
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -71,6 +65,7 @@ function AllMachineLogs() {
       const LogType = 'erp';
       dispatch(getMachineLogGraphData(customerId, machineId, LogType, logPeriod));
     }
+    if (!customer) dispatch(resetMachineLogsGraphData());
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [customer, machine, logPeriod, searchParams]);
 
@@ -130,7 +125,7 @@ function AllMachineLogs() {
     searchColumn: selectedSearchFilter,
   };
 
-  const isGraphPage = () => currentLogPage === "erpGraph"
+  const isGraphPage = () => searchParams.get('type') === "erpGraph"
 
   return (
     <Container maxWidth={false}>
