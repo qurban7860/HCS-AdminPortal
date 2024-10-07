@@ -387,10 +387,14 @@ export default function MachineLogsList({ allMachineLogsType }){
       {!isGraphPage() && (
         <MachineLogsDataTable allMachineLogsPage={false} dataForApi={dataForApi} logType={logType} />
       )}
-      {isGraphPage() && logGraphType.key === 'length_and_waste' ? (
-        <ErpProducedLengthLogGraph timePeriod={logPeriod} customer={machine?.customer?._id} />
-      ) : (
-        <ErpProductionRateLogGraph timePeriod={logPeriod} customer={machine?.customer?._id} />
+      {isGraphPage() && (
+        <>
+          {logGraphType.key === 'length_and_waste' ? (
+            <ErpProducedLengthLogGraph timePeriod={logPeriod} customer={machine?.customer?._id} />
+          ) : (
+            <ErpProductionRateLogGraph timePeriod={logPeriod} customer={machine?.customer?._id} />
+          )}
+        </>
       )}
     </Container>
   );
