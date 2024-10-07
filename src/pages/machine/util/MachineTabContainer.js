@@ -9,12 +9,11 @@ import TabContainer from '../../../components/Tabs/TabContainer';
 import { useSelector } from '../../../redux/store';
 // sections
 import { Cover } from '../../../components/Defaults/Cover';
-import { StyledCardContainer, StyledTooltip } from '../../../theme/styles/default-styles';
+import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import  TABS from './index';
 import { PATH_MACHINE } from '../../../routes/paths';
-import { getMachine, resetMachine } from '../../../redux/slices/products/machine';
+import { getMachine } from '../../../redux/slices/products/machine';
 import TabButtonTooltip from '../../../components/Tabs/TabButtonTooltip';
-import Iconify from '../../../components/iconify';
 // ----------------------------------------------------------------------
 
 MachineTabContainer.propTypes = {
@@ -61,7 +60,7 @@ export default function MachineTabContainer({ currentTabValue }) {
       navigate( PATH_MACHINE.machines.jira.root(machineId) )
     }
   }
-  
+
 
   return (
     <StyledCardContainer>

@@ -2,8 +2,8 @@ import PropTypes from 'prop-types';
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Typography, Card, Grid, Skeleton } from '@mui/material';
-import { Bar } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
+import { Line } from 'react-chartjs-2';
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 
 const formatNumber = (num) => {
   if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`;
@@ -11,65 +11,100 @@ const formatNumber = (num) => {
   return num.toFixed(1);
 };
 
-const barTotalPlugin = {
-  id: 'barTotal',
-  afterDatasetsDraw: (chart, args, options) => {
-    const { ctx, data } = chart;
-    ctx.save();
-    ctx.font = '11px Arial';
-    ctx.fillStyle = '#616161';
-    ctx.textAlign = 'center';
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
-    data.datasets.forEach((dataset, datasetIndex) => {
-      const meta = chart.getDatasetMeta(datasetIndex);
-      meta.data.forEach((bar, index) => {
-        const value = dataset.data[index];
-        const formattedValue = formatNumber(value);
-        ctx.fillText(formattedValue, bar.x, bar.y - 5);
-      });
-    });
-    ctx.restore();
-  }
-};
-
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, barTotalPlugin);
-
-const ErpProducedLengthLogGraph = ({timePeriod, customer}) => {
+const ErpProductionRateLogGraph = ({timePeriod, customer}) => {
   const [graphData, setGraphData] = useState([]);
   const { isLoading, machineLogsGraphData } = useSelector((state) => state.machineErpLogs);
 
   useEffect(() => {
     if (machineLogsGraphData) {
-      const convertedDataToMeters = machineLogsGraphData.map(item => ({
+      const convertedData = machineLogsGraphData.map(item => ({
         ...item,
-        componentLength: item.componentLength / 1000,
-        waste: item.waste / 1000
+        productionRate: (item.componentLength / 1000) / (item.time / 3600000) // Convert length to meters and time to hours
       }));
-      setGraphData(convertedDataToMeters);
+      setGraphData(convertedData);
     }
   }, [machineLogsGraphData]);
-
-
   const processGraphData = () => {
     if (!graphData || graphData.length === 0) {
       return null;
     }
 
-    const sortedData = [...graphData].sort((a, b) => a._id.localeCompare(b._id));
+    const sortedData = [...graphData];
+    let labels = sortedData.map(item => item._id);
 
-    const labels = sortedData.map(item => item._id);
-    const producedLength = sortedData.map(item => item.componentLength);
-    const wasteLength = sortedData.map(item => item.waste);
+    switch (timePeriod) {
+      case 'Daily':
+        sortedData.sort((a, b) => new Date(a._id) - new Date(b._id));
+        labels = Array.from({ length: 7 }, (_, i) => {
+          const date = new Date();
+          date.setDate(date.getDate() - i);
+          const month = String(date.getMonth() + 1).padStart(2, '0');
+          const day = String(date.getDate()).padStart(2, '0');
+          return `${month}/${day}`;
+        }).reverse();
+        break;
+      case 'Monthly':
+        sortedData.sort((a, b) => {
+          const [yearA, monthA] = a._id.split('-');
+          const [yearB, monthB] = b._id.split('-');
+          return new Date(yearA, monthA - 1) - new Date(yearB, monthB - 1);
+        });
+        labels = Array.from({ length: 12 }, (_, i) => {
+          const date = new Date();
+          date.setMonth(date.getMonth() - i);
+          const year = date.getFullYear();
+          const month = String(date.getMonth() + 1).padStart(2, '0');
+          return `${year}-${month}`;
+        }).reverse();
+        break;
+      case 'Quarterly':
+        sortedData.sort((a, b) => {
+          const [yearA, qtrA] = a._id.split('-');
+          const [yearB, qtrB] = b._id.split('-');
+          return yearA === yearB ? qtrA.localeCompare(qtrB) : yearA.localeCompare(yearB);
+        });
+        labels = Array.from({ length: 4 }, (_, i) => {
+          const date = new Date();
+          date.setMonth(date.getMonth() - i * 3);
+          const year = date.getFullYear();
+          const quarter = Math.floor(date.getMonth() / 3) + 1;
+          return `${year}-Q${quarter}`;
+        }).reverse();
+        break;
+      case 'Yearly':
+        sortedData.sort((a, b) => a._id.localeCompare(b._id));
+        labels = Array.from({ length: 5 }, (_, i) => {
+          const date = new Date();
+          date.setFullYear(date.getFullYear() - i);
+          return date.getFullYear().toString();
+        }).reverse();
+        break;
+      default:
+        labels = sortedData.map((item) => item._id);
+    }
+
+    const productionRate = labels.map(label => {
+      const dataPoint = sortedData.find(item => item._id.includes(label));
+      return dataPoint ? dataPoint.productionRate : 0;
+    });
+
+    console.log("productionRate: ", productionRate);
 
     return {
       labels,
       datasets: [
-        { label: 'Produced Length (m)', data: producedLength, backgroundColor: '#A9E0FC' },
-        { label: 'Waste Length (m)', data: wasteLength, backgroundColor: '#FCB49F' },
+        {
+          label: 'Production Rate (m/hr)',
+          data: productionRate,
+          borderColor: '#4CAF50',
+          backgroundColor: 'rgba(76, 175, 80, 0.1)',
+          tension: 0.1
+        },
       ],
     };
   };
-
   const chartData = processGraphData();
 
   const getDataRangeText = () => {
@@ -91,29 +126,24 @@ const ErpProducedLengthLogGraph = ({timePeriod, customer}) => {
     <Grid xs={12} sm={12} md={12} lg={10} xl={6} sx={{ mt: 3}}>
       <Card sx={{ p: 4, boxShadow: 3 }}>
         <Typography variant="h6" color="primary" gutterBottom>
-          Produced Length & Waste Over Time (For the {getDataRangeText()})
+          Production Rate Over Time (For the {getDataRangeText()})
         </Typography>
 
         {isLoading && <Skeleton variant="rectangular" width="100%" height={120} />}
         {!isLoading && chartData ? (
           <div style={{ maxWidth: '100vh', margin: '0 auto' }}>
-            <Bar
+            <Line
               data={chartData}
               options={{
                 responsive: true,
                 maintainAspectRatio: true,
                 aspectRatio: 1.5,
-                elements: {
-                  bar: {
-                    borderRadius: 3,
-                  },
-                },
                 scales: {
                   y: {
                     beginAtZero: true,
                     title: {
                       display: true,
-                      text: 'Meters',
+                      text: 'Production Rate (m/hr)',
                       font: { size: 14, weight: 'bold' },
                       color: '#616161',
                     },
@@ -140,10 +170,9 @@ const ErpProducedLengthLogGraph = ({timePeriod, customer}) => {
                   },
                   title: {
                     display: true,
-                    text: 'Produced & Waste Length (m)',
+                    text: 'Production Rate (m/hr)',
                     font: { size: 18, weight: 'bold' },
                   },
-                  barTotal: {},
                   tooltip: {
                     backgroundColor: '#FFFFFFE6',
                     titleColor: 'black',
@@ -167,8 +196,8 @@ const ErpProducedLengthLogGraph = ({timePeriod, customer}) => {
   );
 };
 
-export default ErpProducedLengthLogGraph;
-ErpProducedLengthLogGraph.propTypes = {
+export default ErpProductionRateLogGraph;
+ErpProductionRateLogGraph.propTypes = {
   timePeriod: PropTypes.string,
   customer: PropTypes.object,
 };
