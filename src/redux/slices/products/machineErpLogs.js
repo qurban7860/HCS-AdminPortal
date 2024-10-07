@@ -50,7 +50,7 @@ const slice = createSlice({
       state.machineErpLogListViewForm = action.payload;
       state.machineErpLogViewForm = false;
       state.machineErpLogAddForm = false;
-      
+
     },
     // SET VIEW TOGGLE
     setAllVisibilityFalse(state, action){
@@ -204,15 +204,16 @@ export function addMachineLogRecord(machine, customer, logs, action, version, ty
 
 // ------------------------- GET LOGS GRAPH DATA ---------------------------------------------
 
-export function getMachineLogGraphData(customerId, machineId, type = "erp", periodType) {
+export function getMachineLogGraphData(customerId, machineId, type = "erp", periodType, logGraphType) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const params = {
         customer: customerId,
         machine: machineId,
-        type, 
+        type,
         periodType,
+        logGraphType
       };
       const response = await axios.get(`${CONFIG.SERVER_URL}productLogs/graph`, { params });
       dispatch(slice.actions.setMachineLogsGraphData(response?.data || ''));
@@ -294,7 +295,7 @@ export function deleteMachineLogRecord(id, logType) {
       return {
         success: response.status === 200,
         message: 'Deleted Successfully',
-      }; 
+      };
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));

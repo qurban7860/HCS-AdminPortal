@@ -21,7 +21,6 @@ import MachineTabContainer from '../util/MachineTabContainer';
 import { machineLogTypeFormats } from '../../../constants/machineLogTypeFormats';
 import IconTooltip from '../../../components/Icons/IconTooltip';
 
-
 // ----------------------------------------------------------------------
 
 export default function MachineLogsAddForm() {

@@ -1,22 +1,23 @@
 import PropTypes from 'prop-types';
 import { useState, useEffect, useCallback } from 'react';
 // @mui
-import { Container, Card, Stack, Box, Typography, IconButton, MenuItem } from '@mui/material';
+import { Container, Card, Stack, Box, Typography, IconButton, MenuItem, useTheme, Divider } from '@mui/material';
 import { FormProvider, useForm } from 'react-hook-form';
 import { LoadingButton } from '@mui/lab';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 // routes
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // components
 import {
   getMachineLogRecords,
   ChangePage,
+  getMachineLogGraphData,
 } from '../../../redux/slices/products/machineErpLogs';
 import MachineTabContainer from '../util/MachineTabContainer';
-import { machineLogTypeFormats } from '../../../constants/machineLogTypeFormats';
+import { machineLogGraphTypes, machineLogTypeFormats } from '../../../constants/machineLogTypeFormats';
 import { RHFAutocomplete, RHFDatePicker, RHFSelect } from '../../../components/hook-form';
 import RHFFilteredSearchBar from '../../../components/hook-form/RHFFilteredSearchBar';
 import { fetchIndMachineLogSchema } from '../../schemas/machine';
@@ -25,34 +26,50 @@ import Iconify from '../../../components/iconify';
 import { StyledTooltip } from '../../../theme/styles/default-styles';
 import { PATH_MACHINE } from '../../../routes/paths';
 import MachineLogsDataTable from './MachineLogsDataTable';
+import ErpProducedLengthLogGraph from '../../machineLogs/graph/ErpProducedLengthLogGraph';
+import ErpProductionRateLogGraph from '../../machineLogs/graph/ErpProductionRateLogGraph';
+import IconTooltip from '../../../components/Icons/IconTooltip';
 
 // ----------------------------------------------------------------------
 
 MachineLogsList.propTypes = {
-  allMachineLogsPage: PropTypes.bool,
   allMachineLogsType: PropTypes.object
 };
 
-export default function MachineLogsList({ allMachineLogsPage = false, allMachineLogsType }){
+export default function MachineLogsList({ allMachineLogsType }){
   const [selectedSearchFilter, setSelectedSearchFilter] = useState('');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [currentLogPage, setCurrentLogPage] = useState("");
+
+  useEffect(() => {
+    setCurrentLogPage(searchParams.get('type'))
+  }, [searchParams])
+
+  const handleErpLogToggle = () => {
+    setSearchParams({type: currentLogPage === 'erpGraph' ? 'currentLogs' : 'erpGraph' });
+  };
+  const isGraphPage = () => searchParams.get('type') === "erpGraph"
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { machineId } = useParams();
-  
+  const theme = useTheme();
+
   const methods = useForm({
     defaultValues: {
       logType: machineLogTypeFormats.find(option => option.type === 'ERP') || null,
-      dateFrom: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), 
-      dateTo: new Date(), 
+      dateFrom: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+      dateTo: new Date(),
       filteredSearchKey: '',
       activeStatus: 'active',
+      logPeriod: "Monthly",
+      logGraphType: machineLogGraphTypes[0]
     },
     resolver: yupResolver(fetchIndMachineLogSchema),
   });
 
   const { watch, setValue, handleSubmit, trigger } = methods;
-  const { dateFrom, dateTo, logType, filteredSearchKey, activeStatus } = watch();
+  const { dateFrom, dateTo, logType, filteredSearchKey, activeStatus, logPeriod, logGraphType } = watch();
 
   useEffect(() => {
     handleResetFilter();
@@ -61,7 +78,7 @@ export default function MachineLogsList({ allMachineLogsPage = false, allMachine
 
   const { page, rowsPerPage } = useSelector((state) => state.machineErpLogs);
   const { machine } = useSelector((state) => state.machine);
-  
+
   const handleResetFilter = () => {
     setValue(filteredSearchKey, '')
     setSelectedSearchFilter('')
@@ -81,9 +98,14 @@ export default function MachineLogsList({ allMachineLogsPage = false, allMachine
     searchColumn: selectedSearchFilter,
   };
 
-  // const handleColumnButtonClick = (columnId, newCheckState) => {
-  //   dispatchTableColumns({ type: 'updateColumnCheck', columnId, newCheckState });
-  // };
+  useEffect(() => {
+    if (isGraphPage() && logPeriod && logGraphType) {
+      const customerId = machine?.customer?._id;
+      const LogType = 'erp';
+      dispatch(getMachineLogGraphData(customerId, machineId, LogType, logPeriod, logGraphType?.key));
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [logPeriod, searchParams, logGraphType]);
 
   const onSubmit = (data) => {
     dispatch(ChangePage(0));
@@ -103,80 +125,142 @@ export default function MachineLogsList({ allMachineLogsPage = false, allMachine
       })
     );
   };
-  
+
   const handleLogTypeChange = useCallback((newLogType) => {
     setValue('logType', newLogType);
-    trigger('logType'); 
+    trigger('logType');
   }, [setValue, trigger]);
 
+  const handlePeriodChange = useCallback((newPeriod) => {
+    setValue('logPeriod', newPeriod);
+  }, [setValue]);
+
+  const handleGraphTypeChange = useCallback((newGraphType) => {
+    setValue('logGraphType', newGraphType);
+  }, [setValue]);
+
   const showAddbutton = () => {
+    if (isGraphPage()) return false;
     if (machine?.status?.slug === 'transferred') return false;
-    if (allMachineLogsPage) return false;
     if (machine?.isArchived) return false;
     return BUTTONS.ADD_MACHINE_LOGS;
+  };
+
+  const showGraphbutton = () => {
+    if (machine?.isArchived) return false;
+    if (isGraphPage()) return false;
+    return BUTTONS.SHOW_LOG_GRAPH;
   };
 
   const returnSearchFilterColumnOptions = () =>
     logType?.tableColumns.filter((item) => item?.searchable && item?.page !== "allMachineLogs")
 
   return (
-    <>
-      <Container maxWidth={false}>
-        {!allMachineLogsPage ? <MachineTabContainer currentTabValue="logs" /> : null}
-        {!allMachineLogsPage && (
-          <FormProvider {...methods}>
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <Card sx={{ p: 3 }}>
-                <Stack spacing={2}>
+    <Container maxWidth={false}>
+      <MachineTabContainer currentTabValue="logs" />
+      <FormProvider {...methods}>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Card sx={{ p: 3 }}>
+            <Stack spacing={2}>
+              <Stack direction="row" spacing={1} sx={{ justifyContent: 'space-between', mb: 3 }}>
+                {!isGraphPage() ? (
                   <Stack
                     direction="row"
                     spacing={1}
-                    sx={{ justifyContent: 'space-between', mb: 3 }}
+                    sx={{ alignSelf: 'flex-start', alignItems: 'center' }}
                   >
-                    <Stack
-                      direction="row"
-                      spacing={1}
-                      sx={{ alignSelf: 'flex-start', alignItems: 'center' }}
-                    >
-                      <Box sx={{ pb: 1 }}>
-                        <Typography variant="h5" color="text.primary">
-                          Logs Filter
-                        </Typography>
-                      </Box>
-                    </Stack>
-                    {showAddbutton() && (
-                      <StyledTooltip
-                        title={showAddbutton()}
-                        placement="top"
-                        disableFocusListener
-                        tooltipcolor="#103996"
-                        color="#fff"
-                      >
-                        <IconButton
-                          color="#fff"
-                          onClick={() => navigate(PATH_MACHINE.machines.logs.new(machineId))}
-                          sx={{
-                            background: '#2065D1',
-                            alignSelf: 'flex-end',
-                            borderRadius: 1,
-                            height: '1.7em',
-                            p: '8.5px 14px',
-                            '&:hover': {
-                              background: '#103996',
-                              color: '#fff',
-                            },
-                          }}
-                        >
-                          <Iconify
-                            color="#fff"
-                            sx={{ height: '24px', width: '24px' }}
-                            icon="eva:plus-fill"
-                          />
-                        </IconButton>
-                      </StyledTooltip>
-                    )}
+                    <Box sx={{ pb: 1 }}>
+                      <Typography variant="h5" color="text.primary">
+                        Logs Filter
+                      </Typography>
+                    </Box>
                   </Stack>
-                  {/* <Divider variant="middle" /> */}
+                ) : (
+                  <Stack
+                  direction="row"
+                  spacing={1}
+                  sx={{ alignSelf: 'flex-start', alignItems: 'center', mb: 2 }}
+                >
+                  <IconTooltip
+                    title="Back"
+                    onClick={handleErpLogToggle}
+                    color={theme.palette.primary.main}
+                    icon="mdi:arrow-left"
+                  />
+                  <Divider orientation="vertical" flexItem />
+                  <Box sx={{ borderBottom: 2, borderColor: 'primary.main', pb: 1 }}>
+                    <Typography variant="h5" color="text.primary">
+                      Log Graphs
+                    </Typography>
+                  </Box>
+                </Stack>
+                )}
+                <Stack direction="row" spacing={1} sx={{ alignSelf: 'flex-end' }}>
+                  {showGraphbutton() && (
+                    <StyledTooltip
+                      title={showGraphbutton()}
+                      placement="top"
+                      disableFocusListener
+                      tooltipcolor="#103996"
+                      color="#fff"
+                    >
+                      <IconButton
+                        color="#fff"
+                        onClick={handleErpLogToggle}
+                        sx={{
+                          background: '#2065D1',
+                          borderRadius: 1,
+                          height: '1.7em',
+                          p: '8.5px 14px',
+                          '&:hover': {
+                            background: '#103996',
+                            color: '#fff',
+                          },
+                        }}
+                      >
+                        <Iconify
+                          color="#fff"
+                          sx={{ height: '24px', width: '24px' }}
+                          icon="mdi:graph-bar"
+                        />
+                      </IconButton>
+                    </StyledTooltip>
+                  )}
+                  {showAddbutton() && (
+                    <StyledTooltip
+                      title={showAddbutton()}
+                      placement="top"
+                      disableFocusListener
+                      tooltipcolor="#103996"
+                      color="#fff"
+                    >
+                      <IconButton
+                        color="#fff"
+                        onClick={() => navigate(PATH_MACHINE.machines.logs.new(machineId))}
+                        sx={{
+                          background: '#2065D1',
+                          borderRadius: 1,
+                          height: '1.7em',
+                          p: '8.5px 14px',
+                          '&:hover': {
+                            background: '#103996',
+                            color: '#fff',
+                          },
+                        }}
+                      >
+                        <Iconify
+                          color="#fff"
+                          sx={{ height: '24px', width: '24px' }}
+                          icon="eva:plus-fill"
+                        />
+                      </IconButton>
+                    </StyledTooltip>
+                  )}
+                </Stack>
+              </Stack>
+              {/* <Divider variant="middle" /> */}
+              {!isGraphPage() && (
+                <>
                   <Box
                     display="grid"
                     gap={2}
@@ -225,7 +309,10 @@ export default function MachineLogsList({ allMachineLogsPage = false, allMachine
                   <Stack
                     direction={{ xs: 'column', sm: 'row' }}
                     spacing={2}
-                    sx={{ justifyContent: 'space-between', alignItems: { xs: 'stretch', sm: 'flex-start' } }}
+                    sx={{
+                      justifyContent: 'space-between',
+                      alignItems: { xs: 'stretch', sm: 'flex-start' },
+                    }}
                   >
                     <Box sx={{ flexGrow: 1, width: { xs: '100%', sm: 'auto' } }}>
                       <RHFFilteredSearchBar
@@ -234,7 +321,11 @@ export default function MachineLogsList({ allMachineLogsPage = false, allMachine
                         setSelectedFilter={setSelectedSearchFilter}
                         selectedFilter={selectedSearchFilter}
                         placeholder="Enter Search here..."
-                        helperText={selectedSearchFilter === "_id" ? "To search by ID, you must enter the complete Log ID" : ""}
+                        helperText={
+                          selectedSearchFilter === '_id'
+                            ? 'To search by ID, you must enter the complete Log ID'
+                            : ''
+                        }
                         fullWidth
                       />
                     </Box>
@@ -256,102 +347,52 @@ export default function MachineLogsList({ allMachineLogsPage = false, allMachine
                       </LoadingButton>
                     </Box>
                   </Stack>
+                </>
+              )}
+              {isGraphPage() && (
+                <Stack direction="row" spacing={2} sx={{ width: '100%' }}>
+                  <Box sx={{ width: '50%' }}>
+                    <RHFAutocomplete
+                      name="logPeriod"
+                      label="Period*"
+                      options={['Daily', 'Monthly', 'Quarterly', 'Yearly']}
+                      onChange={(e, newValue) => handlePeriodChange(newValue)}
+                      size="small"
+                      disableClearable
+                    />
+                  </Box>
+                  <Box sx={{ width: '50%' }}>
+                    <RHFAutocomplete
+                      name="logGraphType"
+                      label="Graph Type*"
+                      options={machineLogGraphTypes}
+                      onChange={(e, newValue) => handleGraphTypeChange(newValue)}
+                      getOptionLabel={(option) => option.name || ''}
+                      isOptionEqualToValue={(option, value) => option?.key === value?.key}
+                      renderOption={(props, option) => (
+                        <li {...props} key={option?.key}>
+                          {option.name || ''}
+                        </li>
+                      )}
+                      disableClearable
+                      size="small"
+                    />
+                  </Box>
                 </Stack>
-              </Card>
-            </form>
-          </FormProvider>
-        )}
-        <MachineLogsDataTable allMachineLogsPage={allMachineLogsPage} dataForApi={dataForApi} logType={logType} />
-        {/* <TableCard>
-          {!isNotFound && (
-            <TablePaginationCustom
-              count={machineErpLogstotalCount || 0}
-              page={page}
-              rowsPerPage={rowsPerPage}
-              onPageChange={onChangePage}
-              onRowsPerPageChange={onChangeRowsPerPage}
-              columnFilterButtonData={tableColumns}
-              columnButtonClickHandler={handleColumnButtonClick}
-            />
-          )}
-
-          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            <Scrollbar>
-              <Table stickyHeader size="small" sx={{ minWidth: 360 }}>
-                <TableHead>
-                  <TableRow>
-                    {dataFiltered.length > 0 &&
-                      tableColumns?.map((headCell, index) => {
-                        if (!headCell?.checked) return null;
-                        return (
-                          <TableCell
-                            key={headCell.id}
-                            align="left"
-                            sortDirection={orderBy === headCell.id ? order : false}
-                            sx={{ width: headCell.width, minWidth: headCell.minWidth }}
-                          >
-                            {onSort ? (
-                              <TableSortLabel
-                                hideSortIcon
-                                active={orderBy === headCell.id}
-                                direction={orderBy === headCell.id ? order : 'asc'}
-                                onClick={() => onSort(headCell.id)}
-                                sx={{ textTransform: 'capitalize' }}
-                              >
-                                {headCell.label}
-                              </TableSortLabel>
-                            ) : (
-                              headCell.label
-                            )}
-                          </TableCell>
-                        );
-                      })}
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {(isLoading ? [...Array(rowsPerPage)] : dataFiltered).map((row, index) =>
-                    row ? (
-                      <MachineLogsTableRow
-                        key={row._id}
-                        columnsToShow={tableColumns}
-                        allMachineLogsPage={allMachineLogsPage}
-                        row={row}
-                        onViewRow={() => handleViewRow(row._id)}
-                        selected={selected.includes(row._id)}
-                        selectedLength={selected.length}
-                        style={index % 2 ? { background: 'red' } : { background: 'green' }}
-                      />
-                    ) : (
-                      !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
-                    )
-                  )}
-                  <TableNoData isNotFound={isNotFound} />
-                </TableBody>
-              </Table>
-            </Scrollbar>
-          </TableContainer>
-          {!isNotFound && (
-            <TablePaginationCustom
-              count={machineErpLogstotalCount || 0}
-              page={page}
-              rowsPerPage={rowsPerPage}
-              onPageChange={onChangePage}
-              onRowsPerPageChange={onChangeRowsPerPage}
-            />
-          )}
-        </TableCard> */}
-      </Container>
-      {/* {openLogDetailsDialog ? (
-        <DialogViewMachineLogDetails
-          logDetails={selectedLog}
-          allMachineLogsPage={allMachineLogsPage}
-          openLogDetailsDialog={openLogDetailsDialog}
-          setOpenLogDetailsDialog={setOpenLogDetailsDialog}
-          logType={logType?.type}
-          refreshLogsList={refreshLogsList}
-        />
-      ) : null} */}
-    </>
+              )}
+            </Stack>
+          </Card>
+        </form>
+      </FormProvider>
+      {!isGraphPage() && (
+        <MachineLogsDataTable allMachineLogsPage={false} dataForApi={dataForApi} logType={logType} />
+      )}
+      {isGraphPage() && logGraphType.key === 'length_and_waste' ? (
+        <ErpProducedLengthLogGraph timePeriod={logPeriod} customer={machine?.customer?._id} />
+      ) : (
+        <ErpProductionRateLogGraph timePeriod={logPeriod} customer={machine?.customer?._id} />
+      )}
+    </Container>
   );
 }
 // ----------------------------------------------------------------------
