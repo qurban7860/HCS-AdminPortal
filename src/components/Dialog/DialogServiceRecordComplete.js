@@ -9,7 +9,6 @@ import {
   DialogTitle,
   Divider,
   DialogActions,
-  Alert,
   Stack,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
@@ -17,10 +16,9 @@ import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useSnackbar } from 'notistack';
-
+import { resetActiveSPContacts } from '../../redux/slices/customer/contact';
 import {
   approveServiceRecordRequest,
-  getMachineServiceRecord,
   sendMachineServiceRecordForApproval,
   setCompleteDialog,
 } from '../../redux/slices/products/machineServiceRecord';
@@ -28,6 +26,7 @@ import FormProvider from '../hook-form/FormProvider';
 import { RHFAutocomplete, RHFTextField } from '../hook-form';
 import { useAuthContext } from '../../auth/useAuthContext';
 import SkeletonLine from '../skeleton/SkeletonLine';
+import Iconify from '../iconify';
 
 DialogServiceRecordComplete.propTypes = {
   recordStatus: PropTypes.object,
@@ -37,9 +36,7 @@ function DialogServiceRecordComplete({ recordStatus }) {
   const [approvingContacts, setApprovingContacts] = useState([]);
   const [allowApproval, setAllowApproval] = useState(false);
   const dispatch = useDispatch();
-  const { machineServiceRecord, completeDialog } = useSelector(
-    (state) => state.machineServiceRecord
-  );
+  const { machineServiceRecord, completeDialog } = useSelector( (state) => state.machineServiceRecord );
   const { activeSpContacts, isLoading } = useSelector((state) => state.contact);
   const { user } = useAuthContext();
 
@@ -80,7 +77,10 @@ function DialogServiceRecordComplete({ recordStatus }) {
     ) {
       setAllowApproval(true);
     }
-  }, [machineServiceRecord, user]);
+    return () => {
+      dispatch(resetActiveSPContacts());
+    }
+  }, [ dispatch, machineServiceRecord, user ]);
 
   const handleCloseDialog = () => {
     dispatch(setCompleteDialog(false));
@@ -120,7 +120,7 @@ const SendApprovalEmails = ({ isLoading, recordStatus, approvingContacts }) => {
   const { user } = useAuthContext();
 
   const CompleteServiceRecordSchema = Yup.object().shape({
-    contacts: Yup.array().min(1, 'At least one contact is required').required(),
+    contacts: Yup.array().min(1).label("Contacts").required(),
   });
 
   const methods = useForm({
@@ -132,12 +132,9 @@ const SendApprovalEmails = ({ isLoading, recordStatus, approvingContacts }) => {
 
   const {
     handleSubmit,
-    watch,
     reset,
     formState: { isSubmitting },
   } = methods;
-
-  const { contacts } = watch();
 
   const handleCloseDialog = () => {
     dispatch(setCompleteDialog(false));
@@ -161,11 +158,9 @@ const SendApprovalEmails = ({ isLoading, recordStatus, approvingContacts }) => {
           params
         )
       );
+      
       await enqueueSnackbar(`Service Record Approval Email Sent Successfully!`);
       await handleCloseDialog();
-      await dispatch(
-        getMachineServiceRecord(machineServiceRecord?.machine?._id, machineServiceRecord?._id)
-      );
     } catch (err) {
       enqueueSnackbar(`Service Record Approval Email Failed to Send! `, { variant: 'error' });
       console.error(err.message);
@@ -179,9 +174,9 @@ const SendApprovalEmails = ({ isLoading, recordStatus, approvingContacts }) => {
           {!isLoading ? (
             <RHFAutocomplete
               multiple
-              // disableCloseOnSelect
+              disableCloseOnSelect
               filterSelectedOptions
-              label="Send Approval Email to Contacts"
+              label="Contacts*"
               name="contacts"
               options={approvingContacts}
               isOptionEqualToValue={(option, value) => option?._id === value?._id}
@@ -195,11 +190,6 @@ const SendApprovalEmails = ({ isLoading, recordStatus, approvingContacts }) => {
           ) : (
             <SkeletonLine />
           )}
-          {contacts?.length > 0 && (
-            <Alert severity="info" variant="filled">
-              Email will be sent to selected contacts?
-            </Alert>
-          )}
         </Stack>
       </DialogContent>
       <DialogActions>
@@ -211,6 +201,7 @@ const SendApprovalEmails = ({ isLoading, recordStatus, approvingContacts }) => {
           disabled={isLoading}
           loading={isSubmitting}
           variant="contained"
+          endIcon={<Iconify icon="streamline:send-email-solidmdi:send" />}
         >
           Send Email
         </LoadingButton>
@@ -284,9 +275,6 @@ const ApproveSeviceRecord = ({ isLoading, recordStatus }) => {
       await enqueueSnackbar(
         `Service Record ${data?.status === 'APPROVED' ? 'Approved' : 'Rejected'} Successfully!`
       );
-      await dispatch(
-        getMachineServiceRecord(machineServiceRecord?.machine?._id, machineServiceRecord?._id)
-      );
     } catch (err) {
       enqueueSnackbar(
         `Service Record ${data?.status === 'APPROVED' ? 'Approval' : 'Rejection'} Failed! `,
@@ -330,6 +318,12 @@ const ApproveSeviceRecord = ({ isLoading, recordStatus }) => {
               loading={rejectionSubmitting}
               variant="contained"
               color="error"
+              sx={{
+                backgroundColor: 'red', 
+                '&:hover': {
+                  backgroundColor: 'darkred', 
+                },
+              }}
               onClick={() => handleStatusChange('REJECTED')}
             >
               Reject
@@ -338,6 +332,12 @@ const ApproveSeviceRecord = ({ isLoading, recordStatus }) => {
               disabled={isSubmitting}
               loading={approvalSubmitting}
               variant="contained"
+              sx={{
+                backgroundColor: 'green', 
+                '&:hover': {
+                  backgroundColor: 'darkgreen', 
+                },
+              }}
               onClick={() => handleStatusChange('APPROVED')}
             >
               Approve

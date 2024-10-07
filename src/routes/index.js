@@ -8,6 +8,7 @@ import CompactLayout from '../layouts/compact';
 import DashboardLayout from '../layouts/dashboard';
 // config
 import { PATH_AFTER_LOGIN } from '../config-global';
+import { PATH_MACHINE_LOGS } from './paths';
 //
 import {
   // Auth
@@ -174,8 +175,8 @@ import {
   // --------------------------- MACHINE LOGS -------------------------------------
   MachineLogsList,
   MachineLogsAdd,
-  MachineLogsView,
-  MachineLogsGraphView,
+  // MachineLogsView,
+  // MachineLogsGraphView,
 
   // --------------------------- MACHINE Jira --------------------------------
   MachineJiraList,
@@ -244,7 +245,13 @@ import {
   MachineStatusAdd, 
   MachineStatusView,
   MachineStatusEdit,
-
+  
+  // --------------------------- MACHINE LOG -------------------------------------
+  AllMachinesLogs,
+  // CoilLogs,
+  // ErpLogs,
+  // ProductionLogs,
+  
   // --------------------- Machine Settings --------------------------
 
   // MACHINE SETTINGS: MACHINE Technical Parameters 
@@ -731,8 +738,8 @@ export default function Router() {
               children:[
                 {element: <MachineLogsList/>, index: true},
                 {path: 'new', element: <MachineLogsAdd/>},
-                {path: 'graph', element: <MachineLogsGraphView/>}, 
-                {path: ':id/view', element: <MachineLogsView/>},
+                // {path: 'graph', element: <MachineLogsGraphView/>}, 
+                // {path: ':id/view', element: <MachineLogsView/>},
               ]
             },
             { path: ':machineId/jira',
@@ -944,6 +951,7 @@ export default function Router() {
             { path: ':id/view', element: <DocumentCategoryView />}
           ],
         },
+
         // ------------------------------ document Type ----------------------------------
         {
           path: 'documentType',
@@ -1108,7 +1116,21 @@ export default function Router() {
         },
       ],
     },
-
+    // ----------------------------- MACHINE LOGS  -----------------------------------
+    {
+      path: PATH_MACHINE_LOGS.root, 
+      element: (
+        <AuthGuard>
+          <DashboardLayout />
+        </AuthGuard>
+      ),
+      children: [
+        { path: '', element: <AllMachinesLogs />, index: true },
+        // { path: 'coilLogs', element: <CoilLogs /> },
+        // { path: 'erpLogs', element: <ErpLogs /> },
+        // { path: 'productionLogs', element: <ProductionLogs /> },
+      ],
+    },    
     // ----------------------------- Sites Report -----------------------------------
     {
       // Sites

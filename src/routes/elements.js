@@ -203,14 +203,14 @@ export const MachineServiceRecordHistoryList = Loadable(lazy(() => import('../pa
 export const MachineINIList = Loadable(lazy(() => import('../pages/machine/historicalConfigurations/HistoricalConfigurationsList')));
 export const MachineINIAdd = Loadable(lazy(() => import('../pages/machine/historicalConfigurations/HistoricalConfigurationsAddForm')));
 export const MachineINIView = Loadable(lazy(() => import('../pages/machine/historicalConfigurations/HistoricalConfigurationsViewForm')));
-export const MachineINICompareView = Loadable(lazy(() => import('../pages/machine/historicalConfigurations/HistoricalConfigurationsCompareViewForm')));
+export const MachineINICompareView = Loadable(lazy(() => import('../pages/machine/historicalConfigurations/HistoricalConfigurationsCompareView')));
 
 // --------------------------- MACHINE LOGS -------------------------------------
 
 export const MachineLogsList = Loadable(lazy(() => import('../pages/machine/logs/MachineLogsList')));
 export const MachineLogsAdd = Loadable(lazy(() => import('../pages/machine/logs/MachineLogsAddForm')));
-export const MachineLogsView = Loadable(lazy(() => import('../pages/machine/logs/MachineLogsViewForm')));
-export const MachineLogsGraphView = Loadable(lazy(() => import('../pages/machine/logs/MachineLogsGraphViewForm')));
+// export const MachineLogsView = Loadable(lazy(() => import('../pages/machine/logs/MachineLogsViewForm')));
+// export const MachineLogsGraphView = Loadable(lazy(() => import('../pages/machine/logs/MachineLogsGraphViewForm')));
 
 // --------------------------- MACHINE JIRA -------------------------------------
 
@@ -219,6 +219,15 @@ export const MachineJiraList = Loadable(lazy(() => import('../pages/machine/jira
 // ---------------------  SETTINGS -------------------------------------------
 
 export const MachineSetting = Loadable(lazy(() => import('../pages/machineSettings/Machine')));
+
+// ---------------------  MACHINE LOGS -------------------------------------------
+
+export const AllMachinesLogs = Loadable(lazy(() => import('../pages/machineLogs/AllMachinesLogs')));
+// export const CoilLogs = Loadable(lazy(() => import('../pages/machineLogs/graph/CoilLogs')));
+// export const ErpLogs = Loadable(lazy(() => import('../pages/machineLogs/graph/ErpLogs')));
+// export const ProductionLogs = Loadable(lazy(() => import('../pages/machineLogs/graph/ProductionLogs')));
+
+
 
 // --------------------- Categories & Models ----------------------
 

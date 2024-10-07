@@ -3,20 +3,15 @@ import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { LoadingButton } from '@mui/lab';
 import axios from 'axios';
-import { Box, Grid, Dialog, DialogContent,  Divider, Stepper, Step, TextField, Button,  StepLabel, StepContent, DialogActions, Checkbox, FormControlLabel } from '@mui/material';
-import { PATH_MACHINE } from '../../routes/paths';
+import { Box, Grid, Dialog, DialogContent,  Divider, Button, DialogActions, Checkbox, FormControlLabel } from '@mui/material';
 import DialogLabel from './DialogLabel';
-import ViewFormField from '../ViewForms/ViewFormField';
 import { changeMachineStatus, getMachine, setMachineStatusChangeDialog } from '../../redux/slices/products/machine';
 import { getActiveMachineStatuses, resetActiveMachineStatuses } from '../../redux/slices/products/statuses';
 import { useSnackbar } from '../snackbar';
-import FormProvider, { RHFAutocomplete, RHFCheckbox, RHFDatePicker } from '../hook-form';
-import { machineTransferSchema } from '../../pages/schemas/machine'
+import FormProvider, { RHFAutocomplete, RHFDatePicker } from '../hook-form';
 import { Snacks } from '../../constants/machine-constants';
 import { fDate } from '../../utils/formatTime';
-import FormLabel from '../DocumentForms/FormLabel';
 import { future5yearDate, pastDate} from '../../pages/machine/util';
 
 function MachineStatusChangeDialog() {
@@ -61,9 +56,6 @@ function MachineStatusChangeDialog() {
     reset,
     handleSubmit,
     setValue,
-    trigger,
-    watch,
-    formState: { isSubmitting },
   } = methods;
 
   const handleMachineDialog = async()=>{ 
@@ -74,7 +66,7 @@ function MachineStatusChangeDialog() {
   const onSubmit = async (data) => {
       try {
         data.updateConnectedMachines = updateConnectedMachines;
-        const response = await dispatch(changeMachineStatus(machine?._id, data));
+        await dispatch(changeMachineStatus(machine?._id, data));
         enqueueSnackbar(Snacks.machineStatusSuccess);
         dispatch(getMachine(machine?._id));
         handleMachineDialog()

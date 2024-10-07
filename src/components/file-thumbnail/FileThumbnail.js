@@ -27,6 +27,7 @@ export default function FileThumbnail({ file, rows, tooltip, imageView, onDownlo
         component="img"
         src={preview}
         sx={{
+              boxShadow: 3,
               width: 1,
               height: 1,
               pb:2.5,
@@ -40,6 +41,7 @@ export default function FileThumbnail({ file, rows, tooltip, imageView, onDownlo
         component="img"
         src={fileThumb(format.toLowerCase())}
         sx={{
+          boxShadow: 3,
           width: 70,
           height: 70,
           flexShrink: 0,

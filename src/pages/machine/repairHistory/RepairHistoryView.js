@@ -59,8 +59,7 @@ export default function RepairHistoryView() {
   ];
 
   return (
-    <>
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+    <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
           heading="Site View"
           links={[
@@ -113,6 +112,5 @@ export default function RepairHistoryView() {
         )}
         
       </Container>
-    </>
   );
 }

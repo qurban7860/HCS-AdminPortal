@@ -1,5 +1,6 @@
 import React, { useEffect, useState, memo } from 'react';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 import { Typography, Grid, Chip, createTheme, IconButton, TextField } from '@mui/material';
 import { green } from '@mui/material/colors';
 import IconPopover from '../Icons/IconPopover';
@@ -8,6 +9,7 @@ import SkeletonViewFormField from '../skeleton/SkeletonViewFormField';
 import { StyledTooltip } from '../../theme/styles/default-styles';
 import Iconify from '../iconify';
 import { ICONS } from '../../constants/icons/default-icons';
+import { fDateTime } from '../../utils/formatTime';
 
 function ViewFormField({
   backLink,
@@ -55,7 +57,7 @@ function ViewFormField({
 }) {
   const [verifiedAnchorEl, setVerifiedAnchorEl] = useState(null);
   const [verifiedBy, setVerifiedBy] = useState([]);
-
+  const { machineServiceRecord } = useSelector((state) => state.machineServiceRecord);
   const theme = createTheme({
     palette: {
       success: green,
@@ -128,13 +130,15 @@ function ViewFormField({
           {secondObjectParam || ''}
           {numberParam || ''}
         </Typography>
-        {srEvaluationComment ? (
+        {srEvaluationComment && (
           <TextField
             disabled
             fullWidth
-            defaultValue={srEvaluationComment?.comment}
+            value={ machineServiceRecord?.approval?.approvalLogs[0]?.comments || "" }
             variant="standard"
-            helperText={srEvaluationComment?.helperText}
+            helperText={`By ${machineServiceRecord?.approval?.approvalLogs[0]?.evaluatedBy.firstName} ${
+                  machineServiceRecord?.approval?.approvalLogs[0]?.evaluatedBy.lastName
+                } on ${fDateTime(machineServiceRecord?.approval?.approvalLogs[0]?.evaluationDate)}`}
             multiline
             minRows={1}
             // maxRows={6}
@@ -155,8 +159,9 @@ function ViewFormField({
                 },
               },
             }}
+            key={machineServiceRecord?.approval?.approvalLogs[0]?.comments}
           />
-        ) : null}
+        )}
         {node || ''}
         {ViewAllVersions && 
           <StyledTooltip title={ICONS.VIEW_VERSIONS.heading} placement="top" disableFocusListener tooltipcolor={theme.palette.primary.main} color={theme.palette.primary.main}>
@@ -386,6 +391,6 @@ ViewFormField.propTypes = {
   backLink: PropTypes.func,
   isLoading: PropTypes.bool,
   variant: PropTypes.string,
-  srEvaluationComment: PropTypes.object,
+  srEvaluationComment: PropTypes.bool
 };
 

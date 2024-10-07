@@ -1,32 +1,33 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useSnackbar } from 'notistack';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router';
 import download from 'downloadjs';
-import { Grid, Typography, Divider, Chip, IconButton, Switch, Box } from '@mui/material';
+import { Grid, Typography, Divider, Chip,  Switch, Box, Button, Dialog, DialogTitle } from '@mui/material';
+import b64toBlob from 'b64-to-blob';
 import CopyIcon from '../../../components/Icons/CopyIcon';
-import Iconify from '../../../components/iconify';
 import { fDate } from '../../../utils/formatTime';
 import ViewFormServiceRecordVersionAudit from '../../../components/ViewForms/ViewFormServiceRecordVersionAudit';
-import { StyledTooltip } from '../../../theme/styles/default-styles';
-import { deleteCheckItemFile, downloadCheckItemFile, getMachineServiceRecordCheckItems } from '../../../redux/slices/products/machineServiceRecord';
+import { downloadCheckItemFile } from '../../../redux/slices/products/machineServiceRecord';
 import { DocumentGalleryItem } from '../../../components/gallery/DocumentGalleryItem';
 import Lightbox from '../../../components/lightbox/Lightbox';
+import SkeletonPDF from '../../../components/skeleton/SkeletonPDF';
 
 const CheckedItemValueHistoryItem = ({ historyItem, inputType }) => {
-  const { machineServiceRecord } = useSelector((state) => state.machineServiceRecord);
   const dispatch = useDispatch();
-  const { enqueueSnackbar } = useSnackbar();
-  const { machineId, serviceId} = useParams();
-
   const regEx = /^[^2]*/;
+  const { enqueueSnackbar } = useSnackbar();
+  const { machineId } = useParams();
+  const [pdf, setPDF] = useState(null);
+  const [PDFName, setPDFName] = useState('');
+  const [AttachedPDFViewerDialog, setAttachedPDFViewerDialog] = useState(false);
   const [selectedImage, setSelectedImage] = useState(-1);
   const [slides, setSlides] = useState([]);
 
   useEffect(() => {
     if (historyItem?.files) {
-        const updatedFiles = historyItem.files?.map(file => ({
+        const updatedFiles = historyItem.files?.filter(file => file?.fileType && file.fileType.startsWith("image"))?.map(file => ({
           ...file,
           src: `data:${file?.fileType};base64,${file?.thumbnail}`,
           thumbnail: `data:${file?.fileType};base64,${file?.thumbnail}`
@@ -41,7 +42,7 @@ const CheckedItemValueHistoryItem = ({ historyItem, inputType }) => {
 
     if(!image?.isLoaded && image?.fileType?.startsWith('image')){
       try {
-        const response = await dispatch(downloadCheckItemFile(machineId, serviceId, image?._id));
+        const response = await dispatch(downloadCheckItemFile(machineId, image.serviceRecord, image?._id));
         if (regEx.test(response.status)) {
           // Update the image property in the imagesLightbox array
           const updatedSlides = [
@@ -68,11 +69,11 @@ const CheckedItemValueHistoryItem = ({ historyItem, inputType }) => {
   };
 
 
-  const handleDownloadCheckItemFile = (fileId, name, extension) => {
-    dispatch(downloadCheckItemFile(machineId, serviceId, fileId))
+  const handleDownloadCheckItemFile = (file) => {
+    dispatch(downloadCheckItemFile( machineId, file.serviceRecord, file._id ))
       .then((res) => {
         if (regEx.test(res.status)) {
-          download(atob(res.data), `${name}.${extension}`, { type: extension });
+          download(atob(res.data), `${file?.name}.${file?.extension}`, { type: file?.extension });
           enqueueSnackbar(res.statusText);
         } else {
           enqueueSnackbar(res.statusText, { variant: `error` });
@@ -87,6 +88,29 @@ const CheckedItemValueHistoryItem = ({ historyItem, inputType }) => {
           enqueueSnackbar('Something went wrong!', { variant: `error` });
         }
       });
+  };
+
+  const handleOpenFile = async (file) => {
+    try {
+      setPDFName(`${file?.name}.${file?.extension}`);
+      setAttachedPDFViewerDialog(true);
+      setPDF(null);
+      const response = await dispatch(downloadCheckItemFile(machineId, file.serviceRecord, file._id));
+      if (regEx.test(response.status)) {
+        const blob = b64toBlob(encodeURI(response.data), 'application/pdf')
+        const url = URL.createObjectURL(blob);
+        setPDF(url);
+      } else {
+        enqueueSnackbar(response.statusText, { variant: 'error' });
+      }
+    } catch (error) {
+      setAttachedPDFViewerDialog(false);
+      if (error?.message || error?.Message) {
+        enqueueSnackbar((error?.message || '' ) || (error?.Message || ''), { variant: 'error' });
+      } else {
+        enqueueSnackbar('File Download Failed!', { variant: 'error' });
+      }
+    }
   };
 
   return (
@@ -139,14 +163,22 @@ const CheckedItemValueHistoryItem = ({ historyItem, inputType }) => {
                 }}
               >
 
-              {slides?.map((file, _index) => (
-                <DocumentGalleryItem isLoading={!slides} key={file?.id} image={file} 
-                  onOpenLightbox={()=> handleOpenLightbox(_index)}
-                  onDownloadFile={()=> handleDownloadCheckItemFile(file._id, file?.name, file?.extension)}
-                  // onDeleteFile={()=> handleDeleteCheckItemFile(file._id)}
-                  toolbar
-                />
-              ))}
+          {slides?.map((file, _index) => (
+            <DocumentGalleryItem key={file?.id} image={file} 
+              onOpenLightbox={()=> handleOpenLightbox(_index)}
+              onDownloadFile={()=> handleDownloadCheckItemFile(file)}
+              toolbar
+            />
+          ))}
+
+          {historyItem?.files?.map((file, _index) => !file.fileType.startsWith("image") && (
+              <DocumentGalleryItem key={file?.id} image={file} 
+                onOpenFile={()=> handleOpenFile(file)}
+                onDownloadFile={()=> handleDownloadCheckItemFile(file)}
+                toolbar
+              />
+            ))}
+
             </Box>
             <ViewFormServiceRecordVersionAudit value={historyItem} />
             <Lightbox
@@ -159,6 +191,20 @@ const CheckedItemValueHistoryItem = ({ historyItem, inputType }) => {
               disabledDownload
               disabledSlideshow
             />
+            {AttachedPDFViewerDialog && (
+              <Dialog fullScreen open={AttachedPDFViewerDialog} onClose={()=> setAttachedPDFViewerDialog(false)}>
+                <DialogTitle variant='h3' sx={{pb:1, pt:2, display:'flex', justifyContent:'space-between'}}>
+                    PDF View
+                      <Button variant='outlined' onClick={()=> setAttachedPDFViewerDialog(false)}>Close</Button>
+                </DialogTitle>
+                <Divider variant='fullWidth' />
+                  {pdf?(
+                      <iframe title={PDFName} src={pdf} style={{paddingBottom:10}} width='100%' height='842px'/>
+                    ):(
+                      <SkeletonPDF />
+                    )}
+              </Dialog>
+            )}
           </>
         );
 };

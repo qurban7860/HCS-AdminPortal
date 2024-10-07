@@ -3,14 +3,8 @@ import PropTypes from 'prop-types';
 import { Stack } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { useDispatch } from '../../redux/store';
 // components
-import { PATH_DOCUMENT, PATH_CRM, PATH_MACHINE, PATH_MACHINE_DRAWING } from '../../routes/paths';
-import { 
-  setDocumentFormVisibility, 
-  setDocumentHistoryNewVersionFormVisibility, 
-  setDocumentNewVersionFormVisibility 
-} from '../../redux/slices/document/document';
+import { PATH_CRM, PATH_MACHINE, PATH_MACHINE_DRAWING } from '../../routes/paths';
 import SearchBarCombo from '../../components/ListTableTools/SearchBarCombo';
 import { BUTTONS } from '../../constants/default-constants';
 
@@ -52,7 +46,6 @@ export default function DocumentListTableToolbar({
   handleGalleryView
 }) {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const { customerId, machineId } = useParams();
   const { customer } = useSelector((state) => state.customer);
   const { machine } = useSelector((state) => state.machine);

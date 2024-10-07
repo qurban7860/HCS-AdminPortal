@@ -25,21 +25,15 @@ import Scrollbar from '../../../components/scrollbar';
 // sections
 import DrawingListTableRow from './DrawingListTableRow';
 import DrawingListTableToolbar from './DrawingListTableToolbar';
-import {
-  getDocumentHistory,
-  resetDocumentHistory,
-} from '../../../redux/slices/document/document';
 import { getActiveDocumentCategories, resetActiveDocumentCategories } from '../../../redux/slices/document/documentCategory';
 import { getActiveDocumentTypes, resetActiveDocumentTypes } from '../../../redux/slices/document/documentType';
 import {
   getDrawings,
   ChangeRowsPerPage,
   ChangePage,
-  setFilterBy,
-  setDrawingViewFormVisibility, 
+  setFilterBy, 
   resetDrawings,
-  getDrawing,
-  resetDrawing} from '../../../redux/slices/products/drawing';
+  getDrawing, } from '../../../redux/slices/products/drawing';
 import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../../components/ListTableTools/TableCard';
 import MachineTabContainer from '../util/MachineTabContainer';
@@ -112,7 +106,6 @@ export default function DrawingList() {
     typeVal,
   });
 
-  const denseHeight = 60;
   const isFiltered = filterName !== '' || !!filterStatus.length;
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
@@ -196,7 +189,7 @@ export default function DrawingList() {
                         style={index % 2 ? { background: 'red' } : { background: 'green' }}
                       />
                     ) : (
-                      !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
+                      !isNotFound && <TableSkeleton key={index} sx={{ height: 60 }} />
                     )
                   )}
                   <TableNoData isNotFound={isNotFound} />

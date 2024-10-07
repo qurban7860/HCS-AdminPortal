@@ -15,6 +15,8 @@ const ROOTS_DOCUMENT = '/documents';
 const ROOTS_MACHINE_DRAWING = '/machineDrawings';
 const ROOTS_SITEMAP = '/sites';
 const ROOTS_SUPPORT_TICKETS = '/supportTickets';
+const ROOTS_MACHINE_LOGS = '/machineLogs';
+
 
 // ----------------------------------------------------------------------
 
@@ -246,12 +248,12 @@ export const PATH_MACHINE = {
       view: (machineId, id ) => path(ROOTS_MACHINE, `/machines/${machineId}/ini/${id}/view`),
       compare: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/ini/compare`),
     },    
-    // --------------------- Machine Tool Installed -----------------------
+    // --------------------- Machine Logs -----------------------
     logs: {
       root: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/logs`),
       new: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/logs/new`),
       graph: (machineId ) => path(ROOTS_MACHINE, `/machines/${machineId}/logs/graph`),
-      view: (machineId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/logs/${id}/view`),
+      // view: (machineId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/logs/${id}/view`),
     },    
     jira: {
       root: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/jira`),
@@ -521,6 +523,17 @@ export const PATH_MACHINE_DRAWING = {
       newVersion: ( id ) => path(ROOTS_MACHINE_DRAWING, `/${id}/view/newVersion`),
     },
   }
+};
+
+// ----------------------- MACHINE LOGS -----------------------------------------
+export const PATH_MACHINE_LOGS = {
+  root: ROOTS_MACHINE_LOGS,
+  permissionDenied: path(ROOTS_MACHINE_LOGS, '/permission-denied'),
+  // machineLogs: {
+  //   CoilLogs: path(ROOTS_MACHINE_LOGS, '/coilLogs'),
+  //   ErpLogs: path(ROOTS_MACHINE_LOGS, '/erpLogs'),
+  //   ProductionLogs: path(ROOTS_MACHINE_LOGS, '/productionLogs'),   
+  // },
 };
 
 // ----------------------- JIRA REPORT -----------------------------------------

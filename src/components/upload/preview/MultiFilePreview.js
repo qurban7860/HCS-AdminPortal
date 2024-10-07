@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { m, AnimatePresence } from 'framer-motion';
 // @mui
 import { useTheme } from '@mui/material/styles';
-import { Button, ButtonGroup, Card, CardMedia, IconButton, Stack, Typography, TextField, Box, Autocomplete, Grid } from '@mui/material';
+import { Button, ButtonGroup, Card, CardMedia, IconButton, Stack, Typography, TextField, Box, Autocomplete, Grid, Dialog, DialogTitle, Divider } from '@mui/material';
 // utils
 import { fData } from '../../../utils/formatNumber';
 import { bgBlur } from '../../../utils/cssStyles';
@@ -14,6 +14,7 @@ import { varFade } from '../../animate';
 import FileThumbnail, { fileData } from '../../file-thumbnail';
 import Lightbox from '../../lightbox/Lightbox';
 import AlreadyExistMenuPopover from '../AlreadyExistMenuPopover';
+import SkeletonPDF from '../../skeleton/SkeletonPDF';
 
 // ----------------------------------------------------------------------
 
@@ -33,6 +34,7 @@ MultiFilePreview.propTypes = {
   onChangeReferenceNumber: PropTypes.func,
   onChangeStockNumber: PropTypes.func,
   onLoadImage: PropTypes.func,
+  onLoadPDF: PropTypes.func,
   onDownload: PropTypes.func,
 };
 
@@ -46,6 +48,7 @@ function MultiFilePreview({
   onChangeReferenceNumber,
   onChangeStockNumber,
   onLoadImage,
+  onLoadPDF,
   onDownload,
   files, 
   onRemove, 
@@ -60,10 +63,14 @@ function MultiFilePreview({
   const [selectedImage, setSelectedImage] = useState(-1);
   const [fileFound, setFileFound] = useState(null);
   const [verifiedAnchorEl, setVerifiedAnchorEl] = useState(null);
+  const [pdf, setPDF] = useState(null);
+  const [PDFName, setPDFName] = useState('');
+  const [PDFViewerDialog, setPDFViewerDialog] = useState(false);
 
-  useEffect(() => {
-    setSlides(files);
-  }, [files]);
+  useEffect(() => {      
+    const Images = files?.filter( ( file => ( file?.type || file?.fileType ) && ( file.type?.startsWith( "image" ) || file.fileType?.startsWith( "image" ) ) ) )
+    setSlides( Images );
+  }, [ files ]);
 
   const handleExtensionsPopoverOpen = (event, file) => {
       setVerifiedAnchorEl(event.currentTarget);
@@ -84,25 +91,46 @@ function MultiFilePreview({
   const handleOpenLightbox = async (index) => {
     setSelectedImage(index);
     const image = slides[index];
-    if(!image.isLoaded && onLoadImage){
+    if(!image?.isLoaded && image?._id  && onLoadImage){
       await onLoadImage(image?._id, index)
     }
   };
 
+  const handleOpenPDF = async (pdfFile,fileName) => {
+    if(pdfFile?._id){
+      onLoadPDF(pdfFile,fileName)
+    } else {
+      setPDFName(pdfFile?.name || fileName );
+      setPDFViewerDialog(true);
+      setPDF(pdfFile?.src);
+    }
+  };
+  
   const handleCloseLightbox = () => {
     setSelectedImage(-1);
   };
 
-  const FORMAT_IMG_VISIBBLE = ['jpg', 'jpeg', 'gif', 'bmp', 'png', 'svg', 'webp', 'ico', 'jpe',];
+  const FORMAT_IMG_VISIBBLE = ['jpg', 'jpeg', 'gif', 'bmp', 'png', 'svg', 'webp', 'ico', 'jpe','pdf'];
         
   return (
     <AnimatePresence initial={false}>
-      {files.map(( file , index ) => {
+      {files?.sort((a, b) => {
+  const isImageA = a.fileType?.startsWith('image') || a.type?.startsWith('image');
+  const isImageB = b.fileType?.startsWith('image') || b.type?.startsWith('image');
+
+  if (isImageA && !isImageB) {
+    return -1; 
+  }
+  if (!isImageA && isImageB) {
+    return 1; 
+  }
+  return 0;
+})?.map(( file , index ) => {
         if(file){
         const { key, name = '', size = 0, displayName, referenceNumber, versionNo, stockNumber, docCategory, docType } = fileData(file);
         const fileType = file?.type?.split('/').pop().toLowerCase();
         const isNotFormatFile = typeof file === 'string';
-        
+        const fileName = name || displayName;
         if (thumbnail) {
           return (
               <Card key={key || index} sx={{
@@ -136,7 +164,7 @@ function MultiFilePreview({
                               width:'100%'
                           }}
                       >       
-                          {FORMAT_IMG_VISIBBLE.some(format => fileType?.match(format))  && <Button sx={{width:'50%', borderRadius:0}} onClick={()=>handleOpenLightbox(index)}><Iconify sx={{ width: '25px'}} icon="carbon:view" /></Button>}
+                          {FORMAT_IMG_VISIBBLE.some(format => fileType?.match(format))  && <Button sx={{width:'50%', borderRadius:0}} onClick={()=> fileType==='pdf' ? handleOpenPDF( file,fileName ) :handleOpenLightbox(index)}><Iconify sx={{ width: '25px'}} icon="carbon:view" /></Button>}
                           { file?.uploaded && onDownload && <Button sx={{width:'50%', borderRadius:0}} onClick={ ()=>onDownload( file ) }><Iconify sx={{ width: '25px'}} icon="solar:download-square-linear" /></Button>}
                           <Button sx={{width: FORMAT_IMG_VISIBBLE.some(format => fileType?.match(format)) || ( file?.uploaded && onDownload ) ? '50%' : '100%', borderRadius:0}} color='error' onClick={() => onRemove(file)}><Iconify sx={{ width: '25px'}} icon="radix-icons:cross-circled" /></Button>
                       </ButtonGroup>
@@ -146,9 +174,7 @@ function MultiFilePreview({
                         sx={{
                         ...bgBlur({
                             color: theme.palette.grey[900],
-                            // opacity:1
                         }),
-                        // background:theme.palette.error,
                         width: 1,
                         left: 0,
                         bottom: 0,
@@ -160,14 +186,6 @@ function MultiFilePreview({
                         <Typography variant="body2">
                             {name.length > 14 ? name?.substring(0, 14) : name}
                             {name?.length > 14 ? '...' : null}
-                        
-                            {/* {file?.found && drawingPage &&
-                              <Iconify
-                                onClick={(event)=> handleExtensionsPopoverOpen(event,file)}
-                                icon="iconamoon:question-mark-circle-bold"
-                                sx={{ cursor: 'pointer', verticalAlign:'bottom', float:'right' }}
-                              />
-                            } */}
                       </Typography>
                       {file?.found && drawingPage &&
                         <AlreadyExistMenuPopover
@@ -359,7 +377,21 @@ function MultiFilePreview({
           disabledTotal
           disabledDownload
           disabledSlideshow
-        />
+      />
+      {PDFViewerDialog && (
+        <Dialog fullScreen open={PDFViewerDialog} onClose={()=> setPDFViewerDialog(false)}>
+          <DialogTitle variant='h3' sx={{pb:1, pt:2, display:'flex', justifyContent:'space-between'}}>
+              PDF View
+                <Button variant='outlined' onClick={()=> setPDFViewerDialog(false)}>Close</Button>
+          </DialogTitle>
+          <Divider variant='fullWidth' />
+            {pdf?(
+                <iframe title={PDFName} src={pdf} style={{paddingBottom:10}} width='100%' height='842px'/>
+              ):(
+                <SkeletonPDF />
+              )}
+        </Dialog>
+      )}
     </AnimatePresence>
   );
 }

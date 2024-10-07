@@ -1,50 +1,47 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import PropTypes from 'prop-types';
-import { useNavigate, useParams } from 'react-router';
+import { useParams } from 'react-router';
 import { useSnackbar } from 'notistack';
 import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { Grid, Skeleton, Stack, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
 import { RHFTextField } from '../../../components/hook-form';
 import CheckedItemInputRow from './CheckedItemInputRow';
 import FormProvider from '../../../components/hook-form/FormProvider';
-import { getMachineServiceRecord, getMachineServiceRecordCheckItems, resetCheckItemValues, setFormActiveStep, updateMachineServiceRecord } from '../../../redux/slices/products/machineServiceRecord';
+import { getMachineServiceRecordCheckItems, resetCheckItemValues, setFormActiveStep, updateMachineServiceRecord } from '../../../redux/slices/products/machineServiceRecord';
 import ServiceRecodStepButtons from '../../../components/DocumentForms/ServiceRecodStepButtons';
+import { MachineServiceRecordPart2TBCISchema, MachineServiceRecordPart2TACISchema } from '../../schemas/machine';
+import FormLabel from '../../../components/DocumentForms/FormLabel';
 
 MachineServiceRecordsSecondStep.propTypes = {
-  // checkItemLists: PropTypes.array
-  serviceRecord: PropTypes.object,
   handleDraftRequest: PropTypes.func,
   handleDiscard: PropTypes.func,
   handleBack: PropTypes.func
 };
 
-function MachineServiceRecordsSecondStep({serviceRecord, handleDraftRequest, handleDiscard, handleBack}) {
+function MachineServiceRecordsSecondStep({ handleDraftRequest, handleDiscard, handleBack}) {
   
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const { machineId, id } = useParams();
   
   const { machineServiceRecord, machineServiceRecordCheckItems, isLoadingCheckItems } = useSelector((state) => state.machineServiceRecord);
-  const { machine } = useSelector((state) => state.machine);
   
   const [ isDraft, setIsDraft ] = useState(false);
   const saveAsDraft = async () => setIsDraft(true);
 
   useEffect(() =>{
-    if(machineId && id){
-      dispatch(getMachineServiceRecord(machineId, id))
+    if( machineId && id ){
       dispatch(getMachineServiceRecordCheckItems( machineId, id ));
     }
-    return(()=> resetCheckItemValues());
-  },[dispatch, machineId, id])
+    // return ()=> dispatch(resetCheckItemValues())
+  },[ dispatch, machineId, id ])
 
   const defaultValues = useMemo(
       () => {
         const initialValues = {
-        serviceRecordConfiguration:   machineServiceRecord?.serviceRecordConfig || null,
         serviceDate:                  machineServiceRecord?.serviceDate || new Date(),
         versionNo:                    machineServiceRecord?.versionNo || 1,
         technicianNotes:              machineServiceRecord?.technicianNotes || '',
@@ -57,28 +54,37 @@ function MachineServiceRecordsSecondStep({serviceRecord, handleDraftRequest, han
       [ machineServiceRecord ]
     );
 
-    const formMethodsBefore = useForm({ defaultValues });
-    const { handleSubmit: handleSubmitBefore, reset: resetBefore, formState: { isSubmitting: isSubmittingBefore, isSubmitted:isSubmittedBefore } } = formMethodsBefore;
+    const formMethodsBefore = useForm({
+      resolver: yupResolver(MachineServiceRecordPart2TBCISchema),
+      defaultValues,
+    });
+    const { handleSubmit: handleSubmitBefore, watch: watchBefore, reset: resetBefore, formState: { isSubmitting: isSubmittingBefore, isSubmitted:isSubmittedBefore } } = formMethodsBefore;
+    const { textBeforeCheckItems } = watchBefore();
     
-    const formMethodsAfter = useForm({ defaultValues });
-    const { handleSubmit: handleSubmitAfter, reset: resetAfter, formState: { isSubmitting: isSubmittingAfter, isSubmitted:isSubmittedAfter } } = formMethodsAfter;
+    const formMethodsAfter = useForm({
+      resolver: yupResolver(MachineServiceRecordPart2TACISchema),
+      defaultValues,
+    });
+    const { handleSubmit: handleSubmitAfter, watch: watchAfter, reset: resetAfter, formState: { isSubmitting: isSubmittingAfter, isSubmitted:isSubmittedAfter } } = formMethodsAfter;
+    const { textAfterCheckItems } = watchAfter();
     
     const methods = useForm({ defaultValues });
-    const { handleSubmit, reset, formState: { isSubmitting } } = methods;
+    const { handleSubmit, formState: { isSubmitting } } = methods;
     
-    useEffect(() => {
-      if (machineServiceRecord) {
-        resetBefore(defaultValues);
-        resetAfter(defaultValues);   
-        reset(defaultValues); 
-      }
-    }, [resetBefore, resetAfter, reset, machineServiceRecord, defaultValues]);
+    // useEffect(() => {
+    //   if (machineServiceRecord) {
+    //     // resetBefore(defaultValues);
+    //     // resetAfter(defaultValues);   
+    //     reset(defaultValues); 
+    //   }
+    // }, [resetBefore, resetAfter, reset, machineServiceRecord, defaultValues]);
     
 
     const [showMessage, setShowMessage] = useState(false);
     const submitBefore = async (data) => {
       const params = {
         textBeforeCheckItems: data.textBeforeCheckItems || '',
+        isReportDocsOnly: false,
       };
       try {
         await dispatch(updateMachineServiceRecord(machineId, id, params));
@@ -89,14 +95,13 @@ function MachineServiceRecordsSecondStep({serviceRecord, handleDraftRequest, han
       } catch (err) {
         console.error(err);
         enqueueSnackbar('Saving failed!', { variant: `error` });
-      } finally {
-        dispatch(getMachineServiceRecordCheckItems(machineId, id));
       }
     };
 
     const submitAfter = async (data) => {
       const params = {
         textAfterCheckItems: data?.textAfterCheckItems || '',
+        isReportDocsOnly: false,
       };
 
       try {
@@ -108,18 +113,17 @@ function MachineServiceRecordsSecondStep({serviceRecord, handleDraftRequest, han
       } catch (err) {
         console.error(err);
         enqueueSnackbar('Saving failed!', { variant: `error` });
-      } finally {
-        dispatch(getMachineServiceRecordCheckItems(machineId, id));
       }
     };
 
     const onSubmit = async (data) => {
+      try {
       const params = {
         textBeforeCheckItems: data?.textBeforeCheckItems || '',
         textAfterCheckItems: data?.textAfterCheckItems || '',
+        isReportDocsOnly: true
       };
 
-      try {
         if (isDraft) {
           await dispatch(updateMachineServiceRecord(machineId, id, params));
           await handleDraftRequest(isDraft);
@@ -131,7 +135,7 @@ function MachineServiceRecordsSecondStep({serviceRecord, handleDraftRequest, han
         enqueueSnackbar('Saving failed!', { variant: `error` });
       }
     };
-
+    
   return (
       <Stack spacing={2}>
             <FormProvider key='beforeForm' methods={formMethodsBefore} onSubmit={handleSubmitBefore(submitBefore)}>
@@ -139,7 +143,7 @@ function MachineServiceRecordsSecondStep({serviceRecord, handleDraftRequest, han
               <RHFTextField name="textBeforeCheckItems" label="Text Before Check Items" minRows={3} multiline />
                 <Grid container display='flex' direction='row' justifyContent='flex-end' gap={2}>
                   {isSubmittedBefore && showMessage && <Typography variant='body2' color='green' sx={{mt:0.5}}>Saved Successfully!</Typography>}
-                  <LoadingButton type='submit' loading={isSubmittingBefore} size='small' variant='contained'>Save</LoadingButton>
+                  <LoadingButton disabled={textBeforeCheckItems?.trim() === machineServiceRecord?.textBeforeCheckItems?.trim()} type='submit' loading={isSubmittingBefore} size='small' variant='contained'>Save</LoadingButton>
                 </Grid>
               </Stack>
             </FormProvider>
@@ -153,10 +157,24 @@ function MachineServiceRecordsSecondStep({serviceRecord, handleDraftRequest, han
                 <Skeleton animation="wave" />
                 <Skeleton animation={false} />
               </Stack>
-              :<>
-                {machineServiceRecordCheckItems?.checkItemLists?.map((row, index) =>
-                    <CheckedItemInputRow key={`row-${row._id}-${index}`} index={index} row={row} />
-                )}   
+              :
+              <>
+                {machineServiceRecordCheckItems?.checkItemLists?.map((row, index) => (
+                  <React.Fragment key={`check-item-list-${row._id}`}>
+                    <Stack sx={{ px: 1 }}>
+                      <FormLabel content={`${index + 1}). ${row?.ListTitle || ''} (Items: ${row?.checkItems?.length})`} />
+                    </Stack>
+                    {row?.checkItems?.map((childRow, childIndex) => (
+                      <CheckedItemInputRow
+                        index={index}
+                        rowData={childRow}
+                        childIndex={childIndex}
+                        checkItemListId={row?._id}
+                        key={`row-${row._id}-${index}-${childIndex}`}
+                      />
+                    ))}
+                  </React.Fragment>
+                ))}
               </>
             }
 
@@ -165,12 +183,12 @@ function MachineServiceRecordsSecondStep({serviceRecord, handleDraftRequest, han
                 <RHFTextField name="textAfterCheckItems" label="Text After Check Items" minRows={3} multiline />
                 <Grid container display='flex' direction='row' justifyContent='flex-end' gap={2}>
                   {isSubmittedAfter && showMessage && <Typography variant='body2' color='green' sx={{mt:0.5}}>Saved Successfully!</Typography>}
-                  <LoadingButton onClick={handleSubmitAfter(submitAfter)} loading={isSubmittingAfter} size='small' variant='contained'>Save</LoadingButton>
+                  <LoadingButton disabled={textAfterCheckItems?.trim() === machineServiceRecord?.textAfterCheckItems?.trim()} onClick={handleSubmitAfter(submitAfter)} loading={isSubmittingAfter} size='small' variant='contained'>Save</LoadingButton>
                 </Grid>
               </Stack>
             </FormProvider>
-            <FormProvider methods={methods}  key='submit' onSubmit={handleSubmit(onSubmit)}>
-              <ServiceRecodStepButtons isSubmitting={isSubmitting} />
+            <FormProvider methods={methods}  key='submit' onSubmit={handleSubmit(onSubmit)} >
+              <ServiceRecodStepButtons handleDraft={saveAsDraft} isDraft={isDraft} isSubmitting={isSubmitting} />
             </FormProvider>
       </Stack>
 )}

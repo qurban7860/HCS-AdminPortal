@@ -78,6 +78,7 @@ RHFUpload.propTypes = {
   imagesOnly:PropTypes.bool,
   dropZone:PropTypes.bool,
   onLoadImage: PropTypes.func,
+  onLoadPDF: PropTypes.func,
   onDownload: PropTypes.func,
 };
 
@@ -89,6 +90,7 @@ export function RHFUpload({ name, multiple, rows, helperText, machine,
   onChangeReferenceNumber,
   onChangeStockNumber,
   onLoadImage,
+  onLoadPDF,
   onDownload,
   drawingPage, dropZone=true, imagesOnly, ...other }) {
 
@@ -111,6 +113,7 @@ export function RHFUpload({ name, multiple, rows, helperText, machine,
             onChangeReferenceNumber={onChangeReferenceNumber}
             onChangeStockNumber={onChangeStockNumber}
             onLoadImage={ onLoadImage }
+            onLoadPDF={onLoadPDF}
             onDownload={ onDownload }
             rows={rows}
             drawingPage

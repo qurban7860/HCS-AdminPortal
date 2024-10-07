@@ -36,9 +36,9 @@ const maxFiles = JSON.parse( localStorage.getItem('configurations'))?.find( ( c 
   export const NotRequiredValidateFileType = (value, options) => {
     const { path, createError } = options;
     if (value && Array.isArray(value)) {
-      if (value.length > 10) {
+      if (value?.filter((v) => ( !v?._id || !v?.uploaded ) )?.length > ( Number(maxFiles?.value) || 20 ) ) {
         return createError({
-          message: 'Maximum 10 files can be uploaded at a time.',
+          message: `Maximum ${ Number(maxFiles?.value) || 20 } files can be uploaded at a time.`,
           path,
           value,
         });
@@ -64,7 +64,7 @@ const maxFiles = JSON.parse( localStorage.getItem('configurations'))?.find( ( c 
     const { path, createError } = options;
   
     if (value && Array.isArray(value)) {
-      if (value.length > 20) {
+      if (value?.filter((v)=> !v?._id)?.length > 20) {
         return createError({
           message: 'Maximum 20 files can be uploaded at a time.',
           path,

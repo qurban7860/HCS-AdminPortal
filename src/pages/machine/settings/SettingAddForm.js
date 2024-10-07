@@ -189,7 +189,7 @@ export default function SettingAddForm() {
                     }}
                     sx={{ mt: 3 }}
                   >
-                    <RHFTextField name="techParamValue" label="Technical Parameter Value" />
+                    <RHFTextField name="techParamValue" label="Technical Parameter Value*" />
                     <RHFCheckbox name="isUpdateMultipleMachines" label="Update in multiple Machines" sx={{my:-1.5}} />
                     { isUpdateMultipleMachines && 
                     <>

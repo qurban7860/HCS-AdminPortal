@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { PATH_CRM, PATH_CALENDAR, PATH_DASHBOARD, PATH_MACHINE, PATH_DOCUMENT, PATH_SETTING, PATH_SITEMAP, PATH_SECURITY, PATH_MACHINE_DRAWING, PATH_SUPPORT_TICKETS } from '../../../routes/paths';
+import { PATH_CRM, PATH_CALENDAR, PATH_DASHBOARD, PATH_MACHINE, PATH_DOCUMENT, PATH_SETTING, PATH_SITEMAP, PATH_SECURITY, PATH_MACHINE_DRAWING, PATH_SUPPORT_TICKETS, PATH_MACHINE_LOGS } from '../../../routes/paths';
 // components
 import Iconify from '../../../components/iconify';
 import SvgColor from '../../../components/svg-color';
@@ -47,6 +47,7 @@ function NavigationConfig() {
     machines: <MachineIcon key="machine"/>,
     users: <Iconify icon="mdi:account-group" />,
     security: <Iconify icon="mdi:security-account" />,
+    machineLogs: <Iconify icon="lucide:list-end" />
   };
 
   const { 
@@ -92,6 +93,10 @@ function NavigationConfig() {
       updatedConfig[0].items.push({ title: 'Calendar', path: PATH_CALENDAR.root, icon: ICONS.calendar });
     }
 
+    if (!navConfig.some((config) => config.title?.toLowerCase() === 'machine logs')) {
+      updatedConfig[0].items.push({ title: 'Machine Logs', path: PATH_MACHINE_LOGS.root, icon: ICONS.machineLogs });
+    }    
+    
     if (isSecurityUserAccessAllowed && navConfig.some((config) => config?.title?.toLowerCase() !== 'security')) {
       updatedConfig[0].items.push({ title: 'Security', path: PATH_SECURITY.root, icon: ICONS.security });
     }

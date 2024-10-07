@@ -1,5 +1,6 @@
 export { default as SkeletonGraph } from './SkeletonGraph';
 export { default as SkeletonMap } from './SkeletonMap';
+export { default as SkeletonLine } from './SkeletonLine';
 export { default as SkeletonPostItem } from './SkeletonPostItem';
 export { default as SkeletonPostDetails } from './SkeletonPostDetails';
 export { default as SkeletonProductItem } from './SkeletonProductItem';

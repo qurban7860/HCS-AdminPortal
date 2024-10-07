@@ -5,7 +5,9 @@ export const Snacks = {
   machineVerifiedSuccess: 'Machine Verified',
   machineFailedVerification: 'Failed to Verify Machine',
   machineDeleted: 'Machine Deleted',
-  machineFailedDelete: 'Failed to Archive Machine',
+  machineFailedArchive: 'Failed to Archive Machine',
+  machineFailedRestore: 'Failed to Restore Machine',
+  machineFailedDelete: 'Failed to Delete Machine',
   machineTransferSuccess: 'Machine Transferred Successfully!',
   machineFailedTransfer: 'Failed to Transfer Machine',
   machineStatusSuccess: 'Machine Status Changed Successfully!',
@@ -49,4 +51,10 @@ export const Snacks = {
   
   // @root - machine - EditMachineSchema
   serialNoRequired: 'Serial Number is Required',
+
+  // @root - MachineLogsList and MachineLogsPage
+  machineLogArchived: 'Machine Log Archived Successfully',
+  machineLogRestored: 'Machine Log Restored Successfully',
+  machineLogDeleted: 'Machine Log Deleted Successfully',
+  machineLogUpdated: 'Machine Log Updated Successfully',
 };

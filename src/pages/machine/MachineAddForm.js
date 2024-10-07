@@ -202,7 +202,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     <>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)} >
         <Grid container>
-          <Grid item xs={18} md={12} >
+          <Grid item xs={12} md={12} >
             <Card sx={{ p: 3 }}>
               <Stack spacing={2}>
                 <Box rowGap={2} columnGap={2} display="grid"
@@ -375,7 +375,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                   ChipProps={{ size: 'small' }}
                 />
                 <Box rowGap={2} columnGap={2} display="grid"
-                  gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
+                  gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
                 >
 
                   {/* <RHFDatePicker inputFormat='dd/MM/yyyy' name="decommissionedDate" label="De-Commissioned Date" /> */}

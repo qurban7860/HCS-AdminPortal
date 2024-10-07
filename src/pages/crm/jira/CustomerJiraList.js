@@ -1,10 +1,7 @@
 import debounce from 'lodash/debounce';
 import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 // @mui
-import { Container, Table, Checkbox, TableBody, TableContainer, TableRow, TableCell, TableHead, TableSortLabel } from '@mui/material';
-// routes
-import { useNavigate, useParams } from 'react-router-dom';
-import { PATH_MACHINE } from '../../../routes/paths';
+import { Container, Table, TableBody, TableContainer } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // components
@@ -49,8 +46,6 @@ const TABLE_HEAD = [
 export default function CustomerJiraList(){
   const { initial, customerJiras, filterBy, page, rowsPerPage, filterStatus, isLoading } = useSelector((state) => state.customerJira );
   const { customer } = useSelector((state) => state.customer);
-  const navigate = useNavigate();
-  const { machineId } = useParams();
 
   const {
     order,
@@ -70,7 +65,6 @@ export default function CustomerJiraList(){
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [ filterStatusOption, setFilterStatusOption ] = useState('');
-  const [ isCreatedAt, setIsCreatedAt ] = useState(false);
   
   useLayoutEffect(() => {
     if(customer?.ref){

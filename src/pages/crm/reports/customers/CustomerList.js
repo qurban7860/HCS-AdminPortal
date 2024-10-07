@@ -5,13 +5,14 @@ import debounce from 'lodash/debounce';
 // @mui
 import {
   Table,
-  Button,
   TableBody,
   Container,
   TableContainer,
   // Stack,
 } from '@mui/material';
 import axios from 'axios';
+// eslint-disable-next-line import/no-unresolved
+import useResponsive from 'src/hooks/useResponsive';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
 // routes
@@ -22,7 +23,6 @@ import {
   getComparator,
   TableNoData,
   TableSkeleton,
-  TableHeadCustom,
   TablePaginationCustom,
   TablePaginationFilter,
   TableHeadFilter,
@@ -86,8 +86,6 @@ export default function CustomerList({ isArchived }) {
   const { enqueueSnackbar } = useSnackbar();
   const axiosToken = () => axios.CancelToken.source();
   const cancelTokenSource = axiosToken();
-
-  const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
   const { customers, reportHiddenColumns, filterBy, verified, excludeReporting, page, rowsPerPage, isLoading } = useSelector((state) => state.customer);
   const [filterVerify, setFilterVerify] = useState(verified);
@@ -101,6 +99,8 @@ export default function CustomerList({ isArchived }) {
   const onChangePage = (event, newPage) => { 
     dispatch(ChangePage(newPage)) 
   }
+  
+  const isMobile = useResponsive('down', 'sm');
 
   useEffect(() => {
     dispatch(getCustomers( null, null, isArchived, cancelTokenSource ));
@@ -108,12 +108,8 @@ export default function CustomerList({ isArchived }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, isArchived ]);
 
-  useEffect(() => {
-    setTableData(customers || []);
-  }, [customers]);
-
   const dataFiltered = applyFilter({
-    inputData: tableData,
+    inputData: customers,
     comparator: getComparator(order, orderBy),
     filterName,
     filterVerify,
@@ -198,42 +194,60 @@ export default function CustomerList({ isArchived }) {
 
   return (
     <Container maxWidth={false}>
-        <StyledCardContainer>
-          <Cover name={ isArchived ? FORMLABELS.COVER.ARCHIVED_CUSTOMERS : FORMLABELS.COVER.CUSTOMERS  } customerSites customerContacts isArchivedCustomers={!isArchived} isArchived={isArchived} />
-        </StyledCardContainer>
-      <TableCard >
+      <StyledCardContainer>
+        <Cover
+          name={isArchived ? FORMLABELS.COVER.ARCHIVED_CUSTOMERS : FORMLABELS.COVER.CUSTOMERS}
+          customerSites
+          customerContacts
+          isArchivedCustomers={!isArchived}
+          isArchived={isArchived}
+        />
+      </StyledCardContainer>
+      <TableCard>
         <CustomerListTableToolbar
           filterName={filterName}
           onFilterName={handleFilterName}
-          filterVerify={ isArchived ? undefined : filterVerify}
-          onFilterVerify={ isArchived ? undefined : handleFilterVerify}
-          filterStatus={ isArchived ? undefined : filterStatus}
-          onFilterStatus={ isArchived ? undefined : handleFilterStatus}
+          filterVerify={isArchived ? undefined : filterVerify}
+          onFilterVerify={isArchived ? undefined : handleFilterVerify}
+          filterStatus={isArchived ? undefined : filterStatus}
+          onFilterStatus={isArchived ? undefined : handleFilterStatus}
           isFiltered={isFiltered}
           onResetFilter={handleResetFilter}
           customerDocList
           machineDocList
           onExportCSV={onExportCSV}
           onExportLoading={exportingCSV}
-          filterExcludeRepoting={ isArchived ? undefined : filterExcludeRepoting}
-          handleExcludeRepoting={ isArchived ? undefined : handleExcludeRepoting}
+          filterExcludeRepoting={isArchived ? undefined : filterExcludeRepoting}
+          handleExcludeRepoting={isArchived ? undefined : handleExcludeRepoting}
           isArchived={isArchived}
         />
 
-        {!isNotFound && <TablePaginationFilter
-          columns={TABLE_HEAD}
-          hiddenColumns={reportHiddenColumns}
-          handleHiddenColumns={handleHiddenColumns}
-          count={customers?customers.length : 0}
-          page={page}
-          rowsPerPage={rowsPerPage}
-          onPageChange={onChangePage}
-          onRowsPerPageChange={onChangeRowsPerPage}
-        />}
-        
+        {!isNotFound && !isMobile && (
+          <TablePaginationFilter
+            columns={TABLE_HEAD}
+            hiddenColumns={reportHiddenColumns}
+            handleHiddenColumns={handleHiddenColumns}
+            count={customers ? customers.length : 0}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
+          />
+        )}
+
+        {!isNotFound && isMobile && (
+          <TablePaginationCustom
+            count={customers ? customers.length : 0}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
+          />
+        )}
+
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
           <Scrollbar>
-            <Table size="small" sx={{ minWidth: 360 }}>
+            <Table stickyHeader size="small" sx={{ minWidth: 360 }}>
               <TableHeadFilter
                 order={order}
                 orderBy={orderBy}
@@ -262,20 +276,21 @@ export default function CustomerList({ isArchived }) {
                       !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                     )
                   )}
-                  <TableNoData isNotFound={isNotFound} />
+                <TableNoData isNotFound={isNotFound} />
               </TableBody>
             </Table>
           </Scrollbar>
         </TableContainer>
 
-        {!isNotFound && <TablePaginationCustom
-          count={customers?customers.length : 0}
-          page={page}
-          rowsPerPage={rowsPerPage}
-          onPageChange={onChangePage}
-          onRowsPerPageChange={onChangeRowsPerPage}
-        />}
-
+        {!isNotFound && (
+          <TablePaginationCustom
+            count={customers ? customers.length : 0}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
+          />
+        )}
       </TableCard>
       <CustomerDialog />
     </Container>

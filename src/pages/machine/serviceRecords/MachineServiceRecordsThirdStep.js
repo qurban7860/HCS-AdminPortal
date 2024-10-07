@@ -1,22 +1,25 @@
 import { useEffect, useMemo, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-import * as Yup from 'yup';
+import b64toBlob from 'b64-to-blob';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Stack } from '@mui/material';
+import { Button, Dialog, DialogTitle, Divider, Stack } from '@mui/material';
 // routes
 import { useNavigate, useParams } from 'react-router-dom';
 import { PATH_MACHINE } from '../../../routes/paths';
+import FormLabel from '../../../components/DocumentForms/FormLabel';
 // slice
-import { updateMachineServiceRecord, resetMachineServiceRecord, getMachineServiceRecord, addMachineServiceRecordFiles, deleteRecordFile, downloadRecordFile } from '../../../redux/slices/products/machineServiceRecord';
+import { updateMachineServiceRecord, resetMachineServiceRecord, addMachineServiceRecordFiles, deleteRecordFile, downloadRecordFile } from '../../../redux/slices/products/machineServiceRecord';
+import { getActiveContacts, resetActiveContacts } from '../../../redux/slices/customer/contact';
 // components
 import ServiceRecodStepButtons from '../../../components/DocumentForms/ServiceRecodStepButtons';
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFAutocomplete, RHFTextField, RHFUpload } from '../../../components/hook-form';
-import { validateImageFileType } from '../../documents/util/Util';
-  
+import { MachineServiceRecordPart3Schema } from '../../schemas/machine';
+import SkeletonPDF from '../../../components/skeleton/SkeletonPDF';
+
 MachineServiceRecordsThirdStep.propTypes = {
   handleDraftRequest: PropTypes.func,
   handleDiscard: PropTypes.func,
@@ -29,19 +32,21 @@ function MachineServiceRecordsThirdStep({handleDraftRequest, handleDiscard, hand
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
     const { machineId, id } = useParams();
-      
+    const { machine } = useSelector((state) => state.machine);
     const { activeContacts } = useSelector((state) => state.contact);
     const { machineServiceRecord } = useSelector((state) => state.machineServiceRecord);
 
     const [ isDraft, setIsDraft ] = useState(false);
     const saveAsDraft = async () => setIsDraft(true);
 
-    useEffect(()=>{
-      if(machineId && id){
-        dispatch(getMachineServiceRecord(machineId, id))
+    useEffect(() => {
+      if (machine?.customer?._id) {
+        dispatch(getActiveContacts(machine?.customer?._id));
       }
-      return(()=> resetMachineServiceRecord());
-    },[dispatch, machineId, id])
+      return () =>{
+          dispatch(resetActiveContacts());
+      }
+    }, [ dispatch, machine ]);
 
     const defaultValues = useMemo(
         () => {
@@ -52,6 +57,7 @@ function MachineServiceRecordsThirdStep({handleDraftRequest, handleDiscard, hand
             suggestedSpares:              machineServiceRecord?.suggestedSpares || '',
             internalNote:                 machineServiceRecord?.internalNote || '',
             operators:                    machineServiceRecord?.operators || [],
+            operatorNotes:                machineServiceRecord?.operatorNotes || '',
             files: machineServiceRecord?.files?.map(file => ({
               key: file?._id,
               _id: file?._id,
@@ -65,7 +71,6 @@ function MachineServiceRecordsThirdStep({handleDraftRequest, handleDiscard, hand
               machineId:machineServiceRecord?.machineId,
               serviceId:id,
             })) || [],
-            operatorNotes:                machineServiceRecord?.operatorNotes || '',
             isActive:                     true,
         }
         return initialValues;
@@ -74,17 +79,11 @@ function MachineServiceRecordsThirdStep({handleDraftRequest, handleDiscard, hand
         [ machineServiceRecord ]
       );
 
-    const ValidationSchema = Yup.object().shape({
-      files: Yup.array().test({
-        name: 'fileType',
-        message: 'Only the following formats are accepted: .jpeg, .jpg, gif, .bmp, .webp, .pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx',
-        test: validateImageFileType
-      }),
-    });
-
     const methods = useForm({
-        resolver: yupResolver(ValidationSchema),
+        resolver: yupResolver(MachineServiceRecordPart3Schema),
         defaultValues,
+        mode: 'onChange',
+        reValidateMode: 'onChange',
     });
     
     const {
@@ -100,9 +99,11 @@ function MachineServiceRecordsThirdStep({handleDraftRequest, handleDiscard, hand
       if (machineServiceRecord) {
         reset(defaultValues);
       }
+      return(()=> resetMachineServiceRecord());
     }, [reset, machineServiceRecord, defaultValues]);
 
     const { isActive, files } = watch()
+    
     const handleDropMultiFile = useCallback(
       async (acceptedFiles) => {
         const docFiles = files || [];
@@ -126,9 +127,9 @@ function MachineServiceRecordsThirdStep({handleDraftRequest, handleDiscard, hand
           }else{
             data.status='SUBMITTED'  
           }
-          
+          data.isReportDocsOnly= false;
           if(id){
-            if(Array.isArray(data?.files) && data?.files?.length > 0){
+            if(Array.isArray(data?.files) && data?.files?.filter((f)=>!f?._id)?.length > 0){
               await dispatch(addMachineServiceRecordFiles(machineId, id, data))
             }
             
@@ -151,39 +152,31 @@ function MachineServiceRecordsThirdStep({handleDraftRequest, handleDiscard, hand
       };
 
       const handleRemoveFile = async (inputFile) => {
-        if (inputFile?._id) {
+        let images = getValues(`files`);
+        if(inputFile?._id){
           await dispatch(deleteRecordFile(machineId, id, inputFile?._id));
-        }
-      
-        if (files.length > 1) {
-          setValue(
-            'files',
-            files.filter((file) => file !== inputFile),
-            { shouldValidate: true }
-          );
+          images = await images?.filter((file) => ( file?._id !== inputFile?._id ))
         } else {
-          setValue('files', [], { shouldValidate: true });
+          images = await images?.filter((file) => ( file !== inputFile ))
         }
+        setValue(`files`, images, { shouldValidate: true } )
       };
 
       const regEx = /^[^2]*/;
-      const handleLoadImage = async (imageId, imageIndex) => {
+      const handleLoadImage = async (imageId) => {
         try {
           const response = await dispatch(downloadRecordFile(machineId, id, imageId));
-      
           if (regEx.test(response.status)) {
-            // Update the image property in the imagesLightbox array
-            const existingFiles = getValues('files') || [];
-            const image = existingFiles[imageIndex];
-      
-            if (image) {
+            const existingFiles = getValues('files');
+            const imageIndex = existingFiles.findIndex(image => image?._id === imageId);
+            if (imageIndex !== -1) {
+              const image = existingFiles[imageIndex];
               existingFiles[imageIndex] = {
                 ...image,
                 src: `data:${image?.fileType};base64,${response.data}`,
                 preview: `data:${image?.fileType};base64,${response.data}`,
                 isLoaded: true,
               };
-      
               setValue('files', existingFiles, { shouldValidate: true });
             }
           }
@@ -191,8 +184,40 @@ function MachineServiceRecordsThirdStep({handleDraftRequest, handleDiscard, hand
           console.error('Error loading full file:', error);
         }
       };
+      
+      const [pdf, setPDF] = useState(null);
+      const [PDFName, setPDFName] = useState('');
+      const [PDFViewerDialog, setPDFViewerDialog] = useState(false);
 
+      const handleOpenFile = async (file, fileName) => {
+        setPDFName(fileName);
+        setPDFViewerDialog(true);
+        setPDF(null);
+        try {
+          if(!file?.isLoaded){
+            const response = await dispatch(downloadRecordFile(machineId, id, file._id));
+            if (regEx.test(response.status)) {
+              const blob = b64toBlob(encodeURI(response.data), 'application/pdf')
+              const url = URL.createObjectURL(blob);
+              setPDF(url);
+            } else {
+              enqueueSnackbar(response.statusText, { variant: 'error' });
+            }
+          }else{
+            setPDF(file?.src);
+          }
+        } catch (error) {
+          setPDFViewerDialog(false)
+          if (error.message) {
+            enqueueSnackbar(error.message, { variant: 'error' });
+          } else {
+            enqueueSnackbar('Something went wrong!', { variant: 'error' });
+          }
+        }
+      };
+  
   return (
+    <>
       <FormProvider methods={methods}  onSubmit={handleSubmit(onSubmit)}>
         <Stack px={2} spacing={2}>    
           { machineServiceRecord?.serviceRecordConfig?.enableNote && <RHFTextField name="serviceNote" label={`${machineServiceRecord?.serviceRecordConfig?.recordType?.toLowerCase() === 'install' ? 'Install' : 'Service' } Note`} minRows={3} multiline/> }      
@@ -211,16 +236,33 @@ function MachineServiceRecordsThirdStep({handleDraftRequest, handleDiscard, hand
             renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}` }</li> )}
           />
           <RHFTextField name="operatorNotes" label="Operator Notes" minRows={3} multiline/> 
+          <FormLabel content='Documents / Images' />
           <RHFUpload multiple  thumbnail name="files" imagesOnly
             onDrop={handleDropMultiFile}
             dropZone={false}
             onRemove={handleRemoveFile}
             onLoadImage={handleLoadImage}
+            onLoadPDF={handleOpenFile}
           />
           {/* <Grid container display="flex"><RHFSwitch name="isActive" label="Active"/></Grid> */}
       </Stack>
       <ServiceRecodStepButtons isActive={isActive} isSubmitting={isSubmitting} isDraft={isDraft} handleDraft={saveAsDraft} />
     </FormProvider>
-  )}
+    {PDFViewerDialog && (
+      <Dialog fullScreen open={PDFViewerDialog} onClose={()=> setPDFViewerDialog(false)}>
+        <DialogTitle variant='h3' sx={{pb:1, pt:2, display:'flex', justifyContent:'space-between'}}>
+            PDF View
+              <Button variant='outlined' onClick={()=> setPDFViewerDialog(false)}>Close</Button>
+        </DialogTitle>
+        <Divider variant='fullWidth' />
+          {pdf?(
+              <iframe title={PDFName} src={pdf} style={{paddingBottom:10}} width='100%' height='842px'/>
+            ):(
+              <SkeletonPDF />
+            )}
+      </Dialog>
+    )}
+  </>
+)}
 
 export default MachineServiceRecordsThirdStep

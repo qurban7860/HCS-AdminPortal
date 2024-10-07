@@ -20,7 +20,6 @@ import {
   getMachineDocuments,
   getMachineDrawingsDocuments,
   addDocument,
-  setViewVisiilityNoOthers,
   checkDocument,
 } from '../../redux/slices/document/document';
 import { getActiveDocumentCategories, resetActiveDocumentCategories } from '../../redux/slices/document/documentCategory';
@@ -28,7 +27,6 @@ import { getActiveDocumentTypesWithCategory, resetActiveDocumentTypes } from '..
 import { addDocumentVersion, updateDocumentVersion,} from '../../redux/slices/document/documentVersion';
 import { getActiveCustomers, resetActiveCustomers } from '../../redux/slices/customer/customer';
 import { getCustomerMachines, resetCustomerMachines} from '../../redux/slices/products/machine';
-import { getDrawings, resetDrawings } from '../../redux/slices/products/drawing';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import FormProvider, { RHFAutocomplete, RHFTextField, RHFUpload,} from '../../components/hook-form';
@@ -81,9 +79,8 @@ function DocumentAddForm({
   const { customer, activeCustomers } = useSelector((state) => state.customer);
 
   // ------------------ document values states ------------------------------
+  
   const [ categoryBy, setCategoryBy ] = useState(null);
-  const [ isDocumentTypesLoaded, setIsDocumentTypesLoaded ] = useState( false );
-  const [ isDocumentCategoryLoaded, setIsDocumentCategoryLoaded ] = useState( false );
   const [ previewVal, setPreviewVal ] = useState('');
   const [ preview, setPreview ] = useState(false);
   const [ readOnlyVal, setReadOnlyVal ] = useState(false);
@@ -170,7 +167,7 @@ function DocumentAddForm({
   }, [ dispatch, categoryBy ] )
 
   useEffect(() => { // Set Default Document Type Value
-    if( activeDocumentTypes?.length > 0 && activeDocumentCategories?.length > 0  && !historyNewVersion && !isDocumentTypesLoaded ){
+    if( activeDocumentTypes?.length > 0 && activeDocumentCategories?.length > 0  && !historyNewVersion ){
       if(activeDocumentTypes.find((el)=> el.isDefault === true )?._id === activeDocumentCategories.find((el)=> el.isDefault === true )?._id){
         setValue('documentType', activeDocumentTypes.find((el)=> el.isDefault === true ))
         setValue('documentCategory', activeDocumentCategories.find((el)=>  el.isDefault === true ))

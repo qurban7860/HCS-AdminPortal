@@ -237,7 +237,6 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId, allow
   };
 
   const [pdf, setPDF] = useState(null);
-  // const [pages, setPages] = useState(null);
   const [PDFName, setPDFName] = useState('');
   const [PDFViewerDialog, setPDFViewerDialog] = useState(false);
 

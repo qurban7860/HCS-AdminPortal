@@ -51,7 +51,7 @@ export default function ProfileListTableRow({
           )}
           </TableCell>
         }
-        { smScreen && <TableCell align="left">{type==="MANUFACTURER"?<Chip label={type} sx={{m:0.2}} color='secondary' />:<Chip label={type} sx={{m:0.2}}  />}</TableCell>}
+        <TableCell align="left">{type==="MANUFACTURER"?<Chip label={type} sx={{m:0.2}} color='secondary' />:<Chip label={type} sx={{m:0.2}}  />}</TableCell>
         <TableCell align="left">{`${web || '___'} x ${flange || '___' } `}</TableCell>
         <TableCell align="left">{`${thicknessStart || '___' }-${thicknessEnd || '___' }`}</TableCell>
         <TableCell align="left"><Switch checked={isActive} disabled size="small"/></TableCell>
