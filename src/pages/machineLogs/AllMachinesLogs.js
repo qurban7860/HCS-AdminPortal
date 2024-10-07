@@ -301,10 +301,14 @@ function AllMachineLogs() {
       {!isGraphPage() && (
         <MachineLogsDataTable allMachineLogsPage dataForApi={dataForApi} logType={logType} />
       )}
-      {isGraphPage() && logGraphType.key === 'length_and_waste' ? (
-        <ErpProducedLengthLogGraph timePeriod={logPeriod} customer={customer} />
-      ) : (
-        <ErpProductionRateLogGraph timePeriod={logPeriod} customer={customer} />
+      {isGraphPage() && (
+        <>
+          {logGraphType.key === 'length_and_waste' ? (
+            <ErpProducedLengthLogGraph timePeriod={logPeriod} customer={machine?.customer?._id} />
+          ) : (
+            <ErpProductionRateLogGraph timePeriod={logPeriod} customer={machine?.customer?._id} />
+          )}
+        </>
       )}
     </Container>
   );
