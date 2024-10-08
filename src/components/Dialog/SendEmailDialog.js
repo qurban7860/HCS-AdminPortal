@@ -20,14 +20,13 @@ import FormProvider from '../hook-form/FormProvider';
 import { RHFTextField } from '../hook-form';
 
 SendEmailDialog.propTypes = {
-  machineServiceRecord: PropTypes.object,
   fileName: PropTypes.string,
 };
 
-function SendEmailDialog({machineServiceRecord, fileName}) {
+function SendEmailDialog({ fileName }) {
     
   const dispatch = useDispatch();
-  const { sendEmailDialog } = useSelector((state) => state.machineServiceRecord);
+  const { machineServiceRecord, machineServiceRecordCheckItems, sendEmailDialog } = useSelector((state) => state.machineServiceRecord);
   const handleCloseDialog = ()=>{ 
     dispatch(setSendEmailDialog(false)) 
     reset();
@@ -62,17 +61,14 @@ function SendEmailDialog({machineServiceRecord, fileName}) {
   
   const onSubmit = async (data) => {    
     try {
-      const PDFBlob = await ReactPDF.pdf(<MachineServiceRecordPDF machineServiceRecord={machineServiceRecord} />).toBlob();
-      console.log("PDFBlob : ",PDFBlob)
+      const PDFBlob = await ReactPDF.pdf(<MachineServiceRecordPDF machineServiceRecord={machineServiceRecord} machineServiceRecordCheckItems={machineServiceRecordCheckItems}/>).toBlob();
       const file = new File([PDFBlob], fileName, { type: PDFBlob.type });
-      console.log("file : ",file)
       data.id = machineServiceRecord?._id;
       data.pdf = file; 
-      
       await dispatch(sendEmail(machineServiceRecord?.machine?._id, data));
       enqueueSnackbar("Email Sent Successfully");  
       reset();
-      dispatch(getMachineServiceRecord(machineServiceRecord?.machine?._id, machineServiceRecord?._id))
+      // dispatch(getMachineServiceRecord(machineServiceRecord?.machine?._id, machineServiceRecord?._id))
       handleCloseDialog();
     } catch (err) {
       enqueueSnackbar("Failed Email Send", { variant: 'error' });
