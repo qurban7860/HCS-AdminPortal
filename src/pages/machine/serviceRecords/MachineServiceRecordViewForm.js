@@ -635,7 +635,7 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
         </Grid>
       </Grid>
       {pdfViewerDialog && <PDFViewerDialog machineServiceRecord={machineServiceRecord} />}
-      {sendEmailDialog && <SendEmailDialog machineServiceRecord={machineServiceRecord} fileName={fileName}/>}
+      {sendEmailDialog && <SendEmailDialog fileName={fileName}/>}
       <DialogServiceRecordAddFile />
       <DialogServiceRecordComplete recordStatus={recordStatus}/>
     </Card>

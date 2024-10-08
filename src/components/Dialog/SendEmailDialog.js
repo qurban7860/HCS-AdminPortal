@@ -5,12 +5,13 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Dialog, DialogContent, Button, DialogTitle, Divider, DialogActions } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useForm } from 'react-hook-form';
+import { useParams } from 'react-router-dom';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useSnackbar } from 'notistack';
 
 import {  
-  getMachineServiceRecord,
+  getMachineServiceRecordCheckItems,
   sendEmail,
   setSendEmailDialog,
 } from '../../redux/slices/products/machineServiceRecord';
@@ -20,14 +21,14 @@ import FormProvider from '../hook-form/FormProvider';
 import { RHFTextField } from '../hook-form';
 
 SendEmailDialog.propTypes = {
-  machineServiceRecord: PropTypes.object,
   fileName: PropTypes.string,
 };
 
-function SendEmailDialog({machineServiceRecord, fileName}) {
+function SendEmailDialog({ fileName }) {
     
   const dispatch = useDispatch();
-  const { sendEmailDialog } = useSelector((state) => state.machineServiceRecord);
+  const { machineId, id } = useParams();
+  const { machineServiceRecord, machineServiceRecordCheckItems, sendEmailDialog } = useSelector((state) => state.machineServiceRecord);
   const handleCloseDialog = ()=>{ 
     dispatch(setSendEmailDialog(false)) 
     reset();
@@ -62,17 +63,14 @@ function SendEmailDialog({machineServiceRecord, fileName}) {
   
   const onSubmit = async (data) => {    
     try {
-      const PDFBlob = await ReactPDF.pdf(<MachineServiceRecordPDF machineServiceRecord={machineServiceRecord} />).toBlob();
-      console.log("PDFBlob : ",PDFBlob)
+      await dispatch(getMachineServiceRecordCheckItems( machineId, id, true ))
+      const PDFBlob = await ReactPDF.pdf(<MachineServiceRecordPDF machineServiceRecord={machineServiceRecord} machineServiceRecordCheckItems={machineServiceRecordCheckItems}/>).toBlob();
       const file = new File([PDFBlob], fileName, { type: PDFBlob.type });
-      console.log("file : ",file)
       data.id = machineServiceRecord?._id;
       data.pdf = file; 
-      
       await dispatch(sendEmail(machineServiceRecord?.machine?._id, data));
       enqueueSnackbar("Email Sent Successfully");  
       reset();
-      dispatch(getMachineServiceRecord(machineServiceRecord?.machine?._id, machineServiceRecord?._id))
       handleCloseDialog();
     } catch (err) {
       enqueueSnackbar("Failed Email Send", { variant: 'error' });
