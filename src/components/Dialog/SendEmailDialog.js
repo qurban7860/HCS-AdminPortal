@@ -5,12 +5,13 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Dialog, DialogContent, Button, DialogTitle, Divider, DialogActions } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useForm } from 'react-hook-form';
+import { useParams } from 'react-router-dom';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useSnackbar } from 'notistack';
 
 import {  
-  getMachineServiceRecord,
+  getMachineServiceRecordCheckItems,
   sendEmail,
   setSendEmailDialog,
 } from '../../redux/slices/products/machineServiceRecord';
@@ -26,6 +27,7 @@ SendEmailDialog.propTypes = {
 function SendEmailDialog({ fileName }) {
     
   const dispatch = useDispatch();
+  const { machineId, id } = useParams();
   const { machineServiceRecord, machineServiceRecordCheckItems, sendEmailDialog } = useSelector((state) => state.machineServiceRecord);
   const handleCloseDialog = ()=>{ 
     dispatch(setSendEmailDialog(false)) 
@@ -61,6 +63,7 @@ function SendEmailDialog({ fileName }) {
   
   const onSubmit = async (data) => {    
     try {
+      await dispatch(getMachineServiceRecordCheckItems( machineId, id, true ))
       const PDFBlob = await ReactPDF.pdf(<MachineServiceRecordPDF machineServiceRecord={machineServiceRecord} machineServiceRecordCheckItems={machineServiceRecordCheckItems}/>).toBlob();
       const file = new File([PDFBlob], fileName, { type: PDFBlob.type });
       data.id = machineServiceRecord?._id;
@@ -68,7 +71,6 @@ function SendEmailDialog({ fileName }) {
       await dispatch(sendEmail(machineServiceRecord?.machine?._id, data));
       enqueueSnackbar("Email Sent Successfully");  
       reset();
-      // dispatch(getMachineServiceRecord(machineServiceRecord?.machine?._id, machineServiceRecord?._id))
       handleCloseDialog();
     } catch (err) {
       enqueueSnackbar("Failed Email Send", { variant: 'error' });
