@@ -51,6 +51,7 @@ export default function ContactViewForm({
 
   const handleEdit = () => navigate(PATH_CRM.customers.contacts.edit(customerId, id));
   const handleMoveConatct = () => navigate(PATH_CRM.customers.contacts.move(customerId, id));
+  const backLink = () => navigate(PATH_CRM.customers.contacts.root(customerId, id));
 
   const onDelete = async () => {
     try {
@@ -114,6 +115,7 @@ export default function ContactViewForm({
         moveCustomerContact={!customer?.isArchived && isAllAccessAllowed && handleMoveConatct } 
         handleEdit={customer?.isArchived ? undefined : handleEdit} 
         onDelete={customer?.isArchived ? undefined : onDelete} 
+        backLink={customer?.isArchived ? undefined : backLink}
         isActive={defaultValues.isActive} 
         formerEmployee={defaultValues.formerEmployee}
       />
