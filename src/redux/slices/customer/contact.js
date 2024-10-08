@@ -11,6 +11,7 @@ const initialState = {
   contactMoveFormVisibility: false,
   responseMessage: null,
   activeCardIndex: '',
+  contactsListView: false,
   isExpanded: false,
   success: false,
   isLoading: false,
@@ -57,6 +58,7 @@ const slice = createSlice({
     setCardActiveIndex(state, action){
       state.activeCardIndex = action.payload;
     },
+     
 
     // CARD IS EXPENDED
     setIsExpanded(state, action){
@@ -81,6 +83,9 @@ const slice = createSlice({
       state.isLoading = false;
     },
 
+    setContactsView(state, action){
+      state.contactsListView = action.payload;
+    },
     // RESET CONTACTS
     resetContacts(state){
       state.contacts = [];
@@ -183,7 +188,9 @@ export const {
   setContactEditFormVisibility,
   setContactMoveFormVisibility,
   setCardActiveIndex,
+  setListActiveIndex,
   setIsExpanded,
+  setContactsView,
   resetContact,
   resetContacts,
   resetActiveContacts,

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'; 
 import { useState, useEffect , useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import debounce from 'lodash/debounce';
@@ -48,7 +49,12 @@ const TABLE_HEAD = [
 
 // ----------------------------------------------------------------------
 
-export default function CustomerContactList() {
+CustomerContactList.propTypes = {
+  isCustomerContactPage: PropTypes.bool,
+  filterFormer: PropTypes.string,
+};
+
+export default function CustomerContactList({isCustomerContactPage = false, filterFormer}) {
   const {
     order,
     orderBy,
@@ -64,7 +70,6 @@ export default function CustomerContactList() {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const { contacts, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.contact);
-  const [tableData, setTableData] = useState([]);
   const [filterName, setFilterName] = useState(filterBy);
   const [exportingCSV, setExportingCSV] = useState(false);
 
@@ -78,18 +83,20 @@ export default function CustomerContactList() {
   }
 
   useEffect(() => {
-    dispatch(getContacts());
-    return ()=> { dispatch( resetContacts() ) }
-  }, [dispatch]);
-
-  useEffect(() => {
-    setTableData(contacts || []);
-  }, [contacts]);
+    if (!isCustomerContactPage) { 
+      dispatch(getContacts());
+      return () => {
+        dispatch(resetContacts());
+      };
+    }
+    return undefined; 
+  }, [dispatch, isCustomerContactPage]);  
 
   const dataFiltered = applyFilter({
-    inputData: tableData,
+    inputData: contacts || [],
     comparator: getComparator(order, orderBy),
     filterName,
+    filterFormer,
   });
 
   const denseHeight = 60;
@@ -97,8 +104,8 @@ export default function CustomerContactList() {
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
   const debouncedSearch = useRef(debounce((value) => {
-      dispatch(ChangePage(0))
-      dispatch(setFilterBy(value))
+    dispatch(ChangePage(0))
+    dispatch(setFilterBy(value))
   }, 500))
 
   const handleFilterName = (event) => {
@@ -146,16 +153,18 @@ export default function CustomerContactList() {
 
   return (
     <Container maxWidth={false}>
+      {!isCustomerContactPage ? (
         <StyledCardContainer>
-          <Cover name='Customer Contacts' backLink customerSites/>
+          <Cover name='Customer Contacts' backLink customerSites/>        
         </StyledCardContainer>
+      ) : null} 
       <TableCard >
-      <CustomerContactListTableToolbar
+        <CustomerContactListTableToolbar
           filterName={filterName}
           onFilterName={handleFilterName}
           isFiltered={isFiltered}
           onResetFilter={handleResetFilter}
-          onExportCSV={onExportCSV}
+          onExportCSV={!isCustomerContactPage ? onExportCSV : undefined}
           onExportLoading={exportingCSV}
         />
 
@@ -167,7 +176,6 @@ export default function CustomerContactList() {
           onRowsPerPageChange={onChangeRowsPerPage}
         />}
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-
           <Scrollbar>
             <Table size="small" sx={{ minWidth: 360 }}>
               <TableHeadCustom
@@ -198,7 +206,6 @@ export default function CustomerContactList() {
                     )
                   )}
                   <TableNoData isNotFound={isNotFound} />
-
               </TableBody>
             </Table>
           </Scrollbar>
@@ -218,8 +225,16 @@ export default function CustomerContactList() {
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName }) {
-  const stabilizedThis = inputData.map((el, index) => [el, index]);
+function applyFilter({ inputData, comparator, filterName, filterFormer }) {
+  let filteredData = inputData;
+
+  if (filterFormer?.toLowerCase() === 'former employee') {
+    filteredData = filteredData.filter((contact) => contact?.formerEmployee);
+  } else if (filterFormer?.toLowerCase() === 'current employee') {
+    filteredData = filteredData.filter((contact) => !contact?.formerEmployee);
+  }
+
+  const stabilizedThis = filteredData.map((el, index) => [el, index]);
 
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -227,14 +242,14 @@ function applyFilter({ inputData, comparator, filterName }) {
     return a[1] - b[1];
   });
   
-  inputData = stabilizedThis.map((el) => el[0]);
+  filteredData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    inputData = inputData.filter(
+    filteredData = filteredData.filter(
       (contact) =>
         contact?.customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         `${contact?.firstName} ${contact?.lastName}`.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        // contact?.title?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+         // contact?.title?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         contact?.phone?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         contact?.email?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         contact?.address?.country?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
@@ -242,5 +257,5 @@ function applyFilter({ inputData, comparator, filterName }) {
     );
   }
 
-  return inputData;
+  return filteredData;
 }
