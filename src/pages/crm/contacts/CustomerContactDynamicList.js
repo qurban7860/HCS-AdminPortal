@@ -216,7 +216,7 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
 </Grid>
   
       <Grid container spacing={1} direction="row" justifyContent="flex-end">
-        {contacts.length === 0 && (
+        {contacts.length === 0 && !contactsListView &&(
           <Grid item lg={12} sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
             <Table>
               <TableBody>
@@ -271,7 +271,7 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
               </CardBase>
             )}
             { !contactViewForm && contactEditForm && !contactAddForm && !contactMoveForm && <ContactEditForm setIsExpanded={setIsExpanded} />}
-            { !contactViewForm && contactAddForm && !contactEditForm && !contactMoveForm && <ContactAddForm setIsExpanded={setIsExpanded}/>}
+            { !contactsListView && contacts.length === 0 && !contactViewForm && contactAddForm && !contactEditForm && !contactMoveForm && <ContactAddForm setIsExpanded={setIsExpanded}/>}
             { !contactViewForm && contactMoveForm && !contactAddForm && !contactEditForm && <ContactMoveForm setIsExpanded={setIsExpanded} />}
           </GridBaseViewForm>  }
           </>
@@ -282,11 +282,11 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
      <CardBase>
        <ContactViewForm />
      </CardBase> )}
-      { contactsListView && id && !contactViewForm && contactEditForm && !contactAddForm && !contactMoveForm && <ContactEditForm setIsExpanded={setIsExpanded} />}
-      { contactsListView && id && !contactViewForm && contactAddForm && !contactEditForm && !contactMoveForm && <ContactAddForm setIsExpanded={setIsExpanded}/>}
-      { contactsListView && id && !contactViewForm && contactMoveForm && !contactAddForm && !contactEditForm && <ContactMoveForm setIsExpanded={setIsExpanded} />}
+      { !contactViewForm && contactEditForm && !contactAddForm && !contactMoveForm && <ContactEditForm setIsExpanded={setIsExpanded} />}
+      { !contactViewForm && contactAddForm && !contactEditForm && !contactMoveForm && <ContactAddForm setIsExpanded={setIsExpanded}/>}
+      { !contactViewForm && contactMoveForm && !contactAddForm && !contactEditForm && <ContactMoveForm setIsExpanded={setIsExpanded} />}
     </Container>
-    { contactsListView && !id && <CustomerContactList isCustomerContactPage filterFormer={filterFormer}/>}
+    { contactsListView && !id && !contactAddForm && <CustomerContactList isCustomerContactPage filterFormer={filterFormer}/>}
     </>
   );
 }

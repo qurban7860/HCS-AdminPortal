@@ -39,7 +39,7 @@ export default function CustomerContactListTableRow({
 
   const contactName = `${firstName || ''} ${lastName || ''}`;
 
-  const phone = phoneNumbers ? phoneNumbers.map(({ countryCode, contactNumber }) => `+${countryCode}-${contactNumber}`).join(', ') : '--';
+  const phone = phoneNumbers ? phoneNumbers.map(({ countryCode, contactNumber }) => `+${countryCode}-${contactNumber}`).join(', ') : '';
 
   return (
     <>
@@ -52,7 +52,7 @@ export default function CustomerContactListTableRow({
             param={contactName}
           />
           {customer?.name && <TableCell style={{ width: '100%', display: 'inline-block' }} >{customer?.name || '' } </TableCell> }
-          {phone && <TableCell style={{ width: '100%', display: 'inline-block' }} >{phone || '-'}</TableCell> }
+          {phone && <TableCell style={{ width: '100%', display: 'inline-block' }} >{phone}</TableCell> }
           {email && <TableCell style={{ width: '100%', display: 'inline-block' }} >{email}</TableCell> }
         </StyledTableRow>
       )}
@@ -65,7 +65,7 @@ export default function CustomerContactListTableRow({
             onClick={() => handleContactViewInNewPage(customer?._id, _id)}
             param={contactName}
           />      
-          <TableCell align="center">{phone || '--'}</TableCell>
+          <TableCell>{phone}</TableCell>
           <TableCell>{email}</TableCell>
           <TableCell> {address?.country}</TableCell>
           <TableCell align="center">
