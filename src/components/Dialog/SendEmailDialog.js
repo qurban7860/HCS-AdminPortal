@@ -12,6 +12,7 @@ import { useSnackbar } from 'notistack';
 
 import {  
   getMachineServiceRecordCheckItems,
+  getMachineServiceRecord,
   sendEmail,
   setSendEmailDialog,
 } from '../../redux/slices/products/machineServiceRecord';
@@ -28,12 +29,12 @@ function SendEmailDialog({ fileName }) {
     
   const dispatch = useDispatch();
   const { machineId, id } = useParams();
-  const { machineServiceRecord, machineServiceRecordCheckItems, sendEmailDialog } = useSelector((state) => state.machineServiceRecord);
+  const { machineServiceRecord, sendEmailDialog } = useSelector((state) => state.machineServiceRecord);
   const handleCloseDialog = ()=>{ 
     dispatch(setSendEmailDialog(false)) 
     reset();
   }
-  
+
   const { enqueueSnackbar } = useSnackbar();
   
   const defaultValues = useMemo(
@@ -63,8 +64,11 @@ function SendEmailDialog({ fileName }) {
   
   const onSubmit = async (data) => {    
     try {
-      await dispatch(getMachineServiceRecordCheckItems( machineId, id, true ))
-      const PDFBlob = await ReactPDF.pdf(<MachineServiceRecordPDF machineServiceRecord={machineServiceRecord} machineServiceRecordCheckItems={machineServiceRecordCheckItems}/>).toBlob();
+      const [ ServiceRecordResponse, CheckItemsResponse ] =  await Promise.all([
+        dispatch(getMachineServiceRecord(machineId, id, true)),
+        dispatch(getMachineServiceRecordCheckItems(machineId, id, true))
+      ])
+      const PDFBlob = await ReactPDF.pdf(<MachineServiceRecordPDF machineServiceRecord={ServiceRecordResponse} machineServiceRecordCheckItems={CheckItemsResponse}/>).toBlob();
       const file = new File([PDFBlob], fileName, { type: PDFBlob.type });
       data.id = machineServiceRecord?._id;
       data.pdf = file; 
