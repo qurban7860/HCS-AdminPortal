@@ -174,7 +174,6 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [ machineServiceRecord]
   );
-
   const handleSendEmail = async() => {
       dispatch(setSendEmailDialog(true))
   }

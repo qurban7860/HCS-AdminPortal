@@ -386,14 +386,17 @@ export function getMachineServiceRecords (machineId, isMachineArchived){
 // ----------------------------------------------------------------------
 export function getMachineServiceRecord(machineId, id, isHighQuality ) {
   return async (dispatch) => {
-    dispatch(slice.actions.startLoading());
+    if(!isHighQuality){
+      dispatch(slice.actions.startLoading());
+    }
     try {
       const params = {};
       if(isHighQuality){
         params.isHighQuality = true;
       }
       const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}`,{ params });
-      dispatch(slice.actions.getMachineServiceRecordSuccess(response.data));
+      await dispatch(slice.actions.getMachineServiceRecordSuccess(response.data));
+      return response.data;
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -634,7 +637,9 @@ export function deleteCheckItemFile(machineId, fileId, Index, childIndex ) {
 
 export function getMachineServiceRecordCheckItems(machineId, id, highQuality) {
   return async (dispatch) => {
-    dispatch(slice.actions.startLoadingCheckItems());
+    if(!highQuality){
+      dispatch(slice.actions.startLoadingCheckItems());
+    }
     try {
       const params = { }
       if( highQuality ){
@@ -642,7 +647,8 @@ export function getMachineServiceRecordCheckItems(machineId, id, highQuality) {
       }
       
       const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecordValues/${id}/checkItems`,{ params } );
-      dispatch(slice.actions.getMachineServiceRecordCheckItemsSuccess(response.data));
+      await dispatch(slice.actions.getMachineServiceRecordCheckItemsSuccess(response.data));
+      return response.data;
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
