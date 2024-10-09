@@ -35,23 +35,26 @@ export default function CustomerContactListTableRow({
   handleContactView,
   handleContactViewInNewPage,
 }) {
-  const { _id, customer, firstName, lastName, phone, email, address, isActive, createdAt } = row;
+  const { _id, customer, firstName, lastName, phoneNumbers, email, address, isActive, createdAt } = row;
 
   const contactName = `${firstName || ''} ${lastName || ''}`;
+
+  const phone = phoneNumbers ? phoneNumbers.map(({ countryCode, contactNumber }) => `+${countryCode}-${contactNumber}`).join(', ') : '--';
+
   return (
     <>
       {/* Render rows with column names in bold for small screens */}
       {!useScreenSize('sm') && (
-          <StyledTableRow hover selected={selected} style={{ display: 'block' }} >
-            <LinkTableCellWithIconTargetBlank style={{ width: '100%', display: 'inline-block' }}
-              onViewRow={() => handleContactView(customer?._id, _id)}
-              onClick={() => handleContactViewInNewPage(customer?._id, _id)}
-              param={contactName}
-            />
-            {customer?.name && <TableCell style={{ width: '100%', display: 'inline-block' }} >{customer?.name || '' } </TableCell> }
-            {phone && <TableCell style={{ width: '100%', display: 'inline-block' }} >{phone}</TableCell> }
-            {email && <TableCell style={{ width: '100%', display: 'inline-block' }} >{email}</TableCell> }
-          </StyledTableRow>
+        <StyledTableRow hover selected={selected} style={{ display: 'block' }} >
+          <LinkTableCellWithIconTargetBlank style={{ width: '100%', display: 'inline-block' }}
+            onViewRow={() => handleContactView(customer?._id, _id)}
+            onClick={() => handleContactViewInNewPage(customer?._id, _id)}
+            param={contactName}
+          />
+          {customer?.name && <TableCell style={{ width: '100%', display: 'inline-block' }} >{customer?.name || '' } </TableCell> }
+          {phone && <TableCell style={{ width: '100%', display: 'inline-block' }} >{phone || '-'}</TableCell> }
+          {email && <TableCell style={{ width: '100%', display: 'inline-block' }} >{email}</TableCell> }
+        </StyledTableRow>
       )}
 
       {useScreenSize('sm') && (
@@ -61,8 +64,8 @@ export default function CustomerContactListTableRow({
             onViewRow={() => handleContactView(customer?._id, _id)}
             onClick={() => handleContactViewInNewPage(customer?._id, _id)}
             param={contactName}
-          />
-          <TableCell>{phone}</TableCell>
+          />      
+          <TableCell align="center">{phone || '--'}</TableCell>
           <TableCell>{email}</TableCell>
           <TableCell> {address?.country}</TableCell>
           <TableCell align="center">
