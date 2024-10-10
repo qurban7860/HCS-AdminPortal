@@ -245,16 +245,23 @@ function applyFilter({ inputData, comparator, filterName, filterFormer }) {
   filteredData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    filteredData = filteredData.filter(
-      (contact) =>
+    filteredData = filteredData.filter((contact) => {
+      const phone = contact?.phoneNumbers 
+        ? contact.phoneNumbers.map(({ countryCode, contactNumber }) =>
+            countryCode ? `+${countryCode}-${contactNumber}` : contactNumber
+          ).join(', ')
+        : '';
+
+      return (
         contact?.customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         `${contact?.firstName} ${contact?.lastName}`.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
          // contact?.title?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        contact?.phone?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        phone.includes(filterName.toLowerCase()) || 
         contact?.email?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         contact?.address?.country?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         fDate(contact?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
-    );
+      );
+    });
   }
 
   return filteredData;
