@@ -39,7 +39,13 @@ export default function CustomerContactListTableRow({
 
   const contactName = `${firstName || ''} ${lastName || ''}`;
 
-  const phone = phoneNumbers ? phoneNumbers.map(({ countryCode, contactNumber }) => `+${countryCode}-${contactNumber}`).join(', ') : '';
+  const phone = phoneNumbers 
+  ? phoneNumbers.map(({ countryCode, contactNumber }) => 
+      countryCode 
+        ? `+${countryCode}-${contactNumber}` 
+        : contactNumber
+    ).join(', ') 
+  : '';
 
   return (
     <>
