@@ -21,6 +21,7 @@ CustomerContactListTableRow.propTypes = {
   handleContactViewInNewPage: PropTypes.func,
   onSelectRow: PropTypes.func,
   onDeleteRow: PropTypes.func,
+  isCustomerContactPage: PropTypes.bool,
 };
 
 export default function CustomerContactListTableRow({
@@ -34,8 +35,9 @@ export default function CustomerContactListTableRow({
   openInNewPage,
   handleContactView,
   handleContactViewInNewPage,
+  isCustomerContactPage
 }) {
-  const { _id, customer, firstName, lastName, phoneNumbers, email, address, isActive, createdAt } = row;
+  const { _id, customer, firstName, title, lastName, phoneNumbers, email, address, isActive, createdAt } = row;
 
   const contactName = `${firstName || ''} ${lastName || ''}`;
 
@@ -46,7 +48,7 @@ export default function CustomerContactListTableRow({
         : contactNumber
     ).join(', ') 
   : '';
-
+  
   return (
     <>
       {/* Render rows with column names in bold for small screens */}
@@ -57,7 +59,8 @@ export default function CustomerContactListTableRow({
             onClick={() => handleContactViewInNewPage(customer?._id, _id)}
             param={contactName}
           />
-          {customer?.name && <TableCell style={{ width: '100%', display: 'inline-block' }} >{customer?.name || '' } </TableCell> }
+          {!isCustomerContactPage && customer?.name && <TableCell style={{ width: '100%', display: 'inline-block' }} >{customer?.name || '' } </TableCell> }
+          {title && <TableCell style={{ width: '100%', display: 'inline-block' }} >{title}</TableCell> }
           {phone && <TableCell style={{ width: '100%', display: 'inline-block' }} >{phone}</TableCell> }
           {email && <TableCell style={{ width: '100%', display: 'inline-block' }} >{email}</TableCell> }
         </StyledTableRow>
@@ -65,18 +68,24 @@ export default function CustomerContactListTableRow({
 
       {useScreenSize('sm') && (
         <StyledTableRow hover selected={selected}>
-          <TableCell> {customer?.name}</TableCell>
+          {isCustomerContactPage && <TableCell align="center">
+            <Switch checked={isActive} disabled size="small" />
+          </TableCell>}
+          {!isCustomerContactPage && (  
+            <TableCell>{customer?.name}</TableCell>
+          )}
           <LinkTableCellWithIconTargetBlank
             onViewRow={() => handleContactView(customer?._id, _id)}
             onClick={() => handleContactViewInNewPage(customer?._id, _id)}
             param={contactName}
-          />      
+          /> 
+          {isCustomerContactPage && <TableCell>{title}</TableCell>}  
           <TableCell>{phone}</TableCell>
           <TableCell>{email}</TableCell>
           <TableCell> {address?.country}</TableCell>
-          <TableCell align="center">
+          {!isCustomerContactPage && <TableCell align="center">
             <Switch checked={isActive} disabled size="small" />
-          </TableCell>
+          </TableCell>}
           <TableCell align="right"> {fDate(createdAt)}</TableCell>
         </StyledTableRow>
       )}
