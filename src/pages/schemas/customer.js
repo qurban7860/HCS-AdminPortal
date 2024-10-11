@@ -8,10 +8,10 @@ export const editCustomerRegistrationSchema = Yup.object().shape({
   contactPersonName: Yup.string().trim().max(200).label('Contact Person Name'),
   email: Yup.string().email().label('Email').required(),
   phoneNumber: Yup.string().trim().max(20).label('Phone Number'),
-  status: Yup.string().max(200).label('Status'),
+  status: Yup.string().max(200).label('Status').nullable(),
   customerNote: Yup.string().trim().max(5000).label('Customer Note'),
   internalRemarks: Yup.string().trim().max(5000).label('Internal Remarks'),
-  machineSerialNos: Yup.string().trim().max(500).label('Machine Serial Nos'),
+  machineSerialNos: Yup.string().trim().max(500).label('Machine Serial Nos').required(),
   address: Yup.string().trim().max(200).label('Address'),
   isActive: Yup.boolean().label('IsActive'),
 });
