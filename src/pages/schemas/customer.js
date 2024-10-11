@@ -5,18 +5,15 @@ const stringLengthMessage = 'Trading name must not exceed 500 characters';
 
 export const editCustomerRegistrationSchema = Yup.object().shape({
   customerName: Yup.string().trim().max(200).label('Customer Name').required(),
-  contactPersonName: Yup.string().trim().max(200).label('Contact Person Name').required(),
+  contactPersonName: Yup.string().trim().max(200).label('Contact Person Name'),
   email: Yup.string().email().label('Email').required(),
-  phoneNumber: Yup.string().trim().max(20).label('Phone Number').required(),
-  status: Yup.string().max(200).label('Status').required(),
-  customerNote: Yup.string().trim().max(5000).label('Customer Note').required(),
-  internalRemarks: Yup.string().trim().max(5000).label('Internal Remarks').required(),
-  acceptanceStatus: Yup.string().max(200).label('Acceptance Status').required(),
-  machineSerialNos: Yup.string().trim().max(500).label('Machine Serial Nos').required(),
-
-  address: Yup.string().trim().max(200).label('Address').required(),
-
-  isActive: Yup.boolean().label('IsActive').required(),
+  phoneNumber: Yup.string().trim().max(20).label('Phone Number'),
+  status: Yup.string().max(200).label('Status'),
+  customerNote: Yup.string().trim().max(5000).label('Customer Note'),
+  internalRemarks: Yup.string().trim().max(5000).label('Internal Remarks'),
+  machineSerialNos: Yup.string().trim().max(500).label('Machine Serial Nos'),
+  address: Yup.string().trim().max(200).label('Address'),
+  isActive: Yup.boolean().label('IsActive'),
 });
 
 // @root - DocumentEditForm

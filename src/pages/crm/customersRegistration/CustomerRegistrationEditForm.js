@@ -66,7 +66,7 @@ export default function CustomerEditForm() {
 
   const onSubmit = async (data) => {
     try {
-      await dispatch(updateCustomerRegistration(data));
+      await dispatch(updateCustomerRegistration( customerId, data ));
       reset();
       enqueueSnackbar('Customer updated successfully!');
       navigate(PATH_CUSTOMER_REGISTRATION.view(customerId));
