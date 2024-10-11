@@ -98,6 +98,11 @@ import {
   RegionView,
   RegionEdit,
 
+  // Customer Registrations
+  CustomerRegistrationList,
+  CustomerRegistrationEdit,
+  CustomerRegistrationView,
+
   // ----------------------------------------------------------------
 
   // Machine
@@ -609,6 +614,22 @@ export default function Router() {
             { path: 'blank', element: <BlankPage /> },
           ]
         },
+      ],
+    },
+
+    // --------------------- Dashboard ----------------------
+    {
+      path: 'customerRegistrations',
+      element: (
+        <AuthGuard>
+          <DashboardLayout />
+        </AuthGuard>
+      ),
+      children: [
+        { element: <CustomerRegistrationList to={PATH_AFTER_LOGIN} replace />, index: true },
+        { path: ':customerId/edit', element: <CustomerRegistrationEdit /> },
+        { path: ':customerId/view', element: <CustomerRegistrationView /> },
+        { path: 'permission-denied', element: <PermissionDeniedPage /> },
       ],
     },
     // ------------------------- Machine ---------------------------

@@ -207,7 +207,7 @@ function applyFilter({ inputData, comparator, filterName, filterStatus, filterRo
           .join(', ')
           .toLowerCase()
           .indexOf(filterName.toLowerCase()) >= 0 ||
-        // (securityUser?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+        // (securityUser?.isActive ? "Active" : "InActive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
         fDate(region?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }
