@@ -33,7 +33,7 @@ function NavigationConfig() {
     chat: icon('ic_chat'),
     mail: icon('ic_mail'),
     user: icon('ic_user'),
-    register: <Iconify icon="mdi:register" />,
+    register: <Iconify icon="mdi:users-add" />,
     file: icon('ic_file'),
     lock: icon('ic_lock'),
     label: icon('ic_label'),
