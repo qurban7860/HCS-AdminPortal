@@ -278,7 +278,7 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
       (filterModel) =>
         filterModel?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         filterModel?.category?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        // (filterModel?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+        // (filterModel?.isActive ? "Active" : "InActive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
         fDate(filterModel?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }

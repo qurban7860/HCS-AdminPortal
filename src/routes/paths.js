@@ -6,6 +6,7 @@ function path(root, sublink) {
 
 const ROOTS_AUTH = '/auth';
 const ROOTS_DASHBOARD = '/dashboard';
+const ROOTS_CUSTOMER_REGISTRATIONS = '/customerRegistrations';
 const ROOTS_CALENDAR = '/calendar';
 const ROOTS_CRM = '/crm';
 const ROOTS_MACHINE = '/products';
@@ -134,7 +135,15 @@ export const PATH_CRM = {
       view: (id) => path(ROOTS_CRM, `/customers/archived/${id}/view`),
     },
   },
-  
+};
+
+// --------------------- CUSTOMER REGISTRATIONS ----------------------
+export const PATH_CUSTOMER_REGISTRATION = {
+  root: ROOTS_CUSTOMER_REGISTRATIONS,
+  edit: ( customerId ) => path(ROOTS_CUSTOMER_REGISTRATIONS, `/${customerId}/edit`),
+  view: ( customerId ) => path(ROOTS_CUSTOMER_REGISTRATIONS, `/${customerId}/view`),
+  permissionDenied: path(ROOTS_CUSTOMER_REGISTRATIONS, '/permission-denied'),
+  blank: path(ROOTS_AUTH, '/login'),
 };
 
 // MACHINE

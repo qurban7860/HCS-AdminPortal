@@ -332,7 +332,7 @@ function applyFilter({ inputData, comparator, filterName, filterVerify, filterEx
         `${customer?.mainSite?.address?.city}, ${customer?.mainSite?.address?.country}`.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         customer?.groupCustomer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         // customer?.mainSite?.address?.country?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        // (customer?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+        // (customer?.isActive ? "Active" : "InActive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
         fDate(customer?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }

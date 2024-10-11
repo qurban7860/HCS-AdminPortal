@@ -315,7 +315,7 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
     inputData = inputData.filter(
       (filterstatus) =>
         filterstatus?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        // (filterstatus?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+        // (filterstatus?.isActive ? "Active" : "InActive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
         fDate(filterstatus?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }

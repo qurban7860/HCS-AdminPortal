@@ -1,13 +1,8 @@
-// import { Helmet } from 'react-helmet-async';
-// import { paramCase } from 'change-case';
 import debounce from 'lodash/debounce';
 import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 // @mui
 import {
-  // Switch,
-  // Grid,
-  Card,
   Table,
   Button,
   Tooltip,
@@ -22,15 +17,11 @@ import { useDispatch, useSelector } from '../../../../redux/store';
 // routes
 import { PATH_SETTING } from '../../../../routes/paths';
 // components
-// import { useSnackbar } from '../../../components/snackbar';
-// import { useSettingsContext } from '../../../components/settings';
 import {
   useTable,
   getComparator,
-  // emptyRows,
   TableNoData,
   TableSkeleton,
-  // TableEmptyRows,
   TableHeadCustom,
   TableSelectedAction,
   TablePaginationCustom,
@@ -42,7 +33,6 @@ import ConfirmDialog from '../../../../components/confirm-dialog';
 import DocumentTypeListTableRow from './DocumentTypeListTableRow';
 import DocumentTypeListTableToolbar from './DocumentTypeListTableToolbar';
 import {
-  // getDocumentType,
   deleteDocumentType,
   getDocumentTypes,
   ChangeRowsPerPage,
@@ -329,7 +319,7 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
       (docType) =>
         docType?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         docType?.docCategory?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        // (docType?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+        // (docType?.isActive ? "Active" : "InActive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
         fDate(docType?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }
