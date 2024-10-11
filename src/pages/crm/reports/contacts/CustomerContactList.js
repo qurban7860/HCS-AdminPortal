@@ -37,18 +37,6 @@ import { exportCSV } from '../../../../utils/exportCSV';
 
 // ----------------------------------------------------------------------
 
-const TABLE_HEAD = [
-  { id: 'customer.name', visibility: 'xs', label: 'Customer', align: 'left' },
-  { id: 'firstName', label: 'Contact', align: 'left' },
-  { id: 'phone', visibility: 'xs', label: 'Phone', align: 'left' },
-  { id: 'email', visibility: 'xs', label: 'Email', align: 'left' },
-  { id: 'address.country', visibility: 'xs', label: 'Country', align: 'left' },
-  { id: 'isActive', visibility: 'xs', label: 'Active', align: 'center' },
-  { id: 'createdAt',visibility: 'xs', label: 'Created At', align: 'right' },
-];
-
-// ----------------------------------------------------------------------
-
 CustomerContactList.propTypes = {
   isCustomerContactPage: PropTypes.bool,
   filterFormer: PropTypes.string,
@@ -72,6 +60,20 @@ export default function CustomerContactList({isCustomerContactPage = false, filt
   const { contacts, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.contact);
   const [filterName, setFilterName] = useState(filterBy);
   const [exportingCSV, setExportingCSV] = useState(false);
+  
+  // ----------------------------------------------------------------------
+
+  const TABLE_HEAD = [
+    ...(isCustomerContactPage ? [{ id: 'isActive', visibility: 'xs', label: 'Active', align: 'center' }] : []),
+    ...(!isCustomerContactPage ? [{ id: 'customer.name', visibility: 'xs', label: 'Customer', align: 'left'}] : []),
+    { id: 'firstName', label: 'Contact Name', align: 'left' },
+    ...(isCustomerContactPage ? [{ id: 'title', label: 'Title', align: 'left' }] : []),
+    { id: 'phone', visibility: 'xs', label: 'Phone', align: 'left' },
+    { id: 'email', visibility: 'xs', label: 'Email', align: 'left' },
+    { id: 'address.country', visibility: 'xs', label: 'Country', align: 'left' },
+    ...(!isCustomerContactPage ? [{ id: 'isActive', visibility: 'xs', label: 'Active', align: 'center' }] : []),
+    { id: 'createdAt',visibility: 'xs', label: 'Created At', align: 'right' },
+  ];
 
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));
@@ -199,6 +201,7 @@ export default function CustomerContactList({isCustomerContactPage = false, filt
                         openInNewPage={() => handleViewCustomerInNewPage(row?.customer?._id)}
                         handleContactView= { handleViewContact }
                         handleContactViewInNewPage= { handleViewContactInNewPage }
+                        isCustomerContactPage={ isCustomerContactPage } 
                         style={index % 2 ? { background: 'red' } : { background: 'green' }}
                       />
                     ) : (
@@ -255,7 +258,7 @@ function applyFilter({ inputData, comparator, filterName, filterFormer }) {
       return (
         contact?.customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         `${contact?.firstName} ${contact?.lastName}`.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-         // contact?.title?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        contact?.title?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         phone.includes(filterName.toLowerCase()) || 
         contact?.email?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         contact?.address?.country?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||

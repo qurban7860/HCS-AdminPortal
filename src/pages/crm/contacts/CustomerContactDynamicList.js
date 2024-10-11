@@ -109,6 +109,12 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
       dispatch(setIsExpanded(false));
     }
   }, [ dispatch, customerId, customer?.isArchived ]);
+  
+  useEffect(()=>{
+    if( Array.isArray(contacts) && contacts?.length > 0 && customerId && !contactsListView && !contactAddForm && !contactEditForm && !contactViewForm && !contactMoveForm){
+      navigate(PATH_CRM.customers.contacts.view( customerId, contacts[0]?._id))
+    }
+  },[ contacts, customerId, navigate, contactsListView, contactAddForm, contactEditForm, contactViewForm, contactMoveForm ])
 
   useEffect(() => {
     setTableData(contacts);
@@ -117,7 +123,11 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
   const toggleContactView = (view) => {
     if (view !== contactsListView) {
       dispatch(setContactsView(view));
-      navigate(PATH_CRM.customers.contacts.root(customerId)); 
+      // if(id){
+      //   navigate(PATH_CRM.customers.contacts.view(customerId, id )); 
+      // }else{
+        navigate(PATH_CRM.customers.contacts.root(customerId)); 
+      // }
     }
   };  
 
@@ -163,7 +173,7 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
   </Grid>
   <Grid item xs={12} md={6}>
     <Stack direction="row" justifyContent="flex-end" alignItems="center" spacing={1} sx={{ width: '100%' }}>
-      <Autocomplete
+      {contactsListView && (<Autocomplete
         freeSolo
         disableClearable
         value={ filterFormer }
@@ -171,6 +181,9 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
         isOptionEqualToValue={(option, val) => option === val}
         onChange={(event, newValue) => {
           if (newValue) {
+            // if( newValue !== filterFormer ){
+            //   navigate(PATH_CRM.customers.contacts.root(customerId)); 
+            // }
             setFilterFormer(newValue);
           } else {
             setFilterFormer('');
@@ -180,8 +193,8 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
         renderInput={(params) => (
           <TextField {...params} size="small" label="Filter Contacts" />
         )}
-      />
-
+      />   
+      )}
     <ButtonGroup variant="outlined" aria-label="Basic button group">
       <Button onClick={() => toggleContactView(false)} startIcon={<Iconify icon="mdi:view-grid" />} sx={{ backgroundColor: !contactsListView ? 'primary.main' : 'grey.450', color: !contactsListView ? 'white' : 'black',  '&:hover': { color: 'rgba(0, 0, 0, 0.7)' } }}>Card</Button>
       <Button onClick={() => toggleContactView(true)} startIcon={<Iconify icon="mdi:view-list" />} sx={{ backgroundColor: contactsListView ? 'primary.main' : 'grey.450', color: contactsListView ? 'white' : 'black', '&:hover': { color: 'rgba(0, 0, 0, 0.7)' } }}>List</Button>
@@ -242,7 +255,28 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
                   sx={{ position: 'fixed', top: '0px', zIndex: '1000' }}
                 />
               </Grid>
-            )}   
+            )}
+            <Autocomplete
+        freeSolo
+        disableClearable
+        value={ filterFormer }
+        options={[ 'All', 'Former Employee', 'Current Employee' ]}
+        isOptionEqualToValue={(option, val) => option === val}
+        onChange={(event, newValue) => {
+          if (newValue) {
+            // if( newValue !== filterFormer ){
+            //   navigate(PATH_CRM.customers.contacts.root(customerId)); 
+            // }
+            setFilterFormer(newValue);
+          } else {
+            setFilterFormer('');
+          }
+        }}
+        sx={{ flex: 1, maxWidth: '400px' }} 
+        renderInput={(params) => (
+          <TextField {...params} size="small" label="Filter Contacts" />
+        )}
+      />   
             <ContactSiteScrollbar
               onClick={(e) => e.stopPropagation()}
               // snapAlign="start"
@@ -277,9 +311,11 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
         )}
       </Grid>
       { !contactsListView && !contactViewForm && contactAddForm && !contactEditForm && !contactMoveForm && <ContactAddForm setIsExpanded={setIsExpanded}/>}
+
+     {/* /////////////////////////List View////////////////////////////// */}
       { contactsListView && id && !contactEditForm && !contactMoveForm && !contactAddForm  && (     
      <CardBase>
-       <ContactViewForm />
+       <ContactViewForm isCustomerContactPage/>
      </CardBase> )}
       { contactsListView && !contactViewForm && contactEditForm && !contactAddForm && !contactMoveForm && <ContactEditForm setIsExpanded={setIsExpanded} />}
       { contactsListView && !contactViewForm && contactAddForm && !contactEditForm && !contactMoveForm && <ContactAddForm setIsExpanded={setIsExpanded}/>}
