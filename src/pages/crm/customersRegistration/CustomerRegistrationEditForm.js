@@ -112,9 +112,8 @@ export default function CustomerEditForm() {
 
                   <RHFAutocomplete
                     name="status"
-                    label="Status*"
+                    label="Status"
                     options={ [ "NEW", "APPROVED", "REJECTED", "PENDING" ] }
-                    disableCloseOnSelect
                     filterSelectedOptions
                   />
                 </Box>
@@ -125,7 +124,7 @@ export default function CustomerEditForm() {
                   gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(1, 1fr)' }}
                 >
                   <RHFTextField name="customerNote" label="Customer Note" />
-                  <RHFTextField name="machineSerialNos" label="Machine Serial Nos" />
+                  <RHFTextField name="machineSerialNos" label="Machine Serial Nos*" />
 
                 </Box>
 
