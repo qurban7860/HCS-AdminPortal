@@ -108,6 +108,19 @@ export default function ContactSiteCard({ name, title, email, phone, image, isMa
               </Grid>
             }
             
+            {isActive !== undefined && (
+            <Grid sx={{ position: 'absolute', top: 5, right: 25, zIndex: '10' }}>
+              <StyledTooltip
+                title={ ICONS.ACTIVE.heading } 
+                tooltipcolor={ ICONS.ACTIVE.color } 
+                placement="top" 
+                disableFocusListener >
+                <Iconify 
+                icon={ICONS.ACTIVE.icon}
+                color={ICONS.ACTIVE.color} />
+              </StyledTooltip>             
+            </Grid> )}
+
             <Typography variant="h4" color="#2065d1" component="div">{_name}</Typography>
             <Typography variant="body1" color="text.secondary" component="div">{_title}</Typography>
             <Typography variant="overline" color="text.secondary" component="div">{_email}</Typography>

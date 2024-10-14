@@ -52,7 +52,7 @@ CustomerContactDynamicList.propTypes = {
 
 export default function CustomerContactDynamicList({ contactAddForm, contactEditForm, contactViewForm, contactMoveForm }) {
 
-  const { contact, contacts, activeCardIndex, isExpanded, contactsListView } = useSelector((state) => state.contact);
+  const { contact: activeContact, contacts, activeCardIndex, isExpanded, contactsListView } = useSelector((state) => state.contact);
   const { isAllAccessAllowed } = useAuthContext()
   const { customer } = useSelector((state) => state.customer);
   const { customerId, id } = useParams() 
@@ -110,11 +110,31 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
     }
   }, [ dispatch, customerId, customer?.isArchived ]);
   
-  useEffect(()=>{
-    if( Array.isArray(contacts) && contacts?.length > 0 && customerId && !contactsListView && !contactAddForm && !contactEditForm && !contactViewForm && !contactMoveForm){
-      navigate(PATH_CRM.customers.contacts.view( customerId, contacts[0]?._id))
+  useEffect(() => {
+    if (contacts.length > 0 && customerId && !contactsListView) {
+      if (filterFormer === 'All') {
+        navigate(PATH_CRM.customers.contacts.view(customerId, contacts[0]?._id));
+      }
     }
-  },[ contacts, customerId, navigate, contactsListView, contactAddForm, contactEditForm, contactViewForm, contactMoveForm ])
+  }, [contacts, customerId, filterFormer, navigate, contactsListView ]);
+  
+const handleFilterChange = (event, newValue) => {
+  if (newValue) {
+    setFilterFormer(newValue);
+  } else {
+    setFilterFormer('All'); 
+  }
+  if (contacts.length > 0 && customerId) {
+    if (newValue === 'Former Employee') {
+      const formerEmployeeContact = contacts.find(contact => contact.formerEmployee);
+      if (formerEmployeeContact) {
+        navigate(PATH_CRM.customers.contacts.view(customerId, formerEmployeeContact._id));
+      }
+    } else if (newValue === 'Current Employee') {
+      navigate(PATH_CRM.customers.contacts.view(customerId, contacts[0]?._id));
+    }
+  }
+};
 
   useEffect(() => {
     setTableData(contacts);
@@ -163,8 +183,8 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
           <Stack>
             {!contactAddForm && !contactEditForm && !isExpanded && 'Contacts'}
             {contactEditForm
-              ? `Edit ${contact?.firstName || '' }`
-              : isExpanded && contact?.firstName || '' }
+              ? `Edit ${activeContact?.firstName || '' }`
+              : isExpanded && activeContact?.firstName || '' }
             {contactAddForm && !isExpanded && 'Add new contact'}
           </Stack>
         }
@@ -181,9 +201,9 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
         isOptionEqualToValue={(option, val) => option === val}
         onChange={(event, newValue) => {
           if (newValue) {
-            // if( newValue !== filterFormer ){
-            //   navigate(PATH_CRM.customers.contacts.root(customerId)); 
-            // }
+            if( newValue !== filterFormer ){
+              navigate(PATH_CRM.customers.contacts.root(customerId)); 
+            }
             setFilterFormer(newValue);
           } else {
             setFilterFormer('');
@@ -257,26 +277,17 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
               </Grid>
             )}
             <Autocomplete
-        freeSolo
-        disableClearable
-        value={ filterFormer }
-        options={[ 'All', 'Former Employee', 'Current Employee' ]}
-        isOptionEqualToValue={(option, val) => option === val}
-        onChange={(event, newValue) => {
-          if (newValue) {
-            // if( newValue !== filterFormer ){
-            //   navigate(PATH_CRM.customers.contacts.root(customerId)); 
-            // }
-            setFilterFormer(newValue);
-          } else {
-            setFilterFormer('');
-          }
-        }}
-        sx={{ flex: 1, maxWidth: '400px' }} 
-        renderInput={(params) => (
-          <TextField {...params} size="small" label="Filter Contacts" />
-        )}
-      />   
+              freeSolo
+              disableClearable
+              value={filterFormer}
+              options={['All', 'Former Employee', 'Current Employee']}
+              isOptionEqualToValue={(option, val) => option === val}
+              onChange={handleFilterChange}
+              sx={{ flex: 1, maxWidth: '400px',  mb: 1 }}
+              renderInput={(params) => (
+             <TextField {...params} size="small" label="Filter Contacts" />
+              )}
+            />
             <ContactSiteScrollbar
               onClick={(e) => e.stopPropagation()}
               // snapAlign="start"
@@ -365,5 +376,3 @@ export function applyFilter({ inputData, comparator, filterName, filterStatus, f
 
   return inputData;
 }
-
-

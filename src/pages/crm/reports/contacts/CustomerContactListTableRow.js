@@ -7,6 +7,8 @@ import { fDate } from '../../../../utils/formatTime';
 import { useScreenSize } from '../../../../hooks/useResponsive';
 import { StyledTableRow } from '../../../../theme/styles/default-styles';
 import LinkTableCellWithIconTargetBlank from '../../../../components/ListTableTools/LinkTableCellWithIconTargetBlank';
+import IconButtonTooltip from '../../../../components/Icons/IconButtonTooltip';
+import { ICONS } from '../../../../constants/icons/default-icons';
 
 // ----------------------------------------------------------------------
 
@@ -37,7 +39,7 @@ export default function CustomerContactListTableRow({
   handleContactViewInNewPage,
   isCustomerContactPage
 }) {
-  const { _id, customer, firstName, title, lastName, phoneNumbers, email, address, isActive, createdAt } = row;
+  const { _id, customer, firstName, title, lastName, phoneNumbers, email, address, isActive, formerEmployee, createdAt } = row;
 
   const contactName = `${firstName || ''} ${lastName || ''}`;
 
@@ -69,7 +71,14 @@ export default function CustomerContactListTableRow({
       {useScreenSize('sm') && (
         <StyledTableRow hover selected={selected}>
           {isCustomerContactPage && <TableCell align="center">
-            <Switch checked={isActive} disabled size="small" />
+            <IconButtonTooltip
+              title={formerEmployee ? ICONS.FORMEREMPLOYEE.heading : ICONS.NOTFORMEREMPLOYEE.heading}
+              color={formerEmployee ? ICONS.FORMEREMPLOYEE.color : ICONS.NOTFORMEREMPLOYEE.color}
+              icon={formerEmployee ? ICONS.FORMEREMPLOYEE.icon : ICONS.NOTFORMEREMPLOYEE.icon}
+            />
+          </TableCell>}
+          {isCustomerContactPage && <TableCell align="center">
+            <IconButtonTooltip title={ ICONS.ACTIVE.heading } color={ ICONS.ACTIVE.color } icon={ ICONS.ACTIVE.icon } />
           </TableCell>}
           {!isCustomerContactPage && (  
             <TableCell>{customer?.name}</TableCell>

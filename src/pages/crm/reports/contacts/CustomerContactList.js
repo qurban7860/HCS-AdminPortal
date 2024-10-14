@@ -34,6 +34,8 @@ import TableCard from '../../../../components/ListTableTools/TableCard';
 import { fDate } from '../../../../utils/formatTime';
 import { useSnackbar } from '../../../../components/snackbar';
 import { exportCSV } from '../../../../utils/exportCSV';
+import IconButtonTooltip from '../../../../components/Icons/IconButtonTooltip';
+import { ICONS } from '../../../../constants/icons/default-icons';
 
 // ----------------------------------------------------------------------
 
@@ -51,7 +53,7 @@ export default function CustomerContactList({isCustomerContactPage = false, filt
     onSelectRow,
     onSort,
   } = useTable({
-    defaultOrderBy: 'createdAt', defaultOrder: 'desc',
+    defaultOrderBy: 'createdAt', defaultOrder: 'asc',
   });
 
   const dispatch = useDispatch();
@@ -64,7 +66,8 @@ export default function CustomerContactList({isCustomerContactPage = false, filt
   // ----------------------------------------------------------------------
 
   const TABLE_HEAD = [
-    ...(isCustomerContactPage ? [{ id: 'isActive', visibility: 'xs', label: 'Active', align: 'center' }] : []),
+    ...(isCustomerContactPage ? [{ id: 'formerEmployee', visibility: 'xs',  label: ( <IconButtonTooltip title={ ICONS.CURR_EMP_ACTIVE.heading } color={ ICONS.CURR_EMP_ACTIVE.color } icon={ ICONS.CURR_EMP_ACTIVE.icon } />), align: 'center' }] : []),
+    ...(isCustomerContactPage ? [{ id: 'isActive', visibility: 'xs',  label: ( <IconButtonTooltip title={ ICONS.ACTIVE.heading } color={ ICONS.ACTIVE.color } icon={ ICONS.ACTIVE.icon } />), align: 'center' }] : []),
     ...(!isCustomerContactPage ? [{ id: 'customer.name', visibility: 'xs', label: 'Customer', align: 'left'}] : []),
     { id: 'firstName', label: 'Contact Name', align: 'left' },
     ...(isCustomerContactPage ? [{ id: 'title', label: 'Title', align: 'left' }] : []),
