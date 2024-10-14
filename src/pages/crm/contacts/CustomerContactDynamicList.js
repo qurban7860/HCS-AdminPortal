@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 // @mui
 import { Stack, Grid, Container, Autocomplete, TextField, Table, TableBody, Button, ButtonGroup } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -90,7 +90,7 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
   const handleResetFilter = () => {
     setFilterName('');
     setFilterStatus([]);
-    // dispatch(resetContacts());
+    dispatch(resetContacts());
   };
 
   const dataFiltered = applyFilter({
@@ -104,37 +104,48 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
   useEffect(() => {
     dispatch(getContacts(customerId, customer?.isArchived));
     return ()=>{
-      // dispatch(resetContacts());
+      dispatch(resetContacts());
       dispatch(setCardActiveIndex(null));
       dispatch(setIsExpanded(false));
     }
   }, [ dispatch, customerId, customer?.isArchived ]);
-  
+
+  const [initialNavigationDone, setInitialNavigationDone] = useState(false);
+
+  const navigateToContact = useCallback((contactId) => {
+    if (customerId && contactId) {
+      navigate(PATH_CRM.customers.contacts.view(customerId, contactId));
+    }
+  }, [customerId, navigate]);
+
+  const handleFilterChange = (event, newValue) => {
+    const selectedFilter = newValue || 'All'; 
+    setFilterFormer(selectedFilter);
+
+    if (contacts.length > 0) {
+      let contactToNavigate = null;
+
+      if (selectedFilter === 'Former Employee') {
+        const formerEmployeeContact = contacts.find(contact => contact.formerEmployee);
+        contactToNavigate = formerEmployeeContact ? formerEmployeeContact._id : contacts[0]?._id; 
+      } else if (selectedFilter === 'Current Employee') {
+        const currentEmployeeContact = contacts.find(contact => !contact.formerEmployee);
+        contactToNavigate = currentEmployeeContact ? currentEmployeeContact._id : contacts[0]?._id; 
+      } else if (selectedFilter === 'All') {
+        contactToNavigate = contacts[0]?._id; 
+      }
+      if (contactToNavigate && (initialNavigationDone || selectedFilter !== 'All')) {
+        navigateToContact(contactToNavigate);
+      }
+    }
+  };
+
   useEffect(() => {
-    if (contacts.length > 0 && customerId && !contactsListView) {
-      if (filterFormer === 'All') {
-        navigate(PATH_CRM.customers.contacts.view(customerId, contacts[0]?._id));
-      }
+    if (contacts.length > 0 && !initialNavigationDone) {
+      navigateToContact(contacts[0]._id);
+      setInitialNavigationDone(true); 
     }
-  }, [contacts, customerId, filterFormer, navigate, contactsListView ]);
-  
-const handleFilterChange = (event, newValue) => {
-  if (newValue) {
-    setFilterFormer(newValue);
-  } else {
-    setFilterFormer('All'); 
-  }
-  if (contacts.length > 0 && customerId) {
-    if (newValue === 'Former Employee') {
-      const formerEmployeeContact = contacts.find(contact => contact.formerEmployee);
-      if (formerEmployeeContact) {
-        navigate(PATH_CRM.customers.contacts.view(customerId, formerEmployeeContact._id));
-      }
-    } else if (newValue === 'Current Employee') {
-      navigate(PATH_CRM.customers.contacts.view(customerId, contacts[0]?._id));
-    }
-  }
-};
+  }, [contacts, navigateToContact, initialNavigationDone]);
 
   useEffect(() => {
     setTableData(contacts);
@@ -262,7 +273,7 @@ const handleFilterChange = (event, newValue) => {
           <>
           <Grid item xs={12} sm={12} md={12} lg={5} xl={4} sx={{ display: contactAddForm && isMobile && 'none' }} >
             {contacts.length > 5 && (
-              <Grid item md={12}>
+              <Grid item md={12} sx={{ mb: 2 }}>
                 <SearchInput
                   disabled={contactAddForm || contactEditForm || contactMoveForm}
                   filterName={filterName}
@@ -283,7 +294,7 @@ const handleFilterChange = (event, newValue) => {
               options={['All', 'Former Employee', 'Current Employee']}
               isOptionEqualToValue={(option, val) => option === val}
               onChange={handleFilterChange}
-              sx={{ flex: 1, maxWidth: '400px',  mb: 1 }}
+              sx={{ flex: 1, maxWidth: '400px',  mb: 2 }}
               renderInput={(params) => (
              <TextField {...params} size="small" label="Filter Contacts" />
               )}

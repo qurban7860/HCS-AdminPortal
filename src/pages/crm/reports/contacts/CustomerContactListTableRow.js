@@ -72,13 +72,17 @@ export default function CustomerContactListTableRow({
         <StyledTableRow hover selected={selected}>
           {isCustomerContactPage && <TableCell align="center">
             <IconButtonTooltip
-              title={formerEmployee ? ICONS.FORMEREMPLOYEE.heading : ICONS.NOTFORMEREMPLOYEE.heading}
-              color={formerEmployee ? ICONS.FORMEREMPLOYEE.color : ICONS.NOTFORMEREMPLOYEE.color}
-              icon={formerEmployee ? ICONS.FORMEREMPLOYEE.icon : ICONS.NOTFORMEREMPLOYEE.icon}
+              title={ formerEmployee ? ICONS.FORMEREMPLOYEE.heading : ICONS.NOTFORMEREMPLOYEE.heading }
+              color={ formerEmployee ? ICONS.FORMEREMPLOYEE.color : ICONS.NOTFORMEREMPLOYEE.color }
+              icon={ formerEmployee ? ICONS.FORMEREMPLOYEE.icon : ICONS.NOTFORMEREMPLOYEE.icon }
             />
           </TableCell>}
           {isCustomerContactPage && <TableCell align="center">
-            <IconButtonTooltip title={ ICONS.ACTIVE.heading } color={ ICONS.ACTIVE.color } icon={ ICONS.ACTIVE.icon } />
+            <IconButtonTooltip 
+              title={ isActive ? ICONS.ACTIVE.heading : ICONS.INACTIVE.heading } 
+              color={ isActive ? ICONS.ACTIVE.color : ICONS.INACTIVE.color } 
+              icon={ isActive ? ICONS.ACTIVE.icon : ICONS.INACTIVE.icon} 
+            />
           </TableCell>}
           {!isCustomerContactPage && (  
             <TableCell>{customer?.name}</TableCell>

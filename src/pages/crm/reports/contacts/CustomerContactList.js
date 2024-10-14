@@ -67,7 +67,7 @@ export default function CustomerContactList({isCustomerContactPage = false, filt
 
   const TABLE_HEAD = [
     ...(isCustomerContactPage ? [{ id: 'formerEmployee', visibility: 'xs',  label: ( <IconButtonTooltip title={ ICONS.CURR_EMP_ACTIVE.heading } color={ ICONS.CURR_EMP_ACTIVE.color } icon={ ICONS.CURR_EMP_ACTIVE.icon } />), align: 'center' }] : []),
-    ...(isCustomerContactPage ? [{ id: 'isActive', visibility: 'xs',  label: ( <IconButtonTooltip title={ ICONS.ACTIVE.heading } color={ ICONS.ACTIVE.color } icon={ ICONS.ACTIVE.icon } />), align: 'center' }] : []),
+    ...(isCustomerContactPage ? [{ id: 'isActive', visibility: 'xs',  label: ( <IconButtonTooltip title={ ICONS.STATUS.heading } color={ ICONS.STATUS.color } icon={ ICONS.STATUS.icon } />), align: 'center' }] : []),
     ...(!isCustomerContactPage ? [{ id: 'customer.name', visibility: 'xs', label: 'Customer', align: 'left'}] : []),
     { id: 'firstName', label: 'Contact Name', align: 'left' },
     ...(isCustomerContactPage ? [{ id: 'title', label: 'Title', align: 'left' }] : []),
