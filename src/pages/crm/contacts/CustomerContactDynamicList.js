@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 // @mui
 import { Stack, Grid, Container, Autocomplete, TextField, Table, TableBody, Button, ButtonGroup } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -52,7 +52,7 @@ CustomerContactDynamicList.propTypes = {
 
 export default function CustomerContactDynamicList({ contactAddForm, contactEditForm, contactViewForm, contactMoveForm }) {
 
-  const { contact, contacts, activeCardIndex, isExpanded, contactsListView } = useSelector((state) => state.contact);
+  const { contact: activeContact, contacts, activeCardIndex, isExpanded, contactsListView } = useSelector((state) => state.contact);
   const { isAllAccessAllowed } = useAuthContext()
   const { customer } = useSelector((state) => state.customer);
   const { customerId, id } = useParams() 
@@ -104,32 +104,81 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
   useEffect(() => {
     dispatch(getContacts(customerId, customer?.isArchived));
     return ()=>{
-      // dispatch(resetContacts());
+      dispatch(resetContacts());
       dispatch(setCardActiveIndex(null));
       dispatch(setIsExpanded(false));
     }
   }, [ dispatch, customerId, customer?.isArchived ]);
-  
-  useEffect(()=>{
-    if( Array.isArray(contacts) && contacts?.length > 0 && customerId && !contactsListView && !contactAddForm && !contactEditForm && !contactViewForm && !contactMoveForm){
-      navigate(PATH_CRM.customers.contacts.view( customerId, contacts[0]?._id))
-    }
-  },[ contacts, customerId, navigate, contactsListView, contactAddForm, contactEditForm, contactViewForm, contactMoveForm ])
 
-  useEffect(() => {
-    setTableData(contacts);
-  }, [contacts ]);
-  
-  const toggleContactView = (view) => {
-    if (view !== contactsListView) {
-      dispatch(setContactsView(view));
-      // if(id){
-      //   navigate(PATH_CRM.customers.contacts.view(customerId, id )); 
-      // }else{
-        navigate(PATH_CRM.customers.contacts.root(customerId)); 
-      // }
+  const [selectedContactId, setselectedContactId] = useState(false);
+
+const navigateToContact = useCallback((contactId) => {
+  if (customerId && contactId && !contactsListView) {
+    navigate(PATH_CRM.customers.contacts.view(customerId, contactId));
+  }
+}, [customerId, navigate, contactsListView]);
+
+// Handle filter change logic
+const handleFilterChange = (event, newValue) => {
+  const selectedFilter = newValue || 'All'; 
+  setFilterFormer(selectedFilter);
+
+  if (contacts.length > 0 && !contactsListView) {
+    let contactToNavigate = null;
+
+    if (selectedFilter === 'Former Employee') {
+      const formerEmployeeContact = contacts.find(contact => contact.formerEmployee);
+      if (formerEmployeeContact) {
+        contactToNavigate = formerEmployeeContact._id;
+      }
+    } else if (selectedFilter === 'Current Employee') {
+      const currentEmployeeContact = contacts.find(contact => !contact.formerEmployee);
+      if (currentEmployeeContact) {
+        contactToNavigate = currentEmployeeContact._id;
+      }
+    } else if (selectedFilter === 'All') {
+      contactToNavigate = contacts[0]?._id; 
     }
-  };  
+    if (contactToNavigate) {
+      navigateToContact(contactToNavigate);
+    }
+  }
+};
+
+useEffect(() => {
+  if (contacts.length > 0 && !selectedContactId) {
+    navigateToContact(contacts[0]._id); 
+    setselectedContactId(true); 
+  }
+}, [contacts, navigateToContact, selectedContactId]);
+
+useEffect(() => {
+  setTableData(contacts);
+}, [contacts]);
+
+const toggleContactView = (view) => {
+  if (view !== contactsListView) {
+    dispatch(setContactsView(view));
+    if (view === 'card') {
+      if (contacts.length > 0) {
+        const firstContactId = contacts[0]._id;
+        navigateToContact(firstContactId);
+      } else {
+        navigate(PATH_CRM.customers.contacts.root(customerId));
+      }
+    } else {
+      navigate(PATH_CRM.customers.contacts.root(customerId));
+    }
+  }
+};
+
+useEffect(() => {
+  if ( contacts.length > 0 && !contactsListView && !contactAddForm && !contactEditForm && !contactMoveForm && !contactViewForm) {
+    const firstContactId = contacts[0]._id;
+    navigateToContact(firstContactId);
+  }
+}, [contacts, navigateToContact, contactsListView, contactAddForm, contactEditForm, contactMoveForm, contactViewForm]);
+
 
   // ------------------------------------------------------------
 
@@ -163,8 +212,8 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
           <Stack>
             {!contactAddForm && !contactEditForm && !isExpanded && 'Contacts'}
             {contactEditForm
-              ? `Edit ${contact?.firstName || '' }`
-              : isExpanded && contact?.firstName || '' }
+              ? `Edit ${activeContact?.firstName || '' }`
+              : isExpanded && activeContact?.firstName || '' }
             {contactAddForm && !isExpanded && 'Add new contact'}
           </Stack>
         }
@@ -181,9 +230,9 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
         isOptionEqualToValue={(option, val) => option === val}
         onChange={(event, newValue) => {
           if (newValue) {
-            // if( newValue !== filterFormer ){
-            //   navigate(PATH_CRM.customers.contacts.root(customerId)); 
-            // }
+            if( newValue !== filterFormer ){
+              navigate(PATH_CRM.customers.contacts.root(customerId)); 
+            }
             setFilterFormer(newValue);
           } else {
             setFilterFormer('');
@@ -242,7 +291,7 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
           <>
           <Grid item xs={12} sm={12} md={12} lg={5} xl={4} sx={{ display: contactAddForm && isMobile && 'none' }} >
             {contacts.length > 5 && (
-              <Grid item md={12}>
+              <Grid item md={12} sx={{ mb: 2 }}>
                 <SearchInput
                   disabled={contactAddForm || contactEditForm || contactMoveForm}
                   filterName={filterName}
@@ -257,26 +306,17 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
               </Grid>
             )}
             <Autocomplete
-        freeSolo
-        disableClearable
-        value={ filterFormer }
-        options={[ 'All', 'Former Employee', 'Current Employee' ]}
-        isOptionEqualToValue={(option, val) => option === val}
-        onChange={(event, newValue) => {
-          if (newValue) {
-            // if( newValue !== filterFormer ){
-            //   navigate(PATH_CRM.customers.contacts.root(customerId)); 
-            // }
-            setFilterFormer(newValue);
-          } else {
-            setFilterFormer('');
-          }
-        }}
-        sx={{ flex: 1, maxWidth: '400px' }} 
-        renderInput={(params) => (
-          <TextField {...params} size="small" label="Filter Contacts" />
-        )}
-      />   
+              freeSolo
+              disableClearable
+              value={filterFormer}
+              options={['All', 'Former Employee', 'Current Employee']}
+              isOptionEqualToValue={(option, val) => option === val}
+              onChange={handleFilterChange}
+              sx={{ flex: 1, maxWidth: '400px',  mb: 2 }}
+              renderInput={(params) => (
+             <TextField {...params} size="small" label="Filter Contacts" />
+              )}
+            />
             <ContactSiteScrollbar
               onClick={(e) => e.stopPropagation()}
               // snapAlign="start"
@@ -286,9 +326,10 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
                 {dataFiltered.map((_contact, index) => (
                   <ContactSiteCard
                     key={_contact?._id || index }
-                    isFormerEmployee={_contact?.formerEmployee}
+                    isActiveEmplyee={_contact?.isActive }
+                    isFormerEmployee={_contact?.formerEmployee }
                     disableClick={ contactMoveForm || contactEditForm || contactAddForm }
-                    isActive={_contact._id === activeCardIndex}
+                    isActive={_contact._id === activeCardIndex }
                     handleOnClick={() => handleCardClick(_contact) }
                     name={`${_contact.firstName || ''} ${_contact.lastName || ''}`} title={_contact.title} email={_contact.email}
                     phone={_contact?.phone || null }
@@ -365,5 +406,3 @@ export function applyFilter({ inputData, comparator, filterName, filterStatus, f
 
   return inputData;
 }
-
-

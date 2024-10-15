@@ -25,6 +25,13 @@ export const ICONS = {
     heading: 'Inactive',
   },
 
+  // Status
+  STATUS: {
+    icon: 'mdi:list-status',
+    color: '#008000',
+    heading: 'Status',
+  },
+
   //  Releases
   RELEASE: {
     icon: 'mdi:source-branch',
