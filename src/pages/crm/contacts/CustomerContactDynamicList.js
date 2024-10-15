@@ -90,7 +90,7 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
   const handleResetFilter = () => {
     setFilterName('');
     setFilterStatus([]);
-    dispatch(resetContacts());
+    // dispatch(resetContacts());
   };
 
   const dataFiltered = applyFilter({
@@ -110,57 +110,75 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
     }
   }, [ dispatch, customerId, customer?.isArchived ]);
 
-  const [initialNavigationDone, setInitialNavigationDone] = useState(false);
+  const [selectedContactId, setselectedContactId] = useState(false);
 
-  const navigateToContact = useCallback((contactId) => {
-    if (customerId && contactId) {
-      navigate(PATH_CRM.customers.contacts.view(customerId, contactId));
-    }
-  }, [customerId, navigate]);
+const navigateToContact = useCallback((contactId) => {
+  if (customerId && contactId && !contactsListView) {
+    navigate(PATH_CRM.customers.contacts.view(customerId, contactId));
+  }
+}, [customerId, navigate, contactsListView]);
 
-  const handleFilterChange = (event, newValue) => {
-    const selectedFilter = newValue || 'All'; 
-    setFilterFormer(selectedFilter);
+// Handle filter change logic
+const handleFilterChange = (event, newValue) => {
+  const selectedFilter = newValue || 'All'; 
+  setFilterFormer(selectedFilter);
 
-    if (contacts.length > 0) {
-      let contactToNavigate = null;
+  if (contacts.length > 0 && !contactsListView) {
+    let contactToNavigate = null;
 
-      if (selectedFilter === 'Former Employee') {
-        const formerEmployeeContact = contacts.find(contact => contact.formerEmployee);
-        contactToNavigate = formerEmployeeContact ? formerEmployeeContact._id : contacts[0]?._id; 
-      } else if (selectedFilter === 'Current Employee') {
-        const currentEmployeeContact = contacts.find(contact => !contact.formerEmployee);
-        contactToNavigate = currentEmployeeContact ? currentEmployeeContact._id : contacts[0]?._id; 
-      } else if (selectedFilter === 'All') {
-        contactToNavigate = contacts[0]?._id; 
+    if (selectedFilter === 'Former Employee') {
+      const formerEmployeeContact = contacts.find(contact => contact.formerEmployee);
+      if (formerEmployeeContact) {
+        contactToNavigate = formerEmployeeContact._id;
       }
-      if (contactToNavigate && (initialNavigationDone || selectedFilter !== 'All')) {
-        navigateToContact(contactToNavigate);
+    } else if (selectedFilter === 'Current Employee') {
+      const currentEmployeeContact = contacts.find(contact => !contact.formerEmployee);
+      if (currentEmployeeContact) {
+        contactToNavigate = currentEmployeeContact._id;
       }
+    } else if (selectedFilter === 'All') {
+      contactToNavigate = contacts[0]?._id; 
     }
-  };
+    if (contactToNavigate) {
+      navigateToContact(contactToNavigate);
+    }
+  }
+};
 
-  useEffect(() => {
-    if (contacts.length > 0 && !initialNavigationDone) {
-      navigateToContact(contacts[0]._id);
-      setInitialNavigationDone(true); 
-    }
-  }, [contacts, navigateToContact, initialNavigationDone]);
+useEffect(() => {
+  if (contacts.length > 0 && !selectedContactId) {
+    navigateToContact(contacts[0]._id); 
+    setselectedContactId(true); 
+  }
+}, [contacts, navigateToContact, selectedContactId]);
 
-  useEffect(() => {
-    setTableData(contacts);
-  }, [contacts ]);
-  
-  const toggleContactView = (view) => {
-    if (view !== contactsListView) {
-      dispatch(setContactsView(view));
-      // if(id){
-      //   navigate(PATH_CRM.customers.contacts.view(customerId, id )); 
-      // }else{
-        navigate(PATH_CRM.customers.contacts.root(customerId)); 
-      // }
+useEffect(() => {
+  setTableData(contacts);
+}, [contacts]);
+
+const toggleContactView = (view) => {
+  if (view !== contactsListView) {
+    dispatch(setContactsView(view));
+    if (view === 'card') {
+      if (contacts.length > 0) {
+        const firstContactId = contacts[0]._id;
+        navigateToContact(firstContactId);
+      } else {
+        navigate(PATH_CRM.customers.contacts.root(customerId));
+      }
+    } else {
+      navigate(PATH_CRM.customers.contacts.root(customerId));
     }
-  };  
+  }
+};
+
+useEffect(() => {
+  if ( contacts.length > 0 && !contactsListView && !contactAddForm && !contactEditForm && !contactMoveForm && !contactViewForm) {
+    const firstContactId = contacts[0]._id;
+    navigateToContact(firstContactId);
+  }
+}, [contacts, navigateToContact, contactsListView, contactAddForm, contactEditForm, contactMoveForm, contactViewForm]);
+
 
   // ------------------------------------------------------------
 
@@ -308,9 +326,10 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
                 {dataFiltered.map((_contact, index) => (
                   <ContactSiteCard
                     key={_contact?._id || index }
-                    isFormerEmployee={_contact?.formerEmployee}
+                    isActiveEmplyee={_contact?.isActive }
+                    isFormerEmployee={_contact?.formerEmployee }
                     disableClick={ contactMoveForm || contactEditForm || contactAddForm }
-                    isActive={_contact._id === activeCardIndex}
+                    isActive={_contact._id === activeCardIndex }
                     handleOnClick={() => handleCardClick(_contact) }
                     name={`${_contact.firstName || ''} ${_contact.lastName || ''}`} title={_contact.title} email={_contact.email}
                     phone={_contact?.phone || null }

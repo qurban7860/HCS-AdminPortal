@@ -21,12 +21,13 @@ ContactSiteCard.propTypes = {
   image: PropTypes.string,
   isMain: PropTypes.bool,
   isFormerEmployee: PropTypes.bool,
+  isActiveEmplyee:PropTypes.bool,
   handleOnClick:PropTypes.func,
   disableClick:PropTypes.bool,
   isActive:PropTypes.bool
 };
 
-export default function ContactSiteCard({ name, title, email, phone, image, isMain, isFormerEmployee, handleOnClick, disableClick, isActive }) {
+export default function ContactSiteCard({ name, title, email, phone, image, isMain, isFormerEmployee, isActiveEmplyee, handleOnClick, disableClick, isActive }) {
 
   const smScreen = useScreenSize('sm');
   const mdScreen = useScreenSize('md');
@@ -108,16 +109,16 @@ export default function ContactSiteCard({ name, title, email, phone, image, isMa
               </Grid>
             }
             
-            {isActive !== undefined && (
+            {isActiveEmplyee !== undefined && (
             <Grid sx={{ position: 'absolute', top: 5, right: 25, zIndex: '10' }}>
               <StyledTooltip
-                title={ ICONS.ACTIVE.heading } 
-                tooltipcolor={ ICONS.ACTIVE.color } 
+                title={ isActiveEmplyee ? ICONS.ACTIVE.heading : ICONS.INACTIVE.heading } 
+                tooltipcolor={ isActiveEmplyee ? ICONS.ACTIVE.color : ICONS.INACTIVE.color } 
                 placement="top" 
                 disableFocusListener >
                 <Iconify 
-                icon={ICONS.ACTIVE.icon}
-                color={ICONS.ACTIVE.color} />
+                icon={ isActiveEmplyee ? ICONS.ACTIVE.icon : ICONS.INACTIVE.icon }
+                color={ isActiveEmplyee ? ICONS.ACTIVE.color : ICONS.INACTIVE.color } />
               </StyledTooltip>             
             </Grid> )}
 
