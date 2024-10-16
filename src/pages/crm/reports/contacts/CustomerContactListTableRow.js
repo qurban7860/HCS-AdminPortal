@@ -1,6 +1,8 @@
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 // @mui
-import { Switch, TableCell } from '@mui/material';
+import { Switch, TableCell, IconButton, Tooltip } from '@mui/material';
+import { MoreHoriz } from '@mui/icons-material';
 // utils
 import { fDate } from '../../../../utils/formatTime';
 // components
@@ -40,17 +42,15 @@ export default function CustomerContactListTableRow({
   isCustomerContactPage
 }) {
   const { _id, customer, firstName, title, lastName, phoneNumbers, email, address, isActive, formerEmployee, createdAt } = row;
-
   const contactName = `${firstName || ''} ${lastName || ''}`;
+  const [showAllPhones, setShowAllPhones] = useState(false);
 
-  const phone = phoneNumbers 
-  ? phoneNumbers.map(({ countryCode, contactNumber }) => 
-      countryCode 
-        ? `+${countryCode}-${contactNumber}` 
-        : contactNumber
-    ).join(', ') 
-  : '';
-  
+  const phone = phoneNumbers ? phoneNumbers.map(({ countryCode, contactNumber }) => countryCode ? `+${countryCode}-${contactNumber}` : contactNumber) : [];
+
+  const handleTogglePhoneDisplay = () => {
+    setShowAllPhones((prev) => !prev);
+  };
+
   return (
     <>
       {/* Render rows with column names in bold for small screens */}
@@ -63,7 +63,25 @@ export default function CustomerContactListTableRow({
           />
           {!isCustomerContactPage && customer?.name && <TableCell style={{ width: '100%', display: 'inline-block' }} >{customer?.name || '' } </TableCell> }
           {title && <TableCell style={{ width: '100%', display: 'inline-block' }} >{title}</TableCell> }
-          {phone && <TableCell style={{ width: '100%', display: 'inline-block' }} >{phone}</TableCell> }
+          <TableCell style={{ width: '100%', display: 'inline-block' }}>
+            {phone.length > 1 ? (
+              <>
+                {showAllPhones ? (phone.join(', ')
+                ) : (
+                  <>
+                    {phone[0]}{' '}
+                    <Tooltip title="See more">
+                      <IconButton onClick={handleTogglePhoneDisplay} size="small">
+                        <MoreHoriz />
+                      </IconButton>
+                    </Tooltip>
+                  </>
+                )}
+              </>
+            ) : (
+              phone[0]
+            )}
+          </TableCell>
           {email && <TableCell style={{ width: '100%', display: 'inline-block' }} >{email}</TableCell> }
         </StyledTableRow>
       )}
@@ -93,9 +111,27 @@ export default function CustomerContactListTableRow({
             param={contactName}
           /> 
           {isCustomerContactPage && <TableCell>{title}</TableCell>}  
-          <TableCell>{phone}</TableCell>
+          <TableCell>
+            {phone.length > 1 ? (
+              <>
+                {showAllPhones ? (phone.join(', ')
+                ) : (
+                  <>
+                    {phone[0]}{' '}
+                    <Tooltip title="See more">
+                      <IconButton onClick={handleTogglePhoneDisplay} size="small">
+                        <MoreHoriz />
+                      </IconButton>
+                    </Tooltip>
+                  </>
+                )}
+              </>
+            ) : (
+              phone[0]
+            )}
+          </TableCell>
           <TableCell>{email}</TableCell>
-          <TableCell> {address?.country}</TableCell>
+          <TableCell>{address?.country}</TableCell>
           {!isCustomerContactPage && <TableCell align="center">
             <Switch checked={isActive} disabled size="small" />
           </TableCell>}
