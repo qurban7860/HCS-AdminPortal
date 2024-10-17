@@ -535,5 +535,6 @@ export const ICONS = {
   SERVICE_RECORDS:{ icon:'mdi:clipboard-text-clock' },
   INI:{ icon:'ph:file-ini-fill' },
   LOGS:{ icon:'lucide:list-end' },
+  GRAPHS:{ icon:'mdi:graph-bar' },
   JIRA:{ icon:'simple-icons:jirasoftware' },
 };

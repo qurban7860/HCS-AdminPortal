@@ -8,7 +8,7 @@ import { useSearchParams } from 'react-router-dom';
 import FormProvider, { RHFAutocomplete, RHFDatePicker } from '../../components/hook-form';
 import { getActiveCustomerMachines, resetActiveCustomerMachines } from '../../redux/slices/products/machine';
 import { getActiveCustomers } from '../../redux/slices/customer/customer';
-import { getMachineLogRecords, ChangePage, getMachineLogGraphData, resetMachineLogsGraphData } from '../../redux/slices/products/machineErpLogs';
+import { getMachineLogRecords, ChangePage, getMachineLogGraphData, resetMachineLogsGraphData, resetMachineErpLogRecords } from '../../redux/slices/products/machineErpLogs';
 import { AddMachineLogSchema } from '../schemas/machine';
 // import useResponsive from '../../hooks/useResponsive';
 import { Cover } from '../../components/Defaults/Cover';
@@ -25,6 +25,7 @@ function AllMachineLogs() {
   const { activeCustomers } = useSelector((state) => state.customer);
   const { page, rowsPerPage } = useSelector((state) => state.machineErpLogs);
   const [selectedSearchFilter, setSelectedSearchFilter] = useState('');
+  const [graphLabels, setGraphLabels] = useState({yaxis: "Cumulative Total Value", xaxis: "Months"});
   const [searchParams] = useSearchParams();
 
   // const isMobile = useResponsive('down', 'sm');
@@ -97,12 +98,14 @@ function AllMachineLogs() {
     setValue('customer', newCustomer);
     setValue('machine', null);
     trigger(['customer', 'machine']);
-  }, [setValue, trigger]);
+    dispatch(resetMachineErpLogRecords());
+  }, [dispatch, setValue, trigger]);
 
   const handleMachineChange = useCallback((newMachine) => {
     setValue('machine', newMachine);
     trigger('machine');
-  }, [setValue, trigger]);
+    dispatch(resetMachineErpLogRecords());
+  }, [dispatch, setValue, trigger]);
 
   const handleLogTypeChange = useCallback((newLogType) => {
     setValue('logType', newLogType);
@@ -111,6 +114,22 @@ function AllMachineLogs() {
 
   const handlePeriodChange = useCallback((newPeriod) => {
     setValue('logPeriod', newPeriod);
+    switch (newPeriod) {
+      case 'Monthly':
+        setGraphLabels((prev) => ({...prev, xaxis: "Months"}))
+        break;
+      case 'Daily':
+        setGraphLabels((prev) => ({...prev, xaxis: "Days"}))
+        break;
+      case 'Quarterly':
+        setGraphLabels((prev) => ({...prev, xaxis: "Quarters"}))
+        break;
+      case 'Yearly':
+        setGraphLabels((prev) => ({...prev, xaxis: "Years"}))
+        break;
+      default:
+        break;
+    }
   }, [setValue]);
 
   const handleGraphTypeChange = useCallback((newGraphType) => {
@@ -304,9 +323,9 @@ function AllMachineLogs() {
       {isGraphPage() && (
         <>
           {logGraphType.key === 'length_and_waste' ? (
-            <ErpProducedLengthLogGraph timePeriod={logPeriod} customer={machine?.customer?._id} />
+            <ErpProducedLengthLogGraph timePeriod={logPeriod} customer={machine?.customer} graphLabels={graphLabels} />
           ) : (
-            <ErpProductionRateLogGraph timePeriod={logPeriod} customer={machine?.customer?._id} />
+            <ErpProductionRateLogGraph timePeriod={logPeriod} customer={machine?.customer} />
           )}
         </>
       )}

@@ -263,7 +263,7 @@ export const PATH_MACHINE = {
       new: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/logs/new`),
       graph: (machineId ) => path(ROOTS_MACHINE, `/machines/${machineId}/logs/graph`),
       // view: (machineId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/logs/${id}/view`),
-    },    
+    },
     jira: {
       root: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/jira`),
       // new: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/logs/new`),

@@ -26,7 +26,7 @@ import IconTooltip from '../../../components/Icons/IconTooltip';
 export default function MachineLogsAddForm() {
 
   const { machine } = useSelector((state) => state.machine);
-  
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { machineId } = useParams();
@@ -107,10 +107,10 @@ export default function MachineLogsAddForm() {
       setError("Invalid JSON. Please format the data before submitting.");
       return;
     }
-  
+
     try {
       const csvData = JSON.parse(data.logTextValue);
-      
+
       if (Array.isArray(csvData) && csvData.length > 5000) {
         setError("JSON size should not be greater than 5000 objects.");
         return;
@@ -137,7 +137,7 @@ export default function MachineLogsAddForm() {
           return item;
         });
       }
-  
+
       setError(null);
       const action = {};
       if (selectedCheckbox === 0) {
@@ -145,7 +145,7 @@ export default function MachineLogsAddForm() {
       } else if (selectedCheckbox) {
         action.updateExistingRecords = true;
       }
-  
+
       const response = await dispatch(addMachineLogRecord(machineId, machine?.customer?._id, logData, action, logVersion ,logType?.type));
       if (response.success) {
         enqueueSnackbar("Logs uploaded successfully!");
@@ -197,7 +197,7 @@ export default function MachineLogsAddForm() {
     } catch {
       // Not valid JSON, continue to CSV check
     }
-  
+
     const lines = data.trim().split('\n');
     const isCSV = lines.length >= 1 && lines.every(line => {
       const columns = line.split(',');
@@ -208,7 +208,7 @@ export default function MachineLogsAddForm() {
       enqueueSnackbar("Data is not in correct format", { variant: 'error' });
       return null;
     }
-  
+
     const csvData = [];
     try {
       lines.forEach((row) => {
@@ -228,11 +228,11 @@ export default function MachineLogsAddForm() {
       enqueueSnackbar(e.message || 'Found error While Converting text to json!', { variant: 'error' });
       return null;
     }
-  
+
     if (csvData.some((item) => item?.measurementUnit === "in")) {
       setInchesMeasurementExists(true);
     }
-  
+
     return csvData;
   };
 
@@ -280,7 +280,7 @@ export default function MachineLogsAddForm() {
 
     setFileInputKey((prevKey) => prevKey + 1);
   };
-  
+
   const handleFormatButtonClick = async (unformattedData) => {
     const formattedData = await formatTxtToJson(unformattedData);
     if (formattedData) {
