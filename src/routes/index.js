@@ -176,7 +176,7 @@ import {
   MachineLogsList,
   MachineLogsAdd,
   // MachineLogsView,
-  // MachineLogsGraphView,
+  MachineLogsGraphView,
 
   // --------------------------- MACHINE Jira --------------------------------
   MachineJiraList,
@@ -738,7 +738,7 @@ export default function Router() {
               children:[
                 {element: <MachineLogsList/>, index: true},
                 {path: 'new', element: <MachineLogsAdd/>},
-                // {path: 'graph', element: <MachineLogsGraphView/>}, 
+                {path: 'graph', element: <MachineLogsGraphView/>}, 
                 // {path: ':id/view', element: <MachineLogsView/>},
               ]
             },

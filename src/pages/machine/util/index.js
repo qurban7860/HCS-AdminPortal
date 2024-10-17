@@ -125,6 +125,11 @@ const TABS = [
     icon: ICONS.LOGS.icon,
   },  
   {
+    value: 'graphs',
+    label: 'Graphs',
+    icon: ICONS.GRAPHS.icon,
+  },  
+  {
     value: 'jira',
     label: 'Jira',
     icon: ICONS.JIRA.icon,

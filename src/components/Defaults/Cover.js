@@ -214,7 +214,7 @@ export function Cover({
                     variant="caption"
                     sx={{ fontWeight: 'bold', fontSize: { xs: '0.65rem', sm: '0.75rem' } }}
                   >
-                  {currentLogPage === "erpGraph" ? "Machine Logs" : "ERP Graphs"}
+                  {currentLogPage === "erpGraph" ? "Machine Logs" : "Graphs"}
                   </Typography>
                 )}
               </Button>
