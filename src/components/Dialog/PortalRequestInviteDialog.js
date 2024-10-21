@@ -26,14 +26,16 @@ function PortalRequestInviteDialog() {
   const { activeContacts } = useSelector((state) => state.contact);
 
   useEffect(()=>{
-    dispatch(getAllActiveCustomers());
-    dispatch(getActiveRoles());
+    if(acceptRequestDialog){
+      dispatch(getAllActiveCustomers());
+      dispatch(getActiveRoles());
+    }
     return ()=>{
       dispatch(resetAllActiveCustomers());
       dispatch(resetActiveRoles());
       dispatch(resetActiveContacts());
     }
-  },[ dispatch ])
+  },[ dispatch, acceptRequestDialog ])
 
   const inviteSchema = Yup.object().shape({
     internalNote: Yup.string().trim().max(5000).label('Internal Note').when([], {
