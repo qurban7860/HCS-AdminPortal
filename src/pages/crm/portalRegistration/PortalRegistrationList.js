@@ -1,4 +1,4 @@
-import { useState, useEffect , useRef } from 'react';
+import { useState, useEffect , useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 // @mui
@@ -12,7 +12,7 @@ import {
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // routes
-import { PATH_CUSTOMER_REGISTRATION } from '../../../routes/paths';
+import { PATH_PORTAL_REGISTRATION } from '../../../routes/paths';
 // components
 import {
   useTable,
@@ -26,16 +26,18 @@ import Scrollbar from '../../../components/scrollbar';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import { FORMLABELS } from '../../../constants/default-constants';
 // sections
-import CustomerRegistrationListTableRow from './CustomerRegistrationListTableRow';
-import CustomerListTableToolbar from './CustomerRegistrationListTableToolbar';
+import PortalRegistrationListTableRow from './PortalRegistrationListTableRow';
+import CustomerListTableToolbar from './PortalRegistrationListTableToolbar';
 import { 
-  getCustomerRegistrations, 
-  resetCustomerRegistrations, 
+  getPortalRegistrations, 
+  resetPortalRegistrations, 
   ChangePage, 
   ChangeRowsPerPage, 
   setFilterBy,
   setFilterStatus
-} from '../../../redux/slices/customer/customerRegistration';
+} from '../../../redux/slices/customer/portalRegistration';
+import CustomerDialog from '../../../components/Dialog/CustomerDialog';
+import { getCustomer, setCustomerDialog } from '../../../redux/slices/customer/customer';
 import { Cover } from '../../../components/Defaults/Cover';
 import TableCard from '../../../components/ListTableTools/TableCard';
 import { fDate } from '../../../utils/formatTime';
@@ -43,16 +45,19 @@ import { fDate } from '../../../utils/formatTime';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'customerName', label: 'Customer Name', align: 'left', },
   { id: 'contactPersonName', label: 'Contact Person Name', align: 'left' },
+  { id: 'email', label: 'Email', align: 'left', },
+  { id: 'phoneNumber', label: 'Telephone', align: 'left', },
+  { id: 'address', label: 'Address', align: 'left', },
+  { id: 'customerName', label: 'Customer Name', align: 'left', },
+  { id: 'machineSerialNos', label: 'Machine', align: 'left', },
   { id: 'status', label: 'Status', align: 'left' },
-  { id: 'isActive', label: 'Active', align: 'center' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
 
 // ----------------------------------------------------------------------
 
-export default function CustomerRegistrationList() {
+export default function PortalRegistrationList() {
   const {
     order,
     orderBy,
@@ -66,7 +71,7 @@ export default function CustomerRegistrationList() {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { customerRegistrations, filterBy, filterStatus, page, rowsPerPage, isLoading } = useSelector((state) => state.customerRegistration);
+  const { portalRegistrations, filterBy, filterStatus, page, rowsPerPage, isLoading } = useSelector((state) => state.portalRegistration);
   const [ filterName, setFilterName ] = useState( filterBy );
   const [ filterByStatus, setFilterByStatus ] = useState( filterStatus );
 
@@ -79,12 +84,12 @@ export default function CustomerRegistrationList() {
   }
 
   useEffect(() => {
-    dispatch(getCustomerRegistrations( page, rowsPerPage ));
-    return ()=> { dispatch( resetCustomerRegistrations() ) }
+    dispatch(getPortalRegistrations( page, rowsPerPage ));
+    return ()=> { dispatch( resetPortalRegistrations() ) }
   }, [ dispatch, page, rowsPerPage ]);
 
   const dataFiltered = applyFilter({
-    inputData: customerRegistrations,
+    inputData: portalRegistrations?.data || [],
     comparator: getComparator(order, orderBy),
     filterName,
     filterByStatus
@@ -120,12 +125,17 @@ export default function CustomerRegistrationList() {
     setPage(0);
   };
 
+  const handleCustomerDialog = useCallback((e, id) => {
+    dispatch(getCustomer(id))
+    dispatch(setCustomerDialog(true))
+  }, [ dispatch ])
+
 useEffect(() => {
   debouncedFilterByStatus.current.cancel();
 }, [ debouncedFilterByStatus ]);
 
   const handleViewRow = (id) => {
-    navigate(PATH_CUSTOMER_REGISTRATION.view(id));
+    navigate(PATH_PORTAL_REGISTRATION.view(id));
   };
 
   const handleResetFilter = () => {
@@ -137,7 +147,7 @@ useEffect(() => {
     <Container maxWidth={false}>
       <StyledCardContainer>
         <Cover
-          name={ FORMLABELS.COVER.REGISTERED_CUSTOMERS}
+          name={ FORMLABELS.COVER.REGISTERED_REQUESTS}
         />
       </StyledCardContainer>
       <TableCard>
@@ -150,7 +160,7 @@ useEffect(() => {
 
         {!isNotFound && (
           <TablePaginationCustom
-            count={ customerRegistrations ? customerRegistrations?.length : 0 }
+            count={ portalRegistrations?.totalCount ? portalRegistrations?.totalCount : 0 }
             page={ page }
             rowsPerPage={ rowsPerPage }
             onPageChange={ onChangePage }
@@ -173,12 +183,13 @@ useEffect(() => {
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) =>
                     row ? (
-                      <CustomerRegistrationListTableRow
+                      <PortalRegistrationListTableRow
                         key={row._id}
                         row={row}
                         selected={selected.includes(row._id)}
                         onSelectRow={() => onSelectRow(row._id)}
                         onViewRow={() => handleViewRow(row._id)}
+                        handleCustomerDialog={()=> row?.customer && handleCustomerDialog(row?.customer?._id)}
                       />
                     ) : (
                       !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
@@ -192,7 +203,7 @@ useEffect(() => {
 
         {!isNotFound && (
           <TablePaginationCustom
-            count={ customerRegistrations ? customerRegistrations?.length : 0 }
+            count={ portalRegistrations?.totalCount ? portalRegistrations?.totalCount : 0 }
             page={ page }
             rowsPerPage={ rowsPerPage }
             onPageChange={ onChangePage }
@@ -201,6 +212,7 @@ useEffect(() => {
         )}
         
       </TableCard>
+      <CustomerDialog />
     </Container>
   );
 }

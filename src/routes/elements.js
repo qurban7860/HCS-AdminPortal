@@ -122,9 +122,9 @@ export const RegionEdit = Loadable(lazy(() => import('../pages/crm/configs/regio
 export const RegionView = Loadable(lazy(() => import('../pages/crm/configs/regions/RegionView')));
 
 // CUSTOMER REQUESTS
-export const CustomerRegistrationList = Loadable(lazy(() => import('../pages/crm/customersRegistration/CustomerRegistrationList')));
-export const CustomerRegistrationEdit = Loadable(lazy(() => import('../pages/crm/customersRegistration/CustomerRegistrationEdit')));
-export const CustomerRegistrationView = Loadable(lazy(() => import('../pages/crm/customersRegistration/CustomerRegistrationView')));
+export const PortalRegistrationList = Loadable(lazy(() => import('../pages/crm/portalRegistration/PortalRegistrationList')));
+export const PortalRegistrationEdit = Loadable(lazy(() => import('../pages/crm/portalRegistration/PortalRegistrationEdit')));
+export const PortalRegistrationView = Loadable(lazy(() => import('../pages/crm/portalRegistration/PortalRegistrationView')));
 
 //----------------------------------------------------------------
 

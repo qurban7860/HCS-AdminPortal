@@ -374,6 +374,20 @@ export function getActiveSPTechnicalSecurityUsers(type) {
   }
 }
 
+// ----------------------------------------------------------------------
+
+export function getValidateUserEmail( login ) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try{ 
+      const response = await axios.get(`${CONFIG.SERVER_URL}security/users/validate`, { params: { login } } );
+      return response;
+    } catch (error) {
+      await dispatch(slice.actions.stopLoading());
+      throw error;
+    }
+  }
+}
 
 // ----------------------------------------------------------------------
 

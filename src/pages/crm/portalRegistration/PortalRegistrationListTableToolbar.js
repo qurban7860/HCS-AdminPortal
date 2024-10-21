@@ -7,7 +7,7 @@ import { options } from '../../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
 
-CustomerRegistrationListTableToolbar.propTypes = {
+PortalRegistrationListTableToolbar.propTypes = {
   isFiltered: PropTypes.bool,
   filterName: PropTypes.string,
   onFilterName: PropTypes.func,
@@ -16,7 +16,7 @@ CustomerRegistrationListTableToolbar.propTypes = {
   onFilterStatus: PropTypes.func,
 };
 
-export default function CustomerRegistrationListTableToolbar({
+export default function PortalRegistrationListTableToolbar({
   isFiltered,
   filterName,
   onFilterName,
