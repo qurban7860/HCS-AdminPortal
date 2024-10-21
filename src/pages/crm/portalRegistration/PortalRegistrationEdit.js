@@ -3,32 +3,31 @@ import { useParams } from 'react-router-dom';
 // @mui
 import { Container } from '@mui/material';
 // redux
-import { useDispatch, useSelector } from '../../../redux/store';
+import { useDispatch } from '../../../redux/store';
 // slices
-import { getCustomerRegistration } from '../../../redux/slices/customer/customerRegistration';
+import { getPortalRegistration } from '../../../redux/slices/customer/portalRegistration';
 // sections
-import CustomerRegistrationEditForm from './CustomerRegistrationEditForm';
+import PortalRegistrationEditForm from './PortalRegistrationEditForm';
 import { Cover } from '../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
 
 export default function CustomerEdit() {
-  const { customerRegistration } = useSelector( (state) => state.customerRegistration );
-  const dispatch = useDispatch();
 
+  const dispatch = useDispatch();
   const { customerId } = useParams();
 
   useLayoutEffect(() => {
-    dispatch(getCustomerRegistration(customerId));
+    dispatch(getPortalRegistration(customerId));
   }, [dispatch, customerId]);
 
   return (
     <Container maxWidth={false }>
         <StyledCardContainer>
-          <Cover name={ customerRegistration?.customerName || ""} />
+          <Cover name="Portal Registration Request" />
         </StyledCardContainer>
-      <CustomerRegistrationEditForm />
+      <PortalRegistrationEditForm />
     </Container>
   );
 }

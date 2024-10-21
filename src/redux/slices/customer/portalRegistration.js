@@ -5,16 +5,18 @@ import { CONFIG } from '../../../config-global';
 
 const initialState = {
   isLoading: false,
-  customerRegistrations: [],
-  customerRegistration: {},
+  portalRegistrations: [],
+  portalRegistration: {},
   filterBy: '',
   filterStatus: "",
   page: 0,
   rowsPerPage: 100,
+  acceptRequestDialog: false,
+  rejectRequestDialog: false,
 };
 
 const slice = createSlice({
-  name: 'customerRegistration',
+  name: 'portalRegistration',
   initialState,
   reducers: {
 
@@ -30,22 +32,30 @@ const slice = createSlice({
       state.filterStatus = action.payload;
     },
 
-    getCustomerRegistrationsSuccess(state, action) {
+    setAcceptRequestDialog(state, action) {
+      state.acceptRequestDialog = action.payload;
+    },
+
+    setRejectRequestDialog(state, action) {
+      state.rejectRequestDialog = action.payload;
+    },
+    
+    getPortalRegistrationsSuccess(state, action) {
       state.isLoading = false;
-      state.customerRegistrations = action.payload;
+      state.portalRegistrations = action.payload;
     },
 
-    getCustomerRegistrationSuccess(state, action) {
+    getPortalRegistrationSuccess(state, action) {
       state.isLoading = false;
-      state.customerRegistration = action.payload;
+      state.portalRegistration = action.payload;
     },
 
-    resetCustomerRegistration(state){
-      state.customerRegistration = null;
+    resetPortalRegistration(state){
+      state.portalRegistration = null;
     },
 
-    resetCustomerRegistrations(state){
-      state.customerRegistrations = [];
+    resetPortalRegistrations(state){
+      state.portalRegistrations = [];
       state.isLoading = false;
     },
 
@@ -69,34 +79,35 @@ export default slice.reducer;
 
 // Actions
 export const {
-  resetCustomerRegistration,
-  resetCustomerRegistrations,
+  resetPortalRegistration,
+  resetPortalRegistrations,
   setFilterBy,
   setFilterStatus,
+  setAcceptRequestDialog,
+  setRejectRequestDialog,
   ChangeRowsPerPage,
   ChangePage,
 } = slice.actions;
 
 // ----------------------------------------------------------------------
 
-export function getCustomerRegistrations( page, pageSize ) {
+export function getPortalRegistrations( page, pageSize ) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const params = {
-
+        isActive: true,
+        isArchived: false,
+        pagination: {
+          page,
+          pageSize,
+        },
         orderBy: {
           createdAt: -1
         } 
       }
-      if( page && pageSize ){
-        params.pagination = {
-          page,
-          pageSize,
-        }
-      }
       const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/register`, { params });
-      dispatch(slice.actions.getCustomerRegistrationsSuccess(response.data));
+      dispatch(slice.actions.getPortalRegistrationsSuccess(response.data));
       return response
     } catch (error) {
       dispatch(slice.actions.stopLoading());
@@ -107,12 +118,12 @@ export function getCustomerRegistrations( page, pageSize ) {
 
 // ----------------------------------------------------------------------
 
-export function getCustomerRegistration(id) {
+export function getPortalRegistration(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/register/${id}`);
-      dispatch(slice.actions.getCustomerRegistrationSuccess(response.data));
+      dispatch(slice.actions.getPortalRegistrationSuccess(response.data));
       return response
     } catch (error) {
       dispatch(slice.actions.stopLoading());
@@ -123,11 +134,12 @@ export function getCustomerRegistration(id) {
 
 // ----------------------------------------------------------------------
 
-export function deleteCustomerRegistration(id) {
+export function deletePortalRegistration(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       await axios.delete(`${CONFIG.SERVER_URL}crm/customers/register/${id}`);
+      dispatch(slice.actions.stopLoading());
     } catch (error) {
       dispatch(slice.actions.stopLoading());
       throw error;
@@ -137,7 +149,7 @@ export function deleteCustomerRegistration(id) {
 
 // --------------------------------------------------------------------------
 
-export function updateCustomerRegistration( Id, params ) {
+export function updatePortalRegistration( Id, params ) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -150,15 +162,15 @@ export function updateCustomerRegistration( Id, params ) {
         address: params?.address,
         status: params?.status,
         customerNote: params?.customerNote,
-        internalRemarks: params?.internalRemarks,
-        machineSerialNos: params?.machineSerialNos,
+        internalNote: params?.internalNote,
+        machineSerialNos: Array.isArray(params?.machineSerialNos) ? params?.machineSerialNos : undefined,
         isActive: params?.isActive,
         isArchived: params?.isArchived,
       };
 
       const response = await axios.patch(`${CONFIG.SERVER_URL}crm/customers/register/${Id}`, data );
+      dispatch(slice.actions.getPortalRegistrationSuccess(response.data));
       return response
-    
     } catch (error) {
       dispatch(slice.actions.stopLoading());
       throw error;

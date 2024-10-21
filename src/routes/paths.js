@@ -6,7 +6,7 @@ function path(root, sublink) {
 
 const ROOTS_AUTH = '/auth';
 const ROOTS_DASHBOARD = '/dashboard';
-const ROOTS_CUSTOMER_REGISTRATIONS = '/customerRegistrations';
+const ROOTS_PORTAL_REGISTRATIONS = '/portalRegistrations';
 const ROOTS_CALENDAR = '/calendar';
 const ROOTS_CRM = '/crm';
 const ROOTS_MACHINE = '/products';
@@ -138,11 +138,11 @@ export const PATH_CRM = {
 };
 
 // --------------------- CUSTOMER REGISTRATIONS ----------------------
-export const PATH_CUSTOMER_REGISTRATION = {
-  root: ROOTS_CUSTOMER_REGISTRATIONS,
-  edit: ( customerId ) => path(ROOTS_CUSTOMER_REGISTRATIONS, `/${customerId}/edit`),
-  view: ( customerId ) => path(ROOTS_CUSTOMER_REGISTRATIONS, `/${customerId}/view`),
-  permissionDenied: path(ROOTS_CUSTOMER_REGISTRATIONS, '/permission-denied'),
+export const PATH_PORTAL_REGISTRATION = {
+  root: ROOTS_PORTAL_REGISTRATIONS,
+  edit: ( customerId ) => path(ROOTS_PORTAL_REGISTRATIONS, `/${customerId}/edit`),
+  view: ( customerId ) => path(ROOTS_PORTAL_REGISTRATIONS, `/${customerId}/view`),
+  permissionDenied: path(ROOTS_PORTAL_REGISTRATIONS, '/permission-denied'),
   blank: path(ROOTS_AUTH, '/login'),
 };
 
