@@ -72,7 +72,7 @@ export default function CustomerEditForm() {
   useEffect(() => {
     trigger('email');
     const timeoutId = setTimeout(async () => {
-      if (email && !errors.email) { 
+      if (email && !errors.email && portalRegistration?.status?.toLowerCase() !== 'approved') { 
         try {
           await dispatch(getValidateUserEmail(email)); 
           clearErrors('email'); 
@@ -90,6 +90,9 @@ export default function CustomerEditForm() {
 
   const onSubmit = async ( data ) => {
       try {
+        if(portalRegistration?.status?.toLowerCase() === 'approved'){
+          delete data?.email;
+        }
         await dispatch(updatePortalRegistration( customerId, data ));
         reset();
         enqueueSnackbar('Customer updated successfully!');
@@ -134,7 +137,7 @@ export default function CustomerEditForm() {
                     options={ [ "NEW", "APPROVED", "REJECTED", "PENDING" ] }
                     filterSelectedOptions
                   />
-                  <RHFTextField name="email" label="Email*" />
+                  <RHFTextField name="email" label="Email*" disabled={portalRegistration?.status?.toLowerCase() === 'approved'} />
                   <RHFTextField name="phoneNumber" label="Phone Number" />
                 </Box>
                 <Box

@@ -380,7 +380,7 @@ export function getValidateUserEmail( login ) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try{ 
-      const response = await axios.get(`${CONFIG.SERVER_URL}security/users/validate`, { params: { login } } );
+      const response = await axios.get(`${CONFIG.SERVER_URL}security/users/validate`, { params: { login, isArchived: false } } );
       return response;
     } catch (error) {
       await dispatch(slice.actions.stopLoading());
