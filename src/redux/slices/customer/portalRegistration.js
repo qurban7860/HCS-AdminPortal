@@ -15,6 +15,8 @@ const initialState = {
     "customerName": false,
     "machineSerialNos": false,
     "status": false,
+    "customer.name": true,
+    "contact.firstName": true,
     "createdAt": false
   },
   filterBy: '',

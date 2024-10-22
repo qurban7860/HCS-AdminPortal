@@ -54,6 +54,8 @@ const TABLE_HEAD = [
   { id: 'customerName', label: 'Customer Name', align: 'left', },
   { id: 'machineSerialNos', label: 'Machines', align: 'left', },
   { id: 'status', label: 'Status', align: 'left' },
+  { id: 'customer.name', label: 'Customer', align: 'left' },
+  { id: 'contact.firstName', label: 'Contact', align: 'left' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
 
