@@ -22,6 +22,7 @@ PortalRegistrationListTableRow.propTypes = {
   onViewGroupCustomer: PropTypes.func,
   onSelectRow: PropTypes.func,
   onDeleteRow: PropTypes.func,
+  hiddenColumns: PropTypes.object,
 };
 
 
@@ -35,19 +36,20 @@ export default function PortalRegistrationListTableRow({
   onViewRow,
   handleCustomerDialog,
   onViewGroupCustomer,
+  hiddenColumns,
 }) {
   const { contactPersonName, email, phoneNumber, address, customerName, machineSerialNos, status, createdAt } = row;
   
   return (
     <StyledTableRow hover selected={selected}>
       <LinkTableCell align="left" onClick={onViewRow} param={contactPersonName} />
-      <TableCell align="left">{email || ''}</TableCell>
-      <TableCell align="left">{phoneNumber}</TableCell>
-      <TableCell align="left">{address}</TableCell>
-      <TableCell align="left">{customerName}</TableCell>
-      <TableCell align="left">{Array.isArray( machineSerialNos ) && (  machineSerialNos?.map((m, index )=> m?.trim() && <Chip key={`${index}${row?._id}`} sx={{ m:0.2 }} label={ m?.trim() } /> ) || '' )}</TableCell>
-      <TableCell align="left">{status || ""} {status?.toUpperCase() === "ACCEPTED" && <Iconify onClick={handleCustomerDialog} icon="solar:user-id-bold" />}</TableCell> 
-      <TableCell align="right" >{fDate(createdAt)}</TableCell>
+      {!hiddenColumns?.email && <TableCell align="left">{email || ''}</TableCell>}
+      {!hiddenColumns?.phoneNumber && <TableCell align="left">{phoneNumber}</TableCell>}
+      {!hiddenColumns?.address && <TableCell align="left">{address}</TableCell>}
+      {!hiddenColumns?.customerName && <TableCell align="left">{customerName}</TableCell>}
+      {!hiddenColumns?.machineSerialNos && <TableCell align="left">{Array.isArray( machineSerialNos ) && (  machineSerialNos?.map((m, index )=> m?.trim() && <Chip key={`${index}${row?._id}`} sx={{ m:0.2 }} label={ m?.trim() } /> ) || '' )}</TableCell>}
+      {!hiddenColumns?.status && <TableCell align="left">{status || ""} {status?.toUpperCase() === "ACCEPTED" && <Iconify onClick={handleCustomerDialog} icon="solar:user-id-bold" />}</TableCell> }
+      {!hiddenColumns?.createdAt && <TableCell align="right" >{fDate(createdAt)}</TableCell>}
     </StyledTableRow>
   );
 }

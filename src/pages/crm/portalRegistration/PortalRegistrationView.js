@@ -5,7 +5,7 @@ import { Container } from '@mui/material';
 // redux
 import { useDispatch } from '../../../redux/store';
 // slices
-import { getPortalRegistration } from '../../../redux/slices/customer/portalRegistration';
+import { getPortalRegistration, resetPortalRegistration } from '../../../redux/slices/customer/portalRegistration';
 import PortalRegistrationViewForm from './PortalRegistrationViewForm';
 import { Cover } from '../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
@@ -19,6 +19,7 @@ export default function CustomerView() {
 
   useLayoutEffect(() => {
     dispatch(getPortalRegistration(customerId));
+    return () => dispatch(resetPortalRegistration());
   }, [dispatch, customerId]);
 
   return (

@@ -26,7 +26,7 @@ export default function CustomerViewForm() {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { portalRegistration, isLoading } = useSelector((state) => state.portalRegistration);
+  const { portalRegistration, acceptRequestDialog, rejectRequestDialog, isLoading } = useSelector((state) => state.portalRegistration);
   const { enqueueSnackbar } = useSnackbar();
   const { customerId } = useParams();
   const defaultValues = useMemo(
@@ -73,8 +73,8 @@ export default function CustomerViewForm() {
     <Card sx={{ p: '1rem', mb:3 }}>
             <ViewFormEditDeleteButtons
               isActive={ defaultValues.isActive}
-              handleEdit={ handleEdit }
-              onArchive={  onArchive }
+              handleEdit={ portalRegistration?.status !== 'APPROVED' ? handleEdit : undefined }
+              onArchive={ portalRegistration?.status !== 'APPROVED' ? onArchive : undefined }
               backLink={() => navigate(PATH_PORTAL_REGISTRATION.root)}
             />
                 <Grid container >
@@ -111,7 +111,7 @@ export default function CustomerViewForm() {
                   <ViewFormAudit defaultValues={defaultValues} />
                 </Grid>
           </Card>
-          <PortalRequestInviteDialog />
+          {( acceptRequestDialog || rejectRequestDialog ) && <PortalRequestInviteDialog />}
     </Grid>
   </Grid>
   );

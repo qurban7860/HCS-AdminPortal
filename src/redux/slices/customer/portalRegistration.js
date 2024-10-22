@@ -7,6 +7,16 @@ const initialState = {
   isLoading: false,
   portalRegistrations: [],
   portalRegistration: {},
+  hiddenColumns: {
+    "contactPersonName": false,
+    "email": false,
+    "phoneNumber": false,
+    "address": false,
+    "customerName": false,
+    "machineSerialNos": false,
+    "status": false,
+    "createdAt": false
+  },
   filterBy: '',
   filterStatus: null,
   page: 0,
@@ -30,6 +40,10 @@ const slice = createSlice({
 
     setFilterStatus(state, action) {
       state.filterStatus = action.payload;
+    },
+
+    setHiddenColumns(state, action) {
+      state.hiddenColumns = action.payload;
     },
 
     setAcceptRequestDialog(state, action) {
@@ -85,6 +99,7 @@ export const {
   setFilterStatus,
   setAcceptRequestDialog,
   setRejectRequestDialog,
+  setHiddenColumns,
   ChangeRowsPerPage,
   ChangePage,
 } = slice.actions;

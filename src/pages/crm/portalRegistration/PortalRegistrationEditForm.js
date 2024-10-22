@@ -35,6 +35,12 @@ export default function CustomerEditForm() {
     dispatch(getPortalRegistration( customerId ));
   }, [ dispatch, customerId ]);
 
+  useEffect(() => {
+    if(portalRegistration?.status?.toLowerCase() === 'approved'){
+      navigate(PATH_PORTAL_REGISTRATION.permissionDenied)
+    }
+  }, [ portalRegistration, navigate, customerId ]);
+
   const defaultValues = useMemo(
     () => ({
       customerName: portalRegistration?.customerName || "",
