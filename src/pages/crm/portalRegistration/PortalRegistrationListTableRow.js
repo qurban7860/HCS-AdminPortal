@@ -38,7 +38,7 @@ export default function PortalRegistrationListTableRow({
   onViewGroupCustomer,
   hiddenColumns,
 }) {
-  const { contactPersonName, email, phoneNumber, address, customerName, machineSerialNos, status, createdAt } = row;
+  const { contactPersonName, email, phoneNumber, address, customerName, machineSerialNos, status, customer, contact, createdAt } = row;
   
   return (
     <StyledTableRow hover selected={selected}>
@@ -48,7 +48,9 @@ export default function PortalRegistrationListTableRow({
       {!hiddenColumns?.address && <TableCell align="left">{address}</TableCell>}
       {!hiddenColumns?.customerName && <TableCell align="left">{customerName}</TableCell>}
       {!hiddenColumns?.machineSerialNos && <TableCell align="left">{Array.isArray( machineSerialNos ) && (  machineSerialNos?.map((m, index )=> m?.trim() && <Chip key={`${index}${row?._id}`} sx={{ m:0.2 }} label={ m?.trim() } /> ) || '' )}</TableCell>}
-      {!hiddenColumns?.status && <TableCell align="left">{status || ""} {status?.toUpperCase() === "ACCEPTED" && <Iconify onClick={handleCustomerDialog} icon="solar:user-id-bold" />}</TableCell> }
+      {!hiddenColumns?.status && <TableCell align="left">{status || ""} {status?.toUpperCase() === "APPROVED" && <Iconify onClick={handleCustomerDialog}  icon="solar:user-id-bold" />}</TableCell> }
+      {!hiddenColumns?.['customer.name'] && <TableCell align="left">{customer?.name || ''}</TableCell>}
+      {!hiddenColumns?.['contact.firstName'] && <TableCell align="left">{`${contact?.firstName || '' } ${contact?.lastName || ""}`}</TableCell>}
       {!hiddenColumns?.createdAt && <TableCell align="right" >{fDate(createdAt)}</TableCell>}
     </StyledTableRow>
   );
