@@ -45,7 +45,7 @@ export default function PortalRegistrationListTableRow({
       <TableCell align="left">{phoneNumber}</TableCell>
       <TableCell align="left">{address}</TableCell>
       <TableCell align="left">{customerName}</TableCell>
-      <TableCell align="left">{Array.isArray( machineSerialNos ) && (  machineSerialNos?.map((m)=> m?.trim() && <Chip sx={{ m:0.2 }} label={ m?.trim() } /> ) || '' )}</TableCell>
+      <TableCell align="left">{Array.isArray( machineSerialNos ) && (  machineSerialNos?.map((m, index )=> m?.trim() && <Chip key={`${index}${row?._id}`} sx={{ m:0.2 }} label={ m?.trim() } /> ) || '' )}</TableCell>
       <TableCell align="left">{status || ""} {status?.toUpperCase() === "ACCEPTED" && <Iconify onClick={handleCustomerDialog} icon="solar:user-id-bold" />}</TableCell> 
       <TableCell align="right" >{fDate(createdAt)}</TableCell>
     </StyledTableRow>

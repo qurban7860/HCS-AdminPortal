@@ -119,7 +119,6 @@ function PortalRequestInviteDialog() {
       } else if( data?.customer && data?.customer?.type?.toUpperCase() === "SP" ){
         data.dataAccessibilityLevel = "GLOBAL"
       }
-      console.log( data )
       const promises = [ dispatch(updatePortalRegistration(customerId, rejectRequestDialog ? rejectData : { ...data, isActive: true })) ];
       
       if (acceptRequestDialog) {
@@ -130,7 +129,6 @@ function PortalRequestInviteDialog() {
       await handleCloseDialog()
       enqueueSnackbar('Customer updated successfully!');
     } catch (err) {
-      console.log(err);
       if (err?.errors && Array.isArray(err?.errors)) {
         err?.errors?.forEach((error) => {
           if (error?.field && error?.message) {

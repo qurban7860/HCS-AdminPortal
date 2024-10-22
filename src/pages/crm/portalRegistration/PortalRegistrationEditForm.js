@@ -100,7 +100,7 @@ export default function CustomerEditForm() {
       } catch (err) {
         if (err?.errors && Array.isArray(err?.errors)) {
           err?.errors?.forEach((error) => {
-            if (error?.field) {
+            if (error?.field && error?.message) {
               setError(error?.field, {
                 type: 'manual',
                 message: error?.message
@@ -137,7 +137,9 @@ export default function CustomerEditForm() {
                     options={ [ "NEW", "APPROVED", "REJECTED", "PENDING" ] }
                     filterSelectedOptions
                   />
-                  <RHFTextField name="email" label="Email*" disabled={portalRegistration?.status?.toLowerCase() === 'approved'} />
+                  <RHFTextField name="email" label="Email*" 
+                    disabled={ portalRegistration?.status?.toLowerCase() === 'approved' } 
+                  />
                   <RHFTextField name="phoneNumber" label="Phone Number" />
                 </Box>
                 <Box
