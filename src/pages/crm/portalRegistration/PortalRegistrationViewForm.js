@@ -79,7 +79,7 @@ export default function CustomerViewForm() {
             />
                 <Grid container >
                   <ViewFormField isLoading={isLoading} sm={6} heading='Customer Name' param={defaultValues?.customerName} />
-                  <ViewFormField isLoading={isLoading} sm={6} heading='Machine Serial Nos' param={defaultValues?.machineSerialNos} />
+                  <ViewFormField isLoading={isLoading} sm={6} heading='Machine Serial Nos' chips={defaultValues?.machineSerialNos} />
                   <ViewFormField isLoading={isLoading} sm={6} heading='Contact Person Name' param={defaultValues?.contactPersonName} />
                   <ViewFormField isLoading={isLoading} sm={6} heading='Status' 
                                       node={<>

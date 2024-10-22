@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 // @mui
 import {
-  TableCell,
+  TableCell, Chip
 } from '@mui/material';
 // utils
 import { fDate } from '../../../utils/formatTime';
@@ -45,7 +45,7 @@ export default function PortalRegistrationListTableRow({
       <TableCell align="left">{phoneNumber}</TableCell>
       <TableCell align="left">{address}</TableCell>
       <TableCell align="left">{customerName}</TableCell>
-      <TableCell align="left">{Array.isArray( machineSerialNos ) && (  machineSerialNos?.join(', ') || '' )}</TableCell>
+      <TableCell align="left">{Array.isArray( machineSerialNos ) && (  machineSerialNos?.map((m)=> m?.trim() && <Chip sx={{ m:0.2 }} label={ m?.trim() } /> ) || '' )}</TableCell>
       <TableCell align="left">{status || ""} {status?.toUpperCase() === "ACCEPTED" && <Iconify onClick={handleCustomerDialog} icon="solar:user-id-bold" />}</TableCell> 
       <TableCell align="right" >{fDate(createdAt)}</TableCell>
     </StyledTableRow>
