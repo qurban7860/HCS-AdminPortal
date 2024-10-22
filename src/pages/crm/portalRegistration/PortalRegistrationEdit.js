@@ -5,7 +5,7 @@ import { Container } from '@mui/material';
 // redux
 import { useDispatch } from '../../../redux/store';
 // slices
-import { getPortalRegistration } from '../../../redux/slices/customer/portalRegistration';
+import { getPortalRegistration, resetPortalRegistration } from '../../../redux/slices/customer/portalRegistration';
 // sections
 import PortalRegistrationEditForm from './PortalRegistrationEditForm';
 import { Cover } from '../../../components/Defaults/Cover';
@@ -20,6 +20,7 @@ export default function CustomerEdit() {
 
   useLayoutEffect(() => {
     dispatch(getPortalRegistration(customerId));
+    return () => dispatch(resetPortalRegistration());
   }, [dispatch, customerId]);
 
   return (

@@ -19,6 +19,7 @@ import {
   getComparator,
   TableNoData,
   TableSkeleton,
+  TablePaginationFilter,
   TablePaginationCustom,
   TableHeadFilter,
 } from '../../../components/table';
@@ -34,7 +35,8 @@ import {
   ChangePage, 
   ChangeRowsPerPage, 
   setFilterBy,
-  setFilterStatus
+  setFilterStatus,
+  setHiddenColumns
 } from '../../../redux/slices/customer/portalRegistration';
 import CustomerDialog from '../../../components/Dialog/CustomerDialog';
 import { getCustomer, setCustomerDialog } from '../../../redux/slices/customer/customer';
@@ -45,7 +47,7 @@ import { fDate } from '../../../utils/formatTime';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'contactPersonName', label: 'Contact Person Name', align: 'left' },
+  { id: 'contactPersonName', label: 'Contact Person Name', align: 'left', hideable:false },
   { id: 'email', label: 'Email', align: 'left', },
   { id: 'phoneNumber', label: 'Telephone', align: 'left', },
   { id: 'address', label: 'Address', align: 'left', },
@@ -71,7 +73,7 @@ export default function PortalRegistrationList() {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { portalRegistrations, filterBy, filterStatus, page, rowsPerPage, isLoading } = useSelector((state) => state.portalRegistration);
+  const { portalRegistrations, hiddenColumns, filterBy, filterStatus, page, rowsPerPage, isLoading } = useSelector((state) => state.portalRegistration);
   const [ filterName, setFilterName ] = useState( filterBy );
   const [ filterByStatus, setFilterByStatus ] = useState( filterStatus );
 
@@ -103,6 +105,10 @@ export default function PortalRegistrationList() {
       dispatch(ChangePage(0))
       dispatch(setFilterBy(value))
   }, 500))
+
+  const handleHiddenColumns = async (arg) => {
+    dispatch(setHiddenColumns(arg))
+  };
 
   const handleFilterName = (event) => {
     debouncedSearch.current(event.target.value)
@@ -161,12 +167,15 @@ useEffect(() => {
         />
 
         {!isNotFound && (
-          <TablePaginationCustom
+          <TablePaginationFilter
+            columns={TABLE_HEAD}
+            hiddenColumns={hiddenColumns}
+            handleHiddenColumns={handleHiddenColumns}
             count={ portalRegistrations?.totalCount ? portalRegistrations?.totalCount : 0 }
-            page={ page }
-            rowsPerPage={ rowsPerPage }
-            onPageChange={ onChangePage }
-            onRowsPerPageChange={ onChangeRowsPerPage }
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
           />
         )}
 
@@ -178,6 +187,7 @@ useEffect(() => {
                 orderBy={orderBy}
                 headLabel={TABLE_HEAD}
                 onSort={onSort}
+                hiddenColumns={hiddenColumns}
               />
 
               <TableBody>
@@ -186,6 +196,7 @@ useEffect(() => {
                   .map((row, index) =>
                     row ? (
                       <PortalRegistrationListTableRow
+                        hiddenColumns={hiddenColumns}
                         key={row._id}
                         row={row}
                         selected={selected.includes(row._id)}
@@ -233,7 +244,7 @@ function applyFilter({ inputData, comparator, filterName, filterByStatus }) {
   inputData = stabilizedThis?.map((el) => el[0]);
 
   if (filterByStatus) {
-    inputData = inputData?.filter((c) => c?.status?.toLowerCase() === filterByStatus?.toLowerCase());
+    inputData = inputData?.filter((c) => c?.status === filterByStatus );
   }
 
   if (filterName) {

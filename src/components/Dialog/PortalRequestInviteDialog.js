@@ -8,7 +8,7 @@ import { useEffect, useMemo } from 'react';
 import { Box, Dialog, DialogContent, DialogTitle, Divider, DialogActions, Checkbox, Button, Stack } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { addSecurityUser } from '../../redux/slices/securityUser/securityUser';
-import { updatePortalRegistration, setAcceptRequestDialog, setRejectRequestDialog, } from '../../redux/slices/customer/portalRegistration';
+import { updatePortalRegistration, setAcceptRequestDialog, setRejectRequestDialog, getPortalRegistration } from '../../redux/slices/customer/portalRegistration';
 import { getAllActiveCustomers, resetAllActiveCustomers } from '../../redux/slices/customer/customer';
 import { getActiveContacts, resetActiveContacts } from '../../redux/slices/customer/contact';
 import { getActiveRoles, resetActiveRoles } from '../../redux/slices/securityUser/role';
@@ -24,6 +24,13 @@ function PortalRequestInviteDialog() {
   const { allActiveCustomers, isLoading } = useSelector((state) => state.customer);
   const { activeRoles } = useSelector((state) => state.role);
   const { activeContacts } = useSelector((state) => state.contact);
+
+  useEffect(()=>{
+    if( !portalRegistration ){
+      dispatch(getPortalRegistration( customerId ))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[ dispatch ])
 
   useEffect(()=>{
     if(acceptRequestDialog){
@@ -63,15 +70,15 @@ function PortalRequestInviteDialog() {
 
   const defaultValues = useMemo(
     () => ({
-        name: portalRegistration.customerName || "",
-        contactPersonName: portalRegistration.contactPersonName || "",
-        email: portalRegistration.email || "",
-        phone: portalRegistration.phoneNumber || "",
-        address: portalRegistration.address || "",
-        customerNote: portalRegistration.customerNote || "",
+        name: portalRegistration?.customerName || "",
+        contactPersonName: portalRegistration?.contactPersonName || "",
+        email: portalRegistration?.email || "",
+        phone: portalRegistration?.phoneNumber || "",
+        address: portalRegistration?.address || "",
+        customerNote: portalRegistration?.customerNote || "",
         machineSerialNos: Array.isArray(portalRegistration?.machineSerialNos) ? portalRegistration?.machineSerialNos : [],
-        status: portalRegistration.status || null,
-        internalNote: portalRegistration.internalNote || "",
+        status: portalRegistration?.status || null,
+        internalNote: portalRegistration?.internalNote || "",
         password: "",
         roles: [],
         customer: null,
@@ -123,11 +130,15 @@ function PortalRequestInviteDialog() {
       
       if (acceptRequestDialog) {
         promises.push(dispatch(addSecurityUser(data)));
+        enqueueSnackbar('Portal request processed successfully!');
+      } else if (rejectRequestDialog){
+        enqueueSnackbar('Portal request Reject!');
+      } else {
+        enqueueSnackbar('Portal request updated successfully!');
       }
       
       await Promise.all(promises);  
       await handleCloseDialog()
-      enqueueSnackbar('Customer updated successfully!');
     } catch (err) {
       if (err?.errors && Array.isArray(err?.errors)) {
         err?.errors?.forEach((error) => {

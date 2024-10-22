@@ -26,7 +26,7 @@ export default function RoleBasedGuard({ hasContent, roles, children }) {
 
   if (typeof roles !== 'undefined' && !roles.includes(currentRole)) {
     return hasContent ? (
-      <Container component={MotionContainer} sx={{ textAlign: 'center' }}>
+      <Container component={MotionContainer} sx={{ textAlign: 'center', mt: 5 }}>
         <m.div variants={varBounce().in}>
           <Typography variant="h3" paragraph>
             Permission Denied
