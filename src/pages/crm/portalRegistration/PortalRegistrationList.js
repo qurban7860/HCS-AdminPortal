@@ -50,7 +50,7 @@ const TABLE_HEAD = [
   { id: 'phoneNumber', label: 'Telephone', align: 'left', },
   { id: 'address', label: 'Address', align: 'left', },
   { id: 'customerName', label: 'Customer Name', align: 'left', },
-  { id: 'machineSerialNos', label: 'Machine', align: 'left', },
+  { id: 'machineSerialNos', label: 'Machines', align: 'left', },
   { id: 'status', label: 'Status', align: 'left' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
@@ -220,6 +220,7 @@ useEffect(() => {
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filterName, filterStatus }) {
+
   const stabilizedThis = inputData?.map((el, index) => [el, index]);
 
   stabilizedThis?.sort((a, b) => {
@@ -234,13 +235,13 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
     filterName = filterName?.trim();
     inputData = inputData?.filter(
       ( c ) =>
-        c?.customerName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         c?.contactPersonName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        c?.email?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        c?.phoneNumber?.toString()?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        c?.address.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        c?.customerName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        c?.machineSerialNos?.some( msn => msn?.toString()?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ) ||
         c?.status?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        c?.acceptanceStatus?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        c?.acceptanceStatus?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        `${c?.address?.city}, ${c?.address?.country}`.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        (c?.isActive ? "Active" : "InActive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
         fDate(c?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }

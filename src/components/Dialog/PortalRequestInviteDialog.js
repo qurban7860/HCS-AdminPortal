@@ -119,14 +119,18 @@ function PortalRequestInviteDialog() {
       } else if( data?.customer && data?.customer?.type?.toUpperCase() === "SP" ){
         data.dataAccessibilityLevel = "GLOBAL"
       }
-      await dispatch(updatePortalRegistration( customerId, rejectRequestDialog ? rejectData : data ));
-      if(acceptRequestDialog){
-        await dispatch(addSecurityUser( data ));
+      console.log( data )
+      const promises = [ dispatch(updatePortalRegistration(customerId, rejectRequestDialog ? rejectData : { ...data, isActive: true })) ];
+      
+      if (acceptRequestDialog) {
+        promises.push(dispatch(addSecurityUser(data)));
       }
-      reset();
+      
+      await Promise.all(promises);  
       await handleCloseDialog()
       enqueueSnackbar('Customer updated successfully!');
     } catch (err) {
+      console.log(err);
       if (err?.errors && Array.isArray(err?.errors)) {
         err?.errors?.forEach((error) => {
           if (error?.field && error?.message) {
@@ -210,7 +214,7 @@ function PortalRequestInviteDialog() {
                     ) }
                     getOptionLabel={(option) => `${option?.name || ''} `}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                    renderOption={(props, option, { selected }) => ( <li {...props}> <Checkbox checked={selected} />{option?.name || ''}</li> )}
+                    renderOption={(props, option, { selected }) => ( <li {...props} key={option?._id} > <Checkbox checked={selected} />{option?.name || ''}</li> )}
                   />
                 </>}
             </Box>

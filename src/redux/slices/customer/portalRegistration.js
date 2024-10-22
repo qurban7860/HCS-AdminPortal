@@ -96,7 +96,6 @@ export function getPortalRegistrations( page, pageSize ) {
     dispatch(slice.actions.startLoading());
     try {
       const params = {
-        isActive: true,
         isArchived: false,
         pagination: {
           page,
@@ -148,13 +147,13 @@ export function deletePortalRegistration(id) {
 }
 
 // --------------------------------------------------------------------------
-
-export function updatePortalRegistration( Id, params ) {
+export function updatePortalRegistration(Id, params) {
   return async (dispatch) => {
-    dispatch(slice.actions.startLoading());
     try {
-
       const data = {
+        customer: params?.customer?._id,
+        contact: params?.contact?._id,
+        roles: params.roles.map(role => role?._id ),
         customerName: params?.customerName,
         contactPersonName: params?.contactPersonName,
         email: params?.email,
@@ -163,17 +162,20 @@ export function updatePortalRegistration( Id, params ) {
         status: params?.status,
         customerNote: params?.customerNote,
         internalNote: params?.internalNote,
-        machineSerialNos: Array.isArray(params?.machineSerialNos) ? params?.machineSerialNos : undefined,
+        machineSerialNos: (Array.isArray(params?.machineSerialNos) && params?.machineSerialNos?.length > 0) 
+          ? params?.machineSerialNos 
+          : undefined,
         isActive: params?.isActive,
         isArchived: params?.isArchived,
       };
 
-      const response = await axios.patch(`${CONFIG.SERVER_URL}crm/customers/register/${Id}`, data );
+      const response = await axios.patch(`${CONFIG.SERVER_URL}crm/customers/register/${Id}`, data);
       dispatch(slice.actions.getPortalRegistrationSuccess(response.data));
-      return response
+      return response;
     } catch (error) {
-      dispatch(slice.actions.stopLoading());
+      dispatch(slice.actions.startLoading());
       throw error;
     }
   };
 }
+
