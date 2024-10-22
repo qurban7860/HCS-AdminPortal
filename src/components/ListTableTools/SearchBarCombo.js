@@ -17,6 +17,7 @@ import { useAuthContext } from '../../auth/useAuthContext';
 import { useDebouncedEffect } from '../../hooks/useDebouncedEffect';
 
 function SearchBarCombo({
+  node,
   isFiltered,
   value,
   onFilterVerify,
@@ -145,6 +146,11 @@ function SearchBarCombo({
               }}
             />
           </Grid>}
+          {node && 
+            <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
+                { node }
+            </Grid>
+          }
 
           {onFilterVerify &&
           <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
@@ -777,6 +783,7 @@ function SearchBarCombo({
 }
 
 SearchBarCombo.propTypes = {
+  node: PropTypes.node,
   isFiltered: PropTypes.bool,
   onClick: PropTypes.func,
   onChange: PropTypes.func,

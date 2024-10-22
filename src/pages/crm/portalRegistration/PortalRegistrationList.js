@@ -96,7 +96,7 @@ export default function PortalRegistrationList() {
   });
 
   const denseHeight = 60;
-  const isFiltered = filterName !== '' || filterByStatus !== '';
+  const isFiltered = filterName !== '' ;
   const isNotFound = (!dataFiltered?.length && !!filterName) || (!isLoading && !dataFiltered?.length);
 
   const debouncedSearch = useRef(debounce((value) => {
@@ -119,9 +119,9 @@ export default function PortalRegistrationList() {
     dispatch(setFilterStatus(value))
   }, 500))
 
-  const handleFilterByStatus = (event) => {
-    debouncedFilterByStatus.current(event.target.value)
-    setFilterByStatus(event.target.value)
+  const handleFilterByStatus = (value) => {
+    debouncedFilterByStatus.current(value)
+    setFilterByStatus(value)
     setPage(0);
   };
 
@@ -153,9 +153,11 @@ useEffect(() => {
       <TableCard>
         <CustomerListTableToolbar
           filterName={ filterName }
+          filterStatus={ filterByStatus }
           onFilterName={ handleFilterName }
           isFiltered={ isFiltered }
           onResetFilter={ handleResetFilter }
+          onChangeStatus={ handleFilterByStatus }
         />
 
         {!isNotFound && (
@@ -219,8 +221,7 @@ useEffect(() => {
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName, filterStatus }) {
-
+function applyFilter({ inputData, comparator, filterName, filterByStatus }) {
   const stabilizedThis = inputData?.map((el, index) => [el, index]);
 
   stabilizedThis?.sort((a, b) => {
@@ -230,6 +231,10 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   });
 
   inputData = stabilizedThis?.map((el) => el[0]);
+
+  if (filterByStatus) {
+    inputData = inputData?.filter((c) => c?.status?.toLowerCase() === filterByStatus?.toLowerCase());
+  }
 
   if (filterName) {
     filterName = filterName?.trim();
@@ -244,10 +249,6 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
         c?.status?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         fDate(c?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
-  }
-
-  if ( filterStatus?.length ) {
-    inputData = inputData?.filter((customer) => filterStatus.includes(customer.status));
   }
 
   return inputData;

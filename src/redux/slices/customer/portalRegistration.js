@@ -8,7 +8,7 @@ const initialState = {
   portalRegistrations: [],
   portalRegistration: {},
   filterBy: '',
-  filterStatus: "",
+  filterStatus: null,
   page: 0,
   rowsPerPage: 100,
   acceptRequestDialog: false,
@@ -153,7 +153,7 @@ export function updatePortalRegistration(Id, params) {
       const data = {
         customer: params?.customer?._id,
         contact: params?.contact?._id,
-        roles: params.roles.map(role => role?._id ),
+        roles: params?.roles?.map(role => role?._id ),
         customerName: params?.customerName,
         contactPersonName: params?.contactPersonName,
         email: params?.email,
@@ -173,7 +173,7 @@ export function updatePortalRegistration(Id, params) {
       dispatch(slice.actions.getPortalRegistrationSuccess(response.data));
       return response;
     } catch (error) {
-      dispatch(slice.actions.startLoading());
+      dispatch(slice.actions.stopLoading());
       throw error;
     }
   };
