@@ -217,6 +217,10 @@ export const MachineLogsAdd = Loadable(lazy(() => import('../pages/machine/logs/
 // export const MachineLogsView = Loadable(lazy(() => import('../pages/machine/logs/MachineLogsViewForm')));
 export const MachineLogsGraphView = Loadable(lazy(() => import('../pages/machine/logs/MachineLogsGraphViewForm')));
 
+// --------------------------- MACHINE INTEGRATION -------------------------------------
+
+export const MachineIntegrationViewForm = Loadable(lazy(() => import('../pages/machine/integration/IntegrationViewForm')));
+
 // --------------------------- MACHINE JIRA -------------------------------------
 
 export const MachineJiraList = Loadable(lazy(() => import('../pages/machine/jira/MachineJiraList')));

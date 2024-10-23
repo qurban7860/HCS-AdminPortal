@@ -326,4 +326,7 @@ export const FORMLABELS = {
     BILLING_SITE: 'Billing Site',
     NEARBY_MILESTONE: 'Nearby Milestone',
   },
+  INTEGRATION: {
+    MAIN_HEADER: 'Portal Integration Details'
+  }
 };

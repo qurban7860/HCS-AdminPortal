@@ -93,7 +93,12 @@ export default function LogChartStacked({ chart, graphLabels }) {
             fontWeight: 600,
             cssClass: 'apexcharts-yaxis-title',
         },
+      },
     },
+    legend: {
+      onItemClick: {
+        toggleDataSeries: false
+      }
     },
     tooltip: {
       custom: ({ series: tooltipSeries, seriesIndex, dataPointIndex, w }) => {
