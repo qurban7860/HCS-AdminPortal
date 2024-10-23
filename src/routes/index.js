@@ -183,6 +183,9 @@ import {
   // MachineLogsView,
   MachineLogsGraphView,
 
+  // --------------------------- MACHINE INTEGRATION -------------------------------------
+  MachineIntegrationViewForm,
+
   // --------------------------- MACHINE Jira --------------------------------
   MachineJiraList,
 
@@ -761,6 +764,11 @@ export default function Router() {
                 {path: 'new', element: <MachineLogsAdd/>},
                 {path: 'graph', element: <MachineLogsGraphView/>}, 
                 // {path: ':id/view', element: <MachineLogsView/>},
+              ]
+            },
+            { path: ':machineId/integration',
+              children:[
+                {element: <MachineIntegrationViewForm/>, index: true},
               ]
             },
             { path: ':machineId/jira',

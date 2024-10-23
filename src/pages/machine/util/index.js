@@ -130,6 +130,11 @@ const TABS = [
     icon: ICONS.GRAPHS.icon,
   },  
   {
+    value: 'integration',
+    label: 'Machine Integration',
+    icon: ICONS.INTEGRATION.icon,
+  },  
+  {
     value: 'jira',
     label: 'Jira',
     icon: ICONS.JIRA.icon,

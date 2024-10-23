@@ -60,6 +60,8 @@ export default function MachineTabContainer({ currentTabValue }) {
       navigate( PATH_MACHINE.machines.logs.graph(machineId) )
     } else if(tab === 'jira' && machineId  ){
       navigate( PATH_MACHINE.machines.jira.root(machineId) )
+    } else if(tab === 'integration' && machineId  ){
+      navigate( PATH_MACHINE.machines.integration.root(machineId) )
     }
   }
 
