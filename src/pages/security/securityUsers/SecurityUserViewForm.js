@@ -117,7 +117,7 @@ export default function SecurityUserViewForm() {
     }
   };
 
-  const onDelete = async () => {
+  const onArchive = async () => {
     try {
       await dispatch(deleteSecurityUser(id));
       await navigate(PATH_SECURITY.root);
@@ -166,7 +166,7 @@ export default function SecurityUserViewForm() {
             handleEdit={handleEdit}
             handleUserInvite={securityUser?.invitationStatus ? handleUserInvite : undefined }
             handleUpdatePassword={handleUpdatePassword}
-            onDelete={onDelete}
+            onArchive={onArchive}
             isLoading={isLoading}
             isInviteLoading={isLoading}
             backLink={() => navigate(PATH_SECURITY.root)}
@@ -180,11 +180,11 @@ export default function SecurityUserViewForm() {
           <ConfirmDialog
             open={openConfirm}
             onClose={handleCloseConfirm}
-            title="Delete"
-            content="Are you sure want to delete?"
+            title="Archive"
+            content="Are you sure want to archive?"
             action={
-              <Button variant="contained" color="error" onClick={onDelete}>
-                Delete
+              <Button variant="contained" color="error" onClick={onArchive}>
+                Archive
               </Button>
             }
           />
