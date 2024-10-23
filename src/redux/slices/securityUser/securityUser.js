@@ -391,18 +391,15 @@ export function getValidateUserEmail( login ) {
 
 // ----------------------------------------------------------------------
 
-export function getSecurityUsers() {
+export function getSecurityUsers( param ) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try{ 
-      const response = await axios.get(`${CONFIG.SERVER_URL}security/users`,
-      {
-        params: {
-          isArchived: false,
-          invitationStatus: false
-        }
+      const params = {
+        isArchived: param?.isArchived || false,
+        invitationStatus: param?.invitationStatus || false
       }
-      );
+      const response = await axios.get(`${CONFIG.SERVER_URL}security/users`, { params });
       if(regEx.test(response.status)){
         dispatch(slice.actions.getSecurityUsersSuccess(response.data));
       }
@@ -478,9 +475,22 @@ export function getLoggedInSecurityUser(id) {
         return response;
       } catch (error) {
         dispatch(slice.actions.hasError(error.Message));
-        console.error(error);
         throw error;
       }
+  };
+}
+
+export function archiveSecurityUser( id, params ) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try{
+      const response = await axios.patch(`${CONFIG.SERVER_URL}security/users/${id}`, { isArchived: params?.isArchived } );
+      dispatch(slice.actions.getSecurityUserSuccess(response.data));
+      return response;
+    } catch (error) {
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
   };
 }
 
@@ -490,15 +500,8 @@ export function deleteSecurityUser(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try{
-      const response = await axios.patch(`${CONFIG.SERVER_URL}security/users/${id}`,
-      {
-        isArchived: true, 
-      }
-      );
-      if(regEx.test(response.status)){
-        dispatch(slice.actions.setResponseMessage(response.data));
-        dispatch(resetSecurityUser())
-      }
+      const response = await axios.delete(`${CONFIG.SERVER_URL}security/users/${id}`, { isArchived: true, } );
+      dispatch(slice.actions.getSecurityUserSuccess(response.data));
       return response;
     } catch (error) {
       dispatch(slice.actions.hasError(error.Message));
