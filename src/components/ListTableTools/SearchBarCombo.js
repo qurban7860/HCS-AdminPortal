@@ -385,7 +385,9 @@ function SearchBarCombo({
                 <MenuItem key="all" value="all">All</MenuItem>
                 <MenuItem key="verified" value="active">Active</MenuItem>
                 <MenuItem key="unverified" value="inActive">In-Active</MenuItem>
-                </Select>
+                <MenuItem key="isArchived" value="isArchived">Archived</MenuItem>
+                <MenuItem key="invitationStatus" value="invitationStatus">Invitations</MenuItem>
+              </Select>
             </FormControl>
             </Stack>
           </Grid>}
