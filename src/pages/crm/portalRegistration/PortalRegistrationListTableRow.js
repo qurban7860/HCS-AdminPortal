@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 // @mui
 import {
-  TableCell, Chip
+  TableCell, Chip, Typography
 } from '@mui/material';
 // utils
 import { fDate } from '../../../utils/formatTime';
@@ -48,7 +48,17 @@ export default function PortalRegistrationListTableRow({
       {!hiddenColumns?.address && <TableCell align="left">{address}</TableCell>}
       {!hiddenColumns?.customerName && <TableCell align="left">{customerName}</TableCell>}
       {!hiddenColumns?.machineSerialNos && <TableCell align="left">{Array.isArray( machineSerialNos ) && (  machineSerialNos?.map((m, index )=> m?.trim() && <Chip key={`${index}${row?._id}`} sx={{ m:0.2 }} label={ m?.trim() } /> ) || '' )}</TableCell>}
-      {!hiddenColumns?.status && <TableCell align="left">{status || ""} {status?.toUpperCase() === "APPROVED" && <Iconify onClick={handleCustomerDialog}  icon="solar:user-id-bold" />}</TableCell> }
+      {!hiddenColumns?.status && <TableCell align="left">
+        <Typography variant='subtitle2' sx={{mr: 1,
+          color: (
+            status === 'REJECTED' && 'red' ||
+            status === 'APPROVED' && 'green'
+          ) || 'inherit'
+          }}
+        >{status || ""}
+        {/* {status?.toUpperCase() === "APPROVED" && <Iconify onClick={handleCustomerDialog}  icon="solar:user-id-bold" />} */}
+        </Typography>
+      </TableCell> }
       {!hiddenColumns?.['customer.name'] && <TableCell align="left">{customer?.name || ''}</TableCell>}
       {!hiddenColumns?.['contact.firstName'] && <TableCell align="left">{`${contact?.firstName || '' } ${contact?.lastName || ""}`}</TableCell>}
       {!hiddenColumns?.createdAt && <TableCell align="right" >{fDate(createdAt)}</TableCell>}
