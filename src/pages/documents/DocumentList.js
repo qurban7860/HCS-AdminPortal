@@ -5,6 +5,9 @@ import debounce from 'lodash/debounce';
 import PropTypes from 'prop-types';
 // @mui
 import {
+  Grid, 
+  Stack, 
+  Card,
   Box,
   Table,
   TableBody,
@@ -266,50 +269,50 @@ useLayoutEffect(() => {
     typeVal,
   });
   
-  const { watch, setValue, handleSubmit } = methods;
+  const { watch, handleSubmit } = methods;
   const filteredSearchKey = watch('filteredSearchKey');
 
   const isFiltered = filterName !== '' || !!filterStatus.length;
   const isNotFound = (!isLoading && !dataFiltered?.length);
 
-  // const filterNameDebounce = (value) => {
-  //   if(machineDrawingPage){
-  //     dispatch(setMachineDocumentFilterBy(value))
-  //   }else if(customerPage){
-  //     dispatch(setCustomerDocumentFilterBy(value))
-  //   }else if(machineDrawings){
-  //     dispatch(setMachineDrawingsFilterBy(value))
-  //   }else if(!customerPage && !machineDrawingPage && !machineDrawings){
-  //     dispatch(setFilterBy(value))
-  //   }
-  // }
+  const filterNameDebounce = (value) => {
+    if(machineDrawingPage){
+      dispatch(setMachineDocumentFilterBy(value))
+    }else if(customerPage){
+      dispatch(setCustomerDocumentFilterBy(value))
+    }else if(machineDrawings){
+      dispatch(setMachineDrawingsFilterBy(value))
+    }else if(!customerPage && !machineDrawingPage && !machineDrawings){
+      dispatch(setFilterBy(value))
+    }
+  }
 
-  // const debouncedSearch = useRef(debounce(async (criteria) => {
-  //     filterNameDebounce(criteria);
-  // }, 500))
+  const debouncedSearch = useRef(debounce(async (criteria) => {
+      filterNameDebounce(criteria);
+  }, 500))
 
-  // const handleFilterName = useCallback((event) => {
-  //   const { value } = event.target;
-  //   debouncedSearch.current(value);
-  //   setFilterName(value);
-  // }, []);
+  const handleFilterName = useCallback((event) => {
+    const { value } = event.target;
+    debouncedSearch.current(value);
+    setFilterName(value);
+  }, []);
   
-  // useLayoutEffect(() => {
-  //     debouncedSearch.current.cancel();
-  // }, [debouncedSearch]);
+  useLayoutEffect(() => {
+      debouncedSearch.current.cancel();
+  }, [debouncedSearch]);
 
-  // useLayoutEffect(()=>{
-  //   if(machineDrawingPage){
-  //     setFilterName(machineDocumentsFilterBy)
-  //   }else if(customerPage){
-  //     setFilterName(customerDocumentsFilterBy)
-  //   }else if(machineDrawings){
-  //     setFilterName(machineDrawingsFilterBy)
-  //   }else if(!customerPage && !machineDrawingPage && !machineDrawings){
-  //     setFilterName(documentFilterBy)
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // },[ ])
+  useLayoutEffect(()=>{
+    if(machineDrawingPage){
+      setFilterName(machineDocumentsFilterBy)
+    }else if(customerPage){
+      setFilterName(customerDocumentsFilterBy)
+    }else if(machineDrawings){
+      setFilterName(machineDrawingsFilterBy)
+    }else if(!customerPage && !machineDrawingPage && !machineDrawings){
+      setFilterName(documentFilterBy)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[ ])
 
   const handleFilterStatus = (event) => {
     // setPage(0);
@@ -330,26 +333,24 @@ useLayoutEffect(() => {
     }
   };
   
-  // const handleResetFilter = () => {
-  //   setValue(filteredSearchKey, '')
-  //   setSelectedSearchFilter('')
-  //   setFilterName('');
-  //   if(machineDrawingPage){
-  //     dispatch(setMachineDocumentFilterBy(""))
-  //   }else if(customerPage){
-  //     dispatch(setCustomerDocumentFilterBy(""))
-  //   }else if(machineDrawings){
-  //     dispatch(setMachineDrawingsFilterBy(""))
-  //   }else if(!customerPage && !machineDrawingPage && !machineDrawings){
-  //     dispatch(setFilterBy(""))
-  //   }
-  //   setFilterStatus([]);
-  // };
+  const handleResetFilter = () => {
+    setFilterName('');
+    if(machineDrawingPage){
+      dispatch(setMachineDocumentFilterBy(""))
+    }else if(customerPage){
+      dispatch(setCustomerDocumentFilterBy(""))
+    }else if(machineDrawings){
+      dispatch(setMachineDrawingsFilterBy(""))
+    }else if(!customerPage && !machineDrawingPage && !machineDrawings){
+      dispatch(setFilterBy(""))
+    }
+    setFilterStatus([]);
+  };
   
-  // useEffect(() => {
-  //   handleResetFilter();
-  // // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [])
+  useEffect(() => {
+    handleResetFilter();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   
   const handleCustomerDialog = (e, Id) => {
     dispatch(getCustomer(Id))
@@ -370,14 +371,30 @@ useLayoutEffect(() => {
   };
   
   const onGetDocuments = (data) => {
-    if (filteredSearchKey && selectedSearchFilter) {
+    if (filteredSearchKey && selectedSearchFilter && !customerPage && !machineDrawingPage && !machinePage && !machineDrawings) {
       dispatch(getDocuments(null, null, null, page, documentRowsPerPage, null, null, cancelTokenSource, filteredSearchKey, selectedSearchFilter));
-    } 
+    } else if (filteredSearchKey && selectedSearchFilter && customerPage && customerId) {
+      dispatch(getDocuments( customer?._id , null, null, page, customerDocumentsRowsPerPage, customer?.isArchived, null, cancelTokenSource, filteredSearchKey, selectedSearchFilter));
+    } else if(filteredSearchKey && selectedSearchFilter && machineDrawingPage &&  machineId ){
+      dispatch(getDocuments( null, machineId, null, page, machineDocumentsRowsPerPage, null, null, cancelTokenSource, filteredSearchKey, selectedSearchFilter));
+    } else if( filteredSearchKey && selectedSearchFilter && machinePage ){
+      dispatch(getDocuments(null, machineId, null, page, machineDrawingsRowsPerPage, null, machine?.isArchived, cancelTokenSource, filteredSearchKey, selectedSearchFilter));
+    } else if( filteredSearchKey && selectedSearchFilter && machineDrawings || machineDrawingPage ){
+      dispatch(getDocuments(null, null, ( machineDrawings || machineDrawingPage ), page, machineDrawingsRowsPerPage, null, null, cancelTokenSource, filteredSearchKey, selectedSearchFilter));
+    }
   };
   
   const afterClearHandler = (data) => {
-    if (filteredSearchKey && selectedSearchFilter) {
+    if (filteredSearchKey && selectedSearchFilter && !customerPage && !machineDrawingPage && !machinePage && !machineDrawings) {
       dispatch(getDocuments(null, null, null, page, documentRowsPerPage, null, null, cancelTokenSource, null, null));
+    } else if (filteredSearchKey && selectedSearchFilter && customerPage && customerId) {
+      dispatch(getDocuments( customer?._id , null, null, page, customerDocumentsRowsPerPage, customer?.isArchived, null, cancelTokenSource, null, null));
+    } else if(filteredSearchKey && selectedSearchFilter && machineDrawingPage &&  machineId ){
+      dispatch(getDocuments( null, machineId, null, page, machineDocumentsRowsPerPage, null, null, cancelTokenSource, null, null));
+    } else if( filteredSearchKey && selectedSearchFilter && machinePage ){
+      dispatch(getDocuments(null, machineId, null, page, machineDrawingsRowsPerPage, null, machine?.isArchived, cancelTokenSource, null, null));
+    } else if( filteredSearchKey && selectedSearchFilter && machineDrawings || machineDrawingPage ){
+      dispatch(getDocuments(null, null, ( machineDrawings || machineDrawingPage ), page, machineDrawingsRowsPerPage, null, null, cancelTokenSource, null, null));
     }
   };
   
@@ -392,43 +409,65 @@ useLayoutEffect(() => {
         </StyledCardContainer>
       )}
       <FormProvider {...methods} onSubmit={handleSubmit(onGetDocuments)}>
+      {!customerPage && !machinePage && (
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <Card sx={{ p: 3 }}>
+              <Stack
+                direction={{ xs: 'column', sm: 'row' }}
+                spacing={2}
+                sx={{
+                  justifyContent: 'space-between',
+                  alignItems: 'flex-start',
+                }}
+              >
+                <Box sx={{ flexGrow: 1, width: { xs: '100%', sm: 'auto' } }}>
+                  <RHFFilteredSearchBar
+                    name="filteredSearchKey"
+                    filterOptions={TABLE_HEAD}
+                    setSelectedFilter={setSelectedSearchFilter}
+                    selectedFilter={selectedSearchFilter}
+                    placeholder="Enter Search here..."
+                    afterClearHandler={afterClearHandler}
+                    fullWidth
+                  />
+                  </Box>
+                   <Box sx={{ justifyContent: 'flex-end', display: 'flex' }}>
+                  <LoadingButton
+                    type="button"
+                    onClick={handleSubmit(onGetDocuments)}
+                    variant="contained"
+                    size="large"
+                  >
+                    Search
+                  </LoadingButton>
+                </Box>
+              </Stack>
+            </Card>
+          </Grid>
+        </Grid>
+        )}
         <TableCard>
-          <Box sx={{ display: 'flex', alignItems: 'center', m: 3 }}>
-            <RHFFilteredSearchBar
-              name="filteredSearchKey"
-              filterOptions={TABLE_HEAD}
-              setSelectedFilter={setSelectedSearchFilter}
-              selectedFilter={selectedSearchFilter}
-              placeholder="Enter Search here..."
-              afterClearHandler={afterClearHandler}
-              sx={{ width: '500px' }}
-            />
-            <DocumentListTableToolbar
-              // filterName={filterName}
-              // filterStatus={filterStatus}
-              // onFilterName={handleFilterName}
-              // onFilterStatus={handleFilterStatus}
-              // isFiltered={isFiltered}
-              // onResetFilter={handleResetFilter}
-              customerPage={customerPage}
-              machinePage={machinePage}
-              machineDrawings={machineDrawings}
-              categoryVal={categoryVal}
-              setCategoryVal={setCategoryVal}
-              typeVal={typeVal}
-              setTypeVal={setTypeVal}
-              handleGalleryView={!isNotFound && (customerPage || machinePage) ? handleGalleryView:undefined}
-            />
-            <Box sx={{ flexGrow: 1 }} />
-            <LoadingButton
-              type="button"
-              onClick={handleSubmit(onGetDocuments)}
-              variant="contained"
-              size="large"
-            >
-              Search
-            </LoadingButton>
-          </Box>
+          { machineDrawingPage && machineDrawings && (
+          <DocumentListTableToolbar
+            filterName={filterName}
+            filterStatus={filterStatus}
+            onFilterName={handleFilterName}
+            onFilterStatus={handleFilterStatus}
+            isFiltered={isFiltered}
+            onResetFilter={handleResetFilter}
+            customerPage={customerPage}
+            machinePage={machinePage}
+            machineDrawings={machineDrawings}
+            categoryVal={categoryVal}
+            setCategoryVal={setCategoryVal}
+            typeVal={typeVal}
+            setTypeVal={setTypeVal}
+            handleGalleryView={
+              !isNotFound && (customerPage || machinePage) ? handleGalleryView : undefined
+            }
+          />
+          )}
           <TablePaginationCustom
             count={documentRowsTotal}
             page={page}
