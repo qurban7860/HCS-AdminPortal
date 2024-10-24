@@ -1,13 +1,19 @@
 import React, { useState, useLayoutEffect, useEffect, useRef, useCallback, useMemo, memo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { FormProvider, useForm } from 'react-hook-form';
 import debounce from 'lodash/debounce';
 import PropTypes from 'prop-types';
 // @mui
 import {
+  Grid, 
+  Stack, 
+  Card,
+  Box,
   Table,
   TableBody,
   TableContainer,
 } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 import axios from 'axios';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
@@ -56,6 +62,7 @@ import { fDate } from '../../utils/formatTime';
 import TableCard from '../../components/ListTableTools/TableCard';
 import MachineDialog from '../../components/Dialog/MachineDialog';
 import CustomerDialog from '../../components/Dialog/CustomerDialog';
+import RHFFilteredSearchBar from '../../components/hook-form/RHFFilteredSearchBar';
 
 // ----------------------------------------------------------------------
 DocumentList.propTypes = {
@@ -71,6 +78,11 @@ function DocumentList({ customerPage, machinePage, machineDrawingPage, machineDr
   const { customerId, machineId } = useParams();
   const axiosToken = () => axios.CancelToken.source();
   const cancelTokenSource = axiosToken();
+  const methods = useForm({
+    defaultValues: {
+      filteredSearchKey: '',
+    },
+  });
   const [filterName, setFilterName] = useState('');
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(100);
@@ -89,6 +101,7 @@ function DocumentList({ customerPage, machinePage, machineDrawingPage, machineDr
   const { activeDocumentCategories } = useSelector((state) => state.documentCategory );
   const { activeDocumentTypes } = useSelector((state) => state.documentType );
   const [totalRows, setTotalRows] = useState( documentRowsTotal );
+  const [selectedSearchFilter, setSelectedSearchFilter] = useState('');
 
   const {
     order,
@@ -186,15 +199,15 @@ useLayoutEffect(() => {
 
   useEffect(() => {
       if (customerPage && customerId) {
-        dispatch(getDocuments( customer?._id , null, null, page, customerDocumentsRowsPerPage, customer?.isArchived, null, cancelTokenSource));
+        dispatch(getDocuments( customer?._id , null, null, page, customerDocumentsRowsPerPage, customer?.isArchived, null, cancelTokenSource, filteredSearchKey, selectedSearchFilter));
       } else if(machineDrawingPage &&  machineId ){
-        dispatch(getDocuments( null, machineId, null, page, machineDocumentsRowsPerPage, null, null, cancelTokenSource));
+        dispatch(getDocuments( null, machineId, null, page, machineDocumentsRowsPerPage, null, null, cancelTokenSource, filteredSearchKey, selectedSearchFilter));
       } else if( machinePage ){
-        dispatch(getDocuments(null, machineId, null, page, machineDrawingsRowsPerPage, null, machine?.isArchived, cancelTokenSource));
+        dispatch(getDocuments(null, machineId, null, page, machineDrawingsRowsPerPage, null, machine?.isArchived, cancelTokenSource, filteredSearchKey, selectedSearchFilter));
       } else if( machineDrawings || machineDrawingPage ){
-        dispatch(getDocuments(null, null, ( machineDrawings || machineDrawingPage ), page, machineDrawingsRowsPerPage, null, null, cancelTokenSource));
+        dispatch(getDocuments(null, null, ( machineDrawings || machineDrawingPage ), page, machineDrawingsRowsPerPage, null, null, cancelTokenSource, filteredSearchKey, selectedSearchFilter));
       } else if(!customerPage && !machineDrawingPage && !machinePage && !machineDrawings  ) {
-        dispatch(getDocuments(null, null, null, page, documentRowsPerPage, null, null, cancelTokenSource));
+        dispatch(getDocuments(null, null, null, page, documentRowsPerPage, null, null, cancelTokenSource, filteredSearchKey, selectedSearchFilter));
       }
       return()=>{ cancelTokenSource.cancel(); dispatch(resetDocuments()) }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -208,7 +221,7 @@ useLayoutEffect(() => {
     machineDocumentsRowsPerPage, 
     machineDrawingsRowsPerPage, 
     documentRowsPerPage,
-    machine
+    machine,
   ]);
   
   useLayoutEffect(()=>{
@@ -256,6 +269,9 @@ useLayoutEffect(() => {
     typeVal,
   });
   
+  const { watch, handleSubmit } = methods;
+  const filteredSearchKey = watch('filteredSearchKey');
+
   const isFiltered = filterName !== '' || !!filterStatus.length;
   const isNotFound = (!isLoading && !dataFiltered?.length);
 
@@ -280,7 +296,7 @@ useLayoutEffect(() => {
     debouncedSearch.current(value);
     setFilterName(value);
   }, []);
-
+  
   useLayoutEffect(() => {
       debouncedSearch.current.cancel();
   }, [debouncedSearch]);
@@ -316,7 +332,7 @@ useLayoutEffect(() => {
         navigate(PATH_DOCUMENT.document.view.root(Id));
     }
   };
-
+  
   const handleResetFilter = () => {
     setFilterName('');
     if(machineDrawingPage){
@@ -330,7 +346,12 @@ useLayoutEffect(() => {
     }
     setFilterStatus([]);
   };
-
+  
+  useEffect(() => {
+    handleResetFilter();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+  
   const handleCustomerDialog = (e, Id) => {
     dispatch(getCustomer(Id))
     dispatch(setCustomerDialog(true))
@@ -348,87 +369,166 @@ useLayoutEffect(() => {
       navigate(PATH_MACHINE.machines.documents.gallery(machineId))
     }
   };
-
+  
+  const onGetDocuments = (data) => {
+    if (filteredSearchKey && selectedSearchFilter && !customerPage && !machineDrawingPage && !machinePage && !machineDrawings) {
+      dispatch(getDocuments(null, null, null, page, documentRowsPerPage, null, null, cancelTokenSource, filteredSearchKey, selectedSearchFilter));
+    } else if (filteredSearchKey && selectedSearchFilter && customerPage && customerId) {
+      dispatch(getDocuments( customer?._id , null, null, page, customerDocumentsRowsPerPage, customer?.isArchived, null, cancelTokenSource, filteredSearchKey, selectedSearchFilter));
+    } else if(filteredSearchKey && selectedSearchFilter && machineDrawingPage &&  machineId ){
+      dispatch(getDocuments( null, machineId, null, page, machineDocumentsRowsPerPage, null, null, cancelTokenSource, filteredSearchKey, selectedSearchFilter));
+    } else if( filteredSearchKey && selectedSearchFilter && machinePage ){
+      dispatch(getDocuments(null, machineId, null, page, machineDrawingsRowsPerPage, null, machine?.isArchived, cancelTokenSource, filteredSearchKey, selectedSearchFilter));
+    } else if( filteredSearchKey && selectedSearchFilter && machineDrawings || machineDrawingPage ){
+      dispatch(getDocuments(null, null, ( machineDrawings || machineDrawingPage ), page, machineDrawingsRowsPerPage, null, null, cancelTokenSource, filteredSearchKey, selectedSearchFilter));
+    }
+  };
+  
+  const afterClearHandler = (data) => {
+    if (filteredSearchKey && selectedSearchFilter && !customerPage && !machineDrawingPage && !machinePage && !machineDrawings) {
+      dispatch(getDocuments(null, null, null, page, documentRowsPerPage, null, null, cancelTokenSource, null, null));
+    } else if (filteredSearchKey && selectedSearchFilter && customerPage && customerId) {
+      dispatch(getDocuments( customer?._id , null, null, page, customerDocumentsRowsPerPage, customer?.isArchived, null, cancelTokenSource, null, null));
+    } else if(filteredSearchKey && selectedSearchFilter && machineDrawingPage &&  machineId ){
+      dispatch(getDocuments( null, machineId, null, page, machineDocumentsRowsPerPage, null, null, cancelTokenSource, null, null));
+    } else if( filteredSearchKey && selectedSearchFilter && machinePage ){
+      dispatch(getDocuments(null, machineId, null, page, machineDrawingsRowsPerPage, null, machine?.isArchived, cancelTokenSource, null, null));
+    } else if( filteredSearchKey && selectedSearchFilter && machineDrawings || machineDrawingPage ){
+      dispatch(getDocuments(null, null, ( machineDrawings || machineDrawingPage ), page, machineDrawingsRowsPerPage, null, null, cancelTokenSource, null, null));
+    }
+  };
+  
   return (
     <>
-    {/* <Container sx={{mb:3}}> */}
-      {!customerPage && !machineDrawingPage && !machinePage &&
-      <StyledCardContainer>
-        <Cover name={machineDrawings ? FORMLABELS.COVER.MACHINE_DRAWINGS :  FORMLABELS.COVER.DOCUMENTS} />
-      </StyledCardContainer>}
-      <TableCard>
-        <DocumentListTableToolbar
-          filterName={filterName}
-          filterStatus={filterStatus}
-          onFilterName={handleFilterName}
-          onFilterStatus={handleFilterStatus}
-          isFiltered={isFiltered}
-          onResetFilter={handleResetFilter}
-          customerPage={customerPage}
-          machinePage={machinePage}
-          machineDrawings={machineDrawings}
-          categoryVal={categoryVal}
-          setCategoryVal={setCategoryVal}
-          typeVal={typeVal}
-          setTypeVal={setTypeVal}
-          handleGalleryView={!isNotFound && (customerPage || machinePage) ? handleGalleryView:undefined}
-        />
-        <TablePaginationCustom
-          count={ documentRowsTotal }
-          page={page}
-          rowsPerPage={rowsPerPage}
-          onPageChange={onChangePage}
-          onRowsPerPageChange={onChangeRowsPerPage}
-        />
-        <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-          <Scrollbar>
-            <Table size="small" sx={{ minWidth: 360 }}>
-              <TableHeadCustom
-                order={order}
-                orderBy={orderBy}
-                headLabel={TABLE_HEAD}
-                onSort={onSort}
-              />
+      {/* <Container sx={{mb:3}}> */}
+      {!customerPage && !machineDrawingPage && !machinePage && (
+        <StyledCardContainer>
+          <Cover
+            name={machineDrawings ? FORMLABELS.COVER.MACHINE_DRAWINGS : FORMLABELS.COVER.DOCUMENTS}
+          />
+        </StyledCardContainer>
+      )}
+      <FormProvider {...methods} onSubmit={handleSubmit(onGetDocuments)}>
+      {!customerPage && !machinePage && (
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <Card sx={{ p: 3 }}>
+              <Stack
+                direction={{ xs: 'column', sm: 'row' }}
+                spacing={2}
+                sx={{
+                  justifyContent: 'space-between',
+                  alignItems: 'flex-start',
+                }}
+              >
+                <Box sx={{ flexGrow: 1, width: { xs: '100%', sm: 'auto' } }}>
+                  <RHFFilteredSearchBar
+                    name="filteredSearchKey"
+                    filterOptions={TABLE_HEAD}
+                    setSelectedFilter={setSelectedSearchFilter}
+                    selectedFilter={selectedSearchFilter}
+                    placeholder="Enter Search here..."
+                    afterClearHandler={afterClearHandler}
+                    fullWidth
+                  />
+                  </Box>
+                   <Box sx={{ justifyContent: 'flex-end', display: 'flex' }}>
+                  <LoadingButton
+                    type="button"
+                    onClick={handleSubmit(onGetDocuments)}
+                    variant="contained"
+                    size="large"
+                  >
+                    Search
+                  </LoadingButton>
+                </Box>
+              </Stack>
+            </Card>
+          </Grid>
+        </Grid>
+        )}
+        <TableCard>
+          { machineDrawingPage && machineDrawings && (
+          <DocumentListTableToolbar
+            filterName={filterName}
+            filterStatus={filterStatus}
+            onFilterName={handleFilterName}
+            onFilterStatus={handleFilterStatus}
+            isFiltered={isFiltered}
+            onResetFilter={handleResetFilter}
+            customerPage={customerPage}
+            machinePage={machinePage}
+            machineDrawings={machineDrawings}
+            categoryVal={categoryVal}
+            setCategoryVal={setCategoryVal}
+            typeVal={typeVal}
+            setTypeVal={setTypeVal}
+            handleGalleryView={
+              !isNotFound && (customerPage || machinePage) ? handleGalleryView : undefined
+            }
+          />
+          )}
+          <TablePaginationCustom
+            count={documentRowsTotal}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
+          />
+          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+            <Scrollbar>
+              <Table size="small" sx={{ minWidth: 360 }}>
+                <TableHeadCustom
+                  order={order}
+                  orderBy={orderBy}
+                  headLabel={TABLE_HEAD}
+                  onSort={onSort}
+                />
 
-              <TableBody>
-                {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
-                  // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row, index) =>
-                    row ? (
-                      <DocumentListTableRow
-                        key={row._id}
-                        row={row}
-                        onViewRow={() => handleViewRow(row._id)}
-                        style={index % 2 ? { background: 'red' } : { background: 'green' }}
-                        customerPage={customerPage}
-                        machinePage={machineDrawingPage}
-                        machineDrawings={machineDrawings}
-                        handleCustomerDialog={(e)=> row?.customer && handleCustomerDialog(e,row?.customer?._id)}
-                        handleMachineDialog={(e)=> row?.machine && handleMachineDialog(e,row?.machine?._id)}
-                      />
-                    ) : (
-                      !isNotFound && <TableSkeleton key={index} sx={{ height: 60 }} />
-                    )
-                  )}
+                <TableBody>
+                  {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
+                    // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row, index) =>
+                      row ? (
+                        <DocumentListTableRow
+                          key={row._id}
+                          row={row}
+                          onViewRow={() => handleViewRow(row._id)}
+                          style={index % 2 ? { background: 'red' } : { background: 'green' }}
+                          customerPage={customerPage}
+                          machinePage={machineDrawingPage}
+                          machineDrawings={machineDrawings}
+                          handleCustomerDialog={(e) =>
+                            row?.customer && handleCustomerDialog(e, row?.customer?._id)
+                          }
+                          handleMachineDialog={(e) =>
+                            row?.machine && handleMachineDialog(e, row?.machine?._id)
+                          }
+                        />
+                      ) : (
+                        !isNotFound && <TableSkeleton key={index} sx={{ height: 60 }} />
+                      )
+                    )}
                   <TableNoData isNotFound={isNotFound} />
-              </TableBody>
-            </Table>
-          </Scrollbar>
-        </TableContainer>
+                </TableBody>
+              </Table>
+            </Scrollbar>
+          </TableContainer>
 
-        {!isNotFound && <TablePaginationCustom
-          count={totalRows}
-          page={page}
-          rowsPerPage={rowsPerPage}
-          onPageChange={onChangePage}
-          onRowsPerPageChange={onChangeRowsPerPage}
-        />}
-      </TableCard>
-      {/* </Container> */}
-      
+          {!isNotFound && (
+            <TablePaginationCustom
+              count={totalRows}
+              page={page}
+              rowsPerPage={rowsPerPage}
+              onPageChange={onChangePage}
+              onRowsPerPageChange={onChangeRowsPerPage}
+            />
+          )}
+        </TableCard>
+        {/* </Container> */}
+      </FormProvider>
       <CustomerDialog />
       <MachineDialog />
-
     </>
   );
 }
