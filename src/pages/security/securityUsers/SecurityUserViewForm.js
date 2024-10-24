@@ -187,7 +187,7 @@ export default function SecurityUserViewForm() {
             isLoading={isLoading}
             onArchive={ securityUser?.isArchived ? undefined : onArchive}
             onRestore={ securityUser?.isArchived ? onRestore : undefined }
-            onDelete={ securityUser?.isArchived ? onDelete : undefined }
+            // onDelete={ securityUser?.isArchived ? onDelete : undefined }
             isInviteLoading={isLoading}
             backLink={() => navigate(PATH_SECURITY.root)}
             isActive={defaultValues.isActive}
