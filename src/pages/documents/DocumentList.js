@@ -373,29 +373,21 @@ useLayoutEffect(() => {
   const onGetDocuments = (data) => {
     if (filteredSearchKey && selectedSearchFilter && !customerPage && !machineDrawingPage && !machinePage && !machineDrawings) {
       dispatch(getDocuments(null, null, null, page, documentRowsPerPage, null, null, cancelTokenSource, filteredSearchKey, selectedSearchFilter));
-    } else if (filteredSearchKey && selectedSearchFilter && customerPage && customerId) {
-      dispatch(getDocuments( customer?._id , null, null, page, customerDocumentsRowsPerPage, customer?.isArchived, null, cancelTokenSource, filteredSearchKey, selectedSearchFilter));
     } else if(filteredSearchKey && selectedSearchFilter && machineDrawingPage &&  machineId ){
       dispatch(getDocuments( null, machineId, null, page, machineDocumentsRowsPerPage, null, null, cancelTokenSource, filteredSearchKey, selectedSearchFilter));
-    } else if( filteredSearchKey && selectedSearchFilter && machinePage ){
-      dispatch(getDocuments(null, machineId, null, page, machineDrawingsRowsPerPage, null, machine?.isArchived, cancelTokenSource, filteredSearchKey, selectedSearchFilter));
-    } else if( filteredSearchKey && selectedSearchFilter && machineDrawings || machineDrawingPage ){
+    }  else if( filteredSearchKey && selectedSearchFilter && machineDrawings || machineDrawingPage ){
       dispatch(getDocuments(null, null, ( machineDrawings || machineDrawingPage ), page, machineDrawingsRowsPerPage, null, null, cancelTokenSource, filteredSearchKey, selectedSearchFilter));
-    }
+    }  
   };
   
   const afterClearHandler = (data) => {
     if (filteredSearchKey && selectedSearchFilter && !customerPage && !machineDrawingPage && !machinePage && !machineDrawings) {
       dispatch(getDocuments(null, null, null, page, documentRowsPerPage, null, null, cancelTokenSource, null, null));
-    } else if (filteredSearchKey && selectedSearchFilter && customerPage && customerId) {
-      dispatch(getDocuments( customer?._id , null, null, page, customerDocumentsRowsPerPage, customer?.isArchived, null, cancelTokenSource, null, null));
     } else if(filteredSearchKey && selectedSearchFilter && machineDrawingPage &&  machineId ){
       dispatch(getDocuments( null, machineId, null, page, machineDocumentsRowsPerPage, null, null, cancelTokenSource, null, null));
-    } else if( filteredSearchKey && selectedSearchFilter && machinePage ){
-      dispatch(getDocuments(null, machineId, null, page, machineDrawingsRowsPerPage, null, machine?.isArchived, cancelTokenSource, null, null));
-    } else if( filteredSearchKey && selectedSearchFilter && machineDrawings || machineDrawingPage ){
+    }  else if( filteredSearchKey && selectedSearchFilter && machineDrawings || machineDrawingPage ){
       dispatch(getDocuments(null, null, ( machineDrawings || machineDrawingPage ), page, machineDrawingsRowsPerPage, null, null, cancelTokenSource, null, null));
-    }
+    }  
   };
   
   return (
@@ -448,7 +440,6 @@ useLayoutEffect(() => {
         </Grid>
         )}
         <TableCard>
-          { machineDrawingPage && machineDrawings && (
           <DocumentListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
@@ -467,7 +458,6 @@ useLayoutEffect(() => {
               !isNotFound && (customerPage || machinePage) ? handleGalleryView : undefined
             }
           />
-          )}
           <TablePaginationCustom
             count={documentRowsTotal}
             page={page}
