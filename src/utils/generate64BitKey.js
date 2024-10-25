@@ -1,10 +1,10 @@
-export default async function generate32BitSecureKey(inputString) {
+export default async function generate64BitSecureKey(inputString) {
   // Convert input string to bytes
   const encoder = new TextEncoder();
   const inputData = encoder.encode(inputString);
   
   // Get cryptographically secure random values
-  const randomBytes = new Uint8Array(32);
+  const randomBytes = new Uint8Array(64);
   crypto.getRandomValues(randomBytes);
   
   // Combine input data with random bytes
@@ -15,20 +15,20 @@ export default async function generate32BitSecureKey(inputString) {
   const hashArray = Array.from(new Uint8Array(hashBuffer));
   
   // Define the character set for the key
-  const alphanumeric = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const alphanumeric = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   
   // Convert hash to alphanumeric string with dashes
-  // We'll generate 34 characters (32 + 2 dashes)
+  // We'll generate 68 characters (64 + 4 dashes)
   let key = '';
   let charCount = 0;
   
-  for (let i = 0; i < 34; i += 1) {
-      // Insert dashes at positions 8 and 17
-      if (i === 8 || i === 17) {
+  for (let i = 0; i < 68; i += 1) {
+      // Insert dashes at positions 16, 32, 48, and 64
+      if (i === 16 || i === 32 || i === 48 || i === 64) {
           key += '-';
       } else {
           // Use modulo to map hash values to alphanumeric characters
-          const index = hashArray[charCount] % alphanumeric.length;
+          const index = hashArray[charCount % hashArray.length] % alphanumeric.length;
           key += alphanumeric[index];
           charCount += 1;
       }

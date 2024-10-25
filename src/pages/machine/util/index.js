@@ -1,5 +1,4 @@
 import { ICONS } from '../../../constants/icons/default-icons';
-import Iconify from '../../../components/iconify';
 
   export function checkValuesNotNull(obj) {
       return Object.values(obj).some(value => value !== null);
