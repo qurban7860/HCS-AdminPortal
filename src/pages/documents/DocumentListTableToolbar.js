@@ -81,7 +81,7 @@ export default function DocumentListTableToolbar({
       <SearchBarCombo
         isFiltered={isFiltered}
         value={filterName}
-        onChange={onFilterName}
+        onChange={(customerPage || machinePage) ? onFilterName : null}
         onClick={onResetFilter}
         SubOnClick={toggleAdd}
         SubOnClick2={ machineDrawings && toggleAddList || undefined }
@@ -91,6 +91,7 @@ export default function DocumentListTableToolbar({
         setCategoryVal={(machineDrawings || machinePage) ? setCategoryVal : null }
         typeVal={typeVal}
         setTypeVal={(machineDrawings || machinePage) ? setTypeVal : null }
+        machineDrawings={machineDrawings}
         handleGalleryView={ ( customer?.isArchived || machine?.isArchived ) ? undefined : handleGalleryView}
       />
     </Stack>
