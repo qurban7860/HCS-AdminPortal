@@ -51,6 +51,9 @@ function ViewFormEditDeleteButtons({
   onRestore,
   onDelete,
   handleEdit,
+  handleRegenerate,
+  handleDownload,
+  downloadTooltip,
   handleJiraNaviagte,
   handleTransfer,
   handleUpdatePassword,
@@ -740,6 +743,25 @@ function ViewFormEditDeleteButtons({
           />
         }
 
+        {/* download button */}
+        {handleRegenerate && <IconTooltip
+          title="Re-generate Portal Key"
+          onClick={() => {
+            handleRegenerate();
+          }}
+          color={disableEditButton ? "#c3c3c3" : theme.palette.primary.main}
+          icon="mdi:sync"
+        />}
+
+        {/* download button */}
+        {handleDownload && <IconTooltip
+          title={downloadTooltip || "Download"}
+          onClick={() => {
+            handleDownload();
+          }}
+          color={disableEditButton ? "#c3c3c3" : theme.palette.primary.main}
+          icon="mdi:cloud-download"
+        />}
         {/* edit button */}
         {handleEdit && !archived && <IconTooltip
           title="Edit"
@@ -1024,6 +1046,9 @@ ViewFormEditDeleteButtons.propTypes = {
   handleViewPDF: PropTypes.func,
   isInviteLoading:PropTypes.bool,
   handleEdit: PropTypes.func,
+  handleDownload: PropTypes.func,
+  handleRegenerate: PropTypes.func,
+  downloadTooltip: PropTypes.string,
   handleJiraNaviagte: PropTypes.func,
   onArchive: PropTypes.func,
   onRestore: PropTypes.func,

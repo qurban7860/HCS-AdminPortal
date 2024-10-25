@@ -49,7 +49,6 @@ import departmentReducer from './slices/department/department';
 import historicalConfigurationReducer from './slices/products/historicalConfiguration';
 import configurationReducer from './slices/products/configuration';
 import machineErpLogsReducer from './slices/products/machineErpLogs';
-import machineIntegrationRecordReducer from './slices/products/machineIntegration';
 import pm2logsReducer from './slices/logs/pm2Logs';
 import dbBackupLogsReducer from './slices/logs/dbBackupLogs';
 import machineJiraReducer from './slices/products/machineJira';
@@ -483,7 +482,6 @@ const rootReducer = combineReducers({
   historicalConfiguration: persistReducer(historicalConfigurationPersistConfig, historicalConfigurationReducer),
   configuration: persistReducer(configurationPersistConfig, configurationReducer),
   machineErpLogs: persistReducer(machineErpLogsPersistConfig, machineErpLogsReducer),
-  machineIntegrationRecord: persistReducer(machineIntegrationPersistConfig, machineIntegrationRecordReducer),
   pm2Logs: persistReducer(pm2LogsPersistConfig, pm2logsReducer),
   dbBackupLogs: persistReducer(dbBackupLogsPersistConfig, dbBackupLogsReducer),
   machineJira: persistReducer(machineJiraPersistConfig, machineJiraReducer),

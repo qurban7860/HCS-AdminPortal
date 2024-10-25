@@ -1,259 +1,210 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, Card, Container, Grid, Link, Typography, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@mui/material';
+import { Button, Card, Container, Grid, Link, Typography, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
+import { useSnackbar } from 'notistack';
+import { FormProvider, useForm } from 'react-hook-form';
 
 import MachineTabContainer from '../util/MachineTabContainer';
-// import Image from '../../../components/image';
-import {
-  addIntegrationRecord,
-  getIntegrationRecord,
-} from '../../../redux/slices/products/machineIntegration';
-import generate32BitSecureKey from '../../../utils/generate32BitKey';
+import generate64BitSecureKey from '../../../utils/generate64BitKey';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
 import { FORMLABELS } from '../../../constants/document-constants';
 import ViewFormField from '../../../components/ViewForms/ViewFormField';
 import { StyledTooltip } from '../../../theme/styles/default-styles';
 import Iconify from '../../../components/iconify';
+import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
+import { RHFTextField } from '../../../components/hook-form';
+import { addPortalIntegrationDetails, addPortalIntegrationKey, getMachine } from '../../../redux/slices/products/machine';
+import { fDateTime } from '../../../utils/formatTime';
 
 const IntegrationViewForm = () => {
   const [openAddMoreInfoDialog, setOpenAddMoreInfoDialog] = useState(false);
+  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
   const { machineId } = useParams();
   const dispatch = useDispatch();
-  const { machine } = useSelector((state) => state.machine);
-  const { isLoading, integtrationDetails, portalKey, machineSerialNo, computerGUID, IPC_SerialNo } = useSelector(
-    (state) => state.machineIntegrationRecord
-  );
-  
-  const [formData, setFormData] = useState({
-    computerGUID: computerGUID || '',
-    ipcSerialNo: IPC_SerialNo || ''
+  const { isLoading, machine } = useSelector((state) => state.machine);
+  const { enqueueSnackbar } = useSnackbar();
+
+  const { serialNo, portalKey, computerGUID, IPC_SerialNo } = machine;
+  const currentPortalKey = portalKey?.[0];
+
+  const methods = useForm({
+    defaultValues: {
+      computerGUID: computerGUID || null,
+      ipcSerialNo: IPC_SerialNo || null
+    },
   });
-  
+
   useEffect(() => {
-    fetchIntegrationRecord();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    dispatch(getMachine(machineId));
+  }, [dispatch, machineId]);
 
-  async function fetchIntegrationRecord() {
-    await dispatch(getIntegrationRecord(machineId));
-  }
+  const handleGenerateKey = async (e, regen = false) => {
+    if (regen) {
+      setOpenConfirmDialog(true);
+      return;
+    }
+    await generateAndSaveKey();
+  };
 
-  const handleGenerateKey = async (machineid) => {
-    const generatedPortalKey = await generate32BitSecureKey(machineid);
+  const generateAndSaveKey = async () => {
+    const generatedPortalKey = await generate64BitSecureKey(machineId);
     const params = {
-      machineSerialNo: machine?.serialNo,
+      machineSerialNo: serialNo,
       portalKey: generatedPortalKey,
     };
-    await dispatch(addIntegrationRecord(machineid, params));
+    await dispatch(addPortalIntegrationKey(machineId, params));
+    enqueueSnackbar('Portal key generated successfully', { variant: 'success' });
   };
 
-  const handleAddMoreInfoDialog = () => {
-    setOpenAddMoreInfoDialog(true);
+  const handleConfirmRegenerate = async () => {
+    setOpenConfirmDialog(false);
+    await generateAndSaveKey();
   };
 
-  const handleInputChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
-
-  const handleSubmit = async () => {
+  const onSubmitDetails = async (data) => {
     const params = {
-      machineSerialNo,
-      portalKey,
-      computerGUID: formData.computerGUID,
-      IPC_SerialNo: formData.ipcSerialNo,
+      computerGUID: data?.computerGUID,
+      IPC_SerialNo: data?.ipcSerialNo
     };
-    await dispatch(addIntegrationRecord(machineId, params));
+
+    await dispatch(addPortalIntegrationDetails(machineId, params));
     setOpenAddMoreInfoDialog(false);
+    enqueueSnackbar('Integration Record Saved', { variant: 'success' });
   };
 
   const handleKeyDownload = () => {
-    const fileContent = `Machine_Serial_No = ${machineSerialNo}\nHowick_Portal_Key = ${portalKey}`;
-    
+    const fileContent = `Machine_Serial_No = ${serialNo}\nHowick_Portal_Key = ${currentPortalKey?.key}`;
     const blob = new Blob([fileContent], { type: 'text/plain' });
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
-    
     link.href = url;
-    link.download = `HowickPortal-${machineSerialNo}.config`;
-    
-    document.body.appendChild(link);
+    link.download = 'HowickPortal.config';
     link.click();
-    
-    document.body.removeChild(link);
     window.URL.revokeObjectURL(url);
+    enqueueSnackbar('Portal key download started', { variant: 'success' });
   };
-  
+
+  const handleKeyCopy = () => {
+    navigator.clipboard.writeText(currentPortalKey?.key);
+    enqueueSnackbar('Portal key copied to clipboard', { variant: 'success' });
+  };
+
+  const renderIntegrationField = (value, fieldName, label) => (
+    value ? (
+      <>
+        <Typography variant="body2" sx={{ fontWeight: 600 }}>{value}</Typography>
+        <StyledTooltip title={`Edit ${label}`} placement="top" disableFocusListener tooltipcolor="#2065D1" color="#2065D1">
+          <Link onClick={() => setOpenAddMoreInfoDialog(fieldName)} color="inherit" sx={{ cursor: 'pointer', mx: 0.5 }}>
+            <Iconify icon="bx:edit-alt" sx={{ position: 'relative', bottom: '-5px' }} color="#2065D1" />
+          </Link>
+        </StyledTooltip>
+      </>
+    ) : (
+      <Link onClick={() => setOpenAddMoreInfoDialog(fieldName)} underline="none" sx={{ cursor: 'pointer', display: 'flex', columnGap: 1 }}>
+        <Typography variant="body2" sx={{ fontWeight: 600 }}>Add {label}</Typography>
+        <Iconify icon="mdi:add-bold" color="#2065D1" />
+      </Link>
+    )
+  );
+
   return (
     <>
       <Container maxWidth={false}>
         <MachineTabContainer currentTabValue="integration" />
-        {!portalKey ? (
-          <Card
-            sx={{
-              position: 'relative',
-              minHeight: '500px',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center',
-              '&::before': {
-                content: '""',
-                position: 'absolute',
-                inset: 0,
-                backgroundImage: 'url(/assets/illustrations/machine-integration.svg)',
-                backgroundSize: 'contain',
-                backgroundPosition: 'center',
-                backgroundRepeat: 'no-repeat',
-                opacity: 0.1,
-                zIndex: 1,
-              },
-            }}
-          >
-            <Box
-              sx={{
-                textAlign: 'center',
-                backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                padding: 3,
-                borderRadius: 2,
-                position: 'relative',
-                zIndex: 2,
-              }}
-            >
-              <Typography variant="subtitle2" gutterBottom>
-                This machine currently does not have a portal key generated.
-              </Typography>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => handleGenerateKey(machineId)}
-                sx={{ mt: 2 }}
-              >
-                Generate Portal Key
-              </Button>
-            </Box>
-          </Card>
-        ) : (
-          <Card
-            sx={{
-              position: 'relative',
-              minHeight: '500px',
-              display: 'flex',
-              flexDirection: 'column',
-              width: '100%', 
-              p: '1rem', 
-              mb: 3,
-            }}
-          >
-            <Box
-              sx={{
-                position: 'absolute',
-                inset: 0,
-                backgroundImage: 'url(/assets/illustrations/machine-integration.svg)',
-                backgroundSize: 'contain',
-                backgroundPosition: 'center',
-                backgroundRepeat: 'no-repeat',
-                opacity: 0.1,
-                zIndex: 1,
-              }}
+        <Card sx={{ minHeight: '500px', width: '100%', p: '1rem', mb: 3, display: 'flex', flexDirection: 'column' }}>
+          <ViewFormEditDeleteButtons
+            sx={{ pt: 5 }}
+            isActive={machine?.isArchived ? undefined : machine?.machineIntegrationSyncStatus}
+            handleDownload={currentPortalKey?.key ? handleKeyDownload : undefined}
+            downloadTooltip="Download Portal Key"
+            handleRegenerate={currentPortalKey?.key ? (e) => handleGenerateKey(e, true) : undefined}
+          />
+          <FormLabel content={FORMLABELS.INTEGRATION.MAIN_HEADER} />
+          <Grid container>
+            <ViewFormField 
+              isLoading={isLoading} 
+              sm={6} 
+              variant='h6' 
+              heading="Computer GUID" 
+              node={renderIntegrationField(computerGUID, "computerGUID", "Computer GUID")}
             />
-            <Box sx={{ position: 'relative', zIndex: 2 }}>
-              <FormLabel content={FORMLABELS.INTEGRATION.MAIN_HEADER} />
-              <Grid container>
-                <ViewFormField isLoading={isLoading} sm={6} variant='h6' heading="Portal Key" 
-                  node={
-                  <>
-                    <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                      {portalKey}
-                    </Typography>
-                    <StyledTooltip
-                      title='Download Portal Key'
-                      placement="top"
-                      disableFocusListener
-                      tooltipcolor="#2065D1" 
-                      color="#2065D1"
-                    >
-                      <Link onClick={handleKeyDownload} color="inherit" target="_blank" rel="noopener" sx={{ cursor: 'pointer',mx: 0.5}}>
-                        <Iconify icon="mdi:file-key" width={30} sx={{position:'relative', bottom:'-5px',}} color="#2065D1" />
-                      </Link>
-                    </StyledTooltip>
-                  </>
-                }
-                />
-                <ViewFormField isLoading={isLoading} sm={6} variant='h6' heading="Machine Serial No." param={machineSerialNo} />
-                <ViewFormField isLoading={isLoading} sm={6} variant='h6' heading="Computer GUID" 
-                  node={
-                  <>
-                    {computerGUID ? (
-                      <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                        {computerGUID}
-                      </Typography>
-                    ) : (
-                      <Link onClick={handleAddMoreInfoDialog} underline="none" sx={{ cursor: 'pointer'}} >
-                        Click here to add
-                      </Link>
-                    )}
-                  </>
-                }
-                />
-                <ViewFormField isLoading={isLoading} sm={6} variant='h6' heading="IPC Serial No." 
-                  node={
-                  <>
-                    {IPC_SerialNo ? (
-                      <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                        {IPC_SerialNo}
-                      </Typography>
-                    ) : (
-                      <Link onClick={handleAddMoreInfoDialog} underline="none" sx={{ cursor: 'pointer'}} >
-                        Click here to add
-                      </Link>
-                    )}
-                  </>
-                }
-                />
+            <ViewFormField 
+              isLoading={isLoading} 
+              sm={6} 
+              variant='h6' 
+              heading="IPC Serial No." 
+              node={renderIntegrationField(IPC_SerialNo, "ipcSerialNo", "IPC Serial No")}
+            />
+            <ViewFormField 
+              isLoading={isLoading} 
+              sm={12} 
+              variant='h6' 
+              heading="Portal Key" 
+              node={currentPortalKey?.key ? (
+                <>
+                  <Typography variant="body2" sx={{ fontWeight: 600 }}>{currentPortalKey.key}</Typography>
+                  <StyledTooltip title='Copy Portal Key' placement="top" disableFocusListener tooltipcolor="#2065D1" color="#2065D1">
+                    <Link onClick={handleKeyCopy} color="inherit" sx={{ cursor: 'pointer', mx: 0.5 }}>
+                      <Iconify icon="mdi:content-copy" sx={{ position: 'relative', bottom: '-5px' }} color="#2065D1" />
+                    </Link>
+                  </StyledTooltip>
+                </>
+              ) : (
+                <Link onClick={(e) => handleGenerateKey(e, false)} underline="none" sx={{ cursor: 'pointer', display: 'flex', columnGap: 1 }}>
+                  <Typography variant="body2" sx={{ fontWeight: 600 }}>Generate Portal Key</Typography>
+                  <Iconify icon="mdi:key-add" color="#2065D1" />
+                </Link>
+              )}
+            />
+            {portalKey?.length > 0 && (
+              <ViewFormField isLoading={isLoading} sm={12} heading="Portal Key Version" param={`v${portalKey?.length}`} />
+            )}
+          </Grid>
+          {currentPortalKey ? (
+            <Grid container sx={{ mt: 'auto', pt: 2 }}>
+              <Grid item md={12} sx={{ overflowWrap: 'break-word', display: 'flex', mt:1, px:0.5  }}>
+                <Typography paragraph variant="body2" sx={{color: 'text.disabled' }}>
+                  <b>Portal Key Generated By:</b> {currentPortalKey?.createdBy?.name}{` at `}
+                  {fDateTime(currentPortalKey?.createdAt)}{"  "}
+                  {currentPortalKey?.createdIP}
+                </Typography>
               </Grid>
-            </Box>
-          </Card>
-        )}
-        {/* <Box sx={{ mt: 4, textAlign: 'center', maxWidth: '500px', mx: 'auto' }}>
-        <Image
-          alt="Machine Integration"
-          src='/assets/illustrations/machine-integration.svg'
-          sx={{ minHeight: 400, mb:2, opacity: 0.65 }}
-        />
-        </Box> */}
+            </Grid>
+          ) : null}
+        </Card>
       </Container>
-      <Dialog open={openAddMoreInfoDialog} onClose={() => setOpenAddMoreInfoDialog(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>Add Integration Details</DialogTitle>
+
+      <Dialog open={!!openAddMoreInfoDialog} onClose={() => setOpenAddMoreInfoDialog(false)} maxWidth="sm" fullWidth>
+        <FormProvider {...methods}>
+          <form onSubmit={methods.handleSubmit(onSubmitDetails)}>
+            <DialogTitle>Integration Details - {openAddMoreInfoDialog === "computerGUID" ? "Computer GUID" : "IPC Serial No"}</DialogTitle>
+            <DialogContent>
+              {openAddMoreInfoDialog && (
+                <RHFTextField 
+                  fullWidth 
+                  name={openAddMoreInfoDialog} 
+                  label={openAddMoreInfoDialog === "computerGUID" ? "Computer GUID" : "IPC Serial No"} 
+                  sx={{ mt: 1, mb: 3 }} 
+                />
+              )}
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => setOpenAddMoreInfoDialog(false)} color="inherit">Cancel</Button>
+              <Button type="submit" variant="contained">Submit</Button>
+            </DialogActions>
+          </form>
+        </FormProvider>
+      </Dialog>
+
+      <Dialog open={openConfirmDialog} onClose={() => setOpenConfirmDialog(false)}>
+        <DialogTitle>Confirm Re-generate Portal Key</DialogTitle>
         <DialogContent>
-        <TextField
-          fullWidth
-          label="Computer GUID"
-          name="computerGUID"
-          value={formData.computerGUID}
-          onChange={handleInputChange}
-          sx={{ mt: 1, mb: 3 }}
-          disabled={!!computerGUID}
-        />
-        <TextField
-          fullWidth
-          label="IPC Serial No"
-          name="ipcSerialNo"
-          value={formData.ipcSerialNo}
-          onChange={handleInputChange}
-          disabled={!!IPC_SerialNo}
-        />
+          <Typography variant="body2">Are you sure you want to re-generate the portal key?</Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenAddMoreInfoDialog(false)} color="inherit">
-            Cancel
-          </Button>
-          <Button onClick={handleSubmit} variant="contained">
-            Submit
-          </Button>
+          <Button onClick={() => setOpenConfirmDialog(false)} color="inherit">Cancel</Button>
+          <Button onClick={handleConfirmRegenerate} variant="contained" color="primary">Confirm</Button>
         </DialogActions>
       </Dialog>
     </>
