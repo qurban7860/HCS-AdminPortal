@@ -145,7 +145,7 @@ export default function CustomerEditForm() {
                     disabled={ portalRegistration?.status?.toLowerCase() === 'approved' } 
                   />
                   <RHFTextField name="phoneNumber" label="Phone Number" />
-                  <RHFCountryAutocomplete name="country" label="Country" />
+                  <RHFCountryAutocomplete name="country" label="Country" disableDefaultValue />
                 </Box>
                 <Box
                   rowGap={2}
