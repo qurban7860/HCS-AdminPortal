@@ -15,10 +15,11 @@ import { getValidateUserEmail } from '../../../redux/slices/securityUser/securit
 import { PATH_PORTAL_REGISTRATION } from '../../../routes/paths';
 // components
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
-import FormProvider, { RHFSwitch, RHFTextField, RHFAutocomplete, RHFChipsInput } from '../../../components/hook-form';
+import FormProvider, { RHFSwitch, RHFTextField, RHFAutocomplete, RHFChipsInput, RHFCountryAutocomplete } from '../../../components/hook-form';
 // schema
 import { editPortalRegistrationSchema } from '../../schemas/customer';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
+import { countries } from '../../../assets/data';
 
 // ----------------------------------------------------------------------
 
@@ -30,10 +31,6 @@ export default function CustomerEditForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-
-  useEffect(() => {
-    dispatch(getPortalRegistration( customerId ));
-  }, [ dispatch, customerId ]);
 
   useEffect(() => {
     if(portalRegistration?.status?.toLowerCase() === 'approved'){
@@ -52,12 +49,13 @@ export default function CustomerEditForm() {
       internalNote: portalRegistration?.internalNote || "",
       acceptanceStatus: portalRegistration?.acceptanceStatus || "",
       machineSerialNos: Array.isArray(portalRegistration?.machineSerialNos) ? portalRegistration?.machineSerialNos : [],
+      country: countries.find(( c ) => c?.label?.toLocaleLowerCase() === portalRegistration?.country?.toLocaleLowerCase()) || null,
       address: portalRegistration?.address || "",
       isActive: portalRegistration?.isActive || false,
-    
     }),
     [ portalRegistration ]
   );
+  
   const methods = useForm({
     resolver: yupResolver( editPortalRegistrationSchema ),
     defaultValues,
@@ -147,6 +145,7 @@ export default function CustomerEditForm() {
                     disabled={ portalRegistration?.status?.toLowerCase() === 'approved' } 
                   />
                   <RHFTextField name="phoneNumber" label="Phone Number" />
+                  <RHFCountryAutocomplete name="country" label="Country" disableDefaultValue />
                 </Box>
                 <Box
                   rowGap={2}

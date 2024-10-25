@@ -39,6 +39,7 @@ export default function CustomerViewForm() {
       customerNote: portalRegistration?.customerNote || "",
       internalNote: portalRegistration?.internalNote || "",
       machineSerialNos: portalRegistration?.machineSerialNos || "",
+      country: portalRegistration?.country || "",
       address: portalRegistration?.address || "",
       isActive: portalRegistration?.isActive || false,
       createdAt: portalRegistration?.createdAt || '',
@@ -105,7 +106,7 @@ export default function CustomerViewForm() {
                   />
                   <ViewFormField isLoading={isLoading} sm={6} heading='Email' param={defaultValues?.email} />
                   <ViewFormField isLoading={isLoading} sm={6} heading='Phone Number' param={defaultValues?.phoneNumber} />
-                  <ViewFormField isLoading={isLoading} sm={12} heading="Address" param={defaultValues?.address } />
+                  <ViewFormField isLoading={isLoading} sm={6} heading="country" param={defaultValues?.country } />
                   <ViewFormField isLoading={isLoading} sm={12} heading='Customer Note' param={defaultValues?.customerNote} />
                   <ViewFormField isLoading={isLoading} sm={12} heading='Internal Note' param={defaultValues?.internalNote} />
                   <ViewFormAudit defaultValues={defaultValues} />

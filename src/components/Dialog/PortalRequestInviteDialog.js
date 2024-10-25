@@ -121,24 +121,16 @@ function PortalRequestInviteDialog() {
         internalNote: data?.internalNote
       }
       data.status = "APPROVED"
-      if( data?.customer && data?.customer?.type?.toUpperCase() !== "SP" ){
-        data.dataAccessibilityLevel = "RESTRICTED"
-      } else if( data?.customer && data?.customer?.type?.toUpperCase() === "SP" ){
-        data.dataAccessibilityLevel = "GLOBAL"
-      }
-      const promises = [ dispatch(updatePortalRegistration(customerId, rejectRequestDialog ? rejectData : { ...data, isActive: true })) ];
       
+      await dispatch(updatePortalRegistration(customerId, rejectRequestDialog ? rejectData : { ...data, isActive: true }));  
+      await handleCloseDialog()
       if (acceptRequestDialog) {
-        promises.push(dispatch(addSecurityUser(data)));
         enqueueSnackbar('Portal request processed successfully!');
       } else if (rejectRequestDialog){
         enqueueSnackbar('Portal request Reject!');
       } else {
         enqueueSnackbar('Portal request updated successfully!');
       }
-      
-      await Promise.all(promises);  
-      await handleCloseDialog()
     } catch (err) {
       if (err?.errors && Array.isArray(err?.errors)) {
         err?.errors?.forEach((error) => {
