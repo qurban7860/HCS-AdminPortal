@@ -156,7 +156,7 @@ const IntegrationViewForm = () => {
               sm={12}
               variant='h6' 
               heading="Portal Key"
-              headingIcon={<Iconify icon="mdi:clipboard-text-history-outline" color="#2065D1" sx={{ position: 'relative', bottom: '-5px' }} />}
+              headingIcon={portalKey?.length > 0 && <Iconify icon="mdi:clipboard-text-history-outline" color="#2065D1" sx={{ position: 'relative', bottom: '-5px' }} />}
               headingIconTooltip="View Portal Key History"
               headingIconHandler={(e) => handlePortalKeyHistoryPopup(e)}
               node={currentPortalKey?.key ? (
