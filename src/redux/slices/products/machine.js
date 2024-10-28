@@ -189,7 +189,7 @@ const slice = createSlice({
     updateMachinePortalKey(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.machine = {...state.machine, portalKey: action.payload};
+      state.machine = {...state.machine, portalKey: action.payload.portalKey, machineIntegrationSyncStatus: action.payload.syncStatus};
       state.initial = true;
     },
 

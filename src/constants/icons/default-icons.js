@@ -351,6 +351,12 @@ export const ICONS = {
     heading: 'Open Map',
   },
   // ------------------------------------------------------------
+  // Machine Integration
+  APILOGS: {
+    icon: 'tabler:logs',
+    color: '#2065D1',
+    heading: 'Sync Connection History',
+  },
 
   // @root - Machine - settings
   // common settings
