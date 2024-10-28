@@ -1,7 +1,7 @@
 import React, { useEffect, useState, memo } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { Typography, Grid, Chip, createTheme, IconButton, TextField } from '@mui/material';
+import { Typography, Grid, Chip, createTheme, IconButton, TextField, Link } from '@mui/material';
 import { green } from '@mui/material/colors';
 import IconPopover from '../Icons/IconPopover';
 import ViewFormMenuPopover from './ViewFormMenuPopover';
@@ -14,6 +14,9 @@ import { fDateTime } from '../../utils/formatTime';
 function ViewFormField({
   backLink,
   heading,
+  headingIcon,
+  headingIconTooltip,
+  headingIconHandler,
   param,
   objectString,
   node,
@@ -82,6 +85,15 @@ function ViewFormField({
   return (
     <Grid item xs={12} sm={sm} sx={{ px: 0.5, py: 1, overflowWrap: 'break-word' }}>
       <Typography variant="overline" sx={{ color: 'text.disabled' }}>{heading || ''}</Typography>
+      {headingIcon && (
+        <StyledTooltip title={headingIconTooltip} placement="top" disableFocusListener tooltipcolor="#2065D1" color="#2065D1">
+          {headingIconHandler ? (
+            <Link onClick={headingIconHandler} color="inherit" sx={{ cursor: 'pointer', mx: 0.5 }}>
+              {(headingIcon)}
+            </Link>
+          ) : headingIcon}
+        </StyledTooltip>
+      )}
       {isLoading ? (
           <SkeletonViewFormField />
       ) : (
@@ -351,6 +363,9 @@ function ViewFormField({
 export default memo(ViewFormField)
 ViewFormField.propTypes = {
   heading: PropTypes.string,
+  headingIcon: PropTypes.object,
+  headingIconTooltip: PropTypes.string,
+  headingIconHandler: PropTypes.func,
   node: PropTypes.node,
   param: PropTypes.string,
   objectString: PropTypes.string,
