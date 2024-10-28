@@ -56,7 +56,6 @@ import emailsReducer from './slices/email/emails';
 import eventReducer from './slices/event/event';
 import customerJiraReducer from './slices/customer/customerJira';
 import jiraReducer from './slices/jira/jira';
-import customerRegistrationReducer from './slices/customer/customerRegistration';
 import apilogsReducer from './slices/logs/apiLogs';
 import portalRegistrationReducer from './slices/customer/portalRegistration';
 
