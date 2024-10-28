@@ -125,6 +125,7 @@ function PortalRequestInviteDialog() {
       await dispatch(updatePortalRegistration(customerId, rejectRequestDialog ? rejectData : { ...data, isActive: true }));  
       await handleCloseDialog()
       if (acceptRequestDialog) {
+        await dispatch(getPortalRegistration( customerId ));
         enqueueSnackbar('Portal request processed successfully!');
       } else if (rejectRequestDialog){
         enqueueSnackbar('Portal request Reject!');
