@@ -509,6 +509,12 @@ export const ICONS = {
     icon: 'ri:swap-box-line',
     heading: 'Move',
   },
+  
+  SEE_MORE: {
+    icon: 'lsicon:more-outline',
+    color: '#909090',
+    heading: 'See More',
+  },
 
   USER_LOCK: {
     icon: 'mingcute:lock-fill',

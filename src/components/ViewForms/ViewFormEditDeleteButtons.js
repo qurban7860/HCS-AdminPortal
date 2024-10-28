@@ -187,7 +187,7 @@ function ViewFormEditDeleteButtons({
   ])
 
   const handleOpenConfirm = (dialogType) => {
-
+    
     if (dialogType === 'UserInvite') {
       setOpenUserInviteConfirm(true);
     }
@@ -286,6 +286,11 @@ function ViewFormEditDeleteButtons({
     await handleCloseConfirm('delete');
   };
 
+  const handleRestore = async () => {
+    await onRestore();
+    await setOpenRestoreConfirm(false);
+  };
+  
   
   const [verifiedAnchorEl, setVerifiedAnchorEl] = useState(null);
   const [verifiedBy, setVerifiedBy] = useState([]);
@@ -957,7 +962,7 @@ function ViewFormEditDeleteButtons({
       />
 
       <ConfirmDialog
-        open={ openRestoreConfirm && !isSubmitSuccessful }
+        open={ openRestoreConfirm }
         onClose={() => {
           handleCloseConfirm('restore');
         }}
@@ -969,7 +974,7 @@ function ViewFormEditDeleteButtons({
             color="error"
             loading={isSubmitted || isSubmitting || isLoading}
             disabled={isSubmitted || isSubmitting || isLoading}
-            onClick={ handleSubmit( onRestore ) }
+            onClick={ handleSubmit( handleRestore ) }
           >
             Restore
           </LoadingButton>

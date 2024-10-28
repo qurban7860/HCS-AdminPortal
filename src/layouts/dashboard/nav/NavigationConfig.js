@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { 
   PATH_CRM, 
-  PATH_CUSTOMER_REGISTRATION,
+  PATH_PORTAL_REGISTRATION,
   PATH_CALENDAR, 
   PATH_DASHBOARD, 
   PATH_MACHINE, 
@@ -79,7 +79,7 @@ function NavigationConfig() {
       items: [
         { title: 'Dashboard', path: PATH_DASHBOARD.root, icon: ICONS.dashboard },
         { title: 'Customers', path: PATH_CRM.customers.list, icon: ICONS.users },
-        { title: 'Customer Registrations', path: PATH_CUSTOMER_REGISTRATION.root, icon: ICONS.register },
+        { title: 'Portal Registrations', path: PATH_PORTAL_REGISTRATION.root, icon: ICONS.register },
         { title: 'Machines', path: PATH_MACHINE.machines.root, icon: ICONS.machines },
       ],
     },

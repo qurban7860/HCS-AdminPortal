@@ -12,15 +12,18 @@ RHFCountryAutocomplete.propTypes = {
   name: PropTypes.string,
   label: PropTypes.string,
   helperText: PropTypes.node,
+  disableDefaultValue: PropTypes.bool,
   Error: PropTypes.bool,
 };
 
-export default function RHFCountryAutocomplete({ name, label, helperText, Error, ...other }) {
+export default function RHFCountryAutocomplete({ name, label, helperText, disableDefaultValue = false, Error, ...other }) {
   const { control, setValue } = useFormContext();
 
   useEffect(()=>{
-    setValue(name,countries?.find(country => country?.code?.toLocaleLowerCase() === 'nz'))
-  },[ name,setValue ])
+    if( !disableDefaultValue ){
+      setValue(name,countries?.find(country => country?.code?.toLocaleLowerCase() === 'nz'))
+    }
+  },[ name, disableDefaultValue, setValue ])
 
   return (
     <Controller

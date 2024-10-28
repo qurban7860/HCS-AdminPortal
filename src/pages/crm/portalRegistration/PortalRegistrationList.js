@@ -1,4 +1,4 @@
-import { useState, useEffect , useRef } from 'react';
+import { useState, useEffect , useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 // @mui
@@ -12,13 +12,14 @@ import {
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // routes
-import { PATH_CUSTOMER_REGISTRATION } from '../../../routes/paths';
+import { PATH_PORTAL_REGISTRATION } from '../../../routes/paths';
 // components
 import {
   useTable,
   getComparator,
   TableNoData,
   TableSkeleton,
+  TablePaginationFilter,
   TablePaginationCustom,
   TableHeadFilter,
 } from '../../../components/table';
@@ -26,16 +27,19 @@ import Scrollbar from '../../../components/scrollbar';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import { FORMLABELS } from '../../../constants/default-constants';
 // sections
-import CustomerRegistrationListTableRow from './CustomerRegistrationListTableRow';
-import CustomerListTableToolbar from './CustomerRegistrationListTableToolbar';
+import PortalRegistrationListTableRow from './PortalRegistrationListTableRow';
+import CustomerListTableToolbar from './PortalRegistrationListTableToolbar';
 import { 
-  getCustomerRegistrations, 
-  resetCustomerRegistrations, 
+  getPortalRegistrations, 
+  resetPortalRegistrations, 
   ChangePage, 
   ChangeRowsPerPage, 
   setFilterBy,
-  setFilterStatus
-} from '../../../redux/slices/customer/customerRegistration';
+  setFilterStatus,
+  setHiddenColumns
+} from '../../../redux/slices/customer/portalRegistration';
+import CustomerDialog from '../../../components/Dialog/CustomerDialog';
+import { getCustomer, setCustomerDialog } from '../../../redux/slices/customer/customer';
 import { Cover } from '../../../components/Defaults/Cover';
 import TableCard from '../../../components/ListTableTools/TableCard';
 import { fDate } from '../../../utils/formatTime';
@@ -43,16 +47,21 @@ import { fDate } from '../../../utils/formatTime';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
+  { id: 'contactPersonName', label: 'Contact Person Name', align: 'left', hideable:false },
+  { id: 'email', label: 'Email', align: 'left', },
+  { id: 'phoneNumber', label: 'Phone Number', align: 'left', },
+  { id: 'address', label: 'Address', align: 'left', },
   { id: 'customerName', label: 'Customer Name', align: 'left', },
-  { id: 'contactPersonName', label: 'Contact Person Name', align: 'left' },
+  { id: 'machineSerialNos', label: 'Machines', align: 'left', },
   { id: 'status', label: 'Status', align: 'left' },
-  { id: 'isActive', label: 'Active', align: 'center' },
+  { id: 'customer.name', label: 'Customer', align: 'left' },
+  { id: 'contact.firstName', label: 'Contact', align: 'left' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
 
 // ----------------------------------------------------------------------
 
-export default function CustomerRegistrationList() {
+export default function PortalRegistrationList() {
   const {
     order,
     orderBy,
@@ -66,7 +75,7 @@ export default function CustomerRegistrationList() {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { customerRegistrations, filterBy, filterStatus, page, rowsPerPage, isLoading } = useSelector((state) => state.customerRegistration);
+  const { portalRegistrations, hiddenColumns, filterBy, filterStatus, page, rowsPerPage, isLoading } = useSelector((state) => state.portalRegistration);
   const [ filterName, setFilterName ] = useState( filterBy );
   const [ filterByStatus, setFilterByStatus ] = useState( filterStatus );
 
@@ -79,25 +88,29 @@ export default function CustomerRegistrationList() {
   }
 
   useEffect(() => {
-    dispatch(getCustomerRegistrations( page, rowsPerPage ));
-    return ()=> { dispatch( resetCustomerRegistrations() ) }
+    dispatch(getPortalRegistrations( page, rowsPerPage ));
+    return ()=> { dispatch( resetPortalRegistrations() ) }
   }, [ dispatch, page, rowsPerPage ]);
 
   const dataFiltered = applyFilter({
-    inputData: customerRegistrations,
+    inputData: portalRegistrations?.data || [],
     comparator: getComparator(order, orderBy),
     filterName,
     filterByStatus
   });
 
   const denseHeight = 60;
-  const isFiltered = filterName !== '' || filterByStatus !== '';
+  const isFiltered = filterName !== '' ;
   const isNotFound = (!dataFiltered?.length && !!filterName) || (!isLoading && !dataFiltered?.length);
 
   const debouncedSearch = useRef(debounce((value) => {
       dispatch(ChangePage(0))
       dispatch(setFilterBy(value))
   }, 500))
+
+  const handleHiddenColumns = async (arg) => {
+    dispatch(setHiddenColumns(arg))
+  };
 
   const handleFilterName = (event) => {
     debouncedSearch.current(event.target.value)
@@ -114,18 +127,23 @@ export default function CustomerRegistrationList() {
     dispatch(setFilterStatus(value))
   }, 500))
 
-  const handleFilterByStatus = (event) => {
-    debouncedFilterByStatus.current(event.target.value)
-    setFilterByStatus(event.target.value)
+  const handleFilterByStatus = (value) => {
+    debouncedFilterByStatus.current(value)
+    setFilterByStatus(value)
     setPage(0);
   };
+
+  const handleCustomerDialog = useCallback((e, id) => {
+    dispatch(getCustomer(id))
+    dispatch(setCustomerDialog(true))
+  }, [ dispatch ])
 
 useEffect(() => {
   debouncedFilterByStatus.current.cancel();
 }, [ debouncedFilterByStatus ]);
 
   const handleViewRow = (id) => {
-    navigate(PATH_CUSTOMER_REGISTRATION.view(id));
+    navigate(PATH_PORTAL_REGISTRATION.view(id));
   };
 
   const handleResetFilter = () => {
@@ -137,24 +155,29 @@ useEffect(() => {
     <Container maxWidth={false}>
       <StyledCardContainer>
         <Cover
-          name={ FORMLABELS.COVER.REGISTERED_CUSTOMERS}
+          name={ FORMLABELS.COVER.REGISTERED_REQUESTS}
         />
       </StyledCardContainer>
       <TableCard>
         <CustomerListTableToolbar
           filterName={ filterName }
+          filterStatus={ filterByStatus }
           onFilterName={ handleFilterName }
           isFiltered={ isFiltered }
           onResetFilter={ handleResetFilter }
+          onChangeStatus={ handleFilterByStatus }
         />
 
         {!isNotFound && (
-          <TablePaginationCustom
-            count={ customerRegistrations ? customerRegistrations?.length : 0 }
-            page={ page }
-            rowsPerPage={ rowsPerPage }
-            onPageChange={ onChangePage }
-            onRowsPerPageChange={ onChangeRowsPerPage }
+          <TablePaginationFilter
+            columns={TABLE_HEAD}
+            hiddenColumns={hiddenColumns}
+            handleHiddenColumns={handleHiddenColumns}
+            count={ portalRegistrations?.totalCount ? portalRegistrations?.totalCount : 0 }
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
           />
         )}
 
@@ -166,6 +189,7 @@ useEffect(() => {
                 orderBy={orderBy}
                 headLabel={TABLE_HEAD}
                 onSort={onSort}
+                hiddenColumns={hiddenColumns}
               />
 
               <TableBody>
@@ -173,12 +197,14 @@ useEffect(() => {
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) =>
                     row ? (
-                      <CustomerRegistrationListTableRow
+                      <PortalRegistrationListTableRow
+                        hiddenColumns={hiddenColumns}
                         key={row._id}
                         row={row}
                         selected={selected.includes(row._id)}
                         onSelectRow={() => onSelectRow(row._id)}
                         onViewRow={() => handleViewRow(row._id)}
+                        handleCustomerDialog={()=> row?.customer && handleCustomerDialog(row?.customer?._id)}
                       />
                     ) : (
                       !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
@@ -192,7 +218,7 @@ useEffect(() => {
 
         {!isNotFound && (
           <TablePaginationCustom
-            count={ customerRegistrations ? customerRegistrations?.length : 0 }
+            count={ portalRegistrations?.totalCount ? portalRegistrations?.totalCount : 0 }
             page={ page }
             rowsPerPage={ rowsPerPage }
             onPageChange={ onChangePage }
@@ -201,13 +227,14 @@ useEffect(() => {
         )}
         
       </TableCard>
+      <CustomerDialog />
     </Container>
   );
 }
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName, filterStatus }) {
+function applyFilter({ inputData, comparator, filterName, filterByStatus }) {
   const stabilizedThis = inputData?.map((el, index) => [el, index]);
 
   stabilizedThis?.sort((a, b) => {
@@ -218,23 +245,23 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
 
   inputData = stabilizedThis?.map((el) => el[0]);
 
+  if (filterByStatus) {
+    inputData = inputData?.filter((c) => c?.status === filterByStatus );
+  }
+
   if (filterName) {
     filterName = filterName?.trim();
     inputData = inputData?.filter(
       ( c ) =>
-        c?.customerName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         c?.contactPersonName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        c?.email?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        c?.phoneNumber?.toString()?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        c?.address.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        c?.customerName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        c?.machineSerialNos?.some( msn => msn?.toString()?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ) ||
         c?.status?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        c?.acceptanceStatus?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        c?.acceptanceStatus?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        `${c?.address?.city}, ${c?.address?.country}`.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        (c?.isActive ? "Active" : "InActive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
         fDate(c?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
-  }
-
-  if ( filterStatus?.length ) {
-    inputData = inputData?.filter((customer) => filterStatus.includes(customer.status));
   }
 
   return inputData;

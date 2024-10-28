@@ -93,13 +93,24 @@ export default function SecurityUserList() {
   const [ filterByRegion, setFilterByRegion ] = useState(filterRegion);
 
   useLayoutEffect(() => {
-    dispatch(getSecurityUsers());
     dispatch(getActiveRegions());
     return ()=>{
-      dispatch(resetSecurityUsers());
       dispatch(resetActiveRegions());
     }
   }, [ dispatch ]);
+
+  useLayoutEffect(() => {
+    if(activeFilterListBy === "isArchived" ){
+      dispatch(getSecurityUsers( { isArchived: true } ));
+    }else if(activeFilterListBy === "invitationStatus" ){
+      dispatch(getSecurityUsers( { invitationStatus: true } ));
+    } else{
+      dispatch(getSecurityUsers());
+    }
+    return ()=>{
+      dispatch(resetSecurityUsers());
+    }
+  }, [ dispatch, activeFilterListBy ]);
 
   const dataFiltered = applyFilter({
     inputData: securityUsers,

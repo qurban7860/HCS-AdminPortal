@@ -3,10 +3,10 @@ import { useParams } from 'react-router-dom';
 // @mui
 import { Container } from '@mui/material';
 // redux
-import { useDispatch, useSelector } from '../../../redux/store';
+import { useDispatch } from '../../../redux/store';
 // slices
-import { getCustomerRegistration } from '../../../redux/slices/customer/customerRegistration';
-import CustomerRegistrationViewForm from './CustomerRegistrationViewForm';
+import { getPortalRegistration, resetPortalRegistration } from '../../../redux/slices/customer/portalRegistration';
+import PortalRegistrationViewForm from './PortalRegistrationViewForm';
 import { Cover } from '../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 
@@ -14,20 +14,20 @@ import { StyledCardContainer } from '../../../theme/styles/default-styles';
 
 export default function CustomerView() {
 
-  const { customerRegistration } = useSelector( (state) => state.customerRegistration );
   const dispatch = useDispatch();
   const { customerId } = useParams();
 
   useLayoutEffect(() => {
-    dispatch(getCustomerRegistration(customerId));
+    dispatch(getPortalRegistration(customerId));
+    return () => dispatch(resetPortalRegistration());
   }, [dispatch, customerId]);
 
   return (
     <Container maxWidth={false} >
         <StyledCardContainer>
-          <Cover name={ customerRegistration?.customerName || ""} />
+          <Cover name="Portal Registration Request" />
         </StyledCardContainer>
-      <CustomerRegistrationViewForm />
+      <PortalRegistrationViewForm />
     </Container>
   );
 }

@@ -33,7 +33,7 @@ export default function PermissionDeniedPage() {
   return (
   
       <Container maxWidth={themeStretch ? false : 'lg'}>
-        <CustomBreadcrumbs
+        {/* <CustomBreadcrumbs
           heading="Permission Denied"
           links={[
             {
@@ -44,9 +44,9 @@ export default function PermissionDeniedPage() {
               name: 'Permission Denied',
             },
           ]}
-        />
+        /> */}
 
-        <ToggleButtonGroup
+        {/* <ToggleButtonGroup
           exclusive
           value={role}
           onChange={handleChangeRole}
@@ -60,10 +60,10 @@ export default function PermissionDeniedPage() {
           <ToggleButton value="user" aria-label="user role">
             isUser
           </ToggleButton>
-        </ToggleButtonGroup>
+        </ToggleButtonGroup> */}
 
         <RoleBasedGuard hasContent roles={[role]}>
-          <Box gap={3} display="grid" gridTemplateColumns="repeat(2, 1fr)">
+          {/* <Box gap={3} display="grid" gridTemplateColumns="repeat(2, 1fr)">
             {[...Array(8)].map((_, index) => (
               <Card key={index}>
                 <CardHeader title={`Card ${index + 1}`} subheader="Proin viverra ligula" />
@@ -75,7 +75,7 @@ export default function PermissionDeniedPage() {
                 </Typography>
               </Card>
             ))}
-          </Box>
+          </Box> */}
         </RoleBasedGuard>
       </Container>
   );

@@ -434,7 +434,7 @@ export function updateDocumentVersionNo(documentId , data) {
 
 // -----------------------------------Get Documents-----------------------------------
 
-export function getDocuments(customerId, machineId, drawing, page, pageSize, isCustomerArchived, isMachineArchived, cancelToken) {
+export function getDocuments(customerId, machineId, drawing, page, pageSize, isCustomerArchived, isMachineArchived, cancelToken, searchKey, searchColumn) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -473,6 +473,12 @@ export function getDocuments(customerId, machineId, drawing, page, pageSize, isC
       } else {
         params.isArchived = false;
       }
+      
+      if (searchKey?.length > 0) {
+        params.searchKey = searchKey;
+        params.searchColumn = searchColumn;
+      }
+      
       const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/` ,
       {
         params,

@@ -24,6 +24,7 @@ RHFFilteredSearchBar.propTypes = {
   size: PropTypes.string,
   selectedFilter: PropTypes.string.isRequired,
   setSelectedFilter: PropTypes.func.isRequired,
+  afterClearHandler: PropTypes.func,
 };
 export default function RHFFilteredSearchBar({
   name,
@@ -33,6 +34,7 @@ export default function RHFFilteredSearchBar({
   helperText,
   selectedFilter,
   setSelectedFilter = () => {},
+  afterClearHandler = () => {},
   ...other
 }) {
   const { control, watch, setValue } = useFormContext();
@@ -50,6 +52,7 @@ export default function RHFFilteredSearchBar({
   const clearSearchKey = () => {
     setValue(name, '');
     setSelectedFilter('');
+    afterClearHandler()
   };
 
   return (

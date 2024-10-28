@@ -54,16 +54,16 @@ export default function TableHeadFilter({
   return (
     <TableHead>
       <TableRow>
-        {headLabel.map((headCell) => {
-          if( width === 'md' ) {
-            displayHeadIs = !hiddenColumns[headCell.id] && mdNone.includes(headCell.id)
-            displayHeadIs = mdNone.includes(headCell.visibility)
-          }else if( width === 'sm'){
-            displayHeadIs = !hiddenColumns[headCell.id] && smNone.includes(headCell.id)
-            displayHeadIs = smNone.includes(headCell.visibility)
-          }else if( width === 'xs' ){
-            displayHeadIs = !hiddenColumns[headCell.id] && xsNone.includes(headCell.id)
-            displayHeadIs = xsNone.includes(headCell.visibility)
+        {headLabel?.map((headCell) => {
+          if( width === 'md' && headCell?.visibility ) {
+            displayHeadIs = !hiddenColumns[headCell.id] && mdNone?.includes(headCell.id)
+            displayHeadIs = mdNone?.includes(headCell?.visibility)
+          }else if( width === 'sm' && headCell?.visibility){
+            displayHeadIs = !hiddenColumns[headCell.id] && smNone?.includes(headCell.id)
+            displayHeadIs = smNone?.includes(headCell?.visibility)
+          }else if( width === 'xs' && headCell?.visibility){
+            displayHeadIs = !hiddenColumns[headCell.id] && xsNone?.includes(headCell.id)
+            displayHeadIs = xsNone?.includes(headCell?.visibility)
           }
 
           return (

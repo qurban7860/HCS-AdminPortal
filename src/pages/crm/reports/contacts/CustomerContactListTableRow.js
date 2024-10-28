@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 // @mui
-import { Switch, TableCell, IconButton, Tooltip } from '@mui/material';
-import { MoreHoriz } from '@mui/icons-material';
+import { Switch, TableCell } from '@mui/material';
 // utils
 import { fDate } from '../../../../utils/formatTime';
 // components
@@ -70,11 +69,11 @@ export default function CustomerContactListTableRow({
                 ) : (
                   <>
                     {phone[0]}{' '}
-                    <Tooltip title="See more">
-                      <IconButton onClick={handleTogglePhoneDisplay} size="small">
-                        <MoreHoriz />
-                      </IconButton>
-                    </Tooltip>
+                    <IconButtonTooltip onClick={handleTogglePhoneDisplay}
+                      title={ ICONS.SEE_MORE.heading } 
+                      color={ ICONS.SEE_MORE.color } 
+                      icon={ ICONS.SEE_MORE.icon } 
+                    />          
                   </>
                 )}
               </>
@@ -117,12 +116,12 @@ export default function CustomerContactListTableRow({
                 {showAllPhones ? (phone.join(', ')
                 ) : (
                   <>
-                    {phone[0]}{' '}
-                    <Tooltip title="See more">
-                      <IconButton onClick={handleTogglePhoneDisplay} size="small">
-                        <MoreHoriz />
-                      </IconButton>
-                    </Tooltip>
+                    {phone[0]}{' '}                     
+                      <IconButtonTooltip onClick={handleTogglePhoneDisplay}
+                        title={ ICONS.SEE_MORE.heading } 
+                        color={ ICONS.SEE_MORE.color } 
+                        icon={ ICONS.SEE_MORE.icon } 
+                      />
                   </>
                 )}
               </>

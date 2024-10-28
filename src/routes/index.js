@@ -99,9 +99,9 @@ import {
   RegionEdit,
 
   // Customer Registrations
-  CustomerRegistrationList,
-  CustomerRegistrationEdit,
-  CustomerRegistrationView,
+  PortalRegistrationList,
+  PortalRegistrationEdit,
+  PortalRegistrationView,
 
   // ----------------------------------------------------------------
 
@@ -622,16 +622,16 @@ export default function Router() {
 
     // --------------------- Dashboard ----------------------
     {
-      path: 'customerRegistrations',
+      path: 'portalRegistrations',
       element: (
         <AuthGuard>
           <DashboardLayout />
         </AuthGuard>
       ),
       children: [
-        { element: <CustomerRegistrationList to={PATH_AFTER_LOGIN} replace />, index: true },
-        { path: ':customerId/edit', element: <CustomerRegistrationEdit /> },
-        { path: ':customerId/view', element: <CustomerRegistrationView /> },
+        { element: <PortalRegistrationList to={PATH_AFTER_LOGIN} replace />, index: true },
+        { path: ':customerId/edit', element: <PortalRegistrationEdit /> },
+        { path: ':customerId/view', element: <PortalRegistrationView /> },
         { path: 'permission-denied', element: <PermissionDeniedPage /> },
       ],
     },

@@ -58,6 +58,7 @@ import customerJiraReducer from './slices/customer/customerJira';
 import jiraReducer from './slices/jira/jira';
 import customerRegistrationReducer from './slices/customer/customerRegistration';
 import apilogsReducer from './slices/logs/apiLogs';
+import portalRegistrationReducer from './slices/customer/portalRegistration';
 
 // ----------------------------------------------------------------------
 
@@ -434,8 +435,8 @@ export const jiraPersistConfig = {
   blacklist: ['error', 'initial', 'responseMessage']
 }
 
-export const customerRegistrationPersistConfig = {
-  key: 'customerRegistration',
+export const portalRegistrationPersistConfig = {
+  key: 'PortalRegistration',
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
@@ -497,7 +498,7 @@ const rootReducer = combineReducers({
   event: persistReducer(eventPersistConfig, eventReducer),
   customerJira: persistReducer(customerJiraPersistConfig, customerJiraReducer),
   jira: persistReducer(jiraPersistConfig, jiraReducer),
-  customerRegistration: persistReducer( customerRegistrationPersistConfig, customerRegistrationReducer ),
+  portalRegistration: persistReducer( portalRegistrationPersistConfig, portalRegistrationReducer ),
 });
 
 export default rootReducer;
