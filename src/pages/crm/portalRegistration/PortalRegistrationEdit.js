@@ -20,7 +20,6 @@ export default function CustomerEdit() {
 
   useLayoutEffect(() => {
     dispatch(getPortalRegistration(customerId));
-    return () => dispatch(resetPortalRegistration());
   }, [dispatch, customerId]);
 
   return (
