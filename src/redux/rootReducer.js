@@ -51,6 +51,7 @@ import configurationReducer from './slices/products/configuration';
 import machineErpLogsReducer from './slices/products/machineErpLogs';
 import pm2logsReducer from './slices/logs/pm2Logs';
 import dbBackupLogsReducer from './slices/logs/dbBackupLogs';
+import apiLogsReducer from './slices/logs/apiLogs';
 import machineJiraReducer from './slices/products/machineJira';
 import emailsReducer from './slices/email/emails';
 import eventReducer from './slices/event/event';
@@ -395,6 +396,12 @@ export const dbBackupLogsPersistConfig = {
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 }
+export const apiLogsPersistConfig = {
+  key: 'apiLogs',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
 export const machineJiraPersistConfig = {
   key: 'machineJira',
   storage,
@@ -484,6 +491,7 @@ const rootReducer = combineReducers({
   machineErpLogs: persistReducer(machineErpLogsPersistConfig, machineErpLogsReducer),
   pm2Logs: persistReducer(pm2LogsPersistConfig, pm2logsReducer),
   dbBackupLogs: persistReducer(dbBackupLogsPersistConfig, dbBackupLogsReducer),
+  apiLogs: persistReducer(apiLogsPersistConfig, apiLogsReducer),
   machineJira: persistReducer(machineJiraPersistConfig, machineJiraReducer),
   emails: persistReducer(emailsPersistConfig, emailsReducer),
   event: persistReducer(eventPersistConfig, eventReducer),

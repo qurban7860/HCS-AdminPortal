@@ -438,6 +438,12 @@ export const PATH_SETTING = {
       view: (id) => path(ROOTS_SETTING, `/dbBackup/logs/${id}/view`),
     }
 },
+  api: {
+    logs: {
+      root: path(ROOTS_SETTING, '/api/logs/'),
+      view: (id) => path(ROOTS_SETTING, `/api/logs/${id}/view`),
+    }
+  },
   // ------------------------ SECURITY USER INVITES ----------------------------------------
   invite: {
     list: path(ROOTS_SETTING, '/invite/list'),

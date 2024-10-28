@@ -200,6 +200,11 @@ return (
                     icon={ICONS.DBBACKUPLOGS.icon}
                     content={ICONS.DBBACKUPLOGS.heading}
                   />
+                   <ListItem
+                    onClick={()=> navigate(PATH_SETTING.api.logs.root)}
+                    icon={ICONS.APILOGS.icon}
+                    content={ICONS.APILOGS.heading}
+                  />
                 </List>}
             </StyledSettingsCardContainer>
           </Box>
