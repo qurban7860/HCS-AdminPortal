@@ -5,14 +5,14 @@ import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useSnackbar } from 'notistack';
 import { useEffect, useMemo } from 'react';
-import { Box, Dialog, DialogContent, DialogTitle, Divider, DialogActions, Checkbox, Button, Stack } from '@mui/material';
+import { Box, Dialog, DialogContent, DialogTitle, Divider, DialogActions, Checkbox, Button, Stack, Typography } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-import { addSecurityUser } from '../../redux/slices/securityUser/securityUser';
 import { updatePortalRegistration, setAcceptRequestDialog, setRejectRequestDialog, getPortalRegistration } from '../../redux/slices/customer/portalRegistration';
 import { getAllActiveCustomers, resetAllActiveCustomers } from '../../redux/slices/customer/customer';
 import { getActiveContacts, resetActiveContacts } from '../../redux/slices/customer/contact';
 import { getActiveRoles, resetActiveRoles } from '../../redux/slices/securityUser/role';
 import FormProvider from '../hook-form/FormProvider';
+import ViewFormField from '../ViewForms/ViewFormField';
 import { RHFAutocomplete, RHFTextField } from '../hook-form';
 
 function PortalRequestInviteDialog() {
@@ -156,16 +156,17 @@ function PortalRequestInviteDialog() {
     >
       <DialogTitle variant='h3' sx={{ my: -2 }}>{`${ acceptRequestDialog ? 'Accept' : 'Reject' } Portal Request`}</DialogTitle>
       <Divider orientation="horizontal" flexItem />
-      <DialogContent dividers sx={{pt:3}}>
+      <DialogContent dividers sx={{pt: rejectRequestDialog ? 3 : 0 }}>
       <Box >
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)} >
-          <Stack spacing={2} sx={{ pt: 1 }}>
+          <Stack spacing={2} >
           <Box rowGap={2} columnGap={2} display="grid"
             gridTemplateColumns={{ sm: 'repeat(1, 1fr)' }}
           >
                 { rejectRequestDialog && <RHFTextField name="internalNote" label="Internal Note" />}
 
                 { acceptRequestDialog && <>
+                    <ViewFormField heading='Email' param={portalRegistration?.email || ""} />
                     <RHFAutocomplete
                       name='customer'
                       label="Customer*"

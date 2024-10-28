@@ -12,11 +12,11 @@ export const editPortalRegistrationSchema = Yup.object().shape({
   customerNote: Yup.string().trim().max(5000).label('Customer Note'),
   internalNote: Yup.string().trim().max(5000).label('Internal Note'),
   machineSerialNos: Yup.array().typeError("Invalid Machine Serial Nos!")
-  .of(
-    Yup.string()
-      .matches(/^\d{6}$/, 'Each serial number must be exactly 6 digits')
-  )
-  .min(1, 'At least one machine serial number is required').label('Machine Serial Nos').required(),
+  .min(1, 'At least one machine serial number is required')
+  .test( 'all-valid-serial-numbers','Each serial number must be exactly 6 digits',
+  (value) => value?.every(serialNo => /^\d{6}$/.test(serialNo)))
+  .label('Machine Serial Nos')
+  .required('Machine serial numbers are required'),
   address: Yup.string().trim().max(200).label('Address'),
   isActive: Yup.boolean().label('IsActive'),
 });
