@@ -14,18 +14,23 @@ import { StyledTooltip } from '../../../theme/styles/default-styles';
 import Iconify from '../../../components/iconify';
 import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
 import { RHFTextField } from '../../../components/hook-form';
-import { addPortalIntegrationDetails, addPortalIntegrationKey, getMachine } from '../../../redux/slices/products/machine';
+import { addPortalIntegrationDetails, addPortalIntegrationKey, getMachineIntegrationDetails } from '../../../redux/slices/products/machine';
 import { fDateTime } from '../../../utils/formatTime';
 import ViewFormMachinePortalKeyHistory from '../../../components/ViewForms/ViewFormMachinePortalKeyHistory';
-import { getApiLogs } from '../../../redux/slices/logs/apiLogs';
+import DialogMachineAPILogsTable from '../../../components/machineIntegration/DialogMachineAPILogsTable';
 
 const IntegrationViewForm = () => {
   const [openAddMoreInfoDialog, setOpenAddMoreInfoDialog] = useState(false);
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
   const [ portalKeyHistoryAnchorEl, setPortalKeyHistoryAnchorEl ] = useState(null);
+  const [ apiLogTableDialogState, setApiLogTableDialogState ] = useState(false);
+
   const { machineId } = useParams();
   const dispatch = useDispatch();
   const { isLoading, machine } = useSelector((state) => state.machine);
+  const { apiLogs } = useSelector(
+    (state) => state.apiLogs
+  );
   const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -40,12 +45,7 @@ const IntegrationViewForm = () => {
   });
 
   useEffect(() => {
-    dispatch(getMachine(machineId));
-    dispatch(getApiLogs(
-      machineId,'',
-      "createdAt:desc",
-      { apiType: "MACHINE-INTEGRATION" }
-    ));
+    dispatch(getMachineIntegrationDetails(machineId));
   }, [dispatch, machineId]);
 
   const handleGenerateKey = async (e, regen = false) => {
@@ -133,7 +133,8 @@ const IntegrationViewForm = () => {
         <Card sx={{ minHeight: '500px', width: '100%', p: '1rem', mb: 3, display: 'flex', flexDirection: 'column' }}>
           <ViewFormEditDeleteButtons
             sx={{ pt: 5 }}
-            apiLogs={["test"]}
+            apiLogs={apiLogs?.data || 0}
+            handleClickOnApiLogs={() => setApiLogTableDialogState(true)}
           />
           <FormLabel content={FORMLABELS.INTEGRATION.MAIN_HEADER} />
           <Grid container>
@@ -248,7 +249,7 @@ const IntegrationViewForm = () => {
               )}
             </DialogContent>
             <DialogActions>
-              <Button onClick={() => setOpenAddMoreInfoDialog(false)} color="inherit">Cancel</Button>
+              <Button onClick={() => setOpenAddMoreInfoDialog(false)} variant='outlined' color="inherit">Cancel</Button>
               <Button type="submit" variant="contained">Submit</Button>
             </DialogActions>
           </form>
@@ -269,7 +270,7 @@ const IntegrationViewForm = () => {
           </Typography>{' '}
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenConfirmDialog(false)} color="inherit">
+          <Button onClick={() => setOpenConfirmDialog(false)} variant='outlined' color="inherit">
             Cancel
           </Button>
           <Button onClick={handleConfirmRegenerate} variant="contained" color="warning">
@@ -283,6 +284,12 @@ const IntegrationViewForm = () => {
         onClose={() => setPortalKeyHistoryAnchorEl(null)}
         ListArr={portalKey}
         ListTitle="Portal Key History"
+      />
+
+      <DialogMachineAPILogsTable 
+        machineId={machineId} 
+        apiLogTableDialogState={apiLogTableDialogState} 
+        setApiLogTableDialogState={setApiLogTableDialogState} 
       />
     </>
   );

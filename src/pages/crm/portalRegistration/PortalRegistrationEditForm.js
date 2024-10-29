@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useSnackbar } from '../../../components/snackbar';
 // slice
-import { updatePortalRegistration, getPortalRegistration } from '../../../redux/slices/customer/portalRegistration';
+import { updatePortalRegistration } from '../../../redux/slices/customer/portalRegistration';
 import { getValidateUserEmail } from '../../../redux/slices/securityUser/securityUser';
 
 // routes
@@ -49,13 +49,13 @@ export default function CustomerEditForm() {
       internalNote: portalRegistration?.internalNote || "",
       acceptanceStatus: portalRegistration?.acceptanceStatus || "",
       machineSerialNos: Array.isArray(portalRegistration?.machineSerialNos) ? portalRegistration?.machineSerialNos : [],
-      country: countries.find(( c ) => c?.label?.toLocaleLowerCase() === portalRegistration?.country?.toLocaleLowerCase()) || null,
+      country: countries?.find(( c ) => c?.label?.toLowerCase() === portalRegistration?.country?.toLowerCase()) || null,
       address: portalRegistration?.address || "",
       isActive: portalRegistration?.isActive || false,
     }),
     [ portalRegistration ]
   );
-  
+
   const methods = useForm({
     resolver: yupResolver( editPortalRegistrationSchema ),
     defaultValues,
@@ -72,15 +72,15 @@ export default function CustomerEditForm() {
   } = methods;
   
   useEffect(() => {
-    reset(portalRegistration);
-  },[ reset, portalRegistration ]);
+    reset( defaultValues );
+  },[ reset, defaultValues ]);
 
   const  { email } = watch();
 
   useEffect(() => {
     trigger('email');
     const timeoutId = setTimeout(async () => {
-      if (email && !errors.email && portalRegistration?.status?.toLowerCase() !== 'approved') { 
+      if (email && !errors?.email && portalRegistration?.status?.toLowerCase() !== 'approved') { 
         try {
           await dispatch(getValidateUserEmail(email)); 
           clearErrors('email'); 
@@ -100,6 +100,9 @@ export default function CustomerEditForm() {
       try {
         if(portalRegistration?.status?.toLowerCase() === 'approved'){
           delete data?.email;
+        }
+        if(!data?.country){
+          data.country = "";
         }
         await dispatch(updatePortalRegistration( customerId, data ));
         reset();

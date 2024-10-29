@@ -61,6 +61,7 @@ export default function CustomerViewForm() {
           isArchived: true,
         }
         await dispatch( updatePortalRegistration( customerId, data ) );
+        enqueueSnackbar("Portal request archived successfully!");
         await navigate( PATH_PORTAL_REGISTRATION.root );
       } catch (err) {
         enqueueSnackbar(err, { variant: `error` });
