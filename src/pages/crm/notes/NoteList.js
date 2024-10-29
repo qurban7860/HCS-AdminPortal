@@ -65,7 +65,7 @@ export default function NoteList() {
   const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
 
   useEffect(() => {
-    if(customerId){
+    if( customerId && customerId !== "undefined" ){
       dispatch(getNotes(customerId, customer?.isArchived));
     }
     return ()=>{ dispatch(resetNotes()) };

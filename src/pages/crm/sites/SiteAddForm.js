@@ -102,8 +102,12 @@ export default function SiteAddForm() {
     try {
       const response = await dispatch(addSite(data));
       enqueueSnackbar('Site created successfully!');
-      await dispatch(getSites(customerId))
-      if(customerId && response?.data?.CustomerSite?._id ) await navigate(PATH_CRM.customers.sites.view( customerId, response?.data?.CustomerSite?._id ))
+      if(customerId && customerId !== "undefined" ){
+        await dispatch(getSites(customerId))
+        if( response?.data?.CustomerSite?._id ){
+          await navigate(PATH_CRM.customers.sites.view( customerId, response?.data?.CustomerSite?._id ))
+        }
+      }
       await reset();
     } catch (err) {
       enqueueSnackbar(err, { variant: `error` });
