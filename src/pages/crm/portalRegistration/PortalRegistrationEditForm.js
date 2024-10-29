@@ -49,7 +49,7 @@ export default function CustomerEditForm() {
       internalNote: portalRegistration?.internalNote || "",
       acceptanceStatus: portalRegistration?.acceptanceStatus || "",
       machineSerialNos: Array.isArray(portalRegistration?.machineSerialNos) ? portalRegistration?.machineSerialNos : [],
-      country: countries.find(( c ) => c?.label?.toLocaleLowerCase() === portalRegistration?.country?.toLocaleLowerCase()) || null,
+      country: portalRegistration?.country && countries?.find(( c ) => c?.label?.toLocaleLowerCase() === portalRegistration?.country?.toLocaleLowerCase()) || null,
       address: portalRegistration?.address || "",
       isActive: portalRegistration?.isActive || false,
     }),
