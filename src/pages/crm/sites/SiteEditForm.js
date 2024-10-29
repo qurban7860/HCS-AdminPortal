@@ -47,7 +47,9 @@ export default function SiteEditForm() {
   }
 
   useEffect(() => {
-    if(customerId && id)dispatch(getSite(customerId, id))
+    if(customerId && customerId !== "undefined" && id && id !== "undefined"){
+      dispatch(getSite(customerId, id))
+    }
     setIsExpanded(true);
     setCardActiveIndex(id);
   }, [ dispatch, customerId, id ]);
@@ -133,7 +135,7 @@ export default function SiteEditForm() {
     try {
       await dispatch(updateSite(data, customerId, id));
       enqueueSnackbar('Site saved Successfully!');
-      if(customerId && id ){
+      if( customerId && customerId !== "undefined" && id && id !== "undefined" ){
         await dispatch(getSites(customerId))
         await navigate(PATH_CRM.customers.sites.view(customerId, id))
       } 
