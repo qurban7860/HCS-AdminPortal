@@ -101,6 +101,9 @@ export default function CustomerEditForm() {
         if(portalRegistration?.status?.toLowerCase() === 'approved'){
           delete data?.email;
         }
+        if(!data?.country){
+          data.country = "";
+        }
         await dispatch(updatePortalRegistration( customerId, data ));
         reset();
         enqueueSnackbar('Customer updated successfully!');
