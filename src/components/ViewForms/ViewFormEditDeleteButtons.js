@@ -47,6 +47,7 @@ function ViewFormEditDeleteButtons({
   transferredHistory,
   apiLogs,
   // Handlers
+  handleClickOnApiLogs,
   handleVerification,
   handleVerificationTitle,
   onArchive,
@@ -298,9 +299,6 @@ function ViewFormEditDeleteButtons({
   const [ transferHistoryAnchorEl, setTransferHistoryAnchorEl ] = useState(null);
   const [ transferHistory, setTransferHistory ] = useState([]);
   
-  const [ APILogsAnchorEl, setAPILogsAnchorEl ] = useState(null);
-  const [ APILogsData, setAPILogsData ] = useState([]);
-  
   const [ serviceRecordApprovalHistoryAnchorEl, setServiceRecordApprovalHistoryAnchorEl ] = useState(null);
   
   const [ machineSettingHistoryAnchorEl, setMachineSettingHistoryAnchorEl ] = useState(null);
@@ -322,13 +320,6 @@ function ViewFormEditDeleteButtons({
     if(transferredHistory?.length > 0) {
       setTransferHistoryAnchorEl(event.currentTarget);
       setTransferHistory(transferredHistory)
-    }
-  };
-
-  const handleAPILogsPopoverOpen = (event) => {
-    if(apiLogs?.length > 0) {
-      setAPILogsAnchorEl(event.currentTarget);
-      setAPILogsData(apiLogs)
     }
   };
 
@@ -373,7 +364,7 @@ function ViewFormEditDeleteButtons({
   const {
     reset,
     handleSubmit,
-    formState: { isSubmitting, isSubmitSuccessful },
+    formState: { isSubmitting },
   } = methods;
 
   const machineSupport = {
@@ -419,7 +410,7 @@ function ViewFormEditDeleteButtons({
                 title={ICONS.APILOGS.heading}
                 color={ICONS.APILOGS.color}
                 icon={ICONS.APILOGS.icon}
-                onClick={handleAPILogsPopoverOpen}
+                onClick={handleClickOnApiLogs}
                 />
             </Badge>
           }
@@ -995,13 +986,6 @@ function ViewFormEditDeleteButtons({
         ListTitle="Ownership Detail"
       />
 
-      {/* <ViewFormMachinePortalKeyHistory
-        open={transferHistoryAnchorEl}
-        onClose={handleTransferHistoryPopoverClose}
-        ListArr={transferHistory}
-        ListTitle="Ownership Detail"
-      /> */}
-
       <ViewFormMachineSettingHistoryMenuPopover
         open={machineSettingHistoryAnchorEl}
         onClose={handleMachineSettingHistoryPopoverClose}
@@ -1051,6 +1035,7 @@ ViewFormEditDeleteButtons.propTypes = {
   multiAuth:PropTypes.bool,
   currentEmp:PropTypes.bool,
   isRequired:PropTypes.bool,
+  handleClickOnApiLogs: PropTypes.func,
   handleTransfer: PropTypes.func,
   handleUpdatePassword: PropTypes.func,
   handleUserInvite: PropTypes.func,
