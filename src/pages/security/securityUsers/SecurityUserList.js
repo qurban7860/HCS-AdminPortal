@@ -1,4 +1,4 @@
-import { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 // @mui
@@ -99,7 +99,7 @@ export default function SecurityUserList() {
     }
   }, [ dispatch ]);
 
-  useLayoutEffect(() => {
+  const onRefresh = useCallback(() => {
     if(activeFilterListBy === "isArchived" ){
       dispatch(getSecurityUsers( { isArchived: true } ));
     }else if(activeFilterListBy === "invitationStatus" ){
@@ -107,10 +107,14 @@ export default function SecurityUserList() {
     } else{
       dispatch(getSecurityUsers());
     }
+  },[ dispatch, activeFilterListBy ] );
+
+  useLayoutEffect(() => {
+    onRefresh();
     return ()=>{
       dispatch(resetSecurityUsers());
     }
-  }, [ dispatch, activeFilterListBy ]);
+  }, [ dispatch, onRefresh ]);
 
   const dataFiltered = applyFilter({
     inputData: securityUsers,
@@ -196,10 +200,6 @@ useEffect(()=>{
     setFilterName('');
     setFilterRole('all');
     setFilterStatus('all');
-  };
-
-  const onRefresh = () => {
-    dispatch(getSecurityUsers());
   };
 
   return (
