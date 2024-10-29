@@ -175,7 +175,7 @@ export function updatePortalRegistration(Id, params) {
         contactPersonName: params?.contactPersonName,
         email: params?.email,
         phoneNumber: params?.phoneNumber,
-        country: params?.country?.label || "",
+        country: params?.country?.label,
         address: params?.address,
         status: params?.status,
         customerNote: params?.customerNote,
