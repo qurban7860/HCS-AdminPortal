@@ -202,8 +202,8 @@ return (
                   />
                    <ListItem
                     onClick={()=> navigate(PATH_SETTING.api.logs.root)}
-                    icon={ICONS.APILOGS.icon}
-                    content={ICONS.APILOGS.heading}
+                    icon={ICONS.API_LOGS.icon}
+                    content={ICONS.API_LOGS.heading}
                   />
                 </List>}
             </StyledSettingsCardContainer>

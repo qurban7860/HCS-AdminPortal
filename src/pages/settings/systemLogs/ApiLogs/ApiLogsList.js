@@ -21,6 +21,7 @@ import Scrollbar from '../../../../components/scrollbar';
 // sections
 import ReleasesListTableRow from './ApiLogsTableRow';
 import ReleasesListTableToolbar from './ApiLogsListTableToolbar';
+import { getMachines } from '../../../../redux/slices/products/machine';
 import { getApiLogs, setFilterBy } from '../../../../redux/slices/logs/apiLogs';
 import { fDate } from '../../../../utils/formatTime';
 import TableCard from '../../../../components/ListTableTools/TableCard';
@@ -49,15 +50,16 @@ export default function ApiLogsList() {
 
   const TABLE_HEAD = [
     { id: 'createdAt', label: 'Date', align: 'left' },
-    // // { id: 'backupLocation', label: 'Name', align: 'left' },
-    // // { id: 'backupSize', label: 'Size', align: 'left' },
-    // { id: 'databaseName', label: 'User', align: 'left' },
-    // // { id: 'backupStatus', label: 'Status', align: 'right' },
   ];
 
   useEffect(() => {
-      dispatch(getApiLogs( machineId, page, rowsPerPage ));
-  }, [dispatch, machineId, page, rowsPerPage ]);
+    // dispatch(getMachines(machineId));
+    dispatch(getApiLogs(
+      machineId,'',
+      "createdAt:desc",
+      { apiType: "MACHINE-INTEGRATION" }
+    ));
+  }, [dispatch, machineId]);
 
   useEffect(() => {
     if (initial) {
@@ -188,13 +190,7 @@ function applyFilter({ inputData, comparator, filterName }) {
   inputData = stabilizedThis.map((el) => el[0]);
   if (filterName) {
     return inputData.filter(
-      (api) => 
-        // api?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 || 
-        // // api?.backupSize?.toString()?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 || 
-        // api?.databaseName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 || 
-        // api?.databaseVersion?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 || 
-        // // api?.backupStatus?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 || 
-        // // api?.backupLocation?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 || 
+      (api) =>  
         fDate(api?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 
     );
   }

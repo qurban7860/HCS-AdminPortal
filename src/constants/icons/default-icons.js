@@ -504,7 +504,7 @@ export const ICONS = {
     icon: 'iconoir:database-backup',
     heading: 'DB Backup Logs',
   },
-  APILOGS: {
+  API_LOGS: {
     icon: 'tabler:api-app',
     heading: 'API Logs',
   },
