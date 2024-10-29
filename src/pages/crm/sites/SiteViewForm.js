@@ -50,7 +50,7 @@ export default function SiteViewForm({ handleMap }) {
               }
   },[ dispatch, customerId, id ])
 
-  const onDelete = async () => {
+  const onArchive = async () => {
     try {
       if(customerId && customerId !== "undefined" && id && id !== "undefined"){
         await dispatch(deleteSite(customerId, id));
@@ -103,7 +103,7 @@ export default function SiteViewForm({ handleMap }) {
         <ViewFormEditDeleteButtons
           isActive={defaultValues?.isActive}
           handleEdit={customer?.isArchived ? undefined : handleEdit}
-          onDelete={customer?.isArchived ? undefined : onDelete}
+          onArchive={customer?.isArchived ? undefined : onArchive}
           // sites={sites}
           mainSite={customer.mainSite?._id === site?._id}
         // handleMap={handleMap}
