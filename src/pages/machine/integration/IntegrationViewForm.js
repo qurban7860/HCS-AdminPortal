@@ -34,7 +34,7 @@ const IntegrationViewForm = () => {
   const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
 
-  const { serialNo, portalKey, computerGUID, IPC_SerialNo } = machine;
+  const { serialNo, portalKey, computerGUID, IPC_SerialNo, status: machineStatus } = machine;
   const currentPortalKey = portalKey?.[0];
 
   const methods = useForm({
@@ -130,106 +130,106 @@ const IntegrationViewForm = () => {
     <>
       <Container maxWidth={false}>
         <MachineTabContainer currentTabValue="integration" />
-        <Card sx={{ minHeight: '500px', width: '100%', p: '1rem', mb: 3, display: 'flex', flexDirection: 'column' }}>
-          <ViewFormEditDeleteButtons
-            sx={{ pt: 5 }}
-            apiLogs={apiLogs?.data || 0}
-            handleClickOnApiLogs={() => setApiLogTableDialogState(true)}
-          />
-          <FormLabel content={FORMLABELS.INTEGRATION.MAIN_HEADER} />
-          <Grid container>
-            <ViewFormField 
-              isLoading={isLoading} 
-              sm={6} 
-              variant='h6' 
-              heading="Computer GUID" 
-              node={renderIntegrationField(computerGUID, "computerGUID", "Computer GUID")}
+        {machineStatus?.slug === "transferred" || machineStatus?.slug ===  "decommissioned" ? (
+          <Card sx={{ 
+            minHeight: '500px', width: '100%', p: '1rem', mb: 3, display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', rowGap: 5,
+            }}>
+          <Iconify width={100} sx={{opacity: 0.3}} icon="mdi:cloud-off-outline" color="#2065D1" />
+            <Typography variant="h5" sx={{ textAlign: 'center' }}>
+              Machine Integration is not available. This machine has been {machineStatus?.name}.
+            </Typography>
+          </Card>
+        ) : (
+          <Card sx={{ minHeight: '500px', width: '100%', p: '1rem', mb: 3, display: 'flex', flexDirection: 'column' }}>
+            <ViewFormEditDeleteButtons
+              sx={{ pt: 5 }}
+              apiLogs={apiLogs?.data || 0}
+              handleClickOnApiLogs={() => setApiLogTableDialogState(true)}
             />
-            <ViewFormField 
-              isLoading={isLoading} 
-              sm={6} 
-              variant='h6' 
-              heading="IPC Serial No." 
-              node={renderIntegrationField(IPC_SerialNo, "ipcSerialNo", "IPC Serial No")}
-            />
-            <ViewFormField 
-              isLoading={isLoading} 
-              sm={12}
-              variant='h6' 
-              heading="Portal Key"
-              headingIcon={portalKey?.length > 0 && <Iconify icon="mdi:clipboard-text-history-outline" color="#2065D1" sx={{ position: 'relative', bottom: '-5px' }} />}
-              headingIconTooltip="View Portal Key History"
-              headingIconHandler={(e) => handlePortalKeyHistoryPopup(e)}
-              node={currentPortalKey?.key ? (
-                <Stack>
-                  <Stack direction="row" alignItems="center">
-                    <StyledTooltip title='Copy Portal Key' placement="top" disableFocusListener tooltipcolor="#2065D1" color="#2065D1">
-                      <Link onClick={() => handleKeyCopy(currentPortalKey?.key)} color="inherit" sx={{ cursor: 'pointer', mx: 0.5 }}>
-                        <Iconify icon="mdi:content-copy" sx={{ position: 'relative', bottom: '-5px' }} color="#2065D1" />
-                      </Link>
-                    </StyledTooltip>
-                    <Typography variant="body2" sx={{ fontWeight: 600 }}>{currentPortalKey.key}</Typography>
-                    <Box sx={{ display: 'flex', columnGap: 1 , mx: 1}}>
-                      <StyledTooltip title='Download Portal Key' placement="top" disableFocusListener tooltipcolor="#2065D1" color="#2065D1">
-                        <Link onClick={handleKeyDownload} color="inherit" sx={{ cursor: 'pointer', mx: 0.5 }}>
-                          <Iconify icon="mdi:cloud-download" width={30} sx={{ position: 'relative', bottom: '-5px' }} color="#2065D1" />
+            <FormLabel content={FORMLABELS.INTEGRATION.MAIN_HEADER} />
+            <Grid container>
+              <ViewFormField 
+                isLoading={isLoading} 
+                sm={6} 
+                variant='h6' 
+                heading="Computer GUID" 
+                node={renderIntegrationField(computerGUID, "computerGUID", "Computer GUID")}
+              />
+              <ViewFormField 
+                isLoading={isLoading} 
+                sm={6} 
+                variant='h6' 
+                heading="IPC Serial No." 
+                node={renderIntegrationField(IPC_SerialNo, "ipcSerialNo", "IPC Serial No")}
+              />
+              <ViewFormField 
+                isLoading={isLoading} 
+                sm={12}
+                variant='h6' 
+                heading="Portal Key"
+                headingIcon={portalKey?.length > 0 && <Iconify icon="mdi:clipboard-text-history-outline" color="#2065D1" sx={{ position: 'relative', bottom: '-5px' }} />}
+                headingIconTooltip="View Portal Key History"
+                headingIconHandler={(e) => handlePortalKeyHistoryPopup(e)}
+                node={currentPortalKey?.key ? (
+                  <Stack>
+                    <Stack direction="row" alignItems="center">
+                      <StyledTooltip title='Copy Portal Key' placement="top" disableFocusListener tooltipcolor="#2065D1" color="#2065D1">
+                        <Link onClick={() => handleKeyCopy(currentPortalKey?.key)} color="inherit" sx={{ cursor: 'pointer', mx: 0.5 }}>
+                          <Iconify icon="mdi:content-copy" sx={{ position: 'relative', bottom: '-5px' }} color="#2065D1" />
                         </Link>
                       </StyledTooltip>
-                      <StyledTooltip title='Re-generate Portal Key' placement="top" disableFocusListener tooltipcolor={theme.palette.warning.main} color={theme.palette.warning.main}>
-                        <Link onClick={(e) => handleGenerateKey(e, true)} color="inherit" sx={{ cursor: 'pointer', mx: 0.5 }}>
-                          <Iconify icon="streamline:ai-redo-spark-solid" width={27} sx={{ position: 'relative', bottom: '-5px' }} color={theme.palette.warning.main} />
-                        </Link>
-                      </StyledTooltip>
-                    </Box>
+                      <Typography variant="body2" sx={{ fontWeight: 600 }}>{currentPortalKey.key}</Typography>
+                      <Box sx={{ display: 'flex', columnGap: 1 , mx: 1}}>
+                        <StyledTooltip title='Download Portal Key' placement="top" disableFocusListener tooltipcolor="#2065D1" color="#2065D1">
+                          <Link onClick={handleKeyDownload} color="inherit" sx={{ cursor: 'pointer', mx: 0.5 }}>
+                            <Iconify icon="mdi:cloud-download" width={30} sx={{ position: 'relative', bottom: '-5px' }} color="#2065D1" />
+                          </Link>
+                        </StyledTooltip>
+                        <StyledTooltip title='Re-generate Portal Key' placement="top" disableFocusListener tooltipcolor={theme.palette.warning.main} color={theme.palette.warning.main}>
+                          <Link onClick={(e) => handleGenerateKey(e, true)} color="inherit" sx={{ cursor: 'pointer', mx: 0.5 }}>
+                            <Iconify icon="streamline:ai-redo-spark-solid" width={27} sx={{ position: 'relative', bottom: '-5px' }} color={theme.palette.warning.main} />
+                          </Link>
+                        </StyledTooltip>
+                      </Box>
+                    </Stack>
+                    <Typography variant="caption" sx={{ color: 'text.disabled', display: 'block', fontStyle: 'italic' }}>
+                      Latest Key generated By {currentPortalKey?.createdBy?.name}{` at `}
+                      {fDateTime(currentPortalKey?.createdAt)}{" from "}
+                      {currentPortalKey?.createdIP}
+                    </Typography>
                   </Stack>
-                  <Typography variant="caption" sx={{ color: 'text.disabled', display: 'block', fontStyle: 'italic' }}>
-                    Latest Key generated By {currentPortalKey?.createdBy?.name}{` at `}
-                    {fDateTime(currentPortalKey?.createdAt)}{" from "}
-                    {currentPortalKey?.createdIP}
-                  </Typography>
-                </Stack>
-              ) : (
-                <Link onClick={(e) => handleGenerateKey(e, false)} underline="none" sx={{ cursor: 'pointer', display: 'flex', columnGap: 1 }}>
-                  <Typography variant="body2" sx={{ fontWeight: 600 }}>Generate Portal Key</Typography>
-                  <Iconify icon="mdi:key-add" color="#2065D1" />
-                </Link>
-              )}
-            />
-            <ViewFormField isLoading={isLoading} sm={12} heading="Portal Integration Status"
-             node={
-              machine?.machineIntegrationSyncStatus?.syncStatus ? (
-                <Stack sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+                ) : (
+                  <Link onClick={(e) => handleGenerateKey(e, false)} underline="none" sx={{ cursor: 'pointer', display: 'flex', columnGap: 1 }}>
+                    <Typography variant="body2" sx={{ fontWeight: 600 }}>Generate Portal Key</Typography>
+                    <Iconify icon="mdi:key-add" color="#2065D1" />
+                  </Link>
+                )}
+              />
+              <ViewFormField isLoading={isLoading} sm={12} heading="Portal Integration Status"
+              node={
+                machine?.machineIntegrationSyncStatus?.syncStatus ? (
+                  <Stack sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+                      <Chip 
+                        icon={<Iconify icon="fluent:plug-connected-checkmark-20-regular" width={25} color="#FFF"/>} 
+                        label="Connected" 
+                        color="primary"
+                      />
+                    <Typography variant="caption" sx={{ color: 'text.disabled', display: 'block', mt: 1, fontStyle: 'italic' }}>
+                      {`Machine Connection Successfully establlished on ${fDateTime(machine?.machineIntegrationSyncStatus?.syncDate)} from ${machine?.machineIntegrationSyncStatus?.syncIP}`} 
+                    </Typography>
+                  </Stack>
+                ) : (
                     <Chip 
-                      icon={<Iconify icon="fluent:plug-connected-checkmark-20-regular" width={25} color="#FFF"/>} 
-                      label="Connected" 
-                      color="primary"
+                      icon={<Iconify icon="tabler:plug-connected-x" color="#FFF" />}
+                      label="Waiting for connection"
+                      color="warning"
                     />
-                  <Typography variant="caption" sx={{ color: 'text.disabled', display: 'block', mt: 1, fontStyle: 'italic' }}>
-                    {`Machine Connection Successfully establlished on ${fDateTime(machine?.machineIntegrationSyncStatus?.syncDate)} from ${machine?.machineIntegrationSyncStatus?.syncIP}`} 
-                  </Typography>
-                </Stack>
-              ) : (
-                  <Chip 
-                    icon={<Iconify icon="tabler:plug-connected-x" color="#FFF" />}
-                    label="Waiting for connection"
-                    color="warning"
-                  />
-              )
-             } 
-            />
-          </Grid>
-          {/* {currentPortalKey ? (
-            <Grid container sx={{ mt: 'auto', pt: 2 }}>
-              <Grid item md={12} sx={{ overflowWrap: 'break-word', display: 'flex', mt:1, px:0.5  }}>
-                <Typography paragraph variant="body2" sx={{color: 'text.disabled' }}>
-                  <b>Portal Key Generated By:</b> {currentPortalKey?.createdBy?.name}{` at `}
-                  {fDateTime(currentPortalKey?.createdAt)}{"  "}
-                  {currentPortalKey?.createdIP}
-                </Typography>
-              </Grid>
+                )
+              } 
+              />
             </Grid>
-          ) : null} */}
-        </Card>
+          </Card>
+        )}
       </Container>
 
       <Dialog open={!!openAddMoreInfoDialog} onClose={() => setOpenAddMoreInfoDialog(false)} maxWidth="sm" fullWidth>
