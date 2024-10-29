@@ -121,6 +121,11 @@ export const RegionAdd = Loadable(lazy(() => import('../pages/crm/configs/region
 export const RegionEdit = Loadable(lazy(() => import('../pages/crm/configs/regions/RegionEdit')));
 export const RegionView = Loadable(lazy(() => import('../pages/crm/configs/regions/RegionView')));
 
+// CUSTOMER REQUESTS
+export const PortalRegistrationList = Loadable(lazy(() => import('../pages/crm/portalRegistration/PortalRegistrationList')));
+export const PortalRegistrationEdit = Loadable(lazy(() => import('../pages/crm/portalRegistration/PortalRegistrationEdit')));
+export const PortalRegistrationView = Loadable(lazy(() => import('../pages/crm/portalRegistration/PortalRegistrationView')));
+
 //----------------------------------------------------------------
 
 // Machine
@@ -210,7 +215,11 @@ export const MachineINICompareView = Loadable(lazy(() => import('../pages/machin
 export const MachineLogsList = Loadable(lazy(() => import('../pages/machine/logs/MachineLogsList')));
 export const MachineLogsAdd = Loadable(lazy(() => import('../pages/machine/logs/MachineLogsAddForm')));
 // export const MachineLogsView = Loadable(lazy(() => import('../pages/machine/logs/MachineLogsViewForm')));
-// export const MachineLogsGraphView = Loadable(lazy(() => import('../pages/machine/logs/MachineLogsGraphViewForm')));
+export const MachineLogsGraphView = Loadable(lazy(() => import('../pages/machine/logs/MachineLogsGraphViewForm')));
+
+// --------------------------- MACHINE INTEGRATION -------------------------------------
+
+export const MachineIntegrationViewForm = Loadable(lazy(() => import('../pages/machine/integration/IntegrationViewForm')));
 
 // --------------------------- MACHINE JIRA -------------------------------------
 

@@ -25,6 +25,13 @@ export const ICONS = {
     heading: 'Inactive',
   },
 
+  // Status
+  STATUS: {
+    icon: 'mdi:list-status',
+    color: '#008000',
+    heading: 'Status',
+  },
+
   //  Releases
   RELEASE: {
     icon: 'mdi:source-branch',
@@ -344,6 +351,12 @@ export const ICONS = {
     heading: 'Open Map',
   },
   // ------------------------------------------------------------
+  // Machine Integration
+  APILOGS: {
+    icon: 'tabler:logs',
+    color: '#2065D1',
+    heading: 'Sync Connection History',
+  },
 
   // @root - Machine - settings
   // common settings
@@ -496,6 +509,12 @@ export const ICONS = {
     icon: 'ri:swap-box-line',
     heading: 'Move',
   },
+  
+  SEE_MORE: {
+    icon: 'lsicon:more-outline',
+    color: '#909090',
+    heading: 'See More',
+  },
 
   USER_LOCK: {
     icon: 'mingcute:lock-fill',
@@ -528,5 +547,7 @@ export const ICONS = {
   SERVICE_RECORDS:{ icon:'mdi:clipboard-text-clock' },
   INI:{ icon:'ph:file-ini-fill' },
   LOGS:{ icon:'lucide:list-end' },
+  GRAPHS:{ icon:'mdi:graph-bar' },
+  INTEGRATION:{ icon:'carbon:ibm-cloud-direct-link-2-connect' },
   JIRA:{ icon:'simple-icons:jirasoftware' },
 };

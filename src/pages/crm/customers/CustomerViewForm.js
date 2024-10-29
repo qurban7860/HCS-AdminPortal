@@ -109,7 +109,6 @@ const onArchive = async () => {
       await dispatch(setCustomerVerification(customerId));
       enqueueSnackbar('Customer Verified!');
     } catch (error) {
-      console.log(error);
       enqueueSnackbar(error, { variant: 'error' });
     }
   };

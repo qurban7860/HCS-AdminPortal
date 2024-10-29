@@ -1,5 +1,4 @@
 import { ICONS } from '../../../constants/icons/default-icons';
-import Iconify from '../../../components/iconify';
 
   export function checkValuesNotNull(obj) {
       return Object.values(obj).some(value => value !== null);
@@ -123,6 +122,16 @@ const TABS = [
     value: 'logs',
     label: 'Logs',
     icon: ICONS.LOGS.icon,
+  },  
+  {
+    value: 'graphs',
+    label: 'Graphs',
+    icon: ICONS.GRAPHS.icon,
+  },  
+  {
+    value: 'integration',
+    label: 'Machine Integration',
+    icon: ICONS.INTEGRATION.icon,
   },  
   {
     value: 'jira',

@@ -3,6 +3,24 @@ import { isNumberLatitude , isNumberLongitude } from '../crm/sites/util/index'
 
 const stringLengthMessage = 'Trading name must not exceed 500 characters';
 
+export const editPortalRegistrationSchema = Yup.object().shape({
+  customerName: Yup.string().trim().max(200).label('Customer Name').required(),
+  contactPersonName: Yup.string().trim().max(200).label('Contact Person Name'),
+  email: Yup.string().email().label('Email').required(),
+  phoneNumber: Yup.string().trim().matches(/^[+0-9 ]+$/, 'Phone number must be digits only!').max(20).label('Phone Number'),
+  status: Yup.string().max(200).label('Status').nullable(),
+  customerNote: Yup.string().trim().max(5000).label('Customer Note'),
+  internalNote: Yup.string().trim().max(5000).label('Internal Note'),
+  machineSerialNos: Yup.array().typeError("Invalid Machine Serial Nos!")
+  .min(1, 'At least one machine serial number is required')
+  .test( 'all-valid-serial-numbers','Each serial number must be exactly 6 digits',
+  (value) => value?.every(serialNo => /^\d{6}$/.test(serialNo)))
+  .label('Machine Serial Nos')
+  .required('Machine serial numbers are required'),
+  address: Yup.string().trim().max(200).label('Address'),
+  isActive: Yup.boolean().label('IsActive'),
+});
+
 // @root - DocumentEditForm
 export const EditCustomerDocumentSchema = Yup.object().shape({
   displayName: Yup.string().max(50),

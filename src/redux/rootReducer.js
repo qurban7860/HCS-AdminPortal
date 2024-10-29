@@ -56,6 +56,8 @@ import emailsReducer from './slices/email/emails';
 import eventReducer from './slices/event/event';
 import customerJiraReducer from './slices/customer/customerJira';
 import jiraReducer from './slices/jira/jira';
+import apilogsReducer from './slices/logs/apiLogs';
+import portalRegistrationReducer from './slices/customer/portalRegistration';
 
 // ----------------------------------------------------------------------
 
@@ -375,6 +377,13 @@ export const machineErpLogsPersistConfig = {
   blacklist: ['error', 'initial', 'responseMessage']
 }
 
+export const machineIntegrationPersistConfig = {
+  key: 'machineIntegrationRecord',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
+
 export const pm2LogsPersistConfig = {
   key: 'pm2Logs',
   storage,
@@ -383,6 +392,12 @@ export const pm2LogsPersistConfig = {
 }
 export const dbBackupLogsPersistConfig = {
   key: 'pm2Logs',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
+export const apiLogsPersistConfig = {
+  key: 'apiLogs',
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
@@ -414,6 +429,13 @@ export const customerJiraPersistConfig = {
 }
 export const jiraPersistConfig = {
   key: 'jira',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
+
+export const portalRegistrationPersistConfig = {
+  key: 'PortalRegistration',
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
@@ -468,12 +490,14 @@ const rootReducer = combineReducers({
   configuration: persistReducer(configurationPersistConfig, configurationReducer),
   machineErpLogs: persistReducer(machineErpLogsPersistConfig, machineErpLogsReducer),
   pm2Logs: persistReducer(pm2LogsPersistConfig, pm2logsReducer),
+  apiLogs: persistReducer(apiLogsPersistConfig, apilogsReducer),
   dbBackupLogs: persistReducer(dbBackupLogsPersistConfig, dbBackupLogsReducer),
   machineJira: persistReducer(machineJiraPersistConfig, machineJiraReducer),
   emails: persistReducer(emailsPersistConfig, emailsReducer),
   event: persistReducer(eventPersistConfig, eventReducer),
   customerJira: persistReducer(customerJiraPersistConfig, customerJiraReducer),
-  jira: persistReducer(jiraPersistConfig, jiraReducer),  
+  jira: persistReducer(jiraPersistConfig, jiraReducer),
+  portalRegistration: persistReducer( portalRegistrationPersistConfig, portalRegistrationReducer ),
 });
 
 export default rootReducer;

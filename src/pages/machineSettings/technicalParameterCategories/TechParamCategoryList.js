@@ -229,7 +229,7 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
     inputData = inputData.filter(
       (produc) =>
         produc?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        // (produc?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+        // (produc?.isActive ? "Active" : "InActive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
         fDate(produc?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }

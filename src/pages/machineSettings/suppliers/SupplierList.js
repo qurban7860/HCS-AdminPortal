@@ -295,7 +295,7 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
         filterSupplier?.contactName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         filterSupplier?.address?.city?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         filterSupplier?.address?.country?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        // (product?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+        // (product?.isActive ? "Active" : "InActive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
         fDate(filterSupplier?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }

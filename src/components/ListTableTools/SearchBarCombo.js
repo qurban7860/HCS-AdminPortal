@@ -17,6 +17,7 @@ import { useAuthContext } from '../../auth/useAuthContext';
 import { useDebouncedEffect } from '../../hooks/useDebouncedEffect';
 
 function SearchBarCombo({
+  node,
   isFiltered,
   value,
   onFilterVerify,
@@ -35,6 +36,7 @@ function SearchBarCombo({
   setCategoryVal,
   typeVal,
   setTypeVal,
+  machineDrawings,
   signInLogsFilter,
   onSignInLogsFilter,
   onChange,
@@ -145,6 +147,11 @@ function SearchBarCombo({
               }}
             />
           </Grid>}
+          {node && 
+            <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
+                { node }
+            </Grid>
+          }
 
           {onFilterVerify &&
           <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
@@ -379,7 +386,9 @@ function SearchBarCombo({
                 <MenuItem key="all" value="all">All</MenuItem>
                 <MenuItem key="verified" value="active">Active</MenuItem>
                 <MenuItem key="unverified" value="inActive">In-Active</MenuItem>
-                </Select>
+                <MenuItem key="isArchived" value="isArchived">Archived</MenuItem>
+                <MenuItem key="invitationStatus" value="invitationStatus">Invitations</MenuItem>
+              </Select>
             </FormControl>
             </Stack>
           </Grid>}
@@ -426,7 +435,7 @@ function SearchBarCombo({
           </Grid>}
 
           { setCategoryVal &&  typeof setCategoryVal === 'function' && 
-          <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
+          <Grid item xs={12} sm={6} md={4} lg={2} xl={(machineDrawings) ? 4 : 2}>
             <Autocomplete 
               id="controllable-states-demo"
               value={categoryVal || null}
@@ -453,7 +462,7 @@ function SearchBarCombo({
             />
           </Grid>}
 
-          {setTypeVal &&  typeof setTypeVal === 'function'  && <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
+          {setTypeVal &&  typeof setTypeVal === 'function'  && <Grid item xs={12} sm={6} md={4} lg={2} xl={(machineDrawings) ? 4 : 2}>
             <Autocomplete 
               id="controllable-states-demo"
               value={typeVal || null}
@@ -777,6 +786,7 @@ function SearchBarCombo({
 }
 
 SearchBarCombo.propTypes = {
+  node: PropTypes.node,
   isFiltered: PropTypes.bool,
   onClick: PropTypes.func,
   onChange: PropTypes.func,
@@ -800,6 +810,7 @@ SearchBarCombo.propTypes = {
   openGraph: PropTypes.func,
   typeVal: PropTypes.object,
   setTypeVal: PropTypes.func,
+  machineDrawings: PropTypes.bool,
   employeeFilterListBy: PropTypes.string,
   onEmployeeFilterListBy: PropTypes.func,
   onFilterListByRegion: PropTypes.func,

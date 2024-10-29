@@ -1,4 +1,4 @@
-import { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 // @mui
@@ -93,13 +93,28 @@ export default function SecurityUserList() {
   const [ filterByRegion, setFilterByRegion ] = useState(filterRegion);
 
   useLayoutEffect(() => {
-    dispatch(getSecurityUsers());
     dispatch(getActiveRegions());
     return ()=>{
-      dispatch(resetSecurityUsers());
       dispatch(resetActiveRegions());
     }
   }, [ dispatch ]);
+
+  const onRefresh = useCallback(() => {
+    if(activeFilterListBy === "isArchived" ){
+      dispatch(getSecurityUsers( { isArchived: true } ));
+    }else if(activeFilterListBy === "invitationStatus" ){
+      dispatch(getSecurityUsers( { invitationStatus: true } ));
+    } else{
+      dispatch(getSecurityUsers());
+    }
+  },[ dispatch, activeFilterListBy ] );
+
+  useLayoutEffect(() => {
+    onRefresh();
+    return ()=>{
+      dispatch(resetSecurityUsers());
+    }
+  }, [ dispatch, onRefresh ]);
 
   const dataFiltered = applyFilter({
     inputData: securityUsers,
@@ -185,10 +200,6 @@ useEffect(()=>{
     setFilterName('');
     setFilterRole('all');
     setFilterStatus('all');
-  };
-
-  const onRefresh = () => {
-    dispatch(getSecurityUsers());
   };
 
   return (
@@ -307,7 +318,7 @@ function applyFilter({ inputData, comparator, filterName, filterStatus, filterRo
         securityUser?.phone?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         `${securityUser?.contact?.firstName?.toLowerCase() || ''} ${securityUser?.contact?.lastName?.toLowerCase() || '' }`.indexOf(filterName.toLowerCase()) >= 0 ||
         securityUser?.roles?.map((obj) => obj.name).join(', ').toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        // (securityUser?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+        // (securityUser?.isActive ? "Active" : "InActive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
         fDate(securityUser?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }

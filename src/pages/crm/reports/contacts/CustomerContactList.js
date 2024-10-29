@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'; 
 import { useState, useEffect , useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import debounce from 'lodash/debounce';
@@ -33,22 +34,17 @@ import TableCard from '../../../../components/ListTableTools/TableCard';
 import { fDate } from '../../../../utils/formatTime';
 import { useSnackbar } from '../../../../components/snackbar';
 import { exportCSV } from '../../../../utils/exportCSV';
+import IconButtonTooltip from '../../../../components/Icons/IconButtonTooltip';
+import { ICONS } from '../../../../constants/icons/default-icons';
 
 // ----------------------------------------------------------------------
 
-const TABLE_HEAD = [
-  { id: 'customer.name', visibility: 'xs', label: 'Customer', align: 'left' },
-  { id: 'firstName', label: 'Contact', align: 'left' },
-  { id: 'phone', visibility: 'xs', label: 'Phone', align: 'left' },
-  { id: 'email', visibility: 'xs', label: 'Email', align: 'left' },
-  { id: 'address.country', visibility: 'xs', label: 'Country', align: 'left' },
-  { id: 'isActive', visibility: 'xs', label: 'Active', align: 'center' },
-  { id: 'createdAt',visibility: 'xs', label: 'Created At', align: 'right' },
-];
+CustomerContactList.propTypes = {
+  isCustomerContactPage: PropTypes.bool,
+  filterFormer: PropTypes.string,
+};
 
-// ----------------------------------------------------------------------
-
-export default function CustomerContactList() {
+export default function CustomerContactList({isCustomerContactPage = false, filterFormer}) {
   const {
     order,
     orderBy,
@@ -57,16 +53,30 @@ export default function CustomerContactList() {
     onSelectRow,
     onSort,
   } = useTable({
-    defaultOrderBy: 'createdAt', defaultOrder: 'desc',
+    defaultOrderBy: 'firstName', defaultOrder: 'asc',
   });
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const { contacts, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.contact);
-  const [tableData, setTableData] = useState([]);
   const [filterName, setFilterName] = useState(filterBy);
   const [exportingCSV, setExportingCSV] = useState(false);
+  
+  // ----------------------------------------------------------------------
+
+  const TABLE_HEAD = [
+    ...(isCustomerContactPage ? [{ id: 'isActive', visibility: 'xs',  label: ( <IconButtonTooltip title={ ICONS.STATUS.heading } color={ ICONS.STATUS.color } icon={ ICONS.STATUS.icon } />), align: 'center' }] : []),
+    ...(isCustomerContactPage ? [{ id: 'formerEmployee', visibility: 'xs',  label: ( <IconButtonTooltip title={ ICONS.CURR_EMP_ACTIVE.heading } color={ ICONS.CURR_EMP_ACTIVE.color } icon={ ICONS.CURR_EMP_ACTIVE.icon } />), align: 'center' }] : []),
+    ...(!isCustomerContactPage ? [{ id: 'customer.name', visibility: 'xs', label: 'Customer', align: 'left'}] : []),
+    { id: 'firstName', label: 'Contact Name', align: 'left' },
+    ...(isCustomerContactPage ? [{ id: 'title', label: 'Title', align: 'left' }] : []),
+    { id: 'phoneNumbers', visibility: 'xs', label: 'Phone', align: 'left' },
+    { id: 'email', visibility: 'xs', label: 'Email', align: 'left' },
+    { id: 'address.country', visibility: 'xs', label: 'Country', align: 'left' },
+    ...(!isCustomerContactPage ? [{ id: 'isActive', visibility: 'xs', label: 'Active', align: 'center' }] : []),
+    { id: 'createdAt',visibility: 'xs', label: 'Created At', align: 'right' },
+  ];
 
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));
@@ -78,18 +88,20 @@ export default function CustomerContactList() {
   }
 
   useEffect(() => {
-    dispatch(getContacts());
-    return ()=> { dispatch( resetContacts() ) }
-  }, [dispatch]);
-
-  useEffect(() => {
-    setTableData(contacts || []);
-  }, [contacts]);
+    if (!isCustomerContactPage) { 
+      dispatch(getContacts());
+      return () => {
+        dispatch(resetContacts());
+      };
+    }
+    return undefined; 
+  }, [dispatch, isCustomerContactPage]);  
 
   const dataFiltered = applyFilter({
-    inputData: tableData,
+    inputData: contacts || [],
     comparator: getComparator(order, orderBy),
     filterName,
+    filterFormer,
   });
 
   const denseHeight = 60;
@@ -97,8 +109,8 @@ export default function CustomerContactList() {
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
   const debouncedSearch = useRef(debounce((value) => {
-      dispatch(ChangePage(0))
-      dispatch(setFilterBy(value))
+    dispatch(ChangePage(0))
+    dispatch(setFilterBy(value))
   }, 500))
 
   const handleFilterName = (event) => {
@@ -150,16 +162,18 @@ export default function CustomerContactList() {
 
   return (
     <Container maxWidth={false}>
+      {!isCustomerContactPage ? (
         <StyledCardContainer>
-          <Cover name='Customer Contacts' backLink customerSites/>
+          <Cover name='Customer Contacts' backLink customerSites/>        
         </StyledCardContainer>
+      ) : null} 
       <TableCard >
-      <CustomerContactListTableToolbar
+        <CustomerContactListTableToolbar
           filterName={filterName}
           onFilterName={handleFilterName}
           isFiltered={isFiltered}
           onResetFilter={handleResetFilter}
-          onExportCSV={onExportCSV}
+          onExportCSV={!isCustomerContactPage ? onExportCSV : undefined}
           onExportLoading={exportingCSV}
         />
 
@@ -171,7 +185,6 @@ export default function CustomerContactList() {
           onRowsPerPageChange={onChangeRowsPerPage}
         />}
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-
           <Scrollbar>
             <Table size="small" sx={{ minWidth: 360 }}>
               <TableHeadCustom
@@ -195,6 +208,7 @@ export default function CustomerContactList() {
                         openInNewPage={() => handleViewCustomerInNewPage(row?.customer?._id)}
                         handleContactView= { handleViewContact }
                         handleContactViewInNewPage= { handleViewContactInNewPage }
+                        isCustomerContactPage={ isCustomerContactPage } 
                         style={index % 2 ? { background: 'red' } : { background: 'green' }}
                       />
                     ) : (
@@ -202,7 +216,6 @@ export default function CustomerContactList() {
                     )
                   )}
                   <TableNoData isNotFound={isNotFound} />
-
               </TableBody>
             </Table>
           </Scrollbar>
@@ -222,29 +235,45 @@ export default function CustomerContactList() {
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName }) {
-  const stabilizedThis = inputData.map((el, index) => [el, index]);
+function applyFilter({ inputData, comparator, filterName, filterFormer }) {
+  let filteredData = inputData;
+
+  if (filterFormer?.toLowerCase() === 'former employee') {
+    filteredData = filteredData.filter((contact) => contact?.formerEmployee);
+  } else if (filterFormer?.toLowerCase() === 'current employee') {
+    filteredData = filteredData.filter((contact) => !contact?.formerEmployee);
+  }
+  const stabilizedThis = filteredData.map((el, index) => [el, index]);
 
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
     return a[1] - b[1];
   });
-  
-  inputData = stabilizedThis.map((el) => el[0]);
+  filteredData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    inputData = inputData.filter(
-      (contact) =>
+    filteredData = filteredData.filter((contact) => {
+      const phoneNumbers = contact?.phoneNumbers 
+        ? contact.phoneNumbers
+          .map(({ countryCode, contactNumber }) => {
+            const fullNumber = countryCode ? `+${countryCode}-${contactNumber}` : contactNumber;
+            return fullNumber.replace(/[^\d]/g, '');
+          })
+          .join(', ')
+        : '';
+
+      return (
         contact?.customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         `${contact?.firstName} ${contact?.lastName}`.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        // contact?.title?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        contact?.phone?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        contact?.title?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        phoneNumbers.indexOf(filterName.replace(/[^\d]/g, '')) || 
         contact?.email?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         contact?.address?.country?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         fDate(contact?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
-    );
+      );
+    });
   }
 
-  return inputData;
+  return filteredData;
 }

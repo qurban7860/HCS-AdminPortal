@@ -25,6 +25,7 @@ import { fDate, fDateTime, GetDifferenceInDays } from '../../utils/formatTime';
 import { useAuthContext } from '../../auth/useAuthContext';
 import { PATH_DASHBOARD } from '../../routes/paths';
 import ViewFormServiceRecordApprovalHistoryPopover from './ViewFormServiceRecordApprovalHistoryPopover';
+import ViewFormMachinePortalKeyHistory from './ViewFormMachinePortalKeyHistory';
 
 function ViewFormEditDeleteButtons({
   backLink,
@@ -44,7 +45,9 @@ function ViewFormEditDeleteButtons({
   settingPage,
   securityUserPage,
   transferredHistory,
+  apiLogs,
   // Handlers
+  handleClickOnApiLogs,
   handleVerification,
   handleVerificationTitle,
   onArchive,
@@ -185,7 +188,7 @@ function ViewFormEditDeleteButtons({
   ])
 
   const handleOpenConfirm = (dialogType) => {
-
+    
     if (dialogType === 'UserInvite') {
       setOpenUserInviteConfirm(true);
     }
@@ -284,6 +287,11 @@ function ViewFormEditDeleteButtons({
     await handleCloseConfirm('delete');
   };
 
+  const handleRestore = async () => {
+    await onRestore();
+    await setOpenRestoreConfirm(false);
+  };
+  
   
   const [verifiedAnchorEl, setVerifiedAnchorEl] = useState(null);
   const [verifiedBy, setVerifiedBy] = useState([]);
@@ -356,7 +364,7 @@ function ViewFormEditDeleteButtons({
   const {
     reset,
     handleSubmit,
-    formState: { isSubmitting, isSubmitSuccessful },
+    formState: { isSubmitting },
   } = methods;
 
   const machineSupport = {
@@ -395,6 +403,16 @@ function ViewFormEditDeleteButtons({
               color={isActive?ICONS.ACTIVE.color:ICONS.INACTIVE.color}
               icon={isActive?ICONS.ACTIVE.icon:ICONS.INACTIVE.icon}
             />
+          }
+          {apiLogs!==undefined && apiLogs?.length > 0 &&
+            <Badge badgeContent={apiLogs?.length || '0' } color="info">
+              <IconTooltip
+                title={ICONS.APILOGS.heading}
+                color={ICONS.APILOGS.color}
+                icon={ICONS.APILOGS.icon}
+                onClick={handleClickOnApiLogs}
+                />
+            </Badge>
           }
           {isIniRead!==undefined &&
             <IconTooltip
@@ -935,7 +953,7 @@ function ViewFormEditDeleteButtons({
       />
 
       <ConfirmDialog
-        open={ openRestoreConfirm && !isSubmitSuccessful }
+        open={ openRestoreConfirm }
         onClose={() => {
           handleCloseConfirm('restore');
         }}
@@ -947,7 +965,7 @@ function ViewFormEditDeleteButtons({
             color="error"
             loading={isSubmitted || isSubmitting || isLoading}
             disabled={isSubmitted || isSubmitting || isLoading}
-            onClick={ handleSubmit( onRestore ) }
+            onClick={ handleSubmit( handleRestore ) }
           >
             Restore
           </LoadingButton>
@@ -1017,6 +1035,7 @@ ViewFormEditDeleteButtons.propTypes = {
   multiAuth:PropTypes.bool,
   currentEmp:PropTypes.bool,
   isRequired:PropTypes.bool,
+  handleClickOnApiLogs: PropTypes.func,
   handleTransfer: PropTypes.func,
   handleUpdatePassword: PropTypes.func,
   handleUserInvite: PropTypes.func,
@@ -1024,6 +1043,7 @@ ViewFormEditDeleteButtons.propTypes = {
   handleViewPDF: PropTypes.func,
   isInviteLoading:PropTypes.bool,
   handleEdit: PropTypes.func,
+  apiLogs: PropTypes.array,
   handleJiraNaviagte: PropTypes.func,
   onArchive: PropTypes.func,
   onRestore: PropTypes.func,

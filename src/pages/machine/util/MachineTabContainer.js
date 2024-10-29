@@ -56,28 +56,49 @@ export default function MachineTabContainer({ currentTabValue }) {
       navigate( PATH_MACHINE.machines.ini.root(machineId) )
     } else if(tab === 'logs' && machineId  ){
       navigate( PATH_MACHINE.machines.logs.root(machineId) )
+    } else if(tab === 'graphs' && machineId  ){
+      navigate( PATH_MACHINE.machines.logs.graph(machineId) )
     } else if(tab === 'jira' && machineId  ){
       navigate( PATH_MACHINE.machines.jira.root(machineId) )
+    } else if(tab === 'integration' && machineId  ){
+      navigate( PATH_MACHINE.machines.integration.root(machineId) )
     }
   }
 
 
   return (
     <StyledCardContainer>
-        <Cover name={machine ? `${machine?.serialNo ? machine?.serialNo : ''} ${machine?.machineModel?.name ? `- ${machine?.machineModel?.name}` : '' }` : 'New Machine'} setting isArchived={machine?.isArchived}  />
+      <Cover
+        name={
+          machine
+            ? `${machine?.serialNo ? machine?.serialNo : ''} ${
+                machine?.machineModel?.name ? `- ${machine?.machineModel?.name}` : ''
+              }`
+            : 'New Machine'
+        }
+        setting
+        isArchived={machine?.isArchived}
+      />
       {!isLoading && (
         <TabContainer
           tabsClasses={tabsClasses.scrollButtons}
           currentTab={currentTabValue}
-          setCurrentTab={(tab)=>  navigatePage(tab) }
+          setCurrentTab={(tab) => navigatePage(tab)}
         >
           {TABS.map((tab) => (
             <Tab
               disabled={tab.disabled}
               key={tab.value}
               value={tab.value}
-              label={tab?.value===currentTabValue?tab.label:""}
-              icon={<TabButtonTooltip value={tab.value} selected={tab?.value===currentTabValue} title={tab.label} icon={tab.icon}/>}
+              label={tab?.value === currentTabValue ? tab.label : ''}
+              icon={
+                <TabButtonTooltip
+                  value={tab.value}
+                  selected={tab?.value === currentTabValue}
+                  title={tab.label}
+                  icon={tab.icon}
+                />
+              }
             />
           ))}
         </TabContainer>

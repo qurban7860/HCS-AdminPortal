@@ -98,6 +98,11 @@ import {
   RegionView,
   RegionEdit,
 
+  // Customer Registrations
+  PortalRegistrationList,
+  PortalRegistrationEdit,
+  PortalRegistrationView,
+
   // ----------------------------------------------------------------
 
   // Machine
@@ -176,7 +181,10 @@ import {
   MachineLogsList,
   MachineLogsAdd,
   // MachineLogsView,
-  // MachineLogsGraphView,
+  MachineLogsGraphView,
+
+  // --------------------------- MACHINE INTEGRATION -------------------------------------
+  MachineIntegrationViewForm,
 
   // --------------------------- MACHINE Jira --------------------------------
   MachineJiraList,
@@ -611,6 +619,22 @@ export default function Router() {
         },
       ],
     },
+
+    // --------------------- Dashboard ----------------------
+    {
+      path: 'portalRegistrations',
+      element: (
+        <AuthGuard>
+          <DashboardLayout />
+        </AuthGuard>
+      ),
+      children: [
+        { element: <PortalRegistrationList to={PATH_AFTER_LOGIN} replace />, index: true },
+        { path: ':customerId/edit', element: <PortalRegistrationEdit /> },
+        { path: ':customerId/view', element: <PortalRegistrationView /> },
+        { path: 'permission-denied', element: <PermissionDeniedPage /> },
+      ],
+    },
     // ------------------------- Machine ---------------------------
     { path: 'products',
       element: (
@@ -738,8 +762,13 @@ export default function Router() {
               children:[
                 {element: <MachineLogsList/>, index: true},
                 {path: 'new', element: <MachineLogsAdd/>},
-                // {path: 'graph', element: <MachineLogsGraphView/>}, 
+                {path: 'graph', element: <MachineLogsGraphView/>}, 
                 // {path: ':id/view', element: <MachineLogsView/>},
+              ]
+            },
+            { path: ':machineId/integration',
+              children:[
+                {element: <MachineIntegrationViewForm/>, index: true},
               ]
             },
             { path: ':machineId/jira',

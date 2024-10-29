@@ -6,6 +6,7 @@ function path(root, sublink) {
 
 const ROOTS_AUTH = '/auth';
 const ROOTS_DASHBOARD = '/dashboard';
+const ROOTS_PORTAL_REGISTRATIONS = '/portalRegistrations';
 const ROOTS_CALENDAR = '/calendar';
 const ROOTS_CRM = '/crm';
 const ROOTS_MACHINE = '/products';
@@ -134,7 +135,15 @@ export const PATH_CRM = {
       view: (id) => path(ROOTS_CRM, `/customers/archived/${id}/view`),
     },
   },
-  
+};
+
+// --------------------- CUSTOMER REGISTRATIONS ----------------------
+export const PATH_PORTAL_REGISTRATION = {
+  root: ROOTS_PORTAL_REGISTRATIONS,
+  edit: ( customerId ) => path(ROOTS_PORTAL_REGISTRATIONS, `/${customerId}/edit`),
+  view: ( customerId ) => path(ROOTS_PORTAL_REGISTRATIONS, `/${customerId}/view`),
+  permissionDenied: path(ROOTS_PORTAL_REGISTRATIONS, '/permission-denied'),
+  blank: path(ROOTS_AUTH, '/login'),
 };
 
 // MACHINE
@@ -254,7 +263,12 @@ export const PATH_MACHINE = {
       new: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/logs/new`),
       graph: (machineId ) => path(ROOTS_MACHINE, `/machines/${machineId}/logs/graph`),
       // view: (machineId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/logs/${id}/view`),
-    },    
+    },
+
+    // --------------------- Machine Integration -----------------------
+    integration: {
+      root: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/integration`),
+    },
     jira: {
       root: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/jira`),
       // new: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/logs/new`),

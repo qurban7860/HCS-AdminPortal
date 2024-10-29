@@ -20,11 +20,13 @@ import { PATH_MACHINE, PATH_CRM } from '../../../routes/paths';
 ContactViewForm.propTypes = {
   currentContact: PropTypes.object,
   setCurrentContactData: PropTypes.func,
+  isCustomerContactPage: PropTypes.bool,
 };
 
 export default function ContactViewForm({
   currentContact = null,
   setCurrentContactData,
+  isCustomerContactPage,
 }) {
   const { contact, isLoading } = useSelector((state) => state.contact);
   const { customer } = useSelector((state) => state.customer);
@@ -51,6 +53,7 @@ export default function ContactViewForm({
 
   const handleEdit = () => navigate(PATH_CRM.customers.contacts.edit(customerId, id));
   const handleMoveConatct = () => navigate(PATH_CRM.customers.contacts.move(customerId, id));
+  const backLink = () => navigate(PATH_CRM.customers.contacts.root(customerId, id));
 
   const onArchive = async () => {
     try {
@@ -114,6 +117,7 @@ export default function ContactViewForm({
         moveCustomerContact={!customer?.isArchived && isAllAccessAllowed && handleMoveConatct } 
         handleEdit={customer?.isArchived ? undefined : handleEdit} 
         onArchive={customer?.isArchived ? undefined : onArchive} 
+        backLink={isCustomerContactPage && !customer?.isArchived ? backLink : undefined}
         isActive={defaultValues.isActive} 
         formerEmployee={defaultValues.formerEmployee}
       />

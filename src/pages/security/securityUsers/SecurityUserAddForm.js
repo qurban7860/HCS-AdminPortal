@@ -135,7 +135,7 @@ const { contact, customer } = watch();
 
   const onSubmit = async (data) => {
     try {
-      const message = !isInvite ? "User Added Successfully":"User Invitation Sent Successfulllfy";
+      const message = !isInvite ? "User Added Successfully":"User Invitation Sent Successfullfy";
       const response = await dispatch(addSecurityUser(data, isInvite));
       reset();
       enqueueSnackbar(message);
