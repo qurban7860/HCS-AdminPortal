@@ -73,7 +73,7 @@ function PortalRequestInviteDialog() {
         name: portalRegistration?.customerName || "",
         contactPersonName: portalRegistration?.contactPersonName || "",
         email: portalRegistration?.email || "",
-        phone: portalRegistration?.phoneNumber || "",
+        phoneNumber: portalRegistration?.phoneNumber || "",
         address: portalRegistration?.address || "",
         customerNote: portalRegistration?.customerNote || "",
         machineSerialNos: Array.isArray(portalRegistration?.machineSerialNos) ? portalRegistration?.machineSerialNos : [],
