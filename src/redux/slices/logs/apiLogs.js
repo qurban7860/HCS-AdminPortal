@@ -106,21 +106,16 @@ export const {
 
 // ---------------------------------- GET API LOGS ------------------------------------
 
-export function getApiLogs(machineId, page, pageSize, cancelToken ) {
+export function getApiLogs(machineId, fields = '', orderBy = '', query = {}) {
   return async (dispatch) => {
-    dispatch(slice.actions.startLoading(page, pageSize));
+    dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}apiclient/logs/`,
-      {
-        params: {
-          machineId,
-          pagination:{
-            page,
-            pageSize
-          }
-        },
-        cancelToken: cancelToken?.token
-      });
+      const params = {
+        orderBy,
+        query,
+        machine: machineId
+      };
+      const response = await axios.get(`${CONFIG.SERVER_URL}apiclient/logs/`, { params });
       dispatch(slice.actions.getApiLogsSuccess(response.data));
     } catch (error) {
       console.log(error);

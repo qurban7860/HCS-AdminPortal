@@ -25,6 +25,7 @@ import { fDate, fDateTime, GetDifferenceInDays } from '../../utils/formatTime';
 import { useAuthContext } from '../../auth/useAuthContext';
 import { PATH_DASHBOARD } from '../../routes/paths';
 import ViewFormServiceRecordApprovalHistoryPopover from './ViewFormServiceRecordApprovalHistoryPopover';
+import ViewFormMachinePortalKeyHistory from './ViewFormMachinePortalKeyHistory';
 
 function ViewFormEditDeleteButtons({
   backLink,
@@ -44,6 +45,7 @@ function ViewFormEditDeleteButtons({
   settingPage,
   securityUserPage,
   transferredHistory,
+  apiLogs,
   // Handlers
   handleVerification,
   handleVerificationTitle,
@@ -51,9 +53,6 @@ function ViewFormEditDeleteButtons({
   onRestore,
   onDelete,
   handleEdit,
-  handleRegenerate,
-  handleDownload,
-  downloadTooltip,
   handleJiraNaviagte,
   handleTransfer,
   handleUpdatePassword,
@@ -299,6 +298,9 @@ function ViewFormEditDeleteButtons({
   const [ transferHistoryAnchorEl, setTransferHistoryAnchorEl ] = useState(null);
   const [ transferHistory, setTransferHistory ] = useState([]);
   
+  const [ APILogsAnchorEl, setAPILogsAnchorEl ] = useState(null);
+  const [ APILogsData, setAPILogsData ] = useState([]);
+  
   const [ serviceRecordApprovalHistoryAnchorEl, setServiceRecordApprovalHistoryAnchorEl ] = useState(null);
   
   const [ machineSettingHistoryAnchorEl, setMachineSettingHistoryAnchorEl ] = useState(null);
@@ -320,6 +322,13 @@ function ViewFormEditDeleteButtons({
     if(transferredHistory?.length > 0) {
       setTransferHistoryAnchorEl(event.currentTarget);
       setTransferHistory(transferredHistory)
+    }
+  };
+
+  const handleAPILogsPopoverOpen = (event) => {
+    if(apiLogs?.length > 0) {
+      setAPILogsAnchorEl(event.currentTarget);
+      setAPILogsData(apiLogs)
     }
   };
 
@@ -403,6 +412,16 @@ function ViewFormEditDeleteButtons({
               color={isActive?ICONS.ACTIVE.color:ICONS.INACTIVE.color}
               icon={isActive?ICONS.ACTIVE.icon:ICONS.INACTIVE.icon}
             />
+          }
+          {apiLogs!==undefined && apiLogs?.length > 0 &&
+            <Badge badgeContent={apiLogs?.length || '0' } color="info">
+              <IconTooltip
+                title={ICONS.APILOGS.heading}
+                color={ICONS.APILOGS.color}
+                icon={ICONS.APILOGS.icon}
+                onClick={handleAPILogsPopoverOpen}
+                />
+            </Badge>
           }
           {isIniRead!==undefined &&
             <IconTooltip
@@ -748,25 +767,6 @@ function ViewFormEditDeleteButtons({
           />
         }
 
-        {/* download button */}
-        {handleRegenerate && <IconTooltip
-          title="Re-generate Portal Key"
-          onClick={() => {
-            handleRegenerate();
-          }}
-          color={disableEditButton ? "#c3c3c3" : theme.palette.primary.main}
-          icon="mdi:sync"
-        />}
-
-        {/* download button */}
-        {handleDownload && <IconTooltip
-          title={downloadTooltip || "Download"}
-          onClick={() => {
-            handleDownload();
-          }}
-          color={disableEditButton ? "#c3c3c3" : theme.palette.primary.main}
-          icon="mdi:cloud-download"
-        />}
         {/* edit button */}
         {handleEdit && !archived && <IconTooltip
           title="Edit"
@@ -995,6 +995,13 @@ function ViewFormEditDeleteButtons({
         ListTitle="Ownership Detail"
       />
 
+      {/* <ViewFormMachinePortalKeyHistory
+        open={transferHistoryAnchorEl}
+        onClose={handleTransferHistoryPopoverClose}
+        ListArr={transferHistory}
+        ListTitle="Ownership Detail"
+      /> */}
+
       <ViewFormMachineSettingHistoryMenuPopover
         open={machineSettingHistoryAnchorEl}
         onClose={handleMachineSettingHistoryPopoverClose}
@@ -1051,9 +1058,7 @@ ViewFormEditDeleteButtons.propTypes = {
   handleViewPDF: PropTypes.func,
   isInviteLoading:PropTypes.bool,
   handleEdit: PropTypes.func,
-  handleDownload: PropTypes.func,
-  handleRegenerate: PropTypes.func,
-  downloadTooltip: PropTypes.string,
+  apiLogs: PropTypes.array,
   handleJiraNaviagte: PropTypes.func,
   onArchive: PropTypes.func,
   onRestore: PropTypes.func,

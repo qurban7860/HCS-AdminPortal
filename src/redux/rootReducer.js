@@ -57,6 +57,7 @@ import emailsReducer from './slices/email/emails';
 import eventReducer from './slices/event/event';
 import customerJiraReducer from './slices/customer/customerJira';
 import jiraReducer from './slices/jira/jira';
+import apilogsReducer from './slices/logs/apiLogs';
 import portalRegistrationReducer from './slices/customer/portalRegistration';
 
 // ----------------------------------------------------------------------
@@ -490,6 +491,7 @@ const rootReducer = combineReducers({
   configuration: persistReducer(configurationPersistConfig, configurationReducer),
   machineErpLogs: persistReducer(machineErpLogsPersistConfig, machineErpLogsReducer),
   pm2Logs: persistReducer(pm2LogsPersistConfig, pm2logsReducer),
+  apiLogs: persistReducer(apiLogsPersistConfig, apilogsReducer),
   dbBackupLogs: persistReducer(dbBackupLogsPersistConfig, dbBackupLogsReducer),
   apiLogs: persistReducer(apiLogsPersistConfig, apiLogsReducer),
   machineJira: persistReducer(machineJiraPersistConfig, machineJiraReducer),

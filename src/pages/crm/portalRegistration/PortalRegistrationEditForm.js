@@ -71,6 +71,10 @@ export default function CustomerEditForm() {
     formState: { isSubmitting, errors },
   } = methods;
   
+  useEffect(() => {
+    reset(portalRegistration);
+  },[ reset, portalRegistration ]);
+
   const  { email } = watch();
 
   useEffect(() => {

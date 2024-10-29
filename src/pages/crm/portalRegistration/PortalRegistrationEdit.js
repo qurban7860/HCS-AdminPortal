@@ -1,4 +1,4 @@
-import { useLayoutEffect } from 'react';
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 // @mui
 import { Container } from '@mui/material';
@@ -18,9 +18,8 @@ export default function CustomerEdit() {
   const dispatch = useDispatch();
   const { customerId } = useParams();
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     dispatch(getPortalRegistration(customerId));
-    return () => dispatch(resetPortalRegistration());
   }, [dispatch, customerId]);
 
   return (

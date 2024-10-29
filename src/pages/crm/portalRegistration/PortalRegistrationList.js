@@ -49,7 +49,7 @@ import { fDate } from '../../../utils/formatTime';
 const TABLE_HEAD = [
   { id: 'contactPersonName', label: 'Contact Person Name', align: 'left', hideable:false },
   { id: 'email', label: 'Email', align: 'left', },
-  { id: 'phoneNumber', label: 'Telephone', align: 'left', },
+  { id: 'phoneNumber', label: 'Phone Number', align: 'left', },
   { id: 'address', label: 'Address', align: 'left', },
   { id: 'customerName', label: 'Customer Name', align: 'left', },
   { id: 'machineSerialNos', label: 'Machines', align: 'left', },
