@@ -19,8 +19,8 @@ import {
 } from '../../../../components/table';
 import Scrollbar from '../../../../components/scrollbar';
 // sections
-import ReleasesListTableRow from './ApiLogsTableRow';
-import ReleasesListTableToolbar from './ApiLogsListTableToolbar';
+import APILogsTableRow from '../../../../components/machineIntegration/APILogsTableRow';
+import ApiLogsListTableToolbar from './ApiLogsListTableToolbar';
 import { getMachines } from '../../../../redux/slices/products/machine';
 import { getApiLogs, setFilterBy } from '../../../../redux/slices/logs/apiLogs';
 import { fDate } from '../../../../utils/formatTime';
@@ -49,17 +49,26 @@ export default function ApiLogsList() {
   const { apiLogs, filterBy, isLoading, initial } = useSelector((state) => state.apiLogs );
 
   const TABLE_HEAD = [
-    { id: 'createdAt', label: 'Date', align: 'left' },
+    { id: 'createdAt', label: 'Timestamp', align: 'left' },
+    { id: 'requestMethod', label: 'Timestamp', align: 'left' },
+    { id: 'requestURL', label: 'Endpoint', align: 'left' },
+    { id: 'responseStatusCode', label: 'Status', align: 'left' },
+    { id: 'responseTime', label: 'Response Time', align: 'left' },
+    { id: 'machine', label: 'Machine', align: 'left' },
+    { id: 'customer', label: 'Customer', align: 'left' },
+    { id: 'additionalContextualInformation', label: 'Description', align: 'left' },
   ];
 
   useEffect(() => {
-    // dispatch(getMachines(machineId));
-    dispatch(getApiLogs(
-      machineId,'',
-      "createdAt:desc",
-      { apiType: "MACHINE-INTEGRATION" }
-    ));
-  }, [dispatch, machineId]);
+    dispatch(getApiLogs({
+      machineId,
+      orderBy: 'createdAt:desc',
+      query: null,
+      page,
+      pageSize: rowsPerPage,
+      }));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page, rowsPerPage ]);
 
   useEffect(() => {
     if (initial) {
@@ -80,10 +89,11 @@ export default function ApiLogsList() {
     setPage(0)
     dispatch(setFilterBy(value))
   }, 500))
-
+  
   const handleFilterName = (event) => {
-    debouncedSearch.current(event.target.value);
-    setFilterName(event.target.value)
+    const { value } = event.target;
+    debouncedSearch.current(value);
+    setFilterName(value);
     setPage(0);
   };
   
@@ -116,7 +126,7 @@ export default function ApiLogsList() {
           <Cover name="API Logs" generalSettings />
         </Card>
         <TableCard>
-          <ReleasesListTableToolbar
+          <ApiLogsListTableToolbar
             filterName={filterName}
             onFilterName={handleFilterName}
             onFilterStatus={handleFilterStatus}
@@ -148,7 +158,7 @@ export default function ApiLogsList() {
                   // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) =>
                     row ? (
-                        <ReleasesListTableRow
+                        <APILogsTableRow
                           key={index}
                           row={row}
                           // onViewRow={() => handleViewRow(row?.id)}
@@ -178,7 +188,6 @@ export default function ApiLogsList() {
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filterName }) {
-
   const stabilizedThis = inputData?.map((el, index) => [el, index]);
 
   stabilizedThis.sort((a, b) => {
@@ -188,11 +197,26 @@ function applyFilter({ inputData, comparator, filterName }) {
   });
 
   inputData = stabilizedThis.map((el) => el[0]);
+
   if (filterName) {
-    return inputData.filter(
-      (api) =>  
-        fDate(api?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 
-    );
+    const lowercasedFilter = filterName.toLowerCase();
+    return inputData.filter((api) => {
+      const machineSerialNo = api?.machine?.some(
+        (machine) => machine?.serialNo?.toLowerCase().includes(lowercasedFilter) ||
+        machine?.name?.toLowerCase().includes(lowercasedFilter)
+      );
+
+      return (
+        fDate(api?.createdAt)?.toLowerCase().includes(lowercasedFilter) ||
+        api?.requestMethod?.toLowerCase().includes(lowercasedFilter) || 
+        api?.requestURL?.toString()?.toLowerCase().includes(lowercasedFilter) || 
+        String(api?.responseStatusCode || '').toLowerCase().includes(lowercasedFilter) ||
+        String(api?.responseTime || '').toLowerCase().includes(lowercasedFilter) ||
+        machineSerialNo || 
+        api?.customer?.name?.toLowerCase().includes(lowercasedFilter) ||
+        api?.additionalContextualInformation?.toLowerCase().includes(lowercasedFilter)
+      );
+    });
   }
 
   return inputData;
