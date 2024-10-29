@@ -10,6 +10,7 @@ const initialState = {
   isLoading: false,
   error: null,
   apiLogs: [],
+  apiLogsCount: 0,
   apiLog: {},
   page: 0,
   rowsPerPage: 100,
@@ -41,6 +42,7 @@ const slice = createSlice({
       state.isLoading = false;
       state.success = true;
       state.apiLogs = action.payload;
+      state.apiLogsCount = action?.payload?.totalCount;
       state.initial = true;
     },
 
@@ -70,6 +72,7 @@ const slice = createSlice({
     // RESET API LOGS
     resetApiLogs(state){
       state.apiLogs = [];
+      state.apiLogsCount = 0;
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
@@ -106,14 +109,15 @@ export const {
 
 // ---------------------------------- GET API LOGS ------------------------------------
 
-export function getApiLogs(machineId, fields = '', orderBy = '', query = {}) {
+export function getApiLogs({machineId, fields = '', orderBy = '', query = {}, page, pageSize}) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const params = {
         orderBy,
-        query,
-        machine: machineId
+        ...query,
+        machine: machineId,
+        pagination: { page, pageSize },
       };
       const response = await axios.get(`${CONFIG.SERVER_URL}apiclient/logs/`, { params });
       dispatch(slice.actions.getApiLogsSuccess(response.data));

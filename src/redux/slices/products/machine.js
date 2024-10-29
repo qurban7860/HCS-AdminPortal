@@ -201,6 +201,20 @@ const slice = createSlice({
       state.initial = true;
     },
 
+    // Update Machine Portal Details
+    updateMachineIntegrationDetails(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.machine = {
+        ...state.machine, 
+        computerGUID: action.payload.computerGUID, 
+        IPC_SerialNo: action.payload.IPC_SerialNo,
+        portalKey: action.payload.portalKey,
+        machineIntegrationSyncStatus: action.payload.machineIntegrationSyncStatus
+      };
+      state.initial = true;
+    },
+
     // GET Machine For Dialog
     getMachineForDialogSuccess(state, action) {
       state.isLoading = false;
@@ -848,6 +862,20 @@ export function changeMachineStatus(machineId, params) {
   };
 }
 
+export function getMachineIntegrationDetails(machineId) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/integration/`);
+      dispatch(slice.actions.updateMachineIntegrationDetails(response.data));
+      
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
 export function addPortalIntegrationKey(machineId, params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
