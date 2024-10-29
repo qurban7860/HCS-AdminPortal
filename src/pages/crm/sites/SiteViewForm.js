@@ -37,9 +37,11 @@ export default function SiteViewForm({ handleMap }) {
   const navigate = useNavigate();
 
   useEffect(()=>{
-    dispatch(getSite(customerId, id ))
-    dispatch(setIsExpanded(true))
-    dispatch(setCardActiveIndex(id))
+    if( customerId && customerId !== "undefined" && id && id !== "undefined" ){
+      dispatch(getSite(customerId, id ))
+      dispatch(setIsExpanded(true))
+      dispatch(setCardActiveIndex(id))
+    }
     return () => 
               { 
                 dispatch(resetSite()) 
@@ -48,13 +50,15 @@ export default function SiteViewForm({ handleMap }) {
               }
   },[ dispatch, customerId, id ])
 
-  const onDelete = async () => {
+  const onArchive = async () => {
     try {
-      await dispatch(deleteSite(customerId, id));
-      enqueueSnackbar('Site Archived Successfully!');
-      await dispatch(setIsExpanded(false));
-      await dispatch(getSites( customerId ));
-      if(customerId ) await navigate(PATH_CRM.customers.sites.root( customerId ))
+      if(customerId && customerId !== "undefined" && id && id !== "undefined"){
+        await dispatch(deleteSite(customerId, id));
+        enqueueSnackbar('Site Archived Successfully!');
+        await dispatch(setIsExpanded(false));
+        await dispatch(getSites( customerId ));
+        await navigate(PATH_CRM.customers.sites.root( customerId ))
+      }
     } catch (err) {
       enqueueSnackbar(err, { variant: `error` });
       console.log(err);
@@ -99,7 +103,7 @@ export default function SiteViewForm({ handleMap }) {
         <ViewFormEditDeleteButtons
           isActive={defaultValues?.isActive}
           handleEdit={customer?.isArchived ? undefined : handleEdit}
-          onDelete={customer?.isArchived ? undefined : onDelete}
+          onArchive={customer?.isArchived ? undefined : onArchive}
           // sites={sites}
           mainSite={customer.mainSite?._id === site?._id}
         // handleMap={handleMap}

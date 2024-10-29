@@ -93,7 +93,7 @@ export default function CustomerSiteDynamicList({ siteAddForm, siteEditForm, sit
   });
 
   useEffect( () => {
-    if( customerId ){
+    if( customerId && customerId !== "undefined" ) {
       dispatch(getSites(customerId, customer?.isArchived));
     }
     return ()=>{ 

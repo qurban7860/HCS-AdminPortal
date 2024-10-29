@@ -99,7 +99,9 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
   });
 
   useEffect(() => {
-    dispatch(getContacts(customerId, customer?.isArchived));
+    if( customerId && customerId !== "undefined" ){
+      dispatch(getContacts(customerId, customer?.isArchived));
+    }
     return ()=>{
       dispatch(resetContacts());
       dispatch(setCardActiveIndex(null));
