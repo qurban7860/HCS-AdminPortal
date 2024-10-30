@@ -65,9 +65,9 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
   const dispatch = useDispatch();
   const navigate = useNavigate()
 
-  const systemConfig= JSON.parse( localStorage.getItem('configurations'))
-
+  
   useEffect(()=>{
+    const systemConfig= JSON.parse( localStorage.getItem('configurations'))
     if( customer?.type?.toLowerCase() === 'sp' && systemConfig ){
       const configSPContactTypes = systemConfig?.find( ( c )=> c?.name?.trim() === 'SP_CONTACT_TYPES' )?.value?.split(',');
       const sPContactTypes = configSPContactTypes?.map(item => item?.trim())?.sort();
@@ -81,7 +81,7 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
         setContactTypes(CustomerContactTypes)
       }
     }
-  },[ customer?.type, systemConfig ])
+  },[ customer?.type ])
   
   // --------------------------------hooks----------------------------------
   const defaultValues = useMemo(
@@ -121,7 +121,7 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
   } = methods;
 
   const { country, phoneNumbers } = watch();
-
+  
   useEffect(() => {
     dispatch(getActiveContacts(customerId))
     dispatch(getActiveDepartments())
@@ -139,7 +139,7 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
       }
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [country]);
+  }, [ country ]);
 
 
   const updateCountryCode = () => {
@@ -160,8 +160,10 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
   const onSubmit = async (data) => {
     try {
       await dispatch(updateContact(customerId, id, data));
-      await dispatch(getContacts(customerId));
-      await navigate(PATH_CRM.customers.contacts.view( customerId, id ))
+      if( customerId && customerId !== "undefined" ){
+        await dispatch(getContacts(customerId));
+        await navigate(PATH_CRM.customers.contacts.view( customerId, id ))
+      }
       await reset();
       enqueueSnackbar('Contact updated successfully!');
     } catch (err) {

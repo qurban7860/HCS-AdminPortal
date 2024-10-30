@@ -110,7 +110,20 @@ export const ContactSchema = Yup.object().shape({
   postcode: Yup.string(),
   isActive: Yup.boolean(),
   formerEmployee: Yup.boolean(),
-  country: Yup.object().nullable()
+  country: Yup.object().nullable(),
+  phoneNumbers: Yup.array().of(
+    Yup.object().shape({
+      type: Yup.string().label("Number Type"),
+      countryCode: Yup.string().label("Country Code")
+        .when('contactNumber', {
+          is: (contactNumber) => !!contactNumber,
+          then: Yup.string().required('Country code is required when contact number is defined!'),
+        })
+        .nullable(),
+      contactNumber: Yup.string().label("Contact Number").nullable(),
+      extensions: Yup.string().label("Extension").nullable(),
+    })
+  ),
   // isPrimary: Yup.boolean(),
 });
 

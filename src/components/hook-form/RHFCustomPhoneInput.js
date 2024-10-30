@@ -14,7 +14,7 @@ RHFCustomPhoneInput.propTypes = {
 
 
 export default function RHFCustomPhoneInput({ name, value, index, label, ...other }) {
-  const { control, setValue } = useFormContext();
+  const { control, setValue, formState: { errors } } = useFormContext();
   const PHONE_TYPES_ = JSON.parse( localStorage.getItem('configurations'))?.find( ( c )=> c?.name === 'PHONE_TYPES' )
   let PHONE_TYPES = ['Mobile', 'Home', 'Work', 'Fax', 'Others'];
   if(PHONE_TYPES_) {
@@ -82,7 +82,7 @@ export default function RHFCustomPhoneInput({ name, value, index, label, ...othe
                       },
                     }}
                     onChange={(e) => {
-                        const inputValue = e.target.value.replace(/[^0-9]/g, '')
+                        const inputValue = e.target?.value?.replace(/[^0-9 ()+-]/g, '')
                           setValue(name,{ ...value, extensions: inputValue } , { shouldValidate: true });
                     }} 
                 />
@@ -92,6 +92,18 @@ export default function RHFCustomPhoneInput({ name, value, index, label, ...othe
                       maxLength: 16
                     },
           }}
+          error={
+            !!errors.phoneNumbers?.[index]?.type ||
+            !!errors.phoneNumbers?.[index]?.countryCode ||
+            !!errors.phoneNumbers?.[index]?.contactNumber ||
+            !!errors.phoneNumbers?.[index]?.extensions
+          }
+          helperText={ 
+            errors.phoneNumbers?.[index]?.type?.message ||
+            errors.phoneNumbers?.[index]?.countryCode?.message ||
+            errors.phoneNumbers?.[index]?.contactNumber?.message ||
+            errors.phoneNumbers?.[index]?.extensions?.message || ""
+          }
           {...other}
         />
       )}

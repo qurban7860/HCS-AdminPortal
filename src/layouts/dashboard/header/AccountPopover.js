@@ -71,7 +71,7 @@ export default function AccountPopover() {
 
   const handleLogout = async () => {
     try {
-      logout();
+      await logout();
       handleClosePopover();
     } catch (error) {
       console.error(error);
