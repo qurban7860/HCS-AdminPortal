@@ -68,9 +68,9 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
 
   const theme = createTheme({ palette: { success: green } });
   
-  const systemConfig= JSON.parse( localStorage.getItem('configurations'))
   
   useEffect(()=>{
+    const systemConfig= JSON.parse( localStorage.getItem('configurations'))
     if( customer?.type?.toLowerCase() === 'sp' && systemConfig ){
       const configSPContactTypes = systemConfig?.find( ( c )=> c?.name?.trim() === 'SP_CONTACT_TYPES' )?.value?.split(',');
       const sPContactTypes = configSPContactTypes?.map(item => item?.trim())?.sort();
@@ -84,8 +84,9 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
         setContactTypes(CustomerContactTypes)
       }
     }
-  },[ customer?.type, systemConfig ])
+  },[ customer?.type ])
 
+  const systemConfig= JSON.parse( localStorage.getItem('configurations'))
   const PHONE_TYPES_ = systemConfig?.find( ( c )=> c?.name === 'PHONE_TYPES' )
   let PHONE_TYPES = ['Mobile', 'Home', 'Work', 'Fax', 'Others'];
   if(PHONE_TYPES_) {
@@ -182,8 +183,12 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
       const respone = await dispatch(addContact(data));
       await dispatch(setIsExpanded(true));
       enqueueSnackbar('Contact added successfully');
-      await dispatch(getContacts(customerId));
-      if(customerId && respone?.data?.customerCategory?._id ) await navigate(PATH_CRM.customers.contacts.view(customerId, respone?.data?.customerCategory?._id ))
+      if( customerId && customerId !== "undefined"){
+        await dispatch(getContacts(customerId));
+        if( respone?.data?.customerCategory?._id ){
+          await navigate(PATH_CRM.customers.contacts.view(customerId, respone?.data?.customerCategory?._id ))
+        }
+      }
       await reset();
     } catch (error) {
       enqueueSnackbar(error, { variant: `error` });

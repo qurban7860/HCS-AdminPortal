@@ -28,7 +28,7 @@ import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 // sections
 import CustomerContactListTableRow from './CustomerContactListTableRow';
 import CustomerContactListTableToolbar from './CustomerContactListTableToolbar';
-import { getContacts, resetContacts, ChangePage, ChangeRowsPerPage, setFilterBy, setCardActiveIndex, setIsExpanded } from '../../../../redux/slices/customer/contact';
+import { getCustomerContacts, resetCustomersContacts, ChangePage, ChangeRowsPerPage, setFilterBy, setCardActiveIndex, setIsExpanded } from '../../../../redux/slices/customer/contact';
 import { Cover } from '../../../../components/Defaults/Cover';
 import TableCard from '../../../../components/ListTableTools/TableCard';
 import { fDate } from '../../../../utils/formatTime';
@@ -59,7 +59,7 @@ export default function CustomerContactList({isCustomerContactPage = false, filt
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const { contacts, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.contact);
+  const { customersContacts, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.contact);
   const [filterName, setFilterName] = useState(filterBy);
   const [exportingCSV, setExportingCSV] = useState(false);
   
@@ -89,16 +89,16 @@ export default function CustomerContactList({isCustomerContactPage = false, filt
 
   useEffect(() => {
     if (!isCustomerContactPage) { 
-      dispatch(getContacts());
+      dispatch(getCustomerContacts());
       return () => {
-        dispatch(resetContacts());
+        dispatch(resetCustomersContacts());
       };
     }
     return undefined; 
   }, [dispatch, isCustomerContactPage]);  
 
   const dataFiltered = applyFilter({
-    inputData: contacts || [],
+    inputData: customersContacts || [],
     comparator: getComparator(order, orderBy),
     filterName,
     filterFormer,
@@ -178,7 +178,7 @@ export default function CustomerContactList({isCustomerContactPage = false, filt
         />
 
         {!isNotFound && <TablePaginationCustom
-          count={contacts?contacts.length : 0}
+          count={ customersContacts? customersContacts?.length : 0 }
           page={page}
           rowsPerPage={rowsPerPage}
           onPageChange={onChangePage}
@@ -222,7 +222,7 @@ export default function CustomerContactList({isCustomerContactPage = false, filt
         </TableContainer>
 
         {!isNotFound && <TablePaginationCustom
-          count={contacts?contacts.length : 0}
+          count={ customersContacts ? customersContacts.length : 0 }
           page={page}
           rowsPerPage={rowsPerPage}
           onPageChange={onChangePage}
