@@ -406,6 +406,10 @@ export const Pm2LogView = Loadable(lazy(() => import('../pages/settings/systemLo
 export const DbBackupLogsList = Loadable(lazy(() => import('../pages/settings/systemLogs/dbBackupLogs/DbBackupLogsList')));
 export const DbBackupLogsViewForm = Loadable(lazy(() => import('../pages/settings/systemLogs/dbBackupLogs/DbBackupLogsViewForm')));
 
+// LOGS: API LOGS
+export const ApiLogsList = Loadable(lazy(() => import('../pages/settings/systemLogs/ApiLogs/ApiLogsList')));
+export const ApiLogsViewForm = Loadable(lazy(() => import('../pages/settings/systemLogs/ApiLogs/ApiLogsViewForm')));
+
 // ----------------------------------------------------------------
 
 // SECURITY USERS

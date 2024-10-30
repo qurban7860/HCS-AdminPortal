@@ -504,6 +504,10 @@ export const ICONS = {
     icon: 'iconoir:database-backup',
     heading: 'DB Backup Logs',
   },
+  API_LOGS: {
+    icon: 'tabler:api-app',
+    heading: 'API Logs',
+  },
 
   MOVE_MACHINE: {
     icon: 'ri:swap-box-line',

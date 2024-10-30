@@ -71,8 +71,8 @@ export default function APILogsTableRow({
             />
           </TableCell>
       <TableCell align="left"><i>{responseTime}</i></TableCell>
-      <TableCell align="left">{machine?.[0]?.serialNo || '-'}</TableCell>
-      <TableCell align="left">{customer?.name || '-'}</TableCell>
+      <TableCell align="left">{machine?.[0]?.serialNo || ''}</TableCell>
+      <TableCell align="left">{customer?.name || ''}</TableCell>
       <TableCell align="left">{additionalContextualInformation}</TableCell>
     </StyledTableRow>
   );

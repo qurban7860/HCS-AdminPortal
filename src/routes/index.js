@@ -368,6 +368,10 @@ import {
   DbBackupLogsList,
   DbBackupLogsViewForm,
 
+  // LOGS: API LOGS
+  ApiLogsList,
+  ApiLogsViewForm,
+
   // ----------------------------------------------------------------
 
   // SECURITY USER
@@ -1055,7 +1059,7 @@ export default function Router() {
             { path: ':id/edit', element: <DepartmentEdit /> }
           ],
         },
-        // ------------------------------ PM2 Logs ----------------------------------
+        // ------------------------------ DB BACKUP LOGS  ----------------------------------
         {
           path: 'dbBackup',
           children: [
@@ -1068,7 +1072,20 @@ export default function Router() {
             }
           ],
         },
-        // ------------------------------ DB BACKUP LOGS ----------------------------------
+         // ------------------------------ API LOGS  ----------------------------------
+         {
+          path: 'api',
+          children: [
+            {
+              path: 'logs',
+              children: [
+                { element: <ApiLogsList /> , index: true },
+                { path: ':id/view', element: <ApiLogsViewForm /> },
+              ]
+            }
+          ],
+        },
+        // ------------------------------ PM2 LOGS ----------------------------------
         {
           path: 'pm2',
           children: [
