@@ -180,9 +180,9 @@ export function getERPLogs(machineId) {
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}productLogs/graph`, 
       {
-        params: { machine: machineId, type: 'erp' }
+        params: { customer: null, machine: machineId, type: 'erp', periodType: 'Monthly', logGraphType: null }
       });
-
+        
       dispatch(slice.actions.getERPLogsSuccess(response.data));
     } catch (error) {
       console.log(error);
@@ -190,3 +190,4 @@ export function getERPLogs(machineId) {
     }
   };
 }
+
