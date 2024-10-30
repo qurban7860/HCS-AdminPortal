@@ -60,8 +60,10 @@ export default function ContactViewForm({
       await dispatch(deleteContact(customerId, id));
       dispatch(setIsExpanded(false));
       enqueueSnackbar('Contact Archived Successfully!');
-      await dispatch(getContacts( customerId ))
-      navigate(PATH_CRM.customers.contacts.root(customerId))
+      if( customerId && customerId !== "undefined" ){
+        await dispatch(getContacts( customerId ))
+        navigate(PATH_CRM.customers.contacts.root(customerId))
+      }
     } catch (err) {
       enqueueSnackbar(err, { variant: `error` });
       console.log('Error:', err);
