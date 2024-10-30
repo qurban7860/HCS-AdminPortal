@@ -174,15 +174,19 @@ export function getMachinesByYear(category, model, country, allRecords ) {
   };
 }
 
-export function getERPLogs(machineId) {
+export function getERPLogs( param ) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}productLogs/graph`, 
-      {
-        params: { customer: null, machine: machineId, type: 'erp', periodType: 'Monthly', logGraphType: null }
-      });
-        
+      const params = { 
+        customer: param?.customer,
+        machine: param?.machineId,
+        type: param?.type || 'erp', 
+        periodType: param?.periodType || 'Monthly', 
+        logGraphType: param?.logGraphType
+      }
+      const response = await axios.get(`${CONFIG.SERVER_URL}productLogs/graph`, { params });
+
       dispatch(slice.actions.getERPLogsSuccess(response.data));
     } catch (error) {
       console.log(error);
@@ -190,4 +194,3 @@ export function getERPLogs(machineId) {
     }
   };
 }
-
