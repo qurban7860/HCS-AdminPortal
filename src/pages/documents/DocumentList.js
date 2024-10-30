@@ -404,13 +404,22 @@ useLayoutEffect(() => {
       {!customerPage && !machinePage && (
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <Card sx={{ p: 3 }}>
+          <Card sx={{ p:(machineDrawings ? 0: 3) }}>
+          { machineDrawings && (
+                <DocumentListTableToolbar
+                  machineDrawings={machineDrawings}
+                  categoryVal={categoryVal}
+                  setCategoryVal={setCategoryVal}
+                  typeVal={typeVal}
+                  setTypeVal={setTypeVal}
+                /> )}
               <Stack
                 direction={{ xs: 'column', sm: 'row' }}
                 spacing={2}
                 sx={{
                   justifyContent: 'space-between',
                   alignItems: 'flex-start',
+                  p:(!machineDrawings ? 0: 3), pt:(!machineDrawings ? 0: 0)
                 }}
               >
                 <Box sx={{ flexGrow: 1, width: { xs: '100%', sm: 'auto' } }}>
@@ -449,7 +458,6 @@ useLayoutEffect(() => {
             onResetFilter={handleResetFilter}
             customerPage={customerPage}
             machinePage={machinePage}
-            machineDrawings={machineDrawings}
             categoryVal={categoryVal}
             setCategoryVal={setCategoryVal}
             typeVal={typeVal}
