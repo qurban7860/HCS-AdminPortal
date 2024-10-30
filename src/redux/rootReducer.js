@@ -86,21 +86,21 @@ export const customerPersistConfig = {
   key: 'customer',
   storage,
   keyPrefix: 'redux-',
-  blacklist: ['error', 'initial', 'responseMessage', 'customers']
+  blacklist: ['error', 'initial', 'responseMessage', 'customers', 'customer']
 };
 
 export const contactPersistConfig = {
   key: 'contact',
   storage,
   keyPrefix: 'redux-',
-  blacklist: ['error', 'initial', 'responseMessage', 'contacts']
+  blacklist: ['error', 'initial', 'responseMessage', 'contacts', 'contact']
 };
 
 export const sitePersistConfig = {
   key: 'site',
   storage,
   keyPrefix: 'redux-',
-  blacklist: ['error', 'initial', 'responseMessage', 'sites']
+  blacklist: ['error', 'initial', 'responseMessage', 'sites', 'site']
 };
 
 export const customerNotePersistConfig = {
