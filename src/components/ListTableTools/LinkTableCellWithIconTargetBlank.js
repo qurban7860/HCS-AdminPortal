@@ -11,9 +11,9 @@ export default function LinkTableCellWithIconTargetBlank({ align, onViewRow, onC
   return (
     <TableCell align={align} sx={{minWidth:'130px'}} {...other}>
       {isVerified!==undefined && <VerificationIcon isVerified={isVerified} />}
-      {tooltip ? 
+      { tooltip && ( typeof tooltip === 'string' || tooltip instanceof Node ) ? 
         <StyledTooltip
-          title={tooltip}
+          title={ tooltip }
           placement="top"
           disableFocusListener
           tooltipcolor="#103996" 
@@ -65,6 +65,6 @@ LinkTableCellWithIconTargetBlank.propTypes = {
   onViewRow: PropTypes.func,
   onClick: PropTypes.func,
   param: PropTypes.string,
-  tooltip: PropTypes.string,
+  tooltip: PropTypes.any,
   isVerified: PropTypes.bool,
 };

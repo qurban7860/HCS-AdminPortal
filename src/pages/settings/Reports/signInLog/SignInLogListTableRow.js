@@ -9,7 +9,6 @@ import { getCustomer, setCustomerDialog } from '../../../../redux/slices/custome
 import { getContact, setContactDialog } from '../../../../redux/slices/customer/contact';
 import { getSecurityUser, setSecurityUserDialog } from '../../../../redux/slices/securityUser/securityUser';
 import LinkTableCellWithIconTargetBlank from '../../../../components/ListTableTools/LinkTableCellWithIconTargetBlank';
-import { StyledTooltip } from '../../../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
 
@@ -79,26 +78,17 @@ export default function SignInLogListTableRow({
             onViewRow={handleCustomerDialog}
             onClick={ !user?.customer?._id ? undefined : () => window.open(PATH_CRM.customers.view( user?.customer?._id ), '_blank') }
             param={user?.customer?.name || ""}
-            tooltip="Customer"
             align='left'
           />
         : <TableCell align="left" />
         }
         { ( user?.customer?._id && user?.contact?._id )?
-        <StyledTooltip
-          title="Click to format the text to JSON"
-          placement="top"
-          disableFocusListener
-          tooltipcolor="#103996" 
-          color="#103996"
-        >
           <LinkTableCellWithIconTargetBlank
             onViewRow={handleContactDialog}
             onClick={ !user?.contact?._id ? undefined : () => window.open(PATH_CRM.customers.contacts.view( user?.customer?._id, user?.contact?._id ), '_blank') }
             param={`${user?.contact?.firstName || ''} ${user?.contact?.lastName || ''}`}
             align='left'
           />
-        </StyledTooltip>
         : <TableCell align="left" />
         }
         { useScreenSize('lg') && <TableCell align="left"> {loginIP} </TableCell>}
