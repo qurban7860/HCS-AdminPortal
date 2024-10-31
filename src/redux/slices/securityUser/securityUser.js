@@ -19,6 +19,7 @@ const initialState = {
   securityUsers: [],
   activeSecurityUsers: [],
   securityUser: null,
+  securityUserDialog: false,
   user: null,
   userId: null,
   userEmail: null,
@@ -169,7 +170,11 @@ const slice = createSlice({
       state.success = true;
       state.initial = true;
     },
-
+    
+    // SET RES MESSAGE
+    setSecurityUserDialog(state, action) {
+      state.securityUserDialog = action.payload;
+    },
     // RESET SECURITY USER
     resetSecurityUser(state){
       state.securityUser = {};
@@ -232,6 +237,7 @@ export const {
   setActiveFilterList,
   setEmployeeFilterList,
   setFilterRegion,
+  setSecurityUserDialog,
   ChangeRowsPerPage,
   ChangePage,
 } = slice.actions;
