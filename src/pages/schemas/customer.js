@@ -113,7 +113,11 @@ export const ContactSchema = Yup.object().shape({
   country: Yup.object().nullable(),
   phoneNumbers: Yup.array().of(
     Yup.object().shape({
-      type: Yup.string().label("Number Type"),
+      type: Yup.string().label("Number Type")
+      .when('contactNumber', {
+        is: (contactNumber) => !!contactNumber,
+        then: Yup.string().required('Type is required when contact number is defined!'),
+      }).nullable(),
       countryCode: Yup.string().label("Country Code")
         .when('contactNumber', {
           is: (contactNumber) => !!contactNumber,
@@ -132,14 +136,22 @@ export const SiteSchema = Yup.object().shape({
   customer: Yup.string(),
   billingSite: Yup.string(),
   email: Yup.string().trim('The contact name cannot include leading and trailing spaces'),
-  // phone: Yup.object().shape({
-  //   countryCode: Yup.number().max(999999).label("Phone Country Code"),
-  //   number: Yup.number().max(999999999999).label("Phone Number"),
-  // }),
-  // fax: Yup.object().shape({
-  //   countryCode: Yup.number().max(999999).label("Fax Country Code"),
-  //   number: Yup.number().max(999999999999).label("Fax Number"),
-  // }),
+  phoneNumbers: Yup.array().of(
+    Yup.object().shape({
+      type: Yup.string().label("Number Type")
+      .when('contactNumber', {
+        is: (contactNumber) => !!contactNumber,
+        then: Yup.string().required('Type is required when contact number is defined!'),
+      }).nullable(),
+      countryCode: Yup.string().label("Country Code")
+        .when('contactNumber', {
+          is: (contactNumber) => !!contactNumber,
+          then: Yup.string().required('Country code is required when contact number is defined!'),
+        }).nullable(),
+      contactNumber: Yup.string().label("Contact Number").nullable(),
+      extensions: Yup.string().label("Extension").nullable(),
+    })
+  ),
   website: Yup.string(),
   lat: Yup.string().nullable()
   .max(25, 'Latitude must be less than or equal to 90.9999999999999999999999')
