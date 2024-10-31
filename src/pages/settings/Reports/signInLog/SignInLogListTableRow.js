@@ -67,7 +67,7 @@ export default function SignInLogListTableRow({
         {user?._id ?
         <LinkTableCellWithIconTargetBlank
           onViewRow={handleSecurityUserDialog}
-          onClick={ !user?._id ? undefined : () => window.open(PATH_SECURITY.users.view( user?._id ), '_blank') }
+          // onClick={ !user?._id ? undefined : () => window.open(PATH_SECURITY.users.view( user?._id ), '_blank') }
           param={user?.name || "" }
           align='left'
         />
@@ -76,21 +76,21 @@ export default function SignInLogListTableRow({
         { user?.customer?._id ? 
           <LinkTableCellWithIconTargetBlank
             onViewRow={handleCustomerDialog}
-            onClick={ !user?.customer?._id ? undefined : () => window.open(PATH_CRM.customers.view( user?.customer?._id ), '_blank') }
+            // onClick={ !user?.customer?._id ? undefined : () => window.open(PATH_CRM.customers.view( user?.customer?._id ), '_blank') }
             param={user?.customer?.name || ""}
             align='left'
           />
         : <TableCell align="left" />
         }
-        { ( user?.customer?._id && user?.contact?._id )?
+        {/* { ( user?.customer?._id && user?.contact?._id )?
           <LinkTableCellWithIconTargetBlank
             onViewRow={handleContactDialog}
-            onClick={ !user?.contact?._id ? undefined : () => window.open(PATH_CRM.customers.contacts.view( user?.customer?._id, user?.contact?._id ), '_blank') }
+            // onClick={ !user?.contact?._id ? undefined : () => window.open(PATH_CRM.customers.contacts.view( user?.customer?._id, user?.contact?._id ), '_blank') }
             param={`${user?.contact?.firstName || ''} ${user?.contact?.lastName || ''}`}
             align='left'
           />
         : <TableCell align="left" />
-        }
+        } */}
         { useScreenSize('lg') && <TableCell align="left"> {loginIP} </TableCell>}
         <TableCell align="left"> {fDateTime(loginTime)} </TableCell>
         <TableCell align="left">{fDateTime(logoutTime)}</TableCell>
