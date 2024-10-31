@@ -435,7 +435,7 @@ function SearchBarCombo({
           </Grid>}
 
           { setCategoryVal &&  typeof setCategoryVal === 'function' && 
-          <Grid item xs={12} sm={6} md={4} lg={2} xl={(machineDrawings) ? 4 : 2}>
+          <Grid item xs={12} sm={6} md={4} lg={2} xl={(machineDrawings) ? 5 : 2}>
             <Autocomplete 
               id="controllable-states-demo"
               value={categoryVal || null}
@@ -462,7 +462,7 @@ function SearchBarCombo({
             />
           </Grid>}
 
-          {setTypeVal &&  typeof setTypeVal === 'function'  && <Grid item xs={12} sm={6} md={4} lg={2} xl={(machineDrawings) ? 4 : 2}>
+          {setTypeVal &&  typeof setTypeVal === 'function'  && <Grid item xs={12} sm={6} md={4} lg={2} xl={(machineDrawings) ? 5 : 2}>
             <Autocomplete 
               id="controllable-states-demo"
               value={typeVal || null}

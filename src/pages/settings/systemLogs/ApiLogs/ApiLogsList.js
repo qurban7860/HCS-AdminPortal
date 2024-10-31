@@ -21,9 +21,8 @@ import Scrollbar from '../../../../components/scrollbar';
 // sections
 import APILogsTableRow from '../../../../components/machineIntegration/APILogsTableRow';
 import ApiLogsListTableToolbar from './ApiLogsListTableToolbar';
-import { getMachines } from '../../../../redux/slices/products/machine';
 import { getApiLogs, setFilterBy } from '../../../../redux/slices/logs/apiLogs';
-import { fDate } from '../../../../utils/formatTime';
+import { fDateTime } from '../../../../utils/formatTime';
 import TableCard from '../../../../components/ListTableTools/TableCard';
 
 export default function ApiLogsList() {
@@ -207,11 +206,11 @@ function applyFilter({ inputData, comparator, filterName }) {
       );
 
       return (
-        fDate(api?.createdAt)?.toLowerCase().includes(lowercasedFilter) ||
+        fDateTime(api?.createdAt)?.toLowerCase().includes(lowercasedFilter) ||
         api?.requestMethod?.toLowerCase().includes(lowercasedFilter) || 
         api?.requestURL?.toString()?.toLowerCase().includes(lowercasedFilter) || 
-        String(api?.responseStatusCode || '').toLowerCase().includes(lowercasedFilter) ||
-        String(api?.responseTime || '').toLowerCase().includes(lowercasedFilter) ||
+        (api?.responseStatusCode || '').toString()?.toLowerCase().includes(lowercasedFilter) ||
+        (api?.responseTime || '').toString()?.toLowerCase().includes(lowercasedFilter) ||
         machineSerialNo || 
         api?.customer?.name?.toLowerCase().includes(lowercasedFilter) ||
         api?.additionalContextualInformation?.toLowerCase().includes(lowercasedFilter)
