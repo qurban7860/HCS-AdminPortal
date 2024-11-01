@@ -8,6 +8,7 @@ APILogsTableRow.propTypes = {
   style: PropTypes.object,
   selected: PropTypes.bool,
   onViewRow: PropTypes.func,
+  hiddenColumns: PropTypes.object,
 };
 
 export default function APILogsTableRow({
@@ -15,6 +16,7 @@ export default function APILogsTableRow({
   style,
   selected,
   onViewRow,
+  hiddenColumns
 }) {
   const {
     createdAt,
@@ -54,7 +56,8 @@ export default function APILogsTableRow({
 
   return (
     <StyledTableRow hover selected={selected} onClick={onViewRow}>
-      <TableCell align="left">{fDateTime(createdAt)}</TableCell>
+      {!hiddenColumns?.createdAt && <TableCell align="left">{fDateTime(createdAt)}</TableCell>}
+      {!hiddenColumns?.requestMethod &&
           <TableCell align="left">
             <Chip
               label={requestMethod}
@@ -62,7 +65,9 @@ export default function APILogsTableRow({
               color={getChipColor(requestMethod)}
             />
           </TableCell>
-      <TableCell align="left">{requestURL}</TableCell>
+      }
+      {!hiddenColumns?.requestURL &&<TableCell align="left">{requestURL}</TableCell>}
+      {!hiddenColumns?.responseStatusCode && 
           <TableCell align="left">
             <Chip
               label={responseStatusCode}
@@ -70,10 +75,11 @@ export default function APILogsTableRow({
               color={getResponseStatusColor(responseStatusCode)}
             />
           </TableCell>
-      <TableCell align="left"><i>{responseTime}</i></TableCell>
-      <TableCell align="left">{machine?.[0]?.serialNo || ''}</TableCell>
-      <TableCell align="left">{customer?.name || ''}</TableCell>
-      <TableCell align="left">{additionalContextualInformation}</TableCell>
+      }
+      {!hiddenColumns?.responseTime &&<TableCell align="left"><i>{responseTime}</i></TableCell>}
+      {!hiddenColumns?.machine &&<TableCell align="left">{machine?.[0]?.serialNo || ''}</TableCell>}
+      {!hiddenColumns?.customer && <TableCell align="left">{customer?.name || ''}</TableCell>}
+      {!hiddenColumns?.additionalContextualInformation && <TableCell align="left">{additionalContextualInformation}</TableCell>}
     </StyledTableRow>
   );
 }

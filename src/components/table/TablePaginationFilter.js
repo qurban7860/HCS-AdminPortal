@@ -36,30 +36,31 @@ function TablePaginationFilter({
     setAnchorEl(null);
   };
 
-  const handleColumnClick = (option) => {
+  const handleColumnClick = (column) => {
     setSelectedColumns((prevSelectedColumns) => {
+      const isSelected = prevSelectedColumns.some((item) => item.id === column.id);
 
-      // Determine new selected columns
-      const newSelectedColumns = prevSelectedColumns.includes(option)
-        ? prevSelectedColumns.filter((item) => item !== option)
-        : [...prevSelectedColumns, option];
-  
+      // Toggle column selection
+      const newSelectedColumns = isSelected
+        ? prevSelectedColumns.filter((item) => item.id !== column.id)
+        : [...prevSelectedColumns, column];
+
       // Compute new hidden columns
       const newHiddenColumns = {};
-      columns.forEach((column) => {
-        if (column?.hideable !== false) {
-          newHiddenColumns[column.id] = newSelectedColumns.some(sele => sele.id === column.id);
+      columns.forEach((col) => {
+        if (col?.hideable !== false) {
+          newHiddenColumns[col.id] = newSelectedColumns.some((sel) => sel.id === col.id);
         }
       });
-  
+
       // Dispatch the action with the new hidden columns
       handleHiddenColumns(newHiddenColumns);
-  
-      // Return the new state
+
+       // Return the new state
       return newSelectedColumns;
     });
   };
-  
+
   return (
     <Box rowGap={2} columnGap={2} display="grid" sx={{borderTop:'1px solid #919eab3d'}}
         gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}>
@@ -82,7 +83,7 @@ function TablePaginationFilter({
             >
               {columns.map((column) => column?.hideable!==false && (
                 <MenuItem dense sx={{p:0}} key={column.id} onClick={() => handleColumnClick(column)}>
-                  <Checkbox checked={selectedColumns && !selectedColumns.includes(column)} />
+                  <Checkbox checked={!selectedColumns.some((col) => col.id === column.id)} />
                   {column.label}
                 </MenuItem>
               ))}

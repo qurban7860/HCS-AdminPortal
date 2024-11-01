@@ -14,9 +14,18 @@ const initialState = {
   apiLog: {},
   page: 0,
   rowsPerPage: 100,
-  filterBy: ''
+  filterBy: '',
+  reportHiddenColumns: {
+    "createdAt": false,
+    "requestMethod": false,
+    "requestURL": false,
+    "responseStatusCode": false,
+    "responseTime": false,
+    "machine.serialNo": false,
+    "customer.name": false,
+    "additionalContextualInformation": true,
+},
 };
-
 const slice = createSlice({
   name: 'apiLogs',
   initialState,
@@ -86,6 +95,10 @@ const slice = createSlice({
     ChangePage(state, action) {
       state.page = action.payload;
     },
+    
+    setReportHiddenColumns(state, action){
+      state.reportHiddenColumns = action.payload;  
+    },
 
     // Set FilterBy
     setFilterBy(state, action) {
@@ -105,6 +118,7 @@ export const {
   ChangeRowsPerPage,
   ChangePage,
   setFilterBy,
+  setReportHiddenColumns
 } = slice.actions;
 
 // ---------------------------------- GET API LOGS ------------------------------------
