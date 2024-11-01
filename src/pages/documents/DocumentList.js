@@ -141,18 +141,18 @@ const onChangePage = (event, newPage) => {
 
 const TABLE_HEAD = useMemo(() => {
   const baseHeaders = [
-    { id: 'displayName', label: 'Name', align: 'left' },
-    { id: 'referenceNumber', visibility: 'xs2', label: 'Ref. No.', align: 'left' },
-    { id: 'docCategory.name', visibility: 'xs1', label: 'Category', align: 'left' },
-    { id: 'docType.name', visibility: 'xs2', label: 'Type', align: 'left' },
+    { id: 'displayName', label: 'Name', align: 'left', allowSearch: true },
+    { id: 'referenceNumber', visibility: 'xs2', label: 'Ref. No.', align: 'left', allowSearch: true },
+    { id: 'docCategory.name', visibility: 'xs1', label: 'Category', align: 'left', allowSearch: true },
+    { id: 'docType.name', visibility: 'xs2', label: 'Type', align: 'left', allowSearch: true },
     { id: 'createdAt', label: 'Created At', align: 'right' },
   ];
 
   if (machineDrawings) {
     return [
       ...baseHeaders.slice(0, 4),
-      { id: 'stockNumber', visibility: 'xs2', label: 'Stock No.', align: 'left' },
-      { id: 'productDrawings', visibility: 'xs2', label: 'Machines', align: 'left' },
+      { id: 'stockNumber', visibility: 'xs2', label: 'Stock No.', align: 'left', allowSearch: true },
+      { id: 'productDrawings', visibility: 'xs2', label: 'Machines', align: 'left', allowSearch: true },
       ...baseHeaders.slice(4),
     ];
   }
@@ -160,7 +160,7 @@ const TABLE_HEAD = useMemo(() => {
   if (!customerPage && !machineDrawingPage && !machineDrawings) {
     return [
       ...baseHeaders.slice(0, 4),
-      { id: 'machine.serialNo', visibility: 'md4', label: 'Machine', align: 'left' },
+      { id: 'machine.serialNo', visibility: 'md4', label: 'Machine', align: 'left', allowSearch: true },
       ...baseHeaders.slice(4),
     ];
   }
@@ -375,7 +375,7 @@ useLayoutEffect(() => {
       dispatch(getDocuments(null, null, null, page, documentRowsPerPage, null, null, cancelTokenSource, filteredSearchKey, selectedSearchFilter));
     } else if(filteredSearchKey && selectedSearchFilter && machineDrawingPage &&  machineId ){
       dispatch(getDocuments( null, machineId, null, page, machineDocumentsRowsPerPage, null, null, cancelTokenSource, filteredSearchKey, selectedSearchFilter));
-    }  else if( filteredSearchKey && selectedSearchFilter && machineDrawings || machineDrawingPage ){
+    }  else if( filteredSearchKey && selectedSearchFilter && (machineDrawings || machineDrawingPage) ){
       dispatch(getDocuments(null, null, ( machineDrawings || machineDrawingPage ), page, machineDrawingsRowsPerPage, null, null, cancelTokenSource, filteredSearchKey, selectedSearchFilter));
     }  
   };
@@ -425,7 +425,7 @@ useLayoutEffect(() => {
                 <Box sx={{ flexGrow: 1, width: { xs: '100%', sm: 'auto' } }}>
                   <RHFFilteredSearchBar
                     name="filteredSearchKey"
-                    filterOptions={TABLE_HEAD}
+                    filterOptions={TABLE_HEAD.filter((item) => item?.allowSearch)}
                     setSelectedFilter={setSelectedSearchFilter}
                     selectedFilter={selectedSearchFilter}
                     placeholder="Enter Search here..."
