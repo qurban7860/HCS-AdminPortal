@@ -10,6 +10,7 @@ const initialState = {
   siteEditFormVisibility: false,
   responseMessage: null,
   activeCardIndex: '',
+  sitesListView: false,
   isExpanded: false,
   success: false,
   isLoading: false,
@@ -90,6 +91,10 @@ const slice = createSlice({
       state.initial = true;
     },
     
+    setSitesView(state, action){
+      state.sitesListView = action.payload;
+    },
+
     // RESET SITE
     resetSite(state){
       state.site = null;
@@ -154,6 +159,7 @@ export const {
   setResponseMessage,
   setIsExpanded,
   setCardActiveIndex,
+  setSitesView,
   resetSite,
   resetSites,
   resetActiveSites,

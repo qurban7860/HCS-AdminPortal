@@ -106,7 +106,7 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
       dispatch(getContacts(customerId, customer?.isArchived));
     }
     return ()=>{
-      // dispatch(resetContacts());
+      dispatch(resetContacts());
       dispatch(setCardActiveIndex(null));
       dispatch(setIsExpanded(false));
     }
