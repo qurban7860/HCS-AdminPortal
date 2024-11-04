@@ -106,13 +106,12 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
       dispatch(getContacts(customerId, customer?.isArchived));
     }
     return ()=>{
-      dispatch(resetContacts());
+      // dispatch(resetContacts());
       dispatch(setCardActiveIndex(null));
       dispatch(setIsExpanded(false));
     }
   }, [ dispatch, customerId, customer?.isArchived ]);
 
-  const [selectedContactId, setselectedContactId] = useState(false);
 
 const navigateToContact = useCallback((contactId) => {
   if (customerId && contactId && !contactsListView) {
@@ -148,11 +147,10 @@ const handleFilterChange = (event, newValue) => {
 };
 
 useEffect(() => {
-  if (contacts.length > 0 && !selectedContactId) {
+  if (contacts.length > 0 && !id ) {
     navigateToContact(contacts[0]._id); 
-    setselectedContactId(true); 
   }
-}, [contacts, navigateToContact, selectedContactId]);
+}, [contacts, navigateToContact, id ]);
 
 useEffect(() => {
   setTableData(contacts);

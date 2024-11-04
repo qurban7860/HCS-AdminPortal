@@ -59,7 +59,7 @@ export default function CustomerContactList({isCustomerContactPage = false, filt
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const { customersContacts, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.contact);
+  const { customersContacts, contacts, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.contact);
   const [filterName, setFilterName] = useState(filterBy);
   const [exportingCSV, setExportingCSV] = useState(false);
   
@@ -98,7 +98,7 @@ export default function CustomerContactList({isCustomerContactPage = false, filt
   }, [dispatch, isCustomerContactPage]);  
 
   const dataFiltered = applyFilter({
-    inputData: customersContacts || [],
+    inputData: isCustomerContactPage ? contacts : customersContacts || [],
     comparator: getComparator(order, orderBy),
     filterName,
     filterFormer,
@@ -178,7 +178,7 @@ export default function CustomerContactList({isCustomerContactPage = false, filt
         />
 
         {!isNotFound && <TablePaginationCustom
-          count={ customersContacts? customersContacts?.length : 0 }
+          count={ ( isCustomerContactPage ? contacts : customersContacts )?.length || 0 }
           page={page}
           rowsPerPage={rowsPerPage}
           onPageChange={onChangePage}
@@ -222,7 +222,7 @@ export default function CustomerContactList({isCustomerContactPage = false, filt
         </TableContainer>
 
         {!isNotFound && <TablePaginationCustom
-          count={ customersContacts ? customersContacts.length : 0 }
+          count={ ( isCustomerContactPage ? contacts : customersContacts )?.length || 0 }
           page={page}
           rowsPerPage={rowsPerPage}
           onPageChange={onChangePage}
@@ -267,7 +267,7 @@ function applyFilter({ inputData, comparator, filterName, filterFormer }) {
         contact?.customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         `${contact?.firstName} ${contact?.lastName}`.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         contact?.title?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        phoneNumbers.indexOf(filterName.replace(/[^\d]/g, '')) || 
+        phoneNumbers.indexOf(filterName.replace(/[^\d]/g, '')) >= 0 || 
         contact?.email?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         contact?.address?.country?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         fDate(contact?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
