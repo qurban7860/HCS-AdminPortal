@@ -35,12 +35,12 @@ export default function MachineServiceReportListTableRow({
 }) {
   const navigate = useNavigate();
   const { machineId } = useParams();
-  const { serviceReportTemplate, serviceReportUID, status, currentApprovalStatus, versionNo, serviceReportDate, primaryServiceReportId, isActive, currentVersion, createdAt, createdBy } = row;
+  const { serviceReportTemplate, serviceReportUID, status, currentApprovalStatus, versionNo, serviceDate, primaryServiceReportId, isActive, currentVersion, createdAt, createdBy } = row;
   const handleServiceReportHistory = () => navigate(PATH_MACHINE.machines.serviceReports.history.root(machineId, primaryServiceReportId));
   
   return (
       <StyledTableRow hover selected={selected}>
-        <TableCell align="left">{fDate(serviceReportDate)}</TableCell>
+        <TableCell align="left">{fDate(serviceDate)}</TableCell>
         <LinkTableCell align="left" onClick={onViewRow} param={serviceReportUID} />
         <TableCell align="left">{currentApprovalStatus !== "PENDING" ? currentApprovalStatus : status || ''}</TableCell>
         <LinkTableCell align="left" onClick={onViewRow} param={`${serviceReportTemplate?.reportTitle ? serviceReportTemplate?.reportTitle	: ''	} ${serviceReportTemplate?.reportType ? ' - ' : ''} ${serviceReportTemplate?.reportType ? serviceReportTemplate?.reportType : ''}`} />

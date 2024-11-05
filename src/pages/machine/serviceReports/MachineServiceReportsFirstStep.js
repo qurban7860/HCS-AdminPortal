@@ -63,7 +63,7 @@ function MachineServiceReportsFirstStep( { handleComplete, handleDraftRequest, h
         const initialValues = {
         docReportType:                reportTypes.find(rt=> rt?.name?.toLowerCase() === machineServiceReport?.serviceReportTemplate?.reportType?.toLowerCase()) || null,
         serviceReportTemplate:        machineServiceReport?.serviceReportTemplate || null,
-        serviceReportDate:            machineServiceReport?.serviceReportDate || new Date(),
+        serviceDate:                  machineServiceReport?.serviceDate || new Date(),
         versionNo:                    machineServiceReport?.versionNo || 1,
         technician:                   machineServiceReport?.technician || null ,
         technicianNotes:              machineServiceReport?.technicianNotes || '',

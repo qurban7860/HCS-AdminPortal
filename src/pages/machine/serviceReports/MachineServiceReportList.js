@@ -37,7 +37,7 @@ import MachineTabContainer from '../util/MachineTabContainer';
 
 
 const TABLE_HEAD = [
-  { id: 'serviceReportDate', label: 'Service Date', align: 'left' },
+  { id: 'serviceDate', label: 'Service Date', align: 'left' },
   { id: 'serviceReportUID', label: 'Service ID', align: 'left' },
   { id: 'status', label: 'Status', align: 'left' },
   { id: 'serviceReportTemplate.reportTitle', label: 'Service Configuration', align: 'left' },

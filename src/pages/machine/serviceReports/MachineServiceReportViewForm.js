@@ -137,7 +137,7 @@ function MachineServiceReportViewForm( {serviceHistoryView} ) {
       reportType:                           machineServiceReport?.reportType || null,
       serviceReportTemplate:                machineServiceReport?.serviceReportTemplate?.reportTitle	 || '',
       serviceReportTemplateReportType:      machineServiceReport?.serviceReportTemplate?.reportType || '',
-      serviceReportDate:                    machineServiceReport?.serviceReportDate || null,
+      serviceDate:                          machineServiceReport?.serviceDate || null,
       versionNo:                            machineServiceReport?.versionNo || 1, 
       decoilers:                            machineServiceReport?.decoilers ,
       technician:                           machineServiceReport?.technician || null,
@@ -182,7 +182,7 @@ function MachineServiceReportViewForm( {serviceHistoryView} ) {
     await dispatch(setPDFViewerDialog(true))
   }
 
-  const fileName = `${defaultValues?.serviceReportDate?.substring(0,10).replaceAll('-','')}_${defaultValues?.serviceReportTemplateReportType}_${defaultValues?.versionNo}.pdf`
+  const fileName = `${defaultValues?.serviceDate?.substring(0,10).replaceAll('-','')}_${defaultValues?.serviceReportTemplateReportType}_${defaultValues?.versionNo}.pdf`
 
   const handleContactView = async (contactId) => {
     await dispatch(setCardActiveIndex(contactId));
@@ -439,7 +439,7 @@ function MachineServiceReportViewForm( {serviceHistoryView} ) {
         <Grid container>
           <FormLabel content={FORMLABELS.KEYDETAILS} />
           <ViewFormField isLoading={isLoading} variant='h4' sm={2} heading="Service Date" 
-            param={fDate(defaultValues.serviceReportDate)} />
+            param={fDate(defaultValues.serviceDate)} />
           <ViewFormField isLoading={isLoading} variant='h4' sm={6} heading="Service Report Configuration" 
             param={`${defaultValues.serviceReportTemplate} ${defaultValues.serviceReportTemplateReportType ? '-' : ''} ${defaultValues.serviceReportTemplateReportType ? defaultValues.serviceReportTemplateReportType : ''}`} />
           <ViewFormField

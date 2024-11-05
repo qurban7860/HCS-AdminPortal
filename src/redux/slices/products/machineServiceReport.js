@@ -432,7 +432,7 @@ export function addMachineServiceReport(machineId, params) {
       try {
         const data = {
           serviceReportTemplate:      params?.serviceReportTemplate?._id,
-          serviceReportDate:          params?.serviceReportDate,
+          serviceDate:                params?.serviceDate,
           versionNo:                  params?.versionNo,
           customer:                   params?.customer,
           site:                       params?.site,
@@ -456,7 +456,7 @@ export function addMachineServiceReport(machineId, params) {
         }
         // const formData = new FormData();
         // formData.append('serviceReportTemplate', params?.serviceReportTemplate?._id || null);
-        // formData.append('serviceReportDate', params?.serviceReportDate);
+        // formData.append('serviceDate', params?.serviceDate);
         // formData.append('versionNo', params?.versionNo);
         // formData.append('customer', params?.customer || null);
         // formData.append('site', params?.site || null);
@@ -506,7 +506,7 @@ export function updateMachineServiceReport(machineId, id, params) {
     try {
       const data = {
         // serviceReportTemplate:        params?.serviceReportTemplate,
-        serviceReportDate:          params?.serviceReportDate,
+        serviceDate:                params?.serviceDate,
         versionNo:                  params?.versionNo ,
         customer:                   params?.customer,
         site:                       params?.site,
