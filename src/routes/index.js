@@ -165,11 +165,11 @@ import {
   MachineProfileView,
   MachineProfileEdit,
 
-  // --------------------------- MACHINE Service Records -------------------------------------
-  MachineServiceRecordList,
-  MachineServiceRecordAdd,
-  MachineServiceRecordView,
-  MachineServiceRecordHistoryList,
+  // --------------------------- MACHINE Service Reports -------------------------------------
+  MachineServiceReportList,
+  MachineServiceReportAdd,
+  MachineServiceReportView,
+  MachineServiceReportHistoryList,
 
   // --------------------------- MACHINE INI -------------------------------------
   MachineINIList,
@@ -226,7 +226,7 @@ import {
   MachineToolView,
   MachineToolEdit,
 
-  // --------------- Service Record Configuration --------------------
+  // --------------- Service Report Template --------------------
 
   // MACHINE SETTINGS CHECK Item Categories
   CheckItemCategoryList,
@@ -240,11 +240,11 @@ import {
   CheckItemView,
   CheckItemEdit,
 
-  // MACHINE SETTINGS Service Record Config / Document
-  ServiceRecordConfigList,
-  ServiceRecordConfigAdd, 
-  ServiceRecordConfigView,
-  ServiceRecordConfigEdit,
+  // MACHINE SETTINGS Service Report Template / Document
+  ServiceReportTemplateList,
+  ServiceReportTemplateAdd, 
+  ServiceReportTemplateView,
+  ServiceReportTemplateEdit,
 
   // ------------------------ Others / Machine Status ------------------------
 
@@ -741,15 +741,15 @@ export default function Router() {
                 {path: ':id/edit', element: <MachineProfileEdit/>}, 
               ]
             },
-            { path: ':machineId/serviceRecords',
+            { path: ':machineId/serviceReports',
               children:[
-                {element: <MachineServiceRecordList/>, index: true},
-                {path: 'new', element: <MachineServiceRecordAdd/>},
-                {path: ':id/view', element: <MachineServiceRecordView/>},
-                {path: ':id/edit', element: <MachineServiceRecordAdd/>}, 
-                {path: ':serviceId/history',children:[
-                    {element: <MachineServiceRecordHistoryList/>, index: true}, 
-                    {path: ':id/view', element: <MachineServiceRecordView serviceHistoryView />},
+                {element: <MachineServiceReportList/>, index: true},
+                {path: 'new', element: <MachineServiceReportAdd/>},
+                {path: ':id/view', element: <MachineServiceReportView/>},
+                {path: ':id/edit', element: <MachineServiceReportAdd/>}, 
+                {path: ':primaryServiceReportId/history',children:[
+                    {element: <MachineServiceReportHistoryList/>, index: true}, 
+                    {path: ':id/view', element: <MachineServiceReportView serviceHistoryView />},
                   ]
                 }, 
               ]
@@ -850,13 +850,13 @@ export default function Router() {
                   {path: ':id/edit', element: <CheckItemEdit/>},
                 ]
               },
-              { path: 'serviceRecordsConfig',
+              { path: 'serviceReportsTemplate',
                 children:[
-                  {element: <ServiceRecordConfigList/>, index: true },
-                  {path: 'new', element: <ServiceRecordConfigAdd/>},
-                  {path: ':id/copy', element: <ServiceRecordConfigAdd/>},
-                  {path: ':id/view', element: <ServiceRecordConfigView/>},
-                  {path: ':id/edit', element: <ServiceRecordConfigEdit/>},
+                  {element: <ServiceReportTemplateList/>, index: true },
+                  {path: 'new', element: <ServiceReportTemplateAdd/>},
+                  {path: ':id/copy', element: <ServiceReportTemplateAdd/>},
+                  {path: ':id/view', element: <ServiceReportTemplateView/>},
+                  {path: ':id/edit', element: <ServiceReportTemplateEdit/>},
                 ]
               },
               // ----------------------------- Others / Machine Status -----------------------------------

@@ -240,14 +240,14 @@ export const PATH_MACHINE = {
       edit: (machineId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/profiles/${id}/edit`),
     },    
     // --------------------- Machine Tool Installed -----------------------
-    serviceRecords: {
-      root: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/serviceRecords`),
-      new: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/serviceRecords/new`),
-      view: (machineId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/serviceRecords/${id}/view`),
-      edit: (machineId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/serviceRecords/${id}/edit`),
+    serviceReports: {
+      root: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/serviceReports`),
+      new: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/serviceReports/new`),
+      view: (machineId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/serviceReports/${id}/view`),
+      edit: (machineId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/serviceReports/${id}/edit`),
       history: {
-        root: (machineId, serviceId) => path(ROOTS_MACHINE, `/machines/${machineId}/serviceRecords/${serviceId}/history`),
-        view: (machineId, serviceId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/serviceRecords/${serviceId}/history/${id}/view`),
+        root: (machineId, primaryServiceReportId) => path(ROOTS_MACHINE, `/machines/${machineId}/serviceReports/${primaryServiceReportId}/history`),
+        view: (machineId, primaryServiceReportId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/serviceReports/${primaryServiceReportId}/history/${id}/view`),
       },
     },    
     // --------------------- Machine Tool Installed -----------------------
@@ -330,13 +330,13 @@ export const PATH_MACHINE = {
         view: (id) => path(ROOTS_MACHINE, `/machines/machineSettings/checkItems/${id}/view`),
         edit: (id) => path(ROOTS_MACHINE, `/machines/machineSettings/checkItems/${id}/edit`),
       },
-      // --------------------- MACHINE service Record Configs -----------------------
-      serviceRecordsConfig: {
-        root: path(ROOTS_MACHINE, '/machines/machineSettings/serviceRecordsConfig'),
-        new: path(ROOTS_MACHINE, '/machines/machineSettings/serviceRecordsConfig/new'),
-        copy: (id) => path(ROOTS_MACHINE, `/machines/machineSettings/serviceRecordsConfig/${id}/copy`),
-        view: (id) => path(ROOTS_MACHINE, `/machines/machineSettings/serviceRecordsConfig/${id}/view`),
-        edit: (id) => path(ROOTS_MACHINE, `/machines/machineSettings/serviceRecordsConfig/${id}/edit`),
+      // --------------------- MACHINE service Report Templates -----------------------
+      serviceReportsTemplate: {
+        root: path(ROOTS_MACHINE, '/machines/machineSettings/serviceReportsTemplate'),
+        new: path(ROOTS_MACHINE, '/machines/machineSettings/serviceReportsTemplate/new'),
+        copy: (id) => path(ROOTS_MACHINE, `/machines/machineSettings/serviceReportsTemplate/${id}/copy`),
+        view: (id) => path(ROOTS_MACHINE, `/machines/machineSettings/serviceReportsTemplate/${id}/view`),
+        edit: (id) => path(ROOTS_MACHINE, `/machines/machineSettings/serviceReportsTemplate/${id}/edit`),
       },
       // --------------------- MACHINE status -----------------------
       status: {

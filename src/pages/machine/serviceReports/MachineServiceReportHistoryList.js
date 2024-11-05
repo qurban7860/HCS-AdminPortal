@@ -1,0 +1,224 @@
+import debounce from 'lodash/debounce';
+import { useState, useEffect, useRef, useLayoutEffect } from 'react';
+// @mui
+import { Table, Tooltip, TableBody, IconButton, TableContainer, Grid, Container, Typography, Divider } from '@mui/material';
+// routes
+import { useNavigate, useParams } from 'react-router-dom';
+import { PATH_MACHINE } from '../../../routes/paths';
+// redux
+import { useDispatch, useSelector } from '../../../redux/store';
+// components
+import {
+  useTable,
+  getComparator,
+  TableNoData,
+  TableSkeleton,
+  TableHeadCustom,
+  TableSelectedAction,
+  TablePaginationCustom,
+} from '../../../components/table';
+import Iconify from '../../../components/iconify';
+import Scrollbar from '../../../components/scrollbar';
+// sections
+import MachineServiceReportHistoryListTableRow from './MachineServiceReportHistoryListTableRow';
+import {
+  getMachineServiceHistoryReports,
+  ChangeRowsPerPage,
+  ChangePage,
+  setFilterBy
+} from '../../../redux/slices/products/machineServiceReport';
+import { fDate } from '../../../utils/formatTime';
+import TableCard from '../../../components/ListTableTools/TableCard';
+import IconTooltip from '../../../components/Icons/IconTooltip';
+import { StyledStack } from '../../../theme/styles/default-styles';
+import MachineTabContainer from '../util/MachineTabContainer';
+
+// ----------------------------------------------------------------------
+
+const TABLE_HEAD = [
+  { id: 'serviceDate', label: 'Service Date', align: 'left' },
+  { id: 'status', label: 'Status', align: 'left' },
+  { id: 'versionNo', visibility: 'xs5', label: 'Version', align: 'left' },
+  { id: 'isActive', label: 'Active', align: 'center' },
+  { id: 'createdBy.name', label: 'Created By', align: 'left' },
+  { id: 'createdAt', label: 'Created At', align: 'right' },
+];
+// ----------------------------------------------------------------------
+
+export default function MachineServiceReportHistoryList() {
+  const { machineServiceReportHistory, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.machineServiceReport);
+  const navigate = useNavigate();
+  const { machineId, primaryServiceReportId } = useParams();
+
+  const {
+    order,
+    orderBy,
+    //
+    selected,
+    onSelectAllRows,
+    //
+    onSort,
+  } = useTable({ defaultOrderBy: 'createdAt', defaultOrder: 'desc' });
+
+  const onChangeRowsPerPage = (event) => {
+    dispatch(ChangePage(0));
+    dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
+  };
+
+  const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
+  const dispatch = useDispatch();
+  const [filterName, setFilterName] = useState('');
+  const [tableData, setTableData] = useState([]);
+
+  useLayoutEffect(()=>{
+    dispatch(getMachineServiceHistoryReports( machineId, primaryServiceReportId))
+  },[ dispatch,  machineId, primaryServiceReportId ])
+
+  useEffect(() => {
+    if (initial) {
+      setTableData(machineServiceReportHistory);
+    }
+  }, [machineServiceReportHistory, initial]);
+
+  const dataFiltered = applyFilter({
+    inputData: tableData,
+    comparator: getComparator(order, orderBy),
+    filterName,
+  });
+
+  const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
+
+  const denseHeight = 60;
+
+  const debouncedSearch = useRef(debounce((value) => {
+    dispatch(ChangePage(0))
+    dispatch(setFilterBy(value))
+  }, 500))
+  
+  useEffect(() => {
+      debouncedSearch.current.cancel();
+  }, [debouncedSearch]);
+  
+  useEffect(()=>{
+      setFilterName(filterBy)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[])
+
+  const handleViewRow = async (Id) => navigate(PATH_MACHINE.machines.serviceReports.history.view(machineId, primaryServiceReportId, Id )) ;
+
+
+  return (
+    <Container maxWidth={false} >
+        <MachineTabContainer currentTabValue='serviceReports' />
+        <TableCard>
+            <Grid container gap={1} p={2}>
+              <Grid item>
+                <StyledStack>
+                      <IconTooltip
+                        title='Back'
+                        onClick={() => navigate(PATH_MACHINE.machines.serviceReports.root(machineId, primaryServiceReportId)) }
+                        color='#1976d2'
+                        icon="mdi:arrow-left"
+                      />
+                      <Divider orientation="vertical" flexItem />
+                  </StyledStack>
+              </Grid>
+              <Grid item>
+                  <Typography variant='h4'>{machineServiceReportHistory?.[0]?.serviceReportUID || '' } - {machineServiceReportHistory?.[0]?.serviceReportTemplate?.reportTitle || '' }</Typography>
+              </Grid>
+            </Grid>
+
+          {!isNotFound && <TablePaginationCustom
+            count={dataFiltered.length}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
+          />}
+
+          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+            <TableSelectedAction
+              numSelected={selected.length}
+              rowCount={tableData.length}
+              onSelectAllRows={(checked) =>
+                onSelectAllRows(
+                  checked,
+                  tableData.map((row) => row._id)
+                )
+              }
+              action={
+                <Tooltip title="Delete">
+                  <IconButton color="primary" >
+                    <Iconify icon="eva:trash-2-outline" />
+                  </IconButton>
+                </Tooltip>
+              }
+            />
+
+            <Scrollbar>
+              <Table size="small" sx={{ minWidth: 360 }}>
+                <TableHeadCustom
+                  order={order}
+                  orderBy={orderBy}
+                  headLabel={TABLE_HEAD}
+                  onSort={onSort}
+                />
+
+                <TableBody>
+                  {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row, index) =>
+                      row ? (
+                        <MachineServiceReportHistoryListTableRow
+                          key={row._id}
+                          row={row}
+                          onViewRow={() => handleViewRow(row._id)}
+                          style={index % 2 ? { background: 'red' } : { background: 'green' }}
+                          isHistory
+                        />
+                      ) : (
+                        !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
+                      )
+                    )}
+                  <TableNoData isNotFound={isNotFound} />
+                </TableBody>
+              </Table>
+            </Scrollbar>
+          </TableContainer>
+
+          {!isNotFound && <TablePaginationCustom
+            count={dataFiltered.length}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
+          />}
+        </TableCard>
+    </Container>
+  );
+}
+
+// ----------------------------------------------------------------------
+
+function applyFilter({ inputData, comparator, filterName, filterStatus }) {
+  const stabilizedThis = inputData.map((el, index) => [el, index]);
+  stabilizedThis.sort((a, b) => {
+    const order = comparator(a[0], b[0]);
+    if (order !== 0) return order;
+    return a[1] - b[1];
+  });
+
+  inputData = stabilizedThis.map((el) => el[0]);
+
+  if (filterName) {
+    inputData = inputData.filter(
+      (docCategory) =>
+        docCategory?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        docCategory?.versionNo?.toString().indexOf(filterName.toLowerCase()) >= 0 ||
+        docCategory?.createdBy?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        fDate(docCategory?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+    );
+  }
+
+  return inputData;
+}

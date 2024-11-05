@@ -37,8 +37,8 @@ import moduleReducer from './slices/module/module';
 import drawingReducer from './slices/products/drawing';
 import configReducer from './slices/config/config';
 import checkItemsReducer from './slices/products/machineCheckItems'
-import machineServiceRecordReducer from './slices/products/machineServiceRecord';
-import serviceRecordConfigReducer from './slices/products/serviceRecordConfig';
+import machineServiceReportReducer from './slices/products/machineServiceReport';
+import serviceReportTemplateReducer from './slices/products/serviceReportTemplate';
 import serviceCategoryReducer from './slices/products/serviceCategory';
 import userInviteReducer from './slices/securityUser/invite';
 import blockedCustomerReducer from './slices/securityConfig/blockedCustomers';
@@ -295,14 +295,14 @@ export const checkItemsPersistConfig={
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 }
-export const machineServiceRecordPersistConfig={
-  key: 'machineServiceRecord',
+export const machineServiceReportPersistConfig={
+  key: 'machineServiceReport',
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 }
-export const serviceRecordConfigPersistConfig={
-  key: 'serviceRecordConfig',
+export const serviceReportTemplatePersistConfig={
+  key: 'serviceReportTemplate',
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
@@ -476,9 +476,9 @@ const rootReducer = combineReducers({
   module: persistReducer(modulePersistConfig, moduleReducer),
   drawing: persistReducer(drawingPersistConfig, drawingReducer),
   config: persistReducer(configPersistConfig, configReducer),
-  serviceRecordConfig: persistReducer(serviceRecordConfigPersistConfig, serviceRecordConfigReducer),
+  serviceReportTemplate: persistReducer(serviceReportTemplatePersistConfig, serviceReportTemplateReducer),
   checkItems: persistReducer(checkItemsPersistConfig, checkItemsReducer),
-  machineServiceRecord: persistReducer(machineServiceRecordPersistConfig, machineServiceRecordReducer),
+  machineServiceReport: persistReducer(machineServiceReportPersistConfig, machineServiceReportReducer),
   serviceCategory: persistReducer(serviceCategoryPersistConfig, serviceCategoryReducer),
   userInvite: persistReducer(userInvitePersistConfig, userInviteReducer),
   blockedCustomer: persistReducer(blockedCustomerPersistConfig, blockedCustomerReducer),

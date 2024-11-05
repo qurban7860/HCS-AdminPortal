@@ -33,7 +33,7 @@ import { ICONS } from '../../../constants/icons/default-icons';
 
   ]
 
-  export  const    recordTypes = [
+  export  const    reportTypes = [
     { _id:1 , name: 'SERVICE'},
     { _id:2 , name: 'REPAIR'},
     { _id:3 , name: 'TRAINING'},
@@ -109,9 +109,9 @@ const TABS = [
     icon: ICONS.PROFILES.icon,
   },
   {
-    value: 'serviceRecords',
-    label: 'Service Records',
-    icon: ICONS.SERVICE_RECORDS.icon,
+    value: 'serviceReports',
+    label: 'Service Reports',
+    icon: ICONS.SERVICE_REPORTS.icon,
   },
   {
     value: 'ini',

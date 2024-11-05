@@ -50,8 +50,8 @@ export default function MachineTabContainer({ currentTabValue }) {
       navigate( PATH_MACHINE.machines.licenses.root(machineId) )
     } else if(tab === 'profile' && machineId  ){
       navigate( PATH_MACHINE.machines.profiles.root(machineId) )
-    } else if(tab === 'serviceRecords' && machineId  ){
-      navigate( PATH_MACHINE.machines.serviceRecords.root(machineId) )
+    } else if(tab === 'serviceReports' && machineId  ){
+      navigate( PATH_MACHINE.machines.serviceReports.root(machineId) )
     } else if(tab === 'ini' && machineId  ){
       navigate( PATH_MACHINE.machines.ini.root(machineId) )
     } else if(tab === 'logs' && machineId  ){
