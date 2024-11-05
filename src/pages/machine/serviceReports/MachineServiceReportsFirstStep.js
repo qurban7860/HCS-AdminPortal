@@ -343,7 +343,7 @@ return (
                     display="grid"
                     gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
                     >
-                    <RHFDatePicker inputFormat='dd/MM/yyyy' name="Service Report Date" label="Service Date" />
+                    <RHFDatePicker inputFormat='dd/MM/yyyy' name="Service Date" label="Service Date" />
                     <RHFTextField name="versionNo" label="Version No" disabled />
                   </Box>
 
