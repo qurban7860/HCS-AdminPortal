@@ -33,9 +33,6 @@ import { fDateTime } from '../../../../utils/formatTime';
 import TableCard from '../../../../components/ListTableTools/TableCard';
 import { PATH_SECURITY } from '../../../../routes/paths';
 import { StyledCardContainer } from '../../../../theme/styles/default-styles';
-import CustomerDialog from '../../../../components/Dialog/CustomerDialog';
-import ContactDialog from '../../../../components/Dialog/ContactDialog';
-import SecurityUserDialog from '../../../../components/Dialog/SecurityUserDialog';
 
 // ----------------------------------------------------------------------
 
@@ -80,9 +77,6 @@ export default function SignInLogList() {
   const userId = localStorage.getItem('userId');
 
   const { signInLogs, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.user);
-  const { customerDialog } = useSelector((state) => state.customer);
-  const { contactDialog } = useSelector((state) => state.contact);
-  const { securityUserDialog } = useSelector((state) => state.user);
 
   useLayoutEffect(() => {
     dispatch(getSignInLogs(userId));
@@ -219,9 +213,6 @@ export default function SignInLogList() {
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
           />}
-          { customerDialog && <CustomerDialog /> }
-          { contactDialog && <ContactDialog /> }
-          { securityUserDialog && <SecurityUserDialog />}
         </TableCard>
       </Container>
   );

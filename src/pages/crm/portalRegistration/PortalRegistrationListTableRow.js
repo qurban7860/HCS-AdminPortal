@@ -8,45 +8,40 @@ import { fDate } from '../../../utils/formatTime';
 // components
 import LinkTableCell from '../../../components/ListTableTools/LinkTableCell';
 import { StyledTableRow } from '../../../theme/styles/default-styles'
-import Iconify from '../../../components/iconify';
+import LinkTableCellWithIconTargetBlank from '../../../components/ListTableTools/LinkTableCellWithIconTargetBlank';
 
 // ----------------------------------------------------------------------
 
 PortalRegistrationListTableRow.propTypes = {
   row: PropTypes.object,
-  style: PropTypes.object,
-  selected: PropTypes.bool,
-  onEditRow: PropTypes.func,
   onViewRow: PropTypes.func,
   handleCustomerDialog: PropTypes.func,
-  onViewGroupCustomer: PropTypes.func,
-  onSelectRow: PropTypes.func,
-  onDeleteRow: PropTypes.func,
   hiddenColumns: PropTypes.object,
 };
 
 
 export default function PortalRegistrationListTableRow({
   row,
-  style,
-  selected,
-  onSelectRow,
-  onDeleteRow,
-  onEditRow,
   onViewRow,
   handleCustomerDialog,
-  onViewGroupCustomer,
   hiddenColumns,
 }) {
-  const { contactPersonName, email, phoneNumber, address, customerName, machineSerialNos, status, customer, contact, createdAt } = row;
+  const { contactPersonName, email, phoneNumber, address, customerName, machineSerialNos, status, customer = null, contact, createdAt } = row;
   
   return (
-    <StyledTableRow hover selected={selected}>
+    <StyledTableRow hover >
       <LinkTableCell align="left" onClick={onViewRow} param={contactPersonName} />
       {!hiddenColumns?.email && <TableCell align="left">{email || ''}</TableCell>}
       {!hiddenColumns?.phoneNumber && <TableCell align="left">{phoneNumber}</TableCell>}
       {!hiddenColumns?.address && <TableCell align="left">{address}</TableCell>}
-      {!hiddenColumns?.customerName && <TableCell align="left">{customerName}</TableCell>}
+      {!hiddenColumns?.customerName && ( customer?._id ? 
+        <LinkTableCellWithIconTargetBlank 
+          onViewRow={handleCustomerDialog}
+          param={customer?.name || "" }
+          align='left'
+        /> 
+        : <TableCell align="left">{customerName}</TableCell> )
+      }
       {!hiddenColumns?.machineSerialNos && <TableCell align="left">{Array.isArray( machineSerialNos ) && (  machineSerialNos?.map((m, index )=> m?.trim() && <Chip key={`${index}${row?._id}`} sx={{ m:0.2 }} label={ m?.trim() } /> ) || '' )}</TableCell>}
       {!hiddenColumns?.status && <TableCell align="left">
         <Typography variant='subtitle2' sx={{mr: 1,

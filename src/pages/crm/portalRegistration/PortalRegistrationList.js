@@ -38,7 +38,6 @@ import {
   setFilterStatus,
   setHiddenColumns
 } from '../../../redux/slices/customer/portalRegistration';
-import CustomerDialog from '../../../components/Dialog/CustomerDialog';
 import { getCustomer, setCustomerDialog } from '../../../redux/slices/customer/customer';
 import { Cover } from '../../../components/Defaults/Cover';
 import TableCard from '../../../components/ListTableTools/TableCard';
@@ -51,7 +50,7 @@ const TABLE_HEAD = [
   { id: 'email', label: 'Email', align: 'left', },
   { id: 'phoneNumber', label: 'Phone Number', align: 'left', },
   { id: 'address', label: 'Address', align: 'left', },
-  { id: 'customerName', label: 'Customer Name', align: 'left', },
+  { id: 'customerName', label: 'organization', align: 'left', },
   { id: 'machineSerialNos', label: 'Machines', align: 'left', },
   { id: 'status', label: 'Status', align: 'left' },
   { id: 'customer.name', label: 'Customer', align: 'left' },
@@ -66,8 +65,6 @@ export default function PortalRegistrationList() {
     order,
     orderBy,
     setPage,
-    selected,
-    onSelectRow,
     onSort,
   } = useTable({
     defaultOrderBy: 'createdAt', defaultOrder: 'desc',
@@ -133,9 +130,9 @@ export default function PortalRegistrationList() {
     setPage(0);
   };
 
-  const handleCustomerDialog = useCallback((e, id) => {
-    dispatch(getCustomer(id))
-    dispatch(setCustomerDialog(true))
+  const handleCustomerDialog = useCallback( async ( id ) => {
+    await dispatch(getCustomer(id))
+    await dispatch(setCustomerDialog(true))
   }, [ dispatch ])
 
 useEffect(() => {
@@ -201,8 +198,6 @@ useEffect(() => {
                         hiddenColumns={hiddenColumns}
                         key={row._id}
                         row={row}
-                        selected={selected.includes(row._id)}
-                        onSelectRow={() => onSelectRow(row._id)}
                         onViewRow={() => handleViewRow(row._id)}
                         handleCustomerDialog={()=> row?.customer && handleCustomerDialog(row?.customer?._id)}
                       />
@@ -227,7 +222,6 @@ useEffect(() => {
         )}
         
       </TableCard>
-      <CustomerDialog />
     </Container>
   );
 }

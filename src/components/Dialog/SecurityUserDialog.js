@@ -1,24 +1,26 @@
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Grid, Dialog, DialogContent, DialogTitle, Divider } from '@mui/material';
-import { setSecurityUserDialog } from '../../redux/slices/securityUser/securityUser';
+import { setSecurityUserDialog, resetSecurityUser } from '../../redux/slices/securityUser/securityUser';
 import { PATH_SECURITY } from '../../routes/paths';
 import DialogLink from './DialogLink';
 import FormLabel from '../DocumentForms/FormLabel';
 import ViewFormField from '../ViewForms/ViewFormField';
-import ViewFormAudit from '../ViewForms/ViewFormAudit';
 
 function SecurityUserDialog() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { securityUser, securityUserDialog, isLoading } = useSelector((state) => state.user);
-  const handleSecurityUserDialog = () => { dispatch(setSecurityUserDialog(false))  }
+  const handleSecurityUserDialog = async () => { 
+    await dispatch(resetSecurityUser())  
+    await dispatch(setSecurityUserDialog(false))  
+  }
 
   return (
     <Dialog
       disableEnforceFocus
       maxWidth="lg"
-      open={securityUserDialog}
+      open={securityUser && securityUserDialog}
       onClose={handleSecurityUserDialog}
       aria-describedby="alert-dialog-slide-description"
     >
@@ -65,8 +67,6 @@ function SecurityUserDialog() {
                 heading="Machines"
                 machineConnectionArrayChip={securityUser?.machines || []}
               />
-              
-            <ViewFormAudit defaultValues={securityUser} />
 
         </Grid>
       </DialogContent>

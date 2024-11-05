@@ -23,7 +23,7 @@ import { countries } from '../../../assets/data';
 
 // ----------------------------------------------------------------------
 
-export default function CustomerEditForm() {
+export default function PortalRegistrationEditForm() {
   
   const { portalRegistration } = useSelector( (state) => state.portalRegistration );
   const { customerId } = useParams();

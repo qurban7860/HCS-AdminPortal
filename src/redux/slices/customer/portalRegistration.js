@@ -25,6 +25,7 @@ const initialState = {
   rowsPerPage: 100,
   acceptRequestDialog: false,
   rejectRequestDialog: false,
+  requestDialog: false,
 };
 
 const slice = createSlice({
@@ -54,6 +55,9 @@ const slice = createSlice({
 
     setRejectRequestDialog(state, action) {
       state.rejectRequestDialog = action.payload;
+    },
+    setRequestDialog(state, action) {
+      state.requestDialog = action.payload;
     },
     
     getPortalRegistrationsSuccess(state, action) {
@@ -101,6 +105,7 @@ export const {
   setFilterStatus,
   setAcceptRequestDialog,
   setRejectRequestDialog,
+  setRequestDialog,
   setHiddenColumns,
   ChangeRowsPerPage,
   ChangePage,

@@ -96,7 +96,7 @@ export default function CustomerEditForm() {
       enqueueSnackbar('Customer updated successfully!');
       navigate(PATH_CRM.customers.view(customerId));
     } catch (err) {
-      enqueueSnackbar(err, { variant: `error` });
+      enqueueSnackbar(typeof err === "string" ? err : "Customer Update failed!", { variant: `error` });
     }
   };
 

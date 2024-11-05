@@ -1,20 +1,25 @@
-// import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { Grid, Dialog, DialogContent, DialogTitle, Divider } from '@mui/material';
-import { setContactDialog } from '../../redux/slices/customer/contact';
+import { setContactDialog, resetContact } from '../../redux/slices/customer/contact';
+import { PATH_CRM } from '../../routes/paths';
 import FormLabel from '../DocumentForms/FormLabel';
 import DialogLink from './DialogLink';
 import ViewFormField from '../ViewForms/ViewFormField';
 import ViewPhoneComponent from '../ViewForms/ViewPhoneComponent';
 
 function ContactDialog() {
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const { contact, contactDialog, isLoading} = useSelector((state) => state.contact);
-    const handleConttactDialog = ()=>{ dispatch(setContactDialog(false)) }
+    const handleConttactDialog = async () => { 
+      await dispatch(resetContact()) 
+      await dispatch(setContactDialog(false)) 
+    }
   return (
     <Dialog
         maxWidth="md"
-        open={contactDialog}
+        open={ contact && contactDialog}
         onClose={handleConttactDialog}
         aria-labelledby="keep-mounted-modal-title"
         aria-describedby="keep-mounted-modal-description"
@@ -75,7 +80,14 @@ function ContactDialog() {
           <ViewFormField isLoading={isLoading}  />
         </Grid>
         </DialogContent>
-        <DialogLink onClose={handleConttactDialog}/>
+        <DialogLink 
+          onClose={handleConttactDialog}
+          onClick={() => {
+            handleConttactDialog();
+            navigate(PATH_CRM.customers.contacts.view(contact?.customer?._id, contact?._id));
+          }}
+          content="Go to Contact"
+        />
       </Dialog>
   );
 }
