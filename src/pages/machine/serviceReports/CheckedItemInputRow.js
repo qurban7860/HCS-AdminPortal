@@ -49,7 +49,7 @@ const CheckedItemInputRow = memo(({ index, childIndex, checkItemListId, rowData 
           checkItemListId,
           machineCheckItem:     rowData._id || null,
           serviceReport:        machineServiceReport?._id,
-          serviceId:            machineServiceReport?.serviceId,
+          primaryServiceReportId:            machineServiceReport?.primaryServiceReportId,
           versionNo:            machineServiceReport?.versionNo,
           comments:             rowData?.reportValue?.comments || "",
           checkItemValue:       getReportValue(rowData),

@@ -42,7 +42,7 @@ function MachineServiceReportsSecondStep({ handleDraftRequest, handleDiscard, ha
   const defaultValues = useMemo(
       () => {
         const initialValues = {
-        serviceDate:                  machineServiceReport?.serviceDate || new Date(),
+        serviceReportDate:            machineServiceReport?.serviceReportDate || new Date(),
         versionNo:                    machineServiceReport?.versionNo || 1,
         technicianNotes:              machineServiceReport?.technicianNotes || '',
         textBeforeCheckItems:         machineServiceReport?.textBeforeCheckItems || '',

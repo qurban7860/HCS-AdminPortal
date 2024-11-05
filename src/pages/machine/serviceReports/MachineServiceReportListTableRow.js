@@ -35,13 +35,13 @@ export default function MachineServiceReportListTableRow({
 }) {
   const navigate = useNavigate();
   const { machineId } = useParams();
-  const { serviceReportTemplate, serviceReportUid, status, currentApprovalStatus, versionNo, serviceDate, serviceId, isActive, currentVersion, createdAt, createdBy } = row;
-  const handleServiceReportHistory = () => navigate(PATH_MACHINE.machines.serviceReports.history.root(machineId, serviceId));
+  const { serviceReportTemplate, serviceReportUID, status, currentApprovalStatus, versionNo, serviceReportDate, primaryServiceReportId, isActive, currentVersion, createdAt, createdBy } = row;
+  const handleServiceReportHistory = () => navigate(PATH_MACHINE.machines.serviceReports.history.root(machineId, primaryServiceReportId));
   
   return (
       <StyledTableRow hover selected={selected}>
-        <TableCell align="left">{fDate(serviceDate)}</TableCell>
-        <LinkTableCell align="left" onClick={onViewRow} param={serviceReportUid} />
+        <TableCell align="left">{fDate(serviceReportDate)}</TableCell>
+        <LinkTableCell align="left" onClick={onViewRow} param={serviceReportUID} />
         <TableCell align="left">{currentApprovalStatus !== "PENDING" ? currentApprovalStatus : status || ''}</TableCell>
         <LinkTableCell align="left" onClick={onViewRow} param={`${serviceReportTemplate?.reportTitle ? serviceReportTemplate?.reportTitle	: ''	} ${serviceReportTemplate?.reportType ? ' - ' : ''} ${serviceReportTemplate?.reportType ? serviceReportTemplate?.reportType : ''}`} />
         <TableCell align="left" sx={{display: 'flex', alignItems:'center'}} >{versionNo} 

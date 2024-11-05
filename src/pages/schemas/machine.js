@@ -280,7 +280,7 @@ export const MachineServiceReportPart1Schema = Yup.object().shape({
     .label('Service Report Template')
     .nullable()
     .required(),
-  serviceDate: Yup.date()
+    serviceReportDate: Yup.date()
     .typeError('Date Should be Valid')
     .max(endOfToday(), 'Service Date must be earlier')
     .nullable()
@@ -338,8 +338,8 @@ export const MachineServiceReportSchema = Yup.object().shape({
     .label('Service Report Template')
     .nullable()
     .required(),
-  // serviceDate: Yup.date().label('Service Date').nullable().required,
-  serviceDate: Yup.date()
+  // serviceReportDate: Yup.date().label('Service Date').nullable().required,
+  servserviceReportDateiceDate: Yup.date()
     .typeError('Date Should be Valid')
     .max(tomorrow, `Service Date must be earlier ${fDate(tomorrow, 'dd/MM/yyyy')}`)
     .nullable()

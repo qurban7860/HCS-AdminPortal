@@ -36,7 +36,7 @@ import MachineTabContainer from '../util/MachineTabContainer';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'serviceDate', label: 'Service Date', align: 'left' },
+  { id: 'serviceReportDate', label: 'Service Date', align: 'left' },
   { id: 'status', label: 'Status', align: 'left' },
   { id: 'versionNo', visibility: 'xs5', label: 'Version', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
@@ -48,7 +48,7 @@ const TABLE_HEAD = [
 export default function MachineServiceReportHistoryList() {
   const { machineServiceReportHistory, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.machineServiceReport);
   const navigate = useNavigate();
-  const { machineId, serviceId } = useParams();
+  const { machineId, primaryServiceReportId } = useParams();
 
   const {
     order,
@@ -71,8 +71,8 @@ export default function MachineServiceReportHistoryList() {
   const [tableData, setTableData] = useState([]);
 
   useLayoutEffect(()=>{
-    dispatch(getMachineServiceHistoryReports( machineId, serviceId))
-  },[ dispatch,  machineId, serviceId ])
+    dispatch(getMachineServiceHistoryReports( machineId, primaryServiceReportId))
+  },[ dispatch,  machineId, primaryServiceReportId ])
 
   useEffect(() => {
     if (initial) {
@@ -104,7 +104,7 @@ export default function MachineServiceReportHistoryList() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 
-  const handleViewRow = async (Id) => navigate(PATH_MACHINE.machines.serviceReports.history.view(machineId, serviceId, Id )) ;
+  const handleViewRow = async (Id) => navigate(PATH_MACHINE.machines.serviceReports.history.view(machineId, primaryServiceReportId, Id )) ;
 
 
   return (
@@ -116,7 +116,7 @@ export default function MachineServiceReportHistoryList() {
                 <StyledStack>
                       <IconTooltip
                         title='Back'
-                        onClick={() => navigate(PATH_MACHINE.machines.serviceReports.root(machineId, serviceId)) }
+                        onClick={() => navigate(PATH_MACHINE.machines.serviceReports.root(machineId, primaryServiceReportId)) }
                         color='#1976d2'
                         icon="mdi:arrow-left"
                       />
@@ -124,7 +124,7 @@ export default function MachineServiceReportHistoryList() {
                   </StyledStack>
               </Grid>
               <Grid item>
-                  <Typography variant='h4'>{machineServiceReportHistory?.[0]?.serviceReportUid || '' } - {machineServiceReportHistory?.[0]?.serviceReportTemplate?.reportTitle || '' }</Typography>
+                  <Typography variant='h4'>{machineServiceReportHistory?.[0]?.serviceReportUID || '' } - {machineServiceReportHistory?.[0]?.serviceReportTemplate?.reportTitle || '' }</Typography>
               </Grid>
             </Grid>
 

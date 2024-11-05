@@ -311,7 +311,7 @@ export function getActiveMachineServiceReports (machineId){
   }
 }
 
-export function getMachineServiceHistoryReports(machineId, serviceId ){
+export function getMachineServiceHistoryReports(machineId, primaryServiceReportId ){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
@@ -320,7 +320,7 @@ export function getMachineServiceHistoryReports(machineId, serviceId ){
         params: {
           isArchived: false,
           // isHistory: true,
-          serviceId,
+          primaryServiceReportId,
         }
       }
       );
@@ -432,7 +432,7 @@ export function addMachineServiceReport(machineId, params) {
       try {
         const data = {
           serviceReportTemplate:      params?.serviceReportTemplate?._id,
-          serviceDate:                params?.serviceDate,
+          serviceReportDate:          params?.serviceReportDate,
           versionNo:                  params?.versionNo,
           customer:                   params?.customer,
           site:                       params?.site,
@@ -456,7 +456,7 @@ export function addMachineServiceReport(machineId, params) {
         }
         // const formData = new FormData();
         // formData.append('serviceReportTemplate', params?.serviceReportTemplate?._id || null);
-        // formData.append('serviceDate', params?.serviceDate);
+        // formData.append('serviceReportDate', params?.serviceReportDate);
         // formData.append('versionNo', params?.versionNo);
         // formData.append('customer', params?.customer || null);
         // formData.append('site', params?.site || null);
@@ -506,7 +506,7 @@ export function updateMachineServiceReport(machineId, id, params) {
     try {
       const data = {
         // serviceReportTemplate:        params?.serviceReportTemplate,
-        serviceDate:                params?.serviceDate,
+        serviceReportDate:          params?.serviceReportDate,
         versionNo:                  params?.versionNo ,
         customer:                   params?.customer,
         site:                       params?.site,
@@ -527,7 +527,7 @@ export function updateMachineServiceReport(machineId, id, params) {
         update:                     params?.update,
         isReportDocsOnly:           params?.isReportDocsOnly,
         isActive:                   params?.isActive,
-        serviceId:                  params?.serviceId,
+        primaryServiceReportId:     params?.primaryServiceReportId,
         emails:                     params?.emails,
       }
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceReports/${id}`, data );
@@ -662,7 +662,7 @@ export function addCheckItemValues(machineId, data, Index, childIndex) {
     try {
       const formData = new FormData();
       formData.append('serviceReport', data.serviceReport);
-      formData.append('serviceId', data.serviceId);
+      formData.append('primaryServiceReportId', data.primaryServiceReportId);
       formData.append('checkItemListId', data.checkItemListId);
       formData.append('machineCheckItem', data.machineCheckItem);
       formData.append('checkItemValue', data.checkItemValue);

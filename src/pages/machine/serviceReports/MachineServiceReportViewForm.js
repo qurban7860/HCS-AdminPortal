@@ -62,7 +62,7 @@ function MachineServiceReportViewForm( {serviceHistoryView} ) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const { machineId, serviceId, id } = useParams();
+  const { machineId, primaryServiceReportId, id } = useParams();
   const { user } = useAuthContext();
   const [selectedImage, setSelectedImage] = useState(-1);
   const [slides, setSlides] = useState([]);
@@ -121,7 +121,7 @@ function MachineServiceReportViewForm( {serviceHistoryView} ) {
 
   const handleServiceReportHistory = () =>  {
     navigate(PATH_MACHINE.machines.serviceReports.history.root(
-      machineId, serviceHistoryView ? serviceId : machineServiceReport?.serviceId 
+      machineId, serviceHistoryView ? primaryServiceReportId : machineServiceReport?.primaryServiceReportId 
     ))
   }
 
@@ -137,7 +137,7 @@ function MachineServiceReportViewForm( {serviceHistoryView} ) {
       reportType:                           machineServiceReport?.reportType || null,
       serviceReportTemplate:                machineServiceReport?.serviceReportTemplate?.reportTitle	 || '',
       serviceReportTemplateReportType:      machineServiceReport?.serviceReportTemplate?.reportType || '',
-      serviceDate:                          machineServiceReport?.serviceDate || null,
+      serviceReportDate:                    machineServiceReport?.serviceReportDate || null,
       versionNo:                            machineServiceReport?.versionNo || 1, 
       decoilers:                            machineServiceReport?.decoilers ,
       technician:                           machineServiceReport?.technician || null,
@@ -182,7 +182,7 @@ function MachineServiceReportViewForm( {serviceHistoryView} ) {
     await dispatch(setPDFViewerDialog(true))
   }
 
-  const fileName = `${defaultValues?.serviceDate?.substring(0,10).replaceAll('-','')}_${defaultValues?.serviceReportTemplateReportType}_${defaultValues?.versionNo}.pdf`
+  const fileName = `${defaultValues?.serviceReportDate?.substring(0,10).replaceAll('-','')}_${defaultValues?.serviceReportTemplateReportType}_${defaultValues?.versionNo}.pdf`
 
   const handleContactView = async (contactId) => {
     await dispatch(setCardActiveIndex(contactId));
@@ -208,8 +208,8 @@ function MachineServiceReportViewForm( {serviceHistoryView} ) {
   ));
 
   const handleBackLink = ()=>{
-    if(serviceHistoryView && serviceId ){
-      navigate(PATH_MACHINE.machines.serviceReports.history.root(machineId, serviceId))
+    if(serviceHistoryView && primaryServiceReportId ){
+      navigate(PATH_MACHINE.machines.serviceReports.history.root(machineId, primaryServiceReportId))
     }else{
       navigate(PATH_MACHINE.machines.serviceReports.root(machineId))
     }
@@ -263,7 +263,7 @@ function MachineServiceReportViewForm( {serviceHistoryView} ) {
     setSelectedImage(index);
     const file = slides[index];
     try {
-      const response = await dispatch(downloadReportFile(machineId, serviceId, file?._id));
+      const response = await dispatch(downloadReportFile(machineId, primaryServiceReportId, file?._id));
       if (regEx.test(response.status)) {
         const updatedItems = [
           ...slides.slice(0, index),
@@ -286,7 +286,7 @@ function MachineServiceReportViewForm( {serviceHistoryView} ) {
     const file = slidesReporting[index];
     try {
       if(!file.isLoaded){
-        const response = await dispatch(downloadReportFile(machineId, serviceId, file?._id));
+        const response = await dispatch(downloadReportFile(machineId, primaryServiceReportId, file?._id));
         if (regEx.test(response.status)) {
           const updatedItems = [
             ...slidesReporting.slice(0, index),
@@ -314,7 +314,7 @@ function MachineServiceReportViewForm( {serviceHistoryView} ) {
 
   const handleDeleteReportFile = async (fileId) => {
     try {
-      await dispatch(deleteReportFile(machineId, machineServiceReport?.serviceId, fileId));
+      await dispatch(deleteReportFile(machineId, machineServiceReport?.primaryServiceReportId, fileId));
       await dispatch(getMachineServiceReport(machineId, id))
       enqueueSnackbar('File deleted successfully!');
     } catch (err) {
@@ -324,7 +324,7 @@ function MachineServiceReportViewForm( {serviceHistoryView} ) {
   };
 
   const handleDownloadReportFile = (fileId, name, extension) => {
-    dispatch(downloadReportFile(machineId, serviceId, fileId))
+    dispatch(downloadReportFile(machineId, primaryServiceReportId, fileId))
       .then((res) => {
         if (regEx.test(res.status)) {
           download(atob(res.data), `${name}.${extension}`, { type: extension });
@@ -360,7 +360,7 @@ function MachineServiceReportViewForm( {serviceHistoryView} ) {
     setAttachedPDFViewerDialog(true);
     setPDF(null);
     try {
-      const response = await dispatch(downloadReportFile(machineId, serviceId, fileId));
+      const response = await dispatch(downloadReportFile(machineId, primaryServiceReportId, fileId));
       if (regEx.test(response.status)) {
         const blob = b64toBlob(encodeURI(response.data), 'application/pdf')
         const url = URL.createObjectURL(blob);
@@ -439,7 +439,7 @@ function MachineServiceReportViewForm( {serviceHistoryView} ) {
         <Grid container>
           <FormLabel content={FORMLABELS.KEYDETAILS} />
           <ViewFormField isLoading={isLoading} variant='h4' sm={2} heading="Service Date" 
-            param={fDate(defaultValues.serviceDate)} />
+            param={fDate(defaultValues.serviceReportDate)} />
           <ViewFormField isLoading={isLoading} variant='h4' sm={6} heading="Service Report Configuration" 
             param={`${defaultValues.serviceReportTemplate} ${defaultValues.serviceReportTemplateReportType ? '-' : ''} ${defaultValues.serviceReportTemplateReportType ? defaultValues.serviceReportTemplateReportType : ''}`} />
           <ViewFormField
@@ -456,7 +456,7 @@ function MachineServiceReportViewForm( {serviceHistoryView} ) {
                   )}
                   {!machineServiceReport?.isHistory &&
                     machineServiceReport?.currentVersion?.versionNo > 1 &&
-                    machineServiceReport?.serviceId && (
+                    machineServiceReport?.primaryServiceReportId && (
                       <HistoryIcon callFunction={handleServiceReportHistory} />
                   )}
                 </>
@@ -560,7 +560,7 @@ function MachineServiceReportViewForm( {serviceHistoryView} ) {
               {machineServiceReportCheckItems?.checkItemLists?.map((row, index) => (
                 <CheckedItemValueRow
                   machineId={machineId}
-                  serviceId={machineServiceReport._id}
+                  primaryServiceReportId={machineServiceReport._id}
                   value={row}
                   index={index}
                   key={row._id}

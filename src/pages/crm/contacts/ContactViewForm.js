@@ -109,7 +109,7 @@ export default function ContactViewForm({
 
   const operatorTraningsList = defaultValues?.serviceReports?.map((item, index) => 
   (
-    <Chip onClick={() => handleSericeReportView(item?.machine, item?._id)} sx={{m:0.3}} label={`${item?.serviceReportTemplate?.reportTitle || ''} | ${fDateTime(item?.serviceDate)}`} />
+    <Chip onClick={() => handleSericeReportView(item?.machine, item?._id)} sx={{m:0.3}} label={`${item?.serviceReportTemplate?.reportTitle || ''} | ${fDateTime(item?.serviceReportDate)}`} />
   ));
 
   return (

@@ -246,8 +246,8 @@ export const PATH_MACHINE = {
       view: (machineId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/serviceReports/${id}/view`),
       edit: (machineId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/serviceReports/${id}/edit`),
       history: {
-        root: (machineId, serviceId) => path(ROOTS_MACHINE, `/machines/${machineId}/serviceReports/${serviceId}/history`),
-        view: (machineId, serviceId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/serviceReports/${serviceId}/history/${id}/view`),
+        root: (machineId, primaryServiceReportId) => path(ROOTS_MACHINE, `/machines/${machineId}/serviceReports/${primaryServiceReportId}/history`),
+        view: (machineId, primaryServiceReportId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/serviceReports/${primaryServiceReportId}/history/${id}/view`),
       },
     },    
     // --------------------- Machine Tool Installed -----------------------

@@ -18,7 +18,7 @@ export function MachineServiceReportPDF({machineServiceReport, machineServiceRep
             reportType:                           machineServiceReport?.reportType || null,
             serviceReportTemplate:                machineServiceReport?.serviceReportTemplate?.reportTitle	 || '',
             serviceReportTemplateReportType:      machineServiceReport?.serviceReportTemplate?.reportType || '',
-            serviceDate:                          machineServiceReport?.serviceDate || null,
+            serviceReportDate:                    machineServiceReport?.serviceReportDate || null,
             versionNo:                            machineServiceReport?.versionNo || null,
             status:                               machineServiceReport?.status || '',
             approvalStatus:                       machineServiceReport?.currentApprovalStatus || '',
@@ -58,7 +58,7 @@ export function MachineServiceReportPDF({machineServiceReport, machineServiceRep
     const decoilers = defaultValues?.decoilers?.map((decoilerMachine) => (`${decoilerMachine?.serialNo ? decoilerMachine?.serialNo : ''}${decoilerMachine?.name ? '-' : ''}${decoilerMachine?.name ? decoilerMachine?.name : ''}`)).join(', ');
     const operators = machineServiceReport?.operators?.map(operator => `${operator?.firstName || ''} ${operator?.lastName || ''}`).join(', ');
     
-    const fileName = `${defaultValues?.serviceDate?.substring(0,10).replaceAll('-','')}_${defaultValues?.serviceReportTemplateReportType}_${defaultValues?.versionNo}`;
+    const fileName = `${defaultValues?.serviceReportDate?.substring(0,10).replaceAll('-','')}_${defaultValues?.serviceReportTemplateReportType}_${defaultValues?.versionNo}`;
 
 function getImageUrl(file) {
         return file?.src  ? `data:image/${ !file?.extension?.toLowerCase()?.includes('png') ? file?.extension : 'jpg' };base64,${file?.src  }` : '';
@@ -92,7 +92,7 @@ function getImageUrl(file) {
             <View style={styles.row}>
                 <View style={styles.col_30}>
                     <Text style={styles.lable}>SERVICE DATE</Text>
-                    <Text style={[styles.text]}>{fDate(defaultValues?.serviceDate)}</Text>
+                    <Text style={[styles.text]}>{fDate(defaultValues?.serviceReportDate)}</Text>
                 </View>
                 <View style={styles.col_30}>
                     <Text style={styles.lable}>REPORT TYPE</Text>

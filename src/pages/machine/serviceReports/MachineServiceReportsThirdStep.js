@@ -69,7 +69,7 @@ function MachineServiceReportsThirdStep({handleDraftRequest, handleDiscard, hand
               path:`${file?.name}.${file?.extension}`,
               downloadFilename:`${file?.name}.${file?.extension}`,
               machineId:machineServiceReport?.machineId,
-              serviceId:id,
+              primaryServiceReportId:id,
             })) || [],
             isActive:                     true,
         }

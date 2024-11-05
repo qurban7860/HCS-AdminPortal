@@ -62,8 +62,8 @@ function MachineServiceReportsFirstStep( { handleComplete, handleDraftRequest, h
       () => {
         const initialValues = {
         docReportType:                reportTypes.find(rt=> rt?.name?.toLowerCase() === machineServiceReport?.serviceReportTemplate?.reportType?.toLowerCase()) || null,
-        serviceReportTemplate:   machineServiceReport?.serviceReportTemplate || null,
-        serviceDate:                  machineServiceReport?.serviceDate || new Date(),
+        serviceReportTemplate:        machineServiceReport?.serviceReportTemplate || null,
+        serviceReportDate:            machineServiceReport?.serviceReportDate || new Date(),
         versionNo:                    machineServiceReport?.versionNo || 1,
         technician:                   machineServiceReport?.technician || null ,
         technicianNotes:              machineServiceReport?.technicianNotes || '',
@@ -80,7 +80,7 @@ function MachineServiceReportsFirstStep( { handleComplete, handleDraftRequest, h
           path:`${file?.name}.${file?.extension}`,
           downloadFilename:`${file?.name}.${file?.extension}`,
           machineId:machineServiceReport?.machineId,
-          serviceId: id,
+          primaryServiceReportId: id,
         })) || [],
       }
       return initialValues;
@@ -170,11 +170,11 @@ function MachineServiceReportsFirstStep( { handleComplete, handleDraftRequest, h
           enqueueSnackbar('Saving failed!', { variant: `error` });
         }
       };
-    const dispatchFiles = async ( serviceID,data )  => {
+    const dispatchFiles = async ( primaryServiceReportId,data )  => {
       if(Array.isArray(data?.files) && data?.files?.length > 0){
         const filteredFiles = data?.files?.filter((ff)=> !ff?._id)
         if(Array.isArray(filteredFiles) && filteredFiles?.length > 0){
-            await dispatch(addMachineServiceReportFiles(machineId, serviceID, { files: filteredFiles, isReportDoc: data?.isReportDoc } ))
+            await dispatch(addMachineServiceReportFiles(machineId, primaryServiceReportId, { files: filteredFiles, isReportDoc: data?.isReportDoc } ))
         }
       }
     }
@@ -343,7 +343,7 @@ return (
                     display="grid"
                     gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
                     >
-                    <RHFDatePicker inputFormat='dd/MM/yyyy' name="serviceDate" label="Service Date" />
+                    <RHFDatePicker inputFormat='dd/MM/yyyy' name="Service Report Date" label="Service Date" />
                     <RHFTextField name="versionNo" label="Version No" disabled />
                   </Box>
 

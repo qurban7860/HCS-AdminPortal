@@ -146,7 +146,7 @@ const SendApprovalEmails = ({ isLoading, reportStatus, approvingContacts }) => {
       const params = {
         approvingContacts: data?.contacts,
         status: reportStatus?.value || '',
-        serviceId: machineServiceReport?.serviceId || '',
+        primaryServiceReportId: machineServiceReport?.primaryServiceReportId || '',
         submittedBy: user,
         submittedAt: new Date(),
       };

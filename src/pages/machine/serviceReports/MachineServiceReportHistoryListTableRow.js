@@ -31,10 +31,10 @@ export default function MachineServiceReportListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { isHistory, versionNo, serviceDate, status, currentApprovalStatus, isActive, createdAt, createdBy } = row;
+  const { isHistory, versionNo, serviceReportDate, status, currentApprovalStatus, isActive, createdAt, createdBy } = row;
   return (
       <StyledTableRow hover selected={selected}>
-        <TableCell align="left" >{fDate(serviceDate)}</TableCell>
+        <TableCell align="left" >{fDate(serviceReportDate)}</TableCell>
         <TableCell align="left" >{currentApprovalStatus !== "PENDING" ? currentApprovalStatus : status}</TableCell>
         <LinkTableCell align="left" onClick={onViewRow} param={`${versionNo || 1} ${!isHistory && status!=="DRAFT"? '(Current Version)' : ''}`} />
         <TableCell align="center"><Switch checked={isActive} disabled size="small" /></TableCell>

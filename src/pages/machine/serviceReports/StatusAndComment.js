@@ -14,7 +14,7 @@ import Lightbox from '../../../components/lightbox/Lightbox';
 import CheckedItemValueHistory from './CheckedItemValueHistory';
 import SkeletonPDF from '../../../components/skeleton/SkeletonPDF';
 
-const StatusAndComment = ({index, childIndex, childRow, machineId, serviceId}) => {
+const StatusAndComment = ({index, childIndex, childRow, machineId, primaryServiceReportId}) => {
     const { machineServiceReport } = useSelector((state) => state.machineServiceReport);
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
@@ -47,7 +47,7 @@ const StatusAndComment = ({index, childIndex, childRow, machineId, serviceId}) =
   
       if(!image?.isLoaded && image?.fileType?.startsWith('image')){
         try {
-          const response = await dispatch(downloadCheckItemFile(machineId, serviceId, image?._id));
+          const response = await dispatch(downloadCheckItemFile(machineId, primaryServiceReportId, image?._id));
           if (regEx.test(response.status)) {
             // Update the image property in the imagesLightbox array
             const updatedSlides = [
@@ -89,7 +89,7 @@ const StatusAndComment = ({index, childIndex, childRow, machineId, serviceId}) =
     };
   
     const handleDownloadCheckItemFile = (fileId, name, extension) => {
-      dispatch(downloadCheckItemFile(machineId, serviceId, fileId))
+      dispatch(downloadCheckItemFile(machineId, primaryServiceReportId, fileId))
         .then((res) => {
           if (regEx.test(res.status)) {
             download(atob(res.data), `${name}.${extension}`, { type: extension });
@@ -245,6 +245,6 @@ StatusAndComment.propTypes = {
     childIndex: PropTypes.number,
     childRow: PropTypes.object,
     machineId: PropTypes.string,
-    serviceId: PropTypes.string,
+    primaryServiceReportId: PropTypes.string,
   };
 export default memo(StatusAndComment)
