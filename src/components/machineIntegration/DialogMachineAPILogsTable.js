@@ -55,7 +55,7 @@ const tableColumns = [
   },
   {
     id: 'responseTime',
-    label: 'Response Time',
+    label: 'Response Time (ms)',
     width: 120,
   },
   {
