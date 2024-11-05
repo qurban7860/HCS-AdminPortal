@@ -46,8 +46,10 @@ export default function RHFFilteredSearchBar({
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   useEffect(() => {
-    if (!selectedFilter) setError('Please select a filter option to enable search');
-  }, [selectedFilter, setError]);
+    if (!selectedFilter && filterOptions.length > 0) {
+      setSelectedFilter(filterOptions[0].id); 
+    }
+  }, [selectedFilter, filterOptions, setSelectedFilter]);
 
   const clearSearchKey = () => {
     setValue(name, '');
