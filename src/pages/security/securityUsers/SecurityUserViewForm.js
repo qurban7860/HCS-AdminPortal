@@ -24,10 +24,6 @@ import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
 import { Cover } from '../../../components/Defaults/Cover';
 import { useSnackbar } from '../../../components/snackbar';
-import LogoAvatar from '../../../components/logo-avatar/LogoAvatar';
-import CustomAvatar from '../../../components/custom-avatar/CustomAvatar';
-import CustomerDialog from '../../../components/Dialog/CustomerDialog';
-import ContactDialog from '../../../components/Dialog/ContactDialog';
 import { StyledCardContainer, StyledTooltip } from '../../../theme/styles/default-styles';
 import Iconify from '../../../components/iconify';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
@@ -322,9 +318,6 @@ export default function SecurityUserViewForm() {
           </Grid>
         </Card>
       </Grid>
-      
-      <CustomerDialog />
-      <ContactDialog />
       <ChangePasswordByAdminDialog />
       
     </>

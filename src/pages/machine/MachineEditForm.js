@@ -24,7 +24,6 @@ import { useSnackbar } from '../../components/snackbar';
 // components
 import FormProvider, { RHFTextField, RHFAutocomplete, RHFSwitch, RHFDatePicker, RHFChipsInput } from '../../components/hook-form';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
-import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 // constants
 import { FORMLABELS } from '../../constants/default-constants';
 import { editMachineSchema } from '../schemas/machine'
@@ -40,7 +39,6 @@ export default function MachineEditForm() {
   const { activeMachineModels } = useSelector((state) => state.machinemodel);
   const { activeCustomers } = useSelector((state) => state.customer);
   const { activeSites } = useSelector((state) => state.site);
-  const { activeMachineStatuses } = useSelector((state) => state.machinestatus);
   const { activeSpContacts } = useSelector((state) => state.contact);
   const { machineConnections } = useSelector((state) => state.machineConnections);
   const { activeCategories } = useSelector((state) => state.category);
@@ -83,10 +81,10 @@ export default function MachineEditForm() {
     reset,
     watch,
     handleSubmit,
-    setError,
-    formState: { isSubmitting, errors },
+    formState: { isSubmitting },
     setValue,
   } = methods
+
   const {
     parentSerialNo,
     category,

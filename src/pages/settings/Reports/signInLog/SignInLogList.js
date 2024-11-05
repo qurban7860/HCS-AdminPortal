@@ -33,18 +33,15 @@ import { fDateTime } from '../../../../utils/formatTime';
 import TableCard from '../../../../components/ListTableTools/TableCard';
 import { PATH_SECURITY } from '../../../../routes/paths';
 import { StyledCardContainer } from '../../../../theme/styles/default-styles';
-import CustomerDialog from '../../../../components/Dialog/CustomerDialog';
-import ContactDialog from '../../../../components/Dialog/ContactDialog';
-import SecurityUserDialog from '../../../../components/Dialog/SecurityUserDialog';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'requestedLogin', visibility: 'md1', label: 'User Login', align: 'left' },
-  { id: 'user.name', label: 'User Name', align: 'left' },
+  { id: 'requestedLogin', visibility: 'md1', label: 'Login', align: 'left' },
+  { id: 'user.name', label: 'User', align: 'left' },
   { id: 'user.customer.name', label: 'Customer', align: 'left' },
   // { id: 'user.contact.firstName', label: 'Contact', align: 'left' },
-  { id: 'loginIP', visibility: 'md2', label: 'User IP', align: 'left' },
+  { id: 'loginIP', visibility: 'md2', label: 'IP', align: 'left' },
   { id: 'loginTime', label: 'Login Time', align: 'left' },
   { id: 'logoutTime', label: 'Logout Time', align: 'left' },
   { id: 'loggedOutBy', label: 'Logout By', align: 'left' },
@@ -80,9 +77,6 @@ export default function SignInLogList() {
   const userId = localStorage.getItem('userId');
 
   const { signInLogs, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.user);
-  const { customerDialog } = useSelector((state) => state.customer);
-  const { contactDialog } = useSelector((state) => state.contact);
-  const { securityUserDialog } = useSelector((state) => state.user);
 
   useLayoutEffect(() => {
     dispatch(getSignInLogs(userId));
@@ -219,9 +213,6 @@ export default function SignInLogList() {
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
           />}
-          { customerDialog && <CustomerDialog /> }
-          { contactDialog && <ContactDialog /> }
-          { securityUserDialog && <SecurityUserDialog />}
         </TableCard>
       </Container>
   );

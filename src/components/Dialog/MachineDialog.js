@@ -4,7 +4,7 @@ import { Grid, Dialog, DialogContent, DialogTitle, Divider } from '@mui/material
 import { PATH_MACHINE } from '../../routes/paths';
 import DialogLink from './DialogLink';
 import FormLabel from '../DocumentForms/FormLabel';
-import { setMachineDialog, setMachineTab, resetMachineForDialog, resetMachine } from '../../redux/slices/products/machine';
+import { setMachineDialog, resetMachineForDialog, resetMachine } from '../../redux/slices/products/machine';
 import ViewFormField from '../ViewForms/ViewFormField';
 
 function MachineDialog() {
@@ -17,7 +17,7 @@ function MachineDialog() {
     <Dialog
       disableEnforceFocus
       maxWidth="lg"
-      open={ machineDialog }
+      open={ machineForDialog && machineDialog }
       onClose={ handleMachineDialog }
       keepMounted
       aria-describedby="alert-dialog-slide-description"

@@ -4,7 +4,7 @@ import { LoadingButton } from '@mui/lab';
 import { Button, Grid, Stack } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { PATH_MACHINE } from '../../routes/paths';
-import { setFormActiveStep } from '../../redux/slices/products/machineServiceRecord';
+import { setFormActiveStep } from '../../redux/slices/products/machineServiceReport';
 import useResponsive from '../../hooks/useResponsive';
 
 ServiceRecodStepButtons.propTypes = {
@@ -27,7 +27,7 @@ export default function ServiceRecodStepButtons({
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { formActiveStep } = useSelector((state) => state.machineServiceRecord);
+  const { formActiveStep } = useSelector((state) => state.machineServiceReport);
   const { machine } = useSelector((state) => state.machine);
   
   const isMobile = useResponsive('down', 'sm');
@@ -37,7 +37,7 @@ export default function ServiceRecodStepButtons({
   } 
 
   const handleCancle = async () => {
-    await navigate(PATH_MACHINE.machines.serviceRecords.root(machine?._id))
+    await navigate(PATH_MACHINE.machines.serviceReports.root(machine?._id))
   } 
 
   return (

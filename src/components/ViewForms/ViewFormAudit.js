@@ -8,8 +8,14 @@ ViewFormAudit.propTypes = {
   displayVariation: PropTypes.string,
 };
 function ViewFormAudit({ defaultValues, displayVariation}) {
-  const { createdByFullName, createdAt, createdIP, updatedByFullName, updatedAt, updatedIP } =
-    defaultValues;
+  const { 
+    createdByFullName = '', 
+    createdAt = '', 
+    createdIP = '', 
+    updatedByFullName = '', 
+    updatedAt = '', 
+    updatedIP = '' 
+  } = defaultValues || {};
 
   return (
     <Grid container item md={12} sx={{ overflowWrap: 'break-word', display: ( displayVariation || 'flex' ), mt:1, px:0.5  }}>

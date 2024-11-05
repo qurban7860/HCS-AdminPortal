@@ -5,6 +5,7 @@ import { CONFIG } from '../config-global';
 import axios from '../utils/axios';
 import localStorageAvailable from '../utils/localStorageAvailable';
 import { isValidToken, setSession, getUserAccess } from './utils';
+import { PATH_AUTH } from '../routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -274,6 +275,8 @@ export function AuthProvider({ children }) {
 
     const clearStorageAndNaviagteToLogin = useCallback( async () => {
         await clearAllPersistedStates();
+        window.location.href = PATH_AUTH.login
+
     },[ clearAllPersistedStates ]);
 
   // CONFIGURATIONS

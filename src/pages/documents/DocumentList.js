@@ -60,8 +60,6 @@ import { StyledCardContainer } from '../../theme/styles/default-styles';
 import { FORMLABELS } from '../../constants/default-constants';
 import { fDate } from '../../utils/formatTime';
 import TableCard from '../../components/ListTableTools/TableCard';
-import MachineDialog from '../../components/Dialog/MachineDialog';
-import CustomerDialog from '../../components/Dialog/CustomerDialog';
 import RHFFilteredSearchBar from '../../components/hook-form/RHFFilteredSearchBar';
 
 // ----------------------------------------------------------------------
@@ -357,9 +355,9 @@ useLayoutEffect(() => {
     dispatch(setCustomerDialog(true))
   }
   
-  const handleMachineDialog = (e, Id) => {
-    dispatch(getMachineForDialog(Id))
-    dispatch(setMachineDialog(true))
+  const handleMachineDialog = async (e, Id) => {
+    await dispatch(getMachineForDialog(Id))
+    await dispatch(setMachineDialog(true))
   }
 
   const handleGalleryView = () => {
@@ -525,8 +523,6 @@ useLayoutEffect(() => {
         </TableCard>
         {/* </Container> */}
       </FormProvider>
-      <CustomerDialog />
-      <MachineDialog />
     </>
   );
 }

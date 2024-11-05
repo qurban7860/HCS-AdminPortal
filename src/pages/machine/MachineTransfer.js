@@ -23,7 +23,6 @@ import { StyledCardContainer } from '../../theme/styles/default-styles';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
 import OpenInNewPage from '../../components/Icons/OpenInNewPage';
-import CustomerDialog from '../../components/Dialog/CustomerDialog';
 
 function MachineTransfer() {
 
@@ -37,7 +36,7 @@ function MachineTransfer() {
   const { activeSpContacts } = useSelector((state) => state.contact);
   const { machine, isLoading } = useSelector((state) => state.machine);
   const { activeMachineStatuses } = useSelector((state) => state.machinestatus);
-  const { activeCustomers, financialCompanies, customerDialog } = useSelector((state) => state.customer);
+  const { activeCustomers, financialCompanies } = useSelector((state) => state.customer);
   const { activeSites } = useSelector((state) => state.site);
   const { activeMachineDocuments } = useSelector((state) => state.machineDocument );
   const { activeSuppliers } = useSelector((state) => state.supplier);
@@ -384,7 +383,6 @@ useEffect(()=>{
           </Card>
           </Grid>
           </Grid>
-      { customerDialog  && <CustomerDialog />}
         </FormProvider>
       </Container>
   );

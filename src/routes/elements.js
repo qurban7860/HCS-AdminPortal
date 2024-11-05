@@ -195,13 +195,12 @@ export const MachineProfileAdd = Loadable(lazy(() => import('../pages/machine/pr
 export const MachineProfileView = Loadable(lazy(() => import('../pages/machine/profiles/ProfileViewForm')));
 export const MachineProfileEdit = Loadable(lazy(() => import('../pages/machine/profiles/ProfileEditForm')));
 
-// --------------------------- MACHINE Service Records -------------------------------------
+// --------------------------- MACHINE Service Reports -------------------------------------
 
-export const MachineServiceRecordList = Loadable(lazy(() => import('../pages/machine/serviceRecords/MachineServiceRecordList')));
-export const MachineServiceRecordAdd = Loadable(lazy(() => import('../pages/machine/serviceRecords/MachineServiceRecordAddForm')));
-export const MachineServiceRecordView = Loadable(lazy(() => import('../pages/machine/serviceRecords/MachineServiceRecordViewForm')));
-// export const MachineServiceRecordEdit = Loadable(lazy(() => import('../pages/machine/serviceRecords/MachineServiceRecordEditForm')));
-export const MachineServiceRecordHistoryList = Loadable(lazy(() => import('../pages/machine/serviceRecords/MachineServiceRecordHistoryList')));
+export const MachineServiceReportList = Loadable(lazy(() => import('../pages/machine/serviceReports/MachineServiceReportList')));
+export const MachineServiceReportAdd = Loadable(lazy(() => import('../pages/machine/serviceReports/MachineServiceReportAddForm')));
+export const MachineServiceReportView = Loadable(lazy(() => import('../pages/machine/serviceReports/MachineServiceReportViewForm')));
+export const MachineServiceReportHistoryList = Loadable(lazy(() => import('../pages/machine/serviceReports/MachineServiceReportHistoryList')));
 
 // --------------------------- MACHINE INI -------------------------------------
 
@@ -272,7 +271,7 @@ export const MachineToolAdd = Loadable(lazy(() => import('../pages/machineSettin
 export const MachineToolView = Loadable(lazy(() => import('../pages/machineSettings/tools/ToolView')));
 export const MachineToolEdit = Loadable(lazy(() => import('../pages/machineSettings/tools/ToolEdit')));
 
-// --------------- Service Record Configuration --------------------
+// --------------- Service Report Configuration --------------------
 
 // MACHINE SETTINGS CHECK Item Categories
 export const CheckItemCategoryList = Loadable(lazy(() => import('../pages/machineSettings/checkItemsCategories/CheckItemCategoryList')));
@@ -286,11 +285,11 @@ export const CheckItemAdd  = Loadable(lazy(() => import('../pages/machineSetting
 export const CheckItemView = Loadable(lazy(() => import('../pages/machineSettings/checkItem/CheckItemView')));
 export const CheckItemEdit = Loadable(lazy(() => import('../pages/machineSettings/checkItem/CheckItemEditForm')));
 
-// MACHINE SETTINGS Service Record Config / Document
-export const ServiceRecordConfigList = Loadable(lazy(() => import('../pages/machineSettings/serviceDocumentConfiguration/ServiceRecordConfigList')));
-export const ServiceRecordConfigAdd = Loadable(lazy(() => import('../pages/machineSettings/serviceDocumentConfiguration/ServiceRecordConfigAddForm')));
-export const ServiceRecordConfigView = Loadable(lazy(() => import('../pages/machineSettings/serviceDocumentConfiguration/ServiceRecordConfigView')));
-export const ServiceRecordConfigEdit = Loadable(lazy(() => import('../pages/machineSettings/serviceDocumentConfiguration/ServiceRecordConfigEdit')));
+// MACHINE SETTINGS Service Report Template / Document
+export const ServiceReportTemplateList = Loadable(lazy(() => import('../pages/machineSettings/serviceReportTemplate/ServiceReportTemplateList')));
+export const ServiceReportTemplateAdd = Loadable(lazy(() => import('../pages/machineSettings/serviceReportTemplate/ServiceReportTemplateAddForm')));
+export const ServiceReportTemplateView = Loadable(lazy(() => import('../pages/machineSettings/serviceReportTemplate/ServiceReportTemplateView')));
+export const ServiceReportTemplateEdit = Loadable(lazy(() => import('../pages/machineSettings/serviceReportTemplate/ServiceReportTemplateEdit')));
 
 // ------------------------ Others / Machine Status ------------------------
 

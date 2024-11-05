@@ -1,12 +1,7 @@
 import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
 // @mui
-import {
-  Switch,
-  Stack,
-  TableRow,
-  TableCell,
-  Chip
-} from '@mui/material';
+import { Switch, Stack, TableRow, TableCell, Chip } from '@mui/material';
 // components
 import Iconify from '../../../components/iconify';
 import { fDate } from '../../../utils/formatTime';
@@ -15,8 +10,9 @@ import LinkTableCell from '../../../components/ListTableTools/LinkTableCell';
 import { useScreenSize } from '../../../hooks/useResponsive';
 import BadgeStatus from '../../../components/badge-status/BadgeStatus';
 import { ICONS } from '../../../constants/icons/default-icons';
+import IconButtonTooltip from '../../../components/Icons/IconButtonTooltip';
 import { StyledTooltip } from '../../../theme/styles/default-styles';
-
+import { getPortalRegistration, setRequestDialog } from '../../../redux/slices/customer/portalRegistration';
 // ----------------------------------------------------------------------
 
 SecurityUserTableRow.propTypes = {
@@ -36,11 +32,14 @@ export default function SecurityUserTableRow({
   onSelectRow,
   onDeleteRow,
 }) {
-  const { login, email, name, roles, phone, createdAt, contact, isActive, isOnline } = row;
-
+  const { login, email, name, roles, phone, createdAt, contact, isActive, registrationRequest, isOnline } = row;
+  const dispatch = useDispatch();
   const smScreen = useScreenSize('sm')
   const lgScreen = useScreenSize('lg')
-  
+  const handleRequestDialog = async ( ) =>{
+    await dispatch(getPortalRegistration(registrationRequest?._id));
+    await dispatch(setRequestDialog(true));
+  }
   return (
       <TableRow hover selected={selected} >
           <Stack direction="row" alignItems="center">
@@ -74,23 +73,7 @@ export default function SecurityUserTableRow({
             {roles.map((obj, index) => (obj.roleType === 'SuperAdmin' ? <Chip key={index} label={obj.name} sx={{m:0.2}} color='secondary' /> : <Chip  key={index} label={obj.name} sx={{m:0.2}} />))}
           </TableCell>
         }
-        {/* { lgScreen && 
-          <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
-            {regions?.map((obj, index) =>  <Chip  key={index} label={obj?.name} sx={{mx:0.3}} />)}
-          </TableCell>
-        } */}
-        {/* <TableCell align="center" key={isOnline}>
-          <StyledTooltip 
-            placement="top" 
-            title={isOnline?ICONS.ONLINE.heading:ICONS.OFFLINE.heading} 
-            disableFocusListener tooltipcolor={isOnline?ICONS.ONLINE.color:ICONS.OFFLINE.color} 
-            color={isOnline?ICONS.ONLINE.color:ICONS.OFFLINE.color}
-          >
-            <Iconify color={isOnline?ICONS.ONLINE.color:ICONS.OFFLINE.color} sx={{ height: 20, width: 20 }} icon={isOnline?ICONS.ONLINE.icon:ICONS.OFFLINE.icon} />
-          </StyledTooltip>
-        </TableCell> */}
-        {/* <TableCell align="center"><Switch checked={currentEmployee} disabled size="small" /></TableCell> */}
-        <TableCell align="left">
+        <TableCell align="center">
           {contact?.firstName && <StyledTooltip
             placement="top" 
             title={contact?.formerEmployee ? ICONS.FORMEREMPLOYEE.heading:ICONS.NOTFORMEREMPLOYEE.heading} 
@@ -101,7 +84,19 @@ export default function SecurityUserTableRow({
           </StyledTooltip>}
             {`${contact?.firstName || ''} ${contact?.lastName || '' }`}
         </TableCell>
-        <TableCell align="center"><Switch checked={isActive} disabled size="small" /></TableCell>
+        <TableCell align="left" sx={{ display: "flex", alignItems: 'center'}}>
+          <StyledTooltip
+            placement="top" 
+            title={ isActive ? ICONS.ACTIVE.heading : ICONS.INACTIVE.heading} 
+            disableFocusListener tooltipcolor={isActive ? ICONS.ACTIVE.color : ICONS.INACTIVE.color} 
+            color={ isActive ? ICONS.ACTIVE.color : ICONS.INACTIVE.color}
+          >
+            <Iconify icon={ isActive ? ICONS.ACTIVE.icon : ICONS.INACTIVE.icon } sx={{mr:1, height: 20, width: 20 }}/>
+          </StyledTooltip>
+          { registrationRequest && 
+            <IconButtonTooltip title='Portal Request' color='#388e3c' icon="mdi:user-details" onClick={handleRequestDialog} /> 
+          }
+        </TableCell>
         <TableCell align="right">{fDate(createdAt)}</TableCell>
       </TableRow>
   );

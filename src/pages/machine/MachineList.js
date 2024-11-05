@@ -56,7 +56,6 @@ import { useSnackbar } from '../../components/snackbar';
 // util
 import TableCard from '../../components/ListTableTools/TableCard';
 import { fDate } from '../../utils/formatTime';
-import CustomerDialog from '../../components/Dialog/CustomerDialog';
 import { exportCSV } from '../../utils/exportCSV';
 
 // ----------------------------------------------------------------------
@@ -343,7 +342,6 @@ export default function MachineList({ isArchived }) {
             onRowsPerPageChange={onChangeRowsPerPage}
           />}
       </TableCard>
-      <CustomerDialog />
     </Container>
   );
 }

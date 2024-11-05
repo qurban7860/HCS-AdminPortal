@@ -125,7 +125,7 @@ export const ICONS = {
     heading: 'Not Approved',
   },
 
-  // Service Record Approval
+  // Service Report Approval
   SR_APPROVED: {
     icon: 'mdi:clipboard-check-outline',
     color: '#008000',
@@ -420,9 +420,9 @@ export const ICONS = {
     icon: 'carbon:parameter',
     heading: 'Check Items',
   },
-  MACHINE_SERVICE_RECORD_CONFIG: {
+  MACHINE_SERVICE_REPORT_CONFIG: {
     icon: 'mdi:tools',
-    heading: 'Service Doc Configurations',
+    heading: 'Service Report Templates',
   },
 
   // @root - Settings - settings
@@ -548,7 +548,7 @@ export const ICONS = {
   DRAWINGS:{ icon:'streamline:hand-held-tablet-drawing-solid' },
   LICENSES:{ icon:'mdi:book-cog-outline' },
   PROFILES:{ icon:'fluent:document-flowchart-24-filled' },
-  SERVICE_RECORDS:{ icon:'mdi:clipboard-text-clock' },
+  SERVICE_REPORTS:{ icon:'mdi:clipboard-text-clock' },
   INI:{ icon:'ph:file-ini-fill' },
   LOGS:{ icon:'lucide:list-end' },
   GRAPHS:{ icon:'mdi:graph-bar' },
