@@ -193,7 +193,9 @@ export function updatePortalRegistration(Id, params) {
       };
 
       const response = await axios.patch(`${CONFIG.SERVER_URL}crm/customers/register/${Id}`, data);
-      dispatch(slice.actions.getPortalRegistrationSuccess(response.data));
+      if( typeof response?.data !== "string" ){
+        dispatch(slice.actions.getPortalRegistrationSuccess(response.data));
+      }
       return response;
     } catch (error) {
       dispatch(slice.actions.stopLoading());

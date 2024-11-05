@@ -33,7 +33,7 @@ function PortalRequestDialog() {
 
   return (
     <Dialog
-      maxWidth="sm"
+      maxWidth="lg"
       fullWidth
       open={ portalRegistration && requestDialog }
       onClose={ handleCloseDialog }
@@ -75,7 +75,7 @@ function PortalRequestDialog() {
           handleCloseDialog();
           navigate(PATH_PORTAL_REGISTRATION.view( portalRegistration?._id ));
         }}
-        content="Go to Security User"
+        content="Go to Portal Request"
       />
     </Dialog>
   );
