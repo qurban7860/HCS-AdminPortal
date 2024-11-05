@@ -147,12 +147,6 @@ const handleFilterChange = (event, newValue) => {
 };
 
 useEffect(() => {
-  if (contacts.length > 0 && !id ) {
-    navigateToContact(contacts[0]._id); 
-  }
-}, [contacts, navigateToContact, id ]);
-
-useEffect(() => {
   setTableData(contacts);
 }, [contacts]);
 
@@ -173,12 +167,10 @@ const toggleContactView = (view) => {
 };
 
 useEffect(() => {
-  if ( contacts.length > 0 && !contactsListView && !contactAddForm && !contactEditForm && !contactMoveForm && !contactViewForm) {
-    const firstContactId = contacts[0]._id;
-    navigateToContact(firstContactId);
+  if ( contacts.length > 0 && !id && !contactsListView && !contactAddForm && !contactEditForm && !contactMoveForm && !contactViewForm) {
+    navigateToContact(contacts[0]._id);
   }
-}, [contacts, navigateToContact, contactsListView, contactAddForm, contactEditForm, contactMoveForm, contactViewForm]);
-
+}, [contacts, navigateToContact, id, contactsListView, contactAddForm, contactEditForm, contactMoveForm, contactViewForm]);
 
   // ------------------------------------------------------------
 
