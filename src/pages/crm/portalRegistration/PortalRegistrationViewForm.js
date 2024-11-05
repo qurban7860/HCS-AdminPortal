@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 // @mui
-import { Card, Grid, Typography } from '@mui/material';
+import { Card, Grid, Typography, Link } from '@mui/material';
 // routes
 import { PATH_PORTAL_REGISTRATION } from '../../../routes/paths';
 // hooks
@@ -13,16 +13,21 @@ import {
   setRejectRequestDialog,
   updatePortalRegistration,
 } from '../../../redux/slices/customer/portalRegistration';
+import { setContactDialog, getContact } from '../../../redux/slices/customer/contact';
+import { setCustomerDialog, getCustomer } from '../../../redux/slices/customer/customer';
+import { setSecurityUserDialog, getSecurityUser } from '../../../redux/slices/securityUser/securityUser';
 // components
 import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../../components/ViewForms/ViewFormField';
 import PortalRequestInviteDialog from '../../../components/Dialog/PortalRequestInviteDialog';
 import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
 import IconButtonTooltip from '../../../components/Icons/IconButtonTooltip';
+import Iconify from '../../../components/iconify/Iconify';
+import { StyledTooltip } from '../../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
 
-export default function CustomerViewForm() {
+export default function PortalRegistrationViewForm() {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -32,8 +37,11 @@ export default function CustomerViewForm() {
   const defaultValues = useMemo(
     () => ({
       customerName: portalRegistration?.customerName || "",
+      customer: portalRegistration?.customer || null,
       contactPersonName: portalRegistration?.contactPersonName || "",
+      contact: portalRegistration?.contact|| null,
       email: portalRegistration?.email || "",
+      securityUser: portalRegistration?.securityUser || null,
       phoneNumber: portalRegistration?.phoneNumber || "",
       status: portalRegistration?.status || "",
       customerNote: portalRegistration?.customerNote || "",
@@ -69,6 +77,21 @@ export default function CustomerViewForm() {
       }
   };
 
+  const handleCustomerDialog = async (id) =>{
+    await dispatch(getCustomer(portalRegistration?.customer?._id))
+    await dispatch(setCustomerDialog(true))
+  }
+  
+  const handleContactDialog = async () =>{
+    await dispatch(getContact(portalRegistration?.customer?._id, portalRegistration?.contact?._id ))
+    await dispatch(setContactDialog(true))
+  }
+
+  const handleSecurityUserDialog = async () => {
+    await dispatch(getSecurityUser(portalRegistration?.securityUser?._id))
+    await dispatch(setSecurityUserDialog(true))
+  }
+
   return (
   <Grid container >
     <Grid item xs={12} md={12}>
@@ -80,9 +103,36 @@ export default function CustomerViewForm() {
               backLink={() => navigate(PATH_PORTAL_REGISTRATION.root)}
             />
                 <Grid container >
-                  <ViewFormField isLoading={isLoading} sm={6} heading='Customer Name' param={defaultValues?.customerName} />
+                  <ViewFormField isLoading={isLoading} sm={6} heading="Customer Name" param={ defaultValues?.customer?._id ? undefined : defaultValues?.customerName}
+                    node={
+                      defaultValues?.customer?._id && (
+                        <Link onClick={handleCustomerDialog} href="#" underline="none">
+                          {defaultValues?.customer?.name || ""}
+                          {!defaultValues?.customer?.isActive &&
+                            <StyledTooltip title="Customer is Inactive" placement='top' disableFocusListener tooltipcolor="#FF0000" color="#FF0000">
+                              <Iconify color="#FF0000" sx={{height: '24px', width: '24px', verticalAlign:"middle", ml:1 }} icon="mdi:ban" />
+                            </StyledTooltip>
+                          }
+                        </Link>)
+                    }
+                  />
+
                   <ViewFormField isLoading={isLoading} sm={6} heading='Machine Serial Nos' chips={defaultValues?.machineSerialNos} />
-                  <ViewFormField isLoading={isLoading} sm={6} heading='Contact Person Name' param={defaultValues?.contactPersonName} />
+                  
+                  <ViewFormField isLoading={isLoading} sm={6} heading="Contact Person Name" param={defaultValues?.contact?._id ? undefined : defaultValues?.contactPersonName}
+                    node={
+                      defaultValues?.contact?._id && (
+                      <Link onClick={handleContactDialog} href="#" underline="none">
+                        {defaultValues?.contact?.firstName || ''} {defaultValues?.contact?.lastName || ''}
+                        {!defaultValues?.contact?.isActive &&
+                          <StyledTooltip title="Contact is Inactive" placement='top' disableFocusListener tooltipcolor="#FF0000" color="#FF0000">
+                            <Iconify color="#FF0000" sx={{height: '24px', width: '24px', verticalAlign:"middle", ml:1 }} icon="mdi:ban" />
+                          </StyledTooltip>
+                        }
+                      </Link>)
+                    }
+                  />
+                  
                   <ViewFormField isLoading={isLoading} sm={6} heading='Status' 
                                       node={<>
                             <Typography variant='h4' sx={{mr: 1,
@@ -105,7 +155,19 @@ export default function CustomerViewForm() {
                             }
                           </>}
                   />
-                  <ViewFormField isLoading={isLoading} sm={6} heading='Email' param={defaultValues?.email} />
+
+                  <ViewFormField isLoading={isLoading} sm={6} heading="Email" param={ defaultValues?.securityUser?._id ? undefined : defaultValues?.email}
+                    node={defaultValues?.securityUser?._id && 
+                      (<Link onClick={handleSecurityUserDialog} href="#" underline="none">
+                        {defaultValues?.email || ''}
+                        {!defaultValues?.securityUser?.isActive &&
+                          <StyledTooltip title="Security user is Inactive" placement='top' disableFocusListener tooltipcolor="#FF0000" color="#FF0000">
+                            <Iconify color="#FF0000" sx={{height: '24px', width: '24px', verticalAlign:"middle", ml:1 }} icon="mdi:ban" />
+                          </StyledTooltip>
+                        }
+                      </Link>)
+                    }
+                  />
                   <ViewFormField isLoading={isLoading} sm={6} heading='Phone Number' param={defaultValues?.phoneNumber} />
                   <ViewFormField isLoading={isLoading} sm={6} heading="country" param={defaultValues?.country } />
                   <ViewFormField isLoading={isLoading} sm={12} heading='Customer Note' param={defaultValues?.customerNote} />

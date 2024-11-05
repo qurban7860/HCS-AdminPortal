@@ -48,7 +48,7 @@ const TABLE_HEAD = [
   { id: 'phone', visibility: 'xs2', label: 'Phone Number', align: 'left' },
   { id: 'roles.name.[]', visibility: 'md1', label: 'Roles', align: 'left' },
   { id: 'contact.firstName', label: 'Contact', align: 'left' },
-  { id: 'isActive', label: 'Active', align: 'center' },
+  { id: 'isActive', label: "   ", align: 'left' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
 

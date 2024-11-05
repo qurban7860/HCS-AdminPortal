@@ -50,7 +50,6 @@ import TableCard from '../../../../components/ListTableTools/TableCard';
 import { fDate } from '../../../../utils/formatTime';
 import { useSnackbar } from '../../../../components/snackbar';
 import { exportCSV } from '../../../../utils/exportCSV';
-import CustomerDialog from '../../../../components/Dialog/CustomerDialog';
 
 // ----------------------------------------------------------------------
 
@@ -292,7 +291,6 @@ export default function CustomerList({ isArchived }) {
           />
         )}
       </TableCard>
-      <CustomerDialog />
     </Container>
   );
 }

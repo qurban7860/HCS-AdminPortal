@@ -25,8 +25,6 @@ import { Cover } from '../../../components/Defaults/Cover';
 import LogoAvatar from '../../../components/logo-avatar/LogoAvatar';
 import CustomAvatar from '../../../components/custom-avatar/CustomAvatar';
 import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
-import CustomerDialog from '../../../components/Dialog/CustomerDialog';
-import ContactDialog from '../../../components/Dialog/ContactDialog';
 
 // ----------------------------------------------------------------------
 
@@ -96,7 +94,6 @@ export default function SecurityUserProfile() {
     [securityUser]
   );
   return (
-    <>
       <Container maxWidth={false}>
         <Card
           sx={{
@@ -177,10 +174,5 @@ export default function SecurityUserProfile() {
           </Grid>
         </Card>
       </Container>
-
-      <CustomerDialog />
-      <ContactDialog />
-
-    </>
   );
 }

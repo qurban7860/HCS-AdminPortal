@@ -25,10 +25,8 @@ import { fDate } from '../../../../utils/formatTime';
 import TableCard from '../../../../components/ListTableTools/TableCard';
 import { getCustomerMachines, resetCustomerMachines, ChangeRowsPerPage,
   ChangePage,
-  // setFilterBy,
   setMachineDialog,
   getMachineForDialog, } from '../../../../redux/slices/products/machine';
-import MachineDialog from '../../../../components/Dialog/MachineDialog';
 import { PATH_MACHINE, PATH_CRM } from '../../../../routes/paths';
 
 export default function MachineList() {
@@ -117,9 +115,9 @@ export default function MachineList() {
     window.open(url, '_blank');
   };
 
-  const handleViewRow = (machineId) => {
-    dispatch(getMachineForDialog(machineId)); 
-    dispatch(setMachineDialog(true));
+  const handleViewRow = async ( machineId ) => {
+    await dispatch(getMachineForDialog(machineId)); 
+    await dispatch(setMachineDialog(true));
   };
 
   const handleMoveMachine = (id) => {
@@ -137,7 +135,6 @@ export default function MachineList() {
   }
 
   return (
-    <>
       <TableCard>
         <MachineListTableToolbar
           filterName={filterName}
@@ -195,8 +192,6 @@ export default function MachineList() {
           onRowsPerPageChange={onChangeRowsPerPage}
         />
       </TableCard>
-      <MachineDialog />
-      </>
   );
 }
 

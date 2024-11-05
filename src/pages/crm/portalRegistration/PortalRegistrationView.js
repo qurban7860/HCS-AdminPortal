@@ -12,7 +12,7 @@ import { StyledCardContainer } from '../../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
 
-export default function CustomerView() {
+export default function PortalRegistrationView() {
 
   const dispatch = useDispatch();
   const { customerId } = useParams();

@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Grid, Dialog, DialogContent, DialogTitle, Divider } from '@mui/material';
-import { setCustomerDialog, setCustomerTab } from '../../redux/slices/customer/customer';
+import { setCustomerDialog, setCustomerTab, resetCustomer } from '../../redux/slices/customer/customer';
 // import Iconify from '../../../components/iconify';
 import { PATH_CRM } from '../../routes/paths';
 import DialogLink from './DialogLink';
@@ -13,13 +13,16 @@ function CustomerDialog() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { customer, customerDialog, isLoading } = useSelector((state) => state.customer);
-  const handleCustomerDialog = () => { dispatch(setCustomerDialog(false))  }
+  const handleCustomerDialog = async () => { 
+    await dispatch(resetCustomer())  
+    await dispatch(setCustomerDialog(false))  
+  }
 
   return (
     <Dialog
       disableEnforceFocus
       maxWidth="lg"
-      open={customerDialog}
+      open={ customer && customerDialog}
       onClose={handleCustomerDialog}
       aria-describedby="alert-dialog-slide-description"
       // keepMounted // for scroll lock

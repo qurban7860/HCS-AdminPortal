@@ -36,9 +36,6 @@ import { TITLES, FORMLABELS } from '../../constants/default-constants';
 import { Snacks } from '../../constants/machine-constants';
 // utils
 import { fDate } from '../../utils/formatTime';
-// dialog
-import MachineDialog from '../../components/Dialog/MachineDialog'
-import CustomerDialog from '../../components/Dialog/CustomerDialog';
 import MachineTransferDialog from '../../components/Dialog/MachineTransferDialog';
 import SiteDialog from '../../components/Dialog/SiteDialog';
 import OpenInNewPage from '../../components/Icons/OpenInNewPage';
@@ -53,8 +50,7 @@ export default function MachineViewForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const { machine, machineDialog, machineTransferDialog, machineStatusChangeDialog, isLoading } = useSelector((state) => state.machine);
-  const { customerDialog } = useSelector((state) => state.customer);
+  const { machine, machineTransferDialog, machineStatusChangeDialog, isLoading } = useSelector((state) => state.machine);
   const { siteDialog } = useSelector((state) => state.site);
   const [disableTransferButton, setDisableTransferButton] = useState(true);
   const [disableEditButton, setDisableEditButton] = useState(false);
@@ -151,9 +147,9 @@ export default function MachineViewForm() {
     dispatch(setCustomerDialog(true));
   };
 
-  const handleMachineDialog = (MachineID) => {
-    dispatch(getMachineForDialog(MachineID));
-    dispatch(setMachineDialog(true)); 
+  const handleMachineDialog = async ( MachineID ) => {
+    await dispatch(getMachineForDialog(MachineID));
+    await dispatch(setMachineDialog(true)); 
   };
 
   const handleStatusChangeDialog = () => {
@@ -425,8 +421,6 @@ export default function MachineViewForm() {
       </Grid>
       
       { siteDialog && <SiteDialog title={siteDialogTitle}/>}
-      { machineDialog  && <MachineDialog />}
-      { customerDialog  && <CustomerDialog />}
       { machineTransferDialog && <MachineTransferDialog />}
       { machineStatusChangeDialog && <MachineStatusChangeDialog />}
       

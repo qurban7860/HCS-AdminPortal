@@ -13,7 +13,6 @@ import {
   Container,
   Dialog,
   DialogTitle,
-  DialogContent,
   Typography,
   Divider
 } from '@mui/material';
@@ -33,12 +32,10 @@ import {
 import { deleteDrawing, getDrawings, getDrawing, resetDrawings } from '../../redux/slices/products/drawing';
 
 import { deleteDocumentFile, downloadFile, getDocumentDownload } from '../../redux/slices/document/documentFile';
-import { getCustomer, resetCustomer, setCustomerDialog} from '../../redux/slices/customer/customer';
-import { getMachineForDialog, resetMachine, setMachineDialog } from '../../redux/slices/products/machine';
+import { getCustomer, setCustomerDialog} from '../../redux/slices/customer/customer';
+import { getMachineForDialog, setMachineDialog } from '../../redux/slices/products/machine';
 import FormLabel from '../../components/DocumentForms/FormLabel';
 import DocumentCover from '../../components/DocumentForms/DocumentCover';
-import CustomerDialog from '../../components/Dialog/CustomerDialog';
-import MachineDialog from '../../components/Dialog/MachineDialog';
 import { PATH_DOCUMENT, PATH_CRM, PATH_MACHINE, PATH_MACHINE_DRAWING } from '../../routes/paths';
 import { useSnackbar } from '../../components/snackbar';
 import { Snacks } from '../../constants/document-constants';
@@ -126,7 +123,7 @@ function DocumentHistoryViewForm({ customerPage, machinePage, machineDrawingPage
   );
 
   const linkedDrawingMachines = documentHistory?.productDrawings?.map((pdrawing, index) =>  
-    <Chip sx={{ml:index===0?0:1}} onClick={() => handleMachineDialog(pdrawing?.machine?._id)} label={`${pdrawing?.machine?.serialNo || '' } ${pdrawing?.machine?.name ? '-' : '' } ${pdrawing?.machine?.name || '' } `} />
+    <Chip sx={{m:0.3}} onClick={() => handleMachineDialog(pdrawing?.machine?._id)} label={`${pdrawing?.machine?.serialNo || '' } ${pdrawing?.machine?.name ? '-' : '' } ${pdrawing?.machine?.name || '' } `} />
   );
 
   const handleNewVersion = async () => {
@@ -161,16 +158,16 @@ const handleNewFile = async () => {
   }
 }
 
-  const handleCustomerDialog = () =>{
+  const handleCustomerDialog = async () =>{
     if (documentHistory?.customer && !customerPage) {
-      dispatch(setCustomerDialog(true));
-      dispatch(getCustomer(documentHistory.customer._id));
+      await dispatch(getCustomer(documentHistory.customer._id));
+      await dispatch(setCustomerDialog(true));
     }
   }
 
-  const handleMachineDialog = (Id) =>{
-      dispatch(setMachineDialog(true));
-      dispatch(getMachineForDialog(Id));
+  const handleMachineDialog = async ( Id ) => {
+    await dispatch(getMachineForDialog(Id));
+    await dispatch(setMachineDialog(true));
   }
 
   const handleEditDrawing = async () =>{
@@ -336,7 +333,6 @@ const handleNewFile = async () => {
     try {
       const response = await dispatch(getDocumentDownload(documentId, versionId, fileId));
       if (regEx.test(response.status)) {
-        const pdfData = `data:application/pdf;base64,${encodeURI(response.data)}`;
         const blob = b64toBlob(encodeURI(response.data), 'application/pdf')
         const url = URL.createObjectURL(blob);
         setPDF(url);
@@ -370,7 +366,7 @@ const handleNewFile = async () => {
       navigate(PATH_DOCUMENT.root)
     }
   }
-
+console.log("check action  : ",!( ( !machinePage && documentHistory?.machine?._id ) || ( !customerPage && documentHistory?.customer?._id ) || ( machineDrawings && documentHistory?.productDrawings?.length > 0 ) ) && !allowActions)
   return (
     <>
     <Container maxWidth={false} sx={{padding:(machineDrawings || customerPage || machinePage || machineDrawingPage) ?'0 !important':''}}>
@@ -551,8 +547,6 @@ const handleNewFile = async () => {
             </Grid>
           </Card>
         </Grid>
-      <CustomerDialog />
-      <MachineDialog />
       {documentVersionEditDialogVisibility && <UpdateDocumentVersionDialog />}
     </Container>
     {PDFViewerDialog && (
