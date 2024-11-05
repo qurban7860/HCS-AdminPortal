@@ -25,8 +25,9 @@ import { PATH_CRM } from '../../../routes/paths';
 
 SiteViewForm.propTypes = {
   handleMap: PropTypes.func,
+  isCustomerSitePage: PropTypes.bool
 };
-export default function SiteViewForm({ handleMap }) {
+export default function SiteViewForm({ handleMap, isCustomerSitePage }) {
 
   const { site, isLoading } = useSelector((state) => state.site);
   const { customer } = useSelector((state) => state.customer);
@@ -49,6 +50,8 @@ export default function SiteViewForm({ handleMap }) {
                 dispatch(setCardActiveIndex(null))
               }
   },[ dispatch, customerId, id ])
+  
+  const backLink = () => navigate(PATH_CRM.customers.sites.root(customerId, id));
 
   const onArchive = async () => {
     try {
@@ -104,6 +107,7 @@ export default function SiteViewForm({ handleMap }) {
           isActive={defaultValues?.isActive}
           handleEdit={customer?.isArchived ? undefined : handleEdit}
           onArchive={customer?.isArchived ? undefined : onArchive}
+          backLink={isCustomerSitePage && !customer?.isArchived ? backLink : undefined}
           // sites={sites}
           mainSite={customer.mainSite?._id === site?._id}
         // handleMap={handleMap}

@@ -106,7 +106,7 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
       dispatch(getContacts(customerId, customer?.isArchived));
     }
     return ()=>{
-      // dispatch(resetContacts());
+      dispatch(resetContacts());
       dispatch(setCardActiveIndex(null));
       dispatch(setIsExpanded(false));
     }
@@ -214,7 +214,7 @@ useEffect(() => {
   </Grid>
   <Grid item xs={12} md={6}>
     <Stack direction="row" justifyContent="flex-end" alignItems="center" spacing={1} sx={{ width: '100%' }}>
-      {contactsListView && (<Autocomplete
+      {contacts.length > 0 && contactsListView && (<Autocomplete
         freeSolo
         disableClearable
         value={ filterFormer }

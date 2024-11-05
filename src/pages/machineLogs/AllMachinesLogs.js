@@ -150,6 +150,10 @@ function AllMachineLogs() {
     searchColumn: selectedSearchFilter,
   };
 
+  
+  const returnSearchFilterColumnOptions = () =>
+    logType?.tableColumns.filter((item) => item?.searchable)
+
   const isGraphPage = () => searchParams.get('type') === "erpGraph"
 
   return (
@@ -258,7 +262,7 @@ function AllMachineLogs() {
                       <Box sx={{ flexGrow: 1, width: { xs: '100%', sm: 'auto' } }}>
                         <RHFFilteredSearchBar
                           name="filteredSearchKey"
-                          filterOptions={logType?.tableColumns}
+                          filterOptions={returnSearchFilterColumnOptions()}
                           setSelectedFilter={setSelectedSearchFilter}
                           selectedFilter={selectedSearchFilter}
                           placeholder="Enter Search here..."
