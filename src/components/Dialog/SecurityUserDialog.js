@@ -26,8 +26,8 @@ function SecurityUserDialog() {
     >
       <DialogTitle variant='h3' sx={{pb:1, pt:2}}>Security User</DialogTitle>
       <Divider orientation="horizontal" flexItem />
-      <DialogContent dividers sx={{px:3}}>
-        <Grid item container>
+      <DialogContent dividers sx={{ p:3 }}>
+        <Grid item container >
           <FormLabel content='Personal Information' />
           <ViewFormField isLoading={isLoading} sm={6} heading="Full Name" param={securityUser?.name || "" } />
           <ViewFormField isLoading={isLoading} sm={6} heading="Phone" param={securityUser?.phone  || "" } />

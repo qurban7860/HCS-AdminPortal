@@ -37,11 +37,11 @@ export default function PortalRegistrationViewForm() {
   const defaultValues = useMemo(
     () => ({
       customerName: portalRegistration?.customerName || "",
-      customer: portalRegistration?.customer?._id || null,
+      customer: portalRegistration?.customer || null,
       contactPersonName: portalRegistration?.contactPersonName || "",
-      contact: portalRegistration?.contact?._id|| null,
+      contact: portalRegistration?.contact|| null,
       email: portalRegistration?.email || "",
-      securityUser: portalRegistration?.securityUser?._id || null,
+      securityUser: portalRegistration?.securityUser || null,
       phoneNumber: portalRegistration?.phoneNumber || "",
       status: portalRegistration?.status || "",
       customerNote: portalRegistration?.customerNote || "",
@@ -103,11 +103,11 @@ export default function PortalRegistrationViewForm() {
               backLink={() => navigate(PATH_PORTAL_REGISTRATION.root)}
             />
                 <Grid container >
-                  <ViewFormField isLoading={isLoading} sm={6} heading="Customer Name" param={defaultValues?.customer?._id ? undefined : defaultValues?.customerName}
+                  <ViewFormField isLoading={isLoading} sm={6} heading="Customer Name" param={ defaultValues?.customer?._id ? undefined : defaultValues?.customerName}
                     node={
                       defaultValues?.customer?._id && (
                         <Link onClick={handleCustomerDialog} href="#" underline="none">
-                          {defaultValues?.customer}
+                          {defaultValues?.customer?.name || ""}
                           {!defaultValues?.customer?.isActive &&
                             <StyledTooltip title="Customer is Inactive" placement='top' disableFocusListener tooltipcolor="#FF0000" color="#FF0000">
                               <Iconify color="#FF0000" sx={{height: '24px', width: '24px', verticalAlign:"middle", ml:1 }} icon="mdi:ban" />
