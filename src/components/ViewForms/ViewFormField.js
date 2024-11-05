@@ -60,7 +60,7 @@ function ViewFormField({
 }) {
   const [verifiedAnchorEl, setVerifiedAnchorEl] = useState(null);
   const [verifiedBy, setVerifiedBy] = useState([]);
-  const { machineServiceRecord } = useSelector((state) => state.machineServiceRecord);
+  const { machineServiceReport } = useSelector((state) => state.machineServiceReport);
   const theme = createTheme({
     palette: {
       success: green,
@@ -146,11 +146,11 @@ function ViewFormField({
           <TextField
             disabled
             fullWidth
-            value={ machineServiceRecord?.approval?.approvalLogs[0]?.comments || "" }
+            value={ machineServiceReport?.approval?.approvalLogs[0]?.comments || "" }
             variant="standard"
-            helperText={`By ${machineServiceRecord?.approval?.approvalLogs[0]?.evaluatedBy.firstName} ${
-                  machineServiceRecord?.approval?.approvalLogs[0]?.evaluatedBy.lastName
-                } on ${fDateTime(machineServiceRecord?.approval?.approvalLogs[0]?.evaluationDate)}`}
+            helperText={`By ${machineServiceReport?.approval?.approvalLogs[0]?.evaluatedBy.firstName} ${
+                  machineServiceReport?.approval?.approvalLogs[0]?.evaluatedBy.lastName
+                } on ${fDateTime(machineServiceReport?.approval?.approvalLogs[0]?.evaluationDate)}`}
             multiline
             minRows={1}
             // maxRows={6}
@@ -171,7 +171,7 @@ function ViewFormField({
                 },
               },
             }}
-            key={machineServiceRecord?.approval?.approvalLogs[0]?.comments}
+            key={machineServiceReport?.approval?.approvalLogs[0]?.comments}
           />
         )}
         {node || ''}

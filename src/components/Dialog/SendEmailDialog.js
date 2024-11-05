@@ -11,12 +11,12 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useSnackbar } from 'notistack';
 
 import {  
-  getMachineServiceRecordCheckItems,
-  getMachineServiceRecord,
+  getMachineServiceReportCheckItems,
+  getMachineServiceReport,
   sendEmail,
   setSendEmailDialog,
-} from '../../redux/slices/products/machineServiceRecord';
-import { MachineServiceRecordPDF } from '../../pages/machine/serviceRecords/MachineServiceRecordPDF';
+} from '../../redux/slices/products/machineServiceReport';
+import { MachineServiceReportPDF } from '../../pages/machine/serviceReports/MachineServiceReportPDF';
 import FormProvider from '../hook-form/FormProvider';
 
 import { RHFTextField } from '../hook-form';
@@ -29,7 +29,7 @@ function SendEmailDialog({ fileName }) {
     
   const dispatch = useDispatch();
   const { machineId, id } = useParams();
-  const { machineServiceRecord, sendEmailDialog } = useSelector((state) => state.machineServiceRecord);
+  const { machineServiceReport, sendEmailDialog } = useSelector((state) => state.machineServiceReport);
   const handleCloseDialog = ()=>{ 
     dispatch(setSendEmailDialog(false)) 
     reset();
@@ -64,15 +64,15 @@ function SendEmailDialog({ fileName }) {
   
   const onSubmit = async (data) => {    
     try {
-      const [ ServiceRecordResponse, CheckItemsResponse ] =  await Promise.all([
-        dispatch(getMachineServiceRecord(machineId, id, true)),
-        dispatch(getMachineServiceRecordCheckItems(machineId, id, true))
+      const [ ServiceReportResponse, CheckItemsResponse ] =  await Promise.all([
+        dispatch(getMachineServiceReport(machineId, id, true)),
+        dispatch(getMachineServiceReportCheckItems(machineId, id, true))
       ])
-      const PDFBlob = await ReactPDF.pdf(<MachineServiceRecordPDF machineServiceRecord={ServiceRecordResponse} machineServiceRecordCheckItems={CheckItemsResponse}/>).toBlob();
+      const PDFBlob = await ReactPDF.pdf(<MachineServiceReportPDF machineServiceReport={ServiceReportResponse} machineServiceReportCheckItems={CheckItemsResponse}/>).toBlob();
       const file = new File([PDFBlob], fileName, { type: PDFBlob.type });
-      data.id = machineServiceRecord?._id;
+      data.id = machineServiceReport?._id;
       data.pdf = file; 
-      await dispatch(sendEmail(machineServiceRecord?.machine?._id, data));
+      await dispatch(sendEmail(machineServiceReport?.machine?._id, data));
       enqueueSnackbar("Email Sent Successfully");  
       reset();
       handleCloseDialog();
