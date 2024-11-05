@@ -4,7 +4,6 @@ import { useParams } from 'react-router-dom';
 // @mui
 import { Table, TableBody, TableContainer, Container, Card } from '@mui/material';
 import { useNavigate } from 'react-router';
-import { PATH_SETTING } from '../../../../routes/paths';
 import { Cover } from '../../../../components/Defaults/Cover';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
@@ -14,14 +13,15 @@ import {
   getComparator,
   TableNoData,
   TableSkeleton,
-  TableHeadCustom,
+  TablePaginationFilter,
   TablePaginationCustom,
+  TableHeadFilter,
 } from '../../../../components/table';
 import Scrollbar from '../../../../components/scrollbar';
 // sections
 import APILogsTableRow from '../../../../components/machineIntegration/APILogsTableRow';
 import ApiLogsListTableToolbar from './ApiLogsListTableToolbar';
-import { getApiLogs, setFilterBy } from '../../../../redux/slices/logs/apiLogs';
+import { getApiLogs, setFilterBy, ChangePage,  setReportHiddenColumns } from '../../../../redux/slices/logs/apiLogs';
 import { fDateTime } from '../../../../utils/formatTime';
 import TableCard from '../../../../components/ListTableTools/TableCard';
 
@@ -40,12 +40,11 @@ export default function ApiLogsList() {
   });
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const { machineId } = useParams()
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
-
-  const { apiLogs, filterBy, isLoading, initial } = useSelector((state) => state.apiLogs );
+  const [filterRequestStatus, setFilterRequestStatus] = useState(-1);
+  const { apiLogs, filterBy, isLoading, initial, reportHiddenColumns } = useSelector((state) => state.apiLogs );
 
   const TABLE_HEAD = [
     { id: 'createdAt', label: 'Timestamp', align: 'left' },
@@ -57,17 +56,6 @@ export default function ApiLogsList() {
     { id: 'customer', label: 'Customer', align: 'left' },
     { id: 'additionalContextualInformation', label: 'Description', align: 'left' },
   ];
-
-  useEffect(() => {
-    dispatch(getApiLogs({
-      machineId,
-      orderBy: 'createdAt:desc',
-      query: null,
-      page,
-      pageSize: rowsPerPage,
-      }));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, rowsPerPage ]);
 
   useEffect(() => {
     if (initial) {
@@ -85,7 +73,7 @@ export default function ApiLogsList() {
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
   const debouncedSearch = useRef(debounce((value) => {
-    setPage(0)
+    dispatch(ChangePage(0))
     dispatch(setFilterBy(value))
   }, 500))
   
@@ -94,6 +82,11 @@ export default function ApiLogsList() {
     debouncedSearch.current(value);
     setFilterName(value);
     setPage(0);
+  };
+  
+  const handleFilterRequestStatus = (event) => {
+    dispatch(ChangePage(0))
+    setFilterRequestStatus(event.target.value);
   };
   
   useEffect(() => {
@@ -118,7 +111,33 @@ export default function ApiLogsList() {
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
   };
-
+  
+  const handleHiddenColumns = async (arg) => {
+    dispatch(setReportHiddenColumns(arg))
+  };
+  
+  useEffect(() => {
+    const query = { apiType: 'MACHINE-INTEGRATION' }; 
+    if (filterRequestStatus !== -1) {
+      if (filterRequestStatus === '200-299') {
+        query.responseStatusCode = { $gte: 200, $lt: 300 };
+      } else if (filterRequestStatus === '400-499') {
+        query.responseStatusCode = { $gte: 400, $lte: 500 };
+      } else {
+        query.responseStatusCode = filterRequestStatus;
+      }
+    }
+    dispatch(getApiLogs({
+      machineId,
+      orderBy: 'createdAt:desc',
+      query,
+      page,
+      pageSize: rowsPerPage,
+    }));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page, rowsPerPage, filterRequestStatus]);
+  
+  
   return (
       <Container maxWidth={false}>
         <Card sx={{mb: 3, height: 160, position: 'relative'}}>
@@ -131,21 +150,29 @@ export default function ApiLogsList() {
             onFilterStatus={handleFilterStatus}
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
+            filterRequestStatus={filterRequestStatus}
+            onFilterRequestStatus={handleFilterRequestStatus}
           />
-            <TablePaginationCustom
-              count={apiLogs?.totalCount || 0 }
-              page={page}
-              rowsPerPage={rowsPerPage}
-              onPageChange={onChangePage}
-              onRowsPerPageChange={onChangeRowsPerPage}
-            />
+          {!isNotFound && (
+          <TablePaginationFilter
+            columns={TABLE_HEAD}
+            hiddenColumns={reportHiddenColumns}
+            handleHiddenColumns={handleHiddenColumns}
+            count={apiLogs?.totalCount || 0}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
+          />
+        )}
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <Scrollbar>
-              <Table size="small" sx={{ minWidth: 360 }}>
-                <TableHeadCustom
+              <Table stickyHeader size="small" sx={{ minWidth: 360 }}>
+                <TableHeadFilter
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
+                  hiddenColumns={reportHiddenColumns}
                   onSort={onSort}
                 />
                 <TableBody>
@@ -160,6 +187,7 @@ export default function ApiLogsList() {
                         <APILogsTableRow
                           key={index}
                           row={row}
+                          hiddenColumns={reportHiddenColumns}
                           // onViewRow={() => handleViewRow(row?.id)}
                           style={index % 2 ? { background: 'red' } : { background: 'green' }}
                         />
@@ -171,14 +199,14 @@ export default function ApiLogsList() {
               </Table>
             </Scrollbar>
           </TableContainer>
-
+          {!isNotFound && (
           <TablePaginationCustom
             count={ apiLogs?.totalCount || 0 }
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-          />
+          /> )}
         </TableCard>
       </Container>
   );
@@ -198,24 +226,18 @@ function applyFilter({ inputData, comparator, filterName }) {
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    const lowercasedFilter = filterName.toLowerCase();
-    return inputData.filter((api) => {
-      const machineSerialNo = api?.machine?.some(
-        (machine) => machine?.serialNo?.toLowerCase().includes(lowercasedFilter) ||
-        machine?.name?.toLowerCase().includes(lowercasedFilter)
+    filterName = filterName?.trim();
+    inputData = inputData?.filter(
+      ( api ) =>
+        fDateTime(api?.createdAt)?.toLowerCase().includes(filterName.toLowerCase()) ||
+        api?.requestMethod?.toLowerCase().includes(filterName.toLowerCase()) ||
+        api?.requestURL?.toString()?.toLowerCase().includes(filterName.toLowerCase()) ||
+        (api?.responseStatusCode || '').toString().toLowerCase().includes(filterName.toLowerCase()) ||
+        (api?.responseTime || '').toString().toLowerCase().includes(filterName.toLowerCase()) ||
+        api?.machine?.some((machine) => machine?.serialNo?.toLowerCase().includes(filterName.toLowerCase()) ) ||      
+        api?.customer?.name?.toLowerCase().includes(filterName.toLowerCase()) ||
+        api?.additionalContextualInformation?.toLowerCase().includes(filterName.toLowerCase())
       );
-
-      return (
-        fDateTime(api?.createdAt)?.toLowerCase().includes(lowercasedFilter) ||
-        api?.requestMethod?.toLowerCase().includes(lowercasedFilter) || 
-        api?.requestURL?.toString()?.toLowerCase().includes(lowercasedFilter) || 
-        (api?.responseStatusCode || '').toString()?.toLowerCase().includes(lowercasedFilter) ||
-        (api?.responseTime || '').toString()?.toLowerCase().includes(lowercasedFilter) ||
-        machineSerialNo || 
-        api?.customer?.name?.toLowerCase().includes(lowercasedFilter) ||
-        api?.additionalContextualInformation?.toLowerCase().includes(lowercasedFilter)
-      );
-    });
   }
 
   return inputData;

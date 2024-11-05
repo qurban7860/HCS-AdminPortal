@@ -106,13 +106,12 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
       dispatch(getContacts(customerId, customer?.isArchived));
     }
     return ()=>{
-      dispatch(resetContacts());
+      // dispatch(resetContacts());
       dispatch(setCardActiveIndex(null));
       dispatch(setIsExpanded(false));
     }
   }, [ dispatch, customerId, customer?.isArchived ]);
 
-  const [selectedContactId, setselectedContactId] = useState(false);
 
 const navigateToContact = useCallback((contactId) => {
   if (customerId && contactId && !contactsListView) {
@@ -148,13 +147,6 @@ const handleFilterChange = (event, newValue) => {
 };
 
 useEffect(() => {
-  if (contacts.length > 0 && !selectedContactId) {
-    navigateToContact(contacts[0]._id); 
-    setselectedContactId(true); 
-  }
-}, [contacts, navigateToContact, selectedContactId]);
-
-useEffect(() => {
   setTableData(contacts);
 }, [contacts]);
 
@@ -175,12 +167,10 @@ const toggleContactView = (view) => {
 };
 
 useEffect(() => {
-  if ( contacts.length > 0 && !contactsListView && !contactAddForm && !contactEditForm && !contactMoveForm && !contactViewForm) {
-    const firstContactId = contacts[0]._id;
-    navigateToContact(firstContactId);
+  if ( contacts.length > 0 && !id && !contactsListView && !contactAddForm && !contactEditForm && !contactMoveForm && !contactViewForm) {
+    navigateToContact(contacts[0]._id);
   }
-}, [contacts, navigateToContact, contactsListView, contactAddForm, contactEditForm, contactMoveForm, contactViewForm]);
-
+}, [contacts, navigateToContact, id, contactsListView, contactAddForm, contactEditForm, contactMoveForm, contactViewForm]);
 
   // ------------------------------------------------------------
 

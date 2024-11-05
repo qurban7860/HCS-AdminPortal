@@ -39,6 +39,8 @@ function SearchBarCombo({
   machineDrawings,
   signInLogsFilter,
   onSignInLogsFilter,
+  apiLogsStatusFilter,
+  onApiLogsStatusFilter,
   onChange,
   onClick,
   SubOnClick,
@@ -504,7 +506,28 @@ function SearchBarCombo({
               renderInput={(params) => <TextField {...params} size='small' label="Environment" />}
             />
           </Grid> }
-
+          {onApiLogsStatusFilter &&
+            <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
+          <Stack alignItems="flex-start">
+            <FormControl fullWidth sx={{ ml: 2, width: '200px' }}>
+              <InputLabel id="api-logs-status-label">Status</InputLabel>
+                <Select
+                  sx={{ width: '200px' }}
+                  labelId="api-logs-status-label"
+                  id="api-logs-status"
+                  size="small"
+                  value={apiLogsStatusFilter}
+                  label="Status"
+                  onChange={onApiLogsStatusFilter}
+                >
+                  <MenuItem key="-1" value={-1}>All</MenuItem>
+                  <MenuItem key="success" value="200-299">Success</MenuItem>
+                  <MenuItem key="failed" value="400-499">Failed</MenuItem>
+                </Select>
+            </FormControl>
+          </Stack>
+           </Grid>
+          }
           {isPm2LogTypes && 
             <>
             <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
@@ -571,7 +594,6 @@ function SearchBarCombo({
               </Stack>
             </Grid>
           }
-
           {handleExcludeRepoting &&
             <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
               <Stack alignItems="flex-start">
@@ -817,6 +839,8 @@ SearchBarCombo.propTypes = {
   filterByRegion: PropTypes.object,
   signInLogsFilter:PropTypes.number,
   onSignInLogsFilter:PropTypes.func,
+  apiLogsStatusFilter:PropTypes.number,
+  onApiLogsStatusFilter:PropTypes.func,
   transferredMachine:PropTypes.bool,
   handleAttach: PropTypes.func,
   radioStatus: PropTypes.bool,

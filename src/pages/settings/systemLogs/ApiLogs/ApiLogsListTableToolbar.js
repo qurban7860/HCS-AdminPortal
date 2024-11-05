@@ -13,6 +13,8 @@ ApiLogsListTableToolbar.propTypes = {
   filterStatus: PropTypes.array,
   onFilterStatus: PropTypes.func,
   statusOptions: PropTypes.array,
+  filterRequestStatus: PropTypes.number,
+  onFilterRequestStatus:PropTypes.func,
 };
 
 export default function ApiLogsListTableToolbar({
@@ -22,8 +24,9 @@ export default function ApiLogsListTableToolbar({
   onFilterName,
   statusOptions,
   onResetFilter,
-  onFilterStatus
-  
+  onFilterStatus,
+  filterRequestStatus,
+  onFilterRequestStatus,
 }) {
 
   return (
@@ -33,6 +36,8 @@ export default function ApiLogsListTableToolbar({
         value={filterName}
         onChange={onFilterName}
         onClick={onResetFilter}
+        onApiLogsStatusFilter={onFilterRequestStatus}
+        apiLogsStatusFilter={filterRequestStatus}
       />
     </Stack>
   );
