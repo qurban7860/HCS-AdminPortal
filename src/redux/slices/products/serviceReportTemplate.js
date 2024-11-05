@@ -333,8 +333,8 @@ export function addServiceReportTemplate(params) {
         if(params.machineCategory){
           data.machineCategory = params.machineCategory?._id;
         }
-        if(params.docTitle){
-          data.docTitle = params.docTitle;
+        if(params.reportTitle){
+          data.reportTitle = params.reportTitle;
         }
         if(params.textBeforeCheckItems){
           data.textBeforeCheckItems = params.textBeforeCheckItems;

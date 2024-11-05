@@ -207,9 +207,9 @@ function ViewFormField({
               }} >
               {configArrayParam.map(
                 (data, index) =>
-                  data?.docTitle &&
-                  typeof data?.docTitle === 'string' &&
-                  data?.docTitle.trim().length > 0 && <Chip key={index} sx={{m:0.2}} label={<div style={{display:'flex',alignItems:'center'}}  ><Typography variant='body2'>{`${data?.docTitle || ''}`}</Typography> <Typography variant='subtitle2'>{` - v${data?.docVersionNo}`}</Typography></div>} />
+                  data?.reportTitle &&
+                  typeof data?.reportTitle === 'string' &&
+                  data?.reportTitle.trim().length > 0 && <Chip key={index} sx={{m:0.2}} label={<div style={{display:'flex',alignItems:'center'}}  ><Typography variant='body2'>{`${data?.reportTitle || ''}`}</Typography> <Typography variant='subtitle2'>{` - v${data?.docVersionNo}`}</Typography></div>} />
               )}
             </Grid>
       )}

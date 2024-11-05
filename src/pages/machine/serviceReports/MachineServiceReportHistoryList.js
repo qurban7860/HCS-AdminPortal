@@ -124,7 +124,7 @@ export default function MachineServiceReportHistoryList() {
                   </StyledStack>
               </Grid>
               <Grid item>
-                  <Typography variant='h4'>{machineServiceReportHistory?.[0]?.serviceReportUid || '' } - {machineServiceReportHistory?.[0]?.serviceReportTemplate?.docTitle || '' }</Typography>
+                  <Typography variant='h4'>{machineServiceReportHistory?.[0]?.serviceReportUid || '' } - {machineServiceReportHistory?.[0]?.serviceReportTemplate?.reportTitle || '' }</Typography>
               </Grid>
             </Grid>
 

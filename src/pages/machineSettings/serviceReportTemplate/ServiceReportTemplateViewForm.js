@@ -56,7 +56,7 @@ export default function ServiceReportTemplateViewForm({ currentServiceReportTemp
       docVersionNo: serviceReportTemplate?.docVersionNo || '',
       machineCategory: serviceReportTemplate?.machineCategory?.name || '',
       machineModel: serviceReportTemplate?.machineModel?.name || '',
-      docTitle: serviceReportTemplate?.docTitle || '',
+      reportTitle: serviceReportTemplate?.reportTitle || '',
       textBeforeCheckItems: serviceReportTemplate?.textBeforeCheckItems || '',
       checkItemLists: serviceReportTemplate?.checkItemLists ,
       textAfterCheckItems: serviceReportTemplate?.textAfterCheckItems || '',
@@ -145,7 +145,7 @@ export default function ServiceReportTemplateViewForm({ currentServiceReportTemp
         machineSettingPage
       />
       <Grid container sx={{mt:2}}>
-        <ViewFormField isLoading={isLoading} sm={6} heading="Document Title" param={defaultValues?.docTitle} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Document Title" param={defaultValues?.reportTitle} />
         <ViewFormField isLoading={isLoading} sm={6} heading="Document Type" param={defaultValues?.reportType} />
         <ViewFormField isLoading={isLoading} sm={6} heading="Status" param={defaultValues?.status} />
         <ViewFormField isLoading={isLoading} sm={6} heading="Version No." param={defaultValues?.docVersionNo} />

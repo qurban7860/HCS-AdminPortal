@@ -422,7 +422,7 @@ export const ICONS = {
   },
   MACHINE_SERVICE_REPORT_CONFIG: {
     icon: 'mdi:tools',
-    heading: 'Service Doc Configurations',
+    heading: 'Service Report Templates',
   },
 
   // @root - Settings - settings

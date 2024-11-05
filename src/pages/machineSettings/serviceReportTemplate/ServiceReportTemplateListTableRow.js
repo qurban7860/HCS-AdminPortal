@@ -30,7 +30,7 @@ export default function ServiceReportTemplateListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { reportType, category, docTitle, status, docVersionNo, approvals, noOfApprovalsRequired, machineModel, isActive, createdAt } = row;
+  const { reportType, category, reportTitle, status, docVersionNo, approvals, noOfApprovalsRequired, machineModel, isActive, createdAt } = row;
   const [openConfirm, setOpenConfirm] = useState(false);
   const [openPopover, setOpenPopover] = useState(null);
 
@@ -55,7 +55,7 @@ export default function ServiceReportTemplateListTableRow({
   return (
     <>
       <TableRow hover selected={selected}>
-        <LinkTableCell align="left" onClick={onViewRow} param={docTitle} />
+        <LinkTableCell align="left" onClick={onViewRow} param={reportTitle} />
         <LinkTableCell align="left" onClick={onViewRow} param={reportType} /> 
         { useScreenSize('lg') && <TableCell >{status || ''}</TableCell>}
         { useScreenSize('lg') && <TableCell >{isActive && docVersionNo || ''}</TableCell>}

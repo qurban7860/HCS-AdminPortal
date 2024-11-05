@@ -34,7 +34,7 @@ function MachineServiceReportsFirstStep( { handleComplete, handleDraftRequest, h
     const { enqueueSnackbar } = useSnackbar();
     const { machineId, id } = useParams();
     const { user  } = useAuthContext()
-    const { reportTypes, activeServiceReportTemplatesForReports } = useSelector((state) => state.serviceReportTemplate);
+    const { reportTypes, activeServiceReportTemplatesForRecords } = useSelector((state) => state.serviceReportTemplate);
     const { activeSpContacts } = useSelector((state) => state.contact);
     const { machineServiceReport, isLoading } = useSelector((state) => state.machineServiceReport);
     const { machine } = useSelector((state) => state.machine);
@@ -310,11 +310,11 @@ return (
                     name="serviceReportTemplate"
                     label="Service Report Template*"
                     disabled={id && true }
-                    options={activeServiceReportTemplatesForReports.filter( src => !docReportType || src?.reportType?.toLowerCase() === docReportType?.name?.toLowerCase() )}
-                    getOptionLabel={(option) => `${option?.docTitle || ''} ${option?.docTitle ? '-' : '' } ${option.reportType || ''} ${option?.docVersionNo ? '- v' : '' }${option?.docVersionNo || ''}`}
+                    options={activeServiceReportTemplatesForRecords?.filter( src => !docReportType || src?.reportType?.toLowerCase() === docReportType?.name?.toLowerCase() )}
+                    getOptionLabel={(option) => `${option?.reportTitle || ''} ${option?.reportTitle ? '-' : '' } ${option.reportType || ''} ${option?.docVersionNo ? '- v' : '' }${option?.docVersionNo || ''}`}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     renderOption={(props, option) => (
-                        <li {...props} key={option?._id}>{`${option?.docTitle || ''} ${option?.docTitle ? '-' : '' } ${option.reportType || ''} ${option?.docVersionNo ? '- v' : '' }${option?.docVersionNo || ''}`}</li>
+                        <li {...props} key={option?._id}>{`${option?.reportTitle || ''} ${option?.reportTitle ? '-' : '' } ${option.reportType || ''} ${option?.docVersionNo ? '- v' : '' }${option?.docVersionNo || ''}`}</li>
                       )}
                       onChange={(event, newValue) =>{
                         if(newValue){
