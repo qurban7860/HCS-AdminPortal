@@ -106,10 +106,10 @@ export default function CustomerSiteDynamicList({ siteAddForm, siteEditForm, sit
   }, [dispatch, customerId, customer?.isArchived ]); 
 
   useEffect(()=>{
-    if( Array.isArray(sites) && sites?.length > 0 && customerId && !siteAddForm && !siteEditForm && !siteViewForm && !sitesListView){
+    if( Array.isArray(sites) && sites?.length > 0 && !id && customerId && !siteAddForm && !siteEditForm && !siteViewForm && !sitesListView){
       navigate(PATH_CRM.customers.sites.view( customerId, sites[0]?._id))
     }
-  },[ sites, customerId, navigate, siteAddForm, siteEditForm, siteViewForm, sitesListView ])
+  },[ sites, id, customerId, navigate, siteAddForm, siteEditForm, siteViewForm, sitesListView ])
   
   const navigateToSite = useCallback((siteId) => {
     if (customerId && siteId && !sitesListView) {
@@ -122,8 +122,7 @@ export default function CustomerSiteDynamicList({ siteAddForm, siteEditForm, sit
       dispatch(setSitesView(view));
       if (view === 'card') {
         if (sites.length > 0) {
-          const firstSiteId = sites[0]._id;
-          navigateToSite(firstSiteId);
+          navigateToSite(sites[0]._id);
         } else {
           navigate(PATH_CRM.customers.sites.root(customerId));
         }
@@ -132,13 +131,6 @@ export default function CustomerSiteDynamicList({ siteAddForm, siteEditForm, sit
       }
     }
   };
-  
-  useEffect(() => {
-    if ( sites.length > 0 && !sitesListView && !SiteAddForm && !siteEditForm && !siteViewForm) {
-      const firstContactId = sites[0]._id;
-      navigateToSite(firstContactId);
-    }
-  }, [sites, navigateToSite, sitesListView, siteAddForm, siteEditForm, siteViewForm]);
 
   useEffect(() => {
     setTableData(sites);
@@ -157,12 +149,11 @@ export default function CustomerSiteDynamicList({ siteAddForm, siteEditForm, sit
     });
   };
 
-
   const handleCardClick = async (_site)=>{
     if(customerId && _site._id ){
         await navigate(PATH_CRM.customers.sites.view(customerId, _site?._id))
     }
-}
+  }
 
   return (
     <>
@@ -221,7 +212,6 @@ export default function CustomerSiteDynamicList({ siteAddForm, siteEditForm, sit
     </Stack>
   </Grid>
 </Grid>
-
 
       <Grid container spacing={1} direction="row" justifyContent="flex-start">
       {sites.length === 0 && !sitesListView &&(
