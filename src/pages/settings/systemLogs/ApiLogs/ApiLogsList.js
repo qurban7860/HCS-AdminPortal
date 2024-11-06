@@ -51,7 +51,7 @@ export default function ApiLogsList() {
     { id: 'requestMethod', label: 'Method', align: 'left' },
     { id: 'requestURL', label: 'Endpoint', align: 'left' },
     { id: 'responseStatusCode', label: 'Status', align: 'left' },
-    { id: 'responseTime', label: 'Response Time', align: 'left' },
+    { id: 'responseTime', label: 'Response Time (ms)', align: 'left' },
     { id: 'machine', label: 'Machine', align: 'left' },
     { id: 'customer', label: 'Customer', align: 'left' },
     { id: 'additionalContextualInformation', label: 'Description', align: 'left' },

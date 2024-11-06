@@ -6,7 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, Card, Grid, Stack, Autocomplete, TextField } from '@mui/material';
+import { Box, Card, Grid, Stack } from '@mui/material';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import FormProvider, { RHFTextField, RHFAutocomplete } from '../../components/hook-form';
@@ -17,7 +17,6 @@ import {
   getDocument,
   resetDocument,
   updateDocument,
-  getDocumentHistory,
 } from '../../redux/slices/document/document';
 import { Snacks } from '../../constants/document-constants';
 import { PATH_CRM, PATH_DOCUMENT, PATH_MACHINE, PATH_MACHINE_DRAWING } from '../../routes/paths';
@@ -35,8 +34,6 @@ function DocumentEditForm({ customerPage, machinePage, drawingPage, machineDrawi
   const { document } = useSelector((state) => state.document);
   const { activeDocumentTypes } = useSelector((state) => state.documentType);
   const { activeDocumentCategories } = useSelector((state) => state.documentCategory);
-  const { customer } = useSelector((state) => state.customer);
-  const { machine } = useSelector((state) => state.machine);
   // States
   const [ customerAccessVal, setCustomerAccessVal ] = useState(false);
   const [ isActive, setIsActive ] = useState(false);
@@ -156,6 +153,7 @@ function DocumentEditForm({ customerPage, machinePage, drawingPage, machineDrawi
                     options={activeDocumentCategories}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => option.name}
+                    value={document?.docCategory || null}
                   />
 
                   <RHFAutocomplete
@@ -165,6 +163,7 @@ function DocumentEditForm({ customerPage, machinePage, drawingPage, machineDrawi
                     options={activeDocumentTypes}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => option.name}
+                    value={document?.docType || null}
                   />
 
                 </Box>
