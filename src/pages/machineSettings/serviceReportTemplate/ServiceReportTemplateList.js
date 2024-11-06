@@ -35,8 +35,8 @@ import { FORMLABELS } from '../../../constants/default-constants';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'reportTitle', label: 'Report Title', align: 'left' },
-  { id: 'reportType', label: 'Report Type', align: 'left' },
+  { id: 'reportTitle', label: 'Template Name', align: 'left' },
+  { id: 'reportType', label: 'Service Type', align: 'left' },
   { id: 'status', visibility: 'md1', label: 'Status', align: 'left' },
   { id: 'docVersionNo', visibility: 'md1', label: 'Version No.', align: 'left' },
   { id: 'verifications', visibility: 'md1', label: 'Approvals', align: 'left' },

@@ -163,7 +163,12 @@ function PortalRequestInviteDialog() {
           <Box rowGap={2} columnGap={2} display="grid"
             gridTemplateColumns={{ sm: 'repeat(1, 1fr)' }}
           >
-                { rejectRequestDialog && <RHFTextField name="internalNote" label="Internal Note" />}
+                { rejectRequestDialog && <RHFTextField 
+                  multiline
+                  rows={3}
+                  name="internalNote" 
+                  label="Internal Note" 
+                />}
 
                 { acceptRequestDialog && <>
                     <ViewFormField heading='Email' param={portalRegistration?.email || ""} />
