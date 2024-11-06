@@ -156,11 +156,11 @@ export default function ServiceReportTemplateEditForm() {
                     sm: 'repeat(2, 1fr)',
                   }}
                 >
-                  <RHFTextField name="reportTitle" label="Report Title" />
+                  <RHFTextField name="reportTitle" label="Template Name" />
 
                   <RHFAutocomplete 
                     name="reportType"
-                    label="Document Type"
+                    label="Service Type"
                     value={reportType}
                     options={reportTypes}
                     isOptionEqualToValue={(option, value) => option.name === value.name}

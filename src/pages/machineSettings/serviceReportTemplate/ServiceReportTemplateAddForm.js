@@ -184,10 +184,10 @@ export default function ServiceReportTemplateAddForm() {
                 <Box rowGap={2} columnGap={2} display="grid"
                   gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
                 >
-                  <RHFTextField name="reportTitle" label="Report Title*" />
+                  <RHFTextField name="reportTitle" label="Template Name*" />
                   <RHFAutocomplete 
                     name="reportType"
-                    label="Report Type*"
+                    label="Service Type*"
                     options={reportTypes}
                     isOptionEqualToValue={(option, value) => option.name === value.name}
                     getOptionLabel={(option) => `${option.name || ''}`}

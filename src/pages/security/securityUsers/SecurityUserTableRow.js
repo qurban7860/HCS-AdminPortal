@@ -57,11 +57,11 @@ export default function SecurityUserTableRow({
           {login}
           {email?.trim() !== login?.trim() &&
               <StyledTooltip 
-              placement="top" 
-              disableFocusListener 
-              title={ email } 
-              tooltipcolor={ ICONS.EMAIL.color } 
-              color={ ICONS.EMAIL.color }
+                placement="top" 
+                disableFocusListener 
+                title={ email } 
+                tooltipcolor={ ICONS.EMAIL.color } 
+                color={ ICONS.EMAIL.color }
               >
                 <Iconify sx={{ ml: 0.5, height: 20, width: 20, mb: -0.5 }} icon={ICONS.EMAIL.icon} />
               </StyledTooltip>

@@ -145,8 +145,8 @@ export default function ServiceReportTemplateViewForm({ currentServiceReportTemp
         machineSettingPage
       />
       <Grid container sx={{mt:2}}>
-        <ViewFormField isLoading={isLoading} sm={6} heading="Document Title" param={defaultValues?.reportTitle} />
-        <ViewFormField isLoading={isLoading} sm={6} heading="Document Type" param={defaultValues?.reportType} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Template Name" param={defaultValues?.reportTitle} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Service Type" param={defaultValues?.reportType} />
         <ViewFormField isLoading={isLoading} sm={6} heading="Status" param={defaultValues?.status} />
         <ViewFormField isLoading={isLoading} sm={6} heading="Version No." param={defaultValues?.docVersionNo} />
       </Grid>

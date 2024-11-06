@@ -126,6 +126,7 @@ function MachineServiceReportViewForm( {serviceHistoryView} ) {
   }
 
   const handleCurrentServiceReport = () => {
+    console.log("currentVersion?._id : ",machineServiceReport?.currentVersion?._id)
     navigate(PATH_MACHINE.machines.serviceReports.view( machineId, machineServiceReport?.currentVersion?._id ))
   }
 
@@ -451,10 +452,12 @@ function MachineServiceReportViewForm( {serviceHistoryView} ) {
                 <>
                   {defaultValues?.versionNo}
                   {(machineServiceReport?.isHistory ||
-                    machineServiceReport?.status === 'DRAFT') && (
+                    machineServiceReport?.status === 'DRAFT') &&
+                    machineServiceReport?.currentVersion?._id && (
                     <CurrentIcon callFunction={handleCurrentServiceReport} />
                   )}
                   {!machineServiceReport?.isHistory &&
+                    machineServiceReport?.currentVersion?.versionNo && 
                     machineServiceReport?.currentVersion?.versionNo > 1 &&
                     machineServiceReport?.primaryServiceReportId && (
                       <HistoryIcon callFunction={handleServiceReportHistory} />
@@ -560,7 +563,7 @@ function MachineServiceReportViewForm( {serviceHistoryView} ) {
               {machineServiceReportCheckItems?.checkItemLists?.map((row, index) => (
                 <CheckedItemValueRow
                   machineId={machineId}
-                  primaryServiceReportId={machineServiceReport._id}
+                  primaryServiceReportId={machineServiceReport?.primaryServiceReportId	}
                   value={row}
                   index={index}
                   key={row._id}
