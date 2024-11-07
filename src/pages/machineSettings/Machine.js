@@ -97,11 +97,6 @@ export default function Machine() {
                   icon={ICONS.TOOLS.icon}
                   content={ICONS.MACHINE_SERVICE_REPORT_CONFIG.heading}
                 />
-                {/* { isAllAccessAllowed && <ListItem
-                  onClick={linkConfiguration}
-                  icon={ICONS.Configuration.icon}
-                  content={ICONS.Configuration.heading}
-                /> } */}
               </List>
           </StyledSettingsCardContainer>
 

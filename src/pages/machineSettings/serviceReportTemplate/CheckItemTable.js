@@ -69,7 +69,7 @@ const CheckItemTable = ({ checkParams, setCheckParams, checkItemList, setCheckIt
     try {
       const newArray =  checkItemList.filter((_, index) => index !== indexToRemove);
       setCheckItemList(newArray);
-      enqueueSnackbar('Check Item Archived successfully!');
+      enqueueSnackbar('Check Item Deleted successfully!');
     } catch (err) {
       enqueueSnackbar('Check Item Archive failed!', { variant: 'error' });
       console.error(err.message);
