@@ -44,9 +44,7 @@ function ViewFormEditDeleteButtons({
   settingPage,
   securityUserPage,
   transferredHistory,
-  apiLogs,
   // Handlers
-  handleClickOnApiLogs,
   handleVerification,
   handleVerificationTitle,
   onArchive,
@@ -402,16 +400,6 @@ function ViewFormEditDeleteButtons({
               color={isActive?ICONS.ACTIVE.color:ICONS.INACTIVE.color}
               icon={isActive?ICONS.ACTIVE.icon:ICONS.INACTIVE.icon}
             />
-          }
-          {apiLogs!==undefined && apiLogs?.length > 0 &&
-            <Badge badgeContent={apiLogs?.length || '0' } color="info">
-              <IconTooltip
-                title={ICONS.APILOGS.heading}
-                color={ICONS.APILOGS.color}
-                icon={ICONS.APILOGS.icon}
-                onClick={handleClickOnApiLogs}
-                />
-            </Badge>
           }
           {isIniRead!==undefined &&
             <IconTooltip
@@ -1034,7 +1022,6 @@ ViewFormEditDeleteButtons.propTypes = {
   multiAuth:PropTypes.bool,
   currentEmp:PropTypes.bool,
   isRequired:PropTypes.bool,
-  handleClickOnApiLogs: PropTypes.func,
   handleTransfer: PropTypes.func,
   handleUpdatePassword: PropTypes.func,
   handleUserInvite: PropTypes.func,
@@ -1042,7 +1029,6 @@ ViewFormEditDeleteButtons.propTypes = {
   handleViewPDF: PropTypes.func,
   isInviteLoading:PropTypes.bool,
   handleEdit: PropTypes.func,
-  apiLogs: PropTypes.array,
   handleJiraNaviagte: PropTypes.func,
   onArchive: PropTypes.func,
   onRestore: PropTypes.func,
