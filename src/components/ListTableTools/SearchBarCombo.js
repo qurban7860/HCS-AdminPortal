@@ -41,6 +41,8 @@ function SearchBarCombo({
   onSignInLogsFilter,
   apiLogsStatusFilter,
   onApiLogsStatusFilter,
+  apiLogsMethodFilter,
+  onApiLogsMethodFilter,
   onChange,
   onClick,
   SubOnClick,
@@ -509,7 +511,7 @@ function SearchBarCombo({
           {onApiLogsStatusFilter &&
             <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
           <Stack alignItems="flex-start">
-            <FormControl fullWidth sx={{ ml: 2, width: '200px' }}>
+            <FormControl fullWidth>
               <InputLabel id="api-logs-status-label">Status</InputLabel>
                 <Select
                   sx={{ width: '200px' }}
@@ -528,6 +530,27 @@ function SearchBarCombo({
           </Stack>
            </Grid>
           }
+           {onApiLogsMethodFilter &&
+            <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
+          <Stack alignItems="flex-start">
+            <FormControl fullWidth sx={{ ml: 1.3 }}>
+              <InputLabel id="api-logs-method-label">Method</InputLabel>
+                <Select
+                  sx={{ width: '200px' }}
+                  labelId="api-logs-method-label"
+                  id="api-logs-method"
+                  size="small"
+                  value={apiLogsMethodFilter}
+                  label="Status"
+                  onChange={onApiLogsMethodFilter}
+                >
+                  <MenuItem value="default">All</MenuItem>
+                  <MenuItem value="GET">GET</MenuItem>
+                  <MenuItem value="POST">POST</MenuItem>
+                </Select>
+            </FormControl>
+          </Stack>
+           </Grid>}
           {isPm2LogTypes && 
             <>
             <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
@@ -841,6 +864,8 @@ SearchBarCombo.propTypes = {
   onSignInLogsFilter:PropTypes.func,
   apiLogsStatusFilter:PropTypes.number,
   onApiLogsStatusFilter:PropTypes.func,
+  apiLogsMethodFilter:PropTypes.number,
+  onApiLogsMethodFilter:PropTypes.func,
   transferredMachine:PropTypes.bool,
   handleAttach: PropTypes.func,
   radioStatus: PropTypes.bool,
