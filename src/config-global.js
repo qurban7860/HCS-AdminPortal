@@ -4,6 +4,7 @@ import { PATH_DASHBOARD } from './routes/paths';
 // ----------------------------------------------------------------------
 
 export const CONFIG = {
+  PORTAL_LOGIN_URL: process.env.PORTAL_LOGIN_URL,
   APP_CODE: process.env.REACT_APP_CODE,
   APP_TITLE: process.env.REACT_APP_TITLE,
   APP_NAME: process.env.REACT_APP_NAME,

@@ -113,11 +113,12 @@ export const {
 
 // ----------------------------------------------------------------------
 
-export function getPortalRegistrations( page, pageSize ) {
+export function getPortalRegistrations( page, pageSize, status ) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const params = {
+        status,
         isArchived: false,
         pagination: {
           page,
