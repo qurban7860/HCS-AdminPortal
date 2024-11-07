@@ -696,7 +696,7 @@ function ViewFormEditDeleteButtons({
           />
         )}
 
-          {/* approve configuration */}
+          {/* approve template */}
           {approveHandler && !(approvers && approvers.length > 0 && approvers?.some((verified) => verified?.verifiedBy?._id === userId)) && <IconTooltip
           title="Approve"
           onClick={() => {
@@ -883,8 +883,8 @@ function ViewFormEditDeleteButtons({
       <ConfirmDialog
         open={openConfigDraftStatuConfirm}
         onClose={() => handleCloseConfirm('ChangeConfigStatusToDraft')}
-        title="Configuration Status"
-        content="Are you sure you want to change configuration status to DRAFT? "
+        title="Template Status"
+        content="Are you sure you want to change this template status to DRAFT? "
         action={
           <LoadingButton variant="contained"
             onClick={()=>{
@@ -900,8 +900,8 @@ function ViewFormEditDeleteButtons({
       <ConfirmDialog
         open={openConfigSubmittedStatuConfirm}
         onClose={() => handleCloseConfirm('ChangeConfigStatusToSubmitted')}
-        title="Configuration Status"
-        content="Do you want to submit it for Approval? "
+        title="Template Status"
+        content="Do you want to submit this template for Approval? "
         action={
           <LoadingButton variant="contained"
             onClick={()=>{
@@ -917,8 +917,8 @@ function ViewFormEditDeleteButtons({
   <ConfirmDialog
         open={openConfigApproveStatuConfirm}
         onClose={() => handleCloseConfirm('ChangeConfigStatusToApprove')}
-        title="Configuration Approval"
-        content="Are you sure you want to APPROVE configuration? "
+        title="Template Approval"
+        content="Are you sure you want to APPROVE this template? "
         action={
           <LoadingButton variant="contained"
             onClick={()=>{
