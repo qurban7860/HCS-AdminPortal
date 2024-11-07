@@ -99,7 +99,7 @@ function UserInviteLanding() {
         await dispatch(updateInvitedUser(data, id));
         enqueueSnackbar('Password has been updated Successfully!');
         reset();
-        if( verifiedInvite?.customerType?.toLowerCase() === "sp" ){
+        if( verifiedInvite?.customerType?.toLowerCase() !== "sp" ){
           window.location.href = CONFIG?.PORTAL_LOGIN_URL;
         } else {
           navigate(PATH_AUTH.login);
