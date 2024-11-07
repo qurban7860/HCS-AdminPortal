@@ -28,7 +28,7 @@ import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import { FORMLABELS } from '../../../constants/default-constants';
 // sections
 import PortalRegistrationListTableRow from './PortalRegistrationListTableRow';
-import CustomerListTableToolbar from './PortalRegistrationListTableToolbar';
+import PortalRegistrationListTableToolbar from './PortalRegistrationListTableToolbar';
 import { 
   getPortalRegistrations, 
   resetPortalRegistrations, 
@@ -84,10 +84,14 @@ export default function PortalRegistrationList() {
     dispatch(ChangePage(newPage)) 
   }
 
+  const getPortalRequests = useCallback(() => {
+    dispatch(getPortalRegistrations( page, rowsPerPage, filterByStatus ));
+  }, [ dispatch, page, rowsPerPage, filterByStatus ] )
+
   useEffect(() => {
-    dispatch(getPortalRegistrations( page, rowsPerPage ));
+    getPortalRequests();
     return ()=> { dispatch( resetPortalRegistrations() ) }
-  }, [ dispatch, page, rowsPerPage ]);
+  }, [ dispatch, getPortalRequests, page, rowsPerPage, filterByStatus ]);
 
   const dataFiltered = applyFilter({
     inputData: portalRegistrations?.data || [],
@@ -156,13 +160,14 @@ useEffect(() => {
         />
       </StyledCardContainer>
       <TableCard>
-        <CustomerListTableToolbar
+        <PortalRegistrationListTableToolbar
           filterName={ filterName }
           filterStatus={ filterByStatus }
           onFilterName={ handleFilterName }
           isFiltered={ isFiltered }
           onResetFilter={ handleResetFilter }
           onChangeStatus={ handleFilterByStatus }
+          onReload={getPortalRequests}
         />
 
         {!isNotFound && (

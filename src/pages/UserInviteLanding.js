@@ -11,7 +11,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
 import { Alert, Box, IconButton, InputAdornment, Stack, Typography, Grid } from '@mui/material';
 import { useSnackbar } from 'notistack';
-import { MuiTelInput } from 'mui-tel-input';
 import { StyledRoot, StyledContent } from '../layouts/login/styles';
 import FormProvider, { RHFPhoneInput, RHFTextField} from '../components/hook-form';
 import Iconify from '../components/iconify';
@@ -22,6 +21,8 @@ import {
   updateInvitedUser,
   verifyUserInvite,
 } from '../redux/slices/securityUser/securityUser';
+import { CONFIG } from '../config-global';
+
 
 // ----------------------------------------------------------------------
 
@@ -33,7 +34,7 @@ function UserInviteLanding() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
   const expired = new Date(expiry).getTime() > new Date().getTime();
-  const { verifiedInvite} = useSelector((state) => state.user);
+  const { verifiedInvite } = useSelector((state) => state.user);
   
   const ChangePassWordSchema = Yup.object().shape({
     fullName:Yup.string().trim().max(50, 'Name must be less than 50 characters').required('Name is required'),
@@ -98,7 +99,11 @@ function UserInviteLanding() {
         await dispatch(updateInvitedUser(data, id));
         enqueueSnackbar('Password has been updated Successfully!');
         reset();
-        navigate(PATH_AUTH.login);
+        if( verifiedInvite?.customerType?.toLowerCase() === "sp" ){
+          window.location.href = CONFIG?.PORTAL_LOGIN_URL;
+        } else {
+          navigate(PATH_AUTH.login);
+        }
       } catch (error) {
         if (error.Message) {
           enqueueSnackbar(error.Message, { variant: `error` });

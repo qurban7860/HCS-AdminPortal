@@ -14,6 +14,7 @@ PortalRegistrationListTableToolbar.propTypes = {
   onResetFilter: PropTypes.func,
   filterStatus: PropTypes.any,
   onChangeStatus: PropTypes.func,
+  onReload: PropTypes.func,
 };
 
 export default function PortalRegistrationListTableToolbar({
@@ -23,6 +24,7 @@ export default function PortalRegistrationListTableToolbar({
   onResetFilter,
   filterStatus,
   onChangeStatus,
+  onReload,
 }) {
 
   return (
@@ -46,6 +48,7 @@ export default function PortalRegistrationListTableToolbar({
         value={filterName}
         onChange={onFilterName}
         onClick={onResetFilter}
+        onReload={onReload}
       />
     </Stack>
   );
