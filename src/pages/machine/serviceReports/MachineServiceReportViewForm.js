@@ -484,13 +484,13 @@ function MachineServiceReportViewForm( {serviceHistoryView} ) {
                 machineServiceReport?.currentVersion?._id === machineServiceReport?._id &&
                 machineServiceReport?.currentApprovalStatus !== 'APPROVED' &&
                 machineServiceReport?.approval?.approvingContacts?.length < 1 &&
-                <IconButtonTooltip title='Request Approval' icon="ph:seal-bold" onClick={handleCompleteConfirm} /> 
+                <IconButtonTooltip title='Request Approval' icon="mdi:email-seal" onClick={handleCompleteConfirm} /> 
               }
               { Array.isArray(machineServiceReport?.approval?.approvingContacts) &&
                 machineServiceReport?.approval?.approvingContacts?.length > 0 &&
                 machineServiceReport?.approval?.approvingContacts?.find(( c => c === user.contact)) && 
                 machineServiceReport?.currentApprovalStatus !== 'APPROVED' &&
-              <IconButtonTooltip title='Approve / Reject' icon="ph:seal-question-fill" onClick={handleCompleteConfirm} /> }
+              <IconButtonTooltip title='Approve / Reject' icon="mdi:approve" onClick={handleCompleteConfirm} /> }
             </>
             }
           />

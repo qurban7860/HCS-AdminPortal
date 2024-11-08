@@ -99,9 +99,9 @@ function UserInviteLanding() {
         await dispatch(updateInvitedUser(data, id));
         enqueueSnackbar('Password has been updated Successfully!');
         reset();
-        if( verifiedInvite?.customerType?.toLowerCase() !== "sp" ){
+        if( verifiedInvite?.customerType?.toLowerCase() !== "sp" && CONFIG?.PORTAL_LOGIN_URL ){
           window.location.href = CONFIG?.PORTAL_LOGIN_URL;
-        } else {
+        } else if(  verifiedInvite?.customerType?.toLowerCase() === "sp" ) {
           navigate(PATH_AUTH.login);
         }
       } catch (error) {
