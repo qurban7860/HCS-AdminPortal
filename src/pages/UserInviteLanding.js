@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useMemo, useState, useEffect, memo } from 'react';
+import { useMemo, useState, useLayoutEffect, memo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 // form
@@ -56,7 +56,7 @@ function UserInviteLanding() {
       confirmPassword:'',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [verifiedInvite]
+    [ verifiedInvite ]
   );
 
   const methods = useForm({
@@ -64,7 +64,7 @@ function UserInviteLanding() {
     defaultValues,
   });
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if(expired){
       navigate(PATH_PAGE.expiredErrorPage);
     }else if (id && code) {
@@ -85,12 +85,13 @@ function UserInviteLanding() {
     formState: { isSubmitting, errors, isSubmitSuccessful},
   } = methods;
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setValue('customerName',verifiedInvite?.customerName || '')
     setValue('contactName',verifiedInvite?.contactName || '')
     setValue('fullName',verifiedInvite?.fullName || '')
     setValue('login',verifiedInvite?.login || '')
     setValue('email',verifiedInvite?.email || '')
+    setValue('phone',verifiedInvite?.phone || '')
   },[verifiedInvite, setValue])
 
   const onSubmit = async (data) => {
