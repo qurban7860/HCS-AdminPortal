@@ -271,7 +271,7 @@ export const MachineToolAdd = Loadable(lazy(() => import('../pages/machineSettin
 export const MachineToolView = Loadable(lazy(() => import('../pages/machineSettings/tools/ToolView')));
 export const MachineToolEdit = Loadable(lazy(() => import('../pages/machineSettings/tools/ToolEdit')));
 
-// --------------- Service Report Configuration --------------------
+// --------------- Service Report Template --------------------
 
 // MACHINE SETTINGS CHECK Item Categories
 export const CheckItemCategoryList = Loadable(lazy(() => import('../pages/machineSettings/checkItemsCategories/CheckItemCategoryList')));

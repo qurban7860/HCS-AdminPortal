@@ -44,6 +44,7 @@ export default function ApiLogsList() {
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterRequestStatus, setFilterRequestStatus] = useState(-1);
+  const [filterRequestMethod, setFilterRequestMethod] = useState('default');
   const { apiLogs, filterBy, isLoading, initial, reportHiddenColumns } = useSelector((state) => state.apiLogs );
 
   const TABLE_HEAD = [
@@ -51,7 +52,7 @@ export default function ApiLogsList() {
     { id: 'requestMethod', label: 'Method', align: 'left' },
     { id: 'requestURL', label: 'Endpoint', align: 'left' },
     { id: 'responseStatusCode', label: 'Status', align: 'left' },
-    { id: 'responseTime', label: 'Response Time', align: 'left' },
+    { id: 'responseTime', label: 'Response Time (ms)', align: 'left' },
     { id: 'machine', label: 'Machine', align: 'left' },
     { id: 'customer', label: 'Customer', align: 'left' },
     { id: 'additionalContextualInformation', label: 'Description', align: 'left' },
@@ -87,6 +88,11 @@ export default function ApiLogsList() {
   const handleFilterRequestStatus = (event) => {
     dispatch(ChangePage(0))
     setFilterRequestStatus(event.target.value);
+  };
+
+  const handleFilterRequestMethod = (event) => {
+    dispatch(ChangePage(0))
+    setFilterRequestMethod(event.target.value);
   };
   
   useEffect(() => {
@@ -127,6 +133,9 @@ export default function ApiLogsList() {
         query.responseStatusCode = filterRequestStatus;
       }
     }
+    if (filterRequestMethod !== 'default') {
+      query.requestMethod = filterRequestMethod;
+    }  
     dispatch(getApiLogs({
       machineId,
       orderBy: 'createdAt:desc',
@@ -135,7 +144,7 @@ export default function ApiLogsList() {
       pageSize: rowsPerPage,
     }));
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, rowsPerPage, filterRequestStatus]);
+  }, [page, rowsPerPage, filterRequestStatus, filterRequestMethod]);
   
   
   return (
@@ -152,6 +161,8 @@ export default function ApiLogsList() {
             onResetFilter={handleResetFilter}
             filterRequestStatus={filterRequestStatus}
             onFilterRequestStatus={handleFilterRequestStatus}
+            filterRequestMethod={filterRequestMethod}
+            onFilterRequestMethod={handleFilterRequestMethod}
           />
           {!isNotFound && (
           <TablePaginationFilter

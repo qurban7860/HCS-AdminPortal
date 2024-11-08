@@ -40,7 +40,7 @@ const TABLE_HEAD = [
   { id: 'serviceDate', label: 'Service Date', align: 'left' },
   { id: 'serviceReportUID', label: 'Service ID', align: 'left' },
   { id: 'status', label: 'Status', align: 'left' },
-  { id: 'serviceReportTemplate.reportTitle', label: 'Service Configuration', align: 'left' },
+  { id: 'serviceReportTemplate.reportTitle', label: 'Service Template', align: 'left' },
   { id: 'versionNo', label: 'Version', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
   { id: 'createdBy.name', label: 'Created By', align: 'left' },

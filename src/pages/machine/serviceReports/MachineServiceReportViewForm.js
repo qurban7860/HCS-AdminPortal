@@ -441,7 +441,7 @@ function MachineServiceReportViewForm( {serviceHistoryView} ) {
           <FormLabel content={FORMLABELS.KEYDETAILS} />
           <ViewFormField isLoading={isLoading} variant='h4' sm={2} heading="Service Date" 
             param={fDate(defaultValues.serviceDate)} />
-          <ViewFormField isLoading={isLoading} variant='h4' sm={6} heading="Service Report Configuration" 
+          <ViewFormField isLoading={isLoading} variant='h4' sm={6} heading="Service Report Template" 
             param={`${defaultValues.serviceReportTemplate} ${defaultValues.serviceReportTemplateReportType ? '-' : ''} ${defaultValues.serviceReportTemplateReportType ? defaultValues.serviceReportTemplateReportType : ''}`} />
           <ViewFormField
               isLoading={isLoading}

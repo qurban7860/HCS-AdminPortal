@@ -66,7 +66,9 @@ export default function APILogsTableRow({
             />
           </TableCell>
       }
-      {!hiddenColumns?.requestURL &&<TableCell align="left">{requestURL}</TableCell>}
+      {!hiddenColumns?.requestURL &&<TableCell align="left">
+        {requestURL?.replace('/api/1.0.0/', '') || requestURL}
+      </TableCell>}
       {!hiddenColumns?.responseStatusCode && 
           <TableCell align="left">
             <Chip
