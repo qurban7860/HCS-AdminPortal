@@ -171,7 +171,7 @@ function UserInviteLanding() {
             />
           </Box>
           <Box sx={{mt:3, display:'flex', justifyContent:"end"}}>
-            <LoadingButton size="large" type="submit" variant="contained" loading={isSubmitSuccessful || isSubmitting}
+            <LoadingButton size="large" type="submit" variant="contained" disabled={ isSubmitSuccessful } loading={ isSubmitting}
                     sx={{ bgcolor: '#10079F', color: 'white', '&:hover': { bgcolor: '#FFA200' }}} >Save
             </LoadingButton>
           </Box>
