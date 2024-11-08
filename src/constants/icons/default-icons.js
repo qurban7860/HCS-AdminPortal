@@ -396,7 +396,7 @@ export const ICONS = {
   },
   // service report status
   SERVICE_REPORT_STATUS: {
-    icon: 'fluent-mdl2:sync-status-solid',
+    icon: 'carbon:report-data',
     heading: 'Service Report Status',
   },
   // configuration information

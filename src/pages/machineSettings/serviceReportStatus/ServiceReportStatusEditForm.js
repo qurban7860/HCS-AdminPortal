@@ -17,6 +17,7 @@ import FormProvider, { RHFTextField, RHFSwitch } from '../../../components/hook-
 import { Cover } from '../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
+import { serviceReportStatusSchema } from '../../schemas/machine';
 
 // ----------------------------------------------------------------------
 
@@ -30,24 +31,12 @@ export default function ServiceReportStatusEditForm() {
   const { enqueueSnackbar } = useSnackbar();
   const { id } = useParams();
 
-  const serviceReportStatusSchema = Yup.object().shape({
-    name: Yup.string().min(2).max(50).required('Name is required'),
-    displayOrderNo: Yup.number()
-    .typeError('Display Order No. must be a number')
-    .nullable()
-    .transform((_, val) => (val !== '' ? Number(val) : null)),
-    type: Yup.string().max(50),
-    description: Yup.string().max(5000),
-    isActive: Yup.boolean(),
-    isDefault: Yup.boolean(),
-  });
-
   const defaultValues = useMemo(
     () => ({
       name: serviceReportStatus?.name || '',
-      description: serviceReportStatus?.description || '',
-      displayOrderNo: serviceReportStatus?.displayOrderNo || '',
       type: serviceReportStatus?.type || '',
+      displayOrderNo: serviceReportStatus?.displayOrderNo || '',
+      description: serviceReportStatus?.description || '',
       isActive: serviceReportStatus.isActive,
       isDefault: serviceReportStatus?.isDefault || false,
     }),
@@ -103,9 +92,9 @@ export default function ServiceReportStatusEditForm() {
                 gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
               >
                 <RHFTextField name="name" label="Name" />
+                <RHFTextField name="type" label="Type" />
                 <RHFTextField name="description" label="Description" minRows={7} multiline />
                 <RHFTextField name="displayOrderNo" label="Display Order No." type="number" />
-                <RHFTextField name="type" label="Type" />
 
                 <Grid display="flex">
                 <RHFSwitch name="isActive" label="Active" />
