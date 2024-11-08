@@ -72,6 +72,11 @@ export default function ApiLogsList() {
 
   const { watch, setValue, handleSubmit, trigger } = methods;
   const { dateFrom, dateTo } = watch();
+  
+  useEffect(() => {
+    handleFetchLogs(defaultValues);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (initial) {
@@ -87,6 +92,38 @@ export default function ApiLogsList() {
   const denseHeight = 60;
   const isFiltered = filterName !== '';
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
+  
+  const handleFetchLogs = (data) => {
+    const query = {
+      apiType: 'MACHINE-INTEGRATION',
+      createdAt: {
+        $gte: new Date(data.dateFrom).toISOString(),
+        $lte: new Date(data.dateTo).toISOString(),
+      },
+    };
+
+    if (filterRequestStatus !== -1) {
+      if (filterRequestStatus === '200-299') {
+        query.responseStatusCode = { $gte: 200, $lt: 300 };
+      } else if (filterRequestStatus === '400-499') {
+        query.responseStatusCode = { $gte: 400, $lte: 500 };
+      } else {
+        query.responseStatusCode = filterRequestStatus;
+      }
+    }
+
+    if (filterRequestMethod !== 'default') {
+      query.requestMethod = filterRequestMethod;
+    }
+
+    dispatch(getApiLogs({
+      machineId,
+      orderBy: 'createdAt:desc',
+      query,
+      page,
+      pageSize: rowsPerPage,
+    }));
+  };
 
   const debouncedSearch = useRef(debounce((value) => {
     dispatch(ChangePage(0))
@@ -138,36 +175,8 @@ export default function ApiLogsList() {
   };
   
   const onHandleSubmit = (data) => {
-    const query = {
-      apiType: 'MACHINE-INTEGRATION',
-      createdAt: {
-        $gte: new Date(data.dateFrom).toISOString(),
-        $lte: new Date(data.dateTo).toISOString(),
-      },
-    };
-  
-    if (filterRequestStatus !== -1) {
-      if (filterRequestStatus === '200-299') {
-        query.responseStatusCode = { $gte: 200, $lt: 300 };
-      } else if (filterRequestStatus === '400-499') {
-        query.responseStatusCode = { $gte: 400, $lte: 500 };
-      } else {
-        query.responseStatusCode = filterRequestStatus;
-      }
-    }
-  
-    if (filterRequestMethod !== 'default') {
-      query.requestMethod = filterRequestMethod;
-    }
-  
-    dispatch(getApiLogs({
-      machineId,
-      orderBy: 'createdAt:desc',
-      query,
-      page,
-      pageSize: rowsPerPage,
-    }));
-  }; 
+    handleFetchLogs(data);
+  };
   
   return (
       <Container maxWidth={false}>
