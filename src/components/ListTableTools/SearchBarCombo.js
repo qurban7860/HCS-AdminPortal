@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Grid, TextField, InputAdornment, Button, Stack, 
-  FormControl, Select, InputLabel, MenuItem, IconButton, Switch, FormControlLabel, Autocomplete } from '@mui/material';
+  FormControl, Select, InputLabel, MenuItem, IconButton, Switch, FormControlLabel, Autocomplete, Box } from '@mui/material';
 import { BUTTONS } from '../../constants/default-constants';
 import Iconify from '../iconify';
 import useResponsive from '../../hooks/useResponsive';
@@ -508,49 +508,43 @@ function SearchBarCombo({
               renderInput={(params) => <TextField {...params} size='small' label="Environment" />}
             />
           </Grid> }
-          {onApiLogsStatusFilter &&
-            <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
-          <Stack alignItems="flex-start">
-            <FormControl fullWidth>
-              <InputLabel id="api-logs-status-label">Status</InputLabel>
-                <Select
-                  sx={{ width: '200px' }}
-                  labelId="api-logs-status-label"
-                  id="api-logs-status"
-                  size="small"
-                  value={apiLogsStatusFilter}
-                  label="Status"
-                  onChange={onApiLogsStatusFilter}
-                >
-                  <MenuItem key="-1" value={-1}>All</MenuItem>
-                  <MenuItem key="success" value="200-299">Success</MenuItem>
-                  <MenuItem key="failed" value="400-499">Failed</MenuItem>
-                </Select>
-            </FormControl>
-          </Stack>
-           </Grid>
-          }
-           {onApiLogsMethodFilter &&
-            <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
-          <Stack alignItems="flex-start">
-            <FormControl fullWidth sx={{ ml: 1.3 }}>
-              <InputLabel id="api-logs-method-label">Method</InputLabel>
-                <Select
-                  sx={{ width: '200px' }}
-                  labelId="api-logs-method-label"
-                  id="api-logs-method"
-                  size="small"
-                  value={apiLogsMethodFilter}
-                  label="Status"
-                  onChange={onApiLogsMethodFilter}
-                >
-                  <MenuItem value="default">All</MenuItem>
-                  <MenuItem value="GET">GET</MenuItem>
-                  <MenuItem value="POST">POST</MenuItem>
-                </Select>
-            </FormControl>
-          </Stack>
-           </Grid>}
+          
+          <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: '1fr', sm: 'repeat(2, 1fr)' }} sx={{ flexGrow: 1, width: { xs: '100%', sm: '100%' } }}>
+          {onApiLogsStatusFilter && (
+           <FormControl fullWidth>
+            <InputLabel id="api-logs-status-label">Status</InputLabel>
+            <Select
+              labelId="api-logs-status-label"
+              id="api-logs-status"
+              size="small"
+              value={apiLogsStatusFilter}
+              label="Status"
+              onChange={onApiLogsStatusFilter}
+            >
+             <MenuItem key="-1" value={-1}>All</MenuItem>
+             <MenuItem key="success" value="200-299">Success</MenuItem>
+             <MenuItem key="failed" value="400-499">Failed</MenuItem>
+            </Select>
+           </FormControl>
+          )}
+          {onApiLogsMethodFilter && (
+           <FormControl fullWidth>
+            <InputLabel id="api-logs-method-label">Method</InputLabel>
+            <Select
+              labelId="api-logs-method-label"
+              id="api-logs-method"
+              size="small"
+              value={apiLogsMethodFilter}
+              label="Method"
+              onChange={onApiLogsMethodFilter}
+            >
+             <MenuItem value="default">All</MenuItem>
+             <MenuItem value="GET">GET</MenuItem>
+             <MenuItem value="POST">POST</MenuItem>
+            </Select>
+           </FormControl>
+          )}</Box>
+
           {isPm2LogTypes && 
             <>
             <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
@@ -864,7 +858,7 @@ SearchBarCombo.propTypes = {
   onSignInLogsFilter:PropTypes.func,
   apiLogsStatusFilter:PropTypes.number,
   onApiLogsStatusFilter:PropTypes.func,
-  apiLogsMethodFilter:PropTypes.number,
+  apiLogsMethodFilter:PropTypes.string,
   onApiLogsMethodFilter:PropTypes.func,
   transferredMachine:PropTypes.bool,
   handleAttach: PropTypes.func,

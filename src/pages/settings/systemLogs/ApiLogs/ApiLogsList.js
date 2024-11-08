@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
 import debounce from 'lodash/debounce';
 import { useParams } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
 // @mui
-import { Table, TableBody, TableContainer, Container, Card } from '@mui/material';
-import { useNavigate } from 'react-router';
+import { Table, TableBody, TableContainer, Container, Card, Box, Grid, Stack } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 import { Cover } from '../../../../components/Defaults/Cover';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
@@ -17,6 +18,7 @@ import {
   TablePaginationCustom,
   TableHeadFilter,
 } from '../../../../components/table';
+import FormProvider, { RHFDatePicker } from '../../../../components/hook-form';
 import Scrollbar from '../../../../components/scrollbar';
 // sections
 import APILogsTableRow from '../../../../components/machineIntegration/APILogsTableRow';
@@ -24,6 +26,7 @@ import ApiLogsListTableToolbar from './ApiLogsListTableToolbar';
 import { getApiLogs, setFilterBy, ChangePage,  setReportHiddenColumns } from '../../../../redux/slices/logs/apiLogs';
 import { fDateTime } from '../../../../utils/formatTime';
 import TableCard from '../../../../components/ListTableTools/TableCard';
+import SearchBarCombo from '../../../../components/ListTableTools/SearchBarCombo';
 
 export default function ApiLogsList() {
   const {
@@ -57,6 +60,18 @@ export default function ApiLogsList() {
     { id: 'customer', label: 'Customer', align: 'left' },
     { id: 'additionalContextualInformation', label: 'Description', align: 'left' },
   ];
+
+  const defaultValues = {
+    dateFrom: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+    dateTo: new Date().toISOString(),
+  };  
+
+  const methods = useForm({
+    defaultValues,
+  });
+
+  const { watch, setValue, handleSubmit, trigger } = methods;
+  const { dateFrom, dateTo } = watch();
 
   useEffect(() => {
     if (initial) {
@@ -122,8 +137,15 @@ export default function ApiLogsList() {
     dispatch(setReportHiddenColumns(arg))
   };
   
-  useEffect(() => {
-    const query = { apiType: 'MACHINE-INTEGRATION' }; 
+  const onHandleSubmit = (data) => {
+    const query = {
+      apiType: 'MACHINE-INTEGRATION',
+      createdAt: {
+        $gte: new Date(data.dateFrom).toISOString(),
+        $lte: new Date(data.dateTo).toISOString(),
+      },
+    };
+  
     if (filterRequestStatus !== -1) {
       if (filterRequestStatus === '200-299') {
         query.responseStatusCode = { $gte: 200, $lt: 300 };
@@ -133,9 +155,11 @@ export default function ApiLogsList() {
         query.responseStatusCode = filterRequestStatus;
       }
     }
+  
     if (filterRequestMethod !== 'default') {
       query.requestMethod = filterRequestMethod;
-    }  
+    }
+  
     dispatch(getApiLogs({
       machineId,
       orderBy: 'createdAt:desc',
@@ -143,15 +167,70 @@ export default function ApiLogsList() {
       page,
       pageSize: rowsPerPage,
     }));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, rowsPerPage, filterRequestStatus, filterRequestMethod]);
-  
+  }; 
   
   return (
       <Container maxWidth={false}>
         <Card sx={{mb: 3, height: 160, position: 'relative'}}>
           <Cover name="API Logs" generalSettings />
         </Card>
+        <FormProvider methods={methods} onSubmit={handleSubmit(onHandleSubmit)}>
+  <Grid container spacing={2}>
+    <Grid item xs={12}>
+      <Card sx={{ p: 3 }}>
+        <Stack spacing={2}>
+          <SearchBarCombo
+            apiLogsStatusFilter={filterRequestStatus}
+            onApiLogsStatusFilter={handleFilterRequestStatus}
+            apiLogsMethodFilter={filterRequestMethod}
+            onApiLogsMethodFilter={handleFilterRequestMethod}
+          />
+          <Box
+            sx={{
+              display: 'grid',
+              gap: 2,
+              gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr) 100px' }, 
+              alignItems: 'center',
+              width: '100%',
+            }}
+          >
+            <RHFDatePicker
+              label="Start Date"
+              name="dateFrom"
+              size="small"
+              value={dateFrom}
+              onChange={(newValue) => {
+                setValue('dateFrom', newValue);
+                trigger(['dateFrom', 'dateTo']);
+              }}
+            />
+            <RHFDatePicker
+              label="End Date"
+              name="dateTo"
+              size="small"
+              value={dateTo}
+              onChange={(newValue) => {
+                setValue('dateTo', newValue);
+                trigger(['dateFrom', 'dateTo']);
+              }}
+            />
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <LoadingButton
+                type="button"
+                onClick={handleSubmit(onHandleSubmit)}
+                variant="contained"
+                size="large"
+              >
+                Search
+              </LoadingButton>
+            </Box>
+          </Box>
+        </Stack>
+      </Card>
+    </Grid>
+  </Grid>
+</FormProvider>
+
         <TableCard>
           <ApiLogsListTableToolbar
             filterName={filterName}
@@ -159,10 +238,6 @@ export default function ApiLogsList() {
             onFilterStatus={handleFilterStatus}
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
-            filterRequestStatus={filterRequestStatus}
-            onFilterRequestStatus={handleFilterRequestStatus}
-            filterRequestMethod={filterRequestMethod}
-            onFilterRequestMethod={handleFilterRequestMethod}
           />
           {!isNotFound && (
           <TablePaginationFilter
