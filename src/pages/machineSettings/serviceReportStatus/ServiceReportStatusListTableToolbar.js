@@ -17,22 +17,16 @@ ServiceReportStatusListTableToolbar.propTypes = {
   filterName: PropTypes.string,
   onFilterName: PropTypes.func,
   onResetFilter: PropTypes.func,
-  filterStatus: PropTypes.array,
-  onFilterStatus: PropTypes.func,
-  statusOptions: PropTypes.array,
 };
 
 export default function ServiceReportStatusListTableToolbar({
   isFiltered,
   filterName,
-  filterStatus,
   onFilterName,
-  statusOptions,
   onResetFilter,
-  onFilterStatus,
 }) {
   const navigate = useNavigate();
-  const toggleAdd = () => navigate(PATH_MACHINE.machines.machineSettings.status.new);
+  const toggleAdd = () => navigate(PATH_MACHINE.machines.machineSettings.serviceReportsStatus.new);
 
   return (
     <Stack {...options}>
@@ -42,7 +36,7 @@ export default function ServiceReportStatusListTableToolbar({
         onChange={onFilterName}
         onClick={onResetFilter}
         SubOnClick={toggleAdd}
-        addButton={BUTTONS.ADDSTATUS}
+        addButton={BUTTONS.ADD_SERVICE_REPORT_STATUS}
         machineSettingPage
       />
     </Stack>

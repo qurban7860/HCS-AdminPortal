@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 // sections
 import ServiceReportStatusViewForm from './ServiceReportStatusViewForm';
-import { getMachineStatus} from '../../../redux/slices/products/statuses';
+import { getServiceReportStatus, resetServiceReportStatus } from '../../../redux/slices/products/serviceReportStatuses';
 
 // ----------------------------------------------------------------------
 
@@ -15,13 +15,16 @@ export default function ServiceReportStatusView() {
 
   useLayoutEffect(()=>{
     if(id){
-      dispatch(getMachineStatus(id))
+      dispatch(getServiceReportStatus(id))
+    }
+    return () => {
+      dispatch(resetServiceReportStatus())
     }
   },[dispatch, id ])
 
   return (
     <Container maxWidth={false}>
-      <StatusViewForm />
+      <ServiceReportStatusViewForm />
     </Container>
   );
 }

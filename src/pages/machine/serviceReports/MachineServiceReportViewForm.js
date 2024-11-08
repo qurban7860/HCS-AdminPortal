@@ -490,7 +490,7 @@ function MachineServiceReportViewForm( {serviceHistoryView} ) {
                 machineServiceReport?.approval?.approvingContacts?.length > 0 &&
                 machineServiceReport?.approval?.approvingContacts?.find(( c => c === user.contact)) && 
                 machineServiceReport?.currentApprovalStatus !== 'APPROVED' &&
-              <IconButtonTooltip title='Approve / Reject' icon="mdi:approve" onClick={handleCompleteConfirm} /> }
+              <IconButtonTooltip title='Approve / Reject' icon="mdi:list-status" onClick={handleCompleteConfirm} /> }
             </>
             }
           />

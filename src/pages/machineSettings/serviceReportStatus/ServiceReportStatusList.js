@@ -4,7 +4,6 @@ import debounce from 'lodash/debounce';
 // @mui
 import {
   Table,
-  Button,
   TableBody,
   Container,
   TableContainer,
@@ -13,16 +12,14 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 // routes
 import {
-  getMachinestatuses,
-  deleteMachinestatus,
+  getServiceReportStatuses,
+  resetServiceReportStatuses,
   ChangeRowsPerPage,
   ChangePage,
   setFilterBy,
-} from '../../../redux/slices/products/statuses';
+} from '../../../redux/slices/products/serviceReportStatuses';
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
-import { useSnackbar } from '../../../components/snackbar';
-// import { useSettingsContext } from '../../../components/settings';
 import {
   useTable,
   getComparator,
@@ -31,22 +28,19 @@ import {
   TableHeadCustom,
   TablePaginationCustom,
 } from '../../../components/table';
-// import Iconify from '../../../components/iconify/Iconify';
 import Scrollbar from '../../../components/scrollbar';
-import ConfirmDialog from '../../../components/confirm-dialog/ConfirmDialog';
-// sections
 import ServiceReportStatusListTableRow from './ServiceReportStatusListTableRow';
 import ServiceReportStatusListTableToolbar from './ServiceReportStatusListTableToolbar';
 import { Cover } from '../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
-import { fDate } from '../../../utils/formatTime';
+import { fDateTime } from '../../../utils/formatTime';
 import TableCard from '../../../components/ListTableTools/TableCard';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
-  { id: 'slug', visibility: 'xs1', label: 'Slug', align: 'left' },
+  { id: 'type', visibility: 'xs1', label: 'Type', align: 'left' },
   { id: 'displayOrderNo', visibility: 'xs1', label: 'Order Number', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
@@ -57,7 +51,6 @@ const TABLE_HEAD = [
 
 export default function ServiceReportStatusList() {
   const {
-    dense,
     // page,
     order,
     orderBy,
@@ -65,7 +58,6 @@ export default function ServiceReportStatusList() {
     setPage,
     //
     selected,
-    setSelected,
     onSelectRow,
     //
     onSort,
@@ -76,23 +68,13 @@ export default function ServiceReportStatusList() {
 
   const dispatch = useDispatch();
 
-  // const { themeStretch } = useSettingsContext();
-
-  const { enqueueSnackbar } = useSnackbar();
-
   const navigate = useNavigate();
 
   const [filterName, setFilterName] = useState('');
 
   const [tableData, setTableData] = useState([]);
 
-  const [filterStatus, setFilterStatus] = useState([]);
-
-  const [openConfirm, setOpenConfirm] = useState(false);
-
-  const { machinestatuses, filterBy, page, rowsPerPage, isLoading, error, initial, responseMessage } = useSelector(
-    (state) => state.machinestatus
-  );
+  const { serviceReportStatuses, filterBy, page, rowsPerPage, isLoading  } = useSelector( (state) => state.serviceReportStatuses );
 
     
   const onChangeRowsPerPage = (event) => {
@@ -103,34 +85,27 @@ export default function ServiceReportStatusList() {
   const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
 
   useLayoutEffect(() => {
-    dispatch(getMachinestatuses());
+    dispatch(getServiceReportStatuses());
+    return () => {
+      dispatch(resetServiceReportStatuses())
+    }
   }, [dispatch]);
 
   useEffect(() => {
-    if (initial) {
-      setTableData(machinestatuses);
+    if (Array.isArray(serviceReportStatuses)) {
+      setTableData(serviceReportStatuses);
     }
-  }, [machinestatuses, error, responseMessage, enqueueSnackbar, initial]);
+  }, [ serviceReportStatuses ]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(order, orderBy),
     filterName,
-    filterStatus,
   });
 
-  const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-
-  const denseHeight = dense ? 60 : 80;
-
-  const isFiltered = filterName !== '' || !!filterStatus.length;
+  const isFiltered = filterName !== '';
 
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
-
-  const handleCloseConfirm = () => {
-    setOpenConfirm(false);
-  };
-
 
   const debouncedSearch = useRef(debounce((value) => {
     dispatch(ChangePage(0))
@@ -149,31 +124,9 @@ export default function ServiceReportStatusList() {
   
   useEffect(()=>{
       setFilterName(filterBy)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[])
+  },[ filterBy ])
 
-  const handleFilterStatus = (event) => {
-    setPage(0);
-    setFilterStatus(event.target.value);
-  };
-
-  const handleDeleteRow = async (id) => {
-    await dispatch(deleteMachinestatus(id));
-    try {
-      dispatch(getMachinestatuses());
-      setSelected([]);
-      if (page > 0) {
-        if (dataInPage.length < 2) {
-          setPage(page - 1);
-        }
-      }
-    } catch (err) {
-      console.log(err.message);
-    }
-  };
-
-  const handleViewRow = (id) => navigate(PATH_MACHINE.machines.machineSettings.status.view(id));
-
+  const handleViewRow = (id) => navigate(PATH_MACHINE.machines.machineSettings.serviceReportsStatus.view(id));
 
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
@@ -183,14 +136,12 @@ export default function ServiceReportStatusList() {
   return (
       <Container maxWidth={false}>
         <StyledCardContainer>
-          <Cover name="Service report Statuses" icon="material-symbols:list-alt-outline" setting />
+          <Cover name="Service Report Statuses" icon="material-symbols:list-alt-outline" setting />
         </StyledCardContainer>
         <TableCard>
           <ServiceReportStatusListTableToolbar
             filterName={filterName}
-            filterStatus={filterStatus}
             onFilterName={handleFilterName}
-            onFilterStatus={handleFilterStatus}
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
           />
@@ -202,23 +153,6 @@ export default function ServiceReportStatusList() {
             onRowsPerPageChange={onChangeRowsPerPage}
           />}
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            {/* <TableSelectedAction
-              numSelected={selected.length}
-              rowCount={tableData.length}
-              onSelectAllRows={(checked) =>
-                onSelectAllRows(
-                  checked,
-                  tableData.map((row) => row._id)
-                )
-              }
-              action={
-                <Tooltip title="Delete">
-                  <IconButton color="primary" onClick={handleOpenConfirm}>
-                    <Iconify icon="eva:trash-2-outline" />
-                  </IconButton>
-                </Tooltip>
-              }
-            /> */}
 
             <Scrollbar>
               <Table size="small" sx={{ minWidth: 360 }}>
@@ -226,15 +160,7 @@ export default function ServiceReportStatusList() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  // rowCount={tableData.length}
-                  // numSelected={selected.length}
                   onSort={onSort}
-                  // onSelectAllRows={(checked) =>
-                  //   onSelectAllRows(
-                  //     checked,
-                  //     tableData.map((row) => row._id)
-                  //   )
-                  // }
                 />
 
                 <TableBody>
@@ -247,12 +173,10 @@ export default function ServiceReportStatusList() {
                           row={row}
                           selected={selected.includes(row._id)}
                           onSelectRow={() => onSelectRow(row._id)}
-                          onDeleteRow={() => handleDeleteRow(row._id)}
-                          // onEditRow={() => handleEditRow(row._id)}
                           onViewRow={() => handleViewRow(row._id)}
                         />
                       ) : (
-                        !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
+                        !isNotFound && <TableSkeleton key={index} />
                       )
                     )}
                   <TableNoData isNotFound={isNotFound} />
@@ -275,7 +199,7 @@ export default function ServiceReportStatusList() {
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName, filterStatus }) {
+function applyFilter({ inputData, comparator, filterName }) {
   const stabilizedThis = inputData ? inputData?.map((el, index) => [el, index]) : [];
 
   stabilizedThis.sort((a, b) => {
@@ -288,15 +212,14 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
 
   if (filterName) {
     inputData = inputData.filter(
-      (filterstatus) =>
-        filterstatus?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        // (filterstatus?.isActive ? "Active" : "InActive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
-        fDate(filterstatus?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+      ( status ) =>
+          status?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+          status?.type?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+          status?.description?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+          status?.displayOrderNo?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        ( status?.isActive ? "Active" : "InActive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+        fDateTime( status?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
-  }
-
-  if (filterStatus.length) {
-    inputData = inputData.filter((customer) => filterStatus.includes(customer.status));
   }
 
   return inputData;

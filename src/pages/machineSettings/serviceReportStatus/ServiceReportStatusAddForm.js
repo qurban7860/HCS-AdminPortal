@@ -10,7 +10,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Box, Card, Grid, Stack, Container } from '@mui/material';
 // slice
-import { addMachineStatus } from '../../../redux/slices/products/statuses';
+import { addServiceReportStatus } from '../../../redux/slices/products/serviceReportStatuses';
 // routes
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
@@ -46,11 +46,12 @@ export default function ServiceReportStatusAddForm() {
   const defaultValues = useMemo(
     () => ({
       name: '',
+      type: "",
+      displayOrderNo: '',
       description: '',
       isActive: true,
       isDefault: false,
       createdAt: '',
-      displayOrderNo: '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -69,17 +70,17 @@ export default function ServiceReportStatusAddForm() {
 
   const onSubmit = async (data) => {
     try {
-      await dispatch(addMachineStatus(data));
+      await dispatch(addServiceReportStatus(data));
       reset();
       enqueueSnackbar('Service Report Status created successfully!');
-      navigate(PATH_MACHINE.machines.machineSettings.status.root);
+      navigate(PATH_MACHINE.machines.machineSettings.serviceReportsStatus.root);
     } catch (error) {
       enqueueSnackbar(error?.message || "Service Report Status create failed!", { variant: `error` });
       console.error(error);
     }
   };
 
-  const toggleCancel = () => navigate(PATH_MACHINE.machines.machineSettings.status.root);
+  const toggleCancel = () => navigate(PATH_MACHINE.machines.machineSettings.serviceReportsStatus.root);
 
   return (
     <Container maxWidth={false}>
@@ -98,9 +99,9 @@ export default function ServiceReportStatusAddForm() {
                   gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
                 >
                   <RHFTextField name="name" label="Name*"/>
-                  <RHFTextField name="description" label="Description" minRows={7} multiline />
+                  <RHFTextField name="type" label="Type" />
                   <RHFTextField name="displayOrderNo" label="Display Order No." />
-                  <RHFTextField name="slug" label="Slug" />
+                  <RHFTextField name="description" label="Description" minRows={7} multiline />
 
                 <Grid display="flex">
                   <RHFSwitch name="isActive" label="Active" />

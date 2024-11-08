@@ -28,12 +28,12 @@ export default function ServiceReportStatusListTableRow({
 
   const smScreen = useScreenSize('sm')
 
-  const { name, slug, displayOrderNo, isActive, isDefault, createdAt } = row;
+  const { name, type, displayOrderNo, isActive, isDefault, createdAt } = row;
 
   return (
       <TableRow hover selected={selected}>
         <LinkTableCell onClick={onViewRow} align="left" param={name} isDefault={isDefault} />
-        { smScreen &&<TableCell align="left" >{slug}</TableCell>}
+        { smScreen &&<TableCell align="left" >{type}</TableCell>}
         <TableCell align="left" >{displayOrderNo}</TableCell>
         <TableCell align="center">
           <Switch checked={isActive} disabled size="small" sx={{ my: -1 }} />{' '}
