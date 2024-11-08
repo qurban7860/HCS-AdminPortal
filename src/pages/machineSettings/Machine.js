@@ -29,6 +29,7 @@ export default function Machine() {
   const linkCheckItemCategory = () => navigate(PATH_MACHINE.machines.machineSettings.checkItemCategories.root);
   const checkItems = () => navigate(PATH_MACHINE.machines.machineSettings.checkItems.root);
   const linkServiceReportsTemplate = () => navigate(PATH_MACHINE.machines.machineSettings.serviceReportsTemplate.root);
+  const linkServiceReportsStatus = () => navigate(PATH_MACHINE.machines.machineSettings.serviceReportsStatus.root);
 
   return (
     <Container maxWidth={false}>
@@ -96,6 +97,11 @@ export default function Machine() {
                   onClick={linkServiceReportsTemplate}
                   icon={ICONS.TOOLS.icon}
                   content={ICONS.MACHINE_SERVICE_REPORT_CONFIG.heading}
+                />
+                <ListItem
+                  onClick={linkServiceReportsStatus}
+                  icon={ICONS.SERVICE_REPORT_STATUS.icon}
+                  content={ICONS.SERVICE_REPORT_STATUS.heading}
                 />
               </List>
           </StyledSettingsCardContainer>

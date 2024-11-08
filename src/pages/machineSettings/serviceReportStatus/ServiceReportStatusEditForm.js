@@ -8,7 +8,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Box, Card, Grid, Stack, } from '@mui/material';
 // slice
-import { updateMachinestatus, getMachineStatus } from '../../../redux/slices/products/statuses';
+import { updateServiceReportStatus } from '../../../redux/slices/products/serviceReportStatuses';
 // routes
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
@@ -21,7 +21,7 @@ import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 // ----------------------------------------------------------------------
 
 export default function ServiceReportStatusEditForm() {
-  const {  machinestatus } = useSelector((state) => state.machinestatus);
+  const {  serviceReportStatus } = useSelector((state) => state.serviceReportStatuses);
 
   const dispatch = useDispatch();
 
@@ -32,27 +32,27 @@ export default function ServiceReportStatusEditForm() {
 
   const serviceReportStatusSchema = Yup.object().shape({
     name: Yup.string().min(2).max(50).required('Name is required'),
+    displayOrderNo: Yup.number()
+    .typeError('Display Order No. must be a number')
+    .nullable()
+    .transform((_, val) => (val !== '' ? Number(val) : null)),
+    type: Yup.string().max(50),
     description: Yup.string().max(5000),
     isActive: Yup.boolean(),
     isDefault: Yup.boolean(),
-    displayOrderNo: Yup.number()
-      .typeError('Display Order No. must be a number')
-      .nullable()
-      .transform((_, val) => (val !== '' ? Number(val) : null)),
-      slug: Yup.string().min(0).max(50).matches(/^(?!.*\s)[\S\s]{0,50}$/, 'Slug field cannot contain blankspaces'),
   });
 
   const defaultValues = useMemo(
     () => ({
-      name: machinestatus?.name || '',
-      description: machinestatus?.description || '',
-      displayOrderNo: machinestatus?.displayOrderNo || '',
-      slug: machinestatus?.slug || '',
-      isActive: machinestatus.isActive,
-      isDefault: machinestatus?.isDefault || false,
+      name: serviceReportStatus?.name || '',
+      description: serviceReportStatus?.description || '',
+      displayOrderNo: serviceReportStatus?.displayOrderNo || '',
+      type: serviceReportStatus?.type || '',
+      isActive: serviceReportStatus.isActive,
+      isDefault: serviceReportStatus?.isDefault || false,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [machinestatus]
+    [serviceReportStatus]
   );
 
   const methods = useForm({
@@ -66,27 +66,23 @@ export default function ServiceReportStatusEditForm() {
     formState: { isSubmitting },
   } = methods;
 
-  useLayoutEffect(() => {
-    dispatch(getMachineStatus(id));
-  }, [dispatch, id]);
-
   useEffect(() => {
-    if (machinestatus) {
+    if (serviceReportStatus) {
       reset(defaultValues);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [machinestatus]);
+  }, [serviceReportStatus]);
 
-  const toggleCancel = () => navigate(PATH_MACHINE.machines.machineSettings.status.view(id));
+  const toggleCancel = () => navigate(PATH_MACHINE.machines.machineSettings.serviceReportsStatus.view(id));
 
   const onSubmit = async (data) => {
     try {
-      await dispatch(updateMachinestatus(data, id));
+      await dispatch(updateServiceReportStatus(data, id));
       reset();
-      enqueueSnackbar('Update success!');
-      navigate(PATH_MACHINE.machines.machineSettings.status.view(id));
+      enqueueSnackbar('Status Updated successfully!');
+      navigate(PATH_MACHINE.machines.machineSettings.serviceReportsStatus.view(id));
     } catch (err) {
-      enqueueSnackbar('Saving failed!', { variant: `error` });
+      enqueueSnackbar('Status Update failed!', { variant: `error` });
       console.error(err.message);
     }
   };
@@ -96,7 +92,7 @@ export default function ServiceReportStatusEditForm() {
       <Grid container spacing={4}>
         <Grid item xs={18} md={12}>
           <StyledCardContainer>
-            <Cover name="Edit Status" icon="material-symbols:diversity-1-rounded" />
+            <Cover name="Edit Service Report Status" icon="fluent-mdl2:sync-status-solid" />
           </StyledCardContainer>
           <Card sx={{ p: 3 }}>
             <Stack spacing={3}>
@@ -109,7 +105,7 @@ export default function ServiceReportStatusEditForm() {
                 <RHFTextField name="name" label="Name" />
                 <RHFTextField name="description" label="Description" minRows={7} multiline />
                 <RHFTextField name="displayOrderNo" label="Display Order No." type="number" />
-                <RHFTextField name="slug" label="Slug" />
+                <RHFTextField name="type" label="Type" />
 
                 <Grid display="flex">
                 <RHFSwitch name="isActive" label="Active" />

@@ -9,7 +9,7 @@ import { Card, Grid } from '@mui/material';
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import { deleteMachinestatus } from '../../../redux/slices/products/statuses';
+import { deleteServiceReportStatus } from '../../../redux/slices/products/serviceReportStatuses';
 // Iconify
 // import Iconify from '../../../components/iconify/Iconify';
 import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
@@ -20,51 +20,51 @@ import { StyledCardContainer } from '../../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
 
-export default function ServiceReportStatusViewForm({ currentMachinestatus = null }) {
+export default function ServiceReportStatusViewForm( ) {
   const navigate = useNavigate();
 
   const { enqueueSnackbar } = useSnackbar();
-  const { machinestatus, isLoading } = useSelector((state) => state.machinestatus);
+  const { serviceReportStatus, isLoading } = useSelector((state) => state.serviceReportStatuses);
   const { id } = useParams();
   const dispatch = useDispatch();
 
   const defaultValues = useMemo(
     () => ({
-      name: machinestatus?.name || '',
-      order: machinestatus?.order || '',
-      description: machinestatus?.description || '',
-      displayOrderNo: machinestatus?.displayOrderNo || '',
-      slug: machinestatus?.slug || '',
-      isActive: machinestatus?.isActive,
-      isDefault: machinestatus?.isDefault,
-      createdByFullName: machinestatus?.createdBy?.name || '',
-      createdAt: machinestatus?.createdAt || '',
-      createdIP: machinestatus?.createdIP || '',
-      updatedByFullName: machinestatus?.updatedBy?.name || '',
-      updatedAt: machinestatus?.updatedAt || '',
-      updatedIP: machinestatus?.updatedIP || '',
+      name: serviceReportStatus?.name || '',
+      order: serviceReportStatus?.order || '',
+      description: serviceReportStatus?.description || '',
+      displayOrderNo: serviceReportStatus?.displayOrderNo || '',
+      type: serviceReportStatus?.type || '',
+      isActive: serviceReportStatus?.isActive,
+      isDefault: serviceReportStatus?.isDefault,
+      createdByFullName: serviceReportStatus?.createdBy?.name || '',
+      createdAt: serviceReportStatus?.createdAt || '',
+      createdIP: serviceReportStatus?.createdIP || '',
+      updatedByFullName: serviceReportStatus?.updatedBy?.name || '',
+      updatedAt: serviceReportStatus?.updatedAt || '',
+      updatedIP: serviceReportStatus?.updatedIP || '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentMachinestatus, machinestatus]
+    [ serviceReportStatus]
   );
 
   const onDelete = () => {
     try {
-      dispatch(deleteMachinestatus(id));
-      navigate(PATH_MACHINE.machines.machineSettings.status.root);
+      dispatch(deleteServiceReportStatus(id));
+      navigate(PATH_MACHINE.machines.machineSettings.serviceReportsStatus.root);
     } catch (err) {
       enqueueSnackbar('Status Archive failed!', { variant: `error` });
       console.log('Error:', err);
     }
   };
 
-  const toggleEdit = () => navigate(PATH_MACHINE.machines.machineSettings.status.edit(id));
+  const toggleEdit = () => navigate(PATH_MACHINE.machines.machineSettings.serviceReportsStatus.edit(id));
 
   return (
   <Grid>
     <StyledCardContainer>
       <Cover
-        name={machinestatus?.name}
+        name={serviceReportStatus?.name}
         setting
         />
     </StyledCardContainer>
@@ -74,7 +74,7 @@ export default function ServiceReportStatusViewForm({ currentMachinestatus = nul
         isDefault={defaultValues.isDefault} 
         handleEdit={toggleEdit} 
         onDelete={onDelete} b
-        backLink={() => navigate(PATH_MACHINE.machines.machineSettings.status.root)} 
+        backLink={() => navigate(PATH_MACHINE.machines.machineSettings.serviceReportsStatus.root)} 
         machineSettingPage
         />
       <Grid container sx={{mt:2}}>
@@ -85,7 +85,7 @@ export default function ServiceReportStatusViewForm({ currentMachinestatus = nul
           heading="Display Order No."
           param={defaultValues?.displayOrderNo?.toString()}
           />
-        <ViewFormField isLoading={isLoading} sm={12} heading="Slug" param={defaultValues?.slug} />
+        <ViewFormField isLoading={isLoading} sm={12} heading="Type" param={defaultValues?.type} />
         <ViewFormField isLoading={isLoading} sm={12} heading="Order Number" param={defaultValues?.order} />
         <Grid container>
           <ViewFormAudit defaultValues={defaultValues} />

@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 // @mui
 import { useDispatch } from 'react-redux';
 import { Container } from '@mui/material';
-import { getMachineStatus} from '../../../redux/slices/products/statuses';
+import { getServiceReportStatus, resetServiceReportStatus } from '../../../redux/slices/products/serviceReportStatuses';
 import ServiceReportStatusEditForm from './ServiceReportStatusEditForm';
 
 // ----------------------------------------------------------------------
@@ -15,7 +15,10 @@ export default function StatusEdit() {
   const { id } = useParams(); 
 
   useLayoutEffect(() => {
-     dispatch(getMachineStatus(id));
+     dispatch(getServiceReportStatus(id));
+     return () => {
+      dispatch( resetServiceReportStatus() )
+     }
   }, [dispatch, id]);
 
   

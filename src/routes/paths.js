@@ -339,6 +339,13 @@ export const PATH_MACHINE = {
         edit: (id) => path(ROOTS_MACHINE, `/machines/machineSettings/serviceReportsTemplate/${id}/edit`),
       },
       // --------------------- MACHINE status -----------------------
+      serviceReportsStatus: {
+        root: path(ROOTS_MACHINE, '/machines/machineSettings/serviceReportsStatus'),
+        new: path(ROOTS_MACHINE, '/machines/machineSettings/serviceReportsStatus/new'),
+        view: (id) => path(ROOTS_MACHINE, `/machines/machineSettings/serviceReportsStatus/${id}/view`),
+        edit: (id) => path(ROOTS_MACHINE, `/machines/machineSettings/serviceReportsStatus/${id}/edit`),
+      },
+      // --------------------- MACHINE status -----------------------
       status: {
         root: path(ROOTS_MACHINE, '/machines/machineSettings/status'),
         new: path(ROOTS_MACHINE, '/machines/machineSettings/status/new'),

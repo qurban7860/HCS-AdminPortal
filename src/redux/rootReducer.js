@@ -39,6 +39,7 @@ import configReducer from './slices/config/config';
 import checkItemsReducer from './slices/products/machineCheckItems'
 import machineServiceReportReducer from './slices/products/machineServiceReport';
 import serviceReportTemplateReducer from './slices/products/serviceReportTemplate';
+import serviceReportStatusesReducer from './slices/products/serviceReportStatuses';
 import serviceCategoryReducer from './slices/products/serviceCategory';
 import userInviteReducer from './slices/securityUser/invite';
 import blockedCustomerReducer from './slices/securityConfig/blockedCustomers';
@@ -169,6 +170,12 @@ export const machineNotePersistConfig = {
 
 export const machinestatusPersistConfig = {
   key: 'machinestatus',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+};
+export const machineServiceReportStatusPersistConfig = {
+  key: 'serviceReportStatuses',
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
@@ -477,6 +484,7 @@ const rootReducer = combineReducers({
   drawing: persistReducer(drawingPersistConfig, drawingReducer),
   config: persistReducer(configPersistConfig, configReducer),
   serviceReportTemplate: persistReducer(serviceReportTemplatePersistConfig, serviceReportTemplateReducer),
+  serviceReportStatuses: persistReducer(machineServiceReportStatusPersistConfig, serviceReportStatusesReducer),
   checkItems: persistReducer(checkItemsPersistConfig, checkItemsReducer),
   machineServiceReport: persistReducer(machineServiceReportPersistConfig, machineServiceReportReducer),
   serviceCategory: persistReducer(serviceCategoryPersistConfig, serviceCategoryReducer),
