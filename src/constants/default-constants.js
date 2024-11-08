@@ -230,6 +230,7 @@ export const BUTTONS = {
   ADD_CHECK_ITEM_CATEGORY: 'Add Category',
   ADD_SERVICE_CHECK_ITEM: 'Add Check Item',
   ADD_MACHINE_SERVICE_CONFIG: 'Add New Template',
+  ADD_SERVICE_REPORT_STATUS: "Add Service Report Status",
   ADD_MACHINE_SERVICE_REPORT: 'Add Service Report',
   ADD_MACHINE_INI: 'Add INI',
   ADD_MACHINE_LOGS: 'Add New Log',

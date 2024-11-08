@@ -75,7 +75,7 @@ export default function ServiceReportStatusAddForm() {
       enqueueSnackbar('Service Report Status created successfully!');
       navigate(PATH_MACHINE.machines.machineSettings.serviceReportsStatus.root);
     } catch (error) {
-      enqueueSnackbar(error?.message || "Service Report Status create failed!", { variant: `error` });
+      enqueueSnackbar(typeof error === 'string' && error || "Service Report Status create failed!", { variant: `error` });
       console.error(error);
     }
   };
