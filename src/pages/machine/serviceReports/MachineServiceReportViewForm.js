@@ -126,6 +126,7 @@ function MachineServiceReportViewForm( {serviceHistoryView} ) {
   }
 
   const handleCurrentServiceReport = () => {
+    console.log("currentVersion?._id : ",machineServiceReport?.currentVersion?._id)
     navigate(PATH_MACHINE.machines.serviceReports.view( machineId, machineServiceReport?.currentVersion?._id ))
   }
 
@@ -440,7 +441,7 @@ function MachineServiceReportViewForm( {serviceHistoryView} ) {
           <FormLabel content={FORMLABELS.KEYDETAILS} />
           <ViewFormField isLoading={isLoading} variant='h4' sm={2} heading="Service Date" 
             param={fDate(defaultValues.serviceDate)} />
-          <ViewFormField isLoading={isLoading} variant='h4' sm={6} heading="Service Report Configuration" 
+          <ViewFormField isLoading={isLoading} variant='h4' sm={6} heading="Service Report Template" 
             param={`${defaultValues.serviceReportTemplate} ${defaultValues.serviceReportTemplateReportType ? '-' : ''} ${defaultValues.serviceReportTemplateReportType ? defaultValues.serviceReportTemplateReportType : ''}`} />
           <ViewFormField
               isLoading={isLoading}
@@ -451,10 +452,12 @@ function MachineServiceReportViewForm( {serviceHistoryView} ) {
                 <>
                   {defaultValues?.versionNo}
                   {(machineServiceReport?.isHistory ||
-                    machineServiceReport?.status === 'DRAFT') && (
+                    machineServiceReport?.status === 'DRAFT') &&
+                    machineServiceReport?.currentVersion?._id && (
                     <CurrentIcon callFunction={handleCurrentServiceReport} />
                   )}
                   {!machineServiceReport?.isHistory &&
+                    machineServiceReport?.currentVersion?.versionNo && 
                     machineServiceReport?.currentVersion?.versionNo > 1 &&
                     machineServiceReport?.primaryServiceReportId && (
                       <HistoryIcon callFunction={handleServiceReportHistory} />
@@ -481,13 +484,13 @@ function MachineServiceReportViewForm( {serviceHistoryView} ) {
                 machineServiceReport?.currentVersion?._id === machineServiceReport?._id &&
                 machineServiceReport?.currentApprovalStatus !== 'APPROVED' &&
                 machineServiceReport?.approval?.approvingContacts?.length < 1 &&
-                <IconButtonTooltip title='Request Approval' icon="streamline:send-email-solid" onClick={handleCompleteConfirm} /> 
+                <IconButtonTooltip title='Request Approval' icon="mdi:email-seal" onClick={handleCompleteConfirm} /> 
               }
               { Array.isArray(machineServiceReport?.approval?.approvingContacts) &&
                 machineServiceReport?.approval?.approvingContacts?.length > 0 &&
                 machineServiceReport?.approval?.approvingContacts?.find(( c => c === user.contact)) && 
                 machineServiceReport?.currentApprovalStatus !== 'APPROVED' &&
-              <IconButtonTooltip title='Approve / Reject' icon="mdi:stamper" onClick={handleCompleteConfirm} /> }
+              <IconButtonTooltip title='Approve / Reject' icon="mdi:list-status" onClick={handleCompleteConfirm} /> }
             </>
             }
           />
@@ -560,7 +563,7 @@ function MachineServiceReportViewForm( {serviceHistoryView} ) {
               {machineServiceReportCheckItems?.checkItemLists?.map((row, index) => (
                 <CheckedItemValueRow
                   machineId={machineId}
-                  primaryServiceReportId={machineServiceReport._id}
+                  primaryServiceReportId={machineServiceReport?.primaryServiceReportId	}
                   value={row}
                   index={index}
                   key={row._id}

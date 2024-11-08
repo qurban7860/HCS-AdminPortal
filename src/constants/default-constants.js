@@ -53,8 +53,8 @@ export const FORMLABELS = {
     MACHINE_CHECK_ITEM_SERVICE_PARAM_ADD: 'New Check Item',
     MACHINE_CHECK_ITEM_SERVICE_PARAM_EDIT: 'Edit Check Item',
     MACHINE_CHECK_ITEM_SERVICE_CONFIGS: 'Service Report Template',
-    MACHINE_CHECK_ITEM_SERVICE_CONFIGS_ADD: 'New Service Report Template',
-    MACHINE_CHECK_ITEM_SERVICE_CONFIGS_EDIT: 'Edit Service Report Template',
+    MACHINE_CHECK_ITEM_SERVICE_CONFIGS_ADD: 'New Service Template',
+    MACHINE_CHECK_ITEM_SERVICE_CONFIGS_EDIT: 'Edit Service Template',
     MACHINE_CHECK_ITEM_SERVICE_REPORTS: 'Check Items Service Reports',
     MACHINE_CHECK_ITEM_SERVICE_REPORT_ADD: 'New Check Items Service Report',
     MACHINE_CHECK_ITEM_SERVICE_CHECK_PARAM_REPORT_ADD: 'New Check Items Service Parameter',
@@ -229,7 +229,8 @@ export const BUTTONS = {
   // MACHINE SETTINGS
   ADD_CHECK_ITEM_CATEGORY: 'Add Category',
   ADD_SERVICE_CHECK_ITEM: 'Add Check Item',
-  ADD_MACHINE_SERVICE_CONFIG: 'Add Configuration',
+  ADD_MACHINE_SERVICE_CONFIG: 'Add New Template',
+  ADD_SERVICE_REPORT_STATUS: "Add Service Report Status",
   ADD_MACHINE_SERVICE_REPORT: 'Add Service Report',
   ADD_MACHINE_INI: 'Add INI',
   ADD_MACHINE_LOGS: 'Add New Log',
@@ -318,8 +319,8 @@ export const TOGGLE = {
 export const Snacks = {
   configuration_Verification_Success: 'Verification Success',
   configuration_Verification_Failed: 'Verification Failed!',
-  configuration_approve_Success: 'Document approved Successfully!',
-  configuration_approve_Failed: 'Document approve Failed!',
+  configuration_approve_Success: 'Template approved Successfully!',
+  configuration_approve_Failed: 'Template approve Failed!',
   // auth: reset
   password_changed: 'Password update Successful',
   password_change_failed: 'Password update Failed'

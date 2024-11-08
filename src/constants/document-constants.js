@@ -327,6 +327,7 @@ export const FORMLABELS = {
     NEARBY_MILESTONE: 'Nearby Milestone',
   },
   INTEGRATION: {
-    MAIN_HEADER: 'Portal Integration Details'
+    MAIN_HEADER: 'Portal Integration Details',
+    SYNC_LOGS_HISTORY: 'Machine Sync Connection Logs',
   }
 };

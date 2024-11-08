@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useMemo, useState, useEffect, memo } from 'react';
+import { useMemo, useState, useLayoutEffect, memo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 // form
@@ -11,7 +11,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
 import { Alert, Box, IconButton, InputAdornment, Stack, Typography, Grid } from '@mui/material';
 import { useSnackbar } from 'notistack';
-import { MuiTelInput } from 'mui-tel-input';
 import { StyledRoot, StyledContent } from '../layouts/login/styles';
 import FormProvider, { RHFPhoneInput, RHFTextField} from '../components/hook-form';
 import Iconify from '../components/iconify';
@@ -22,6 +21,8 @@ import {
   updateInvitedUser,
   verifyUserInvite,
 } from '../redux/slices/securityUser/securityUser';
+import { CONFIG } from '../config-global';
+
 
 // ----------------------------------------------------------------------
 
@@ -33,7 +34,7 @@ function UserInviteLanding() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
   const expired = new Date(expiry).getTime() > new Date().getTime();
-  const { verifiedInvite} = useSelector((state) => state.user);
+  const { verifiedInvite } = useSelector((state) => state.user);
   
   const ChangePassWordSchema = Yup.object().shape({
     fullName:Yup.string().trim().max(50, 'Name must be less than 50 characters').required('Name is required'),
@@ -55,7 +56,7 @@ function UserInviteLanding() {
       confirmPassword:'',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [verifiedInvite]
+    [ verifiedInvite ]
   );
 
   const methods = useForm({
@@ -63,7 +64,7 @@ function UserInviteLanding() {
     defaultValues,
   });
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if(expired){
       navigate(PATH_PAGE.expiredErrorPage);
     }else if (id && code) {
@@ -84,21 +85,30 @@ function UserInviteLanding() {
     formState: { isSubmitting, errors, isSubmitSuccessful},
   } = methods;
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setValue('customerName',verifiedInvite?.customerName || '')
     setValue('contactName',verifiedInvite?.contactName || '')
     setValue('fullName',verifiedInvite?.fullName || '')
     setValue('login',verifiedInvite?.login || '')
     setValue('email',verifiedInvite?.email || '')
+    setValue('phone',verifiedInvite?.phone || '')
   },[verifiedInvite, setValue])
 
   const onSubmit = async (data) => {
-    if (id) {
       try {
+        if( !id ){
+          navigate(PATH_PAGE.invalidErrorPage);
+        }
         await dispatch(updateInvitedUser(data, id));
         enqueueSnackbar('Password has been updated Successfully!');
         reset();
-        navigate(PATH_AUTH.login);
+        console.log("URL : ",CONFIG?.PORTAL_LOGIN_URL)
+        const url = CONFIG?.PORTAL_LOGIN_URL || "https://dev.portal.howickltd.com/auth/login"
+        if( verifiedInvite?.customerType?.toLowerCase() !== "sp" && url ){
+          window.open(url);
+        } else if(  verifiedInvite?.customerType?.toLowerCase() === "sp" ) {
+          navigate(PATH_AUTH.login);
+        }
       } catch (error) {
         if (error.Message) {
           enqueueSnackbar(error.Message, { variant: `error` });
@@ -109,9 +119,6 @@ function UserInviteLanding() {
         }
         console.log('Error:', error);
       }
-    }else{
-      navigate(PATH_PAGE.invalidErrorPage);
-    }
   };
 
   return (
@@ -165,7 +172,7 @@ function UserInviteLanding() {
             />
           </Box>
           <Box sx={{mt:3, display:'flex', justifyContent:"end"}}>
-            <LoadingButton size="large" type="submit" variant="contained" loading={isSubmitSuccessful || isSubmitting}
+            <LoadingButton size="large" type="submit" variant="contained" disabled={ isSubmitSuccessful } loading={ isSubmitting}
                     sx={{ bgcolor: '#10079F', color: 'white', '&:hover': { bgcolor: '#FFA200' }}} >Save
             </LoadingButton>
           </Box>

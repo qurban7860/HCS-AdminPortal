@@ -57,11 +57,11 @@ export default function SecurityUserTableRow({
           {login}
           {email?.trim() !== login?.trim() &&
               <StyledTooltip 
-              placement="top" 
-              disableFocusListener 
-              title={ email } 
-              tooltipcolor={ ICONS.EMAIL.color } 
-              color={ ICONS.EMAIL.color }
+                placement="top" 
+                disableFocusListener 
+                title={ email } 
+                tooltipcolor={ ICONS.EMAIL.color } 
+                color={ ICONS.EMAIL.color }
               >
                 <Iconify sx={{ ml: 0.5, height: 20, width: 20, mb: -0.5 }} icon={ICONS.EMAIL.icon} />
               </StyledTooltip>
@@ -73,7 +73,7 @@ export default function SecurityUserTableRow({
             {roles.map((obj, index) => (obj.roleType === 'SuperAdmin' ? <Chip key={index} label={obj.name} sx={{m:0.2}} color='secondary' /> : <Chip  key={index} label={obj.name} sx={{m:0.2}} />))}
           </TableCell>
         }
-        <TableCell align="center">
+        <TableCell align="left">
           {contact?.firstName && <StyledTooltip
             placement="top" 
             title={contact?.formerEmployee ? ICONS.FORMEREMPLOYEE.heading:ICONS.NOTFORMEREMPLOYEE.heading} 

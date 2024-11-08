@@ -44,9 +44,7 @@ function ViewFormEditDeleteButtons({
   settingPage,
   securityUserPage,
   transferredHistory,
-  apiLogs,
   // Handlers
-  handleClickOnApiLogs,
   handleVerification,
   handleVerificationTitle,
   onArchive,
@@ -403,16 +401,6 @@ function ViewFormEditDeleteButtons({
               icon={isActive?ICONS.ACTIVE.icon:ICONS.INACTIVE.icon}
             />
           }
-          {apiLogs!==undefined && apiLogs?.length > 0 &&
-            <Badge badgeContent={apiLogs?.length || '0' } color="info">
-              <IconTooltip
-                title={ICONS.APILOGS.heading}
-                color={ICONS.APILOGS.color}
-                icon={ICONS.APILOGS.icon}
-                onClick={handleClickOnApiLogs}
-                />
-            </Badge>
-          }
           {isIniRead!==undefined &&
             <IconTooltip
               title={isIniRead ? ICONS.READINI.heading:ICONS.NOTREADINI.heading}
@@ -696,7 +684,7 @@ function ViewFormEditDeleteButtons({
           />
         )}
 
-          {/* approve configuration */}
+          {/* approve template */}
           {approveHandler && !(approvers && approvers.length > 0 && approvers?.some((verified) => verified?.verifiedBy?._id === userId)) && <IconTooltip
           title="Approve"
           onClick={() => {
@@ -883,8 +871,8 @@ function ViewFormEditDeleteButtons({
       <ConfirmDialog
         open={openConfigDraftStatuConfirm}
         onClose={() => handleCloseConfirm('ChangeConfigStatusToDraft')}
-        title="Configuration Status"
-        content="Are you sure you want to change configuration status to DRAFT? "
+        title="Template Status"
+        content="Are you sure you want to change this template status to DRAFT? "
         action={
           <LoadingButton variant="contained"
             onClick={()=>{
@@ -900,8 +888,8 @@ function ViewFormEditDeleteButtons({
       <ConfirmDialog
         open={openConfigSubmittedStatuConfirm}
         onClose={() => handleCloseConfirm('ChangeConfigStatusToSubmitted')}
-        title="Configuration Status"
-        content="Do you want to submit it for Approval? "
+        title="Template Status"
+        content="Do you want to submit this template for Approval? "
         action={
           <LoadingButton variant="contained"
             onClick={()=>{
@@ -917,8 +905,8 @@ function ViewFormEditDeleteButtons({
   <ConfirmDialog
         open={openConfigApproveStatuConfirm}
         onClose={() => handleCloseConfirm('ChangeConfigStatusToApprove')}
-        title="Configuration Approval"
-        content="Are you sure you want to APPROVE configuration? "
+        title="Template Approval"
+        content="Are you sure you want to APPROVE this template? "
         action={
           <LoadingButton variant="contained"
             onClick={()=>{
@@ -1034,7 +1022,6 @@ ViewFormEditDeleteButtons.propTypes = {
   multiAuth:PropTypes.bool,
   currentEmp:PropTypes.bool,
   isRequired:PropTypes.bool,
-  handleClickOnApiLogs: PropTypes.func,
   handleTransfer: PropTypes.func,
   handleUpdatePassword: PropTypes.func,
   handleUserInvite: PropTypes.func,
@@ -1042,7 +1029,6 @@ ViewFormEditDeleteButtons.propTypes = {
   handleViewPDF: PropTypes.func,
   isInviteLoading:PropTypes.bool,
   handleEdit: PropTypes.func,
-  apiLogs: PropTypes.array,
   handleJiraNaviagte: PropTypes.func,
   onArchive: PropTypes.func,
   onRestore: PropTypes.func,
