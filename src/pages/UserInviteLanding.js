@@ -100,7 +100,7 @@ function UserInviteLanding() {
         enqueueSnackbar('Password has been updated Successfully!');
         reset();
         if( verifiedInvite?.customerType?.toLowerCase() !== "sp" && CONFIG?.PORTAL_LOGIN_URL ){
-          window.location.href = CONFIG?.PORTAL_LOGIN_URL;
+          window.open(CONFIG?.PORTAL_LOGIN_URL);
         } else if(  verifiedInvite?.customerType?.toLowerCase() === "sp" ) {
           navigate(PATH_AUTH.login);
         }
