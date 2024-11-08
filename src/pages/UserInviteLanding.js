@@ -94,15 +94,17 @@ function UserInviteLanding() {
   },[verifiedInvite, setValue])
 
   const onSubmit = async (data) => {
-    if (id) {
       try {
+        if( !id ){
+          navigate(PATH_PAGE.invalidErrorPage);
+        }
         await dispatch(updateInvitedUser(data, id));
         enqueueSnackbar('Password has been updated Successfully!');
         reset();
-        console.log("PORTAL_LOGIN_URL : ",CONFIG?.PORTAL_LOGIN_URL)
-        if( verifiedInvite?.customerType?.toLowerCase() !== "sp" && CONFIG?.PORTAL_LOGIN_URL ){
-          const url = CONFIG?.PORTAL_LOGIN_URL || ""
-          window.open(url, '_blank');
+        console.log("URL : ",CONFIG?.PORTAL_LOGIN_URL)
+        const url = CONFIG?.PORTAL_LOGIN_URL || "https://dev.portal.howickltd.com/auth/login"
+        if( verifiedInvite?.customerType?.toLowerCase() !== "sp" && url ){
+          window.open(url);
         } else if(  verifiedInvite?.customerType?.toLowerCase() === "sp" ) {
           navigate(PATH_AUTH.login);
         }
@@ -116,9 +118,6 @@ function UserInviteLanding() {
         }
         console.log('Error:', error);
       }
-    }else{
-      navigate(PATH_PAGE.invalidErrorPage);
-    }
   };
 
   return (
@@ -172,7 +171,7 @@ function UserInviteLanding() {
             />
           </Box>
           <Box sx={{mt:3, display:'flex', justifyContent:"end"}}>
-            <LoadingButton size="large" type="submit" variant="contained" loading={isSubmitSuccessful || isSubmitting}
+            <LoadingButton size="large" type="submit" variant="contained" disabled={ isSubmitSuccessful } loading={ isSubmitting}
                     sx={{ bgcolor: '#10079F', color: 'white', '&:hover': { bgcolor: '#FFA200' }}} >Save
             </LoadingButton>
           </Box>

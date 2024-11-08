@@ -18,6 +18,7 @@ function PortalRequestDialog() {
         contactPersonName: portalRegistration?.contactPersonName || "",
         email: portalRegistration?.email || "",
         phoneNumber: portalRegistration?.phoneNumber || "",
+        country: portalRegistration?.country || "",
         address: portalRegistration?.address || "",
         customerNote: portalRegistration?.customerNote || "",
         machineSerialNos: Array.isArray(portalRegistration?.machineSerialNos) ? portalRegistration?.machineSerialNos : [],
@@ -64,7 +65,7 @@ function PortalRequestDialog() {
 
           <ViewFormField isLoading={isLoading} sm={6} heading="Email" param={ defaultValues?.email}/>
           <ViewFormField isLoading={isLoading} sm={6} heading='Phone Number' param={defaultValues?.phoneNumber} />
-          <ViewFormField isLoading={isLoading} sm={6} heading="country" param={defaultValues?.country } />
+          <ViewFormField isLoading={isLoading} sm={6} heading="Country" param={defaultValues?.country } />
           <ViewFormField isLoading={isLoading} sm={12} heading='Customer Note' param={defaultValues?.customerNote} />
           <ViewFormField isLoading={isLoading} sm={12} heading='Internal Note' param={defaultValues?.internalNote} />
         </Grid>
