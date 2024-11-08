@@ -43,6 +43,8 @@ function SearchBarCombo({
   onApiLogsStatusFilter,
   apiLogsMethodFilter,
   onApiLogsMethodFilter,
+  apiLogsTypeFilter,
+  onApiLogsTypeFilter,
   onChange,
   onClick,
   SubOnClick,
@@ -509,7 +511,7 @@ function SearchBarCombo({
             />
           </Grid> }
           
-          {onApiLogsStatusFilter && onApiLogsMethodFilter && <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: '1fr', sm: 'repeat(2, 1fr)' }} sx={{ flexGrow: 1, width: { xs: '100%', sm: '100%' } }}>
+          {onApiLogsStatusFilter && onApiLogsMethodFilter && <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: '1fr', sm: 'repeat(3, 1fr)' }} sx={{ flexGrow: 1, width: { xs: '100%', sm: '100%' } }}>
           {onApiLogsStatusFilter && (
            <FormControl fullWidth>
             <InputLabel id="api-logs-status-label">Status</InputLabel>
@@ -541,6 +543,24 @@ function SearchBarCombo({
              <MenuItem value="default">All</MenuItem>
              <MenuItem value="GET">GET</MenuItem>
              <MenuItem value="POST">POST</MenuItem>
+            </Select>
+           </FormControl>
+          )}
+          {onApiLogsTypeFilter && (
+           <FormControl fullWidth>
+            <InputLabel id="api-logs-type-label">API Type</InputLabel>
+            <Select
+              labelId="api-logs-type-label"
+              id="api-logs-type"
+              size="small"
+              value={apiLogsTypeFilter}
+              label="Type"
+              onChange={onApiLogsTypeFilter}
+            >
+             <MenuItem value="ALL">All</MenuItem>
+             <MenuItem value="MACHINE-INTEGRATION">MACHINE-INTEGRATION</MenuItem>
+             <MenuItem value="INI">INI</MenuItem>
+             <MenuItem value="OTHER">OTHER</MenuItem>
             </Select>
            </FormControl>
           )}</Box> }
@@ -860,6 +880,8 @@ SearchBarCombo.propTypes = {
   onApiLogsStatusFilter:PropTypes.func,
   apiLogsMethodFilter:PropTypes.string,
   onApiLogsMethodFilter:PropTypes.func,
+  apiLogsTypeFilter:PropTypes.string,
+  onApiLogsTypeFilter:PropTypes.func,
   transferredMachine:PropTypes.bool,
   handleAttach: PropTypes.func,
   radioStatus: PropTypes.bool,
