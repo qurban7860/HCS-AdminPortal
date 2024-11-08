@@ -11,7 +11,7 @@ import { PATH_SECURITY } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFSwitch, RHFTextField, RHFAutocomplete, RHFPhoneInput } from '../../../components/hook-form';
-// slice
+import FormLabel from '../../../components/DocumentForms/FormLabel';
 import { updateSecurityUser } from '../../../redux/slices/securityUser/securityUser';
 import { getAllActiveCustomers, resetAllActiveCustomers } from '../../../redux/slices/customer/customer';
 import { getActiveContacts, resetActiveContacts } from '../../../redux/slices/customer/contact';
@@ -137,6 +137,7 @@ const onChangeContact = (contact) => {
         <Grid item xs={12} md={12}>
           <Card sx={{ p: 3 }}>
           <Stack  spacing={2} >
+            <FormLabel content='Personal Information' />
             <Box rowGap={2} columnGap={2} display="grid"
               gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
             >
@@ -172,7 +173,7 @@ const onChangeContact = (contact) => {
               <RHFTextField name="email" label="Email Address*" inputProps={{ style: { textTransform: 'lowercase' } }} />
               <RHFTextField name="loginEmail" label="Login Email" disabled inputProps={{ style: { textTransform: 'lowercase' } }} />
             </Box>
-
+            <FormLabel content='Accessibility Information' />
             <Box
               rowGap={2} columnGap={2} display="grid"
               gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
