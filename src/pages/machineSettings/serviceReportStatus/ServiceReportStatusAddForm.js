@@ -16,11 +16,12 @@ import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFTextField, RHFSwitch } from '../../../components/hook-form';
-
 // util
 import { Cover } from '../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
+import { serviceReportStatusSchema } from '../../schemas/machine';
+
 
 // ----------------------------------------------------------------------
 
@@ -30,18 +31,6 @@ export default function ServiceReportStatusAddForm() {
   const navigate = useNavigate();
 
   const { enqueueSnackbar } = useSnackbar();
-
-  const serviceReportStatusSchema = Yup.object().shape({
-    name: Yup.string().min(2).max(50).required('Name is required!'),
-    description: Yup.string().max(5000),
-    isActive: Yup.boolean(),
-    isDefault: Yup.boolean(),
-    displayOrderNo: Yup.number()
-      .typeError('Display Order No. must be a number')
-      .nullable()
-      .transform((_, val) => (val !== '' ? Number(val) : null)),
-    slug: Yup.string().min(0).max(50).matches(/^(?!.*\s)[\S\s]{0,50}$/, 'Slug field cannot contain blankspaces'),
-  });
 
   const defaultValues = useMemo(
     () => ({

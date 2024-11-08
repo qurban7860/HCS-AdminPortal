@@ -31,10 +31,9 @@ export default function ServiceReportStatusViewForm( ) {
   const defaultValues = useMemo(
     () => ({
       name: serviceReportStatus?.name || '',
-      order: serviceReportStatus?.order || '',
-      description: serviceReportStatus?.description || '',
-      displayOrderNo: serviceReportStatus?.displayOrderNo || '',
       type: serviceReportStatus?.type || '',
+      displayOrderNo: serviceReportStatus?.displayOrderNo || '',
+      description: serviceReportStatus?.description || '',
       isActive: serviceReportStatus?.isActive,
       isDefault: serviceReportStatus?.isDefault,
       createdByFullName: serviceReportStatus?.createdBy?.name || '',
@@ -79,14 +78,13 @@ export default function ServiceReportStatusViewForm( ) {
         />
       <Grid container sx={{mt:2}}>
         <ViewFormField isLoading={isLoading} sm={12} heading="Name" param={defaultValues?.name} />
-        <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues?.description} />
+        <ViewFormField isLoading={isLoading} sm={12} heading="Type" param={defaultValues?.type} />
         <ViewFormField isLoading={isLoading}
           sm={12}
           heading="Display Order No."
           param={defaultValues?.displayOrderNo?.toString()}
           />
-        <ViewFormField isLoading={isLoading} sm={12} heading="Type" param={defaultValues?.type} />
-        <ViewFormField isLoading={isLoading} sm={12} heading="Order Number" param={defaultValues?.order} />
+        <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues?.description} />
         <Grid container>
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>
