@@ -509,7 +509,7 @@ function SearchBarCombo({
             />
           </Grid> }
           
-          <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: '1fr', sm: 'repeat(2, 1fr)' }} sx={{ flexGrow: 1, width: { xs: '100%', sm: '100%' } }}>
+          {onApiLogsStatusFilter && onApiLogsMethodFilter && <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: '1fr', sm: 'repeat(2, 1fr)' }} sx={{ flexGrow: 1, width: { xs: '100%', sm: '100%' } }}>
           {onApiLogsStatusFilter && (
            <FormControl fullWidth>
             <InputLabel id="api-logs-status-label">Status</InputLabel>
@@ -543,7 +543,7 @@ function SearchBarCombo({
              <MenuItem value="POST">POST</MenuItem>
             </Select>
            </FormControl>
-          )}</Box>
+          )}</Box> }
 
           {isPm2LogTypes && 
             <>

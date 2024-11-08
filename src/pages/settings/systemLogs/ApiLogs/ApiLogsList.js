@@ -95,7 +95,6 @@ export default function ApiLogsList() {
   
   const handleFetchLogs = (data) => {
     const query = {
-      apiType: 'MACHINE-INTEGRATION',
       createdAt: {
         $gte: new Date(data.dateFrom).toISOString(),
         $lte: new Date(data.dateTo).toISOString(),
