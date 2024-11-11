@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
 import debounce from 'lodash/debounce';
 import { useParams } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
 // @mui
-import { Table, TableBody, TableContainer, Container, Card } from '@mui/material';
-import { useNavigate } from 'react-router';
+import { Table, TableBody, TableContainer, Container, Card, Box, Grid, Stack } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 import { Cover } from '../../../../components/Defaults/Cover';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
@@ -17,113 +18,98 @@ import {
   TablePaginationCustom,
   TableHeadFilter,
 } from '../../../../components/table';
+import FormProvider, { RHFDatePicker } from '../../../../components/hook-form';
 import Scrollbar from '../../../../components/scrollbar';
 // sections
 import APILogsTableRow from '../../../../components/machineIntegration/APILogsTableRow';
-import ApiLogsListTableToolbar from './ApiLogsListTableToolbar';
-import { getApiLogs, setFilterBy, ChangePage,  setReportHiddenColumns } from '../../../../redux/slices/logs/apiLogs';
-import { fDateTime } from '../../../../utils/formatTime';
+import {
+  getApiLogs,
+  setFilterBy,
+  ChangePage,
+  setReportHiddenColumns,
+} from '../../../../redux/slices/logs/apiLogs';
 import TableCard from '../../../../components/ListTableTools/TableCard';
+import SearchBarCombo from '../../../../components/ListTableTools/SearchBarCombo';
+import RHFFilteredSearchBar from '../../../../components/hook-form/RHFFilteredSearchBar';
 
 export default function ApiLogsList() {
-  const {
-    order,
-    orderBy,
-    page, 
-    rowsPerPage,
-    setPage,
-    onSort,
-    onChangePage,
-    onChangeRowsPerPage,
-  } = useTable({
-    defaultOrderBy: 'createdAt', defaultOrder: 'desc',
-  });
+  const { order, orderBy, page, rowsPerPage, setPage, onSort, onChangePage, onChangeRowsPerPage } =
+    useTable({
+      defaultOrderBy: 'createdAt',
+      defaultOrder: 'desc',
+    });
 
   const dispatch = useDispatch();
-  const { machineId } = useParams()
-  const [filterName, setFilterName] = useState('');
+  const { machineId } = useParams();
   const [tableData, setTableData] = useState([]);
   const [filterRequestStatus, setFilterRequestStatus] = useState(-1);
   const [filterRequestMethod, setFilterRequestMethod] = useState('default');
-  const { apiLogs, filterBy, isLoading, initial, reportHiddenColumns } = useSelector((state) => state.apiLogs );
+  const [filterRequestType, setFilterRequestType] = useState('ALL');
+  const [selectedSearchFilter, setSelectedSearchFilter] = useState('');
+  const { apiLogs, isLoading, initial, reportHiddenColumns } = useSelector(
+    (state) => state.apiLogs
+  );
 
   const TABLE_HEAD = [
     { id: 'createdAt', label: 'Timestamp', align: 'left' },
     { id: 'requestMethod', label: 'Method', align: 'left' },
-    { id: 'requestURL', label: 'Endpoint', align: 'left' },
+    { id: 'requestURL', label: 'Endpoint', align: 'left', allowSearch: true },
     { id: 'responseStatusCode', label: 'Status', align: 'left' },
-    { id: 'responseTime', label: 'Response Time (ms)', align: 'left' },
+    { id: 'responseTime', label: 'Response Time(ms)', align: 'left', allowSearch: true },
     { id: 'machine', label: 'Machine', align: 'left' },
     { id: 'customer', label: 'Customer', align: 'left' },
-    { id: 'additionalContextualInformation', label: 'Description', align: 'left' },
+    { id: 'additionalContextualInformation', label: 'Description', align: 'left', allowSearch: true },
   ];
+
+  const defaultValues = {
+    dateFrom: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+    dateTo: new Date().toISOString(),
+    filteredSearchKey: '',
+  };
+
+  const methods = useForm({
+    defaultValues,
+  });
+
+  const { watch, setValue, handleSubmit, trigger } = methods;
+  const { dateFrom, dateTo, filteredSearchKey } = watch();
+
+  useEffect(() => {
+    handleFetchLogs(defaultValues);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (initial) {
-      setTableData(apiLogs?.data || [] ); 
+      setTableData(apiLogs?.data || []);
     }
-  }, [ initial, apiLogs ]);
+  }, [initial, apiLogs]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(order, orderBy),
-    filterName,
-  });  
+  });
   const denseHeight = 60;
-  const isFiltered = filterName !== '';
-  const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
+  const isNotFound = !dataFiltered.length || (!isLoading && !dataFiltered.length);
 
-  const debouncedSearch = useRef(debounce((value) => {
-    dispatch(ChangePage(0))
-    dispatch(setFilterBy(value))
-  }, 500))
-  
-  const handleFilterName = (event) => {
-    const { value } = event.target;
-    debouncedSearch.current(value);
-    setFilterName(value);
-    setPage(0);
-  };
-  
-  const handleFilterRequestStatus = (event) => {
-    dispatch(ChangePage(0))
-    setFilterRequestStatus(event.target.value);
-  };
+  const handleFetchLogs = (data) => {
+    const query = {
+      createdAt: {
+        $gte: new Date(data.dateFrom).toISOString(),
+        $lte: new Date(data.dateTo).toISOString(),
+      },
+    };
 
-  const handleFilterRequestMethod = (event) => {
-    dispatch(ChangePage(0))
-    setFilterRequestMethod(event.target.value);
-  };
-  
-  useEffect(() => {
-      debouncedSearch.current.cancel();
-  }, [debouncedSearch]);
-  
-  useEffect(()=>{
-      setFilterName(filterBy)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[ filterBy ])
+    if (filteredSearchKey && selectedSearchFilter) {
+      if (selectedSearchFilter === 'responseTime') {
+        query.responseTime = { $regex: filteredSearchKey, $options: 'i' };
+      } else if (selectedSearchFilter === 'additionalContextualInformation') {
+        query.additionalContextualInformation = { $regex: filteredSearchKey, $options: 'i' };
+      } else if (selectedSearchFilter === 'requestURL') {
+        query.requestURL = { $regex: filteredSearchKey, $options: 'i' };
+      } 
+    }
 
-  const handleFilterStatus = (event) => {
-    setPage(0);
-  };
-
-  // const handleViewRow = (id) => {
-  //   const url = `https://howickltd.atlassian.net/projects/HPS/versions/${id}/tab/release-report-all-issues`
-  //   window.open(url, '_blank');
-  //   // navigate(PATH_SETTING.releases.view(link))
-  // };
-
-  const handleResetFilter = () => {
-    dispatch(setFilterBy(''))
-  };
-  
-  const handleHiddenColumns = async (arg) => {
-    dispatch(setReportHiddenColumns(arg))
-  };
-  
-  useEffect(() => {
-    const query = { apiType: 'MACHINE-INTEGRATION' }; 
     if (filterRequestStatus !== -1) {
       if (filterRequestStatus === '200-299') {
         query.responseStatusCode = { $gte: 200, $lt: 300 };
@@ -133,38 +119,175 @@ export default function ApiLogsList() {
         query.responseStatusCode = filterRequestStatus;
       }
     }
+
     if (filterRequestMethod !== 'default') {
       query.requestMethod = filterRequestMethod;
-    }  
-    dispatch(getApiLogs({
-      machineId,
-      orderBy: 'createdAt:desc',
-      query,
-      page,
-      pageSize: rowsPerPage,
-    }));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, rowsPerPage, filterRequestStatus, filterRequestMethod]);
-  
-  
+    }
+
+    if (filterRequestType !== 'ALL') {
+      query.apiType = filterRequestType;
+    }
+
+    dispatch(
+      getApiLogs({
+        machineId,
+        orderBy: 'createdAt:desc',
+        query,
+        page,
+        pageSize: rowsPerPage,
+      })
+    );
+  };
+
+  const debouncedSearch = useRef(
+    debounce((value) => {
+      dispatch(ChangePage(0));
+      dispatch(setFilterBy(value));
+    }, 500)
+  );
+
+  const handleFilterRequestStatus = (event) => {
+    dispatch(ChangePage(0));
+    setFilterRequestStatus(event.target.value);
+  };
+
+  const handleFilterRequestMethod = (event) => {
+    dispatch(ChangePage(0));
+    setFilterRequestMethod(event.target.value);
+  };
+
+  const handleFilterRequestType = (event) => {
+    dispatch(ChangePage(0));
+    setFilterRequestType(event.target.value);
+  };
+
+  useEffect(() => {
+    debouncedSearch.current.cancel();
+  }, [debouncedSearch]);
+
+  const afterClearHandler = () => {
+    const initialQuery = {
+      createdAt: {
+        $gte: new Date(defaultValues.dateFrom).toISOString(),
+        $lte: new Date(defaultValues.dateTo).toISOString(),
+      },
+    };
+
+    dispatch(
+      getApiLogs({
+        machineId,
+        orderBy: 'createdAt:desc',
+        query: initialQuery,
+        page: 0,
+        pageSize: rowsPerPage,
+      })
+    );
+
+    setValue('dateFrom', defaultValues.dateFrom);
+    setValue('dateTo', defaultValues.dateTo);
+    setValue('filteredSearchKey', defaultValues.filteredSearchKey);
+  };
+
+  // const handleViewRow = (id) => {
+  //   const url = `https://howickltd.atlassian.net/projects/HPS/versions/${id}/tab/release-report-all-issues`
+  //   window.open(url, '_blank');
+  //   // navigate(PATH_SETTING.releases.view(link))
+  // };
+
+  const handleHiddenColumns = async (arg) => {
+    dispatch(setReportHiddenColumns(arg));
+  };
+
+  const onHandleSubmit = (data) => {
+    handleFetchLogs(data);
+  };
+
   return (
-      <Container maxWidth={false}>
-        <Card sx={{mb: 3, height: 160, position: 'relative'}}>
-          <Cover name="API Logs" generalSettings />
-        </Card>
-        <TableCard>
-          <ApiLogsListTableToolbar
-            filterName={filterName}
-            onFilterName={handleFilterName}
-            onFilterStatus={handleFilterStatus}
-            isFiltered={isFiltered}
-            onResetFilter={handleResetFilter}
-            filterRequestStatus={filterRequestStatus}
-            onFilterRequestStatus={handleFilterRequestStatus}
-            filterRequestMethod={filterRequestMethod}
-            onFilterRequestMethod={handleFilterRequestMethod}
-          />
-          {!isNotFound && (
+    <Container maxWidth={false}>
+      <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
+        <Cover name="API Logs" generalSettings />
+      </Card>
+      <FormProvider methods={methods} onSubmit={handleSubmit(onHandleSubmit)}>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <Card sx={{ p: 3 }}>
+              <Stack spacing={2}>
+                <SearchBarCombo
+                  apiLogsStatusFilter={filterRequestStatus}
+                  onApiLogsStatusFilter={handleFilterRequestStatus}
+                  apiLogsMethodFilter={filterRequestMethod}
+                  onApiLogsMethodFilter={handleFilterRequestMethod}
+                  apiLogsTypeFilter={filterRequestType}
+                  onApiLogsTypeFilter={handleFilterRequestType}
+                />
+                <Box
+                  sx={{
+                    display: 'grid',
+                    gap: 2,
+                    gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)' },
+                    alignItems: 'center',
+                    width: '100%',
+                  }}
+                >
+                  <RHFDatePicker
+                    label="Start Date"
+                    name="dateFrom"
+                    size="small"
+                    value={dateFrom}
+                    onChange={(newValue) => {
+                      setValue('dateFrom', newValue);
+                      trigger(['dateFrom', 'dateTo']);
+                    }}
+                  />
+                  <RHFDatePicker
+                    label="End Date"
+                    name="dateTo"
+                    size="small"
+                    value={dateTo}
+                    onChange={(newValue) => {
+                      setValue('dateTo', newValue);
+                      trigger(['dateFrom', 'dateTo']);
+                    }}
+                  />
+                </Box>
+                <Stack
+                  direction={{ xs: 'column', sm: 'row' }}
+                  spacing={2}
+                  sx={{
+                    justifyContent: 'space-between',
+                    alignItems: 'flex-start',
+                  }}
+                >
+                  <Box sx={{ flexGrow: 1, width: { xs: '100%', sm: 'auto' } }}>
+                    <RHFFilteredSearchBar
+                      name="filteredSearchKey"
+                      filterOptions={TABLE_HEAD.filter((item) => item?.allowSearch)}
+                      setSelectedFilter={setSelectedSearchFilter}
+                      selectedFilter={selectedSearchFilter}
+                      placeholder="Enter Search here..."
+                      afterClearHandler={afterClearHandler}
+                      fullWidth
+                    />
+                  </Box>
+                  <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <LoadingButton
+                      type="button"
+                      onClick={handleSubmit(onHandleSubmit)}
+                      variant="contained"
+                      size="large"
+                    >
+                      Search
+                    </LoadingButton>
+                  </Box>
+                </Stack>
+              </Stack>
+            </Card>
+          </Grid>
+        </Grid>
+      </FormProvider>
+
+      <TableCard>
+        {!isNotFound && (
           <TablePaginationFilter
             columns={TABLE_HEAD}
             hiddenColumns={reportHiddenColumns}
@@ -176,50 +299,49 @@ export default function ApiLogsList() {
             onRowsPerPageChange={onChangeRowsPerPage}
           />
         )}
-          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            <Scrollbar>
-              <Table stickyHeader size="small" sx={{ minWidth: 360 }}>
-                <TableHeadFilter
-                  order={order}
-                  orderBy={orderBy}
-                  headLabel={TABLE_HEAD}
-                  hiddenColumns={reportHiddenColumns}
-                  onSort={onSort}
-                />
-                <TableBody>
-                {(
-                  isLoading
-                    ? [...Array(rowsPerPage)]
-                    : dataFiltered
-                  )
+        <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+          <Scrollbar>
+            <Table stickyHeader size="small" sx={{ minWidth: 360 }}>
+              <TableHeadFilter
+                order={order}
+                orderBy={orderBy}
+                headLabel={TABLE_HEAD}
+                hiddenColumns={reportHiddenColumns}
+                onSort={onSort}
+              />
+              <TableBody>
+                {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
                   // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) =>
                     row ? (
-                        <APILogsTableRow
-                          key={index}
-                          row={row}
-                          hiddenColumns={reportHiddenColumns}
-                          // onViewRow={() => handleViewRow(row?.id)}
-                          style={index % 2 ? { background: 'red' } : { background: 'green' }}
-                        />
-                      
-                    ) : !isNotFound && isLoading && <TableSkeleton key={index} sx={{ height: denseHeight }} />
+                      <APILogsTableRow
+                        key={index}
+                        row={row}
+                        hiddenColumns={reportHiddenColumns}
+                        // onViewRow={() => handleViewRow(row?.id)}
+                        style={index % 2 ? { background: 'red' } : { background: 'green' }}
+                      />
+                    ) : (
+                      !isNotFound &&
+                      isLoading && <TableSkeleton key={index} sx={{ height: denseHeight }} />
+                    )
                   )}
-                  <TableNoData isNotFound={isNotFound} />
-                </TableBody>
-              </Table>
-            </Scrollbar>
-          </TableContainer>
-          {!isNotFound && (
+                <TableNoData isNotFound={isNotFound} />
+              </TableBody>
+            </Table>
+          </Scrollbar>
+        </TableContainer>
+        {!isNotFound && (
           <TablePaginationCustom
-            count={ apiLogs?.totalCount || 0 }
+            count={apiLogs?.totalCount || 0}
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-          /> )}
-        </TableCard>
-      </Container>
+          />
+        )}
+      </TableCard>
+    </Container>
   );
 }
 
@@ -235,21 +357,6 @@ function applyFilter({ inputData, comparator, filterName }) {
   });
 
   inputData = stabilizedThis.map((el) => el[0]);
-
-  if (filterName) {
-    filterName = filterName?.trim();
-    inputData = inputData?.filter(
-      ( api ) =>
-        fDateTime(api?.createdAt)?.toLowerCase().includes(filterName.toLowerCase()) ||
-        api?.requestMethod?.toLowerCase().includes(filterName.toLowerCase()) ||
-        api?.requestURL?.toString()?.toLowerCase().includes(filterName.toLowerCase()) ||
-        (api?.responseStatusCode || '').toString().toLowerCase().includes(filterName.toLowerCase()) ||
-        (api?.responseTime || '').toString().toLowerCase().includes(filterName.toLowerCase()) ||
-        api?.machine?.some((machine) => machine?.serialNo?.toLowerCase().includes(filterName.toLowerCase()) ) ||      
-        api?.customer?.name?.toLowerCase().includes(filterName.toLowerCase()) ||
-        api?.additionalContextualInformation?.toLowerCase().includes(filterName.toLowerCase())
-      );
-  }
 
   return inputData;
 }

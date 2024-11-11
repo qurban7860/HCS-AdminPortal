@@ -123,7 +123,7 @@ export const {
 
 // ---------------------------------- GET API LOGS ------------------------------------
 
-export function getApiLogs({machineId, fields = '', orderBy = '', query = {}, page, pageSize}) {
+export function getApiLogs({machineId, fields = '', orderBy = '', query = {}, page, pageSize, searchKey, searchColumn}) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -133,6 +133,10 @@ export function getApiLogs({machineId, fields = '', orderBy = '', query = {}, pa
         machine: machineId,
         pagination: { page, pageSize },
       };
+      if (searchKey?.length > 0) {
+        params.searchKey = searchKey;
+        params.searchColumn = searchColumn;
+      }
       const response = await axios.get(`${CONFIG.SERVER_URL}apiclient/logs/`, { params });
       dispatch(slice.actions.getApiLogsSuccess(response.data));
     } catch (error) {
