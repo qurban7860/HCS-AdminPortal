@@ -47,9 +47,10 @@ export default function ServiceReportStatusViewForm( ) {
     [ serviceReportStatus]
   );
 
-  const onDelete = () => {
+  const onDelete = async () => {
     try {
-      dispatch(deleteServiceReportStatus(id));
+      await dispatch(deleteServiceReportStatus(id));
+      enqueueSnackbar('Service Report Status Archive Successfully!');
       navigate(PATH_MACHINE.machines.machineSettings.serviceReportsStatus.root);
     } catch (err) {
       enqueueSnackbar('Status Archive failed!', { variant: `error` });

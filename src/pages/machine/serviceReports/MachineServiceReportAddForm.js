@@ -69,7 +69,7 @@ function MachineServiceReportAddForm() {
   
   const handleDiscard = useCallback(async () => {
     if (machineServiceReport?._id) {
-      await dispatch(deleteMachineServiceReport(machineId, machineServiceReport?._id, machineServiceReport?.status));
+      await dispatch(deleteMachineServiceReport(machineId, machineServiceReport?._id, machineServiceReport?.status?._id));
     }
     navigate(PATH_MACHINE.machines.serviceReports.root(machineId));
   }, [dispatch, machineId, machineServiceReport, navigate]);
@@ -105,7 +105,7 @@ function MachineServiceReportAddForm() {
           <Grid item xs={12} md={12}>
             <Card>
               <CardHeader 
-                title={machineServiceReport?.serviceReportUID && `Service ID : ${machineServiceReport?.serviceReportUid || ''}  (${machineServiceReport?.status || ''})`}
+                title={machineServiceReport?.serviceReportUID && `Service ID : ${machineServiceReport?.serviceReportUid || ''}  (${machineServiceReport?.status?.name || ''})`}
                 action={
                   !isLoading &&
                     <Grid item display='flex' columnGap={1} mr={1}>

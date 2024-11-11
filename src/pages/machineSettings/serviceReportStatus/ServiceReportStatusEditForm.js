@@ -1,5 +1,4 @@
-import * as Yup from 'yup';
-import { useEffect, useLayoutEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 // form
@@ -13,7 +12,7 @@ import { updateServiceReportStatus } from '../../../redux/slices/products/servic
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import FormProvider, { RHFTextField, RHFSwitch } from '../../../components/hook-form';
+import FormProvider, { RHFTextField, RHFSwitch, RHFAutocomplete } from '../../../components/hook-form';
 import { Cover } from '../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
@@ -22,7 +21,7 @@ import { serviceReportStatusSchema } from '../../schemas/machine';
 // ----------------------------------------------------------------------
 
 export default function ServiceReportStatusEditForm() {
-  const {  serviceReportStatus } = useSelector((state) => state.serviceReportStatuses);
+  const { serviceReportStatus, statusTypes } = useSelector((state) => state.serviceReportStatuses);
 
   const dispatch = useDispatch();
 
@@ -37,8 +36,7 @@ export default function ServiceReportStatusEditForm() {
       type: serviceReportStatus?.type || '',
       displayOrderNo: serviceReportStatus?.displayOrderNo || '',
       description: serviceReportStatus?.description || '',
-      isActive: serviceReportStatus.isActive,
-      isDefault: serviceReportStatus?.isDefault || false,
+      isActive: serviceReportStatus?.isActive,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [serviceReportStatus]
@@ -92,13 +90,19 @@ export default function ServiceReportStatusEditForm() {
                 gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
               >
                 <RHFTextField name="name" label="Name" />
-                <RHFTextField name="type" label="Type" />
+                <RHFAutocomplete 
+                  name="type" 
+                  label="Type*" 
+                  options={ statusTypes }
+                  isOptionEqualToValue={ (option, value) => option === value }
+                />
                 <RHFTextField name="description" label="Description" minRows={7} multiline />
                 <RHFTextField name="displayOrderNo" label="Display Order No." type="number" />
 
                 <Grid display="flex">
                 <RHFSwitch name="isActive" label="Active" />
                 <RHFSwitch name="isDefault" label="Default" />
+                <RHFSwitch name="isSubmit" label="Submit" />
               </Grid>
               </Box>
             </Stack>
