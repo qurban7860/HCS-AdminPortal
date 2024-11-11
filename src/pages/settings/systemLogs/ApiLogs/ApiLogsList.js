@@ -311,7 +311,7 @@ export default function ApiLogsList() {
               />
               <TableBody>
                 {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
-                  // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) =>
                     row ? (
                       <APILogsTableRow
