@@ -12,6 +12,7 @@ import {
   Table,
   TableBody,
   TableContainer,
+  TextField, Autocomplete
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import axios from 'axios';
@@ -53,7 +54,7 @@ import {
 } from '../../redux/slices/document/document';
 import { getMachineForDialog,  setMachineDialog } from '../../redux/slices/products/machine';
 import { getActiveDocumentCategories } from '../../redux/slices/document/documentCategory';
-import { getActiveDocumentTypes } from '../../redux/slices/document/documentType';
+import { getActiveDocumentTypes, getActiveDocumentTypesWithCategory } from '../../redux/slices/document/documentType';
 import { getCustomer, setCustomerDialog } from '../../redux/slices/customer/customer';
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
@@ -388,6 +389,38 @@ useLayoutEffect(() => {
     }  
   };
   
+  useEffect(() => {
+    if (!machineDrawings && !machineDrawingPage && !machinePage) {
+      dispatch(getActiveDocumentCategories());
+    }
+  }, [dispatch, machineDrawings, machineDrawingPage, machinePage]);
+
+  const handleCategoryChange = (event, newValue) => {
+    if (newValue) {
+      setCategoryVal(newValue);
+      dispatch(getActiveDocumentTypesWithCategory(newValue._id));
+      if (newValue._id !== typeVal?.docCategory?._id) {
+        setTypeVal(null);
+      }
+    } else {
+      setCategoryVal(null);
+      setTypeVal(null);
+      dispatch(getActiveDocumentTypesWithCategory()); // Clear types when no category is selected
+    }
+  };
+
+  const handleTypeChange = (event, newValue) => {
+    if (newValue) {
+      setTypeVal(newValue);
+      if (!categoryVal) {
+        setCategoryVal(newValue.docCategory);
+        dispatch(getActiveDocumentTypesWithCategory(newValue.docCategory._id));
+      }
+    } else {
+      setTypeVal(null);
+    }
+  };
+
   return (
     <>
       {/* <Container sx={{mb:3}}> */}
@@ -402,8 +435,8 @@ useLayoutEffect(() => {
       {!customerPage && !machinePage && (
         <Grid container spacing={2}>
           <Grid item xs={12}>
-          <Card sx={{ p:(machineDrawings ? 0: 3) }}>
-          { machineDrawings && (
+            <Card sx={{ p:(machineDrawings ? 0: 3) }}>
+              { machineDrawings && (
                 <DocumentListTableToolbar
                   machineDrawings={machineDrawings}
                   categoryVal={categoryVal}
@@ -411,6 +444,38 @@ useLayoutEffect(() => {
                   typeVal={typeVal}
                   setTypeVal={setTypeVal}
                 /> )}
+
+             { !machineDrawings && !machineDrawingPage && !machinePage && (
+        <Box rowGap={2} columnGap={2} mb={3} display="grid" gridTemplateColumns={{ xs: '1fr', sm: 'repeat(2, 1fr)' }} sx={{ flexGrow: 1, width: { xs: '100%', sm: '100%' } }}>
+          
+          <Autocomplete 
+            id="category-autocomplete"
+            value={categoryVal || null}
+            options={activeDocumentCategories || []}
+            isOptionEqualToValue={(option, val) => option?._id === val?._id}
+            getOptionLabel={(option) => option.name || ''}
+            onChange={handleCategoryChange}
+            renderOption={(props, option) => (
+              <li {...props} key={option._id}>{option.name}</li>
+            )}
+            renderInput={(params) => <TextField {...params} size="small" label="Category" />}
+          />
+
+          <Autocomplete 
+            id="type-autocomplete"
+            value={typeVal || null}
+            options={activeDocumentTypes || []}
+            isOptionEqualToValue={(option, val) => option?._id === val?._id}
+            getOptionLabel={(option) => option.name || ''}
+            onChange={handleTypeChange}
+            renderOption={(props, option) => (
+              <li {...props} key={option._id}>{option.name}</li>
+            )}
+            renderInput={(params) => <TextField {...params} size="small" label="Type" />}
+          />
+        </Box>
+      )}
+
               <Stack
                 direction={{ xs: 'column', sm: 'row' }}
                 spacing={2}

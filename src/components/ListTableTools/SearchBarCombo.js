@@ -554,7 +554,7 @@ function SearchBarCombo({
               id="api-logs-type"
               size="small"
               value={apiLogsTypeFilter}
-              label="Type"
+              label="API Type"
               onChange={onApiLogsTypeFilter}
             >
              <MenuItem value="ALL">All</MenuItem>

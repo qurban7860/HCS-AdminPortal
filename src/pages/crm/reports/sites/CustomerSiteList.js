@@ -68,7 +68,7 @@ export default function CustomerSiteList({ isCustomerSitePage = false }) {
     ...(!isCustomerSitePage ? [{ id: 'customer.name', visibility: 'xs', label: 'Customer', align: 'left'}] : []),
     { id: 'name', label: 'Site', align: 'left' },
     { id: 'address.country', visibility: 'xs', label: 'Address', align: 'left' },
-    { id: 'phoneNumbers.countryCode', visibility: 'xs', label: 'Phone', align: 'left' },
+    { id: 'phoneNumbers', visibility: 'xs', label: 'Phone', align: 'left' },
     { id: 'email', visibility: 'xs', label: 'Email', align: 'left' },
     { id: 'primaryTechnicalContact.firstName', visibility: 'xs', label: 'Technical Contact', align: 'left' },
     { id: 'primaryBillingContact.firstName', visibility: 'xs', label: 'Billing Contact', align: 'left' },

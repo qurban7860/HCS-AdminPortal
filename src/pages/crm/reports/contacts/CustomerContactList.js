@@ -102,6 +102,7 @@ export default function CustomerContactList({isCustomerContactPage = false, filt
     comparator: getComparator(order, orderBy),
     filterName,
     filterFormer,
+    orderBy
   });
 
   const denseHeight = 60;
@@ -235,7 +236,7 @@ export default function CustomerContactList({isCustomerContactPage = false, filt
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName, filterFormer }) {
+function applyFilter({ inputData, comparator, filterName, filterFormer, orderBy }) {
   let filteredData = inputData;
 
   if (filterFormer?.toLowerCase() === 'former employee') {
@@ -246,7 +247,12 @@ function applyFilter({ inputData, comparator, filterName, filterFormer }) {
   const stabilizedThis = filteredData.map((el, index) => [el, index]);
 
   stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
+    if (orderBy === 'phoneNumbers') {
+      const phoneA = a[0].phoneNumbers ? a[0].phoneNumbers.map(p => `${p.countryCode || ''}${p.contactNumber}`).join(', ') : '';
+      const phoneB = b[0].phoneNumbers ? b[0].phoneNumbers.map(p => `${p.countryCode || ''}${p.contactNumber}`).join(', ') : '';
+      return comparator({ phoneNumbers: phoneA }, { phoneNumbers: phoneB });
+    }
+    const order = comparator(a[0], b[0], orderBy);
     if (order !== 0) return order;
     return a[1] - b[1];
   });
