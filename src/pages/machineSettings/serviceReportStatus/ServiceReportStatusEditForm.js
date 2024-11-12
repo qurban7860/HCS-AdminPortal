@@ -101,8 +101,6 @@ export default function ServiceReportStatusEditForm() {
 
                 <Grid display="flex">
                 <RHFSwitch name="isActive" label="Active" />
-                <RHFSwitch name="isDefault" label="Default" />
-                <RHFSwitch name="isSubmit" label="Submit" />
               </Grid>
               </Box>
             </Stack>
