@@ -1,4 +1,6 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import { createSlice } from '@reduxjs/toolkit';
+import { EventSourcePolyfill } from 'eventsource-polyfill';
 // utils
 import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
@@ -168,11 +170,12 @@ export const {
 export function connectToCommentsSSE(primaryServiceReportId) {
   return async (dispatch) => {
     const token = window.localStorage.getItem('accessToken');
-    const eventSource = new EventSource(
+    
+    const eventSource = new EventSourcePolyfill(
       `${CONFIG.SERVER_URL}products/serviceReport/${primaryServiceReportId}/comments/stream`,
       {
         headers: {
-          'Authorization': `Bearer ${token}`,
+          'Authorization': `Bearer ${token}`
         },
         withCredentials: true
       }
