@@ -291,6 +291,11 @@ export const ServiceReportTemplateAdd = Loadable(lazy(() => import('../pages/mac
 export const ServiceReportTemplateView = Loadable(lazy(() => import('../pages/machineSettings/serviceReportTemplate/ServiceReportTemplateView')));
 export const ServiceReportTemplateEdit = Loadable(lazy(() => import('../pages/machineSettings/serviceReportTemplate/ServiceReportTemplateEdit')));
 
+
+export const ServiceReportStatusList = Loadable(lazy(() => import('../pages/machineSettings/serviceReportStatus/ServiceReportStatusList')));
+export const ServiceReportStatusAdd  = Loadable(lazy(() => import('../pages/machineSettings/serviceReportStatus/ServiceReportStatusAddForm')));
+export const ServiceReportStatusView = Loadable(lazy(() => import('../pages/machineSettings/serviceReportStatus/ServiceReportStatusView')));
+export const ServiceReportStatusEdit = Loadable(lazy(() => import('../pages/machineSettings/serviceReportStatus/ServiceReportStatusEdit')));
 // ------------------------ Others / Machine Status ------------------------
 
 // MACHINE SETTINGS: MACHINE Statuses

@@ -394,6 +394,11 @@ export const ICONS = {
     icon: 'mdi:tools',
     heading: 'Tools',
   },
+  // service report status
+  SERVICE_REPORT_STATUS: {
+    icon: 'carbon:report-data',
+    heading: 'Service Report Status',
+  },
   // configuration information
   Configuration: {
     icon: 'mdi:settings-outline',

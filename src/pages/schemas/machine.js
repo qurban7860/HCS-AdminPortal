@@ -332,6 +332,17 @@ export const CheckItemSchema = Yup.object().shape({
     .nullable(true),
 });
 
+export const serviceReportStatusSchema = Yup.object().shape({
+  name: Yup.string().label("Name").min(2).max(50).required(),
+  type: Yup.string().nullable().label("Type").min(2).max(50).required(),
+  displayOrderNo: Yup.number()
+  .typeError('Display Order No. must be a number')
+  .nullable()
+  .transform((_, val) => (val !== '' ? Number(val) : null)),
+  description: Yup.string().label("Description").max(5000),
+  isActive: Yup.boolean(), 
+});
+
 export const MachineServiceReportSchema = Yup.object().shape({
   reportType: Yup.object().label('Report Type').nullable().required(),
   serviceReportTemplate: Yup.object()

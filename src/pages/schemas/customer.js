@@ -13,8 +13,8 @@ export const editPortalRegistrationSchema = Yup.object().shape({
   internalNote: Yup.string().trim().max(5000).label('Internal Note'),
   machineSerialNos: Yup.array().typeError("Invalid Machine Serial Nos!")
   .min(1, 'At least one machine serial number is required')
-  .test( 'all-valid-serial-numbers','Each serial number must be exactly 6 digits',
-  (value) => value?.every(serialNo => /^\d{6}$/.test(serialNo)))
+  // .test( 'all-valid-serial-numbers','Each serial number must be exactly 6 digits',
+  // (value) => value?.every(serialNo => /^\d{6}$/.test(serialNo)))
   .label('Machine Serial Nos')
   .required('Machine serial numbers are required'),
   address: Yup.string().trim().max(200).label('Address'),

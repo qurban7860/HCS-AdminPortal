@@ -246,6 +246,11 @@ import {
   ServiceReportTemplateView,
   ServiceReportTemplateEdit,
 
+  // Service Report Status
+  ServiceReportStatusList,
+  ServiceReportStatusAdd, 
+  ServiceReportStatusView,
+  ServiceReportStatusEdit,
   // ------------------------ Others / Machine Status ------------------------
 
   // MACHINE SETTINGS: MACHINE Statuses
@@ -850,6 +855,7 @@ export default function Router() {
                   {path: ':id/edit', element: <CheckItemEdit/>},
                 ]
               },
+              // ----------------------------- Service Reports Template -----------------------------------
               { path: 'serviceReportsTemplate',
                 children:[
                   {element: <ServiceReportTemplateList/>, index: true },
@@ -857,6 +863,15 @@ export default function Router() {
                   {path: ':id/copy', element: <ServiceReportTemplateAdd/>},
                   {path: ':id/view', element: <ServiceReportTemplateView/>},
                   {path: ':id/edit', element: <ServiceReportTemplateEdit/>},
+                ]
+              },
+              // ----------------------------- SERVICE REPORT Status -----------------------------------
+              { path: 'serviceReportsStatus',
+                children:[
+                  {element: <ServiceReportStatusList/>, index: true },
+                  {path: 'new', element: <ServiceReportStatusAdd/>},
+                  {path: ':id/view', element: <ServiceReportStatusView/>},
+                  {path: ':id/edit', element: <ServiceReportStatusEdit/>},
                 ]
               },
               // ----------------------------- Others / Machine Status -----------------------------------
