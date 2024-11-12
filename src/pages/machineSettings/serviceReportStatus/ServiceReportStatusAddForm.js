@@ -38,8 +38,6 @@ export default function ServiceReportStatusAddForm() {
       displayOrderNo: '',
       description: '',
       isActive: true,
-      isDefault: false,
-      isSubmit: false,
       createdAt: '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps

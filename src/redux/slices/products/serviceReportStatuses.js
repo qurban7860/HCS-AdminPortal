@@ -192,7 +192,6 @@ export function addServiceReportStatus(params) {
           displayOrderNo: params?.displayOrderNo || "",
           description: params?.description || "",
           isActive: params?.isActive,
-          isDefault: params?.isDefault,
         };
         const response = await axios.post(`${CONFIG.SERVER_URL}products/productServiceReportStatus`, data);
         dispatch(slice.actions.getServiceReportStatusSuccess(response.data));
