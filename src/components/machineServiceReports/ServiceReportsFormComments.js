@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import {
   Paper,
   Button,
-  Avatar,
   List,
   ListItem,
   ListItemAvatar,
@@ -22,12 +21,13 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { useSnackbar } from 'notistack';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { LoadingButton } from '@mui/lab';
 
 import FormLabel from '../DocumentForms/FormLabel';
 import { FORMLABELS } from '../../constants/default-constants';
 import FormProvider, { RHFTextField } from '../hook-form';
 import { CustomAvatar } from '../custom-avatar';
-import { addComment, deleteComment, getComments, resetComments, updateComment } from '../../redux/slices/products/machineServiceReportComments';
+import { addComment, deleteComment, getComments, resetComments, updateComment, connectToCommentsSSE } from '../../redux/slices/products/machineServiceReportComments';
 import ConfirmDialog from '../confirm-dialog';
 
 dayjs.extend(relativeTime);
@@ -49,24 +49,33 @@ const ServiceReportsFormComments = ({ currentUser, serviceReportData, machine })
   const dispatch = useDispatch();
   const machineDisabled = machine?.isArchived || machine?.status?.slug === 'transferred';
 
-  const { error, comments } = useSelector(
+  const { error, comments, isLoading } = useSelector(
     (state) => state.serviceReportComments
   );
 
   useEffect(() => {
-    if (serviceReportData?._id) {
+    let eventSource;
+    
+    if (serviceReportData?.primaryServiceReportId) {
       dispatch(
         getComments({
           primaryServiceReportId: serviceReportData?.primaryServiceReportId,
-          serviceReportId: serviceReportData?._id,
         })
       );
+      
+      dispatch(connectToCommentsSSE(serviceReportData?.primaryServiceReportId))
+        .then(source => {
+          eventSource = source;
+        });
     }
+
     return () => {
+      if (eventSource) {
+        eventSource.close();
+      }
       dispatch(resetComments());
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [serviceReportData]);
+  }, [dispatch, serviceReportData]);
 
   const methods = useForm({
     resolver: yupResolver(CommentSchema),
@@ -75,7 +84,7 @@ const ServiceReportsFormComments = ({ currentUser, serviceReportData, machine })
     },
   });
 
-  const { reset, handleSubmit, watch } = methods;
+  const { reset, handleSubmit, watch, formState: { isSubmitting } } = methods;
 
   const commentValue = watch('comment');
 
@@ -159,6 +168,17 @@ const ServiceReportsFormComments = ({ currentUser, serviceReportData, machine })
                 />
                 {!!commentValue?.trim() && (
                   <Stack spacing={1} direction="row">
+                    <LoadingButton
+                      type="submit"
+                      disabled={isLoading}
+                      loading={isSubmitting}
+                      variant="contained"
+                      color="primary"
+                      size="small"
+                      sx={{ width: 'fit-content' }}
+                    >
+                      Save
+                    </LoadingButton>
                     <Button
                       type="submit"
                       variant="contained"
@@ -222,16 +242,18 @@ const ServiceReportsFormComments = ({ currentUser, serviceReportData, machine })
                               helperText={`${editValue.length}/300 characters`}
                             />
                             <Stack direction="row" spacing={1}>
-                              <Button
+                              <LoadingButton
+                                type="submit"
+                                onClick={() => handleSaveEdit(item._id)}
+                                disabled={!editValue.trim()}
+                                loading={isLoading}
                                 variant="contained"
                                 color="primary"
                                 size="small"
                                 sx={{ width: 'fit-content' }}
-                                onClick={() => handleSaveEdit(item._id)}
-                                disabled={!editValue.trim()}
                               >
                                 Update
-                              </Button>
+                              </LoadingButton>
                               <Button
                                 variant="text"
                                 size="small"
