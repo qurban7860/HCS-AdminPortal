@@ -55,10 +55,10 @@ export default function ApiLogsList() {
     { id: 'requestMethod', label: 'Method', align: 'left' },
     { id: 'requestURL', label: 'Endpoint', align: 'left', allowSearch: true },
     { id: 'responseStatusCode', label: 'Status', align: 'left' },
-    { id: 'responseTime', label: 'Response Time(ms)', align: 'left', allowSearch: true },
+    { id: 'responseTime', label: 'Time(ms)', align: 'left', allowSearch: true },
     { id: 'machine', label: 'Machine', align: 'left' },
     { id: 'customer', label: 'Customer', align: 'left' },
-    { id: 'additionalContextualInformation', label: 'Description', align: 'left', allowSearch: true },
+    { id: 'additionalContextualInformation', label: 'Response', align: 'left', allowSearch: true },
   ];
 
   const defaultValues = {

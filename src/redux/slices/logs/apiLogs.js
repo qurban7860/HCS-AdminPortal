@@ -22,7 +22,7 @@ const initialState = {
     "responseStatusCode": false,
     "responseTime": false,
     "machine.serialNo": false,
-    "customer.name": false,
+    "customer.name": true,
     "additionalContextualInformation": true,
 },
 };

@@ -1,7 +1,10 @@
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Chip, TableCell } from '@mui/material';
 import { fDateTime } from '../../utils/formatTime';
 import { StyledTableRow } from '../../theme/styles/default-styles';
+import LinkTableCell from '../ListTableTools/LinkTableCell';
+import ApiLogsViewForm from '../../pages/settings/systemLogs/ApiLogs/ApiLogsViewForm';
 
 APILogsTableRow.propTypes = {
   row: PropTypes.object,
@@ -28,6 +31,16 @@ export default function APILogsTableRow({
     customer,
     additionalContextualInformation,
   } = row;
+  
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const handleRowClick = () => {
+    setDialogOpen(true);
+  };
+
+  const handleCloseDialog = () => {
+    setDialogOpen(false);
+  };
 
   const getChipColor = (method) => {
     switch (method) {
@@ -54,9 +67,10 @@ export default function APILogsTableRow({
     return 'default';
   };
 
-  return (
-    <StyledTableRow hover selected={selected} onClick={onViewRow}>
-      {!hiddenColumns?.createdAt && <TableCell align="left">{fDateTime(createdAt)}</TableCell>}
+  return (  
+    <>
+    <StyledTableRow hover selected={selected} onClick={handleRowClick} sx={{ cursor: 'pointer' }}>
+      {!hiddenColumns?.createdAt && <LinkTableCell align="left" onClick={handleRowClick} param={fDateTime(createdAt)}/>}
       {!hiddenColumns?.requestMethod &&
           <TableCell align="left">
             <Chip
@@ -83,5 +97,23 @@ export default function APILogsTableRow({
       {!hiddenColumns?.customer && <TableCell align="left">{customer?.name || ''}</TableCell>}
       {!hiddenColumns?.additionalContextualInformation && <TableCell align="left">{additionalContextualInformation}</TableCell>}
     </StyledTableRow>
+
+     <ApiLogsViewForm
+     open={dialogOpen}
+     onClose={handleCloseDialog}
+     logDetails={{
+       createdAt: fDateTime(createdAt),
+       requestURL,
+       requestMethod,
+       responseTime,
+       responseStatusCode,
+       machine,
+       customer,
+       additionalContextualInformation,
+     }}
+     requestMethodColor={getChipColor(requestMethod)}
+     responseStatusColor={getResponseStatusColor(responseStatusCode)}
+     />
+     </>
   );
 }
