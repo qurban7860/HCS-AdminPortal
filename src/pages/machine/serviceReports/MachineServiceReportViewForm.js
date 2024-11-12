@@ -49,6 +49,8 @@ import SkeletonLine from '../../../components/skeleton/SkeletonLine';
 import DialogServiceReportComplete from '../../../components/Dialog/DialogServiceReportComplete';
 import SkeletonPDF from '../../../components/skeleton/SkeletonPDF';
 import IconButtonTooltip from '../../../components/Icons/IconButtonTooltip';
+import ReportStatusButton from './ReportStatusButton';
+import { StyledVersionChip } from '../../../theme/styles/default-styles';
 
 MachineServiceReportViewForm.propTypes = {
   serviceHistoryView: PropTypes.bool,
@@ -136,6 +138,7 @@ function MachineServiceReportViewForm( {serviceHistoryView} ) {
       site:                                 machineServiceReport?.site || null,
       machine:                              machineServiceReport?.machine || null,
       reportType:                           machineServiceReport?.reportType || null,
+      serviceReportUID:                     machineServiceReport?.serviceReportUID || "",
       serviceReportTemplate:                machineServiceReport?.serviceReportTemplate?.reportTitle	 || '',
       serviceReportTemplateReportType:      machineServiceReport?.serviceReportTemplate?.reportType || '',
       serviceDate:                          machineServiceReport?.serviceDate || null,
@@ -439,18 +442,23 @@ function MachineServiceReportViewForm( {serviceHistoryView} ) {
         
         <Grid container>
           <FormLabel content={FORMLABELS.KEYDETAILS} />
-          <ViewFormField isLoading={isLoading} variant='h4' sm={2} heading="Service Date" 
+          <ViewFormField isLoading={isLoading} variant='h4' sm={4} heading="Service Date" 
             param={fDate(defaultValues.serviceDate)} />
-          <ViewFormField isLoading={isLoading} variant='h4' sm={6} heading="Service Report Template" 
-            param={`${defaultValues.serviceReportTemplate} ${defaultValues.serviceReportTemplateReportType ? '-' : ''} ${defaultValues.serviceReportTemplateReportType ? defaultValues.serviceReportTemplateReportType : ''}`} />
+
+
           <ViewFormField
               isLoading={isLoading}
               variant="h4"
-              sm={2}
-              heading="Version No"
+              sm={4}
+              heading="Service ID"
+              param={ defaultValues.serviceReportUID }
               node={
                 <>
-                  {defaultValues?.versionNo}
+                  <StyledVersionChip 
+                    label={`v ${ defaultValues.versionNo}`}
+                    size="small" 
+                    variant="outlined"
+                  />
                   {(machineServiceReport?.isHistory ||
                     machineServiceReport?.status?.name?.toUpperCase() === 'DRAFT') &&
                     machineServiceReport?.currentVersion?._id && (
@@ -465,7 +473,7 @@ function MachineServiceReportViewForm( {serviceHistoryView} ) {
                 </>
               }
             />
-          <ViewFormField isLoading={isLoading} variant='h4' sm={2} heading="Status" 
+          <ViewFormField isLoading={isLoading} variant='h4' sm={4} heading="Status" 
             node={ <>
               <Typography variant='h4' sx={{mr: 1,
                 color: (
@@ -474,7 +482,7 @@ function MachineServiceReportViewForm( {serviceHistoryView} ) {
                 ) || 'inherit'
                 }}
               >
-                {machineServiceReport?.currentApprovalStatus === "PENDING" ? ( machineServiceReport?.status?.name ) || "" : machineServiceReport?.currentApprovalStatus}
+                {machineServiceReport?.currentApprovalStatus === "PENDING" ? ( machineServiceReport?.status?.name && <ReportStatusButton machineID={ machineId } iconButton reportID={ id } status={ machineServiceReport?.status } />) || "" : machineServiceReport?.currentApprovalStatus}
               </Typography> 
               {
                 !machine?.isArchived &&
@@ -493,6 +501,14 @@ function MachineServiceReportViewForm( {serviceHistoryView} ) {
               <IconButtonTooltip title='Approve / Reject' icon="mdi:list-status" onClick={handleCompleteConfirm} /> }
             </>
             }
+          />
+
+          <ViewFormField 
+            isLoading={isLoading} 
+            variant='h4' 
+            sm={6} 
+            heading="Service Report Template" 
+            param={`${defaultValues.serviceReportTemplate} ${defaultValues.serviceReportTemplateReportType ? '-' : ''} ${defaultValues.serviceReportTemplateReportType ? defaultValues.serviceReportTemplateReportType : ''}`}
           />
 
           {(machineServiceReport?.currentApprovalStatus !== "PENDING" && machineServiceReport?.approval?.approvalLogs?.length > 0) ? (              

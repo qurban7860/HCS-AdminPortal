@@ -79,7 +79,7 @@ export default function ServiceReportStatusEditForm() {
       <Grid container spacing={4}>
         <Grid item xs={18} md={12}>
           <StyledCardContainer>
-            <Cover name="Edit Service Report Status" icon="fluent-mdl2:sync-status-solid" />
+            <Cover name="Edit Report Status" icon="fluent-mdl2:sync-status-solid" />
           </StyledCardContainer>
           <Card sx={{ p: 3 }}>
             <Stack spacing={3}>

@@ -227,7 +227,7 @@ function applyFilter({ inputData, comparator, filterName, filterStatus, filterDr
   inputData = stabilizedThis.map((el) => el[0]);
 
   if(!filterDraftStatus){
-    inputData = inputData.filter((srec) => srec?.status!=="DRAFT");
+    inputData = inputData.filter((srec) => srec?.status?.type?.toLowerCase() !=="draft");
   }
 
   if (filterName) {

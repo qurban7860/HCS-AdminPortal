@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import {  useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -64,7 +63,7 @@ export default function ServiceReportStatusViewForm( ) {
   <Grid>
     <StyledCardContainer>
       <Cover
-        name={serviceReportStatus?.name}
+        name={serviceReportStatus?.name || "Report Status"}
         setting
         />
     </StyledCardContainer>

@@ -74,7 +74,7 @@ export default function ServiceReportStatusAddForm() {
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
-        <Cover name="New Service Report Status" icon="material-symbols:diversity-1-rounded" />
+        <Cover name="New Report Status" icon="material-symbols:diversity-1-rounded" />
       </StyledCardContainer>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container>

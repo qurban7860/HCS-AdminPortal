@@ -7,6 +7,7 @@ import { CONFIG } from '../../../config-global';
 const initialState = {
   intial: false,
   isLoading: false,
+  isLoadingReportStatus: false,
   error: null,
   serviceReportStatus: {},
   serviceReportStatuses: [],
@@ -25,9 +26,14 @@ const slice = createSlice({
     startLoading(state) {
       state.isLoading = true;
     },
+    
+    startLoadingReportStatus(state) {
+      state.isLoadingReportStatus = true;
+    },
 
     // GET  STATUSES
     getServiceReportStatusesSuccess(state, action) {
+      state.isLoadingReportStatus = false;
       state.isLoading = false;
       state.serviceReportStatuses = action.payload;
       state.initial = true;
@@ -64,6 +70,7 @@ const slice = createSlice({
     },
 
     hasError(state, action) {
+      state.isLoadingReportStatus = false;
       state.isLoading = false;
       state.initial = true;
     },
@@ -101,6 +108,7 @@ export const {
 export function getServiceReportStatuses(){
   return async (dispatch) =>{
     try{
+      dispatch(slice.actions.startLoadingReportStatus());
       dispatch(slice.actions.startLoading());
       const response = await axios.get(`${CONFIG.SERVER_URL}products/productServiceReportStatus`, 
       {
