@@ -45,6 +45,13 @@ const slice = createSlice({
     // },
 
     // HAS ERROR
+    updateCommentsFromSSE(state, action) {
+      state.comments = action.payload;
+      state.isLoading = false;
+      state.success = true;
+      state.initial = true;
+    },
+
     hasError(state, action) {
       state.isLoading = false;
       state.error = action.payload;
@@ -147,6 +154,7 @@ export const {
   // setNoteFormVisibility,
   // setNoteEditFormVisibility,
   // setNoteViewFormVisibility,
+  updateCommentsFromSSE,
   resetComment,
   resetComments,
   setResponseMessage,
@@ -157,7 +165,27 @@ export const {
 
 // ----------------------------------------------------------------------
 
-export function getComments({primaryServiceReportId, serviceReportId}) {
+export function connectToCommentsSSE(primaryServiceReportId) {
+  return async (dispatch) => {
+    const eventSource = new EventSource(
+      `${CONFIG.SERVER_URL}products/serviceReport/${primaryServiceReportId}/serviceReportComments/stream`
+    );
+
+    eventSource.onmessage = (event) => {
+      const comments = JSON.parse(event.data);
+      dispatch(slice.actions.updateCommentsFromSSE(comments));
+    };
+
+    eventSource.onerror = (error) => {
+      console.error('SSE Error:', error);
+      eventSource.close();
+    };
+
+    return eventSource;
+  };
+}
+
+export function getComments({primaryServiceReportId}) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
