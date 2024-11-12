@@ -523,7 +523,7 @@ export function updateMachineServiceReport(machineId, id, params) {
         operators:                  params?.operators,
         operatorNotes:              params?.operatorNotes,
         checkItemReportValues:      params?.checkItemReportValues,
-        status:                     params?.status || null,
+        status:                     params?.status,
         update:                     params?.update,
         isReportDocsOnly:           params?.isReportDocsOnly,
         isActive:                   params?.isActive,
