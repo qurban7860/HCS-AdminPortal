@@ -180,15 +180,6 @@ const ServiceReportsFormComments = ({ currentUser, serviceReportData, machine })
                       Save
                     </LoadingButton>
                     <Button
-                      type="submit"
-                      variant="contained"
-                      color="primary"
-                      size="small"
-                      sx={{ width: 'fit-content' }}
-                    >
-                      Save
-                    </Button>
-                    <Button
                       type="button"
                       variant="text"
                       size="small"
