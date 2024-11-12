@@ -20,7 +20,7 @@ export function MachineServiceReportPDF({machineServiceReport, machineServiceRep
             serviceReportTemplateReportType:      machineServiceReport?.serviceReportTemplate?.reportType || '',
             serviceDate:                          machineServiceReport?.serviceDate || null,
             versionNo:                            machineServiceReport?.versionNo || null,
-            status:                               machineServiceReport?.status || '',
+            status:                               machineServiceReport?.status?.name || '',
             approvalStatus:                       machineServiceReport?.currentApprovalStatus || '',
             decoilers:                            machineServiceReport?.decoilers ,
             technician:                           machineServiceReport?.technician || null,

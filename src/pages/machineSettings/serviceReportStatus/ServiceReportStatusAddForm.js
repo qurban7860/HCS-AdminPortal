@@ -1,7 +1,5 @@
-// import PropTypes from 'prop-types';
-import * as Yup from 'yup';
 import { useMemo } from 'react';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
@@ -15,7 +13,7 @@ import { addServiceReportStatus } from '../../../redux/slices/products/serviceRe
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import FormProvider, { RHFTextField, RHFSwitch } from '../../../components/hook-form';
+import FormProvider, { RHFTextField, RHFSwitch, RHFAutocomplete } from '../../../components/hook-form';
 // util
 import { Cover } from '../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
@@ -27,6 +25,7 @@ import { serviceReportStatusSchema } from '../../schemas/machine';
 
 export default function ServiceReportStatusAddForm() {
   const dispatch = useDispatch();
+  const { statusTypes } = useSelector( ( state ) => state.serviceReportStatuses );
 
   const navigate = useNavigate();
 
@@ -35,11 +34,12 @@ export default function ServiceReportStatusAddForm() {
   const defaultValues = useMemo(
     () => ({
       name: '',
-      type: "",
+      type: null,
       displayOrderNo: '',
       description: '',
       isActive: true,
       isDefault: false,
+      isSubmit: false,
       createdAt: '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -74,7 +74,7 @@ export default function ServiceReportStatusAddForm() {
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
-        <Cover name="New Service Report Status" icon="material-symbols:diversity-1-rounded" />
+        <Cover name="New Report Status" icon="material-symbols:diversity-1-rounded" />
       </StyledCardContainer>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container>
@@ -88,13 +88,17 @@ export default function ServiceReportStatusAddForm() {
                   gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
                 >
                   <RHFTextField name="name" label="Name*"/>
-                  <RHFTextField name="type" label="Type" />
+                  <RHFAutocomplete 
+                    name="type" 
+                    label="Type*" 
+                    options={statusTypes}
+                    isOptionEqualToValue={ (option, value) => option === value }
+                  />
                   <RHFTextField name="displayOrderNo" label="Display Order No." />
                   <RHFTextField name="description" label="Description" minRows={7} multiline />
 
                 <Grid display="flex">
                   <RHFSwitch name="isActive" label="Active" />
-                  <RHFSwitch name="isDefault" label="Default" />
                 </Grid>
                 </Box>
               </Stack>

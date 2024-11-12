@@ -362,7 +362,7 @@ export function getMachineServiceReports (machineId, isMachineArchived){
         isArchived: false,
         $or: [
             { isHistory: false },
-            { status: 'DRAFT' }
+            // { status: { type: { $regex: '^DRAFT$', $options: 'i' } }}
           ],
         orderBy : {
           createdAt: -1
@@ -523,7 +523,7 @@ export function updateMachineServiceReport(machineId, id, params) {
         operators:                  params?.operators,
         operatorNotes:              params?.operatorNotes,
         checkItemReportValues:      params?.checkItemReportValues,
-        status:                     params?.status || 'DRAFT',
+        status:                     params?.status || null,
         update:                     params?.update,
         isReportDocsOnly:           params?.isReportDocsOnly,
         isActive:                   params?.isActive,

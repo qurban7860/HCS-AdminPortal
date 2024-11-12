@@ -334,14 +334,13 @@ export const CheckItemSchema = Yup.object().shape({
 
 export const serviceReportStatusSchema = Yup.object().shape({
   name: Yup.string().label("Name").min(2).max(50).required(),
-  type: Yup.string().label("Type").min(2).max(50).required(),
+  type: Yup.string().nullable().label("Type").min(2).max(50).required(),
   displayOrderNo: Yup.number()
   .typeError('Display Order No. must be a number')
   .nullable()
   .transform((_, val) => (val !== '' ? Number(val) : null)),
   description: Yup.string().label("Description").max(5000),
-  isActive: Yup.boolean(),
-  isDefault: Yup.boolean(),
+  isActive: Yup.boolean(), 
 });
 
 export const MachineServiceReportSchema = Yup.object().shape({

@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import {  useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -47,9 +46,10 @@ export default function ServiceReportStatusViewForm( ) {
     [ serviceReportStatus]
   );
 
-  const onDelete = () => {
+  const onDelete = async () => {
     try {
-      dispatch(deleteServiceReportStatus(id));
+      await dispatch(deleteServiceReportStatus(id));
+      enqueueSnackbar('Service Report Status Archive Successfully!');
       navigate(PATH_MACHINE.machines.machineSettings.serviceReportsStatus.root);
     } catch (err) {
       enqueueSnackbar('Status Archive failed!', { variant: `error` });
@@ -63,7 +63,7 @@ export default function ServiceReportStatusViewForm( ) {
   <Grid>
     <StyledCardContainer>
       <Cover
-        name={serviceReportStatus?.name}
+        name={serviceReportStatus?.name || "Report Status"}
         setting
         />
     </StyledCardContainer>

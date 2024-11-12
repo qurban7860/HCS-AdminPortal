@@ -7,6 +7,7 @@ import { CONFIG } from '../../../config-global';
 const initialState = {
   intial: false,
   isLoading: false,
+  isLoadingReportStatus: false,
   error: null,
   serviceReportStatus: {},
   serviceReportStatuses: [],
@@ -14,6 +15,7 @@ const initialState = {
   filterBy: '',
   page: 0,
   rowsPerPage: 100,
+  statusTypes: [ 'Draft', 'To Do', 'In Progress', 'Done' ],
 };
 
 const slice = createSlice({
@@ -24,9 +26,14 @@ const slice = createSlice({
     startLoading(state) {
       state.isLoading = true;
     },
+    
+    startLoadingReportStatus(state) {
+      state.isLoadingReportStatus = true;
+    },
 
     // GET  STATUSES
     getServiceReportStatusesSuccess(state, action) {
+      state.isLoadingReportStatus = false;
       state.isLoading = false;
       state.serviceReportStatuses = action.payload;
       state.initial = true;
@@ -63,6 +70,7 @@ const slice = createSlice({
     },
 
     hasError(state, action) {
+      state.isLoadingReportStatus = false;
       state.isLoading = false;
       state.initial = true;
     },
@@ -100,6 +108,7 @@ export const {
 export function getServiceReportStatuses(){
   return async (dispatch) =>{
     try{
+      dispatch(slice.actions.startLoadingReportStatus());
       dispatch(slice.actions.startLoading());
       const response = await axios.get(`${CONFIG.SERVER_URL}products/productServiceReportStatus`, 
       {
@@ -178,12 +187,12 @@ export function addServiceReportStatus(params) {
       dispatch(slice.actions.startLoading());
       try {
         const data = {
-          name: params.name,
-          type: params.type,
-          displayOrderNo: params.displayOrderNo,
-          description: params.description,
-          isActive: params.isActive,
-          isDefault: params.isDefault,
+          name: params?.name || "",
+          type: params?.type || "",
+          displayOrderNo: params?.displayOrderNo || "",
+          description: params?.description || "",
+          isActive: params?.isActive,
+          isDefault: params?.isDefault,
         };
         const response = await axios.post(`${CONFIG.SERVER_URL}products/productServiceReportStatus`, data);
         dispatch(slice.actions.getServiceReportStatusSuccess(response.data));
@@ -203,12 +212,11 @@ export function updateServiceReportStatus(params,Id) {
     try {
       dispatch(slice.actions.startLoading());
       const data = {
-        name: params.name,
-        type: params.type,
-        displayOrderNo: params.displayOrderNo,
-        description: params.description,
-        isActive: params.isActive,
-        isDefault: params.isDefault,
+        name: params?.name || "",
+        type: params?.type || "",
+        displayOrderNo: params?.displayOrderNo || "",
+        description: params?.description || "",
+        isActive: params?.isActive,
       };
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/productServiceReportStatus/${Id}`, data );
       dispatch(slice.actions.getServiceReportStatusSuccess(response.data));

@@ -136,7 +136,7 @@ export default function ServiceReportStatusList() {
   return (
       <Container maxWidth={false}>
         <StyledCardContainer>
-          <Cover name="Service Report Statuses" icon="material-symbols:list-alt-outline" setting />
+          <Cover name="Report Statuses" icon="material-symbols:list-alt-outline" setting />
         </StyledCardContainer>
         <TableCard>
           <ServiceReportStatusListTableToolbar
