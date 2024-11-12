@@ -16,6 +16,7 @@ import categoryReducer from './slices/products/category';
 import toolReducer from './slices/products/tools';
 import techparamcategoryReducer from './slices/products/machineTechParamCategory';
 import machinenoteReducer from './slices/products/machineNote';
+import serviceReportCommentsReducer from './slices/products/machineServiceReportComments';
 import machinestatusReducer from './slices/products/statuses';
 import machinemodelReducer from './slices/products/model';
 import techparamReducer from './slices/products/machineTechParam';
@@ -166,6 +167,13 @@ export const machineNotePersistConfig = {
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
+};
+
+export const serviceReportCommentsPersistConfig = {
+  key: 'serviceReportComments',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage', 'comment', 'comments']
 };
 
 export const machinestatusPersistConfig = {
@@ -463,6 +471,7 @@ const rootReducer = combineReducers({
   tool: persistReducer(toolPersistConfig,toolReducer),
   techparamcategory: persistReducer(techparamcategoryPersistConfig,techparamcategoryReducer),
   machineNote: persistReducer(machineNotePersistConfig, machinenoteReducer),
+  serviceReportComments: persistReducer(serviceReportCommentsPersistConfig, serviceReportCommentsReducer),
   machinestatus: persistReducer(machinestatusPersistConfig, machinestatusReducer),
   machinemodel: persistReducer(machinemodelPersistConfig, machinemodelReducer),
   techparam: persistReducer(techparamPersistConfig, techparamReducer),

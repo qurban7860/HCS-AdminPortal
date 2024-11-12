@@ -49,6 +49,7 @@ import SkeletonLine from '../../../components/skeleton/SkeletonLine';
 import DialogServiceReportComplete from '../../../components/Dialog/DialogServiceReportComplete';
 import SkeletonPDF from '../../../components/skeleton/SkeletonPDF';
 import IconButtonTooltip from '../../../components/Icons/IconButtonTooltip';
+import ServiceReportsFormComments from '../../../components/machineServiceReports/ServiceReportsFormComments';
 import ReportStatusButton from './ReportStatusButton';
 import { StyledVersionChip } from '../../../theme/styles/default-styles';
 
@@ -65,7 +66,7 @@ function MachineServiceReportViewForm( {serviceHistoryView} ) {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const { machineId, primaryServiceReportId, id } = useParams();
-  const { user } = useAuthContext();
+  const { user, userId } = useAuthContext();
   const [selectedImage, setSelectedImage] = useState(-1);
   const [slides, setSlides] = useState([]);
 
@@ -535,6 +536,9 @@ function MachineServiceReportViewForm( {serviceHistoryView} ) {
           />
           <ViewFormField isLoading={isLoading} sm={4} heading="Technician"  param={`${defaultValues?.technician?.firstName || ''} ${defaultValues?.technician?.lastName || ''} `} />
           <ViewFormNoteField sm={12} heading="Technician Notes" param={defaultValues.technicianNotes} />
+
+          <ServiceReportsFormComments serviceReportData={machineServiceReport} currentUser={{...user, userId}} machine={machine}/>
+
           { machineServiceReport?.reportDocs?.length > 0 &&
           <>
             <FormLabel content='Reporting Documents' />
@@ -574,7 +578,7 @@ function MachineServiceReportViewForm( {serviceHistoryView} ) {
           <FormLabel content={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />
           {defaultValues.textBeforeCheckItems && <ViewFormNoteField sm={12}  param={defaultValues.textBeforeCheckItems} />}
           {!isLoadingCheckItems ? 
-            <Grid item md={12} sx={{  overflowWrap: 'break-word' }}>
+            <Grid item md={12} sx={{ overflowWrap: 'break-word' }}>
               <Grid item md={12} sx={{display:'flex', flexDirection:'column'}}>
               {machineServiceReportCheckItems?.checkItemLists?.map((row, index) => (
                 <CheckedItemValueRow

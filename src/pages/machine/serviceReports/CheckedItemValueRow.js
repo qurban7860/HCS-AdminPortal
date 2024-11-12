@@ -5,10 +5,11 @@ import StatusAndComment from './StatusAndComment';
 
 const CheckedItemValueRow = ({value, index, machineId, primaryServiceReportId }) => (
     <Grid sx={{ border: '1px solid #e1e1e1', borderRadius: '7px', mt:1, p:1, backgroundColor: '#f3f4f594'}}>
-      <Typography variant='h5' sx={{ display: 'flex'}}>
-          <b>{`${index+1}- `}</b>{typeof value?.ListTitle === 'string' && value?.ListTitle || ''} {' ( Items: '}<b>{`${value?.checkItems?.length || 0}`}</b>{' ) '} 
-      </Typography>
-      <Grid  >
+    <Typography variant="h5" sx={{ display: 'flex' }}>
+      <b>{index + 1}- </b>
+      {value?.ListTitle || ''} (Items: <b>{value?.checkItems?.length || 0}</b>)
+    </Typography>
+      <Grid>
       <TableContainer >
         <Table size="small" aria-label="simple table" >
           <TableBody  >

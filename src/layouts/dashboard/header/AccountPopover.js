@@ -2,19 +2,14 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 // @mui
-import { alpha, useTheme } from '@mui/material/styles';
 import {
   Box,
   Divider,
-  Drawer,
   Typography,
   Stack,
-  Tooltip,
   MenuItem,
-  IconButton,
 } from '@mui/material';
 // routes
-import { NAV } from '../../../config-global';
 // auth
 import { useAuthContext } from '../../../auth/useAuthContext';
 // components
@@ -23,20 +18,7 @@ import { useSnackbar } from '../../../components/snackbar';
 import MenuPopover from '../../../components/menu-popover';
 import { IconButtonAnimate } from '../../../components/animate';
 // import Drawer
-import SettingsDrawer from '../../../components/settings/drawer';
-import LayoutOptions from '../../../components/settings/drawer/LayoutOptions';
-import Block from '../../../components/settings/drawer/Block';
-import ModeOptions from '../../../components/settings/drawer/ModeOptions';
-import ContrastOptions from '../../../components/settings/drawer/ContrastOptions';
-import DirectionOptions from '../../../components/settings/drawer/DirectionOptions';
-import StretchOptions from '../../../components/settings/drawer/StretchOptions';
-import ColorPresetsOptions from '../../../components/settings/drawer/ColorPresetsOptions';
-import FullScreenOptions from '../../../components/settings/drawer/FullScreenOptions';
-import { bgBlur } from '../../../utils/cssStyles';
 import { useSettingsContext } from '../../../components/settings';
-import { defaultSettings } from '../../../components/settings/config-setting';
-import Iconify from '../../../components/iconify';
-import Scrollbar from '../../../components/scrollbar';
 import { TITLES } from '../../../constants/default-constants';
 import { OPTIONS } from './util/OptionsListItems';
 import { setChangePasswordDialog } from '../../../redux/slices/securityUser/securityUser';
@@ -48,7 +30,6 @@ const SPACING = 2.5;
 // ----------------------------------------------------------------------
 
 export default function AccountPopover() {
-  const theme = useTheme();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { user, logout } = useAuthContext();
