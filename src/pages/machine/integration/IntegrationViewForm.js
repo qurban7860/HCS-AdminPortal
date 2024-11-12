@@ -18,6 +18,7 @@ import { addPortalIntegrationDetails, addPortalIntegrationKey, getMachineIntegra
 import { fDateTime } from '../../../utils/formatTime';
 import ViewFormMachinePortalKeyHistory from '../../../components/ViewForms/ViewFormMachinePortalKeyHistory';
 import MachineSyncAPILogsTable from '../../../components/machineIntegration/MachineSyncAPILogsTable';
+import CopyIcon from '../../../components/Icons/CopyIcon';
 
 const IntegrationViewForm = () => {
   const [openAddMoreInfoDialog, setOpenAddMoreInfoDialog] = useState(false);
@@ -93,10 +94,10 @@ const IntegrationViewForm = () => {
     enqueueSnackbar('Portal key download started', { variant: 'success' });
   };
 
-  const handleKeyCopy = (textToCopy) => {
-    navigator.clipboard.writeText(textToCopy);
-    enqueueSnackbar('Copied to clipboard', { variant: 'success' });
-  };
+  // const handleKeyCopy = (textToCopy) => {
+  //   navigator.clipboard.writeText(textToCopy);
+  //   enqueueSnackbar('Copied to clipboard', { variant: 'success' });
+  // };
 
   const handlePortalKeyHistoryPopup = (event) => {
     setPortalKeyHistoryAnchorEl(event.currentTarget);
@@ -105,11 +106,7 @@ const IntegrationViewForm = () => {
   const renderIntegrationField = (value, fieldName, label) => (
     value ? (
       <>
-        <StyledTooltip title={`Copy ${label}`} placement="top" disableFocusListener tooltipcolor="#2065D1" color="#2065D1">
-          <Link onClick={() => handleKeyCopy(value)} color="inherit" sx={{ cursor: 'pointer', mx: 0.5 }}>
-            <Iconify icon="mdi:content-copy" sx={{ position: 'relative', bottom: '-5px' }} color="#2065D1" />
-          </Link>
-        </StyledTooltip>
+        <CopyIcon value={value} sx={{ ml: 0, mr: 0.5 }}/>
         <Typography variant="body2" sx={{ fontWeight: 600 }}>{value}</Typography>
         <StyledTooltip title={`Edit ${label}`} placement="top" disableFocusListener tooltipcolor="#2065D1" color="#2065D1">
           <Link onClick={() => setOpenAddMoreInfoDialog(fieldName)} color="inherit" sx={{ cursor: 'pointer', mx: 0.5 }}>
@@ -168,11 +165,7 @@ const IntegrationViewForm = () => {
                   node={currentPortalKey?.key ? (
                     <Stack>
                       <Stack direction="row" alignItems="center">
-                        <StyledTooltip title='Copy Portal Key' placement="top" disableFocusListener tooltipcolor="#2065D1" color="#2065D1">
-                          <Link onClick={() => handleKeyCopy(currentPortalKey?.key)} color="inherit" sx={{ cursor: 'pointer', mx: 0.5 }}>
-                            <Iconify icon="mdi:content-copy" sx={{ position: 'relative', bottom: '-5px' }} color="#2065D1" />
-                          </Link>
-                        </StyledTooltip>
+                        <CopyIcon value={currentPortalKey.key} sx={{ ml: 0, mr: 0.5 }}/>
                         <Typography variant="body2" sx={{ fontWeight: 600 }}>{currentPortalKey.key}</Typography>
                         <Box sx={{ display: 'flex', columnGap: 1 , mx: 1}}>
                           <StyledTooltip title='Download Portal Key' placement="top" disableFocusListener tooltipcolor="#2065D1" color="#2065D1">
