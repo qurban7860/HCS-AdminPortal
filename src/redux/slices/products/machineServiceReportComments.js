@@ -167,8 +167,15 @@ export const {
 
 export function connectToCommentsSSE(primaryServiceReportId) {
   return async (dispatch) => {
+    const token = window.localStorage.getItem('accessToken');
     const eventSource = new EventSource(
-      `${CONFIG.SERVER_URL}products/serviceReport/${primaryServiceReportId}/serviceReportComments/stream`
+      `${CONFIG.SERVER_URL}products/serviceReport/${primaryServiceReportId}/comments/stream`,
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+        withCredentials: true
+      }
     );
 
     eventSource.onmessage = (event) => {
