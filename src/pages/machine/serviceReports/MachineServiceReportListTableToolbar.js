@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 // @mui
-import { Stack } from '@mui/material';
+import { Stack, Autocomplete, TextField } from '@mui/material';
 // routes
 import { useNavigate, useParams } from 'react-router-dom';
 import { PATH_MACHINE } from '../../../routes/paths';
@@ -51,6 +51,7 @@ export default function MachineServiceReportListTableToolbar({
   };
 
   const { machine } = useSelector((state) => state.machine); 
+  const { activeServiceReportStatuses, isLoadingReportStatus  } = useSelector( (state) => state.serviceReportStatuses );
 
   return (
     <Stack {...options}>
@@ -60,6 +61,18 @@ export default function MachineServiceReportListTableToolbar({
         onChange={onFilterName}
         onClick={onResetFilter}
         SubOnClick={toggleAdd}
+        node={
+          <Autocomplete 
+            value={ filterStatus || null}
+            isLoading={ isLoadingReportStatus }
+            options={ activeServiceReportStatuses }
+            isOptionEqualToValue={(option, val) => option?._id === val?._id}
+            getOptionLabel={(option) => option?.name}
+            onChange={onFilterStatus}
+            renderOption={(props, option) => ( <li {...props} key={option?._id}>{option?.name || ''}</li> )}
+            renderInput={(params) => <TextField {...params} size='small' label="Status" />}
+          />  
+        }
         addButton={!(machine?.isArchived || isHistory) ? BUTTONS.ADD_MACHINE_SERVICE_REPORT : undefined}
         transferredMachine={machine?.status?.slug==='transferred'}
         radioStatus={toggleStatus}

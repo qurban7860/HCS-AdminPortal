@@ -105,7 +105,7 @@ function MachineServiceReportViewForm( {serviceHistoryView} ) {
 
   const handleEdit = async() => {
     await dispatch(setFormActiveStep(0));
-    if(machineServiceReport?.status?.name?.toUpperCase() ==="SUBMITTED"){
+    if( machineServiceReport?.status?.type?.toLowerCase() !== "draft" ){
       try {
         const sreport = await dispatch(createMachineServiceReportVersion(machineId, id));
         if(sreport){
