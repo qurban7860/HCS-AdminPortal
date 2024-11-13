@@ -412,7 +412,6 @@ export const DbBackupLogsViewForm = Loadable(lazy(() => import('../pages/setting
 
 // LOGS: API LOGS
 export const ApiLogsList = Loadable(lazy(() => import('../pages/settings/systemLogs/ApiLogs/ApiLogsList')));
-export const ApiLogsViewForm = Loadable(lazy(() => import('../pages/settings/systemLogs/ApiLogs/ApiLogsViewForm')));
 
 // ----------------------------------------------------------------
 

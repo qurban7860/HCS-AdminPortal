@@ -375,7 +375,6 @@ import {
 
   // LOGS: API LOGS
   ApiLogsList,
-  ApiLogsViewForm,
 
   // ----------------------------------------------------------------
 
@@ -1095,7 +1094,6 @@ export default function Router() {
               path: 'logs',
               children: [
                 { element: <ApiLogsList /> , index: true },
-                { path: ':id/view', element: <ApiLogsViewForm /> },
               ]
             }
           ],
