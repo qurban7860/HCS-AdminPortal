@@ -23,7 +23,7 @@
 //   param: PropTypes.string,
 //   children: PropTypes.node,
 // };
-// function ApiLogsViewForm({ open, onClose, logDetails, requestMethodColor='default', responseStatusColor='default' }) {
+// function  DialogViewApiLogDetails({ open, onClose, logDetails, requestMethodColor='default', responseStatusColor='default' }) {
 //   return (
 //     <Dialog open={open} onClose={onClose} maxWidth="md"  aria-labelledby="api-log-dialog-title" aria-describedby="api-log-dialog-description" fullWidth>
 //       <DialogTitle variant="h3" sx={{ pb: 1, pt: 2 }}>API Log Details</DialogTitle>
@@ -53,7 +53,7 @@
 //   );
 // }
 
-// ApiLogsViewForm.propTypes = {
+//  DialogViewApiLogDetails.propTypes = {
 //   open: PropTypes.bool.isRequired,
 //   onClose: PropTypes.func.isRequired,
 //   logDetails: PropTypes.object,
@@ -61,12 +61,12 @@
 //   responseStatusColor: PropTypes.string,
 // };
 
-// export default ApiLogsViewForm;
+// export default  DialogViewApiLogDetails;
 
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Divider } from '@mui/material';
-import CodeMirror from '@uiw/react-codemirror';  
+import CodeMirror from '../CodeMirror/JsonEditor'; 
 
 function DialogViewApiLogDetails({ open, onClose, logDetails }) {
   return (

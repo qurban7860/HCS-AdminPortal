@@ -4,7 +4,7 @@ import { Chip, TableCell } from '@mui/material';
 import { fDateTime } from '../../utils/formatTime';
 import { StyledTableRow } from '../../theme/styles/default-styles';
 import LinkTableCell from '../ListTableTools/LinkTableCell';
-import DialogViewApiLogDetails from '../../pages/settings/systemLogs/ApiLogs/DialogViewApiLogDetails';
+import DialogViewApiLogDetails from '../Dialog/DialogViewApiLogDetails';
 
 APILogsTableRow.propTypes = {
   row: PropTypes.object,
@@ -103,16 +103,16 @@ export default function APILogsTableRow({
      onClose={handleCloseDialog}
      logDetails={{
        createdAt: fDateTime(createdAt),
-       requestURL,
        requestMethod,
-       responseTime,
+       requestURL,
        responseStatusCode,
+       responseTime,
        serialNo: machine?.[0]?.serialNo || '',
        customerName: customer?.name || '',
        additionalContextualInformation,
      }}
-     requestMethodColor={getChipColor(requestMethod)}
-     responseStatusColor={getResponseStatusColor(responseStatusCode)}
+    //  requestMethodColor={getChipColor(requestMethod)}
+    //  responseStatusColor={getResponseStatusColor(responseStatusCode)}
      />
      </>
   );
