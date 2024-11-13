@@ -54,7 +54,7 @@ const ServiceReportsFormComments = ({ currentUser, serviceReportData, machine })
   );
 
   useEffect(() => {
-    let eventSource;
+    let controller;
     
     if (serviceReportData?.primaryServiceReportId) {
       dispatch(
@@ -64,14 +64,14 @@ const ServiceReportsFormComments = ({ currentUser, serviceReportData, machine })
       );
       
       dispatch(connectToCommentsSSE(serviceReportData?.primaryServiceReportId))
-        .then(source => {
-          eventSource = source;
+        .then(ctrl => {
+          controller = ctrl;
         });
     }
-
+  
     return () => {
-      if (eventSource) {
-        eventSource.close();
+      if (controller) {
+        controller.abort();
       }
       dispatch(resetComments());
     };
