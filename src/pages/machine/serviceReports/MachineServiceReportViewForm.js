@@ -380,7 +380,9 @@ function MachineServiceReportViewForm( {serviceHistoryView} ) {
         enqueueSnackbar('Something went wrong!', { variant: 'error' });
       }
     }
-  };
+  };  
+
+  console.log(" ServiceReport?.status : ",machineServiceReport?.status?.type?.toLowerCase())
 
   return (
     <Container maxWidth={false}>
@@ -488,7 +490,7 @@ function MachineServiceReportViewForm( {serviceHistoryView} ) {
                 !machine?.isArchived &&
                 machineServiceReport?.isActive &&
                 !machineServiceReport?.isHistory &&
-                machineServiceReport?.status?.name?.toUpperCase() === 'SUBMITTED' &&
+                machineServiceReport?.status?.type?.toLowerCase() === 'done' &&
                 machineServiceReport?.currentVersion?._id === machineServiceReport?._id &&
                 machineServiceReport?.currentApprovalStatus !== 'APPROVED' &&
                 machineServiceReport?.approval?.approvingContacts?.length < 1 &&
