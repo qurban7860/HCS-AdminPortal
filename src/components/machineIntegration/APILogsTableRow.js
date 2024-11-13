@@ -101,7 +101,8 @@ export default function APILogsTableRow({
      <DialogViewApiLogDetails
      open={dialogOpen}
      onClose={handleCloseDialog}
-     logDetails={{
+     logDetails=
+      {{
        createdAt: fDateTime(createdAt),
        requestMethod,
        requestURL,
@@ -110,9 +111,7 @@ export default function APILogsTableRow({
        serialNo: machine?.[0]?.serialNo || '',
        customerName: customer?.name || '',
        additionalContextualInformation,
-     }}
-    //  requestMethodColor={getChipColor(requestMethod)}
-    //  responseStatusColor={getResponseStatusColor(responseStatusCode)}
+      }}
      />
      </>
   );
