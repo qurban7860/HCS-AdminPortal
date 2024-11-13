@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { createSlice } from '@reduxjs/toolkit';
-import { EventSourcePolyfill } from 'eventsource-polyfill';
+import { fetchEventSource } from '@microsoft/fetch-event-source';
 // utils
 import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
@@ -171,27 +171,25 @@ export function connectToCommentsSSE(primaryServiceReportId) {
   return async (dispatch) => {
     const token = window.localStorage.getItem('accessToken');
     
-    const eventSource = new EventSourcePolyfill(
-      `${CONFIG.SERVER_URL}products/serviceReport/${primaryServiceReportId}/comments/stream`,
-      {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        },
-        withCredentials: true
-      }
-    );
+    const ctrl = new AbortController();
 
-    eventSource.onmessage = (event) => {
-      const comments = JSON.parse(event.data);
-      dispatch(slice.actions.updateCommentsFromSSE(comments));
-    };
+    fetchEventSource(`${CONFIG.SERVER_URL}products/serviceReport/${primaryServiceReportId}/serviceReportComments/stream`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+      signal: ctrl.signal,
+      onmessage(event) {
+        const comments = JSON.parse(event.data);
+        dispatch(slice.actions.updateCommentsFromSSE(comments));
+      },
+      onerror(error) {
+        console.error('SSE Error:', error);
+        ctrl.abort();
+      },
+    });
 
-    eventSource.onerror = (error) => {
-      console.error('SSE Error:', error);
-      eventSource.close();
-    };
-
-    return eventSource;
+    return ctrl;
   };
 }
 
