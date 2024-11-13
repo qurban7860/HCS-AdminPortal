@@ -145,7 +145,7 @@ const ServiceReportsFormComments = ({ currentUser, serviceReportData, machine })
 
   return (
     <>
-      <Paper sx={{ marginTop: 2, width: '100%' }}>
+      <Paper sx={{ width: '100%', p: 2 }}>
         <FormLabel content={FORMLABELS.COVER.MACHINE_SERVICE_REPORT_NOTES} />
         <Box sx={{ py: 2 }}>
         {!machineDisabled && (

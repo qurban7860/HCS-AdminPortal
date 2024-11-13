@@ -184,7 +184,7 @@ export function connectToCommentsSSE(primaryServiceReportId) {
         dispatch(slice.actions.updateCommentsFromSSE(comments));
       },
       onerror(error) {
-        console.error('SSE Error:', error);
+        // console.error('SSE Error:', error);
         ctrl.abort();
       },
     });

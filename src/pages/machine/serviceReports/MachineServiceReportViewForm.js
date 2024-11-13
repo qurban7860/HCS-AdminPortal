@@ -537,8 +537,6 @@ function MachineServiceReportViewForm( {serviceHistoryView} ) {
           <ViewFormField isLoading={isLoading} sm={4} heading="Technician"  param={`${defaultValues?.technician?.firstName || ''} ${defaultValues?.technician?.lastName || ''} `} />
           <ViewFormNoteField sm={12} heading="Technician Notes" param={defaultValues.technicianNotes} />
 
-          <ServiceReportsFormComments serviceReportData={machineServiceReport} currentUser={{...user, userId}} machine={machine}/>
-
           { machineServiceReport?.reportDocs?.length > 0 &&
           <>
             <FormLabel content='Reporting Documents' />
@@ -654,6 +652,7 @@ function MachineServiceReportViewForm( {serviceHistoryView} ) {
         </Box>
           
           <ViewFormAudit defaultValues={defaultValues} />
+
         </Grid>
       </Grid>
       {pdfViewerDialog && <PDFViewerDialog machineServiceReport={machineServiceReport} />}
@@ -661,6 +660,9 @@ function MachineServiceReportViewForm( {serviceHistoryView} ) {
       <DialogServiceReportAddFile />
       <DialogServiceReportComplete reportStatus={reportStatus}/>
     </Card>
+      <Card sx={{ mt: 2 }}>
+        <ServiceReportsFormComments serviceReportData={machineServiceReport} currentUser={{...user, userId}} machine={machine}/>
+      </Card>
 
     <Lightbox
         index={selectedImage}
