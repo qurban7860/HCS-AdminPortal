@@ -30,6 +30,9 @@ export default function APILogsTableRow({
     machine,
     customer,
     additionalContextualInformation,
+    requestHeaders = {},
+    createdIP = '', 
+    createdBy = '' 
   } = row;
   
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -93,26 +96,35 @@ export default function APILogsTableRow({
           </TableCell>
       }
       {!hiddenColumns?.responseTime &&<TableCell align="left"><i>{responseTime}</i></TableCell>}
-      {!hiddenColumns?.machine &&<TableCell align="left">{machine?.[0]?.serialNo || ''}</TableCell>}
-      {!hiddenColumns?.customer && <TableCell align="left">{customer?.name || ''}</TableCell>}
       {!hiddenColumns?.additionalContextualInformation && <TableCell align="left">{additionalContextualInformation}</TableCell>}
+      {!hiddenColumns?.['customer.name'] && <TableCell align="left">{customer?.name || ''}</TableCell>}
+      {!hiddenColumns?.machine &&<TableCell align="left">{machine?.[0]?.serialNo || ''}</TableCell>}
     </StyledTableRow>
 
-     <DialogViewApiLogDetails
-     open={dialogOpen}
-     onClose={handleCloseDialog}
-     logDetails=
-      {{
-       createdAt: fDateTime(createdAt),
-       requestMethod,
-       requestURL,
-       responseStatusCode,
-       responseTime,
-       serialNo: machine?.[0]?.serialNo || '',
-       customerName: customer?.name || '',
-       additionalContextualInformation,
-      }}
-     />
+    <DialogViewApiLogDetails
+        open={dialogOpen}
+        onClose={handleCloseDialog}
+        logDetails={{
+          createdAt: fDateTime(createdAt),
+          requestMethod,
+          requestURL,
+          responseStatusCode,
+          responseTime,
+          additionalContextualInformation,
+          customerName: customer?.name || '',
+          serialNo: machine?.[0]?.serialNo || '',
+          machineName: machine?.[0]?.name || '',
+          portalKeyCreatedBy: machine?.[0]?.portalKey?.[0]?.createdBy?.name || '',
+          requestHeaders: {
+            'content-type': requestHeaders['content-type'],
+            'content-length': requestHeaders['content-length'],
+            connection: requestHeaders.connection,
+            host: requestHeaders.host
+          },
+          createdIP,
+          createdBy: createdBy?.name || '',
+        }}
+      />
      </>
   );
 }
