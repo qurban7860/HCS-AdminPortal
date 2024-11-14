@@ -14,11 +14,12 @@ import { StyledTooltip } from '../../../theme/styles/default-styles';
 import Iconify from '../../../components/iconify';
 import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
 import { RHFTextField } from '../../../components/hook-form';
-import { addPortalIntegrationDetails, addPortalIntegrationKey, getMachineIntegrationDetails } from '../../../redux/slices/products/machine';
+import { addPortalIntegrationDetails, addPortalIntegrationKey, getMachineIntegrationDetails, streamMachineIntegrationStatus } from '../../../redux/slices/products/machine';
 import { fDateTime } from '../../../utils/formatTime';
 import ViewFormMachinePortalKeyHistory from '../../../components/ViewForms/ViewFormMachinePortalKeyHistory';
 import MachineSyncAPILogsTable from '../../../components/machineIntegration/MachineSyncAPILogsTable';
 import CopyIcon from '../../../components/Icons/CopyIcon';
+import AnimatedIntegrationStatusChip from '../../../components/machineIntegration/AnimatedIntegrationStatusChip';
 
 const IntegrationViewForm = () => {
   const [openAddMoreInfoDialog, setOpenAddMoreInfoDialog] = useState(false);
@@ -28,14 +29,31 @@ const IntegrationViewForm = () => {
   const { machineId } = useParams();
   const dispatch = useDispatch();
   const { isLoading, machine } = useSelector((state) => state.machine);
-  const { apiLogs } = useSelector(
-    (state) => state.apiLogs
-  );
+
   const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
 
   const { serialNo, portalKey, computerGUID, IPC_SerialNo, status: machineStatus } = machine;
   const currentPortalKey = portalKey?.[0];
+
+  useEffect(() => {
+    let controller;
+    
+    if (machineId) {
+      dispatch(getMachineIntegrationDetails(machineId));
+      
+      dispatch(streamMachineIntegrationStatus(machineId))
+        .then(ctrl => {
+          controller = ctrl;
+        });
+    }
+  
+    return () => {
+      if (controller) {
+        controller.abort();
+      }
+    };
+  }, [dispatch, machineId]);
 
   const methods = useForm({
     defaultValues: {
@@ -195,24 +213,24 @@ const IntegrationViewForm = () => {
                 />
                 <ViewFormField isLoading={isLoading} sm={12} heading="Portal Integration Status"
                 node={
-                  machine?.machineIntegrationSyncStatus?.syncStatus ? (
-                    <Stack sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-                        <Chip 
-                          icon={<Iconify icon="fluent:plug-connected-checkmark-20-regular" width={25} color="#FFF"/>} 
-                          label="Connected" 
-                          color="primary"
-                        />
-                      <Typography variant="caption" sx={{ color: 'text.disabled', display: 'block', mt: 1, fontStyle: 'italic' }}>
-                        {`Machine Connection Successfully establlished on ${fDateTime(machine?.machineIntegrationSyncStatus?.syncDate)} from ${machine?.machineIntegrationSyncStatus?.syncIP}`} 
-                      </Typography>
-                    </Stack>
-                  ) : (
-                      <Chip 
-                        icon={<Iconify icon="tabler:plug-connected-x" color="#FFF" />}
-                        label="Waiting for connection"
-                        color="warning"
+                  <AnimatedIntegrationStatusChip
+                    isConnected={machine?.machineIntegrationSyncStatus?.syncStatus}
+                    syncDate={fDateTime(machine?.machineIntegrationSyncStatus?.syncDate)}
+                    syncIP={machine?.machineIntegrationSyncStatus?.syncIP}
+                    ConnectedIcon={() => (
+                      <Iconify 
+                        icon="fluent:plug-connected-checkmark-20-regular" 
+                        width={25} 
+                        color="#FFF"
                       />
-                  )
+                    )}
+                    DisconnectedIcon={() => (
+                      <Iconify 
+                        icon="tabler:plug-connected-x" 
+                        color="#FFF" 
+                      />
+                    )}
+                  />
                 } 
                 />
               </Grid>
