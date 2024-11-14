@@ -440,8 +440,8 @@ function SearchBarCombo({
             </Stack>
           </Grid>}
 
-          { setCategoryVal &&  typeof setCategoryVal === 'function' && 
-          <Grid item xs={12} sm={6} md={4} lg={2} xl={(machineDrawings) ? 5 : 2}>
+          { !machineDrawings && setCategoryVal &&  typeof setCategoryVal === 'function' && 
+          <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
             <Autocomplete 
               id="controllable-states-demo"
               value={categoryVal || null}
@@ -468,7 +468,7 @@ function SearchBarCombo({
             />
           </Grid>}
 
-          {setTypeVal &&  typeof setTypeVal === 'function'  && <Grid item xs={12} sm={6} md={4} lg={2} xl={(machineDrawings) ? 5 : 2}>
+          { !machineDrawings && setTypeVal &&  typeof setTypeVal === 'function'  && <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
             <Autocomplete 
               id="controllable-states-demo"
               value={typeVal || null}
@@ -511,21 +511,22 @@ function SearchBarCombo({
             />
           </Grid> }
           
-          {onApiLogsStatusFilter && onApiLogsMethodFilter && <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: '1fr', sm: 'repeat(3, 1fr)' }} sx={{ flexGrow: 1, width: { xs: '100%', sm: '100%' } }}>
-          {onApiLogsStatusFilter && (
+          {onApiLogsTypeFilter && onApiLogsMethodFilter && onApiLogsStatusFilter && <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: '1fr', sm: 'repeat(3, 1fr)' }} sx={{ flexGrow: 1, width: { xs: '100%', sm: '100%' }, mr: 1 }}>
+          {onApiLogsTypeFilter && (
            <FormControl fullWidth>
-            <InputLabel id="api-logs-status-label">Status</InputLabel>
+            <InputLabel id="api-logs-type-label">API Type</InputLabel>
             <Select
-              labelId="api-logs-status-label"
-              id="api-logs-status"
+              labelId="api-logs-type-label"
+              id="api-logs-type"
               size="small"
-              value={apiLogsStatusFilter}
-              label="Status"
-              onChange={onApiLogsStatusFilter}
+              value={apiLogsTypeFilter}
+              label="API Type"
+              onChange={onApiLogsTypeFilter}
             >
-             <MenuItem key="-1" value={-1}>All</MenuItem>
-             <MenuItem key="success" value="200-299">Success</MenuItem>
-             <MenuItem key="failed" value="400-499">Failed</MenuItem>
+             <MenuItem value="ALL">All</MenuItem>
+             <MenuItem value="MACHINE-INTEGRATION">MACHINE-INTEGRATION</MenuItem>
+             <MenuItem value="INI">INI</MenuItem>
+             <MenuItem value="OTHER">OTHER</MenuItem>
             </Select>
            </FormControl>
           )}
@@ -546,24 +547,24 @@ function SearchBarCombo({
             </Select>
            </FormControl>
           )}
-          {onApiLogsTypeFilter && (
+           {onApiLogsStatusFilter && (
            <FormControl fullWidth>
-            <InputLabel id="api-logs-type-label">API Type</InputLabel>
+            <InputLabel id="api-logs-status-label">Status</InputLabel>
             <Select
-              labelId="api-logs-type-label"
-              id="api-logs-type"
+              labelId="api-logs-status-label"
+              id="api-logs-status"
               size="small"
-              value={apiLogsTypeFilter}
-              label="API Type"
-              onChange={onApiLogsTypeFilter}
+              value={apiLogsStatusFilter}
+              label="Status"
+              onChange={onApiLogsStatusFilter}
             >
-             <MenuItem value="ALL">All</MenuItem>
-             <MenuItem value="MACHINE-INTEGRATION">MACHINE-INTEGRATION</MenuItem>
-             <MenuItem value="INI">INI</MenuItem>
-             <MenuItem value="OTHER">OTHER</MenuItem>
+             <MenuItem key="-1" value={-1}>All</MenuItem>
+             <MenuItem key="success" value="200-299">Success</MenuItem>
+             <MenuItem key="failed" value="400-499">Failed</MenuItem>
             </Select>
            </FormControl>
-          )}</Box> }
+          )}
+          </Box> }
 
           {isPm2LogTypes && 
             <>

@@ -88,9 +88,9 @@ export default function DocumentListTableToolbar({
         addButton={ ( !machineDrawings && ( customer?.isArchived || machine?.isArchived ) ) ? undefined : addButton }
         transferredMachine={machinePage && machine?.status?.slug === 'transferred'}
         categoryVal={categoryVal}
-        setCategoryVal={(machineDrawings || machinePage) ? setCategoryVal : null }
+        setCategoryVal={(machinePage) ? setCategoryVal : null }
         typeVal={typeVal}
-        setTypeVal={(machineDrawings || machinePage) ? setTypeVal : null }
+        setTypeVal={(machinePage) ? setTypeVal : null }
         machineDrawings={machineDrawings}
         handleGalleryView={ ( customer?.isArchived || machine?.isArchived ) ? undefined : handleGalleryView}
       />

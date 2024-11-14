@@ -52,6 +52,7 @@ export default function ApiLogsList() {
 
   const TABLE_HEAD = [
     { id: 'createdAt', label: 'Timestamp', align: 'left' },
+    { id: 'apiType', label: 'API Type', align: 'left' },
     { id: 'requestMethod', label: 'Method', align: 'left' },
     { id: 'requestURL', label: 'Endpoint', align: 'left', allowSearch: true },
     { id: 'responseStatusCode', label: 'Status', align: 'left' },
@@ -266,6 +267,11 @@ export default function ApiLogsList() {
                       selectedFilter={selectedSearchFilter}
                       placeholder="Enter Search here..."
                       afterClearHandler={afterClearHandler}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          handleSubmit(onHandleSubmit)();
+                        }
+                      }}
                       fullWidth
                     />
                   </Box>
