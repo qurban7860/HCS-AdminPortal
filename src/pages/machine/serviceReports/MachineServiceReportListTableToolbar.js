@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 // @mui
-import { Stack, Autocomplete, TextField } from '@mui/material';
+import { Stack, Autocomplete, TextField, Grid } from '@mui/material';
 // routes
 import { useNavigate, useParams } from 'react-router-dom';
 import { PATH_MACHINE } from '../../../routes/paths';
@@ -20,8 +20,10 @@ MachineServiceReportListTableToolbar.propTypes = {
   filterName: PropTypes.string,
   onFilterName: PropTypes.func,
   onResetFilter: PropTypes.func,
-  filterStatus: PropTypes.array,
+  filterStatus: PropTypes.object,
+  filterStatusType: PropTypes.string,
   onFilterStatus: PropTypes.func,
+  onFilterStatusType: PropTypes.func,
   statusOptions: PropTypes.array,
   isHistory: PropTypes.bool,
   toggleStatus: PropTypes.bool,
@@ -31,11 +33,13 @@ MachineServiceReportListTableToolbar.propTypes = {
 export default function MachineServiceReportListTableToolbar({
   isFiltered,
   filterName,
-  filterStatus,
+  filterStatus = null ,
+  filterStatusType = null ,
   onFilterName,
   statusOptions,
   onResetFilter,
   onFilterStatus,
+  onFilterStatusType,
   isHistory,
   toggleStatus,
   onToggleStatus
@@ -51,7 +55,7 @@ export default function MachineServiceReportListTableToolbar({
   };
 
   const { machine } = useSelector((state) => state.machine); 
-  const { activeServiceReportStatuses, isLoadingReportStatus  } = useSelector( (state) => state.serviceReportStatuses );
+  const { activeServiceReportStatuses, isLoadingReportStatus, statusTypes  } = useSelector( (state) => state.serviceReportStatuses );
 
   return (
     <Stack {...options}>
@@ -61,17 +65,32 @@ export default function MachineServiceReportListTableToolbar({
         onChange={onFilterName}
         onClick={onResetFilter}
         SubOnClick={toggleAdd}
-        node={
-          <Autocomplete 
-            value={ filterStatus || null}
-            isLoading={ isLoadingReportStatus }
-            options={ activeServiceReportStatuses }
-            isOptionEqualToValue={(option, val) => option?._id === val?._id}
-            getOptionLabel={(option) => option?.name}
-            onChange={onFilterStatus}
-            renderOption={(props, option) => ( <li {...props} key={option?._id}>{option?.name || ''}</li> )}
-            renderInput={(params) => <TextField {...params} size='small' label="Status" />}
-          />  
+        nodes={
+          <>
+          <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
+
+            <Autocomplete 
+              value={ filterStatus || null}
+              isLoading={ isLoadingReportStatus }
+              options={ activeServiceReportStatuses?.filter( s => s?.type?.toLowerCase() !== 'draft' ) }
+              isOptionEqualToValue={(option, val) => option?._id === val?._id}
+              getOptionLabel={(option) => option?.name}
+              onChange={onFilterStatus}
+              renderOption={(props, option) => ( <li {...props} key={option?._id}>{option?.name || ''}</li> )}
+              renderInput={(params) => <TextField {...params} size='small' label="Status" />}
+            />  
+          </Grid>
+          <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
+            <Autocomplete 
+              value={ filterStatusType || null }
+              options={ statusTypes }
+              getOptionLabel={(option) => option}
+              onChange={ onFilterStatusType }
+              renderOption={(props, option) => ( <li {...props} key={option}>{option || ''}</li> )}
+              renderInput={(params) => <TextField {...params} size='small' label="Type" />}
+            /> 
+          </Grid>
+          </>
         }
         addButton={!(machine?.isArchived || isHistory) ? BUTTONS.ADD_MACHINE_SERVICE_REPORT : undefined}
         transferredMachine={machine?.status?.slug==='transferred'}

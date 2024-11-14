@@ -18,6 +18,7 @@ import { useDebouncedEffect } from '../../hooks/useDebouncedEffect';
 
 function SearchBarCombo({
   node,
+  nodes,
   isFiltered,
   value,
   onFilterVerify,
@@ -156,6 +157,8 @@ function SearchBarCombo({
                 { node }
             </Grid>
           }
+
+          { nodes && nodes }
 
           {onFilterVerify &&
           <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
@@ -832,6 +835,7 @@ function SearchBarCombo({
 
 SearchBarCombo.propTypes = {
   node: PropTypes.node,
+  nodes: PropTypes.node,
   isFiltered: PropTypes.bool,
   onClick: PropTypes.func,
   onChange: PropTypes.func,

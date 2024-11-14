@@ -354,19 +354,35 @@ export function getMachineServiceReportVersion(machineId, id ){
 // ------------------------------------------------------------------------------------------------
 
 
-export function getMachineServiceReports (machineId, isMachineArchived){
+export function getMachineServiceReports ( param ){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
+      const { page, rowsPerPage, machineId, isMachineArchived, status, draftStatus, statusType } = param
       const params = {
         isArchived: false,
-        $or: [
-            { isHistory: false },
-            // { status: { type: { $regex: '^DRAFT$', $options: 'i' } }}
+        $and: [
+          { isHistory: false },
           ],
-        orderBy : {
-          createdAt: -1
-        }
+        orderBy : { createdAt: -1 },
+        pagination: { page, rowsPerPage },
+      }
+      // If status is provided, add it to the query
+      if (status) {
+        params.$and.push({ status });
+      }
+
+      // // If draftStatus is provided, add a condition to include draft statuses, ensuring uniqueness by `primaryServiceReportId`
+      // if (draftStatus) {
+      //   params.$and.push({
+      //     $or: [
+      //       { status: draftStatus },
+      //       { status },
+      //     ]
+      //   });
+      // }
+      if (statusType) {
+        params.$and.push({ "status.type": statusType });
       }
     if(isMachineArchived){
       params.archivedByMachine = true;
