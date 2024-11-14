@@ -169,7 +169,6 @@ import {
   MachineServiceReportList,
   MachineServiceReportAdd,
   MachineServiceReportView,
-  MachineServiceReportHistoryList,
 
   // --------------------------- MACHINE INI -------------------------------------
   MachineINIList,
@@ -751,11 +750,6 @@ export default function Router() {
                 {path: 'new', element: <MachineServiceReportAdd/>},
                 {path: ':id/view', element: <MachineServiceReportView/>},
                 {path: ':id/edit', element: <MachineServiceReportAdd/>}, 
-                {path: ':primaryServiceReportId/history',children:[
-                    {element: <MachineServiceReportHistoryList/>, index: true}, 
-                    {path: ':id/view', element: <MachineServiceReportView serviceHistoryView />},
-                  ]
-                }, 
               ]
             },
             { path: ':machineId/ini',

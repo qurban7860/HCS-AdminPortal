@@ -64,7 +64,6 @@ function MachineServiceReportsFirstStep( { handleComplete, handleDraftRequest, h
         docReportType:                reportTypes.find(rt=> rt?.name?.toLowerCase() === machineServiceReport?.serviceReportTemplate?.reportType?.toLowerCase()) || null,
         serviceReportTemplate:        machineServiceReport?.serviceReportTemplate || null,
         serviceDate:                  machineServiceReport?.serviceDate || new Date(),
-        versionNo:                    machineServiceReport?.versionNo || 1,
         technician:                   machineServiceReport?.technician || null ,
         technicianNotes:              machineServiceReport?.technicianNotes || '',
         textBeforeCheckItems:         machineServiceReport?.textBeforeCheckItems || '',
@@ -344,17 +343,16 @@ return (
                     gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
                     >
                     <RHFDatePicker inputFormat='dd/MM/yyyy' name="Service Date" label="Service Date" />
-                    <RHFTextField name="versionNo" label="Version No" disabled />
-                  </Box>
 
-                  <RHFAutocomplete
-                    name="technician"
-                    label="Technician"
-                    options={ technicians }
-                    getOptionLabel={(option) => `${option?.firstName || ''} ${option?.lastName || ''}`}
-                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                    renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li>)}
-                  />
+                    <RHFAutocomplete
+                      name="technician"
+                      label="Technician"
+                      options={ technicians }
+                      getOptionLabel={(option) => `${option?.firstName || ''} ${option?.lastName || ''}`}
+                      isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                      renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li>)}
+                    />
+                  </Box>
 
                   <RHFTextField name="technicianNotes" label="Technician Notes" minRows={3} multiline/> 
                   <FormLabel content='Reporting Documents' />

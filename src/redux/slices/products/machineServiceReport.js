@@ -28,7 +28,6 @@ const initialState = {
   isHistorical: false,
   isDetailPage: false,
   filterBy: '',
-  filterDraft:false,
   page: 0,
   rowsPerPage: 100,
 };
@@ -229,11 +228,6 @@ const slice = createSlice({
       state.filterBy = action.payload;
     },
 
-    // Set FilterDraft
-    setFilterDraft(state, action) {
-      state.filterDraft  = action.payload;
-    },
-
     // Set PageRowCount
     ChangeRowsPerPage(state, action) {
       state.rowsPerPage = action.payload;
@@ -266,7 +260,6 @@ export const {
   resetSubmittingCheckItemIndex,
   setResponseMessage,
   setFilterBy,
-  setFilterDraft,
   ChangeRowsPerPage,
   ChangePage,
 } = slice.actions;
@@ -358,32 +351,22 @@ export function getMachineServiceReports ( param ){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
-      const { page, rowsPerPage, machineId, isMachineArchived, status, draftStatus, statusType } = param
+      const { page, rowsPerPage, machineId, isMachineArchived, status, statusType } = param
       const params = {
         isArchived: false,
-        $and: [
-          { isHistory: false },
-          ],
+        $or: [],
         orderBy : { createdAt: -1 },
         pagination: { page, rowsPerPage },
       }
-      // If status is provided, add it to the query
+      
       if (status) {
-        params.$and.push({ status });
+        params.$or.push({ status });
       }
 
-      // // If draftStatus is provided, add a condition to include draft statuses, ensuring uniqueness by `primaryServiceReportId`
-      // if (draftStatus) {
-      //   params.$and.push({
-      //     $or: [
-      //       { status: draftStatus },
-      //       { status },
-      //     ]
-      //   });
-      // }
       if (statusType) {
-        params.$and.push({ "status.type": statusType });
+        params.$or.push({ "status.type": statusType });
       }
+
     if(isMachineArchived){
       params.archivedByMachine = true;
       params.isArchived = true;
@@ -574,21 +557,6 @@ export function addMachineServiceReportFiles(machineId, id, params) {
       }
       const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceReports/${id}/files/`,formData);
       dispatch(slice.actions.getMachineServiceReportSuccess(response?.data));
-    } catch (error) {
-      console.error(error);
-      dispatch(slice.actions.hasError(error.Message));
-      throw error;
-    }
-  };
-}
-
-
-export function createMachineServiceReportVersion(machineId, id) {
-  return async (dispatch) => {
-    dispatch(slice.actions.startLoading());
-    try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceReports/${id}/version/`);
-      return response?.data;
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
