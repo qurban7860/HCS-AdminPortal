@@ -23,6 +23,7 @@ export default function APILogsTableRow({
 }) {
   const {
     createdAt,
+    apiType,
     requestMethod,
     requestURL,
     responseStatusCode,
@@ -74,6 +75,7 @@ export default function APILogsTableRow({
     <>
     <StyledTableRow hover selected={selected} onClick={handleRowClick} sx={{ cursor: 'pointer' }}>
       {!hiddenColumns?.createdAt && <LinkTableCell align="left" onClick={handleRowClick} param={fDateTime(createdAt)}/>}
+      {!hiddenColumns?.apiType &&<TableCell align="left"><i>{apiType}</i></TableCell>}
       {!hiddenColumns?.requestMethod &&
           <TableCell align="left">
             <Chip
@@ -106,6 +108,7 @@ export default function APILogsTableRow({
         onClose={handleCloseDialog}
         logDetails={{
           createdAt: fDateTime(createdAt),
+          apiType,
           requestMethod,
           requestURL,
           responseStatusCode,

@@ -84,6 +84,14 @@ export default function RHFFilteredSearchBar({
                 paddingLeft: isMobile ? '14px' : 'inherit',
               },
             }}
+            onChange={(e) => {
+              const {value} = e.target;
+              field.onChange(e); 
+              if (value === '') {
+                setSelectedFilter('');
+                afterClearHandler();
+              }
+            }}
             {...other}
             InputProps={{
               startAdornment: (
