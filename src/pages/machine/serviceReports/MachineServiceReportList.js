@@ -20,8 +20,10 @@ import Scrollbar from '../../../components/scrollbar';
 // sections
 import MachineServiceReportListTableRow from './MachineServiceReportListTableRow';
 import MachineServiceReportListTableToolbar from './MachineServiceReportListTableToolbar';
+import { getActiveServiceReportStatuses, resetActiveServiceReportStatuses } from '../../../redux/slices/products/serviceReportStatuses';
 import {
   getMachineServiceReports,
+  resetMachineServiceReports,
   setDetailPageFlag,
   ChangeRowsPerPage,
   ChangePage,
@@ -50,7 +52,8 @@ const TABLE_HEAD = [
 
 export default function MachineServiceReportList() {
   const { machine } = useSelector((state) => state.machine);
-  const { machineServiceReports, filterBy, filterDraft, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.machineServiceReport);
+  const { machineServiceReports, filterBy, filterDraft, page, rowsPerPage, isLoading } = useSelector((state) => state.machineServiceReport);
+  const { activeServiceReportStatuses } = useSelector( (state) => state.serviceReportStatuses );
   const navigate = useNavigate();
   const { machineId } = useParams();
 
@@ -71,33 +74,46 @@ export default function MachineServiceReportList() {
   const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
   const dispatch = useDispatch();
   const [filterName, setFilterName] = useState('');
-  const [tableData, setTableData] = useState([]);
-  const [filterStatus, setFilterStatus] = useState([]);
+  const [filterStatus, setFilterStatus] = useState(null);
+  const [statusType, setStatusType] = useState(null);
   const [filterDraftStatus, setFilterDraftStatus] = useState(false);
   
   useLayoutEffect(() => {
     dispatch(setSendEmailDialog(false));
-    if(machineId){
-      dispatch(getMachineServiceReports(machineId, machine?.isArchived ));
-    }
+    dispatch(getActiveServiceReportStatuses() )
     dispatch(setDetailPageFlag(false));
-  }, [dispatch, machineId, machine ]);
-
-  useEffect(() => {
-    if (initial) {
-      setTableData(machineServiceReports);
+    return ()=>{
+      dispatch( resetActiveServiceReportStatuses() )
     }
-  }, [machineServiceReports, initial]);
+  }, [ dispatch ]);
+
+  useLayoutEffect(() => {
+    if(machineId ){
+      dispatch(getMachineServiceReports(
+        {
+          page,
+          rowsPerPage,
+          machineId,
+          isMachineArchived: machine?.isArchived,
+          status: filterStatus?._id,
+          draftStatus: !filterDraftStatus ? activeServiceReportStatuses?.find( ds => ds?.type?.toLowerCase() === 'draft' )?._id : undefined ,
+          statusType
+        }
+      ));
+    }
+    return () => {
+      dispatch( resetMachineServiceReports() )
+    }
+  }, [dispatch, machineId, machine, activeServiceReportStatuses, filterStatus, filterDraftStatus, statusType, page, rowsPerPage ]);
 
   const dataFiltered = applyFilter({
-    inputData: tableData,
+    inputData: machineServiceReports?.data || [],
     comparator: getComparator(order, orderBy),
     filterName,
-    filterStatus,
     filterDraftStatus
   });
 
-  const isFiltered = filterName !== '' || !!filterStatus.length;
+  const isFiltered = filterName !== '' ;
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
   const denseHeight = 60;
@@ -135,10 +151,22 @@ export default function MachineServiceReportList() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 
-  const handleFilterStatus = (event) => {
-    setPage(0);
-    setFilterStatus(event.target.value);
-  };
+  const handleFilterStatus = ( option, newValue ) => {
+    if( newValue ){
+      setPage(0);
+      setFilterStatus( newValue );
+    } else {
+      setFilterStatus( null );
+    }
+  }
+  const handleStatusType = ( option, newValue ) => {
+    if( newValue ){
+      setPage(0);
+      setStatusType( newValue );
+    } else {
+      setStatusType( null );
+    }
+  }
 
   const handleViewRow = async (id) => navigate(PATH_MACHINE.machines.serviceReports.view(machineId ,id));
 
@@ -154,8 +182,10 @@ export default function MachineServiceReportList() {
           <MachineServiceReportListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
+            filterStatusType={ statusType } 
             onFilterName={handleFilterName}
             onFilterStatus={handleFilterStatus}
+            onFilterStatusType={handleStatusType}
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
             toggleStatus={filterDraftStatus}
@@ -163,8 +193,8 @@ export default function MachineServiceReportList() {
           />
 
           {!isNotFound && <TablePaginationCustom
-            count={dataFiltered.length}
-            page={page}
+            count={machineServiceReports?.totalCount || 0 }
+            page={machineServiceReports?.currentPage || 0 }
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
@@ -203,8 +233,8 @@ export default function MachineServiceReportList() {
           </TableContainer>
 
           {!isNotFound && <TablePaginationCustom
-            count={dataFiltered.length}
-            page={page}
+            count={ machineServiceReports?.totalCount || 0 }
+            page={ machineServiceReports?.currentPage || 0 }
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
@@ -216,7 +246,7 @@ export default function MachineServiceReportList() {
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName, filterStatus, filterDraftStatus }) {
+function applyFilter({ inputData, comparator, filterName, filterDraftStatus }) {
   const stabilizedThis = inputData.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -238,10 +268,6 @@ function applyFilter({ inputData, comparator, filterName, filterStatus, filterDr
         docCategory?.createdBy?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         fDate(docCategory?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
-  }
-
-  if (filterStatus.length) {
-    inputData = inputData.filter((customer) => filterStatus.includes(customer.status));
   }
 
   return inputData;

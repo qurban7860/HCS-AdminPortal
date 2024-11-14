@@ -255,7 +255,7 @@ function applyFilter({ inputData, comparator, filterName, filterByStatus }) {
         c?.contactPersonName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         c?.email?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         c?.phoneNumber?.toString()?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        c?.address.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        c?.address?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         c?.customerName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         c?.machineSerialNos?.some( msn => msn?.toString()?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ) ||
         c?.status?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
