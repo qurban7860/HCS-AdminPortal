@@ -27,7 +27,6 @@ import { useSnackbar } from '../../../components/snackbar';
 import { FORMLABELS } from '../../../constants/default-constants';
 import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../../components/ViewForms/ViewFormField';
-import ViewFormNoteField from '../../../components/ViewForms/ViewFormNoteField';
 import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
 import { fDate } from '../../../utils/formatTime';
@@ -47,6 +46,7 @@ import SkeletonPDF from '../../../components/skeleton/SkeletonPDF';
 import IconButtonTooltip from '../../../components/Icons/IconButtonTooltip';
 import ServiceReportsFormComments from '../../../components/machineServiceReports/ServiceReportsFormComments';
 import ReportStatusButton from './ReportStatusButton';
+import ViewHistory from './ViewHistory';
 
 function MachineServiceReportViewForm( ) {
   
@@ -112,8 +112,6 @@ function MachineServiceReportViewForm( ) {
       serviceDate:                          machineServiceReport?.serviceDate || null,
       decoilers:                            machineServiceReport?.decoilers ,
       technician:                           machineServiceReport?.technician || null,
-      textBeforeCheckItems:                 machineServiceReport?.textBeforeCheckItems || '',
-      textAfterCheckItems:                  machineServiceReport?.textAfterCheckItems || '',
       // checkParams:         
       headerLeftText:                       machineServiceReport?.serviceReportTemplate?.header?.leftText || '',
       headerCenterText:                     machineServiceReport?.serviceReportTemplate?.header?.centerText || '',
@@ -121,15 +119,17 @@ function MachineServiceReportViewForm( ) {
       footerLeftText:                       machineServiceReport?.serviceReportTemplate?.footer?.leftText || '', 
       footerCenterText:                     machineServiceReport?.serviceReportTemplate?.footer?.centerText || '',
       footerRightText:                      machineServiceReport?.serviceReportTemplate?.footer?.rightText || '',
-      internalComments:                     machineServiceReport?.internalComments || '',
-      serviceNote:                          machineServiceReport?.serviceNote || '',
-      recommendationNote:                   machineServiceReport?.recommendationNote || '',
-      suggestedSpares:                      machineServiceReport?.suggestedSpares || '',
-      internalNote:                         machineServiceReport?.internalNote || '',
+      textBeforeCheckItems:                 machineServiceReport?.textBeforeCheckItems || [],
+      textAfterCheckItems:                  machineServiceReport?.textAfterCheckItems || [],
+      internalComments:                     machineServiceReport?.internalComments || [],
+      serviceNote:                          machineServiceReport?.serviceNote || [],
+      recommendationNote:                   machineServiceReport?.recommendationNote || [],
+      suggestedSpares:                      machineServiceReport?.suggestedSpares || [],
+      internalNote:                         machineServiceReport?.internalNote || [],
+      operatorNotes:                        machineServiceReport?.operatorNotes || [],
+      technicianNotes:                      machineServiceReport?.technicianNotes ||[],
       files:                                machineServiceReport?.files || [],
       operators:                            machineServiceReport?.operators || [],
-      operatorNotes:                        machineServiceReport?.operatorNotes || '',
-      technicianNotes:                      machineServiceReport?.technicianNotes ||'',
       isActive:                             machineServiceReport?.isActive,
       status:                               machineServiceReport?.status?.name || "",
       approvalStatus:                       machineServiceReport?.currentApprovalStatus || '',
@@ -471,7 +471,7 @@ function MachineServiceReportViewForm( ) {
             ))} 
           />
           <ViewFormField isLoading={isLoading} sm={4} heading="Technician"  param={`${defaultValues?.technician?.firstName || ''} ${defaultValues?.technician?.lastName || ''} `} />
-          <ViewFormNoteField sm={12} heading="Technician Notes" param={defaultValues.technicianNotes} />
+          <ViewHistory isLoading={isLoading} title="Technician Notes" historicalData={defaultValues.technicianNotes} />
 
           { machineServiceReport?.reportDocs?.length > 0 &&
           <>
@@ -510,7 +510,7 @@ function MachineServiceReportViewForm( ) {
             </Box>
           </>}
           <FormLabel content={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />
-          {defaultValues.textBeforeCheckItems && <ViewFormNoteField sm={12}  param={defaultValues.textBeforeCheckItems} />}
+          {defaultValues.textBeforeCheckItems && <ViewHistory isLoading={isLoading}  historicalData={defaultValues.textBeforeCheckItems} />}
           {!isLoadingCheckItems ? 
             <Grid item md={12} sx={{ overflowWrap: 'break-word' }}>
               <Grid item md={12} sx={{display:'flex', flexDirection:'column'}}>
@@ -540,14 +540,14 @@ function MachineServiceReportViewForm( ) {
             </Stack>
           }
           
-          {defaultValues.textAfterCheckItems && <ViewFormNoteField sm={12}  param={defaultValues.textAfterCheckItems} />}
+          {defaultValues.textAfterCheckItems && <ViewHistory isLoading={isLoading}  historicalData={defaultValues.textAfterCheckItems} />}
 
-          {machineServiceReport?.serviceReportTemplate?.enableNote && <ViewFormNoteField sm={12} heading={`${machineServiceReport?.serviceReportTemplate?.reportType?.charAt(0).toUpperCase()||''}${machineServiceReport?.serviceReportTemplate?.reportType?.slice(1).toLowerCase()||''} Note`} param={defaultValues.serviceNote} />}
-          {machineServiceReport?.serviceReportTemplate?.enableMaintenanceRecommendations && <ViewFormNoteField sm={12} heading="Recommendation Note" param={defaultValues.recommendationNote} />}
-          {machineServiceReport?.serviceReportTemplate?.enableSuggestedSpares && <ViewFormNoteField sm={12} heading="Suggested Spares" param={defaultValues.suggestedSpares} />}
-          <ViewFormNoteField sm={12} heading="Internal Note" param={defaultValues.internalNote} />
+          {machineServiceReport?.serviceReportTemplate?.enableNote && <ViewHistory isLoading={isLoading} title={`${machineServiceReport?.serviceReportTemplate?.reportType?.charAt(0).toUpperCase()||''}${machineServiceReport?.serviceReportTemplate?.reportType?.slice(1).toLowerCase()||''} Note`} historicalData={defaultValues.serviceNote} />}
+          {machineServiceReport?.serviceReportTemplate?.enableMaintenanceRecommendations && <ViewHistory isLoading={isLoading} title="Recommendation Note" historicalData={defaultValues.recommendationNote} />}
+          {machineServiceReport?.serviceReportTemplate?.enableSuggestedSpares && <ViewHistory isLoading={isLoading} title="Suggested Spares" historicalData={defaultValues.suggestedSpares} />}
+          <ViewHistory isLoading={isLoading} title="Internal Note" historicalData={defaultValues.internalNote} />
           <ViewFormField isLoading={isLoading} sm={12} heading="Operators" chipDialogArrayParam={operators} />
-          <ViewFormNoteField sm={12} heading="Operator Notes" param={defaultValues.operatorNotes} />
+          <ViewHistory isLoading={isLoading} title="Operator Notes" historicalData={defaultValues.operatorNotes} />
           {machineServiceReport?.files?.length > 0 && 
           <FormLabel content='Documents / Images' />
           }

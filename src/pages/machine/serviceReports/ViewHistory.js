@@ -19,9 +19,9 @@ const ViewHistory = ({ historicalData, title, isLoading }) => {
         sm={12}
         isLoading={isLoading}
         heading={title}
-        param={historicalData?.[0]?.comment || ""}
+        param={historicalData?.[0]?.note || ""}
       />
-      <StyledTooltip
+      { Array.isArray(historicalData) && historicalData?.length > 1 && <StyledTooltip
         tooltipcolor='#2065D1'
         placement="top"
         title={showHistory ? "Hide History" : "Show History"}
@@ -29,9 +29,9 @@ const ViewHistory = ({ historicalData, title, isLoading }) => {
         <IconButton onClick={toggleHistory}>
           <Iconify icon={showHistory ? 'eva:arrow-ios-upward-fill' : 'eva:arrow-ios-downward-fill'} />
         </IconButton>
-      </StyledTooltip>
+      </StyledTooltip>}
 
-      {showHistory && (
+      {showHistory && Array.isArray(historicalData) && historicalData?.length > 1 && (
         <Grid item md={12} sx={{ backgroundColor: '#f3f4f594', p: 1, borderRadius: '7px', border: '1px solid #e1e1e1' }}>
           {historicalData?.slice(1).map((itemHistory, itemIndex) => (
             <React.Fragment key={itemIndex + 1}>
