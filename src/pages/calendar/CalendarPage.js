@@ -46,6 +46,7 @@ function CalendarPage({ calendarRef, view, date, previousDate, selectedUser, sel
 
   const { events, eventModel, selectedRange } = useSelector((state) => state.event );
   const [ selectedCustomer, setSelectedCustomer ] = useState(null);
+  const [ selectedStatus, setSelectedStatus ] = useState(null);
 
   const handleChangeView = (newView) => {
     const calendarEl = calendarRef.current;
@@ -130,9 +131,10 @@ function CalendarPage({ calendarRef, view, date, previousDate, selectedUser, sel
     selectedCustomer,
     selectedContact,
     selectedUser,
+    selectedStatus,
     isAllAccessAllowed,
     user
-  }), [events, selectedCustomer, selectedContact, selectedUser, isAllAccessAllowed, user]);
+  }), [events, selectedCustomer, selectedContact, selectedUser, selectedStatus, isAllAccessAllowed, user]);
 
   return (
     <>
@@ -147,6 +149,8 @@ function CalendarPage({ calendarRef, view, date, previousDate, selectedUser, sel
               setSelectedContact={setSelectedContact}
               selectedUser={selectedUser}
               setSelectedUser={setSelectedUser}
+              selectedStatus={selectedStatus}
+              setSelectedStatus={setSelectedStatus}
               date={date}
               view={view}
               onNextDate={handleClickDateNext}
@@ -195,7 +199,7 @@ function CalendarPage({ calendarRef, view, date, previousDate, selectedUser, sel
   );
 }
 
-function applyFilter({ inputData, selectedCustomer, selectedContact, selectedUser, isAllAccessAllowed, user}) {
+function applyFilter({ inputData, selectedCustomer, selectedContact, selectedUser, selectedStatus, isAllAccessAllowed, user}) {
 
   const stabilizedThis = inputData?.map((el, index) => [el, index]);
 
@@ -209,6 +213,10 @@ function applyFilter({ inputData, selectedCustomer, selectedContact, selectedUse
     inputData = inputData.filter((e) => e?.extendedProps?.createdBy?._id === selectedUser?._id);
   } 
   
+  if (selectedStatus) {
+    inputData = inputData.filter((e) => e?.extendedProps?.status === selectedStatus.value);
+  }
+
   if (selectedContact) {
     inputData = inputData.filter(
       (e) =>

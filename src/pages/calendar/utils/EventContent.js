@@ -4,11 +4,13 @@ import { Grid, Typography, createTheme } from '@mui/material';
 import { fDateTime } from '../../../utils/formatTime';
 import { StyledTooltip } from '../../../theme/styles/default-styles';
 import PriorityIcon from './PriorityIcon';
+import Iconify from '../../../components/iconify';
+import { StatusColor } from './StatusColor';
 
 const EventContent = ({ info }) => {
     const theme = createTheme(); 
     const { timeText, event } = info;
-    const { isCustomerEvent, start, priority, customer, machines, primaryTechnician, supportingTechnicians } = event.extendedProps;
+    const { isCustomerEvent, start, priority, status, customer, machines, primaryTechnician, supportingTechnicians } = event.extendedProps;
     const supportingTechnicianNames = supportingTechnicians.map( (tech) => `${tech?.firstName || '' } ${tech?.lastName || '' }` ).join(', ');
     const title = `${primaryTechnician?.firstName || '' } ${primaryTechnician?.lastName || '' }${supportingTechnicianNames || '' }, ${customer?.name || '' }`;
     const machineNames = machines.map( (mc) => `${mc?.name ? `${mc?.name || '' } - ` : ''}${mc?.serialNo || '' }` ).join(', ');
@@ -22,6 +24,7 @@ const EventContent = ({ info }) => {
                 { isCustomerEvent && <Typography variant='body2'><strong>Customer:</strong> {customer.name}</Typography>}
                 { machines?.length > 0 && isCustomerEvent && ( <Typography variant='body2'><strong>Machines:</strong> {machineNames}</Typography>)}
                 { priority?.trim() && <Typography variant="body2"><strong>Priority:</strong> {priority}</Typography>}
+                { status?.trim() && <Typography variant="body2"><strong>Status:</strong> {status}</Typography>}
             </Grid>
         }
         placement='top-start'
@@ -29,6 +32,16 @@ const EventContent = ({ info }) => {
     >
         <div className="fc-event-main-frame" style={{ display: 'flex', alignItems: 'center', position: 'relative', zIndex: 10 }} >
             <PriorityIcon priority={priority} noMediumIcon />
+            {status && (
+              <div className="fc-event-status" style={{ marginRight: 4,  display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Iconify
+                  icon="fluent:target-16-filled" 
+                  width={16} 
+                  height={16} 
+                  color={StatusColor(status)} 
+                />
+              </div>
+            )}
             <div className="fc-event-time" style={{ marginRight: 4 }}>{timeText}</div>
             <div className="fc-event-title-container" >
                 <div className="fc-event-title fc-sticky">{title}</div>
@@ -46,6 +59,7 @@ EventContent.propTypes = {
                 isCustomerEvent: PropTypes.bool.isRequired,
                 start: PropTypes.any.isRequired,
                 priority: PropTypes.string,
+                status: PropTypes.string,
                 customer: PropTypes.shape({ name: PropTypes.string.isRequired }).isRequired,
                 machines: PropTypes.array,
                 primaryTechnician: PropTypes.shape({
@@ -59,3 +73,5 @@ EventContent.propTypes = {
 };
 
 export default EventContent;
+
+
