@@ -19,6 +19,7 @@ import { getActiveServiceReportTemplatesForRecords, resetServiceReportTemplate }
 import ServiceRecodStepButtons from '../../../components/DocumentForms/ServiceRecodStepButtons';
 import SkeletonLine from '../../../components/skeleton/SkeletonLine';
 import SkeletonPDF from '../../../components/skeleton/SkeletonPDF';
+import HistoryNotes from './HistoryNotes';
 
 MachineServiceReportsFirstStep.propTypes = {
     handleComplete : PropTypes.func,
@@ -65,9 +66,9 @@ function MachineServiceReportsFirstStep( { handleComplete, handleDraftRequest, h
         serviceReportTemplate:        machineServiceReport?.serviceReportTemplate || null,
         serviceDate:                  machineServiceReport?.serviceDate || new Date(),
         technician:                   machineServiceReport?.technician || null ,
-        technicianNotes:              machineServiceReport?.technicianNotes || '',
-        textBeforeCheckItems:         machineServiceReport?.textBeforeCheckItems || '',
-        textAfterCheckItems:          machineServiceReport?.textAfterCheckItems || '',
+        technicianNotes:              '',
+        textBeforeCheckItems:         '',
+        textAfterCheckItems:          '',
         files: machineServiceReport?.reportDocs?.map(file => ({
           key: file?._id,
           _id: file?._id,
@@ -166,7 +167,7 @@ function MachineServiceReportsFirstStep( { handleComplete, handleDraftRequest, h
     
         } catch (err) {
           console.error(err);
-          enqueueSnackbar('Saving failed!', { variant: `error` });
+          enqueueSnackbar( typeof err === 'string' ? err : 'Saving failed!', { variant: `error` });
         }
       };
     const dispatchFiles = async ( primaryServiceReportId,data )  => {
@@ -344,6 +345,7 @@ return (
                     >
                     <RHFDatePicker inputFormat='dd/MM/yyyy' name="Service Date" label="Service Date" />
 
+                  </Box>
                     <RHFAutocomplete
                       name="technician"
                       label="Technician"
@@ -352,9 +354,9 @@ return (
                       isOptionEqualToValue={(option, value) => option?._id === value?._id}
                       renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li>)}
                     />
-                  </Box>
 
                   <RHFTextField name="technicianNotes" label="Technician Notes" minRows={3} multiline/> 
+                  <HistoryNotes historicalData={ machineServiceReport?.technicianNotes } />
                   <FormLabel content='Reporting Documents' />
                   <RHFUpload multiple  thumbnail name="files" imagesOnly
                     onDrop={handleDropMultiFile}

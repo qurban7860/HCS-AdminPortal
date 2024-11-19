@@ -368,11 +368,12 @@ function MachineServiceReportViewForm( ) {
           skeletonIcon={isLoading || !machineServiceReport?._id}
           handleEdit={ 
             !machine?.isArchived && 
+            machineServiceReport?.status?.type?.toLowerCase() === 'draft' &&
             machineServiceReport?._id && handleEdit
           }
           onDelete={
             !machine?.isArchived &&
-            machineServiceReport?.status?.name?.toUpperCase() === 'DRAFT' &&
+            // machineServiceReport?.status?.name?.toUpperCase() === 'DRAFT' &&
             machineServiceReport?._id
               ? onDelete
               : null
@@ -470,7 +471,7 @@ function MachineServiceReportViewForm( ) {
               />
             ))} 
           />
-          <ViewFormField isLoading={isLoading} sm={4} heading="Technician"  param={`${defaultValues?.technician?.firstName || ''} ${defaultValues?.technician?.lastName || ''} `} />
+          {/* <ViewFormField isLoading={isLoading} sm={4} heading="Technician"  param={`${defaultValues?.technician?.firstName || ''} ${defaultValues?.technician?.lastName || ''} `} /> */}
           <ViewHistory isLoading={isLoading} title="Technician Notes" historicalData={defaultValues.technicianNotes} />
 
           { machineServiceReport?.reportDocs?.length > 0 &&
@@ -546,7 +547,7 @@ function MachineServiceReportViewForm( ) {
           {machineServiceReport?.serviceReportTemplate?.enableMaintenanceRecommendations && <ViewHistory isLoading={isLoading} title="Recommendation Note" historicalData={defaultValues.recommendationNote} />}
           {machineServiceReport?.serviceReportTemplate?.enableSuggestedSpares && <ViewHistory isLoading={isLoading} title="Suggested Spares" historicalData={defaultValues.suggestedSpares} />}
           <ViewHistory isLoading={isLoading} title="Internal Note" historicalData={defaultValues.internalNote} />
-          <ViewFormField isLoading={isLoading} sm={12} heading="Operators" chipDialogArrayParam={operators} />
+          {/* <ViewFormField isLoading={isLoading} sm={12} heading="Operators" chipDialogArrayParam={operators} /> */}
           <ViewHistory isLoading={isLoading} title="Operator Notes" historicalData={defaultValues.operatorNotes} />
           {machineServiceReport?.files?.length > 0 && 
           <FormLabel content='Documents / Images' />

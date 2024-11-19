@@ -59,11 +59,11 @@ const ServiceReportsFormComments = ({ currentUser, serviceReportData, machine })
     if (serviceReportData?.primaryServiceReportId) {
       dispatch(
         getComments({
-          primaryServiceReportId: serviceReportData?.primaryServiceReportId,
+          serviceReportId: serviceReportData?._id,
         })
       );
       
-      dispatch(connectToCommentsSSE(serviceReportData?.primaryServiceReportId))
+      dispatch(connectToCommentsSSE(serviceReportData?._id))
         .then(ctrl => {
           controller = ctrl;
         });
@@ -91,10 +91,9 @@ const ServiceReportsFormComments = ({ currentUser, serviceReportData, machine })
   const onSubmit = async (data) => {
     await dispatch(
       addComment({
-        primaryServiceReportId: serviceReportData?.primaryServiceReportId,
+        serviceReportId: serviceReportData?._id,
         params: {
           serviceReportId: serviceReportData?._id,
-          primaryServiceReportId: serviceReportData?.primaryServiceReportId,
           comment: data.comment,
         },
       })
@@ -106,7 +105,7 @@ const ServiceReportsFormComments = ({ currentUser, serviceReportData, machine })
 
   const handleSaveEdit = async (editCommentId) => {
     await dispatch(
-      updateComment(serviceReportData?.primaryServiceReportId, editCommentId, {
+      updateComment(serviceReportData?._id, editCommentId, {
         comment: editValue,
       })
     );
@@ -118,7 +117,7 @@ const ServiceReportsFormComments = ({ currentUser, serviceReportData, machine })
 
   const handleConfirmDelete = async () => {
     await dispatch(
-      deleteComment(serviceReportData?.primaryServiceReportId, commentToDelete?._id, {
+      deleteComment(serviceReportData?._id, commentToDelete?._id, {
         isArchived: true,
       })
     );

@@ -11,6 +11,7 @@ const initialState = {
   responseMessage: null,
   success: false,
   isLoading: false,
+  isUpdatingReportStatus: false,
   isLoadingCheckItems: false,
   submittingCheckItemIndex: -1,
   error: null,
@@ -41,7 +42,9 @@ const slice = createSlice({
     startLoading(state) {
       state.isLoading = true;
     },
-
+    startUpdatingReportStatus(state) {
+      state.isUpdatingReportStatus = true;
+    },
     // START LOADING CHECK ITEMS
     startLoadingCheckItems(state) {
       state.isLoadingCheckItems = true;
@@ -120,6 +123,14 @@ const slice = createSlice({
       state.success = true;
       state.machineServiceReportCheckItems = action.payload;
       state.initial = true;
+    },
+
+    updateMachineServiceReportStatusSuccess(state, action) {
+      state.isUpdatingReportStatus = false;
+      state.machineServiceReport = {
+        ...state.machineServiceReport,
+        status: action.payload
+      }
     },
 
     UpdateMachineServiceReportCheckItems(state, action) {
@@ -496,7 +507,23 @@ export function addMachineServiceReport(machineId, params) {
     };
 
 }
+// --------------------------------------------------------------------------
 
+export function updateMachineServiceReportStatus(machineId, id, params) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startUpdatingReportStatus());
+    try {
+      const data = { status: params?.status?._id }
+      await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceReports/${id}/status`, data );
+      await dispatch(slice.actions.updateMachineServiceReportStatusSuccess(params?.status));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+
+}
 // --------------------------------------------------------------------------
 
 export function updateMachineServiceReport(machineId, id, params) {
@@ -530,8 +557,10 @@ export function updateMachineServiceReport(machineId, id, params) {
         emails:                     params?.emails,
       }
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceReports/${id}`, data );
-      await dispatch(slice.actions.updateMachineServiceReportSuccess(response?.data));
-      return response?.data?.serviceReport;
+      if( typeof response?.data !== 'string' && !response?.data?.message ){
+        await dispatch(slice.actions.updateMachineServiceReportSuccess(response?.data));
+      }
+        return response?.data?.serviceReport;
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
