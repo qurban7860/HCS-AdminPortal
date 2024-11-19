@@ -11,6 +11,7 @@ const initialState = {
   responseMessage: null,
   success: false,
   isLoading: false,
+  isLoadingReportNote: false,
   isUpdatingReportStatus: false,
   isLoadingCheckItems: false,
   submittingCheckItemIndex: -1,
@@ -81,6 +82,7 @@ const slice = createSlice({
     hasError(state, action) {
       state.isLoading = false;
       state.isLoadingCheckItems = false;
+      state.isUpdatingReportStatus = false;
       state.error = action.payload;
       state.initial = true;
     },
