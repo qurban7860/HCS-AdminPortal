@@ -14,6 +14,7 @@ import { getMachineServiceReportCheckItems, resetCheckItemValues, setFormActiveS
 import ServiceRecodStepButtons from '../../../components/DocumentForms/ServiceRecodStepButtons';
 import { MachineServiceReportPart2TBCISchema, MachineServiceReportPart2TACISchema } from '../../schemas/machine';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
+import HistoryNotes from './HistoryNotes';
 
 MachineServiceReportsSecondStep.propTypes = {
   handleDraftRequest: PropTypes.func,
@@ -44,9 +45,8 @@ function MachineServiceReportsSecondStep({ handleDraftRequest, handleDiscard, ha
         const initialValues = {
         serviceDate:                  machineServiceReport?.serviceDate || new Date(),
         versionNo:                    machineServiceReport?.versionNo || 1,
-        technicianNotes:              machineServiceReport?.technicianNotes || '',
-        textBeforeCheckItems:         machineServiceReport?.textBeforeCheckItems || '',
-        textAfterCheckItems:          machineServiceReport?.textAfterCheckItems || '',
+        textBeforeCheckItems:         '',
+        textAfterCheckItems:          '',
       }
       return initialValues;
     },
@@ -58,14 +58,14 @@ function MachineServiceReportsSecondStep({ handleDraftRequest, handleDiscard, ha
       resolver: yupResolver(MachineServiceReportPart2TBCISchema),
       defaultValues,
     });
-    const { handleSubmit: handleSubmitBefore, watch: watchBefore, reset: resetBefore, formState: { isSubmitting: isSubmittingBefore, isSubmitted:isSubmittedBefore } } = formMethodsBefore;
+    const { handleSubmit: handleSubmitBefore, watch: watchBefore, reset: resetBefore, formState: { isDirty: isDirtyBefore, isSubmitting: isSubmittingBefore, isSubmitted:isSubmittedBefore } } = formMethodsBefore;
     const { textBeforeCheckItems } = watchBefore();
     
     const formMethodsAfter = useForm({
       resolver: yupResolver(MachineServiceReportPart2TACISchema),
       defaultValues,
     });
-    const { handleSubmit: handleSubmitAfter, watch: watchAfter, reset: resetAfter, formState: { isSubmitting: isSubmittingAfter, isSubmitted:isSubmittedAfter } } = formMethodsAfter;
+    const { handleSubmit: handleSubmitAfter, watch: watchAfter, reset: resetAfter, formState: { isDirty: isDirtyAfter, isSubmitting: isSubmittingAfter, isSubmitted:isSubmittedAfter } } = formMethodsAfter;
     const { textAfterCheckItems } = watchAfter();
     
     const methods = useForm({ defaultValues });
@@ -135,7 +135,7 @@ function MachineServiceReportsSecondStep({ handleDraftRequest, handleDiscard, ha
         enqueueSnackbar('Saving failed!', { variant: `error` });
       }
     };
-    
+
   return (
       <Stack spacing={2}>
             <FormProvider key='beforeForm' methods={formMethodsBefore} onSubmit={handleSubmitBefore(submitBefore)}>
@@ -143,7 +143,8 @@ function MachineServiceReportsSecondStep({ handleDraftRequest, handleDiscard, ha
               <RHFTextField name="textBeforeCheckItems" label="Text Before Check Items" minRows={3} multiline />
                 <Grid container display='flex' direction='row' justifyContent='flex-end' gap={2}>
                   {isSubmittedBefore && showMessage && <Typography variant='body2' color='green' sx={{mt:0.5}}>Saved Successfully!</Typography>}
-                  <LoadingButton disabled={textBeforeCheckItems?.trim() === machineServiceReport?.textBeforeCheckItems?.trim()} type='submit' loading={isSubmittingBefore} size='small' variant='contained'>Save</LoadingButton>
+                  <LoadingButton disabled={ !isDirtyBefore } type='submit' loading={isSubmittingBefore} size='small' variant='contained'>Save</LoadingButton>
+                  <HistoryNotes historicalData={ machineServiceReport?.textBeforeCheckItems } start />
                 </Grid>
               </Stack>
             </FormProvider>
@@ -183,7 +184,8 @@ function MachineServiceReportsSecondStep({ handleDraftRequest, handleDiscard, ha
                 <RHFTextField name="textAfterCheckItems" label="Text After Check Items" minRows={3} multiline />
                 <Grid container display='flex' direction='row' justifyContent='flex-end' gap={2}>
                   {isSubmittedAfter && showMessage && <Typography variant='body2' color='green' sx={{mt:0.5}}>Saved Successfully!</Typography>}
-                  <LoadingButton disabled={textAfterCheckItems?.trim() === machineServiceReport?.textAfterCheckItems?.trim()} onClick={handleSubmitAfter(submitAfter)} loading={isSubmittingAfter} size='small' variant='contained'>Save</LoadingButton>
+                  <LoadingButton disabled={ !isDirtyAfter } onClick={handleSubmitAfter(submitAfter)} loading={isSubmittingAfter} size='small' variant='contained'>Save</LoadingButton>
+                  <HistoryNotes historicalData={ machineServiceReport?.textAfterCheckItems } start />
                 </Grid>
               </Stack>
             </FormProvider>

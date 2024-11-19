@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React, { useMemo, memo, useLayoutEffect, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import b64toBlob from 'b64-to-blob';
@@ -21,7 +20,6 @@ import { deleteMachineServiceReport,
   setFormActiveStep,
   getMachineServiceReportCheckItems,
   resetCheckItemValues,
-  createMachineServiceReportVersion,
   setCompleteDialog} from '../../../redux/slices/products/machineServiceReport';
 import { getActiveSPContacts, setCardActiveIndex, setIsExpanded } from '../../../redux/slices/customer/contact';
 // components
@@ -29,13 +27,10 @@ import { useSnackbar } from '../../../components/snackbar';
 import { FORMLABELS } from '../../../constants/default-constants';
 import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../../components/ViewForms/ViewFormField';
-import ViewFormNoteField from '../../../components/ViewForms/ViewFormNoteField';
 import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
 import { fDate } from '../../../utils/formatTime';
 import CheckedItemValueRow from './CheckedItemValueRow';
-import HistoryIcon from '../../../components/Icons/HistoryIcon';
-import CurrentIcon from '../../../components/Icons/CurrentIcon';
 import SendEmailDialog from '../../../components/Dialog/SendEmailDialog';
 import PDFViewerDialog from '../../../components/Dialog/PDFViewerDialog';
 import Iconify from '../../../components/iconify';
@@ -51,13 +46,9 @@ import SkeletonPDF from '../../../components/skeleton/SkeletonPDF';
 import IconButtonTooltip from '../../../components/Icons/IconButtonTooltip';
 import ServiceReportsFormComments from '../../../components/machineServiceReports/ServiceReportsFormComments';
 import ReportStatusButton from './ReportStatusButton';
-import { StyledVersionChip } from '../../../theme/styles/default-styles';
+import ViewHistory from './ViewHistory';
 
-MachineServiceReportViewForm.propTypes = {
-  serviceHistoryView: PropTypes.bool,
-}
-
-function MachineServiceReportViewForm( {serviceHistoryView} ) {
+function MachineServiceReportViewForm( ) {
   
   const { machineServiceReport, machineServiceReportCheckItems, isLoadingCheckItems, isLoading, pdfViewerDialog, sendEmailDialog } = useSelector((state) => state.machineServiceReport);
   const { machine } = useSelector((state) => state.machine)
@@ -106,32 +97,8 @@ function MachineServiceReportViewForm( {serviceHistoryView} ) {
 
   const handleEdit = async() => {
     await dispatch(setFormActiveStep(0));
-    if( machineServiceReport?.status?.type?.toLowerCase() !== "draft" ){
-      try {
-        const sreport = await dispatch(createMachineServiceReportVersion(machineId, id));
-        if(sreport){
-          await navigate(PATH_MACHINE.machines.serviceReports.edit(machineId, sreport?._id))
-        }
-      } catch (error) {
-        enqueueSnackbar('Version creation failed', { variant: `error` });
-        console.error(error);
-      }
-      
-    }else{
-      await navigate(PATH_MACHINE.machines.serviceReports.edit(machineId, id))
-    }
+    await navigate(PATH_MACHINE.machines.serviceReports.edit(machineId, id))
   };
-
-  const handleServiceReportHistory = () =>  {
-    navigate(PATH_MACHINE.machines.serviceReports.history.root(
-      machineId, serviceHistoryView ? primaryServiceReportId : machineServiceReport?.primaryServiceReportId 
-    ))
-  }
-
-  const handleCurrentServiceReport = () => {
-    console.log("currentVersion?._id : ",machineServiceReport?.currentVersion?._id)
-    navigate(PATH_MACHINE.machines.serviceReports.view( machineId, machineServiceReport?.currentVersion?._id ))
-  }
 
   const defaultValues = useMemo(
     () => ({
@@ -143,11 +110,8 @@ function MachineServiceReportViewForm( {serviceHistoryView} ) {
       serviceReportTemplate:                machineServiceReport?.serviceReportTemplate?.reportTitle	 || '',
       serviceReportTemplateReportType:      machineServiceReport?.serviceReportTemplate?.reportType || '',
       serviceDate:                          machineServiceReport?.serviceDate || null,
-      versionNo:                            machineServiceReport?.versionNo || 1, 
       decoilers:                            machineServiceReport?.decoilers ,
       technician:                           machineServiceReport?.technician || null,
-      textBeforeCheckItems:                 machineServiceReport?.textBeforeCheckItems || '',
-      textAfterCheckItems:                  machineServiceReport?.textAfterCheckItems || '',
       // checkParams:         
       headerLeftText:                       machineServiceReport?.serviceReportTemplate?.header?.leftText || '',
       headerCenterText:                     machineServiceReport?.serviceReportTemplate?.header?.centerText || '',
@@ -155,15 +119,17 @@ function MachineServiceReportViewForm( {serviceHistoryView} ) {
       footerLeftText:                       machineServiceReport?.serviceReportTemplate?.footer?.leftText || '', 
       footerCenterText:                     machineServiceReport?.serviceReportTemplate?.footer?.centerText || '',
       footerRightText:                      machineServiceReport?.serviceReportTemplate?.footer?.rightText || '',
-      internalComments:                     machineServiceReport?.internalComments || '',
-      serviceNote:                          machineServiceReport?.serviceNote || '',
-      recommendationNote:                   machineServiceReport?.recommendationNote || '',
-      suggestedSpares:                      machineServiceReport?.suggestedSpares || '',
-      internalNote:                         machineServiceReport?.internalNote || '',
+      textBeforeCheckItems:                 machineServiceReport?.textBeforeCheckItems || [],
+      textAfterCheckItems:                  machineServiceReport?.textAfterCheckItems || [],
+      internalComments:                     machineServiceReport?.internalComments || [],
+      serviceNote:                          machineServiceReport?.serviceNote || [],
+      recommendationNote:                   machineServiceReport?.recommendationNote || [],
+      suggestedSpares:                      machineServiceReport?.suggestedSpares || [],
+      internalNote:                         machineServiceReport?.internalNote || [],
+      operatorNotes:                        machineServiceReport?.operatorNotes || [],
+      technicianNotes:                      machineServiceReport?.technicianNotes ||[],
       files:                                machineServiceReport?.files || [],
       operators:                            machineServiceReport?.operators || [],
-      operatorNotes:                        machineServiceReport?.operatorNotes || '',
-      technicianNotes:                      machineServiceReport?.technicianNotes ||'',
       isActive:                             machineServiceReport?.isActive,
       status:                               machineServiceReport?.status?.name || "",
       approvalStatus:                       machineServiceReport?.currentApprovalStatus || '',
@@ -187,7 +153,7 @@ function MachineServiceReportViewForm( {serviceHistoryView} ) {
     await dispatch(setPDFViewerDialog(true))
   }
 
-  const fileName = `${defaultValues?.serviceDate?.substring(0,10).replaceAll('-','')}_${defaultValues?.serviceReportTemplateReportType}_${defaultValues?.versionNo}.pdf`
+  const fileName = `${defaultValues?.serviceDate?.substring(0,10).replaceAll('-','')}_${defaultValues?.serviceReportTemplateReportType}.pdf`
 
   const handleContactView = async (contactId) => {
     await dispatch(setCardActiveIndex(contactId));
@@ -213,11 +179,7 @@ function MachineServiceReportViewForm( {serviceHistoryView} ) {
   ));
 
   const handleBackLink = ()=>{
-    if(serviceHistoryView && primaryServiceReportId ){
-      navigate(PATH_MACHINE.machines.serviceReports.history.root(machineId, primaryServiceReportId))
-    }else{
-      navigate(PATH_MACHINE.machines.serviceReports.root(machineId))
-    }
+    navigate(PATH_MACHINE.machines.serviceReports.root(machineId))
   }
   
   const [reportStatus, setReportStatus]= useState(null);
@@ -403,30 +365,27 @@ function MachineServiceReportViewForm( {serviceHistoryView} ) {
             machine?.status?.slug === 'transferred' ||
             machineServiceReport.currentApprovalStatus === 'APPROVED'
           }
-          skeletonIcon={isLoading && !machineServiceReport?._id}
+          skeletonIcon={isLoading || !machineServiceReport?._id}
           handleEdit={ 
             !machine?.isArchived && 
-            !machineServiceReport?.isHistory && 
+            machineServiceReport?.status?.type?.toLowerCase() === 'draft' &&
             machineServiceReport?._id && handleEdit
           }
           onDelete={
             !machine?.isArchived &&
-            !machineServiceReport?.isHistory &&
-            machineServiceReport?.status?.name?.toUpperCase() === 'DRAFT' &&
+            // machineServiceReport?.status?.name?.toUpperCase() === 'DRAFT' &&
             machineServiceReport?._id
               ? onDelete
               : null
           }
           backLink={handleBackLink}
-          handleSendPDFEmail={ !machine?.isArchived && !machineServiceReport?.isHistory && machineServiceReport?._id && handleSendEmail}
-          handleViewPDF={!machineServiceReport?.isHistory && machineServiceReport?._id && handlePDFViewer}
+          handleSendPDFEmail={ !machine?.isArchived && machineServiceReport?._id && handleSendEmail}
+          handleViewPDF={ !machine?.isArchived && machineServiceReport?._id && handlePDFViewer}
           
           handleCompleteMSR={
             !machine?.isArchived &&
             machineServiceReport?.isActive &&
-            !machineServiceReport?.isHistory &&
             machineServiceReport?.status?.name?.toUpperCase() === 'SUBMITTED' &&
-            machineServiceReport?.currentVersion?._id === machineServiceReport?._id &&
             machineServiceReport?.currentApprovalStatus !== 'APPROVED' &&
             machineServiceReport?.approval?.approvingContacts?.length < 1 &&
             handleCompleteConfirm || undefined
@@ -434,9 +393,7 @@ function MachineServiceReportViewForm( {serviceHistoryView} ) {
 
           serviceReportStatus={
             ((machineServiceReport.isActive &&
-              !machineServiceReport?.isHistory &&
               machineServiceReport?.status?.name?.toUpperCase() === 'SUBMITTED' &&
-              machineServiceReport?.currentVersion?._id === machineServiceReport?._id &&
               machineServiceReport?.approval?.approvingContacts?.length > 0) ||
               machineServiceReport?.completeEvaluationHistory?.totalLogsCount > 0) ?
             serviceReportApprovalData : null
@@ -455,26 +412,6 @@ function MachineServiceReportViewForm( {serviceHistoryView} ) {
               sm={4}
               heading="Service ID"
               param={ defaultValues.serviceReportUID }
-              node={
-                <>
-                  <StyledVersionChip 
-                    label={`v ${ defaultValues.versionNo}`}
-                    size="small" 
-                    variant="outlined"
-                  />
-                  {(machineServiceReport?.isHistory ||
-                    machineServiceReport?.status?.name?.toUpperCase() === 'DRAFT') &&
-                    machineServiceReport?.currentVersion?._id && (
-                    <CurrentIcon callFunction={handleCurrentServiceReport} />
-                  )}
-                  {!machineServiceReport?.isHistory &&
-                    machineServiceReport?.currentVersion?.versionNo && 
-                    machineServiceReport?.currentVersion?.versionNo > 1 &&
-                    machineServiceReport?.primaryServiceReportId && (
-                      <HistoryIcon callFunction={handleServiceReportHistory} />
-                  )}
-                </>
-              }
             />
           <ViewFormField isLoading={isLoading} variant='h4' sm={4} heading="Status" 
             node={ <>
@@ -490,9 +427,7 @@ function MachineServiceReportViewForm( {serviceHistoryView} ) {
               {
                 !machine?.isArchived &&
                 machineServiceReport?.isActive &&
-                !machineServiceReport?.isHistory &&
                 machineServiceReport?.status?.type?.toLowerCase() === 'done' &&
-                machineServiceReport?.currentVersion?._id === machineServiceReport?._id &&
                 machineServiceReport?.currentApprovalStatus !== 'APPROVED' &&
                 machineServiceReport?.approval?.approvingContacts?.length < 1 &&
                 <IconButtonTooltip title='Request Approval' icon="mdi:email-seal" onClick={handleCompleteConfirm} /> 
@@ -536,8 +471,8 @@ function MachineServiceReportViewForm( {serviceHistoryView} ) {
               />
             ))} 
           />
-          <ViewFormField isLoading={isLoading} sm={4} heading="Technician"  param={`${defaultValues?.technician?.firstName || ''} ${defaultValues?.technician?.lastName || ''} `} />
-          <ViewFormNoteField sm={12} heading="Technician Notes" param={defaultValues.technicianNotes} />
+          {/* <ViewFormField isLoading={isLoading} sm={4} heading="Technician"  param={`${defaultValues?.technician?.firstName || ''} ${defaultValues?.technician?.lastName || ''} `} /> */}
+          <ViewHistory isLoading={isLoading} title="Technician Notes" historicalData={defaultValues.technicianNotes} />
 
           { machineServiceReport?.reportDocs?.length > 0 &&
           <>
@@ -572,11 +507,11 @@ function MachineServiceReportViewForm( {serviceHistoryView} ) {
                   toolbar
                 />
               ))}
-              {!machineServiceReport?.isHistory && machineServiceReport?.status?.name?.toUpperCase() === 'DRAFT' && <ThumbnailDocButton onClick={handleAddReportDocsDialog}/>}
+              { machineServiceReport?.status?.name?.toUpperCase() === 'DRAFT' && <ThumbnailDocButton onClick={handleAddReportDocsDialog}/> }
             </Box>
           </>}
           <FormLabel content={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />
-          {defaultValues.textBeforeCheckItems && <ViewFormNoteField sm={12}  param={defaultValues.textBeforeCheckItems} />}
+          {defaultValues.textBeforeCheckItems && <ViewHistory isLoading={isLoading}  historicalData={defaultValues.textBeforeCheckItems} />}
           {!isLoadingCheckItems ? 
             <Grid item md={12} sx={{ overflowWrap: 'break-word' }}>
               <Grid item md={12} sx={{display:'flex', flexDirection:'column'}}>
@@ -606,14 +541,14 @@ function MachineServiceReportViewForm( {serviceHistoryView} ) {
             </Stack>
           }
           
-          {defaultValues.textAfterCheckItems && <ViewFormNoteField sm={12}  param={defaultValues.textAfterCheckItems} />}
+          {defaultValues.textAfterCheckItems && <ViewHistory isLoading={isLoading}  historicalData={defaultValues.textAfterCheckItems} />}
 
-          {machineServiceReport?.serviceReportTemplate?.enableNote && <ViewFormNoteField sm={12} heading={`${machineServiceReport?.serviceReportTemplate?.reportType?.charAt(0).toUpperCase()||''}${machineServiceReport?.serviceReportTemplate?.reportType?.slice(1).toLowerCase()||''} Note`} param={defaultValues.serviceNote} />}
-          {machineServiceReport?.serviceReportTemplate?.enableMaintenanceRecommendations && <ViewFormNoteField sm={12} heading="Recommendation Note" param={defaultValues.recommendationNote} />}
-          {machineServiceReport?.serviceReportTemplate?.enableSuggestedSpares && <ViewFormNoteField sm={12} heading="Suggested Spares" param={defaultValues.suggestedSpares} />}
-          <ViewFormNoteField sm={12} heading="Internal Note" param={defaultValues.internalNote} />
-          <ViewFormField isLoading={isLoading} sm={12} heading="Operators" chipDialogArrayParam={operators} />
-          <ViewFormNoteField sm={12} heading="Operator Notes" param={defaultValues.operatorNotes} />
+          {machineServiceReport?.serviceReportTemplate?.enableNote && <ViewHistory isLoading={isLoading} title={`${machineServiceReport?.serviceReportTemplate?.reportType?.charAt(0).toUpperCase()||''}${machineServiceReport?.serviceReportTemplate?.reportType?.slice(1).toLowerCase()||''} Note`} historicalData={defaultValues.serviceNote} />}
+          {machineServiceReport?.serviceReportTemplate?.enableMaintenanceRecommendations && <ViewHistory isLoading={isLoading} title="Recommendation Note" historicalData={defaultValues.recommendationNote} />}
+          {machineServiceReport?.serviceReportTemplate?.enableSuggestedSpares && <ViewHistory isLoading={isLoading} title="Suggested Spares" historicalData={defaultValues.suggestedSpares} />}
+          <ViewHistory isLoading={isLoading} title="Internal Note" historicalData={defaultValues.internalNote} />
+          {/* <ViewFormField isLoading={isLoading} sm={12} heading="Operators" chipDialogArrayParam={operators} /> */}
+          <ViewHistory isLoading={isLoading} title="Operator Notes" historicalData={defaultValues.operatorNotes} />
           {machineServiceReport?.files?.length > 0 && 
           <FormLabel content='Documents / Images' />
           }
@@ -650,7 +585,7 @@ function MachineServiceReportViewForm( {serviceHistoryView} ) {
               />
             ))}
 
-          {!machineServiceReport?.isHistory && machineServiceReport?.status?.name?.toUpperCase() === 'DRAFT' && <ThumbnailDocButton onClick={handleAddFileDialog}/>}
+          { machineServiceReport?.status?.name?.toUpperCase() === 'DRAFT' && <ThumbnailDocButton onClick={handleAddFileDialog}/>}
         </Box>
           
           <ViewFormAudit defaultValues={defaultValues} />

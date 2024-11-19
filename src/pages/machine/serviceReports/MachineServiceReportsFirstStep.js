@@ -19,6 +19,7 @@ import { getActiveServiceReportTemplatesForRecords, resetServiceReportTemplate }
 import ServiceRecodStepButtons from '../../../components/DocumentForms/ServiceRecodStepButtons';
 import SkeletonLine from '../../../components/skeleton/SkeletonLine';
 import SkeletonPDF from '../../../components/skeleton/SkeletonPDF';
+import HistoryNotes from './HistoryNotes';
 
 MachineServiceReportsFirstStep.propTypes = {
     handleComplete : PropTypes.func,
@@ -64,11 +65,10 @@ function MachineServiceReportsFirstStep( { handleComplete, handleDraftRequest, h
         docReportType:                reportTypes.find(rt=> rt?.name?.toLowerCase() === machineServiceReport?.serviceReportTemplate?.reportType?.toLowerCase()) || null,
         serviceReportTemplate:        machineServiceReport?.serviceReportTemplate || null,
         serviceDate:                  machineServiceReport?.serviceDate || new Date(),
-        versionNo:                    machineServiceReport?.versionNo || 1,
         technician:                   machineServiceReport?.technician || null ,
-        technicianNotes:              machineServiceReport?.technicianNotes || '',
-        textBeforeCheckItems:         machineServiceReport?.textBeforeCheckItems || '',
-        textAfterCheckItems:          machineServiceReport?.textAfterCheckItems || '',
+        technicianNotes:              '',
+        textBeforeCheckItems:         '',
+        textAfterCheckItems:          '',
         files: machineServiceReport?.reportDocs?.map(file => ({
           key: file?._id,
           _id: file?._id,
@@ -167,7 +167,7 @@ function MachineServiceReportsFirstStep( { handleComplete, handleDraftRequest, h
     
         } catch (err) {
           console.error(err);
-          enqueueSnackbar('Saving failed!', { variant: `error` });
+          enqueueSnackbar( typeof err === 'string' ? err : 'Saving failed!', { variant: `error` });
         }
       };
     const dispatchFiles = async ( primaryServiceReportId,data )  => {
@@ -344,19 +344,19 @@ return (
                     gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
                     >
                     <RHFDatePicker inputFormat='dd/MM/yyyy' name="Service Date" label="Service Date" />
-                    <RHFTextField name="versionNo" label="Version No" disabled />
-                  </Box>
 
-                  <RHFAutocomplete
-                    name="technician"
-                    label="Technician"
-                    options={ technicians }
-                    getOptionLabel={(option) => `${option?.firstName || ''} ${option?.lastName || ''}`}
-                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                    renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li>)}
-                  />
+                  </Box>
+                    <RHFAutocomplete
+                      name="technician"
+                      label="Technician"
+                      options={ technicians }
+                      getOptionLabel={(option) => `${option?.firstName || ''} ${option?.lastName || ''}`}
+                      isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                      renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li>)}
+                    />
 
                   <RHFTextField name="technicianNotes" label="Technician Notes" minRows={3} multiline/> 
+                  <HistoryNotes historicalData={ machineServiceReport?.technicianNotes } />
                   <FormLabel content='Reporting Documents' />
                   <RHFUpload multiple  thumbnail name="files" imagesOnly
                     onDrop={handleDropMultiFile}

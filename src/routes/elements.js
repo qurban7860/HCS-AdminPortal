@@ -200,7 +200,6 @@ export const MachineProfileEdit = Loadable(lazy(() => import('../pages/machine/p
 export const MachineServiceReportList = Loadable(lazy(() => import('../pages/machine/serviceReports/MachineServiceReportList')));
 export const MachineServiceReportAdd = Loadable(lazy(() => import('../pages/machine/serviceReports/MachineServiceReportAddForm')));
 export const MachineServiceReportView = Loadable(lazy(() => import('../pages/machine/serviceReports/MachineServiceReportViewForm')));
-export const MachineServiceReportHistoryList = Loadable(lazy(() => import('../pages/machine/serviceReports/MachineServiceReportHistoryList')));
 
 // --------------------------- MACHINE INI -------------------------------------
 

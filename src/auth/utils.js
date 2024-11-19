@@ -43,7 +43,7 @@ export const tokenExpired = (exp) => {
   expiredTimer = setTimeout(() => {
     alert('Your session has expired. Please login again');
     localStorage.removeItem('accessToken');
-    // window.location.href = PATH_AUTH.login;
+    window.location.href = PATH_AUTH.login;
   }, timeLeft);
 };
 

@@ -41,8 +41,6 @@ export default function MachineServiceReportListTableToolbar({
   onFilterStatus,
   onFilterStatusType,
   isHistory,
-  toggleStatus,
-  onToggleStatus
 }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -94,9 +92,6 @@ export default function MachineServiceReportListTableToolbar({
         }
         addButton={!(machine?.isArchived || isHistory) ? BUTTONS.ADD_MACHINE_SERVICE_REPORT : undefined}
         transferredMachine={machine?.status?.slug==='transferred'}
-        radioStatus={toggleStatus}
-        radioStatusLabel="Show Draft"
-        handleRadioStatus={onToggleStatus}
       />
     </Stack>
   );

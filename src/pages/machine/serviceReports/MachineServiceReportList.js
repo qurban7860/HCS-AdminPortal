@@ -29,7 +29,6 @@ import {
   ChangePage,
   setFilterBy,
   setSendEmailDialog,
-  setFilterDraft
 } from '../../../redux/slices/products/machineServiceReport';
 import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../../components/ListTableTools/TableCard';
@@ -43,7 +42,6 @@ const TABLE_HEAD = [
   { id: 'serviceReportUID', label: 'Service ID', align: 'left' },
   { id: 'status', label: 'Status', align: 'left' },
   { id: 'serviceReportTemplate.reportTitle', label: 'Service Template', align: 'left' },
-  { id: 'versionNo', label: 'Version', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
   { id: 'createdBy.name', label: 'Created By', align: 'left' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
@@ -52,8 +50,7 @@ const TABLE_HEAD = [
 
 export default function MachineServiceReportList() {
   const { machine } = useSelector((state) => state.machine);
-  const { machineServiceReports, filterBy, filterDraft, page, rowsPerPage, isLoading } = useSelector((state) => state.machineServiceReport);
-  const { activeServiceReportStatuses } = useSelector( (state) => state.serviceReportStatuses );
+  const { machineServiceReports, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.machineServiceReport);
   const navigate = useNavigate();
   const { machineId } = useParams();
 
@@ -61,8 +58,6 @@ export default function MachineServiceReportList() {
     order,
     orderBy,
     setPage,
-    //
-    //
     onSort,
   } = useTable({ defaultOrderBy: 'createdAt', defaultOrder: 'desc' });
 
@@ -76,7 +71,6 @@ export default function MachineServiceReportList() {
   const [filterName, setFilterName] = useState('');
   const [filterStatus, setFilterStatus] = useState(null);
   const [statusType, setStatusType] = useState(null);
-  const [filterDraftStatus, setFilterDraftStatus] = useState(false);
   
   useLayoutEffect(() => {
     dispatch(setSendEmailDialog(false));
@@ -96,7 +90,6 @@ export default function MachineServiceReportList() {
           machineId,
           isMachineArchived: machine?.isArchived,
           status: filterStatus?._id,
-          draftStatus: !filterDraftStatus ? activeServiceReportStatuses?.find( ds => ds?.type?.toLowerCase() === 'draft' )?._id : undefined ,
           statusType
         }
       ));
@@ -104,13 +97,12 @@ export default function MachineServiceReportList() {
     return () => {
       dispatch( resetMachineServiceReports() )
     }
-  }, [dispatch, machineId, machine, activeServiceReportStatuses, filterStatus, filterDraftStatus, statusType, page, rowsPerPage ]);
+  }, [dispatch, machineId, machine, filterStatus, statusType, page, rowsPerPage ]);
 
   const dataFiltered = applyFilter({
     inputData: machineServiceReports?.data || [],
     comparator: getComparator(order, orderBy),
     filterName,
-    filterDraftStatus
   });
 
   const isFiltered = filterName !== '' ;
@@ -123,23 +115,11 @@ export default function MachineServiceReportList() {
     dispatch(setFilterBy(value))
   }, 500))
 
-  const debouncedDraft = useRef(debounce((value) => {
-    dispatch(ChangePage(0))
-    dispatch(setFilterDraft(value))
-  }, 500))
-
   const handleFilterName = (event) => {
     debouncedSearch.current(event.target.value);
     setFilterName(event.target.value)
     setPage(0);
   };
-
-  const handleFilterDraft = (status) => {
-    debouncedDraft.current(status)
-    setFilterDraftStatus(status)
-    setPage(0);
-  }
-
   
   useEffect(() => {
       debouncedSearch.current.cancel();
@@ -147,7 +127,6 @@ export default function MachineServiceReportList() {
   
   useEffect(()=>{
       setFilterName(filterBy)
-      setFilterDraftStatus(filterDraft)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 
@@ -180,16 +159,14 @@ export default function MachineServiceReportList() {
           <MachineTabContainer currentTabValue='serviceReports' />
         <TableCard>
           <MachineServiceReportListTableToolbar
-            filterName={filterName}
-            filterStatus={filterStatus}
+            filterName={ filterName }
+            filterStatus={ filterStatus }
             filterStatusType={ statusType } 
-            onFilterName={handleFilterName}
-            onFilterStatus={handleFilterStatus}
-            onFilterStatusType={handleStatusType}
-            isFiltered={isFiltered}
-            onResetFilter={handleResetFilter}
-            toggleStatus={filterDraftStatus}
-            onToggleStatus={handleFilterDraft}
+            onFilterName={ handleFilterName }
+            onFilterStatus={ handleFilterStatus }
+            onFilterStatusType={ handleStatusType }
+            isFiltered={ isFiltered }
+            onResetFilter={ handleResetFilter }
           />
 
           {!isNotFound && <TablePaginationCustom
@@ -246,7 +223,7 @@ export default function MachineServiceReportList() {
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName, filterDraftStatus }) {
+function applyFilter({ inputData, comparator, filterName }) {
   const stabilizedThis = inputData.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -255,10 +232,6 @@ function applyFilter({ inputData, comparator, filterName, filterDraftStatus }) {
   });
 
   inputData = stabilizedThis.map((el) => el[0]);
-
-  if(!filterDraftStatus){
-    inputData = inputData.filter((srec) => srec?.status?.type?.toLowerCase() !=="draft");
-  }
 
   if (filterName) {
     inputData = inputData.filter(

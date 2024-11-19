@@ -19,6 +19,7 @@ import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFAutocomplete, RHFTextField, RHFUpload } from '../../../components/hook-form';
 import { MachineServiceReportPart3Schema } from '../../schemas/machine';
 import SkeletonPDF from '../../../components/skeleton/SkeletonPDF';
+import HistoryNotes from './HistoryNotes';
 
 MachineServiceReportsThirdStep.propTypes = {
   handleDraftRequest: PropTypes.func,
@@ -51,13 +52,13 @@ function MachineServiceReportsThirdStep({handleDraftRequest, handleDiscard, hand
     const defaultValues = useMemo(
         () => {
           const initialValues = {
-            serviceNote:                  machineServiceReport?.serviceNote || '',
-            recommendationNote:           machineServiceReport?.recommendationNote || '',
-            internalComments:             machineServiceReport?.internalComments || '',
-            suggestedSpares:              machineServiceReport?.suggestedSpares || '',
-            internalNote:                 machineServiceReport?.internalNote || '',
+            serviceNote:                  '',
+            recommendationNote:           '',
+            internalComments:             '',
+            suggestedSpares:              '',
+            internalNote:                 '',
             operators:                    machineServiceReport?.operators || [],
-            operatorNotes:                machineServiceReport?.operatorNotes || '',
+            operatorNotes:                '',
             files: machineServiceReport?.files?.map(file => ({
               key: file?._id,
               _id: file?._id,
@@ -220,10 +221,27 @@ function MachineServiceReportsThirdStep({handleDraftRequest, handleDiscard, hand
     <>
       <FormProvider methods={methods}  onSubmit={handleSubmit(onSubmit)}>
         <Stack px={2} spacing={2}>    
-          { machineServiceReport?.serviceReportTemplate?.enableNote && <RHFTextField name="serviceNote" label={`${machineServiceReport?.serviceReportTemplate?.reportType?.toLowerCase() === 'install' ? 'Install' : 'Service' } Note`} minRows={3} multiline/> }      
-          { machineServiceReport?.serviceReportTemplate?.enableMaintenanceRecommendations && <RHFTextField name="recommendationNote" label="Recommendation Note" minRows={3} multiline/> }
-          { machineServiceReport?.serviceReportTemplate?.enableSuggestedSpares && <RHFTextField name="suggestedSpares" label="Suggested Spares" minRows={3} multiline/> }
+          { machineServiceReport?.serviceReportTemplate?.enableNote && 
+          <>
+            <RHFTextField name="serviceNote" label={`${machineServiceReport?.serviceReportTemplate?.reportType?.toLowerCase() === 'install' ? 'Install' : 'Service' } Note`} minRows={3} multiline/> 
+            <HistoryNotes historicalData={ machineServiceReport?.serviceNote } />
+          </>
+          }      
+          { machineServiceReport?.serviceReportTemplate?.enableMaintenanceRecommendations && 
+          <>
+            <RHFTextField name="recommendationNote" label="Recommendation Note" minRows={3} multiline/> 
+            <HistoryNotes historicalData={ machineServiceReport?.recommendationNote } />
+          </>
+          }
+          { machineServiceReport?.serviceReportTemplate?.enableSuggestedSpares && 
+          <>
+            <RHFTextField name="suggestedSpares" label="Suggested Spares" minRows={3} multiline/> 
+            <HistoryNotes historicalData={ machineServiceReport?.suggestedSpares } />
+          </>
+          }
           <RHFTextField name="internalNote" label="Internal Note" minRows={3} multiline/> 
+          <HistoryNotes historicalData={ machineServiceReport?.internalNote } />
+
           <RHFAutocomplete 
             multiple
             disableCloseOnSelect
@@ -236,6 +254,8 @@ function MachineServiceReportsThirdStep({handleDraftRequest, handleDiscard, hand
             renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}` }</li> )}
           />
           <RHFTextField name="operatorNotes" label="Operator Notes" minRows={3} multiline/> 
+          <HistoryNotes historicalData={ machineServiceReport?.operatorNotes } />
+
           <FormLabel content='Documents / Images' />
           <RHFUpload multiple  thumbnail name="files" imagesOnly
             onDrop={handleDropMultiFile}

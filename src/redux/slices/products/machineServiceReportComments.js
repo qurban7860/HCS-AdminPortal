@@ -169,13 +169,13 @@ export const {
 
 // ----------------------------------------------------------------------
 
-export function connectToCommentsSSE(primaryServiceReportId) {
+export function connectToCommentsSSE(serviceReportId) {
   return async (dispatch) => {
     const token = window.localStorage.getItem('accessToken');
     
     const ctrl = new AbortController();
 
-    fetchEventSource(`${CONFIG.SERVER_URL}products/serviceReport/${primaryServiceReportId}/serviceReportComments/stream`, {
+    fetchEventSource(`${CONFIG.SERVER_URL}products/serviceReport/${serviceReportId}/serviceReportComments/stream`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -198,11 +198,11 @@ export function connectToCommentsSSE(primaryServiceReportId) {
   };
 }
 
-export function getComments({primaryServiceReportId}) {
+export function getComments({serviceReportId}) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/serviceReport/${primaryServiceReportId}/serviceReportComments`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/serviceReport/${serviceReportId}/serviceReportComments`);
       dispatch(slice.actions.getCommentsSuccess(response.data));
     } catch (error) {
       console.log(error);
@@ -212,12 +212,12 @@ export function getComments({primaryServiceReportId}) {
   };
 }
 
-export function addComment({primaryServiceReportId, params}) {
+export function addComment({serviceReportId, params}) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const data = { ...params};
-      const response = await axios.post(`${CONFIG.SERVER_URL}products/serviceReport/${primaryServiceReportId}/serviceReportComments/`, data);
+      const response = await axios.post(`${CONFIG.SERVER_URL}products/serviceReport/${serviceReportId}/serviceReportComments/`, data);
       // dispatch(slice.actions.setNoteFormVisibility(false));
       dispatch(slice.actions.addCommentsSuccess(response.data?.commentsList));
     } catch (error) {
@@ -228,7 +228,7 @@ export function addComment({primaryServiceReportId, params}) {
   };
 }
 
-export function updateComment(primaryServiceReportId, commentId, params) {
+export function updateComment(serviceReportId, commentId, params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -238,7 +238,7 @@ export function updateComment(primaryServiceReportId, commentId, params) {
         isArchived: false,
       };
       const response = await axios.patch(
-        `${CONFIG.SERVER_URL}products/serviceReport/${primaryServiceReportId}/serviceReportComments/${commentId}`,
+        `${CONFIG.SERVER_URL}products/serviceReport/${serviceReportId}/serviceReportComments/${commentId}`,
         data
       );
       dispatch(slice.actions.updateCommentsSuccess(response.data?.commentsList));
@@ -266,12 +266,12 @@ export function updateComment(primaryServiceReportId, commentId, params) {
 //   };
 // }
 
-export function deleteComment(primaryServiceReportId, commentId) {
+export function deleteComment(serviceReportId, commentId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.delete(
-        `${CONFIG.SERVER_URL}products/serviceReport/${primaryServiceReportId}/serviceReportComments/${commentId}`);
+        `${CONFIG.SERVER_URL}products/serviceReport/${serviceReportId}/serviceReportComments/${commentId}`);
       dispatch(slice.actions.deleteCommentSuccess(response.data?.commentsList));
       // dispatch(slice.actions.setResponseMessage(response.data));
     } catch (error) {

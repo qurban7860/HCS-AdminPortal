@@ -5,10 +5,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { Button, Menu, MenuItem, Typography, } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import CircularProgress from '@mui/material/CircularProgress';
 import { getActiveServiceReportStatuses, resetActiveServiceReportStatuses } from '../../../redux/slices/products/serviceReportStatuses';
-import { updateMachineServiceReport } from '../../../redux/slices/products/machineServiceReport';
+import { updateMachineServiceReportStatus } from '../../../redux/slices/products/machineServiceReport';
 import IconButtonTooltip from '../../../components/Icons/IconButtonTooltip';
+import { useSnackbar } from '../../../components/snackbar';
+import Iconify from '../../../components/iconify';
 
 ReportStatusButton.propTypes = {
     iconButton: PropTypes.bool,
@@ -49,9 +50,10 @@ export default function ReportStatusButton( { iconButton, status, machineID, rep
   const open = Boolean(anchorEl);
   const { machineId, id } = useParams();
   const dispatch = useDispatch();
-  const { isLoading  } = useSelector( (state) => state.machineServiceReport );
+  const { enqueueSnackbar } = useSnackbar();
+  const { isUpdatingReportStatus } = useSelector( (state) => state.machineServiceReport );
   const { activeServiceReportStatuses, isLoadingReportStatus  } = useSelector( (state) => state.serviceReportStatuses );
-  
+
   useEffect(()=>{
     dispatch(getActiveServiceReportStatuses() )
     return ()=>{
@@ -67,9 +69,13 @@ export default function ReportStatusButton( { iconButton, status, machineID, rep
     setAnchorEl(null);
   };
 
-  const handleAction = ( statusId ) => {
-    dispatch(updateMachineServiceReport( machineId, id, { status: statusId })); 
-    handleClose();
+  const handleAction = async ( statusId ) => {
+    try{
+      handleClose();
+      await dispatch(updateMachineServiceReportStatus( machineId, id, { status: statusId })); 
+    } catch( error ){
+      enqueueSnackbar( typeof error === 'string' ? error : 'Saving failed!', { variant: `error` });
+    }
   };
 
   const getButtonColor = ( statusType ) => {
@@ -83,11 +89,13 @@ export default function ReportStatusButton( { iconButton, status, machineID, rep
         {iconButton ?
         <>
             { status?.name || "" }
+            { isUpdatingReportStatus ? ( <Iconify icon="eos-icons:loading" sx={{ ml:1, height: '30px', width: '30px' }}/> ) :
             <IconButtonTooltip 
-                title='Change Status' 
-                icon="bxs:down-arrow" 
-                onClick={handleClick}
+              title='Change Status' 
+              icon="bxs:down-arrow" 
+              onClick={handleClick}
             /> 
+            }
         </>
          :
       <Button
@@ -99,11 +107,11 @@ export default function ReportStatusButton( { iconButton, status, machineID, rep
         onClick={handleClick}
         color={getButtonColor( status?.type?.toLowerCase())}
         endIcon={
-          isLoading ? <CircularProgress color="inherit" /> : ( 
+          isLoadingReportStatus ? <Iconify icon="eos-icons:loading" /> : ( 
                 Array.isArray( activeServiceReportStatuses ) && activeServiceReportStatuses?.length > 0 && <KeyboardArrowDownIcon /> 
             )
         }
-        disabled={isLoading}
+        disabled={ isLoadingReportStatus }
       >
         { status?.name || "" }
       </Button>}
@@ -112,10 +120,19 @@ export default function ReportStatusButton( { iconButton, status, machineID, rep
         open={open}
         onClose={handleClose}
       >
-        { isLoadingReportStatus && ( <CircularProgress size={20} color="inherit" /> && "Loading..." ) }
+        { isLoadingReportStatus && (  
+          <MenuItem> 
+            <Iconify icon="eos-icons:loading" size="40px" sx={{ ml:1 }}/> Loading... 
+          </MenuItem>
+        )}
         { !isLoadingReportStatus && Array.isArray( activeServiceReportStatuses ) && 
-          activeServiceReportStatuses?.filter((s)=> s?.type?.toLowerCase() !== 'draft' )?.map( ( s ) => 
-            <MenuItem size="small" onClick={() => status?._id !== s?._id && handleAction(s?._id) } selected={ status?._id === s?._id } >
+          activeServiceReportStatuses?.map( ( s ) => 
+            <MenuItem 
+              size="small" 
+              onClick={() => status?._id !== s?._id && handleAction(s) } 
+              selected={ status?._id === s?._id } selected={ status?._id === s?._id } 
+              disabled={ status?._id === s?._id } selected={ status?._id === s?._id } 
+            >
               <Typography variant="body2" noWrap>
                 {`${s?.name || ""}${s?.type ? ` (${s?.type || ""})` : ""}`}
               </Typography>
