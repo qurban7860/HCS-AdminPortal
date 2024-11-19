@@ -13,7 +13,8 @@ const ViewHistory = ({ historicalData, title, isLoading, start }) => {
   const currentData = historicalData?.find(hd => !hd?.isHistory);
   const hasTechnician = Boolean(currentData?.technician);
   const hasOperators = Array.isArray(currentData?.operators) && currentData?.operators.length > 0;
-
+  const filteredHistoricalData = Array.isArray(historicalData) && historicalData?.filter( hd => hd?.isHistory );
+  
   const handleContactDialog = useCallback( async ( customerId, contactId ) => {
     await dispatch( getContact( customerId, contactId ) )
     await dispatch( setContactDialog( true ) )
@@ -57,14 +58,14 @@ const ViewHistory = ({ historicalData, title, isLoading, start }) => {
         </>
       )}
       </Grid>
-      {currentData?.createdAt && <Grid sx={{ px: 0.5, mt: ( currentData.operators || currentData.technician ) ? 0 : -2 }}>
+      {currentData?.updatedBy && <Grid sx={{ px: 0.5, mt: ( currentData.operators || currentData.technician ) ? 0 : -2 }}>
           <Typography variant="body2" sx={{color: 'text.disabled',ml:'auto'}}>
             <Typography variant="overline" sx={{color: 'text.disabled',ml:'auto'}}>Last Modified: </Typography>
-            {fDateTime(currentData?.createdAt)}{` by `}{`${currentData?.createdBy?.name || ''}`}
+            {fDateTime(currentData?.createdAt)}{` by `}{`${ currentData?.updatedBy?.name || ''}`}
           </Typography>
       </Grid>}
-      { Array.isArray(historicalData) && historicalData?.length > 1 && 
-        <HistoryNotes historicalData={historicalData?.filter( hd => hd?.isHistory )} start={start} />
+      { Array.isArray(filteredHistoricalData) && filteredHistoricalData?.length > 0 && 
+        <HistoryNotes historicalData={filteredHistoricalData} start={start} />
       }
     </Grid>
   );

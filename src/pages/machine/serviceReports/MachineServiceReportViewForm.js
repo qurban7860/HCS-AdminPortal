@@ -472,7 +472,7 @@ function MachineServiceReportViewForm( ) {
             ))} 
           />
           {/* <ViewFormField isLoading={isLoading} sm={4} heading="Technician"  param={`${defaultValues?.technician?.firstName || ''} ${defaultValues?.technician?.lastName || ''} `} /> */}
-          <ViewHistory isLoading={isLoading} title="Technician Notes" historicalData={defaultValues.technicianNotes} />
+          <ViewHistory isLoading={isLoading} title="Technician Notes" historicalData={machineServiceReport.technicianNotes} />
 
           { machineServiceReport?.reportDocs?.length > 0 &&
           <>

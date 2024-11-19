@@ -80,7 +80,7 @@ return(
                   {historyItem?.createdAt && <Grid >
                       <Typography variant="body2" sx={{color: 'text.disabled',ml:'auto'}}>
                         <Typography variant="overline" sx={{color: 'text.disabled',ml:'auto'}}>Last Modified: </Typography>
-                        {fDateTime(historyItem?.createdAt)}{` by `}{`${historyItem?.createdBy?.name || ''}`}
+                        {fDateTime(historyItem?.createdAt)}{` by `}{`${historyItem?.updatedBy?.name || ''}`}
                       </Typography>
                   </Grid>}
                 </Grid>
