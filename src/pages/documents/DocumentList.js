@@ -142,8 +142,8 @@ const TABLE_HEAD = useMemo(() => {
   const baseHeaders = [
     { id: 'displayName', label: 'Name', align: 'left', allowSearch: true },
     { id: 'referenceNumber', visibility: 'xs2', label: 'Ref. No.', align: 'left', allowSearch: true },
-    { id: 'docCategory.name', visibility: 'xs1', label: 'Category', align: 'left', allowSearch: true },
-    { id: 'docType.name', visibility: 'xs2', label: 'Type', align: 'left', allowSearch: true },
+    { id: 'docCategory.name', visibility: 'xs1', label: 'Category', align: 'left', allowSearch: false },
+    { id: 'docType.name', visibility: 'xs2', label: 'Type', align: 'left', allowSearch: false },
     { id: 'createdAt', label: 'Created At', align: 'right' },
   ];
 
@@ -166,35 +166,35 @@ const TABLE_HEAD = useMemo(() => {
   return baseHeaders;
 }, [customerPage, machineDrawingPage, machineDrawings]);
 
-useLayoutEffect(() => {
-    if(machineDrawingPage || machineDrawings || machinePage ){
+// useLayoutEffect(() => {
+//     if(machineDrawingPage || machineDrawings || machinePage ){
 
-      if(machineDrawings){
-        dispatch(getActiveDocumentCategories(null, null, machineDrawings));
-        dispatch(getActiveDocumentTypes(null, machineDrawings));
-      }else{
-        dispatch(getActiveDocumentCategories(null));  
-        dispatch(getActiveDocumentTypes());
-      }
+//       if(machineDrawings){
+//         dispatch(getActiveDocumentCategories(null, null, machineDrawings));
+//         dispatch(getActiveDocumentTypes(null, machineDrawings));
+//       }else{
+//         dispatch(getActiveDocumentCategories(null));  
+//         dispatch(getActiveDocumentTypes());
+//       }
 
-      if(machineDrawings){
-        const defaultType = activeDocumentTypes.find((typ) => typ?.isDefault === true);
-        const defaultCategory = activeDocumentCategories.find((cat) => cat?.isDefault === true);
+//       if(machineDrawings){
+//         const defaultType = activeDocumentTypes.find((typ) => typ?.isDefault === true);
+//         const defaultCategory = activeDocumentCategories.find((cat) => cat?.isDefault === true);
 
-        if(typeVal===null && defaultType){
-          setTypeVal(defaultType);
-          setCategoryVal(defaultType?.docCategory)
-        }else{
-          setTypeVal(null);
-          setCategoryVal(null);
-        }
-        if(!defaultType && categoryVal===null){
-          setCategoryVal(defaultCategory);
-        }
-      }
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-}, [ dispatch, machineDrawingPage, machineDrawings ]);
+//         if(typeVal===null && defaultType){
+//           setTypeVal(defaultType);
+//           setCategoryVal(defaultType?.docCategory)
+//         }else{
+//           setTypeVal(null);
+//           setCategoryVal(null);
+//         }
+//         if(!defaultType && categoryVal===null){
+//           setCategoryVal(defaultCategory);
+//         }
+//       }
+//     }
+//   // eslint-disable-next-line react-hooks/exhaustive-deps
+// }, [ dispatch, machineDrawingPage, machineDrawings ]);
 
   useEffect(() => {
       if (customerPage && customerId) {
@@ -372,43 +372,45 @@ useLayoutEffect(() => {
   const onGetDocuments = (data) => {
     if (filteredSearchKey && selectedSearchFilter && !customerPage && !machineDrawingPage && !machinePage && !machineDrawings) {
       dispatch(getDocuments(null, null, null, page, documentRowsPerPage, null, null, cancelTokenSource, filteredSearchKey, selectedSearchFilter));
-    } else if(filteredSearchKey && selectedSearchFilter && machineDrawingPage &&  machineId ){
-      dispatch(getDocuments( null, machineId, null, page, machineDocumentsRowsPerPage, null, null, cancelTokenSource, filteredSearchKey, selectedSearchFilter));
-    }  else if( filteredSearchKey && selectedSearchFilter && (machineDrawings || machineDrawingPage) ){
-      dispatch(getDocuments(null, null, ( machineDrawings || machineDrawingPage ), page, machineDrawingsRowsPerPage, null, null, cancelTokenSource, filteredSearchKey, selectedSearchFilter));
+    } 
+      else if( filteredSearchKey && selectedSearchFilter && machineDrawings ){
+      dispatch(getDocuments(null, null, machineDrawings, page, machineDrawingsRowsPerPage, null, null, cancelTokenSource, filteredSearchKey, selectedSearchFilter));
     }  
   };
   
   const afterClearHandler = (data) => {
     if (filteredSearchKey && selectedSearchFilter && !customerPage && !machineDrawingPage && !machinePage && !machineDrawings) {
       dispatch(getDocuments(null, null, null, page, documentRowsPerPage, null, null, cancelTokenSource, null, null));
-    } else if(filteredSearchKey && selectedSearchFilter && machineDrawingPage &&  machineId ){
-      dispatch(getDocuments( null, machineId, null, page, machineDocumentsRowsPerPage, null, null, cancelTokenSource, null, null));
-    }  else if( filteredSearchKey && selectedSearchFilter && machineDrawings || machineDrawingPage ){
-      dispatch(getDocuments(null, null, ( machineDrawings || machineDrawingPage ), page, machineDrawingsRowsPerPage, null, null, cancelTokenSource, null, null));
+    } 
+      else if( filteredSearchKey && selectedSearchFilter && machineDrawings ){
+      dispatch(getDocuments(null, null, machineDrawings, page, machineDrawingsRowsPerPage, null, null, cancelTokenSource, null, null));
     }  
   };
   
   useEffect(() => {
-    if (!machineDrawings && !machineDrawingPage && !machinePage) {
-      dispatch(getActiveDocumentCategories());
+    if (machineDrawings) {
+      dispatch(getActiveDocumentCategories(null, null, machineDrawings));
+      dispatch(getActiveDocumentTypes(null, machineDrawings));
+    } else {
+      dispatch(getActiveDocumentCategories(null));  
+      dispatch(getActiveDocumentTypes());
     }
-  }, [dispatch, machineDrawings, machineDrawingPage, machinePage]);
-
+  }, [dispatch, machineDrawings]);
+  
   const handleCategoryChange = (event, newValue) => {
     if (newValue) {
       setCategoryVal(newValue);
       dispatch(getActiveDocumentTypesWithCategory(newValue._id));
       if (newValue._id !== typeVal?.docCategory?._id) {
-        setTypeVal(null);
+        setTypeVal(null);  
       }
     } else {
       setCategoryVal(null);
       setTypeVal(null);
-      dispatch(getActiveDocumentTypesWithCategory()); // Clear types when no category is selected
+      dispatch(getActiveDocumentTypesWithCategory(null)); 
     }
   };
-
+  
   const handleTypeChange = (event, newValue) => {
     if (newValue) {
       setTypeVal(newValue);
@@ -420,6 +422,7 @@ useLayoutEffect(() => {
       setTypeVal(null);
     }
   };
+  
 
   return (
     <>
@@ -435,19 +438,10 @@ useLayoutEffect(() => {
       {!customerPage && !machinePage && (
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <Card sx={{ p:(machineDrawings ? 0: 3) }}>
-              { machineDrawings && (
-                <DocumentListTableToolbar
-                  machineDrawings={machineDrawings}
-                  categoryVal={categoryVal}
-                  setCategoryVal={setCategoryVal}
-                  typeVal={typeVal}
-                  setTypeVal={setTypeVal}
-                /> )}
+            <Card sx={{ p: 3 }}>
 
-             { !machineDrawings && !machineDrawingPage && !machinePage && (
-        <Box rowGap={2} columnGap={2} mb={3} display="grid" gridTemplateColumns={{ xs: '1fr', sm: 'repeat(2, 1fr)' }} sx={{ flexGrow: 1, width: { xs: '100%', sm: '100%' } }}>
-          
+           { !machineDrawingPage && !machinePage && (
+           <Box rowGap={2} columnGap={2} mb={3} display="grid" gridTemplateColumns={{ xs: '1fr', sm: 'repeat(2, 1fr)' }} sx={{ flexGrow: 1, width: { xs: '100%', sm: '100%' } }}> 
           <Autocomplete 
             id="category-autocomplete"
             value={categoryVal || null}
@@ -460,7 +454,6 @@ useLayoutEffect(() => {
             )}
             renderInput={(params) => <TextField {...params} size="small" label="Category" />}
           />
-
           <Autocomplete 
             id="type-autocomplete"
             value={typeVal || null}
@@ -475,14 +468,12 @@ useLayoutEffect(() => {
           />
         </Box>
       )}
-
               <Stack
                 direction={{ xs: 'column', sm: 'row' }}
                 spacing={2}
                 sx={{
                   justifyContent: 'space-between',
                   alignItems: 'flex-start',
-                  p:(!machineDrawings ? 0: 3), pt:(!machineDrawings ? 0: 0)
                 }}
               >
                 <Box sx={{ flexGrow: 1, width: { xs: '100%', sm: 'auto' } }}>
@@ -493,6 +484,11 @@ useLayoutEffect(() => {
                     selectedFilter={selectedSearchFilter}
                     placeholder="Enter Search here..."
                     afterClearHandler={afterClearHandler}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        handleSubmit(onGetDocuments)();
+                      }
+                    }}
                     fullWidth
                   />
                   </Box>
@@ -511,6 +507,7 @@ useLayoutEffect(() => {
           </Grid>
         </Grid>
         )}
+        </FormProvider>
         <TableCard>
           <DocumentListTableToolbar
             filterName={filterName}
@@ -519,12 +516,13 @@ useLayoutEffect(() => {
             onFilterStatus={handleFilterStatus}
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
+            machineDrawings={machineDrawings}
             customerPage={customerPage}
             machinePage={machinePage}
             categoryVal={categoryVal}
-            setCategoryVal={setCategoryVal}
+            setCategoryVal={ (!machineDrawings) ? setCategoryVal : undefined }
             typeVal={typeVal}
-            setTypeVal={setTypeVal}
+            setTypeVal={ (!machineDrawings) ? setTypeVal : undefined }
             handleGalleryView={
               !isNotFound && (customerPage || machinePage) ? handleGalleryView : undefined
             }
@@ -587,7 +585,6 @@ useLayoutEffect(() => {
           )}
         </TableCard>
         {/* </Container> */}
-      </FormProvider>
     </>
   );
 }

@@ -1,6 +1,8 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { createSlice } from '@reduxjs/toolkit';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
+import LZString from 'lz-string';
+
 // utils
 import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
@@ -180,7 +182,10 @@ export function connectToCommentsSSE(serviceReportId) {
       },
       signal: ctrl.signal,
       onmessage(event) {
-        const comments = JSON.parse(event.data);
+        const decompressed = LZString.decompressFromUTF16(event.data);
+        const comments = JSON.parse(decompressed);
+        // eslint-disable-next-line no-debugger
+        debugger;
         dispatch(slice.actions.updateCommentsFromSSE(comments));
       },
       onerror(error) {

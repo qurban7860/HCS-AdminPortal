@@ -23,6 +23,7 @@ export default function APILogsTableRow({
 }) {
   const {
     createdAt,
+    apiType,
     requestMethod,
     requestURL,
     responseStatusCode,
@@ -72,8 +73,9 @@ export default function APILogsTableRow({
 
   return (  
     <>
-    <StyledTableRow hover selected={selected} onClick={handleRowClick} sx={{ cursor: 'pointer' }}>
+    <StyledTableRow hover selected={selected}>
       {!hiddenColumns?.createdAt && <LinkTableCell align="left" onClick={handleRowClick} param={fDateTime(createdAt)}/>}
+      {!hiddenColumns?.apiType &&<TableCell align="left"><i>{apiType}</i></TableCell>}
       {!hiddenColumns?.requestMethod &&
           <TableCell align="left">
             <Chip
@@ -98,7 +100,7 @@ export default function APILogsTableRow({
       {!hiddenColumns?.responseTime &&<TableCell align="left"><i>{responseTime}</i></TableCell>}
       {!hiddenColumns?.additionalContextualInformation && <TableCell align="left">{additionalContextualInformation}</TableCell>}
       {!hiddenColumns?.['customer.name'] && <TableCell align="left">{customer?.name || ''}</TableCell>}
-      {!hiddenColumns?.machine &&<TableCell align="left">{machine?.[0]?.serialNo || ''}</TableCell>}
+      {!hiddenColumns?.machine &&<LinkTableCell align="left" onClick={handleRowClick} param={machine?.[0]?.serialNo || ''}/>}
     </StyledTableRow>
 
     <DialogViewApiLogDetails
@@ -106,6 +108,7 @@ export default function APILogsTableRow({
         onClose={handleCloseDialog}
         logDetails={{
           createdAt: fDateTime(createdAt),
+          apiType,
           requestMethod,
           requestURL,
           responseStatusCode,

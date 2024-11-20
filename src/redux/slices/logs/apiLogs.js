@@ -17,6 +17,7 @@ const initialState = {
   filterBy: '',
   reportHiddenColumns: {
     "createdAt": false,
+    "apiType": false,
     "requestMethod": false,
     "requestURL": false,
     "responseStatusCode": false,

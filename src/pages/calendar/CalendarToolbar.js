@@ -21,6 +21,13 @@ const VIEW_OPTIONS = [
   { value: 'listMonth', label: 'Agenda', icon: 'ic:round-view-agenda' },
 ];
 
+const statusOptions = [
+  { label: 'To Do', value: 'To Do', color: '#FBC02D' },
+  { label: 'In Progress', value: 'In Progress', color: '#1E88E5' },
+  { label: 'Done', value: 'Done', color: '#388E3C' },
+  { label: 'Cancelled', value: 'Cancelled', color: '#D32F2F' },
+];
+
 // ----------------------------------------------------------------------
 
 CalendarToolbar.propTypes = {
@@ -30,6 +37,8 @@ CalendarToolbar.propTypes = {
   setSelectedContact: PropTypes.func,
   selectedUser: PropTypes.object,
   setSelectedUser: PropTypes.func,
+  selectedStatus: PropTypes.object,
+  setSelectedStatus: PropTypes.func,
   onNextDate: PropTypes.func,
   onPrevDate: PropTypes.func,
   onOpenFilter: PropTypes.func,
@@ -45,6 +54,8 @@ function CalendarToolbar({
   setSelectedContact,
   selectedUser,
   setSelectedUser,
+  selectedStatus,
+  setSelectedStatus,
   date,
   view,
   onNextDate,
@@ -60,13 +71,17 @@ function CalendarToolbar({
   const { activeSpContacts } = useSelector((state) => state.contact);
   const { activeSecurityUsers } = useSelector((state) => state.user);
   const { startOfWeek, endOfWeek } = getWeekRange(date);
-
+  
   return (
     <Stack
       alignItems="center"
       justifyContent="space-between"
       direction={{ xs: 'column', sm: 'row' }}
-      sx={{ p: 2.5 }}
+      sx={{ p: 2.5,
+        flexWrap: 'wrap', 
+        rowGap: 2, 
+        columnGap: 2,
+       }}
     >
       {isDesktop && (
         <Stack direction="row" spacing={1}>
@@ -80,7 +95,7 @@ function CalendarToolbar({
         </Stack>
       )}
 
-      <Stack direction="row" alignItems="center" spacing={2}>
+      <Stack direction="row" alignItems="center" justifyContent="center" sx={{ flexGrow: 1, flexWrap: 'wrap', rowGap: 2, columnGap: 2, mr: 25}}>
         <IconButton onClick={onPrevDate}>
           <Iconify icon="eva:arrow-ios-back-fill" />
         </IconButton> 
@@ -92,7 +107,7 @@ function CalendarToolbar({
         </IconButton>
       </Stack>
 
-      <Stack direction="row" alignItems="center" spacing={2}>
+      <Stack direction="row" alignItems="center" sx={{ flexWrap: 'wrap', rowGap: 2, columnGap: 2, justifyContent: 'flex-start', width: '100%' }}>
           <Autocomplete 
             value={ selectedContact || null}
             options={isAllAccessAllowed ? activeSpContacts : activeSpContacts?.filter((spc)=> spc?.reportingTo === user?.contact || spc?._id === user?.contact )}
@@ -146,12 +161,31 @@ function CalendarToolbar({
           />
         }
         
+        <Autocomplete
+          value={selectedStatus || null}
+          options={statusOptions}
+          isOptionEqualToValue={(option, val) => option.value === val?.value}
+          getOptionLabel={(option) => option?.label || ''}
+          onChange={(event, newValue) => {
+            if (newValue) {
+              setSelectedStatus(newValue);
+            } else {
+              setSelectedStatus(null);
+            }
+          }}
+          sx={{ width: '225px' }}
+          renderOption={(props, option) => ( <li {...props} key={option.value} style={{ color: option.color }}>{option.label}</li>)}
+          renderInput={(params) => <TextField {...params} size="small" label="Status" 
+          InputProps={{...params.InputProps, style: { color: selectedStatus?.color || 'inherit' },
+          }} />}
+        />
+        
         <StyledTooltip title="New Event" placement="top" disableFocusListener tooltipcolor="#103996" color="#fff">
           <IconButton color="#fff" onClick={()=> {
             dispatch(setEventModel(true))
             dispatch(setSelectedEvent(null))
           }} 
-            sx={{ background:"#2065D1", borderRadius:1, height:'1.7em', p:'8.5px 14px',
+            sx={{ background:"#2065D1", borderRadius:1, height:'1.7em', p:'8.5px 14px', marginLeft: 'auto',
                   '&:hover': { background:"#103996", color:"#fff" } }}>
             <Iconify color="#fff" sx={{ height: '24px', width: '24px'}} icon='eva:plus-fill' />
           </IconButton>

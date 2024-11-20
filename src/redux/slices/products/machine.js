@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { fetchEventSource } from '@microsoft/fetch-event-source';
 // utils
 import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
@@ -213,6 +214,17 @@ const slice = createSlice({
         machineIntegrationSyncStatus: action.payload.machineIntegrationSyncStatus
       };
       state.initial = true;
+    },
+
+    // Update Machine Integration Status over SSE
+    updateMachineIntegrationStatusFromSSE(state, action) {
+      state.machine = {
+        ...state.machine, 
+        computerGUID: action.payload.computerGUID,
+        IPC_SerialNo: action.payload.IPC_SerialNo,
+        portalKey: action.payload.portalKey,
+        machineIntegrationSyncStatus: action.payload.machineIntegrationSyncStatus
+      };
     },
 
     // GET Machine For Dialog
@@ -912,5 +924,31 @@ export function addPortalIntegrationDetails(machineId, {computerGUID, IPC_Serial
       dispatch(slice.actions.hasError(error.Message));
       throw error;
     }
+  };
+}
+
+export function streamMachineIntegrationStatus(machineId) {
+  return async (dispatch) => {
+    const token = window.localStorage.getItem('accessToken');
+    
+    const ctrl = new AbortController();
+
+    fetchEventSource(`${CONFIG.SERVER_URL}products/machines/${machineId}/integration/streamIntegrationStatus`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+      signal: ctrl.signal,
+      onmessage(event) {
+        const integrationDetails = JSON.parse(event.data);
+        dispatch(slice.actions.updateMachineIntegrationStatusFromSSE(integrationDetails));
+      },
+      onerror(error) {
+        // console.error('SSE Error:', error);
+        ctrl.abort();
+      },
+    });
+
+    return ctrl;
   };
 }
