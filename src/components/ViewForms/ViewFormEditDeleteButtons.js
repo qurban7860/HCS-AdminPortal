@@ -472,8 +472,8 @@ function ViewFormEditDeleteButtons({
             </Badge>
           }
 
-          {transferredHistory !== undefined &&
-            <Badge badgeContent={transferredHistory?.length || '0' } color="info">
+          {transferredHistory !== undefined && transferredHistory?.length > 0 &&
+            <Badge badgeContent={transferredHistory?.length} color="info">
               <IconTooltip
                 title='Ownership Detail'
                 color={ICONS.TRANSFERHISTORY.color}
