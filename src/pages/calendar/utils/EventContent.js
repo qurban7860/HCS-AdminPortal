@@ -35,9 +35,9 @@ const EventContent = ({ info }) => {
             {status && (
               <div className="fc-event-status" style={{ marginRight: 4,  display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Iconify
-                  icon="fluent:target-16-filled" 
-                  width={16} 
-                  height={16} 
+                  icon="fluent-mdl2:status-circle-inner" 
+                  width={12} 
+                  height={12} 
                   color={StatusColor(status)} 
                 />
               </div>
