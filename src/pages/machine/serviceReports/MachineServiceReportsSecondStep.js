@@ -45,8 +45,8 @@ function MachineServiceReportsSecondStep({ handleDraftRequest, handleDiscard, ha
         const initialValues = {
         serviceDate:                  machineServiceReport?.serviceDate || new Date(),
         versionNo:                    machineServiceReport?.versionNo || 1,
-        textBeforeCheckItems:         '',
-        textAfterCheckItems:          '',
+        textBeforeCheckItems:         machineServiceReport?.textBeforeCheckItems || '',
+        textAfterCheckItems:          machineServiceReport?.textAfterCheckItems || '',
       }
       return initialValues;
     },
@@ -143,8 +143,8 @@ function MachineServiceReportsSecondStep({ handleDraftRequest, handleDiscard, ha
               <RHFTextField name="textBeforeCheckItems" label="Text Before Check Items" minRows={3} multiline />
                 <Grid container display='flex' direction='row' justifyContent='flex-end' gap={2}>
                   {isSubmittedBefore && showMessage && <Typography variant='body2' color='green' sx={{mt:0.5}}>Saved Successfully!</Typography>}
-                  <LoadingButton disabled={ !isDirtyBefore } type='submit' loading={isSubmittingBefore} size='small' variant='contained'>Save</LoadingButton>
-                  <HistoryNotes historicalData={ machineServiceReport?.textBeforeCheckItems } start />
+                  <LoadingButton disabled={ !isDirtyBefore || isSubmittingBefore } type='submit' loading={isSubmittingBefore} size='small' variant='contained'>Save</LoadingButton>
+
                 </Grid>
               </Stack>
             </FormProvider>
@@ -184,8 +184,7 @@ function MachineServiceReportsSecondStep({ handleDraftRequest, handleDiscard, ha
                 <RHFTextField name="textAfterCheckItems" label="Text After Check Items" minRows={3} multiline />
                 <Grid container display='flex' direction='row' justifyContent='flex-end' gap={2}>
                   {isSubmittedAfter && showMessage && <Typography variant='body2' color='green' sx={{mt:0.5}}>Saved Successfully!</Typography>}
-                  <LoadingButton disabled={ !isDirtyAfter } onClick={handleSubmitAfter(submitAfter)} loading={isSubmittingAfter} size='small' variant='contained'>Save</LoadingButton>
-                  <HistoryNotes historicalData={ machineServiceReport?.textAfterCheckItems } start />
+                  <LoadingButton disabled={ !isDirtyAfter || isSubmittingAfter } onClick={handleSubmitAfter(submitAfter)} loading={isSubmittingAfter} size='small' variant='contained'>Save</LoadingButton>
                 </Grid>
               </Stack>
             </FormProvider>

@@ -10,17 +10,20 @@ const initialState = {
   resetFlags: true,
   responseMessage: null,
   success: false,
+  error: null,
   isLoading: false,
   isLoadingReportNote: false,
   isUpdatingReportStatus: false,
   isLoadingCheckItems: false,
   submittingCheckItemIndex: -1,
-  error: null,
   machineServiceReport: {},
   machineServiceReports: [],
   machineServiceReportHistory: [],
   activeMachineServiceReports: [],
   machineServiceReportCheckItems: [],
+  serviceReportNote: null,
+  serviceReportNotes: [],
+  activeServiceReportNotes:[],
   sendEmailDialog:false,
   pdfViewerDialog:false,
   addFileDialog:false,
@@ -82,6 +85,7 @@ const slice = createSlice({
     hasError(state, action) {
       state.isLoading = false;
       state.isLoadingCheckItems = false;
+      state.isLoadingReportNote = false;
       state.isUpdatingReportStatus = false;
       state.error = action.payload;
       state.initial = true;
@@ -173,6 +177,13 @@ const slice = createSlice({
       state.initial = true;
     },
 
+    UpdateMachineServiceReportNote(state, action) {
+      state.machineServiceReport = {
+        ...state.machineServiceReport,
+        ...action.payload
+      };
+    },
+    
     // SET SEND EMAIL DIALOG
     setSendEmailDialog(state, action) {
       state.sendEmailDialog = action.payload;
@@ -236,6 +247,23 @@ const slice = createSlice({
       state.isLoading = false;
     },
 
+    // RESET 
+    resetServiceReportNote(state){
+      state.serviceReportNote = {};
+      state.isLoading = false;
+    },
+
+    // RESET 
+    resetServiceReportNotes(state){
+      state.serviceReportNotes = [];
+      state.isLoading = false;
+    },
+    // RESET 
+    resetActiveServiceReportNotes(state){
+      state.activeServiceReportNotes = [];
+      state.isLoading = false;
+    },
+
     // Set FilterBy
     setFilterBy(state, action) {
       state.filterBy = action.payload;
@@ -271,6 +299,9 @@ export const {
   resetMachineServiceReport,
   resetCheckItemValues,
   resetSubmittingCheckItemIndex,
+  resetServiceReportNote,
+  resetServiceReportNotes,
+  resetActiveServiceReportNotes,
   setResponseMessage,
   setFilterBy,
   ChangeRowsPerPage,

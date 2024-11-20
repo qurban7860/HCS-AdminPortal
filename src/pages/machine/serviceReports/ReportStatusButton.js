@@ -13,7 +13,7 @@ import Iconify from '../../../components/iconify';
 
 ReportStatusButton.propTypes = {
     iconButton: PropTypes.bool,
-    status: PropTypes.string,
+    status: PropTypes.object,
     machineID: PropTypes.string,
     reportID: PropTypes.string,
   };
@@ -69,10 +69,10 @@ export default function ReportStatusButton( { iconButton, status, machineID, rep
     setAnchorEl(null);
   };
 
-  const handleAction = async ( statusId ) => {
+  const handleAction = async ( newStatus ) => {
     try{
       handleClose();
-      await dispatch(updateMachineServiceReportStatus( machineId, id, { status: statusId })); 
+      await dispatch(updateMachineServiceReportStatus( machineId, id, { status: newStatus })); 
     } catch( error ){
       enqueueSnackbar( typeof error === 'string' ? error : 'Saving failed!', { variant: `error` });
     }
@@ -89,12 +89,29 @@ export default function ReportStatusButton( { iconButton, status, machineID, rep
         {iconButton ?
         <>
             { status?.name || "" }
-            { isUpdatingReportStatus ? ( <Iconify icon="eos-icons:loading" sx={{ ml:1, height: '30px', width: '30px' }}/> ) :
-            <IconButtonTooltip 
-              title='Change Status' 
-              icon="bxs:down-arrow" 
-              onClick={handleClick}
-            /> 
+            {
+              ( isUpdatingReportStatus && 
+                <Iconify icon="eos-icons:loading" sx={{ ml:1, height: '30px', width: '30px' }}/> 
+              ) ||
+              ( 
+                !isUpdatingReportStatus && 
+                status?.name?.toLowerCase() === "draft" && 
+                activeServiceReportStatuses?.some( s => s?.name?.toLowerCase() === "submitted" ) &&
+                <IconButtonTooltip 
+                  title='Submit' 
+                  icon="mdi:login" 
+                  onClick={()=> handleAction(  activeServiceReportStatuses?.find( s => s?.name?.toLowerCase() === "submitted" ))}
+                /> 
+              ) ||
+              ( 
+                status?.name?.toLowerCase() !== "draft" && 
+                !isUpdatingReportStatus && 
+                <IconButtonTooltip 
+                  title='Change Status' 
+                  icon="bxs:down-arrow" 
+                  onClick={handleClick}
+                /> 
+              )
             }
         </>
          :
@@ -107,9 +124,13 @@ export default function ReportStatusButton( { iconButton, status, machineID, rep
         onClick={handleClick}
         color={getButtonColor( status?.type?.toLowerCase())}
         endIcon={
-          isLoadingReportStatus ? <Iconify icon="eos-icons:loading" /> : ( 
-                Array.isArray( activeServiceReportStatuses ) && activeServiceReportStatuses?.length > 0 && <KeyboardArrowDownIcon /> 
-            )
+          ( isLoadingReportStatus && <Iconify icon="eos-icons:loading" /> ) ||
+          ( 
+            !isLoadingReportStatus && 
+            Array.isArray( activeServiceReportStatuses ) && 
+            activeServiceReportStatuses?.length > 0 && 
+            <KeyboardArrowDownIcon /> 
+          )
         }
         disabled={ isLoadingReportStatus }
       >
@@ -128,13 +149,13 @@ export default function ReportStatusButton( { iconButton, status, machineID, rep
         { !isLoadingReportStatus && Array.isArray( activeServiceReportStatuses ) && 
           activeServiceReportStatuses?.map( ( s ) => 
             <MenuItem 
+              key={s?._id}
               size="small" 
-              onClick={() => status?._id !== s?._id && handleAction(s) } 
-              selected={ status?._id === s?._id } selected={ status?._id === s?._id } 
+              onClick={() => status?._id !== s?._id && handleAction(s) }
               disabled={ status?._id === s?._id } selected={ status?._id === s?._id } 
             >
               <Typography variant="body2" noWrap>
-                {`${s?.name || ""}${s?.type ? ` (${s?.type || ""})` : ""}`}
+                {`${s?.name || ""}${ ( s?.type && ( s?.name?.toLowerCase() !== s?.type?.toLowerCase() ) ) ? ` (${s?.type || ""})` : ""}`}
               </Typography>
             </MenuItem>
         )}
