@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
 import { Button, Grid, Stack } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router';
 import { PATH_MACHINE } from '../../routes/paths';
 import { setFormActiveStep } from '../../redux/slices/products/machineServiceReport';
 import useResponsive from '../../hooks/useResponsive';
@@ -29,7 +29,7 @@ export default function ServiceRecodStepButtons({
   const dispatch = useDispatch();
   const { formActiveStep } = useSelector((state) => state.machineServiceReport);
   const { machine } = useSelector((state) => state.machine);
-  
+  const { machineId, id } = useParams();
   const isMobile = useResponsive('down', 'sm');
 
   const handleBack = async () => {
@@ -37,7 +37,11 @@ export default function ServiceRecodStepButtons({
   } 
 
   const handleCancle = async () => {
-    await navigate(PATH_MACHINE.machines.serviceReports.root(machine?._id))
+    if( machineId && id ){
+    await navigate(PATH_MACHINE.machines.serviceReports.view( machineId, id ))
+    } else {
+      await navigate(PATH_MACHINE.machines.serviceReports.root(machine?._id))
+    }
   } 
 
   return (

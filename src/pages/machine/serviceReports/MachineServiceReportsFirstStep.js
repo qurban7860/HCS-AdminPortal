@@ -19,7 +19,7 @@ import { getActiveServiceReportTemplatesForRecords, resetServiceReportTemplate }
 import ServiceRecodStepButtons from '../../../components/DocumentForms/ServiceRecodStepButtons';
 import SkeletonLine from '../../../components/skeleton/SkeletonLine';
 import SkeletonPDF from '../../../components/skeleton/SkeletonPDF';
-import HistoryNotes from './HistoryNotes';
+import ViewHistory from './ViewHistory';
 
 MachineServiceReportsFirstStep.propTypes = {
     handleComplete : PropTypes.func,
@@ -278,8 +278,11 @@ return (
                   columnGap={2}
                   display="grid"
                   sx={{width:'100%'}}
-                  gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
+                  gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(3, 1fr)' }}
                   >
+                  
+                  <RHFDatePicker inputFormat='dd/MM/yyyy' name="Service Date" label="Service Date" />
+
                   <RHFAutocomplete 
                       name="docReportType"
                       label="Report Type*"
@@ -334,18 +337,7 @@ return (
                       }
                     }
                     />
-
                   </Box> 
-
-                  <Box
-                    rowGap={2}
-                    columnGap={2}
-                    display="grid"
-                    gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
-                    >
-                    <RHFDatePicker inputFormat='dd/MM/yyyy' name="Service Date" label="Service Date" />
-
-                  </Box>
                     <RHFAutocomplete
                       name="technician"
                       label="Technician"
@@ -356,7 +348,7 @@ return (
                     />
 
                   <RHFTextField name="technicianNotes" label="Technician Notes" minRows={3} multiline/> 
-                  <HistoryNotes historicalData={ machineServiceReport?.technicianNotes } />
+                  <ViewHistory historicalData={ machineServiceReport?.technicianNotes } />
                   <FormLabel content='Reporting Documents' />
                   <RHFUpload multiple  thumbnail name="files" imagesOnly
                     onDrop={handleDropMultiFile}

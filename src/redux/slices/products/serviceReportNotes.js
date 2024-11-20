@@ -9,7 +9,7 @@ const initialState = {
   isLoading: false,
   isLoadingReportNote: false,
   error: null,
-  serviceReportNote: {},
+  serviceReportNote: null,
   serviceReportNotes: [],
   activeServiceReportNotes:[],
   filterBy: '',

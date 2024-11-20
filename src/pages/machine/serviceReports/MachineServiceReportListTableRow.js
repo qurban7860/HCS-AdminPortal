@@ -36,7 +36,7 @@ export default function MachineServiceReportListTableRow({
       <StyledTableRow hover selected={selected}>
         <TableCell align="left">{fDate(serviceDate)}</TableCell>
         <LinkTableCell align="left" onClick={onViewRow} param={serviceReportUID} />
-        <TableCell align="left">{ `${currentApprovalStatus !== "PENDING" ? currentApprovalStatus : status?.name || ''} ${status?.type ? `(${status.type})` : ""}`}</TableCell>
+        <TableCell align="left">{ `${currentApprovalStatus !== "PENDING" ? currentApprovalStatus : status?.name || ''} ${status?.type && ( status?.name?.toLowerCase() !== status?.type?.toLowerCase() ) ? `(${status.type})` : ""}`}</TableCell>
         <LinkTableCell align="left" onClick={onViewRow} param={`${serviceReportTemplate?.reportTitle ? serviceReportTemplate?.reportTitle	: ''	} ${serviceReportTemplate?.reportType ? ' - ' : ''} ${serviceReportTemplate?.reportType ? serviceReportTemplate?.reportType : ''}`} />
         <TableCell align="center"><Switch checked={isActive} disabled size="small" /></TableCell> 
         <TableCell align="left">{createdBy.name}</TableCell>

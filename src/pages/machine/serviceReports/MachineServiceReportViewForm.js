@@ -345,8 +345,6 @@ function MachineServiceReportViewForm( ) {
     }
   };  
 
-  console.log(" ServiceReport?.status : ",machineServiceReport?.status?.type?.toLowerCase())
-
   return (
     <Container maxWidth={false}>
       <MachineTabContainer currentTabValue='serviceReports' />
