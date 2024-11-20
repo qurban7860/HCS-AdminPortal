@@ -27,6 +27,7 @@ import { useSnackbar } from '../../../components/snackbar';
 import { FORMLABELS } from '../../../constants/default-constants';
 import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../../components/ViewForms/ViewFormField';
+import ViewFormNoteField from '../../../components/ViewForms/ViewFormNoteField';
 import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
 import { fDate } from '../../../utils/formatTime';
@@ -119,8 +120,8 @@ function MachineServiceReportViewForm( ) {
       footerLeftText:                       machineServiceReport?.serviceReportTemplate?.footer?.leftText || '', 
       footerCenterText:                     machineServiceReport?.serviceReportTemplate?.footer?.centerText || '',
       footerRightText:                      machineServiceReport?.serviceReportTemplate?.footer?.rightText || '',
-      textBeforeCheckItems:                 machineServiceReport?.textBeforeCheckItems || [],
-      textAfterCheckItems:                  machineServiceReport?.textAfterCheckItems || [],
+      textBeforeCheckItems:                 machineServiceReport?.textBeforeCheckItems || "",
+      textAfterCheckItems:                  machineServiceReport?.textAfterCheckItems || "",
       internalComments:                     machineServiceReport?.internalComments || [],
       serviceNote:                          machineServiceReport?.serviceNote || [],
       recommendationNote:                   machineServiceReport?.recommendationNote || [],
@@ -420,7 +421,12 @@ function MachineServiceReportViewForm( ) {
                 ) || 'inherit'
                 }}
               >
-                {machineServiceReport?.currentApprovalStatus === "PENDING" ? ( machineServiceReport?.status?.name && <ReportStatusButton machineID={ machineId } iconButton reportID={ id } status={ machineServiceReport?.status } />) || "" : machineServiceReport?.currentApprovalStatus}
+                {machineServiceReport?.currentApprovalStatus === "PENDING" ? 
+                  ( 
+                    machineServiceReport?.status?.name && 
+                    <ReportStatusButton machineID={ machineId } iconButton reportID={ id } status={ machineServiceReport?.status } />
+                  ) || "" 
+                : machineServiceReport?.currentApprovalStatus}
               </Typography> 
               {
                 !machine?.isArchived &&
@@ -509,7 +515,10 @@ function MachineServiceReportViewForm( ) {
             </Box>
           </>}
           <FormLabel content={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />
-          {defaultValues.textBeforeCheckItems && <ViewHistory isLoading={isLoading}  historicalData={defaultValues.textBeforeCheckItems} />}
+          { defaultValues.textBeforeCheckItems &&
+            typeof defaultValues.textBeforeCheckItems === "string" && 
+            <ViewFormNoteField isLoading={isLoading} sm={12} param={defaultValues.textBeforeCheckItems} />
+          }
           {!isLoadingCheckItems ? 
             <Grid item md={12} sx={{ overflowWrap: 'break-word' }}>
               <Grid item md={12} sx={{display:'flex', flexDirection:'column'}}>
@@ -539,8 +548,10 @@ function MachineServiceReportViewForm( ) {
             </Stack>
           }
           
-          {defaultValues.textAfterCheckItems && <ViewHistory isLoading={isLoading}  historicalData={defaultValues.textAfterCheckItems} />}
-
+          { defaultValues.textAfterCheckItems && 
+            typeof defaultValues.textAfterCheckItems === "string" && 
+            <ViewFormNoteField isLoading={isLoading} sm={12}  param={defaultValues.textAfterCheckItems} />
+          }
           {machineServiceReport?.serviceReportTemplate?.enableNote && <ViewHistory isLoading={isLoading} title={`${machineServiceReport?.serviceReportTemplate?.reportType?.charAt(0).toUpperCase()||''}${machineServiceReport?.serviceReportTemplate?.reportType?.slice(1).toLowerCase()||''} Note`} historicalData={defaultValues.serviceNote} />}
           {machineServiceReport?.serviceReportTemplate?.enableMaintenanceRecommendations && <ViewHistory isLoading={isLoading} title="Recommendation Note" historicalData={defaultValues.recommendationNote} />}
           {machineServiceReport?.serviceReportTemplate?.enableSuggestedSpares && <ViewHistory isLoading={isLoading} title="Suggested Spares" historicalData={defaultValues.suggestedSpares} />}
