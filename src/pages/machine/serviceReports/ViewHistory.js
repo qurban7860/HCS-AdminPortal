@@ -29,14 +29,14 @@ const ViewHistory = ({ historicalData, title, isLoading, onEdit }) => {
     <Grid container >
       <Grid container item md={12} sx={{ px: 0.5, pt: 1, display:"block", alignItems: 'center', whiteSpace: 'pre-line', overflowWrap: 'break-word'  }}>
         <Typography variant="body2" sx={{color: 'text.disabled', }}>
-          <Typography variant="overline" sx={{color: 'text.disabled', display: "flex", justifyContent: "space-between", alignItems: 'center', whiteSpace: 'pre-line', overflowWrap: 'break-word' }}>{`${title || "Notes"}:`}
+          {/* <Typography variant="overline" sx={{color: 'text.disabled', display: "flex", justifyContent: "space-between", alignItems: 'center', whiteSpace: 'pre-line', overflowWrap: 'break-word' }}>{`${title || "Notes"}:`}
             <Grid sx={{ position: "relative", mb: -2 }} >
               <ViewFormEditDeleteButtons 
                 onDelete={onDelete}
                 handleEdit={onEdit}
               />
             </Grid>
-          </Typography>
+          </Typography> */}
           {currentData?.note || ""}{ currentData?.note?.trim() && <CopyIcon value={currentData?.note}/> }
         </Typography>
         <Typography variant="body2" sx={{ px: 0.5, color: 'text.disabled', alignItems: "center", display: "flex", width:"100%" }}>
