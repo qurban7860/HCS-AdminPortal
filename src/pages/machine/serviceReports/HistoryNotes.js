@@ -84,7 +84,7 @@ return(
                       )}
                       {historyItem?.updatedBy && 
                         <Typography variant="overline" sx={{ color: 'text.disabled', ml:"auto"  }}>
-                          <i><b>Last Modified: </b>{fDateTime(historyItem?.createdAt)}{` by `}{`${ historyItem?.updatedBy?.name || ''}`}</i>
+                          <i><b>Last Modified: </b>{fDateTime(historyItem?.updatedAt)}{` by `}{`${ historyItem?.updatedBy?.name || ''}`}</i>
                         </Typography>
                       }
                     </>
