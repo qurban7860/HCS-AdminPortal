@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
@@ -26,13 +26,21 @@ const ViewHistory = ({ name, label, historicalData, title, methods }) => {
     formState: { isSubmitting },
   } = methods || method;
 
-  const currentData = ( Array.isArray(historicalData) && historicalData?.length > 0 ) && historicalData[0] || null;
-  const hasTechnician = Boolean(currentData?.technician);
-  const hasOperators = Array.isArray(currentData?.operators) && currentData?.operators.length > 0;
-  const filteredHistoricalData = Array.isArray(historicalData) && historicalData?.slice(1) || [];
   const [ val, setVal ] = useState("");
   const [ isEditing, setIsEditing ] = useState(false);
-  
+  const [ currentData, setCurrentData ] = useState(null);
+  const [ hasTechnician, setHasTechnician ] = useState({});
+  const [ hasOperators, setHasOperators ] = useState([]);
+  const [ filteredHistoricalData, setFilteredHistoricalData ] = useState([]);
+
+  useEffect(()=>{
+    const Data = ( Array.isArray(historicalData) && historicalData?.length > 0 ) && historicalData[0] || null;
+    setCurrentData( Data );
+    setHasTechnician( Boolean(Data?.technician) );
+    setHasOperators( Array.isArray(Data?.operators) && Data?.operators.length > 0 );
+    setFilteredHistoricalData( Array.isArray(historicalData) && historicalData?.slice(1) || [] );
+  },[ historicalData ])
+
   const handleContactDialog = useCallback( async ( customerId, contactId ) => {
     await dispatch( getContact( customerId, contactId ) )
     await dispatch( setContactDialog( true ) )
@@ -54,7 +62,7 @@ const ViewHistory = ({ name, label, historicalData, title, methods }) => {
         enqueueSnackbar("Note updated successfully!");
         setVal("")
         setIsEditing(false);
-      } else{
+      } else if( id ){
         const currentValue = getValues(name);
         await dispatch(addServiceReportNote( id, name, currentValue ))
         setVal("")
@@ -96,27 +104,41 @@ const ViewHistory = ({ name, label, historicalData, title, methods }) => {
               multiline
               minRows={3}
               name={name}
-              label={label}
+              label={ label || currentData?.type || ""}
               value={val}
               onChange={ handleChangeValue }
               sx={{ mb: 1 }}
             />
-            <Grid container display='flex' direction='row' justifyContent='flex-end' gap={ 2 }>
-              { isEditing && <Button size='small' variant='outlined' onClick={ handleCancel } disabled={ isLoading || isLoadingReportNote || isSubmitting } >cancel</Button>}
-              <LoadingButton disabled={ isLoading || isLoadingReportNote || isSubmitting } onClick={ handleSave } loading={ isLoadingReportNote } size='small' variant='contained'>{ isEditing ? "Update" : "Save" }</LoadingButton>
-            </Grid>
+            { id && 
+              <Grid container display='flex' direction='row' justifyContent='flex-end' gap={ 2 }>
+                { isEditing && <Button size='small' variant='outlined' onClick={ handleCancel } disabled={ isLoading || isLoadingReportNote || isSubmitting } >cancel</Button>}
+                <LoadingButton disabled={ isLoading || isLoadingReportNote || isSubmitting } onClick={ handleSave } loading={ isLoadingReportNote } size='small' variant='contained'>{ isEditing ? "Update" : "Save" }</LoadingButton>
+              </Grid>
+            }
           </>
         }
+      { id && 
       <Grid container item md={12} sx={{ px: 0.5, pt: 1, display:"block", alignItems: 'center', whiteSpace: 'pre-line', overflowWrap: 'break-word'  }}>
-        { !isEditing &&
+        { !isEditing && 
           <Typography variant="body2" sx={{color: 'text.disabled', }}>
-            <Typography variant="overline" sx={{color: 'text.disabled', display: "flex", justifyContent: "space-between", alignItems: 'center', whiteSpace: 'pre-line', overflowWrap: 'break-word' }}>{`${title || "Notes"}:`}
-              <Grid sx={{ position: "relative", mb: -2 }} >
-                <ViewFormEditDeleteButtons 
-                  onDelete={onDelete}
-                  handleEdit={handleEdit}
-                />
-              </Grid>
+            <Typography variant="overline" 
+              sx={{ pb: currentData?.note?.trim() ? 0 : 3,
+                    color: 'text.disabled', 
+                    display: "flex", 
+                    justifyContent: "space-between", 
+                    alignItems: 'center', 
+                    whiteSpace: 'pre-line', 
+                    overflowWrap: 'break-word' 
+                }}
+              >{`${title || "Notes"}:`}
+              { currentData?.note && currentData?.note?.trim() &&
+                <Grid sx={{ position: "relative", mb: -1.5 }} >
+                  <ViewFormEditDeleteButtons 
+                    onDelete={onDelete}
+                    handleEdit={handleEdit}
+                  />
+                </Grid>
+              }
             </Typography>
             {currentData?.note || ""}{ currentData?.note?.trim() && <CopyIcon value={currentData?.note}/> }
           </Typography>
@@ -128,11 +150,11 @@ const ViewHistory = ({ name, label, historicalData, title, methods }) => {
                 <Typography variant="overline" sx={{ color: 'text.disabled' }}>
                   <b>Technician:</b>
                 </Typography>
-                <Chip 
+                {currentData?.technician?.firstName && <Chip 
                   sx={{ m: 0.5 }}
                   label={`${currentData?.technician?.firstName || ''} ${currentData?.technician?.lastName || ''}`}
                   onClick={() => handleContactDialog(currentData?.technician?.customer?._id, currentData?.technician?._id)}
-                />
+                />}
               </>
             )}
             {hasOperators && (
@@ -141,7 +163,7 @@ const ViewHistory = ({ name, label, historicalData, title, methods }) => {
                   <b>Operators:</b>
                 </Typography>
                 {currentData?.operators?.map(op => (
-                  <Chip
+                  op?.firstName && <Chip
                     key={op._id}
                     sx={{ m: 0.5 }}
                     label={`${op.firstName || ''} ${op.lastName || ''}`}
@@ -157,8 +179,8 @@ const ViewHistory = ({ name, label, historicalData, title, methods }) => {
             }
           </>
         </Typography>
-      </Grid>
-      { Array.isArray(filteredHistoricalData) && filteredHistoricalData?.length > 0 && 
+      </Grid>}
+      { Array.isArray(filteredHistoricalData) && filteredHistoricalData?.length > 0 && id &&
         <HistoryNotes title={title} historicalData={filteredHistoricalData} />
       }
     </Grid>
