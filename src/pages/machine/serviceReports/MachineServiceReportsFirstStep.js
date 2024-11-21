@@ -133,7 +133,6 @@ function MachineServiceReportsFirstStep( { handleComplete, handleDraftRequest, h
 
       const onSubmit = async (data) => {
         try {
-      console.log("getValues technicianNotes :  ",getValues("technicianNotes"))
 
           if(isSubmit){
             data.status = 'SUBMITTED'
@@ -174,11 +173,11 @@ function MachineServiceReportsFirstStep( { handleComplete, handleDraftRequest, h
           enqueueSnackbar( typeof err === 'string' ? err : 'Saving failed!', { variant: `error` });
         }
       };
-    const dispatchFiles = async ( primaryServiceReportId,data )  => {
+    const dispatchFiles = async ( serviceReportId,data )  => {
       if(Array.isArray(data?.files) && data?.files?.length > 0){
         const filteredFiles = data?.files?.filter((ff)=> !ff?._id)
         if(Array.isArray(filteredFiles) && filteredFiles?.length > 0){
-            await dispatch(addMachineServiceReportFiles(machineId, primaryServiceReportId, { files: filteredFiles, isReportDoc: data?.isReportDoc } ))
+            await dispatch(addMachineServiceReportFiles(machineId, serviceReportId, { files: filteredFiles, isReportDoc: data?.isReportDoc } ))
         }
       }
     }
