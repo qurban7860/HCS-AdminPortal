@@ -13,10 +13,10 @@ import { fDateTime } from '../../../utils/formatTime';
 import { useSnackbar } from '../../../components/snackbar';
 import { addServiceReportNote, updateServiceReportNote, deleteServiceReportNote } from '../../../redux/slices/products/machineServiceReport';
 
-const ViewHistory = ({ name, label, historicalData, title }) => {
+const ViewHistory = ({ name, label, historicalData, title, methods }) => {
 
   const dispatch = useDispatch()
-  const methods = useForm();
+  const method = useForm();
   const { enqueueSnackbar } = useSnackbar();
   const { isLoading, isLoadingReportNote } = useSelector((state) => state.machineServiceReport);
   const { id } = useParams();
@@ -24,7 +24,7 @@ const ViewHistory = ({ name, label, historicalData, title }) => {
     getValues,
     setValue,
     formState: { isSubmitting },
-  } = methods;
+  } = methods || method;
 
   const currentData = ( Array.isArray(historicalData) && historicalData?.length > 0 ) && historicalData[0] || null;
   const hasTechnician = Boolean(currentData?.technician);
@@ -32,6 +32,7 @@ const ViewHistory = ({ name, label, historicalData, title }) => {
   const filteredHistoricalData = Array.isArray(historicalData) && historicalData?.slice(1) || [];
   const [ val, setVal ] = useState("");
   const [ isEditing, setIsEditing ] = useState(false);
+  
   const handleContactDialog = useCallback( async ( customerId, contactId ) => {
     await dispatch( getContact( customerId, contactId ) )
     await dispatch( setContactDialog( true ) )
@@ -169,6 +170,7 @@ ViewHistory.propTypes = {
   label: PropTypes.string,
   title: PropTypes.string,
   historicalData: PropTypes.array,
+  methods: PropTypes.any
 };
 
 export default ViewHistory;

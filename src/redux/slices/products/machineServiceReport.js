@@ -669,12 +669,12 @@ export function addServiceReportNote( serviceReportId, name, note ) {
 
 // --------------------------------------------------------------------------
 
-export function updateServiceReportNote( serviceReportId, Id, name, params ) {
+export function updateServiceReportNote( serviceReportId, Id, name, note ) {
   return async (dispatch) => {
     try {
       dispatch(slice.actions.startLoadingReportNote());
-      const param = { [name]: params?.note || "" };
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/serviceReport/${serviceReportId}/notes/${Id}`, param );
+      const params = { note };
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/serviceReport/${serviceReportId}/notes/${Id}`, params );
       await dispatch(slice.actions.updateServiceReportNoteSuccess({ name, data: response.data }));
     } catch (error) {
       dispatch(slice.actions.hasError());

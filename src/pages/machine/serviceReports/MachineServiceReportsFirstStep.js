@@ -129,8 +129,12 @@ function MachineServiceReportsFirstStep( { handleComplete, handleDraftRequest, h
     }, [reset, machineServiceReport ]);
 
     const { docReportType, serviceReportTemplate, files } = watch();
+
+
       const onSubmit = async (data) => {
         try {
+      console.log("getValues technicianNotes :  ",getValues("technicianNotes"))
+
           if(isSubmit){
             data.status = 'SUBMITTED'
           }
@@ -348,7 +352,12 @@ return (
                     />
 
                   {/* <RHFTextField name="technicianNotes" label="Technician Notes" minRows={3} multiline/>  */}
-                  <ViewHistory name="technicianNotes" label="Technician Notes" historicalData={ machineServiceReport?.technicianNotes } />
+                  <ViewHistory 
+                    name="technicianNotes" 
+                    label="Technician Notes" 
+                    historicalData={ machineServiceReport?.technicianNotes }
+                    methods={methods}
+                  />
                   <FormLabel content='Reporting Documents' />
                   <RHFUpload multiple  thumbnail name="files" imagesOnly
                     onDrop={handleDropMultiFile}
