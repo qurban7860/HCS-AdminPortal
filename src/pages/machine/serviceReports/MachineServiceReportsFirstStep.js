@@ -9,7 +9,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useSnackbar } from 'notistack';
 import FormProvider from '../../../components/hook-form/FormProvider';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
-import { RHFTextField, RHFAutocomplete, RHFDatePicker, RHFUpload } from '../../../components/hook-form';
+import { RHFAutocomplete, RHFDatePicker, RHFUpload } from '../../../components/hook-form';
 import { MachineServiceReportPart1Schema } from '../../schemas/machine';
 import { useAuthContext } from '../../../auth/useAuthContext';
 import { PATH_MACHINE } from '../../../routes/paths';
@@ -129,8 +129,12 @@ function MachineServiceReportsFirstStep( { handleComplete, handleDraftRequest, h
     }, [reset, machineServiceReport ]);
 
     const { docReportType, serviceReportTemplate, files } = watch();
+
+
       const onSubmit = async (data) => {
         try {
+      console.log("getValues technicianNotes :  ",getValues("technicianNotes"))
+
           if(isSubmit){
             data.status = 'SUBMITTED'
           }
@@ -347,8 +351,13 @@ return (
                       renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li>)}
                     />
 
-                  <RHFTextField name="technicianNotes" label="Technician Notes" minRows={3} multiline/> 
-                  <ViewHistory historicalData={ machineServiceReport?.technicianNotes } />
+                  {/* <RHFTextField name="technicianNotes" label="Technician Notes" minRows={3} multiline/>  */}
+                  <ViewHistory 
+                    name="technicianNotes" 
+                    label="Technician Notes" 
+                    historicalData={ machineServiceReport?.technicianNotes }
+                    methods={methods}
+                  />
                   <FormLabel content='Reporting Documents' />
                   <RHFUpload multiple  thumbnail name="files" imagesOnly
                     onDrop={handleDropMultiFile}

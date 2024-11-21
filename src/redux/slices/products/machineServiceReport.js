@@ -21,9 +21,6 @@ const initialState = {
   machineServiceReportHistory: [],
   activeMachineServiceReports: [],
   machineServiceReportCheckItems: [],
-  serviceReportNote: null,
-  serviceReportNotes: [],
-  activeServiceReportNotes:[],
   sendEmailDialog:false,
   pdfViewerDialog:false,
   addFileDialog:false,
@@ -52,6 +49,10 @@ const slice = createSlice({
     // START LOADING CHECK ITEMS
     startLoadingCheckItems(state) {
       state.isLoadingCheckItems = true;
+    },
+
+    startLoadingReportNote(state) {
+      state.isLoadingReportNote = true;
     },
 
     setSubmittingCheckItemIndex(state, action) {
@@ -141,15 +142,90 @@ const slice = createSlice({
 
     UpdateMachineServiceReportCheckItems(state, action) {
       const { Index, childIndex, checkItem } = action.payload;
-      state.machineServiceReportCheckItems.checkItemLists[Index].checkItems[childIndex].reportValue = {
-        ...state.machineServiceReportCheckItems.checkItemLists[Index].checkItems[childIndex].reportValue,
-        comments: checkItem.comments	,
-        checkItemValue: checkItem.checkItemValue,
-        files: [ ...state.machineServiceReportCheckItems.checkItemLists[Index].checkItems[childIndex].reportValue.files,
-        ...checkItem.files
-        ]
+    
+      // Create new copies of the state to maintain immutability
+      const checkItemList = [...state.machineServiceReportCheckItems.checkItemLists];
+      const checkItems = [...checkItemList[Index].checkItems];
+      const targetCheckItem = { ...checkItems[childIndex] };
+    
+      // Ensure historicalData is an array
+      const historicalData = Array.isArray(targetCheckItem.historicalData)
+        ? [...targetCheckItem.historicalData]
+        : [];
+    
+      // Merge files with existing files
+      const newEntry = {
+        ...checkItem,
+        files: [
+          ...(historicalData[0]?.files || []), // Existing files from the first entry, if any
+          ...(checkItem.files || []), // New files from the payload
+        ],
+      };
+    
+      // Append the new entry to historicalData
+      historicalData.push(newEntry);
+    
+      // Update the target check item with the modified historicalData
+      targetCheckItem.historicalData = historicalData;
+    
+      // Replace the updated check item in the checkItems array
+      checkItems[childIndex] = targetCheckItem;
+    
+      // Replace the updated checkItems in the checkItemList
+      checkItemList[Index] = {
+        ...checkItemList[Index],
+        checkItems,
+      };
+    
+      // Update the state with the modified checkItemLists
+      state.machineServiceReportCheckItems = {
+        ...state.machineServiceReportCheckItems,
+        checkItemLists: checkItemList,
       };
     },
+    
+    addMachineServiceReportCheckItems(state, action) {
+      const { Index, childIndex, checkItem } = action.payload;
+    
+      // Create new copies of the state to maintain immutability
+      const checkItemList = [...state.machineServiceReportCheckItems.checkItemLists];
+      const checkItems = [...checkItemList[Index].checkItems];
+      const targetCheckItem = { ...checkItems[childIndex] };
+    
+      // Ensure historicalData is an array
+      const historicalData = Array.isArray(targetCheckItem.historicalData)
+        ? [...targetCheckItem.historicalData]
+        : [];
+    
+      // Create a new entry with merged files
+      const newEntry = {
+        ...checkItem,
+        files: [
+          ...(checkItem.files || []), // New files from the payload
+        ],
+      };
+    
+      // Add the new entry to the beginning of historicalData
+      historicalData.unshift(newEntry);
+    
+      // Update the target check item with the modified historicalData
+      targetCheckItem.historicalData = historicalData;
+    
+      // Replace the updated check item in the checkItems array
+      checkItems[childIndex] = targetCheckItem;
+    
+      // Replace the updated checkItems in the checkItemList
+      checkItemList[Index] = {
+        ...checkItemList[Index],
+        checkItems,
+      };
+    
+      // Update the state with the modified checkItemLists
+      state.machineServiceReportCheckItems = {
+        ...state.machineServiceReportCheckItems,
+        checkItemLists: checkItemList,
+      };
+    },    
 
     deleteMachineServiceReportCheckItemSuccess(state, action) {
       const { Index, childIndex, checkItem } = action.payload;
@@ -169,19 +245,38 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // GET MACHINE Active SERVICE PARAM
-    addMachineServiceReportFilesSuccess(state) {
-      state.isLoading = false;
-      state.success = true;
-      
-      state.initial = true;
+    addServiceReportNoteSuccess(state, action) {
+      const { name, data } = action.payload;
+      const array = state.machineServiceReport[name];
+      if (Array.isArray(array)) {
+        state.machineServiceReport[name] = [data, ...array];
+      } else {
+        state.machineServiceReport[name] = [data];
+      }
+      state.isLoadingReportNote = false;
     },
 
-    UpdateMachineServiceReportNote(state, action) {
-      state.machineServiceReport = {
-        ...state.machineServiceReport,
-        ...action.payload
-      };
+    updateServiceReportNoteSuccess(state, action) {
+      const { name, data } = action.payload;
+      const array = state.machineServiceReport[name];
+      if (Array.isArray(array) && array.length > 0) {
+        state.machineServiceReport[name] = [data, ...array.slice(1)];
+      } else {
+        state.machineServiceReport[name] = [data];
+      }
+      state.isLoadingReportNote = false;
+    },
+
+    deleteServiceReportNoteSuccess(state, action) {
+      const { name } = action.payload;
+      const array = state.machineServiceReport[name];
+      if (Array.isArray(array) && array?.length > 0 ) {
+        state.machineServiceReport = {
+          ...state.machineServiceReport,
+          [name]: array?.slice(1)
+        };
+      }
+      state.isLoadingReportNote = false;
     },
     
     // SET SEND EMAIL DIALOG
@@ -247,23 +342,6 @@ const slice = createSlice({
       state.isLoading = false;
     },
 
-    // RESET 
-    resetServiceReportNote(state){
-      state.serviceReportNote = {};
-      state.isLoading = false;
-    },
-
-    // RESET 
-    resetServiceReportNotes(state){
-      state.serviceReportNotes = [];
-      state.isLoading = false;
-    },
-    // RESET 
-    resetActiveServiceReportNotes(state){
-      state.activeServiceReportNotes = [];
-      state.isLoading = false;
-    },
-
     // Set FilterBy
     setFilterBy(state, action) {
       state.filterBy = action.payload;
@@ -299,9 +377,6 @@ export const {
   resetMachineServiceReport,
   resetCheckItemValues,
   resetSubmittingCheckItemIndex,
-  resetServiceReportNote,
-  resetServiceReportNotes,
-  resetActiveServiceReportNotes,
   setResponseMessage,
   setFilterBy,
   ChangeRowsPerPage,
@@ -448,6 +523,23 @@ export function getMachineServiceReport(machineId, id, isHighQuality ) {
   };
 }
 
+//----------------------------------------------------------------
+
+export function deleteServiceReportNote( serviceReportId, id, name ) {
+  return async (dispatch) => {
+    try {
+      dispatch(slice.actions.startLoadingReportNote());
+      await axios.patch(`${CONFIG.SERVER_URL}products/serviceReport/${serviceReportId}/notes/${id}`,{ isArchived: true });
+      dispatch(slice.actions.deleteServiceReportNoteSuccess({ name }));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+// ---------------------------------------------------------
+
 export function deleteMachineServiceReport(machineId, id, status ) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
@@ -557,6 +649,40 @@ export function updateMachineServiceReportStatus(machineId, id, params) {
   };
 
 }
+
+// --------------------------------------------------------------------------
+
+export function addServiceReportNote( serviceReportId, name, note ) {
+  return async (dispatch) => {
+    try {
+      dispatch(slice.actions.startLoadingReportNote());
+      const params = { [name]: note || "" };
+      const response = await axios.post(`${CONFIG.SERVER_URL}products/serviceReport/${serviceReportId}/notes`, params );
+      await dispatch(slice.actions.addServiceReportNoteSuccess( { name, data: response.data }));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError());
+      throw error;
+    }
+  };
+}
+
+// --------------------------------------------------------------------------
+
+export function updateServiceReportNote( serviceReportId, Id, name, note ) {
+  return async (dispatch) => {
+    try {
+      dispatch(slice.actions.startLoadingReportNote());
+      const params = { note };
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/serviceReport/${serviceReportId}/notes/${Id}`, params );
+      await dispatch(slice.actions.updateServiceReportNoteSuccess({ name, data: response.data }));
+    } catch (error) {
+      dispatch(slice.actions.hasError());
+      throw error;
+    }
+  };
+}
+
 // --------------------------------------------------------------------------
 
 export function updateMachineServiceReport(machineId, id, params) {
@@ -708,7 +834,6 @@ export function addCheckItemValues(machineId, data, Index, childIndex) {
     try {
       const formData = new FormData();
       formData.append('serviceReport', data.serviceReport);
-      formData.append('primaryServiceReportId', data.primaryServiceReportId);
       formData.append('checkItemListId', data.checkItemListId);
       formData.append('machineCheckItem', data.machineCheckItem);
       formData.append('checkItemValue', data.checkItemValue);
@@ -724,21 +849,20 @@ export function addCheckItemValues(machineId, data, Index, childIndex) {
 
       let response;
       
-      if (
-        data?.reportValue?._id &&
-        data?.reportValue?.serviceReport?.versionNo === data?.versionNo
-      ) {
+      if ( data?.reportValue?._id ) {
         response = await axios.patch(
           `${CONFIG.SERVER_URL}products/machines/${machineId}/serviceReportValues/${data?.reportValue?._id}`,
           formData
         );
+        await dispatch(slice.actions.UpdateMachineServiceReportCheckItems({ Index, childIndex, checkItem: { ...response.data } }));
       } else {
         response = await axios.post(
           `${CONFIG.SERVER_URL}products/machines/${machineId}/serviceReportValues/`,
           formData
         );
+        await dispatch(slice.actions.addMachineServiceReportCheckItems({ Index, childIndex, checkItem: { ...response.data } }));
       }
-      dispatch(slice.actions.UpdateMachineServiceReportCheckItems({ Index, childIndex, checkItem: { ...response.data } }));
+      
       return response?.data;
     } catch (error) {
       console.error(error);
