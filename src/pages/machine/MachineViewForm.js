@@ -42,6 +42,7 @@ import OpenInNewPage from '../../components/Icons/OpenInNewPage';
 import Iconify from '../../components/iconify';
 import IconButtonTooltip from '../../components/Icons/IconButtonTooltip';
 import MachineStatusChangeDialog from '../../components/Dialog/MachineStatusChangeDialog';
+import MachineAddForm from './MachineAddForm';
 
 // ----------------------------------------------------------------------
 
@@ -288,7 +289,7 @@ export default function MachineViewForm() {
               handleTransfer={ machine?.isArchived ? undefined : () => navigate(PATH_MACHINE.machines.transfer(machine?._id))}
               backLink={() => navigate( machine?.isArchived ? PATH_MACHINE.machines.archived.root : PATH_MACHINE.machines.root)}
               machineSupportDate={ machine?.isArchived ? undefined : defaultValues?.supportExpireDate}
-              transferredHistory={ machine?.isArchived ? undefined : machine?.transferredHistory || []}
+              transferredHistory={ machine?.isArchived && MachineAddForm ? undefined : machine?.transferredHistory || []}
             />
             <FormLabel content={FORMLABELS.KEYDETAILS} />
             <Grid container>

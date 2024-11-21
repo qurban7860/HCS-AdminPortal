@@ -35,6 +35,16 @@ const initialState = {
   activeFilterList: 'active',
   employeeFilterList: 'all',
   filterRegion: null,
+  reportHiddenColumns: {
+    "name": false,
+    "login": false,
+    "phone": false,
+    "requestURL": false,
+    "roles.name.[]": false,
+    "contact.firstName": false,
+    "isActive": true,
+    "createdAt": false,
+  },
 };
 
 const slice = createSlice({
@@ -133,7 +143,6 @@ const slice = createSlice({
       state.initial = true;
     },
 
-
     // GET user
     getSecurityUserSuccess(state, action) {
       state.isLoading = false;
@@ -217,6 +226,10 @@ const slice = createSlice({
     ChangePage(state, action) {
       state.page = action.payload;
     },
+    // set ColumnFilter
+    setReportHiddenColumns(state, action){
+      state.reportHiddenColumns = action.payload;  
+    },
   },
 });
 
@@ -240,6 +253,7 @@ export const {
   setSecurityUserDialog,
   ChangeRowsPerPage,
   ChangePage,
+  setReportHiddenColumns,
 } = slice.actions;
 // ----------------------------------------------------------------------
 

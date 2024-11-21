@@ -22,6 +22,7 @@ SecurityUserTableRow.propTypes = {
   onDeleteRow: PropTypes.func,
   onSelectRow: PropTypes.func,
   onViewRow: PropTypes.func,
+  hiddenColumns: PropTypes.object,
 };
 
 export default function SecurityUserTableRow({
@@ -31,6 +32,7 @@ export default function SecurityUserTableRow({
   onViewRow,
   onSelectRow,
   onDeleteRow,
+  hiddenColumns
 }) {
   const { login, email, name, roles, phone, createdAt, contact, isActive, registrationRequest, isOnline } = row;
   const dispatch = useDispatch();
@@ -42,7 +44,7 @@ export default function SecurityUserTableRow({
   }
   return (
       <TableRow hover selected={selected} >
-          <Stack direction="row" alignItems="center">
+          { !hiddenColumns?.name && <Stack direction="row" alignItems="center">
             <CustomAvatar
               name={name}
               alt={name}
@@ -52,8 +54,8 @@ export default function SecurityUserTableRow({
               sx={{ ml: 1, my: 0.5, width: '30px', height: '30px' }}
             />
             <LinkTableCell align="left" onClick={onViewRow} param={name} />
-          </Stack>
-        { smScreen && <TableCell align="left">
+          </Stack>}
+        { smScreen && !hiddenColumns?.login && <TableCell align="left">
           {login}
           {email?.trim() !== login?.trim() &&
               <StyledTooltip 
@@ -67,13 +69,13 @@ export default function SecurityUserTableRow({
               </StyledTooltip>
           }
           </TableCell>}
-        { smScreen && <TableCell align="left">{phone || ''}</TableCell>}
-        { lgScreen && 
+        { smScreen && !hiddenColumns?.login && <TableCell align="left">{phone || ''}</TableCell>}
+        { lgScreen && !hiddenColumns?.['roles.name.[]'] &&
           <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
             {roles.map((obj, index) => (obj.roleType === 'SuperAdmin' ? <Chip key={index} label={obj.name} sx={{m:0.2}} color='secondary' /> : <Chip  key={index} label={obj.name} sx={{m:0.2}} />))}
           </TableCell>
         }
-        <TableCell align="left">
+        { !hiddenColumns?.['contact.firstName'] &&<TableCell align="left">
           {contact?.firstName && <StyledTooltip
             placement="top" 
             title={contact?.formerEmployee ? ICONS.FORMEREMPLOYEE.heading:ICONS.NOTFORMEREMPLOYEE.heading} 
@@ -83,8 +85,8 @@ export default function SecurityUserTableRow({
             <Iconify icon={ICONS.FORMEREMPLOYEE.icon} sx={{mr:1, height: 20, width: 20 }}/>
           </StyledTooltip>}
             {`${contact?.firstName || ''} ${contact?.lastName || '' }`}
-        </TableCell>
-        <TableCell align="left" sx={{ display: "flex", alignItems: 'center'}}>
+        </TableCell>}
+        { !hiddenColumns?.isActive && <TableCell align="left" sx={{ display: "flex", alignItems: 'center'}}>
           <StyledTooltip
             placement="top" 
             title={ isActive ? ICONS.ACTIVE.heading : ICONS.INACTIVE.heading} 
@@ -96,8 +98,8 @@ export default function SecurityUserTableRow({
           { registrationRequest && 
             <IconButtonTooltip title='Portal Request' color='#388e3c' icon="mdi:user-details" onClick={handleRequestDialog} /> 
           }
-        </TableCell>
-        <TableCell align="right">{fDate(createdAt)}</TableCell>
+        </TableCell>}
+        {!hiddenColumns?.createdAt && <TableCell align="right">{fDate(createdAt)}</TableCell>}
       </TableRow>
   );
 }

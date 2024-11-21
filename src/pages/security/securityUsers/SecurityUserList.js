@@ -16,7 +16,9 @@ import {
   TableNoData,
   TableSkeleton,
   TableHeadCustom,
+  TableHeadFilter,
   TableSelectedAction,
+  TablePaginationFilter,
   TablePaginationCustom,
 } from '../../../components/table';
 // sections
@@ -31,6 +33,7 @@ import {
   setActiveFilterList,
   setEmployeeFilterList,
   setFilterRegion,
+  setReportHiddenColumns,
 } from '../../../redux/slices/securityUser/securityUser';
 import { getActiveRegions, resetActiveRegions } from '../../../redux/slices/region/region';
 import { fDate } from '../../../utils/formatTime';
@@ -76,7 +79,8 @@ export default function SecurityUserList() {
     activeFilterList, 
     page, 
     rowsPerPage, 
-    isLoading
+    isLoading,
+    reportHiddenColumns
   } = useSelector((state) => state.user);
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));
@@ -164,7 +168,6 @@ const handleEmployeeFilterListBy = (event) => {
   setPage(0);
 };
 
-
 const debouncedFilterRegion = useRef(debounce((value) => {
   dispatch(ChangePage(0))
   dispatch(setFilterRegion(value))
@@ -202,6 +205,10 @@ useEffect(()=>{
     setFilterStatus('all');
   };
 
+  const handleHiddenColumns = async (arg) => {
+    dispatch(setReportHiddenColumns(arg))
+  };
+
   return (
       <Container maxWidth={false}>
         <StyledCardContainer>
@@ -225,7 +232,10 @@ useEffect(()=>{
             onReload={onRefresh}
           />
 
-        {!isNotFound && <TablePaginationCustom
+        {!isNotFound && <TablePaginationFilter
+            columns={TABLE_HEAD}
+            hiddenColumns={reportHiddenColumns}
+            handleHiddenColumns={handleHiddenColumns}
             count={dataFiltered.length}
             page={page}
             rowsPerPage={rowsPerPage}
@@ -241,11 +251,12 @@ useEffect(()=>{
 
             <Scrollbar>
               <Table size="small" sx={{ minWidth: 360 }}>
-                <TableHeadCustom
+                <TableHeadFilter
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
                   onSort={onSort}
+                  hiddenColumns={reportHiddenColumns}
                 />
 
                 <TableBody>
@@ -259,6 +270,7 @@ useEffect(()=>{
                         selected={selected.includes(row._id)}
                         onSelectRow={() => onSelectRow(row._id)}
                         onViewRow={() => handleViewRow(row._id)}
+                        hiddenColumns={reportHiddenColumns}
                       />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
