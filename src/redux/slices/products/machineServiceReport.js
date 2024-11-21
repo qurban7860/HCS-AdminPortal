@@ -21,9 +21,6 @@ const initialState = {
   machineServiceReportHistory: [],
   activeMachineServiceReports: [],
   machineServiceReportCheckItems: [],
-  serviceReportNote: null,
-  serviceReportNotes: [],
-  activeServiceReportNotes:[],
   sendEmailDialog:false,
   pdfViewerDialog:false,
   addFileDialog:false,
@@ -52,6 +49,10 @@ const slice = createSlice({
     // START LOADING CHECK ITEMS
     startLoadingCheckItems(state) {
       state.isLoadingCheckItems = true;
+    },
+
+    startLoadingReportNote(state) {
+      state.isLoadingReportNote = true;
     },
 
     setSubmittingCheckItemIndex(state, action) {
@@ -244,19 +245,38 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // GET MACHINE Active SERVICE PARAM
-    addMachineServiceReportFilesSuccess(state) {
-      state.isLoading = false;
-      state.success = true;
-      
-      state.initial = true;
+    addServiceReportNoteSuccess(state, action) {
+      const { name, data } = action.payload;
+      const array = state.machineServiceReport[name];
+      if (Array.isArray(array)) {
+        state.machineServiceReport[name] = [data, ...array];
+      } else {
+        state.machineServiceReport[name] = [data];
+      }
+      state.isLoadingReportNote = false;
     },
 
-    UpdateMachineServiceReportNote(state, action) {
-      state.machineServiceReport = {
-        ...state.machineServiceReport,
-        ...action.payload
-      };
+    updateServiceReportNoteSuccess(state, action) {
+      const { name, data } = action.payload;
+      const array = state.machineServiceReport[name];
+      if (Array.isArray(array) && array.length > 0) {
+        state.machineServiceReport[name] = [data, ...array.slice(1)];
+      } else {
+        state.machineServiceReport[name] = [data];
+      }
+      state.isLoadingReportNote = false;
+    },
+
+    deleteServiceReportNoteSuccess(state, action) {
+      const { name } = action.payload;
+      const array = state.machineServiceReport[name];
+      if (Array.isArray(array) && array?.length > 0 ) {
+        state.machineServiceReport = {
+          ...state.machineServiceReport,
+          [name]: array?.slice(1)
+        };
+      }
+      state.isLoadingReportNote = false;
     },
     
     // SET SEND EMAIL DIALOG
@@ -322,23 +342,6 @@ const slice = createSlice({
       state.isLoading = false;
     },
 
-    // RESET 
-    resetServiceReportNote(state){
-      state.serviceReportNote = {};
-      state.isLoading = false;
-    },
-
-    // RESET 
-    resetServiceReportNotes(state){
-      state.serviceReportNotes = [];
-      state.isLoading = false;
-    },
-    // RESET 
-    resetActiveServiceReportNotes(state){
-      state.activeServiceReportNotes = [];
-      state.isLoading = false;
-    },
-
     // Set FilterBy
     setFilterBy(state, action) {
       state.filterBy = action.payload;
@@ -374,9 +377,6 @@ export const {
   resetMachineServiceReport,
   resetCheckItemValues,
   resetSubmittingCheckItemIndex,
-  resetServiceReportNote,
-  resetServiceReportNotes,
-  resetActiveServiceReportNotes,
   setResponseMessage,
   setFilterBy,
   ChangeRowsPerPage,
@@ -523,6 +523,23 @@ export function getMachineServiceReport(machineId, id, isHighQuality ) {
   };
 }
 
+//----------------------------------------------------------------
+
+export function deleteServiceReportNote( serviceReportId, id, name ) {
+  return async (dispatch) => {
+    try {
+      dispatch(slice.actions.startLoadingReportNote());
+      await axios.patch(`${CONFIG.SERVER_URL}products/serviceReport/${serviceReportId}/notes/${id}`,{ isArchived: true });
+      dispatch(slice.actions.deleteServiceReportNoteSuccess({ name }));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+// ---------------------------------------------------------
+
 export function deleteMachineServiceReport(machineId, id, status ) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
@@ -632,6 +649,40 @@ export function updateMachineServiceReportStatus(machineId, id, params) {
   };
 
 }
+
+// --------------------------------------------------------------------------
+
+export function addServiceReportNote( serviceReportId, name, note ) {
+  return async (dispatch) => {
+    try {
+      dispatch(slice.actions.startLoadingReportNote());
+      const params = { [name]: note || "" };
+      const response = await axios.post(`${CONFIG.SERVER_URL}products/serviceReport/${serviceReportId}/notes`, params );
+      await dispatch(slice.actions.addServiceReportNoteSuccess( { name, data: response.data }));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError());
+      throw error;
+    }
+  };
+}
+
+// --------------------------------------------------------------------------
+
+export function updateServiceReportNote( serviceReportId, Id, name, params ) {
+  return async (dispatch) => {
+    try {
+      dispatch(slice.actions.startLoadingReportNote());
+      const param = { [name]: params?.note || "" };
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/serviceReport/${serviceReportId}/notes/${Id}`, param );
+      await dispatch(slice.actions.updateServiceReportNoteSuccess({ name, data: response.data }));
+    } catch (error) {
+      dispatch(slice.actions.hasError());
+      throw error;
+    }
+  };
+}
+
 // --------------------------------------------------------------------------
 
 export function updateMachineServiceReport(machineId, id, params) {

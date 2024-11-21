@@ -16,10 +16,10 @@ import { getActiveContacts, resetActiveContacts } from '../../../redux/slices/cu
 // components
 import ServiceRecodStepButtons from '../../../components/DocumentForms/ServiceRecodStepButtons';
 import { useSnackbar } from '../../../components/snackbar';
-import FormProvider, { RHFAutocomplete, RHFTextField, RHFUpload } from '../../../components/hook-form';
+import FormProvider, { RHFAutocomplete, RHFUpload } from '../../../components/hook-form';
 import { MachineServiceReportPart3Schema } from '../../schemas/machine';
 import SkeletonPDF from '../../../components/skeleton/SkeletonPDF';
-import HistoryNotes from './HistoryNotes';
+import ViewHistory from './ViewHistory';
 
 MachineServiceReportsThirdStep.propTypes = {
   handleDraftRequest: PropTypes.func,
@@ -222,25 +222,31 @@ function MachineServiceReportsThirdStep({handleDraftRequest, handleDiscard, hand
       <FormProvider methods={methods}  onSubmit={handleSubmit(onSubmit)}>
         <Stack px={2} spacing={2}>    
           { machineServiceReport?.serviceReportTemplate?.enableNote && 
-          <>
-            <RHFTextField name="serviceNote" label={`${machineServiceReport?.serviceReportTemplate?.reportType?.toLowerCase() === 'install' ? 'Install' : 'Service' } Note`} minRows={3} multiline/> 
-            <HistoryNotes historicalData={ machineServiceReport?.serviceNote } />
-          </>
+            <ViewHistory 
+              historicalData={ machineServiceReport?.serviceNote } 
+              name="serviceNote" 
+              label={`${machineServiceReport?.serviceReportTemplate?.reportType?.toLowerCase() === 'install' ? 'Install' : 'Service' } Note`}
+            />
           }      
           { machineServiceReport?.serviceReportTemplate?.enableMaintenanceRecommendations && 
-          <>
-            <RHFTextField name="recommendationNote" label="Recommendation Note" minRows={3} multiline/> 
-            <HistoryNotes historicalData={ machineServiceReport?.recommendationNote } />
-          </>
+            <ViewHistory 
+              historicalData={ machineServiceReport?.recommendationNote } 
+              name="recommendationNote" 
+              label="Recommendation Note"
+            />
           }
           { machineServiceReport?.serviceReportTemplate?.enableSuggestedSpares && 
-          <>
-            <RHFTextField name="suggestedSpares" label="Suggested Spares" minRows={3} multiline/> 
-            <HistoryNotes historicalData={ machineServiceReport?.suggestedSpares } />
-          </>
+            <ViewHistory 
+              name="suggestedSpares" 
+              label="Suggested Spares" 
+              historicalData={ machineServiceReport?.suggestedSpares } 
+            />
           }
-          <RHFTextField name="internalNote" label="Internal Note" minRows={3} multiline/> 
-          <HistoryNotes historicalData={ machineServiceReport?.internalNote } />
+          <ViewHistory 
+            name="internalNote" 
+            label="Internal Note"
+            historicalData={ machineServiceReport?.internalNote } 
+          />
 
           <RHFAutocomplete 
             multiple
@@ -253,8 +259,12 @@ function MachineServiceReportsThirdStep({handleDraftRequest, handleDiscard, hand
             isOptionEqualToValue={(option, value) => option?._id === value?._id}
             renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}` }</li> )}
           />
-          <RHFTextField name="operatorNotes" label="Operator Notes" minRows={3} multiline/> 
-          <HistoryNotes historicalData={ machineServiceReport?.operatorNotes } />
+          
+          <ViewHistory 
+            name="operatorNotes" 
+            label="Operator Notes" 
+            historicalData={ machineServiceReport?.operatorNotes } 
+          />
 
           <FormLabel content='Documents / Images' />
           <RHFUpload multiple  thumbnail name="files" imagesOnly

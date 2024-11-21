@@ -20,7 +20,7 @@ import { deleteMachineServiceReport,
   setFormActiveStep,
   getMachineServiceReportCheckItems,
   resetCheckItemValues,
-  setCompleteDialog} from '../../../redux/slices/products/machineServiceReport';
+  setCompleteDialog } from '../../../redux/slices/products/machineServiceReport';
 import { getActiveSPContacts, setCardActiveIndex, setIsExpanded } from '../../../redux/slices/customer/contact';
 // components
 import { useSnackbar } from '../../../components/snackbar';
@@ -156,28 +156,28 @@ function MachineServiceReportViewForm( ) {
 
   const fileName = `${defaultValues?.serviceDate?.substring(0,10).replaceAll('-','')}_${defaultValues?.serviceReportTemplateReportType}.pdf`
 
-  const handleContactView = async (contactId) => {
-    await dispatch(setCardActiveIndex(contactId));
-    await dispatch(setIsExpanded(true));
-    await navigate(PATH_CRM.customers.contacts.view(machine?.customer?._id,contactId))
-  };
+  // const handleContactView = async (contactId) => {
+  //   await dispatch(setCardActiveIndex(contactId));
+  //   await dispatch(setIsExpanded(true));
+  //   await navigate(PATH_CRM.customers.contacts.view(machine?.customer?._id,contactId))
+  // };
 
-  const handleContactViewInNewPage = async (contactId) => {
-    await dispatch(setCardActiveIndex(contactId));
-    await dispatch(setIsExpanded(true));
-    await window.open(PATH_CRM.customers.contacts.view(machine?.customer?._id, contactId), '_blank');
-  };
+  // const handleContactViewInNewPage = async (contactId) => {
+  //   await dispatch(setCardActiveIndex(contactId));
+  //   await dispatch(setIsExpanded(true));
+  //   await window.open(PATH_CRM.customers.contacts.view(machine?.customer?._id, contactId), '_blank');
+  // };
 
-  const operators = defaultValues?.operators?.map((operator, index) => (  
-    <Chip 
-        onClick={() => handleContactView(operator?._id)} 
-        sx={{m:0.2}}
-        key={operator?._id}
-        deleteIcon={<Iconify icon="fluent:open-12-regular"/>}
-        onDelete={()=> handleContactViewInNewPage(operator?._id)}
-        label={`${operator?.firstName || ''} ${operator?.lastName || ''}`} 
-      />
-  ));
+  // const operators = defaultValues?.operators?.map((operator, index) => (  
+  //   <Chip 
+  //       onClick={() => handleContactView(operator?._id)} 
+  //       sx={{m:0.2}}
+  //       key={operator?._id}
+  //       deleteIcon={<Iconify icon="fluent:open-12-regular"/>}
+  //       onDelete={()=> handleContactViewInNewPage(operator?._id)}
+  //       label={`${operator?.firstName || ''} ${operator?.lastName || ''}`} 
+  //     />
+  // ));
 
   const handleBackLink = ()=>{
     navigate(PATH_MACHINE.machines.serviceReports.root(machineId))
