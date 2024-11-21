@@ -652,11 +652,15 @@ export function updateMachineServiceReportStatus(machineId, id, params) {
 
 // --------------------------------------------------------------------------
 
-export function addServiceReportNote( serviceReportId, name, note ) {
+export function addServiceReportNote( serviceReportId, name, data ) {
   return async (dispatch) => {
     try {
       dispatch(slice.actions.startLoadingReportNote());
-      const params = { [name]: note || "" };
+      const params = { 
+        [data.name]: data?.note || "",
+        technician: data?.technician,
+        operators: data?.operators
+       };
       const response = await axios.post(`${CONFIG.SERVER_URL}products/serviceReport/${serviceReportId}/notes`, params );
       await dispatch(slice.actions.addServiceReportNoteSuccess( { name, data: response.data }));
     } catch (error) {
@@ -669,11 +673,15 @@ export function addServiceReportNote( serviceReportId, name, note ) {
 
 // --------------------------------------------------------------------------
 
-export function updateServiceReportNote( serviceReportId, Id, name, note ) {
+export function updateServiceReportNote( serviceReportId, Id, name, data ) {
   return async (dispatch) => {
     try {
       dispatch(slice.actions.startLoadingReportNote());
-      const params = { note };
+      const params = { 
+        [data.name]: data?.note || "",
+        technician: data?.technician,
+        operators: data?.operators
+       };
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/serviceReport/${serviceReportId}/notes/${Id}`, params );
       await dispatch(slice.actions.updateServiceReportNoteSuccess({ name, data: response.data }));
     } catch (error) {
