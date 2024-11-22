@@ -18,6 +18,7 @@ import { useDebouncedEffect } from '../../hooks/useDebouncedEffect';
 
 function SearchBarCombo({
   node,
+  reduceFilterSize,
   nodes,
   isFiltered,
   value,
@@ -130,7 +131,7 @@ function SearchBarCombo({
 
   return (
     <Grid container rowSpacing={logTypes?.length > 0 ? 2:1} columnSpacing={1} sx={{display:'flex', }}>
-          { onChange && <Grid item xs={12} sm={12} md={12} lg={logTypes?.length > 0 || (setAccountManagerFilter && setSupportManagerFilter) ? 4:6} xl={logTypes?.length > 0 || (setAccountManagerFilter && setSupportManagerFilter) ? 4:6}>
+          { onChange && <Grid item xs={12} sm={12} md={12} lg={logTypes?.length > 0 || reduceFilterSize || (setAccountManagerFilter && setSupportManagerFilter) ? 4:6} xl={logTypes?.length > 0 || reduceFilterSize || (setAccountManagerFilter && setSupportManagerFilter) ? 4:6}>
             <TextField
               fullWidth
               value={value}
@@ -852,6 +853,7 @@ SearchBarCombo.propTypes = {
   node: PropTypes.node,
   nodes: PropTypes.node,
   isFiltered: PropTypes.bool,
+  reduceFilterSize: PropTypes.bool,
   onClick: PropTypes.func,
   onChange: PropTypes.func,
   value: PropTypes.string,

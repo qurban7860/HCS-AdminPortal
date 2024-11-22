@@ -470,21 +470,17 @@ export function getMachineServiceReports ( param ){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
-      const { page, rowsPerPage, machineId, isMachineArchived, status, statusType } = param
+      const { page, rowsPerPage, machineId, isMachineArchived, status } = param
       const params = {
         isArchived: false,
         $or: [],
-        orderBy : { createdAt: -1 },
+        orderBy: { createdAt: -1 },
         pagination: { page, rowsPerPage },
-      }
+      };
       
-      if (status) {
-        params.$or.push({ status });
-      }
-
-      if (statusType) {
-        params.$or.push({ "status.type": statusType });
-      }
+      if (Array.isArray(status) && status.length > 0) {
+        params.$or.push({ status: { $in: status } });
+      }      
 
     if(isMachineArchived){
       params.archivedByMachine = true;
@@ -529,7 +525,7 @@ export function deleteServiceReportNote( serviceReportId, id, name ) {
   return async (dispatch) => {
     try {
       dispatch(slice.actions.startLoadingReportNote());
-      await axios.patch(`${CONFIG.SERVER_URL}products/serviceReport/${serviceReportId}/notes/${id}`,{ isArchived: true });
+      await axios.delete(`${CONFIG.SERVER_URL}products/serviceReport/${serviceReportId}/notes/${id}`,{ isArchived: true });
       dispatch(slice.actions.deleteServiceReportNoteSuccess({ name }));
     } catch (error) {
       dispatch(slice.actions.hasError(error.Message));

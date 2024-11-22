@@ -21,7 +21,7 @@ MachineServiceReportListTableToolbar.propTypes = {
   onFilterName: PropTypes.func,
   onResetFilter: PropTypes.func,
   filterStatus: PropTypes.object,
-  filterStatusType: PropTypes.string,
+  filterStatusType: PropTypes.array,
   onFilterStatus: PropTypes.func,
   onFilterStatusType: PropTypes.func,
   statusOptions: PropTypes.array,
@@ -34,7 +34,7 @@ export default function MachineServiceReportListTableToolbar({
   isFiltered,
   filterName,
   filterStatus = null ,
-  filterStatusType = null ,
+  filterStatusType ,
   onFilterName,
   statusOptions,
   onResetFilter,
@@ -63,6 +63,7 @@ export default function MachineServiceReportListTableToolbar({
         onChange={onFilterName}
         onClick={onResetFilter}
         SubOnClick={toggleAdd}
+        reduceFilterSize
         nodes={
           <>
           <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
@@ -78,9 +79,11 @@ export default function MachineServiceReportListTableToolbar({
               renderInput={(params) => <TextField {...params} size='small' label="Status" />}
             />  
           </Grid>
-          <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
+          <Grid item xs={12} sm={6} md={6} lg={ 4} >
             <Autocomplete 
-              value={ filterStatusType || null }
+              value={ filterStatusType || [] }
+              multiple
+              size="small"
               options={ statusTypes }
               getOptionLabel={(option) => option}
               onChange={ onFilterStatusType }
