@@ -678,7 +678,7 @@ export function updateServiceReportNote( serviceReportId, Id, name, data ) {
     try {
       dispatch(slice.actions.startLoadingReportNote());
       const params = { 
-        [data.name]: data?.note || "",
+        note: data?.note || "",
         technician: data?.technician,
         operators: data?.operators
        };

@@ -476,7 +476,7 @@ function MachineServiceReportViewForm( ) {
             ))} 
           />
           {/* <ViewFormField isLoading={isLoading} sm={4} heading="Technician"  param={`${defaultValues?.technician?.firstName || ''} ${defaultValues?.technician?.lastName || ''} `} /> */}
-          <ViewHistory isLoading={isLoading} title="Technician Notes" historicalData={machineServiceReport.technicianNotes} />
+          <ViewHistory isLoading={isLoading} label="Technician Notes" historicalData={machineServiceReport.technicianNotes} />
 
           { machineServiceReport?.reportDocs?.length > 0 &&
           <>
@@ -552,12 +552,12 @@ function MachineServiceReportViewForm( ) {
             typeof defaultValues.textAfterCheckItems === "string" && 
             <ViewFormNoteField isLoading={isLoading} sm={12}  param={defaultValues.textAfterCheckItems} />
           }
-          {machineServiceReport?.serviceReportTemplate?.enableNote && <ViewHistory isLoading={isLoading} title={`${machineServiceReport?.serviceReportTemplate?.reportType?.charAt(0).toUpperCase()||''}${machineServiceReport?.serviceReportTemplate?.reportType?.slice(1).toLowerCase()||''} Note`} historicalData={defaultValues.serviceNote} />}
-          {machineServiceReport?.serviceReportTemplate?.enableMaintenanceRecommendations && <ViewHistory isLoading={isLoading} title="Recommendation Note" historicalData={defaultValues.recommendationNote} />}
-          {machineServiceReport?.serviceReportTemplate?.enableSuggestedSpares && <ViewHistory isLoading={isLoading} title="Suggested Spares" historicalData={defaultValues.suggestedSpares} />}
-          <ViewHistory isLoading={isLoading} title="Internal Note" historicalData={defaultValues.internalNote} />
+          {machineServiceReport?.serviceReportTemplate?.enableNote && <ViewHistory isLoading={isLoading} label={`${machineServiceReport?.serviceReportTemplate?.reportType?.charAt(0).toUpperCase()||''}${machineServiceReport?.serviceReportTemplate?.reportType?.slice(1).toLowerCase()||''} Note`} historicalData={defaultValues.serviceNote} />}
+          {machineServiceReport?.serviceReportTemplate?.enableMaintenanceRecommendations && <ViewHistory isLoading={isLoading} label="Recommendation Note" historicalData={defaultValues.recommendationNote} />}
+          {machineServiceReport?.serviceReportTemplate?.enableSuggestedSpares && <ViewHistory isLoading={isLoading} label="Suggested Spares" historicalData={defaultValues.suggestedSpares} />}
+          <ViewHistory isLoading={isLoading} label="Internal Note" historicalData={defaultValues.internalNote} />
           {/* <ViewFormField isLoading={isLoading} sm={12} heading="Operators" chipDialogArrayParam={operators} /> */}
-          <ViewHistory isLoading={isLoading} title="Operator Notes" historicalData={defaultValues.operatorNotes} />
+          <ViewHistory isLoading={isLoading} label="Operator Notes" historicalData={defaultValues.operatorNotes} />
           {machineServiceReport?.files?.length > 0 && 
           <FormLabel content='Documents / Images' />
           }
