@@ -150,7 +150,7 @@ const ViewHistory = ({ name, label, historicalData, title, methods }) => {
                     overflowWrap: 'break-word' 
                 }}
               >{`${title || label || currentData?.type || "Notes"}:`}
-              { currentData?.note && currentData?.note?.trim() &&
+              { currentData?.note && currentData?.note?.trim() && methods &&
                 <Grid sx={{ position: "relative", mb: -1.5 }} >
                   <ViewFormEditDeleteButtons 
                     onDelete={onDelete}
@@ -192,7 +192,7 @@ const ViewHistory = ({ name, label, historicalData, title, methods }) => {
               </>
             )}
             {currentData?.updatedBy && 
-              <Typography variant="overline" sx={{ color: 'text.disabled', ml:"auto"  }}>
+              <Typography variant="body2" sx={{ color: 'text.disabled', ml:"auto"  }}>
                 <i><b>Last Modified: </b>{fDateTime(currentData?.updatedAt)}{` by `}{`${ currentData?.updatedBy?.name || ''}`}</i>
               </Typography>
             }
