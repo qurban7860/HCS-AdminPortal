@@ -13,7 +13,7 @@ import { fDateTime } from '../../../utils/formatTime';
 import { useSnackbar } from '../../../components/snackbar';
 import { addServiceReportNote, updateServiceReportNote, deleteServiceReportNote } from '../../../redux/slices/products/machineServiceReport';
 
-const ViewHistory = ({ name, label, historicalData, title, methods }) => {
+const ViewHistory = ({ name, label, historicalData, methods }) => {
 
   const dispatch = useDispatch()
   const method = useForm();
@@ -114,7 +114,7 @@ const ViewHistory = ({ name, label, historicalData, title, methods }) => {
   };
 
   return (
-    <Grid container >
+    <Grid container sx={{ mb: 1}}>
         { (isEditing || name ) &&
           <>
             <TextField 
@@ -138,7 +138,7 @@ const ViewHistory = ({ name, label, historicalData, title, methods }) => {
         }
       { id && 
       <Grid container item md={12} sx={{ px: 0.5, pt: 1, display:"block", alignItems: 'center', whiteSpace: 'pre-line', overflowWrap: 'break-word'  }}>
-        { !isEditing && 
+        { !isEditing && currentData?.note && currentData?.note?.trim() &&
           <Typography variant="body2" sx={{color: 'text.disabled', }}>
             <Typography variant="overline" 
               sx={{ pb: currentData?.note?.trim() ? 0 : 3,
@@ -149,8 +149,8 @@ const ViewHistory = ({ name, label, historicalData, title, methods }) => {
                     whiteSpace: 'pre-line', 
                     overflowWrap: 'break-word' 
                 }}
-              >{`${title || label || currentData?.type || "Notes"}:`}
-              { currentData?.note && currentData?.note?.trim() && methods &&
+              >{`${ label || currentData?.type || "Notes"}:`}
+              { methods &&
                 <Grid sx={{ position: "relative", mb: -1.5 }} >
                   <ViewFormEditDeleteButtons 
                     onDelete={onDelete}
@@ -162,11 +162,11 @@ const ViewHistory = ({ name, label, historicalData, title, methods }) => {
             {currentData?.note || ""}{ currentData?.note?.trim() && <CopyIcon value={currentData?.note}/> }
           </Typography>
         }
-        <Typography variant="body2" sx={{ px: 0.5, color: 'text.disabled', alignItems: "center", display: "flex", width:"100%" }}>
+        <Typography variant="body2" sx={{ color: 'text.disabled', alignItems: "center", display: "flex", width:"100%" }}>
           <>
             {hasTechnician && (
               <>
-                <Typography variant="overline" sx={{ color: 'text.disabled' }}>
+                <Typography variant="body2" sx={{ color: 'text.disabled' }}>
                   <b>Technician:</b>
                 </Typography>
                 {currentData?.technician?.firstName && <Chip 
@@ -178,7 +178,7 @@ const ViewHistory = ({ name, label, historicalData, title, methods }) => {
             )}
             {hasOperators && (
               <>
-                <Typography variant="overline" sx={{ color: 'text.disabled' }}>
+                <Typography variant="body2" sx={{ color: 'text.disabled' }}>
                   <b>Operators:</b>
                 </Typography>
                 {currentData?.operators?.map(op => (
@@ -200,7 +200,7 @@ const ViewHistory = ({ name, label, historicalData, title, methods }) => {
         </Typography>
       </Grid>}
       { Array.isArray(filteredHistoricalData) && filteredHistoricalData?.length > 0 && id &&
-        <HistoryNotes title={title} historicalData={filteredHistoricalData} />
+        <HistoryNotes label={label} historicalData={filteredHistoricalData} />
       }
     </Grid>
   );
@@ -209,7 +209,6 @@ const ViewHistory = ({ name, label, historicalData, title, methods }) => {
 ViewHistory.propTypes = {
   name: PropTypes.string,
   label: PropTypes.string,
-  title: PropTypes.string,
   historicalData: PropTypes.array,
   methods: PropTypes.any
 };

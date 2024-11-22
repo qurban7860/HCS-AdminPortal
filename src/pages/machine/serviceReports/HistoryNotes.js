@@ -8,7 +8,7 @@ import CopyIcon from '../../../components/Icons/CopyIcon';
 import { setContactDialog, getContact } from '../../../redux/slices/customer/contact';
 import { fDateTime } from '../../../utils/formatTime';
 
-const HistoryNotes = ({ title, historicalData }) =>  {
+const HistoryNotes = ({ label, historicalData }) =>  {
 
   const dispatch = useDispatch()
   const [showHistory, setShowHistory] = useState(false);
@@ -25,13 +25,13 @@ return(
   <>
   { Array.isArray(historicalData) && historicalData?.length > 0 && <Grid container item md={12} sx={{ px: 0.5 }} >
       <Grid container item md={12} sx={{ display: 'flex', justifyContent: "flex-start" , alignItems: 'center', whiteSpace: 'pre-line', wordBreak: 'break-word'  }}>
-        <Typography variant="overline" sx={{ color: 'text.disabled', cursor: "pointer" }} onClick={toggleHistory} >
+        <Typography variant="body2" sx={{ color: 'text.disabled', cursor: "pointer" }} onClick={toggleHistory} >
           <b>{`${showHistory ? "Hide " : "Show "} more:`}</b>
         </Typography>
         <StyledTooltip
           tooltipcolor='#2065D1'
           placement="top"
-          title={`${showHistory ? "Hide " : "Show "} ${title || "Notes"}`}
+          title={`${showHistory ? "Hide " : "Show "} ${label || "Notes"}`}
         >
           <IconButton onClick={toggleHistory}>
           <Iconify icon={showHistory ? 'eva:arrow-ios-upward-fill' : 'eva:arrow-ios-downward-fill'} />
@@ -47,7 +47,7 @@ return(
 
                   {historyItem?.note && (
                     <Typography variant="body2" >
-                      <Typography variant="overline" sx={{ color: 'text.disabled' }}>{ title && <b>{`${title}: `}</b>}</Typography>
+                      <Typography variant="overline" sx={{ color: 'text.disabled' }}>{ label && <b>{`${label}: `}</b>}</Typography>
                       {` ${historyItem?.note || ''}`}
                       {historyItem?.note?.trim() && <CopyIcon value={historyItem?.note} />}
                     </Typography>
@@ -101,7 +101,7 @@ return(
 
 
 HistoryNotes.propTypes = {
-  title: PropTypes.string,
+  label: PropTypes.string,
   historicalData: PropTypes.array,
 };
 
