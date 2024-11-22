@@ -26,7 +26,7 @@ return(
   { Array.isArray(historicalData) && historicalData?.length > 0 && <Grid container item md={12} sx={{ px: 0.5 }} >
       <Grid container item md={12} sx={{ display: 'flex', justifyContent: "flex-start" , alignItems: 'center', whiteSpace: 'pre-line', wordBreak: 'break-word'  }}>
         <Typography variant="overline" sx={{ color: 'text.disabled', cursor: "pointer" }} onClick={toggleHistory} >
-          <b>{`${showHistory ? "Hide " : "Show "} more notes:`}</b>
+          <b>{`${showHistory ? "Hide " : "Show "} more:`}</b>
         </Typography>
         <StyledTooltip
           tooltipcolor='#2065D1'
@@ -83,7 +83,7 @@ return(
                         </>
                       )}
                       {historyItem?.updatedBy && 
-                        <Typography variant="overline" sx={{ color: 'text.disabled', ml:"auto"  }}>
+                        <Typography variant="body2" sx={{ color: 'text.disabled', ml:"auto"  }}>
                           <i><b>Last Modified: </b>{fDateTime(historyItem?.updatedAt)}{` by `}{`${ historyItem?.updatedBy?.name || ''}`}</i>
                         </Typography>
                       }
