@@ -184,8 +184,6 @@ export function connectToCommentsSSE(serviceReportId) {
       onmessage(event) {
         const decompressed = LZString.decompressFromUTF16(event.data);
         const comments = JSON.parse(decompressed);
-        // eslint-disable-next-line no-debugger
-        debugger;
         dispatch(slice.actions.updateCommentsFromSSE(comments));
       },
       onerror(error) {

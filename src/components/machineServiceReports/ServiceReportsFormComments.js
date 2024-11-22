@@ -56,7 +56,7 @@ const ServiceReportsFormComments = ({ currentUser, serviceReportData, machine })
   useEffect(() => {
     let controller;
     
-    if (serviceReportData?.primaryServiceReportId) {
+    if (serviceReportData?._id) {
       dispatch(
         getComments({
           serviceReportId: serviceReportData?._id,
@@ -93,7 +93,6 @@ const ServiceReportsFormComments = ({ currentUser, serviceReportData, machine })
       addComment({
         serviceReportId: serviceReportData?._id,
         params: {
-          serviceReportId: serviceReportData?._id,
           comment: data.comment,
         },
       })
