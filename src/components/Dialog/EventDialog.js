@@ -493,15 +493,18 @@ function EventDialog({
                     )}
                   />
                   <RHFAutocomplete
-                    label="Status"
                     name="status"
                     options={['To Do', 'In Progress', 'Done', 'Cancelled']}
                     isOptionEqualToValue={(option, value) => option === value}
                     renderInput={(params) => (
-                      <RenderCustomInput label="Status" params={params}
-                        InputProps={{
-                          ...params.InputProps,
-                          style: { ...params.InputProps.style, color: StatusColor(params.InputProps.value) },
+                      <RenderCustomInput
+                       label="Status*"
+                       params={{ ...params, error: !!errors?.status, helperText: errors?.status?.message, 
+                        InputProps: {
+                        ...params.InputProps,
+                        style: { 
+                        ...params.InputProps.style, 
+                        color: StatusColor(params.InputProps.value) }},
                         }}
                       />
                     )}
@@ -510,6 +513,7 @@ function EventDialog({
                         {option}
                       </li>
                     )}
+                    rules={{ required: 'Status is required' }}
                   />
                 </Box>
 

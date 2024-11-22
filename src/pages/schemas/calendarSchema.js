@@ -39,7 +39,7 @@ export const eventSchema = ( clearErrors ) =>  Yup.object().shape({
     jiraTicket: Yup.string().max(200).label('Jira Ticket'),
     customer: Yup.object().nullable().label('Customer').required(),
     priority: Yup.object().label('Priority').nullable(), 
-    status: Yup.object().label('Status').nullable(), 
+    status: Yup.string().nullable().label('Status').required(),
     machines: Yup.array().nullable().label('Machines'),
     site: Yup.object().nullable().label('Site'),
     primaryTechnician: Yup.object().nullable().label('Primary Technician').required(),
@@ -53,3 +53,4 @@ export const eventSchema = ( clearErrors ) =>  Yup.object().shape({
       validateFileType
     ).nullable(),
   });
+  
