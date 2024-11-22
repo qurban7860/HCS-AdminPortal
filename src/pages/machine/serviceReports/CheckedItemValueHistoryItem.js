@@ -164,7 +164,7 @@ const CheckedItemValueHistoryItem = ({ historyItem, inputType }) => {
               >
 
           {slides?.map((file, _index) => (
-            <DocumentGalleryItem key={file?.id} image={file} 
+            <DocumentGalleryItem key={file?._id} image={file} 
               onOpenLightbox={()=> handleOpenLightbox(_index)}
               onDownloadFile={()=> handleDownloadCheckItemFile(file)}
               toolbar
@@ -172,7 +172,7 @@ const CheckedItemValueHistoryItem = ({ historyItem, inputType }) => {
           ))}
 
           {historyItem?.files?.map((file, _index) => !file.fileType.startsWith("image") && (
-              <DocumentGalleryItem key={file?.id} image={file} 
+              <DocumentGalleryItem key={file?._id} image={file} 
                 onOpenFile={()=> handleOpenFile(file)}
                 onDownloadFile={()=> handleDownloadCheckItemFile(file)}
                 toolbar

@@ -6,8 +6,8 @@ import { useParams } from 'react-router-dom';
 import { LoadingButton } from '@mui/lab';
 import { Grid, Typography, Chip, TextField, Button } from '@mui/material';
 import HistoryNotes from './HistoryNotes';
-import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
 import CopyIcon from '../../../components/Icons/CopyIcon';
+import IconifyButton from '../../../components/Icons/IconifyButton';
 import { setContactDialog, getContact } from '../../../redux/slices/customer/contact';
 import { fDateTime } from '../../../utils/formatTime';
 import { useSnackbar } from '../../../components/snackbar';
@@ -97,6 +97,15 @@ const ViewHistory = ({ name, label, historicalData, methods }) => {
     setIsEditing(true);
     setVal(currentData?.note || "");
     if(name){
+      
+      if( currentData?.type === "technicianNotes" && currentData?.technician ){
+        setValue("technician",currentData?.technician);
+      }
+
+      if( currentData?.type === "operatorNotes" && currentData?.operators ){
+        setValue("operators",currentData?.operators);
+      }
+
       setValue(name, currentData?.note || "");
     }
   };
@@ -136,7 +145,7 @@ const ViewHistory = ({ name, label, historicalData, methods }) => {
             }
           </>
         }
-      { id && 
+      { id && !isEditing &&
       <Grid container item md={12} sx={{ px: 0.5, pt: 1, display:"block", alignItems: 'center', whiteSpace: 'pre-line', overflowWrap: 'break-word'  }}>
         { !isEditing && currentData?.note && currentData?.note?.trim() &&
           <Typography variant="body2" sx={{color: 'text.disabled', }}>
@@ -150,16 +159,26 @@ const ViewHistory = ({ name, label, historicalData, methods }) => {
                     overflowWrap: 'break-word' 
                 }}
               >{`${ label || currentData?.type || "Notes"}:`}
-              { methods &&
-                <Grid sx={{ position: "relative", mb: -1.5 }} >
-                  <ViewFormEditDeleteButtons 
-                    onDelete={onDelete}
-                    handleEdit={handleEdit}
-                  />
-                </Grid>
-              }
+
             </Typography>
-            {currentData?.note || ""}{ currentData?.note?.trim() && <CopyIcon value={currentData?.note}/> }
+            {currentData?.note || ""}
+            { currentData?.note?.trim() && <CopyIcon value={currentData?.note}/> }
+            { methods &&
+              <>
+                <IconifyButton 
+                  title='Edit'
+                  icon='mdi:edit'
+                  color='#103996'
+                  onClick={handleEdit}
+                />
+                <IconifyButton 
+                  title='Delete'
+                  icon='mdi:delete'
+                  color='#FF0000'
+                  onClick={ onDelete }
+                />
+              </>
+            }
           </Typography>
         }
         <Typography variant="body2" sx={{ color: 'text.disabled', alignItems: "center", display: "flex", width:"100%" }}>

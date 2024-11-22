@@ -51,6 +51,7 @@ const TABLE_HEAD = [
 export default function MachineServiceReportList() {
   const { machine } = useSelector((state) => state.machine);
   const { machineServiceReports, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.machineServiceReport);
+  const { activeServiceReportStatuses, isLoadingReportStatus } = useSelector( (state) => state.serviceReportStatuses );
   const navigate = useNavigate();
   const { machineId } = useParams();
 
@@ -70,7 +71,7 @@ export default function MachineServiceReportList() {
   const dispatch = useDispatch();
   const [filterName, setFilterName] = useState('');
   const [filterStatus, setFilterStatus] = useState(null);
-  const [statusType, setStatusType] = useState(null);
+  const [statusType, setStatusType] = useState([ 'To Do', 'In Progress' ]);
   
   useLayoutEffect(() => {
     dispatch(setSendEmailDialog(false));
@@ -82,22 +83,32 @@ export default function MachineServiceReportList() {
   }, [ dispatch ]);
 
   useLayoutEffect(() => {
-    if(machineId ){
-      dispatch(getMachineServiceReports(
-        {
+    if ( !isLoadingReportStatus) {
+      const matchedStatusIds = [
+        ...(filterStatus?._id ? [filterStatus._id] : []),
+        ...activeServiceReportStatuses.filter(({ type }) => 
+            statusType.some(
+              (status) => status.toLowerCase() === type.toLowerCase()
+            )
+          ).map(({ _id }) => _id)
+      ];
+      const uniqueStatusIds = [...new Set(matchedStatusIds)];
+      dispatch(
+        getMachineServiceReports({
           page,
           rowsPerPage,
           machineId,
           isMachineArchived: machine?.isArchived,
-          status: filterStatus?._id,
-          statusType
-        }
-      ));
+          status: uniqueStatusIds,
+        })
+      );
     }
+  
     return () => {
-      dispatch( resetMachineServiceReports() )
-    }
-  }, [dispatch, machineId, machine, filterStatus, statusType, page, rowsPerPage ]);
+      dispatch(resetMachineServiceReports());
+    };
+     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, machineId, machine, filterStatus, statusType, isLoadingReportStatus, page, rowsPerPage]);  
 
   const dataFiltered = applyFilter({
     inputData: machineServiceReports?.data || [],
