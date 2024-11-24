@@ -6,7 +6,7 @@ import Iconify from '../../../components/iconify';
 import { StyledTooltip } from '../../../theme/styles/default-styles';
 import CopyIcon from '../../../components/Icons/CopyIcon';
 import { setContactDialog, getContact } from '../../../redux/slices/customer/contact';
-import { fDateTime } from '../../../utils/formatTime';
+import ServiceReportAuditLogs from './ServiceReportAuditLogs';
 
 const HistoryNotes = ({ label, historicalData }) =>  {
 
@@ -82,11 +82,7 @@ return(
                           ))}
                         </>
                       )}
-                      {historyItem?.updatedBy && 
-                        <Typography variant="body2" sx={{ color: 'text.disabled', ml:"auto"  }}>
-                          <i><b>Last Modified: </b>{fDateTime(historyItem?.updatedAt)}{` by `}{`${ historyItem?.updatedBy?.name || ''}`}</i>
-                        </Typography>
-                      }
+                      <ServiceReportAuditLogs data={ historyItem || null } />
                     </>
                   </Typography>
                 </Grid>

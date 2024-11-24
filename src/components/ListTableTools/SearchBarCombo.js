@@ -827,7 +827,7 @@ function SearchBarCombo({
                 </StyledTooltip>
               </Grid>
               }
-              {addButton && !transferredMachine 
+              {addButton  && SubOnClick && !transferredMachine 
                 && !(( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly )) &&
                 <Grid item >
                     <StyledTooltip title={addButton} placement="top" disableFocusListener tooltipcolor="#103996" color="#fff">

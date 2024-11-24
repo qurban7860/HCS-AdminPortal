@@ -5,6 +5,7 @@ import {
   PATH_CALENDAR, 
   PATH_DASHBOARD, 
   PATH_MACHINE, 
+  PATH_SERVICE_REPORTS,
   PATH_DOCUMENT, 
   PATH_SETTING, 
   PATH_SITEMAP, 
@@ -57,11 +58,12 @@ function NavigationConfig() {
     document: <Iconify icon="lets-icons:file-dock-fill" />,
     drawing: <Iconify icon="streamline:hand-held-tablet-drawing-solid" />,
     reports: <Iconify icon="mdi:report-box-outline" />,
-    map: <Iconify icon="mdi:map-marker" />,
     machines: <MachineIcon key="machine"/>,
+    serviceReports: <Iconify icon="mdi:clipboard-text-clock" />,
     users: <Iconify icon="mdi:account-group" />,
     security: <Iconify icon="mdi:security-account" />,
-    machineLogs: <Iconify icon="lucide:list-end" />
+    machineLogs: <Iconify icon="lucide:list-end" />,
+    map: <Iconify icon="mdi:map-marker" />,
   };
 
   const { 
@@ -81,6 +83,7 @@ function NavigationConfig() {
         { title: 'Customers', path: PATH_CRM.customers.list, icon: ICONS.users },
         { title: 'Portal Registrations', path: PATH_PORTAL_REGISTRATION.root, icon: ICONS.register },
         { title: 'Machines', path: PATH_MACHINE.machines.root, icon: ICONS.machines },
+        { title: 'Service Reports', path: PATH_SERVICE_REPORTS.root, icon: ICONS.serviceReports },
       ],
     },
   ]);

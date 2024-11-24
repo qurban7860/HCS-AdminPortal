@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React, { useMemo, memo, useLayoutEffect, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import b64toBlob from 'b64-to-blob';
@@ -6,7 +7,7 @@ import { Container, Card, Chip, Grid, Box, Stack, Dialog, DialogTitle, Divider, 
 // routes
 import { useNavigate, useParams } from 'react-router-dom';
 import download from 'downloadjs';
-import { PATH_MACHINE, PATH_CRM } from '../../../routes/paths';
+import { PATH_MACHINE, PATH_CRM, PATH_SERVICE_REPORTS } from '../../../routes/paths';
 // redux
 import { deleteMachineServiceReport,   
   getMachineServiceReport, 
@@ -44,12 +45,18 @@ import Lightbox from '../../../components/lightbox/Lightbox';
 import SkeletonLine from '../../../components/skeleton/SkeletonLine';
 import DialogServiceReportComplete from '../../../components/Dialog/DialogServiceReportComplete';
 import SkeletonPDF from '../../../components/skeleton/SkeletonPDF';
+import { Cover } from '../../../components/Defaults/Cover';
+import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import IconButtonTooltip from '../../../components/Icons/IconButtonTooltip';
 import ServiceReportsFormComments from '../../../components/machineServiceReports/ServiceReportsFormComments';
 import ReportStatusButton from './ReportStatusButton';
 import ViewHistory from './ViewHistory';
 
-function MachineServiceReportViewForm( ) {
+MachineServiceReportViewForm.propTypes = {
+  reportsPage: PropTypes.bool,
+};
+
+function MachineServiceReportViewForm( { reportsPage } ) {
   
   const { machineServiceReport, machineServiceReportCheckItems, isLoadingCheckItems, isLoading, pdfViewerDialog, sendEmailDialog } = useSelector((state) => state.machineServiceReport);
   const { machine } = useSelector((state) => state.machine)
@@ -66,7 +73,7 @@ function MachineServiceReportViewForm( ) {
   const [slidesReporting, setSlidesReporting] = useState([]);
 
   useLayoutEffect(()=>{
-    if(machineId && id ){
+    if( id ){
       dispatch(setAddFileDialog(false));
       dispatch(getMachineServiceReport(machineId, id));
     }
@@ -78,7 +85,7 @@ function MachineServiceReportViewForm( ) {
   },[ dispatch, machineId, id])
 
   useEffect(()=>{
-    if( machineId && id && !pdfViewerDialog ){
+    if( id && !pdfViewerDialog ){
       dispatch(getMachineServiceReportCheckItems( machineId, id ));
     }
     return ()=> dispatch(resetCheckItemValues())
@@ -179,14 +186,15 @@ function MachineServiceReportViewForm( ) {
   //     />
   // ));
 
-  const handleBackLink = ()=>{
-    navigate(PATH_MACHINE.machines.serviceReports.root(machineId))
-  }
+  const handleBackLink = () => { navigate(
+    reportsPage ?
+    PATH_SERVICE_REPORTS.root :
+    PATH_MACHINE.machines.serviceReports.root(machineId)
+  )}
   
-  const [reportStatus, setReportStatus]= useState(null);
+  const [ reportStatus, setReportStatus ] = useState(null);
 
   useEffect(() => {
-
     if ( machineServiceReport?.files && Array.isArray( machineServiceReport?.files ) ) {
       const updatedSildes = machineServiceReport?.files
       ?.filter(file => file?.fileType && file.fileType.startsWith("image"))
@@ -348,7 +356,12 @@ function MachineServiceReportViewForm( ) {
 
   return (
     <Container maxWidth={false}>
-      <MachineTabContainer currentTabValue='serviceReports' />
+          { !reportsPage && <MachineTabContainer currentTabValue='serviceReports' />}
+          { reportsPage && 
+            <StyledCardContainer>
+              <Cover name="Service Reports" icon="mdi:clipboard-text-clock" />
+            </StyledCardContainer>
+          }
     <Card sx={{ p: 2 }}>
       <Grid>
         <ViewFormEditDeleteButtons
@@ -356,22 +369,24 @@ function MachineServiceReportViewForm( ) {
           isActive={defaultValues.isActive}
           disableEditButton={
             machine?.isArchived ||
+            reportsPage ||
             machine?.status?.slug === 'transferred' ||
             machineServiceReport.currentApprovalStatus === 'APPROVED'
           }
           disableDeleteButton={
             machine?.isArchived ||
+            reportsPage ||
             machine?.status?.slug === 'transferred' ||
             machineServiceReport.currentApprovalStatus === 'APPROVED'
           }
           skeletonIcon={isLoading || !machineServiceReport?._id}
           handleEdit={ 
-            !machine?.isArchived && 
+            !machine?.isArchived && !reportsPage &&
             machineServiceReport?.status?.type?.toLowerCase() === 'draft' &&
             machineServiceReport?._id && handleEdit
           }
           onDelete={
-            !machine?.isArchived &&
+            !machine?.isArchived && !reportsPage &&
             // machineServiceReport?.status?.name?.toUpperCase() === 'DRAFT' &&
             machineServiceReport?._id
               ? onDelete
@@ -424,7 +439,7 @@ function MachineServiceReportViewForm( ) {
                 {machineServiceReport?.currentApprovalStatus === "PENDING" ? 
                   ( 
                     machineServiceReport?.status?.name && 
-                    <ReportStatusButton machineID={ machineId } iconButton reportID={ id } status={ machineServiceReport?.status } />
+                    <ReportStatusButton reportsPage={reportsPage} machineID={ machineId } iconButton reportID={ id } status={ machineServiceReport?.status } />
                   ) || "" 
                 : machineServiceReport?.currentApprovalStatus}
               </Typography> 
@@ -522,15 +537,16 @@ function MachineServiceReportViewForm( ) {
           {!isLoadingCheckItems ? 
             <Grid item md={12} sx={{ overflowWrap: 'break-word' }}>
               <Grid item md={12} sx={{display:'flex', flexDirection:'column'}}>
-              {machineServiceReportCheckItems?.checkItemLists?.map((row, index) => (
-                <CheckedItemValueRow
-                  machineId={machineId}
-                  primaryServiceReportId={machineServiceReport?.primaryServiceReportId	}
-                  value={row}
-                  index={index}
-                  key={row._id}
-                />
-              ))}
+              { machineServiceReportCheckItems?.checkItemLists?.map((row, index) => (
+                  <CheckedItemValueRow
+                    machineId={machineId}
+                    primaryServiceReportId={machineServiceReport?.primaryServiceReportId	}
+                    value={row}
+                    index={index}
+                    key={row._id}
+                  />
+                ))
+              }
               </Grid>
             </Grid>
             :
