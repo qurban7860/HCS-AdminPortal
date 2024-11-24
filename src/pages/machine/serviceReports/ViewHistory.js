@@ -6,10 +6,10 @@ import { useParams } from 'react-router-dom';
 import { LoadingButton } from '@mui/lab';
 import { Grid, Typography, Chip, TextField, Button } from '@mui/material';
 import HistoryNotes from './HistoryNotes';
+import ServiceReportAuditLogs from './ServiceReportAuditLogs';
 import CopyIcon from '../../../components/Icons/CopyIcon';
 import IconifyButton from '../../../components/Icons/IconifyButton';
 import { setContactDialog, getContact } from '../../../redux/slices/customer/contact';
-import { fDateTime } from '../../../utils/formatTime';
 import { useSnackbar } from '../../../components/snackbar';
 import { addServiceReportNote, updateServiceReportNote, deleteServiceReportNote } from '../../../redux/slices/products/machineServiceReport';
 
@@ -210,11 +210,7 @@ const ViewHistory = ({ name, label, historicalData, methods }) => {
                 ))}
               </>
             )}
-            {currentData?.updatedBy && 
-              <Typography variant="body2" sx={{ color: 'text.disabled', ml:"auto"  }}>
-                <i><b>Last Modified: </b>{fDateTime(currentData?.updatedAt)}{` by `}{`${ currentData?.updatedBy?.name || ''}`}</i>
-              </Typography>
-            }
+            <ServiceReportAuditLogs data={ currentData || null } />
           </>
         </Typography>
       </Grid>}

@@ -7,7 +7,7 @@ import { useSnackbar } from 'notistack';
 import b64toBlob from 'b64-to-blob';
 import { fDate } from '../../../utils/formatTime';
 import CopyIcon from '../../../components/Icons/CopyIcon';
-import ViewFormServiceReportVersionAudit from '../../../components/ViewForms/ViewFormServiceReportVersionAudit';
+import ServiceReportAuditLogs from './ServiceReportAuditLogs';
 import { DocumentGalleryItem } from '../../../components/gallery/DocumentGalleryItem';
 import { deleteCheckItemFile, downloadCheckItemFile, setAddFileDialog } from '../../../redux/slices/products/machineServiceReport';
 import Lightbox from '../../../components/lightbox/Lightbox';
@@ -23,6 +23,7 @@ const StatusAndComment = ({index, childIndex, childRow, machineId, primaryServic
     const [selectedImage, setSelectedImage] = useState(-1);
     const [slides, setSlides] = useState([]);
     const [pdf, setPDF] = useState(null);
+    const [reportValue, setReportValue] = useState(null);
     const [PDFName, setPDFName] = useState('');
     const [AttachedPDFViewerDialog, setAttachedPDFViewerDialog] = useState(false);
 
@@ -31,15 +32,19 @@ const StatusAndComment = ({index, childIndex, childRow, machineId, primaryServic
     }
 
     useEffect(() => {
-      if ( childRow?.reportValue?.files ){
-          const updatedFiles = childRow?.reportValue?.files?.filter(file => file?.fileType && file.fileType.startsWith("image"))?.map(file => ({
-            ...file,
-            src: `data:${file?.fileType};base64,${file?.thumbnail}`,
-            thumbnail: `data:${file?.fileType};base64,${file?.thumbnail}`
-          }));
-          setSlides(updatedFiles);
+      if(Array.isArray( childRow?.historicalData ) && childRow?.historicalData?.length > 0 ){
+        const itemsReportVals = childRow?.historicalData?.[0]
+        setReportValue(itemsReportVals)
+        if (itemsReportVals?.files) {
+            const updatedFiles = itemsReportVals.files.filter(file => file?.fileType?.startsWith("image")).map(file => ({
+              ...file,
+              src: `data:${file.fileType};base64,${file.thumbnail}`,
+              thumbnail: `data:${file.fileType};base64,${file.thumbnail}`
+            }));
+            setSlides(updatedFiles);
+        }
       }
-    }, [childRow]);
+    }, [ childRow ]);
   
     const handleOpenLightbox = async (_index) => {
       setSelectedImage(_index);
@@ -136,9 +141,9 @@ const StatusAndComment = ({index, childIndex, childRow, machineId, primaryServic
   return (
     <TableRow key={childRow._id} sx={{ backgroundColor: 'none',}} >
     <Grid item md={12} sx={{mt: childIndex !==0 && 0.5, p:1,  border: '1px solid #e8e8e8',  borderRadius:'7px',backgroundColor: 'white' }} >
-      <Grid item md={12} sx={{ display: childRow?.reportValue?.checkItemValue ? 'block' : 'flex'}}>
+      <Grid item md={12} sx={{ display: reportValue?.checkItemValue ? 'block' : 'flex'}}>
         <Typography variant="body2" ><b>{`${index+1}.${childIndex+1}- `}</b>{`${childRow.name}`}</Typography>
-        {childRow?.reportValue?.checkItemValue && 
+        {reportValue?.checkItemValue && 
           <Grid >
             <Grid sx={{ mt:1,
               alignItems: 'center',
@@ -146,19 +151,19 @@ const StatusAndComment = ({index, childIndex, childRow, machineId, primaryServic
               wordBreak: 'break-word' }}>
               <Typography variant="body2" >
                   <b>Value: </b>
-                  {childRow?.inputType.toLowerCase() === 'boolean' && childRow?.reportValue?.checkItemValue && 
-                    <Switch sx={{mt:-0.5}} size='small' disabled checked={childRow?.reportValue?.checkItemValue==='true'} />
+                  {childRow?.inputType.toLowerCase() === 'boolean' && reportValue?.checkItemValue && 
+                    <Switch sx={{mt:-0.5}} size='small' disabled checked={reportValue?.checkItemValue==='true'} />
                   }                        
-                  {childRow?.inputType.toLowerCase() === 'date' ? fDate(childRow?.reportValue?.checkItemValue) : 
+                  {childRow?.inputType.toLowerCase() === 'date' ? fDate(reportValue?.checkItemValue) : 
                     <> 
-                      {childRow?.inputType.toLowerCase() === 'status' ? (childRow?.reportValue?.checkItemValue && 
-                        <Chip size="small" label={childRow?.reportValue?.checkItemValue} /> || '') : 
+                      {childRow?.inputType.toLowerCase() === 'status' ? (reportValue?.checkItemValue && 
+                        <Chip size="small" label={reportValue?.checkItemValue} /> || '') : 
                         (childRow?.inputType.toLowerCase() === 'number' || 
                         childRow?.inputType.toLowerCase() === 'long text' || 
                         childRow?.inputType.toLowerCase() === 'short text') && 
-                        childRow?.reportValue?.checkItemValue 
+                        reportValue?.checkItemValue 
                       }
-                        {childRow?.reportValue?.checkItemValue?.trim() && childRow?.inputType?.toLowerCase() !== 'boolean' && <CopyIcon value={childRow?.reportValue?.checkItemValue}/>}
+                        {reportValue?.checkItemValue?.trim() && childRow?.inputType?.toLowerCase() !== 'boolean' && <CopyIcon value={reportValue?.checkItemValue}/>}
                     </> 
                 }
               </Typography>
@@ -167,8 +172,8 @@ const StatusAndComment = ({index, childIndex, childRow, machineId, primaryServic
               alignItems: 'center',
               whiteSpace: 'pre-line',
               wordBreak: 'break-word' }}>
-              {childRow?.reportValue?.comments && <Typography variant="body2" sx={{mr:1}} ><b>Comment: </b>{childRow?.reportValue?.comments}
-                {childRow?.reportValue?.comments?.trim() && <CopyIcon value={childRow?.reportValue?.comments || ''} />}
+              {reportValue?.comments && <Typography variant="body2" sx={{mr:1}} ><b>Comment: </b>{reportValue?.comments}
+                {reportValue?.comments?.trim() && <CopyIcon value={reportValue?.comments || ''} />}
               </Typography>}
             </Grid>
             <Box
@@ -192,7 +197,7 @@ const StatusAndComment = ({index, childIndex, childRow, machineId, primaryServic
                 toolbar
               />
             ))}
-            { childRow?.reportValue?.files?.map((file, _index) => !file.fileType.startsWith("image") && (
+            { reportValue?.files?.map((file, _index) => !file.fileType.startsWith("image") && (
               <DocumentGalleryItem key={file?.id} image={file} 
                 onOpenFile={()=> handleOpenFile(file)}
                 onDownloadFile={()=> handleDownloadCheckItemFile(file._id, file?.name, file?.extension)}
@@ -201,7 +206,7 @@ const StatusAndComment = ({index, childIndex, childRow, machineId, primaryServic
               />
             ))}
           </Box>
-          <ViewFormServiceReportVersionAudit value={childRow?.reportValue}/>
+          <ServiceReportAuditLogs data={reportValue}/>
         </Grid>
         }
         {/* {childRow?.historicalData && childRow?.historicalData?.length > 0 &&
@@ -209,8 +214,8 @@ const StatusAndComment = ({index, childIndex, childRow, machineId, primaryServic
         } */}
       </Grid>
 
-      {childRow?.historicalData?.length > 0 && (
-        <CheckedItemValueHistory historicalData={childRow?.historicalData} inputType={childRow?.inputType} />
+      {Array.isArray( childRow?.historicalData ) && childRow?.historicalData?.length > 1 && (
+        <CheckedItemValueHistory historicalData={childRow?.historicalData?.slice(1) } inputType={childRow?.inputType} />
       )}
       </Grid>
       <Lightbox

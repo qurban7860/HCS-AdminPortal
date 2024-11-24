@@ -8,7 +8,7 @@ import { Grid, Typography, Divider, Chip,  Switch, Box, Button, Dialog, DialogTi
 import b64toBlob from 'b64-to-blob';
 import CopyIcon from '../../../components/Icons/CopyIcon';
 import { fDate } from '../../../utils/formatTime';
-import ViewFormServiceReportVersionAudit from '../../../components/ViewForms/ViewFormServiceReportVersionAudit';
+import ServiceReportAuditLogs from './ServiceReportAuditLogs';
 import { downloadCheckItemFile } from '../../../redux/slices/products/machineServiceReport';
 import { DocumentGalleryItem } from '../../../components/gallery/DocumentGalleryItem';
 import Lightbox from '../../../components/lightbox/Lightbox';
@@ -180,7 +180,7 @@ const CheckedItemValueHistoryItem = ({ historyItem, inputType }) => {
             ))}
 
             </Box>
-            <ViewFormServiceReportVersionAudit value={historyItem} />
+            <ServiceReportAuditLogs data={ historyItem || null } />
             <Lightbox
               index={selectedImage}
               slides={slides}

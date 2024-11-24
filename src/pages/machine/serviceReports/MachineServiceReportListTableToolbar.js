@@ -16,6 +16,7 @@ import { resetMachineServiceReport, setFormActiveStep } from '../../../redux/sli
 // ----------------------------------------------------------------------
 
 MachineServiceReportListTableToolbar.propTypes = {
+  reportsPage: PropTypes.bool,
   isFiltered: PropTypes.bool,
   filterName: PropTypes.string,
   onFilterName: PropTypes.func,
@@ -31,6 +32,7 @@ MachineServiceReportListTableToolbar.propTypes = {
 };
 
 export default function MachineServiceReportListTableToolbar({
+  reportsPage,
   isFiltered,
   filterName,
   filterStatus = null ,
@@ -62,7 +64,7 @@ export default function MachineServiceReportListTableToolbar({
         value={filterName}
         onChange={onFilterName}
         onClick={onResetFilter}
-        SubOnClick={toggleAdd}
+        SubOnClick={ reportsPage ? toggleAdd : undefined }
         reduceFilterSize
         nodes={
           <>
@@ -93,7 +95,7 @@ export default function MachineServiceReportListTableToolbar({
           </Grid>
           </>
         }
-        addButton={!(machine?.isArchived || isHistory) ? BUTTONS.ADD_MACHINE_SERVICE_REPORT : undefined}
+        addButton={!( machine?.isArchived || isHistory ) ? BUTTONS.ADD_MACHINE_SERVICE_REPORT : undefined}
         transferredMachine={machine?.status?.slug==='transferred'}
       />
     </Stack>

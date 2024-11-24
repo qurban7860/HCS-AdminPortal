@@ -12,6 +12,7 @@ import { useSnackbar } from '../../../components/snackbar';
 import Iconify from '../../../components/iconify';
 
 ReportStatusButton.propTypes = {
+    reportsPage: PropTypes.bool,
     iconButton: PropTypes.bool,
     status: PropTypes.object,
     machineID: PropTypes.string,
@@ -45,7 +46,7 @@ const StyledMenu = styled((props) => (
   },
 }));
 
-export default function ReportStatusButton( { iconButton, status, machineID, reportID } ) {
+export default function ReportStatusButton( { reportsPage, iconButton, status, machineID, reportID } ) {
   const [ anchorEl, setAnchorEl ] = useState(null);
   const open = Boolean(anchorEl);
   const { machineId, id } = useParams();
@@ -96,7 +97,7 @@ export default function ReportStatusButton( { iconButton, status, machineID, rep
               ( 
                 !isUpdatingReportStatus && 
                 status?.name?.toLowerCase() === "draft" && 
-                activeServiceReportStatuses?.some( s => s?.name?.toLowerCase() === "submitted" ) &&
+                activeServiceReportStatuses?.some( s => s?.name?.toLowerCase() === "submitted" ) && !reportsPage &&
                 <IconButtonTooltip 
                   title='Submit' 
                   icon="mdi:login" 
@@ -147,7 +148,9 @@ export default function ReportStatusButton( { iconButton, status, machineID, rep
           </MenuItem>
         )}
         { !isLoadingReportStatus && Array.isArray( activeServiceReportStatuses ) && 
-          activeServiceReportStatuses?.map( ( s ) => 
+          activeServiceReportStatuses?.filter(
+            (s) => !reportsPage || s?.name?.toLowerCase() === 'under review')
+            ?.map( ( s ) => 
             <MenuItem 
               key={s?._id}
               size="small" 

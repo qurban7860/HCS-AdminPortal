@@ -1,10 +1,11 @@
+import PropTypes from 'prop-types';
 import debounce from 'lodash/debounce';
 import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 // @mui
 import { Container, Table, TableBody, TableContainer } from '@mui/material';
 // routes
 import { useNavigate, useParams } from 'react-router-dom';
-import { PATH_MACHINE } from '../../../routes/paths';
+import { PATH_MACHINE, PATH_SERVICE_REPORTS } from '../../../routes/paths';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // components
@@ -32,6 +33,8 @@ import {
 } from '../../../redux/slices/products/machineServiceReport';
 import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../../components/ListTableTools/TableCard';
+import { Cover } from '../../../components/Defaults/Cover';
+import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import MachineTabContainer from '../util/MachineTabContainer';
 
 // ----------------------------------------------------------------------
@@ -48,7 +51,11 @@ const TABLE_HEAD = [
 ];
 // ----------------------------------------------------------------------
 
-export default function MachineServiceReportList() {
+MachineServiceReportList.propTypes = {
+  reportsPage: PropTypes.bool,
+}
+
+export default function MachineServiceReportList( { reportsPage }) {
   const { machine } = useSelector((state) => state.machine);
   const { machineServiceReports, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.machineServiceReport);
   const { activeServiceReportStatuses, isLoadingReportStatus } = useSelector( (state) => state.serviceReportStatuses );
@@ -158,7 +165,10 @@ export default function MachineServiceReportList() {
     }
   }
 
-  const handleViewRow = async (id) => navigate(PATH_MACHINE.machines.serviceReports.view(machineId ,id));
+  const handleViewRow = async (id) => navigate( reportsPage ? 
+    PATH_SERVICE_REPORTS.view( id ) :
+    PATH_MACHINE.machines.serviceReports.view(machineId ,id)
+  );
 
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
@@ -167,9 +177,15 @@ export default function MachineServiceReportList() {
 
   return (
     <Container maxWidth={false} >
-          <MachineTabContainer currentTabValue='serviceReports' />
+          { machineId && <MachineTabContainer currentTabValue='serviceReports' />}
+          { !machineId && 
+            <StyledCardContainer>
+              <Cover name="Service Reports" icon="mdi:clipboard-text-clock" />
+            </StyledCardContainer>
+          }
         <TableCard>
           <MachineServiceReportListTableToolbar
+            reportsPage={reportsPage}
             filterName={ filterName }
             filterStatus={ filterStatus }
             filterStatusType={ statusType } 

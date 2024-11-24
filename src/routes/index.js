@@ -643,6 +643,7 @@ export default function Router() {
       ],
     },
     // ------------------------- Machine ---------------------------
+
     { path: 'products',
       element: (
         <AuthGuard>
@@ -910,7 +911,18 @@ export default function Router() {
         { path: 'blank', element: <BlankPage /> },
       ],
     },
-
+    // ------------------------- Service Report ---------------------------
+    { path: 'serviceReports',
+      element: (
+        <AuthGuard>
+          <DashboardLayout />
+        </AuthGuard>
+      ),
+      children:[
+        { element: <MachineServiceReportList to={PATH_AFTER_LOGIN} replace  reportsPage />, index: true },
+        { path: ':id/view', element: <MachineServiceReportView reportsPage /> },
+      ]
+    },
     // SECURITY
     {
       path: 'security',
