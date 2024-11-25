@@ -41,12 +41,13 @@ import MachineTabContainer from '../util/MachineTabContainer';
 
 
 const TABLE_HEAD = [
-  { id: 'isActive', label: 'Active', align: 'left' },
+  { id: 'checkboxes', label: ' ', align: 'left' },
   { id: 'serviceDate', label: 'Service Date', align: 'left' },
+  { id: 'serviceReportTemplate.reportType', label: 'Type', align: 'left' },
   { id: 'serviceReportUID', label: 'Service ID', align: 'left' },
+  { id: 'machine.serialNo', label: 'Machine', align: 'left' },
+  { id: 'customer.name', label: 'Customer', align: 'left' },
   { id: 'status.name', label: 'Status', align: 'left' },
-  { id: 'status.type', label: 'Type', align: 'left' },
-  { id: 'serviceReportTemplate.reportTitle', label: 'Template', align: 'left' },
   { id: 'createdBy.name', label: 'Created By', align: 'left' },
 ];
 // ----------------------------------------------------------------------
