@@ -103,7 +103,7 @@ function MachineServiceReportViewForm( { reportsPage } ) {
     }
   };
 
-  const handleEdit = async() => {
+  const handleEdit = async () => {
     await dispatch(setFormActiveStep(0));
     await navigate(PATH_MACHINE.machines.serviceReports.edit(machineId, id))
   };
@@ -415,7 +415,11 @@ function MachineServiceReportViewForm( { reportsPage } ) {
         />
         
         <Grid container>
-          <FormLabel content={FORMLABELS.KEYDETAILS} />
+          <FormLabel 
+            variant='h4'
+            content={`${defaultValues.serviceReportTemplateReportType || FORMLABELS.KEYDETAILS}`} 
+            endingContent={`${defaultValues.serviceReportTemplate || ""}`} 
+          />
           <ViewFormField isLoading={isLoading} variant='h4' sm={4} heading="Service Date" 
             param={fDate(defaultValues.serviceDate)} />
 
@@ -458,14 +462,6 @@ function MachineServiceReportViewForm( { reportsPage } ) {
               <IconButtonTooltip title='Approve / Reject' icon="mdi:list-status" onClick={handleCompleteConfirm} /> }
             </>
             }
-          />
-
-          <ViewFormField 
-            isLoading={isLoading} 
-            variant='h4' 
-            sm={6} 
-            heading="Service Report Template" 
-            param={`${defaultValues.serviceReportTemplate} ${defaultValues.serviceReportTemplateReportType ? '-' : ''} ${defaultValues.serviceReportTemplateReportType ? defaultValues.serviceReportTemplateReportType : ''}`}
           />
 
           {(machineServiceReport?.currentApprovalStatus !== "PENDING" && machineServiceReport?.approval?.approvalLogs?.length > 0) ? (              

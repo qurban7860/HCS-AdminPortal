@@ -8,15 +8,10 @@ function ServiceReportAuditLogs({ data }) {
     <>
       {data?.updatedBy && 
         <Typography variant="body2" 
-          sx={{ 
-                color: 'text.disabled', 
-                ml: "auto", 
-                display: 'flex', 
-                justifyContent: "flex-end" 
-              }}
+          sx={{ color: 'text.disabled' }}
         >
           <i>
-            <b>Last Modified: </b>
+            {/* <b>Last Modified: </b> */}
             {fDateTime(data?.updatedAt)}{` by `}{`${data?.updatedBy?.name || ''}`}
           </i>
         </Typography>

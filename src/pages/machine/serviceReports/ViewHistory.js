@@ -11,6 +11,7 @@ import CopyIcon from '../../../components/Icons/CopyIcon';
 import IconifyButton from '../../../components/Icons/IconifyButton';
 import { setContactDialog, getContact } from '../../../redux/slices/customer/contact';
 import { useSnackbar } from '../../../components/snackbar';
+import FormLabel from '../../../components/DocumentForms/FormLabel';
 import { addServiceReportNote, updateServiceReportNote, deleteServiceReportNote } from '../../../redux/slices/products/machineServiceReport';
 
 const ViewHistory = ({ name, label, historicalData, methods }) => {
@@ -146,10 +147,11 @@ const ViewHistory = ({ name, label, historicalData, methods }) => {
           </>
         }
       { id && !isEditing &&
-      <Grid container item md={12} sx={{ px: 0.5, pt: 1, display:"block", alignItems: 'center', whiteSpace: 'pre-line', overflowWrap: 'break-word'  }}>
+      <Grid container item md={12} sx={{ pt: 1, display:"block", alignItems: 'center', whiteSpace: 'pre-line', overflowWrap: 'break-word'  }}>
         { !isEditing && currentData?.note && currentData?.note?.trim() &&
           <Typography variant="body2" sx={{color: 'text.disabled', }}>
-            <Typography variant="overline" 
+            <FormLabel content={`${ label || currentData?.type || "Notes"}:`} />
+            {/* <Typography variant="overline" 
               sx={{ pb: currentData?.note?.trim() ? 0 : 3,
                     color: 'text.disabled', 
                     display: "flex", 
@@ -159,8 +161,7 @@ const ViewHistory = ({ name, label, historicalData, methods }) => {
                     overflowWrap: 'break-word' 
                 }}
               >{`${ label || currentData?.type || "Notes"}:`}
-
-            </Typography>
+            </Typography> */}
             {currentData?.note || ""}
             { currentData?.note?.trim() && <CopyIcon value={currentData?.note}/> }
             { methods &&
@@ -210,9 +211,9 @@ const ViewHistory = ({ name, label, historicalData, methods }) => {
                 ))}
               </>
             )}
-            <ServiceReportAuditLogs data={ currentData || null } />
           </>
         </Typography>
+            <ServiceReportAuditLogs data={ currentData || null } />
       </Grid>}
       { Array.isArray(filteredHistoricalData) && filteredHistoricalData?.length > 0 && id &&
         <HistoryNotes label={label} historicalData={filteredHistoricalData} />
