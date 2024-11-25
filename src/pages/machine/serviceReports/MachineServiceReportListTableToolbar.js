@@ -64,7 +64,7 @@ export default function MachineServiceReportListTableToolbar({
         value={filterName}
         onChange={onFilterName}
         onClick={onResetFilter}
-        SubOnClick={ reportsPage ? toggleAdd : undefined }
+        SubOnClick={ !reportsPage ? toggleAdd : undefined }
         reduceFilterSize
         nodes={
           <>
