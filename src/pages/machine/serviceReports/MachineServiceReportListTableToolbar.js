@@ -21,6 +21,7 @@ MachineServiceReportListTableToolbar.propTypes = {
   filterName: PropTypes.string,
   onFilterName: PropTypes.func,
   onResetFilter: PropTypes.func,
+  onReload: PropTypes.func,
   filterStatus: PropTypes.object,
   filterStatusType: PropTypes.array,
   onFilterStatus: PropTypes.func,
@@ -35,6 +36,7 @@ export default function MachineServiceReportListTableToolbar({
   reportsPage,
   isFiltered,
   filterName,
+  onReload,
   filterStatus = null ,
   filterStatusType ,
   onFilterName,
@@ -62,7 +64,8 @@ export default function MachineServiceReportListTableToolbar({
       <SearchBarCombo
         isFiltered={isFiltered}
         value={filterName}
-        onChange={onFilterName}
+        onChange={ onFilterName }
+        onReload={ onReload }
         onClick={onResetFilter}
         SubOnClick={ !reportsPage ? toggleAdd : undefined }
         reduceFilterSize

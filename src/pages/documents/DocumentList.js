@@ -96,7 +96,6 @@ function DocumentList({ customerPage, machinePage, machineDrawingPage, machineDr
     customerDocumentsFilterBy, customerDocumentsRowsPerPage,
     machineDocumentsFilterBy, machineDocumentsRowsPerPage,
     isLoading } = useSelector((state) => state.document );
-    console.log("isLoading : ",isLoading)
   const { activeDocumentCategories } = useSelector((state) => state.documentCategory );
   const { activeDocumentTypes } = useSelector((state) => state.documentType );
   const [totalRows, setTotalRows] = useState( documentRowsTotal );
@@ -271,8 +270,8 @@ const TABLE_HEAD = useMemo(() => {
   const { watch, handleSubmit } = methods;
   const filteredSearchKey = watch('filteredSearchKey');
 
-  const isFiltered = filterName !== '' || !!filterStatus.length;
-  const isNotFound = (!isLoading && !dataFiltered?.length);
+  const isFiltered = filterName !== '' ;
+  const isNotFound = (!dataFiltered.length && !!filterName);
 
   const filterNameDebounce = (value) => {
     if(machineDrawingPage){

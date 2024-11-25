@@ -148,9 +148,7 @@ export default function ReportStatusButton( { reportsPage, iconButton, status, m
           </MenuItem>
         )}
         { !isLoadingReportStatus && Array.isArray( activeServiceReportStatuses ) && 
-          activeServiceReportStatuses?.filter(
-            (s) => !reportsPage || s?.name?.toLowerCase() === 'under review')
-            ?.map( ( s ) => 
+          activeServiceReportStatuses?.map( ( s ) => 
             <MenuItem 
               key={s?._id}
               size="small" 
