@@ -142,10 +142,10 @@ export default function MachineViewForm() {
     }
   };
   
-  const handleCustomerDialog = (event, customerId) => {
+  const handleCustomerDialog = async (event, customerId) => {
     event.preventDefault(); 
-    dispatch(getCustomer(customerId));
-    dispatch(setCustomerDialog(true));
+    await dispatch(getCustomer(customerId));
+    await dispatch(setCustomerDialog(true));
   };
 
   const handleMachineDialog = async ( MachineID ) => {

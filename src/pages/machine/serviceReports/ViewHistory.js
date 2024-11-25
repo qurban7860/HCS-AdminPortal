@@ -125,6 +125,8 @@ const ViewHistory = ({ name, label, historicalData, methods }) => {
 
   return (
     <Grid container sx={{ mb: 1}}>
+        { ( name ||( currentData?.note && currentData?.note?.trim()) ) && 
+          <FormLabel content={`${ label || currentData?.type || "Notes"}:`} /> }
         { (isEditing || name ) &&
           <>
             <TextField 
@@ -136,7 +138,7 @@ const ViewHistory = ({ name, label, historicalData, methods }) => {
               label={ label || currentData?.type || "Notes"}
               value={val}
               onChange={ handleChangeValue }
-              sx={{ mb: 1, mt: methods ? 0 : 2 }}
+              sx={{ mb: 1, mt: 2 }}
             />
             { id && 
               <Grid container display='flex' direction='row' justifyContent='flex-end' gap={ 2 }>
@@ -150,7 +152,6 @@ const ViewHistory = ({ name, label, historicalData, methods }) => {
       <Grid container item md={12} sx={{ pt: 1, display:"block", alignItems: 'center', whiteSpace: 'pre-line', overflowWrap: 'break-word'  }}>
         { !isEditing && currentData?.note && currentData?.note?.trim() &&
           <Typography variant="body2" sx={{color: 'text.disabled', }}>
-            <FormLabel content={`${ label || currentData?.type || "Notes"}:`} />
             {/* <Typography variant="overline" 
               sx={{ pb: currentData?.note?.trim() ? 0 : 3,
                     color: 'text.disabled', 

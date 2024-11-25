@@ -1,13 +1,12 @@
-import PropTypes from 'prop-types';
 import React, { useMemo, memo, useLayoutEffect, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import b64toBlob from 'b64-to-blob';
 // @mui
-import { Container, Card, Chip, Grid, Box, Stack, Dialog, DialogTitle, Divider, Button, Typography } from '@mui/material';
+import { Container, Card, Chip, Grid, Box, Stack, Dialog, DialogTitle, Divider, Button, Typography, Link } from '@mui/material';
 // routes
 import { useNavigate, useParams } from 'react-router-dom';
 import download from 'downloadjs';
-import { PATH_MACHINE, PATH_CRM, PATH_SERVICE_REPORTS } from '../../../routes/paths';
+import { PATH_MACHINE, PATH_CRM } from '../../../routes/paths';
 // redux
 import { deleteMachineServiceReport,   
   getMachineServiceReport, 
@@ -22,7 +21,9 @@ import { deleteMachineServiceReport,
   getMachineServiceReportCheckItems,
   resetCheckItemValues,
   setCompleteDialog } from '../../../redux/slices/products/machineServiceReport';
-import { getActiveSPContacts, setCardActiveIndex, setIsExpanded } from '../../../redux/slices/customer/contact';
+import { getActiveSPContacts } from '../../../redux/slices/customer/contact';
+import { getMachineForDialog, setMachineDialog } from '../../../redux/slices/products/machine';
+import { getCustomer, setCustomerDialog } from '../../../redux/slices/customer/customer';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import { FORMLABELS } from '../../../constants/default-constants';
@@ -45,18 +46,13 @@ import Lightbox from '../../../components/lightbox/Lightbox';
 import SkeletonLine from '../../../components/skeleton/SkeletonLine';
 import DialogServiceReportComplete from '../../../components/Dialog/DialogServiceReportComplete';
 import SkeletonPDF from '../../../components/skeleton/SkeletonPDF';
-import { Cover } from '../../../components/Defaults/Cover';
-import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import IconButtonTooltip from '../../../components/Icons/IconButtonTooltip';
 import ServiceReportsFormComments from '../../../components/machineServiceReports/ServiceReportsFormComments';
+import OpenInNewPage from '../../../components/Icons/OpenInNewPage';
 import ReportStatusButton from './ReportStatusButton';
 import ViewHistory from './ViewHistory';
 
-MachineServiceReportViewForm.propTypes = {
-  reportsPage: PropTypes.bool,
-};
-
-function MachineServiceReportViewForm( { reportsPage } ) {
+function MachineServiceReportViewForm(  ) {
   
   const { machineServiceReport, machineServiceReportCheckItems, isLoadingCheckItems, isLoading, pdfViewerDialog, sendEmailDialog } = useSelector((state) => state.machineServiceReport);
   const { machine } = useSelector((state) => state.machine)
@@ -186,11 +182,7 @@ function MachineServiceReportViewForm( { reportsPage } ) {
   //     />
   // ));
 
-  const handleBackLink = () => { navigate(
-    reportsPage ?
-    PATH_SERVICE_REPORTS.root :
-    PATH_MACHINE.machines.serviceReports.root(machineId)
-  )}
+  const handleBackLink = () => navigate( PATH_MACHINE.machines.serviceReports.root(machineId) );
   
   const [ reportStatus, setReportStatus ] = useState(null);
 
@@ -354,14 +346,21 @@ function MachineServiceReportViewForm( { reportsPage } ) {
     }
   };  
 
+  const handleCustomerDialog = async (event, customerId) => {
+    event.preventDefault(); 
+    await dispatch(getCustomer(customerId));
+    await dispatch(setCustomerDialog(true));
+  };
+
+  const handleMachineDialog = async ( event, MachineID ) => {
+    event.preventDefault(); 
+    await dispatch(getMachineForDialog(MachineID));
+    await dispatch(setMachineDialog(true)); 
+  };
+
   return (
     <Container maxWidth={false}>
-          { !reportsPage && <MachineTabContainer currentTabValue='serviceReports' />}
-          { reportsPage && 
-            <StyledCardContainer>
-              <Cover name="Service Reports" icon="mdi:clipboard-text-clock" />
-            </StyledCardContainer>
-          }
+      <MachineTabContainer currentTabValue='serviceReports' />
     <Card sx={{ p: 2 }}>
       <Grid>
         <ViewFormEditDeleteButtons
@@ -369,24 +368,22 @@ function MachineServiceReportViewForm( { reportsPage } ) {
           isActive={defaultValues.isActive}
           disableEditButton={
             machine?.isArchived ||
-            reportsPage ||
             machine?.status?.slug === 'transferred' ||
             machineServiceReport.currentApprovalStatus === 'APPROVED'
           }
           disableDeleteButton={
             machine?.isArchived ||
-            reportsPage ||
             machine?.status?.slug === 'transferred' ||
             machineServiceReport.currentApprovalStatus === 'APPROVED'
           }
           skeletonIcon={isLoading || !machineServiceReport?._id}
           handleEdit={ 
-            !machine?.isArchived && !reportsPage &&
+            !machine?.isArchived && 
             machineServiceReport?.status?.type?.toLowerCase() === 'draft' &&
             machineServiceReport?._id && handleEdit
           }
           onDelete={
-            !machine?.isArchived && !reportsPage &&
+            !machine?.isArchived &&
             // machineServiceReport?.status?.name?.toUpperCase() === 'DRAFT' &&
             machineServiceReport?._id
               ? onDelete
@@ -416,7 +413,6 @@ function MachineServiceReportViewForm( { reportsPage } ) {
         
         <Grid container>
           <FormLabel 
-            variant='h4'
             content={`${defaultValues.serviceReportTemplateReportType || FORMLABELS.KEYDETAILS}`} 
             endingContent={`${defaultValues.serviceReportTemplate || ""}`} 
           />
@@ -443,7 +439,7 @@ function MachineServiceReportViewForm( { reportsPage } ) {
                 {machineServiceReport?.currentApprovalStatus === "PENDING" ? 
                   ( 
                     machineServiceReport?.status?.name && 
-                    <ReportStatusButton reportsPage={reportsPage} machineID={ machineId } iconButton reportID={ id } status={ machineServiceReport?.status } />
+                    <ReportStatusButton machineID={ machineId } iconButton reportID={ id } status={ machineServiceReport?.status } />
                   ) || "" 
                 : machineServiceReport?.currentApprovalStatus}
               </Typography> 
@@ -470,19 +466,55 @@ function MachineServiceReportViewForm( { reportsPage } ) {
               srEvaluationComment={ machineServiceReport?.approval?.approvalLogs?.length > 0 }
             />
           ) : null}
+
           <ViewFormField
             isLoading={isLoading}
-            sm={12}
+            sm={4}
+            variant='h4'
+            heading="Customer" 
+            node={
+              defaultValues.customer && (
+                <>
+                <Link variant='h4' onClick={(event)=> handleCustomerDialog(event, defaultValues.customer?._id)} underline="none" sx={{ cursor: 'pointer'}}>
+                  {defaultValues.customer?.name}
+                </Link>
+                  <OpenInNewPage onClick={()=> window.open( PATH_CRM.customers.view(defaultValues.customer?._id), '_blank' ) }/>
+                </>
+              )
+            }
+          />
+
+          <ViewFormField
+            isLoading={isLoading}
+            sm={4}
+            variant='h4'
+            heading="Machine"
+            node={
+              defaultValues.customer && (
+                <>
+                <Link variant='h4' onClick={(event)=> handleMachineDialog(event, defaultValues.machine?._id)} underline="none" sx={{ cursor: 'pointer'}}>
+                  {defaultValues.machine?.serialNo}
+                </Link>
+                  <OpenInNewPage onClick={()=> window.open( PATH_MACHINE.machines.view(defaultValues.machine?._id), '_blank' ) }/>
+                </>
+              )
+            }
+            
+          />
+          <ViewFormField
+            isLoading={isLoading}
+            sm={4}
             heading="Decoilers"
-            chipDialogArrayParam={defaultValues?.decoilers?.map(( decoilerMachine ) => (
+            chipDialogArrayParam={defaultValues?.decoilers?.map(( dM ) => (
               <Chip 
-                key={decoilerMachine?._id}
+                key={dM?._id}
                 sx={{ m:0.2 }} 
+                onClick={ ( event ) => handleMachineDialog( event, dM?._id ) }
                 deleteIcon={<Iconify icon="fluent:open-12-regular"/>}
                 onDelete={()=> {
-                  window.open(PATH_MACHINE.machines.view(decoilerMachine?._id), '_blank');
+                  window.open(PATH_MACHINE.machines.view(dM?._id), '_blank');
                 }}
-                label={`${decoilerMachine?.serialNo || ''} ${decoilerMachine?.name  ? '-' : '' } ${decoilerMachine?.name || ''} `} 
+                label={`${dM?.serialNo || ''} ${dM?.name  ? '-' : '' } ${dM?.name || ''} `} 
               />
             ))} 
           />

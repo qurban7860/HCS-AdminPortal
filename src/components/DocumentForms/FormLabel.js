@@ -15,7 +15,7 @@ export default function FormLabel({ content, endingContent, variant }) {
       >
         <Typography variant={ variant || "h6" } sm={12} sx={{ ml: 1, p:'2px', color: 'white'}}>{content}</Typography>
         { endingContent  && 
-          <Typography variant={ variant || "h6" } sm={12} sx={{ mr: 1, p:'2px' }}>{endingContent}</Typography>
+          <Typography variant={ variant || "h6" } sm={12} sx={{ mr: 1, p:'2px', color: 'MenuText' }}>{endingContent}</Typography>
         }
       </Grid>
     </Grid>

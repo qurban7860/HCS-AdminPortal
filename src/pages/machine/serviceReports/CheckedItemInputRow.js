@@ -14,6 +14,7 @@ import { RHFAutocomplete, RHFDatePicker, RHFSwitch, RHFTextField, RHFUpload } fr
 import { statusTypes } from '../util';
 import { fDate, stringToDate } from '../../../utils/formatTime';
 import CheckedItemValueHistory from './CheckedItemValueHistory';
+import CheckedItemValueRow from './CheckedItemValueRow';
 import { CheckItemSchema } from '../../schemas/machine';
 import SkeletonPDF from '../../../components/skeleton/SkeletonPDF';
 
@@ -303,10 +304,18 @@ const CheckedItemInputRow = memo(({ index, childIndex, checkItemListId, rowData 
               </Grid>
 
               {rowData?.historicalData?.length > 0 && (
+                <>
+                {/* <CheckedItemValueRow
+                  machineId={machineId}
+                  value={rowData}
+                  index={childIndex}
+                  key={rowData._id}
+                /> */}
                 <CheckedItemValueHistory
                   historicalData={rowData.historicalData}
                   inputType={rowData.inputType}
                 />
+                </>
               )}
             </Stack>
       </FormProvider>

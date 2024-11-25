@@ -1,7 +1,7 @@
 import React, { useEffect, useLayoutEffect, useState, useMemo, useCallback } from 'react'
 import PropTypes from 'prop-types';
 import b64toBlob from 'b64-to-blob';
-import { Box, Button, Dialog, DialogTitle, Divider, Stack } from '@mui/material';
+import { Box, Button, Dialog, DialogTitle, Divider, Stack, Grid } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router';
@@ -9,7 +9,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useSnackbar } from 'notistack';
 import FormProvider from '../../../components/hook-form/FormProvider';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
-import { RHFAutocomplete, RHFDatePicker, RHFUpload } from '../../../components/hook-form';
+import { RHFAutocomplete, RHFDatePicker, RHFUpload, RHFRadioGroup } from '../../../components/hook-form';
 import { MachineServiceReportPart1Schema } from '../../schemas/machine';
 import { useAuthContext } from '../../../auth/useAuthContext';
 import { PATH_MACHINE } from '../../../routes/paths';
@@ -128,7 +128,7 @@ function MachineServiceReportsFirstStep( { handleComplete, handleDraftRequest, h
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [reset, machineServiceReport ]);
 
-    const { docReportType, serviceReportTemplate, files } = watch();
+    const { docReportType, serviceReportTemplate, reportSubmission, files } = watch();
 
 
       const onSubmit = async (data) => {
@@ -357,14 +357,29 @@ return (
                     historicalData={ machineServiceReport?.technicianNotes }
                     methods={methods}
                   />
-                  <FormLabel content='Reporting Documents' />
-                  <RHFUpload multiple  thumbnail name="files" imagesOnly
-                    onDrop={handleDropMultiFile}
-                    dropZone={false}
-                    onRemove={handleRemoveFile}
-                    onLoadImage={handleLoadImage}
-                    onLoadPDF={handleOpenFile}
-                  />
+                  <Grid container item sm={12} sx={{ display: 'flex', }} >
+                    <RHFRadioGroup 
+                      label="Report Submission"
+                      name="reportSubmission"
+                      row
+                      options={[
+                        { value: 'offline', label:'Off-line'}, 
+                        { value: 'online', label:'Online'}
+                      ]}
+                    />
+                  </Grid>
+                  {
+                    reportSubmission?.toLowerCase() === 'offline' && 
+                  <>
+                    <FormLabel content='Reporting Documents' />
+                    <RHFUpload multiple  thumbnail name="files" imagesOnly
+                      onDrop={handleDropMultiFile}
+                      dropZone={false}
+                      onRemove={handleRemoveFile}
+                      onLoadImage={handleLoadImage}
+                      onLoadPDF={handleOpenFile}
+                    />
+                  </>}
           </Stack>
           <ServiceRecodStepButtons handleSubmit={saveAsSubmit} isSubmitted={isSubmit} handleDraft={saveAsDraft} isDraft={isDraft} isSubmitting={isSubmitting} />
           </>
