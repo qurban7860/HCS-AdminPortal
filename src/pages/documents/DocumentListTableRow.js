@@ -27,6 +27,7 @@ DocumentListTableRow.propTypes = {
   machineDrawings: PropTypes.bool,
   handleMachineDialog: PropTypes.func,
   handleCustomerDialog: PropTypes.func,
+  hiddenColumns: PropTypes.object,
 };
 
 export default function DocumentListTableRow({
@@ -41,7 +42,8 @@ export default function DocumentListTableRow({
   machinePage,
   machineDrawings,
   handleMachineDialog,
-  handleCustomerDialog
+  handleCustomerDialog,
+  hiddenColumns
 }) {
   const {
     displayName,
@@ -64,20 +66,20 @@ export default function DocumentListTableRow({
 
   return (
     <StyledTableRow hover selected={selected}>
-      <LinkTableCell align="left" param={displayName} stringLength={45} onClick={onViewRow} />
-      {  smScreen && <TableCell align="left">{ referenceNumberString }</TableCell>}
-      {  smScreen && <TableCell align="left">{ docCategoryNameString }</TableCell>}
-      {  smScreen && <TableCell align="left">{ docTypeNameString }</TableCell>}
+      {  !hiddenColumns?.displayName && <LinkTableCell align="left" param={displayName} stringLength={45} onClick={onViewRow} />}
+      {  !hiddenColumns?.referenceNumber && <TableCell align="left">{ referenceNumberString }</TableCell>}
+      {  !hiddenColumns?.['docCategory.name'] && <TableCell align="left">{ docCategoryNameString }</TableCell>}
+      {  !hiddenColumns?.['docType.name'] && <TableCell align="left">{ docTypeNameString }</TableCell>}
       {/* {  lgScreen && <TableCell align="center">{documentVersions[0]?.versionNo}</TableCell>} */}
-      {  smScreen && machineDrawings && <TableCell align="left">{stockNumber}</TableCell>}
-      {  smScreen && machineDrawings && <TableCell align="left">{productDrawings?.map((m)=> m?.machine?.serialNo).join(', ')}</TableCell>}
-      {  !customerPage && !machinePage && !machineDrawings && lgScreen && 
+      {  !hiddenColumns?.stockNumber && machineDrawings && <TableCell align="left">{stockNumber}</TableCell>}
+      {  !hiddenColumns?.productDrawings && machineDrawings && <TableCell align="left">{productDrawings?.map((m)=> m?.machine?.serialNo).join(', ')}</TableCell>}
+      {  !hiddenColumns?.['machine.serialNo'] && !customerPage && !machinePage && !machineDrawings && lgScreen && 
           <>
             {/* <LinkDialogTableCell onClick={handleCustomerDialog} align='left' param={customer?.name}/>   */}
             <LinkDialogTableCell onClick={handleMachineDialog} align='left' param={machine?.serialNo}/>  
           </>
       }
-      <TableCell align="right">{fDate(createdAt)}</TableCell>
+      {!hiddenColumns?.createdAt && <TableCell align="right">{fDate(createdAt)}</TableCell>}
     </StyledTableRow>
   );
 }
