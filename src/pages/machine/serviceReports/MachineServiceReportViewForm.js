@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React, { useMemo, memo, useLayoutEffect, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import b64toBlob from 'b64-to-blob';
@@ -6,7 +7,7 @@ import { Container, Card, Chip, Grid, Box, Stack, Dialog, DialogTitle, Divider, 
 // routes
 import { useNavigate, useParams } from 'react-router-dom';
 import download from 'downloadjs';
-import { PATH_MACHINE, PATH_CRM } from '../../../routes/paths';
+import { PATH_MACHINE, PATH_CRM, PATH_SERVICE_REPORTS } from '../../../routes/paths';
 // redux
 import { deleteMachineServiceReport,   
   getMachineServiceReport, 
@@ -44,12 +45,18 @@ import Lightbox from '../../../components/lightbox/Lightbox';
 import SkeletonLine from '../../../components/skeleton/SkeletonLine';
 import DialogServiceReportComplete from '../../../components/Dialog/DialogServiceReportComplete';
 import SkeletonPDF from '../../../components/skeleton/SkeletonPDF';
+import { Cover } from '../../../components/Defaults/Cover';
+import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import IconButtonTooltip from '../../../components/Icons/IconButtonTooltip';
 import ServiceReportsFormComments from '../../../components/machineServiceReports/ServiceReportsFormComments';
 import ReportStatusButton from './ReportStatusButton';
 import ViewHistory from './ViewHistory';
 
-function MachineServiceReportViewForm( ) {
+MachineServiceReportViewForm.propTypes = {
+  reportsPage: PropTypes.bool,
+};
+
+function MachineServiceReportViewForm( { reportsPage } ) {
   
   const { machineServiceReport, machineServiceReportCheckItems, isLoadingCheckItems, isLoading, pdfViewerDialog, sendEmailDialog } = useSelector((state) => state.machineServiceReport);
   const { machine } = useSelector((state) => state.machine)
@@ -66,7 +73,7 @@ function MachineServiceReportViewForm( ) {
   const [slidesReporting, setSlidesReporting] = useState([]);
 
   useLayoutEffect(()=>{
-    if(machineId && id ){
+    if( id ){
       dispatch(setAddFileDialog(false));
       dispatch(getMachineServiceReport(machineId, id));
     }
@@ -78,7 +85,7 @@ function MachineServiceReportViewForm( ) {
   },[ dispatch, machineId, id])
 
   useEffect(()=>{
-    if( machineId && id && !pdfViewerDialog ){
+    if( id && !pdfViewerDialog ){
       dispatch(getMachineServiceReportCheckItems( machineId, id ));
     }
     return ()=> dispatch(resetCheckItemValues())
@@ -96,7 +103,7 @@ function MachineServiceReportViewForm( ) {
     }
   };
 
-  const handleEdit = async() => {
+  const handleEdit = async () => {
     await dispatch(setFormActiveStep(0));
     await navigate(PATH_MACHINE.machines.serviceReports.edit(machineId, id))
   };
@@ -179,14 +186,15 @@ function MachineServiceReportViewForm( ) {
   //     />
   // ));
 
-  const handleBackLink = ()=>{
-    navigate(PATH_MACHINE.machines.serviceReports.root(machineId))
-  }
+  const handleBackLink = () => { navigate(
+    reportsPage ?
+    PATH_SERVICE_REPORTS.root :
+    PATH_MACHINE.machines.serviceReports.root(machineId)
+  )}
   
-  const [reportStatus, setReportStatus]= useState(null);
+  const [ reportStatus, setReportStatus ] = useState(null);
 
   useEffect(() => {
-
     if ( machineServiceReport?.files && Array.isArray( machineServiceReport?.files ) ) {
       const updatedSildes = machineServiceReport?.files
       ?.filter(file => file?.fileType && file.fileType.startsWith("image"))
@@ -348,7 +356,12 @@ function MachineServiceReportViewForm( ) {
 
   return (
     <Container maxWidth={false}>
-      <MachineTabContainer currentTabValue='serviceReports' />
+          { !reportsPage && <MachineTabContainer currentTabValue='serviceReports' />}
+          { reportsPage && 
+            <StyledCardContainer>
+              <Cover name="Service Reports" icon="mdi:clipboard-text-clock" />
+            </StyledCardContainer>
+          }
     <Card sx={{ p: 2 }}>
       <Grid>
         <ViewFormEditDeleteButtons
@@ -356,22 +369,24 @@ function MachineServiceReportViewForm( ) {
           isActive={defaultValues.isActive}
           disableEditButton={
             machine?.isArchived ||
+            reportsPage ||
             machine?.status?.slug === 'transferred' ||
             machineServiceReport.currentApprovalStatus === 'APPROVED'
           }
           disableDeleteButton={
             machine?.isArchived ||
+            reportsPage ||
             machine?.status?.slug === 'transferred' ||
             machineServiceReport.currentApprovalStatus === 'APPROVED'
           }
           skeletonIcon={isLoading || !machineServiceReport?._id}
           handleEdit={ 
-            !machine?.isArchived && 
+            !machine?.isArchived && !reportsPage &&
             machineServiceReport?.status?.type?.toLowerCase() === 'draft' &&
             machineServiceReport?._id && handleEdit
           }
           onDelete={
-            !machine?.isArchived &&
+            !machine?.isArchived && !reportsPage &&
             // machineServiceReport?.status?.name?.toUpperCase() === 'DRAFT' &&
             machineServiceReport?._id
               ? onDelete
@@ -400,7 +415,11 @@ function MachineServiceReportViewForm( ) {
         />
         
         <Grid container>
-          <FormLabel content={FORMLABELS.KEYDETAILS} />
+          <FormLabel 
+            variant='h4'
+            content={`${defaultValues.serviceReportTemplateReportType || FORMLABELS.KEYDETAILS}`} 
+            endingContent={`${defaultValues.serviceReportTemplate || ""}`} 
+          />
           <ViewFormField isLoading={isLoading} variant='h4' sm={4} heading="Service Date" 
             param={fDate(defaultValues.serviceDate)} />
 
@@ -424,7 +443,7 @@ function MachineServiceReportViewForm( ) {
                 {machineServiceReport?.currentApprovalStatus === "PENDING" ? 
                   ( 
                     machineServiceReport?.status?.name && 
-                    <ReportStatusButton machineID={ machineId } iconButton reportID={ id } status={ machineServiceReport?.status } />
+                    <ReportStatusButton reportsPage={reportsPage} machineID={ machineId } iconButton reportID={ id } status={ machineServiceReport?.status } />
                   ) || "" 
                 : machineServiceReport?.currentApprovalStatus}
               </Typography> 
@@ -443,14 +462,6 @@ function MachineServiceReportViewForm( ) {
               <IconButtonTooltip title='Approve / Reject' icon="mdi:list-status" onClick={handleCompleteConfirm} /> }
             </>
             }
-          />
-
-          <ViewFormField 
-            isLoading={isLoading} 
-            variant='h4' 
-            sm={6} 
-            heading="Service Report Template" 
-            param={`${defaultValues.serviceReportTemplate} ${defaultValues.serviceReportTemplateReportType ? '-' : ''} ${defaultValues.serviceReportTemplateReportType ? defaultValues.serviceReportTemplateReportType : ''}`}
           />
 
           {(machineServiceReport?.currentApprovalStatus !== "PENDING" && machineServiceReport?.approval?.approvalLogs?.length > 0) ? (              
@@ -476,7 +487,7 @@ function MachineServiceReportViewForm( ) {
             ))} 
           />
           {/* <ViewFormField isLoading={isLoading} sm={4} heading="Technician"  param={`${defaultValues?.technician?.firstName || ''} ${defaultValues?.technician?.lastName || ''} `} /> */}
-          <ViewHistory isLoading={isLoading} title="Technician Notes" historicalData={machineServiceReport.technicianNotes} />
+          <ViewHistory isLoading={isLoading} label="Technician Notes" historicalData={machineServiceReport.technicianNotes} />
 
           { machineServiceReport?.reportDocs?.length > 0 &&
           <>
@@ -522,15 +533,16 @@ function MachineServiceReportViewForm( ) {
           {!isLoadingCheckItems ? 
             <Grid item md={12} sx={{ overflowWrap: 'break-word' }}>
               <Grid item md={12} sx={{display:'flex', flexDirection:'column'}}>
-              {machineServiceReportCheckItems?.checkItemLists?.map((row, index) => (
-                <CheckedItemValueRow
-                  machineId={machineId}
-                  primaryServiceReportId={machineServiceReport?.primaryServiceReportId	}
-                  value={row}
-                  index={index}
-                  key={row._id}
-                />
-              ))}
+              { machineServiceReportCheckItems?.checkItemLists?.map((row, index) => (
+                  <CheckedItemValueRow
+                    machineId={machineId}
+                    primaryServiceReportId={machineServiceReport?.primaryServiceReportId	}
+                    value={row}
+                    index={index}
+                    key={row._id}
+                  />
+                ))
+              }
               </Grid>
             </Grid>
             :
@@ -552,12 +564,12 @@ function MachineServiceReportViewForm( ) {
             typeof defaultValues.textAfterCheckItems === "string" && 
             <ViewFormNoteField isLoading={isLoading} sm={12}  param={defaultValues.textAfterCheckItems} />
           }
-          {machineServiceReport?.serviceReportTemplate?.enableNote && <ViewHistory isLoading={isLoading} title={`${machineServiceReport?.serviceReportTemplate?.reportType?.charAt(0).toUpperCase()||''}${machineServiceReport?.serviceReportTemplate?.reportType?.slice(1).toLowerCase()||''} Note`} historicalData={defaultValues.serviceNote} />}
-          {machineServiceReport?.serviceReportTemplate?.enableMaintenanceRecommendations && <ViewHistory isLoading={isLoading} title="Recommendation Note" historicalData={defaultValues.recommendationNote} />}
-          {machineServiceReport?.serviceReportTemplate?.enableSuggestedSpares && <ViewHistory isLoading={isLoading} title="Suggested Spares" historicalData={defaultValues.suggestedSpares} />}
-          <ViewHistory isLoading={isLoading} title="Internal Note" historicalData={defaultValues.internalNote} />
+          {machineServiceReport?.serviceReportTemplate?.enableNote && <ViewHistory isLoading={isLoading} label={`${machineServiceReport?.serviceReportTemplate?.reportType?.charAt(0).toUpperCase()||''}${machineServiceReport?.serviceReportTemplate?.reportType?.slice(1).toLowerCase()||''} Note`} historicalData={defaultValues.serviceNote} />}
+          {machineServiceReport?.serviceReportTemplate?.enableMaintenanceRecommendations && <ViewHistory isLoading={isLoading} label="Recommendation Note" historicalData={defaultValues.recommendationNote} />}
+          {machineServiceReport?.serviceReportTemplate?.enableSuggestedSpares && <ViewHistory isLoading={isLoading} label="Suggested Spares" historicalData={defaultValues.suggestedSpares} />}
+          <ViewHistory isLoading={isLoading} label="Internal Note" historicalData={defaultValues.internalNote} />
           {/* <ViewFormField isLoading={isLoading} sm={12} heading="Operators" chipDialogArrayParam={operators} /> */}
-          <ViewHistory isLoading={isLoading} title="Operator Notes" historicalData={defaultValues.operatorNotes} />
+          <ViewHistory isLoading={isLoading} label="Operator Notes" historicalData={defaultValues.operatorNotes} />
           {machineServiceReport?.files?.length > 0 && 
           <FormLabel content='Documents / Images' />
           }

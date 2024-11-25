@@ -6,9 +6,9 @@ import Iconify from '../../../components/iconify';
 import { StyledTooltip } from '../../../theme/styles/default-styles';
 import CopyIcon from '../../../components/Icons/CopyIcon';
 import { setContactDialog, getContact } from '../../../redux/slices/customer/contact';
-import { fDateTime } from '../../../utils/formatTime';
+import ServiceReportAuditLogs from './ServiceReportAuditLogs';
 
-const HistoryNotes = ({ title, historicalData }) =>  {
+const HistoryNotes = ({ label, historicalData }) =>  {
 
   const dispatch = useDispatch()
   const [showHistory, setShowHistory] = useState(false);
@@ -25,16 +25,18 @@ return(
   <>
   { Array.isArray(historicalData) && historicalData?.length > 0 && <Grid container item md={12} sx={{ px: 0.5 }} >
       <Grid container item md={12} sx={{ display: 'flex', justifyContent: "flex-start" , alignItems: 'center', whiteSpace: 'pre-line', wordBreak: 'break-word'  }}>
-        <Typography variant="overline" sx={{ color: 'text.disabled', cursor: "pointer" }} onClick={toggleHistory} >
+        {/* <Typography variant="body2" sx={{ color: 'text.disabled', cursor: "pointer" }} onClick={toggleHistory} >
           <b>{`${showHistory ? "Hide " : "Show "} more:`}</b>
-        </Typography>
+        </Typography> */}
         <StyledTooltip
           tooltipcolor='#2065D1'
           placement="top"
-          title={`${showHistory ? "Hide " : "Show "} ${title || "Notes"}`}
+          title={`${showHistory ? "Hide " : "Show "} history
+          `}
         >
           <IconButton onClick={toggleHistory}>
-          <Iconify icon={showHistory ? 'eva:arrow-ios-upward-fill' : 'eva:arrow-ios-downward-fill'} />
+          {   /*  <Iconify icon={showHistory ? 'eva:arrow-ios-upward-fill' : 'eva:arrow-ios-downward-fill'} />  */  }
+           <Iconify icon='mdi:history' />
           </IconButton>
         </StyledTooltip>
       </Grid>
@@ -47,17 +49,16 @@ return(
 
                   {historyItem?.note && (
                     <Typography variant="body2" >
-                      <Typography variant="overline" sx={{ color: 'text.disabled' }}>{ title && <b>{`${title}: `}</b>}</Typography>
                       {` ${historyItem?.note || ''}`}
                       {historyItem?.note?.trim() && <CopyIcon value={historyItem?.note} />}
                     </Typography>
                   )}
 
-                  <Typography variant="body2" sx={{ px: 0.5, color: 'text.disabled', alignItems: "center", display: "flex", width:"100%" }}>
+                  <Typography variant="body2" sx={{ color: 'text.disabled', alignItems: "center", display: "flex", width:"100%" }}>
                     <>
                       { historyItem?.technician && (
                         <>
-                          <Typography variant="overline" sx={{ color: 'text.disabled' }}>
+                          <Typography variant="body2" sx={{ color: 'text.disabled' }}>
                             <b>Technician:</b>
                           </Typography>
                           <Chip 
@@ -69,7 +70,7 @@ return(
                       )}
                       { Array.isArray( historyItem?.operators ) && historyItem?.operators?.length > 0 && (
                         <>
-                          <Typography variant="overline" sx={{ color: 'text.disabled' }}>
+                          <Typography variant="body2" sx={{ color: 'text.disabled' }}>
                             <b>Operators:</b>
                           </Typography>
                           {historyItem?.operators?.map(op => (
@@ -82,13 +83,9 @@ return(
                           ))}
                         </>
                       )}
-                      {historyItem?.updatedBy && 
-                        <Typography variant="body2" sx={{ color: 'text.disabled', ml:"auto"  }}>
-                          <i><b>Last Modified: </b>{fDateTime(historyItem?.updatedAt)}{` by `}{`${ historyItem?.updatedBy?.name || ''}`}</i>
-                        </Typography>
-                      }
                     </>
                   </Typography>
+                      <ServiceReportAuditLogs data={ historyItem || null } />
                 </Grid>
               </Grid>
           </React.Fragment>
@@ -101,7 +98,7 @@ return(
 
 
 HistoryNotes.propTypes = {
-  title: PropTypes.string,
+  label: PropTypes.string,
   historicalData: PropTypes.array,
 };
 

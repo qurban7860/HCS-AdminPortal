@@ -16,12 +16,14 @@ import { resetMachineServiceReport, setFormActiveStep } from '../../../redux/sli
 // ----------------------------------------------------------------------
 
 MachineServiceReportListTableToolbar.propTypes = {
+  reportsPage: PropTypes.bool,
   isFiltered: PropTypes.bool,
   filterName: PropTypes.string,
   onFilterName: PropTypes.func,
   onResetFilter: PropTypes.func,
+  onReload: PropTypes.func,
   filterStatus: PropTypes.object,
-  filterStatusType: PropTypes.string,
+  filterStatusType: PropTypes.array,
   onFilterStatus: PropTypes.func,
   onFilterStatusType: PropTypes.func,
   statusOptions: PropTypes.array,
@@ -31,10 +33,12 @@ MachineServiceReportListTableToolbar.propTypes = {
 };
 
 export default function MachineServiceReportListTableToolbar({
+  reportsPage,
   isFiltered,
   filterName,
+  onReload,
   filterStatus = null ,
-  filterStatusType = null ,
+  filterStatusType ,
   onFilterName,
   statusOptions,
   onResetFilter,
@@ -60,9 +64,11 @@ export default function MachineServiceReportListTableToolbar({
       <SearchBarCombo
         isFiltered={isFiltered}
         value={filterName}
-        onChange={onFilterName}
+        onChange={ onFilterName }
+        onReload={ onReload }
         onClick={onResetFilter}
-        SubOnClick={toggleAdd}
+        SubOnClick={ !reportsPage ? toggleAdd : undefined }
+        reduceFilterSize
         nodes={
           <>
           <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
@@ -78,9 +84,11 @@ export default function MachineServiceReportListTableToolbar({
               renderInput={(params) => <TextField {...params} size='small' label="Status" />}
             />  
           </Grid>
-          <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
+          <Grid item xs={12} sm={6} md={6} lg={ 4} >
             <Autocomplete 
-              value={ filterStatusType || null }
+              value={ filterStatusType || [] }
+              multiple
+              size="small"
               options={ statusTypes }
               getOptionLabel={(option) => option}
               onChange={ onFilterStatusType }
@@ -90,7 +98,7 @@ export default function MachineServiceReportListTableToolbar({
           </Grid>
           </>
         }
-        addButton={!(machine?.isArchived || isHistory) ? BUTTONS.ADD_MACHINE_SERVICE_REPORT : undefined}
+        addButton={!( machine?.isArchived || isHistory ) ? BUTTONS.ADD_MACHINE_SERVICE_REPORT : undefined}
         transferredMachine={machine?.status?.slug==='transferred'}
       />
     </Stack>

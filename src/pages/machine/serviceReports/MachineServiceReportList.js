@@ -1,10 +1,11 @@
+import PropTypes from 'prop-types';
 import debounce from 'lodash/debounce';
-import { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef, useCallback } from 'react';
 // @mui
 import { Container, Table, TableBody, TableContainer } from '@mui/material';
 // routes
 import { useNavigate, useParams } from 'react-router-dom';
-import { PATH_MACHINE } from '../../../routes/paths';
+import { PATH_MACHINE, PATH_SERVICE_REPORTS } from '../../../routes/paths';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // components
@@ -32,25 +33,32 @@ import {
 } from '../../../redux/slices/products/machineServiceReport';
 import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../../components/ListTableTools/TableCard';
+import { Cover } from '../../../components/Defaults/Cover';
+import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import MachineTabContainer from '../util/MachineTabContainer';
 
 // ----------------------------------------------------------------------
 
 
 const TABLE_HEAD = [
+  { id: 'isActive', label: 'Active', align: 'left' },
   { id: 'serviceDate', label: 'Service Date', align: 'left' },
   { id: 'serviceReportUID', label: 'Service ID', align: 'left' },
-  { id: 'status', label: 'Status', align: 'left' },
-  { id: 'serviceReportTemplate.reportTitle', label: 'Service Template', align: 'left' },
-  { id: 'isActive', label: 'Active', align: 'center' },
+  { id: 'status.name', label: 'Status', align: 'left' },
+  { id: 'status.type', label: 'Type', align: 'left' },
+  { id: 'serviceReportTemplate.reportTitle', label: 'Template', align: 'left' },
   { id: 'createdBy.name', label: 'Created By', align: 'left' },
-  { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
 // ----------------------------------------------------------------------
 
-export default function MachineServiceReportList() {
+MachineServiceReportList.propTypes = {
+  reportsPage: PropTypes.bool,
+}
+
+export default function MachineServiceReportList( { reportsPage }) {
   const { machine } = useSelector((state) => state.machine);
   const { machineServiceReports, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.machineServiceReport);
+  const { activeServiceReportStatuses, isLoadingReportStatus } = useSelector( (state) => state.serviceReportStatuses );
   const navigate = useNavigate();
   const { machineId } = useParams();
 
@@ -59,7 +67,7 @@ export default function MachineServiceReportList() {
     orderBy,
     setPage,
     onSort,
-  } = useTable({ defaultOrderBy: 'createdAt', defaultOrder: 'desc' });
+  } = useTable({ defaultOrderBy: 'serviceDate', defaultOrder: 'desc' });
 
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));
@@ -70,34 +78,42 @@ export default function MachineServiceReportList() {
   const dispatch = useDispatch();
   const [filterName, setFilterName] = useState('');
   const [filterStatus, setFilterStatus] = useState(null);
-  const [statusType, setStatusType] = useState(null);
-  
-  useLayoutEffect(() => {
-    dispatch(setSendEmailDialog(false));
-    dispatch(getActiveServiceReportStatuses() )
-    dispatch(setDetailPageFlag(false));
-    return ()=>{
-      dispatch( resetActiveServiceReportStatuses() )
-    }
-  }, [ dispatch ]);
+  const [statusType, setStatusType] = useState([ 'To Do', 'In Progress' ]);
 
-  useLayoutEffect(() => {
-    if(machineId ){
-      dispatch(getMachineServiceReports(
-        {
+  const getReports = useCallback( async ()=>{
+    await dispatch(setSendEmailDialog(false));
+    await dispatch(getActiveServiceReportStatuses() )
+    await dispatch(setDetailPageFlag(false));
+    if ( !isLoadingReportStatus ) {
+      const matchedStatusIds = [
+        ...(filterStatus?._id ? [filterStatus._id] : []),
+        ... await activeServiceReportStatuses.filter(({ type }) => 
+            statusType.some(
+              (status) => status.toLowerCase() === type.toLowerCase()
+            )
+          ).map(({ _id }) => _id)
+      ];
+      const uniqueStatusIds = [...new Set(matchedStatusIds)];
+      dispatch(
+        getMachineServiceReports({
           page,
           rowsPerPage,
           machineId,
           isMachineArchived: machine?.isArchived,
-          status: filterStatus?._id,
-          statusType
-        }
-      ));
+          status: uniqueStatusIds,
+        })
+      );
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[ dispatch, filterStatus, statusType, isLoadingReportStatus, page, rowsPerPage ])
+
+  useLayoutEffect(() => {
+    getReports();
     return () => {
-      dispatch( resetMachineServiceReports() )
-    }
-  }, [dispatch, machineId, machine, filterStatus, statusType, page, rowsPerPage ]);
+      dispatch( resetActiveServiceReportStatuses() )
+      dispatch( resetMachineServiceReports() );
+    };
+  }, [ dispatch, getReports ]);  
 
   const dataFiltered = applyFilter({
     inputData: machineServiceReports?.data || [],
@@ -106,7 +122,7 @@ export default function MachineServiceReportList() {
   });
 
   const isFiltered = filterName !== '' ;
-  const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
+  const isNotFound = (!dataFiltered.length && !!filterName);
 
   const denseHeight = 60;
 
@@ -147,7 +163,13 @@ export default function MachineServiceReportList() {
     }
   }
 
-  const handleViewRow = async (id) => navigate(PATH_MACHINE.machines.serviceReports.view(machineId ,id));
+  const handleViewRow = async ( mId, id) => { 
+    if( mId && !machineId ){
+      window.open(PATH_MACHINE.machines.serviceReports.view( ( machineId || mId ) ,id ), '_blank');
+    } else {
+      navigate( PATH_MACHINE.machines.serviceReports.view( machineId ,id ) );
+    }
+  }
 
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
@@ -156,9 +178,16 @@ export default function MachineServiceReportList() {
 
   return (
     <Container maxWidth={false} >
-          <MachineTabContainer currentTabValue='serviceReports' />
+          { machineId && <MachineTabContainer currentTabValue='serviceReports' />}
+          { !machineId && 
+            <StyledCardContainer>
+              <Cover name="Service Reports" icon="mdi:clipboard-text-clock" />
+            </StyledCardContainer>
+          }
         <TableCard>
           <MachineServiceReportListTableToolbar
+            onReload={getReports}
+            reportsPage={reportsPage}
             filterName={ filterName }
             filterStatus={ filterStatus }
             filterStatusType={ statusType } 
@@ -189,14 +218,14 @@ export default function MachineServiceReportList() {
                 />
 
                 <TableBody>
-                  {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
+                  {( ( isLoading || isLoadingReportStatus ) ? [...Array(rowsPerPage)] : dataFiltered)
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) =>
                       row ? (
                         <MachineServiceReportListTableRow
                           key={row._id}
                           row={row}
-                          onViewRow={() => handleViewRow(row._id)}
+                          onViewRow={() => handleViewRow( row?.machine?._id, row._id)}
                           style={index % 2 ? { background: 'red' } : { background: 'green' }}
                         />
                       ) : (
