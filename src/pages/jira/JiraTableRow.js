@@ -27,6 +27,7 @@ JiraTableRow.propTypes = {
   onDeleteRow: PropTypes.func,
   onSelectRow: PropTypes.func,
   onViewRow: PropTypes.func,
+  hiddenColumns: PropTypes.object,
 };
 
 export default function JiraTableRow({
@@ -36,6 +37,7 @@ export default function JiraTableRow({
   onViewRow,
   onSelectRow,
   onDeleteRow,
+  hiddenColumns
 }) {
 
   const { id, self, key, Organizations, fields, expand } = row;
@@ -44,13 +46,13 @@ export default function JiraTableRow({
 
   return (
     <StyledTableRow hover selected={selected}>
-      <TableCell align="left">{fDate(fields?.created)}</TableCell>
-      <LinkTableCell align="left" onClick={() => onViewRow( key )} param={key || ''} />
-      <TableCell align="left">{fields?.summary || ''}</TableCell>
-      <TableCell align="left">{fields?.customfield_10002[0]?.name || ''}</TableCell>
-      <TableCell align="left">{fields?.customfield_10069 || ''}</TableCell>
-      <TableCell align="left">{fields?.customfield_10070?.value || ''}</TableCell>
-      <TableCell align="left">{fields?.status?.statusCategory?.name && <Chip sx={getJiraStatusSX(fields)} label={fields?.status?.name || ''} />}</TableCell>
+      {!hiddenColumns?.['fields.created'] && <TableCell align="left">{fDate(fields?.created)}</TableCell>}
+      {!hiddenColumns?.key && <LinkTableCell align="left" onClick={() => onViewRow( key )} param={key || ''} />}
+      {!hiddenColumns?.['fields.summary'] && <TableCell align="left">{fields?.summary || ''}</TableCell>}
+      {!hiddenColumns?.['fields.customfield_10002[0].name'] && <TableCell align="left">{fields?.customfield_10002[0]?.name || ''}</TableCell>}
+      {!hiddenColumns?.['fields.customfield_10069'] && <TableCell align="left">{fields?.customfield_10069 || ''}</TableCell>}
+      {!hiddenColumns?.['fields.customfield_10070.value'] && <TableCell align="left">{fields?.customfield_10070?.value || ''}</TableCell>}
+      {!hiddenColumns?.['fields.status.name'] && <TableCell align="left">{fields?.status?.statusCategory?.name && <Chip sx={getJiraStatusSX(fields)} label={fields?.status?.name || ''} />}</TableCell>}
     </StyledTableRow>
   );
 }
