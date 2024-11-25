@@ -147,7 +147,7 @@ const ViewHistory = ({ name, label, historicalData, methods }) => {
           </>
         }
       { id && !isEditing &&
-      <Grid container item md={12} sx={{ px: 0.5, pt: 1, display:"block", alignItems: 'center', whiteSpace: 'pre-line', overflowWrap: 'break-word'  }}>
+      <Grid container item md={12} sx={{ pt: 1, display:"block", alignItems: 'center', whiteSpace: 'pre-line', overflowWrap: 'break-word'  }}>
         { !isEditing && currentData?.note && currentData?.note?.trim() &&
           <Typography variant="body2" sx={{color: 'text.disabled', }}>
             <FormLabel content={`${ label || currentData?.type || "Notes"}:`} />
