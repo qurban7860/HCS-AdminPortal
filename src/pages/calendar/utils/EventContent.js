@@ -30,22 +30,24 @@ const EventContent = ({ info }) => {
         placement='top-start'
         tooltipcolor={theme.palette.primary.main}
     >
-        <div className="fc-event-main-frame" style={{ display: 'flex', alignItems: 'center', position: 'relative', zIndex: 10 }} >
-            <PriorityIcon priority={priority} noMediumIcon />
+        <div className="fc-event-main-frame" style={{ display: 'flex', alignItems: 'center', position: 'relative', zIndex: 10, 
+            textDecoration: status === 'Cancelled' ? 'line-through' : 'none',
+            textDecorationColor: status === 'Cancelled' ? StatusColor(status) : 'inherit' }} >
             {status && (
               <div className="fc-event-status" style={{ marginRight: 4,  display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Iconify
                   icon="fluent-mdl2:status-circle-inner" 
-                  width={12} 
-                  height={12} 
+                  width={16} 
+                  height={16} 
                   color={StatusColor(status)} 
                 />
               </div>
             )}
             <div className="fc-event-time" style={{ marginRight: 4 }}>{timeText}</div>
             <div className="fc-event-title-container" >
-                <div className="fc-event-title fc-sticky">{title}</div>
+                <div className="fc-event-title fc-sticky"  style={{ textDecoration: status === 'Cancelled' ? 'line-through' : 'none', textDecorationColor: status === 'Cancelled' ? StatusColor(status) : 'inherit' }}>{title}</div>
             </div>
+            <PriorityIcon priority={priority} noMediumIcon />
         </div>
     </StyledTooltip>
   );
