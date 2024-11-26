@@ -44,7 +44,7 @@ MachineServiceReportList.propTypes = {
 }
 
 export default function MachineServiceReportList( { reportsPage }) {
-  console.log("reportsPage : ",reportsPage)
+  
   const { machine } = useSelector((state) => state.machine);
   const { machineServiceReports, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.machineServiceReport);
   const { activeServiceReportStatuses, isLoadingReportStatus } = useSelector( (state) => state.serviceReportStatuses );
@@ -91,11 +91,18 @@ export default function MachineServiceReportList( { reportsPage }) {
   const [filterStatus, setFilterStatus] = useState(null);
   const [statusType, setStatusType] = useState([ 'To Do', 'In Progress' ]);
 
+  useEffect(() => {
+    dispatch(getActiveServiceReportStatuses() )
+    return () => {
+      dispatch( resetActiveServiceReportStatuses() )
+      dispatch( resetMachineServiceReports() );
+    };
+  }, [ dispatch ]);
+
   const getReports = useCallback( async ()=>{
     await dispatch(setSendEmailDialog(false));
-    await dispatch(getActiveServiceReportStatuses() )
     await dispatch(setDetailPageFlag(false));
-    if ( !isLoadingReportStatus ) {
+    if( !isLoadingReportStatus && Array.isArray( activeServiceReportStatuses ) && activeServiceReportStatuses?.length > 0 ){
       const matchedStatusIds = [
         ...(filterStatus?._id ? [filterStatus._id] : []),
         ... await activeServiceReportStatuses.filter(({ type }) => 
@@ -104,7 +111,9 @@ export default function MachineServiceReportList( { reportsPage }) {
             )
           ).map(({ _id }) => _id)
       ];
+
       const uniqueStatusIds = [...new Set(matchedStatusIds)];
+
       dispatch(
         getMachineServiceReports({
           page,
@@ -115,15 +124,11 @@ export default function MachineServiceReportList( { reportsPage }) {
         })
       );
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+      // eslint-disable-next-line react-hooks/exhaustive-deps
   },[ dispatch, filterStatus, statusType, isLoadingReportStatus, page, rowsPerPage ])
 
   useLayoutEffect(() => {
     getReports();
-    return () => {
-      dispatch( resetActiveServiceReportStatuses() )
-      dispatch( resetMachineServiceReports() );
-    };
   }, [ dispatch, getReports ]);  
 
   const dataFiltered = applyFilter({
