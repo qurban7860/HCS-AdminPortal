@@ -42,6 +42,7 @@ const slice = createSlice({
     // GET Active STATUSES
     getActiveServiceReportStatusesSuccess(state, action) {
       state.isLoading = false;
+      state.isLoadingReportStatus = false;
       state.activeServiceReportStatuses = action.payload;
       state.initial = true;
     },
@@ -130,6 +131,7 @@ export function getServiceReportStatuses(){
 export function getActiveServiceReportStatuses ( cancelToken ){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
+    dispatch(slice.actions.startLoadingReportStatus());
     try{
       const response = await axios.get(`${CONFIG.SERVER_URL}products/productServiceReportStatus`, 
       {
@@ -139,7 +141,8 @@ export function getActiveServiceReportStatuses ( cancelToken ){
         },
         cancelToken: cancelToken?.token,
       });
-      dispatch(slice.actions.getActiveServiceReportStatusesSuccess(response.data));
+      await dispatch(slice.actions.getActiveServiceReportStatusesSuccess(response.data));
+      return response;
     } catch (error) {
       dispatch(slice.actions.hasError(error.Message));
       throw error;

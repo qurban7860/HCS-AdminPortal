@@ -6,11 +6,13 @@ import { TableCell } from '@mui/material';
 import { fDate } from '../../../utils/formatTime';
 // components
 import LinkTableCell from '../../../components/ListTableTools/LinkTableCell';
+import LinkTableCellWithIconTargetBlank from '../../../components/ListTableTools/LinkTableCellWithIconTargetBlank';
 import { StyledTableRow, StyledTooltip } from '../../../theme/styles/default-styles';
 import Iconify from '../../../components/iconify';
 import { ICONS } from '../../../constants/icons/default-icons';
 import { getMachineForDialog, setMachineDialog } from '../../../redux/slices/products/machine';
 import { getCustomer, setCustomerDialog } from '../../../redux/slices/customer/customer';
+import { getSecurityUser, setSecurityUserDialog } from '../../../redux/slices/securityUser/securityUser';
 
 // ----------------------------------------------------------------------
 
@@ -20,8 +22,10 @@ MachineServiceReportListTableRow.propTypes = {
   selected: PropTypes.bool,
   onEditRow: PropTypes.func,
   onViewRow: PropTypes.func,
+  openInNewPage: PropTypes.func,
   onSelectRow: PropTypes.func,
   onDeleteRow: PropTypes.func,
+  reportsPage: PropTypes.bool,
 };
 
 
@@ -33,6 +37,8 @@ export default function MachineServiceReportListTableRow({
   onDeleteRow,
   onEditRow,
   onViewRow,
+  openInNewPage,
+  reportsPage
 }) {
 
   const { serviceReportTemplate, serviceReportUID, status, currentApprovalStatus, customer, machine, serviceDate, isActive, createdBy } = row;
@@ -48,6 +54,12 @@ export default function MachineServiceReportListTableRow({
     event.preventDefault(); 
     await dispatch(getMachineForDialog(MachineID));
     await dispatch(setMachineDialog(true)); 
+  };
+
+  const handleUserDialog = async ( event, UserID ) => {
+    event.preventDefault(); 
+    await dispatch(getSecurityUser(UserID));
+    await dispatch(setSecurityUserDialog(true)); 
   };
 
   return (
@@ -68,17 +80,20 @@ export default function MachineServiceReportListTableRow({
         <TableCell>
           {serviceReportTemplate?.reportType || "" }
         </TableCell>
-        <LinkTableCell align="left" onClick={onViewRow} param={ serviceReportUID } />
-        <LinkTableCell align="left" 
+        <LinkTableCellWithIconTargetBlank align="left" onClick={ reportsPage ? openInNewPage : undefined } onViewRow={onViewRow} param={ serviceReportUID } />
+        { reportsPage && <LinkTableCell align="left" 
           onClick={ (event)=> handleMachineDialog(event, machine?._id) } 
           param={ machine?.serialNo || "" } 
-        />
+        />}
         <LinkTableCell align="left" 
           onClick={(event)=> handleCustomerDialog(event, customer?._id)} 
           param={ customer?.name || "" } 
         />
         <TableCell align="left">{ `${currentApprovalStatus !== "PENDING" ? currentApprovalStatus : status?.name || ''} `}</TableCell>
-        <TableCell align="left">{createdBy.name}</TableCell>
+        <LinkTableCell align="left" 
+          onClick={(event)=> handleUserDialog(event, createdBy?._id || '')} 
+          param={ createdBy.name || "" } 
+        />
       </StyledTableRow>
 
   );
