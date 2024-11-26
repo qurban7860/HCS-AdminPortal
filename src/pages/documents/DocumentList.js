@@ -413,41 +413,48 @@ const TABLE_HEAD = useMemo(() => {
       dispatch(getActiveDocumentTypes());
     }
   }, [dispatch, machineDrawings]);
+
+  useEffect(() => {
+    if (activeDocumentCategories && activeDocumentCategories.length > 0) {
+      setCategoryVal(activeDocumentCategories[0]);
+      dispatch(getActiveDocumentTypesWithCategory(activeDocumentCategories[0]._id));
+    }
+  }, [activeDocumentCategories, dispatch]);
   
   const handleCategoryChange = (event, newValue) => {
     if (newValue) {
       setCategoryVal(newValue);
-      dispatch(getActiveDocumentTypesWithCategory(newValue._id)); 
+      dispatch(getActiveDocumentTypesWithCategory(newValue._id));
   
       if (typeVal?.docCategory?._id !== newValue._id) {
         setTypeVal(null);
       }
     } else {
-      setCategoryVal(null); 
-      setTypeVal(null); 
-      dispatch(getActiveDocumentTypesWithCategory(null)); 
+      setCategoryVal(null);
+      setTypeVal(null);
+      dispatch(getActiveDocumentTypesWithCategory(null));
       afterClearHandler();
     }
-  };  
+  };
   
   const handleTypeChange = (event, newValue) => {
     if (newValue) {
-      setTypeVal(newValue); 
+      setTypeVal(newValue);
   
       if (!categoryVal) {
-        setCategoryVal(newValue.docCategory); 
+        setCategoryVal(newValue.docCategory);
         dispatch(getActiveDocumentTypesWithCategory(newValue.docCategory._id));
       }
     } else {
-      setTypeVal(null); 
+      setTypeVal(null);
       afterClearHandler();
     }
-  };  
-
+  };
+  
   const handleHiddenColumns = async (arg) => {
     dispatch(setReportHiddenColumns(arg));
   };
-
+  
   return (
     <>
       {/* <Container sx={{mb:3}}> */}
