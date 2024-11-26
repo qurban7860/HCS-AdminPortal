@@ -479,7 +479,7 @@ function ViewFormEditDeleteButtons({
           {showDetails && transferredHistory !== undefined && transferredHistory?.length > 0 &&
             <Badge badgeContent={transferredHistory?.length || '0' } color="info">
               <IconTooltip
-                title='Ownership Detail'
+                title='Ownership History'
                 color={ICONS.TRANSFERHISTORY.color}
                 icon={ICONS.TRANSFERHISTORY.icon}
                 onClick={handleTransferHistoryPopoverOpen}
@@ -974,7 +974,7 @@ function ViewFormEditDeleteButtons({
         open={transferHistoryAnchorEl}
         onClose={handleTransferHistoryPopoverClose}
         ListArr={transferHistory}
-        ListTitle="Ownership Detail"
+        ListTitle="Ownership History"
       />
 
       <ViewFormMachineSettingHistoryMenuPopover
