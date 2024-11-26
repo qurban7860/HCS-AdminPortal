@@ -378,19 +378,9 @@ const TABLE_HEAD = useMemo(() => {
 
     if (docCategoryId || docTypeId || (filteredSearchKey && selectedSearchFilter)) {
       dispatch(
-        getDocuments(
-          null, 
-          null, 
-          machineDrawings || null, 
-          page,
+        getDocuments( null, null, machineDrawings || null, page,
           machineDrawings ? machineDrawingsRowsPerPage : documentRowsPerPage,
-          null, 
-          null, 
-          cancelTokenSource,
-          filteredSearchKey || null, 
-          selectedSearchFilter || null,
-          docCategoryId,
-          docTypeId 
+          null, null, cancelTokenSource, filteredSearchKey || null, selectedSearchFilter || null, docCategoryId, docTypeId 
         )
       );
     }
@@ -400,7 +390,8 @@ const TABLE_HEAD = useMemo(() => {
     setCategoryVal(null); 
     setTypeVal(null); 
     dispatch(
-      getDocuments(null, null, machineDrawings || null, page, machineDrawings ? machineDrawingsRowsPerPage : documentRowsPerPage, null, null, cancelTokenSource, null, null, null, null )
+      getDocuments(null, null, machineDrawings || null, page, machineDrawings ? machineDrawingsRowsPerPage : documentRowsPerPage,
+        null, null, cancelTokenSource, null, null, null, null )
     );
   };  
   
@@ -483,8 +474,8 @@ const TABLE_HEAD = useMemo(() => {
           />
           <Autocomplete
             id="type-autocomplete"
-            value={typeVal || null}
-            options={activeDocumentTypes || []}
+            value={categoryVal ? typeVal : null} 
+            options={categoryVal ? activeDocumentTypes : []}
             getOptionLabel={(option) => option.name || ''}
             onChange={handleTypeChange}
             renderInput={(params) => <TextField {...params} size="small" label="Type" />}
