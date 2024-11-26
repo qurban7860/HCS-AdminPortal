@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import debounce from 'lodash/debounce';
-import { useState, useEffect, useLayoutEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef, useCallback, useMemo } from 'react';
 // @mui
 import { Container, Table, TableBody, TableContainer } from '@mui/material';
 // routes
@@ -39,29 +39,39 @@ import MachineTabContainer from '../util/MachineTabContainer';
 
 // ----------------------------------------------------------------------
 
-
-const TABLE_HEAD = [
-  { id: 'checkboxes', label: ' ', align: 'left' },
-  { id: 'serviceDate', label: 'Service Date', align: 'left' },
-  { id: 'serviceReportTemplate.reportType', label: 'Type', align: 'left' },
-  { id: 'serviceReportUID', label: 'Service ID', align: 'left' },
-  { id: 'machine.serialNo', label: 'Machine', align: 'left' },
-  { id: 'customer.name', label: 'Customer', align: 'left' },
-  { id: 'status.name', label: 'Status', align: 'left' },
-  { id: 'createdBy.name', label: 'Created By', align: 'left' },
-];
-// ----------------------------------------------------------------------
-
 MachineServiceReportList.propTypes = {
   reportsPage: PropTypes.bool,
 }
 
 export default function MachineServiceReportList( { reportsPage }) {
+  console.log("reportsPage : ",reportsPage)
   const { machine } = useSelector((state) => state.machine);
   const { machineServiceReports, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.machineServiceReport);
   const { activeServiceReportStatuses, isLoadingReportStatus } = useSelector( (state) => state.serviceReportStatuses );
   const navigate = useNavigate();
   const { machineId } = useParams();
+
+  const TABLE_HEAD = useMemo(() => {
+    const baseHeaders =  [
+      { id: 'checkboxes', label: ' ', align: 'left' },
+      { id: 'serviceDate', label: 'Service Date', align: 'left' },
+      { id: 'serviceReportTemplate.reportType', label: 'Type', align: 'left' },
+      { id: 'serviceReportUID', label: 'Service ID', align: 'left' },
+      { id: 'customer.name', label: 'Customer', align: 'left' },
+      { id: 'status.name', label: 'Status', align: 'left' },
+      { id: 'createdBy.name', label: 'Created By', align: 'left' },
+    ];
+  
+    if ( reportsPage ) {
+      return [
+        ...baseHeaders.slice(0, 4),
+        { id: 'machine.serialNo', label: 'Machine', align: 'left' },
+        ...baseHeaders.slice(4),
+      ];
+    }
+
+    return baseHeaders;
+  }, [ reportsPage ] );
 
   const {
     order,
@@ -164,12 +174,12 @@ export default function MachineServiceReportList( { reportsPage }) {
     }
   }
 
-  const handleViewRow = async ( mId, id) => { 
-    if( mId && !machineId ){
+  const handleViewRow = async ( mId, id ) => { 
+    navigate( PATH_MACHINE.machines.serviceReports.view( ( machineId || mId ), id ) );
+  }
+
+  const openInNewPage = async ( mId, id) => { 
       window.open(PATH_MACHINE.machines.serviceReports.view( ( machineId || mId ) ,id ), '_blank');
-    } else {
-      navigate( PATH_MACHINE.machines.serviceReports.view( machineId ,id ) );
-    }
   }
 
   const handleResetFilter = () => {
@@ -224,9 +234,11 @@ export default function MachineServiceReportList( { reportsPage }) {
                     .map((row, index) =>
                       row ? (
                         <MachineServiceReportListTableRow
+                          reportsPage={reportsPage}
                           key={row._id}
                           row={row}
-                          onViewRow={() => handleViewRow( row?.machine?._id, row._id)}
+                          onViewRow={() => handleViewRow( row?.machine?._id, row._id )}
+                          openInNewPage={() => openInNewPage( row?.machine?._id, row._id ) }
                           style={index % 2 ? { background: 'red' } : { background: 'green' }}
                         />
                       ) : (

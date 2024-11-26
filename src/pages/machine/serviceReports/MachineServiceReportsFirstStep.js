@@ -69,6 +69,7 @@ function MachineServiceReportsFirstStep( { handleComplete, handleDraftRequest, h
         technicianNotes:              '',
         textBeforeCheckItems:         '',
         textAfterCheckItems:          '',
+        reportSubmission:             '',
         files: machineServiceReport?.reportDocs?.map(file => ({
           key: file?._id,
           _id: file?._id,
