@@ -96,7 +96,7 @@ const RHFNoteFields = ({ name, label, historicalData, isTechnician, isOperator, 
 
 
 
-  const handleSave = async () => {
+  const handleSave = methods.handleSubmit( async () => {
     try{
       setLoading(true);
       if( watchedValues?._id && isEditing ){
@@ -114,7 +114,7 @@ const RHFNoteFields = ({ name, label, historicalData, isTechnician, isOperator, 
       setLoading(false);
       enqueueSnackbar(error?.message || "Note save failed!", { variant: `error` });
     }
-  };
+  });
 
   const onEdit = async ( noteData ) => {
     setValue('_id',noteData?._id || '')
@@ -197,7 +197,7 @@ const RHFNoteFields = ({ name, label, historicalData, isTechnician, isOperator, 
                 { id &&
                   <>
                     { isEditing && <Button size='small' variant='outlined' onClick={ handleCancel } disabled={ loading } >cancel</Button>}
-                    <LoadingButton disabled={ !isChanged || isLoading || loading || isSubmitting } onClick={ handleSave } loading={ isLoadingReportNote } size='small' variant='contained'>{ isEditing ? "Update" : "Save" }</LoadingButton>
+                    <LoadingButton disabled={ !isChanged || loading || isSubmitting || isLoadingReportNote } onClick={ handleSave } loading={ loading || isSubmitting } size='small' variant='contained'>{ isEditing ? "Update" : "Save" }</LoadingButton>
                   </>
                 }
               </Grid>
