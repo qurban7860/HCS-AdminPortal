@@ -288,7 +288,7 @@ export const MachineServiceReportPart1Schema = Yup.object().shape({
     .label('Service Date'),
   reportSubmition: Yup.string().max(12).nullable(),
   technician: Yup.object().label('Technician').nullable(),
-  technicianNotes: Yup.string().max(5000).label('Technician Notes'),
+  // technicianNotes: Yup.string().max(5000).label('Technician Notes'),
   files: Yup.mixed()
   .nullable(true)
   .when('reportSubmition', {
@@ -301,6 +301,13 @@ export const MachineServiceReportPart1Schema = Yup.object().shape({
   }),
 });
 
+export const reportNoteSchema = Yup.object().shape({
+  technicians: Yup.array().label('Technicians').nullable(),
+  operators: Yup.array().label('Operator').nullable(),
+  note: Yup.string().max(5000).label('Operator Notes').required(),
+  isPublic: Yup.boolean(),
+});
+
 export const MachineServiceReportPart2TBCISchema = Yup.object().shape({
   textBeforeCheckItems: Yup.string().max(5000).label('Text Before Check Items'),
 });
@@ -310,13 +317,13 @@ export const MachineServiceReportPart2TACISchema = Yup.object().shape({
 });
 
 export const MachineServiceReportPart3Schema = Yup.object().shape({
-  serviceNote: Yup.string().max(5000).label('Service Note'),
-  recommendationNote: Yup.string().max(5000).label('Recommendation Note'),
-  internalComments: Yup.string().max(5000).label('Internal Note'),
-  suggestedSpares: Yup.string().max(5000).label('Suggested Spares'),
-  internalNote: Yup.string().max(5000).label('Internal Note'),
-  operators: Yup.array().label('Operator').nullable(),
-  operatorNotes: Yup.string().max(5000).label('Operator Notes'),
+  // serviceNote: Yup.string().max(5000).label('Service Note'),
+  // recommendationNote: Yup.string().max(5000).label('Recommendation Note'),
+  // internalComments: Yup.string().max(5000).label('Internal Note'),
+  // suggestedSpares: Yup.string().max(5000).label('Suggested Spares'),
+  // internalNote: Yup.string().max(5000).label('Internal Note'),
+  // operators: Yup.array().label('Operator').nullable(),
+  // operatorNotes: Yup.string().max(5000).label('Operator Notes'),
   files: Yup.mixed()
     .required(Snacks.fileRequired)
     .test('fileType', fileTypesMessage, NotRequiredValidateFileType)

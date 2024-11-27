@@ -570,7 +570,7 @@ export function addMachineServiceReport(machineId, params) {
           status:                     params?.status || 'DRAFT',
           machine:                    machineId,
           decoilers:                  params?.decoilers?.map((dec)=> dec?._id),
-          technician:                 params?.technician?._id,
+          technicians:                params?.technicians,
           technicianNotes:            params?.technicianNotes,
           textBeforeCheckItems:       params?.textBeforeCheckItems,
           textAfterCheckItems:        params?.textAfterCheckItems,
@@ -653,11 +653,14 @@ export function addServiceReportNote( serviceReportId, name, data ) {
   return async (dispatch) => {
     try {
       dispatch(slice.actions.startLoadingReportNote());
-      const params = { 
-        [data.name]: data?.note || "",
-        technician: data?.technician,
-        operators: data?.operators
-       };
+      const params = {
+        [name]: { 
+          note: data?.note,
+          technicians: data?.technicians?.map( tn => tn?._id ),
+          operators: data?.operators?.map( op => op?._id ),
+          isPublic: data?.isPublic,
+        }
+      }
       const response = await axios.post(`${CONFIG.SERVER_URL}products/serviceReport/${serviceReportId}/notes`, params );
       await dispatch(slice.actions.addServiceReportNoteSuccess( { name, data: response.data }));
     } catch (error) {
@@ -676,8 +679,9 @@ export function updateServiceReportNote( serviceReportId, Id, name, data ) {
       dispatch(slice.actions.startLoadingReportNote());
       const params = { 
         note: data?.note || "",
-        technician: data?.technician,
-        operators: data?.operators
+        technicians: data?.technicians,
+        operators: data?.operators,
+        isPublic: data?.isPublic,
        };
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/serviceReport/${serviceReportId}/notes/${Id}`, params );
       await dispatch(slice.actions.updateServiceReportNoteSuccess({ name, data: response.data }));
@@ -701,7 +705,7 @@ export function updateMachineServiceReport(machineId, id, params) {
         customer:                   params?.customer,
         site:                       params?.site,
         machine:                    machineId,
-        technician:                 params?.technician?._id,
+        technicians:                 params?.technicians,
         technicianNotes:            params?.technicianNotes,
         textBeforeCheckItems:       params?.textBeforeCheckItems,
         textAfterCheckItems:        params?.textAfterCheckItems,

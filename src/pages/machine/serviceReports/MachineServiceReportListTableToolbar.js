@@ -93,7 +93,7 @@ export default function MachineServiceReportListTableToolbar({
               getOptionLabel={(option) => option}
               onChange={ onFilterStatusType }
               renderOption={(props, option) => ( <li {...props} key={option}>{option || ''}</li> )}
-              renderInput={(params) => <TextField {...params} size='small' label="Type" />}
+              renderInput={(params) => <TextField {...params} size='small' label="Status Type" />}
             /> 
           </Grid>
           </>
