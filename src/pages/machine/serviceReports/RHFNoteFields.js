@@ -197,7 +197,7 @@ const RHFNoteFields = ({ name, label, historicalData, isTechnician, isOperator, 
                 { id &&
                   <>
                     { isEditing && <Button size='small' variant='outlined' onClick={ handleCancel } disabled={ loading } >cancel</Button>}
-                    <LoadingButton disabled={ !isChanged || isLoading || loading || isSubmitting } onClick={ handleSave } loading={ isLoadingReportNote } size='small' variant='contained'>{ isEditing ? "Update" : "Save" }</LoadingButton>
+                    <LoadingButton disabled={ !isChanged || loading || isSubmitting || isLoadingReportNote } onClick={ handleSave } loading={ loading || isSubmitting } size='small' variant='contained'>{ isEditing ? "Update" : "Save" }</LoadingButton>
                   </>
                 }
               </Grid>

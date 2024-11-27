@@ -225,7 +225,7 @@ function MachineServiceReportsThirdStep({handleDraftRequest, handleDiscard, hand
               historicalData={ machineServiceReport?.serviceNote } 
               name="serviceNote" 
               label={`${machineServiceReport?.serviceReportTemplate?.reportType?.toLowerCase() === 'install' ? 'Install' : 'Service' } Note`}
-              parentMethods={methods}
+              setParentValue={ setValue }
             />
           }      
           { machineServiceReport?.serviceReportTemplate?.enableMaintenanceRecommendations && 
@@ -233,7 +233,7 @@ function MachineServiceReportsThirdStep({handleDraftRequest, handleDiscard, hand
               historicalData={ machineServiceReport?.recommendationNote } 
               name="recommendationNote" 
               label="Recommendation Note"
-              parentMethods={methods}
+              setParentValue={ setValue }
             />
           }
           { machineServiceReport?.serviceReportTemplate?.enableSuggestedSpares && 
@@ -241,14 +241,14 @@ function MachineServiceReportsThirdStep({handleDraftRequest, handleDiscard, hand
               name="suggestedSpares" 
               label="Suggested Spares" 
               historicalData={ machineServiceReport?.suggestedSpares } 
-              parentMethods={methods}
+              setParentValue={ setValue }
             />
           }
           <RHFNoteFields 
             name="internalNote" 
             label="Internal Note"
             historicalData={ machineServiceReport?.internalNote } 
-            parentMethods={methods}
+            setParentValue={ setValue }
           />
           
           <RHFNoteFields 
@@ -256,7 +256,7 @@ function MachineServiceReportsThirdStep({handleDraftRequest, handleDiscard, hand
             name="operatorNotes" 
             label="Operator Notes" 
             historicalData={ machineServiceReport?.operatorNotes } 
-            parentMethods={methods}
+            setParentValue={ setValue }
           />
 
           <FormLabel content='Documents / Images' />
