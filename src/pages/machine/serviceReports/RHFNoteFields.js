@@ -96,7 +96,7 @@ const RHFNoteFields = ({ name, label, historicalData, isTechnician, isOperator, 
 
 
 
-  const handleSave = async () => {
+  const handleSave = methods.handleSubmit( async () => {
     try{
       setLoading(true);
       if( watchedValues?._id && isEditing ){
@@ -114,7 +114,7 @@ const RHFNoteFields = ({ name, label, historicalData, isTechnician, isOperator, 
       setLoading(false);
       enqueueSnackbar(error?.message || "Note save failed!", { variant: `error` });
     }
-  };
+  });
 
   const onEdit = async ( noteData ) => {
     setValue('_id',noteData?._id || '')
