@@ -118,7 +118,7 @@ export const machinePersistConfig = {
   key: 'machine',
   storage,
   keyPrefix: 'redux-',
-  blacklist: ['error', 'initial', 'responseMessage', 'machines']
+  blacklist: ['error', 'initial', 'responseMessage', 'machine', 'machines']
 };
 export const suppplierPersistConfig = {
   key: 'supplier',
@@ -316,7 +316,7 @@ export const machineServiceReportPersistConfig={
   key: 'machineServiceReport',
   storage,
   keyPrefix: 'redux-',
-  blacklist: ['error', 'initial', 'responseMessage']
+  blacklist: ['error', 'initial', 'responseMessage', 'machineServiceReport', 'machineServiceReports']
 }
 export const serviceReportTemplatePersistConfig={
   key: 'serviceReportTemplate',
