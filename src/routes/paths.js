@@ -10,6 +10,7 @@ const ROOTS_PORTAL_REGISTRATIONS = '/portalRegistrations';
 const ROOTS_CALENDAR = '/calendar';
 const ROOTS_CRM = '/crm';
 const ROOTS_MACHINE = '/products';
+const ROOTS_MACHINE_SETTING_REPORT = '/machineSettingReports'
 const ROOTS_SERVICE_REPORTS = '/serviceReports'
 const ROOTS_SECURITY = '/security';
 const ROOTS_SETTING = '/settings';
@@ -366,6 +367,12 @@ export const PATH_MACHINE = {
     },
   },
 };
+ 
+export const PATH_MACHINE_SETTING_REPORT = {
+  root: ROOTS_MACHINE_SETTING_REPORT,
+  view: ( id ) => path(ROOTS_MACHINE_SETTING_REPORT, `/${id}/view`),
+};
+
 
 export const PATH_SERVICE_REPORTS = {
   root: ROOTS_SERVICE_REPORTS,
