@@ -15,6 +15,7 @@ import { statusTypes } from '../util';
 import { fDate, stringToDate } from '../../../utils/formatTime';
 import CheckedItemValueHistory from './CheckedItemValueHistory';
 import CheckedItemValueRow from './CheckedItemValueRow';
+import StatusAndComment from './StatusAndComment';
 import { CheckItemSchema } from '../../schemas/machine';
 import SkeletonPDF from '../../../components/skeleton/SkeletonPDF';
 
@@ -305,16 +306,22 @@ const CheckedItemInputRow = memo(({ index, childIndex, checkItemListId, rowData 
 
               {rowData?.historicalData?.length > 0 && (
                 <>
+            <StatusAndComment
+              index={index}
+              childIndex={childIndex}
+              key={rowData._id}
+              childRow={rowData}
+            />
                 {/* <CheckedItemValueRow
                   machineId={machineId}
                   value={rowData}
                   index={childIndex}
                   key={rowData._id}
                 /> */}
-                <CheckedItemValueHistory
+                {/* <CheckedItemValueHistory
                   historicalData={rowData.historicalData}
                   inputType={rowData.inputType}
-                />
+                /> */}
                 </>
               )}
             </Stack>

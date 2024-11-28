@@ -13,9 +13,9 @@ const CheckedItemValueHistory = ({ historicalData, inputType }) => {
   };
 
   return (
-    <Grid container display='flex' direction='row-reverse'>
+    <Grid container display='flex' >
         <StyledTooltip tooltipcolor='#2065D1' placement="top" title={showHistory?"Hide History":"Show History"}>
-          <IconButton onClick={toggleHistory}><Iconify icon={showHistory?'eva:arrow-ios-upward-fill':'eva:arrow-ios-downward-fill'} /></IconButton>
+          <IconButton onClick={toggleHistory}><Iconify icon="mdi:history" /></IconButton>
         </StyledTooltip>
       {showHistory && (
         <Grid item md={12} sx={{ backgroundColor: '#f3f4f594', p: 1, borderRadius: '7px', border: '1px solid #e1e1e1' }}>
