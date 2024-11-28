@@ -607,9 +607,10 @@ function MachineServiceReportViewForm(  ) {
           <ViewNoteHistory label="Internal Note" historicalData={defaultValues.internalNote} />
           {/* <ViewFormField isLoading={isLoading} sm={12} heading="Operators" chipDialogArrayParam={operators} /> */}
           <ViewNoteHistory label="Operator Notes" historicalData={defaultValues.operatorNotes} />
-          {machineServiceReport?.files?.length > 0 && 
+          { defaultValues?.reportSubmission && machineServiceReport?.files?.length > 0 && 
           <FormLabel content='Documents / Images' />
           }
+          { defaultValues?.reportSubmission &&
           <Box
             sx={{my:1, width:'100%'}}
             gap={2}
@@ -623,7 +624,7 @@ function MachineServiceReportViewForm(  ) {
             }}
           >
 
-          {slides?.map((file, _index) => (
+          { slides?.map((file, _index) => (
             <DocumentGalleryItem isLoading={isLoading} key={file?._id} image={file} 
               onOpenLightbox={()=> handleOpenLightbox(_index)}
               onDownloadFile={()=> handleDownloadReportFile(file._id, file?.name, file?.extension)}
@@ -633,7 +634,7 @@ function MachineServiceReportViewForm(  ) {
             />
           ))}
 
-          {machineServiceReport?.files?.map((file, _index) => !file.fileType.startsWith("image") && (
+          { machineServiceReport?.files?.map((file, _index) => !file.fileType.startsWith("image") && (
               <DocumentGalleryItem isLoading={isLoading} key={file?._id} image={file} 
                 onOpenFile={()=> handleOpenFile(file._id, file?.name, file?.extension)}
                 onDownloadFile={()=> handleDownloadReportFile(file._id, file?.name, file?.extension)}
@@ -643,11 +644,10 @@ function MachineServiceReportViewForm(  ) {
               />
             ))}
 
-          { !defaultValues?.reportSubmission && 
-            machineServiceReport?.status?.name?.toUpperCase() === 'DRAFT' && 
+          { machineServiceReport?.status?.name?.toUpperCase() === 'DRAFT' && 
             <ThumbnailDocButton onClick={handleAddFileDialog}/>
           }
-        </Box>
+        </Box>}
           
           <ViewFormAudit defaultValues={defaultValues} />
 

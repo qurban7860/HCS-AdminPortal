@@ -129,12 +129,9 @@ function MachineServiceReportsFirstStep( { handleComplete, handleDraftRequest, h
     const { docReportType, serviceReportTemplate, reportSubmission, files } = watch();
     const watchValues = watch();
 
-    console.log(' watchValues first step : ',watchValues)
-
       const onSubmit = async (data) => {
         try {
-
-          if(isSubmit){
+          if( ( isSubmit || !reportSubmission ) && !isDraft ){
             data.status = 'SUBMITTED'
           }
           if(!data.technician){
@@ -351,7 +348,6 @@ return (
                     historicalData={ machineServiceReport?.technicianNotes }
                     setParentValue={ setValue }
                   />
-                  <Grid container item sm={12} sx={{ display: 'flex', }} >
                     <RHFRadioGroup 
                       name="reportSubmission"
                       row
@@ -359,9 +355,12 @@ return (
                         { value: false, label:'Off-line'}, 
                         { value: true, label:'Online'}
                       ]}
-                      onChange={() => setValue('reportSubmission',!reportSubmission)}
+                      sx={{ my: -1 }}
+                      onChange={() => {
+                        setIsSubmit(!isSubmit)
+                        setValue('reportSubmission',!reportSubmission)
+                      }}
                     />
-                  </Grid>
                   {
                     !reportSubmission && 
                   <>
@@ -375,7 +374,7 @@ return (
                     />
                   </>}
           </Stack>
-          <ServiceRecodStepButtons isSubmit={ !reportSubmission } handleSubmit={reportSubmission ? saveAsSubmit : undefined } isSubmitted={isSubmit} handleDraft={saveAsDraft} isDraft={isDraft} isSubmitting={isSubmitting} />
+          <ServiceRecodStepButtons reportSubmission={ !reportSubmission } handleSubmit={reportSubmission ? saveAsSubmit : undefined } isSubmitted={isSubmit} handleDraft={saveAsDraft} isDraft={isDraft} isSubmitting={isSubmitting} />
           </>
         }
     </FormProvider>
