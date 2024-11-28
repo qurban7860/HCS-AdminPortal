@@ -14,7 +14,7 @@ import Lightbox from '../../../components/lightbox/Lightbox';
 import CheckedItemValueHistory from './CheckedItemValueHistory';
 import SkeletonPDF from '../../../components/skeleton/SkeletonPDF';
 
-const StatusAndComment = ({index, childIndex, childRow, machineId, primaryServiceReportId}) => {
+const StatusAndComment = ({index, childIndex, childRow, isBorder, machineId, primaryServiceReportId}) => {
     const { machineServiceReport } = useSelector((state) => state.machineServiceReport);
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
@@ -140,9 +140,15 @@ const StatusAndComment = ({index, childIndex, childRow, machineId, primaryServic
 
   return (
     <TableRow key={childRow._id} sx={{ backgroundColor: 'none',}} >
-    <Grid item md={12} sx={{mt: childIndex !==0 && 0.5, p:1,  border: '1px solid #e8e8e8',  borderRadius:'7px',backgroundColor: 'white' }} >
+    <Grid item md={12} sx={{mt: childIndex !==0 && 0.5, 
+          ...(isBorder && {
+            p: 1,
+            border: '1px solid #e8e8e8',
+            borderRadius: '7px',
+            backgroundColor: 'white',
+          } || [] ) }} >
       <Grid item md={12} sx={{ display: reportValue?.checkItemValue ? 'block' : 'flex'}}>
-        <Typography variant="body2" ><b>{`${index+1}.${childIndex+1}- `}</b>{`${childRow.name}`}</Typography>
+        { isBorder && <Typography variant="body2" ><b>{`${index+1}.${childIndex+1}- `}</b>{`${childRow.name}`}</Typography>}
         {reportValue?.checkItemValue && 
           <Grid >
             <Grid sx={{ mt:1,
@@ -250,6 +256,7 @@ StatusAndComment.propTypes = {
     childIndex: PropTypes.number,
     childRow: PropTypes.object,
     machineId: PropTypes.string,
+    isBorder: PropTypes.bool,
     primaryServiceReportId: PropTypes.string,
   };
 export default memo(StatusAndComment)

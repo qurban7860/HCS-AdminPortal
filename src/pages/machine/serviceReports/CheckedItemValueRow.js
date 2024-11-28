@@ -15,6 +15,7 @@ const CheckedItemValueRow = ({value, index, machineId, primaryServiceReportId })
           <TableBody  >
           {value?.checkItems?.map((childRow, childIndex) => (
             <StatusAndComment
+              isBorder
               machineId={machineId}
               primaryServiceReportId={primaryServiceReportId}
               index={index}
