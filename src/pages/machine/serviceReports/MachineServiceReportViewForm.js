@@ -521,7 +521,7 @@ function MachineServiceReportViewForm(  ) {
           />
           <ViewNoteHistory label="Technician Notes" historicalData={machineServiceReport.technicianNotes} />
 
-          { machineServiceReport?.reportDocs?.length > 0 &&
+          { !defaultValues?.reportSubmission && machineServiceReport?.reportDocs?.length > 0 &&
           <>
             <FormLabel content='Reporting Documents' />
             <Box
