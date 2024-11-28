@@ -304,7 +304,7 @@ export const MachineServiceReportPart1Schema = Yup.object().shape({
 export const reportNoteSchema = Yup.object().shape({
   technicians: Yup.array().label('Technicians').nullable(),
   operators: Yup.array().label('Operator').nullable(),
-  note: Yup.string().max(5000).label('Operator Notes').required(),
+  note: Yup.string().max(5000).label('Operator Notes').trim().required(),
   isPublic: Yup.boolean(),
 });
 

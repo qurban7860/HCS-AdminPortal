@@ -23,7 +23,7 @@ const HistoryNotes = ({ historicalData }) =>  {
 
 return(
   <>
-  { Array.isArray(historicalData) && historicalData?.length > 0 && <Grid container item md={12} sx={{ px: 0.5 }} >
+  { Array.isArray(historicalData) && historicalData?.length > 0 && <Grid container item md={12}  >
       <Grid container item md={12} sx={{ display: 'flex', justifyContent: "flex-start" , alignItems: 'center', whiteSpace: 'pre-line', wordBreak: 'break-word'  }}>
         {/* <Typography variant="body2" sx={{ color: 'text.disabled', cursor: "pointer" }} onClick={toggleHistory} >
           <b>{`${showHistory ? "Hide " : "Show "} more:`}</b>

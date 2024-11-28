@@ -47,8 +47,8 @@ const RHFNoteFields = ({ name, label, historicalData, isTechnician, isOperator, 
   const methods = useForm({
     resolver: yupResolver( reportNoteSchema ),
     defaultValues,
-    mode: 'onChange',
-    reValidateMode: 'onChange',
+    mode: 'onBlur',
+    reValidateMode: 'onSubmit',
   });
 
   const {
@@ -59,15 +59,15 @@ const RHFNoteFields = ({ name, label, historicalData, isTechnician, isOperator, 
   } = methods;
 
   const watchedValues = watch(); 
-  // const watchedValues = watch([ '_id', 'technicians', 'operators', 'note', 'isPublic']);
+  const { _id, technicians, operators, note, isPublic } = watch(); 
 
-  // console.log('watchedValues : ',watchedValues)
+  console.log('watchedValues : ',watchedValues)
   // console.log('defaultValues : ',defaultValues)
 
-  // useEffect(()=>{
-  //   setParentValue(name,watchedValues);
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // },[ watchedValues ])
+  useEffect(()=>{
+    setParentValue(name,{ _id, technicians, operators, note, isPublic });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[ _id, technicians, operators, note, isPublic ])
 
   const isChanged = useMemo(() => 
     JSON.stringify(defaultValues) !== JSON.stringify(watchedValues)
@@ -146,7 +146,7 @@ const RHFNoteFields = ({ name, label, historicalData, isTechnician, isOperator, 
 
   return (
     <FormProvider methods={methods} >
-      <Grid container sx={{ mb: 1}}>
+      <Grid container >
           { ( name ||( currentData?.note && currentData?.note?.trim()) ) && 
             <FormLabel content={`${ label || currentData?.type || "Notes"}:`} /> }
           { (isEditing || name ) && methods && 
@@ -192,12 +192,20 @@ const RHFNoteFields = ({ name, label, historicalData, isTechnician, isOperator, 
                 name='note'
                 label={ label || currentData?.type || "Notes"}
               />  
-              <Grid container display='flex' direction='row' alignItems="center" justifyContent='flex-end' gap={ 2 }>
-                <RHFSwitch label='Public' name='isPublic' />
+              <Grid container display='flex' direction='row' alignItems="center" justifyContent='flex-end' >
+                {/* <RHFSwitch label='Public' name='isPublic' /> */}
                 { id &&
                   <>
                     { isEditing && <Button size='small' variant='outlined' onClick={ handleCancel } disabled={ loading } >cancel</Button>}
-                    <LoadingButton disabled={ !isChanged || loading || isSubmitting || isLoadingReportNote } onClick={ handleSave } loading={ loading || isSubmitting } size='small' variant='contained'>{ isEditing ? "Update" : "Save" }</LoadingButton>
+                    <LoadingButton 
+                      disabled={ !isChanged || loading || isSubmitting || isLoadingReportNote } 
+                      onClick={ handleSave } 
+                      loading={ loading || isSubmitting } 
+                      size='small' 
+                      variant='contained'
+                    >
+                      { isEditing ? "Update" : "Save" }
+                    </LoadingButton>
                   </>
                 }
               </Grid>

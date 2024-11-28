@@ -27,9 +27,9 @@ const ViewNoteHistory = ({ label, historicalData, isEditing, onEdit, onDelete })
   },[ dispatch ])
 
   return (
-    <Grid container >
+    <Grid container item md={12} >
       { label && currentData?.note?.trim() &&
-        <Grid sx={{ mt: 1 }} >
+        <Grid container item md={12}  >
           <FormLabel content={`${ label || currentData?.type || "Notes"}`} /> 
         </Grid>
       }

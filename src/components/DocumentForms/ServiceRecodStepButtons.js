@@ -14,7 +14,7 @@ ServiceRecodStepButtons.propTypes = {
   isDraft: PropTypes.bool,
   isActive: PropTypes.bool,
   isSubmitted: PropTypes.bool,
-  isSubmit: PropTypes.bool,
+  reportSubmission: PropTypes.bool,
 };
 
 export default function ServiceRecodStepButtons({
@@ -24,7 +24,7 @@ export default function ServiceRecodStepButtons({
   isDraft,
   isActive,
   isSubmitted,
-  isSubmit
+  reportSubmission
 }) {
 
   const navigate = useNavigate();
@@ -57,7 +57,7 @@ export default function ServiceRecodStepButtons({
       <Grid item sm={12} md={6} display='flex' columnGap={2} justifyContent='flex-end' >
         <Button size={isMobile ? 'medium' : 'large'} onClick={handleBack} disabled={ formActiveStep===0 } variant="outlined">Back</Button>
           <LoadingButton disabled={!isActive && formActiveStep===2} size={isMobile ? 'medium' : 'large'} type='submit' variant="contained"  loading={isSubmitting && !isDraft && !isSubmitted }>
-            { ( formActiveStep===2 || isSubmit ) ? "Submit" : "Next" }
+            { ( formActiveStep===2 || reportSubmission ) ? "Submit" : "Next" }
           </LoadingButton>
       </Grid>
     </Grid>
