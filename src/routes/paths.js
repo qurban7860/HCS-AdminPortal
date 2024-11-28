@@ -373,7 +373,6 @@ export const PATH_MACHINE_SETTING_REPORT = {
   view: ( id ) => path(ROOTS_MACHINE_SETTING_REPORT, `/${id}/view`),
 };
 
-
 export const PATH_SERVICE_REPORTS = {
   root: ROOTS_SERVICE_REPORTS,
   view: ( id ) => path(ROOTS_SERVICE_REPORTS, `/${id}/view`),

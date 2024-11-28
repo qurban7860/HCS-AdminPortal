@@ -33,7 +33,6 @@ import {
   ChangePage,
   setFilterBy,
   setVerified,
-  setMachineTab,
   setReportHiddenColumns
 } from '../../redux/slices/products/machine';
 import { resetToolInstalled, resetToolsInstalled } from '../../redux/slices/products/toolInstalled';
@@ -58,7 +57,7 @@ import { exportCSV } from '../../utils/exportCSV';
 
 // ----------------------------------------------------------------------
 
-MachineList.propTypes = {
+MachineSettingReportList.propTypes = {
   isArchived: PropTypes.object,
 };
 
@@ -67,13 +66,10 @@ const TABLE_HEAD = [
   // { id: 'name', visibility: 'md1',label: 'Name', align: 'left' },
   { id: 'machineModel.name', visibility: 'xs1', label: 'Model', align: 'left' },
   { id: 'customer.name', visibility: 'md2', label: 'Customer', align: 'left' },
-  { id: 'techParam.name', label: 'Parameter Name', align: 'left' },
-  { id: 'techParamValue', label: 'Parameter Value', align: 'left' },
-  { id: 'techParam.category.name', label: 'Category', align: 'left' },
   { id: 'createdAt', label: 'Created At', align: 'right' }
 ];
 
-export default function MachineList({ isArchived }) {
+export default function MachineSettingReportList({ isArchived }) {
   const {
     order,
     orderBy,
@@ -96,9 +92,6 @@ export default function MachineList({ isArchived }) {
   const cancelTokenSource = axiosToken();
 
   const { machines, 
-    verified, 
-    accountManager, 
-    supportManager, 
     filterBy, 
     page, 
     rowsPerPage, 
@@ -109,7 +102,6 @@ export default function MachineList({ isArchived }) {
     reportHiddenColumns
   } = useSelector( (state) => state.machine);
 
-  const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const isMobile = useResponsive('down', 'sm');
 
@@ -136,7 +128,6 @@ export default function MachineList({ isArchived }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[dispatch, page, rowsPerPage, isArchived])
 
-  const [filterVerify, setFilterVerify] = useState(verified);
   const [filterName, setFilterName] = useState(filterBy);
   const [filterStatus, setFilterStatus] = useState([]);
   
@@ -146,15 +137,10 @@ export default function MachineList({ isArchived }) {
     }
   }, [machines, error, responseMessage, enqueueSnackbar, initial]);
 
-
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(order, orderBy),
     filterName,
-    filterVerify,
-    filterStatus,
-    accountManager, 
-    supportManager,
   });
 
   const isFiltered = filterName !== '' || !!filterStatus.length;
@@ -176,21 +162,10 @@ export default function MachineList({ isArchived }) {
     setFilterName(event.target.value)
     setPage(0);
   };
-
-  const handleFilterVerify = (event) => {
-    debouncedVerified.current(event.target.value);
-    setFilterVerify(event.target.value)
-    setPage(0);
-  };
   
   useEffect(() => {
       debouncedSearch.current.cancel();
   }, [debouncedSearch]);
-
-  const handleFilterStatus = (event) => {
-    setPage(0);
-    setFilterStatus(event.target.value);
-  };
   
   const handleCustomerDialog = (e, id) => {
     dispatch(getCustomer(id))
@@ -206,7 +181,7 @@ export default function MachineList({ isArchived }) {
   const [exportingCSV, setExportingCSV] = useState(false);
   const onExportCSV = async () => {
     setExportingCSV(true);
-    const response = dispatch(await exportCSV('Machines'));
+    const response = dispatch(await exportCSV('machinesettingreports'));
     response.then((res) => {
       setExportingCSV(false);
       enqueueSnackbar(res.message, {variant:`${res.hasError?"error":""}`});
@@ -226,10 +201,6 @@ export default function MachineList({ isArchived }) {
         <MachineSettingReportListTableToolbar
           filterName={filterName}
           onFilterName={handleFilterName}
-          // filterVerify={ isArchived ? undefined : filterVerify}
-          // onFilterVerify={ isArchived ? undefined : handleFilterVerify}
-          // filterStatus={ isArchived ? undefined : filterStatus}
-          // onFilterStatus={ isArchived ? undefined : handleFilterStatus}
           isFiltered={isFiltered}
           onResetFilter={handleResetFilter}
           onExportCSV={onExportCSV}
@@ -306,7 +277,7 @@ export default function MachineList({ isArchived }) {
     </Container>
   );
 }
-function applyFilter({ inputData, comparator, filterName, filterVerify, filterStatus, accountManager, supportManager }) {
+function applyFilter({ inputData, comparator, filterName }) {
   const stabilizedThis = inputData.map((el, index) => [el, index]);
 
   stabilizedThis.sort((a, b) => {
@@ -324,11 +295,9 @@ function applyFilter({ inputData, comparator, filterName, filterVerify, filterSt
         product?.serialNo?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         product?.machineModel?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         product?.customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        // product?.techParam.name?.toString().toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        // product?.techParam?.category?.name?.toString().toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        // product?.techParamValue?.toString().toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         fDate(product?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }
   return inputData;
 }
+

@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 // @mui
-import { Switch, TableRow, TableCell, Grid } from '@mui/material';
+import { TableRow, TableCell } from '@mui/material';
 import { green } from '@mui/material/colors';
 import { createTheme } from '@mui/material/styles';
 // utils
@@ -42,9 +42,6 @@ export default function MachineSettingReportListTableRow({
     serialNo,
     machineModel,
     customer,
-    techParam,
-    techParamValue,
-    category,
     createdAt,
   } = row;
 
@@ -62,10 +59,8 @@ export default function MachineSettingReportListTableRow({
       {  useScreenSize('lg') && !hiddenColumns['customer.name'] &&
         <LinkDialogTableCell onClick={handleCustomerDialog} align='center' param={customer?.name}/>  
       }
-      { !hiddenColumns?.['techParam.name'] && <TableCell align="left"> {techParam?.name || ""} </TableCell>}
-      { !hiddenColumns?.techParamValue && <TableCell align="left"> {techParamValue || ""} </TableCell>}
-      { !hiddenColumns?.['techParam.category.name'] && <TableCell align="left"> {techParam?.category?.name||""} </TableCell>}
       { !hiddenColumns?.createdAt && <TableCell align="right">{fDate(createdAt)}</TableCell>}
     </TableRow>
   );
 } 
+
