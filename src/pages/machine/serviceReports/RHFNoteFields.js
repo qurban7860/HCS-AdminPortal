@@ -61,9 +61,6 @@ const RHFNoteFields = ({ name, label, historicalData, isTechnician, isOperator, 
   const watchedValues = watch(); 
   const { _id, technicians, operators, note, isPublic } = watch(); 
 
-  console.log('watchedValues : ',watchedValues)
-  // console.log('defaultValues : ',defaultValues)
-
   useEffect(()=>{
     setParentValue(name,{ _id, technicians, operators, note, isPublic });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -72,7 +69,6 @@ const RHFNoteFields = ({ name, label, historicalData, isTechnician, isOperator, 
   const isChanged = useMemo(() => 
     JSON.stringify(defaultValues) !== JSON.stringify(watchedValues)
   ,[watchedValues, defaultValues]);
-  console.log('isChanged : ',isChanged)
 
   useEffect(() => {
     const sPContactUser = activeSpContacts?.filter( ( el )=> el?._id === user?.contact );

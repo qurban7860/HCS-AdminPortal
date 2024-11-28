@@ -129,8 +129,6 @@ function MachineServiceReportsFirstStep( { handleComplete, handleDraftRequest, h
     const { docReportType, serviceReportTemplate, reportSubmission, files } = watch();
     const watchValues = watch();
 
-    console.log(' watchValues first step : ',watchValues)
-
       const onSubmit = async (data) => {
         try {
           if( ( isSubmit || !reportSubmission ) && !isDraft ){
