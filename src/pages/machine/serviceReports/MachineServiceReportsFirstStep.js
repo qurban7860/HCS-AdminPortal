@@ -66,7 +66,7 @@ function MachineServiceReportsFirstStep( { handleComplete, handleDraftRequest, h
         serviceDate:                  machineServiceReport?.serviceDate || new Date(),
         textBeforeCheckItems:         '',
         textAfterCheckItems:          '',
-        reportSubmission:             false,
+        reportSubmission:             machineServiceReport?.reportSubmission || true,
         files: machineServiceReport?.reportDocs?.map(file => ({
           key: file?._id,
           _id: file?._id,
@@ -357,7 +357,7 @@ return (
                       ]}
                       sx={{ my: -1 }}
                       onChange={() => {
-                        setIsSubmit(!isSubmit)
+                          setIsSubmit( !reportSubmission && true || false )
                         setValue('reportSubmission',!reportSubmission)
                       }}
                     />

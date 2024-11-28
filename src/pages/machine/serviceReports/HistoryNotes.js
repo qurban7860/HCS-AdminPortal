@@ -54,13 +54,14 @@ return(
                     </Typography>
                   )}
 
-                  <Typography variant="body2" sx={{ color: 'text.disabled', alignItems: "center", display: "flex", width:"100%" }}>
+                  <Typography variant="body2" sx={{ color: 'text.disabled', alignItems: "center", width:"100%" }}>
                     <>
                       { Array.isArray( historyItem?.technicians ) && historyItem?.technicians?.length > 0 && (
                         <>
                             <b>Technician:</b>
                           {historyItem?.technicians?.map(op => (
                             <Chip
+                              size='small'
                               key={op._id}
                               sx={{ m: 0.5 }}
                               label={`${op.firstName || ''} ${op.lastName || ''}`}
@@ -74,7 +75,8 @@ return(
                             <b>Operators:</b>
                           {historyItem?.operators?.map(op => (
                             <Chip
-                              key={op._id}
+                              size='small'
+                              key={ op._id }
                               sx={{ m: 0.5 }}
                               label={`${op.firstName || ''} ${op.lastName || ''}`}
                               onClick={() => handleContactDialog(op.customer?._id, op._id)}

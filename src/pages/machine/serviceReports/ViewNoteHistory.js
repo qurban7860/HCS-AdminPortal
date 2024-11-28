@@ -36,7 +36,7 @@ const ViewNoteHistory = ({ label, historicalData, isEditing, onEdit, onDelete })
       { !isEditing &&
         <Grid container item md={12} sx={{ pt: 1, display:"block", alignItems: 'center', whiteSpace: 'pre-line', overflowWrap: 'break-word'  }}>
           { currentData?.note && currentData?.note?.trim() &&
-            <Typography variant="body2" sx={{color: 'text.disabled', }} >
+            <Typography variant="body2" sx={{color: 'text.disabled', whiteSpace: 'pre-line', overflowWrap: 'break-word' }} >
               {currentData?.note || ""}
               { currentData?.note?.trim() && <CopyIcon value={currentData?.note}/> }
               { onEdit && 
@@ -57,13 +57,14 @@ const ViewNoteHistory = ({ label, historicalData, isEditing, onEdit, onDelete })
               }
             </Typography>
           }
-          <Typography variant="body2" sx={{ color: 'text.disabled', alignItems: "center", display: "flex", width:"100%" }}>
+          <Typography variant="body2" sx={{ color: 'text.disabled', alignItems: "center", whiteSpace: 'pre-line', overflowWrap: 'break-word', width:"100%" }}>
             <>
               { Array.isArray( currentData?.technicians ) && currentData?.technicians?.length > 0 && (
                 <>
                   <b>Technicians:</b>
                   {currentData?.technicians?.map( t => (
                     t?.firstName && <Chip
+                      size='small'
                       key={t?._id}
                       sx={{ m: 0.5 }}
                       label={`${t?.firstName || ''} ${t?.lastName || ''}`}
@@ -77,6 +78,7 @@ const ViewNoteHistory = ({ label, historicalData, isEditing, onEdit, onDelete })
                   <b>Operators:</b>
                   {currentData?.operators?.map(op => (
                     op?.firstName && <Chip
+                      size='small'
                       key={op?._id}
                       sx={{ m: 0.5 }}
                       label={`${op?.firstName || ''} ${op?.lastName || ''}`}

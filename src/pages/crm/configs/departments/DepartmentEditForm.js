@@ -40,7 +40,7 @@ export default function DepartmentEditForm() {
   
   useEffect(() =>{
     const configs = JSON.parse( localStorage.getItem('configurations'))
-    const departTypes = configs?.find((item) => item.name === 'Department_Types')?.value.split(',').map((type) => type.trim())
+    const departTypes = configs?.find((item) => item?.name?.trim()?.toLowerCase() === 'department_types')?.value.split(',').map((type) => type.trim())
     if(Array.isArray(departTypes) &&  departTypes.length > 0){
       setDepartmentTypes(departTypes)
     }
