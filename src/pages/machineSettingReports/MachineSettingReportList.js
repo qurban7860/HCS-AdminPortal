@@ -33,17 +33,10 @@ import {
   ChangePage,
   setFilterBy,
   setVerified,
+  setMachineTab,
   setReportHiddenColumns
 } from '../../redux/slices/products/machine';
-import { resetToolInstalled, resetToolsInstalled } from '../../redux/slices/products/toolInstalled';
 import { resetSetting, resetSettings } from '../../redux/slices/products/machineSetting';
-import { resetLicense, resetLicenses } from '../../redux/slices/products/license';
-import { resetNote, resetNotes } from '../../redux/slices/products/machineNote';
-import {
-  resetMachineDocument,
-  resetMachineDocuments,
-} from '../../redux/slices/document/machineDocument';
-import { getSPContacts } from '../../redux/slices/customer/contact';
 
 import { getCustomer, setCustomerDialog } from '../../redux/slices/customer/customer';
 // routes
@@ -66,6 +59,8 @@ const TABLE_HEAD = [
   // { id: 'name', visibility: 'md1',label: 'Name', align: 'left' },
   { id: 'machineModel.name', visibility: 'xs1', label: 'Model', align: 'left' },
   { id: 'customer.name', visibility: 'md2', label: 'Customer', align: 'left' },
+  { id: 'HLCSoftwareVersion', label: 'HLC Software Version', align: 'left' },
+  { id: 'PLCSoftwareVersion', label: 'PLC Software Version', align: 'left' },
   { id: 'createdAt', label: 'Created At', align: 'right' }
 ];
 
@@ -86,7 +81,7 @@ export default function MachineSettingReportList({ isArchived }) {
   const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
 
   const [tableData, setTableData] = useState([]);
-  
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const axiosToken = () => axios.CancelToken.source();
   const cancelTokenSource = axiosToken();
@@ -108,17 +103,8 @@ export default function MachineSettingReportList({ isArchived }) {
   useLayoutEffect(() => {
     dispatch(resetMachine());
     dispatch(resetMachines());
-    dispatch(resetToolInstalled());
-    dispatch(resetToolsInstalled());
     dispatch(resetSetting());
     dispatch(resetSettings());
-    dispatch(resetLicense());
-    dispatch(resetLicenses());
-    dispatch(resetNote());
-    dispatch(resetNotes());
-    dispatch(resetMachineDocument());
-    dispatch(resetMachineDocuments());
-    dispatch(getSPContacts( cancelTokenSource ));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
@@ -166,6 +152,11 @@ export default function MachineSettingReportList({ isArchived }) {
   useEffect(() => {
       debouncedSearch.current.cancel();
   }, [debouncedSearch]);
+  
+  const handleViewRow = (id) => {
+    dispatch(setMachineTab('info'));
+    navigate(PATH_MACHINE.machines.settings.root(id));
+  }
   
   const handleCustomerDialog = (e, id) => {
     dispatch(getCustomer(id))
@@ -252,6 +243,7 @@ export default function MachineSettingReportList({ isArchived }) {
                         row={row}
                         hiddenColumns={reportHiddenColumns}
                         onSelectRow={() => onSelectRow(row._id)}
+                        onViewRow={() => handleViewRow(row._id)}
                         style={index % 2 ? { background: 'red' } : { background: 'green' }}
                         handleCustomerDialog={(e)=> row?.customer && handleCustomerDialog(e,row?.customer?._id)}
                         isArchived={isArchived}

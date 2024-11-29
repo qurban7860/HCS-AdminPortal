@@ -7,6 +7,7 @@ import { createTheme } from '@mui/material/styles';
 // utils
 import { fDate } from '../../utils/formatTime';
 // components
+import LinkTableCellWithIconTargetBlank from '../../components/ListTableTools/LinkTableCellWithIconTargetBlank';
 import { useScreenSize } from '../../hooks/useResponsive';
 import LinkDialogTableCell from '../../components/ListTableTools/LinkDialogTableCell';
 
@@ -40,6 +41,7 @@ export default function MachineSettingReportListTableRow({
 
   const {
     serialNo,
+    verifications,
     machineModel,
     customer,
     createdAt,
@@ -53,12 +55,27 @@ export default function MachineSettingReportListTableRow({
 
   return (
     <TableRow hover selected={selected}>
-      <TableCell>{serialNo || ''}</TableCell>
+     <LinkTableCellWithIconTargetBlank
+        align="left"
+        onViewRow={ onViewRow }
+        param={serialNo}
+        isVerified={verifications?.length > 0}
+      />
       {/* { useScreenSize('lg') && !hiddenColumns?.name && <TableCell>{name || ''}</TableCell>} */}
       {  useScreenSize('sm') && !hiddenColumns['machineModel.name'] && <TableCell>{ machineModel?.name || ''}</TableCell>}
       {  useScreenSize('lg') && !hiddenColumns['customer.name'] &&
         <LinkDialogTableCell onClick={handleCustomerDialog} align='center' param={customer?.name}/>  
       }
+       {!hiddenColumns.HLCSoftwareVersion && (
+        <TableCell align="left">
+          {row.techParam?.code.includes('HLCSoftwareVersion') ? row.techParamValue : ''}
+        </TableCell>
+      )}
+      {!hiddenColumns.PLCSoftwareVersion && (
+        <TableCell align="left">
+          {row.techParam?.code.includes('PLCSoftwareVersion') ? row.techParamValue : ''}
+        </TableCell>
+      )}
       { !hiddenColumns?.createdAt && <TableCell align="right">{fDate(createdAt)}</TableCell>}
     </TableRow>
   );
