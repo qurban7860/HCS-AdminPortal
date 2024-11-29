@@ -30,7 +30,7 @@ const ErpProducedLengthLogGraph = ({timePeriod, customer, graphLabels}) => {
     switch (timePeriod) {
       case 'Daily':
         sortedData.sort((a, b) => new Date(a._id) - new Date(b._id));
-        labels = Array.from({ length: 7 }, (_, i) => {
+        labels = Array.from({ length: 30 }, (_, i) => {
           const date = new Date();
           date.setDate(date.getDate() - i);
           const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -101,7 +101,7 @@ const ErpProducedLengthLogGraph = ({timePeriod, customer, graphLabels}) => {
   const getDataRangeText = () => {
     switch (timePeriod) {
       case 'Daily':
-        return 'last 7 Days';
+        return 'last 30 Days';
       case 'Monthly':
         return 'last 12 Months';
       case 'Quarterly':
