@@ -13,8 +13,9 @@ import { deleteCheckItemFile, downloadCheckItemFile, setAddFileDialog } from '..
 import Lightbox from '../../../components/lightbox/Lightbox';
 import CheckedItemValueHistory from './CheckedItemValueHistory';
 import SkeletonPDF from '../../../components/skeleton/SkeletonPDF';
+import IconifyButton from '../../../components/Icons/IconifyButton';
 
-const StatusAndComment = ({index, childIndex, childRow, isBorder, machineId, primaryServiceReportId}) => {
+const StatusAndComment = ({index, childIndex, childRow, isBorder, isUpdating, machineId, onEdit, onDelete }) => {
     const { machineServiceReport } = useSelector((state) => state.machineServiceReport);
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
@@ -52,7 +53,7 @@ const StatusAndComment = ({index, childIndex, childRow, isBorder, machineId, pri
   
       if(!image?.isLoaded && image?.fileType?.startsWith('image')){
         try {
-          const response = await dispatch(downloadCheckItemFile(machineId, primaryServiceReportId, image?._id));
+          const response = await dispatch(downloadCheckItemFile(machineId, image?._id));
           if (regEx.test(response.status)) {
             // Update the image property in the imagesLightbox array
             const updatedSlides = [
@@ -94,7 +95,7 @@ const StatusAndComment = ({index, childIndex, childRow, isBorder, machineId, pri
     };
   
     const handleDownloadCheckItemFile = (fileId, name, extension) => {
-      dispatch(downloadCheckItemFile(machineId, primaryServiceReportId, fileId))
+      dispatch(downloadCheckItemFile(machineId, fileId))
         .then((res) => {
           if (regEx.test(res.status)) {
             download(atob(res.data), `${name}.${extension}`, { type: extension });
@@ -120,7 +121,7 @@ const StatusAndComment = ({index, childIndex, childRow, isBorder, machineId, pri
       setPDFName(`${file?.name}.${file?.extension}`);
       setAttachedPDFViewerDialog(true);
       setPDF(null);
-      const response = await dispatch(downloadCheckItemFile(machineId, file.serviceReport, file._id));
+      const response = await dispatch(downloadCheckItemFile(machineId, file._id));
       if (regEx.test(response.status)) {
         const blob = b64toBlob(encodeURI(response.data), 'application/pdf')
         const url = URL.createObjectURL(blob);
@@ -149,7 +150,7 @@ const StatusAndComment = ({index, childIndex, childRow, isBorder, machineId, pri
           } || [] ) }} >
       <Grid item md={12} sx={{ display: reportValue?.checkItemValue ? 'block' : 'flex'}}>
         { isBorder && <Typography variant="body2" ><b>{`${index+1}.${childIndex+1}- `}</b>{`${childRow.name}`}</Typography>}
-        {reportValue?.checkItemValue && 
+        {reportValue?.checkItemValue && !isUpdating && 
           <Grid >
             <Grid sx={{ mt:1,
               alignItems: 'center',
@@ -171,6 +172,22 @@ const StatusAndComment = ({index, childIndex, childRow, isBorder, machineId, pri
                       }
                         {reportValue?.checkItemValue?.trim() && childRow?.inputType?.toLowerCase() !== 'boolean' && <CopyIcon value={reportValue?.checkItemValue}/>}
                     </> 
+                }
+                { onEdit &&
+                  <IconifyButton 
+                    title='Edit'
+                    icon='mdi:edit'
+                    color='#103996'
+                    onClick={ () => onEdit( reportValue ) }
+                  />
+                }
+                { onDelete &&
+                  <IconifyButton 
+                    title='Delete'
+                    icon='mdi:delete'
+                    color='#FF0000'
+                    onClick={ () => onDelete( reportValue ) }
+                  />
                 }
               </Typography>
             </Grid>
@@ -257,6 +274,8 @@ StatusAndComment.propTypes = {
     childRow: PropTypes.object,
     machineId: PropTypes.string,
     isBorder: PropTypes.bool,
-    primaryServiceReportId: PropTypes.string,
+    isUpdating: PropTypes.bool,
+    onEdit: PropTypes.func,
+    onDelete: PropTypes.func,
   };
 export default memo(StatusAndComment)

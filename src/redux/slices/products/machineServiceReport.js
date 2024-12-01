@@ -30,6 +30,8 @@ const initialState = {
   isHistorical: false,
   isDetailPage: false,
   filterBy: '',
+  filterByStatus: '',
+  filterByStatusType: [ 'To Do', 'In Progress' ],
   page: 0,
   rowsPerPage: 100,
 };
@@ -140,7 +142,7 @@ const slice = createSlice({
       }
     },
 
-    UpdateMachineServiceReportCheckItems(state, action) {
+    updateMachineServiceReportCheckItems(state, action) {
       const { Index, childIndex, checkItem } = action.payload;
     
       // Create new copies of the state to maintain immutability
@@ -153,17 +155,46 @@ const slice = createSlice({
         ? [...targetCheckItem.historicalData]
         : [];
     
-      // Merge files with existing files
-      const newEntry = {
+      historicalData[0] = {
         ...checkItem,
-        files: [
-          ...(historicalData[0]?.files || []), // Existing files from the first entry, if any
-          ...(checkItem.files || []), // New files from the payload
-        ],
       };
     
-      // Append the new entry to historicalData
-      historicalData.push(newEntry);
+      // Update the target check item with the modified historicalData
+      targetCheckItem.historicalData = historicalData;
+    
+      // Replace the updated check item in the checkItems array
+      checkItems[childIndex] = targetCheckItem;
+    
+      // Replace the updated checkItems in the checkItemList
+      checkItemList[Index] = {
+        ...checkItemList[Index],
+        checkItems,
+      };
+    
+      // Update the state with the modified checkItemLists
+      state.machineServiceReportCheckItems = {
+        ...state.machineServiceReportCheckItems,
+        checkItemLists: checkItemList,
+      };
+    },
+
+    deleteMachineServiceReportCheckItems(state, action) {
+      const { Index, childIndex, checkItem } = action.payload;
+    
+      // Create new copies of the state to maintain immutability
+      const checkItemList = [...state.machineServiceReportCheckItems.checkItemLists];
+      const checkItems = [...checkItemList[Index].checkItems];
+      const targetCheckItem = { ...checkItems[childIndex] };
+    
+      // Ensure historicalData is an array
+      const historicalData = Array.isArray(targetCheckItem.historicalData)
+        ? [...targetCheckItem.historicalData]
+        : [];
+    
+      // Remove the entry at index 0
+      if (historicalData.length > 0) {
+        historicalData.splice(0, 1); // Remove the first item in the array
+      }
     
       // Update the target check item with the modified historicalData
       targetCheckItem.historicalData = historicalData;
@@ -227,7 +258,7 @@ const slice = createSlice({
       };
     },    
 
-    deleteMachineServiceReportCheckItemSuccess(state, action) {
+    deleteMachineServiceReportCheckItemFileSuccess(state, action) {
       const { Index, childIndex, checkItem } = action.payload;
       const checkItemFiles = [ ...state.machineServiceReportCheckItems.checkItemLists[Index].checkItems[childIndex].reportValue.files ] 
       state.machineServiceReportCheckItems.checkItemLists[Index].checkItems[childIndex].reportValue = {
@@ -347,6 +378,16 @@ const slice = createSlice({
       state.filterBy = action.payload;
     },
 
+    // Set FilterBy
+    setFilterByStatus(state, action) {
+      state.filterByStatus = action.payload;
+    },
+
+    // Set FilterBy
+    setFilterByStatusType(state, action) {
+      state.filterByStatusType = action.payload;
+    },
+
     // Set PageRowCount
     ChangeRowsPerPage(state, action) {
       state.rowsPerPage = action.payload;
@@ -379,6 +420,8 @@ export const {
   resetSubmittingCheckItemIndex,
   setResponseMessage,
   setFilterBy,
+  setFilterByStatus,
+  setFilterByStatusType,
   ChangeRowsPerPage,
   ChangePage,
 } = slice.actions;
@@ -790,10 +833,10 @@ export function deleteReportFile(machineId, id, fileId) {
   };
 }
 
-export function downloadCheckItemFile(machineId, id, fileId) {
+export function downloadCheckItemFile(machineId, id ) {
   return async (dispatch) => {
     dispatch(slice.actions.setSubmittingCheckItemIndex());
-    const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceReportValues/files/${fileId}/download/` );
+    const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceReportValues/files/${id}/download/` );
     dispatch(slice.actions.resetSubmittingCheckItemIndex());
     return response;
   };
@@ -807,7 +850,7 @@ export function deleteCheckItemFile(machineId, fileId, Index, childIndex ) {
       {
           isArchived: true, 
       });
-      dispatch(slice.actions.deleteMachineServiceReportCheckItemSuccess({ Index, childIndex, checkItem: fileId }));
+      dispatch(slice.actions.deleteMachineServiceReportCheckItemFileSuccess({ Index, childIndex, checkItem: fileId }));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -859,17 +902,11 @@ export function addCheckItemValues(machineId, data, Index, childIndex) {
 
       let response;
       
-      if ( data?.reportValue?._id ) {
-        response = await axios.patch(
-          `${CONFIG.SERVER_URL}products/machines/${machineId}/serviceReportValues/${data?.reportValue?._id}`,
-          formData
-        );
-        await dispatch(slice.actions.UpdateMachineServiceReportCheckItems({ Index, childIndex, checkItem: { ...response.data } }));
+      if ( data?._id ) {
+        response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceReportValues/${data?._id}`, formData);
+        await dispatch(slice.actions.updateMachineServiceReportCheckItems({ Index, childIndex, checkItem: { ...response.data } }));
       } else {
-        response = await axios.post(
-          `${CONFIG.SERVER_URL}products/machines/${machineId}/serviceReportValues/`,
-          formData
-        );
+        response = await axios.post( `${CONFIG.SERVER_URL}products/machines/${machineId}/serviceReportValues/`, formData );
         await dispatch(slice.actions.addMachineServiceReportCheckItems({ Index, childIndex, checkItem: { ...response.data } }));
       }
       
@@ -881,6 +918,23 @@ export function addCheckItemValues(machineId, data, Index, childIndex) {
     }
   };
 }
+
+export function deleteCheckItemValues( machineId, Id, Index, childIndex ) {
+  return async (dispatch) => {
+    try {
+      const formData = new FormData();
+      formData.append('isActive', false );
+      formData.append('isArchived', true);
+      await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceReportValues/${Id}`,formData );
+      await dispatch(slice.actions.deleteMachineServiceReportCheckItems({ Index, childIndex }));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
 
 export function sendMachineServiceReportForApproval(machineId, id, params) {
   return async (dispatch) => {

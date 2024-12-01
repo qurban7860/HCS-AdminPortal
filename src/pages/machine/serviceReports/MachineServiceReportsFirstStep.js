@@ -43,6 +43,7 @@ function MachineServiceReportsFirstStep( { handleComplete, handleDraftRequest, h
     const [ isSubmit, setIsSubmit ] = useState(false);
     const saveAsDraft = async () => setIsDraft(true);
     const saveAsSubmit = async () => setIsSubmit(true);
+
     const machineDecoilers = (machine?.machineConnections || [])?.map((decoiler) => ({
       _id: decoiler?.connectedMachine?._id ?? null,
       name: decoiler?.connectedMachine?.name ?? null,
@@ -66,7 +67,7 @@ function MachineServiceReportsFirstStep( { handleComplete, handleDraftRequest, h
         serviceDate:                  machineServiceReport?.serviceDate || new Date(),
         textBeforeCheckItems:         '',
         textAfterCheckItems:          '',
-        reportSubmission:             machineServiceReport?.reportSubmission || true,
+        reportSubmission:             machineServiceReport?.reportSubmission || false,
         files: machineServiceReport?.reportDocs?.map(file => ({
           key: file?._id,
           _id: file?._id,
@@ -131,11 +132,8 @@ function MachineServiceReportsFirstStep( { handleComplete, handleDraftRequest, h
 
       const onSubmit = async (data) => {
         try {
-          if( ( isSubmit || !reportSubmission ) && !isDraft ){
+          if( isSubmit ){
             data.status = 'SUBMITTED'
-          }
-          if(!data.technician){
-            data.technician = null;
           }
           data.isReportDoc = true
           if(!id ){
@@ -143,7 +141,7 @@ function MachineServiceReportsFirstStep( { handleComplete, handleDraftRequest, h
             data.decoilers = machineDecoilers;
             const serviceReport = await dispatch(addMachineServiceReport(machineId, data));
             dispatchFiles( serviceReport?._id, data );
-            if( !reportSubmission || isSubmit ){
+            if( isSubmit || isDraft ){
               await navigate(PATH_MACHINE.machines.serviceReports.view(machineId, serviceReport?._id))
             } else {
               await navigate(PATH_MACHINE.machines.serviceReports.edit(machineId, serviceReport?._id))
@@ -151,7 +149,7 @@ function MachineServiceReportsFirstStep( { handleComplete, handleDraftRequest, h
           }else {
             await dispatch(updateMachineServiceReport(machineId, id, data));
             dispatchFiles( id, data );
-            if( !reportSubmission || isSubmit ){
+            if( isSubmit ){
               await navigate(PATH_MACHINE.machines.serviceReports.view(machineId, id))
             } else {
               await navigate(PATH_MACHINE.machines.serviceReports.edit(machineId, id))  
@@ -348,6 +346,16 @@ return (
                     historicalData={ machineServiceReport?.technicianNotes }
                     setParentValue={ setValue }
                   />
+
+                    <FormLabel content='Reporting Documents' />
+                    <RHFUpload multiple  thumbnail name="files" imagesOnly
+                      onDrop={handleDropMultiFile}
+                      dropZone={false}
+                      onRemove={handleRemoveFile}
+                      onLoadImage={handleLoadImage}
+                      onLoadPDF={handleOpenFile}
+                    />
+
                     <RHFRadioGroup 
                       name="reportSubmission"
                       row
@@ -357,24 +365,17 @@ return (
                       ]}
                       sx={{ my: -1 }}
                       onChange={() => {
-                          setIsSubmit( !reportSubmission && true || false )
                         setValue('reportSubmission',!reportSubmission)
                       }}
                     />
-                  {
-                    !reportSubmission && 
-                  <>
-                    <FormLabel content='Reporting Documents' />
-                    <RHFUpload multiple  thumbnail name="files" imagesOnly
-                      onDrop={handleDropMultiFile}
-                      dropZone={false}
-                      onRemove={handleRemoveFile}
-                      onLoadImage={handleLoadImage}
-                      onLoadPDF={handleOpenFile}
-                    />
-                  </>}
           </Stack>
-          <ServiceRecodStepButtons reportSubmission={ !reportSubmission } handleSubmit={reportSubmission ? saveAsSubmit : undefined } isSubmitted={isSubmit} handleDraft={saveAsDraft} isDraft={isDraft} isSubmitting={isSubmitting} />
+            <ServiceRecodStepButtons 
+              handleSubmit={ !reportSubmission ? saveAsSubmit : undefined } 
+              isSubmitted={ isSubmit } 
+              handleDraft={saveAsDraft} 
+              isDraft={ isDraft } 
+              isSubmitting={isSubmitting} 
+            />
           </>
         }
     </FormProvider>
