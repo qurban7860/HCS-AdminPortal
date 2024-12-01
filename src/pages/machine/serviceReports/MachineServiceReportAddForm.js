@@ -1,6 +1,7 @@
 import { useLayoutEffect, useState, useCallback, memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Container, Card, Grid, StepLabel, Step, Stepper, Box, CardContent, CardHeader } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 // routes
 import { useNavigate, useParams } from 'react-router-dom';
 import { PATH_MACHINE } from '../../../routes/paths';
@@ -14,6 +15,7 @@ import {
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import MachineTabContainer from '../util/MachineTabContainer';
+import ConfirmDialog from '../../../components/confirm-dialog';
 import DialogServiceReportAddFile from '../../../components/Dialog/DialogServiceReportAddFile';
 import MachineServiceReportsFirstStep from './MachineServiceReportsFirstStep';
 import MachineServiceReportsSecondStep from './MachineServiceReportsSecondStep';
@@ -32,7 +34,10 @@ function MachineServiceReportAddForm() {
   const { machineId, id } = useParams();
   const { formActiveStep, machineServiceReport, isLoading } = useSelector((state) => state.machineServiceReport);
   const [ completed, setCompleted ] = useState([]);
+  const [ discardDialog, setDiscardDialog ] = useState( false );
+
   const isMobile = useResponsive('down', 'sm');
+
   useLayoutEffect(() => {
     if (machineId && id) {
       setCompleted((prev) => {
@@ -67,6 +72,10 @@ function MachineServiceReportAddForm() {
     }
   }, [navigate, machineId]);
   
+  const handleDiscardDialog = async () => {
+
+  }
+
   const handleDiscard = useCallback(async () => {
     if (machineServiceReport?._id) {
       await dispatch(deleteMachineServiceReport(machineId, machineServiceReport?._id, machineServiceReport?.status?._id));
@@ -109,7 +118,7 @@ function MachineServiceReportAddForm() {
                 action={
                   !isLoading &&
                     <Grid item display='flex' columnGap={1} mr={1}>
-                      <IconTooltip title="Discard" onClick={handleDiscard} color="#FF0000" icon="mdi:archive" />
+                      <IconTooltip title="Discard" onClick={()=> setDiscardDialog(true)} color="#FF0000" icon="mdi:archive" />
                     </Grid>
                 }
               />
@@ -140,6 +149,23 @@ function MachineServiceReportAddForm() {
           </Grid>
         </Grid>
       <DialogServiceReportAddFile />
+      <ConfirmDialog
+        open={ discardDialog }
+        onClose={() => setDiscardDialog(false)}
+        title="Discard"
+        content="Are you sure you want to Discard?"
+        action={
+          <LoadingButton
+            variant="contained"
+            color="error"
+            loading={ isLoading}
+            disabled={ isLoading }
+            onClick={ handleDiscard }
+          >
+            Discard
+          </LoadingButton>
+        }
+      />
     </Container>
   );
 }

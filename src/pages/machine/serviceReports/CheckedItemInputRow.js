@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Grid, Typography, Stack, Dialog, DialogTitle, Button, Divider } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-import { addCheckItemValues, deleteCheckItemFile, downloadCheckItemFile } from '../../../redux/slices/products/machineServiceReport';
+import { addCheckItemValues, deleteCheckItemValues, deleteCheckItemFile, downloadCheckItemFile } from '../../../redux/slices/products/machineServiceReport';
 import FormProvider from '../../../components/hook-form/FormProvider';
 import { RHFAutocomplete, RHFDatePicker, RHFSwitch, RHFTextField, RHFUpload } from '../../../components/hook-form';
 import { statusTypes } from '../util';
@@ -25,40 +25,40 @@ const CheckedItemInputRow = memo(({ index, childIndex, checkItemListId, rowData 
     const { enqueueSnackbar } = useSnackbar();
     const { machineId, id } = useParams();
     const { machineServiceReport } = useSelector((state) => state.machineServiceReport);
-    const [pdf, setPDF] = useState(null);
-    const [PDFName, setPDFName] = useState('');
-    const [PDFViewerDialog, setPDFViewerDialog] = useState(false);
+    const [ pdf, setPDF ] = useState(null);
+    const [ PDFName, setPDFName ] = useState('');
+    const [ PDFViewerDialog, setPDFViewerDialog ] = useState(false);
+    const [ checkItem, setCheckItem ] = useState( null );
 
     const getReportValue = (item) => {
       if (item?.inputType === 'Date') {
-        return stringToDate(item?.reportValue?.checkItemValue, 'dd/MM/yyyy');
+        return stringToDate(item?.checkItemValue, 'dd/MM/yyyy');
       }
       if (item?.inputType === 'Boolean') {
-        return item?.reportValue?.checkItemValue === 'true';
+        return item?.checkItemValue === 'true';
       }
       if (item?.inputType === 'Number') {
-        const value = parseFloat(item?.reportValue?.checkItemValue);
+        const value = parseFloat(item?.checkItemValue);
         return Number.isNaN(value) ? "" : value;
       }
       if (item?.inputType === 'Status') {
-        return statusTypes.find((st) => st?.name === item?.reportValue?.checkItemValue) || null;
+        return statusTypes.find((st) => st?.name === item?.checkItemValue) || null;
       }
-      return item?.reportValue?.checkItemValue || "";
+      return item?.checkItemValue || "";
     };
 
     const defaultValues = useMemo(
       () => ({
+          _id:                  checkItem?._id || null,
           checkItemListId,
           machineCheckItem:     rowData._id || null,
           serviceReport:        machineServiceReport?._id,
-          primaryServiceReportId:            machineServiceReport?.primaryServiceReportId,
-          versionNo:            machineServiceReport?.versionNo,
-          comments:             rowData?.reportValue?.comments || "",
-          checkItemValue:       getReportValue(rowData),
+          comments:             checkItem?.comments || "",
+          checkItemValue:       getReportValue( { ...rowData, checkItemValue: checkItem?.checkItemValue || '' } ),
           inputType:            rowData?.inputType || '',
           name:                 rowData?.name || '',
           isRequired:           rowData?.isRequired || false,
-          images:               rowData?.reportValue?.files?.map(file => ({
+          images:               checkItem?.files?.map(file => ({
             uploaded:           true,
             key:                file?._id || '',
             _id:                file?._id || '',
@@ -72,7 +72,7 @@ const CheckedItemInputRow = memo(({ index, childIndex, checkItemListId, rowData 
             machineId,
             id,
           })) || []
-      }), [ rowData, machineId, id, checkItemListId, machineServiceReport ] );
+      }), [ rowData, checkItem, machineId, id, checkItemListId, machineServiceReport ] );
     
     const methods = useForm({
       resolver: yupResolver(CheckItemSchema),
@@ -114,6 +114,7 @@ const CheckedItemInputRow = memo(({ index, childIndex, checkItemListId, rowData 
         }
 
         await dispatch( addCheckItemValues( machineId, data, index, childIndex ));
+        setCheckItem( null )
         reset()
         setShowMessages( true );
         setTimeout(() => {
@@ -156,7 +157,7 @@ const CheckedItemInputRow = memo(({ index, childIndex, checkItemListId, rowData 
 
     const handleLoadImage = async (imageId) => {
       try {
-        const response = await dispatch(downloadCheckItemFile(machineId, id, imageId));
+        const response = await dispatch(downloadCheckItemFile(machineId, imageId));
         if (regEx.test(response.status)) {
           const existingFiles = getValues('images');
           const imageIndex = existingFiles.findIndex(image => image?._id === imageId);
@@ -182,7 +183,7 @@ const CheckedItemInputRow = memo(({ index, childIndex, checkItemListId, rowData 
       setPDF(null);
       try {
         if(!file?.isLoaded){
-          const response = await dispatch(downloadCheckItemFile(machineId, id, file._id));
+          const response = await dispatch(downloadCheckItemFile(machineId, file._id));
           if (regEx.test(response.status)) {
             const blob = b64toBlob(encodeURI(response.data), 'application/pdf')
             const url = URL.createObjectURL(blob);
@@ -202,6 +203,19 @@ const CheckedItemInputRow = memo(({ index, childIndex, checkItemListId, rowData 
         }
       }
     };
+
+    const handleEdit = async ( checkItemData ) => {
+      await setCheckItem(checkItemData)
+    }
+
+    const handleDelete = async ( checkItemData ) => {
+      try{
+        await dispatch(deleteCheckItemValues( machineId ,checkItemData?._id, index, childIndex ))
+        await enqueueSnackbar('Check Item deleted Successfully!');
+      } catch( error ){
+        await enqueueSnackbar('Check Item delete Failed!', { variant: 'error' });
+      }
+    }
 
   return (
     <Stack spacing={2} px={2}>
@@ -293,6 +307,13 @@ const CheckedItemInputRow = memo(({ index, childIndex, checkItemListId, rowData 
                     Saved Successfully!
                   </Typography>
                 )}
+                { checkItem?._id && <Button 
+                  size='small'
+                  variant='outlined'
+                  onClick={ () => setCheckItem( null ) }
+                >
+                  Cancel
+                </Button>}
                 <LoadingButton
                   type="submit"
                   size="small"
@@ -300,29 +321,20 @@ const CheckedItemInputRow = memo(({ index, childIndex, checkItemListId, rowData 
                   variant="contained"
                   disabled={!( isChanged )} 
                 >
-                  Save
+                  { checkItem?._id ? 'Update' : 'Save' }
                 </LoadingButton>
               </Grid>
 
               {rowData?.historicalData?.length > 0 && (
-                <>
-            <StatusAndComment
-              index={index}
-              childIndex={childIndex}
-              key={rowData._id}
-              childRow={rowData}
-            />
-                {/* <CheckedItemValueRow
-                  machineId={machineId}
-                  value={rowData}
-                  index={childIndex}
+                <StatusAndComment
+                  index={index}
+                  childIndex={childIndex}
                   key={rowData._id}
-                /> */}
-                {/* <CheckedItemValueHistory
-                  historicalData={rowData.historicalData}
-                  inputType={rowData.inputType}
-                /> */}
-                </>
+                  childRow={rowData}
+                  onEdit={ checkItem?._id ? undefined : handleEdit }
+                  onDelete={ handleDelete }
+                  isUpdating={ checkItem?._id !== undefined }
+                />
               )}
             </Stack>
       </FormProvider>
