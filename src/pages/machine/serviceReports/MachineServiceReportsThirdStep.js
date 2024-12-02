@@ -46,6 +46,7 @@ function MachineServiceReportsThirdStep({handleDraftRequest, handleDiscard, hand
       }
       return () =>{
           dispatch(resetActiveContacts());
+          dispatch(resetMachineServiceReport());
       }
     }, [ dispatch, machine ]);
 
@@ -95,12 +96,11 @@ function MachineServiceReportsThirdStep({handleDraftRequest, handleDiscard, hand
     formState: { isSubmitting },
     } = methods;
 
-    useEffect(() => {
-      if (machineServiceReport) {
-        reset(defaultValues);
-      }
-      return(()=> resetMachineServiceReport());
-    }, [reset, machineServiceReport, defaultValues]);
+    // useEffect(() => {
+    //   if (machineServiceReport) {
+    //     reset(defaultValues);
+    //   }
+    // }, [reset, machineServiceReport, defaultValues]);
 
     const { isActive, files } = watch()
     
