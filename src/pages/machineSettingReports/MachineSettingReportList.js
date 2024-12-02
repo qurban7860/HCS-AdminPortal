@@ -2,11 +2,13 @@ import PropTypes from 'prop-types';
 import { useLayoutEffect, useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { FormProvider, useForm } from 'react-hook-form';
 import axios from 'axios';
 import debounce from 'lodash/debounce';
 // form
 // @mui
-import { Container, Table, TableBody, TableContainer } from '@mui/material';
+import { Container, Table, TableBody, TableContainer, Grid, Card, Stack, Box } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 import {
   useTable,
   getComparator,
@@ -18,6 +20,7 @@ import {
 } from '../../components/table';
 import useResponsive from '../../hooks/useResponsive';
 import Scrollbar from '../../components/scrollbar';
+import RHFFilteredSearchBar from '../../components/hook-form/RHFFilteredSearchBar';
 import MachineSettingReportListTableRow from './MachineSettingReportListTableRow';
 import MachineSettingReportListTableToolbar from './MachineSettingReportListTableToolbar';
 
@@ -45,7 +48,6 @@ import { PATH_MACHINE } from '../../routes/paths';
 import { useSnackbar } from '../../components/snackbar';
 // util
 import TableCard from '../../components/ListTableTools/TableCard';
-import { fDate } from '../../utils/formatTime';
 import { exportCSV } from '../../utils/exportCSV';
 
 // ----------------------------------------------------------------------
@@ -55,13 +57,12 @@ MachineSettingReportList.propTypes = {
 };
 
 const TABLE_HEAD = [
-  { id: 'serialNo', label: 'Serial Number', align: 'left', hideable:false },
+  { id: 'serialNo', label: 'Serial Number', align: 'left', hideable:false, allowSearch: true },
   // { id: 'name', visibility: 'md1',label: 'Name', align: 'left' },
-  { id: 'machineModel.name', visibility: 'xs1', label: 'Model', align: 'left' },
-  { id: 'customer.name', visibility: 'md2', label: 'Customer', align: 'left' },
-  { id: 'HLCSoftwareVersion', label: 'HLC Software Version', align: 'left' },
-  { id: 'PLCSoftwareVersion', label: 'PLC Software Version', align: 'left' },
-  { id: 'createdAt', label: 'Created At', align: 'right' }
+  { id: 'machineModel.name', visibility: 'xs1', label: 'Model', align: 'left', allowSearch: true },
+  { id: 'customer.name', visibility: 'xs1', label: 'Customer', align: 'left', allowSearch: true },
+  { id: 'HLCSoftwareVersion', visibility: 'md', label: 'HLC Software Version', align: 'left' },
+  { id: 'PLCSoftwareVersion', visibility: 'md', label: 'PLC Software Version', align: 'left' },
 ];
 
 export default function MachineSettingReportList({ isArchived }) {
@@ -85,7 +86,12 @@ export default function MachineSettingReportList({ isArchived }) {
   const dispatch = useDispatch();
   const axiosToken = () => axios.CancelToken.source();
   const cancelTokenSource = axiosToken();
-
+  const [selectedSearchFilter, setSelectedSearchFilter] = useState('');
+  const methods = useForm({
+    defaultValues: {
+      filteredSearchKey: '',
+    },
+  });
   const { machines, 
     filterBy, 
     page, 
@@ -99,6 +105,9 @@ export default function MachineSettingReportList({ isArchived }) {
 
   const { enqueueSnackbar } = useSnackbar();
   const isMobile = useResponsive('down', 'sm');
+
+  const { watch, handleSubmit } = methods;
+  const filteredSearchKey = watch('filteredSearchKey');
 
   useLayoutEffect(() => {
     dispatch(resetMachine());
@@ -188,12 +197,55 @@ export default function MachineSettingReportList({ isArchived }) {
       <StyledCardContainer>
       <Cover name= "Machine Setting Reports"  />
       </StyledCardContainer>
+      <FormProvider {...methods} >
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <Card sx={{ p: 3 }}>
+              <Stack
+                direction={{ xs: 'column', sm: 'row' }}
+                spacing={2}
+                sx={{
+                  justifyContent: 'space-between',
+                  alignItems: 'flex-start',
+                }}
+              >
+                <Box sx={{ flexGrow: 1, width: { xs: '100%', sm: 'auto' } }}>
+                  <RHFFilteredSearchBar
+                    name="filteredSearchKey"
+                    filterOptions={TABLE_HEAD.filter((item) => item?.allowSearch)}
+                    setSelectedFilter={setSelectedSearchFilter}
+                    selectedFilter={selectedSearchFilter}
+                    placeholder="Enter Search here..."
+                    // afterClearHandler={afterClearHandler}
+                    // onKeyDown={(e) => {
+                    //   if (e.key === 'Enter') {
+                    //     handleSubmit(onGetReports)();
+                    //   }
+                    // }}
+                    fullWidth
+                  />
+                  </Box>
+                   <Box sx={{ justifyContent: 'flex-end', display: 'flex' }}>
+                  <LoadingButton
+                    type="button"
+                    // onClick={handleSubmit(onGetReports)}
+                    variant="contained"
+                    size="large"
+                  >
+                    Search
+                  </LoadingButton>
+                </Box>
+              </Stack>
+            </Card>
+          </Grid>
+        </Grid>
+        </FormProvider>
       <TableCard>
         <MachineSettingReportListTableToolbar
-          filterName={filterName}
-          onFilterName={handleFilterName}
-          isFiltered={isFiltered}
-          onResetFilter={handleResetFilter}
+          // filterName={filterName}
+          // onFilterName={handleFilterName}
+          // isFiltered={isFiltered}
+          // onResetFilter={handleResetFilter}
           onExportCSV={onExportCSV}
           onExportLoading={exportingCSV}
           isArchived={isArchived}
@@ -286,8 +338,7 @@ function applyFilter({ inputData, comparator, filterName }) {
         // product?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         product?.serialNo?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         product?.machineModel?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        product?.customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        fDate(product?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+        product?.customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }
   return inputData;
