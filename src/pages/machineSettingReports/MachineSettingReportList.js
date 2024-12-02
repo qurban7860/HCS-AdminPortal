@@ -1,12 +1,11 @@
 import PropTypes from 'prop-types';
-import { useLayoutEffect, useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import debounce from 'lodash/debounce';
-// form
+import { FormProvider, useForm } from 'react-hook-form';
 // @mui
-import { Container, Table, TableBody, TableContainer } from '@mui/material';
+import { Container, Table, TableBody, TableContainer, Grid, Card, Stack, Box } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 import {
   useTable,
   getComparator,
@@ -18,6 +17,7 @@ import {
 } from '../../components/table';
 import useResponsive from '../../hooks/useResponsive';
 import Scrollbar from '../../components/scrollbar';
+import RHFFilteredSearchBar from '../../components/hook-form/RHFFilteredSearchBar';
 import MachineSettingReportListTableRow from './MachineSettingReportListTableRow';
 import MachineSettingReportListTableToolbar from './MachineSettingReportListTableToolbar';
 
@@ -26,17 +26,10 @@ import { StyledCardContainer } from '../../theme/styles/default-styles';
 
 // slice
 import {
-  getMachines,
-  resetMachines,
-  resetMachine,
-  ChangeRowsPerPage,
-  ChangePage,
-  setFilterBy,
-  setVerified,
   setMachineTab,
-  setReportHiddenColumns
 } from '../../redux/slices/products/machine';
-import { resetSetting, resetSettings } from '../../redux/slices/products/machineSetting';
+
+import { getTechparamReports, ChangePage, ChangeRowsPerPage, setReportHiddenColumns  } from '../../redux/slices/products/machineTechParamReport';
 
 import { getCustomer, setCustomerDialog } from '../../redux/slices/customer/customer';
 // routes
@@ -45,7 +38,6 @@ import { PATH_MACHINE } from '../../routes/paths';
 import { useSnackbar } from '../../components/snackbar';
 // util
 import TableCard from '../../components/ListTableTools/TableCard';
-import { fDate } from '../../utils/formatTime';
 import { exportCSV } from '../../utils/exportCSV';
 
 // ----------------------------------------------------------------------
@@ -55,103 +47,55 @@ MachineSettingReportList.propTypes = {
 };
 
 const TABLE_HEAD = [
-  { id: 'serialNo', label: 'Serial Number', align: 'left', hideable:false },
+  { id: 'serialNo', label: 'Serial Number', align: 'left', hideable:false, allowSearch: true },
   // { id: 'name', visibility: 'md1',label: 'Name', align: 'left' },
-  { id: 'machineModel.name', visibility: 'xs1', label: 'Model', align: 'left' },
-  { id: 'customer.name', visibility: 'md2', label: 'Customer', align: 'left' },
-  { id: 'HLCSoftwareVersion', label: 'HLC Software Version', align: 'left' },
-  { id: 'PLCSoftwareVersion', label: 'PLC Software Version', align: 'left' },
-  { id: 'createdAt', label: 'Created At', align: 'right' }
+  { id: 'machineModel.name', visibility: 'xs1', label: 'Model', align: 'left', allowSearch: true },
+  { id: 'customer.name', visibility: 'xs1', label: 'Customer', align: 'left', allowSearch: true },
+  { id: 'HLCSoftwareVersion', visibility: 'md', label: 'HLC Software Version', align: 'left' },
+  { id: 'PLCSoftwareVersion', visibility: 'md', label: 'PLC Software Version', align: 'left' },
 ];
 
 export default function MachineSettingReportList({ isArchived }) {
-  const {
-    order,
-    orderBy,
-    setPage,
-    onSelectRow,
-    onSort,
-  } = useTable({ defaultOrderBy: 'serialNo', defaultOrder: 'desc' });
-
-  const onChangeRowsPerPage = (event) => {
-    dispatch(ChangePage(0));
-    dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
-  };
-
-  const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
+  
+  const { order, orderBy,  onSelectRow, onSort } = useTable({
+    defaultOrderBy: 'machineModel.name',
+    defaultOrder: 'desc',
+  });
 
   const [tableData, setTableData] = useState([]);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const axiosToken = () => axios.CancelToken.source();
-  const cancelTokenSource = axiosToken();
+  const [selectedSearchFilter, setSelectedSearchFilter] = useState('');
 
-  const { machines, 
-    filterBy, 
-    page, 
-    rowsPerPage, 
-    isLoading, 
-    error, 
-    initial, 
-    responseMessage,
-    reportHiddenColumns
-  } = useSelector( (state) => state.machine);
+  const methods = useForm({
+    defaultValues: {
+      filteredSearchKey: '',
+    },
+  });
+
+  const { page, rowsPerPage, isLoading, techparamReport, machineSettingReportstotalCount, reportHiddenColumns } = useSelector((state) => state.techparamReport) || {};
 
   const { enqueueSnackbar } = useSnackbar();
   const isMobile = useResponsive('down', 'sm');
 
-  useLayoutEffect(() => {
-    dispatch(resetMachine());
-    dispatch(resetMachines());
-    dispatch(resetSetting());
-    dispatch(resetSettings());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch]);
+  const { watch, handleSubmit } = methods;
+  const filteredSearchKey = watch('filteredSearchKey');
 
-  useEffect(()=>{
-    dispatch(getMachines(null, null, isArchived, cancelTokenSource ));
-    return ()=>{ cancelTokenSource.cancel() };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[dispatch, page, rowsPerPage, isArchived])
-
-  const [filterName, setFilterName] = useState(filterBy);
-  const [filterStatus, setFilterStatus] = useState([]);
-  
-  useEffect(() => {
-    if (initial) {
-      setTableData(machines || []);
-    }
-  }, [machines, error, responseMessage, enqueueSnackbar, initial]);
-
-  const dataFiltered = applyFilter({
+  const dataFiltered = applySort({
     inputData: tableData,
     comparator: getComparator(order, orderBy),
-    filterName,
   });
 
-  const isFiltered = filterName !== '' || !!filterStatus.length;
-  const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
+  const isNotFound = !dataFiltered.length || (!isLoading && !dataFiltered.length);
   const denseHeight = 60;
 
-  const debouncedSearch = useRef(debounce((value) => {
-    dispatch(ChangePage(0))
-    dispatch(setFilterBy(value))
-  }, 500))
-
-  const debouncedVerified = useRef(debounce((value) => {
-    dispatch(ChangePage(0))
-    dispatch(setVerified(value))
-  }, 500))
-
-  const handleFilterName = (event) => {
-    debouncedSearch.current(event.target.value);
-    setFilterName(event.target.value)
-    setPage(0);
+  const onChangePage = (event, newPage) => {
+    dispatch(ChangePage(newPage));
   };
-  
-  useEffect(() => {
-      debouncedSearch.current.cancel();
-  }, [debouncedSearch]);
+  const onChangeRowsPerPage = (event) => {
+    dispatch(ChangePage(0));
+    dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10)));
+  };
   
   const handleViewRow = (id) => {
     dispatch(setMachineTab('info'));
@@ -162,13 +106,40 @@ export default function MachineSettingReportList({ isArchived }) {
     dispatch(getCustomer(id))
     dispatch(setCustomerDialog(true))
   }
-
-  const handleResetFilter = () => {
-    dispatch(setFilterBy(''))
-    setFilterName('');
-    setFilterStatus([]);
-  };
   
+  useEffect(() => {
+    dispatch(
+      getTechparamReports({
+        page,
+        pageSize: rowsPerPage,
+        searchKey: filteredSearchKey,
+        searchColumn: selectedSearchFilter,
+      })
+    );
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, page, rowsPerPage]);
+  
+  useEffect(() => {
+    setTableData(techparamReport?.data || []);
+  }, [techparamReport]);
+
+  const onGetReports = (data) => {
+    dispatch(
+      getTechparamReports({
+        page,
+        pageSize: rowsPerPage,
+        searchKey: filteredSearchKey,
+        searchColumn: selectedSearchFilter,
+      })
+    );
+  };
+
+  const afterClearHandler = () => { 
+    dispatch(
+      getTechparamReports({ page, pageSize: rowsPerPage, searchKey: '', searchColumn: '' })
+    );
+  };  
+
   const [exportingCSV, setExportingCSV] = useState(false);
   const onExportCSV = async () => {
     setExportingCSV(true);
@@ -182,39 +153,68 @@ export default function MachineSettingReportList({ isArchived }) {
   const handleHiddenColumns = async (arg) => {
    dispatch(setReportHiddenColumns(arg))
   };
-
+  
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
-      <Cover name= "Machine Setting Reports"  />
+        <Cover name="Machine Setting Reports" />
       </StyledCardContainer>
+      <FormProvider {...methods} onSubmit={handleSubmit(onGetReports)}>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <Card sx={{ p: 3 }}>
+              <Stack
+                direction={{ xs: 'column', sm: 'row' }}
+                spacing={2}
+                sx={{
+                  justifyContent: 'space-between',
+                  alignItems: 'flex-start',
+                }}
+              >
+                <Box sx={{ flexGrow: 1, width: { xs: '100%', sm: 'auto' } }}>
+                  <RHFFilteredSearchBar
+                    name="filteredSearchKey"
+                    filterOptions={TABLE_HEAD.filter((item) => item?.allowSearch)}
+                    setSelectedFilter={setSelectedSearchFilter}
+                    selectedFilter={selectedSearchFilter}
+                    placeholder="Enter Search here..."
+                    afterClearHandler={afterClearHandler}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        handleSubmit(onGetReports)();
+                      }
+                    }}
+                    fullWidth
+                  />
+                </Box>
+                <Box sx={{ justifyContent: 'flex-end', display: 'flex' }}>
+                  <LoadingButton
+                    type="button"
+                    onClick={handleSubmit(onGetReports)}
+                    variant="contained"
+                    size="large"
+                  >
+                    Search
+                  </LoadingButton>
+                </Box>
+              </Stack>
+            </Card>
+          </Grid>
+        </Grid>
+      </FormProvider>
       <TableCard>
         <MachineSettingReportListTableToolbar
-          filterName={filterName}
-          onFilterName={handleFilterName}
-          isFiltered={isFiltered}
-          onResetFilter={handleResetFilter}
           onExportCSV={onExportCSV}
           onExportLoading={exportingCSV}
           isArchived={isArchived}
         />
 
-        {!isNotFound && !isMobile &&(
+        {!isNotFound && !isMobile && (
           <TablePaginationFilter
             columns={TABLE_HEAD}
             hiddenColumns={reportHiddenColumns}
             handleHiddenColumns={handleHiddenColumns}
-            count={machines? machines.length : 0}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-          />
-        )}
-
-        {!isNotFound && isMobile && (
-          <TablePaginationCustom
-            count={machines ? machines.length : 0}
+            count={machineSettingReportstotalCount || 0}
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
@@ -243,7 +243,7 @@ export default function MachineSettingReportList({ isArchived }) {
                         row={row}
                         hiddenColumns={reportHiddenColumns}
                         onSelectRow={() => onSelectRow(row._id)}
-                        onViewRow={() => handleViewRow(row._id)}
+                        // onViewRow={() => handleViewRow(row._id)}
                         style={index % 2 ? { background: 'red' } : { background: 'green' }}
                         handleCustomerDialog={(e)=> row?.customer && handleCustomerDialog(e,row?.customer?._id)}
                         isArchived={isArchived}
@@ -258,20 +258,22 @@ export default function MachineSettingReportList({ isArchived }) {
           </Scrollbar>
         </TableContainer>
 
-        {!isNotFound && <TablePaginationCustom
-            count={machines? machines.length : 0}
+        {!isNotFound && (
+          <TablePaginationCustom
+            count={machineSettingReportstotalCount || 0}
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-          />}
+          />
+        )}
       </TableCard>
     </Container>
   );
 }
-function applyFilter({ inputData, comparator, filterName }) {
-  const stabilizedThis = inputData.map((el, index) => [el, index]);
 
+function applySort({ inputData, comparator }) {
+  const stabilizedThis =  inputData && inputData.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
@@ -279,17 +281,5 @@ function applyFilter({ inputData, comparator, filterName }) {
   });
 
   inputData = stabilizedThis.map((el) => el[0]);
-    
-  if (filterName) {
-    inputData = inputData.filter(
-      (product) =>
-        // product?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        product?.serialNo?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        product?.machineModel?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        product?.customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        fDate(product?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
-    );
-  }
   return inputData;
 }
-

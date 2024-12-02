@@ -44,7 +44,7 @@ export default function MachineSettingReportListTableRow({
     verifications,
     machineModel,
     customer,
-    createdAt,
+    techParamas,
   } = row;
 
   const theme = createTheme({
@@ -63,20 +63,19 @@ export default function MachineSettingReportListTableRow({
       />
       {/* { useScreenSize('lg') && !hiddenColumns?.name && <TableCell>{name || ''}</TableCell>} */}
       {  useScreenSize('sm') && !hiddenColumns['machineModel.name'] && <TableCell>{ machineModel?.name || ''}</TableCell>}
-      {  useScreenSize('lg') && !hiddenColumns['customer.name'] &&
+      {  useScreenSize('sm') && !hiddenColumns['customer.name'] &&
         <LinkDialogTableCell onClick={handleCustomerDialog} align='center' param={customer?.name}/>  
       }
-       {!hiddenColumns.HLCSoftwareVersion && (
+       {useScreenSize('lg') && !hiddenColumns.HLCSoftwareVersion && (
         <TableCell align="left">
-          {row.techParam?.code.includes('HLCSoftwareVersion') ? row.techParamValue : ''}
+          {techParamas?.HLCSoftwareVersion || ''}
         </TableCell>
       )}
-      {!hiddenColumns.PLCSoftwareVersion && (
+      {useScreenSize('lg') && !hiddenColumns.PLCSoftwareVersion && (
         <TableCell align="left">
-          {row.techParam?.code.includes('PLCSoftwareVersion') ? row.techParamValue : ''}
+           {techParamas?.PLCSWVersion || ''}
         </TableCell>
       )}
-      { !hiddenColumns?.createdAt && <TableCell align="right">{fDate(createdAt)}</TableCell>}
     </TableRow>
   );
 } 
