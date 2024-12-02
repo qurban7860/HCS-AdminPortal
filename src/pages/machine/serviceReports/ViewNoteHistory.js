@@ -58,7 +58,6 @@ const ViewNoteHistory = ({ label, historicalData, isEditing, onEdit, onDelete })
             </Typography>
           }
           <Typography variant="body2" sx={{ color: 'text.disabled', alignItems: "center", whiteSpace: 'pre-line', overflowWrap: 'break-word', width:"100%" }}>
-            <>
               { Array.isArray( currentData?.technicians ) && currentData?.technicians?.length > 0 && (
                 <>
                   <b>Technicians:</b>
@@ -87,9 +86,8 @@ const ViewNoteHistory = ({ label, historicalData, isEditing, onEdit, onDelete })
                   ))}
                 </>
               )}
-            </>
           </Typography>
-              <ServiceReportAuditLogs data={ currentData || null } />
+          <ServiceReportAuditLogs data={ currentData || null } />
         </Grid>
       }
       { Array.isArray( filteredHistoricalData ) && filteredHistoricalData?.length > 0 &&

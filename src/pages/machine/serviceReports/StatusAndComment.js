@@ -1,7 +1,7 @@
 import React, { useState, memo, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Grid, Chip, TableRow, Typography, Box, Switch, Divider, Button, Dialog, DialogTitle } from '@mui/material';
+import { Grid, Chip, Typography, Box, Switch, Divider, Button, Dialog, DialogTitle } from '@mui/material';
 import download from 'downloadjs';
 import { useSnackbar } from 'notistack';
 import b64toBlob from 'b64-to-blob';
@@ -140,7 +140,7 @@ const StatusAndComment = ({index, childIndex, childRow, isBorder, isUpdating, ma
   };
 
   return (
-    <TableRow key={childRow._id} sx={{ backgroundColor: 'none',}} >
+    < >
     <Grid item md={12} sx={{mt: childIndex !==0 && 0.5, 
           ...(isBorder && {
             p: 1,
@@ -265,7 +265,7 @@ const StatusAndComment = ({index, childIndex, childRow, isBorder, isUpdating, ma
                     )}
               </Dialog>
             )}
-    </TableRow>
+    </>
   )
 }
 StatusAndComment.propTypes = {
