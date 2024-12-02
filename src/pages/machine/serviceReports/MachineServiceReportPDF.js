@@ -108,27 +108,27 @@ export function MachineServiceReportPDF({machineServiceReport, machineServiceRep
         <View style={styles.body}>
             <Text style={styles.title}>Key Details</Text>
             <View style={styles.row}>
-                <View style={styles.col_20}>
+                <View style={styles.col_30}>
                     <Text style={styles.lable}>SERVICE DATE</Text>
                     <Text style={[styles.text]}>{fDate(defaultValues?.serviceDate)}</Text>
                 </View>
-                <View style={styles.col_30}>
+                <View style={styles.col_40}>
                     <Text style={styles.lable}>SERVICE ID</Text>
                     <Text style={[styles.text]}>{ defaultValues?.serviceReportUID }</Text>
                 </View>
-                <View style={styles.col_10}>
-                    <Text style={styles.lable}>VERSION</Text>
-                    <Text style={[styles.text]}>{defaultValues?.versionNo}</Text>
-                </View>
-                <View style={styles.col_40}>
+                <View style={styles.col_30}>
                     <Text style={styles.lable}>STATUS</Text>
                     <Text style={[styles.text]}>{defaultValues.approvalStatus === "PENDING" ? defaultValues.status : defaultValues.approvalStatus}</Text>
                 </View>
             </View>
             <View style={styles.row}>
-                <View style={styles.col}>
+                <View style={styles.col_30}>
                     <Text style={styles.lable}>REPORT TYPE</Text>
                     <Text style={[styles.text]}>{defaultValues?.serviceReportTemplateReportType}</Text>
+                </View>
+                <View style={styles.col_70}>
+                    <Text style={styles.lable}>SERVICE REPORT TEMPLATE</Text>
+                    <Text style={[styles.text]}>{defaultValues?.serviceReportTemplate}</Text>
                 </View>
             </View>
             <View style={styles.row}>

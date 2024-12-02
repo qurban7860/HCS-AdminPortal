@@ -2,6 +2,7 @@ import React, { useState, memo, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Grid, Chip, Typography, Box, Switch, Divider, Button, Dialog, DialogTitle } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 import download from 'downloadjs';
 import { useSnackbar } from 'notistack';
 import b64toBlob from 'b64-to-blob';
@@ -11,12 +12,13 @@ import ServiceReportAuditLogs from './ServiceReportAuditLogs';
 import { DocumentGalleryItem } from '../../../components/gallery/DocumentGalleryItem';
 import { deleteCheckItemFile, downloadCheckItemFile, setAddFileDialog } from '../../../redux/slices/products/machineServiceReport';
 import Lightbox from '../../../components/lightbox/Lightbox';
+import ConfirmDialog from '../../../components/confirm-dialog';
 import CheckedItemValueHistory from './CheckedItemValueHistory';
 import SkeletonPDF from '../../../components/skeleton/SkeletonPDF';
 import IconifyButton from '../../../components/Icons/IconifyButton';
 
 const StatusAndComment = ({index, childIndex, childRow, isBorder, isUpdating, machineId, onEdit, onDelete }) => {
-    const { machineServiceReport } = useSelector((state) => state.machineServiceReport);
+    const { machineServiceReport, isLoadingCheckItems } = useSelector((state) => state.machineServiceReport);
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
 
@@ -27,13 +29,14 @@ const StatusAndComment = ({index, childIndex, childRow, isBorder, isUpdating, ma
     const [reportValue, setReportValue] = useState(null);
     const [PDFName, setPDFName] = useState('');
     const [AttachedPDFViewerDialog, setAttachedPDFViewerDialog] = useState(false);
+    const [ deleteDialog, setDeleteDialog ] = useState( false );
 
     const handleAddFileDialog = () => {
       dispatch(setAddFileDialog(true));
     }
 
     useEffect(() => {
-      if(Array.isArray( childRow?.historicalData ) && childRow?.historicalData?.length > 0 ){
+      if( Array.isArray( childRow?.historicalData ) && childRow?.historicalData?.length > 0 ){
         const itemsReportVals = childRow?.historicalData?.[0]
         setReportValue(itemsReportVals)
         if (itemsReportVals?.files) {
@@ -170,7 +173,7 @@ const StatusAndComment = ({index, childIndex, childRow, isBorder, isUpdating, ma
                         childRow?.inputType.toLowerCase() === 'short text') && 
                         reportValue?.checkItemValue 
                       }
-                        {reportValue?.checkItemValue?.trim() && childRow?.inputType?.toLowerCase() !== 'boolean' && <CopyIcon value={reportValue?.checkItemValue}/>}
+                      { typeof childRow?.inputType !== 'boolean'  && reportValue?.checkItemValue?.trim() && <CopyIcon value={reportValue?.checkItemValue}/>}
                     </> 
                 }
                 { onEdit &&
@@ -186,7 +189,7 @@ const StatusAndComment = ({index, childIndex, childRow, isBorder, isUpdating, ma
                     title='Delete'
                     icon='mdi:delete'
                     color='#FF0000'
-                    onClick={ () => onDelete( reportValue ) }
+                    onClick={ () => setDeleteDialog( true ) }
                   />
                 }
               </Typography>
@@ -265,6 +268,23 @@ const StatusAndComment = ({index, childIndex, childRow, isBorder, isUpdating, ma
                     )}
               </Dialog>
             )}
+        <ConfirmDialog
+          open={ deleteDialog }
+          onClose={() => setDeleteDialog(false)}
+          title="Delete"
+          content="Are you sure you want to Delete?"
+          action={
+            <LoadingButton
+              variant="contained"
+              color="error"
+              loading={ isLoadingCheckItems }
+              disabled={ isLoadingCheckItems }
+              onClick={ () => onDelete( reportValue ) }
+            >
+              Delete
+            </LoadingButton>
+          }
+        />
     </>
   )
 }
