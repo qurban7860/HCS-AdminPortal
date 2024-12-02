@@ -381,18 +381,18 @@ function MachineServiceReportViewForm(  ) {
           handleEdit={ 
             !machine?.isArchived && 
             machineServiceReport?.status?.type?.toLowerCase() === 'draft' &&
-            machineServiceReport?._id && handleEdit
+            machineServiceReport?._id && handleEdit || undefined
           }
           onDelete={
             !machine?.isArchived &&
             // machineServiceReport?.status?.name?.toUpperCase() === 'DRAFT' &&
             machineServiceReport?._id
               ? onDelete
-              : null
+              : undefined
           }
           backLink={handleBackLink}
-          handleSendPDFEmail={ !machine?.isArchived && machineServiceReport?._id && handleSendEmail}
-          handleViewPDF={ !machine?.isArchived && machineServiceReport?._id && handlePDFViewer}
+          handleSendPDFEmail={ !machine?.isArchived && machineServiceReport?._id && handleSendEmail || undefined }
+          handleViewPDF={ !machine?.isArchived && machineServiceReport?._id && handlePDFViewer || undefined }
           
           handleCompleteMSR={
             !machine?.isArchived &&
