@@ -44,7 +44,7 @@ export default function MachineSettingReportListTableRow({
     verifications,
     machineModel,
     customer,
-    createdAt,
+    techParamas,
   } = row;
 
   const theme = createTheme({
@@ -68,12 +68,12 @@ export default function MachineSettingReportListTableRow({
       }
        {useScreenSize('lg') && !hiddenColumns.HLCSoftwareVersion && (
         <TableCell align="left">
-          {row.techParam?.code.includes('HLCSoftwareVersion') ? row.techParamValue : ''}
+          {techParamas?.HLCSoftwareVersion || ''}
         </TableCell>
       )}
       {useScreenSize('lg') && !hiddenColumns.PLCSoftwareVersion && (
         <TableCell align="left">
-          {row.techParam?.code.includes('PLCSoftwareVersion') ? row.techParamValue : ''}
+           {techParamas?.PLCSWVersion || ''}
         </TableCell>
       )}
     </TableRow>
