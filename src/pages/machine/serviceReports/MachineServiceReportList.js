@@ -29,9 +29,11 @@ import {
   ChangeRowsPerPage,
   ChangePage,
   setFilterBy,
+  setFilterByStatus,
+  setFilterByStatusType,
   setSendEmailDialog,
 } from '../../../redux/slices/products/machineServiceReport';
-import { fDate } from '../../../utils/formatTime';
+import { fDate, fDateTime } from '../../../utils/formatTime';
 import TableCard from '../../../components/ListTableTools/TableCard';
 import { Cover } from '../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
@@ -46,11 +48,11 @@ MachineServiceReportList.propTypes = {
 export default function MachineServiceReportList( { reportsPage }) {
   
   const { machine } = useSelector((state) => state.machine);
-  const { machineServiceReports, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.machineServiceReport);
+  const { machineServiceReports, filterBy, filterByStatus, filterByStatusType, page, rowsPerPage, isLoading } = useSelector((state) => state.machineServiceReport);
   const { activeServiceReportStatuses, isLoadingReportStatus } = useSelector( (state) => state.serviceReportStatuses );
   const navigate = useNavigate();
   const { machineId } = useParams();
-
+  
   const TABLE_HEAD = useMemo(() => {
     const baseHeaders =  [
       { id: 'checkboxes', label: ' ', align: 'left' },
@@ -85,11 +87,11 @@ export default function MachineServiceReportList( { reportsPage }) {
     dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
   };
 
-  const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
+  const onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
   const dispatch = useDispatch();
   const [filterName, setFilterName] = useState('');
   const [filterStatus, setFilterStatus] = useState(null);
-  const [statusType, setStatusType] = useState([ 'To Do', 'In Progress' ]);
+  const [statusType, setStatusType] = useState( [] );
 
   useEffect(() => {
     dispatch(getActiveServiceReportStatuses() )
@@ -99,7 +101,7 @@ export default function MachineServiceReportList( { reportsPage }) {
     };
   }, [ dispatch ]);
 
-  const getReports = useCallback( async ()=>{
+  const getReports = useCallback( async () => {
     await dispatch(setSendEmailDialog(false));
     await dispatch(setDetailPageFlag(false));
     if( !isLoadingReportStatus && Array.isArray( activeServiceReportStatuses ) && activeServiceReportStatuses?.length > 0 ){
@@ -152,32 +154,51 @@ export default function MachineServiceReportList( { reportsPage }) {
     setFilterName(event.target.value)
     setPage(0);
   };
-  
-  useEffect(() => {
-      debouncedSearch.current.cancel();
-  }, [debouncedSearch]);
-  
-  useEffect(()=>{
-      setFilterName(filterBy)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[])
+
+  const debouncedFilterStatus = useRef(debounce((value) => {
+    dispatch(ChangePage(0))
+    dispatch(setFilterByStatus(value))
+  }, 500))
 
   const handleFilterStatus = ( option, newValue ) => {
     if( newValue ){
-      setPage(0);
+      debouncedFilterStatus.current( newValue );
       setFilterStatus( newValue );
+      setPage(0);
     } else {
+      debouncedFilterStatus.current( null );
       setFilterStatus( null );
     }
   }
+
+  const debouncedFilterStatusType = useRef(debounce((value) => {
+    dispatch(ChangePage(0))
+    dispatch(setFilterByStatusType(value))
+  }, 500))
+
   const handleStatusType = ( option, newValue ) => {
     if( newValue ){
-      setPage(0);
+      debouncedFilterStatusType.current(newValue);
       setStatusType( newValue );
+      setPage(0);
     } else {
+      debouncedFilterStatusType.current(null);
       setStatusType( null );
     }
   }
+
+  useEffect(() => {
+    debouncedSearch.current.cancel();
+    debouncedFilterStatus.current.cancel();
+    debouncedFilterStatusType.current.cancel();
+  }, [ debouncedSearch, debouncedFilterStatus, debouncedFilterStatusType ]);
+
+  useEffect(()=>{
+    setFilterName( filterBy )
+    setFilterStatus( filterByStatus )
+    setStatusType( filterByStatusType )
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[ filterBy, filterByStatus, filterByStatusType ])
 
   const handleViewRow = async ( mId, id ) => { 
     navigate( PATH_MACHINE.machines.serviceReports.view( ( machineId || mId ), id ) );
@@ -282,11 +303,15 @@ function applyFilter({ inputData, comparator, filterName }) {
 
   if (filterName) {
     inputData = inputData.filter(
-      (docCategory) =>
-        docCategory?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        docCategory?.versionNo?.toString().indexOf(filterName.toLowerCase()) >= 0 ||
-        docCategory?.createdBy?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        fDate(docCategory?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+      ( msr ) =>
+        ( msr?.isActive ? "Active" : "InActive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+        fDate( msr?.serviceDate )?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        msr?.serviceReportTemplate?.reportType?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        msr?.machine?.serialNo?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        msr?.customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        msr?.status?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        msr?.createdBy?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        fDateTime( msr?.createdAt )?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }
 

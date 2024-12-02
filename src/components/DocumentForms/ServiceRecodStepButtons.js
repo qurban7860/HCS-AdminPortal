@@ -17,12 +17,12 @@ ServiceRecodStepButtons.propTypes = {
 };
 
 export default function ServiceRecodStepButtons({
-  handleDraft,
-  isSubmitting,
-  handleSubmit,
   isDraft,
   isActive,
-  isSubmitted
+  isSubmitted,
+  isSubmitting,
+  handleDraft,
+  handleSubmit,
 }) {
 
   const navigate = useNavigate();
@@ -50,12 +50,26 @@ export default function ServiceRecodStepButtons({
       <Grid item sm={12} md={6} display='flex' columnGap={2}>
         <Button size={isMobile ? 'medium' : 'large'} onClick={handleCancle} variant="outlined">Exit</Button> 
         { handleDraft && (<LoadingButton loading={isSubmitting && isDraft} size={isMobile ? 'medium' : 'large'} onClick={handleDraft} type='submit' variant="outlined" fullWidth={isMobile}>Save as draft</LoadingButton> )}
-        { handleSubmit && formActiveStep === 0 && <LoadingButton onClick={handleSubmit} size={isMobile ? 'medium' : 'large'} type='submit' variant="contained"  loading={isSubmitting && !isDraft && isSubmitted }>Submit</LoadingButton>}
       </Grid>
-      <Grid item sm={12} md={6} display='flex' columnGap={2} justifyContent='flex-end'  >
-        <Button size={isMobile ? 'medium' : 'large'} onClick={handleBack} disabled={ formActiveStep===0 } variant="outlined">Back</Button>
-          <LoadingButton disabled={!isActive && formActiveStep===2} size={isMobile ? 'medium' : 'large'} type='submit' variant="contained"  loading={isSubmitting && !isDraft && !isSubmitted }>
-            {formActiveStep===2?"Submit":"Next"}
+      <Grid item sm={12} md={6} display='flex' columnGap={2} justifyContent='flex-end' >
+          {formActiveStep > 0 && 
+            <Button 
+              size={isMobile ? 'medium' : 'large'} 
+              onClick={handleBack} 
+              disabled={ formActiveStep===0 } 
+              variant="outlined"
+            >Back
+            </Button>
+          }
+          <LoadingButton 
+            onClick={ handleSubmit }
+            disabled={!isActive && formActiveStep===2} 
+            size={isMobile ? 'medium' : 'large'} 
+            type='submit' 
+            variant="contained"  
+            loading={ isSubmitting && !isDraft && !isSubmitted }
+          >
+            { ( formActiveStep === 2 || handleSubmit ) ? "Submit" : "Next" }
           </LoadingButton>
       </Grid>
     </Grid>

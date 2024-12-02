@@ -1,6 +1,6 @@
 import { memo } from 'react'
 import PropTypes from 'prop-types';
-import { Grid, TableContainer, Table, TableBody, Typography } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import StatusAndComment from './StatusAndComment';
 
 const CheckedItemValueRow = ({value, index, machineId, primaryServiceReportId }) => (
@@ -10,11 +10,9 @@ const CheckedItemValueRow = ({value, index, machineId, primaryServiceReportId })
       {value?.ListTitle || ''} (Items: <b>{value?.checkItems?.length || 0}</b>)
     </Typography>
       <Grid>
-      <TableContainer >
-        <Table size="small" aria-label="simple table" >
-          <TableBody  >
           {value?.checkItems?.map((childRow, childIndex) => (
             <StatusAndComment
+              isBorder
               machineId={machineId}
               primaryServiceReportId={primaryServiceReportId}
               index={index}
@@ -23,9 +21,6 @@ const CheckedItemValueRow = ({value, index, machineId, primaryServiceReportId })
               childRow={childRow}
             />
           ))}
-          </TableBody>
-        </Table>
-        </TableContainer>
       </Grid>   
     </Grid>
   );

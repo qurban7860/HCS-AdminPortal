@@ -42,7 +42,7 @@ const CheckedItemValueHistoryItem = ({ historyItem, inputType }) => {
 
     if(!image?.isLoaded && image?.fileType?.startsWith('image')){
       try {
-        const response = await dispatch(downloadCheckItemFile(machineId, image.serviceReport, image?._id));
+        const response = await dispatch(downloadCheckItemFile(machineId, image?._id));
         if (regEx.test(response.status)) {
           // Update the image property in the imagesLightbox array
           const updatedSlides = [
@@ -70,7 +70,7 @@ const CheckedItemValueHistoryItem = ({ historyItem, inputType }) => {
 
 
   const handleDownloadCheckItemFile = (file) => {
-    dispatch(downloadCheckItemFile( machineId, file.serviceReport, file._id ))
+    dispatch(downloadCheckItemFile( machineId, file._id ))
       .then((res) => {
         if (regEx.test(res.status)) {
           download(atob(res.data), `${file?.name}.${file?.extension}`, { type: file?.extension });
@@ -95,7 +95,7 @@ const CheckedItemValueHistoryItem = ({ historyItem, inputType }) => {
       setPDFName(`${file?.name}.${file?.extension}`);
       setAttachedPDFViewerDialog(true);
       setPDF(null);
-      const response = await dispatch(downloadCheckItemFile(machineId, file.serviceReport, file._id));
+      const response = await dispatch(downloadCheckItemFile(machineId, file._id));
       if (regEx.test(response.status)) {
         const blob = b64toBlob(encodeURI(response.data), 'application/pdf')
         const url = URL.createObjectURL(blob);

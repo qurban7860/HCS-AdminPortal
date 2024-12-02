@@ -8,7 +8,7 @@ import CopyIcon from '../../../components/Icons/CopyIcon';
 import { setContactDialog, getContact } from '../../../redux/slices/customer/contact';
 import ServiceReportAuditLogs from './ServiceReportAuditLogs';
 
-const HistoryNotes = ({ label, historicalData }) =>  {
+const HistoryNotes = ({ historicalData }) =>  {
 
   const dispatch = useDispatch()
   const [showHistory, setShowHistory] = useState(false);
@@ -23,11 +23,8 @@ const HistoryNotes = ({ label, historicalData }) =>  {
 
 return(
   <>
-  { Array.isArray(historicalData) && historicalData?.length > 0 && <Grid container item md={12} sx={{ px: 0.5 }} >
+  { Array.isArray(historicalData) && historicalData?.length > 0 && <Grid container item md={12}  >
       <Grid container item md={12} sx={{ display: 'flex', justifyContent: "flex-start" , alignItems: 'center', whiteSpace: 'pre-line', wordBreak: 'break-word'  }}>
-        {/* <Typography variant="body2" sx={{ color: 'text.disabled', cursor: "pointer" }} onClick={toggleHistory} >
-          <b>{`${showHistory ? "Hide " : "Show "} more:`}</b>
-        </Typography> */}
         <StyledTooltip
           tooltipcolor='#2065D1'
           placement="top"
@@ -54,28 +51,29 @@ return(
                     </Typography>
                   )}
 
-                  <Typography variant="body2" sx={{ color: 'text.disabled', alignItems: "center", display: "flex", width:"100%" }}>
+                  <Typography variant="body2" sx={{ color: 'text.disabled', alignItems: "center", width:"100%" }}>
                     <>
-                      { historyItem?.technician && (
+                      { Array.isArray( historyItem?.technicians ) && historyItem?.technicians?.length > 0 && (
                         <>
-                          <Typography variant="body2" sx={{ color: 'text.disabled' }}>
                             <b>Technician:</b>
-                          </Typography>
-                          <Chip 
-                            sx={{ m: 0.5 }}
-                            label={`${historyItem?.technician?.firstName || ''} ${historyItem?.technician?.lastName || ''}`}
-                            onClick={() => handleContactDialog(historyItem?.technician?.customer?._id, historyItem?.technician?._id)}
-                          />
+                          {historyItem?.technicians?.map(op => (
+                            <Chip
+                              size='small'
+                              key={op._id}
+                              sx={{ m: 0.5 }}
+                              label={`${op.firstName || ''} ${op.lastName || ''}`}
+                              onClick={() => handleContactDialog(op.customer?._id, op._id)}
+                            />
+                          ))}
                         </>
                       )}
                       { Array.isArray( historyItem?.operators ) && historyItem?.operators?.length > 0 && (
                         <>
-                          <Typography variant="body2" sx={{ color: 'text.disabled' }}>
                             <b>Operators:</b>
-                          </Typography>
                           {historyItem?.operators?.map(op => (
                             <Chip
-                              key={op._id}
+                              size='small'
+                              key={ op._id }
                               sx={{ m: 0.5 }}
                               label={`${op.firstName || ''} ${op.lastName || ''}`}
                               onClick={() => handleContactDialog(op.customer?._id, op._id)}
@@ -98,7 +96,6 @@ return(
 
 
 HistoryNotes.propTypes = {
-  label: PropTypes.string,
   historicalData: PropTypes.array,
 };
 

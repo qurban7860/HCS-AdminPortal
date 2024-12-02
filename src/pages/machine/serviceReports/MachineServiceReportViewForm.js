@@ -50,7 +50,7 @@ import IconButtonTooltip from '../../../components/Icons/IconButtonTooltip';
 import ServiceReportsFormComments from '../../../components/machineServiceReports/ServiceReportsFormComments';
 import OpenInNewPage from '../../../components/Icons/OpenInNewPage';
 import ReportStatusButton from './ReportStatusButton';
-import ViewHistory from './ViewHistory';
+import ViewNoteHistory from './ViewNoteHistory';
 
 function MachineServiceReportViewForm(  ) {
   
@@ -123,6 +123,7 @@ function MachineServiceReportViewForm(  ) {
       footerLeftText:                       machineServiceReport?.serviceReportTemplate?.footer?.leftText || '', 
       footerCenterText:                     machineServiceReport?.serviceReportTemplate?.footer?.centerText || '',
       footerRightText:                      machineServiceReport?.serviceReportTemplate?.footer?.rightText || '',
+      reportSubmission:                     machineServiceReport?.reportSubmission || '',
       textBeforeCheckItems:                 machineServiceReport?.textBeforeCheckItems || "",
       textAfterCheckItems:                  machineServiceReport?.textAfterCheckItems || "",
       internalComments:                     machineServiceReport?.internalComments || [],
@@ -380,18 +381,18 @@ function MachineServiceReportViewForm(  ) {
           handleEdit={ 
             !machine?.isArchived && 
             machineServiceReport?.status?.type?.toLowerCase() === 'draft' &&
-            machineServiceReport?._id && handleEdit
+            machineServiceReport?._id && handleEdit || undefined
           }
           onDelete={
             !machine?.isArchived &&
             // machineServiceReport?.status?.name?.toUpperCase() === 'DRAFT' &&
             machineServiceReport?._id
               ? onDelete
-              : null
+              : undefined
           }
           backLink={handleBackLink}
-          handleSendPDFEmail={ !machine?.isArchived && machineServiceReport?._id && handleSendEmail}
-          handleViewPDF={ !machine?.isArchived && machineServiceReport?._id && handlePDFViewer}
+          handleSendPDFEmail={ !machine?.isArchived && machineServiceReport?._id && handleSendEmail || undefined }
+          handleViewPDF={ !machine?.isArchived && machineServiceReport?._id && handlePDFViewer || undefined }
           
           handleCompleteMSR={
             !machine?.isArchived &&
@@ -518,10 +519,9 @@ function MachineServiceReportViewForm(  ) {
               />
             ))} 
           />
-          {/* <ViewFormField isLoading={isLoading} sm={4} heading="Technician"  param={`${defaultValues?.technician?.firstName || ''} ${defaultValues?.technician?.lastName || ''} `} /> */}
-          <ViewHistory isLoading={isLoading} label="Technician Notes" historicalData={machineServiceReport.technicianNotes} />
+          <ViewNoteHistory label="Technician Notes" historicalData={machineServiceReport.technicianNotes} />
 
-          { machineServiceReport?.reportDocs?.length > 0 &&
+          { !defaultValues?.reportSubmission && machineServiceReport?.reportDocs?.length > 0 &&
           <>
             <FormLabel content='Reporting Documents' />
             <Box
@@ -557,54 +557,60 @@ function MachineServiceReportViewForm(  ) {
               { machineServiceReport?.status?.name?.toUpperCase() === 'DRAFT' && <ThumbnailDocButton onClick={handleAddReportDocsDialog}/> }
             </Box>
           </>}
-          <FormLabel content={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />
-          { defaultValues.textBeforeCheckItems &&
-            typeof defaultValues.textBeforeCheckItems === "string" && 
-            <ViewFormNoteField isLoading={isLoading} sm={12} param={defaultValues.textBeforeCheckItems} />
-          }
-          {!isLoadingCheckItems ? 
-            <Grid item md={12} sx={{ overflowWrap: 'break-word' }}>
-              <Grid item md={12} sx={{display:'flex', flexDirection:'column'}}>
-              { machineServiceReportCheckItems?.checkItemLists?.map((row, index) => (
-                  <CheckedItemValueRow
-                    machineId={machineId}
-                    primaryServiceReportId={machineServiceReport?.primaryServiceReportId	}
-                    value={row}
-                    index={index}
-                    key={row._id}
-                  />
-                ))
-              }
-              </Grid>
-            </Grid>
-            :
-            <Stack
-              my={1} py={2} spacing={2}
-              sx={{
-                width: '100%',
-                borderRadius: '10px',
-                border: (theme) => `1px solid ${theme.palette.grey[400]}`,
-              }}
-            >
-              {Array.from({ length: 8 }).map((_, index) => (
-                <SkeletonLine key={index} />
-              ))}
-            </Stack>
-          }
           
-          { defaultValues.textAfterCheckItems && 
-            typeof defaultValues.textAfterCheckItems === "string" && 
-            <ViewFormNoteField isLoading={isLoading} sm={12}  param={defaultValues.textAfterCheckItems} />
+          { defaultValues?.reportSubmission && 
+            <>
+              <FormLabel content={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />
+              { defaultValues.textBeforeCheckItems &&
+                typeof defaultValues.textBeforeCheckItems === "string" && 
+                <ViewFormNoteField isLoading={isLoading} sm={12} param={defaultValues.textBeforeCheckItems} />
+              }
+              {!isLoadingCheckItems ? 
+                <Grid item md={12} sx={{ overflowWrap: 'break-word' }}>
+                  <Grid item md={12} sx={{display:'flex', flexDirection:'column'}}>
+                  { machineServiceReportCheckItems?.checkItemLists?.map((row, index) => (
+                      <CheckedItemValueRow
+                        machineId={machineId}
+                        primaryServiceReportId={machineServiceReport?.primaryServiceReportId	}
+                        value={row}
+                        index={index}
+                        key={row._id}
+                      />
+                    ))
+                  }
+                  </Grid>
+                </Grid>
+                :
+                <Stack
+                  my={1} py={2} spacing={2}
+                  sx={{
+                    width: '100%',
+                    borderRadius: '10px',
+                    border: (theme) => `1px solid ${theme.palette.grey[400]}`,
+                  }}
+                >
+                  {Array.from({ length: 8 }).map((_, index) => (
+                    <SkeletonLine key={index} />
+                  ))}
+                </Stack>
+              }
+
+              { defaultValues.textAfterCheckItems && 
+                typeof defaultValues.textAfterCheckItems === "string" && 
+                <ViewFormNoteField isLoading={isLoading} sm={12}  param={defaultValues.textAfterCheckItems} />
+              }
+            </>
           }
-          {machineServiceReport?.serviceReportTemplate?.enableNote && <ViewHistory isLoading={isLoading} label={`${machineServiceReport?.serviceReportTemplate?.reportType?.charAt(0).toUpperCase()||''}${machineServiceReport?.serviceReportTemplate?.reportType?.slice(1).toLowerCase()||''} Note`} historicalData={defaultValues.serviceNote} />}
-          {machineServiceReport?.serviceReportTemplate?.enableMaintenanceRecommendations && <ViewHistory isLoading={isLoading} label="Recommendation Note" historicalData={defaultValues.recommendationNote} />}
-          {machineServiceReport?.serviceReportTemplate?.enableSuggestedSpares && <ViewHistory isLoading={isLoading} label="Suggested Spares" historicalData={defaultValues.suggestedSpares} />}
-          <ViewHistory isLoading={isLoading} label="Internal Note" historicalData={defaultValues.internalNote} />
+          {machineServiceReport?.serviceReportTemplate?.enableNote && <ViewNoteHistory label={`${machineServiceReport?.serviceReportTemplate?.reportType?.charAt(0).toUpperCase()||''}${machineServiceReport?.serviceReportTemplate?.reportType?.slice(1).toLowerCase()||''} Note`} historicalData={defaultValues.serviceNote} />}
+          {machineServiceReport?.serviceReportTemplate?.enableMaintenanceRecommendations && <ViewNoteHistory label="Recommendation Note" historicalData={defaultValues.recommendationNote} />}
+          {machineServiceReport?.serviceReportTemplate?.enableSuggestedSpares && <ViewNoteHistory label="Suggested Spares" historicalData={defaultValues.suggestedSpares} />}
+          <ViewNoteHistory label="Internal Note" historicalData={defaultValues.internalNote} />
           {/* <ViewFormField isLoading={isLoading} sm={12} heading="Operators" chipDialogArrayParam={operators} /> */}
-          <ViewHistory isLoading={isLoading} label="Operator Notes" historicalData={defaultValues.operatorNotes} />
-          {machineServiceReport?.files?.length > 0 && 
+          <ViewNoteHistory label="Operator Notes" historicalData={defaultValues.operatorNotes} />
+          { defaultValues?.reportSubmission && machineServiceReport?.files?.length > 0 && 
           <FormLabel content='Documents / Images' />
           }
+          { defaultValues?.reportSubmission &&
           <Box
             sx={{my:1, width:'100%'}}
             gap={2}
@@ -618,7 +624,7 @@ function MachineServiceReportViewForm(  ) {
             }}
           >
 
-          {slides?.map((file, _index) => (
+          { slides?.map((file, _index) => (
             <DocumentGalleryItem isLoading={isLoading} key={file?._id} image={file} 
               onOpenLightbox={()=> handleOpenLightbox(_index)}
               onDownloadFile={()=> handleDownloadReportFile(file._id, file?.name, file?.extension)}
@@ -628,7 +634,7 @@ function MachineServiceReportViewForm(  ) {
             />
           ))}
 
-          {machineServiceReport?.files?.map((file, _index) => !file.fileType.startsWith("image") && (
+          { machineServiceReport?.files?.map((file, _index) => !file.fileType.startsWith("image") && (
               <DocumentGalleryItem isLoading={isLoading} key={file?._id} image={file} 
                 onOpenFile={()=> handleOpenFile(file._id, file?.name, file?.extension)}
                 onDownloadFile={()=> handleDownloadReportFile(file._id, file?.name, file?.extension)}
@@ -638,8 +644,10 @@ function MachineServiceReportViewForm(  ) {
               />
             ))}
 
-          { machineServiceReport?.status?.name?.toUpperCase() === 'DRAFT' && <ThumbnailDocButton onClick={handleAddFileDialog}/>}
-        </Box>
+          { machineServiceReport?.status?.name?.toUpperCase() === 'DRAFT' && 
+            <ThumbnailDocButton onClick={handleAddFileDialog}/>
+          }
+        </Box>}
           
           <ViewFormAudit defaultValues={defaultValues} />
 

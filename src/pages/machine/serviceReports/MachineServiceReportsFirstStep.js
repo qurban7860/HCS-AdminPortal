@@ -8,8 +8,8 @@ import { useNavigate, useParams } from 'react-router';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useSnackbar } from 'notistack';
 import FormProvider from '../../../components/hook-form/FormProvider';
-import FormLabel from '../../../components/DocumentForms/FormLabel';
 import { RHFAutocomplete, RHFDatePicker, RHFUpload, RHFRadioGroup } from '../../../components/hook-form';
+import FormLabel from '../../../components/DocumentForms/FormLabel';
 import { MachineServiceReportPart1Schema } from '../../schemas/machine';
 import { useAuthContext } from '../../../auth/useAuthContext';
 import { PATH_MACHINE } from '../../../routes/paths';
@@ -19,7 +19,7 @@ import { getActiveServiceReportTemplatesForRecords, resetServiceReportTemplate }
 import ServiceRecodStepButtons from '../../../components/DocumentForms/ServiceRecodStepButtons';
 import SkeletonLine from '../../../components/skeleton/SkeletonLine';
 import SkeletonPDF from '../../../components/skeleton/SkeletonPDF';
-import ViewHistory from './ViewHistory';
+import RHFNoteFields from './RHFNoteFields';
 
 MachineServiceReportsFirstStep.propTypes = {
     handleComplete : PropTypes.func,
@@ -39,11 +39,11 @@ function MachineServiceReportsFirstStep( { handleComplete, handleDraftRequest, h
     const { activeSpContacts } = useSelector((state) => state.contact);
     const { machineServiceReport, isLoading } = useSelector((state) => state.machineServiceReport);
     const { machine } = useSelector((state) => state.machine);
-    const [ technicians, setTechnicians ] = useState([]);
     const [ isDraft, setIsDraft ] = useState(false);
     const [ isSubmit, setIsSubmit ] = useState(false);
     const saveAsDraft = async () => setIsDraft(true);
     const saveAsSubmit = async () => setIsSubmit(true);
+
     const machineDecoilers = (machine?.machineConnections || [])?.map((decoiler) => ({
       _id: decoiler?.connectedMachine?._id ?? null,
       name: decoiler?.connectedMachine?.name ?? null,
@@ -65,11 +65,9 @@ function MachineServiceReportsFirstStep( { handleComplete, handleDraftRequest, h
         docReportType:                reportTypes.find(rt=> rt?.name?.toLowerCase() === machineServiceReport?.serviceReportTemplate?.reportType?.toLowerCase()) || null,
         serviceReportTemplate:        machineServiceReport?.serviceReportTemplate || null,
         serviceDate:                  machineServiceReport?.serviceDate || new Date(),
-        technician:                   machineServiceReport?.technician || null ,
-        technicianNotes:              '',
         textBeforeCheckItems:         '',
         textAfterCheckItems:          '',
-        reportSubmission:             '',
+        reportSubmission:             machineServiceReport?.reportSubmission || false,
         files: machineServiceReport?.reportDocs?.map(file => ({
           key: file?._id,
           _id: file?._id,
@@ -104,42 +102,38 @@ function MachineServiceReportsFirstStep( { handleComplete, handleDraftRequest, h
     formState: { isSubmitting },
     } = methods;
 
-  useEffect(() => {
-    const sPContactUser = activeSpContacts?.find( ( el )=> el?._id === user?.contact );
-    let techniciansList = activeSpContacts?.filter( ( el ) => el?.departmentDetails?.departmentType?.toLowerCase() === 'technical');
-    if ( sPContactUser && !techniciansList?.some( ( el ) => el?._id === user?.contact ) ) {
-      techniciansList = [ sPContactUser, ...techniciansList ]
-    }
-    if( !machineServiceReport?._id ){
-      setValue('technician', sPContactUser || null );
-    }
-    if ( machineServiceReport?.technician?._id && techniciansList?.some( ( el ) => ( el?._id !== machineServiceReport?.technician?._id ) ) ) {
-      techniciansList = [ machineServiceReport?.technician, ...techniciansList ];
-      setValue('technician', machineServiceReport?.technician || null );
-    }
-    techniciansList = techniciansList?.sort((a, b) => a?.firstName.localeCompare(b?.firstName) );
-    setTechnicians(techniciansList);
-   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ activeSpContacts, setValue, user?.contact, id ]);
+  // useEffect(() => {
+  //   const sPContactUser = activeSpContacts?.find( ( el )=> el?._id === user?.contact );
+  //   let techniciansList = activeSpContacts?.filter( ( el ) => el?.departmentDetails?.departmentType?.toLowerCase() === 'technical');
+  //   if ( sPContactUser && !techniciansList?.some( ( el ) => el?._id === user?.contact ) ) {
+  //     techniciansList = [ sPContactUser, ...techniciansList ]
+  //   }
+  //   if( !machineServiceReport?._id ){
+  //     setValue('technician', sPContactUser || null );
+  //   }
+  //   if ( machineServiceReport?.technician?._id && techniciansList?.some( ( el ) => ( el?._id !== machineServiceReport?.technician?._id ) ) ) {
+  //     techniciansList = [ machineServiceReport?.technician, ...techniciansList ];
+  //     setValue('technician', machineServiceReport?.technician || null );
+  //   }
+  //   techniciansList = techniciansList?.sort((a, b) => a?.firstName.localeCompare(b?.firstName) );
+  //   setTechnicians(techniciansList);
+  //  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [ activeSpContacts, setValue, user?.contact, id ]);
 
-    useEffect(() => {
-      if (machineServiceReport) {
-        reset(defaultValues);
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [reset, machineServiceReport ]);
+    // useEffect(() => {
+    //   if (machineServiceReport) {
+    //     reset(defaultValues);
+    //   }
+    //   // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [reset, machineServiceReport ]);
 
     const { docReportType, serviceReportTemplate, reportSubmission, files } = watch();
-
+    const watchValues = watch();
 
       const onSubmit = async (data) => {
         try {
-
-          if(isSubmit){
+          if( isSubmit ){
             data.status = 'SUBMITTED'
-          }
-          if(!data.technician){
-            data.technician = null;
           }
           data.isReportDoc = true
           if(!id ){
@@ -147,7 +141,7 @@ function MachineServiceReportsFirstStep( { handleComplete, handleDraftRequest, h
             data.decoilers = machineDecoilers;
             const serviceReport = await dispatch(addMachineServiceReport(machineId, data));
             dispatchFiles( serviceReport?._id, data );
-            if( isSubmit ){
+            if( isSubmit || isDraft ){
               await navigate(PATH_MACHINE.machines.serviceReports.view(machineId, serviceReport?._id))
             } else {
               await navigate(PATH_MACHINE.machines.serviceReports.edit(machineId, serviceReport?._id))
@@ -174,6 +168,7 @@ function MachineServiceReportsFirstStep( { handleComplete, handleDraftRequest, h
           enqueueSnackbar( typeof err === 'string' ? err : 'Saving failed!', { variant: `error` });
         }
       };
+
     const dispatchFiles = async ( serviceReportId,data )  => {
       if(Array.isArray(data?.files) && data?.files?.length > 0){
         const filteredFiles = data?.files?.filter((ff)=> !ff?._id)
@@ -341,37 +336,16 @@ return (
                       }
                     }
                     />
-                  </Box> 
-                    <RHFAutocomplete
-                      name="technician"
-                      label="Technician"
-                      options={ technicians }
-                      getOptionLabel={(option) => `${option?.firstName || ''} ${option?.lastName || ''}`}
-                      isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                      renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li>)}
-                    />
+                  </Box>
 
-                  {/* <RHFTextField name="technicianNotes" label="Technician Notes" minRows={3} multiline/>  */}
-                  <ViewHistory 
+                  <RHFNoteFields 
                     name="technicianNotes" 
                     label="Technician Notes" 
+                    isTechnician
                     historicalData={ machineServiceReport?.technicianNotes }
-                    methods={methods}
+                    setParentValue={ setValue }
                   />
-                  <Grid container item sm={12} sx={{ display: 'flex', }} >
-                    <RHFRadioGroup 
-                      label="Report Submission"
-                      name="reportSubmission"
-                      row
-                      options={[
-                        { value: 'offline', label:'Off-line'}, 
-                        { value: 'online', label:'Online'}
-                      ]}
-                    />
-                  </Grid>
-                  {
-                    reportSubmission?.toLowerCase() === 'offline' && 
-                  <>
+
                     <FormLabel content='Reporting Documents' />
                     <RHFUpload multiple  thumbnail name="files" imagesOnly
                       onDrop={handleDropMultiFile}
@@ -380,9 +354,27 @@ return (
                       onLoadImage={handleLoadImage}
                       onLoadPDF={handleOpenFile}
                     />
-                  </>}
+
+                    <RHFRadioGroup 
+                      name="reportSubmission"
+                      row
+                      options={[
+                        { value: false, label:'Off-line'}, 
+                        { value: true, label:'Online'}
+                      ]}
+                      sx={{ my: -1 }}
+                      onChange={() => {
+                        setValue('reportSubmission',!reportSubmission)
+                      }}
+                    />
           </Stack>
-          <ServiceRecodStepButtons handleSubmit={saveAsSubmit} isSubmitted={isSubmit} handleDraft={saveAsDraft} isDraft={isDraft} isSubmitting={isSubmitting} />
+            <ServiceRecodStepButtons 
+              handleSubmit={ !reportSubmission ? saveAsSubmit : undefined } 
+              isSubmitted={ isSubmit } 
+              handleDraft={saveAsDraft} 
+              isDraft={ isDraft } 
+              isSubmitting={isSubmitting} 
+            />
           </>
         }
     </FormProvider>

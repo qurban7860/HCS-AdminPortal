@@ -19,7 +19,7 @@ import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFAutocomplete, RHFUpload } from '../../../components/hook-form';
 import { MachineServiceReportPart3Schema } from '../../schemas/machine';
 import SkeletonPDF from '../../../components/skeleton/SkeletonPDF';
-import ViewHistory from './ViewHistory';
+import RHFNoteFields from './RHFNoteFields';
 
 MachineServiceReportsThirdStep.propTypes = {
   handleDraftRequest: PropTypes.func,
@@ -46,6 +46,7 @@ function MachineServiceReportsThirdStep({handleDraftRequest, handleDiscard, hand
       }
       return () =>{
           dispatch(resetActiveContacts());
+          dispatch(resetMachineServiceReport());
       }
     }, [ dispatch, machine ]);
 
@@ -57,7 +58,6 @@ function MachineServiceReportsThirdStep({handleDraftRequest, handleDiscard, hand
             internalComments:             '',
             suggestedSpares:              '',
             internalNote:                 '',
-            operators:                    machineServiceReport?.operators || [],
             operatorNotes:                '',
             files: machineServiceReport?.files?.map(file => ({
               key: file?._id,
@@ -96,12 +96,11 @@ function MachineServiceReportsThirdStep({handleDraftRequest, handleDiscard, hand
     formState: { isSubmitting },
     } = methods;
 
-    useEffect(() => {
-      if (machineServiceReport) {
-        reset(defaultValues);
-      }
-      return(()=> resetMachineServiceReport());
-    }, [reset, machineServiceReport, defaultValues]);
+    // useEffect(() => {
+    //   if (machineServiceReport) {
+    //     reset(defaultValues);
+    //   }
+    // }, [reset, machineServiceReport, defaultValues]);
 
     const { isActive, files } = watch()
     
@@ -222,56 +221,46 @@ function MachineServiceReportsThirdStep({handleDraftRequest, handleDiscard, hand
       <FormProvider methods={methods}  onSubmit={handleSubmit(onSubmit)}>
         <Stack px={2} spacing={2}>    
           { machineServiceReport?.serviceReportTemplate?.enableNote && 
-            <ViewHistory 
+            <RHFNoteFields 
               historicalData={ machineServiceReport?.serviceNote } 
               name="serviceNote" 
               label={`${machineServiceReport?.serviceReportTemplate?.reportType?.toLowerCase() === 'install' ? 'Install' : 'Service' } Note`}
-              methods={methods}
+              setParentValue={ setValue }
             />
           }      
           { machineServiceReport?.serviceReportTemplate?.enableMaintenanceRecommendations && 
-            <ViewHistory 
+            <RHFNoteFields 
               historicalData={ machineServiceReport?.recommendationNote } 
               name="recommendationNote" 
               label="Recommendation Note"
-              methods={methods}
+              setParentValue={ setValue }
             />
           }
           { machineServiceReport?.serviceReportTemplate?.enableSuggestedSpares && 
-            <ViewHistory 
+            <RHFNoteFields 
               name="suggestedSpares" 
               label="Suggested Spares" 
               historicalData={ machineServiceReport?.suggestedSpares } 
-              methods={methods}
+              setParentValue={ setValue }
             />
           }
-          <ViewHistory 
+          <RHFNoteFields 
             name="internalNote" 
             label="Internal Note"
             historicalData={ machineServiceReport?.internalNote } 
-            methods={methods}
-          />
-
-          <RHFAutocomplete 
-            multiple
-            disableCloseOnSelect
-            filterSelectedOptions
-            name="operators" 
-            label="Operators"
-            options={activeContacts}
-            getOptionLabel={(option) => `${option?.firstName ||  ''} ${option?.lastName || ''}`}
-            isOptionEqualToValue={(option, value) => option?._id === value?._id}
-            renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}` }</li> )}
+            setParentValue={ setValue }
           />
           
-          <ViewHistory 
+          <RHFNoteFields 
+            isOperator
             name="operatorNotes" 
             label="Operator Notes" 
             historicalData={ machineServiceReport?.operatorNotes } 
-            methods={methods}
+            setParentValue={ setValue }
           />
 
           <FormLabel content='Documents / Images' />
+
           <RHFUpload multiple  thumbnail name="files" imagesOnly
             onDrop={handleDropMultiFile}
             dropZone={false}

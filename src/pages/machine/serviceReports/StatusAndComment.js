@@ -1,7 +1,8 @@
 import React, { useState, memo, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Grid, Chip, TableRow, Typography, Box, Switch, Divider, Button, Dialog, DialogTitle } from '@mui/material';
+import { Grid, Chip, Typography, Box, Switch, Divider, Button, Dialog, DialogTitle } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 import download from 'downloadjs';
 import { useSnackbar } from 'notistack';
 import b64toBlob from 'b64-to-blob';
@@ -11,11 +12,13 @@ import ServiceReportAuditLogs from './ServiceReportAuditLogs';
 import { DocumentGalleryItem } from '../../../components/gallery/DocumentGalleryItem';
 import { deleteCheckItemFile, downloadCheckItemFile, setAddFileDialog } from '../../../redux/slices/products/machineServiceReport';
 import Lightbox from '../../../components/lightbox/Lightbox';
+import ConfirmDialog from '../../../components/confirm-dialog';
 import CheckedItemValueHistory from './CheckedItemValueHistory';
 import SkeletonPDF from '../../../components/skeleton/SkeletonPDF';
+import IconifyButton from '../../../components/Icons/IconifyButton';
 
-const StatusAndComment = ({index, childIndex, childRow, machineId, primaryServiceReportId}) => {
-    const { machineServiceReport } = useSelector((state) => state.machineServiceReport);
+const StatusAndComment = ({index, childIndex, childRow, isBorder, isUpdating, machineId, onEdit, onDelete }) => {
+    const { machineServiceReport, isLoadingCheckItems } = useSelector((state) => state.machineServiceReport);
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
 
@@ -26,13 +29,14 @@ const StatusAndComment = ({index, childIndex, childRow, machineId, primaryServic
     const [reportValue, setReportValue] = useState(null);
     const [PDFName, setPDFName] = useState('');
     const [AttachedPDFViewerDialog, setAttachedPDFViewerDialog] = useState(false);
+    const [ deleteDialog, setDeleteDialog ] = useState( false );
 
     const handleAddFileDialog = () => {
       dispatch(setAddFileDialog(true));
     }
 
     useEffect(() => {
-      if(Array.isArray( childRow?.historicalData ) && childRow?.historicalData?.length > 0 ){
+      if( Array.isArray( childRow?.historicalData ) && childRow?.historicalData?.length > 0 ){
         const itemsReportVals = childRow?.historicalData?.[0]
         setReportValue(itemsReportVals)
         if (itemsReportVals?.files) {
@@ -52,7 +56,7 @@ const StatusAndComment = ({index, childIndex, childRow, machineId, primaryServic
   
       if(!image?.isLoaded && image?.fileType?.startsWith('image')){
         try {
-          const response = await dispatch(downloadCheckItemFile(machineId, primaryServiceReportId, image?._id));
+          const response = await dispatch(downloadCheckItemFile(machineId, image?._id));
           if (regEx.test(response.status)) {
             // Update the image property in the imagesLightbox array
             const updatedSlides = [
@@ -94,7 +98,7 @@ const StatusAndComment = ({index, childIndex, childRow, machineId, primaryServic
     };
   
     const handleDownloadCheckItemFile = (fileId, name, extension) => {
-      dispatch(downloadCheckItemFile(machineId, primaryServiceReportId, fileId))
+      dispatch(downloadCheckItemFile(machineId, fileId))
         .then((res) => {
           if (regEx.test(res.status)) {
             download(atob(res.data), `${name}.${extension}`, { type: extension });
@@ -120,7 +124,7 @@ const StatusAndComment = ({index, childIndex, childRow, machineId, primaryServic
       setPDFName(`${file?.name}.${file?.extension}`);
       setAttachedPDFViewerDialog(true);
       setPDF(null);
-      const response = await dispatch(downloadCheckItemFile(machineId, file.serviceReport, file._id));
+      const response = await dispatch(downloadCheckItemFile(machineId, file._id));
       if (regEx.test(response.status)) {
         const blob = b64toBlob(encodeURI(response.data), 'application/pdf')
         const url = URL.createObjectURL(blob);
@@ -139,11 +143,17 @@ const StatusAndComment = ({index, childIndex, childRow, machineId, primaryServic
   };
 
   return (
-    <TableRow key={childRow._id} sx={{ backgroundColor: 'none',}} >
-    <Grid item md={12} sx={{mt: childIndex !==0 && 0.5, p:1,  border: '1px solid #e8e8e8',  borderRadius:'7px',backgroundColor: 'white' }} >
+    < >
+    <Grid item md={12} sx={{mt: childIndex !==0 && 0.5, 
+          ...(isBorder && {
+            p: 1,
+            border: '1px solid #e8e8e8',
+            borderRadius: '7px',
+            backgroundColor: 'white',
+          } || [] ) }} >
       <Grid item md={12} sx={{ display: reportValue?.checkItemValue ? 'block' : 'flex'}}>
-        <Typography variant="body2" ><b>{`${index+1}.${childIndex+1}- `}</b>{`${childRow.name}`}</Typography>
-        {reportValue?.checkItemValue && 
+        { isBorder && <Typography variant="body2" ><b>{`${index+1}.${childIndex+1}- `}</b>{`${childRow.name}`}</Typography>}
+        {reportValue?.checkItemValue && !isUpdating && 
           <Grid >
             <Grid sx={{ mt:1,
               alignItems: 'center',
@@ -163,8 +173,24 @@ const StatusAndComment = ({index, childIndex, childRow, machineId, primaryServic
                         childRow?.inputType.toLowerCase() === 'short text') && 
                         reportValue?.checkItemValue 
                       }
-                        {reportValue?.checkItemValue?.trim() && childRow?.inputType?.toLowerCase() !== 'boolean' && <CopyIcon value={reportValue?.checkItemValue}/>}
+                      { typeof childRow?.inputType !== 'boolean'  && reportValue?.checkItemValue?.trim() && <CopyIcon value={reportValue?.checkItemValue}/>}
                     </> 
+                }
+                { onEdit &&
+                  <IconifyButton 
+                    title='Edit'
+                    icon='mdi:edit'
+                    color='#103996'
+                    onClick={ () => onEdit( reportValue ) }
+                  />
+                }
+                { onDelete &&
+                  <IconifyButton 
+                    title='Delete'
+                    icon='mdi:delete'
+                    color='#FF0000'
+                    onClick={ () => setDeleteDialog( true ) }
+                  />
                 }
               </Typography>
             </Grid>
@@ -242,7 +268,24 @@ const StatusAndComment = ({index, childIndex, childRow, machineId, primaryServic
                     )}
               </Dialog>
             )}
-    </TableRow>
+        <ConfirmDialog
+          open={ deleteDialog }
+          onClose={() => setDeleteDialog(false)}
+          title="Delete"
+          content="Are you sure you want to Delete?"
+          action={
+            <LoadingButton
+              variant="contained"
+              color="error"
+              loading={ isLoadingCheckItems }
+              disabled={ isLoadingCheckItems }
+              onClick={ () => onDelete( reportValue ) }
+            >
+              Delete
+            </LoadingButton>
+          }
+        />
+    </>
   )
 }
 StatusAndComment.propTypes = {
@@ -250,6 +293,9 @@ StatusAndComment.propTypes = {
     childIndex: PropTypes.number,
     childRow: PropTypes.object,
     machineId: PropTypes.string,
-    primaryServiceReportId: PropTypes.string,
+    isBorder: PropTypes.bool,
+    isUpdating: PropTypes.bool,
+    onEdit: PropTypes.func,
+    onDelete: PropTypes.func,
   };
 export default memo(StatusAndComment)

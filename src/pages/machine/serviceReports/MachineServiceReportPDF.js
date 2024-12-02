@@ -12,58 +12,75 @@ export function MachineServiceReportPDF({machineServiceReport, machineServiceRep
 
     const defaultValues = useMemo(
         () => ({
-            customer:                             machineServiceReport?.customer || null,
-            site:                                 machineServiceReport?.site || null,
-            machine:                              machineServiceReport?.machine || null,
-            reportType:                           machineServiceReport?.reportType || null,
-            serviceReportTemplate:                machineServiceReport?.serviceReportTemplate?.reportTitle	 || '',
-            serviceReportTemplateReportType:      machineServiceReport?.serviceReportTemplate?.reportType || '',
-            serviceReportUID:                     machineServiceReport?.serviceReportUID || "",
-            serviceDate:                          machineServiceReport?.serviceDate || null,
-            versionNo:                            machineServiceReport?.versionNo || null,
-            status:                               machineServiceReport?.status?.name || '',
-            approvalStatus:                       machineServiceReport?.currentApprovalStatus || '',
-            decoilers:                            machineServiceReport?.decoilers ,
-            technician:                           machineServiceReport?.technician || null,
-            textBeforeCheckItems:                 machineServiceReport?.textBeforeCheckItems || '',
-            textAfterCheckItems:                  machineServiceReport?.textAfterCheckItems || '',
-            headerLeftText:                       machineServiceReport?.serviceReportTemplate?.header?.leftText || '',
-            headerCenterText:                     machineServiceReport?.serviceReportTemplate?.header?.centerText || '',
-            headerRightText:                      machineServiceReport?.serviceReportTemplate?.header?.rightText || '',
-            footerLeftText:                       machineServiceReport?.serviceReportTemplate?.footer?.leftText || '',
-            footerCenterText:                     machineServiceReport?.serviceReportTemplate?.footer?.centerText || '',
-            footerRightText:                      machineServiceReport?.serviceReportTemplate?.footer?.rightText || '',
-            internalComments:                     machineServiceReport?.internalComments || '',
-            serviceNote:                          machineServiceReport?.serviceNote || '',
-            recommendationNote:                   machineServiceReport?.recommendationNote || '',
-            suggestedSpares:                      machineServiceReport?.suggestedSpares || '',
-            internalNote:                         machineServiceReport?.internalNote || '',
-            reportDocs:                           machineServiceReport?.reportDocs || [],
-            files:                                machineServiceReport?.files || [],
-            operators:                            machineServiceReport?.operators || [],
-            operatorNotes:                        machineServiceReport?.operatorNotes || '',
-            technicianNotes:                      machineServiceReport?.technicianNotes ||'',
-            isReportDocsOnly:                     machineServiceReport?.isReportDocsOnly,
-            isActive:                             machineServiceReport?.isActive,
-            createdAt:                            machineServiceReport?.createdAt || '',
-            createdByFullName:                    machineServiceReport?.createdBy?.name || '',
-            createdIP:                            machineServiceReport?.createdIP || '',
-            updatedAt:                            machineServiceReport?.updatedAt || '',
-            updatedByFullName:                    machineServiceReport?.updatedBy?.name || '',
-            updatedIP:                            machineServiceReport?.updatedIP || '',
+            customer:                           machineServiceReport?.customer || null,
+            site:                               machineServiceReport?.site || null,
+            machine:                            machineServiceReport?.machine || null,
+            reportType:                         machineServiceReport?.reportType || null,
+            serviceReportTemplate:              machineServiceReport?.serviceReportTemplate?.reportTitle	 || '',
+            serviceReportTemplateReportType:    machineServiceReport?.serviceReportTemplate?.reportType || '',
+            serviceReportUID:                   machineServiceReport?.serviceReportUID || "",
+            serviceDate:                        machineServiceReport?.serviceDate || null,
+            versionNo:                          machineServiceReport?.versionNo || null,
+            status:                             machineServiceReport?.status?.name || '',
+            approvalStatus:                     machineServiceReport?.currentApprovalStatus || '',
+            decoilers:                          machineServiceReport?.decoilers ,
+            reportDocs:                         machineServiceReport?.reportDocs || [],
+            reportSubmission:                   machineServiceReport?.reportSubmission || '',
+            textBeforeCheckItems:               machineServiceReport?.textBeforeCheckItems || '',
+            textAfterCheckItems:                machineServiceReport?.textAfterCheckItems || '',
+            headerLeftText:                     machineServiceReport?.serviceReportTemplate?.header?.leftText || '',
+            headerCenterText:                   machineServiceReport?.serviceReportTemplate?.header?.centerText || '',
+            headerRightText:                    machineServiceReport?.serviceReportTemplate?.header?.rightText || '',
+            footerLeftText:                     machineServiceReport?.serviceReportTemplate?.footer?.leftText || '',
+            footerCenterText:                   machineServiceReport?.serviceReportTemplate?.footer?.centerText || '',
+            footerRightText:                    machineServiceReport?.serviceReportTemplate?.footer?.rightText || '',
+            technicianNotes:                    Array.isArray( machineServiceReport?.technicianNotes ) && 
+                                                machineServiceReport?.technicianNotes?.length > 0 && 
+                                                machineServiceReport?.technicianNotes[0] || null,
+            internalComments:                   Array.isArray( machineServiceReport?.internalComments ) && 
+                                                machineServiceReport?.internalComments?.length > 0 && 
+                                                machineServiceReport?.internalComments[0] || null,
+            serviceNote:                        Array.isArray( machineServiceReport?.serviceNote ) && 
+                                                machineServiceReport?.serviceNote?.length > 0 && 
+                                                machineServiceReport?.serviceNote[0] || null,
+            recommendationNote:                 Array.isArray( machineServiceReport?.recommendationNote ) && 
+                                                machineServiceReport?.recommendationNote?.length > 0 && 
+                                                machineServiceReport?.recommendationNote[0] || null,
+            suggestedSpares:                    Array.isArray( machineServiceReport?.suggestedSpares ) && 
+                                                machineServiceReport?.suggestedSpares?.length > 0 && 
+                                                machineServiceReport?.suggestedSpares[0] || null,
+            internalNote:                       Array.isArray( machineServiceReport?.internalNote ) && 
+                                                machineServiceReport?.internalNote?.length > 0 && 
+                                                machineServiceReport?.internalNote[0] || null,
+            operatorNotes:                      Array.isArray( machineServiceReport?.operatorNotes ) && 
+                                                machineServiceReport?.operatorNotes?.length > 0 && 
+                                                machineServiceReport?.operatorNotes[0] || null,
+            isReportDocsOnly:                   machineServiceReport?.isReportDocsOnly,
+            files:                              machineServiceReport?.files || [],
+            isActive:                           machineServiceReport?.isActive,
+            createdAt:                          machineServiceReport?.createdAt || '',
+            createdByFullName:                  machineServiceReport?.createdBy?.name || '',
+            createdIP:                          machineServiceReport?.createdIP || '',
+            updatedAt:                          machineServiceReport?.updatedAt || '',
+            updatedByFullName:                  machineServiceReport?.updatedBy?.name || '',
+            updatedIP:                          machineServiceReport?.updatedIP || '',
         }),
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [ machineServiceReport]
     );
 
-    const decoilers = defaultValues?.decoilers?.map((decoilerMachine) => (`${decoilerMachine?.serialNo ? decoilerMachine?.serialNo : ''}${decoilerMachine?.name ? '-' : ''}${decoilerMachine?.name ? decoilerMachine?.name : ''}`)).join(', ');
-    const operators = machineServiceReport?.operators?.map(operator => `${operator?.firstName || ''} ${operator?.lastName || ''}`).join(', ');
-    
+    const decoilers = useMemo( () =>
+        defaultValues?.decoilers?.map((d) => `${d?.serialNo || ''}${d?.name ? ` - ${d?.name}` : ''}`).join(', ') || ''
+    ,[ defaultValues?.decoilers ] );
+
     const fileName = `${defaultValues?.serviceDate?.substring(0,10).replaceAll('-','')}_${defaultValues?.serviceReportTemplateReportType}_${defaultValues?.versionNo}`;
 
-function getImageUrl(file) {
-        return file?.src  ? `data:image/${ !file?.extension?.toLowerCase()?.includes('png') ? file?.extension : 'jpg' };base64,${file?.src  }` : '';
+    function getImageUrl(file) {
+        if (!file?.src) return '';
+        const extension = file?.extension?.toLowerCase() || 'jpg';
+        return `data:image/${extension.includes('png') ? 'png' : 'jpg'};base64,${file.src}`;
     }
+    
     
     return (
         <Document title={fileName} subject='Serevice Report'
@@ -91,27 +108,27 @@ function getImageUrl(file) {
         <View style={styles.body}>
             <Text style={styles.title}>Key Details</Text>
             <View style={styles.row}>
-                <View style={styles.col_20}>
+                <View style={styles.col_30}>
                     <Text style={styles.lable}>SERVICE DATE</Text>
                     <Text style={[styles.text]}>{fDate(defaultValues?.serviceDate)}</Text>
                 </View>
-                <View style={styles.col_30}>
+                <View style={styles.col_40}>
                     <Text style={styles.lable}>SERVICE ID</Text>
                     <Text style={[styles.text]}>{ defaultValues?.serviceReportUID }</Text>
                 </View>
-                <View style={styles.col_10}>
-                    <Text style={styles.lable}>VERSION</Text>
-                    <Text style={[styles.text]}>{defaultValues?.versionNo}</Text>
-                </View>
-                <View style={styles.col_40}>
+                <View style={styles.col_30}>
                     <Text style={styles.lable}>STATUS</Text>
                     <Text style={[styles.text]}>{defaultValues.approvalStatus === "PENDING" ? defaultValues.status : defaultValues.approvalStatus}</Text>
                 </View>
             </View>
             <View style={styles.row}>
-                <View style={styles.col}>
+                <View style={styles.col_30}>
                     <Text style={styles.lable}>REPORT TYPE</Text>
                     <Text style={[styles.text]}>{defaultValues?.serviceReportTemplateReportType}</Text>
+                </View>
+                <View style={styles.col_70}>
+                    <Text style={styles.lable}>SERVICE REPORT TEMPLATE</Text>
+                    <Text style={[styles.text]}>{defaultValues?.serviceReportTemplate}</Text>
                 </View>
             </View>
             <View style={styles.row}>
@@ -144,39 +161,51 @@ function getImageUrl(file) {
                 </View>
             </View>
 
-            <View style={styles.row}>
-                <View style={styles.col}>
-                    <Text style={styles.lable}>TECHNICIAN</Text>
-                    <Text style={styles.text}>{defaultValues?.technician?.firstName || ' '} {defaultValues?.technician?.lastName || ' '}</Text>
-                </View>
-            </View>
-
-            <View style={styles.row}>
-                <View style={styles.col}>
-                    <Text style={styles.lable}>TECHNICIAN NOTES</Text>
-                    <Text style={styles.text_sm}>{defaultValues?.technicianNotes || ' '}</Text>
-                </View>
-            </View>
-            
-            {Array.isArray(defaultValues?.reportDocs) && 
-            defaultValues?.reportDocs?.filter( f => f?.src )?.length > 0 && 
-            <>
-                <Text style={styles.title}>Reporting Documents</Text>
+            { defaultValues?.technicianNotes?.note?.trim() && < >
                 <View style={styles.row}>
-                    <View style={styles.image_row} >
-                        {defaultValues?.reportDocs?.filter( f => f?.src )?.map((file, fileIndex) => {
-                            const imageUrl = getImageUrl(file);
-                            return (
-                                ( file?.src && <View key={file?._id} style={styles.image_column}>
-                                    { imageUrl && <Image style={{ borderRadius:5, height:"372px", objectFit: "cover" }} src={ imageUrl } />}
-                                </View> || '' )
-                            );
-                        })}
+                    <View style={styles.col}>
+                        <Text style={styles.lable}>Technician Note</Text>
+                        <Text style={styles.text_sm}>{ defaultValues?.technicianNotes?.note || ''}</Text>
                     </View>
                 </View>
+                {defaultValues?.technicianNotes?.technicians?.length > 0 && (
+                    <View style={styles.row}>
+                        <View style={styles.col}>
+                            <Text style={styles.lable}>Technicians</Text>
+                            <Text style={styles.text_sm}>{ defaultValues?.technicianNotes?.technicians?.map( op => `${op?.firstName || ''} ${op?.lastName || ''}`)?.join(', ')}</Text>
+                        </View>
+                    </View>
+                )}
+                {defaultValues?.technicianNotes?.operators?.length > 0 && (
+                    <View style={styles.row}>
+                        <View style={styles.col}>
+                            <Text style={styles.lable}>Operators</Text>
+                            <Text style={styles.text_sm}>{ defaultValues?.technicianNotes?.operators?.map( op => `${op?.firstName || ''} ${op?.lastName || ''}`)?.join(', ')}</Text>
+                        </View>
+                    </View>
+                )}
             </>}
 
-            {/* { !defaultValues?.isReportDocsOnly && <> */}
+            {   !defaultValues?.reportSubmission && Array.isArray(defaultValues?.reportDocs) && 
+                defaultValues?.reportDocs?.filter( f => f?.src )?.length > 0 && 
+                <>
+                    <Text style={styles.title}>Reporting Documents</Text>
+                    <View style={styles.row}>
+                        <View style={styles.image_row} >
+                            {defaultValues?.reportDocs?.filter( f => f?.src )?.map((file, fileIndex) => {
+                                const imageUrl = getImageUrl(file);
+                                return (
+                                    ( file?.src && <View key={file?._id} style={styles.image_column}>
+                                        { imageUrl && <Image style={{ borderRadius:5, height:"372px", objectFit: "cover" }} src={ imageUrl } />}
+                                    </View> || '' )
+                                );
+                            })}
+                        </View>
+                    </View>
+                </>
+            }
+
+            { defaultValues?.reportSubmission && <>
 
             <View style={styles.row}>
                 <View style={styles.col}>
@@ -230,49 +259,159 @@ function getImageUrl(file) {
                 </View>
             </View>
 
-            <View style={styles.row}>
-                <View style={styles.col}>
-                    <Text style={styles.lable}>Service Note</Text>
-                    <Text style={styles.text_sm}>{defaultValues?.serviceNote}</Text>
-                </View>
-            </View>
+            </>}
 
-            <View style={styles.row}>
-                <View style={styles.col}>
-                    <Text style={styles.lable}>RECOMMENDATION  Note</Text>
-                    <Text style={styles.text_sm}>{defaultValues?.recommendationNote}</Text>
+            { defaultValues?.internalComments?.note?.trim() && < >
+                <View style={styles.row}>
+                    <View style={styles.col}>
+                        <Text style={styles.lable}>Technician Note</Text>
+                        <Text style={styles.text_sm}>{ defaultValues?.internalComments?.note || ''}</Text>
+                    </View>
                 </View>
-            </View>
+                {defaultValues?.internalComments?.technicians?.length > 0 && (
+                    <View style={styles.row}>
+                        <View style={styles.col}>
+                            <Text style={styles.lable}>Technicians</Text>
+                            <Text style={styles.text_sm}>{ defaultValues?.internalComments?.technicians?.map( op => `${op?.firstName || ''} ${op?.lastName || ''}`)?.join(', ')}</Text>
+                        </View>
+                    </View>
+                )}
+                {defaultValues?.internalComments?.operators?.length > 0 && (
+                    <View style={styles.row}>
+                        <View style={styles.col}>
+                            <Text style={styles.lable}>Operators</Text>
+                            <Text style={styles.text_sm}>{ defaultValues?.internalComments?.operators?.map( op => `${op?.firstName || ''} ${op?.lastName || ''}`)?.join(', ')}</Text>
+                        </View>
+                    </View>
+                )}
+            </>}
 
-
-            <View style={styles.row}>
-                <View style={styles.col}>
-                    <Text style={styles.lable}>SUGGESTED SPARES</Text>
-                    <Text style={styles.text_sm}>{defaultValues?.suggestedSpares}</Text>
+            { defaultValues?.serviceNote?.note?.trim() && < >
+                <View style={styles.row}>
+                    <View style={styles.col}>
+                        <Text style={styles.lable}>Technician Note</Text>
+                        <Text style={styles.text_sm}>{ defaultValues?.serviceNote?.note || ''}</Text>
+                    </View>
                 </View>
-            </View>
+                {defaultValues?.serviceNote?.technicians?.length > 0 && (
+                    <View style={styles.row}>
+                        <View style={styles.col}>
+                            <Text style={styles.lable}>Technicians</Text>
+                            <Text style={styles.text_sm}>{ defaultValues?.serviceNote?.technicians?.map( op => `${op?.firstName || ''} ${op?.lastName || ''}`)?.join(', ')}</Text>
+                        </View>
+                    </View>
+                )}
+                {defaultValues?.serviceNote?.operators?.length > 0 && (
+                    <View style={styles.row}>
+                        <View style={styles.col}>
+                            <Text style={styles.lable}>Operators</Text>
+                            <Text style={styles.text_sm}>{ defaultValues?.serviceNote?.operators?.map( op => `${op?.firstName || ''} ${op?.lastName || ''}`)?.join(', ')}</Text>
+                        </View>
+                    </View>
+                )}
+            </>}
 
-            <View style={styles.row}>
-                <View style={styles.col}>
-                    <Text style={styles.lable}>INTERNAL NOTE</Text>
-                    <Text style={styles.text_sm}>{defaultValues?.internalNote}</Text>
+            { defaultValues?.recommendationNote?.note?.trim() && < >
+                <View style={styles.row}>
+                    <View style={styles.col}>
+                        <Text style={styles.lable}>RECOMMENDATION  Note</Text>
+                        <Text style={styles.text_sm}>{ defaultValues?.recommendationNote?.note || ''}</Text>
+                    </View>
                 </View>
-            </View>
+                {defaultValues?.recommendationNote?.technicians?.length > 0 && (
+                    <View style={styles.row}>
+                        <View style={styles.col}>
+                            <Text style={styles.lable}>Technicians</Text>
+                            <Text style={styles.text_sm}>{ defaultValues?.recommendationNote?.technicians?.map( op => `${op?.firstName || ''} ${op?.lastName || ''}`)?.join(', ')}</Text>
+                        </View>
+                    </View>
+                )}
+                {defaultValues?.recommendationNote?.operators?.length > 0 && (
+                    <View style={styles.row}>
+                        <View style={styles.col}>
+                            <Text style={styles.lable}>Operators</Text>
+                            <Text style={styles.text_sm}>{ defaultValues?.recommendationNote?.operators?.map( op => `${op?.firstName || ''} ${op?.lastName || ''}`)?.join(', ')}</Text>
+                        </View>
+                    </View>
+                )}
+            </>}
 
-            <View style={styles.row}>
-                <View style={styles.col}>
-                    <Text style={styles.lable}>Operators</Text>
-                    <Text style={styles.text_sm}>{operators}</Text>
+            { defaultValues?.suggestedSpares?.note?.trim() && < >
+                <View style={styles.row}>
+                    <View style={styles.col}>
+                        <Text style={styles.lable}>SUGGESTED SPARES</Text>
+                        <Text style={styles.text_sm}>{ defaultValues?.suggestedSpares?.note || ''}</Text>
+                    </View>
                 </View>
-            </View>
+                {defaultValues?.suggestedSpares?.technicians?.length > 0 && (
+                    <View style={styles.row}>
+                        <View style={styles.col}>
+                            <Text style={styles.lable}>Technicians</Text>
+                            <Text style={styles.text_sm}>{ defaultValues?.suggestedSpares?.technicians?.map( op => `${op?.firstName || ''} ${op?.lastName || ''}`)?.join(', ')}</Text>
+                        </View>
+                    </View>
+                )}
+                {defaultValues?.suggestedSpares?.operators?.length > 0 && (
+                    <View style={styles.row}>
+                        <View style={styles.col}>
+                            <Text style={styles.lable}>Operators</Text>
+                            <Text style={styles.text_sm}>{ defaultValues?.suggestedSpares?.operators?.map( op => `${op?.firstName || ''} ${op?.lastName || ''}`)?.join(', ')}</Text>
+                        </View>
+                    </View>
+                )}
+            </>}
 
-            <View style={styles.row}>
-                <View style={styles.col}>
-                    <Text style={styles.lable}>Operators Notes</Text>
-                    <Text style={styles.text_sm}>{defaultValues?.operatorNotes}</Text>
+            { defaultValues?.internalNote?.note?.trim() && < >
+                <View style={styles.row}>
+                    <View style={styles.col}>
+                        <Text style={styles.lable}>INTERNAL NOTE</Text>
+                        <Text style={styles.text_sm}>{ defaultValues?.internalNote?.note || ''}</Text>
+                    </View>
                 </View>
-            </View>
-            { Array.isArray(defaultValues?.files) && defaultValues?.files?.filter( f => f?.src )?.length > 0 && <>
+                {defaultValues?.internalNote?.technicians?.length > 0 && (
+                    <View style={styles.row}>
+                        <View style={styles.col}>
+                            <Text style={styles.lable}>Technicians</Text>
+                            <Text style={styles.text_sm}>{ defaultValues?.internalNote?.technicians?.map( op => `${op?.firstName || ''} ${op?.lastName || ''}`)?.join(', ')}</Text>
+                        </View>
+                    </View>
+                )}
+                {defaultValues?.internalNote?.operators?.length > 0 && (
+                    <View style={styles.row}>
+                        <View style={styles.col}>
+                            <Text style={styles.lable}>Operators</Text>
+                            <Text style={styles.text_sm}>{ defaultValues?.internalNote?.operators?.map( op => `${op?.firstName || ''} ${op?.lastName || ''}`)?.join(', ')}</Text>
+                        </View>
+                    </View>
+                )}
+            </>}
+
+            { defaultValues?.operatorNotes?.note?.trim() && < >
+                <View style={styles.row}>
+                    <View style={styles.col}>
+                        <Text style={styles.lable}>Operators Notes</Text>
+                        <Text style={styles.text_sm}>{ defaultValues?.operatorNotes?.note || ''}</Text>
+                    </View>
+                </View>
+                {defaultValues?.operatorNotes?.technicians?.length > 0 && (
+                    <View style={styles.row}>
+                        <View style={styles.col}>
+                            <Text style={styles.lable}>Technicians</Text>
+                            <Text style={styles.text_sm}>{ defaultValues?.operatorNotes?.technicians?.map( op => `${op?.firstName || ''} ${op?.lastName || ''}`)?.join(', ')}</Text>
+                        </View>
+                    </View>
+                )}
+                {defaultValues?.operatorNotes?.operators?.length > 0 && (
+                    <View style={styles.row}>
+                        <View style={styles.col}>
+                            <Text style={styles.lable}>Operators</Text>
+                            <Text style={styles.text_sm}>{ defaultValues?.operatorNotes?.operators?.map( op => `${op?.firstName || ''} ${op?.lastName || ''}`)?.join(', ')}</Text>
+                        </View>
+                    </View>
+                )}
+            </>}
+
+            { defaultValues?.reportSubmission && Array.isArray(defaultValues?.files) && defaultValues?.files?.filter( f => f?.src )?.length > 0 && <>
                 <Text style={styles.title}>Documents / Images</Text>
                 <View style={styles.row}>
                     <View style={styles.image_row} >
@@ -287,7 +426,6 @@ function getImageUrl(file) {
                     </View>
                 </View>
             </>}
-        {/* </>} */}
         </View>
 
         <View style={styles.footer} fixed>
