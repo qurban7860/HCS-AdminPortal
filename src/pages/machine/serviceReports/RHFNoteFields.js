@@ -24,7 +24,6 @@ const RHFNoteFields = ({ name, label, historicalData, isTechnician, isOperator, 
   const { enqueueSnackbar } = useSnackbar();
 
   const { machineServiceReport } = useSelector((state) => state.machineServiceReport);
-  const { isLoading, isLoadingReportNote } = useSelector((state) => state.machineServiceReport);
   const { activeSpContacts, activeContacts } = useSelector((state) => state.contact);
 
   const [ isEditing, setIsEditing ] = useState(false);
@@ -54,7 +53,6 @@ const RHFNoteFields = ({ name, label, historicalData, isTechnician, isOperator, 
   const {
     setValue,
     watch,
-    reset,
     formState: { isSubmitting },
   } = methods;
 
@@ -103,7 +101,11 @@ const RHFNoteFields = ({ name, label, historicalData, isTechnician, isOperator, 
         await dispatch(addServiceReportNote( id, name, watchedValues ))
         enqueueSnackbar("Note saved successfully!");
       }
-      reset();
+      setValue('_id','');
+      setValue('technicians',[]);
+      setValue('operators',[]);
+      setValue('note','');
+      setValue('isPublic',true);
       setParentValue(name,'');
       setLoading(false);
     } catch (error){
@@ -123,7 +125,12 @@ const RHFNoteFields = ({ name, label, historicalData, isTechnician, isOperator, 
   };
 
   const handleCancel = () => { 
-    reset();
+    setValue('_id','');
+    setValue('technicians',[]);
+    setValue('operators',[]);
+    setValue('note','');
+    setValue('isPublic',true);
+    setParentValue(name,'');
     setIsEditing(false);
     setCurrentData(null)
   }
@@ -194,7 +201,7 @@ const RHFNoteFields = ({ name, label, historicalData, isTechnician, isOperator, 
                   <>
                     { isEditing && <Button size='small' variant='outlined' onClick={ handleCancel } disabled={ loading } sx={{ mr: 1 }} >cancel</Button>}
                     <LoadingButton 
-                      disabled={ !isChanged || loading || isSubmitting || isLoadingReportNote } 
+                      disabled={ !isChanged || loading || isSubmitting } 
                       onClick={ handleSave } 
                       loading={ loading || isSubmitting } 
                       size='small' 

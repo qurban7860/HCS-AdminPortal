@@ -120,12 +120,12 @@ function MachineServiceReportsFirstStep( { handleComplete, handleDraftRequest, h
   //  // eslint-disable-next-line react-hooks/exhaustive-deps
   // }, [ activeSpContacts, setValue, user?.contact, id ]);
 
-    useEffect(() => {
-      if (machineServiceReport) {
-        reset(defaultValues);
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [reset, machineServiceReport ]);
+    // useEffect(() => {
+    //   if (machineServiceReport) {
+    //     reset(defaultValues);
+    //   }
+    //   // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [reset, machineServiceReport ]);
 
     const { docReportType, serviceReportTemplate, reportSubmission, files } = watch();
     const watchValues = watch();
@@ -338,7 +338,6 @@ return (
                     />
                   </Box>
 
-                  {/* <RHFTextField name="technicianNotes" label="Technician Notes" minRows={3} multiline/>  */}
                   <RHFNoteFields 
                     name="technicianNotes" 
                     label="Technician Notes" 
