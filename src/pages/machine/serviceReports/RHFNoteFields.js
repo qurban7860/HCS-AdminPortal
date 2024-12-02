@@ -192,7 +192,7 @@ const RHFNoteFields = ({ name, label, historicalData, isTechnician, isOperator, 
                 {/* <RHFSwitch label='Public' name='isPublic' /> */}
                 { id &&
                   <>
-                    { isEditing && <Button size='small' variant='outlined' onClick={ handleCancel } disabled={ loading } >cancel</Button>}
+                    { isEditing && <Button size='small' variant='outlined' onClick={ handleCancel } disabled={ loading } sx={{ mr: 1 }} >cancel</Button>}
                     <LoadingButton 
                       disabled={ !isChanged || loading || isSubmitting || isLoadingReportNote } 
                       onClick={ handleSave } 

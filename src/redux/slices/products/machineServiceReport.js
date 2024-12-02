@@ -155,8 +155,14 @@ const slice = createSlice({
         ? [...targetCheckItem.historicalData]
         : [];
     
+      // Handle merging of files
+      const existingFiles = (historicalData[0]?.files || []);
+      const newFiles = checkItem.files || [];
+      const mergedFiles = [...existingFiles, ...newFiles];
+
       historicalData[0] = {
         ...checkItem,
+        files: mergedFiles,
       };
     
       // Update the target check item with the modified historicalData
@@ -179,7 +185,7 @@ const slice = createSlice({
     },
 
     deleteMachineServiceReportCheckItems(state, action) {
-      const { Index, childIndex, checkItem } = action.payload;
+      const { Index, childIndex } = action.payload;
     
       // Create new copies of the state to maintain immutability
       const checkItemList = [...state.machineServiceReportCheckItems.checkItemLists];
@@ -928,7 +934,6 @@ export function deleteCheckItemValues( machineId, Id, Index, childIndex ) {
       await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceReportValues/${Id}`,formData );
       await dispatch(slice.actions.deleteMachineServiceReportCheckItems({ Index, childIndex }));
     } catch (error) {
-      console.error(error);
       dispatch(slice.actions.hasError(error.Message));
       throw error;
     }
