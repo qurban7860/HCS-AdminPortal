@@ -25,6 +25,7 @@ export function MachineServiceReportPDF({machineServiceReport, machineServiceRep
             approvalStatus:                     machineServiceReport?.currentApprovalStatus || '',
             decoilers:                          machineServiceReport?.decoilers ,
             reportDocs:                         machineServiceReport?.reportDocs || [],
+            reportSubmission:                   machineServiceReport?.reportSubmission || '',
             textBeforeCheckItems:               machineServiceReport?.textBeforeCheckItems || '',
             textAfterCheckItems:                machineServiceReport?.textAfterCheckItems || '',
             headerLeftText:                     machineServiceReport?.serviceReportTemplate?.header?.leftText || '',
@@ -74,9 +75,12 @@ export function MachineServiceReportPDF({machineServiceReport, machineServiceRep
 
     const fileName = `${defaultValues?.serviceDate?.substring(0,10).replaceAll('-','')}_${defaultValues?.serviceReportTemplateReportType}_${defaultValues?.versionNo}`;
 
-function getImageUrl(file) {
-        return file?.src  ? `data:image/${ !file?.extension?.toLowerCase()?.includes('png') ? file?.extension : 'jpg' };base64,${file?.src  }` : '';
+    function getImageUrl(file) {
+        if (!file?.src) return '';
+        const extension = file?.extension?.toLowerCase() || 'jpg';
+        return `data:image/${extension.includes('png') ? 'png' : 'jpg'};base64,${file.src}`;
     }
+    
     
     return (
         <Document title={fileName} subject='Serevice Report'
@@ -182,25 +186,26 @@ function getImageUrl(file) {
                 )}
             </>}
 
-            {Array.isArray(defaultValues?.reportDocs) && 
-            defaultValues?.reportDocs?.filter( f => f?.src )?.length > 0 && 
-            <>
-                <Text style={styles.title}>Reporting Documents</Text>
-                <View style={styles.row}>
-                    <View style={styles.image_row} >
-                        {defaultValues?.reportDocs?.filter( f => f?.src )?.map((file, fileIndex) => {
-                            const imageUrl = getImageUrl(file);
-                            return (
-                                ( file?.src && <View key={file?._id} style={styles.image_column}>
-                                    { imageUrl && <Image style={{ borderRadius:5, height:"372px", objectFit: "cover" }} src={ imageUrl } />}
-                                </View> || '' )
-                            );
-                        })}
+            {   !defaultValues?.reportSubmission && Array.isArray(defaultValues?.reportDocs) && 
+                defaultValues?.reportDocs?.filter( f => f?.src )?.length > 0 && 
+                <>
+                    <Text style={styles.title}>Reporting Documents</Text>
+                    <View style={styles.row}>
+                        <View style={styles.image_row} >
+                            {defaultValues?.reportDocs?.filter( f => f?.src )?.map((file, fileIndex) => {
+                                const imageUrl = getImageUrl(file);
+                                return (
+                                    ( file?.src && <View key={file?._id} style={styles.image_column}>
+                                        { imageUrl && <Image style={{ borderRadius:5, height:"372px", objectFit: "cover" }} src={ imageUrl } />}
+                                    </View> || '' )
+                                );
+                            })}
+                        </View>
                     </View>
-                </View>
-            </>}
+                </>
+            }
 
-            {/* { !defaultValues?.isReportDocsOnly && <> */}
+            { defaultValues?.reportSubmission && <>
 
             <View style={styles.row}>
                 <View style={styles.col}>
@@ -253,6 +258,8 @@ function getImageUrl(file) {
                     <Text style={styles.text_sm}>{defaultValues?.textAfterCheckItems}</Text>
                 </View>
             </View>
+
+            </>}
 
             { defaultValues?.internalComments?.note?.trim() && < >
                 <View style={styles.row}>
@@ -404,7 +411,7 @@ function getImageUrl(file) {
                 )}
             </>}
 
-            { Array.isArray(defaultValues?.files) && defaultValues?.files?.filter( f => f?.src )?.length > 0 && <>
+            { defaultValues?.reportSubmission && Array.isArray(defaultValues?.files) && defaultValues?.files?.filter( f => f?.src )?.length > 0 && <>
                 <Text style={styles.title}>Documents / Images</Text>
                 <View style={styles.row}>
                     <View style={styles.image_row} >
@@ -419,7 +426,6 @@ function getImageUrl(file) {
                     </View>
                 </View>
             </>}
-        {/* </>} */}
         </View>
 
         <View style={styles.footer} fixed>
