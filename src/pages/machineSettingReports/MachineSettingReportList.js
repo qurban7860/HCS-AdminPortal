@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { FormProvider, useForm } from 'react-hook-form';
 // @mui
-import { Container, Table, TableBody, TableContainer, Grid, Card, Stack, Box } from '@mui/material';
+import { Container, Table, TableBody, TableContainer, Grid, Card, Box, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import {
   useTable,
@@ -40,7 +40,6 @@ MachineSettingReportList.propTypes = {
 
 const TABLE_HEAD = [
   { id: 'serialNo', label: 'Serial No.', align: 'left', hideable:false, allowSearch: true },
-  // { id: 'name', visibility: 'md1',label: 'Name', align: 'left' },
   { id: 'machineModel.name', visibility: 'xs1', label: 'Model', align: 'left', allowSearch: true },
   { id: 'customer.name', visibility: 'xs1', label: 'Customer', align: 'left', allowSearch: true },
   { id: 'HLCSoftwareVersion', visibility: 'md', label: 'HLC Software Version', align: 'left' },
@@ -57,7 +56,7 @@ export default function MachineSettingReportList({ isArchived }) {
   const [tableData, setTableData] = useState([]);
   const dispatch = useDispatch();
   const [selectedSearchFilter, setSelectedSearchFilter] = useState('');
-
+  const [filterStatus, setFilterStatus] = useState('all');
   const methods = useForm({
     defaultValues: {
       filteredSearchKey: '',
@@ -93,6 +92,10 @@ export default function MachineSettingReportList({ isArchived }) {
     dispatch(setCustomerDialog(true))
   }
   
+  const onFilterStatus = (event) => {
+    setFilterStatus(event.target.value);
+  };
+
   useEffect(() => {
     dispatch(
       getTechparamReports({
@@ -110,14 +113,17 @@ export default function MachineSettingReportList({ isArchived }) {
   }, [techparamReport]);
 
   const onGetReports = (data) => {
+    if(selectedSearchFilter && filteredSearchKey || filterStatus){
+    const status = filterStatus === 'all' ? null : filterStatus;
     dispatch(
       getTechparamReports({
         page,
         pageSize: rowsPerPage,
         searchKey: filteredSearchKey,
         searchColumn: selectedSearchFilter,
+        machineStatus: status,
       })
-    );
+    )};
   };
 
   const afterClearHandler = () => { 
@@ -149,15 +155,15 @@ export default function MachineSettingReportList({ isArchived }) {
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Card sx={{ p: 3 }}>
-              <Stack
-                direction={{ xs: 'column', sm: 'row' }}
-                spacing={2}
+              <Box
                 sx={{
-                  justifyContent: 'space-between',
-                  alignItems: 'flex-start',
+                  display: 'grid',
+                  gap: 2,
+                  gridTemplateColumns: { xs: '1fr', sm: '1fr auto auto' },
+                  width: '100%',
                 }}
               >
-                <Box sx={{ flexGrow: 1, width: { xs: '100%', sm: 'auto' } }}>
+                <Box sx={{ flexGrow: 1 }}>
                   <RHFFilteredSearchBar
                     name="filteredSearchKey"
                     filterOptions={TABLE_HEAD.filter((item) => item?.allowSearch)}
@@ -173,6 +179,26 @@ export default function MachineSettingReportList({ isArchived }) {
                     fullWidth
                   />
                 </Box>
+
+                <Box sx={{ flexShrink: 0, display: 'flex' }}>
+                  <FormControl fullWidth size="small" sx={{ minWidth: { sm: 400 } }}>
+                    <InputLabel id="status-select-label">Status</InputLabel>
+                    <Select
+                      labelId="status-select-label"
+                      id="status-select"
+                      name="status"
+                      label="Status"
+                      value={filterStatus}
+                      onChange={onFilterStatus}
+                    >
+                      <MenuItem key="all" value="all"> All </MenuItem>
+                      <MenuItem key="assembly" value="assembly"> Assembly </MenuItem>
+                      <MenuItem key="ready-for-shipment" value="ready-for-shipment"> Ready for Shipment </MenuItem>
+                      <MenuItem key="freight" value="freight"> Freight </MenuItem>
+                      <MenuItem key="commissioned" value="commissioned"> Commissioned </MenuItem>
+                    </Select>
+                  </FormControl>
+                </Box>
                 <Box sx={{ justifyContent: 'flex-end', display: 'flex' }}>
                   <LoadingButton
                     type="button"
@@ -183,18 +209,16 @@ export default function MachineSettingReportList({ isArchived }) {
                     Search
                   </LoadingButton>
                 </Box>
-              </Stack>
+              </Box>
             </Card>
           </Grid>
         </Grid>
-      </FormProvider>
       <TableCard>
         <MachineSettingReportListTableToolbar
           onExportCSV={onExportCSV}
           onExportLoading={exportingCSV}
           isArchived={isArchived}
         />
-
         {!isNotFound && !isMobile && (
           <TablePaginationFilter
             columns={TABLE_HEAD}
@@ -207,7 +231,6 @@ export default function MachineSettingReportList({ isArchived }) {
             onRowsPerPageChange={onChangeRowsPerPage}
           />
         )}
-
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
           <Scrollbar>
             <Table stickyHeader size="small" sx={{ minWidth: 360 }}>
@@ -218,7 +241,6 @@ export default function MachineSettingReportList({ isArchived }) {
                 hiddenColumns={reportHiddenColumns}
                 onSort={onSort}
               />
-
               <TableBody>
                 {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -230,7 +252,9 @@ export default function MachineSettingReportList({ isArchived }) {
                         hiddenColumns={reportHiddenColumns}
                         onSelectRow={() => onSelectRow(row._id)}
                         style={index % 2 ? { background: 'red' } : { background: 'green' }}
-                        handleCustomerDialog={(e)=> row?.customer && handleCustomerDialog(e,row?.customer?._id)}
+                        handleCustomerDialog={(e) =>
+                          row?.customer && handleCustomerDialog(e, row?.customer?._id)
+                        }
                         isArchived={isArchived}
                       />
                     ) : (
@@ -242,7 +266,6 @@ export default function MachineSettingReportList({ isArchived }) {
             </Table>
           </Scrollbar>
         </TableContainer>
-
         {!isNotFound && (
           <TablePaginationCustom
             count={machineSettingReportstotalCount || 0}
@@ -253,6 +276,7 @@ export default function MachineSettingReportList({ isArchived }) {
           />
         )}
       </TableCard>
+      </FormProvider>
     </Container>
   );
 }

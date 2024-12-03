@@ -63,7 +63,6 @@ export default function MachineSettingReportListTableRow({
     <TableRow hover selected={selected}>
      {/* <LinkTableCellWithIconTargetBlank align="left" isVerified={verifications?.length > 0} /> */}
         <LinkTableCell align="left" onClick={(event) => handleMachineDialog(event, row.machineId)} param={serialNo || ''}> {serialNo || ''} </LinkTableCell>
-      {/* { useScreenSize('lg') && !hiddenColumns?.name && <TableCell>{name || ''}</TableCell>} */}
       {  useScreenSize('sm') && !hiddenColumns['machineModel.name'] && <TableCell>{ machineModel?.name || ''}</TableCell>}
       {  useScreenSize('sm') && !hiddenColumns['customer.name'] &&
         <LinkDialogTableCell onClick={handleCustomerDialog} align='center' param={customer?.name}/>  
