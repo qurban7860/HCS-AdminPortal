@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { FormProvider, useForm } from 'react-hook-form';
 // @mui
-import { Container, Table, TableBody, TableContainer, Grid, Card, Box, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { Container, Table, TableBody, TableContainer, Grid, Card, Box } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import {
   useTable,
@@ -14,6 +14,7 @@ import {
   TablePaginationCustom,
   TablePaginationFilter
 } from '../../components/table';
+import { RHFAutocomplete } from '../../components/hook-form';
 import useResponsive from '../../hooks/useResponsive';
 import Scrollbar from '../../components/scrollbar';
 import RHFFilteredSearchBar from '../../components/hook-form/RHFFilteredSearchBar';
@@ -22,7 +23,7 @@ import MachineSettingReportListTableToolbar from './MachineSettingReportListTabl
 
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
-
+import { getActiveMachineStatuses, resetActiveMachineStatuses } from '../../redux/slices/products/statuses';
 import { getTechparamReports, ChangePage, ChangeRowsPerPage, setReportHiddenColumns  } from '../../redux/slices/products/machineTechParamReport';
 
 import { getCustomer, setCustomerDialog } from '../../redux/slices/customer/customer';
@@ -47,6 +48,8 @@ const TABLE_HEAD = [
 ];
 
 export default function MachineSettingReportList({ isArchived }) {
+
+  const [statusesToShow, setStatusesToShow] = useState([])
   
   const { order, orderBy,  onSelectRow, onSort } = useTable({
     defaultOrderBy: 'machineModel.name',
@@ -56,20 +59,22 @@ export default function MachineSettingReportList({ isArchived }) {
   const [tableData, setTableData] = useState([]);
   const dispatch = useDispatch();
   const [selectedSearchFilter, setSelectedSearchFilter] = useState('');
-  const [filterStatus, setFilterStatus] = useState('all');
   const methods = useForm({
     defaultValues: {
       filteredSearchKey: '',
+      statusType: '',
     },
   });
 
   const { page, rowsPerPage, isLoading, techparamReport, machineSettingReportstotalCount, reportHiddenColumns } = useSelector((state) => state.techparamReport) || {};
+  const { activeMachineStatuses } = useSelector((state) => state.machinestatus) || {};
 
   const { enqueueSnackbar } = useSnackbar();
   const isMobile = useResponsive('down', 'sm');
 
-  const { watch, handleSubmit } = methods;
+  const { watch, handleSubmit, setValue } = methods;
   const filteredSearchKey = watch('filteredSearchKey');
+  const statusType = watch('statusType');
 
   const dataFiltered = applySort({
     inputData: tableData,
@@ -91,10 +96,17 @@ export default function MachineSettingReportList({ isArchived }) {
     dispatch(getCustomer(id))
     dispatch(setCustomerDialog(true))
   }
+
+  useEffect(() => {
+    if (activeMachineStatuses?.length > 0) {
+      const filteredStatuses = activeMachineStatuses.filter((status => (status.name !== "Transferred" && status.name !== "Decommissioned")))
+      setStatusesToShow([{name: "All"}, ...filteredStatuses])
+    }
+  }, [activeMachineStatuses]);
   
-  const onFilterStatus = (event) => {
-    setFilterStatus(event.target.value);
-  };
+  useEffect(() => {
+    setValue('statusType', statusesToShow.find((status) => status.name === 'All'));
+  }, [statusesToShow, setValue]);
 
   useEffect(() => {
     dispatch(
@@ -103,6 +115,7 @@ export default function MachineSettingReportList({ isArchived }) {
         pageSize: rowsPerPage,
         searchKey: filteredSearchKey,
         searchColumn: selectedSearchFilter,
+        machineStatus: statusType,
       })
     );
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -111,21 +124,29 @@ export default function MachineSettingReportList({ isArchived }) {
   useEffect(() => {
     setTableData(techparamReport?.data || []);
   }, [techparamReport]);
-
-  const onGetReports = (data) => {
-    if(selectedSearchFilter && filteredSearchKey || filterStatus){
-    const status = filterStatus === 'all' ? null : filterStatus;
+  
+  useEffect(() => {
+    const fetchStatuses = async () => {
+      await dispatch(getActiveMachineStatuses())
+    };
+    fetchStatuses();
+    return () => {
+      dispatch(resetActiveMachineStatuses());
+    };
+  }, [dispatch]);
+  
+  const onGetReports = () => {
+    if ( filteredSearchKey && selectedSearchFilter || statusType ) {
+    const status = statusType?.name === 'All' ? null : statusType?.name;
     dispatch(
       getTechparamReports({
-        page,
-        pageSize: rowsPerPage,
         searchKey: filteredSearchKey,
         searchColumn: selectedSearchFilter,
         machineStatus: status,
       })
     )};
   };
-
+  
   const afterClearHandler = () => { 
     dispatch(
       getTechparamReports({ page, pageSize: rowsPerPage, searchKey: '', searchColumn: '' })
@@ -145,7 +166,7 @@ export default function MachineSettingReportList({ isArchived }) {
   const handleHiddenColumns = async (arg) => {
    dispatch(setReportHiddenColumns(arg))
   };
-  
+
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
@@ -179,25 +200,31 @@ export default function MachineSettingReportList({ isArchived }) {
                     fullWidth
                   />
                 </Box>
-
                 <Box sx={{ flexShrink: 0, display: 'flex' }}>
-                  <FormControl fullWidth size="small" sx={{ minWidth: { sm: 400 } }}>
-                    <InputLabel id="status-select-label">Status</InputLabel>
-                    <Select
-                      labelId="status-select-label"
-                      id="status-select"
-                      name="status"
-                      label="Status"
-                      value={filterStatus}
-                      onChange={onFilterStatus}
-                    >
-                      <MenuItem key="all" value="all"> All </MenuItem>
-                      <MenuItem key="assembly" value="assembly"> Assembly </MenuItem>
-                      <MenuItem key="ready-for-shipment" value="ready-for-shipment"> Ready for Shipment </MenuItem>
-                      <MenuItem key="freight" value="freight"> Freight </MenuItem>
-                      <MenuItem key="commissioned" value="commissioned"> Commissioned </MenuItem>
-                    </Select>
-                  </FormControl>
+                    <RHFAutocomplete
+                    name="statusType"
+                    label="Status Type"
+                    sx={{ minWidth: { sm: 400 } }}
+                    options={statusesToShow || []}
+                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    getOptionLabel={(option) => option?.name || ''}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option?._id}>
+                         {' '}
+                        {option?.name || ''}
+                      </li>
+                    )}
+                    // onChange={(e, newValue) => setValue('status', newValue)}
+                    onChange={(event, newValue) =>{
+                      if(newValue){
+                        setValue('statusType', newValue);
+                      } else {
+                        setValue('statusType', null); 
+                        afterClearHandler();
+                      }
+                    }}
+                    size="small"
+                  />
                 </Box>
                 <Box sx={{ justifyContent: 'flex-end', display: 'flex' }}>
                   <LoadingButton
