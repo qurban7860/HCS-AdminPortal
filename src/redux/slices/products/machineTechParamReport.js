@@ -95,14 +95,15 @@ export const {
 
 // -----------------------------------Get Machine Report-----------------------------------  
 
-export function getTechparamReports({ page, pageSize, searchKey = null, searchColumn = null }) {
+export function getTechparamReports({ page, pageSize, searchKey = null, searchColumn = null, machineStatus = null }) {
     return async (dispatch) => {
       dispatch(slice.actions.startLoading());
       try {
         const response = await axios.get(`${CONFIG.SERVER_URL}products/techparamReport`, {
           params: {
             pagination: { page, pageSize },
-            ...(searchKey?.length > 0 && { search: {key: searchKey, column: searchColumn} })
+            ...(searchKey?.length > 0 && { search: {key: searchKey, column: searchColumn} }),
+            machineStatus,
           }
         });
         dispatch(slice.actions.getTechparamReportsSuccess(response.data));
