@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import { FormProvider, useForm } from 'react-hook-form';
 // @mui
 import { Container, Table, TableBody, TableContainer, Grid, Card, Stack, Box } from '@mui/material';
@@ -24,16 +23,9 @@ import MachineSettingReportListTableToolbar from './MachineSettingReportListTabl
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
 
-// slice
-import {
-  setMachineTab,
-} from '../../redux/slices/products/machine';
-
 import { getTechparamReports, ChangePage, ChangeRowsPerPage, setReportHiddenColumns  } from '../../redux/slices/products/machineTechParamReport';
 
 import { getCustomer, setCustomerDialog } from '../../redux/slices/customer/customer';
-// routes
-import { PATH_MACHINE } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 // util
@@ -47,7 +39,7 @@ MachineSettingReportList.propTypes = {
 };
 
 const TABLE_HEAD = [
-  { id: 'serialNo', label: 'Serial Number', align: 'left', hideable:false, allowSearch: true },
+  { id: 'serialNo', label: 'Serial No.', align: 'left', hideable:false, allowSearch: true },
   // { id: 'name', visibility: 'md1',label: 'Name', align: 'left' },
   { id: 'machineModel.name', visibility: 'xs1', label: 'Model', align: 'left', allowSearch: true },
   { id: 'customer.name', visibility: 'xs1', label: 'Customer', align: 'left', allowSearch: true },
@@ -63,7 +55,6 @@ export default function MachineSettingReportList({ isArchived }) {
   });
 
   const [tableData, setTableData] = useState([]);
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [selectedSearchFilter, setSelectedSearchFilter] = useState('');
 
@@ -96,11 +87,6 @@ export default function MachineSettingReportList({ isArchived }) {
     dispatch(ChangePage(0));
     dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10)));
   };
-  
-  const handleViewRow = (id) => {
-    dispatch(setMachineTab('info'));
-    navigate(PATH_MACHINE.machines.settings.root(id));
-  }
   
   const handleCustomerDialog = (e, id) => {
     dispatch(getCustomer(id))
@@ -243,7 +229,6 @@ export default function MachineSettingReportList({ isArchived }) {
                         row={row}
                         hiddenColumns={reportHiddenColumns}
                         onSelectRow={() => onSelectRow(row._id)}
-                        // onViewRow={() => handleViewRow(row._id)}
                         style={index % 2 ? { background: 'red' } : { background: 'green' }}
                         handleCustomerDialog={(e)=> row?.customer && handleCustomerDialog(e,row?.customer?._id)}
                         isArchived={isArchived}

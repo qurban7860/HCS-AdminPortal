@@ -1,13 +1,13 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 // @mui
 import { TableRow, TableCell } from '@mui/material';
 import { green } from '@mui/material/colors';
 import { createTheme } from '@mui/material/styles';
-// utils
-import { fDate } from '../../utils/formatTime';
 // components
-import LinkTableCellWithIconTargetBlank from '../../components/ListTableTools/LinkTableCellWithIconTargetBlank';
+import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
+import { getMachineForDialog, setMachineDialog } from '../../redux/slices/products/machine';
+// import LinkTableCellWithIconTargetBlank from '../../components/ListTableTools/LinkTableCellWithIconTargetBlank';
 import { useScreenSize } from '../../hooks/useResponsive';
 import LinkDialogTableCell from '../../components/ListTableTools/LinkDialogTableCell';
 
@@ -41,7 +41,6 @@ export default function MachineSettingReportListTableRow({
 
   const {
     serialNo,
-    verifications,
     machineModel,
     customer,
     techParamas,
@@ -52,15 +51,18 @@ export default function MachineSettingReportListTableRow({
       success: green,
     },
   });
+  const dispatch = useDispatch();
+
+  const handleMachineDialog = async ( event, MachineID ) => {
+    event.preventDefault(); 
+    await dispatch(getMachineForDialog(MachineID));
+    await dispatch(setMachineDialog(true)); 
+  };
 
   return (
     <TableRow hover selected={selected}>
-     <LinkTableCellWithIconTargetBlank
-        align="left"
-        onViewRow={ onViewRow }
-        param={serialNo}
-        isVerified={verifications?.length > 0}
-      />
+     {/* <LinkTableCellWithIconTargetBlank align="left" isVerified={verifications?.length > 0} /> */}
+        <LinkTableCell align="left" onClick={(event) => handleMachineDialog(event, row.machineId)} param={serialNo || ''}> {serialNo || ''} </LinkTableCell>
       {/* { useScreenSize('lg') && !hiddenColumns?.name && <TableCell>{name || ''}</TableCell>} */}
       {  useScreenSize('sm') && !hiddenColumns['machineModel.name'] && <TableCell>{ machineModel?.name || ''}</TableCell>}
       {  useScreenSize('sm') && !hiddenColumns['customer.name'] &&
