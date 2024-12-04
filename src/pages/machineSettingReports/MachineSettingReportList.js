@@ -207,7 +207,7 @@ export default function MachineSettingReportList({ isArchived }) {
                   <RHFAutocomplete
                     name="statusType"
                     label="Status Type"
-                    sx={{ minWidth: 400 }}
+                    sx={{ minWidth: { sm: 400 } }}
                     options={statusesToShow || []}
                     multiple
                     size="small"
