@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { FormProvider, useForm } from 'react-hook-form';
 // @mui
-import { Container, Table, TableBody, TableContainer, Grid, Card, Box } from '@mui/material';
+import { Container, Table, TableBody, TableContainer, Grid, Card, Box, Checkbox } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import {
   useTable,
@@ -48,33 +48,66 @@ const TABLE_HEAD = [
 ];
 
 export default function MachineSettingReportList({ isArchived }) {
-
   const [statusesToShow, setStatusesToShow] = useState([])
+  const [tableData, setTableData] = useState([]);
+  const [selectedSearchFilter, setSelectedSearchFilter] = useState('');
   
+  const { page, rowsPerPage, isLoading, techparamReport, machineSettingReportstotalCount, reportHiddenColumns } = useSelector((state) => state.techparamReport) || {};
+  const { activeMachineStatuses } = useSelector((state) => state.machinestatus) || {};
+
   const { order, orderBy,  onSelectRow, onSort } = useTable({
     defaultOrderBy: 'machineModel.name',
     defaultOrder: 'desc',
   });
 
-  const [tableData, setTableData] = useState([]);
   const dispatch = useDispatch();
-  const [selectedSearchFilter, setSelectedSearchFilter] = useState('');
-  const methods = useForm({
-    defaultValues: {
-      filteredSearchKey: '',
-      statusType: '',
-    },
-  });
-
-  const { page, rowsPerPage, isLoading, techparamReport, machineSettingReportstotalCount, reportHiddenColumns } = useSelector((state) => state.techparamReport) || {};
-  const { activeMachineStatuses } = useSelector((state) => state.machinestatus) || {};
-
   const { enqueueSnackbar } = useSnackbar();
   const isMobile = useResponsive('down', 'sm');
 
+  const methods = useForm({
+    defaultValues: {
+      filteredSearchKey: '',
+      statusType: [],
+    },
+  });
+
   const { watch, handleSubmit, setValue } = methods;
-  const filteredSearchKey = watch('filteredSearchKey');
-  const statusType = watch('statusType');
+  const {filteredSearchKey, statusType} = watch();
+
+  useEffect(() => {
+    if (activeMachineStatuses?.length > 0) {
+      const filteredStatuses = activeMachineStatuses.filter((status => (status.name !== "Transferred" && status.name !== "Decommissioned")))
+      setStatusesToShow([...filteredStatuses])
+    }
+  }, [activeMachineStatuses]);
+
+  useEffect(() => {
+    const status = statusType?.map((item) => item.name).join(',');
+    dispatch(
+      getTechparamReports({
+        page,
+        pageSize: rowsPerPage,
+        searchKey: filteredSearchKey,
+        searchColumn: selectedSearchFilter,
+        machineStatus: status,
+      })
+    );
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, page, rowsPerPage]);
+  
+  useEffect(() => {
+    setTableData(techparamReport?.data || []);
+  }, [techparamReport]);
+  
+  useEffect(() => {
+    const fetchStatuses = async () => {
+      await dispatch(getActiveMachineStatuses())
+    };
+    fetchStatuses();
+    return () => {
+      dispatch(resetActiveMachineStatuses());
+    };
+  }, [dispatch]);
 
   const dataFiltered = applySort({
     inputData: tableData,
@@ -96,60 +129,30 @@ export default function MachineSettingReportList({ isArchived }) {
     dispatch(getCustomer(id))
     dispatch(setCustomerDialog(true))
   }
-
-  useEffect(() => {
-    if (activeMachineStatuses?.length > 0) {
-      const filteredStatuses = activeMachineStatuses.filter((status => (status.name !== "Transferred" && status.name !== "Decommissioned")))
-      setStatusesToShow([{name: "All"}, ...filteredStatuses])
-    }
-  }, [activeMachineStatuses]);
   
-  useEffect(() => {
-    setValue('statusType', statusesToShow.find((status) => status.name === 'All'));
-  }, [statusesToShow, setValue]);
-
-  useEffect(() => {
+  const onGetReports = (data) => {
+    if ((filteredSearchKey && selectedSearchFilter) || statusType) {
+      const status = data?.statusType?.map((item) => item.name).join(',');
+      dispatch(
+        getTechparamReports({
+          searchKey: filteredSearchKey,
+          searchColumn: selectedSearchFilter,
+          machineStatus: status,
+        })
+      );
+    }
+  };
+  
+  const afterClearHandler = () => {
+    const status = statusType?.map((item) => item.name).join(',');
     dispatch(
       getTechparamReports({
         page,
         pageSize: rowsPerPage,
-        searchKey: filteredSearchKey,
-        searchColumn: selectedSearchFilter,
-        machineStatus: statusType,
-      })
-    );
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, page, rowsPerPage]);
-  
-  useEffect(() => {
-    setTableData(techparamReport?.data || []);
-  }, [techparamReport]);
-  
-  useEffect(() => {
-    const fetchStatuses = async () => {
-      await dispatch(getActiveMachineStatuses())
-    };
-    fetchStatuses();
-    return () => {
-      dispatch(resetActiveMachineStatuses());
-    };
-  }, [dispatch]);
-  
-  const onGetReports = () => {
-    if ( filteredSearchKey && selectedSearchFilter || statusType ) {
-    const status = statusType?.name === 'All' ? null : statusType?.name;
-    dispatch(
-      getTechparamReports({
-        searchKey: filteredSearchKey,
-        searchColumn: selectedSearchFilter,
+        searchKey: '',
+        searchColumn: '',
         machineStatus: status,
       })
-    )};
-  };
-  
-  const afterClearHandler = () => { 
-    dispatch(
-      getTechparamReports({ page, pageSize: rowsPerPage, searchKey: '', searchColumn: '' })
     );
   };  
 
@@ -201,29 +204,24 @@ export default function MachineSettingReportList({ isArchived }) {
                   />
                 </Box>
                 <Box sx={{ flexShrink: 0, display: 'flex' }}>
-                    <RHFAutocomplete
+                  <RHFAutocomplete
                     name="statusType"
                     label="Status Type"
                     sx={{ minWidth: { sm: 400 } }}
                     options={statusesToShow || []}
+                    multiple
+                    size="small"
                     isOptionEqualToValue={(option, value) => option._id === value._id}
                     getOptionLabel={(option) => option?.name || ''}
                     renderOption={(props, option) => (
                       <li {...props} key={option?._id}>
-                         {' '}
+                        <Checkbox 
+                          checked={statusType?.some((item) => item._id === option._id)} 
+                          size="small"
+                        />
                         {option?.name || ''}
                       </li>
                     )}
-                    // onChange={(e, newValue) => setValue('status', newValue)}
-                    onChange={(event, newValue) =>{
-                      if(newValue){
-                        setValue('statusType', newValue);
-                      } else {
-                        setValue('statusType', null); 
-                        afterClearHandler();
-                      }
-                    }}
-                    size="small"
                   />
                 </Box>
                 <Box sx={{ justifyContent: 'flex-end', display: 'flex' }}>
@@ -240,69 +238,69 @@ export default function MachineSettingReportList({ isArchived }) {
             </Card>
           </Grid>
         </Grid>
-      <TableCard>
-        <MachineSettingReportListTableToolbar
-          onExportCSV={onExportCSV}
-          onExportLoading={exportingCSV}
-          isArchived={isArchived}
-        />
-        {!isNotFound && !isMobile && (
-          <TablePaginationFilter
-            columns={TABLE_HEAD}
-            hiddenColumns={reportHiddenColumns}
-            handleHiddenColumns={handleHiddenColumns}
-            count={machineSettingReportstotalCount || 0}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
+        <TableCard>
+          <MachineSettingReportListTableToolbar
+            onExportCSV={onExportCSV}
+            onExportLoading={exportingCSV}
+            isArchived={isArchived}
           />
-        )}
-        <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-          <Scrollbar>
-            <Table stickyHeader size="small" sx={{ minWidth: 360 }}>
-              <TableHeadFilter
-                order={order}
-                orderBy={orderBy}
-                headLabel={TABLE_HEAD}
-                hiddenColumns={reportHiddenColumns}
-                onSort={onSort}
-              />
-              <TableBody>
-                {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row, index) =>
-                    row ? (
-                      <MachineSettingReportListTableRow
-                        key={row._id}
-                        row={row}
-                        hiddenColumns={reportHiddenColumns}
-                        onSelectRow={() => onSelectRow(row._id)}
-                        style={index % 2 ? { background: 'red' } : { background: 'green' }}
-                        handleCustomerDialog={(e) =>
-                          row?.customer && handleCustomerDialog(e, row?.customer?._id)
-                        }
-                        isArchived={isArchived}
-                      />
-                    ) : (
-                      !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
-                    )
-                  )}
-                <TableNoData isNotFound={isNotFound} />
-              </TableBody>
-            </Table>
-          </Scrollbar>
-        </TableContainer>
-        {!isNotFound && (
-          <TablePaginationCustom
-            count={machineSettingReportstotalCount || 0}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-          />
-        )}
-      </TableCard>
+          {!isNotFound && !isMobile && (
+            <TablePaginationFilter
+              columns={TABLE_HEAD}
+              hiddenColumns={reportHiddenColumns}
+              handleHiddenColumns={handleHiddenColumns}
+              count={machineSettingReportstotalCount || 0}
+              page={page}
+              rowsPerPage={rowsPerPage}
+              onPageChange={onChangePage}
+              onRowsPerPageChange={onChangeRowsPerPage}
+            />
+          )}
+          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+            <Scrollbar>
+              <Table stickyHeader size="small" sx={{ minWidth: 360 }}>
+                <TableHeadFilter
+                  order={order}
+                  orderBy={orderBy}
+                  headLabel={TABLE_HEAD}
+                  hiddenColumns={reportHiddenColumns}
+                  onSort={onSort}
+                />
+                <TableBody>
+                  {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row, index) =>
+                      row ? (
+                        <MachineSettingReportListTableRow
+                          key={row._id}
+                          row={row}
+                          hiddenColumns={reportHiddenColumns}
+                          onSelectRow={() => onSelectRow(row._id)}
+                          style={index % 2 ? { background: 'red' } : { background: 'green' }}
+                          handleCustomerDialog={(e) =>
+                            row?.customer && handleCustomerDialog(e, row?.customer?._id)
+                          }
+                          isArchived={isArchived}
+                        />
+                      ) : (
+                        !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
+                      )
+                    )}
+                  <TableNoData isNotFound={isNotFound} />
+                </TableBody>
+              </Table>
+            </Scrollbar>
+          </TableContainer>
+          {!isNotFound && (
+            <TablePaginationCustom
+              count={machineSettingReportstotalCount || 0}
+              page={page}
+              rowsPerPage={rowsPerPage}
+              onPageChange={onChangePage}
+              onRowsPerPageChange={onChangeRowsPerPage}
+            />
+          )}
+        </TableCard>
       </FormProvider>
     </Container>
   );

@@ -103,7 +103,7 @@ export function getTechparamReports({ page, pageSize, searchKey = null, searchCo
           params: {
             pagination: { page, pageSize },
             ...(searchKey?.length > 0 && { search: {key: searchKey, column: searchColumn} }),
-            machineStatus,
+            ...(machineStatus && { machineStatus }),
           }
         });
         dispatch(slice.actions.getTechparamReportsSuccess(response.data));
