@@ -181,7 +181,7 @@ export default function MachineSettingReportList({ isArchived }) {
                 </Box>
 
                 <Box sx={{ flexShrink: 0, display: 'flex' }}>
-                  <FormControl fullWidth size="small" sx={{ minWidth: { sm: 400 } }}>
+                  <FormControl fullWidth size="small" sx={{ maxWidth: '25%', minWidth: 200 }}>
                     <InputLabel id="status-select-label">Status</InputLabel>
                     <Select
                       labelId="status-select-label"
