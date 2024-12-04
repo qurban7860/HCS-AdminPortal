@@ -13,6 +13,7 @@ import FormProvider from '../../../components/hook-form/FormProvider';
 import { RHFAutocomplete, RHFDatePicker, RHFSwitch, RHFTextField, RHFUpload } from '../../../components/hook-form';
 import { statusTypes } from '../util';
 import { fDate, stringToDate } from '../../../utils/formatTime';
+import { handleError } from '../../../utils/errorHandler';
 import CheckedItemValueHistory from './CheckedItemValueHistory';
 import CheckedItemValueRow from './CheckedItemValueRow';
 import StatusAndComment from './StatusAndComment';
@@ -122,7 +123,7 @@ const CheckedItemInputRow = memo(({ index, childIndex, checkItemListId, rowData 
         }, 20000);
       } catch (err) {
         console.error(err);
-        enqueueSnackbar('Saving failed!', { variant: `error` });
+        enqueueSnackbar( handleError( err ) ||'Check Item save failed!', { variant: `error` });
       }
     };
 
@@ -196,11 +197,7 @@ const CheckedItemInputRow = memo(({ index, childIndex, checkItemListId, rowData 
         }
       } catch (error) {
         setPDFViewerDialog(false)
-        if (error.message) {
-          enqueueSnackbar(error.message, { variant: 'error' });
-        } else {
-          enqueueSnackbar('Something went wrong!', { variant: 'error' });
-        }
+        enqueueSnackbar( handleError( error ) || 'Open file failed!', { variant: 'error' });
       }
     };
 
@@ -213,7 +210,7 @@ const CheckedItemInputRow = memo(({ index, childIndex, checkItemListId, rowData 
         await dispatch(deleteCheckItemValues( machineId ,checkItemData?._id, index, childIndex ))
         await enqueueSnackbar('Check Item deleted Successfully!');
       } catch( error ){
-        await enqueueSnackbar('Check Item delete Failed!', { variant: 'error' });
+        await enqueueSnackbar( handleError( error ) || 'Check Item delete Failed!', { variant: 'error' });
       }
     }
 

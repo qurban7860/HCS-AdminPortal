@@ -13,8 +13,8 @@ import { deleteMachineServiceReport,
   resetMachineServiceReport,
   setSendEmailDialog,
   setPDFViewerDialog,
-  setAddFileDialog,
   setAddReportDocsDialog,
+  setIsReportDoc,
   downloadReportFile,
   deleteReportFile,
   setFormActiveStep,
@@ -39,9 +39,9 @@ import PDFViewerDialog from '../../../components/Dialog/PDFViewerDialog';
 import Iconify from '../../../components/iconify';
 import MachineTabContainer from '../util/MachineTabContainer';
 import { ThumbnailDocButton } from '../../../components/Thumbnails';
-import DialogServiceReportAddFile from '../../../components/Dialog/DialogServiceReportAddFile';
 import { DocumentGalleryItem } from '../../../components/gallery/DocumentGalleryItem';
 import { useAuthContext } from '../../../auth/useAuthContext';
+import { handleError } from '../../../utils/errorHandler';
 import Lightbox from '../../../components/lightbox/Lightbox';
 import SkeletonLine from '../../../components/skeleton/SkeletonLine';
 import DialogServiceReportComplete from '../../../components/Dialog/DialogServiceReportComplete';
@@ -60,7 +60,7 @@ function MachineServiceReportViewForm(  ) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const { machineId, primaryServiceReportId, id } = useParams();
+  const { machineId, id } = useParams();
   const { user, userId } = useAuthContext();
   const [selectedImage, setSelectedImage] = useState(-1);
   const [slides, setSlides] = useState([]);
@@ -70,7 +70,7 @@ function MachineServiceReportViewForm(  ) {
 
   useLayoutEffect(()=>{
     if( id ){
-      dispatch(setAddFileDialog(false));
+      dispatch(setAddReportDocsDialog(false));
       dispatch(getMachineServiceReport(machineId, id));
     }
     dispatch(setPDFViewerDialog(false));
@@ -94,7 +94,7 @@ function MachineServiceReportViewForm(  ) {
       await enqueueSnackbar('Machine Service Report Archived Successfully!');
       await navigate(PATH_MACHINE.machines.serviceReports.root(machineId))
     } catch (error) {
-      enqueueSnackbar(error, { variant: `error` });
+      enqueueSnackbar( handleError( error ) || 'Service report delete failed!', { variant: `error` });
       console.error(error);
     }
   };
@@ -221,10 +221,11 @@ function MachineServiceReportViewForm(  ) {
   const regEx = /^[^2]*/;
 
   const handleAddFileDialog = ()=>{
-    dispatch(setAddFileDialog(true));
+    dispatch(setAddReportDocsDialog(true));
   }
 
   const handleAddReportDocsDialog = ()=>{
+    dispatch(setIsReportDoc(true));
     dispatch(setAddReportDocsDialog(true));
   }
 
@@ -232,7 +233,7 @@ function MachineServiceReportViewForm(  ) {
     setSelectedImage(index);
     const file = slides[index];
     try {
-      const response = await dispatch(downloadReportFile(machineId, primaryServiceReportId, file?._id));
+      const response = await dispatch(downloadReportFile(machineId, id, file?._id));
       if (regEx.test(response.status)) {
         const updatedItems = [
           ...slides.slice(0, index),
@@ -255,7 +256,7 @@ function MachineServiceReportViewForm(  ) {
     const file = slidesReporting[index];
     try {
       if(!file.isLoaded){
-        const response = await dispatch(downloadReportFile(machineId, primaryServiceReportId, file?._id));
+        const response = await dispatch(downloadReportFile(machineId, id, file?._id));
         if (regEx.test(response.status)) {
           const updatedItems = [
             ...slidesReporting.slice(0, index),
@@ -283,17 +284,17 @@ function MachineServiceReportViewForm(  ) {
 
   const handleDeleteReportFile = async (fileId) => {
     try {
-      await dispatch(deleteReportFile(machineId, machineServiceReport?.primaryServiceReportId, fileId));
+      await dispatch(deleteReportFile(machineId, machineServiceReport?._id, fileId));
       await dispatch(getMachineServiceReport(machineId, id))
       enqueueSnackbar('File deleted successfully!');
     } catch (err) {
       console.log(err);
-      enqueueSnackbar('File Deletion failed!', { variant: `error` });
+      enqueueSnackbar( handleError( err ) || 'File Deletion failed!', { variant: `error` });
     }
   };
 
   const handleDownloadReportFile = (fileId, name, extension) => {
-    dispatch(downloadReportFile(machineId, primaryServiceReportId, fileId))
+    dispatch(downloadReportFile(machineId, id, fileId))
       .then((res) => {
         if (regEx.test(res.status)) {
           download(atob(res.data), `${name}.${extension}`, { type: extension });
@@ -303,13 +304,7 @@ function MachineServiceReportViewForm(  ) {
         }
       })
       .catch((err) => {
-        if (err.Message) {
-          enqueueSnackbar(err.Message, { variant: `error` });
-        } else if (err.message) {
-          enqueueSnackbar(err.message, { variant: `error` });
-        } else {
-          enqueueSnackbar('Something went wrong!', { variant: `error` });
-        }
+        enqueueSnackbar( handleError( err ) || 'File download failed!' , { variant: `error` });
       });
   };
   
@@ -329,7 +324,7 @@ function MachineServiceReportViewForm(  ) {
     setAttachedPDFViewerDialog(true);
     setPDF(null);
     try {
-      const response = await dispatch(downloadReportFile(machineId, primaryServiceReportId, fileId));
+      const response = await dispatch(downloadReportFile(machineId, id, fileId));
       if (regEx.test(response.status)) {
         const blob = b64toBlob(encodeURI(response.data), 'application/pdf')
         const url = URL.createObjectURL(blob);
@@ -338,12 +333,9 @@ function MachineServiceReportViewForm(  ) {
         enqueueSnackbar(response.statusText, { variant: 'error' });
       }
     } catch (error) {
+      enqueueSnackbar( handleError( error ) || 'PDF open failed!', { variant: 'error' });
       setAttachedPDFViewerDialog(false);
-      if (error.message) {
-        enqueueSnackbar(error.message, { variant: 'error' });
-      } else {
-        enqueueSnackbar('Something went wrong!', { variant: 'error' });
-      }
+
     }
   };  
 
@@ -571,7 +563,6 @@ function MachineServiceReportViewForm(  ) {
                   { machineServiceReportCheckItems?.checkItemLists?.map((row, index) => (
                       <CheckedItemValueRow
                         machineId={machineId}
-                        primaryServiceReportId={machineServiceReport?.primaryServiceReportId	}
                         value={row}
                         index={index}
                         key={row._id}
@@ -645,7 +636,7 @@ function MachineServiceReportViewForm(  ) {
             ))}
 
           { machineServiceReport?.status?.name?.toUpperCase() === 'DRAFT' && 
-            <ThumbnailDocButton onClick={handleAddFileDialog}/>
+            <ThumbnailDocButton onClick={handleAddFileDialog} />
           }
         </Box>}
           
@@ -655,7 +646,7 @@ function MachineServiceReportViewForm(  ) {
       </Grid>
       {pdfViewerDialog && <PDFViewerDialog machineServiceReport={machineServiceReport} />}
       {sendEmailDialog && <SendEmailDialog fileName={fileName}/>}
-      <DialogServiceReportAddFile />
+      
       <DialogServiceReportComplete reportStatus={reportStatus}/>
     </Card>
       <Card sx={{ mt: 2 }}>

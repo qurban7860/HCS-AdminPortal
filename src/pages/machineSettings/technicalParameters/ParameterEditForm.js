@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 // form
@@ -75,13 +75,12 @@ export default function ParameterEditForm() {
     formState: { isSubmitting },
   } = methods;
 
-  // useEffect(() => {
-  //   if (techparam) {
-  //     reset(defaultValues);
-  //   }
-  //   setParamVal(techparam.category);
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [techparam]);
+  useEffect(() => {
+    if (techparam) {
+      reset(defaultValues);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ techparam ]);
 
   const toggleCancel = () => navigate(PATH_MACHINE.machines.machineSettings.technicalParameters.view(id));
 

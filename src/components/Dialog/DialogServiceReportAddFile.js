@@ -5,29 +5,17 @@ import { LoadingButton } from '@mui/lab';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useSnackbar } from 'notistack';
-import { useParams } from 'react-router-dom';
-
-import {  
-  addMachineServiceReportFiles,
-  setAddFileDialog,
-  setAddReportDocsDialog
-} from '../../redux/slices/products/machineServiceReport';
-
+import { addMachineServiceReportFiles, setAddReportDocsDialog, setIsReportDoc } from '../../redux/slices/products/machineServiceReport';
 import FormProvider from '../hook-form/FormProvider';
 import { RHFUpload } from '../hook-form';
+import { useServiceReportParams } from '../../hooks/useServiceReportParams';
 import { MachineServiceReportPart3Schema } from '../../pages/schemas/machine';
 
 function DialogServiceReportAddFile( ) {
-
-  const { machineId, id } = useParams();
-  const dispatch = useDispatch();
-  const { addFileDialog, addReportDocsDialog } = useSelector((state) => state.machineServiceReport);
+  const { machineId, id } = useServiceReportParams() 
   
-  const handleCloseDialog = async ()=>{ 
-    await dispatch(setAddFileDialog(false)) 
-    await dispatch(setAddReportDocsDialog(false))
-    reset();
-  }
+  const dispatch = useDispatch();
+  const { addReportDocsDialog, isReportDoc } = useSelector((state) => state.machineServiceReport);
   
   const { enqueueSnackbar } = useSnackbar();
 
@@ -73,19 +61,30 @@ function DialogServiceReportAddFile( ) {
 
   const onSubmit = async (data) => {
     try {
-      data.isReportDoc = addReportDocsDialog;
-      await dispatch(addMachineServiceReportFiles(machineId, id, data))
-      await handleCloseDialog();
-      await reset();
-      await enqueueSnackbar('Files uploaded successfully!');
+      if(isReportDoc){
+        data.isReportDoc = isReportDoc;
+      }
+      if( machineId && id ){
+        await dispatch(addMachineServiceReportFiles(machineId, id, data))
+        await handleCloseDialog();
+        await enqueueSnackbar('Files uploaded successfully!');
+      } else {
+        enqueueSnackbar('File upload failed, parameters missing!', { variant: `error` });
+      }
     } catch (error) {
-      enqueueSnackbar('Failed file upload', { variant: `error` });
+      enqueueSnackbar('Failed to upload files. Please try again.', { variant: `error` });
       console.error(error);
     }
   };
 
+  const handleCloseDialog = async ()=>{
+    await dispatch(setAddReportDocsDialog(false));
+    await dispatch(setIsReportDoc(false));
+    reset();
+  }
+
   return (
-    <Dialog fullWidth maxWidth="xl" open={ addFileDialog || addReportDocsDialog } onClose={handleCloseDialog}>
+    <Dialog fullWidth maxWidth="xl" open={ addReportDocsDialog } onClose={handleCloseDialog}>
       <DialogTitle variant='h3' sx={{pb:1, pt:2}}>Add Documents / Images</DialogTitle>
       <Divider orientation="horizontal" flexItem />
       <DialogContent dividers sx={{pt:2}}>
