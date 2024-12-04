@@ -14,9 +14,9 @@ import {
 } from '../../../redux/slices/products/machineServiceReport';
 // components
 import { useSnackbar } from '../../../components/snackbar';
+import { handleError } from '../../../utils/errorHandler';
 import MachineTabContainer from '../util/MachineTabContainer';
 import ConfirmDialog from '../../../components/confirm-dialog';
-import DialogServiceReportAddFile from '../../../components/Dialog/DialogServiceReportAddFile';
 import MachineServiceReportsFirstStep from './MachineServiceReportsFirstStep';
 import MachineServiceReportsSecondStep from './MachineServiceReportsSecondStep';
 import MachineServiceReportsThirdStep from './MachineServiceReportsThirdStep';
@@ -50,7 +50,7 @@ function MachineServiceReportAddForm() {
     return () => {
       dispatch(resetMachineServiceReport());
     };
-  }, [dispatch, machineId, id]);
+  }, [ dispatch, machineId, id ] );
 
   const handleStep = useCallback((step) => async () => {
     if (formActiveStep === 0 && !completed[formActiveStep]) {
@@ -77,11 +77,17 @@ function MachineServiceReportAddForm() {
   }
 
   const handleDiscard = useCallback(async () => {
-    if (machineServiceReport?._id) {
-      await dispatch(deleteMachineServiceReport(machineId, machineServiceReport?._id, machineServiceReport?.status?._id));
+    try{
+      if (machineServiceReport?._id) {
+        await dispatch(deleteMachineServiceReport(machineId, machineServiceReport?._id, machineServiceReport?.status?._id));
+      }
+      setDiscardDialog(false)
+      navigate(PATH_MACHINE.machines.serviceReports.root(machineId));
+    } catch( error ){
+      setDiscardDialog(false)
+      enqueueSnackbar( handleError( error ) || 'Service Report discard failed!', { variant: 'error' });
     }
-    navigate(PATH_MACHINE.machines.serviceReports.root(machineId));
-  }, [dispatch, machineId, machineServiceReport, navigate]);
+  }, [ dispatch, machineId, machineServiceReport, enqueueSnackbar, navigate ]);
   
   const handleComplete = useCallback((step) => {
     const newCompleted = [...completed];
@@ -148,7 +154,6 @@ function MachineServiceReportAddForm() {
             </Card>
           </Grid>
         </Grid>
-      <DialogServiceReportAddFile />
       <ConfirmDialog
         open={ discardDialog }
         onClose={() => setDiscardDialog(false)}

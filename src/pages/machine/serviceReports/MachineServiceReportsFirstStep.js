@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState, useMemo, useCallback } from 'react'
+import React, { useEffect, useLayoutEffect, useState, useMemo, memo, useCallback } from 'react'
 import PropTypes from 'prop-types';
 import b64toBlob from 'b64-to-blob';
 import { Box, Button, Dialog, DialogTitle, Divider, Stack, Grid } from '@mui/material';
@@ -13,6 +13,7 @@ import FormLabel from '../../../components/DocumentForms/FormLabel';
 import { MachineServiceReportPart1Schema } from '../../schemas/machine';
 import { useAuthContext } from '../../../auth/useAuthContext';
 import { PATH_MACHINE } from '../../../routes/paths';
+import { handleError } from '../../../utils/errorHandler';
 import { getActiveSPContacts, resetActiveSPContacts } from '../../../redux/slices/customer/contact';
 import { addMachineServiceReport, setFormActiveStep, updateMachineServiceReport, addMachineServiceReportFiles, deleteReportFile, downloadReportFile  } from '../../../redux/slices/products/machineServiceReport';
 import { getActiveServiceReportTemplatesForRecords, resetServiceReportTemplate } from '../../../redux/slices/products/serviceReportTemplate';
@@ -62,27 +63,25 @@ function MachineServiceReportsFirstStep( { handleComplete, handleDraftRequest, h
     const defaultValues = useMemo(
       () => {
         const initialValues = {
-        docReportType:                reportTypes.find(rt=> rt?.name?.toLowerCase() === machineServiceReport?.serviceReportTemplate?.reportType?.toLowerCase()) || null,
-        serviceReportTemplate:        machineServiceReport?.serviceReportTemplate || null,
-        serviceDate:                  machineServiceReport?.serviceDate || new Date(),
-        textBeforeCheckItems:         '',
-        textAfterCheckItems:          '',
-        reportSubmission:             machineServiceReport?.reportSubmission || false,
-        files: machineServiceReport?.reportDocs?.map(file => ({
-          key: file?._id,
-          _id: file?._id,
-          name:`${file?.name}.${file?.extension}`,
-          type: file?.fileType,
-          fileType: file?.fileType,
-          preview: `data:${file?.fileType};base64, ${file?.thumbnail}`,
-          src: `data:${file?.fileType};base64, ${file?.thumbnail}`,
-          path:`${file?.name}.${file?.extension}`,
-          downloadFilename:`${file?.name}.${file?.extension}`,
-          machineId:machineServiceReport?.machineId,
-          primaryServiceReportId: id,
-        })) || [],
-      }
-      return initialValues;
+          docReportType:                reportTypes.find(rt=> rt?.name?.toLowerCase() === machineServiceReport?.serviceReportTemplate?.reportType?.toLowerCase()) || null,
+          serviceReportTemplate:        machineServiceReport?.serviceReportTemplate || null,
+          serviceDate:                  machineServiceReport?.serviceDate || new Date(),
+          reportSubmission:             machineServiceReport?.reportSubmission || false,
+          files: machineServiceReport?.reportDocs?.map(file => ({
+            key: file?._id,
+            _id: file?._id,
+            name:`${file?.name}.${file?.extension}`,
+            type: file?.fileType,
+            fileType: file?.fileType,
+            preview: `data:${file?.fileType};base64, ${file?.thumbnail}`,
+            src: `data:${file?.fileType};base64, ${file?.thumbnail}`,
+            path:`${file?.name}.${file?.extension}`,
+            downloadFilename:`${file?.name}.${file?.extension}`,
+            machineId:machineServiceReport?.machineId,
+            primaryServiceReportId: id,
+          })) || [],
+        }
+        return initialValues;
     }, [ machineServiceReport, reportTypes, id ] );
 
     const methods = useForm({
@@ -102,30 +101,16 @@ function MachineServiceReportsFirstStep( { handleComplete, handleDraftRequest, h
     formState: { isSubmitting },
     } = methods;
 
-  // useEffect(() => {
-  //   const sPContactUser = activeSpContacts?.find( ( el )=> el?._id === user?.contact );
-  //   let techniciansList = activeSpContacts?.filter( ( el ) => el?.departmentDetails?.departmentType?.toLowerCase() === 'technical');
-  //   if ( sPContactUser && !techniciansList?.some( ( el ) => el?._id === user?.contact ) ) {
-  //     techniciansList = [ sPContactUser, ...techniciansList ]
-  //   }
-  //   if( !machineServiceReport?._id ){
-  //     setValue('technician', sPContactUser || null );
-  //   }
-  //   if ( machineServiceReport?.technician?._id && techniciansList?.some( ( el ) => ( el?._id !== machineServiceReport?.technician?._id ) ) ) {
-  //     techniciansList = [ machineServiceReport?.technician, ...techniciansList ];
-  //     setValue('technician', machineServiceReport?.technician || null );
-  //   }
-  //   techniciansList = techniciansList?.sort((a, b) => a?.firstName.localeCompare(b?.firstName) );
-  //   setTechnicians(techniciansList);
-  //  // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [ activeSpContacts, setValue, user?.contact, id ]);
-
-    // useEffect(() => {
-    //   if (machineServiceReport) {
-    //     reset(defaultValues);
-    //   }
-    //   // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [reset, machineServiceReport ]);
+    useEffect(() => {
+      if (machineServiceReport) {
+        const currentValues = getValues(); // Get current form values
+        const updatedValues = {
+          ...defaultValues,
+          ...currentValues, // Merge current values to avoid empty fields
+        };
+        reset(updatedValues); // Reset with merged values
+      }
+    }, [reset, getValues, machineServiceReport, defaultValues]);
 
     const { docReportType, serviceReportTemplate, reportSubmission, files } = watch();
     const watchValues = watch();
@@ -146,7 +131,7 @@ function MachineServiceReportsFirstStep( { handleComplete, handleDraftRequest, h
             } else {
               await navigate(PATH_MACHINE.machines.serviceReports.edit(machineId, serviceReport?._id))
             }
-          }else {
+          } else {
             await dispatch(updateMachineServiceReport(machineId, id, data));
             dispatchFiles( id, data );
             if( isSubmit ){
@@ -165,7 +150,7 @@ function MachineServiceReportsFirstStep( { handleComplete, handleDraftRequest, h
     
         } catch (err) {
           console.error(err);
-          enqueueSnackbar( typeof err === 'string' ? err : 'Saving failed!', { variant: `error` });
+          enqueueSnackbar( handleError( err ) || 'Service report save failed!', { variant: `error` });
         }
       };
 
@@ -234,11 +219,7 @@ function MachineServiceReportsFirstStep( { handleComplete, handleDraftRequest, h
           }
         } catch (error) {
           setPDFViewerDialog(false);
-          if (error.message) {
-            enqueueSnackbar(error.message, { variant: 'error' });
-          } else {
-            enqueueSnackbar('Something went wrong!', { variant: 'error' });
-          }
+          enqueueSnackbar( handleError( error ) || 'Open file failed!', { variant: 'error' });
         }
       };
 
@@ -324,12 +305,12 @@ return (
                           if(!docReportType || newValue?.reportType?.toUpperCase() !== docReportType?.name?.toUpperCase() ){
                             setValue('docReportType',reportTypes?.find((rt)=> rt?.name?.toUpperCase() === newValue?.reportType?.toUpperCase()))
                           }
-                          setValue('textBeforeCheckItems',newValue?.textBeforeCheckItems || '')
-                          setValue('textAfterCheckItems',newValue?.textAfterCheckItems || '')
+                          setValue('textBeforeCheckItems',newValue?.textBeforeCheckItems )
+                          setValue('textAfterCheckItems',newValue?.textAfterCheckItems )
                         } else {
                           setValue('serviceReportTemplate',null )
-                          setValue('textBeforeCheckItems', '')
-                          setValue('textAfterCheckItems', '')
+                          setValue('textBeforeCheckItems', undefined )
+                          setValue('textAfterCheckItems', undefined )
                         }
                         trigger('docReportType')
                         trigger('serviceReportTemplate')
@@ -342,6 +323,7 @@ return (
                     name="technicianNotes" 
                     label="Technician Notes" 
                     isTechnician
+                    saveHide
                     historicalData={ machineServiceReport?.technicianNotes }
                     setParentValue={ setValue }
                   />
@@ -353,6 +335,7 @@ return (
                       onRemove={handleRemoveFile}
                       onLoadImage={handleLoadImage}
                       onLoadPDF={handleOpenFile}
+
                     />
 
                     <RHFRadioGroup 
@@ -396,4 +379,4 @@ return (
 )
 }
 
-export default MachineServiceReportsFirstStep
+export default memo(MachineServiceReportsFirstStep);

@@ -8,6 +8,7 @@ import { Grid, Typography, Divider, Chip,  Switch, Box, Button, Dialog, DialogTi
 import b64toBlob from 'b64-to-blob';
 import CopyIcon from '../../../components/Icons/CopyIcon';
 import { fDate } from '../../../utils/formatTime';
+import { handleError } from '../../../utils/errorHandler';
 import ServiceReportAuditLogs from './ServiceReportAuditLogs';
 import { downloadCheckItemFile } from '../../../redux/slices/products/machineServiceReport';
 import { DocumentGalleryItem } from '../../../components/gallery/DocumentGalleryItem';
@@ -80,13 +81,7 @@ const CheckedItemValueHistoryItem = ({ historyItem, inputType }) => {
         }
       })
       .catch((err) => {
-        if (err.Message) {
-          enqueueSnackbar(err.Message, { variant: `error` });
-        } else if (err.message) {
-          enqueueSnackbar(err.message, { variant: `error` });
-        } else {
-          enqueueSnackbar('Something went wrong!', { variant: `error` });
-        }
+        enqueueSnackbar( handleError( err ) || 'Download file failed!', { variant: `error` });
       });
   };
 
@@ -105,11 +100,7 @@ const CheckedItemValueHistoryItem = ({ historyItem, inputType }) => {
       }
     } catch (error) {
       setAttachedPDFViewerDialog(false);
-      if (error?.message || error?.Message) {
-        enqueueSnackbar((error?.message || '' ) || (error?.Message || ''), { variant: 'error' });
-      } else {
-        enqueueSnackbar('File Download Failed!', { variant: 'error' });
-      }
+      enqueueSnackbar( handleError( error ) || 'Open file failed!', { variant: 'error' });
     }
   };
 
@@ -134,7 +125,7 @@ const CheckedItemValueHistoryItem = ({ historyItem, inputType }) => {
                             inputType.toLowerCase() === 'short text') &&
                           historyItem?.checkItemValue
                         )}
-                        {historyItem?.checkItemValue?.trim() && inputType.toLowerCase() !== 'boolean' && <CopyIcon value={historyItem?.comments} />}
+                        {historyItem?.checkItemValue?.trim() && inputType.toLowerCase() !== 'boolean' && <CopyIcon value={ historyItem?.checkItemValue || ''} />}
                       </>
                     )}
                   </Typography>

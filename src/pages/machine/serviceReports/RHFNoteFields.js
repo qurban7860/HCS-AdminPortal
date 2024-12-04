@@ -9,13 +9,14 @@ import { Grid, Button, Box } from '@mui/material';
 import { useSnackbar } from '../../../components/snackbar';
 import { useAuthContext } from '../../../auth/useAuthContext';
 import { reportNoteSchema } from '../../schemas/machine';
-import { RHFAutocomplete, RHFTextField, RHFSwitch } from '../../../components/hook-form';
+import { handleError } from '../../../utils/errorHandler';
+import { RHFAutocomplete, RHFTextField } from '../../../components/hook-form';
 import { addServiceReportNote, updateServiceReportNote, deleteServiceReportNote } from '../../../redux/slices/products/machineServiceReport';
 import ViewNoteHistory from './ViewNoteHistory';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
 import FormProvider from '../../../components/hook-form/FormProvider';
 
-const RHFNoteFields = ({ name, label, historicalData, isTechnician, isOperator, setParentValue }) => {
+const RHFNoteFields = ({ name, label, historicalData, saveHide, isTechnician, isOperator, setParentValue }) => {
 
   const dispatch = useDispatch()
 
@@ -46,13 +47,14 @@ const RHFNoteFields = ({ name, label, historicalData, isTechnician, isOperator, 
   const methods = useForm({
     resolver: yupResolver( reportNoteSchema ),
     defaultValues,
-    mode: 'onBlur',
+    mode: 'onSubmit',
     reValidateMode: 'onSubmit',
   });
 
   const {
     setValue,
     watch,
+    trigger,
     formState: { isSubmitting },
   } = methods;
 
@@ -61,6 +63,9 @@ const RHFNoteFields = ({ name, label, historicalData, isTechnician, isOperator, 
 
   useEffect(()=>{
     setParentValue(name,{ _id, technicians, operators, note, isPublic });
+    if( note?.trim() ){
+      trigger('note');
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[ _id, technicians, operators, note, isPublic ])
 
@@ -110,7 +115,7 @@ const RHFNoteFields = ({ name, label, historicalData, isTechnician, isOperator, 
       setLoading(false);
     } catch (error){
       setLoading(false);
-      enqueueSnackbar(error?.message || "Note save failed!", { variant: `error` });
+      enqueueSnackbar( handleError( error ) || "Note save failed!", { variant: `error` });
     }
   });
 
@@ -143,7 +148,7 @@ const RHFNoteFields = ({ name, label, historicalData, isTechnician, isOperator, 
       setLoading(false);
     } catch (error){
       setLoading(false);
-      enqueueSnackbar(error?.message || "note delete failed!", { variant: `error` });
+      enqueueSnackbar( handleError( error ) || "note delete failed!", { variant: `error` });
     }
   }
 
@@ -195,12 +200,13 @@ const RHFNoteFields = ({ name, label, historicalData, isTechnician, isOperator, 
                 name='note'
                 label={ label || currentData?.type || "Notes"}
               />  
+
               <Grid container display='flex' direction='row' alignItems="center" justifyContent='flex-end' >
                 {/* <RHFSwitch label='Public' name='isPublic' /> */}
                 { id &&
                   <>
                     { isEditing && <Button size='small' variant='outlined' onClick={ handleCancel } disabled={ loading } sx={{ mr: 1 }} >cancel</Button>}
-                    <LoadingButton 
+                    { ( isEditing || !saveHide ) && <LoadingButton 
                       disabled={ !isChanged || loading || isSubmitting } 
                       onClick={ handleSave } 
                       loading={ loading || isSubmitting } 
@@ -208,7 +214,7 @@ const RHFNoteFields = ({ name, label, historicalData, isTechnician, isOperator, 
                       variant='contained'
                     >
                       { isEditing ? "Update" : "Save" }
-                    </LoadingButton>
+                    </LoadingButton>}
                   </>
                 }
               </Grid>
@@ -224,6 +230,7 @@ RHFNoteFields.propTypes = {
   name: PropTypes.string,
   label: PropTypes.string,
   historicalData: PropTypes.array,
+  saveHide: PropTypes.bool,
   isTechnician: PropTypes.bool, 
   isOperator: PropTypes.bool,
   setParentValue: PropTypes.func

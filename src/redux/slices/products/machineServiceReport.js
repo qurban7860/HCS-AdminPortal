@@ -23,7 +23,7 @@ const initialState = {
   machineServiceReportCheckItems: [],
   sendEmailDialog:false,
   pdfViewerDialog:false,
-  addFileDialog:false,
+  isReportDoc: false,
   addReportDocsDialog: false,
   completeDialog:false,
   formActiveStep:0,
@@ -315,6 +315,34 @@ const slice = createSlice({
       }
       state.isLoadingReportNote = false;
     },
+
+    addServiceReportFilesSuccess(state, action) {
+      state.isLoading = false;
+      if( action.payload?.isReportDoc ){
+        state.machineServiceReport = {
+          ...state.machineServiceReport,
+          reportDocs: [ ...( state.machineServiceReport?.reportDocs || [] ), ...( action.payload?.files || [] ) ]
+        }	
+      } else {
+        state.machineServiceReport = {
+          ...state.machineServiceReport,
+          files: [ ...( state.machineServiceReport?.files || [] ), ...( action.payload?.files || [] ) ]
+        }	
+      }
+    },
+
+    deleteServiceReportFileSuccess(state, action) {
+      state.isLoading = false;
+      const { id } = action.payload;
+      const array = state.machineServiceReport.files;
+      if (Array.isArray(array) && array?.length > 0 ) {
+        state.machineServiceReport = {
+          ...state.machineServiceReport,
+          files: state.machineServiceReport?.files?.filter( f => f?._id !== id ) || []
+        };
+      }
+      state.isLoadingReportNote = false;
+    },
     
     // SET SEND EMAIL DIALOG
     setSendEmailDialog(state, action) {
@@ -326,15 +354,14 @@ const slice = createSlice({
       state.pdfViewerDialog = action.payload;
     },
 
-    
-    // SET ADD FILE DIALOG
-    setAddFileDialog(state, action) {
-      state.addFileDialog = action.payload;
-    },
-
     // SET ADD FILE DIALOG
     setAddReportDocsDialog(state, action) {
       state.addReportDocsDialog = action.payload;
+    },
+
+    // SET ADD FILE DIALOG
+    setIsReportDoc(state, action) {
+      state.isReportDoc = action.payload;
     },
     
     // SET COMLETE DIALOG
@@ -416,8 +443,8 @@ export const {
   setAllFlagsFalse,
   setSendEmailDialog,
   setPDFViewerDialog,
-  setAddFileDialog,
   setAddReportDocsDialog,
+  setIsReportDoc,
   setCompleteDialog,
   setFormActiveStep,
   resetMachineServiceReports,
@@ -803,7 +830,10 @@ export function addMachineServiceReportFiles(machineId, id, params) {
         });
       }
       const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceReports/${id}/files/`,formData);
-      dispatch(slice.actions.getMachineServiceReportSuccess(response?.data));
+      if(params?.isReportDoc){
+        response.data.isReportDoc = true
+      }
+      dispatch(slice.actions.addServiceReportFilesSuccess(response?.data));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -823,14 +853,10 @@ export function downloadReportFile(machineId, id, fileId) {
 
 export function deleteReportFile(machineId, id, fileId) {
   return async (dispatch) => {
-    dispatch(slice.actions.setSubmittingCheckItemIndex());
     try {
-      const response = await axios.delete(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceReports/${id}/files/${fileId}/` , 
-      {
-          isArchived: true, 
-      });
-      dispatch(slice.actions.setResponseMessage(response.data));
-      dispatch(slice.actions.resetSubmittingCheckItemIndex());
+      dispatch(slice.actions.startLoading());
+      await axios.delete(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceReports/${id}/files/${fileId}/` , { isArchived: true } );
+      dispatch(slice.actions.deleteServiceReportFileSuccess({ id: fileId }));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));

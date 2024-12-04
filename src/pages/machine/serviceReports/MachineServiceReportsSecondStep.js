@@ -10,11 +10,11 @@ import { LoadingButton } from '@mui/lab';
 import { RHFTextField } from '../../../components/hook-form';
 import CheckedItemInputRow from './CheckedItemInputRow';
 import FormProvider from '../../../components/hook-form/FormProvider';
+import { handleError } from '../../../utils/errorHandler';
 import { getMachineServiceReportCheckItems, resetCheckItemValues, setFormActiveStep, updateMachineServiceReport } from '../../../redux/slices/products/machineServiceReport';
 import ServiceRecodStepButtons from '../../../components/DocumentForms/ServiceRecodStepButtons';
 import { MachineServiceReportPart2TBCISchema, MachineServiceReportPart2TACISchema } from '../../schemas/machine';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
-import HistoryNotes from './HistoryNotes';
 
 MachineServiceReportsSecondStep.propTypes = {
   handleDraftRequest: PropTypes.func,
@@ -30,24 +30,19 @@ function MachineServiceReportsSecondStep({ handleDraftRequest, handleDiscard, ha
   
   const { machineServiceReport, machineServiceReportCheckItems, isLoadingCheckItems } = useSelector((state) => state.machineServiceReport);
   
-  const [ isDraft, setIsDraft ] = useState(false);
-  const saveAsDraft = async () => setIsDraft(true);
-
   useEffect(() =>{
     if( machineId && id ){
       dispatch(getMachineServiceReportCheckItems( machineId, id ));
     }
-    // return ()=> dispatch(resetCheckItemValues())
+    return ()=> dispatch(resetCheckItemValues())
   },[ dispatch, machineId, id ])
 
   const defaultValues = useMemo(
       () => {
         const initialValues = {
-        serviceDate:                  machineServiceReport?.serviceDate || new Date(),
-        versionNo:                    machineServiceReport?.versionNo || 1,
-        textBeforeCheckItems:         machineServiceReport?.textBeforeCheckItems || '',
-        textAfterCheckItems:          machineServiceReport?.textAfterCheckItems || '',
-      }
+          textBeforeCheckItems:         machineServiceReport?.textBeforeCheckItems || '',
+          textAfterCheckItems:          machineServiceReport?.textAfterCheckItems || '',
+        }
       return initialValues;
     },
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -58,26 +53,24 @@ function MachineServiceReportsSecondStep({ handleDraftRequest, handleDiscard, ha
       resolver: yupResolver(MachineServiceReportPart2TBCISchema),
       defaultValues,
     });
-    const { handleSubmit: handleSubmitBefore, watch: watchBefore, reset: resetBefore, formState: { isDirty: isDirtyBefore, isSubmitting: isSubmittingBefore, isSubmitted:isSubmittedBefore } } = formMethodsBefore;
-    const { textBeforeCheckItems } = watchBefore();
+    const { handleSubmit: handleSubmitBefore, reset: resetBefore, formState: { isDirty: isDirtyBefore, isSubmitting: isSubmittingBefore, isSubmitted:isSubmittedBefore } } = formMethodsBefore;
     
     const formMethodsAfter = useForm({
       resolver: yupResolver(MachineServiceReportPart2TACISchema),
       defaultValues,
     });
-    const { handleSubmit: handleSubmitAfter, watch: watchAfter, reset: resetAfter, formState: { isDirty: isDirtyAfter, isSubmitting: isSubmittingAfter, isSubmitted:isSubmittedAfter } } = formMethodsAfter;
-    const { textAfterCheckItems } = watchAfter();
+    const { handleSubmit: handleSubmitAfter, reset: resetAfter, formState: { isDirty: isDirtyAfter, isSubmitting: isSubmittingAfter, isSubmitted:isSubmittedAfter } } = formMethodsAfter;
     
     const methods = useForm({ defaultValues });
     const { handleSubmit, formState: { isSubmitting } } = methods;
     
-    // useEffect(() => {
-    //   if (machineServiceReport) {
-    //     // resetBefore(defaultValues);
-    //     // resetAfter(defaultValues);   
-    //     reset(defaultValues); 
-    //   }
-    // }, [resetBefore, resetAfter, reset, machineServiceReport, defaultValues]);
+    useEffect(() => {
+      if (machineServiceReport) {
+        resetBefore(defaultValues);
+        resetAfter(defaultValues);
+      }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [ machineServiceReport ]);
     
 
     const [showMessage, setShowMessage] = useState(false);
@@ -94,7 +87,7 @@ function MachineServiceReportsSecondStep({ handleDraftRequest, handleDiscard, ha
         }, 10000);
       } catch (err) {
         console.error(err);
-        enqueueSnackbar('Saving failed!', { variant: `error` });
+        enqueueSnackbar( handleError( err ) || 'Text save failed!', { variant: `error` });
       }
     };
 
@@ -112,27 +105,27 @@ function MachineServiceReportsSecondStep({ handleDraftRequest, handleDiscard, ha
         }, 10000);
       } catch (err) {
         console.error(err);
-        enqueueSnackbar('Saving failed!', { variant: `error` });
+        enqueueSnackbar( handleError( err ) || 'Text save failed!', { variant: `error` });
       }
     };
 
     const onSubmit = async (data) => {
       try {
-      const params = {
-        textBeforeCheckItems: data?.textBeforeCheckItems || '',
-        textAfterCheckItems: data?.textAfterCheckItems || '',
-        isReportDocsOnly: true
-      };
+        // const params = {
+        //   textBeforeCheckItems: data?.textBeforeCheckItems || '',
+        //   textAfterCheckItems: data?.textAfterCheckItems || '',
+        //   isReportDocsOnly: true
+        // };
 
-        if (isDraft) {
-          await dispatch(updateMachineServiceReport(machineId, id, params));
-          await handleDraftRequest(isDraft);
-        } else {
+        // if (isDraft) {
+        //   await dispatch(updateMachineServiceReport(machineId, id, params));
+        //   await handleDraftRequest(isDraft);
+        // } else {
           await dispatch(setFormActiveStep(2));
-        }
+        // }
       } catch (err) {
         console.error(err);
-        enqueueSnackbar('Saving failed!', { variant: `error` });
+        enqueueSnackbar( handleError( err ) || 'Service report save failed!', { variant: `error` });
       }
     };
 
@@ -189,7 +182,7 @@ function MachineServiceReportsSecondStep({ handleDraftRequest, handleDiscard, ha
               </Stack>
             </FormProvider>
             <FormProvider methods={methods}  key='submit' onSubmit={handleSubmit(onSubmit)} >
-              <ServiceRecodStepButtons handleDraft={saveAsDraft} isDraft={isDraft} isSubmitting={isSubmitting} />
+              <ServiceRecodStepButtons isSubmitting={isSubmitting} />
             </FormProvider>
       </Stack>
 )}

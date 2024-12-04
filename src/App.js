@@ -76,10 +76,10 @@ export default function App() {
                             <ScrollToTop />
                             <ThemeLocalization>
                               <SnackbarProvider>
+                                <Router />
                                 <StyledChart />
                                 <IdleManager />
                                 <DialogManager />
-                                <Router />
                               </SnackbarProvider>
                             </ThemeLocalization>
                           </ErrorBoundary>

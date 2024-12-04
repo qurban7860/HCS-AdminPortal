@@ -9,6 +9,7 @@ import { getActiveServiceReportStatuses, resetActiveServiceReportStatuses } from
 import { updateMachineServiceReportStatus } from '../../../redux/slices/products/machineServiceReport';
 import IconButtonTooltip from '../../../components/Icons/IconButtonTooltip';
 import { useSnackbar } from '../../../components/snackbar';
+import { handleError } from '../../../utils/errorHandler';
 import Iconify from '../../../components/iconify';
 
 ReportStatusButton.propTypes = {
@@ -75,7 +76,7 @@ export default function ReportStatusButton( { reportsPage, iconButton, status, m
       handleClose();
       await dispatch(updateMachineServiceReportStatus( machineId, id, { status: newStatus })); 
     } catch( error ){
-      enqueueSnackbar( typeof error === 'string' ? error : 'Saving failed!', { variant: `error` });
+      enqueueSnackbar( handleError( error ) || 'Status update failed!', { variant: `error` });
     }
   };
 

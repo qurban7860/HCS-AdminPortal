@@ -10,12 +10,14 @@ import { fDate } from '../../../utils/formatTime';
 import CopyIcon from '../../../components/Icons/CopyIcon';
 import ServiceReportAuditLogs from './ServiceReportAuditLogs';
 import { DocumentGalleryItem } from '../../../components/gallery/DocumentGalleryItem';
-import { deleteCheckItemFile, downloadCheckItemFile, setAddFileDialog } from '../../../redux/slices/products/machineServiceReport';
+import { deleteCheckItemFile, downloadCheckItemFile, setAddReportDocsDialog } from '../../../redux/slices/products/machineServiceReport';
 import Lightbox from '../../../components/lightbox/Lightbox';
 import ConfirmDialog from '../../../components/confirm-dialog';
 import CheckedItemValueHistory from './CheckedItemValueHistory';
 import SkeletonPDF from '../../../components/skeleton/SkeletonPDF';
 import IconifyButton from '../../../components/Icons/IconifyButton';
+import { handleError } from '../../../utils/errorHandler';
+
 
 const StatusAndComment = ({index, childIndex, childRow, isBorder, isUpdating, machineId, onEdit, onDelete }) => {
     const { machineServiceReport, isLoadingCheckItems } = useSelector((state) => state.machineServiceReport);
@@ -32,7 +34,7 @@ const StatusAndComment = ({index, childIndex, childRow, isBorder, isUpdating, ma
     const [ deleteDialog, setDeleteDialog ] = useState( false );
 
     const handleAddFileDialog = () => {
-      dispatch(setAddFileDialog(true));
+      dispatch(setAddReportDocsDialog(true));
     }
 
     useEffect(() => {
@@ -92,8 +94,7 @@ const StatusAndComment = ({index, childIndex, childRow, isBorder, isUpdating, ma
         // }
         enqueueSnackbar('File Archived successfully!');
       } catch (err) {
-        console.log(err);
-        enqueueSnackbar('File Deletion failed!', { variant: `error` });
+        enqueueSnackbar( handleError( err ) || 'File Deletion failed!', { variant: `error` });
       }
     };
   
@@ -108,13 +109,7 @@ const StatusAndComment = ({index, childIndex, childRow, isBorder, isUpdating, ma
           }
         })
         .catch((err) => {
-          if (err.Message) {
-            enqueueSnackbar(err.Message, { variant: `error` });
-          } else if (err.message) {
-            enqueueSnackbar(err.message, { variant: `error` });
-          } else {
-            enqueueSnackbar('Something went wrong!', { variant: `error` });
-          }
+          enqueueSnackbar( handleError( err ) || 'File download failed!', { variant: `error` });
         });
     };
 
@@ -134,11 +129,7 @@ const StatusAndComment = ({index, childIndex, childRow, isBorder, isUpdating, ma
       }
     } catch (error) {
       setAttachedPDFViewerDialog(false);
-      if (error?.message || error?.Message) {
-        enqueueSnackbar((error?.message || '' ) || (error?.Message || ''), { variant: 'error' });
-      } else {
-        enqueueSnackbar('File Download Failed!', { variant: 'error' });
-      }
+      enqueueSnackbar( handleError( error ) || 'File Download Failed!' , { variant: 'error' });
     }
   };
 
