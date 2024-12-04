@@ -268,7 +268,6 @@ export default function MachineSettingReportList({ isArchived }) {
                 />
                 <TableBody>
                   {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) =>
                       row ? (
                         <MachineSettingReportListTableRow

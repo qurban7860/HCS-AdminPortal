@@ -33,7 +33,7 @@ export default function MachineSettingReportListTableToolbar({
 }) {
 
   return (
-    <Stack {...options}>
+    <Stack {...options} sx={{ px: 2.5, py: 1 }}>
       <SearchBarCombo
         isFiltered={isFiltered}
         value={filterName}
