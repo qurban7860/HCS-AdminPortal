@@ -31,7 +31,10 @@ const initialState = {
   isDetailPage: false,
   filterBy: '',
   filterByStatus: '',
-  filterByStatusType: [ 'To Do', 'In Progress' ],
+  filterByStatusType: [],
+  reportFilterBy: '',
+  reportFilterByStatus: '',
+  reportFilterByStatusType: [ 'To Do', 'In Progress' ],
   page: 0,
   rowsPerPage: 100,
 };
@@ -420,6 +423,21 @@ const slice = createSlice({
     setFilterByStatusType(state, action) {
       state.filterByStatusType = action.payload;
     },
+    
+    // Set REPORT FilterBy
+    setReportFilterBy(state, action) {
+      state.reportFilterBy = action.payload;
+    },
+        
+     // Set ReportFilterBy
+    setReportFilterByStatus(state, action) {
+      state.reportFilterByStatus = action.payload;
+    },
+
+    // Set ReportFilterBy
+    setReportFilterByStatusType(state, action) {
+      state.reportFilterByStatusType = action.payload;
+    },
 
     // Set PageRowCount
     ChangeRowsPerPage(state, action) {
@@ -455,6 +473,9 @@ export const {
   setFilterBy,
   setFilterByStatus,
   setFilterByStatusType,
+  setReportFilterBy,
+  setReportFilterByStatus,
+  setReportFilterByStatusType,
   ChangeRowsPerPage,
   ChangePage,
 } = slice.actions;
