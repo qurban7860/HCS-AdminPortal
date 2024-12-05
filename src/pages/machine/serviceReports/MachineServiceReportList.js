@@ -31,6 +31,9 @@ import {
   setFilterBy,
   setFilterByStatus,
   setFilterByStatusType,
+  setReportFilterBy,
+  setReportFilterByStatus,
+  setReportFilterByStatusType,
   setSendEmailDialog,
 } from '../../../redux/slices/products/machineServiceReport';
 import { fDate, fDateTime } from '../../../utils/formatTime';
@@ -48,7 +51,7 @@ MachineServiceReportList.propTypes = {
 export default function MachineServiceReportList( { reportsPage }) {
   
   const { machine } = useSelector((state) => state.machine);
-  const { machineServiceReports, filterBy, filterByStatus, filterByStatusType, page, rowsPerPage, isLoading } = useSelector((state) => state.machineServiceReport);
+  const { machineServiceReports, filterBy, filterByStatus, filterByStatusType, reportFilterBy, reportFilterByStatus, reportFilterByStatusType, page, rowsPerPage, isLoading } = useSelector((state) => state.machineServiceReport);
   const { activeServiceReportStatuses, isLoadingReportStatus } = useSelector( (state) => state.serviceReportStatuses );
   const navigate = useNavigate();
   const { machineId } = useParams();
@@ -108,7 +111,7 @@ export default function MachineServiceReportList( { reportsPage }) {
       const matchedStatusIds = [
         ...(filterStatus?._id ? [filterStatus._id] : []),
         ... await activeServiceReportStatuses.filter(({ type }) => 
-            statusType.some(
+            statusType?.some(
               (status) => status.toLowerCase() === type.toLowerCase()
             )
           ).map(({ _id }) => _id)
@@ -146,7 +149,11 @@ export default function MachineServiceReportList( { reportsPage }) {
 
   const debouncedSearch = useRef(debounce((value) => {
     dispatch(ChangePage(0))
-    dispatch(setFilterBy(value))
+    if( reportsPage ) {
+      dispatch(setReportFilterBy(value))
+    } else {
+      dispatch(setFilterBy(value))
+    }
   }, 500))
 
   const handleFilterName = (event) => {
@@ -157,7 +164,11 @@ export default function MachineServiceReportList( { reportsPage }) {
 
   const debouncedFilterStatus = useRef(debounce((value) => {
     dispatch(ChangePage(0))
-    dispatch(setFilterByStatus(value))
+    if( reportsPage ){
+      dispatch(setReportFilterByStatus(value))
+    } else{
+      dispatch(setFilterByStatus(value))
+    }
   }, 500))
 
   const handleFilterStatus = ( option, newValue ) => {
@@ -170,11 +181,15 @@ export default function MachineServiceReportList( { reportsPage }) {
       setFilterStatus( null );
     }
   }
-
+  
   const debouncedFilterStatusType = useRef(debounce((value) => {
-    dispatch(ChangePage(0))
-    dispatch(setFilterByStatusType(value))
-  }, 500))
+    dispatch(ChangePage(0));
+    if (reportsPage) {
+      dispatch(setReportFilterByStatusType(value));
+    } else {
+      dispatch(setFilterByStatusType(value));
+    }
+  }, 500));
 
   const handleStatusType = ( option, newValue ) => {
     if( newValue ){
@@ -193,12 +208,13 @@ export default function MachineServiceReportList( { reportsPage }) {
     debouncedFilterStatusType.current.cancel();
   }, [ debouncedSearch, debouncedFilterStatus, debouncedFilterStatusType ]);
 
-  useEffect(()=>{
-    setFilterName( filterBy )
-    setFilterStatus( filterByStatus )
-    setStatusType( filterByStatusType )
+  useEffect(() => {
+    setFilterName( reportsPage ? reportFilterBy : filterBy )
+    setFilterStatus( reportsPage ? reportFilterByStatus : filterByStatus )
+    setStatusType( reportsPage ? reportFilterByStatusType : filterByStatusType );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[ filterBy, filterByStatus, filterByStatusType ])
+  }, [ filterBy, reportFilterBy, filterByStatus, reportFilterByStatus, filterByStatusType, reportFilterByStatusType, reportsPage ] );
+  
 
   const handleViewRow = async ( mId, id ) => { 
     navigate( PATH_MACHINE.machines.serviceReports.view( ( machineId || mId ), id ) );
@@ -209,7 +225,11 @@ export default function MachineServiceReportList( { reportsPage }) {
   }
 
   const handleResetFilter = () => {
-    dispatch(setFilterBy(''))
+    if( reportsPage ){
+      dispatch(setReportFilterBy(''))
+    }else{
+      dispatch(setFilterBy(''))
+    }
     setFilterName('');
   };
 

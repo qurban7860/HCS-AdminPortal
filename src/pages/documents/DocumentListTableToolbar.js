@@ -76,7 +76,7 @@ export default function DocumentListTableToolbar({
       spacing={2}
       alignItems="center"
       direction={{ xs: 'column', md: 'row' }}
-      sx={{ px: 2.5, py: 3 }}
+      sx={{ px: 2.5, py: 1 }}
     >
       <SearchBarCombo
         isFiltered={isFiltered}
