@@ -44,6 +44,16 @@ const initialState = {
   machineDocumentsFilterBy: '',
   machineDocumentsPage: 0,
   machineDocumentsRowsPerPage: 100,
+  reportHiddenColumns: {
+    "displayName": false,
+    "referenceNumber": false,
+    "docCategory.name": false,
+    "docType.name": false,
+    "stockNumber": false,
+    "productDrawings": true,
+    "machine.serialNo": true,
+    "createdAt": false,
+  },
 };
 
 const slice = createSlice({
@@ -234,6 +244,10 @@ const slice = createSlice({
     machineDrawingsChangePage(state, action) {
       state.machineDrawingsPage = action.payload;
     },
+    // set HiddenColumns
+    setReportHiddenColumns(state, action){
+      state.reportHiddenColumns = action.payload;  
+    },
   },
 });
 
@@ -269,6 +283,7 @@ export const {
   setMachineDrawingsFilterBy,
   machineDrawingsChangePage,
   machineDrawingsChangeRowsPerPage,
+  setReportHiddenColumns
 } = slice.actions;
 
 // ----------------------------Add Document------------------------------------------
@@ -434,7 +449,7 @@ export function updateDocumentVersionNo(documentId , data) {
 
 // -----------------------------------Get Documents-----------------------------------
 
-export function getDocuments(customerId, machineId, drawing, page, pageSize, isCustomerArchived, isMachineArchived, cancelToken, searchKey, searchColumn) {
+export function getDocuments(customerId, machineId, drawing, page, pageSize, isCustomerArchived, isMachineArchived, cancelToken, searchKey, searchColumn, docCategory, docType) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -478,6 +493,13 @@ export function getDocuments(customerId, machineId, drawing, page, pageSize, isC
         params.searchKey = searchKey;
         params.searchColumn = searchColumn;
       }
+      
+      if (docCategory) {
+        params.docCategory = docCategory; 
+      }
+      if (docType) {
+        params.docType = docType; 
+      }      
       
       const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/` ,
       {

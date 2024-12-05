@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import PropTypes from 'prop-types';
 // @mui
-import { Stack, Typography, IconButton, ToggleButton, Autocomplete, TextField } from '@mui/material';
+import { Stack, Typography, IconButton, ToggleButton, Autocomplete, TextField, FormControlLabel, Switch } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 // utils
 import { fDate } from '../../utils/formatTime';
@@ -25,7 +25,7 @@ const statusOptions = [
   { label: 'To Do', value: 'To Do', color: '#FBC02D' },
   { label: 'In Progress', value: 'In Progress', color: '#1E88E5' },
   { label: 'Done', value: 'Done', color: '#388E3C' },
-  { label: 'Cancelled', value: 'Cancelled', color: '#D32F2F' },
+  // { label: 'Cancelled', value: 'Cancelled', color: '#D32F2F' },
 ];
 
 // ----------------------------------------------------------------------
@@ -39,6 +39,8 @@ CalendarToolbar.propTypes = {
   setSelectedUser: PropTypes.func,
   selectedStatus: PropTypes.object,
   setSelectedStatus: PropTypes.func,
+  showCancelled: PropTypes.object,
+  setShowCancelled: PropTypes.func,
   onNextDate: PropTypes.func,
   onPrevDate: PropTypes.func,
   onOpenFilter: PropTypes.func,
@@ -56,6 +58,8 @@ function CalendarToolbar({
   setSelectedUser,
   selectedStatus,
   setSelectedStatus,
+  showCancelled,
+  setShowCancelled,
   date,
   view,
   onNextDate,
@@ -72,6 +76,10 @@ function CalendarToolbar({
   const { activeSecurityUsers } = useSelector((state) => state.user);
   const { startOfWeek, endOfWeek } = getWeekRange(date);
   
+  const handleShowCancelledChange = (event) => {
+    setShowCancelled(event.target.checked); 
+  };
+
   return (
     <Stack
       alignItems="center"
@@ -180,6 +188,17 @@ function CalendarToolbar({
           }} />}
         />
         
+        <FormControlLabel
+          control={
+         <Switch
+          checked={showCancelled}
+          onChange={handleShowCancelledChange}
+          name="showCancelled"
+          color="error"
+         />}
+          label="Show Cancelled"
+        />
+
         <StyledTooltip title="New Event" placement="top" disableFocusListener tooltipcolor="#103996" color="#fff">
           <IconButton color="#fff" onClick={()=> {
             dispatch(setEventModel(true))

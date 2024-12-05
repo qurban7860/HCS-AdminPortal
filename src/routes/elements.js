@@ -227,6 +227,10 @@ export const MachineJiraList = Loadable(lazy(() => import('../pages/machine/jira
 
 export const MachineSetting = Loadable(lazy(() => import('../pages/machineSettings/Machine')));
 
+// ---------------------  MACHINE SETTING REPORT -------------------------------------------
+
+export const MachineSettingReportList = Loadable(lazy(() => import('../pages/machineSettingReports/MachineSettingReportList')));
+
 // ---------------------  MACHINE LOGS -------------------------------------------
 
 export const AllMachinesLogs = Loadable(lazy(() => import('../pages/machineLogs/AllMachinesLogs')));

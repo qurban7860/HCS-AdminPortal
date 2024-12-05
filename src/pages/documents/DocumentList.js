@@ -28,6 +28,8 @@ import {
   TableSkeleton,
   TableHeadCustom,
   TablePaginationCustom,
+  TablePaginationFilter,
+  TableHeadFilter,
 } from '../../components/table';
 import Scrollbar from '../../components/scrollbar';
 // sections
@@ -51,6 +53,7 @@ import {
   setMachineDrawingsFilterBy,
   machineDrawingsChangePage,
   machineDrawingsChangeRowsPerPage,
+  setReportHiddenColumns,
 } from '../../redux/slices/document/document';
 import { getMachineForDialog,  setMachineDialog } from '../../redux/slices/products/machine';
 import { getActiveDocumentCategories } from '../../redux/slices/document/documentCategory';
@@ -95,7 +98,8 @@ function DocumentList({ customerPage, machinePage, machineDrawingPage, machineDr
     machineDrawingsFilterBy, machineDrawingsPage, machineDrawingsRowsPerPage,
     customerDocumentsFilterBy, customerDocumentsRowsPerPage,
     machineDocumentsFilterBy, machineDocumentsRowsPerPage,
-    isLoading } = useSelector((state) => state.document );
+    isLoading, reportHiddenColumns } = useSelector((state) => state.document );
+    console.log("isLoading : ",isLoading)
   const { activeDocumentCategories } = useSelector((state) => state.documentCategory );
   const { activeDocumentTypes } = useSelector((state) => state.documentType );
   const [totalRows, setTotalRows] = useState( documentRowsTotal );
@@ -143,14 +147,14 @@ const TABLE_HEAD = useMemo(() => {
     { id: 'referenceNumber', visibility: 'xs2', label: 'Ref. No.', align: 'left', allowSearch: true },
     { id: 'docCategory.name', visibility: 'xs1', label: 'Category', align: 'left', allowSearch: false },
     { id: 'docType.name', visibility: 'xs2', label: 'Type', align: 'left', allowSearch: false },
-    { id: 'createdAt', label: 'Created At', align: 'right' },
+    { id: 'createdAt', visibility: 'xs2', label: 'Created At', align: 'right' },
   ];
 
   if (machineDrawings) {
     return [
       ...baseHeaders.slice(0, 4),
       { id: 'stockNumber', visibility: 'xs2', label: 'Stock No.', align: 'left', allowSearch: true },
-      { id: 'productDrawings', visibility: 'xs2', label: 'Machines', align: 'left', allowSearch: true },
+      { id: 'productDrawings', visibility: 'xs2', label: 'Machines', align: 'left', allowSearch: false },
       ...baseHeaders.slice(4),
     ];
   }
@@ -158,7 +162,7 @@ const TABLE_HEAD = useMemo(() => {
   if (!customerPage && !machineDrawingPage && !machineDrawings) {
     return [
       ...baseHeaders.slice(0, 4),
-      { id: 'machine.serialNo', visibility: 'md4', label: 'Machine', align: 'left', allowSearch: true },
+      { id: 'machine.serialNo', visibility: 'md4', label: 'Machine', align: 'left', allowSearch: false },
       ...baseHeaders.slice(4),
     ];
   }
@@ -368,23 +372,28 @@ const TABLE_HEAD = useMemo(() => {
     }
   };
   
-  const onGetDocuments = (data) => {
-    if (filteredSearchKey && selectedSearchFilter && !customerPage && !machineDrawingPage && !machinePage && !machineDrawings) {
-      dispatch(getDocuments(null, null, null, page, documentRowsPerPage, null, null, cancelTokenSource, filteredSearchKey, selectedSearchFilter));
-    } 
-      else if( filteredSearchKey && selectedSearchFilter && machineDrawings ){
-      dispatch(getDocuments(null, null, machineDrawings, page, machineDrawingsRowsPerPage, null, null, cancelTokenSource, filteredSearchKey, selectedSearchFilter));
-    }  
-  };
+  const onGetDocuments = () => {
+    const docCategoryId = categoryVal?._id || null;
+    const docTypeId = typeVal?._id || null;  
+
+    if (docCategoryId || docTypeId || (filteredSearchKey && selectedSearchFilter)) {
+      dispatch(
+        getDocuments( null, null, machineDrawings || null, page,
+          machineDrawings ? machineDrawingsRowsPerPage : documentRowsPerPage,
+          null, null, cancelTokenSource, filteredSearchKey || null, selectedSearchFilter || null, docCategoryId, docTypeId 
+        )
+      );
+    }
+  };  
   
-  const afterClearHandler = (data) => {
-    if (filteredSearchKey && selectedSearchFilter && !customerPage && !machineDrawingPage && !machinePage && !machineDrawings) {
-      dispatch(getDocuments(null, null, null, page, documentRowsPerPage, null, null, cancelTokenSource, null, null));
-    } 
-      else if( filteredSearchKey && selectedSearchFilter && machineDrawings ){
-      dispatch(getDocuments(null, null, machineDrawings, page, machineDrawingsRowsPerPage, null, null, cancelTokenSource, null, null));
-    }  
-  };
+  const afterClearHandler = () => {
+    setCategoryVal(null); 
+    setTypeVal(null); 
+    dispatch(
+      getDocuments(null, null, machineDrawings || null, page, machineDrawings ? machineDrawingsRowsPerPage : documentRowsPerPage,
+        null, null, cancelTokenSource, null, null, null, null )
+    );
+  };  
   
   useEffect(() => {
     if (machineDrawings) {
@@ -395,34 +404,48 @@ const TABLE_HEAD = useMemo(() => {
       dispatch(getActiveDocumentTypes());
     }
   }, [dispatch, machineDrawings]);
+
+  useEffect(() => {
+    if (activeDocumentCategories && activeDocumentCategories.length > 0) {
+      setCategoryVal(activeDocumentCategories[0]);
+      dispatch(getActiveDocumentTypesWithCategory(activeDocumentCategories[0]._id));
+    }
+  }, [activeDocumentCategories, dispatch]);
   
   const handleCategoryChange = (event, newValue) => {
     if (newValue) {
       setCategoryVal(newValue);
       dispatch(getActiveDocumentTypesWithCategory(newValue._id));
-      if (newValue._id !== typeVal?.docCategory?._id) {
-        setTypeVal(null);  
+  
+      if (typeVal?.docCategory?._id !== newValue._id) {
+        setTypeVal(null);
       }
     } else {
       setCategoryVal(null);
       setTypeVal(null);
-      dispatch(getActiveDocumentTypesWithCategory(null)); 
+      dispatch(getActiveDocumentTypesWithCategory(null));
+      afterClearHandler();
     }
   };
   
   const handleTypeChange = (event, newValue) => {
     if (newValue) {
       setTypeVal(newValue);
+  
       if (!categoryVal) {
         setCategoryVal(newValue.docCategory);
         dispatch(getActiveDocumentTypesWithCategory(newValue.docCategory._id));
       }
     } else {
       setTypeVal(null);
+      afterClearHandler();
     }
   };
   
-
+  const handleHiddenColumns = async (arg) => {
+    dispatch(setReportHiddenColumns(arg));
+  };
+  
   return (
     <>
       {/* <Container sx={{mb:3}}> */}
@@ -441,28 +464,20 @@ const TABLE_HEAD = useMemo(() => {
 
            { !machineDrawingPage && !machinePage && (
            <Box rowGap={2} columnGap={2} mb={3} display="grid" gridTemplateColumns={{ xs: '1fr', sm: 'repeat(2, 1fr)' }} sx={{ flexGrow: 1, width: { xs: '100%', sm: '100%' } }}> 
-          <Autocomplete 
+          <Autocomplete
             id="category-autocomplete"
-            value={categoryVal || null}
+            value={categoryVal || null}  
             options={activeDocumentCategories || []}
-            isOptionEqualToValue={(option, val) => option?._id === val?._id}
             getOptionLabel={(option) => option.name || ''}
             onChange={handleCategoryChange}
-            renderOption={(props, option) => (
-              <li {...props} key={option._id}>{option.name}</li>
-            )}
             renderInput={(params) => <TextField {...params} size="small" label="Category" />}
           />
-          <Autocomplete 
+          <Autocomplete
             id="type-autocomplete"
-            value={typeVal || null}
-            options={activeDocumentTypes || []}
-            isOptionEqualToValue={(option, val) => option?._id === val?._id}
+            value={categoryVal ? typeVal : null} 
+            options={categoryVal ? activeDocumentTypes : []}
             getOptionLabel={(option) => option.name || ''}
             onChange={handleTypeChange}
-            renderOption={(props, option) => (
-              <li {...props} key={option._id}>{option.name}</li>
-            )}
             renderInput={(params) => <TextField {...params} size="small" label="Type" />}
           />
         </Box>
@@ -506,7 +521,6 @@ const TABLE_HEAD = useMemo(() => {
           </Grid>
         </Grid>
         )}
-        </FormProvider>
         <TableCard>
           <DocumentListTableToolbar
             filterName={filterName}
@@ -526,7 +540,10 @@ const TABLE_HEAD = useMemo(() => {
               !isNotFound && (customerPage || machinePage) ? handleGalleryView : undefined
             }
           />
-          <TablePaginationCustom
+          <TablePaginationFilter
+            columns={TABLE_HEAD}
+            hiddenColumns={reportHiddenColumns}
+            handleHiddenColumns={handleHiddenColumns}
             count={documentRowsTotal}
             page={page}
             rowsPerPage={rowsPerPage}
@@ -536,11 +553,12 @@ const TABLE_HEAD = useMemo(() => {
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <Scrollbar>
               <Table size="small" sx={{ minWidth: 360 }}>
-                <TableHeadCustom
+                <TableHeadFilter
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
                   onSort={onSort}
+                  hiddenColumns={reportHiddenColumns}
                 />
 
                 <TableBody>
@@ -562,6 +580,7 @@ const TABLE_HEAD = useMemo(() => {
                           handleMachineDialog={(e) =>
                             row?.machine && handleMachineDialog(e, row?.machine?._id)
                           }
+                          hiddenColumns={reportHiddenColumns}
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: 60 }} />
@@ -584,13 +603,14 @@ const TABLE_HEAD = useMemo(() => {
           )}
         </TableCard>
         {/* </Container> */}
+      </FormProvider>
     </>
   );
 }
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, orderBy, filterName, filterStatus, categoryVal, typeVal }) {
+function applyFilter({ inputData, comparator, orderBy, filterName, filterStatus, categoryVal, typeVal, machinePage, machineDrawingPage }) {
 
   if(inputData){
     const stabilizedThis = inputData && inputData.map((el, index) => [el, index]);
@@ -605,13 +625,13 @@ function applyFilter({ inputData, comparator, orderBy, filterName, filterStatus,
     inputData = stabilizedThis?.map((el) => el[0]);
   
   
-    inputData = stabilizedThis?.map((el) => el[0]);
+    if (machinePage || machineDrawingPage) {
     if(categoryVal)
       inputData = inputData?.filter((drawing)=> drawing.docCategory?._id  === categoryVal?._id );
   
     if(typeVal)
       inputData = inputData?.filter((drawing)=> drawing.docType?._id === typeVal?._id );
-  
+    }
   
     if (filterName) {
       inputData = inputData.filter(

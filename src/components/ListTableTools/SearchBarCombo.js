@@ -515,7 +515,7 @@ function SearchBarCombo({
             />
           </Grid> }
           
-          {onApiLogsTypeFilter && onApiLogsMethodFilter && onApiLogsStatusFilter && <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: '1fr', sm: 'repeat(3, 1fr)' }} sx={{ flexGrow: 1, width: { xs: '100%', sm: '100%' }, pr: 1, pt: 1}}>
+          {onApiLogsTypeFilter && onApiLogsMethodFilter && onApiLogsStatusFilter && <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: '1fr', sm: 'repeat(3, 1fr)' }} sx={{ flexGrow: 1, width: { xs: '100%', sm: '100%' }, pl: 1, pt: 1}}>
           {onApiLogsTypeFilter && (
            <FormControl fullWidth>
             <InputLabel id="api-logs-type-label">API Type</InputLabel>
@@ -528,9 +528,9 @@ function SearchBarCombo({
               onChange={onApiLogsTypeFilter}
             >
              <MenuItem value="ALL">All</MenuItem>
-             <MenuItem value="MACHINE-INTEGRATION">MACHINE-INTEGRATION</MenuItem>
-             <MenuItem value="INI" disabled>INI</MenuItem>
-             <MenuItem value="OTHER">OTHER</MenuItem>
+             <MenuItem value="MACHINE-INTEGRATION">synch</MenuItem>
+             <MenuItem value="INI" disabled>ini</MenuItem>
+             <MenuItem value="OTHER">others</MenuItem>
             </Select>
            </FormControl>
           )}

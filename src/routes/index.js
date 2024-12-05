@@ -224,7 +224,10 @@ import {
   MachineToolAdd, 
   MachineToolView,
   MachineToolEdit,
-
+  
+  // MACHINE SETTING REPORT
+  MachineSettingReportList,
+  
   // --------------- Service Report Template --------------------
 
   // MACHINE SETTINGS CHECK Item Categories
@@ -910,6 +913,18 @@ export default function Router() {
         { path: 'permission-denied', element: <PermissionDeniedPage /> },
         { path: 'blank', element: <BlankPage /> },
       ],
+    },
+    // ------------------------- Machine Setting Report ---------------------------
+    { path: 'machineSettingReports',
+      element: (
+        <AuthGuard>
+          <DashboardLayout />
+        </AuthGuard>
+      ),
+      children:[
+        { element: <MachineSettingReportList />, index: true },
+        // { path: ':id/view', element: <MachineSettingReportView /> },
+      ]
     },
     // ------------------------- Service Report ---------------------------
     { path: 'serviceReports',

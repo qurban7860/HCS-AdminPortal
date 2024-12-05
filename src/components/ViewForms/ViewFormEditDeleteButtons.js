@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { LoadingButton } from '@mui/lab';
 import { Badge, Box, Divider, Grid, TextField } from '@mui/material';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { memo, useState, useLayoutEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -120,16 +120,20 @@ function ViewFormEditDeleteButtons({
   const [openConfigDraftStatuConfirm, setOpenConfigDraftStatuConfirm] = useState(false);
   const [openConfigSubmittedStatuConfirm, setOpenConfigSubmittedStatuConfirm] = useState(false);
   const [openConfigApproveStatuConfirm, setOpenConfigApproveStatuConfirm] = useState(false);
+  const { machine } = useSelector((state) => state.machine);
   const [lockUntil, setLockUntil] = useState(''); 
   const [lockUntilError, setLockUntilError] = useState(''); 
+
+  const isCustomerSelected = !!machine?.customer; 
+  const hasPurchaseDate = !!transferredHistory?.some((historyItem) => historyItem.purchaseDate);
+  const hasTransferDate = !!transferredHistory?.some((historyItem) => historyItem.transferredDate);
+  const showDetails = isCustomerSelected && (hasPurchaseDate || hasTransferDate);
 
   const theme = createTheme({
     palette: {
       success: green,
     },
   });
-  
-
 
   // Function to handle date change
   const handleLockUntilChange = newValue => {
@@ -472,10 +476,10 @@ function ViewFormEditDeleteButtons({
             </Badge>
           }
 
-          {transferredHistory !== undefined &&
+          {showDetails && transferredHistory !== undefined && transferredHistory?.length > 0 &&
             <Badge badgeContent={transferredHistory?.length || '0' } color="info">
               <IconTooltip
-                title='Ownership Detail'
+                title='Ownership History'
                 color={ICONS.TRANSFERHISTORY.color}
                 icon={ICONS.TRANSFERHISTORY.icon}
                 onClick={handleTransferHistoryPopoverOpen}
@@ -970,7 +974,7 @@ function ViewFormEditDeleteButtons({
         open={transferHistoryAnchorEl}
         onClose={handleTransferHistoryPopoverClose}
         ListArr={transferHistory}
-        ListTitle="Ownership Detail"
+        ListTitle="Ownership History"
       />
 
       <ViewFormMachineSettingHistoryMenuPopover
