@@ -1,7 +1,7 @@
 import React, { useEffect, useLayoutEffect, useState, useMemo, memo, useCallback } from 'react'
 import PropTypes from 'prop-types';
 import b64toBlob from 'b64-to-blob';
-import { Box, Button, Dialog, DialogTitle, Divider, Stack, Grid } from '@mui/material';
+import { Box, Button, Dialog, DialogTitle, Divider, Stack } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router';
@@ -11,7 +11,6 @@ import FormProvider from '../../../components/hook-form/FormProvider';
 import { RHFAutocomplete, RHFDatePicker, RHFUpload, RHFRadioGroup } from '../../../components/hook-form';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
 import { MachineServiceReportPart1Schema } from '../../schemas/machine';
-import { useAuthContext } from '../../../auth/useAuthContext';
 import { PATH_MACHINE } from '../../../routes/paths';
 import { handleError } from '../../../utils/errorHandler';
 import { getActiveSPContacts, resetActiveSPContacts } from '../../../redux/slices/customer/contact';
@@ -35,9 +34,7 @@ function MachineServiceReportsFirstStep( { handleComplete, handleDraftRequest, h
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
     const { machineId, id } = useParams();
-    const { user  } = useAuthContext()
     const { reportTypes, activeServiceReportTemplatesForRecords } = useSelector((state) => state.serviceReportTemplate);
-    const { activeSpContacts } = useSelector((state) => state.contact);
     const { machineServiceReport, isLoading } = useSelector((state) => state.machineServiceReport);
     const { machine } = useSelector((state) => state.machine);
     const [ isDraft, setIsDraft ] = useState(false);
@@ -63,9 +60,9 @@ function MachineServiceReportsFirstStep( { handleComplete, handleDraftRequest, h
     const defaultValues = useMemo(
       () => {
         const initialValues = {
+          serviceDate:                  machineServiceReport?.serviceDate || new Date(),
           docReportType:                reportTypes.find(rt=> rt?.name?.toLowerCase() === machineServiceReport?.serviceReportTemplate?.reportType?.toLowerCase()) || null,
           serviceReportTemplate:        machineServiceReport?.serviceReportTemplate || null,
-          serviceDate:                  machineServiceReport?.serviceDate || new Date(),
           reportSubmission:             machineServiceReport?.reportSubmission || false,
           files: machineServiceReport?.reportDocs?.map(file => ({
             key: file?._id,
@@ -100,26 +97,45 @@ function MachineServiceReportsFirstStep( { handleComplete, handleDraftRequest, h
     handleSubmit,
     formState: { isSubmitting },
     } = methods;
-
+    const { docReportType, reportSubmission, files } = watch();
+    
     useEffect(() => {
-      if (machineServiceReport) {
-        const currentValues = getValues(); // Get current form values
-        const updatedValues = {
-          ...defaultValues,
-          ...currentValues, // Merge current values to avoid empty fields
-        };
-        reset(updatedValues); // Reset with merged values
-      }
-    }, [reset, getValues, machineServiceReport, defaultValues]);
+      if ( !machineServiceReport ) return;
+    
+      // const areFilesDirty = ( ) => watchedValues?.files?.some( ( f ) =>  !f?._id ) || undefined
+      // const isDateEqual = () => {
+      //   if( watchedValues.serviceDate && defaultValues.serviceDate ){
+      //     return new Date( watchedValues.serviceDate ).getTime() === new Date( defaultValues.serviceDate ).getTime();
+      //   }
+      //   return undefined
+      // }
+      // console.log( 'areFilesDirty : ', areFilesDirty(), 'isDateEqual : ' ,isDateEqual() )
+    
+      // const mismatchedFields = {
+      //   files: areFilesDirty ? watchedValues.files : undefined,
+      //   serviceDate: !isDateEqual() ? watchedValues.serviceDate : undefined,
+      //   reportSubmission: watchedValues?.reportSubmission || false,
+      // };
+    
+      // const hasMismatches = Object.values(mismatchedFields).some( val => val !== undefined );
+    
+      // if ( hasMismatches ) {
+      //   Object.entries( mismatchedFields ).forEach(([key, value]) => {
+      //     if (value !== undefined) setValue(key, value);
+      //   });
+      // } else {
+      // }      
+      reset(defaultValues);
+      
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [ machineServiceReport ]);    
 
-    const { docReportType, serviceReportTemplate, reportSubmission, files } = watch();
-    const watchValues = watch();
 
       const onSubmit = async (data) => {
         try {
-          if( isSubmit ){
-            data.status = 'SUBMITTED'
-          }
+          // if( isSubmit ){
+          //   data.status = 'SUBMITTED'
+          // }
           data.isReportDoc = true
           if(!id ){
             data.isReportDocsOnly = true;
@@ -261,7 +277,7 @@ return (
                   gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(3, 1fr)' }}
                   >
                   
-                  <RHFDatePicker inputFormat='dd/MM/yyyy' name="Service Date" label="Service Date" />
+                  <RHFDatePicker inputFormat='dd/MM/yyyy' name="serviceDate" label="Service Date" />
 
                   <RHFAutocomplete 
                       name="docReportType"
@@ -273,20 +289,20 @@ return (
                       renderOption={(props, option) => (
                         <li {...props} key={option?._id}>{`${option.name ? option.name : ''}`}</li>
                       )}
-                      onChange={(event, newValue) =>{
-                        if(newValue){
-                            setValue('docReportType',newValue)
-                            if( serviceReportTemplate?.reportType?.toUpperCase() !== newValue?.name?.toUpperCase() ){
-                              setValue('serviceReportTemplate',null)
-                            }
-                          } else {
-                            setValue('serviceReportTemplate',null )
-                            setValue('docReportType', null )
-                          }
-                          trigger('serviceReportTemplate')
-                          trigger('docReportType')
-                        }
-                      }
+                      // onChange={(event, newValue) =>{
+                      //   if(newValue){
+                      //       setValue('docReportType',newValue)
+                      //       if( serviceReportTemplate?.reportType?.toUpperCase() !== newValue?.name?.toUpperCase() ){
+                      //         setValue('serviceReportTemplate',null)
+                      //       }
+                      //     } else {
+                      //       setValue('serviceReportTemplate',null )
+                      //       setValue('docReportType', null )
+                      //     }
+                      //     trigger('serviceReportTemplate')
+                      //     trigger('docReportType')
+                      //   }
+                      // }
                   />
 
                   <RHFAutocomplete
