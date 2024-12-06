@@ -507,7 +507,6 @@ export function getDocuments(customerId, machineId, drawing, page, pageSize, isC
         cancelToken: cancelToken?.token,
       }
       );
-      console.log('documents response.data : ',response.data)
       dispatch(slice.actions.getDocumentsSuccess(response.data));
     } catch (error) {
       console.log(error);

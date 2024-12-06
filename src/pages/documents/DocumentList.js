@@ -99,7 +99,6 @@ function DocumentList({ customerPage, machinePage, machineDrawingPage, machineDr
     customerDocumentsFilterBy, customerDocumentsRowsPerPage,
     machineDocumentsFilterBy, machineDocumentsRowsPerPage,
     isLoading, reportHiddenColumns } = useSelector((state) => state.document );
-    console.log("isLoading : ",isLoading)
   const { activeDocumentCategories } = useSelector((state) => state.documentCategory );
   const { activeDocumentTypes } = useSelector((state) => state.documentType );
   const [totalRows, setTotalRows] = useState( documentRowsTotal );
@@ -374,15 +373,12 @@ const TABLE_HEAD = useMemo(() => {
   const onGetDocuments = () => {
     const docCategoryId = categoryVal?._id || null;
     const docTypeId = typeVal?._id || null;  
-
-    if (docCategoryId || docTypeId || (filteredSearchKey && selectedSearchFilter)) {
       dispatch(
         getDocuments( null, null, machineDrawings || null, page,
           machineDrawings ? machineDrawingsRowsPerPage : documentRowsPerPage,
           null, null, cancelTokenSource, filteredSearchKey || null, selectedSearchFilter || null, docCategoryId, docTypeId 
         )
       );
-    }
   };  
   
   const afterClearHandler = () => {
