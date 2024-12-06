@@ -286,17 +286,13 @@ export const MachineServiceReportPart1Schema = Yup.object().shape({
     .nullable()
     .required()
     .label('Service Date'),
-  reportSubmition: Yup.string().max(12).nullable(),
-  technician: Yup.object().label('Technician').nullable(),
-  // technicianNotes: Yup.string().max(5000).label('Technician Notes'),
+  reportSubmition: Yup.boolean(),
   files: Yup.mixed()
+  .test('fileType', fileTypesMessage, NotRequiredValidateFileType)
   .nullable(true)
   .when('reportSubmition', {
-    is: 'online',
-    then: (schema) =>
-      schema
-        .required('Files are required when report submission is online')
-        .test('fileType', fileTypesMessage, NotRequiredValidateFileType),
+    is: false,
+    then: (schema) =>schema.required('Files are required when report submission is online'),
     otherwise: (schema) => schema.notRequired(),
   }),
 });
@@ -309,21 +305,14 @@ export const reportNoteSchema = Yup.object().shape({
 });
 
 export const MachineServiceReportPart2TBCISchema = Yup.object().shape({
-  textBeforeCheckItems: Yup.string().max(5000).label('Text Before Check Items'),
+  textBeforeCheckItems: Yup.string().trim().max(5000).label('Text Before Check Items'),
 });
 
 export const MachineServiceReportPart2TACISchema = Yup.object().shape({
-  textAfterCheckItems: Yup.string().max(5000).label('Text After Check Items'),
+  textAfterCheckItems: Yup.string().trim().max(5000).label('Text After Check Items'),
 });
 
 export const MachineServiceReportPart3Schema = Yup.object().shape({
-  // serviceNote: Yup.string().max(5000).label('Service Note'),
-  // recommendationNote: Yup.string().max(5000).label('Recommendation Note'),
-  // internalComments: Yup.string().max(5000).label('Internal Note'),
-  // suggestedSpares: Yup.string().max(5000).label('Suggested Spares'),
-  // internalNote: Yup.string().max(5000).label('Internal Note'),
-  // operators: Yup.array().label('Operator').nullable(),
-  // operatorNotes: Yup.string().max(5000).label('Operator Notes'),
   files: Yup.mixed()
     .required(Snacks.fileRequired)
     .test('fileType', fileTypesMessage, NotRequiredValidateFileType)
