@@ -80,7 +80,7 @@ function MachineServiceReportViewForm(  ) {
     }
   },[ dispatch, machineId, id])
 
-  useEffect(()=>{
+  useLayoutEffect(()=>{
     if( id && !pdfViewerDialog ){
       dispatch(getMachineServiceReportCheckItems( machineId, id ));
     }
@@ -187,7 +187,7 @@ function MachineServiceReportViewForm(  ) {
   
   const [ reportStatus, setReportStatus ] = useState(null);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if ( machineServiceReport?.files && Array.isArray( machineServiceReport?.files ) ) {
       const updatedSildes = machineServiceReport?.files
       ?.filter(file => file?.fileType && file.fileType.startsWith("image"))
@@ -513,7 +513,7 @@ function MachineServiceReportViewForm(  ) {
           />
           <ViewNoteHistory label="Technician Notes" historicalData={machineServiceReport.technicianNotes} />
 
-          { !defaultValues?.reportSubmission && machineServiceReport?.reportDocs?.length > 0 &&
+          { !defaultValues?.reportSubmission &&
           <>
             <FormLabel content='Reporting Documents' />
             <Box
@@ -528,7 +528,7 @@ function MachineServiceReportViewForm(  ) {
                 xl: 'repeat(8, 1fr)',
               }}
             >
-              {slidesReporting?.map((file, _index) => (
+              { slidesReporting?.map((file, _index) => (
                 <DocumentGalleryItem isLoading={isLoading} key={file?._id} image={file} 
                   onOpenLightbox={()=> handleOpenReportingLightbox(_index)}
                   onDownloadFile={()=> handleDownloadReportFile(file._id, file?.name, file?.extension)}

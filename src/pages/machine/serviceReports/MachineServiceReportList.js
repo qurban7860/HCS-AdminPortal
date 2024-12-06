@@ -327,6 +327,7 @@ function applyFilter({ inputData, comparator, filterName }) {
         ( msr?.isActive ? "Active" : "InActive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
         fDate( msr?.serviceDate )?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         msr?.serviceReportTemplate?.reportType?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        msr?.serviceReportUID?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         msr?.machine?.serialNo?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         msr?.customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         msr?.status?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
