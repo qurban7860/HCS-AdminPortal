@@ -81,12 +81,12 @@ function MachineServiceReportViewForm(  ) {
   },[ dispatch, machineId, id])
 
   useLayoutEffect(()=>{
-    if( id && !pdfViewerDialog ){
+    if( id && !pdfViewerDialog && machineServiceReport?.reportSubmission ){
       dispatch(getMachineServiceReportCheckItems( machineId, id ));
     }
     return ()=> dispatch(resetCheckItemValues())
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[dispatch, machineId, id ] )
+  },[dispatch, machineId, id, machineServiceReport?.reportSubmission ] )
 
   const onDelete = async () => {
     try {
@@ -123,7 +123,6 @@ function MachineServiceReportViewForm(  ) {
       footerLeftText:                       machineServiceReport?.serviceReportTemplate?.footer?.leftText || '', 
       footerCenterText:                     machineServiceReport?.serviceReportTemplate?.footer?.centerText || '',
       footerRightText:                      machineServiceReport?.serviceReportTemplate?.footer?.rightText || '',
-      reportSubmission:                     machineServiceReport?.reportSubmission || '',
       textBeforeCheckItems:                 machineServiceReport?.textBeforeCheckItems || "",
       textAfterCheckItems:                  machineServiceReport?.textAfterCheckItems || "",
       internalComments:                     machineServiceReport?.internalComments || [],
@@ -513,7 +512,7 @@ function MachineServiceReportViewForm(  ) {
           />
           <ViewNoteHistory label="Technician Notes" historicalData={machineServiceReport.technicianNotes} />
 
-          { !defaultValues?.reportSubmission &&
+          { !machineServiceReport?.reportSubmission &&
           <>
             <FormLabel content='Reporting Documents' />
             <Box
@@ -550,7 +549,7 @@ function MachineServiceReportViewForm(  ) {
             </Box>
           </>}
           
-          { defaultValues?.reportSubmission && 
+          { machineServiceReport?.reportSubmission && 
             <>
               <FormLabel content={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />
               { defaultValues.textBeforeCheckItems &&
@@ -598,10 +597,10 @@ function MachineServiceReportViewForm(  ) {
           <ViewNoteHistory label="Internal Note" historicalData={defaultValues.internalNote} />
           {/* <ViewFormField isLoading={isLoading} sm={12} heading="Operators" chipDialogArrayParam={operators} /> */}
           <ViewNoteHistory label="Operator Notes" historicalData={defaultValues.operatorNotes} />
-          { defaultValues?.reportSubmission && machineServiceReport?.files?.length > 0 && 
-          <FormLabel content='Documents / Images' />
+          { machineServiceReport?.reportSubmission &&
+            <FormLabel content='Documents / Images' />
           }
-          { defaultValues?.reportSubmission &&
+          { machineServiceReport?.reportSubmission &&
           <Box
             sx={{my:1, width:'100%'}}
             gap={2}
