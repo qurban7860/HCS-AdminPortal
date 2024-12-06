@@ -159,7 +159,7 @@ export default function MachineSettingReportList({ isArchived }) {
   const [exportingCSV, setExportingCSV] = useState(false);
   const onExportCSV = async () => {
     setExportingCSV(true);
-    const response = dispatch(await exportCSV('machineSettingsReport'));
+    const response = dispatch(await exportCSV('MachineSettingsReport'));
     response.then((res) => {
       setExportingCSV(false);
       enqueueSnackbar(res.message, {variant:`${res.hasError?"error":""}`});

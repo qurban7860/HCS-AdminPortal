@@ -65,6 +65,7 @@ function NavigationConfig() {
     security: <Iconify icon="mdi:security-account" />,
     machineLogs: <Iconify icon="lucide:list-end" />,
     map: <Iconify icon="mdi:map-marker" />,
+    machineSettingReports: <Iconify icon="tdesign:task-setting-filled" />,
   };
 
   const { 
@@ -84,7 +85,7 @@ function NavigationConfig() {
         { title: 'Customers', path: PATH_CRM.customers.list, icon: ICONS.users },
         { title: 'Portal Registrations', path: PATH_PORTAL_REGISTRATION.root, icon: ICONS.register },
         { title: 'Machines', path: PATH_MACHINE.machines.root, icon: ICONS.machines },
-        { title: 'Machine Setting Reports', path:  PATH_MACHINE_SETTING_REPORT.root, icon: ICONS.setting },
+        { title: 'Machine Setting Reports', path:  PATH_MACHINE_SETTING_REPORT.root, icon: ICONS.machineSettingReports },
         { title: 'Service Reports', path: PATH_SERVICE_REPORTS.root, icon: ICONS.serviceReports },
       ],
     },
