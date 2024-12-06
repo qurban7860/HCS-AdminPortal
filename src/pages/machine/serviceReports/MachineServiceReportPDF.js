@@ -55,7 +55,6 @@ export function MachineServiceReportPDF({machineServiceReport, machineServiceRep
             operatorNotes:                      Array.isArray( machineServiceReport?.operatorNotes ) && 
                                                 machineServiceReport?.operatorNotes?.length > 0 && 
                                                 machineServiceReport?.operatorNotes[0] || null,
-            isReportDocsOnly:                   machineServiceReport?.isReportDocsOnly,
             files:                              machineServiceReport?.files || [],
             isActive:                           machineServiceReport?.isActive,
             createdAt:                          machineServiceReport?.createdAt || '',
@@ -77,8 +76,7 @@ export function MachineServiceReportPDF({machineServiceReport, machineServiceRep
 
     function getImageUrl(file) {
         if (!file?.src) return '';
-        const extension = file?.extension?.toLowerCase() || 'jpg';
-        return `data:image/${extension.includes('png') ? 'png' : 'jpg'};base64,${file.src}`;
+        return `data:image/jpg;base64,${file.src}`;
     }
     
     
@@ -186,8 +184,7 @@ export function MachineServiceReportPDF({machineServiceReport, machineServiceRep
                 )}
             </>}
 
-            {   !defaultValues?.reportSubmission && Array.isArray(defaultValues?.reportDocs) && 
-                defaultValues?.reportDocs?.filter( f => f?.src )?.length > 0 && 
+            {   !defaultValues?.reportSubmission && Array.isArray(defaultValues?.reportDocs) &&
                 <>
                     <Text style={styles.title}>Reporting Documents</Text>
                     <View style={styles.row}>
