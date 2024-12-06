@@ -288,7 +288,6 @@ export const MachineServiceReportPart1Schema = Yup.object().shape({
     .label('Service Date'),
   reportSubmition: Yup.boolean(),
   files: Yup.mixed()
-  .test('fileType', fileTypesMessage, NotRequiredValidateFileType)
   .nullable(true)
   .when('reportSubmition', {
     is: false,
