@@ -100,33 +100,9 @@ function MachineServiceReportsFirstStep( { handleComplete, handleDraftRequest, h
     const { docReportType, reportSubmission, files } = watch();
     
     useEffect(() => {
-      if ( !machineServiceReport ) return;
-    
-      // const areFilesDirty = ( ) => watchedValues?.files?.some( ( f ) =>  !f?._id ) || undefined
-      // const isDateEqual = () => {
-      //   if( watchedValues.serviceDate && defaultValues.serviceDate ){
-      //     return new Date( watchedValues.serviceDate ).getTime() === new Date( defaultValues.serviceDate ).getTime();
-      //   }
-      //   return undefined
-      // }
-      // console.log( 'areFilesDirty : ', areFilesDirty(), 'isDateEqual : ' ,isDateEqual() )
-    
-      // const mismatchedFields = {
-      //   files: areFilesDirty ? watchedValues.files : undefined,
-      //   serviceDate: !isDateEqual() ? watchedValues.serviceDate : undefined,
-      //   reportSubmission: watchedValues?.reportSubmission || false,
-      // };
-    
-      // const hasMismatches = Object.values(mismatchedFields).some( val => val !== undefined );
-    
-      // if ( hasMismatches ) {
-      //   Object.entries( mismatchedFields ).forEach(([key, value]) => {
-      //     if (value !== undefined) setValue(key, value);
-      //   });
-      // } else {
-      // }      
-      reset(defaultValues);
-      
+      if ( machineServiceReport ){
+        reset( defaultValues );
+      }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ machineServiceReport ]);    
 

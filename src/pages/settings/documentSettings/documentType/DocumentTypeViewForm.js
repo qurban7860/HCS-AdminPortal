@@ -22,7 +22,7 @@ import MergeDocumentTypeDialog from '../../../../components/Dialog/MergeDocument
 // ----------------------------------------------------------------------
 
 export default function DocumentTypeViewForm() {
-  const { documentType } = useSelector((state) => state.documentType);
+  const { documentType, mergeDialogVisibility } = useSelector((state) => state.documentType);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
@@ -89,7 +89,7 @@ export default function DocumentTypeViewForm() {
           </Grid>
         </Grid>
       </Card>
-      <MergeDocumentTypeDialog  />
+      { mergeDialogVisibility && <MergeDocumentTypeDialog  />}
     </>
   );
 }
