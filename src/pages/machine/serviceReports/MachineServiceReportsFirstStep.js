@@ -109,31 +109,28 @@ function MachineServiceReportsFirstStep( { handleComplete, handleDraftRequest, h
 
       const onSubmit = async (data) => {
         try {
-          // if( isSubmit ){
-          //   data.status = 'SUBMITTED'
-          // }
           data.isReportDoc = true
           if(!id ){
             data.isReportDocsOnly = true;
             data.decoilers = machineDecoilers;
             const serviceReport = await dispatch(addMachineServiceReport(machineId, data));
             dispatchFiles( serviceReport?._id, data );
-            if( isSubmit || isDraft ){
-              await navigate(PATH_MACHINE.machines.serviceReports.view(machineId, serviceReport?._id))
-            } else {
+            if( reportSubmission ){
               await navigate(PATH_MACHINE.machines.serviceReports.edit(machineId, serviceReport?._id))
+            } else {
+              await navigate(PATH_MACHINE.machines.serviceReports.view(machineId, serviceReport?._id))
             }
           } else {
             await dispatch(updateMachineServiceReport(machineId, id, data));
             dispatchFiles( id, data );
-            if( isSubmit ){
-              await navigate(PATH_MACHINE.machines.serviceReports.view(machineId, id))
-            } else {
+            if( reportSubmission ){
               await navigate(PATH_MACHINE.machines.serviceReports.edit(machineId, id))  
+            } else {
+              await navigate(PATH_MACHINE.machines.serviceReports.view(machineId, id))
             }
           }
 
-          if(isDraft){
+          if( isDraft ){
             await handleDraftRequest(isDraft);
           }else if(!isSubmit){
             await dispatch(setFormActiveStep(1));
@@ -345,8 +342,8 @@ return (
           </Stack>
             <ServiceRecodStepButtons 
               handleSubmit={ !reportSubmission ? saveAsSubmit : undefined } 
-              isSubmitted={ isSubmit } 
-              handleDraft={saveAsDraft} 
+              isSubmitted={ isSubmit }
+              handleDraft={ reportSubmission ? saveAsDraft : undefined } 
               isDraft={ isDraft } 
               isSubmitting={isSubmitting} 
             />

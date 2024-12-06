@@ -53,31 +53,29 @@ function MachineServiceReportsSecondStep({ handleDraftRequest, handleDiscard, ha
       resolver: yupResolver(MachineServiceReportPart2TBCISchema),
       defaultValues,
     });
-    const { handleSubmit: handleSubmitBefore, reset: resetBefore, formState: { isDirty: isDirtyBefore, isSubmitting: isSubmittingBefore, isSubmitted:isSubmittedBefore } } = formMethodsBefore;
+    const { handleSubmit: handleSubmitBefore, formState: { isDirty: isDirtyBefore, isSubmitting: isSubmittingBefore, isSubmitted:isSubmittedBefore } } = formMethodsBefore;
     
     const formMethodsAfter = useForm({
       resolver: yupResolver(MachineServiceReportPart2TACISchema),
       defaultValues,
     });
-    const { handleSubmit: handleSubmitAfter, reset: resetAfter, formState: { isDirty: isDirtyAfter, isSubmitting: isSubmittingAfter, isSubmitted:isSubmittedAfter } } = formMethodsAfter;
+    const { handleSubmit: handleSubmitAfter, formState: { isDirty: isDirtyAfter, isSubmitting: isSubmittingAfter, isSubmitted:isSubmittedAfter } } = formMethodsAfter;
     
     const methods = useForm({ defaultValues });
-    const { handleSubmit, formState: { isSubmitting } } = methods;
+    const { handleSubmit, reset, formState: { isSubmitting } } = methods;
     
     useEffect(() => {
-      if (machineServiceReport) {
-        resetBefore(defaultValues);
-        resetAfter(defaultValues);
+      if ( machineServiceReport ){
+        reset( defaultValues );
       }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ machineServiceReport ]);
     
 
     const [showMessage, setShowMessage] = useState(false);
     const submitBefore = async (data) => {
       const params = {
-        textBeforeCheckItems: data.textBeforeCheckItems || '',
-        isReportDocsOnly: false,
+        textBeforeCheckItems: data.textBeforeCheckItems || ''
       };
       try {
         await dispatch(updateMachineServiceReport(machineId, id, params));
@@ -93,8 +91,7 @@ function MachineServiceReportsSecondStep({ handleDraftRequest, handleDiscard, ha
 
     const submitAfter = async (data) => {
       const params = {
-        textAfterCheckItems: data?.textAfterCheckItems || '',
-        isReportDocsOnly: false,
+        textAfterCheckItems: data?.textAfterCheckItems || ''
       };
 
       try {

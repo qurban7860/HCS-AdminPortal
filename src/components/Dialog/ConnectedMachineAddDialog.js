@@ -15,6 +15,7 @@ import { TableHeadCustom } from '../table';
 import Iconify from '../iconify';
 import IconButtonTooltip from '../Icons/IconButtonTooltip';
 import uuidv4 from '../../utils/uuidv4';
+import { handleError } from '../../utils/errorHandler';
 
 function ConnectedMachineAddDialog({activeCategories, activeMachineModels}) {
 
@@ -109,9 +110,13 @@ function ConnectedMachineAddDialog({activeCategories, activeMachineModels}) {
   };
 
   const handleSave = async () => {
-    dispatch(setNewConnectedMachines(newMachines));
-    handleConnectedMachineAddDialog();
-    reset();
+    try{
+      dispatch(setNewConnectedMachines(newMachines));
+      handleConnectedMachineAddDialog();
+      reset();
+    } catch ( error ){
+      enqueueSnackbar( handleError( error ) || 'Connected Machine save failed!', { variant: `error` });
+    }
   }
 
   return (

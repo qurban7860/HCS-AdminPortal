@@ -27,6 +27,7 @@ import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 // constants
 import { FORMLABELS } from '../../constants/default-constants';
 import { editMachineSchema } from '../schemas/machine'
+import { handleError } from '../../utils/errorHandler'
 
 // ----------------------------------------------------------------------
 
@@ -134,7 +135,7 @@ export default function MachineEditForm() {
         reset();
         navigate(PATH_MACHINE.machines.view(machine._id));
       } catch (error) {
-        enqueueSnackbar('Saving failed!', { variant: `error` });
+        enqueueSnackbar( handleError( error ) || 'Saving failed!', { variant: `error` });
         console.error(error);
       }
   };
