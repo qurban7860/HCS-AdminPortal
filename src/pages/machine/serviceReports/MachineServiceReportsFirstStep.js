@@ -85,7 +85,7 @@ function MachineServiceReportsFirstStep( { handleComplete, handleDraftRequest, h
         resolver: yupResolver(MachineServiceReportPart1Schema),
         defaultValues,
         mode: 'onBlur',
-        reValidateMode: 'onSubmit',
+        reValidateMode: 'onChange',
     });
     
     const {
@@ -106,6 +106,14 @@ function MachineServiceReportsFirstStep( { handleComplete, handleDraftRequest, h
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ machineServiceReport ]);    
 
+    const dispatchFiles = async ( serviceReportId,data )  => {
+      if(Array.isArray(data?.files) && data?.files?.length > 0){
+        const filteredFiles = data?.files?.filter((ff)=> !ff?._id)
+        if(Array.isArray(filteredFiles) && filteredFiles?.length > 0){
+          await dispatch(addMachineServiceReportFiles(machineId, serviceReportId, { files: filteredFiles, isReportDoc: data?.isReportDoc } ))
+        }
+      }
+    }
 
       const onSubmit = async (data) => {
         try {
@@ -114,15 +122,15 @@ function MachineServiceReportsFirstStep( { handleComplete, handleDraftRequest, h
             data.isReportDocsOnly = true;
             data.decoilers = machineDecoilers;
             const serviceReport = await dispatch(addMachineServiceReport(machineId, data));
-            dispatchFiles( serviceReport?._id, data );
+            await dispatchFiles( serviceReport?._id, data );
             if( reportSubmission ){
               await navigate(PATH_MACHINE.machines.serviceReports.edit(machineId, serviceReport?._id))
             } else {
               await navigate(PATH_MACHINE.machines.serviceReports.view(machineId, serviceReport?._id))
             }
           } else {
+            await dispatchFiles( id, data );
             await dispatch(updateMachineServiceReport(machineId, id, data));
-            dispatchFiles( id, data );
             if( reportSubmission ){
               await navigate(PATH_MACHINE.machines.serviceReports.edit(machineId, id))  
             } else {
@@ -143,14 +151,6 @@ function MachineServiceReportsFirstStep( { handleComplete, handleDraftRequest, h
         }
       };
 
-    const dispatchFiles = async ( serviceReportId,data )  => {
-      if(Array.isArray(data?.files) && data?.files?.length > 0){
-        const filteredFiles = data?.files?.filter((ff)=> !ff?._id)
-        if(Array.isArray(filteredFiles) && filteredFiles?.length > 0){
-            await dispatch(addMachineServiceReportFiles(machineId, serviceReportId, { files: filteredFiles, isReportDoc: data?.isReportDoc } ))
-        }
-      }
-    }
 
       const handleRemoveFile = async (inputFile) => {
         let images = getValues(`files`);
