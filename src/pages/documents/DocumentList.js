@@ -260,7 +260,6 @@ const TABLE_HEAD = useMemo(() => {
     documentRowsPerPage 
   ] )
 
-
   const dataFiltered = applyFilter({
     inputData: documents?.data || [],
     comparator: getComparator(order, orderBy),
@@ -404,13 +403,6 @@ const TABLE_HEAD = useMemo(() => {
       dispatch(getActiveDocumentTypes());
     }
   }, [dispatch, machineDrawings]);
-
-  useEffect(() => {
-    if (activeDocumentCategories && activeDocumentCategories.length > 0) {
-      setCategoryVal(activeDocumentCategories[0]);
-      dispatch(getActiveDocumentTypesWithCategory(activeDocumentCategories[0]._id));
-    }
-  }, [activeDocumentCategories, dispatch]);
   
   const handleCategoryChange = (event, newValue) => {
     if (newValue) {
@@ -438,7 +430,6 @@ const TABLE_HEAD = useMemo(() => {
       }
     } else {
       setTypeVal(null);
-      afterClearHandler();
     }
   };
   
