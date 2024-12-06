@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useMemo, useState } from 'react'
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router';
 import { useSnackbar } from 'notistack';
@@ -52,21 +52,28 @@ function MachineServiceReportsSecondStep({ handleDraftRequest, handleDiscard, ha
     const formMethodsBefore = useForm({
       resolver: yupResolver(MachineServiceReportPart2TBCISchema),
       defaultValues,
+      mode: 'onBlur',
+      reValidateMode: 'onSubmit',
     });
-    const { handleSubmit: handleSubmitBefore, formState: { isDirty: isDirtyBefore, isSubmitting: isSubmittingBefore, isSubmitted:isSubmittedBefore } } = formMethodsBefore;
+    const { handleSubmit: handleSubmitBefore, reset: resetBefore, formState: { isDirty: isDirtyBefore, isSubmitting: isSubmittingBefore, isSubmitted:isSubmittedBefore } } = formMethodsBefore;
     
     const formMethodsAfter = useForm({
       resolver: yupResolver(MachineServiceReportPart2TACISchema),
       defaultValues,
+      mode: 'onBlur',
+      reValidateMode: 'onSubmit',
     });
-    const { handleSubmit: handleSubmitAfter, formState: { isDirty: isDirtyAfter, isSubmitting: isSubmittingAfter, isSubmitted:isSubmittedAfter } } = formMethodsAfter;
+    const { handleSubmit: handleSubmitAfter, reset: resetAfter, formState: { isDirty: isDirtyAfter, isSubmitting: isSubmittingAfter, isSubmitted:isSubmittedAfter } } = formMethodsAfter;
     
     const methods = useForm({ defaultValues });
     const { handleSubmit, reset, formState: { isSubmitting } } = methods;
     
-    useEffect(() => {
+    console.log('defaultValues : ',defaultValues)
+    useLayoutEffect(() => {
       if ( machineServiceReport ){
-        reset( defaultValues );
+        reset( machineServiceReport );
+        resetBefore(machineServiceReport);
+        resetAfter(machineServiceReport);
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ machineServiceReport ]);

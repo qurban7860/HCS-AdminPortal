@@ -309,11 +309,11 @@ export const reportNoteSchema = Yup.object().shape({
 });
 
 export const MachineServiceReportPart2TBCISchema = Yup.object().shape({
-  textBeforeCheckItems: Yup.string().max(5000).label('Text Before Check Items'),
+  textBeforeCheckItems: Yup.string().trim().max(5000).label('Text Before Check Items'),
 });
 
 export const MachineServiceReportPart2TACISchema = Yup.object().shape({
-  textAfterCheckItems: Yup.string().max(5000).label('Text After Check Items'),
+  textAfterCheckItems: Yup.string().trim().max(5000).label('Text After Check Items'),
 });
 
 export const MachineServiceReportPart3Schema = Yup.object().shape({

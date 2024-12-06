@@ -187,7 +187,7 @@ function MachineServiceReportViewForm(  ) {
   
   const [ reportStatus, setReportStatus ] = useState(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if ( machineServiceReport?.files && Array.isArray( machineServiceReport?.files ) ) {
       const updatedSildes = machineServiceReport?.files
       ?.filter(file => file?.fileType && file.fileType.startsWith("image"))
