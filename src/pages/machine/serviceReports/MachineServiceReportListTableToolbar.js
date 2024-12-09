@@ -88,6 +88,8 @@ export default function MachineServiceReportListTableToolbar({
             <Autocomplete 
               value={ filterStatusType || [] }
               multiple
+              disableCloseOnSelect
+              filterSelectedOptions
               size="small"
               options={ statusTypes }
               getOptionLabel={(option) => option}

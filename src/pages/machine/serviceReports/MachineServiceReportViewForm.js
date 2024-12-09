@@ -376,7 +376,7 @@ function MachineServiceReportViewForm(  ) {
           }
           onDelete={
             !machine?.isArchived &&
-            // machineServiceReport?.status?.name?.toUpperCase() === 'DRAFT' &&
+            machineServiceReport?.status?.name?.toUpperCase() === 'DRAFT' &&
             machineServiceReport?._id
               ? onDelete
               : undefined
