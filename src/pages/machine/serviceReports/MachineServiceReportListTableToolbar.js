@@ -75,7 +75,7 @@ export default function MachineServiceReportListTableToolbar({
 
             <Autocomplete 
               value={ filterStatus || null}
-              isLoading={ isLoadingReportStatus }
+              isloading={ isLoadingReportStatus?.toString() }
               options={ activeServiceReportStatuses?.filter( s => s?.type?.toLowerCase() !== 'draft' ) }
               isOptionEqualToValue={(option, val) => option?._id === val?._id}
               getOptionLabel={(option) => option?.name}

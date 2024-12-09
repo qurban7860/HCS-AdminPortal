@@ -211,10 +211,7 @@ export default function MachineServiceReportList( { reportsPage }) {
     debouncedFilterStatusType.current.cancel();
   }, [ debouncedSearch, debouncedFilterStatus, debouncedFilterStatusType ]);
 
-  console.log('statusType : ',statusType)
-  console.log('filterByStatusType : ',filterByStatusType)
   console.log('reportFilterByStatusType : ',reportFilterByStatusType)
-
   useEffect(() => {
     setFilterName( reportsPage ? reportFilterBy : filterBy )
     setFilterStatus( reportsPage ? reportFilterByStatus : filterByStatus )
