@@ -26,7 +26,6 @@ import {
   getComparator,
   TableNoData,
   TableSkeleton,
-  TableHeadCustom,
   TablePaginationCustom,
   TablePaginationFilter,
   TableHeadFilter,
@@ -167,36 +166,6 @@ const TABLE_HEAD = useMemo(() => {
   }
   return baseHeaders;
 }, [customerPage, machineDrawingPage, machineDrawings]);
-
-// useLayoutEffect(() => {
-//     if(machineDrawingPage || machineDrawings || machinePage ){
-
-//       if(machineDrawings){
-//         dispatch(getActiveDocumentCategories(null, null, machineDrawings));
-//         dispatch(getActiveDocumentTypes(null, machineDrawings));
-//       }else{
-//         dispatch(getActiveDocumentCategories(null));  
-//         dispatch(getActiveDocumentTypes());
-//       }
-
-//       if(machineDrawings){
-//         const defaultType = activeDocumentTypes.find((typ) => typ?.isDefault === true);
-//         const defaultCategory = activeDocumentCategories.find((cat) => cat?.isDefault === true);
-
-//         if(typeVal===null && defaultType){
-//           setTypeVal(defaultType);
-//           setCategoryVal(defaultType?.docCategory)
-//         }else{
-//           setTypeVal(null);
-//           setCategoryVal(null);
-//         }
-//         if(!defaultType && categoryVal===null){
-//           setCategoryVal(defaultCategory);
-//         }
-//       }
-//     }
-//   // eslint-disable-next-line react-hooks/exhaustive-deps
-// }, [ dispatch, machineDrawingPage, machineDrawings ]);
 
   useEffect(() => {
       if (customerPage && customerId) {
@@ -382,8 +351,6 @@ const TABLE_HEAD = useMemo(() => {
   };  
   
   const afterClearHandler = () => {
-    setCategoryVal(null); 
-    setTypeVal(null); 
     dispatch(
       getDocuments(null, null, machineDrawings || null, page, machineDrawings ? machineDrawingsRowsPerPage : documentRowsPerPage,
         null, null, cancelTokenSource, null, null, null, null )
