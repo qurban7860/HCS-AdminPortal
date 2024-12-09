@@ -96,12 +96,15 @@ export default function MachineServiceReportList( { reportsPage }) {
   const [filterStatus, setFilterStatus] = useState(null);
   const [statusType, setStatusType] = useState( [] );
 
-  useEffect(() => {
-    dispatch(getActiveServiceReportStatuses() )
+  useLayoutEffect(() => {
+    if( !isLoadingReportStatus ){
+      dispatch(getActiveServiceReportStatuses() )
+    }
     return () => {
       dispatch( resetActiveServiceReportStatuses() )
       dispatch( resetMachineServiceReports() );
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ dispatch ]);
 
   const getReports = useCallback( async () => {
@@ -130,11 +133,11 @@ export default function MachineServiceReportList( { reportsPage }) {
       );
     }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[ dispatch, filterStatus, statusType, isLoadingReportStatus, page, rowsPerPage ])
+  },[ filterStatus, statusType, page, isLoadingReportStatus, rowsPerPage ])
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     getReports();
-  }, [ dispatch, getReports ]);  
+  }, [ getReports ]);  
 
   const dataFiltered = applyFilter({
     inputData: machineServiceReports?.data || [],
@@ -207,6 +210,10 @@ export default function MachineServiceReportList( { reportsPage }) {
     debouncedFilterStatus.current.cancel();
     debouncedFilterStatusType.current.cancel();
   }, [ debouncedSearch, debouncedFilterStatus, debouncedFilterStatusType ]);
+
+  console.log('statusType : ',statusType)
+  console.log('filterByStatusType : ',filterByStatusType)
+  console.log('reportFilterByStatusType : ',reportFilterByStatusType)
 
   useEffect(() => {
     setFilterName( reportsPage ? reportFilterBy : filterBy )

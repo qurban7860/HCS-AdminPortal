@@ -4,6 +4,7 @@ import { styled } from '@mui/material/styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { Button, Menu, MenuItem, Typography, } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { getActiveServiceReportStatuses, resetActiveServiceReportStatuses } from '../../../redux/slices/products/serviceReportStatuses';
 import { updateMachineServiceReportStatus } from '../../../redux/slices/products/machineServiceReport';
@@ -11,6 +12,7 @@ import IconButtonTooltip from '../../../components/Icons/IconButtonTooltip';
 import { useSnackbar } from '../../../components/snackbar';
 import { handleError } from '../../../utils/errorHandler';
 import Iconify from '../../../components/iconify';
+import ConfirmDialog from '../../../components/confirm-dialog';
 
 ReportStatusButton.propTypes = {
     reportsPage: PropTypes.bool,
@@ -55,6 +57,7 @@ export default function ReportStatusButton( { reportsPage, iconButton, status, m
   const { enqueueSnackbar } = useSnackbar();
   const { isUpdatingReportStatus } = useSelector( (state) => state.machineServiceReport );
   const { activeServiceReportStatuses, isLoadingReportStatus  } = useSelector( (state) => state.serviceReportStatuses );
+  const [ submitDialog, setSubmitDialog ] = useState( false );
 
   useEffect(()=>{
     dispatch(getActiveServiceReportStatuses() )
@@ -75,6 +78,8 @@ export default function ReportStatusButton( { reportsPage, iconButton, status, m
     try{
       handleClose();
       await dispatch(updateMachineServiceReportStatus( machineId, id, { status: newStatus })); 
+      // enqueueSnackbar('Status updated successfully!');
+      setSubmitDialog(false);
     } catch( error ){
       enqueueSnackbar( handleError( error ) || 'Status update failed!', { variant: `error` });
     }
@@ -102,7 +107,7 @@ export default function ReportStatusButton( { reportsPage, iconButton, status, m
                 <IconButtonTooltip 
                   title='Submit' 
                   icon="mdi:login" 
-                  onClick={()=> handleAction(  activeServiceReportStatuses?.find( s => s?.name?.toLowerCase() === "submitted" ))}
+                  onClick={()=> setSubmitDialog( true ) }
                 /> 
               ) ||
               ( 
@@ -162,6 +167,23 @@ export default function ReportStatusButton( { reportsPage, iconButton, status, m
             </MenuItem>
         )}
       </StyledMenu>
+      <ConfirmDialog
+          open={ submitDialog }
+          onClose={() => setSubmitDialog(false)}
+          title="Submit"
+          content="Are you sure you want to Submit?"
+          action={
+            <LoadingButton
+              variant="contained"
+              color="primary"
+              loading={ isUpdatingReportStatus }
+              disabled={ isUpdatingReportStatus }
+              onClick={ () => handleAction(  activeServiceReportStatuses?.find( s => s?.name?.toLowerCase() === "submitted" )) }
+            >
+              Submit
+            </LoadingButton>
+          }
+        />
     </div>
   );
 }
