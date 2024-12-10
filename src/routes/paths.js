@@ -6,9 +6,12 @@ function path(root, sublink) {
 
 const ROOTS_AUTH = '/auth';
 const ROOTS_DASHBOARD = '/dashboard';
+const ROOTS_PORTAL_REGISTRATIONS = '/portalRegistrations';
 const ROOTS_CALENDAR = '/calendar';
 const ROOTS_CRM = '/crm';
 const ROOTS_MACHINE = '/products';
+const ROOTS_MACHINE_SETTING_REPORT = '/machineSettingReports'
+const ROOTS_SERVICE_REPORTS = '/serviceReports'
 const ROOTS_SECURITY = '/security';
 const ROOTS_SETTING = '/settings';
 const ROOTS_DOCUMENT = '/documents';
@@ -134,7 +137,15 @@ export const PATH_CRM = {
       view: (id) => path(ROOTS_CRM, `/customers/archived/${id}/view`),
     },
   },
-  
+};
+
+// --------------------- CUSTOMER REGISTRATIONS ----------------------
+export const PATH_PORTAL_REGISTRATION = {
+  root: ROOTS_PORTAL_REGISTRATIONS,
+  edit: ( customerId ) => path(ROOTS_PORTAL_REGISTRATIONS, `/${customerId}/edit`),
+  view: ( customerId ) => path(ROOTS_PORTAL_REGISTRATIONS, `/${customerId}/view`),
+  permissionDenied: path(ROOTS_PORTAL_REGISTRATIONS, '/permission-denied'),
+  blank: path(ROOTS_AUTH, '/login'),
 };
 
 // MACHINE
@@ -231,15 +242,11 @@ export const PATH_MACHINE = {
       edit: (machineId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/profiles/${id}/edit`),
     },    
     // --------------------- Machine Tool Installed -----------------------
-    serviceRecords: {
-      root: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/serviceRecords`),
-      new: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/serviceRecords/new`),
-      view: (machineId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/serviceRecords/${id}/view`),
-      edit: (machineId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/serviceRecords/${id}/edit`),
-      history: {
-        root: (machineId, serviceId) => path(ROOTS_MACHINE, `/machines/${machineId}/serviceRecords/${serviceId}/history`),
-        view: (machineId, serviceId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/serviceRecords/${serviceId}/history/${id}/view`),
-      },
+    serviceReports: {
+      root: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/serviceReports`),
+      new: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/serviceReports/new`),
+      view: (machineId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/serviceReports/${id}/view`),
+      edit: (machineId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/serviceReports/${id}/edit`),
     },    
     // --------------------- Machine Tool Installed -----------------------
     ini: {
@@ -254,7 +261,12 @@ export const PATH_MACHINE = {
       new: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/logs/new`),
       graph: (machineId ) => path(ROOTS_MACHINE, `/machines/${machineId}/logs/graph`),
       // view: (machineId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/logs/${id}/view`),
-    },    
+    },
+
+    // --------------------- Machine Integration -----------------------
+    integration: {
+      root: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/integration`),
+    },
     jira: {
       root: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/jira`),
       // new: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/logs/new`),
@@ -316,13 +328,20 @@ export const PATH_MACHINE = {
         view: (id) => path(ROOTS_MACHINE, `/machines/machineSettings/checkItems/${id}/view`),
         edit: (id) => path(ROOTS_MACHINE, `/machines/machineSettings/checkItems/${id}/edit`),
       },
-      // --------------------- MACHINE service Record Configs -----------------------
-      serviceRecordsConfig: {
-        root: path(ROOTS_MACHINE, '/machines/machineSettings/serviceRecordsConfig'),
-        new: path(ROOTS_MACHINE, '/machines/machineSettings/serviceRecordsConfig/new'),
-        copy: (id) => path(ROOTS_MACHINE, `/machines/machineSettings/serviceRecordsConfig/${id}/copy`),
-        view: (id) => path(ROOTS_MACHINE, `/machines/machineSettings/serviceRecordsConfig/${id}/view`),
-        edit: (id) => path(ROOTS_MACHINE, `/machines/machineSettings/serviceRecordsConfig/${id}/edit`),
+      // --------------------- MACHINE service Report Templates -----------------------
+      serviceReportsTemplate: {
+        root: path(ROOTS_MACHINE, '/machines/machineSettings/serviceReportsTemplate'),
+        new: path(ROOTS_MACHINE, '/machines/machineSettings/serviceReportsTemplate/new'),
+        copy: (id) => path(ROOTS_MACHINE, `/machines/machineSettings/serviceReportsTemplate/${id}/copy`),
+        view: (id) => path(ROOTS_MACHINE, `/machines/machineSettings/serviceReportsTemplate/${id}/view`),
+        edit: (id) => path(ROOTS_MACHINE, `/machines/machineSettings/serviceReportsTemplate/${id}/edit`),
+      },
+      // --------------------- MACHINE status -----------------------
+      serviceReportsStatus: {
+        root: path(ROOTS_MACHINE, '/machines/machineSettings/serviceReportsStatus'),
+        new: path(ROOTS_MACHINE, '/machines/machineSettings/serviceReportsStatus/new'),
+        view: (id) => path(ROOTS_MACHINE, `/machines/machineSettings/serviceReportsStatus/${id}/view`),
+        edit: (id) => path(ROOTS_MACHINE, `/machines/machineSettings/serviceReportsStatus/${id}/edit`),
       },
       // --------------------- MACHINE status -----------------------
       status: {
@@ -348,7 +367,16 @@ export const PATH_MACHINE = {
     },
   },
 };
+ 
+export const PATH_MACHINE_SETTING_REPORT = {
+  root: ROOTS_MACHINE_SETTING_REPORT,
+  view: ( id ) => path(ROOTS_MACHINE_SETTING_REPORT, `/${id}/view`),
+};
 
+export const PATH_SERVICE_REPORTS = {
+  root: ROOTS_SERVICE_REPORTS,
+  view: ( id ) => path(ROOTS_SERVICE_REPORTS, `/${id}/view`),
+};
 
 export const PATH_SETTING = {
   permissionDenied: path(ROOTS_SETTING, '/permission-denied'),
@@ -424,6 +452,12 @@ export const PATH_SETTING = {
       view: (id) => path(ROOTS_SETTING, `/dbBackup/logs/${id}/view`),
     }
 },
+  api: {
+    logs: {
+      root: path(ROOTS_SETTING, '/api/logs/'),
+      view: (id) => path(ROOTS_SETTING, `/api/logs/${id}/view`),
+    }
+  },
   // ------------------------ SECURITY USER INVITES ----------------------------------------
   invite: {
     list: path(ROOTS_SETTING, '/invite/list'),

@@ -8,8 +8,8 @@ import ConfirmDialog from '../../../components/confirm-dialog';
 import { PATH_SECURITY } from '../../../routes/paths';
 // slices
 import {
-  getSecurityUsers,
   deleteSecurityUser,
+  archiveSecurityUser,
   sendUserInvite,
   getSecurityUser,
   changeUserStatus,
@@ -24,10 +24,6 @@ import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
 import { Cover } from '../../../components/Defaults/Cover';
 import { useSnackbar } from '../../../components/snackbar';
-import LogoAvatar from '../../../components/logo-avatar/LogoAvatar';
-import CustomAvatar from '../../../components/custom-avatar/CustomAvatar';
-import CustomerDialog from '../../../components/Dialog/CustomerDialog';
-import ContactDialog from '../../../components/Dialog/ContactDialog';
 import { StyledCardContainer, StyledTooltip } from '../../../theme/styles/default-styles';
 import Iconify from '../../../components/iconify';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
@@ -119,11 +115,29 @@ export default function SecurityUserViewForm() {
 
   const onDelete = async () => {
     try {
-      await dispatch(deleteSecurityUser(id));
+      await dispatch(deleteSecurityUser( id, { isArchived: true } ));
       await navigate(PATH_SECURITY.root);
-      await dispatch(getSecurityUsers());
+      // await dispatch(getSecurityUsers());
+    } catch (error) {
+      enqueueSnackbar('User Delete failed!', { variant: `error` });
+      console.log('Error:', error);
+    }
+  };
+
+  const onArchive = async () => {
+    try {
+      await dispatch(archiveSecurityUser( id, { isArchived: true } ));
     } catch (error) {
       enqueueSnackbar('User Archive failed!', { variant: `error` });
+      console.log('Error:', error);
+    }
+  };
+
+  const onRestore = async () => {
+    try {
+      await dispatch(archiveSecurityUser( id, { isArchived: false } ));
+    } catch (error) {
+      enqueueSnackbar('User Restore failed!', { variant: `error` });
       console.log('Error:', error);
     }
   };
@@ -163,28 +177,30 @@ export default function SecurityUserViewForm() {
         </StyledCardContainer>
         <Card sx={{ p: 3 }}>
           <ViewFormEditDeleteButtons
-            handleEdit={handleEdit}
-            handleUserInvite={securityUser?.invitationStatus ? handleUserInvite : undefined }
-            handleUpdatePassword={handleUpdatePassword}
-            onDelete={onDelete}
+            handleEdit={ securityUser?.isArchived ? undefined : handleEdit}
+            handleUserInvite={ ( securityUser?.invitationStatus && !securityUser?.isArchived ) ? handleUserInvite : undefined }
+            handleUpdatePassword={securityUser?.isArchived ? undefined : handleUpdatePassword}
             isLoading={isLoading}
+            onArchive={ securityUser?.isArchived ? undefined : onArchive}
+            onRestore={ securityUser?.isArchived ? onRestore : undefined }
+            // onDelete={ securityUser?.isArchived ? onDelete : undefined }
             isInviteLoading={isLoading}
             backLink={() => navigate(PATH_SECURITY.root)}
             isActive={defaultValues.isActive}
             multiAuth={defaultValues?.multiFactorAuthentication} 
             formerEmployee={defaultValues?.formerEmployee}
             userStatus={userStatus}
-            onUserStatusChange={handleChangeUserStatus}
+            onUserStatusChange={securityUser?.isArchived ? undefined : handleChangeUserStatus}
             securityUserPage
           />
           <ConfirmDialog
             open={openConfirm}
             onClose={handleCloseConfirm}
-            title="Delete"
-            content="Are you sure want to delete?"
+            title="Archive"
+            content="Are you sure want to archive?"
             action={
-              <Button variant="contained" color="error" onClick={onDelete}>
-                Delete
+              <Button variant="contained" color="error" onClick={onArchive}>
+                Archive
               </Button>
             }
           />
@@ -302,9 +318,6 @@ export default function SecurityUserViewForm() {
           </Grid>
         </Card>
       </Grid>
-      
-      <CustomerDialog />
-      <ContactDialog />
       <ChangePasswordByAdminDialog />
       
     </>

@@ -11,11 +11,13 @@ const initialState = {
   contactMoveFormVisibility: false,
   responseMessage: null,
   activeCardIndex: '',
+  contactsListView: false,
   isExpanded: false,
   success: false,
   isLoading: false,
   error: null,
   contacts: [],
+  customersContacts: [],
   activeContacts: [],
   spContacts: [],
   activeSpContacts: [],
@@ -57,6 +59,7 @@ const slice = createSlice({
     setCardActiveIndex(state, action){
       state.activeCardIndex = action.payload;
     },
+     
 
     // CARD IS EXPENDED
     setIsExpanded(state, action){
@@ -81,6 +84,9 @@ const slice = createSlice({
       state.isLoading = false;
     },
 
+    setContactsView(state, action){
+      state.contactsListView = action.payload;
+    },
     // RESET CONTACTS
     resetContacts(state){
       state.contacts = [];
@@ -102,7 +108,21 @@ const slice = createSlice({
       state.contactMoveFormVisibility=false;
       state.formVisibility=false;
     },
-      
+    
+    // GET Customers Contacts
+    getCustomersContactsSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.customersContacts = action.payload;
+      state.initial = true;
+    },
+
+    // RESET ACTIVE CONTACTS
+    resetCustomersContacts(state){
+      state.customersContacts = [];
+      state.isLoading = false;
+    },
+
     // GET Contacts
     getContactsSuccess(state, action) {
       state.isLoading = false;
@@ -183,11 +203,14 @@ export const {
   setContactEditFormVisibility,
   setContactMoveFormVisibility,
   setCardActiveIndex,
+  setListActiveIndex,
   setIsExpanded,
+  setContactsView,
   resetContact,
   resetContacts,
   resetActiveContacts,
   resetActiveSPContacts,
+  resetCustomersContacts,
   resetContactFormsVisiblity,
   setResponseMessage,
   setFilterBy,
@@ -335,6 +358,37 @@ export function getSPContacts( cancelToken ) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
       // throw error;
+    }
+  };
+}
+
+
+// ----------------------------------------------------------------------
+
+export function getCustomerContacts(customerID, isCustomerArchived) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const params = {
+        orderBy : {
+          firstName: 1
+        }
+      }
+
+      if(isCustomerArchived){
+        params.archivedByCustomer = true;
+        params.isArchived = true;
+      }else{
+        params.isArchived = false;
+      }
+
+      const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/contacts`,{ params } );
+      dispatch(slice.actions.getCustomersContactsSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Contacts loaded successfully'));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }

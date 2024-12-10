@@ -24,6 +24,7 @@ RHFFilteredSearchBar.propTypes = {
   size: PropTypes.string,
   selectedFilter: PropTypes.string.isRequired,
   setSelectedFilter: PropTypes.func.isRequired,
+  afterClearHandler: PropTypes.func,
 };
 export default function RHFFilteredSearchBar({
   name,
@@ -33,6 +34,7 @@ export default function RHFFilteredSearchBar({
   helperText,
   selectedFilter,
   setSelectedFilter = () => {},
+  afterClearHandler = () => {},
   ...other
 }) {
   const { control, watch, setValue } = useFormContext();
@@ -44,12 +46,15 @@ export default function RHFFilteredSearchBar({
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   useEffect(() => {
-    if (!selectedFilter) setError('Please select a filter option to enable search');
-  }, [selectedFilter, setError]);
+    if (!selectedFilter && filterOptions.length > 0) {
+      setSelectedFilter(filterOptions[0].id); 
+    }
+  }, [selectedFilter, filterOptions, setSelectedFilter]);
 
   const clearSearchKey = () => {
     setValue(name, '');
     setSelectedFilter('');
+    afterClearHandler()
   };
 
   return (
@@ -78,6 +83,14 @@ export default function RHFFilteredSearchBar({
               '& .MuiInputBase-input': {
                 paddingLeft: isMobile ? '14px' : 'inherit',
               },
+            }}
+            onChange={(e) => {
+              const {value} = e.target;
+              field.onChange(e); 
+              if (value === '') {
+                setSelectedFilter('');
+                afterClearHandler();
+              }
             }}
             {...other}
             InputProps={{

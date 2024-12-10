@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Grid, IconButton, alpha } from '@mui/material';
+import { Grid } from '@mui/material';
 import { StyledTooltip } from '../../theme/styles/default-styles';
 import Iconify from '../iconify';
 import { MachineIcon } from '../../theme/overrides/CustomIcons';

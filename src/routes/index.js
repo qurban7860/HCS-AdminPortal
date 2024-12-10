@@ -98,6 +98,11 @@ import {
   RegionView,
   RegionEdit,
 
+  // Customer Registrations
+  PortalRegistrationList,
+  PortalRegistrationEdit,
+  PortalRegistrationView,
+
   // ----------------------------------------------------------------
 
   // Machine
@@ -160,11 +165,10 @@ import {
   MachineProfileView,
   MachineProfileEdit,
 
-  // --------------------------- MACHINE Service Records -------------------------------------
-  MachineServiceRecordList,
-  MachineServiceRecordAdd,
-  MachineServiceRecordView,
-  MachineServiceRecordHistoryList,
+  // --------------------------- MACHINE Service Reports -------------------------------------
+  MachineServiceReportList,
+  MachineServiceReportAdd,
+  MachineServiceReportView,
 
   // --------------------------- MACHINE INI -------------------------------------
   MachineINIList,
@@ -176,7 +180,10 @@ import {
   MachineLogsList,
   MachineLogsAdd,
   // MachineLogsView,
-  // MachineLogsGraphView,
+  MachineLogsGraphView,
+
+  // --------------------------- MACHINE INTEGRATION -------------------------------------
+  MachineIntegrationViewForm,
 
   // --------------------------- MACHINE Jira --------------------------------
   MachineJiraList,
@@ -217,8 +224,11 @@ import {
   MachineToolAdd, 
   MachineToolView,
   MachineToolEdit,
-
-  // --------------- Service Record Configuration --------------------
+  
+  // MACHINE SETTING REPORT
+  MachineSettingReportList,
+  
+  // --------------- Service Report Template --------------------
 
   // MACHINE SETTINGS CHECK Item Categories
   CheckItemCategoryList,
@@ -232,12 +242,17 @@ import {
   CheckItemView,
   CheckItemEdit,
 
-  // MACHINE SETTINGS Service Record Config / Document
-  ServiceRecordConfigList,
-  ServiceRecordConfigAdd, 
-  ServiceRecordConfigView,
-  ServiceRecordConfigEdit,
+  // MACHINE SETTINGS Service Report Template / Document
+  ServiceReportTemplateList,
+  ServiceReportTemplateAdd, 
+  ServiceReportTemplateView,
+  ServiceReportTemplateEdit,
 
+  // Service Report Status
+  ServiceReportStatusList,
+  ServiceReportStatusAdd, 
+  ServiceReportStatusView,
+  ServiceReportStatusEdit,
   // ------------------------ Others / Machine Status ------------------------
 
   // MACHINE SETTINGS: MACHINE Statuses
@@ -359,6 +374,9 @@ import {
   // LOGS: DB BACKUP LOGS
   DbBackupLogsList,
   DbBackupLogsViewForm,
+
+  // LOGS: API LOGS
+  ApiLogsList,
 
   // ----------------------------------------------------------------
 
@@ -611,7 +629,24 @@ export default function Router() {
         },
       ],
     },
+
+    // --------------------- Dashboard ----------------------
+    {
+      path: 'portalRegistrations',
+      element: (
+        <AuthGuard>
+          <DashboardLayout />
+        </AuthGuard>
+      ),
+      children: [
+        { element: <PortalRegistrationList to={PATH_AFTER_LOGIN} replace />, index: true },
+        { path: ':customerId/edit', element: <PortalRegistrationEdit /> },
+        { path: ':customerId/view', element: <PortalRegistrationView /> },
+        { path: 'permission-denied', element: <PermissionDeniedPage /> },
+      ],
+    },
     // ------------------------- Machine ---------------------------
+
     { path: 'products',
       element: (
         <AuthGuard>
@@ -713,17 +748,12 @@ export default function Router() {
                 {path: ':id/edit', element: <MachineProfileEdit/>}, 
               ]
             },
-            { path: ':machineId/serviceRecords',
+            { path: ':machineId/serviceReports',
               children:[
-                {element: <MachineServiceRecordList/>, index: true},
-                {path: 'new', element: <MachineServiceRecordAdd/>},
-                {path: ':id/view', element: <MachineServiceRecordView/>},
-                {path: ':id/edit', element: <MachineServiceRecordAdd/>}, 
-                {path: ':serviceId/history',children:[
-                    {element: <MachineServiceRecordHistoryList/>, index: true}, 
-                    {path: ':id/view', element: <MachineServiceRecordView serviceHistoryView />},
-                  ]
-                }, 
+                {element: <MachineServiceReportList/>, index: true},
+                {path: 'new', element: <MachineServiceReportAdd/>},
+                {path: ':id/view', element: <MachineServiceReportView/>},
+                {path: ':id/edit', element: <MachineServiceReportAdd/>}, 
               ]
             },
             { path: ':machineId/ini',
@@ -738,8 +768,13 @@ export default function Router() {
               children:[
                 {element: <MachineLogsList/>, index: true},
                 {path: 'new', element: <MachineLogsAdd/>},
-                // {path: 'graph', element: <MachineLogsGraphView/>}, 
+                {path: 'graph', element: <MachineLogsGraphView/>}, 
                 // {path: ':id/view', element: <MachineLogsView/>},
+              ]
+            },
+            { path: ':machineId/integration',
+              children:[
+                {element: <MachineIntegrationViewForm/>, index: true},
               ]
             },
             { path: ':machineId/jira',
@@ -817,13 +852,23 @@ export default function Router() {
                   {path: ':id/edit', element: <CheckItemEdit/>},
                 ]
               },
-              { path: 'serviceRecordsConfig',
+              // ----------------------------- Service Reports Template -----------------------------------
+              { path: 'serviceReportsTemplate',
                 children:[
-                  {element: <ServiceRecordConfigList/>, index: true },
-                  {path: 'new', element: <ServiceRecordConfigAdd/>},
-                  {path: ':id/copy', element: <ServiceRecordConfigAdd/>},
-                  {path: ':id/view', element: <ServiceRecordConfigView/>},
-                  {path: ':id/edit', element: <ServiceRecordConfigEdit/>},
+                  {element: <ServiceReportTemplateList/>, index: true },
+                  {path: 'new', element: <ServiceReportTemplateAdd/>},
+                  {path: ':id/copy', element: <ServiceReportTemplateAdd/>},
+                  {path: ':id/view', element: <ServiceReportTemplateView/>},
+                  {path: ':id/edit', element: <ServiceReportTemplateEdit/>},
+                ]
+              },
+              // ----------------------------- SERVICE REPORT Status -----------------------------------
+              { path: 'serviceReportsStatus',
+                children:[
+                  {element: <ServiceReportStatusList/>, index: true },
+                  {path: 'new', element: <ServiceReportStatusAdd/>},
+                  {path: ':id/view', element: <ServiceReportStatusView/>},
+                  {path: ':id/edit', element: <ServiceReportStatusEdit/>},
                 ]
               },
               // ----------------------------- Others / Machine Status -----------------------------------
@@ -869,7 +914,30 @@ export default function Router() {
         { path: 'blank', element: <BlankPage /> },
       ],
     },
-
+    // ------------------------- Machine Setting Report ---------------------------
+    { path: 'machineSettingReports',
+      element: (
+        <AuthGuard>
+          <DashboardLayout />
+        </AuthGuard>
+      ),
+      children:[
+        { element: <MachineSettingReportList />, index: true },
+        // { path: ':id/view', element: <MachineSettingReportView /> },
+      ]
+    },
+    // ------------------------- Service Report ---------------------------
+    { path: 'serviceReports',
+      element: (
+        <AuthGuard>
+          <DashboardLayout />
+        </AuthGuard>
+      ),
+      children:[
+        { element: <MachineServiceReportList to={PATH_AFTER_LOGIN} replace  reportsPage />, index: true },
+        { path: ':id/view', element: <MachineServiceReportView reportsPage /> },
+      ]
+    },
     // SECURITY
     {
       path: 'security',
@@ -1026,7 +1094,7 @@ export default function Router() {
             { path: ':id/edit', element: <DepartmentEdit /> }
           ],
         },
-        // ------------------------------ PM2 Logs ----------------------------------
+        // ------------------------------ DB BACKUP LOGS  ----------------------------------
         {
           path: 'dbBackup',
           children: [
@@ -1039,7 +1107,19 @@ export default function Router() {
             }
           ],
         },
-        // ------------------------------ DB BACKUP LOGS ----------------------------------
+         // ------------------------------ API LOGS  ----------------------------------
+         {
+          path: 'api',
+          children: [
+            {
+              path: 'logs',
+              children: [
+                { element: <ApiLogsList /> , index: true },
+              ]
+            }
+          ],
+        },
+        // ------------------------------ PM2 LOGS ----------------------------------
         {
           path: 'pm2',
           children: [

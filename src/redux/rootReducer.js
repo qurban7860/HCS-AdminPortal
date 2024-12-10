@@ -16,9 +16,11 @@ import categoryReducer from './slices/products/category';
 import toolReducer from './slices/products/tools';
 import techparamcategoryReducer from './slices/products/machineTechParamCategory';
 import machinenoteReducer from './slices/products/machineNote';
+import serviceReportCommentsReducer from './slices/products/machineServiceReportComments';
 import machinestatusReducer from './slices/products/statuses';
 import machinemodelReducer from './slices/products/model';
 import techparamReducer from './slices/products/machineTechParam';
+import techparamReportReducer from './slices/products/machineTechParamReport';
 import machineSettingReducer from './slices/products/machineSetting';
 import toolInstalledReducer from './slices/products/toolInstalled';
 import roleReducer from './slices/securityUser/role';
@@ -37,8 +39,9 @@ import moduleReducer from './slices/module/module';
 import drawingReducer from './slices/products/drawing';
 import configReducer from './slices/config/config';
 import checkItemsReducer from './slices/products/machineCheckItems'
-import machineServiceRecordReducer from './slices/products/machineServiceRecord';
-import serviceRecordConfigReducer from './slices/products/serviceRecordConfig';
+import machineServiceReportReducer from './slices/products/machineServiceReport';
+import serviceReportTemplateReducer from './slices/products/serviceReportTemplate';
+import serviceReportStatusesReducer from './slices/products/serviceReportStatuses';
 import serviceCategoryReducer from './slices/products/serviceCategory';
 import userInviteReducer from './slices/securityUser/invite';
 import blockedCustomerReducer from './slices/securityConfig/blockedCustomers';
@@ -56,6 +59,10 @@ import emailsReducer from './slices/email/emails';
 import eventReducer from './slices/event/event';
 import customerJiraReducer from './slices/customer/customerJira';
 import jiraReducer from './slices/jira/jira';
+import apilogsReducer from './slices/logs/apiLogs';
+import portalRegistrationReducer from './slices/customer/portalRegistration';
+import serviceReportNotesReducer from './slices/products/serviceReportNotes';
+
 
 // ----------------------------------------------------------------------
 
@@ -112,7 +119,7 @@ export const machinePersistConfig = {
   key: 'machine',
   storage,
   keyPrefix: 'redux-',
-  blacklist: ['error', 'initial', 'responseMessage', 'machines']
+  blacklist: ['error', 'initial', 'responseMessage', 'machine', 'machines']
 };
 export const suppplierPersistConfig = {
   key: 'supplier',
@@ -165,8 +172,21 @@ export const machineNotePersistConfig = {
   blacklist: ['error', 'initial', 'responseMessage']
 };
 
+export const serviceReportCommentsPersistConfig = {
+  key: 'serviceReportComments',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage', 'comment', 'comments']
+};
+
 export const machinestatusPersistConfig = {
   key: 'machinestatus',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+};
+export const machineServiceReportStatusPersistConfig = {
+  key: 'serviceReportStatuses',
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
@@ -179,6 +199,12 @@ export const machinemodelPersistConfig = {
 };
 export const techparamPersistConfig = {
   key: 'techparam',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+};
+export const techparamReportPersistConfig = {
+  key: 'techparamReport',
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
@@ -293,14 +319,14 @@ export const checkItemsPersistConfig={
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 }
-export const machineServiceRecordPersistConfig={
-  key: 'machineServiceRecord',
+export const machineServiceReportPersistConfig={
+  key: 'machineServiceReport',
   storage,
   keyPrefix: 'redux-',
-  blacklist: ['error', 'initial', 'responseMessage']
+  blacklist: ['error', 'initial', 'responseMessage', 'machineServiceReport', 'machineServiceReports']
 }
-export const serviceRecordConfigPersistConfig={
-  key: 'serviceRecordConfig',
+export const serviceReportTemplatePersistConfig={
+  key: 'serviceReportTemplate',
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
@@ -375,6 +401,13 @@ export const machineErpLogsPersistConfig = {
   blacklist: ['error', 'initial', 'responseMessage']
 }
 
+export const machineIntegrationPersistConfig = {
+  key: 'machineIntegrationRecord',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
+
 export const pm2LogsPersistConfig = {
   key: 'pm2Logs',
   storage,
@@ -383,6 +416,12 @@ export const pm2LogsPersistConfig = {
 }
 export const dbBackupLogsPersistConfig = {
   key: 'pm2Logs',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
+export const apiLogsPersistConfig = {
+  key: 'apiLogs',
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
@@ -419,6 +458,21 @@ export const jiraPersistConfig = {
   blacklist: ['error', 'initial', 'responseMessage']
 }
 
+export const portalRegistrationPersistConfig = {
+  key: 'PortalRegistration',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
+
+export const serviceReportNotesPersistConfig = {
+  key: 'serviceReportNotes',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
+
+
 const rootReducer = combineReducers({
   user: persistReducer(userPersistConfig, userReducer),
   customer: persistReducer(customerPersistConfig, customerReducer),
@@ -434,9 +488,11 @@ const rootReducer = combineReducers({
   tool: persistReducer(toolPersistConfig,toolReducer),
   techparamcategory: persistReducer(techparamcategoryPersistConfig,techparamcategoryReducer),
   machineNote: persistReducer(machineNotePersistConfig, machinenoteReducer),
+  serviceReportComments: persistReducer(serviceReportCommentsPersistConfig, serviceReportCommentsReducer),
   machinestatus: persistReducer(machinestatusPersistConfig, machinestatusReducer),
   machinemodel: persistReducer(machinemodelPersistConfig, machinemodelReducer),
   techparam: persistReducer(techparamPersistConfig, techparamReducer),
+  techparamReport: persistReducer(techparamReportPersistConfig, techparamReportReducer),
   machineSetting: persistReducer(machineSettingPersistConfig, machineSettingReducer),
   toolInstalled: persistReducer(machineToolInstalledPersistConfig, toolInstalledReducer),
   role: persistReducer(userRolesPersistConfig, roleReducer),
@@ -454,9 +510,10 @@ const rootReducer = combineReducers({
   module: persistReducer(modulePersistConfig, moduleReducer),
   drawing: persistReducer(drawingPersistConfig, drawingReducer),
   config: persistReducer(configPersistConfig, configReducer),
-  serviceRecordConfig: persistReducer(serviceRecordConfigPersistConfig, serviceRecordConfigReducer),
+  serviceReportTemplate: persistReducer(serviceReportTemplatePersistConfig, serviceReportTemplateReducer),
+  serviceReportStatuses: persistReducer(machineServiceReportStatusPersistConfig, serviceReportStatusesReducer),
   checkItems: persistReducer(checkItemsPersistConfig, checkItemsReducer),
-  machineServiceRecord: persistReducer(machineServiceRecordPersistConfig, machineServiceRecordReducer),
+  machineServiceReport: persistReducer(machineServiceReportPersistConfig, machineServiceReportReducer),
   serviceCategory: persistReducer(serviceCategoryPersistConfig, serviceCategoryReducer),
   userInvite: persistReducer(userInvitePersistConfig, userInviteReducer),
   blockedCustomer: persistReducer(blockedCustomerPersistConfig, blockedCustomerReducer),
@@ -468,12 +525,15 @@ const rootReducer = combineReducers({
   configuration: persistReducer(configurationPersistConfig, configurationReducer),
   machineErpLogs: persistReducer(machineErpLogsPersistConfig, machineErpLogsReducer),
   pm2Logs: persistReducer(pm2LogsPersistConfig, pm2logsReducer),
+  apiLogs: persistReducer(apiLogsPersistConfig, apilogsReducer),
   dbBackupLogs: persistReducer(dbBackupLogsPersistConfig, dbBackupLogsReducer),
   machineJira: persistReducer(machineJiraPersistConfig, machineJiraReducer),
   emails: persistReducer(emailsPersistConfig, emailsReducer),
   event: persistReducer(eventPersistConfig, eventReducer),
   customerJira: persistReducer(customerJiraPersistConfig, customerJiraReducer),
-  jira: persistReducer(jiraPersistConfig, jiraReducer),  
+  jira: persistReducer(jiraPersistConfig, jiraReducer),
+  portalRegistration: persistReducer( portalRegistrationPersistConfig, portalRegistrationReducer ),
+  serviceReportNotes: persistReducer( serviceReportNotesPersistConfig, serviceReportNotesReducer ),
 });
 
 export default rootReducer;

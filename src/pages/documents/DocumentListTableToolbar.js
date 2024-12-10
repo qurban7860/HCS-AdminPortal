@@ -76,21 +76,22 @@ export default function DocumentListTableToolbar({
       spacing={2}
       alignItems="center"
       direction={{ xs: 'column', md: 'row' }}
-      sx={{ px: 2.5, py: 3 }}
+      sx={{ px: 2.5, py: 1 }}
     >
       <SearchBarCombo
         isFiltered={isFiltered}
         value={filterName}
-        onChange={onFilterName}
+        onChange={(customerPage || machinePage) ? onFilterName : null}
         onClick={onResetFilter}
         SubOnClick={toggleAdd}
         SubOnClick2={ machineDrawings && toggleAddList || undefined }
         addButton={ ( !machineDrawings && ( customer?.isArchived || machine?.isArchived ) ) ? undefined : addButton }
         transferredMachine={machinePage && machine?.status?.slug === 'transferred'}
         categoryVal={categoryVal}
-        setCategoryVal={(machineDrawings || machinePage) ? setCategoryVal : null }
+        setCategoryVal={(machinePage) ? setCategoryVal : null }
         typeVal={typeVal}
-        setTypeVal={(machineDrawings || machinePage) ? setTypeVal : null }
+        setTypeVal={(machinePage) ? setTypeVal : null }
+        machineDrawings={machineDrawings}
         handleGalleryView={ ( customer?.isArchived || machine?.isArchived ) ? undefined : handleGalleryView}
       />
     </Stack>

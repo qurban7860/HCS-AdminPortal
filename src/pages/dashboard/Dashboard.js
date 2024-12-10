@@ -28,6 +28,7 @@ import { varFade } from '../../components/animate';
 import { CONFIG } from '../../config-global';
 import {  getActiveMachineModels } from '../../redux/slices/products/model';
 import {  getActiveCategories } from '../../redux/slices/products/category';
+import {  getActiveSPContacts } from '../../redux/slices/customer/contact';
 import { countries } from '../../assets/data';
 import Iconify from '../../components/iconify';
 import { PATH_DASHBOARD } from '../../routes/paths';
@@ -90,10 +91,10 @@ export default function Dashboard() {
       setMBCCategory(defaultCategory);
       setMBMCategory(defaultCategory);
       setMBYCategory(defaultCategory);
-      
-      dispatch(getMachinesByCountry(defaultCategory?._id,null, null))
-      dispatch(getMachinesByYear(defaultCategory?._id,null, null))
-      dispatch(getMachinesByModel(defaultCategory?._id,null, null))
+      dispatch(getActiveSPContacts());
+      dispatch(getMachinesByCountry(defaultCategory?._id,null, null));
+      dispatch(getMachinesByYear(defaultCategory?._id,null, null));
+      dispatch(getMachinesByModel(defaultCategory?._id,null, null));
     }
   },[dispatch, activeCategories, isDashboardAccessLimited])
 

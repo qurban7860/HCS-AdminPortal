@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { LoadingButton } from '@mui/lab';
 import { Badge, Box, Divider, Grid, TextField } from '@mui/material';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { memo, useState, useLayoutEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -24,7 +24,7 @@ import { ICONS } from '../../constants/icons/default-icons';
 import { fDate, fDateTime, GetDifferenceInDays } from '../../utils/formatTime';
 import { useAuthContext } from '../../auth/useAuthContext';
 import { PATH_DASHBOARD } from '../../routes/paths';
-import ViewFormServiceRecordApprovalHistoryPopover from './ViewFormServiceRecordApprovalHistoryPopover';
+import ViewFormServiceReportApprovalHistoryPopover from './ViewFormServiceReportApprovalHistoryPopover';
 
 function ViewFormEditDeleteButtons({
   backLink,
@@ -95,7 +95,7 @@ function ViewFormEditDeleteButtons({
   drawingPage,
   history,
   onMergeDocumentType,
-  serviceRecordStatus
+  serviceReportStatus
 }) {
   const { id } = useParams();
   const navigate = useNavigate()
@@ -120,16 +120,20 @@ function ViewFormEditDeleteButtons({
   const [openConfigDraftStatuConfirm, setOpenConfigDraftStatuConfirm] = useState(false);
   const [openConfigSubmittedStatuConfirm, setOpenConfigSubmittedStatuConfirm] = useState(false);
   const [openConfigApproveStatuConfirm, setOpenConfigApproveStatuConfirm] = useState(false);
+  const { machine } = useSelector((state) => state.machine);
   const [lockUntil, setLockUntil] = useState(''); 
   const [lockUntilError, setLockUntilError] = useState(''); 
+
+  const isCustomerSelected = !!machine?.customer; 
+  const hasPurchaseDate = !!transferredHistory?.some((historyItem) => historyItem.purchaseDate);
+  const hasTransferDate = !!transferredHistory?.some((historyItem) => historyItem.transferredDate);
+  const showDetails = isCustomerSelected && (hasPurchaseDate || hasTransferDate);
 
   const theme = createTheme({
     palette: {
       success: green,
     },
   });
-  
-
 
   // Function to handle date change
   const handleLockUntilChange = newValue => {
@@ -185,7 +189,7 @@ function ViewFormEditDeleteButtons({
   ])
 
   const handleOpenConfirm = (dialogType) => {
-
+    
     if (dialogType === 'UserInvite') {
       setOpenUserInviteConfirm(true);
     }
@@ -284,6 +288,11 @@ function ViewFormEditDeleteButtons({
     await handleCloseConfirm('delete');
   };
 
+  const handleRestore = async () => {
+    await onRestore();
+    await setOpenRestoreConfirm(false);
+  };
+  
   
   const [verifiedAnchorEl, setVerifiedAnchorEl] = useState(null);
   const [verifiedBy, setVerifiedBy] = useState([]);
@@ -291,7 +300,7 @@ function ViewFormEditDeleteButtons({
   const [ transferHistoryAnchorEl, setTransferHistoryAnchorEl ] = useState(null);
   const [ transferHistory, setTransferHistory ] = useState([]);
   
-  const [ serviceRecordApprovalHistoryAnchorEl, setServiceRecordApprovalHistoryAnchorEl ] = useState(null);
+  const [ serviceReportApprovalHistoryAnchorEl, setServiceReportApprovalHistoryAnchorEl ] = useState(null);
   
   const [ machineSettingHistoryAnchorEl, setMachineSettingHistoryAnchorEl ] = useState(null);
 
@@ -320,14 +329,14 @@ function ViewFormEditDeleteButtons({
     setTransferHistory([])
   };
   
-  const handleServiceRecordApprovalHistoryPopoverOpen = (event) => {
-    if(serviceRecordStatus?.completeHistory?.totalLogsCount > 0) {
-      setServiceRecordApprovalHistoryAnchorEl(event.currentTarget);
+  const handleServiceReportApprovalHistoryPopoverOpen = (event) => {
+    if(serviceReportStatus?.completeHistory?.totalLogsCount > 0) {
+      setServiceReportApprovalHistoryAnchorEl(event.currentTarget);
     }
   };
 
-  const handleServiceRecordApprovalHistoryPopoverClose = () => {
-    setServiceRecordApprovalHistoryAnchorEl(null);
+  const handleServiceReportApprovalHistoryPopoverClose = () => {
+    setServiceReportApprovalHistoryAnchorEl(null);
   };
 
   const handleMachineSettingHistoryPopoverOpen = (event) => {
@@ -356,7 +365,7 @@ function ViewFormEditDeleteButtons({
   const {
     reset,
     handleSubmit,
-    formState: { isSubmitting, isSubmitSuccessful },
+    formState: { isSubmitting },
   } = methods;
 
   const machineSupport = {
@@ -467,10 +476,10 @@ function ViewFormEditDeleteButtons({
             </Badge>
           }
 
-          {transferredHistory !== undefined &&
+          {showDetails && transferredHistory !== undefined && transferredHistory?.length > 0 &&
             <Badge badgeContent={transferredHistory?.length || '0' } color="info">
               <IconTooltip
-                title='Ownership Detail'
+                title='Ownership History'
                 color={ICONS.TRANSFERHISTORY.color}
                 icon={ICONS.TRANSFERHISTORY.icon}
                 onClick={handleTransferHistoryPopoverOpen}
@@ -564,32 +573,32 @@ function ViewFormEditDeleteButtons({
           />
           }
 
-          {serviceRecordStatus && (
-            <Badge badgeContent={serviceRecordStatus?.completeHistory?.totalLogsCount || 0} color="info">
-              {serviceRecordStatus?.currentApprovingContacts?.length > 0 ? (
+          {serviceReportStatus && (
+            <Badge badgeContent={serviceReportStatus?.completeHistory?.totalLogsCount || 0} color="info">
+              {serviceReportStatus?.currentApprovingContacts?.length > 0 ? (
                 <>
-                {serviceRecordStatus?.status === 'APPROVED' && (
+                {serviceReportStatus?.status === 'APPROVED' && (
                     <IconTooltip
                       title={ICONS.SR_APPROVED.heading}
                       color={ICONS.SR_APPROVED.color}
                       icon={ICONS.SR_APPROVED.icon}
-                      onClick={handleServiceRecordApprovalHistoryPopoverOpen}
+                      onClick={handleServiceReportApprovalHistoryPopoverOpen}
                     />
                   )}
-                {serviceRecordStatus?.status === 'REJECTED' && (
+                {serviceReportStatus?.status === 'REJECTED' && (
                     <IconTooltip
                       title={ICONS.SR_REJECTED.heading}
                       color={ICONS.SR_REJECTED.color}
                       icon={ICONS.SR_REJECTED.icon}
-                      onClick={handleServiceRecordApprovalHistoryPopoverOpen}
+                      onClick={handleServiceReportApprovalHistoryPopoverOpen}
                     />
                   )}
-                {serviceRecordStatus?.status === 'PENDING' && (
+                {serviceReportStatus?.status === 'PENDING' && (
                     <IconTooltip
                       title={ICONS.SR_PENDING.heading}
                       color={ICONS.SR_PENDING.color}
                       icon={ICONS.SR_PENDING.icon}
-                      onClick={handleServiceRecordApprovalHistoryPopoverOpen}
+                      onClick={handleServiceReportApprovalHistoryPopoverOpen}
                     />
                   )}
                 </>
@@ -598,7 +607,7 @@ function ViewFormEditDeleteButtons({
                   title={ICONS.SR_HISTORY.heading}
                   color={ICONS.SR_HISTORY.color}
                   icon={ICONS.SR_HISTORY.icon}
-                  onClick={handleServiceRecordApprovalHistoryPopoverOpen}
+                  onClick={handleServiceReportApprovalHistoryPopoverOpen}
                 />
               )}
             </Badge>
@@ -679,7 +688,7 @@ function ViewFormEditDeleteButtons({
           />
         )}
 
-          {/* approve configuration */}
+          {/* approve template */}
           {approveHandler && !(approvers && approvers.length > 0 && approvers?.some((verified) => verified?.verifiedBy?._id === userId)) && <IconTooltip
           title="Approve"
           onClick={() => {
@@ -866,8 +875,8 @@ function ViewFormEditDeleteButtons({
       <ConfirmDialog
         open={openConfigDraftStatuConfirm}
         onClose={() => handleCloseConfirm('ChangeConfigStatusToDraft')}
-        title="Configuration Status"
-        content="Are you sure you want to change configuration status to DRAFT? "
+        title="Template Status"
+        content="Are you sure you want to change this template status to DRAFT? "
         action={
           <LoadingButton variant="contained"
             onClick={()=>{
@@ -883,8 +892,8 @@ function ViewFormEditDeleteButtons({
       <ConfirmDialog
         open={openConfigSubmittedStatuConfirm}
         onClose={() => handleCloseConfirm('ChangeConfigStatusToSubmitted')}
-        title="Configuration Status"
-        content="Do you want to submit it for Approval? "
+        title="Template Status"
+        content="Do you want to submit this template for Approval? "
         action={
           <LoadingButton variant="contained"
             onClick={()=>{
@@ -900,8 +909,8 @@ function ViewFormEditDeleteButtons({
   <ConfirmDialog
         open={openConfigApproveStatuConfirm}
         onClose={() => handleCloseConfirm('ChangeConfigStatusToApprove')}
-        title="Configuration Approval"
-        content="Are you sure you want to APPROVE configuration? "
+        title="Template Approval"
+        content="Are you sure you want to APPROVE this template? "
         action={
           <LoadingButton variant="contained"
             onClick={()=>{
@@ -935,7 +944,7 @@ function ViewFormEditDeleteButtons({
       />
 
       <ConfirmDialog
-        open={ openRestoreConfirm && !isSubmitSuccessful }
+        open={ openRestoreConfirm }
         onClose={() => {
           handleCloseConfirm('restore');
         }}
@@ -947,7 +956,7 @@ function ViewFormEditDeleteButtons({
             color="error"
             loading={isSubmitted || isSubmitting || isLoading}
             disabled={isSubmitted || isSubmitting || isLoading}
-            onClick={ handleSubmit( onRestore ) }
+            onClick={ handleSubmit( handleRestore ) }
           >
             Restore
           </LoadingButton>
@@ -965,7 +974,7 @@ function ViewFormEditDeleteButtons({
         open={transferHistoryAnchorEl}
         onClose={handleTransferHistoryPopoverClose}
         ListArr={transferHistory}
-        ListTitle="Ownership Detail"
+        ListTitle="Ownership History"
       />
 
       <ViewFormMachineSettingHistoryMenuPopover
@@ -982,12 +991,12 @@ function ViewFormEditDeleteButtons({
         ListTitle= "Approved By"
       />
 
-      <ViewFormServiceRecordApprovalHistoryPopover
-        open={serviceRecordApprovalHistoryAnchorEl}
-        onClose={handleServiceRecordApprovalHistoryPopoverClose}
-        evaluationHistory={serviceRecordStatus?.completeHistory?.evaluationHistory}
-        ListArr={serviceRecordStatus?.currentApprovalLogs}
-        ListTitle="Service Record Approval Details"
+      <ViewFormServiceReportApprovalHistoryPopover
+        open={serviceReportApprovalHistoryAnchorEl}
+        onClose={handleServiceReportApprovalHistoryPopoverClose}
+        evaluationHistory={serviceReportStatus?.completeHistory?.evaluationHistory}
+        ListArr={serviceReportStatus?.currentApprovalLogs}
+        ListTitle="Service Report Approval Details"
       />
     </Grid>
 
@@ -1059,5 +1068,5 @@ ViewFormEditDeleteButtons.propTypes = {
   drawingPage: PropTypes.bool,
   history: PropTypes.array,
   onMergeDocumentType: PropTypes.func,
-  serviceRecordStatus: PropTypes.object
+  serviceReportStatus: PropTypes.object
 };

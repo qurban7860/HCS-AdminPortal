@@ -121,6 +121,11 @@ export const RegionAdd = Loadable(lazy(() => import('../pages/crm/configs/region
 export const RegionEdit = Loadable(lazy(() => import('../pages/crm/configs/regions/RegionEdit')));
 export const RegionView = Loadable(lazy(() => import('../pages/crm/configs/regions/RegionView')));
 
+// CUSTOMER REQUESTS
+export const PortalRegistrationList = Loadable(lazy(() => import('../pages/crm/portalRegistration/PortalRegistrationList')));
+export const PortalRegistrationEdit = Loadable(lazy(() => import('../pages/crm/portalRegistration/PortalRegistrationEdit')));
+export const PortalRegistrationView = Loadable(lazy(() => import('../pages/crm/portalRegistration/PortalRegistrationView')));
+
 //----------------------------------------------------------------
 
 // Machine
@@ -190,13 +195,11 @@ export const MachineProfileAdd = Loadable(lazy(() => import('../pages/machine/pr
 export const MachineProfileView = Loadable(lazy(() => import('../pages/machine/profiles/ProfileViewForm')));
 export const MachineProfileEdit = Loadable(lazy(() => import('../pages/machine/profiles/ProfileEditForm')));
 
-// --------------------------- MACHINE Service Records -------------------------------------
+// --------------------------- MACHINE Service Reports -------------------------------------
 
-export const MachineServiceRecordList = Loadable(lazy(() => import('../pages/machine/serviceRecords/MachineServiceRecordList')));
-export const MachineServiceRecordAdd = Loadable(lazy(() => import('../pages/machine/serviceRecords/MachineServiceRecordAddForm')));
-export const MachineServiceRecordView = Loadable(lazy(() => import('../pages/machine/serviceRecords/MachineServiceRecordViewForm')));
-// export const MachineServiceRecordEdit = Loadable(lazy(() => import('../pages/machine/serviceRecords/MachineServiceRecordEditForm')));
-export const MachineServiceRecordHistoryList = Loadable(lazy(() => import('../pages/machine/serviceRecords/MachineServiceRecordHistoryList')));
+export const MachineServiceReportList = Loadable(lazy(() => import('../pages/machine/serviceReports/MachineServiceReportList')));
+export const MachineServiceReportAdd = Loadable(lazy(() => import('../pages/machine/serviceReports/MachineServiceReportAddForm')));
+export const MachineServiceReportView = Loadable(lazy(() => import('../pages/machine/serviceReports/MachineServiceReportViewForm')));
 
 // --------------------------- MACHINE INI -------------------------------------
 
@@ -210,7 +213,11 @@ export const MachineINICompareView = Loadable(lazy(() => import('../pages/machin
 export const MachineLogsList = Loadable(lazy(() => import('../pages/machine/logs/MachineLogsList')));
 export const MachineLogsAdd = Loadable(lazy(() => import('../pages/machine/logs/MachineLogsAddForm')));
 // export const MachineLogsView = Loadable(lazy(() => import('../pages/machine/logs/MachineLogsViewForm')));
-// export const MachineLogsGraphView = Loadable(lazy(() => import('../pages/machine/logs/MachineLogsGraphViewForm')));
+export const MachineLogsGraphView = Loadable(lazy(() => import('../pages/machine/logs/MachineLogsGraphViewForm')));
+
+// --------------------------- MACHINE INTEGRATION -------------------------------------
+
+export const MachineIntegrationViewForm = Loadable(lazy(() => import('../pages/machine/integration/IntegrationViewForm')));
 
 // --------------------------- MACHINE JIRA -------------------------------------
 
@@ -219,6 +226,10 @@ export const MachineJiraList = Loadable(lazy(() => import('../pages/machine/jira
 // ---------------------  SETTINGS -------------------------------------------
 
 export const MachineSetting = Loadable(lazy(() => import('../pages/machineSettings/Machine')));
+
+// ---------------------  MACHINE SETTING REPORT -------------------------------------------
+
+export const MachineSettingReportList = Loadable(lazy(() => import('../pages/machineSettingReports/MachineSettingReportList')));
 
 // ---------------------  MACHINE LOGS -------------------------------------------
 
@@ -263,7 +274,7 @@ export const MachineToolAdd = Loadable(lazy(() => import('../pages/machineSettin
 export const MachineToolView = Loadable(lazy(() => import('../pages/machineSettings/tools/ToolView')));
 export const MachineToolEdit = Loadable(lazy(() => import('../pages/machineSettings/tools/ToolEdit')));
 
-// --------------- Service Record Configuration --------------------
+// --------------- Service Report Template --------------------
 
 // MACHINE SETTINGS CHECK Item Categories
 export const CheckItemCategoryList = Loadable(lazy(() => import('../pages/machineSettings/checkItemsCategories/CheckItemCategoryList')));
@@ -277,12 +288,17 @@ export const CheckItemAdd  = Loadable(lazy(() => import('../pages/machineSetting
 export const CheckItemView = Loadable(lazy(() => import('../pages/machineSettings/checkItem/CheckItemView')));
 export const CheckItemEdit = Loadable(lazy(() => import('../pages/machineSettings/checkItem/CheckItemEditForm')));
 
-// MACHINE SETTINGS Service Record Config / Document
-export const ServiceRecordConfigList = Loadable(lazy(() => import('../pages/machineSettings/serviceDocumentConfiguration/ServiceRecordConfigList')));
-export const ServiceRecordConfigAdd = Loadable(lazy(() => import('../pages/machineSettings/serviceDocumentConfiguration/ServiceRecordConfigAddForm')));
-export const ServiceRecordConfigView = Loadable(lazy(() => import('../pages/machineSettings/serviceDocumentConfiguration/ServiceRecordConfigView')));
-export const ServiceRecordConfigEdit = Loadable(lazy(() => import('../pages/machineSettings/serviceDocumentConfiguration/ServiceRecordConfigEdit')));
+// MACHINE SETTINGS Service Report Template / Document
+export const ServiceReportTemplateList = Loadable(lazy(() => import('../pages/machineSettings/serviceReportTemplate/ServiceReportTemplateList')));
+export const ServiceReportTemplateAdd = Loadable(lazy(() => import('../pages/machineSettings/serviceReportTemplate/ServiceReportTemplateAddForm')));
+export const ServiceReportTemplateView = Loadable(lazy(() => import('../pages/machineSettings/serviceReportTemplate/ServiceReportTemplateView')));
+export const ServiceReportTemplateEdit = Loadable(lazy(() => import('../pages/machineSettings/serviceReportTemplate/ServiceReportTemplateEdit')));
 
+
+export const ServiceReportStatusList = Loadable(lazy(() => import('../pages/machineSettings/serviceReportStatus/ServiceReportStatusList')));
+export const ServiceReportStatusAdd  = Loadable(lazy(() => import('../pages/machineSettings/serviceReportStatus/ServiceReportStatusAddForm')));
+export const ServiceReportStatusView = Loadable(lazy(() => import('../pages/machineSettings/serviceReportStatus/ServiceReportStatusView')));
+export const ServiceReportStatusEdit = Loadable(lazy(() => import('../pages/machineSettings/serviceReportStatus/ServiceReportStatusEdit')));
 // ------------------------ Others / Machine Status ------------------------
 
 // MACHINE SETTINGS: MACHINE Statuses
@@ -396,6 +412,9 @@ export const Pm2LogView = Loadable(lazy(() => import('../pages/settings/systemLo
 // LOGS: DB BACKUP LOGS
 export const DbBackupLogsList = Loadable(lazy(() => import('../pages/settings/systemLogs/dbBackupLogs/DbBackupLogsList')));
 export const DbBackupLogsViewForm = Loadable(lazy(() => import('../pages/settings/systemLogs/dbBackupLogs/DbBackupLogsViewForm')));
+
+// LOGS: API LOGS
+export const ApiLogsList = Loadable(lazy(() => import('../pages/settings/systemLogs/ApiLogs/ApiLogsList')));
 
 // ----------------------------------------------------------------
 

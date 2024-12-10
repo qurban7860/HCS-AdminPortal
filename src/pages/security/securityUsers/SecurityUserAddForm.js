@@ -22,6 +22,7 @@ import { getActiveRoles, resetActiveRoles } from '../../../redux/slices/security
 import { getActiveRegions, resetActiveRegions } from '../../../redux/slices/region/region';
 import { addUserSchema , editUserSchema} from '../../schemas/securityUser';
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
+import FormLabel from '../../../components/DocumentForms/FormLabel';
 
 SecurityUserAddForm.propTypes = {
   isEdit: PropTypes.bool,
@@ -135,7 +136,7 @@ const { contact, customer } = watch();
 
   const onSubmit = async (data) => {
     try {
-      const message = !isInvite ? "User Added Successfully":"User Invitation Sent Successfulllfy";
+      const message = !isInvite ? "User Added Successfully":"User Invitation Sent Successfullfy";
       const response = await dispatch(addSecurityUser(data, isInvite));
       reset();
       enqueueSnackbar(message);
@@ -156,6 +157,7 @@ const { contact, customer } = watch();
         <Grid item xs={12} md={12}>
           <Card sx={{ p: 3 }}>
           <Stack spacing={2} >
+            <FormLabel content='Personal Information' />
             <Box rowGap={2} columnGap={2} display="grid"
               gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
             >
@@ -208,7 +210,7 @@ const { contact, customer } = watch();
                 <RHFPasswordField name="confirmPassword" label="Confirm Password*" />
               </Box>
             ))}
-
+            <FormLabel content='Accessibility Information' />
             <Box rowGap={2} columnGap={2} display="grid"
               gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
             >

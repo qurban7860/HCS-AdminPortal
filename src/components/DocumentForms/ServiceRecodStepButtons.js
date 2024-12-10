@@ -2,9 +2,9 @@ import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
 import { Button, Grid, Stack } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router';
 import { PATH_MACHINE } from '../../routes/paths';
-import { setFormActiveStep } from '../../redux/slices/products/machineServiceRecord';
+import { setFormActiveStep } from '../../redux/slices/products/machineServiceReport';
 import useResponsive from '../../hooks/useResponsive';
 
 ServiceRecodStepButtons.propTypes = {
@@ -17,19 +17,19 @@ ServiceRecodStepButtons.propTypes = {
 };
 
 export default function ServiceRecodStepButtons({
-  handleDraft,
-  isSubmitting,
-  handleSubmit,
   isDraft,
   isActive,
-  isSubmitted
+  isSubmitted,
+  isSubmitting,
+  handleDraft,
+  handleSubmit,
 }) {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { formActiveStep } = useSelector((state) => state.machineServiceRecord);
+  const { formActiveStep } = useSelector((state) => state.machineServiceReport);
   const { machine } = useSelector((state) => state.machine);
-  
+  const { machineId, id } = useParams();
   const isMobile = useResponsive('down', 'sm');
 
   const handleBack = async () => {
@@ -37,7 +37,11 @@ export default function ServiceRecodStepButtons({
   } 
 
   const handleCancle = async () => {
-    await navigate(PATH_MACHINE.machines.serviceRecords.root(machine?._id))
+    if( machineId && id ){
+    await navigate(PATH_MACHINE.machines.serviceReports.view( machineId, id ))
+    } else {
+      await navigate(PATH_MACHINE.machines.serviceReports.root(machine?._id))
+    }
   } 
 
   return (
@@ -45,13 +49,27 @@ export default function ServiceRecodStepButtons({
     <Grid container sx={{ px: 2, pt:2 }} spacing={2} >
       <Grid item sm={12} md={6} display='flex' columnGap={2}>
         <Button size={isMobile ? 'medium' : 'large'} onClick={handleCancle} variant="outlined">Exit</Button> 
-        { handleDraft && (<LoadingButton loading={isSubmitting && isDraft} size={isMobile ? 'medium' : 'large'} onClick={handleDraft} type='submit' variant="outlined" fullWidth={isMobile}>Save as draft</LoadingButton> )}
-        { handleSubmit && formActiveStep === 0 && <LoadingButton onClick={handleSubmit} size={isMobile ? 'medium' : 'large'} type='submit' variant="contained"  loading={isSubmitting && !isDraft && isSubmitted }>Submit</LoadingButton>}
+        { handleDraft && (<LoadingButton loading={isSubmitting && isDraft} size={isMobile ? 'medium' : 'large'} onClick={handleDraft} type='submit' variant="outlined" fullWidth={isMobile}>Save</LoadingButton> )}
       </Grid>
-      <Grid item sm={12} md={6} display='flex' columnGap={2} justifyContent='flex-end'  >
-        <Button size={isMobile ? 'medium' : 'large'} onClick={handleBack} disabled={ formActiveStep===0 } variant="outlined">Back</Button>
-          <LoadingButton disabled={!isActive && formActiveStep===2} size={isMobile ? 'medium' : 'large'} type='submit' variant="contained"  loading={isSubmitting && !isDraft && !isSubmitted }>
-            {formActiveStep===2?"Submit":"Next"}
+      <Grid item sm={12} md={6} display='flex' columnGap={2} justifyContent='flex-end' >
+          {formActiveStep > 0 && 
+            <Button 
+              size={isMobile ? 'medium' : 'large'} 
+              onClick={handleBack} 
+              disabled={ formActiveStep===0 } 
+              variant="outlined"
+            >Back
+            </Button>
+          }
+          <LoadingButton 
+            onClick={ handleSubmit }
+            disabled={!isActive && formActiveStep===2} 
+            size={isMobile ? 'medium' : 'large'} 
+            type='submit' 
+            variant="contained"  
+            loading={ isSubmitting && !isDraft && !isSubmitted }
+          >
+            { ( formActiveStep === 2 || handleSubmit ) ? "Complete" : "Next" }
           </LoadingButton>
       </Grid>
     </Grid>

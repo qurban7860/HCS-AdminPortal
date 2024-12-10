@@ -15,8 +15,10 @@ import {
   TableNoData,
   TableSkeleton,
   TableHeadCustom,
+  TableHeadFilter,
   TableSelectedAction,
   TablePaginationCustom,
+  TablePaginationFilter,
 } from '../../components/table';
 // sections
 import JiraTableToolbar from './JiraTableToolbar';
@@ -25,7 +27,7 @@ import { fDate, fDateTime } from '../../utils/formatTime';
 // constants
 import TableCard from '../../components/ListTableTools/TableCard';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
-import { getJiraTickets, resetJiraTickets, setFilterStatus, ChangePage, ChangeRowsPerPage, setFilterBy, setFilterPeriod } from '../../redux/slices/jira/jira';
+import { getJiraTickets, resetJiraTickets, setFilterStatus, ChangePage, ChangeRowsPerPage, setFilterBy, setFilterPeriod, setReportHiddenColumns } from '../../redux/slices/jira/jira';
 import { getJiraStatusChipColor } from '../../utils/jira';
 import { CONFIG } from '../../config-global';
 
@@ -68,7 +70,8 @@ export default function JiraList() {
     page, 
     rowsPerPage, 
     totalRows,
-    isLoading
+    isLoading,
+    reportHiddenColumns
   } = useSelector((state) => state.jira);
 
   const onChangeRowsPerPage = (event) => {
@@ -193,6 +196,10 @@ export default function JiraList() {
   const handleViewRow = (key) => {
     window.open(`${CONFIG.JIRA_URL}${key}`, '_blank');
   }
+  
+  const handleHiddenColumns = async (arg) => {
+    dispatch(setReportHiddenColumns(arg));
+  };
 
   return (
       <Container maxWidth={false}>
@@ -223,7 +230,10 @@ export default function JiraList() {
               </>
           }
 
-        {!isNotFound && <TablePaginationCustom
+        {!isNotFound && <TablePaginationFilter
+            columns={TABLE_HEAD}
+            hiddenColumns={reportHiddenColumns}
+            handleHiddenColumns={handleHiddenColumns}
             count={dataFiltered?.length}
             page={page}
             rowsPerPage={rowsPerPage}
@@ -240,11 +250,12 @@ export default function JiraList() {
 
             <Scrollbar>
               <Table size="small" sx={{ minWidth: 360 }}>
-                <TableHeadCustom
+                <TableHeadFilter
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
                   onSort={onSort}
+                  hiddenColumns={reportHiddenColumns}
                 />
 
                 <TableBody>
@@ -256,6 +267,7 @@ export default function JiraList() {
                           key={row.id}
                           row={row}
                           onViewRow={handleViewRow}
+                          hiddenColumns={reportHiddenColumns}
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />

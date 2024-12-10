@@ -19,6 +19,7 @@ const initialState = {
   securityUsers: [],
   activeSecurityUsers: [],
   securityUser: null,
+  securityUserDialog: false,
   user: null,
   userId: null,
   userEmail: null,
@@ -34,6 +35,16 @@ const initialState = {
   activeFilterList: 'active',
   employeeFilterList: 'all',
   filterRegion: null,
+  reportHiddenColumns: {
+    "name": false,
+    "login": false,
+    "phone": false,
+    "requestURL": false,
+    "roles.name.[]": false,
+    "contact.firstName": false,
+    "isActive": true,
+    "createdAt": false,
+  },
 };
 
 const slice = createSlice({
@@ -132,7 +143,6 @@ const slice = createSlice({
       state.initial = true;
     },
 
-
     // GET user
     getSecurityUserSuccess(state, action) {
       state.isLoading = false;
@@ -169,7 +179,11 @@ const slice = createSlice({
       state.success = true;
       state.initial = true;
     },
-
+    
+    // SET RES MESSAGE
+    setSecurityUserDialog(state, action) {
+      state.securityUserDialog = action.payload;
+    },
     // RESET SECURITY USER
     resetSecurityUser(state){
       state.securityUser = {};
@@ -212,6 +226,10 @@ const slice = createSlice({
     ChangePage(state, action) {
       state.page = action.payload;
     },
+    // set ColumnFilter
+    setReportHiddenColumns(state, action){
+      state.reportHiddenColumns = action.payload;  
+    },
   },
 });
 
@@ -232,45 +250,45 @@ export const {
   setActiveFilterList,
   setEmployeeFilterList,
   setFilterRegion,
+  setSecurityUserDialog,
   ChangeRowsPerPage,
   ChangePage,
+  setReportHiddenColumns,
 } = slice.actions;
 // ----------------------------------------------------------------------
 
 export function addSecurityUser(param, isInvite) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-    dispatch(resetSecurityUser());
     try{
       const data = {
-      customer: param.customer?._id,
-      contact: param.contact?._id,
-      name: param.name,
-      phone:  param.phone,
-      email: param.email,
-      login: param.email,
-      password: param.password,
-      roles: param.roles.map(role => role?._id ),
-      dataAccessibilityLevel: param?.dataAccessibilityLevel?.toUpperCase() ,
-      regions: param.regions?.map(region => region?._id ),
-      customers: param.customers?.map(customer => customer?._id),
-      machines: param.machines?.map(machines => machines?._id),
-      isInvite: param.isInvite,
-      isActive: param.isActive,
-      currentEmployee: param.currentEmployee,
-      multiFactorAuthentication: param.multiFactorAuthentication,
+        customer: param.customer?._id,
+        contact: param.contact?._id,
+        name: param.name,
+        phone:  param.phone,
+        email: param.email,
+        login: param.email,
+        password: param.password,
+        roles: param.roles.map(role => role?._id ),
+        dataAccessibilityLevel: param?.dataAccessibilityLevel?.toUpperCase() ,
+        regions: param.regions?.map(region => region?._id ),
+        customers: param.customers?.map(customer => customer?._id),
+        machines: param.machines?.map(machines => machines?._id),
+        isInvite: param.isInvite,
+        isActive: param.isActive,
+        currentEmployee: param.currentEmployee,
+        multiFactorAuthentication: param.multiFactorAuthentication,
       }
       const response = await axios.post(`${CONFIG.SERVER_URL}security/users`, data);
-      if(regEx.test(response.status) && isInvite){
-        await axios.get(`${CONFIG.SERVER_URL}security/invites/sendUserInvite/${response?.data?.user?._id}`);
-        dispatch(setSecurityUserFormVisibility(false))
-        dispatch(getSecurityUsers());
-      }
+      // if(regEx.test(response.status) && isInvite){
+      //   await axios.get(`${CONFIG.SERVER_URL}security/invites/sendUserInvite/${response?.data?.user?._id}`);
+      //   dispatch(setSecurityUserFormVisibility(false))
+      //   dispatch(getSecurityUsers());
+      // }
       dispatch(slice.actions.stopLoading());
       return response;
     } catch (error) {
       dispatch(slice.actions.hasError(error.Message));
-      console.error(error);
       throw error;
     }
   };
@@ -374,21 +392,32 @@ export function getActiveSPTechnicalSecurityUsers(type) {
   }
 }
 
-
 // ----------------------------------------------------------------------
 
-export function getSecurityUsers() {
+export function getValidateUserEmail( login ) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try{ 
-      const response = await axios.get(`${CONFIG.SERVER_URL}security/users`,
-      {
-        params: {
-          isArchived: false,
-          invitationStatus: false
-        }
+      const response = await axios.get(`${CONFIG.SERVER_URL}security/users/validate`, { params: { login, isArchived: false } } );
+      return response;
+    } catch (error) {
+      await dispatch(slice.actions.stopLoading());
+      throw error;
+    }
+  }
+}
+
+// ----------------------------------------------------------------------
+
+export function getSecurityUsers( param ) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try{ 
+      const params = {
+        isArchived: param?.isArchived || false,
+        invitationStatus: param?.invitationStatus || false
       }
-      );
+      const response = await axios.get(`${CONFIG.SERVER_URL}security/users`, { params });
       if(regEx.test(response.status)){
         dispatch(slice.actions.getSecurityUsersSuccess(response.data));
       }
@@ -464,9 +493,22 @@ export function getLoggedInSecurityUser(id) {
         return response;
       } catch (error) {
         dispatch(slice.actions.hasError(error.Message));
-        console.error(error);
         throw error;
       }
+  };
+}
+
+export function archiveSecurityUser( id, params ) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try{
+      const response = await axios.patch(`${CONFIG.SERVER_URL}security/users/${id}`, { isArchived: params?.isArchived } );
+      dispatch(slice.actions.getSecurityUserSuccess(response.data));
+      return response;
+    } catch (error) {
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
   };
 }
 
@@ -476,15 +518,8 @@ export function deleteSecurityUser(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try{
-      const response = await axios.patch(`${CONFIG.SERVER_URL}security/users/${id}`,
-      {
-        isArchived: true, 
-      }
-      );
-      if(regEx.test(response.status)){
-        dispatch(slice.actions.setResponseMessage(response.data));
-        dispatch(resetSecurityUser())
-      }
+      const response = await axios.delete(`${CONFIG.SERVER_URL}security/users/${id}`, { isArchived: true, } );
+      dispatch(slice.actions.getSecurityUserSuccess(response.data));
       return response;
     } catch (error) {
       dispatch(slice.actions.hasError(error.Message));

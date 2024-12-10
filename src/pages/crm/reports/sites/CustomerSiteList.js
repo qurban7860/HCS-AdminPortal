@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'; 
 import { useState, useEffect , useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import debounce from 'lodash/debounce';
@@ -37,21 +38,11 @@ import { exportCSV } from '../../../../utils/exportCSV';
 
 // ----------------------------------------------------------------------
 
-const TABLE_HEAD = [
-  { id: 'customer.name', visibility: 'xs', label: 'Customer', align: 'left' },
-  { id: 'name', label: 'Site', align: 'left' },
-  { id: 'address.country', visibility: 'xs', label: 'Address', align: 'left' },
-  { id: 'phoneNumbers.countryCode', visibility: 'xs', label: 'Phone', align: 'left' },
-  { id: 'email', visibility: 'xs', label: 'Email', align: 'left' },
-  { id: 'primaryTechnicalContact.firstName', visibility: 'xs', label: 'Technical Contact', align: 'left' },
-  { id: 'primaryBillingContact.firstName', visibility: 'xs', label: 'Billing Contact', align: 'left' },
-  { id: 'isActive', visibility: 'xs', label: 'Active', align: 'center' },
-  { id: 'createdAt',visibility: 'xs', label: 'Created At', align: 'right' },
-];
+CustomerSiteList.propTypes = {
+  isCustomerSitePage: PropTypes.bool,
+};
 
-// ----------------------------------------------------------------------
-
-export default function CustomerSiteList() {
+export default function CustomerSiteList({ isCustomerSitePage = false }) {
   const {
     order,
     orderBy,
@@ -72,6 +63,20 @@ export default function CustomerSiteList() {
   const [exportingCSV, setExportingCSV] = useState(false);
   const [ tableData, setTableData ] = useState([]);
   const [ filterName, setFilterName ] = useState(filterBy);
+  
+  const TABLE_HEAD = [
+    ...(!isCustomerSitePage ? [{ id: 'customer.name', visibility: 'xs', label: 'Customer', align: 'left'}] : []),
+    { id: 'name', label: 'Site', align: 'left' },
+    { id: 'address.country', visibility: 'xs', label: 'Address', align: 'left' },
+    { id: 'phoneNumbers', visibility: 'xs', label: 'Phone', align: 'left' },
+    { id: 'email', visibility: 'xs', label: 'Email', align: 'left' },
+    { id: 'primaryTechnicalContact.firstName', visibility: 'xs', label: 'Technical Contact', align: 'left' },
+    { id: 'primaryBillingContact.firstName', visibility: 'xs', label: 'Billing Contact', align: 'left' },
+    { id: 'isActive', visibility: 'xs', label: 'Active', align: 'center' },
+    { id: 'createdAt',visibility: 'xs', label: 'Created At', align: 'right' },
+  ];
+  
+  // ----------------------------------------------------------------------
 
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));
@@ -81,9 +86,11 @@ export default function CustomerSiteList() {
   const onChangePage = (event, newPage) => {  dispatch(ChangePage(newPage))  }
 
   useEffect(() => {
-    dispatch(getSites());
-    return ()=> { dispatch( resetSites() ) }
-  }, [dispatch]);
+    if (!isCustomerSitePage) { 
+      dispatch(getSites());
+      return ()=> { dispatch( resetSites() ) };
+    }   return undefined; 
+  }, [dispatch, isCustomerSitePage]);  
 
   useEffect(() => {
     setTableData(sites || []);
@@ -150,16 +157,18 @@ export default function CustomerSiteList() {
 
   return (
     <Container maxWidth={false}>
+      {!isCustomerSitePage ? (
         <StyledCardContainer>
           <Cover name='Customer Sites' backLink customerContacts/>
         </StyledCardContainer>
+      ) : null}
       <TableCard >
       <CustomerSiteListTableToolbar
           filterName={filterName}
           onFilterName={handleFilterName}
           isFiltered={isFiltered}
           onResetFilter={handleResetFilter}
-          onExportCSV={onExportCSV}
+          onExportCSV={!isCustomerSitePage ? onExportCSV : undefined}
           onExportLoading={exportingCSV}
         />
 
@@ -195,6 +204,7 @@ export default function CustomerSiteList() {
                         openInNewPage={() => handleViewCustomerInNewPage(row?.customer?._id)}
                         handleSiteView= { handleViewSite }
                         handleSiteViewInNewPage= { handleViewSiteInNewPage }
+                        isCustomerSitePage={ isCustomerSitePage }
                         style={index % 2 ? { background: 'red' } : { background: 'green' }}
                       />
                     ) : (

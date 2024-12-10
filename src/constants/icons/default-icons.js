@@ -25,6 +25,13 @@ export const ICONS = {
     heading: 'Inactive',
   },
 
+  // Status
+  STATUS: {
+    icon: 'mdi:list-status',
+    color: '#008000',
+    heading: 'Status',
+  },
+
   //  Releases
   RELEASE: {
     icon: 'mdi:source-branch',
@@ -118,7 +125,7 @@ export const ICONS = {
     heading: 'Not Approved',
   },
 
-  // Service Record Approval
+  // Service Report Approval
   SR_APPROVED: {
     icon: 'mdi:clipboard-check-outline',
     color: '#008000',
@@ -344,6 +351,12 @@ export const ICONS = {
     heading: 'Open Map',
   },
   // ------------------------------------------------------------
+  // Machine Integration
+  APILOGS: {
+    icon: 'tabler:logs',
+    color: '#2065D1',
+    heading: 'Sync Connection History',
+  },
 
   // @root - Machine - settings
   // common settings
@@ -381,6 +394,11 @@ export const ICONS = {
     icon: 'mdi:tools',
     heading: 'Tools',
   },
+  // service report status
+  SERVICE_REPORT_STATUS: {
+    icon: 'carbon:report-data',
+    heading: 'Service Report Status',
+  },
   // configuration information
   Configuration: {
     icon: 'mdi:settings-outline',
@@ -407,9 +425,9 @@ export const ICONS = {
     icon: 'carbon:parameter',
     heading: 'Check Items',
   },
-  MACHINE_SERVICE_RECORD_CONFIG: {
+  MACHINE_SERVICE_REPORT_CONFIG: {
     icon: 'mdi:tools',
-    heading: 'Service Doc Configurations',
+    heading: 'Service Report Templates',
   },
 
   // @root - Settings - settings
@@ -491,10 +509,20 @@ export const ICONS = {
     icon: 'iconoir:database-backup',
     heading: 'DB Backup Logs',
   },
+  API_LOGS: {
+    icon: 'tabler:api-app',
+    heading: 'API Logs',
+  },
 
   MOVE_MACHINE: {
     icon: 'ri:swap-box-line',
     heading: 'Move',
+  },
+  
+  SEE_MORE: {
+    icon: 'lsicon:more-outline',
+    color: '#909090',
+    heading: 'See More',
   },
 
   USER_LOCK: {
@@ -525,8 +553,10 @@ export const ICONS = {
   DRAWINGS:{ icon:'streamline:hand-held-tablet-drawing-solid' },
   LICENSES:{ icon:'mdi:book-cog-outline' },
   PROFILES:{ icon:'fluent:document-flowchart-24-filled' },
-  SERVICE_RECORDS:{ icon:'mdi:clipboard-text-clock' },
+  SERVICE_REPORTS:{ icon:'mdi:clipboard-text-clock' },
   INI:{ icon:'ph:file-ini-fill' },
   LOGS:{ icon:'lucide:list-end' },
+  GRAPHS:{ icon:'mdi:graph-bar' },
+  INTEGRATION:{ icon:'carbon:ibm-cloud-direct-link-2-connect' },
   JIRA:{ icon:'simple-icons:jirasoftware' },
 };

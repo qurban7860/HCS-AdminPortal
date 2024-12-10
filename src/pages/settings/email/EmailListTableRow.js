@@ -37,7 +37,7 @@ export default function EmailListTableRow({
       </Stack>
       <TableCell align='left' > { customer?.name || ''} </TableCell> 
       <TableCell align='left' > { fromEmail } </TableCell>
-      <TableCell align='left' > { toEmails } </TableCell>
+      <TableCell align='left' > { Array.isArray(toEmails) && toEmails?.join(", ") } </TableCell>
       <TableCell align='right' > { fDateTime(createdAt) } </TableCell>
     </StyledTableRow>
   );

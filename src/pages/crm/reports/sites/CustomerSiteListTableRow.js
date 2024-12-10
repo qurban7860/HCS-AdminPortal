@@ -25,6 +25,7 @@ CustomerSiteListTableRow.propTypes = {
   handleSiteViewInNewPage: PropTypes.func,
   onSelectRow: PropTypes.func,
   onDeleteRow: PropTypes.func,
+  isCustomerSitePage: PropTypes.bool,
 };
 
 export default function CustomerSiteListTableRow({
@@ -38,6 +39,7 @@ export default function CustomerSiteListTableRow({
   openInNewPage,
   handleSiteView,
   handleSiteViewInNewPage,
+  isCustomerSitePage
 }) {
   const { _id, customer, name, email, phoneNumbers, address, lat, long,
     primaryBillingContact, primaryTechnicalContact, isActive, createdAt } = row;
@@ -47,7 +49,7 @@ export default function CustomerSiteListTableRow({
     <>
       {useScreenSize('sm') && (
         <StyledTableRow hover selected={selected}>
-          <TableCell>{ limitedName || ''}</TableCell>
+          {!isCustomerSitePage && ( <TableCell>{ limitedName || ''}</TableCell>)}
           <LinkTableCellWithIconTargetBlank
             onViewRow={() => handleSiteView(customer?._id, _id)}
             onClick={() => handleSiteViewInNewPage(customer?._id, _id)}

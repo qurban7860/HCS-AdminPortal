@@ -1,7 +1,7 @@
 import React, { useEffect, useState, memo } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { Typography, Grid, Chip, createTheme, IconButton, TextField } from '@mui/material';
+import { Typography, Grid, Chip, createTheme, IconButton, TextField, Link } from '@mui/material';
 import { green } from '@mui/material/colors';
 import IconPopover from '../Icons/IconPopover';
 import ViewFormMenuPopover from './ViewFormMenuPopover';
@@ -14,6 +14,9 @@ import { fDateTime } from '../../utils/formatTime';
 function ViewFormField({
   backLink,
   heading,
+  headingIcon,
+  headingIconTooltip,
+  headingIconHandler,
   param,
   objectString,
   node,
@@ -57,7 +60,7 @@ function ViewFormField({
 }) {
   const [verifiedAnchorEl, setVerifiedAnchorEl] = useState(null);
   const [verifiedBy, setVerifiedBy] = useState([]);
-  const { machineServiceRecord } = useSelector((state) => state.machineServiceRecord);
+  const { machineServiceReport } = useSelector((state) => state.machineServiceReport);
   const theme = createTheme({
     palette: {
       success: green,
@@ -82,6 +85,15 @@ function ViewFormField({
   return (
     <Grid item xs={12} sm={sm} sx={{ px: 0.5, py: 1, overflowWrap: 'break-word' }}>
       <Typography variant="overline" sx={{ color: 'text.disabled' }}>{heading || ''}</Typography>
+      {headingIcon && (
+        <StyledTooltip title={headingIconTooltip} placement="top" disableFocusListener tooltipcolor="#2065D1" color="#2065D1">
+          {headingIconHandler ? (
+            <Link onClick={headingIconHandler} color="inherit" sx={{ cursor: 'pointer', mx: 0.5 }}>
+              {(headingIcon)}
+            </Link>
+          ) : headingIcon}
+        </StyledTooltip>
+      )}
       {isLoading ? (
           <SkeletonViewFormField />
       ) : (
@@ -134,11 +146,11 @@ function ViewFormField({
           <TextField
             disabled
             fullWidth
-            value={ machineServiceRecord?.approval?.approvalLogs[0]?.comments || "" }
+            value={ machineServiceReport?.approval?.approvalLogs[0]?.comments || "" }
             variant="standard"
-            helperText={`By ${machineServiceRecord?.approval?.approvalLogs[0]?.evaluatedBy.firstName} ${
-                  machineServiceRecord?.approval?.approvalLogs[0]?.evaluatedBy.lastName
-                } on ${fDateTime(machineServiceRecord?.approval?.approvalLogs[0]?.evaluationDate)}`}
+            helperText={`By ${machineServiceReport?.approval?.approvalLogs[0]?.evaluatedBy.firstName} ${
+                  machineServiceReport?.approval?.approvalLogs[0]?.evaluatedBy.lastName
+                } on ${fDateTime(machineServiceReport?.approval?.approvalLogs[0]?.evaluationDate)}`}
             multiline
             minRows={1}
             // maxRows={6}
@@ -159,7 +171,7 @@ function ViewFormField({
                 },
               },
             }}
-            key={machineServiceRecord?.approval?.approvalLogs[0]?.comments}
+            key={machineServiceReport?.approval?.approvalLogs[0]?.comments}
           />
         )}
         {node || ''}
@@ -195,9 +207,9 @@ function ViewFormField({
               }} >
               {configArrayParam.map(
                 (data, index) =>
-                  data?.docTitle &&
-                  typeof data?.docTitle === 'string' &&
-                  data?.docTitle.trim().length > 0 && <Chip key={index} sx={{m:0.2}} label={<div style={{display:'flex',alignItems:'center'}}  ><Typography variant='body2'>{`${data?.docTitle || ''}`}</Typography> <Typography variant='subtitle2'>{` - v${data?.docVersionNo}`}</Typography></div>} />
+                  data?.reportTitle &&
+                  typeof data?.reportTitle === 'string' &&
+                  data?.reportTitle.trim().length > 0 && <Chip key={index} sx={{m:0.2}} label={<div style={{display:'flex',alignItems:'center'}}  ><Typography variant='body2'>{`${data?.reportTitle || ''}`}</Typography> <Typography variant='subtitle2'>{` - v${data?.docVersionNo}`}</Typography></div>} />
               )}
             </Grid>
       )}
@@ -351,6 +363,9 @@ function ViewFormField({
 export default memo(ViewFormField)
 ViewFormField.propTypes = {
   heading: PropTypes.string,
+  headingIcon: PropTypes.object,
+  headingIconTooltip: PropTypes.string,
+  headingIconHandler: PropTypes.func,
   node: PropTypes.node,
   param: PropTypes.string,
   objectString: PropTypes.string,

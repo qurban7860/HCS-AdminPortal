@@ -1,5 +1,20 @@
 import { useEffect, useState } from 'react';
-import { PATH_CRM, PATH_CALENDAR, PATH_DASHBOARD, PATH_MACHINE, PATH_DOCUMENT, PATH_SETTING, PATH_SITEMAP, PATH_SECURITY, PATH_MACHINE_DRAWING, PATH_SUPPORT_TICKETS, PATH_MACHINE_LOGS } from '../../../routes/paths';
+import { 
+  PATH_CRM, 
+  PATH_PORTAL_REGISTRATION,
+  PATH_CALENDAR, 
+  PATH_DASHBOARD, 
+  PATH_MACHINE, 
+  PATH_MACHINE_SETTING_REPORT,
+  PATH_SERVICE_REPORTS,
+  PATH_DOCUMENT, 
+  PATH_SETTING, 
+  PATH_SITEMAP, 
+  PATH_SECURITY, 
+  PATH_MACHINE_DRAWING, 
+  PATH_SUPPORT_TICKETS, 
+  PATH_MACHINE_LOGS 
+} from '../../../routes/paths';
 // components
 import Iconify from '../../../components/iconify';
 import SvgColor from '../../../components/svg-color';
@@ -20,6 +35,7 @@ function NavigationConfig() {
     chat: icon('ic_chat'),
     mail: icon('ic_mail'),
     user: icon('ic_user'),
+    register: <Iconify icon="mdi:users-add" />,
     file: icon('ic_file'),
     lock: icon('ic_lock'),
     label: icon('ic_label'),
@@ -43,11 +59,13 @@ function NavigationConfig() {
     document: <Iconify icon="lets-icons:file-dock-fill" />,
     drawing: <Iconify icon="streamline:hand-held-tablet-drawing-solid" />,
     reports: <Iconify icon="mdi:report-box-outline" />,
-    map: <Iconify icon="mdi:map-marker" />,
     machines: <MachineIcon key="machine"/>,
+    serviceReports: <Iconify icon="mdi:clipboard-text-clock" />,
     users: <Iconify icon="mdi:account-group" />,
     security: <Iconify icon="mdi:security-account" />,
-    machineLogs: <Iconify icon="lucide:list-end" />
+    machineLogs: <Iconify icon="lucide:list-end" />,
+    map: <Iconify icon="mdi:map-marker" />,
+    machineSettingReports: <Iconify icon="tdesign:task-setting-filled" />,
   };
 
   const { 
@@ -65,7 +83,10 @@ function NavigationConfig() {
       items: [
         { title: 'Dashboard', path: PATH_DASHBOARD.root, icon: ICONS.dashboard },
         { title: 'Customers', path: PATH_CRM.customers.list, icon: ICONS.users },
+        { title: 'Portal Registrations', path: PATH_PORTAL_REGISTRATION.root, icon: ICONS.register },
         { title: 'Machines', path: PATH_MACHINE.machines.root, icon: ICONS.machines },
+        { title: 'Machine Setting Reports', path:  PATH_MACHINE_SETTING_REPORT.root, icon: ICONS.machineSettingReports },
+        { title: 'Service Reports', path: PATH_SERVICE_REPORTS.root, icon: ICONS.serviceReports },
       ],
     },
   ]);

@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 // @mui
 import { Switch, TableCell } from '@mui/material';
@@ -7,6 +8,8 @@ import { fDate } from '../../../../utils/formatTime';
 import { useScreenSize } from '../../../../hooks/useResponsive';
 import { StyledTableRow } from '../../../../theme/styles/default-styles';
 import LinkTableCellWithIconTargetBlank from '../../../../components/ListTableTools/LinkTableCellWithIconTargetBlank';
+import IconButtonTooltip from '../../../../components/Icons/IconButtonTooltip';
+import { ICONS } from '../../../../constants/icons/default-icons';
 
 // ----------------------------------------------------------------------
 
@@ -21,6 +24,7 @@ CustomerContactListTableRow.propTypes = {
   handleContactViewInNewPage: PropTypes.func,
   onSelectRow: PropTypes.func,
   onDeleteRow: PropTypes.func,
+  isCustomerContactPage: PropTypes.bool,
 };
 
 export default function CustomerContactListTableRow({
@@ -34,40 +38,102 @@ export default function CustomerContactListTableRow({
   openInNewPage,
   handleContactView,
   handleContactViewInNewPage,
+  isCustomerContactPage
 }) {
-  const { _id, customer, firstName, lastName, phone, email, address, isActive, createdAt } = row;
-
+  const { _id, customer, firstName, title, lastName, phoneNumbers, email, address, isActive, formerEmployee, createdAt } = row;
   const contactName = `${firstName || ''} ${lastName || ''}`;
+  const [showAllPhones, setShowAllPhones] = useState(false);
+
+  const phone = phoneNumbers ? phoneNumbers.map(({ countryCode, contactNumber }) => countryCode ? `+${countryCode}-${contactNumber}` : contactNumber) : [];
+
+  const handleTogglePhoneDisplay = () => {
+    setShowAllPhones((prev) => !prev);
+  };
+
   return (
     <>
       {/* Render rows with column names in bold for small screens */}
       {!useScreenSize('sm') && (
-          <StyledTableRow hover selected={selected} style={{ display: 'block' }} >
-            <LinkTableCellWithIconTargetBlank style={{ width: '100%', display: 'inline-block' }}
-              onViewRow={() => handleContactView(customer?._id, _id)}
-              onClick={() => handleContactViewInNewPage(customer?._id, _id)}
-              param={contactName}
-            />
-            {customer?.name && <TableCell style={{ width: '100%', display: 'inline-block' }} >{customer?.name || '' } </TableCell> }
-            {phone && <TableCell style={{ width: '100%', display: 'inline-block' }} >{phone}</TableCell> }
-            {email && <TableCell style={{ width: '100%', display: 'inline-block' }} >{email}</TableCell> }
-          </StyledTableRow>
-      )}
-
-      {useScreenSize('sm') && (
-        <StyledTableRow hover selected={selected}>
-          <TableCell> {customer?.name}</TableCell>
-          <LinkTableCellWithIconTargetBlank
+        <StyledTableRow hover selected={selected} style={{ display: 'block' }} >
+          <LinkTableCellWithIconTargetBlank style={{ width: '100%', display: 'inline-block' }}
             onViewRow={() => handleContactView(customer?._id, _id)}
             onClick={() => handleContactViewInNewPage(customer?._id, _id)}
             param={contactName}
           />
-          <TableCell>{phone}</TableCell>
-          <TableCell>{email}</TableCell>
-          <TableCell> {address?.country}</TableCell>
-          <TableCell align="center">
-            <Switch checked={isActive} disabled size="small" />
+          {!isCustomerContactPage && customer?.name && <TableCell style={{ width: '100%', display: 'inline-block' }} >{customer?.name || '' } </TableCell> }
+          {title && <TableCell style={{ width: '100%', display: 'inline-block' }} >{title}</TableCell> }
+          <TableCell style={{ width: '100%', display: 'inline-block' }}>
+            {phone.length > 1 ? (
+              <>
+                {showAllPhones ? (phone.join(', ')
+                ) : (
+                  <>
+                    {phone[0]}{' '}
+                    <IconButtonTooltip onClick={handleTogglePhoneDisplay}
+                      title={ ICONS.SEE_MORE.heading } 
+                      color={ ICONS.SEE_MORE.color } 
+                      icon={ ICONS.SEE_MORE.icon } 
+                    />          
+                  </>
+                )}
+              </>
+            ) : (
+              phone[0]
+            )}
           </TableCell>
+          {email && <TableCell style={{ width: '100%', display: 'inline-block' }} >{email}</TableCell> }
+        </StyledTableRow>
+      )}
+
+      {useScreenSize('sm') && (
+        <StyledTableRow hover selected={selected}>
+          {isCustomerContactPage && <TableCell align="center">
+            <IconButtonTooltip 
+              title={ isActive ? ICONS.ACTIVE.heading : ICONS.INACTIVE.heading } 
+              color={ isActive ? ICONS.ACTIVE.color : ICONS.INACTIVE.color } 
+              icon={ isActive ? ICONS.ACTIVE.icon : ICONS.INACTIVE.icon} 
+            />
+          </TableCell>}
+          {isCustomerContactPage && <TableCell align="center">
+            <IconButtonTooltip
+              title={ formerEmployee ? ICONS.FORMEREMPLOYEE.heading : ICONS.NOTFORMEREMPLOYEE.heading }
+              color={ formerEmployee ? ICONS.FORMEREMPLOYEE.color : ICONS.NOTFORMEREMPLOYEE.color }
+              icon={ formerEmployee ? ICONS.FORMEREMPLOYEE.icon : ICONS.NOTFORMEREMPLOYEE.icon }
+            />
+          </TableCell>}
+          {!isCustomerContactPage && (  
+            <TableCell>{customer?.name}</TableCell>
+          )}
+          <LinkTableCellWithIconTargetBlank
+            onViewRow={() => handleContactView(customer?._id, _id)}
+            onClick={() => handleContactViewInNewPage(customer?._id, _id)}
+            param={contactName}
+          /> 
+          {isCustomerContactPage && <TableCell>{title}</TableCell>}  
+          <TableCell>
+            {phone.length > 1 ? (
+              <>
+                {showAllPhones ? (phone.join(', ')
+                ) : (
+                  <>
+                    {phone[0]}{' '}                     
+                      <IconButtonTooltip onClick={handleTogglePhoneDisplay}
+                        title={ ICONS.SEE_MORE.heading } 
+                        color={ ICONS.SEE_MORE.color } 
+                        icon={ ICONS.SEE_MORE.icon } 
+                      />
+                  </>
+                )}
+              </>
+            ) : (
+              phone[0]
+            )}
+          </TableCell>
+          <TableCell>{email}</TableCell>
+          <TableCell>{address?.country}</TableCell>
+          {!isCustomerContactPage && <TableCell align="center">
+            <Switch checked={isActive} disabled size="small" />
+          </TableCell>}
           <TableCell align="right"> {fDate(createdAt)}</TableCell>
         </StyledTableRow>
       )}

@@ -46,6 +46,8 @@ function CalendarPage({ calendarRef, view, date, previousDate, selectedUser, sel
 
   const { events, eventModel, selectedRange } = useSelector((state) => state.event );
   const [ selectedCustomer, setSelectedCustomer ] = useState(null);
+  const [ selectedStatus, setSelectedStatus ] = useState(null);
+  const [showCancelled, setShowCancelled] = useState(false);
 
   const handleChangeView = (newView) => {
     const calendarEl = calendarRef.current;
@@ -130,9 +132,11 @@ function CalendarPage({ calendarRef, view, date, previousDate, selectedUser, sel
     selectedCustomer,
     selectedContact,
     selectedUser,
+    selectedStatus,
     isAllAccessAllowed,
-    user
-  }), [events, selectedCustomer, selectedContact, selectedUser, isAllAccessAllowed, user]);
+    user,
+    showCancelled
+  }), [events, selectedCustomer, selectedContact, selectedUser, selectedStatus, isAllAccessAllowed, user, showCancelled]);
 
   return (
     <>
@@ -147,6 +151,10 @@ function CalendarPage({ calendarRef, view, date, previousDate, selectedUser, sel
               setSelectedContact={setSelectedContact}
               selectedUser={selectedUser}
               setSelectedUser={setSelectedUser}
+              selectedStatus={selectedStatus}
+              setSelectedStatus={setSelectedStatus}
+              showCancelled={showCancelled}
+              setShowCancelled={setShowCancelled}
               date={date}
               view={view}
               onNextDate={handleClickDateNext}
@@ -195,7 +203,7 @@ function CalendarPage({ calendarRef, view, date, previousDate, selectedUser, sel
   );
 }
 
-function applyFilter({ inputData, selectedCustomer, selectedContact, selectedUser, isAllAccessAllowed, user}) {
+function applyFilter({ inputData, selectedCustomer, selectedContact, selectedUser, selectedStatus, showCancelled, isAllAccessAllowed, user}) {
 
   const stabilizedThis = inputData?.map((el, index) => [el, index]);
 
@@ -208,6 +216,14 @@ function applyFilter({ inputData, selectedCustomer, selectedContact, selectedUse
   if(selectedUser){
     inputData = inputData.filter((e) => e?.extendedProps?.createdBy?._id === selectedUser?._id);
   } 
+  
+  if (selectedStatus) {
+    inputData = inputData.filter((e) => e?.extendedProps?.status === selectedStatus.value);
+  }
+  
+  if (!showCancelled) {
+    inputData = inputData.filter((e) => e?.extendedProps?.status !== 'Cancelled');
+  }
   
   if (selectedContact) {
     inputData = inputData.filter(

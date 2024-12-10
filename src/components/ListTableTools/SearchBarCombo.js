@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Grid, TextField, InputAdornment, Button, Stack, 
-  FormControl, Select, InputLabel, MenuItem, IconButton, Switch, FormControlLabel, Autocomplete } from '@mui/material';
+  FormControl, Select, InputLabel, MenuItem, IconButton, Switch, FormControlLabel, Autocomplete, Box } from '@mui/material';
 import { BUTTONS } from '../../constants/default-constants';
 import Iconify from '../iconify';
 import useResponsive from '../../hooks/useResponsive';
@@ -17,6 +17,9 @@ import { useAuthContext } from '../../auth/useAuthContext';
 import { useDebouncedEffect } from '../../hooks/useDebouncedEffect';
 
 function SearchBarCombo({
+  node,
+  reduceFilterSize,
+  nodes,
   isFiltered,
   value,
   onFilterVerify,
@@ -35,8 +38,15 @@ function SearchBarCombo({
   setCategoryVal,
   typeVal,
   setTypeVal,
+  machineDrawings,
   signInLogsFilter,
   onSignInLogsFilter,
+  apiLogsStatusFilter,
+  onApiLogsStatusFilter,
+  apiLogsMethodFilter,
+  onApiLogsMethodFilter,
+  apiLogsTypeFilter,
+  onApiLogsTypeFilter,
   onChange,
   onClick,
   SubOnClick,
@@ -121,7 +131,7 @@ function SearchBarCombo({
 
   return (
     <Grid container rowSpacing={logTypes?.length > 0 ? 2:1} columnSpacing={1} sx={{display:'flex', }}>
-          { onChange && <Grid item xs={12} sm={12} md={12} lg={logTypes?.length > 0 || (setAccountManagerFilter && setSupportManagerFilter) ? 4:6} xl={logTypes?.length > 0 || (setAccountManagerFilter && setSupportManagerFilter) ? 4:6}>
+          { onChange && <Grid item xs={12} sm={12} md={12} lg={logTypes?.length > 0 || reduceFilterSize || (setAccountManagerFilter && setSupportManagerFilter) ? 4:6} xl={logTypes?.length > 0 || reduceFilterSize || (setAccountManagerFilter && setSupportManagerFilter) ? 4:6}>
             <TextField
               fullWidth
               value={value}
@@ -145,6 +155,13 @@ function SearchBarCombo({
               }}
             />
           </Grid>}
+          {node && 
+            <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
+                { node }
+            </Grid>
+          }
+
+          { nodes && nodes }
 
           {onFilterVerify &&
           <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
@@ -379,7 +396,9 @@ function SearchBarCombo({
                 <MenuItem key="all" value="all">All</MenuItem>
                 <MenuItem key="verified" value="active">Active</MenuItem>
                 <MenuItem key="unverified" value="inActive">In-Active</MenuItem>
-                </Select>
+                <MenuItem key="isArchived" value="isArchived">Archived</MenuItem>
+                <MenuItem key="invitationStatus" value="invitationStatus">Invitations</MenuItem>
+              </Select>
             </FormControl>
             </Stack>
           </Grid>}
@@ -425,7 +444,7 @@ function SearchBarCombo({
             </Stack>
           </Grid>}
 
-          { setCategoryVal &&  typeof setCategoryVal === 'function' && 
+          { !machineDrawings && setCategoryVal &&  typeof setCategoryVal === 'function' && 
           <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
             <Autocomplete 
               id="controllable-states-demo"
@@ -453,7 +472,7 @@ function SearchBarCombo({
             />
           </Grid>}
 
-          {setTypeVal &&  typeof setTypeVal === 'function'  && <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
+          { !machineDrawings && setTypeVal &&  typeof setTypeVal === 'function'  && <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
             <Autocomplete 
               id="controllable-states-demo"
               value={typeVal || null}
@@ -495,6 +514,61 @@ function SearchBarCombo({
               renderInput={(params) => <TextField {...params} size='small' label="Environment" />}
             />
           </Grid> }
+          
+          {onApiLogsTypeFilter && onApiLogsMethodFilter && onApiLogsStatusFilter && <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: '1fr', sm: 'repeat(3, 1fr)' }} sx={{ flexGrow: 1, width: { xs: '100%', sm: '100%' }, pl: 1, pt: 1}}>
+          {onApiLogsTypeFilter && (
+           <FormControl fullWidth>
+            <InputLabel id="api-logs-type-label">API Type</InputLabel>
+            <Select
+              labelId="api-logs-type-label"
+              id="api-logs-type"
+              size="small"
+              value={apiLogsTypeFilter}
+              label="API Type"
+              onChange={onApiLogsTypeFilter}
+            >
+             <MenuItem value="ALL">All</MenuItem>
+             <MenuItem value="MACHINE-INTEGRATION">synch</MenuItem>
+             <MenuItem value="INI" disabled>ini</MenuItem>
+             <MenuItem value="OTHER">others</MenuItem>
+            </Select>
+           </FormControl>
+          )}
+          {onApiLogsMethodFilter && (
+           <FormControl fullWidth>
+            <InputLabel id="api-logs-method-label">Method</InputLabel>
+            <Select
+              labelId="api-logs-method-label"
+              id="api-logs-method"
+              size="small"
+              value={apiLogsMethodFilter}
+              label="Method"
+              onChange={onApiLogsMethodFilter}
+            >
+             <MenuItem value="default">All</MenuItem>
+             <MenuItem value="GET">GET</MenuItem>
+             <MenuItem value="POST">POST</MenuItem>
+            </Select>
+           </FormControl>
+          )}
+           {onApiLogsStatusFilter && (
+           <FormControl fullWidth>
+            <InputLabel id="api-logs-status-label">Status</InputLabel>
+            <Select
+              labelId="api-logs-status-label"
+              id="api-logs-status"
+              size="small"
+              value={apiLogsStatusFilter}
+              label="Status"
+              onChange={onApiLogsStatusFilter}
+            >
+             <MenuItem key="-1" value={-1}>All</MenuItem>
+             <MenuItem key="success" value="200-299">Success</MenuItem>
+             <MenuItem key="failed" value="400-499">Failed</MenuItem>
+            </Select>
+           </FormControl>
+          )}
+          </Box> }
 
           {isPm2LogTypes && 
             <>
@@ -562,7 +636,6 @@ function SearchBarCombo({
               </Stack>
             </Grid>
           }
-
           {handleExcludeRepoting &&
             <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
               <Stack alignItems="flex-start">
@@ -754,7 +827,7 @@ function SearchBarCombo({
                 </StyledTooltip>
               </Grid>
               }
-              {addButton && !transferredMachine 
+              {addButton  && SubOnClick && !transferredMachine 
                 && !(( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly )) &&
                 <Grid item >
                     <StyledTooltip title={addButton} placement="top" disableFocusListener tooltipcolor="#103996" color="#fff">
@@ -777,7 +850,10 @@ function SearchBarCombo({
 }
 
 SearchBarCombo.propTypes = {
+  node: PropTypes.node,
+  nodes: PropTypes.node,
   isFiltered: PropTypes.bool,
+  reduceFilterSize: PropTypes.bool,
   onClick: PropTypes.func,
   onChange: PropTypes.func,
   value: PropTypes.string,
@@ -800,12 +876,19 @@ SearchBarCombo.propTypes = {
   openGraph: PropTypes.func,
   typeVal: PropTypes.object,
   setTypeVal: PropTypes.func,
+  machineDrawings: PropTypes.bool,
   employeeFilterListBy: PropTypes.string,
   onEmployeeFilterListBy: PropTypes.func,
   onFilterListByRegion: PropTypes.func,
   filterByRegion: PropTypes.object,
   signInLogsFilter:PropTypes.number,
   onSignInLogsFilter:PropTypes.func,
+  apiLogsStatusFilter:PropTypes.number,
+  onApiLogsStatusFilter:PropTypes.func,
+  apiLogsMethodFilter:PropTypes.string,
+  onApiLogsMethodFilter:PropTypes.func,
+  apiLogsTypeFilter:PropTypes.string,
+  onApiLogsTypeFilter:PropTypes.func,
   transferredMachine:PropTypes.bool,
   handleAttach: PropTypes.func,
   radioStatus: PropTypes.bool,

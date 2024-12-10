@@ -3,9 +3,6 @@ import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 // @mui
 import {
-  // Switch,
-  // Grid,
-  Card,
   Table,
   Button,
   Tooltip,
@@ -13,7 +10,6 @@ import {
   Container,
   IconButton,
   TableContainer,
-  // Stack,
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
@@ -326,7 +322,7 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
     inputData = inputData.filter(
       (docCategory) =>
         docCategory?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        // (docCategory?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+        // (docCategory?.isActive ? "Active" : "InActive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
         fDate(docCategory?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }

@@ -28,7 +28,8 @@ export default function Machine() {
   const linkTool = () => navigate(PATH_MACHINE.machines.machineSettings.tools.root);
   const linkCheckItemCategory = () => navigate(PATH_MACHINE.machines.machineSettings.checkItemCategories.root);
   const checkItems = () => navigate(PATH_MACHINE.machines.machineSettings.checkItems.root);
-  const linkServiceRecordsConfig = () => navigate(PATH_MACHINE.machines.machineSettings.serviceRecordsConfig.root);
+  const linkServiceReportsTemplate = () => navigate(PATH_MACHINE.machines.machineSettings.serviceReportsTemplate.root);
+  const linkServiceReportsStatus = () => navigate(PATH_MACHINE.machines.machineSettings.serviceReportsStatus.root);
 
   return (
     <Container maxWidth={false}>
@@ -93,15 +94,15 @@ export default function Machine() {
                   content={ICONS.MACHINE_CHECK_ITEMS.heading}
                 />
                 <ListItem
-                  onClick={linkServiceRecordsConfig}
+                  onClick={linkServiceReportsTemplate}
                   icon={ICONS.TOOLS.icon}
-                  content={ICONS.MACHINE_SERVICE_RECORD_CONFIG.heading}
+                  content={ICONS.MACHINE_SERVICE_REPORT_CONFIG.heading}
                 />
-                {/* { isAllAccessAllowed && <ListItem
-                  onClick={linkConfiguration}
-                  icon={ICONS.Configuration.icon}
-                  content={ICONS.Configuration.heading}
-                /> } */}
+                <ListItem
+                  onClick={linkServiceReportsStatus}
+                  icon={ICONS.SERVICE_REPORT_STATUS.icon}
+                  content={ICONS.SERVICE_REPORT_STATUS.heading}
+                />
               </List>
           </StyledSettingsCardContainer>
 

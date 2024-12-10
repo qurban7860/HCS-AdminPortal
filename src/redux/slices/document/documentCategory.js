@@ -242,10 +242,12 @@ export function getActiveDocumentCategories(categoryBy, cancelToken, drawing) {
         cancelToken: cancelToken?.token,
       }
 
-      if(drawing) {
-        query.params.drawing = true;
+      if (drawing) {
+        query.params.drawing = drawing; 
+      } else {
+        query.params.drawing = false; 
       }
-
+      
       Object.assign(query.params, categoryBy)
       const response = await axios.get(`${CONFIG.SERVER_URL}documents/categories/` , query );
       dispatch(slice.actions.getActiveDocumentCategoriesSuccess(response.data));

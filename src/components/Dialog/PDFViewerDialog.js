@@ -6,22 +6,22 @@ import { Dialog, Button, DialogTitle } from '@mui/material';
 import SkeletonPDF from '../skeleton/SkeletonPDF';
 import { 
   setPDFViewerDialog,
-    getMachineServiceRecord, 
-    getMachineServiceRecordCheckItems,
-    resetMachineServiceRecord,
-    resetCheckItemValues } from '../../redux/slices/products/machineServiceRecord';
-import { MachineServiceRecordPDF } from '../../pages/machine/serviceRecords/MachineServiceRecordPDF';
+    getMachineServiceReport, 
+    getMachineServiceReportCheckItems,
+    resetMachineServiceReport,
+    resetCheckItemValues } from '../../redux/slices/products/machineServiceReport';
+import { MachineServiceReportPDF } from '../../pages/machine/serviceReports/MachineServiceReportPDF';
 
 
 function PDFViewerDialog() {
   const dispatch = useDispatch();
   const { machineId, id } = useParams();
-  const { machineServiceRecord, machineServiceRecordCheckItems, pdfViewerDialog, isLoadingCheckItems, isLoading  } = useSelector((state) => state.machineServiceRecord);
+  const { machineServiceReport, machineServiceReportCheckItems, pdfViewerDialog, isLoadingCheckItems, isLoading  } = useSelector((state) => state.machineServiceReport);
 
   useEffect(()=>{
       if( machineId && id ){
-          dispatch(getMachineServiceRecord(machineId, id, true ));
-          dispatch(getMachineServiceRecordCheckItems( machineId, id, true ))
+          dispatch(getMachineServiceReport(machineId, id, true ));
+          dispatch(getMachineServiceReportCheckItems( machineId, id, true ))
       }
   },[ dispatch, machineId, id ])
 
@@ -35,7 +35,7 @@ function PDFViewerDialog() {
       </DialogTitle>
       { ( isLoading || isLoadingCheckItems ) ? <SkeletonPDF /> :
       <PDFViewer style={{height:'842px', width:'100%', paddingBottom:10}}>
-        <MachineServiceRecordPDF machineServiceRecord={machineServiceRecord} machineServiceRecordCheckItems={machineServiceRecordCheckItems} />
+        <MachineServiceReportPDF machineServiceReport={machineServiceReport} machineServiceReportCheckItems={machineServiceReportCheckItems} />
       </PDFViewer>
       }
       {/* <DialogActions style={{paddingTop:10, paddingBottom:10}}>

@@ -274,42 +274,44 @@ export const CheckItemsSchema = Yup.object().shape({
   isActive: Yup.boolean(),
 });
 
-export const MachineServiceRecordPart1Schema = Yup.object().shape({
-  docRecordType: Yup.object().label('Document Type').nullable().required(),
-  serviceRecordConfiguration: Yup.object()
-    .label('Service Record Configuration')
+export const MachineServiceReportPart1Schema = Yup.object().shape({
+  docReportType: Yup.object().label('Report Type').nullable().required(),
+  serviceReportTemplate: Yup.object()
+    .label('Service Report Template')
     .nullable()
     .required(),
-  serviceDate: Yup.date()
+    serviceDate: Yup.date()
     .typeError('Date Should be Valid')
     .max(endOfToday(), 'Service Date must be earlier')
     .nullable()
     .required()
     .label('Service Date'),
-  technician: Yup.object().label('Technician').nullable(),
-  technicianNotes: Yup.string().max(5000).label('Technician Notes'),
+  reportSubmition: Yup.boolean(),
   files: Yup.mixed()
-    .required(Snacks.fileRequired)
-    .test('fileType', fileTypesMessage, NotRequiredValidateFileType)
-    .nullable(true),
+  .nullable(true)
+  .when('reportSubmition', {
+    is: false,
+    then: (schema) =>schema.required('Files are required when report submission is online'),
+    otherwise: (schema) => schema.notRequired(),
+  }),
 });
 
-export const MachineServiceRecordPart2TBCISchema = Yup.object().shape({
-  textBeforeCheckItems: Yup.string().max(5000).label('Text Before Check Items'),
-});
-
-export const MachineServiceRecordPart2TACISchema = Yup.object().shape({
-  textAfterCheckItems: Yup.string().max(5000).label('Text After Check Items'),
-});
-
-export const MachineServiceRecordPart3Schema = Yup.object().shape({
-  serviceNote: Yup.string().max(5000).label('Service Note'),
-  recommendationNote: Yup.string().max(5000).label('Recommendation Note'),
-  internalComments: Yup.string().max(5000).label('Internal Note'),
-  suggestedSpares: Yup.string().max(5000).label('Suggested Spares'),
-  internalNote: Yup.string().max(5000).label('Internal Note'),
+export const reportNoteSchema = Yup.object().shape({
+  technicians: Yup.array().label('Technicians').nullable(),
   operators: Yup.array().label('Operator').nullable(),
-  operatorNotes: Yup.string().max(5000).label('Operator Notes'),
+  note: Yup.string().max(5000).label('Notes').trim().required(),
+  isPublic: Yup.boolean(),
+});
+
+export const MachineServiceReportPart2TBCISchema = Yup.object().shape({
+  textBeforeCheckItems: Yup.string().trim().max(5000).label('Text Before Check Items'),
+});
+
+export const MachineServiceReportPart2TACISchema = Yup.object().shape({
+  textAfterCheckItems: Yup.string().trim().max(5000).label('Text After Check Items'),
+});
+
+export const MachineServiceReportPart3Schema = Yup.object().shape({
   files: Yup.mixed()
     .required(Snacks.fileRequired)
     .test('fileType', fileTypesMessage, NotRequiredValidateFileType)
@@ -332,10 +334,21 @@ export const CheckItemSchema = Yup.object().shape({
     .nullable(true),
 });
 
-export const MachineServiceRecordSchema = Yup.object().shape({
-  recordType: Yup.object().label('Record Type').nullable().required(),
-  serviceRecordConfiguration: Yup.object()
-    .label('Service Record Configuration')
+export const serviceReportStatusSchema = Yup.object().shape({
+  name: Yup.string().label("Name").min(2).max(50).required(),
+  type: Yup.string().nullable().label("Type").min(2).max(50).required(),
+  displayOrderNo: Yup.number()
+  .typeError('Display Order No. must be a number')
+  .nullable()
+  .transform((_, val) => (val !== '' ? Number(val) : null)),
+  description: Yup.string().label("Description").max(5000),
+  isActive: Yup.boolean(), 
+});
+
+export const MachineServiceReportSchema = Yup.object().shape({
+  reportType: Yup.object().label('Report Type').nullable().required(),
+  serviceReportTemplate: Yup.object()
+    .label('Service Report Template')
     .nullable()
     .required(),
   // serviceDate: Yup.date().label('Service Date').nullable().required,
@@ -480,9 +493,9 @@ export const MachineServiceRecordSchema = Yup.object().shape({
   isActive: Yup.boolean(),
 });
 
-export const ServiceRecordConfigSchema = Yup.object().shape({
-  docTitle: Yup.string().max(200).required().label('Document Title'),
-  recordType: Yup.object().label('Record Type').required().nullable(),
+export const ServiceReportTemplateSchema = Yup.object().shape({
+  reportTitle: Yup.string().max(200).required().label('Report Title'),
+  reportType: Yup.object().label('Report Type').required().nullable(),
   docVersionNo: Yup.number()
     .min(1)
     .label('Version No.')

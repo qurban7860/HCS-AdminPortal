@@ -48,7 +48,7 @@ export default function CheckItemViewForm() {
       minValidation:              checkItem?.minValidation,
       maxValidation:              checkItem?.maxValidation,
       description:                checkItem?.description,
-      utlizedInRecordConfigs:     checkItem?.serviceRecordConfigs,
+      utlizedInReportConfigs:     checkItem?.serviceReportTemplates,
       isRequired:                 checkItem?.isRequired || false, 
       isActive:                   checkItem?.isActive,
       createdAt:                  checkItem?.createdAt || '',
@@ -84,7 +84,7 @@ export default function CheckItemViewForm() {
           <ViewFormField isLoading={isLoading} sm={6} heading="Minimum Validation" param={defaultValues.minValidation} />
           <ViewFormField isLoading={isLoading} sm={6} heading="Maximum Validation" param={defaultValues.maxValidation} />
           <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues.description} />
-          <ViewFormField isLoading={isLoading} sm={12} heading="Utlized In Configs" configArrayParam={defaultValues.utlizedInRecordConfigs} />
+          <ViewFormField isLoading={isLoading} sm={12} heading="Utlized In Configs" configArrayParam={defaultValues.utlizedInReportConfigs} />
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>
       </Grid>

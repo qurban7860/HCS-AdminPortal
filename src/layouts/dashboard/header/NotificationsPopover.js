@@ -54,7 +54,7 @@ function NotificationsPopover() {
     if(notification?._id){
       // setOpenPopover(null);
       sendJsonMessage({eventName:'markAs',_id:notification?._id, status:true});
-      navigate(PATH_MACHINE.machines.settings.serviceRecordConfigs.view(notification?.extraInfo?._id));
+      navigate(PATH_MACHINE.machines.settings.serviceReportTemplates.view(notification?.extraInfo?._id));
     }else{
       sendJsonMessage({eventName:'markAs', status:true});
     }

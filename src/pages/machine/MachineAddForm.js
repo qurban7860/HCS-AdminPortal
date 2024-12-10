@@ -32,6 +32,7 @@ import IconTooltip from '../../components/Icons/IconTooltip';
 import IconButtonTooltip from '../../components/Icons/IconButtonTooltip';
 import IconPopover from '../../components/Icons/IconPopover';
 import { GroupHeader, GroupItems } from '../../theme/styles/default-styles';
+import { handleError } from '../../utils/errorHandler';
 
 MachineAddForm.propTypes = {
   isEdit: PropTypes.bool,
@@ -161,8 +162,8 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     
     try {
       const response = await dispatch(addMachine(data));
-      reset();
       enqueueSnackbar('Machine created successfully!');
+      reset();
       if( landToCustomerMachinePage && customer._id ){
         await navigate(PATH_CRM.customers.machines.root(customer?._id));
       }else if(response?.data?.Machine?._id){
@@ -171,7 +172,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
         await navigate(PATH_MACHINE.machines.root);
       }
     } catch (error) {
-      enqueueSnackbar(error, { variant: `error` });
+      enqueueSnackbar( handleError( error ) || 'Machine save failed!', { variant: `error` });
       console.error(error);
     }
   };

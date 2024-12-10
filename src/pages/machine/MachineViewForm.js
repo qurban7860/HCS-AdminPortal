@@ -36,15 +36,13 @@ import { TITLES, FORMLABELS } from '../../constants/default-constants';
 import { Snacks } from '../../constants/machine-constants';
 // utils
 import { fDate } from '../../utils/formatTime';
-// dialog
-import MachineDialog from '../../components/Dialog/MachineDialog'
-import CustomerDialog from '../../components/Dialog/CustomerDialog';
 import MachineTransferDialog from '../../components/Dialog/MachineTransferDialog';
 import SiteDialog from '../../components/Dialog/SiteDialog';
 import OpenInNewPage from '../../components/Icons/OpenInNewPage';
 import Iconify from '../../components/iconify';
 import IconButtonTooltip from '../../components/Icons/IconButtonTooltip';
 import MachineStatusChangeDialog from '../../components/Dialog/MachineStatusChangeDialog';
+import MachineAddForm from './MachineAddForm';
 
 // ----------------------------------------------------------------------
 
@@ -53,8 +51,7 @@ export default function MachineViewForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const { machine, machineDialog, machineTransferDialog, machineStatusChangeDialog, isLoading } = useSelector((state) => state.machine);
-  const { customerDialog } = useSelector((state) => state.customer);
+  const { machine, machineTransferDialog, machineStatusChangeDialog, isLoading } = useSelector((state) => state.machine);
   const { siteDialog } = useSelector((state) => state.site);
   const [disableTransferButton, setDisableTransferButton] = useState(true);
   const [disableEditButton, setDisableEditButton] = useState(false);
@@ -145,15 +142,15 @@ export default function MachineViewForm() {
     }
   };
   
-  const handleCustomerDialog = (event, customerId) => {
+  const handleCustomerDialog = async (event, customerId) => {
     event.preventDefault(); 
-    dispatch(getCustomer(customerId));
-    dispatch(setCustomerDialog(true));
+    await dispatch(getCustomer(customerId));
+    await dispatch(setCustomerDialog(true));
   };
 
-  const handleMachineDialog = (MachineID) => {
-    dispatch(getMachineForDialog(MachineID));
-    dispatch(setMachineDialog(true)); 
+  const handleMachineDialog = async ( MachineID ) => {
+    await dispatch(getMachineForDialog(MachineID));
+    await dispatch(setMachineDialog(true)); 
   };
 
   const handleStatusChangeDialog = () => {
@@ -292,7 +289,7 @@ export default function MachineViewForm() {
               handleTransfer={ machine?.isArchived ? undefined : () => navigate(PATH_MACHINE.machines.transfer(machine?._id))}
               backLink={() => navigate( machine?.isArchived ? PATH_MACHINE.machines.archived.root : PATH_MACHINE.machines.root)}
               machineSupportDate={ machine?.isArchived ? undefined : defaultValues?.supportExpireDate}
-              transferredHistory={ machine?.isArchived ? undefined : machine?.transferredHistory || []}
+              transferredHistory={ machine?.isArchived && MachineAddForm ? undefined : machine?.transferredHistory || []}
             />
             <FormLabel content={FORMLABELS.KEYDETAILS} />
             <Grid container>
@@ -425,8 +422,6 @@ export default function MachineViewForm() {
       </Grid>
       
       { siteDialog && <SiteDialog title={siteDialogTitle}/>}
-      { machineDialog  && <MachineDialog />}
-      { customerDialog  && <CustomerDialog />}
       { machineTransferDialog && <MachineTransferDialog />}
       { machineStatusChangeDialog && <MachineStatusChangeDialog />}
       

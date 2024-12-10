@@ -40,7 +40,7 @@ export default function RHFRadioGroup({
       name={name}
       control={control}
       render={({ field, fieldState: { error } }) => (
-        <FormControl component="fieldset">
+        <FormControl component="fieldset" >
           {label && (
             <FormLabel component="legend" id={labelledby} sx={{ typography: 'body2' }}>
               {label}

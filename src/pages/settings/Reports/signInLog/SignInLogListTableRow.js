@@ -1,23 +1,14 @@
 import PropTypes from 'prop-types';
-// import { useState } from 'react';
-// import { sentenceCase } from 'change-case';
-// @mui
-import {
-  // Switch,
-  // Stack,
-  // Button,
-  TableRow,
-  // Checkbox,
-  // MenuItem,
-  TableCell,
-  // IconButton,
-  // Link,
-} from '@mui/material';
-// utils
+import { TableRow, TableCell } from '@mui/material';
 import { styled } from '@mui/system';
-import {  fDateTime } from '../../../../utils/formatTime';
+import { useDispatch } from '../../../../redux/store';
+import { PATH_CRM, PATH_SECURITY } from '../../../../routes/paths';
+import { fDateTime } from '../../../../utils/formatTime';
 import { useScreenSize } from '../../../../hooks/useResponsive';
-import LinkTableCell from '../../../../components/ListTableTools/LinkTableCell';
+import { getCustomer, setCustomerDialog } from '../../../../redux/slices/customer/customer';
+import { getContact, setContactDialog } from '../../../../redux/slices/customer/contact';
+import { getSecurityUser, setSecurityUserDialog } from '../../../../redux/slices/securityUser/securityUser';
+import LinkTableCellWithIconTargetBlank from '../../../../components/ListTableTools/LinkTableCellWithIconTargetBlank';
 
 // ----------------------------------------------------------------------
 
@@ -52,17 +43,60 @@ export default function SignInLogListTableRow({
   status
 }) {
   const { loginTime, user, loginIP, requestedLogin, logoutTime, loggedOutBy, statusCode } = row;
+
+  const dispatch = useDispatch();
+
+  const handleSecurityUserDialog = () => {
+    dispatch(getSecurityUser(user?._id))
+    dispatch(setSecurityUserDialog(true))
+  }
+
+  const handleCustomerDialog = ( ) => {
+    dispatch(getCustomer( user?.customer?._id ))
+    dispatch(setCustomerDialog(true))
+  }
+
+  const handleContactDialog = ( ) => {
+    dispatch(getContact(user?.customer?._id, user?.contact?._id))
+    dispatch(setContactDialog(true))
+  }
+
   return (
       <StyledTableRow hover selected={selected}>
         { useScreenSize('lg') && <TableCell align="left"> {requestedLogin || ''} </TableCell>}
-        {user && <LinkTableCell align="left" onClick={onViewRow} param={user?.name} /> || <TableCell align="left"> </TableCell>}
+        {user?._id ?
+        <LinkTableCellWithIconTargetBlank
+          onViewRow={handleSecurityUserDialog}
+          // onClick={ !user?._id ? undefined : () => window.open(PATH_SECURITY.users.view( user?._id ), '_blank') }
+          param={user?.name || "" }
+          align='left'
+        />
+        : <TableCell align="left" />
+        }
+        { user?.customer?._id ? 
+          <LinkTableCellWithIconTargetBlank
+            onViewRow={handleCustomerDialog}
+            // onClick={ !user?.customer?._id ? undefined : () => window.open(PATH_CRM.customers.view( user?.customer?._id ), '_blank') }
+            param={user?.customer?.name || ""}
+            align='left'
+          />
+        : <TableCell align="left" />
+        }
+        {/* { ( user?.customer?._id && user?.contact?._id )?
+          <LinkTableCellWithIconTargetBlank
+            onViewRow={handleContactDialog}
+            // onClick={ !user?.contact?._id ? undefined : () => window.open(PATH_CRM.customers.contacts.view( user?.customer?._id, user?.contact?._id ), '_blank') }
+            param={`${user?.contact?.firstName || ''} ${user?.contact?.lastName || ''}`}
+            align='left'
+          />
+        : <TableCell align="left" />
+        } */}
         { useScreenSize('lg') && <TableCell align="left"> {loginIP} </TableCell>}
         <TableCell align="left"> {fDateTime(loginTime)} </TableCell>
         <TableCell align="left">{fDateTime(logoutTime)}</TableCell>
         <TableCell align="left">{loggedOutBy}</TableCell>
         { useScreenSize('sm') && <TableCell align="left" sx={{color: statusCode===200?"green":"red"}}> 
-          {status?.value}
-          {status?.notes && ` (${status?.notes})`}
+          {status?.value || '' }{status?.notes || ''}
         </TableCell>}
       </StyledTableRow>
   );

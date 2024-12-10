@@ -38,17 +38,6 @@ MachineLogsList.propTypes = {
 
 export default function MachineLogsList({ allMachineLogsType }){
   const [selectedSearchFilter, setSelectedSearchFilter] = useState('');
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [currentLogPage, setCurrentLogPage] = useState("");
-
-  useEffect(() => {
-    setCurrentLogPage(searchParams.get('type'))
-  }, [searchParams])
-
-  const handleErpLogToggle = () => {
-    setSearchParams({type: currentLogPage === 'erpGraph' ? 'currentLogs' : 'erpGraph' });
-  };
-  const isGraphPage = () => searchParams.get('type') === "erpGraph"
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -62,14 +51,12 @@ export default function MachineLogsList({ allMachineLogsType }){
       dateTo: new Date(),
       filteredSearchKey: '',
       activeStatus: 'active',
-      logPeriod: "Monthly",
-      logGraphType: machineLogGraphTypes[0]
     },
     resolver: yupResolver(fetchIndMachineLogSchema),
   });
 
   const { watch, setValue, handleSubmit, trigger } = methods;
-  const { dateFrom, dateTo, logType, filteredSearchKey, activeStatus, logPeriod, logGraphType } = watch();
+  const { dateFrom, dateTo, logType, filteredSearchKey, activeStatus } = watch();
 
   useEffect(() => {
     handleResetFilter();
@@ -98,15 +85,6 @@ export default function MachineLogsList({ allMachineLogsType }){
     searchColumn: selectedSearchFilter,
   };
 
-  useEffect(() => {
-    if (isGraphPage() && logPeriod && logGraphType) {
-      const customerId = machine?.customer?._id;
-      const LogType = 'erp';
-      dispatch(getMachineLogGraphData(customerId, machineId, LogType, logPeriod, logGraphType?.key));
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [logPeriod, searchParams, logGraphType]);
-
   const onSubmit = (data) => {
     dispatch(ChangePage(0));
     dispatch(
@@ -131,25 +109,10 @@ export default function MachineLogsList({ allMachineLogsType }){
     trigger('logType');
   }, [setValue, trigger]);
 
-  const handlePeriodChange = useCallback((newPeriod) => {
-    setValue('logPeriod', newPeriod);
-  }, [setValue]);
-
-  const handleGraphTypeChange = useCallback((newGraphType) => {
-    setValue('logGraphType', newGraphType);
-  }, [setValue]);
-
   const showAddbutton = () => {
-    if (isGraphPage()) return false;
     if (machine?.status?.slug === 'transferred') return false;
     if (machine?.isArchived) return false;
     return BUTTONS.ADD_MACHINE_LOGS;
-  };
-
-  const showGraphbutton = () => {
-    if (machine?.isArchived) return false;
-    if (isGraphPage()) return false;
-    return BUTTONS.SHOW_LOG_GRAPH;
   };
 
   const returnSearchFilterColumnOptions = () =>
@@ -163,69 +126,18 @@ export default function MachineLogsList({ allMachineLogsType }){
           <Card sx={{ p: 3 }}>
             <Stack spacing={2}>
               <Stack direction="row" spacing={1} sx={{ justifyContent: 'space-between', mb: 3 }}>
-                {!isGraphPage() ? (
-                  <Stack
-                    direction="row"
-                    spacing={1}
-                    sx={{ alignSelf: 'flex-start', alignItems: 'center' }}
-                  >
-                    <Box sx={{ pb: 1 }}>
-                      <Typography variant="h5" color="text.primary">
-                        Logs Filter
-                      </Typography>
-                    </Box>
-                  </Stack>
-                ) : (
-                  <Stack
+                <Stack
                   direction="row"
                   spacing={1}
-                  sx={{ alignSelf: 'flex-start', alignItems: 'center', mb: 2 }}
+                  sx={{ alignSelf: 'flex-start', alignItems: 'center' }}
                 >
-                  <IconTooltip
-                    title="Back"
-                    onClick={handleErpLogToggle}
-                    color={theme.palette.primary.main}
-                    icon="mdi:arrow-left"
-                  />
-                  <Divider orientation="vertical" flexItem />
-                  <Box sx={{ borderBottom: 2, borderColor: 'primary.main', pb: 1 }}>
+                  <Box sx={{ pb: 1 }}>
                     <Typography variant="h5" color="text.primary">
-                      Log Graphs
+                      Logs Filter
                     </Typography>
                   </Box>
                 </Stack>
-                )}
                 <Stack direction="row" spacing={1} sx={{ alignSelf: 'flex-end' }}>
-                  {showGraphbutton() && (
-                    <StyledTooltip
-                      title={showGraphbutton()}
-                      placement="top"
-                      disableFocusListener
-                      tooltipcolor="#103996"
-                      color="#fff"
-                    >
-                      <IconButton
-                        color="#fff"
-                        onClick={handleErpLogToggle}
-                        sx={{
-                          background: '#2065D1',
-                          borderRadius: 1,
-                          height: '1.7em',
-                          p: '8.5px 14px',
-                          '&:hover': {
-                            background: '#103996',
-                            color: '#fff',
-                          },
-                        }}
-                      >
-                        <Iconify
-                          color="#fff"
-                          sx={{ height: '24px', width: '24px' }}
-                          icon="mdi:graph-bar"
-                        />
-                      </IconButton>
-                    </StyledTooltip>
-                  )}
                   {showAddbutton() && (
                     <StyledTooltip
                       title={showAddbutton()}
@@ -259,143 +171,97 @@ export default function MachineLogsList({ allMachineLogsType }){
                 </Stack>
               </Stack>
               {/* <Divider variant="middle" /> */}
-              {!isGraphPage() && (
-                <>
-                  <Box
-                    display="grid"
-                    gap={2}
-                    gridTemplateColumns={{ xs: '1fr', sm: 'repeat(3, 1fr)' }}
-                    sx={{ flexGrow: 1 }}
+              <Box
+                display="grid"
+                gap={2}
+                gridTemplateColumns={{ xs: '1fr', sm: 'repeat(3, 1fr)' }}
+                sx={{ flexGrow: 1 }}
+              >
+                <RHFDatePicker
+                  label="Start Date"
+                  name="dateFrom"
+                  size="small"
+                  value={dateFrom}
+                  onChange={(newValue) => {
+                    setValue('dateFrom', newValue);
+                    trigger(['dateFrom', 'dateTo']);
+                  }}
+                />
+                <RHFDatePicker
+                  label="End Date"
+                  name="dateTo"
+                  size="small"
+                  value={dateTo}
+                  onChange={(newValue) => {
+                    setValue('dateTo', newValue);
+                    trigger(['dateFrom', 'dateTo']);
+                  }}
+                />
+                <RHFAutocomplete
+                  name="logType"
+                  size="small"
+                  label="Log Type*"
+                  options={machineLogTypeFormats}
+                  getOptionLabel={(option) => option.type || ''}
+                  isOptionEqualToValue={(option, value) => option?.type === value?.type}
+                  onChange={(e, newValue) => handleLogTypeChange(newValue)}
+                  renderOption={(props, option) => (
+                    <li {...props} key={option?.type}>
+                      {option.type || ''}
+                    </li>
+                  )}
+                  disableClearable
+                  autoSelect
+                  openOnFocus
+                  getOptionDisabled={(option) => option?.disabled}
+                />
+              </Box>
+              <Stack
+                direction={{ xs: 'column', sm: 'row' }}
+                spacing={2}
+                sx={{
+                  justifyContent: 'space-between',
+                  alignItems: { xs: 'stretch', sm: 'flex-start' },
+                }}
+              >
+                <Box sx={{ flexGrow: 1, width: { xs: '100%', sm: 'auto' } }}>
+                  <RHFFilteredSearchBar
+                    name="filteredSearchKey"
+                    filterOptions={returnSearchFilterColumnOptions()}
+                    setSelectedFilter={setSelectedSearchFilter}
+                    selectedFilter={selectedSearchFilter}
+                    placeholder="Enter Search here..."
+                    helperText={
+                      selectedSearchFilter === '_id'
+                        ? 'To search by ID, you must enter the complete Log ID'
+                        : ''
+                    }
+                    fullWidth
+                  />
+                </Box>
+                <Box sx={{ width: { xs: '100%', sm: 'auto' } }}>
+                  <RHFSelect
+                    name="activeStatus"
+                    size="small"
+                    label="Status"
+                    sx={{ width: { xs: '100%', sm: 150 } }}
+                    onChange={(e) => setValue('activeStatus', e.target.value)}
                   >
-                    <RHFDatePicker
-                      label="Start Date"
-                      name="dateFrom"
-                      size="small"
-                      value={dateFrom}
-                      onChange={(newValue) => {
-                        setValue('dateFrom', newValue);
-                        trigger(['dateFrom', 'dateTo']);
-                      }}
-                    />
-                    <RHFDatePicker
-                      label="End Date"
-                      name="dateTo"
-                      size="small"
-                      value={dateTo}
-                      onChange={(newValue) => {
-                        setValue('dateTo', newValue);
-                        trigger(['dateFrom', 'dateTo']);
-                      }}
-                    />
-                    <RHFAutocomplete
-                      name="logType"
-                      size="small"
-                      label="Log Type*"
-                      options={machineLogTypeFormats}
-                      getOptionLabel={(option) => option.type || ''}
-                      isOptionEqualToValue={(option, value) => option?.type === value?.type}
-                      onChange={(e, newValue) => handleLogTypeChange(newValue)}
-                      renderOption={(props, option) => (
-                        <li {...props} key={option?.type}>
-                          {option.type || ''}
-                        </li>
-                      )}
-                      disableClearable
-                      autoSelect
-                      openOnFocus
-                      getOptionDisabled={(option) => option?.disabled}
-                    />
-                  </Box>
-                  <Stack
-                    direction={{ xs: 'column', sm: 'row' }}
-                    spacing={2}
-                    sx={{
-                      justifyContent: 'space-between',
-                      alignItems: { xs: 'stretch', sm: 'flex-start' },
-                    }}
-                  >
-                    <Box sx={{ flexGrow: 1, width: { xs: '100%', sm: 'auto' } }}>
-                      <RHFFilteredSearchBar
-                        name="filteredSearchKey"
-                        filterOptions={returnSearchFilterColumnOptions()}
-                        setSelectedFilter={setSelectedSearchFilter}
-                        selectedFilter={selectedSearchFilter}
-                        placeholder="Enter Search here..."
-                        helperText={
-                          selectedSearchFilter === '_id'
-                            ? 'To search by ID, you must enter the complete Log ID'
-                            : ''
-                        }
-                        fullWidth
-                      />
-                    </Box>
-                    <Box sx={{ width: { xs: '100%', sm: 'auto' } }}>
-                      <RHFSelect
-                        name="activeStatus"
-                        size="small"
-                        label="Status"
-                        sx={{ width: { xs: '100%', sm: 150 } }}
-                        onChange={(e) => setValue('activeStatus', e.target.value)}
-                      >
-                        <MenuItem value="active">Active</MenuItem>
-                        <MenuItem value="archived">Archived</MenuItem>
-                      </RHFSelect>
-                    </Box>
-                    <Box sx={{ width: { xs: '100%', sm: 'auto' } }}>
-                      <LoadingButton type="submit" variant="contained" size="large" fullWidth>
-                        Get Logs
-                      </LoadingButton>
-                    </Box>
-                  </Stack>
-                </>
-              )}
-              {isGraphPage() && (
-                <Stack direction="row" spacing={2} sx={{ width: '100%' }}>
-                  <Box sx={{ width: '50%' }}>
-                    <RHFAutocomplete
-                      name="logPeriod"
-                      label="Period*"
-                      options={['Daily', 'Monthly', 'Quarterly', 'Yearly']}
-                      onChange={(e, newValue) => handlePeriodChange(newValue)}
-                      size="small"
-                      disableClearable
-                    />
-                  </Box>
-                  <Box sx={{ width: '50%' }}>
-                    <RHFAutocomplete
-                      name="logGraphType"
-                      label="Graph Type*"
-                      options={machineLogGraphTypes}
-                      onChange={(e, newValue) => handleGraphTypeChange(newValue)}
-                      getOptionLabel={(option) => option.name || ''}
-                      isOptionEqualToValue={(option, value) => option?.key === value?.key}
-                      renderOption={(props, option) => (
-                        <li {...props} key={option?.key}>
-                          {option.name || ''}
-                        </li>
-                      )}
-                      disableClearable
-                      size="small"
-                    />
-                  </Box>
-                </Stack>
-              )}
+                    <MenuItem value="active">Active</MenuItem>
+                    <MenuItem value="archived">Archived</MenuItem>
+                  </RHFSelect>
+                </Box>
+                <Box sx={{ width: { xs: '100%', sm: 'auto' } }}>
+                  <LoadingButton type="submit" variant="contained" size="large" fullWidth>
+                    Get Logs
+                  </LoadingButton>
+                </Box>
+              </Stack>
             </Stack>
           </Card>
         </form>
       </FormProvider>
-      {!isGraphPage() && (
-        <MachineLogsDataTable allMachineLogsPage={false} dataForApi={dataForApi} logType={logType} />
-      )}
-      {isGraphPage() && (
-        <>
-          {logGraphType.key === 'length_and_waste' ? (
-            <ErpProducedLengthLogGraph timePeriod={logPeriod} customer={machine?.customer?._id} />
-          ) : (
-            <ErpProductionRateLogGraph timePeriod={logPeriod} customer={machine?.customer?._id} />
-          )}
-        </>
-      )}
+      <MachineLogsDataTable allMachineLogsPage={false} dataForApi={dataForApi} logType={logType} />
     </Container>
   );
 }
