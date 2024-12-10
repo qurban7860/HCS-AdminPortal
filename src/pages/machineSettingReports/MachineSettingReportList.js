@@ -62,7 +62,7 @@ export default function MachineSettingReportList({ isArchived }) {
 
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
-  const isMobile = useResponsive('down', 'sm');
+  const isMobile = useResponsive('down', 'lg');
 
   const methods = useForm({
     defaultValues: {

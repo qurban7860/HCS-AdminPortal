@@ -99,7 +99,7 @@ export default function SecurityUserTableRow({
             <IconButtonTooltip title='Portal Request' color='#388e3c' icon="mdi:user-details" onClick={handleRequestDialog} /> 
           }
         </TableCell>}
-        {!hiddenColumns?.createdAt && <TableCell align="right">{fDate(createdAt)}</TableCell>}
+        { useScreenSize('lg') && !hiddenColumns?.createdAt && <TableCell align="right">{fDate(createdAt)}</TableCell>}
       </TableRow>
   );
 }
