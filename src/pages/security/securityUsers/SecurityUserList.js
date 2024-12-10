@@ -35,6 +35,7 @@ import {
   setFilterRegion,
   setReportHiddenColumns,
 } from '../../../redux/slices/securityUser/securityUser';
+import useResponsive from '../../../hooks/useResponsive';
 import { getActiveRegions, resetActiveRegions } from '../../../redux/slices/region/region';
 import { fDate } from '../../../utils/formatTime';
 // constants
@@ -50,9 +51,9 @@ const TABLE_HEAD = [
   { id: 'login', visibility: 'xs1', label: 'Login', align: 'left' },
   { id: 'phone', visibility: 'xs2', label: 'Phone Number', align: 'left' },
   { id: 'roles.name.[]', visibility: 'md1', label: 'Roles', align: 'left' },
-  { id: 'contact.firstName', label: 'Contact', align: 'left' },
+  { id: 'contact.firstName', visibility: 'xl', label: 'Contact', align: 'left' },
   { id: 'isActive', label: "   ", align: 'left' },
-  { id: 'createdAt', label: 'Created At', align: 'right' },
+  { id: 'createdAt', visibility: 'md', label: 'Created At', align: 'right' },
 ];
 
 // ----------------------------------------------------------------------
@@ -95,6 +96,7 @@ export default function SecurityUserList() {
   const [ activeFilterListBy, setActiveFilterListBy ] = useState(activeFilterList);
   const [ employeeFilterListBy, setEmployeeFilterListBy ] = useState(employeeFilterList);
   const [ filterByRegion, setFilterByRegion ] = useState(filterRegion);
+  const isMobile = useResponsive('down', 'lg');
 
   useLayoutEffect(() => {
     dispatch(getActiveRegions());
@@ -232,10 +234,17 @@ useEffect(()=>{
             onReload={onRefresh}
           />
 
-        {!isNotFound && <TablePaginationFilter
+        {!isNotFound && !isMobile && <TablePaginationFilter
             columns={TABLE_HEAD}
             hiddenColumns={reportHiddenColumns}
             handleHiddenColumns={handleHiddenColumns}
+            count={dataFiltered.length}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
+          />}
+           {!isNotFound && isMobile && <TablePaginationCustom
             count={dataFiltered.length}
             page={page}
             rowsPerPage={rowsPerPage}
