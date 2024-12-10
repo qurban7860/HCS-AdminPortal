@@ -26,7 +26,6 @@ import {
   getComparator,
   TableNoData,
   TableSkeleton,
-  TableHeadCustom,
   TablePaginationCustom,
   TablePaginationFilter,
   TableHeadFilter,
@@ -203,13 +202,16 @@ const TABLE_HEAD = useMemo(() => {
         dispatch(getDocuments( customer?._id , null, null, page, customerDocumentsRowsPerPage, customer?.isArchived, null, cancelTokenSource, filteredSearchKey, selectedSearchFilter));
       } else if(machineDrawingPage &&  machineId ){
         dispatch(getDocuments( null, machineId, null, page, machineDocumentsRowsPerPage, null, null, cancelTokenSource, filteredSearchKey, selectedSearchFilter));
-      } else if( machinePage ){
-        dispatch(getDocuments(null, machineId, null, page, machineDrawingsRowsPerPage, null, machine?.isArchived, cancelTokenSource, filteredSearchKey, selectedSearchFilter));
-      } else if( machineDrawings || machineDrawingPage ){
-        dispatch(getDocuments(null, null, ( machineDrawings || machineDrawingPage ), page, machineDrawingsRowsPerPage, null, null, cancelTokenSource, filteredSearchKey, selectedSearchFilter));
-      } else if(!customerPage && !machineDrawingPage && !machinePage && !machineDrawings  ) {
-        dispatch(getDocuments(null, null, null, page, documentRowsPerPage, null, null, cancelTokenSource, filteredSearchKey, selectedSearchFilter));
-      }
+      } 
+      else if( machinePage ){
+        dispatch(getDocuments(null, machineId, null, page, machineDrawingsRowsPerPage, null, machine?.isArchived, cancelTokenSource));
+      } 
+      // else if( machineDrawings || machineDrawingPage ){
+      //   dispatch(getDocuments(null, null, ( machineDrawings || machineDrawingPage ), page, machineDrawingsRowsPerPage, null, null, cancelTokenSource, filteredSearchKey, selectedSearchFilter));
+      // } 
+      // else if(!customerPage && !machineDrawingPage && !machinePage && !machineDrawings  ) {
+      //   dispatch(getDocuments(null, null, null, page, documentRowsPerPage, null, null, cancelTokenSource, filteredSearchKey, selectedSearchFilter));
+      // }
       return()=>{ cancelTokenSource.cancel(); dispatch(resetDocuments()) }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
@@ -273,8 +275,8 @@ const TABLE_HEAD = useMemo(() => {
   const filteredSearchKey = watch('filteredSearchKey');
 
   const isFiltered = filterName !== '' ;
-  const isNotFound = (!dataFiltered.length && !!filterName);
-
+  const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
+  
   const filterNameDebounce = (value) => {
     if(machineDrawingPage){
       dispatch(setMachineDocumentFilterBy(value))
@@ -373,20 +375,19 @@ const TABLE_HEAD = useMemo(() => {
   const onGetDocuments = () => {
     const docCategoryId = categoryVal?._id || null;
     const docTypeId = typeVal?._id || null;  
+    if((filteredSearchKey && selectedSearchFilter) || (docCategoryId ||  docTypeId) ){
       dispatch(
         getDocuments( null, null, machineDrawings || null, page,
           machineDrawings ? machineDrawingsRowsPerPage : documentRowsPerPage,
           null, null, cancelTokenSource, filteredSearchKey || null, selectedSearchFilter || null, docCategoryId, docTypeId 
         )
       );
+    }
   };  
   
   const afterClearHandler = () => {
-    setCategoryVal(null); 
-    setTypeVal(null); 
     dispatch(
-      getDocuments(null, null, machineDrawings || null, page, machineDrawings ? machineDrawingsRowsPerPage : documentRowsPerPage,
-        null, null, cancelTokenSource, null, null, null, null )
+      resetDocuments()
     );
   };  
   
@@ -527,7 +528,7 @@ const TABLE_HEAD = useMemo(() => {
               !isNotFound && (customerPage || machinePage) ? handleGalleryView : undefined
             }
           />
-          <TablePaginationFilter
+          { !isNotFound && <TablePaginationFilter
             columns={TABLE_HEAD}
             hiddenColumns={reportHiddenColumns}
             handleHiddenColumns={handleHiddenColumns}
@@ -536,17 +537,17 @@ const TABLE_HEAD = useMemo(() => {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-          />
+          /> }
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <Scrollbar>
               <Table size="small" sx={{ minWidth: 360 }}>
-                <TableHeadFilter
+                { !isNotFound && <TableHeadFilter
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
                   onSort={onSort}
                   hiddenColumns={reportHiddenColumns}
-                />
+                />}
 
                 <TableBody>
                   {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)

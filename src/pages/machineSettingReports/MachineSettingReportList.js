@@ -71,7 +71,7 @@ export default function MachineSettingReportList({ isArchived }) {
     },
   });
 
-  const { watch, handleSubmit, setValue } = methods;
+  const { watch, handleSubmit } = methods;
   const {filteredSearchKey, statusType} = watch();
 
   useEffect(() => {
@@ -210,6 +210,7 @@ export default function MachineSettingReportList({ isArchived }) {
                     sx={{ minWidth: { sm: 400 } }}
                     options={statusesToShow || []}
                     multiple
+                    disableCloseOnSelect
                     size="small"
                     isOptionEqualToValue={(option, value) => option._id === value._id}
                     getOptionLabel={(option) => option?.name || ''}
