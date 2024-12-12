@@ -102,7 +102,18 @@ const documentSchema = Yup.object().shape({
   } = methods;
 
   const { files, docCategory } = watch();
-
+  
+  useEffect(() => {
+    if (!methods.getValues("docCategory") && activeDocumentCategories?.length > 0) {
+      const defaultCategory = activeDocumentCategories.find(
+        (category) => category?.name?.toLowerCase()?.trim() === "assembly drawings"
+      );
+      if (defaultCategory) {
+        methods.setValue("docCategory", defaultCategory);
+      }
+    }
+  }, [activeDocumentCategories, methods]);
+  
   useEffect(() => {
     if(docCategory){
       files?.forEach( ( f, index ) => {
