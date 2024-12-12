@@ -102,7 +102,7 @@ function DocumentAddForm({
   const methods = useForm({
     resolver: yupResolver(documentSchema( selectedValue )),
     defaultValues:{
-      documentCategory:  null,
+      documentCategory:  activeDocumentCategories?.find( f => f?.name?.toLowerCase()?.trim() === 'assembly drawings') || null,
       documentType:  null,
       displayName:  '',
       stockNumber:  '',
