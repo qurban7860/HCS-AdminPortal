@@ -120,6 +120,10 @@ const onChangeContact = (contact) => {
 
   const onSubmit = async (data) => {
     try {
+      const phoneRegex = /^\+\d+$/;
+      if (!data.phone || phoneRegex.test(data.phone.trim())) {
+        data.phone = ''; 
+      }
       await dispatch(updateSecurityUser(data, securityUser._id));
       await reset();
       await navigate(PATH_SECURITY.users.view(securityUser._id));
