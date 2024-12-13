@@ -105,25 +105,37 @@ const documentSchema = Yup.object().shape({
 
   const { files, docCategory } = watch();
 
-  console.log('files : ',files)
-  
   useEffect(() => {
-    trigger('files')
-  },[ files, trigger ])
-
-  useEffect(() => {
-    if(docCategory){
-      files?.forEach( ( f, index ) => {
-        setValue(`files[${index}].docCategory`, docCategory )
-        if( docCategory?._id !== files[index]?.docType?.docCategory?._id ){
-          setValue(`files[${index}].docType`, [] );
-        }
-      })
-    }else{
-      files?.forEach((f, index) => { setValue(`files[${index}].docCategory`, null); setValue(`files[${index}].docType`, null);  })
+    if ( !docCategory?._id && activeDocumentCategories?.length > 0) {
+      const defaultCategory = activeDocumentCategories.find(( c ) => c?.name?.toLowerCase()?.trim() === "assembly drawings" );
+      if (defaultCategory) {
+        setValue("docCategory", defaultCategory);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ docCategory?._id ]);
+  }, [ activeDocumentCategories ]);
+  
+  useEffect(() => {
+    trigger('files');
+  }, [ trigger, files ]);
+
+  const onChangeDocCategory= ( event, newValue ) => {
+    if(newValue){
+      files?.forEach( ( f, index ) => {
+        setValue('docCategory', newValue )
+        setValue(`files[${index}].docCategory`, newValue )
+        if( newValue?._id !== files[index]?.docType?.docCategory?._id ){
+          setValue(`files[${index}].docType`, null);
+        }
+      })
+    } else {
+      setValue('docCategory', null )
+      files?.forEach((f, index) => { 
+        setValue(`files[${index}].docCategory`, null); 
+        setValue(`files[${index}].docType`, null);  
+      })
+    }
+  }
 
   const onSubmit = async (data) => {
     try {
@@ -319,6 +331,7 @@ const documentSchema = Yup.object().shape({
                       isOptionEqualToValue={( option, value ) => option._id === value._id }
                       getOptionLabel={(option) => `${option?.name || ''}`}
                       renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.name || ''}`}</li> )}
+                      onChange={onChangeDocCategory}
                     />
                   </Box>
                     {/* <RHFTextField name="description" label="Description" minRows={3} multiline /> */}

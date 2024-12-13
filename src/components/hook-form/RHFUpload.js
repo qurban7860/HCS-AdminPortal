@@ -121,11 +121,12 @@ export function RHFUpload({ name, multiple, rows, helperText, machine,
               field.onChange(updatedFiles);
             }}
 
-            onChangeVersionNo={ onChangeVersionNo ? ( index, value ) => {
+            onChangeVersionNo={ ( index, value ) => {
               const updatedFiles = [...field.value];
-              updatedFiles[index] = { ...updatedFiles[index], versionNo: onChangeVersionNo( value ) };
+              updatedFiles[index] = { ...updatedFiles[index], versionNo: value?.replace(/[^\d.]|(?<=\..*)\./g, "")
+              };
               field.onChange(updatedFiles);
-            } : undefined }
+            }}
 
             onChangeDisplayName={ ( index, value ) => {
               const updatedFiles = [...field.value];
