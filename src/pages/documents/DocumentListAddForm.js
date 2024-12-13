@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 import PropTypes from 'prop-types';
-import { useEffect, useLayoutEffect, useState, memo} from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 // form
@@ -76,7 +76,7 @@ function DocumentListAddForm({
 const documentSchema = Yup.object().shape({
   docCategory: Yup.object().label('Document Category').required().nullable(),
   description: Yup.string().max(10000),
-  files: Yup.mixed().required('Files required!')
+  files: Yup.mixed().label('Files').required('Files required!')
   .test( 'fileType',
     'Only the following formats are accepted: .jpeg, .jpg, gif, .bmp, .webp, .pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx',
     validateMultipleDrawingsFileType
@@ -88,8 +88,10 @@ const documentSchema = Yup.object().shape({
     defaultValues:{
       docCategory: activeDocumentCategories?.find( f => f?.name?.toLowerCase()?.trim() === 'assembly drawings') || null,
       description: '',
-      files: null,
+      files: [],
     },
+    mode: 'onSubmit',
+    reValidateMode: 'onSubmit',
   });
 
   const {
@@ -103,46 +105,25 @@ const documentSchema = Yup.object().shape({
 
   const { files, docCategory } = watch();
 
+  console.log('files : ',files)
+  
+  useEffect(() => {
+    trigger('files')
+  },[ files, trigger ])
+
   useEffect(() => {
     if(docCategory){
       files?.forEach( ( f, index ) => {
         setValue(`files[${index}].docCategory`, docCategory )
         if( docCategory?._id !== files[index]?.docType?.docCategory?._id ){
-          setValue(`files[${index}].docType`, null);
+          setValue(`files[${index}].docType`, [] );
         }
       })
     }else{
       files?.forEach((f, index) => { setValue(`files[${index}].docCategory`, null); setValue(`files[${index}].docType`, null);  })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ docCategory?._id, files ]);
-
-const onChangeDocType = ( index, event, value ) => {
-  if( value ){
-    setValue(`files[${index}].docType`, value );
-    if( !files[index].docCategory || !files[index].docCategory?._id !== value?.docCategory?._id  ){
-      setValue(`files[${index}].docCategory`, value?.docCategory );
-    }
-  } else {
-    setValue(`files[${index}].docType`, null );
-  }
-  trigger('files');
-}
-
-
-const onChangeDisplayName = (index, value) => { setValue(`files[${index}].displayName`, value); trigger('files'); }
-const onChangeReferenceNumber = (index, value) => setValue(`files[${index}].referenceNumber`, value);
-const onChangeStockNumber = (index, value) => setValue(`files[${index}].stockNumber`, value);
-
-const onChangeVersionNo = (index, value) => {
-  const sanitizedValue = value?.replace(/[^\d.]+/g, "");
-  const dotIndex = sanitizedValue.indexOf(".");
-  const lastIndex = sanitizedValue.lastIndexOf(".");
-  const finalValue = lastIndex !== dotIndex ? sanitizedValue.slice(0, lastIndex) + sanitizedValue.slice(lastIndex + 1) : sanitizedValue;
-  setValue(`files[${index}].versionNo`, finalValue);
-  // setValue(`files[${index}].versionNo`, value?.replace(/[^0-9.]/g, ''))
-}
-
+  }, [ docCategory?._id ]);
 
   const onSubmit = async (data) => {
     try {
@@ -162,7 +143,7 @@ const onChangeVersionNo = (index, value) => {
 
 
   const handleClosePreview = () => setPreview(false);
-  const [duplicate, setDuplicate] = useState(false);
+  const [ duplicate, setDuplicate ] = useState(false);
 
   const hashFilesMD5 = async (_files) => {
     const hashPromises = _files.map((file) => new Promise((resolve, reject) => {
@@ -213,38 +194,54 @@ const onChangeVersionNo = (index, value) => {
 
   const handleDropMultiFile = async (acceptedFiles) => {
     setProgressBar(true);
-    const setProgressBarPercentage = async ( index ) => {
-      await setProgress( acceptedFiles?.length ? Math.round( (100 / acceptedFiles.length ) * index / 10 ) * 10  : 0  );
-  }
+  
+    const setProgressBarPercentage = (processedFiles) => {
+      const percentage = Math.round((processedFiles / acceptedFiles.length) * 100);
+      setProgress(percentage); // Update the progress bar
+    };
+  
     pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
-    const defaultDocCategory = await activeDocumentCategories?.find( f => f?.name?.toLowerCase()?.trim() === 'assembly drawings');
-
-      const _files_MD5 = await hashFilesMD5(acceptedFiles);
-    const newFiles = await acceptedFiles.reduce(async (accumulatorPromise, file, index) => {
-      await setProgressBarPercentage( index )
-      const accumulator = await accumulatorPromise;
+  
+    const defaultDocCategory = activeDocumentCategories?.find(
+      (f) => f?.name?.toLowerCase()?.trim() === "assembly drawings"
+    );
+  
+    const _files_MD5 = await hashFilesMD5(acceptedFiles);
+  
+    // Prepare tasks for all files
+    const fileProcessingTasks = acceptedFiles.map(async (file, index) => {
+      setProgressBarPercentage(index + 1);
+  
       const displayName = await removeFileExtension(file?.name);
       const referenceNumber = await getRefferenceNumber(file?.name);
       const versionNo = await getVersionNumber(file?.name);
-
-      let stockNumber = '';
-      const checkDocType = activeDocumentTypes.find((el) => displayName.trim().toLowerCase().includes(el.name.trim().toLowerCase()));
-
-      let defaultDocType
-      if( checkDocType?.docCategory?._id === defaultDocCategory?._id ){
-        defaultDocType = checkDocType
-      } else if( displayName.trim().toLowerCase().includes( 'frama' ) || displayName.trim().toLowerCase().includes( 'decoiler' )){
-        defaultDocType = activeDocumentTypes.find((el) => el?.name?.trim()?.toLowerCase().includes( 'assembly' ))
+  
+      let stockNumber = "";
+      const checkDocType = activeDocumentTypes.find((el) =>
+        displayName.trim().toLowerCase().includes(el.name.trim().toLowerCase())
+      );
+  
+      let defaultDocType = null ;
+      if (checkDocType?.docCategory?._id === defaultDocCategory?._id) {
+        defaultDocType = checkDocType;
+      } else if (
+        displayName.trim().toLowerCase().includes("frama") ||
+        displayName.trim().toLowerCase().includes("decoiler")
+      ) {
+        defaultDocType = activeDocumentTypes.find((el) =>
+          el?.name?.trim()?.toLowerCase().includes("assembly")
+        );
       }
   
-      if (file?.type?.indexOf('pdf') > -1) {
+      if (file?.type?.indexOf("pdf") > -1) {
         const arrayBuffer = await file.arrayBuffer();
         const pdfDocument = await pdfjs.getDocument(arrayBuffer).promise;
         const page = await pdfDocument.getPage(1);
         const textContent = await page.getTextContent();
+  
         try {
           textContent.items.some((item, indexx) => {
-            if (item.str === 'DRAWN BY' && textContent?.items[indexx + 2]?.str?.length < 15) {
+            if (item.str === "DRAWN BY" && textContent?.items[indexx + 2]?.str?.length < 15) {
               stockNumber = textContent.items[indexx + 2].str;
               return true;
             }
@@ -252,39 +249,47 @@ const onChangeVersionNo = (index, value) => {
               stockNumber = textContent.items[indexx + 2].str;
               return true;
             }
-            if (item.str === 'APPROVED' && textContent?.items[indexx - 2]?.str?.length < 15) {
+            if (item.str === "APPROVED" && textContent?.items[indexx - 2]?.str?.length < 15) {
               stockNumber = textContent.items[indexx - 2].str;
               return true;
             }
-            return false; // Continue iterating if condition is not met
+            return false;
           });
         } catch (e) {
           console.log(e);
         }
       }
-
-      if (files?.some(f => f?.hashMD5 === _files_MD5[index] )) {
-        return accumulator;
+  
+      if (files?.some((f) => f?.hashMD5 === _files_MD5[index])) {
+        return null; // Skip duplicate files
       }
-      file.drawingMachine = machine?._id;
-      file.hashMD5 = _files_MD5[index];
-      file.displayName = displayName;
-      file.docCategory = defaultDocCategory;
-      file.docType = defaultDocType;
-      file.versionNo = versionNo?.replace(/[^\d.]+/g, "");
-      file.referenceNumber = referenceNumber;
-      file.stockNumber = stockNumber;
-      return [...accumulator, file];
-    }, Promise.resolve([]));
+  
+      return {
+        ...file,
+        drawingMachine: machine?._id,
+        hashMD5: _files_MD5[index],
+        displayName,
+        docCategory: defaultDocCategory,
+        docType: defaultDocType,
+        versionNo: versionNo?.replace(/[^\d.]+/g, ""),
+        referenceNumber,
+        stockNumber,
+      };
+    });
+  
+    // Process all files concurrently
+    const processedFiles = (await Promise.all(fileProcessingTasks)).filter(Boolean);
+  
     setProgressBar(false);
-    setProgress(0)
-    if(files){
-      setValue('files',[ ...files, ...newFiles] );
+    setProgress(0);
+  
+    if( Array.isArray( files ) && files?.length > 0 ) {
+      setValue("files", [...files, ...processedFiles]);
     } else {
-      setValue('files',[ ...newFiles] );
+      setValue("files", [...processedFiles]);
     }
-    trigger('files');
-  }
+  
+  };
   
   const toggleCancel = () => { 
     if(machineDrawings){
@@ -326,21 +331,16 @@ const onChangeVersionNo = (index, value) => {
                           } else {
                               setValue('files', null);
                           }
-                          trigger('files');
                       }}
-                      onRemoveAll={() => { setValue('files', null ); trigger('files') }}
+                      onRemoveAll={() => { setValue('files', null ) }}
                       // machine={machineVal}
-                      onChangeDocType={onChangeDocType}
-                      // onChangeDocCategory={onChangeDocCategory}
-                      onChangeVersionNo={onChangeVersionNo}
-                      onChangeDisplayName={onChangeDisplayName}
-                      onChangeReferenceNumber={onChangeReferenceNumber}
-                      onChangeStockNumber={onChangeStockNumber}
                       drawingPage={drawingPage || machineDrawings}
                     />
-                    { progressBar &&  <Box sx={{ width: '100%' }}>
+                    { progressBar &&  
+                      <Box sx={{ width: '100%' }} >
                         <LinearProgressWithLabel variant="buffer"  value={progress}  /> 
-                    </Box>}
+                      </Box>
+                    }
                 <AddFormButtons drawingPage={ !customerPage && !machineDrawingPage } isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Stack>
             </Card>
@@ -376,4 +376,4 @@ const onChangeVersionNo = (index, value) => {
   )
 }
 
-export default memo(DocumentListAddForm)
+export default DocumentListAddForm

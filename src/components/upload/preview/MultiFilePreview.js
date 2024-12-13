@@ -114,18 +114,7 @@ function MultiFilePreview({
         
   return (
     <AnimatePresence initial={false}>
-      {files?.sort((a, b) => {
-  const isImageA = a.fileType?.startsWith('image') || a.type?.startsWith('image');
-  const isImageB = b.fileType?.startsWith('image') || b.type?.startsWith('image');
-
-  if (isImageA && !isImageB) {
-    return -1; 
-  }
-  if (!isImageA && isImageB) {
-    return 1; 
-  }
-  return 0;
-})?.map(( file , index ) => {
+      {files?.map(( file , index ) => {
         if(file){
         const { key, name = '', size = 0, displayName, referenceNumber, versionNo, stockNumber, docCategory, docType } = fileData(file);
         const fileType = file?.type?.split('/').pop().toLowerCase();
@@ -237,7 +226,7 @@ function MultiFilePreview({
                 options={ activeDocumentCategories }
                 isOptionEqualToValue={( option, value ) => option?._id === value?._id }
                 getOptionLabel={(option) => `${option?.name || ''}`}
-                onChange={(event, newValue) => onChangeDocCategory( index, event, newValue)}
+                onChange={(event, newValue) => onChangeDocCategory( index, newValue)}
                 renderInput={(params) => <TextField {...params} label="Category" size='small' />}
               />} */}
 
@@ -250,7 +239,7 @@ function MultiFilePreview({
                     isOptionEqualToValue={( option, value ) => option?._id === value?._id }
                     getOptionLabel={(option) => `${option?.name || ''}`}
                     renderOption={(props, option) => (<li {...props} key={option?._id}>{`${option.name || ''}`}</li>)}
-                    onChange={(event, newValue) => onChangeDocType( index, event, newValue)}
+                    onChange={(event, newValue) => onChangeDocType( index, newValue)}
                     renderInput={(params) => <TextField {...params} label="Type*" size='small' error={!docType }  helperText={!docType  && 'Document Type is required!'} />}
                   />}
                 </Grid>
@@ -289,7 +278,7 @@ function MultiFilePreview({
                       maxLength: 20
                     },
                 }}
-                onChange={(e)=> onChangeReferenceNumber( index, e.target.value)} 
+                onChange={(e)=> onChangeReferenceNumber( index, e )} 
               />}
 
               {onChangeStockNumber && <TextField 

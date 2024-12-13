@@ -261,8 +261,8 @@ const ApproveSeviceReport = ({ isLoading, reportStatus }) => {
       const params = {
         status: data?.status,
         comments: data?.comments,
-        evaluatedBy: user?.contact,
-        evaluationDate: new Date(),
+        updatedBy: user?.contact,
+        updatedAt: new Date(),
       };
 
       await dispatch(
@@ -275,12 +275,12 @@ const ApproveSeviceReport = ({ isLoading, reportStatus }) => {
       await enqueueSnackbar(
         `Service Report ${data?.status === 'APPROVED' ? 'Approved' : 'Rejected'} Successfully!`
       );
-    } catch (err) {
+    } catch ( err ) {
       enqueueSnackbar(
         `Service Report ${data?.status === 'APPROVED' ? 'Approval' : 'Rejection'} Failed! `,
         { variant: 'error' }
       );
-      console.error(err.message);
+      console.error( err );
     } finally {
       setApprovalSubmitting(false);
       setRejectionSubmitting(false);

@@ -257,7 +257,7 @@ export const Snacks = {
   fileRequired: 'File is required',
   fileMaxSize: 'File size should be less than 10MB',
   fileMaxCount: `Maximum ${ Number(maxFiles?.value) || 20 } files can be uploaded at a time.`,
-  fieldsRequired: 'Below Drawings fields required.',
+  fieldsRequired: 'Above Drawings fields required!',
   docMaxSize: 'Document Name must not exceed 40 characters',
 
   // @root - DocumentViewForm - documents dashboard

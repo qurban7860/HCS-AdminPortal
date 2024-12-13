@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import * as Yup from 'yup';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -8,7 +9,6 @@ import { LoadingButton } from '@mui/lab';
 import { Grid, Button, Box } from '@mui/material';
 import { useSnackbar } from '../../../components/snackbar';
 import { useAuthContext } from '../../../auth/useAuthContext';
-import { reportNoteSchema } from '../../schemas/machine';
 import { handleError } from '../../../utils/errorHandler';
 import { RHFAutocomplete, RHFTextField } from '../../../components/hook-form';
 import { addServiceReportNote, updateServiceReportNote, deleteServiceReportNote } from '../../../redux/slices/products/machineServiceReport';
@@ -31,6 +31,12 @@ const RHFNoteFields = ({ name, label, historicalData, saveHide, isTechnician, is
   const [ currentData, setCurrentData ] = useState(null);
   const [ techniciansList, setTechniciansList ] = useState([]);
   const [ loading, setLoading ] = useState(null);
+  const reportNoteSchema = Yup.object().shape({
+    technicians: Yup.array().label('Technicians').nullable(),
+    operators: Yup.array().label('Operators').nullable(),
+    note: Yup.string().max(5000).label('Notes').trim(),
+    isPublic: Yup.boolean(),
+  });
 
   const defaultValues = useMemo(
     () => {
@@ -220,7 +226,7 @@ const RHFNoteFields = ({ name, label, historicalData, saveHide, isTechnician, is
               </Grid>
             </Box>
           }
-          <ViewNoteHistory historicalData={historicalData} isEditing={isEditing} onEdit={onEdit} onDelete={onDelete} />
+          <ViewNoteHistory historicalData={historicalData} isEditing={isEditing} onEdit={ id ? onEdit : undefined} onDelete={ id ? onDelete : undefined } />
       </Grid>
     </FormProvider>
   );

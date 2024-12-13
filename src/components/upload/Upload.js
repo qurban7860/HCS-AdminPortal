@@ -179,8 +179,8 @@ export default function Upload({
             {hasFile && <SingleFilePreview file={file} />}
           </StyledDropZone>
         <Typography
-        variant="body2"
-        sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center', ml: 2, mt: 0.5 }}
+          variant="body2"
+          sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center', ml: 2, mt: 0.5 }}
         >
           Allowed Formats:
           <Iconify
@@ -192,7 +192,6 @@ export default function Upload({
         <AllowedExtensionsMenuePopover open={verifiedAnchorEl} onClose={handleExtensionsPopoverClose} imagesOnly={imagesOnly} />
       </>
       }
-      {helperText && helperText}
 
       <RejectionFiles fileRejections={fileRejections} />
 
@@ -315,6 +314,7 @@ export default function Upload({
           }  
         </>
       )}
+      {helperText && helperText}
     </Box>
   );
 }

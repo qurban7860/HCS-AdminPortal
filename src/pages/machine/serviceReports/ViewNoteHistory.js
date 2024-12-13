@@ -35,28 +35,26 @@ const ViewNoteHistory = ({ label, historicalData, isEditing, onEdit, onDelete })
       }
       { !isEditing &&
         <Grid container item md={12} sx={{ pt: 1, display:"block", alignItems: 'center', whiteSpace: 'pre-line', overflowWrap: 'break-word'  }}>
-          { currentData?.note && currentData?.note?.trim() &&
-            <Typography variant="body2" sx={{color: 'text.disabled', whiteSpace: 'pre-line', overflowWrap: 'break-word' }} >
-              {currentData?.note || ""}
-              { currentData?.note?.trim() && <CopyIcon value={currentData?.note}/> }
-              { onEdit && 
-                <IconifyButton 
-                  title='Edit'
-                  icon='mdi:edit'
-                  color='#103996'
-                  onClick={ () => onEdit( currentData ) }
-                />
-              }
-              { onDelete && 
-                <IconifyButton 
-                  title='Delete'
-                  icon='mdi:delete'
-                  color='#FF0000'
-                  onClick={ () => onDelete( currentData ) }
-                />
-              }
-            </Typography>
-          }
+          <Typography variant="body2" sx={{color: 'text.disabled', whiteSpace: 'pre-line', overflowWrap: 'break-word' }} >
+            {currentData?.note || ""}
+            { currentData?.note?.trim() && <CopyIcon value={currentData?.note}/> }
+            { onEdit &&
+              <IconifyButton 
+                title='Edit'
+                icon='mdi:edit'
+                color='#103996'
+                onClick={ () => onEdit( currentData ) }
+              />
+            }
+            { onDelete &&
+              <IconifyButton 
+                title='Delete'
+                icon='mdi:delete'
+                color='#FF0000'
+                onClick={ () => onDelete( currentData ) }
+              />
+            }
+          </Typography>
           <Typography variant="body2" sx={{ color: 'text.disabled', alignItems: "center", whiteSpace: 'pre-line', overflowWrap: 'break-word', width:"100%" }}>
               { Array.isArray( currentData?.technicians ) && currentData?.technicians?.length > 0 && (
                 <>
