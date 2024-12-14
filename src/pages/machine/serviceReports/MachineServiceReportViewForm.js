@@ -138,7 +138,6 @@ function MachineServiceReportViewForm(  ) {
       isActive:                             machineServiceReport?.isActive,
       status:                               machineServiceReport?.status?.name || "",
       approvalStatus:                       machineServiceReport?.currentApprovalStatus || '',
-      approvalLog:                          machineServiceReport?.approval?.approvalLogs || '',
       createdAt:                            machineServiceReport?.createdAt || '',
       createdByFullName:                    machineServiceReport?.createdBy?.name || '',
       createdIP:                            machineServiceReport?.createdIP || '',
@@ -277,7 +276,7 @@ function MachineServiceReportViewForm(  ) {
 
   const serviceReportApprovalData = {
     status: machineServiceReport?.currentApprovalStatus,
-    currentApprovalLogs: machineServiceReport?.approval?.approvalLogs,
+    currentApprovalLogs: machineServiceReport?.approval?.approvalHistory,
     currentApprovingContacts: machineServiceReport?.approval?.approvingContacts,
     completeHistory: machineServiceReport?.completeEvaluationHistory,
   }
@@ -400,7 +399,7 @@ function MachineServiceReportViewForm(  ) {
               machineServiceReport?.status?.name?.toUpperCase() === 'SUBMITTED' &&
               machineServiceReport?.approval?.approvingContacts?.length > 0) ||
               machineServiceReport?.completeEvaluationHistory?.totalLogsCount > 0) ?
-            serviceReportApprovalData : null
+              serviceReportApprovalData : null
           }
         />
         
@@ -459,17 +458,19 @@ function MachineServiceReportViewForm(  ) {
             }
           />
 
-          {(machineServiceReport?.currentApprovalStatus !== "PENDING" && machineServiceReport?.approval?.approvalLogs?.length > 0) ? (              
-            <>
+          {/* {( machineServiceReport?.currentApprovalStatus !== "PENDING" && machineServiceReport?.approval?.approvalHistory?.length > 0) ? (               */}
+            <Grid container item md={12} >
               <ViewFormField
                 sm={ 12 }
                 isLoading={ isLoading } 
                 heading={ `${machineServiceReport?.currentApprovalStatus === "REJECTED" ? "Rejection" : "Approval"} Comments` }
-                param={ machineServiceReport?.approval?.approvalLogs[0]?.comments || "" }
+                param={ machineServiceReport?.approval?.approvalHistory[0]?.comments || "" }
               />
-              <ServiceReportAuditLogs data={ machineServiceReport?.approval?.approvalLogs[0] || '' } />
-            </>
-          ) : null}
+              <ServiceReportAuditLogs 
+                data={ machineServiceReport?.approval?.approvalHistory?.[0] || {}}
+              />
+            </Grid>
+          {/* ) : null } */}
 
           <ViewFormField
             sm={ 4 }

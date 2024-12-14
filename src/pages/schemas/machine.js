@@ -290,7 +290,7 @@ export const MachineServiceReportPart1Schema = Yup.object().shape({
   files: Yup.array()
   .when('reportSubmition', {
     is: false,
-    then: (schema) =>schema.min(1,'Files are required when report submission is online'),
+    then: (schema) =>schema.min(1,'Files are required when report submission is Off-line'),
     otherwise: (schema) => schema.notRequired(),
   })
   .test('fileType', fileTypesMessage, NotRequiredValidateFileType)

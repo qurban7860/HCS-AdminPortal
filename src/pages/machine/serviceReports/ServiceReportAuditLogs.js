@@ -12,7 +12,8 @@ function ServiceReportAuditLogs({ data }) {
         >
           <i>
             {/* <b>Last Modified: </b> */}
-            {fDateTime(data?.updatedAt)}{` by `}{`${data?.updatedBy?.name || ''}`}
+            {fDateTime(data?.updatedAt)}{` by `}
+            {`${data?.updatedBy?.name || ''}${data?.updatedBy?.firstName || ''} ${data?.updatedBy?.lastName || ''}`}
           </i>
         </Typography>
       }
@@ -25,6 +26,8 @@ ServiceReportAuditLogs.propTypes = {
     updatedAt: PropTypes.string,
     updatedBy: PropTypes.shape({
       name: PropTypes.string,
+      firstName: PropTypes.string,
+      lastName: PropTypes.string,
     }),
   }),
 };
