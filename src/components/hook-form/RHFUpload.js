@@ -74,6 +74,7 @@ RHFUpload.propTypes = {
   onChangeDisplayName: PropTypes.func,
   onChangeReferenceNumber: PropTypes.func,
   onChangeStockNumber: PropTypes.func,
+  isDocumentList: PropTypes.bool,
   drawingPage:PropTypes.bool,
   imagesOnly:PropTypes.bool,
   dropZone:PropTypes.bool,
@@ -89,6 +90,7 @@ export function RHFUpload({ name, multiple, rows, helperText, machine,
   onChangeDisplayName,
   onChangeReferenceNumber,
   onChangeStockNumber,
+  isDocumentList,
   onLoadImage,
   onLoadPDF,
   onDownload,
@@ -106,12 +108,44 @@ export function RHFUpload({ name, multiple, rows, helperText, machine,
             dropZone={dropZone}
             multiple
             imagesOnly={imagesOnly}
-            onChangeDocType={onChangeDocType}
-            onChangeDocCategory={onChangeDocCategory}
-            onChangeVersionNo={onChangeVersionNo}
-            onChangeDisplayName={onChangeDisplayName}
-            onChangeReferenceNumber={onChangeReferenceNumber}
-            onChangeStockNumber={onChangeStockNumber}
+            isDocumentList={isDocumentList}
+            onChangeDocType={(index, newValue) => {
+              const updatedFiles = [...field.value];
+              updatedFiles[index] = { ...updatedFiles[index], docType: newValue || null };
+              field.onChange(updatedFiles);
+            }}
+
+            onChangeDocCategory={ ( index, newValue ) => {
+              const updatedFiles = [ ...field.value ];
+              updatedFiles[index] = { ...updatedFiles[index], docCategory: newValue || null };
+              field.onChange(updatedFiles);
+            }}
+
+            onChangeVersionNo={ ( index, value ) => {
+              const updatedFiles = [...field.value];
+              updatedFiles[index] = { ...updatedFiles[index], versionNo: value?.replace(/[^\d.]|(?<=\..*)\./g, "")
+              };
+              field.onChange(updatedFiles);
+            }}
+
+            onChangeDisplayName={ ( index, value ) => {
+              const updatedFiles = [...field.value];
+              updatedFiles[index] = { ...updatedFiles[index], displayName: value };
+              field.onChange(updatedFiles);
+            }}
+
+            onChangeReferenceNumber={ ( index, value ) => {
+              const updatedFiles = [...field.value];
+              updatedFiles[index] = { ...updatedFiles[index], referenceNumber: value };
+              field.onChange(updatedFiles);
+            }}
+
+            onChangeStockNumber={ ( index, value ) => {
+              const updatedFiles = [...field.value];
+              updatedFiles[index] = { ...updatedFiles[index], stockNumber: value};
+              field.onChange(updatedFiles);
+            }}
+
             onLoadImage={ onLoadImage }
             onLoadPDF={onLoadPDF}
             onDownload={ onDownload }

@@ -574,7 +574,7 @@ function ViewFormEditDeleteButtons({
           }
 
           {serviceReportStatus && (
-            <Badge badgeContent={serviceReportStatus?.completeHistory?.totalLogsCount || 0} color="info">
+            <Badge badgeContent={serviceReportStatus?.completeHistory?.approval?.approvalHistory || 0} color="info">
               {serviceReportStatus?.currentApprovingContacts?.length > 0 ? (
                 <>
                 {serviceReportStatus?.status === 'APPROVED' && (
@@ -994,7 +994,7 @@ function ViewFormEditDeleteButtons({
       <ViewFormServiceReportApprovalHistoryPopover
         open={serviceReportApprovalHistoryAnchorEl}
         onClose={handleServiceReportApprovalHistoryPopoverClose}
-        evaluationHistory={serviceReportStatus?.completeHistory?.evaluationHistory}
+        evaluationHistory={serviceReportStatus?.completeHistory?.approvalHistory}
         ListArr={serviceReportStatus?.currentApprovalLogs}
         ListTitle="Service Report Approval Details"
       />

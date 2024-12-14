@@ -63,7 +63,7 @@ function MachineServiceReportsFirstStep( { handleComplete, handleDraftRequest, h
           serviceDate:                  machineServiceReport?.serviceDate || new Date(),
           docReportType:                reportTypes.find(rt=> rt?.name?.toLowerCase() === machineServiceReport?.serviceReportTemplate?.reportType?.toLowerCase()) || null,
           serviceReportTemplate:        machineServiceReport?.serviceReportTemplate || null,
-          reportSubmission:             machineServiceReport?.reportSubmission || false,
+          reportSubmition:              machineServiceReport?.reportSubmition || false,
           files: machineServiceReport?.reportDocs?.map(file => ({
             key: file?._id,
             _id: file?._id,
@@ -84,7 +84,7 @@ function MachineServiceReportsFirstStep( { handleComplete, handleDraftRequest, h
     const methods = useForm({
         resolver: yupResolver(MachineServiceReportPart1Schema),
         defaultValues,
-        mode: 'onBlur',
+        mode: 'onChange',
         reValidateMode: 'onChange',
     });
     
@@ -97,7 +97,7 @@ function MachineServiceReportsFirstStep( { handleComplete, handleDraftRequest, h
     handleSubmit,
     formState: { isSubmitting },
     } = methods;
-    const { docReportType, reportSubmission, files } = watch();
+    const { docReportType, reportSubmition, files } = watch();
     
     useEffect(() => {
       if ( machineServiceReport ){
@@ -123,7 +123,7 @@ function MachineServiceReportsFirstStep( { handleComplete, handleDraftRequest, h
             data.decoilers = machineDecoilers;
             const serviceReport = await dispatch(addMachineServiceReport(machineId, data));
             await dispatchFiles( serviceReport?._id, data );
-            if( reportSubmission ){
+            if( reportSubmition ){
               await navigate(PATH_MACHINE.machines.serviceReports.edit(machineId, serviceReport?._id))
             } else {
               await navigate(PATH_MACHINE.machines.serviceReports.view(machineId, serviceReport?._id))
@@ -131,7 +131,7 @@ function MachineServiceReportsFirstStep( { handleComplete, handleDraftRequest, h
           } else {
             await dispatchFiles( id, data );
             await dispatch(updateMachineServiceReport(machineId, id, data));
-            if( reportSubmission ){
+            if( reportSubmition ){
               await navigate(PATH_MACHINE.machines.serviceReports.edit(machineId, id))  
             } else {
               await navigate(PATH_MACHINE.machines.serviceReports.view(machineId, id))
@@ -328,7 +328,7 @@ return (
                     />
 
                     <RHFRadioGroup 
-                      name="reportSubmission"
+                      name="reportSubmition"
                       row
                       options={[
                         { value: false, label:'Off-line'}, 
@@ -336,14 +336,14 @@ return (
                       ]}
                       sx={{ my: -1 }}
                       onChange={() => {
-                        setValue('reportSubmission',!reportSubmission)
+                        setValue('reportSubmition',!reportSubmition)
                       }}
                     />
           </Stack>
             <ServiceRecodStepButtons 
-              handleSubmit={ !reportSubmission ? saveAsSubmit : undefined } 
+              handleSubmit={ !reportSubmition ? saveAsSubmit : undefined } 
               isSubmitted={ isSubmit }
-              handleDraft={ reportSubmission ? saveAsDraft : undefined } 
+              handleDraft={ reportSubmition ? saveAsDraft : undefined } 
               isDraft={ isDraft } 
               isSubmitting={isSubmitting} 
             />

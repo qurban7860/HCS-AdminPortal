@@ -8,7 +8,7 @@ MachineServiceReportPDF.propTypes = {
     machineServiceReportCheckItems: PropTypes.object,
 };
 
-export function MachineServiceReportPDF({machineServiceReport, machineServiceReportCheckItems}) {
+export function MachineServiceReportPDF( { machineServiceReport, machineServiceReportCheckItems } ) {
 
     const defaultValues = useMemo(
         () => ({
@@ -25,7 +25,7 @@ export function MachineServiceReportPDF({machineServiceReport, machineServiceRep
             approvalStatus:                     machineServiceReport?.currentApprovalStatus || '',
             decoilers:                          machineServiceReport?.decoilers ,
             reportDocs:                         machineServiceReport?.reportDocs || [],
-            reportSubmission:                   machineServiceReport?.reportSubmission || '',
+            reportSubmition:                    machineServiceReport?.reportSubmition || '',
             textBeforeCheckItems:               machineServiceReport?.textBeforeCheckItems || '',
             textAfterCheckItems:                machineServiceReport?.textAfterCheckItems || '',
             headerLeftText:                     machineServiceReport?.serviceReportTemplate?.header?.leftText || '',
@@ -65,7 +65,7 @@ export function MachineServiceReportPDF({machineServiceReport, machineServiceRep
             updatedIP:                          machineServiceReport?.updatedIP || '',
         }),
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [ machineServiceReport]
+        [ machineServiceReport ]
     );
 
     const decoilers = useMemo( () =>
@@ -184,7 +184,7 @@ export function MachineServiceReportPDF({machineServiceReport, machineServiceRep
                 )}
             </>}
 
-            {   !defaultValues?.reportSubmission && Array.isArray(defaultValues?.reportDocs) &&
+            {   !defaultValues?.reportSubmition && Array.isArray(defaultValues?.reportDocs) &&
                 <>
                     <Text style={styles.title}>Reporting Documents</Text>
                     <View style={styles.row}>
@@ -202,7 +202,7 @@ export function MachineServiceReportPDF({machineServiceReport, machineServiceRep
                 </>
             }
 
-            { defaultValues?.reportSubmission && <>
+            { defaultValues?.reportSubmition && <>
 
             <View style={styles.row}>
                 <View style={styles.col}>
@@ -408,7 +408,7 @@ export function MachineServiceReportPDF({machineServiceReport, machineServiceRep
                 )}
             </>}
 
-            { defaultValues?.reportSubmission && Array.isArray(defaultValues?.files) && defaultValues?.files?.filter( f => f?.src )?.length > 0 && <>
+            { defaultValues?.reportSubmition && Array.isArray(defaultValues?.files) && defaultValues?.files?.filter( f => f?.src )?.length > 0 && <>
                 <Text style={styles.title}>Documents / Images</Text>
                 <View style={styles.row}>
                     <View style={styles.image_row} >

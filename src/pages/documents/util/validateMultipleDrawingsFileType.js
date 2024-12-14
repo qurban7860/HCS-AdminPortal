@@ -23,10 +23,11 @@ const validateMultipleDrawingsFileType = (value, options) => {
             });
         }
     const invalidFiles = value.filter((file) => {
-        const fileExtension = file?.name?.split('.').pop().toLowerCase();
+        const fileExtension = file?.path?.split('.').pop().toLowerCase();
     return !allowedExtensions.includes(fileExtension);
     });
-    if (invalidFiles.length > 0) {
+    
+    if (invalidFiles.length > 0){
         const invalidFileNames = invalidFiles.map((file) => file.name).join(', ');
         return createError({
             message: `Invalid file(s) detected: ${invalidFileNames}`,

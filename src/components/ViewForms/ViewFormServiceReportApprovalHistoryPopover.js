@@ -84,7 +84,7 @@ function ViewFormServiceReportApprovalPopover({ open, onClose, ListTitle, evalua
                               </TableCell>
                             </StyledTooltip>
                             <TableCell align="right">
-                              {fDateTime(log?.evaluationDate) || ''}
+                              {fDateTime(log?.updatedAt) || ''}
                             </TableCell>
                           </TableRow>
                         ))
