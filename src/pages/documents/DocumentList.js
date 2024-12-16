@@ -160,7 +160,7 @@ const TABLE_HEAD = useMemo(() => {
   if (!customerPage && !machineDrawingPage && !machineDrawings) {
     return [
       ...baseHeaders.slice(0, 4),
-      { id: 'machine.serialNo', visibility: 'md4', label: 'Machine', align: 'left', allowSearch: false },
+      { id: 'machine.serialNo', visibility: 'md4', label: 'Machine', align: 'left', allowSearch: true },
       ...baseHeaders.slice(4),
     ];
   }

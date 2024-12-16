@@ -51,7 +51,7 @@ const initialState = {
     "docType.name": false,
     "stockNumber": false,
     "productDrawings": true,
-    "machine.serialNo": true,
+    "machine.serialNo": false,
     "createdAt": false,
   },
 };
