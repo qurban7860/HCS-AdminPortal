@@ -206,53 +206,38 @@ const documentSchema = Yup.object().shape({
 
   const handleDropMultiFile = async (acceptedFiles) => {
     setProgressBar(true);
-  
-    const setProgressBarPercentage = async (index) => {
-      const percentage = Math.round(((index + 1) / acceptedFiles.length) * 100); // Calculate percentage
-      await setProgress(percentage); // Update the progress bar
-    };
-  
+    const setProgressBarPercentage = async ( index ) => {
+      await setProgress( acceptedFiles?.length ? Math.round( (100 / acceptedFiles.length ) * index / 10 ) * 10  : 0  );
+  }
     pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
-  
-    const defaultDocCategory = activeDocumentCategories?.find(
-      (f) => f?.name?.toLowerCase()?.trim() === "assembly drawings"
-    );
-  
-    const _files_MD5 = await hashFilesMD5(acceptedFiles);
-  
+    const defaultDocCategory = await activeDocumentCategories?.find( f => f?.name?.toLowerCase()?.trim() === 'assembly drawings');
+
+      const _files_MD5 = await hashFilesMD5(acceptedFiles);
     const newFiles = await acceptedFiles.reduce(async (accumulatorPromise, file, index) => {
-      await setProgressBarPercentage(index); // Update progress bar for each file processed
-  
+      await setProgressBarPercentage( index )
       const accumulator = await accumulatorPromise;
       const displayName = await removeFileExtension(file?.name);
       const referenceNumber = await getRefferenceNumber(file?.name);
       const versionNo = await getVersionNumber(file?.name);
-  
-      let stockNumber = "";
-      const checkDocType = activeDocumentTypes.find((el) =>
-        displayName.trim().toLowerCase().includes(el.name.trim().toLowerCase())
-      );
-  
-      let defaultDocType;
-      if (checkDocType?.docCategory?._id === defaultDocCategory?._id) {
-        defaultDocType = checkDocType;
-      } else if (
-        displayName.trim().toLowerCase().includes("frama") ||
-        displayName.trim().toLowerCase().includes("decoiler")
-      ) {
-        defaultDocType = activeDocumentTypes.find((el) =>
-          el?.name?.trim()?.toLowerCase().includes("assembly")
-        );
+
+      let stockNumber = '';
+      const checkDocType = activeDocumentTypes.find((el) => displayName.trim().toLowerCase().includes(el.name.trim().toLowerCase()));
+
+      let defaultDocType
+      if( checkDocType?.docCategory?._id === defaultDocCategory?._id ){
+        defaultDocType = checkDocType
+      } else if( displayName.trim().toLowerCase().includes( 'frama' ) || displayName.trim().toLowerCase().includes( 'decoiler' )){
+        defaultDocType = activeDocumentTypes.find((el) => el?.name?.trim()?.toLowerCase().includes( 'assembly' ))
       }
   
-      if (file?.type?.indexOf("pdf") > -1) {
+      if (file?.type?.indexOf('pdf') > -1) {
         const arrayBuffer = await file.arrayBuffer();
         const pdfDocument = await pdfjs.getDocument(arrayBuffer).promise;
         const page = await pdfDocument.getPage(1);
         const textContent = await page.getTextContent();
         try {
           textContent.items.some((item, indexx) => {
-            if (item.str === "DRAWN BY" && textContent?.items[indexx + 2]?.str?.length < 15) {
+            if (item.str === 'DRAWN BY' && textContent?.items[indexx + 2]?.str?.length < 15) {
               stockNumber = textContent.items[indexx + 2].str;
               return true;
             }
@@ -260,18 +245,18 @@ const documentSchema = Yup.object().shape({
               stockNumber = textContent.items[indexx + 2].str;
               return true;
             }
-            if (item.str === "APPROVED" && textContent?.items[indexx - 2]?.str?.length < 15) {
+            if (item.str === 'APPROVED' && textContent?.items[indexx - 2]?.str?.length < 15) {
               stockNumber = textContent.items[indexx - 2].str;
               return true;
             }
-            return false;
+            return false; // Continue iterating if condition is not met
           });
         } catch (e) {
           console.log(e);
         }
       }
-  
-      if (files?.some((f) => f?.hashMD5 === _files_MD5[index])) {
+
+      if (files?.some(f => f?.hashMD5 === _files_MD5[index] )) {
         return accumulator;
       }
       file.drawingMachine = machine?._id;
@@ -284,17 +269,15 @@ const documentSchema = Yup.object().shape({
       file.stockNumber = stockNumber;
       return [...accumulator, file];
     }, Promise.resolve([]));
-  
     setProgressBar(false);
-    setProgress(0);
-  
-    if (files) {
-      setValue("files", [...files, ...newFiles]);
+    setProgress(0)
+    if(files){
+      setValue('files',[ ...files, ...newFiles] );
     } else {
-      setValue("files", [...newFiles]);
+      setValue('files',[ ...newFiles] );
     }
-    trigger("files");
-  };
+    trigger('files');
+  }
   
   const toggleCancel = () => { 
     if(machineDrawings){
