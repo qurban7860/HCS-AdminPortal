@@ -207,9 +207,9 @@ const documentSchema = Yup.object().shape({
   const handleDropMultiFile = async (acceptedFiles) => {
     setProgressBar(true);
   
-    const setProgressBarPercentage = (processedFiles) => {
-      const percentage = Math.round((processedFiles / acceptedFiles.length) * 100);
-      setProgress(percentage); // Update the progress bar
+    const setProgressBarPercentage = async (index) => {
+      const percentage = Math.round(((index + 1) / acceptedFiles.length) * 100); // Calculate percentage
+      await setProgress(percentage); // Update the progress bar
     };
   
     pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
@@ -220,10 +220,10 @@ const documentSchema = Yup.object().shape({
   
     const _files_MD5 = await hashFilesMD5(acceptedFiles);
   
-    // Prepare tasks for all files
-    const fileProcessingTasks = acceptedFiles.map(async (file, index) => {
-      setProgressBarPercentage(index + 1);
+    const newFiles = await acceptedFiles.reduce(async (accumulatorPromise, file, index) => {
+      await setProgressBarPercentage(index); // Update progress bar for each file processed
   
+      const accumulator = await accumulatorPromise;
       const displayName = await removeFileExtension(file?.name);
       const referenceNumber = await getRefferenceNumber(file?.name);
       const versionNo = await getVersionNumber(file?.name);
@@ -233,7 +233,7 @@ const documentSchema = Yup.object().shape({
         displayName.trim().toLowerCase().includes(el.name.trim().toLowerCase())
       );
   
-      let defaultDocType = null ;
+      let defaultDocType;
       if (checkDocType?.docCategory?._id === defaultDocCategory?._id) {
         defaultDocType = checkDocType;
       } else if (
@@ -250,7 +250,6 @@ const documentSchema = Yup.object().shape({
         const pdfDocument = await pdfjs.getDocument(arrayBuffer).promise;
         const page = await pdfDocument.getPage(1);
         const textContent = await page.getTextContent();
-  
         try {
           textContent.items.some((item, indexx) => {
             if (item.str === "DRAWN BY" && textContent?.items[indexx + 2]?.str?.length < 15) {
@@ -273,34 +272,28 @@ const documentSchema = Yup.object().shape({
       }
   
       if (files?.some((f) => f?.hashMD5 === _files_MD5[index])) {
-        return null; // Skip duplicate files
+        return accumulator;
       }
-  
-      return {
-        ...file,
-        drawingMachine: machine?._id,
-        hashMD5: _files_MD5[index],
-        displayName,
-        docCategory: defaultDocCategory,
-        docType: defaultDocType,
-        versionNo: versionNo?.replace(/[^\d.]+/g, ""),
-        referenceNumber,
-        stockNumber,
-      };
-    });
-  
-    // Process all files concurrently
-    const processedFiles = (await Promise.all(fileProcessingTasks)).filter(Boolean);
+      file.drawingMachine = machine?._id;
+      file.hashMD5 = _files_MD5[index];
+      file.displayName = displayName;
+      file.docCategory = defaultDocCategory;
+      file.docType = defaultDocType;
+      file.versionNo = versionNo?.replace(/[^\d.]+/g, "");
+      file.referenceNumber = referenceNumber;
+      file.stockNumber = stockNumber;
+      return [...accumulator, file];
+    }, Promise.resolve([]));
   
     setProgressBar(false);
     setProgress(0);
   
-    if( Array.isArray( files ) && files?.length > 0 ) {
-      setValue("files", [...files, ...processedFiles]);
+    if (files) {
+      setValue("files", [...files, ...newFiles]);
     } else {
-      setValue("files", [...processedFiles]);
+      setValue("files", [...newFiles]);
     }
-  
+    trigger("files");
   };
   
   const toggleCancel = () => { 
