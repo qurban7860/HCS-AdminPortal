@@ -78,7 +78,7 @@ const documentSchema = Yup.object().shape({
   description: Yup.string().max(10000),
   files: Yup.mixed().label('Files').required('Files required!')
   .test( 'fileType',
-    'Only the following formats are accepted: .jpeg, .jpg, gif, .bmp, .webp, .pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx',
+    'Only the following formats are accepted: .pdf',
     validateMultipleDrawingsFileType
   ).nullable(true),
 });
