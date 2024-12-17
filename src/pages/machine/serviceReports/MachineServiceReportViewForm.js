@@ -276,9 +276,8 @@ function MachineServiceReportViewForm(  ) {
 
   const serviceReportApprovalData = {
     status: machineServiceReport?.currentApprovalStatus,
-    currentApprovalLogs: machineServiceReport?.approval?.approvalHistory,
-    currentApprovingContacts: machineServiceReport?.approval?.approvingContacts,
-    completeHistory: machineServiceReport?.completeEvaluationHistory,
+    approvalLogs: machineServiceReport?.approval?.approvalHistory,
+    approvingContacts: machineServiceReport?.approval?.approvingContacts,
   }
 
   const handleDeleteReportFile = async (fileId) => {
@@ -398,7 +397,7 @@ function MachineServiceReportViewForm(  ) {
             ((machineServiceReport.isActive &&
               machineServiceReport?.status?.name?.toUpperCase() === 'SUBMITTED' &&
               machineServiceReport?.approval?.approvingContacts?.length > 0) ||
-              machineServiceReport?.completeEvaluationHistory?.totalLogsCount > 0) ?
+              machineServiceReport?.approval?.approvalHistory.length > 0) ?
               serviceReportApprovalData : null
           }
         />
