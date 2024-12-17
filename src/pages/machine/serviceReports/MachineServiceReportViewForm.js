@@ -457,7 +457,7 @@ function MachineServiceReportViewForm(  ) {
             }
           />
 
-          {/* {( machineServiceReport?.currentApprovalStatus !== "PENDING" && machineServiceReport?.approval?.approvalHistory?.length > 0) ? (               */}
+          {( machineServiceReport?.currentApprovalStatus !== "PENDING" && machineServiceReport?.approval?.approvalHistory?.length > 0) ? (              
             <Grid container item md={12} >
               <ViewFormField
                 sm={ 12 }
@@ -469,7 +469,7 @@ function MachineServiceReportViewForm(  ) {
                 data={ machineServiceReport?.approval?.approvalHistory?.[0] || {}}
               />
             </Grid>
-          {/* ) : null } */}
+          ) : null }
 
           <ViewFormField
             sm={ 4 }
