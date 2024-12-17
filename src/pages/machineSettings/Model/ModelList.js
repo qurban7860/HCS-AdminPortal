@@ -33,12 +33,14 @@ import {
 import Scrollbar from '../../../components/scrollbar';
 import ConfirmDialog from '../../../components/confirm-dialog/ConfirmDialog';
 // sections
+import { getActiveCategories, resetActiveCategories } from '../../../redux/slices/products/category';
 import ModelListTableRow from './ModelListTableRow';
 import ModelListTableToolbar from './ModelListTableToolbar';
 import { Cover } from '../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../../components/ListTableTools/TableCard';
+// import { RHFAutocomplete } from '../../../components/hook-form';
 
 // ----------------------------------------------------------------------
 
@@ -73,26 +75,31 @@ export default function ModelList() {
   const navigate = useNavigate();
 
   const [filterName, setFilterName] = useState('');
-
   const [filterStatus, setFilterStatus] = useState([]);
-
   const [openConfirm, setOpenConfirm] = useState(false);
-
+  const [selectedCategory, setSelectedCategory] = useState(null); 
   const { machineModels, filterBy, page, rowsPerPage, isLoading, error, initial, responseMessage } = useSelector(
     (state) => state.machinemodel
   );
-  
+
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));
     dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
   };
 
-  const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
+  const onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
 
   useLayoutEffect(() => {
     dispatch(getMachineModels());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
+  
+  useEffect(() => {
+    dispatch(getActiveCategories());
+    return () => { 
+      dispatch(resetActiveCategories()); 
+    }
+  }, [dispatch]);  
 
   useEffect(() => {
     if (initial) {
@@ -105,7 +112,8 @@ export default function ModelList() {
     comparator: getComparator(order, orderBy),
     filterName,
     filterStatus,
-  });
+    selectedCategory, // Pass filterCategory to applyFilter
+  }, [selectedCategory, filterName, filterStatus]);
 
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
@@ -119,26 +127,25 @@ export default function ModelList() {
     setOpenConfirm(false);
   };
 
-
   const debouncedSearch = useRef(debounce((value) => {
-    dispatch(ChangePage(0))
-    dispatch(setFilterBy(value))
-  }, 500))
+    dispatch(ChangePage(0));
+    dispatch(setFilterBy(value));
+  }, 500));
 
   const handleFilterName = (event) => {
     debouncedSearch.current(event.target.value);
-    setFilterName(event.target.value)
+    setFilterName(event.target.value);
     setPage(0);
   };
-  
+
   useEffect(() => {
-      debouncedSearch.current.cancel();
+    debouncedSearch.current.cancel();
   }, [debouncedSearch]);
-  
-  useEffect(()=>{
-      setFilterName(filterBy)
+
+  useEffect(() => {
+    setFilterName(filterBy);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[])
+  }, []);
 
   const handleFilterStatus = (event) => {
     setPage(0);
@@ -160,11 +167,10 @@ export default function ModelList() {
     }
   };
 
-
   const handleViewRow = async (id) => navigate(PATH_MACHINE.machines.machineSettings.models.view(id));
 
   const handleResetFilter = () => {
-    dispatch(setFilterBy(''))
+    dispatch(setFilterBy(''));
     setFilterName('');
   };
 
@@ -182,6 +188,8 @@ export default function ModelList() {
             onFilterStatus={handleFilterStatus}
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
+            selectedCategory={selectedCategory}
+            setSelectedCategory={setSelectedCategory}
           />
           {!isNotFound && <TablePaginationCustom
             count={dataFiltered.length}
@@ -191,7 +199,6 @@ export default function ModelList() {
             onRowsPerPageChange={onChangeRowsPerPage}
           />}
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-
             <Scrollbar>
               <Table size="small" sx={{ minWidth: 360 }}>
                 <TableHeadCustom
@@ -200,7 +207,6 @@ export default function ModelList() {
                   headLabel={TABLE_HEAD}
                   onSort={onSort}
                 />
-
                 <TableBody>
                   {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -223,7 +229,6 @@ export default function ModelList() {
               </Table>
             </Scrollbar>
           </TableContainer>
-
           {!isNotFound && <TablePaginationCustom
             count={dataFiltered.length}
             page={page}
@@ -233,7 +238,6 @@ export default function ModelList() {
           />}
         </TableCard>
       </Container>
-
       <ConfirmDialog
         open={openConfirm}
         onClose={handleCloseConfirm}
@@ -262,7 +266,7 @@ export default function ModelList() {
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName, filterStatus }) {
+function applyFilter({ inputData, comparator, filterName, filterStatus, selectedCategory }) {
   const stabilizedThis = inputData ? inputData?.map((el, index) => [el, index]) : [];
 
   stabilizedThis.sort((a, b) => {
@@ -273,6 +277,7 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
 
   inputData = stabilizedThis.map((el) => el[0]);
 
+  
   if (filterName) {
     inputData = inputData.filter(
       (filterModel) =>
@@ -286,5 +291,12 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   if (filterStatus.length) {
     inputData = inputData.filter((customer) => filterStatus.includes(customer.status));
   }
+  
+  if (selectedCategory) {
+    inputData = inputData.filter(
+      (customer) => customer?.category?._id === selectedCategory._id
+    );
+  }
+
   return inputData;
 }
