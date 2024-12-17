@@ -54,16 +54,13 @@ export default function CustomerListTableToolbar({
         value={filterName}
         onChange={onFilterName}
         onClick={onResetFilter}
-        machineSettingPage
-      />
-    </Box>
-  
-    <Box sx={{ width: 'auto', minWidth: 300, flexShrink: 0 }}>
-      <Autocomplete
+        node={
+          <Autocomplete
         value={selectedCategory || null}
         options={activeCategories}
         getOptionLabel={(option) => `${option?.name || ''}`}
         isOptionEqualToValue={(option, value) => option?._id === value?._id}
+        sx={{ maxWidth: '225px' }}
         onChange={(event, newValue) => {
           if (newValue) {
             setSelectedCategory(newValue);
@@ -79,10 +76,8 @@ export default function CustomerListTableToolbar({
         renderInput={(params) => (
           <TextField {...params} size="small" label="Categories" />
         )}
-      />
-    </Box>
-    <Box>
-      <SearchBarCombo
+      />}
+        machineSettingPage
         SubOnClick={toggleAdd}
         addButton={BUTTONS.ADDMODEL}
       />
