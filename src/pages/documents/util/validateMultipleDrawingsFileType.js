@@ -1,4 +1,4 @@
-import { Snacks } from '../../../constants/document-constants';
+import { Snacks, allowedExtensions } from '../../../constants/document-constants';
 
 const maxFiles = JSON.parse( localStorage.getItem('configurations'))?.find( ( c )=> c?.name === 'MAX_UPLOAD_FILES' )
 
@@ -10,7 +10,7 @@ const validateMultipleDrawingsFileType = (value, options) => {
 
         const invalidFiles = value.filter((file) => {
             const fileExtension = file?.path?.split('.').pop().toLowerCase();
-            return !['pdf'].includes(fileExtension);
+            return !allowedExtensions.includes(fileExtension);
         });
         
         if (invalidFiles.length > 0){
@@ -38,7 +38,6 @@ const validateMultipleDrawingsFileType = (value, options) => {
                 value,
             });
         }
-
 
         return true;
     }
