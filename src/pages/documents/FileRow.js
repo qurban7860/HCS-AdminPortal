@@ -12,6 +12,8 @@ export default function FileRow({
     i,
     file,
     docCategory,
+    setValue,
+    trigger,
 }){
     
     const { key, displayName, docType } = fileData(file);
@@ -49,6 +51,10 @@ export default function FileRow({
                             isOptionEqualToValue={( option, value ) => option?._id === value?._id }
                             getOptionLabel={(option) => `${option?.name || ''}`}
                             renderOption={(props, option) => (<li {...props} key={option?._id}>{`${option?.name || ''}`}</li>)}
+                            onChange={(event, newValue)=> {
+                                setValue(`files[${i}].docType`, newValue || null)
+                                trigger('files')
+                            }}
                         />
                     </Grid>
                     <Grid item md={8} sm={12} >
@@ -58,6 +64,10 @@ export default function FileRow({
                             Error={ displayName?.trim() === '' }
                             name={`files[${i}].displayName`}
                             label="Document Name*"
+                            onChange={(event)=> {
+                                setValue(`files[${i}].displayName`, event?.target?.value || "")
+                                trigger('files')
+                            }}
                         />
                     </Grid>
                 </Stack>
@@ -94,4 +104,6 @@ FileRow.propTypes = {
     i: PropTypes.number,
     file: PropTypes.object,
     docCategory: PropTypes.object,
+    setValue: PropTypes.func,
+    trigger: PropTypes.func,
 };
