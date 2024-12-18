@@ -276,6 +276,8 @@ function DocumentListAddForm({
                           i={index} 
                           file={f}
                           docCategory={docCategory}
+                          setValue={setValue}
+                          trigger={trigger}
                         />
                       ) 
                     }
