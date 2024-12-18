@@ -73,9 +73,11 @@ function DocumentListAddForm({
   const documentSchema = Yup.object().shape({
     docCategory: Yup.object().label('Document Category').required().nullable(),
     description: Yup.string().max(10000),
-    files: Yup.array().label('Files').min(1,'Files required!')
+    files: Yup.array()
+    .label('Files')
+    .min(1,'Files required!')
     .test( 'fileType',
-      'Only the following formats are accepted: .pdf',
+      'Only the following formats are accepted: jpeg, jpg, gif, bmp, webp, pdf, doc, xls, ppt',
       validateMultipleDrawingsFileType
     ).nullable(true),
   });

@@ -37,6 +37,7 @@ export default function FileRow({
                 <Stack direction={{ sm: 'block', md: 'row' }} spacing={1} >
                     <Grid item md={4} sm={12} >
                         <RHFAutocomplete 
+                            Error={ !docType?._id }
                             size='small'
                             name={`files[${i}].docType`}
                             label="Type*"
@@ -54,6 +55,7 @@ export default function FileRow({
                         <RHFTextField 
                             fullWidth 
                             size='small'
+                            Error={ displayName?.trim() === '' }
                             name={`files[${i}].displayName`}
                             label="Document Name*"
                         />

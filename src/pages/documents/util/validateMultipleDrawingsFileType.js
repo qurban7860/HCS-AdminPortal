@@ -7,14 +7,12 @@ const validateMultipleDrawingsFileType = (value, options) => {
     
     const { path, createError } = options;
     if (value && Array.isArray(value)) {
-
         const invalidFiles = value.filter((file) => {
             const fileExtension = file?.path?.split('.').pop().toLowerCase();
             return !allowedExtensions.includes(fileExtension);
         });
-        
         if (invalidFiles.length > 0){
-            const invalidFileNames = invalidFiles.map((file) => file.path).join(', ');
+            const invalidFileNames = invalidFiles?.map((file) => file?.path).join(', ');
             return createError({
                 message: `Invalid file(s) detected: ${invalidFileNames}`,
                 path,
