@@ -68,15 +68,10 @@ Upload.propTypes = {
   onUpload: PropTypes.func,
   thumbnail: PropTypes.bool,
   rows: PropTypes.bool,
+  hideFiles: PropTypes.bool,
   helperText: PropTypes.node,
   onRemoveAll: PropTypes.func,
   machine:PropTypes.string,
-  onChangeDocType: PropTypes.func,
-  onChangeDocCategory: PropTypes.func,
-  onChangeVersionNo: PropTypes.func,
-  onChangeDisplayName: PropTypes.func,
-  onChangeReferenceNumber: PropTypes.func,
-  onChangeStockNumber: PropTypes.func,
   drawingPage:PropTypes.bool,
   imagesOnly:PropTypes.bool,
   dropZone:PropTypes.bool,
@@ -99,16 +94,11 @@ export default function Upload({
   files,
   thumbnail,
   rows,
+  hideFiles,
   onUpload,
   onRemove,
   onRemoveAll,
   machine,
-  onChangeDocType,
-  onChangeDocCategory,
-  onChangeVersionNo,
-  onChangeDisplayName,
-  onChangeReferenceNumber,
-  onChangeStockNumber,
   drawingPage,
   onLoadImage,
   onLoadPDF,
@@ -278,19 +268,12 @@ export default function Upload({
               xl: 'repeat(8, 1fr)',
             }}
           >
-            {hasFiles &&
+            {hasFiles && !hideFiles &&
               <MultiFilePreview 
-                onChangeDocType={onChangeDocType}
-                onChangeDocCategory={onChangeDocCategory}
-                onChangeVersionNo={onChangeVersionNo}
-                onChangeDisplayName={onChangeDisplayName}
-                onChangeReferenceNumber={onChangeReferenceNumber}
-                onChangeStockNumber={onChangeStockNumber}
                 onLoadImage={ onLoadImage }
                 onLoadPDF={onLoadPDF}
                 onDownload={ onDownload }
-                machine={machine||''} 
-                rows={rows} 
+                machine={machine||''}
                 drawingPage 
                 files={files} 
                 thumbnail={thumbnail} 
