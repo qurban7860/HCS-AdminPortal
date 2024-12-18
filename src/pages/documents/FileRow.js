@@ -1,10 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { Box, Grid, Stack } from '@mui/material';
+import { Box, Grid, Stack, IconButton } from '@mui/material';
 import { m } from 'framer-motion';
 import FileThumbnail, { fileData } from '../../components/file-thumbnail';
 import { varFade } from '../../components/animate';
+import Iconify from '../../components/iconify';
 import { RHFAutocomplete, RHFTextField } from '../../components/hook-form';
 
 
@@ -14,6 +15,7 @@ export default function FileRow({
     docCategory,
     setValue,
     trigger,
+    onRemove
 }){
     
     const { key, displayName, docType } = fileData(file);
@@ -96,6 +98,11 @@ export default function FileRow({
                 </Box>
             </Stack>
         </Stack>
+        {onRemove && (
+            <IconButton edge="end" size="small" onClick={() => onRemove(file)} sx={{ ml: 5 }}> 
+                <Iconify icon="eva:close-fill" />
+            </IconButton>
+        )}
     </Stack>
   )
 }
@@ -106,4 +113,5 @@ FileRow.propTypes = {
     docCategory: PropTypes.object,
     setValue: PropTypes.func,
     trigger: PropTypes.func,
+    onRemove: PropTypes.func
 };
