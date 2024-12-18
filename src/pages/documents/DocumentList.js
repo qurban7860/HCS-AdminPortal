@@ -157,7 +157,7 @@ const TABLE_HEAD = useMemo(() => {
     ];
   }
 
-  if (!customerPage && !machineDrawingPage && !machineDrawings) {
+  if (!customerPage && !machineDrawingPage && !machineDrawings && !machinePage) {
     return [
       ...baseHeaders.slice(0, 4),
       { id: 'machine.serialNo', visibility: 'md4', label: 'Machine', align: 'left', allowSearch: true },
@@ -165,7 +165,7 @@ const TABLE_HEAD = useMemo(() => {
     ];
   }
   return baseHeaders;
-}, [customerPage, machineDrawingPage, machineDrawings]);
+}, [customerPage, machineDrawingPage, machineDrawings, machinePage]);
 
 // useLayoutEffect(() => {
 //     if(machineDrawingPage || machineDrawings || machinePage ){
