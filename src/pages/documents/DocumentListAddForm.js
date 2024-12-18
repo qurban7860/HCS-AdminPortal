@@ -114,10 +114,6 @@ function DocumentListAddForm({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ activeDocumentCategories ]);
   
-  useEffect(() => {
-    trigger('files');
-  }, [ trigger, files ]);
-
   const onSubmit = async (data) => {
     try {
       await dispatch(addDrawingsList( data));
@@ -256,13 +252,6 @@ function DocumentListAddForm({
                       hideFiles
                       name="files"
                       onDrop={handleDropMultiFile}
-                      onRemove={(inputFile) => {
-                          if (files?.length > 1) {
-                              setValue('files', files?.filter((file) => file?.hashMD5 !== inputFile?.hashMD5));
-                          } else {
-                              setValue('files', null);
-                          }
-                      }}
                       drawingPage={drawingPage || machineDrawings}
                     />
                     { progressBar &&  
@@ -278,6 +267,14 @@ function DocumentListAddForm({
                           docCategory={docCategory}
                           setValue={setValue}
                           trigger={trigger}
+                          onRemove={(inputFile) => {
+                            if (files?.length > 1) {
+                                setValue('files', files?.filter((file) => file?.hashMD5 !== inputFile?.hashMD5));
+                            } else {
+                                setValue('files', null);
+                            }
+                            trigger('files')
+                          }}
                         />
                       ) 
                     }
