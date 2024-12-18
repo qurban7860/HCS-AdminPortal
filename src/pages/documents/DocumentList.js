@@ -508,7 +508,7 @@ const TABLE_HEAD = useMemo(() => {
             </Card>
           </Grid>
         </Grid>
-        )}
+        )}</FormProvider>
         <TableCard>
           <DocumentListTableToolbar
             filterName={filterName}
@@ -560,7 +560,8 @@ const TABLE_HEAD = useMemo(() => {
                           onViewRow={() => handleViewRow(row._id)}
                           style={index % 2 ? { background: 'red' } : { background: 'green' }}
                           customerPage={customerPage}
-                          machinePage={machineDrawingPage}
+                          machinePage={machinePage}
+                          machineDrawingPage={machineDrawingPage}
                           machineDrawings={machineDrawings}
                           handleCustomerDialog={(e) =>
                             row?.customer && handleCustomerDialog(e, row?.customer?._id)
@@ -591,7 +592,6 @@ const TABLE_HEAD = useMemo(() => {
           )}
         </TableCard>
         {/* </Container> */}
-      </FormProvider>
     </>
   );
 }

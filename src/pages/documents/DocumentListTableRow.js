@@ -76,10 +76,7 @@ export default function DocumentListTableRow({
       {  !hiddenColumns?.stockNumber && machineDrawings && <TableCell align="left">{stockNumber}</TableCell>}
       {  !hiddenColumns?.productDrawings && machineDrawings && <TableCell align="left">{productDrawings?.map((m)=> m?.machine?.serialNo).join(', ')}</TableCell>}
       {  !hiddenColumns?.['machine.serialNo'] && !customerPage && !machinePage && !machineDrawings && !machineDrawingPage && lgScreen && 
-          <>
-            {/* <LinkDialogTableCell onClick={handleCustomerDialog} align='left' param={customer?.name}/>   */}
-            <LinkDialogTableCell onClick={handleMachineDialog} align='left' param={machine?.serialNo}/>  
-          </>
+          <LinkDialogTableCell onClick={handleMachineDialog} align='left' param={machine?.serialNo}/>  
       }
       {!hiddenColumns?.createdAt && <TableCell align="right">{fDate(createdAt)}</TableCell>}
     </StyledTableRow>
