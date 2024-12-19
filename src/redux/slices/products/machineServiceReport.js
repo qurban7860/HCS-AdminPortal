@@ -51,6 +51,9 @@ const slice = createSlice({
     startUpdatingReportStatus(state) {
       state.isUpdatingReportStatus = true;
     },
+    endUpdatingReportStatus(state, action) {
+      state.isUpdatingReportStatus = false;
+    },
     // START LOADING CHECK ITEMS
     startLoadingCheckItems(state) {
       state.isLoadingCheckItems = true;
@@ -735,6 +738,24 @@ export function updateMachineServiceReportStatus(machineId, id, params) {
       const data = { status: params?.status?._id }
       await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceReports/${id}/status`, data );
       await dispatch(slice.actions.updateMachineServiceReportStatusSuccess(params?.status));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+
+}
+
+// --------------------------------------------------------------------------
+
+export function sendToDraftMachineServiceReportStatus(machineId, id) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startUpdatingReportStatus());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceReports/${id}/sendToDraft`);
+      await dispatch(slice.actions.endUpdatingReportStatus());
+      await dispatch(slice.actions.getMachineServiceReportSuccess(response?.data?.data));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));

@@ -49,7 +49,7 @@ function ViewFormServiceReportApprovalPopover({ open, onClose, ListTitle, evalua
                     >
                       <TableCell align="left">{item?.status}</TableCell>
                       <TableCell align="left">
-                        {`${item?.updatedBy?.firstName} ${item?.updatedBy?.lastName}` || ''}
+                        {item?.updatedBy?.name || ''}
                       </TableCell>
                       <StyledTooltip
                         title={item?.comments || ''}
