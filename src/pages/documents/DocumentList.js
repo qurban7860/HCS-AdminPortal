@@ -134,9 +134,11 @@ const onChangePage = (event, newPage) => {
     dispatch(customerDocumentChangePage(newPage))
   }else if(machineDrawings){
     dispatch(machineDrawingsChangePage(newPage))
+    dispatch(getDocuments(null, null, ( machineDrawings || machineDrawingPage ), page, machineDrawingsRowsPerPage, null, null, cancelTokenSource, filteredSearchKey, selectedSearchFilter));
   }else if(!machineDrawings && !customerPage && !machineDrawingPage){
     dispatch(ChangePage(newPage))
   }
+
 }
 
 const TABLE_HEAD = useMemo(() => {
@@ -390,7 +392,7 @@ const TABLE_HEAD = useMemo(() => {
       resetDocuments()
     );
   };  
-  console.log('machineDrawings : ',machineDrawings)
+  
   useEffect(() => {
       dispatch(getActiveDocumentCategories(null, null, machineDrawings ));
       dispatch(getActiveDocumentTypes(null, machineDrawings ));
