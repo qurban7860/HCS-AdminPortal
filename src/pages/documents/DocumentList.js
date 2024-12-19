@@ -111,36 +111,46 @@ function DocumentList({ customerPage, machinePage, machineDrawingPage, machineDr
     defaultOrderBy: machineDrawings ? 'doNotOrder' : 'createdAt', defaultOrder: 'desc',
   });
 
-  const onChangeRowsPerPage = (event) => {
-    if(machineDrawingPage){
-      dispatch(machineDocumentChangePage(0))
-      dispatch(machineDocumentChangeRowsPerPage(parseInt(event.target.value, 10)))
-    }else if(customerPage){
-      dispatch(customerDocumentChangePage(0))
-      dispatch(customerDocumentChangeRowsPerPage(parseInt(event.target.value, 10)))
-    }else if(machineDrawings){
-      dispatch(machineDrawingsChangePage(0))
-      dispatch(machineDrawingsChangeRowsPerPage(parseInt(event.target.value, 10)))
-      dispatch(getDocuments(null, null, ( machineDrawings || machineDrawingPage ), page, machineDrawingsRowsPerPage, null, null, cancelTokenSource, filteredSearchKey, selectedSearchFilter));
-    }else if(!machineDrawings && !customerPage && !machineDrawingPage){
-      dispatch(ChangePage(0));
-      dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10)));
-    }
-  };
-  
-  const onChangePage = (event, newPage) => {
-    if(machineDrawingPage){
-      dispatch(machineDocumentChangePage(newPage))
-    }else if(customerPage){
-      dispatch(customerDocumentChangePage(newPage))
-    }else if(machineDrawings){
-      dispatch(machineDrawingsChangePage(newPage))
-      dispatch(getDocuments(null, null, ( machineDrawings || machineDrawingPage ), page, machineDrawingsRowsPerPage, null, null, cancelTokenSource, filteredSearchKey, selectedSearchFilter));
-    }else if(!machineDrawings && !customerPage && !machineDrawingPage){
-      dispatch(ChangePage(newPage))
-    }
-  
+const onChangeRowsPerPage = (event) => {
+  if(machineDrawingPage){
+    dispatch(machineDocumentChangePage(0))
+    dispatch(machineDocumentChangeRowsPerPage(parseInt(event.target.value, 10)))
+  }else if(customerPage){
+    dispatch(customerDocumentChangePage(0))
+    dispatch(customerDocumentChangeRowsPerPage(parseInt(event.target.value, 10)))
+  }else if(machineDrawings){
+    dispatch(machineDrawingsChangePage(0))
+    dispatch(machineDrawingsChangeRowsPerPage(parseInt(event.target.value, 10)))
+    dispatch(
+      getDocuments( null, null, machineDrawings || null, page,
+        machineDrawings ? machineDrawingsRowsPerPage : documentRowsPerPage,
+        null, null, cancelTokenSource, filteredSearchKey || null, selectedSearchFilter || null, categoryVal, typeVal 
+      )
+    );
+  }else if(!machineDrawings && !customerPage && !machineDrawingPage){
+    dispatch(ChangePage(0));
+    dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10)));
   }
+};
+
+const onChangePage = (event, newPage) => {
+  if(machineDrawingPage){
+    dispatch(machineDocumentChangePage(newPage))
+  }else if(customerPage){
+    dispatch(customerDocumentChangePage(newPage))
+  }else if(machineDrawings){
+    dispatch(machineDrawingsChangePage(newPage))
+    dispatch(
+      getDocuments( null, null, machineDrawings || null, page,
+        machineDrawings ? machineDrawingsRowsPerPage : documentRowsPerPage,
+        null, null, cancelTokenSource, filteredSearchKey || null, selectedSearchFilter || null, categoryVal, typeVal  
+      )
+    );
+  }else if(!machineDrawings && !customerPage && !machineDrawingPage){
+    dispatch(ChangePage(newPage))
+  }
+
+}
 
 const TABLE_HEAD = useMemo(() => {
   const baseHeaders = [
