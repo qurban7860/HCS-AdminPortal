@@ -124,7 +124,7 @@ const onChangeRowsPerPage = (event) => {
     dispatch(
       getDocuments( null, null, machineDrawings || null, page,
         machineDrawings ? machineDrawingsRowsPerPage : documentRowsPerPage,
-        null, null, cancelTokenSource, filteredSearchKey || null, selectedSearchFilter || null, docCategoryId, docTypeId 
+        null, null, cancelTokenSource, filteredSearchKey || null, selectedSearchFilter || null, categoryVal, typeVal 
       )
     );
   }else if(!machineDrawings && !customerPage && !machineDrawingPage){
@@ -143,7 +143,7 @@ const onChangePage = (event, newPage) => {
     dispatch(
       getDocuments( null, null, machineDrawings || null, page,
         machineDrawings ? machineDrawingsRowsPerPage : documentRowsPerPage,
-        null, null, cancelTokenSource, filteredSearchKey || null, selectedSearchFilter || null, docCategoryId, docTypeId 
+        null, null, cancelTokenSource, filteredSearchKey || null, selectedSearchFilter || null, categoryVal, typeVal  
       )
     );
   }else if(!machineDrawings && !customerPage && !machineDrawingPage){
