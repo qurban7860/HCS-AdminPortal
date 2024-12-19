@@ -83,8 +83,8 @@ export default function DocumentListTableToolbar({
         value={filterName}
         onChange={(customerPage || machinePage) ? onFilterName : null}
         onClick={onResetFilter}
-        SubOnClick={toggleAdd}
-        SubOnClick2={ machineDrawings && toggleAddList || undefined }
+        SubOnClick={!machineDrawings && toggleAdd || undefined }
+        // SubOnClick2={ machineDrawings && toggleAddList || undefined }
         addButton={ ( !machineDrawings && ( customer?.isArchived || machine?.isArchived ) ) ? undefined : addButton }
         transferredMachine={machinePage && machine?.status?.slug === 'transferred'}
         categoryVal={categoryVal}

@@ -51,6 +51,9 @@ const slice = createSlice({
     startUpdatingReportStatus(state) {
       state.isUpdatingReportStatus = true;
     },
+    endUpdatingReportStatus(state, action) {
+      state.isUpdatingReportStatus = false;
+    },
     // START LOADING CHECK ITEMS
     startLoadingCheckItems(state) {
       state.isLoadingCheckItems = true;
@@ -671,7 +674,7 @@ export function addMachineServiceReport(machineId, params) {
           technicianNotes:            params?.technicianNotes,
           textBeforeCheckItems:       params?.textBeforeCheckItems,
           textAfterCheckItems:        params?.textAfterCheckItems,
-          reportSubmission:           params?.reportSubmission,
+          reportSubmition:            params?.reportSubmition,
           serviceNote:                params?.serviceNote,
           recommendationNote:         params?.recommendationNote,
           internalComments:           params?.internalComments,
@@ -746,6 +749,24 @@ export function updateMachineServiceReportStatus(machineId, id, params) {
 
 // --------------------------------------------------------------------------
 
+export function sendToDraftMachineServiceReportStatus(machineId, id) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startUpdatingReportStatus());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceReports/${id}/sendToDraft`);
+      await dispatch(slice.actions.endUpdatingReportStatus());
+      await dispatch(slice.actions.getMachineServiceReportSuccess(response?.data?.data));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+
+}
+
+// --------------------------------------------------------------------------
+
 export function addServiceReportNote( serviceReportId, name, data ) {
   return async (dispatch) => {
     try {
@@ -802,11 +823,11 @@ export function updateMachineServiceReport(machineId, id, params) {
         customer:                   params?.customer,
         site:                       params?.site,
         machine:                    machineId,
-        technicians:                 params?.technicians,
+        technicians:                params?.technicians,
         technicianNotes:            params?.technicianNotes,
         textBeforeCheckItems:       params?.textBeforeCheckItems,
         textAfterCheckItems:        params?.textAfterCheckItems,
-        reportSubmission:           params?.reportSubmission,
+        reportSubmition:            params?.reportSubmition,
         serviceNote:                params?.serviceNote,
         recommendationNote:         params?.recommendationNote,
         internalComments:           params?.internalComments,

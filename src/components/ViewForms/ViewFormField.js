@@ -56,7 +56,6 @@ function ViewFormField({
   handleAllVersion,
   isLoading,
   variant='body1',
-  srEvaluationComment,
 }) {
   const [verifiedAnchorEl, setVerifiedAnchorEl] = useState(null);
   const [verifiedBy, setVerifiedBy] = useState([]);
@@ -142,38 +141,6 @@ function ViewFormField({
           {secondObjectParam || ''}
           {numberParam || ''}
         </Typography>
-        {srEvaluationComment && (
-          <TextField
-            disabled
-            fullWidth
-            value={ machineServiceReport?.approval?.approvalLogs[0]?.comments || "" }
-            variant="standard"
-            helperText={`By ${machineServiceReport?.approval?.approvalLogs[0]?.evaluatedBy.firstName} ${
-                  machineServiceReport?.approval?.approvalLogs[0]?.evaluatedBy.lastName
-                } on ${fDateTime(machineServiceReport?.approval?.approvalLogs[0]?.evaluationDate)}`}
-            multiline
-            minRows={1}
-            // maxRows={6}
-            size="small"
-            FormHelperTextProps={{
-              sx: {
-                textAlign: 'right',
-                marginLeft: 'auto',
-                marginRight: "0",
-              },
-            }}
-            InputProps={{
-              sx: {
-                typography: 'body2',
-                '& .MuiInputBase-input.Mui-disabled': {
-                  color: theme.palette.text.primary,
-                  WebkitTextFillColor: theme.palette.text.primary,
-                },
-              },
-            }}
-            key={machineServiceReport?.approval?.approvalLogs[0]?.comments}
-          />
-        )}
         {node || ''}
         {ViewAllVersions && 
           <StyledTooltip title={ICONS.VIEW_VERSIONS.heading} placement="top" disableFocusListener tooltipcolor={theme.palette.primary.main} color={theme.palette.primary.main}>
@@ -406,6 +373,5 @@ ViewFormField.propTypes = {
   backLink: PropTypes.func,
   isLoading: PropTypes.bool,
   variant: PropTypes.string,
-  srEvaluationComment: PropTypes.bool
 };
 

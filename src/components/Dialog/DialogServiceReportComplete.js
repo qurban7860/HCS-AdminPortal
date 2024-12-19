@@ -29,10 +29,10 @@ import SkeletonLine from '../skeleton/SkeletonLine';
 import Iconify from '../iconify';
 
 DialogServiceReportComplete.propTypes = {
-  reportStatus: PropTypes.object,
+  dialogType: PropTypes.string,
 };
 
-function DialogServiceReportComplete({ reportStatus }) {
+function DialogServiceReportComplete({ dialogType }) {
   const [approvingContacts, setApprovingContacts] = useState([]);
   const [allowApproval, setAllowApproval] = useState(false);
   const dispatch = useDispatch();
@@ -73,14 +73,15 @@ function DialogServiceReportComplete({ reportStatus }) {
   useEffect(() => {
     if (
       machineServiceReport?.approval?.approvingContacts?.length > 0 &&
-      machineServiceReport?.approval?.approvingContacts?.includes(user?.contact)
+      machineServiceReport?.approval?.approvingContacts?.includes(user?.contact) &&
+      dialogType === "evaluate"
     ) {
       setAllowApproval(true);
-    }
+    } else setAllowApproval(false);
     return () => {
       dispatch(resetActiveSPContacts());
     }
-  }, [ dispatch, machineServiceReport, user ]);
+  }, [dialogType]);
 
   const handleCloseDialog = () => {
     dispatch(setCompleteDialog(false));
@@ -97,13 +98,11 @@ function DialogServiceReportComplete({ reportStatus }) {
       {allowApproval ? (
         <ApproveSeviceReport
           isLoading={isLoading}
-          reportStatus={reportStatus}
           approvingContacts={approvingContacts}
         />
       ) : (
         <SendApprovalEmails
           isLoading={isLoading}
-          reportStatus={reportStatus}
           approvingContacts={approvingContacts}
         />
       )}
@@ -113,7 +112,7 @@ function DialogServiceReportComplete({ reportStatus }) {
 
 export default DialogServiceReportComplete;
 
-const SendApprovalEmails = ({ isLoading, reportStatus, approvingContacts }) => {
+const SendApprovalEmails = ({ isLoading, approvingContacts }) => {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const { machineServiceReport } = useSelector((state) => state.machineServiceReport);
@@ -145,7 +144,6 @@ const SendApprovalEmails = ({ isLoading, reportStatus, approvingContacts }) => {
     try {
       const params = {
         approvingContacts: data?.contacts,
-        status: reportStatus?.value || '',
         primaryServiceReportId: machineServiceReport?.primaryServiceReportId || '',
         submittedBy: user,
         submittedAt: new Date(),
@@ -210,13 +208,12 @@ const SendApprovalEmails = ({ isLoading, reportStatus, approvingContacts }) => {
   );
 };
 
-const ApproveSeviceReport = ({ isLoading, reportStatus }) => {
+const ApproveSeviceReport = ({ isLoading }) => {
   const [approvalSubmitting, setApprovalSubmitting] = useState(false);
   const [rejectionSubmitting, setRejectionSubmitting] = useState(false);
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const { machineServiceReport } = useSelector((state) => state.machineServiceReport);
-  const { user } = useAuthContext();
   const maxLength = 500;
 
   const CompleteServiceReportSchema = Yup.object().shape({
@@ -261,8 +258,6 @@ const ApproveSeviceReport = ({ isLoading, reportStatus }) => {
       const params = {
         status: data?.status,
         comments: data?.comments,
-        evaluatedBy: user?.contact,
-        evaluationDate: new Date(),
       };
 
       await dispatch(
@@ -275,12 +270,12 @@ const ApproveSeviceReport = ({ isLoading, reportStatus }) => {
       await enqueueSnackbar(
         `Service Report ${data?.status === 'APPROVED' ? 'Approved' : 'Rejected'} Successfully!`
       );
-    } catch (err) {
+    } catch ( err ) {
       enqueueSnackbar(
         `Service Report ${data?.status === 'APPROVED' ? 'Approval' : 'Rejection'} Failed! `,
         { variant: 'error' }
       );
-      console.error(err.message);
+      console.error( err );
     } finally {
       setApprovalSubmitting(false);
       setRejectionSubmitting(false);
@@ -351,11 +346,9 @@ const ApproveSeviceReport = ({ isLoading, reportStatus }) => {
 
 SendApprovalEmails.propTypes = {
   isLoading: PropTypes.bool,
-  reportStatus: PropTypes.object,
   approvingContacts: PropTypes.array,
 };
 
 ApproveSeviceReport.propTypes = {
   isLoading: PropTypes.bool,
-  reportStatus: PropTypes.object,
 };

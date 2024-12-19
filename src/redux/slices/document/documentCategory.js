@@ -230,7 +230,7 @@ export function getDocumentCategory(Id) {
 
 // -----------------------------------Get Active Document Categories-----------------------------------
 
-export function getActiveDocumentCategories(categoryBy, cancelToken, drawing) {
+export function getActiveDocumentCategories( categoryBy, cancelToken, drawing ) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -238,14 +238,9 @@ export function getActiveDocumentCategories(categoryBy, cancelToken, drawing) {
         params: {
           isArchived: false,
           isActive: true,
+          drawing
         },
         cancelToken: cancelToken?.token,
-      }
-
-      if (drawing) {
-        query.params.drawing = drawing; 
-      } else {
-        query.params.drawing = false; 
       }
       
       Object.assign(query.params, categoryBy)

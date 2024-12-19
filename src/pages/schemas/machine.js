@@ -287,20 +287,14 @@ export const MachineServiceReportPart1Schema = Yup.object().shape({
     .required()
     .label('Service Date'),
   reportSubmition: Yup.boolean(),
-  files: Yup.mixed()
-  .nullable(true)
+  files: Yup.array()
   .when('reportSubmition', {
     is: false,
-    then: (schema) =>schema.required('Files are required when report submission is online'),
+    then: (schema) =>schema.min(1,'Files are required when report submission is Off-line'),
     otherwise: (schema) => schema.notRequired(),
-  }),
-});
-
-export const reportNoteSchema = Yup.object().shape({
-  technicians: Yup.array().label('Technicians').nullable(),
-  operators: Yup.array().label('Operator').nullable(),
-  note: Yup.string().max(5000).label('Notes').trim().required(),
-  isPublic: Yup.boolean(),
+  })
+  .test('fileType', fileTypesMessage, NotRequiredValidateFileType)
+  .nullable(true),
 });
 
 export const MachineServiceReportPart2TBCISchema = Yup.object().shape({

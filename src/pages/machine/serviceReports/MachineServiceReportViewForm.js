@@ -7,6 +7,7 @@ import { Container, Card, Chip, Grid, Box, Stack, Dialog, DialogTitle, Divider, 
 import { useNavigate, useParams } from 'react-router-dom';
 import download from 'downloadjs';
 import { PATH_MACHINE, PATH_CRM } from '../../../routes/paths';
+import ServiceReportAuditLogs from './ServiceReportAuditLogs';
 // redux
 import { deleteMachineServiceReport,   
   getMachineServiceReport, 
@@ -20,7 +21,8 @@ import { deleteMachineServiceReport,
   setFormActiveStep,
   getMachineServiceReportCheckItems,
   resetCheckItemValues,
-  setCompleteDialog } from '../../../redux/slices/products/machineServiceReport';
+  setCompleteDialog, 
+  sendToDraftMachineServiceReportStatus} from '../../../redux/slices/products/machineServiceReport';
 import { getActiveSPContacts } from '../../../redux/slices/customer/contact';
 import { getMachineForDialog, setMachineDialog } from '../../../redux/slices/products/machine';
 import { getCustomer, setCustomerDialog } from '../../../redux/slices/customer/customer';
@@ -81,12 +83,12 @@ function MachineServiceReportViewForm(  ) {
   },[ dispatch, machineId, id])
 
   useLayoutEffect(()=>{
-    if( id && !pdfViewerDialog && machineServiceReport?.reportSubmission ){
+    if( id && !pdfViewerDialog && machineServiceReport?.reportSubmition ){
       dispatch(getMachineServiceReportCheckItems( machineId, id ));
     }
     return ()=> dispatch(resetCheckItemValues())
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[dispatch, machineId, id, machineServiceReport?.reportSubmission ] )
+  },[dispatch, machineId, id, machineServiceReport?.reportSubmition ] )
 
   const onDelete = async () => {
     try {
@@ -137,7 +139,6 @@ function MachineServiceReportViewForm(  ) {
       isActive:                             machineServiceReport?.isActive,
       status:                               machineServiceReport?.status?.name || "",
       approvalStatus:                       machineServiceReport?.currentApprovalStatus || '',
-      approvalLog:                          machineServiceReport?.approval?.approvalLogs || '',
       createdAt:                            machineServiceReport?.createdAt || '',
       createdByFullName:                    machineServiceReport?.createdBy?.name || '',
       createdIP:                            machineServiceReport?.createdIP || '',
@@ -184,7 +185,7 @@ function MachineServiceReportViewForm(  ) {
 
   const handleBackLink = () => navigate( PATH_MACHINE.machines.serviceReports.root(machineId) );
   
-  const [ reportStatus, setReportStatus ] = useState(null);
+  const [ reportApprovalDialogType, setReportApprovalDialogType ] = useState(null);
 
   useEffect(() => {
     if ( machineServiceReport?.files && Array.isArray( machineServiceReport?.files ) ) {
@@ -207,12 +208,6 @@ function MachineServiceReportViewForm(  ) {
         thumbnail: `data:${file?.fileType};base64,${file?.thumbnail}`,
       }));
       setSlidesReporting(updatedSildes);
-    }
-
-    if (machineServiceReport?.status?.name?.toUpperCase() === 'DRAFT') {
-      setReportStatus({ label: 'Complete', value: 'SUBMITTED' });
-    } else if (machineServiceReport?.status?.name?.toUpperCase() === 'SUBMITTED') {
-      setReportStatus({ label: 'Approve', value: 'APPROVED' });
     }
   }, [machineServiceReport]);
 
@@ -276,9 +271,8 @@ function MachineServiceReportViewForm(  ) {
 
   const serviceReportApprovalData = {
     status: machineServiceReport?.currentApprovalStatus,
-    currentApprovalLogs: machineServiceReport?.approval?.approvalLogs,
-    currentApprovingContacts: machineServiceReport?.approval?.approvingContacts,
-    completeHistory: machineServiceReport?.completeEvaluationHistory,
+    approvalLogs: machineServiceReport?.approval?.approvalHistory,
+    approvingContacts: machineServiceReport?.approval?.approvingContacts,
   }
 
   const handleDeleteReportFile = async (fileId) => {
@@ -307,11 +301,10 @@ function MachineServiceReportViewForm(  ) {
       });
   };
   
-  const handleCompleteConfirm = () => {
+  const handleCompleteConfirm = (type) => {
+    setReportApprovalDialogType(type)
     dispatch(setCompleteDialog(true))
-    if(!machineServiceReport?.approval?.approvingContacts?.length > 0){
-      dispatch(getActiveSPContacts());
-    }
+    dispatch(getActiveSPContacts());
   }
 
   const [pdf, setPDF] = useState(null);
@@ -350,6 +343,15 @@ function MachineServiceReportViewForm(  ) {
     await dispatch(setMachineDialog(true)); 
   };
 
+  const handleSendToDraft = async () => {
+    try {
+      await dispatch(sendToDraftMachineServiceReportStatus(machineId, id));
+      enqueueSnackbar('Service Report sent to draft successfully!');
+    } catch (error) {
+      enqueueSnackbar( handleError( error ) || 'Service Report send to draft failed!', { variant: 'error' });
+    }
+  };
+
   return (
     <Container maxWidth={false}>
       <MachineTabContainer currentTabValue='serviceReports' />
@@ -384,22 +386,13 @@ function MachineServiceReportViewForm(  ) {
           backLink={handleBackLink}
           handleSendPDFEmail={ !machine?.isArchived && machineServiceReport?._id && handleSendEmail || undefined }
           handleViewPDF={ !machine?.isArchived && machineServiceReport?._id && handlePDFViewer || undefined }
-          
-          handleCompleteMSR={
-            !machine?.isArchived &&
-            machineServiceReport?.isActive &&
-            machineServiceReport?.status?.name?.toUpperCase() === 'SUBMITTED' &&
-            machineServiceReport?.currentApprovalStatus !== 'APPROVED' &&
-            machineServiceReport?.approval?.approvingContacts?.length < 1 &&
-            handleCompleteConfirm || undefined
-          }
 
           serviceReportStatus={
             ((machineServiceReport.isActive &&
               machineServiceReport?.status?.name?.toUpperCase() === 'SUBMITTED' &&
               machineServiceReport?.approval?.approvingContacts?.length > 0) ||
-              machineServiceReport?.completeEvaluationHistory?.totalLogsCount > 0) ?
-            serviceReportApprovalData : null
+              machineServiceReport?.approval?.approvalHistory.length > 0) ?
+              serviceReportApprovalData : null
           }
         />
         
@@ -408,64 +401,111 @@ function MachineServiceReportViewForm(  ) {
             content={`${defaultValues.serviceReportTemplateReportType || FORMLABELS.KEYDETAILS}`} 
             endingContent={`${defaultValues.serviceReportTemplate || ""}`} 
           />
-          <ViewFormField isLoading={isLoading} variant='h4' sm={4} heading="Service Date" 
-            param={fDate(defaultValues.serviceDate)} />
 
+          <ViewFormField 
+            isLoading={isLoading} 
+            variant='h4' 
+            sm={4} 
+            heading="Service Date" 
+            param={fDate(defaultValues.serviceDate)} 
+          />
+
+          <ViewFormField
+            isLoading={isLoading}
+            variant="h4"
+            sm={4}
+            heading="Service ID"
+            param={ defaultValues.serviceReportUID }
+          />
 
           <ViewFormField
               isLoading={isLoading}
               variant="h4"
               sm={4}
-              heading="Service ID"
-              param={ defaultValues.serviceReportUID }
-            />
-          <ViewFormField isLoading={isLoading} variant='h4' sm={4} heading="Status" 
-            node={ <>
-              <Typography variant='h4' sx={{mr: 1,
-                color: (
-                  machineServiceReport?.currentApprovalStatus === 'REJECTED' && 'red' || 
-                  machineServiceReport?.currentApprovalStatus === 'APPROVED' && 'green'
-                ) || 'inherit'
-                }}
-              >
-                {machineServiceReport?.currentApprovalStatus === "PENDING" ? 
-                  ( 
-                    machineServiceReport?.status?.name && 
-                    <ReportStatusButton machineID={ machineId } iconButton reportID={ id } status={ machineServiceReport?.status } />
-                  ) || "" 
-                : machineServiceReport?.currentApprovalStatus}
-              </Typography> 
-              {
-                !machine?.isArchived &&
-                machineServiceReport?.isActive &&
-                machineServiceReport?.status?.type?.toLowerCase() === 'done' &&
-                machineServiceReport?.currentApprovalStatus !== 'APPROVED' &&
-                machineServiceReport?.approval?.approvingContacts?.length < 1 &&
-                <IconButtonTooltip title='Request Approval' icon="mdi:email-seal" onClick={handleCompleteConfirm} /> 
+              heading="Status"
+              node={
+                <>
+                  <Typography
+                    variant="h4"
+                    sx={{
+                      mr: 1,
+                      color:
+                        (machineServiceReport?.currentApprovalStatus === 'REJECTED' && 'red') ||
+                        (machineServiceReport?.currentApprovalStatus === 'APPROVED' && 'green') ||
+                        'inherit',
+                    }}
+                  >
+                    {machineServiceReport?.currentApprovalStatus === 'PENDING'
+                      ? (machineServiceReport?.status?.name && (
+                          <ReportStatusButton
+                            machineID={machineId}
+                            iconButton
+                            reportID={id}
+                            status={machineServiceReport?.status}
+                          />
+                        )) ||
+                        ''
+                      : machineServiceReport?.currentApprovalStatus}
+                  </Typography>
+                  {!machine?.isArchived &&
+                    machineServiceReport?.isActive && 
+                    machineServiceReport?.currentApprovalStatus === 'REJECTED' && (
+                      <IconButtonTooltip
+                        title="Send to Draft"
+                        icon="fluent:edit-arrow-back-16-regular"
+                        onClick={handleSendToDraft}
+                      />
+                    )}
+                  {!machine?.isArchived &&
+                    machineServiceReport?.isActive &&
+                    machineServiceReport?.status?.type?.toLowerCase() === 'done' &&
+                    machineServiceReport?.currentApprovalStatus !== 'APPROVED' && (
+                      <IconButtonTooltip
+                        title="Request Approval"
+                        icon="mdi:email-seal"
+                        onClick={() => handleCompleteConfirm("sendEmail")}
+                        sx={{ mt: 1 }}
+                      />
+                    )}
+                  {!machine?.isArchived &&
+                    machineServiceReport?.isActive &&
+                    machineServiceReport?.status?.type?.toLowerCase() === 'done' && 
+                    Array.isArray(machineServiceReport?.approval?.approvingContacts) &&
+                    machineServiceReport?.approval?.approvingContacts?.length > 0 &&
+                    machineServiceReport?.approval?.approvingContacts?.find(
+                      (c) => c === user.contact
+                    ) &&
+                    machineServiceReport?.currentApprovalStatus !== 'APPROVED' && (
+                      <IconButtonTooltip
+                        title="Approve / Reject"
+                        icon="mdi:list-status"
+                        onClick={() => handleCompleteConfirm("evaluate")}
+                      />
+                    )}
+                </>
               }
-              { Array.isArray(machineServiceReport?.approval?.approvingContacts) &&
-                machineServiceReport?.approval?.approvingContacts?.length > 0 &&
-                machineServiceReport?.approval?.approvingContacts?.find(( c => c === user.contact)) && 
-                machineServiceReport?.currentApprovalStatus !== 'APPROVED' &&
-              <IconButtonTooltip title='Approve / Reject' icon="mdi:list-status" onClick={handleCompleteConfirm} /> }
-            </>
-            }
-          />
-
-          {(machineServiceReport?.currentApprovalStatus !== "PENDING" && machineServiceReport?.approval?.approvalLogs?.length > 0) ? (              
-            <ViewFormField isLoading={isLoading} sm={12}
-              heading={`${machineServiceReport?.currentApprovalStatus === "REJECTED" ? "Rejection" : "Approval"} Comments`}
-              srEvaluationComment={ machineServiceReport?.approval?.approvalLogs?.length > 0 }
             />
-          ) : null}
+
+          {( machineServiceReport?.currentApprovalStatus !== "PENDING" && machineServiceReport?.approval?.approvalHistory?.length > 0) ? (              
+            <Grid container item md={12} >
+              <ViewFormField
+                sm={ 12 }
+                isLoading={ isLoading } 
+                heading={ `${machineServiceReport?.currentApprovalStatus === "REJECTED" ? "Rejection" : "Approval"} Comments` }
+                param={ machineServiceReport?.approval?.approvalHistory[0]?.comments || "" }
+              />
+              <ServiceReportAuditLogs 
+                data={ machineServiceReport?.approval?.approvalHistory?.[0] || {}}
+              />
+            </Grid>
+          ) : null }
 
           <ViewFormField
-            isLoading={isLoading}
-            sm={4}
+            sm={ 4 }
             variant='h4'
             heading="Customer" 
-            node={
-              defaultValues.customer && (
+            isLoading={ isLoading }
+            node={ defaultValues?.customer && (
                 <>
                 <Link variant='h4' onClick={(event)=> handleCustomerDialog(event, defaultValues.customer?._id)} underline="none" sx={{ cursor: 'pointer'}}>
                   {defaultValues.customer?.name}
@@ -481,17 +521,20 @@ function MachineServiceReportViewForm(  ) {
             sm={4}
             variant='h4'
             heading="Machine"
-            node={
-              defaultValues.customer && (
+            node={ defaultValues?.customer && (
                 <>
-                <Link variant='h4' onClick={(event)=> handleMachineDialog(event, defaultValues.machine?._id)} underline="none" sx={{ cursor: 'pointer'}}>
-                  {defaultValues.machine?.serialNo}
-                </Link>
+                  <Link 
+                    variant='h4' 
+                    onClick={(event)=> handleMachineDialog(event, defaultValues.machine?._id)} 
+                    underline="none" 
+                    sx={{ cursor: 'pointer'}}
+                  >
+                    {defaultValues.machine?.serialNo}
+                  </Link>
                   <OpenInNewPage onClick={()=> window.open( PATH_MACHINE.machines.view(defaultValues.machine?._id), '_blank' ) }/>
                 </>
               )
             }
-            
           />
           <ViewFormField
             isLoading={isLoading}
@@ -512,7 +555,7 @@ function MachineServiceReportViewForm(  ) {
           />
           <ViewNoteHistory label="Technician Notes" historicalData={machineServiceReport.technicianNotes} />
 
-          { !machineServiceReport?.reportSubmission &&
+          { !machineServiceReport?.reportSubmition &&
           <>
             <FormLabel content='Reporting Documents' />
             <Box
@@ -549,7 +592,7 @@ function MachineServiceReportViewForm(  ) {
             </Box>
           </>}
           
-          { machineServiceReport?.reportSubmission && 
+          { machineServiceReport?.reportSubmition && 
             <>
               <FormLabel content={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />
               { defaultValues.textBeforeCheckItems &&
@@ -597,10 +640,10 @@ function MachineServiceReportViewForm(  ) {
           <ViewNoteHistory label="Internal Note" historicalData={defaultValues.internalNote} />
           {/* <ViewFormField isLoading={isLoading} sm={12} heading="Operators" chipDialogArrayParam={operators} /> */}
           <ViewNoteHistory label="Operator Notes" historicalData={defaultValues.operatorNotes} />
-          { machineServiceReport?.reportSubmission &&
+          { machineServiceReport?.reportSubmition &&
             <FormLabel content='Documents / Images' />
           }
-          { machineServiceReport?.reportSubmission &&
+          { machineServiceReport?.reportSubmition &&
           <Box
             sx={{my:1, width:'100%'}}
             gap={2}
@@ -646,7 +689,7 @@ function MachineServiceReportViewForm(  ) {
       {pdfViewerDialog && <PDFViewerDialog machineServiceReport={machineServiceReport} />}
       {sendEmailDialog && <SendEmailDialog fileName={fileName}/>}
       
-      <DialogServiceReportComplete reportStatus={reportStatus}/>
+      <DialogServiceReportComplete dialogType={reportApprovalDialogType}/>
     </Card>
       <Card sx={{ mt: 2 }}>
         <ServiceReportsFormComments serviceReportData={machineServiceReport} currentUser={{...user, userId}} machine={machine}/>

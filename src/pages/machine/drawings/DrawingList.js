@@ -82,8 +82,8 @@ export default function DrawingList() {
   useEffect(() => {
     if( machineId ){
       dispatch(getDrawings( machineId, machine?.isArchived  ));
-      dispatch(getActiveDocumentCategories());
-      dispatch(getActiveDocumentTypes());
+      dispatch(getActiveDocumentCategories( null, null, true ));
+      dispatch(getActiveDocumentTypes( null, true ));
     } 
     return () => {
       dispatch(resetDrawings());
@@ -159,6 +159,7 @@ export default function DrawingList() {
           setCategoryVal={setCategoryVal}
           typeVal={typeVal}
           setTypeVal={setTypeVal}
+          drawing
         />
           {!isNotFound && <TablePaginationCustom
             count={dataFiltered.length}

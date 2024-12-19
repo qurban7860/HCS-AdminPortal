@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useEffect, useState, useCallback , memo} from 'react';
+import { useEffect, useLayoutEffect, useState, useCallback , memo} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 // form
@@ -87,22 +87,12 @@ function DocumentAddForm({
   const [ readOnlyDocument, setReadOnlyDocument ] = useState(false);
   const [ selectedValue, setSelectedValue ] = useState('new');
   const [ selectedVersionValue, setSelectedVersionValue ] = useState('newVersion');
-  const [ duplicate, setDuplicate ] = useState(false);
-
-  useEffect(() => {
-    if( ( newVersion || addFiles || historyAddFiles || historyNewVersion ) && id ){
-      dispatch(getDocument(id))
-    }
-    return ()=>{
-      dispatch(resetDocument())
-    }
-  }, [ dispatch, id, historyAddFiles, historyNewVersion, newVersion, addFiles ]);
-  
+  const [ duplicate, setDuplicate ] = useState(false);  
 
   const methods = useForm({
     resolver: yupResolver(documentSchema( selectedValue )),
     defaultValues:{
-      documentCategory:  null,
+      documentCategory: null,
       documentType:  null,
       displayName:  '',
       stockNumber:  '',
@@ -129,6 +119,32 @@ function DocumentAddForm({
   const { documentCategory, documentType, displayName, versionNo, documentVal, machineVal, files, isActive, customerAccess  } = watch();
 
   useEffect(() => {
+    if( ( newVersion || addFiles || historyAddFiles || historyNewVersion ) && id ){
+      dispatch(getDocument(id))
+    }
+  }, [ dispatch, id, historyAddFiles, historyNewVersion, newVersion, addFiles ]);
+
+  useLayoutEffect(() => {
+    if (!newVersion && !addFiles && !historyNewVersion && !historyAddFiles ) {
+      reset();
+      setSelectedValue('new');
+      setReadOnlyDocument(false);
+    }
+    if(machineDrawings){
+      dispatch(getActiveCustomers());
+    }
+    return () =>  { 
+      dispatch(resetDocument())
+      dispatch(resetActiveDocuments()); 
+      dispatch(resetActiveCustomers()); 
+      dispatch(resetCustomerMachines()); 
+      dispatch(resetActiveDocumentTypes()); 
+      dispatch(resetActiveDocumentCategories()) 
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, customer, machine ]);
+
+  useLayoutEffect(() => {
     if( customerPage && !categoryBy ){
       setCategoryBy( {customer: true} )
       if( customer?._id && selectedValue === 'newVersion' ) dispatch(getCustomerDocuments(customer?._id));
@@ -151,7 +167,7 @@ function DocumentAddForm({
   }, [dispatch, categoryBy, customerPage, customer, machinePage, machine, machineDrawings, selectedValue]);
   
 
-  useEffect( () => { 
+  useLayoutEffect( () => { 
     // Get Active Document Types And Active Document Categoories
     if( !newVersion && !addFiles && !historyNewVersion && !historyAddFiles ){
       if( ( customerPage || machinePage || drawingPage || machineDrawings ) && categoryBy){
@@ -159,70 +175,22 @@ function DocumentAddForm({
         dispatch( getActiveDocumentTypesWithCategory( null, categoryBy ) ) 
       }
     }
-      return  ()=>{
-        dispatch(resetActiveDocumentCategories())
-        dispatch(resetActiveDocumentTypes())
-      }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ dispatch, categoryBy ] )
 
-  useEffect(() => { // Set Default Document Type Value
-    if( activeDocumentTypes?.length > 0 && activeDocumentCategories?.length > 0  && !historyNewVersion ){
-      if(activeDocumentTypes.find((el)=> el.isDefault === true )?._id === activeDocumentCategories.find((el)=> el.isDefault === true )?._id){
-        setValue('documentType', activeDocumentTypes.find((el)=> el.isDefault === true ))
-        setValue('documentCategory', activeDocumentCategories.find((el)=>  el.isDefault === true ))
-      } else if (activeDocumentTypes.find((el)=> el.isDefault === true )){
-        setValue('documentType', activeDocumentTypes.find((el)=> el.isDefault === true ))
-        setValue('documentCategory', activeDocumentTypes.find((el)=> el.isDefault === true )?.docCategory || null )
-      } else {
-        setValue('documentCategory', activeDocumentCategories.find((el)=>  el.isDefault === true ))
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[ activeDocumentTypes, activeDocumentCategories ] )
-
-
-  // ------------------------------------------------------ 
-  // ------------------------------------------------------
-  // ------------------------------------------------------ 
-
   useEffect(() => {
-    if (!newVersion && !addFiles && !historyNewVersion && !historyAddFiles ) {
-      reset();
-      setSelectedValue('new');
-      setReadOnlyDocument(false);
+    if(Array.isArray(activeDocumentCategories) && activeDocumentCategories?.length > 0 && !documentCategory ){
+      let ddc = activeDocumentCategories?.find((el) => el.isDefault );
+      if(!ddc)
+        ddc = activeDocumentCategories?.find((el) => el?.name?.toLowerCase()?.trim() === 'assembly drawings' );
+      setValue('documentCategory', ddc );
     }
-    if(machineDrawings){
-      dispatch(getActiveCustomers());
-    }
-    return () =>  { 
-      dispatch(resetActiveDocuments()); 
-      dispatch(resetActiveCustomers()); 
-      dispatch(resetCustomerMachines()); 
-      dispatch(resetActiveDocumentTypes()); 
-      dispatch(resetActiveDocumentCategories()) 
+    if(Array.isArray(activeDocumentTypes) && activeDocumentTypes?.length > 0 && documentCategory ){
+      const ddt = activeDocumentTypes?.find((el) => el.isDefault && el?.docCategory?._id === documentCategory?._id )
+      setValue('documentType', ddt );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, customer, machine ]);
-
-  useEffect(()=>{
-    if( ( historyNewVersion || historyAddFiles || newVersion || addFiles ) && document ){
-      setReadOnlyDocument(true);
-      setSelectedValue('newVersion');
-      setValue('documentVal',document)
-      setValue('displayName', document?.displayName);
-      setValue('documentType', document?.docType);
-      setValue('documentCategory', document?.docCategory);
-      setValue('customerAccess', document?.customerAccess);
-      setValue('isActive', document?.isActive);
-      setReadOnlyVal(true);
-      if( historyNewVersion || newVersion ){
-        setSelectedVersionValue('newVersion');
-      }else if( historyAddFiles || addFiles ){
-        setSelectedVersionValue('existingVersion');
-      }
-    }
-  },[ historyNewVersion, historyAddFiles, newVersion, addFiles, document, setValue ])
+  }, [ activeDocumentCategories, activeDocumentTypes ]);
 
   const onSubmit = async (data) => {
     try {
@@ -512,26 +480,21 @@ function DocumentAddForm({
                             if (newValue) {
                               setValue('documentCategory', newValue);
                               if (newValue?._id !== documentType?.docCategory?._id) {
-                                // dispatch(resetActiveDocumentTypes());
                                 setValue('documentType', null);
                               }
                             } else {
                               setValue('documentCategory', null);
                               setValue('documentType', null);
-                              // dispatch(getActiveDocumentTypesWithCategory(null, categoryBy ));
                             }
                             }}
                           renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.name || ''}`}</li> )}
-                          id="controllable-states-demo"
-                          ChipProps={{ size: 'small' }}
                         />
 
                         <RHFAutocomplete
                           name="documentType"
                           label="Document Type*"
                           disabled={readOnlyVal}
-                          options={activeDocumentTypes?.filter(el => ( el?.docCategory?._id && documentCategory) ? el?.docCategory?._id === documentCategory?._id : !documentCategory)}
-                          // options={activeDocumentTypes}
+                          options={activeDocumentTypes?.filter(el => documentCategory ? el?.docCategory?._id === documentCategory?._id : !documentCategory)}
                           isOptionEqualToValue={( option, value ) => option._id === value._id }
                           getOptionLabel={(option) => `${option?.name || ''}`}
                           renderOption={(props, option) => (<li {...props} key={option?._id}>{`${option.name || ''}`}</li>)}
@@ -545,8 +508,6 @@ function DocumentAddForm({
                               setValue('documentType', null);
                             }
                             }}
-                          id="controllable-states-demo"
-                            ChipProps={{ size: 'small' }}
                         />
 
                         </Box>)}

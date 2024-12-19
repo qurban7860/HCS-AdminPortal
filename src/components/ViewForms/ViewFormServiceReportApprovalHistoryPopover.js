@@ -8,9 +8,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Paper,
-  Divider,
-  Chip
+  Paper
 } from '@mui/material';
 import MenuPopover from '../menu-popover/MenuPopover';
 import FormLabel from '../DocumentForms/FormLabel';
@@ -45,57 +43,36 @@ function ViewFormServiceReportApprovalPopover({ open, onClose, ListTitle, evalua
             <TableBody>
               {evaluationHistory?.length > 0
                 ? evaluationHistory?.map((item) => (
-                    <React.Fragment key={item._id}>
-                      <TableRow>
-                        <TableCell colSpan={4}>
-                          <Divider>
-                            <Chip label={`Version ${item?.versionNo}`} size="small" />
-                          </Divider>
+                    <TableRow
+                      key={item?._id}
+                      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                    >
+                      <TableCell align="left">{item?.status}</TableCell>
+                      <TableCell align="left">
+                        {item?.updatedBy?.name || ''}
+                      </TableCell>
+                      <StyledTooltip
+                        title={item?.comments || ''}
+                        placement="right"
+                        disableFocusListener
+                        tooltipcolor="#1976d2"
+                        color="#1976d2"
+                        sx={{ maxWidth: '1000px' }}
+                      >
+                        <TableCell
+                          align="left"
+                          sx={{
+                            maxWidth: '200px',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                          }}
+                        >
+                          <span>{item?.comments || ''}</span>
                         </TableCell>
-                      </TableRow>
-                      {item.logs?.length > 0 ? (
-                        item.logs.map((log) => (
-                          <TableRow
-                            key={log?._id}
-                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                          >
-                            <TableCell align="left">{log?.status}</TableCell>
-                            <TableCell align="left">
-                              {`${log?.evaluatedBy?.firstName} ${log?.evaluatedBy?.lastName}` || ''}
-                            </TableCell>
-                            <StyledTooltip
-                              title={log?.comments || ''}
-                              placement="right"
-                              disableFocusListener
-                              tooltipcolor="#1976d2"
-                              color="#1976d2"
-                              sx={{ maxWidth: '1000px' }}
-                            >
-                              <TableCell
-                                align="left"
-                                sx={{
-                                  maxWidth: '200px',
-                                  overflow: 'hidden',
-                                  textOverflow: 'ellipsis',
-                                  whiteSpace: 'nowrap',
-                                }}
-                              >
-                                <span>{log?.comments || ''}</span>
-                              </TableCell>
-                            </StyledTooltip>
-                            <TableCell align="right">
-                              {fDateTime(log?.evaluationDate) || ''}
-                            </TableCell>
-                          </TableRow>
-                        ))
-                      ) : (
-                        <TableRow>
-                          <TableCell colSpan={4} align="center">
-                            Not Evaluated
-                          </TableCell>
-                        </TableRow>
-                      )}
-                    </React.Fragment>
+                      </StyledTooltip>
+                      <TableCell align="right">{fDateTime(item?.updatedAt) || ''}</TableCell>
+                    </TableRow>
                   ))
                 : null}
             </TableBody>

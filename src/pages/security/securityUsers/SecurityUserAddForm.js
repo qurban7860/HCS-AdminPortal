@@ -136,6 +136,10 @@ const { contact, customer } = watch();
 
   const onSubmit = async (data) => {
     try {
+      const phoneRegex = /^\+\d+$/;
+      if (!data.phone || phoneRegex.test(data.phone.trim())) {
+        data.phone = ''; 
+      }
       const message = !isInvite ? "User Added Successfully":"User Invitation Sent Successfullfy";
       const response = await dispatch(addSecurityUser(data, isInvite));
       reset();

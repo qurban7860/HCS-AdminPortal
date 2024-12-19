@@ -121,6 +121,12 @@ const onChangeRowsPerPage = (event) => {
   }else if(machineDrawings){
     dispatch(machineDrawingsChangePage(0))
     dispatch(machineDrawingsChangeRowsPerPage(parseInt(event.target.value, 10)))
+    dispatch(
+      getDocuments( null, null, machineDrawings || null, page,
+        machineDrawings ? machineDrawingsRowsPerPage : documentRowsPerPage,
+        null, null, cancelTokenSource, filteredSearchKey || null, selectedSearchFilter || null, categoryVal, typeVal 
+      )
+    );
   }else if(!machineDrawings && !customerPage && !machineDrawingPage){
     dispatch(ChangePage(0));
     dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10)));
@@ -134,9 +140,16 @@ const onChangePage = (event, newPage) => {
     dispatch(customerDocumentChangePage(newPage))
   }else if(machineDrawings){
     dispatch(machineDrawingsChangePage(newPage))
+    dispatch(
+      getDocuments( null, null, machineDrawings || null, page,
+        machineDrawings ? machineDrawingsRowsPerPage : documentRowsPerPage,
+        null, null, cancelTokenSource, filteredSearchKey || null, selectedSearchFilter || null, categoryVal, typeVal  
+      )
+    );
   }else if(!machineDrawings && !customerPage && !machineDrawingPage){
     dispatch(ChangePage(newPage))
   }
+
 }
 
 const TABLE_HEAD = useMemo(() => {
@@ -157,15 +170,15 @@ const TABLE_HEAD = useMemo(() => {
     ];
   }
 
-  if (!customerPage && !machineDrawingPage && !machineDrawings) {
+  if (!customerPage && !machineDrawingPage && !machineDrawings && !machinePage) {
     return [
       ...baseHeaders.slice(0, 4),
-      { id: 'machine.serialNo', visibility: 'md4', label: 'Machine', align: 'left', allowSearch: false },
+      { id: 'machine.serialNo', visibility: 'md4', label: 'Machine', align: 'left', allowSearch: true },
       ...baseHeaders.slice(4),
     ];
   }
   return baseHeaders;
-}, [customerPage, machineDrawingPage, machineDrawings]);
+}, [customerPage, machineDrawingPage, machineDrawings, machinePage]);
 
 // useLayoutEffect(() => {
 //     if(machineDrawingPage || machineDrawings || machinePage ){
@@ -392,13 +405,8 @@ const TABLE_HEAD = useMemo(() => {
   };  
   
   useEffect(() => {
-    if (machineDrawings) {
-      dispatch(getActiveDocumentCategories(null, null, machineDrawings));
-      dispatch(getActiveDocumentTypes(null, machineDrawings));
-    } else {
-      dispatch(getActiveDocumentCategories(null));  
-      dispatch(getActiveDocumentTypes());
-    }
+      dispatch(getActiveDocumentCategories(null, null, machineDrawings ));
+      dispatch(getActiveDocumentTypes(null, machineDrawings ));
   }, [dispatch, machineDrawings]);
   
   const handleCategoryChange = (event, newValue) => {
@@ -508,7 +516,7 @@ const TABLE_HEAD = useMemo(() => {
             </Card>
           </Grid>
         </Grid>
-        )}
+        )}</FormProvider>
         <TableCard>
           <DocumentListTableToolbar
             filterName={filterName}
@@ -560,7 +568,8 @@ const TABLE_HEAD = useMemo(() => {
                           onViewRow={() => handleViewRow(row._id)}
                           style={index % 2 ? { background: 'red' } : { background: 'green' }}
                           customerPage={customerPage}
-                          machinePage={machineDrawingPage}
+                          machinePage={machinePage}
+                          machineDrawingPage={machineDrawingPage}
                           machineDrawings={machineDrawings}
                           handleCustomerDialog={(e) =>
                             row?.customer && handleCustomerDialog(e, row?.customer?._id)
@@ -591,7 +600,6 @@ const TABLE_HEAD = useMemo(() => {
           )}
         </TableCard>
         {/* </Container> */}
-      </FormProvider>
     </>
   );
 }

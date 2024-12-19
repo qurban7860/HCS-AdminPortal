@@ -330,7 +330,7 @@ function ViewFormEditDeleteButtons({
   };
   
   const handleServiceReportApprovalHistoryPopoverOpen = (event) => {
-    if(serviceReportStatus?.completeHistory?.totalLogsCount > 0) {
+    if(serviceReportStatus?.approvalLogs?.length > 0) {
       setServiceReportApprovalHistoryAnchorEl(event.currentTarget);
     }
   };
@@ -574,8 +574,8 @@ function ViewFormEditDeleteButtons({
           }
 
           {serviceReportStatus && (
-            <Badge badgeContent={serviceReportStatus?.completeHistory?.totalLogsCount || 0} color="info">
-              {serviceReportStatus?.currentApprovingContacts?.length > 0 ? (
+            <Badge badgeContent={serviceReportStatus?.approvalLogs?.length || 0} color="info">
+              {serviceReportStatus?.approvingContacts?.length > 0 ? (
                 <>
                 {serviceReportStatus?.status === 'APPROVED' && (
                     <IconTooltip
@@ -994,8 +994,7 @@ function ViewFormEditDeleteButtons({
       <ViewFormServiceReportApprovalHistoryPopover
         open={serviceReportApprovalHistoryAnchorEl}
         onClose={handleServiceReportApprovalHistoryPopoverClose}
-        evaluationHistory={serviceReportStatus?.completeHistory?.evaluationHistory}
-        ListArr={serviceReportStatus?.currentApprovalLogs}
+        evaluationHistory={serviceReportStatus?.approvalLogs}
         ListTitle="Service Report Approval Details"
       />
     </Grid>
