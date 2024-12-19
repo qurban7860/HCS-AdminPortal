@@ -121,7 +121,12 @@ const onChangeRowsPerPage = (event) => {
   }else if(machineDrawings){
     dispatch(machineDrawingsChangePage(0))
     dispatch(machineDrawingsChangeRowsPerPage(parseInt(event.target.value, 10)))
-    dispatch(getDocuments(null, null, ( machineDrawings || machineDrawingPage ), page, machineDrawingsRowsPerPage, null, null, cancelTokenSource, filteredSearchKey, selectedSearchFilter));
+    dispatch(
+      getDocuments( null, null, machineDrawings || null, page,
+        machineDrawings ? machineDrawingsRowsPerPage : documentRowsPerPage,
+        null, null, cancelTokenSource, filteredSearchKey || null, selectedSearchFilter || null, categoryVal, typeVal 
+      )
+    );
   }else if(!machineDrawings && !customerPage && !machineDrawingPage){
     dispatch(ChangePage(0));
     dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10)));
@@ -135,7 +140,12 @@ const onChangePage = (event, newPage) => {
     dispatch(customerDocumentChangePage(newPage))
   }else if(machineDrawings){
     dispatch(machineDrawingsChangePage(newPage))
-    dispatch(getDocuments(null, null, ( machineDrawings || machineDrawingPage ), page, machineDrawingsRowsPerPage, null, null, cancelTokenSource, filteredSearchKey, selectedSearchFilter));
+    dispatch(
+      getDocuments( null, null, machineDrawings || null, page,
+        machineDrawings ? machineDrawingsRowsPerPage : documentRowsPerPage,
+        null, null, cancelTokenSource, filteredSearchKey || null, selectedSearchFilter || null, categoryVal, typeVal  
+      )
+    );
   }else if(!machineDrawings && !customerPage && !machineDrawingPage){
     dispatch(ChangePage(newPage))
   }
