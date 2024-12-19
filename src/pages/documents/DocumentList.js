@@ -111,36 +111,36 @@ function DocumentList({ customerPage, machinePage, machineDrawingPage, machineDr
     defaultOrderBy: machineDrawings ? 'doNotOrder' : 'createdAt', defaultOrder: 'desc',
   });
 
-const onChangeRowsPerPage = (event) => {
-  if(machineDrawingPage){
-    dispatch(machineDocumentChangePage(0))
-    dispatch(machineDocumentChangeRowsPerPage(parseInt(event.target.value, 10)))
-  }else if(customerPage){
-    dispatch(customerDocumentChangePage(0))
-    dispatch(customerDocumentChangeRowsPerPage(parseInt(event.target.value, 10)))
-  }else if(machineDrawings){
-    dispatch(machineDrawingsChangePage(0))
-    dispatch(machineDrawingsChangeRowsPerPage(parseInt(event.target.value, 10)))
-    dispatch(getDocuments(null, null, ( machineDrawings || machineDrawingPage ), page, machineDrawingsRowsPerPage, null, null, cancelTokenSource, filteredSearchKey, selectedSearchFilter));
-  }else if(!machineDrawings && !customerPage && !machineDrawingPage){
-    dispatch(ChangePage(0));
-    dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10)));
+  const onChangeRowsPerPage = (event) => {
+    if(machineDrawingPage){
+      dispatch(machineDocumentChangePage(0))
+      dispatch(machineDocumentChangeRowsPerPage(parseInt(event.target.value, 10)))
+    }else if(customerPage){
+      dispatch(customerDocumentChangePage(0))
+      dispatch(customerDocumentChangeRowsPerPage(parseInt(event.target.value, 10)))
+    }else if(machineDrawings){
+      dispatch(machineDrawingsChangePage(0))
+      dispatch(machineDrawingsChangeRowsPerPage(parseInt(event.target.value, 10)))
+      dispatch(getDocuments(null, null, ( machineDrawings || machineDrawingPage ), page, machineDrawingsRowsPerPage, null, null, cancelTokenSource, filteredSearchKey, selectedSearchFilter));
+    }else if(!machineDrawings && !customerPage && !machineDrawingPage){
+      dispatch(ChangePage(0));
+      dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10)));
+    }
+  };
+  
+  const onChangePage = (event, newPage) => {
+    if(machineDrawingPage){
+      dispatch(machineDocumentChangePage(newPage))
+    }else if(customerPage){
+      dispatch(customerDocumentChangePage(newPage))
+    }else if(machineDrawings){
+      dispatch(machineDrawingsChangePage(newPage))
+      dispatch(getDocuments(null, null, ( machineDrawings || machineDrawingPage ), page, machineDrawingsRowsPerPage, null, null, cancelTokenSource, filteredSearchKey, selectedSearchFilter));
+    }else if(!machineDrawings && !customerPage && !machineDrawingPage){
+      dispatch(ChangePage(newPage))
+    }
+  
   }
-};
-
-const onChangePage = (event, newPage) => {
-  if(machineDrawingPage){
-    dispatch(machineDocumentChangePage(newPage))
-  }else if(customerPage){
-    dispatch(customerDocumentChangePage(newPage))
-  }else if(machineDrawings){
-    dispatch(machineDrawingsChangePage(newPage))
-    dispatch(getDocuments(null, null, ( machineDrawings || machineDrawingPage ), page, machineDrawingsRowsPerPage, null, null, cancelTokenSource, filteredSearchKey, selectedSearchFilter));
-  }else if(!machineDrawings && !customerPage && !machineDrawingPage){
-    dispatch(ChangePage(newPage))
-  }
-
-}
 
 const TABLE_HEAD = useMemo(() => {
   const baseHeaders = [
@@ -443,12 +443,10 @@ const TABLE_HEAD = useMemo(() => {
         </StyledCardContainer>
       )}
       <FormProvider {...methods} onSubmit={handleSubmit(onGetDocuments)}>
-      {!customerPage && !machinePage && (
+      {!customerPage && !machinePage && !machineDrawingPage && (
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Card sx={{ p: 3 }}>
-
-           { !machineDrawingPage && !machinePage && (
            <Box rowGap={2} columnGap={2} mb={3} display="grid" gridTemplateColumns={{ xs: '1fr', sm: 'repeat(2, 1fr)' }} sx={{ flexGrow: 1, width: { xs: '100%', sm: '100%' } }}> 
           <Autocomplete
             id="category-autocomplete"
@@ -467,7 +465,6 @@ const TABLE_HEAD = useMemo(() => {
             renderInput={(params) => <TextField {...params} size="small" label="Type" />}
           />
         </Box>
-      )}
               <Stack
                 direction={{ xs: 'column', sm: 'row' }}
                 spacing={2}
@@ -538,14 +535,15 @@ const TABLE_HEAD = useMemo(() => {
           /> }
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <Scrollbar>
-              <Table size="small" sx={{ minWidth: 360 }}>
-                { !isNotFound && <TableHeadFilter
+            <Table size="small" sx={{ minWidth: 360, mt:2 }}>
+            {(!isNotFound || machinePage) && ( 
+                <TableHeadFilter
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
                   onSort={onSort}
                   hiddenColumns={reportHiddenColumns}
-                />}
+                />)}
 
                 <TableBody>
                   {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
@@ -579,7 +577,7 @@ const TABLE_HEAD = useMemo(() => {
             </Scrollbar>
           </TableContainer>
 
-          {!isNotFound && (
+          {(!isNotFound || machinePage) && (
             <TablePaginationCustom
               count={totalRows}
               page={page}
