@@ -390,15 +390,10 @@ const TABLE_HEAD = useMemo(() => {
       resetDocuments()
     );
   };  
-  
+  console.log('machineDrawings : ',machineDrawings)
   useEffect(() => {
-    if (machineDrawings) {
-      dispatch(getActiveDocumentCategories(null, null, machineDrawings));
-      dispatch(getActiveDocumentTypes(null, machineDrawings));
-    } else {
-      dispatch(getActiveDocumentCategories(null));  
-      dispatch(getActiveDocumentTypes());
-    }
+      dispatch(getActiveDocumentCategories(null, null, machineDrawings ));
+      dispatch(getActiveDocumentTypes(null, machineDrawings ));
   }, [dispatch, machineDrawings]);
   
   const handleCategoryChange = (event, newValue) => {

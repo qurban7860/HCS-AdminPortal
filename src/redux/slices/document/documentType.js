@@ -223,14 +223,9 @@ export function getActiveDocumentTypes(cancelToken, drawing ) {
         params: {
           isArchived: false,
           isActive: true,
+          drawing
         },
         cancelToken: cancelToken?.token,
-      }
-
-      if (drawing) {
-        query.params.drawing = drawing; 
-      } else {
-        query.params.drawing = false; 
       }
 
       const response = await axios.get(`${CONFIG.SERVER_URL}documents/documentType/`, query);
@@ -273,7 +268,7 @@ export function getActiveDrawingTypes(cancelToken) {
 
 // -----------------------------------Get Active Document Types of Categories-----------------------------------
 
-export function getActiveDocumentTypesWithCategory(typeCategory, categoryBy ) {
+export function getActiveDocumentTypesWithCategory(typeCategory, categoryBy, drawing ) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -282,6 +277,7 @@ export function getActiveDocumentTypesWithCategory(typeCategory, categoryBy ) {
           isArchived: false,
           isActive: true,
           docCategory: typeCategory,
+          drawing,
         }
       }
       if( categoryBy ){
