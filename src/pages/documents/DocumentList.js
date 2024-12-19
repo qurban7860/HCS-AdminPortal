@@ -121,6 +121,7 @@ const onChangeRowsPerPage = (event) => {
   }else if(machineDrawings){
     dispatch(machineDrawingsChangePage(0))
     dispatch(machineDrawingsChangeRowsPerPage(parseInt(event.target.value, 10)))
+    dispatch(getDocuments(null, null, ( machineDrawings || machineDrawingPage ), page, machineDrawingsRowsPerPage, null, null, cancelTokenSource, filteredSearchKey, selectedSearchFilter));
   }else if(!machineDrawings && !customerPage && !machineDrawingPage){
     dispatch(ChangePage(0));
     dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10)));
