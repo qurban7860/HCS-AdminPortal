@@ -38,6 +38,7 @@ function SearchBarCombo({
   setCategoryVal,
   typeVal,
   setTypeVal,
+  drawing,
   machineDrawings,
   signInLogsFilter,
   onSignInLogsFilter,
@@ -455,14 +456,14 @@ function SearchBarCombo({
               onChange={(event, newValue) => {
                 if (newValue) {
                   setCategoryVal(newValue);
-                  dispatch(getActiveDocumentTypesWithCategory(newValue?._id))
+                  dispatch(getActiveDocumentTypesWithCategory(newValue?._id, null, drawing ))
                   if(newValue?._id !== typeVal?.docCategory?._id){
                     setTypeVal(null);
                   }
                 } else {
                   setCategoryVal(null);
                   setTypeVal(null);
-                  dispatch(getActiveDocumentTypesWithCategory())
+                  dispatch(getActiveDocumentTypesWithCategory( null, null, drawing ))
                 }
               }}
               renderOption={(props, option) => (
@@ -484,7 +485,7 @@ function SearchBarCombo({
                   setTypeVal(newValue);
                   if(!categoryVal){
                     setCategoryVal(newValue?.docCategory)
-                    dispatch(getActiveDocumentTypesWithCategory(newValue?.docCategory?._id))
+                    dispatch(getActiveDocumentTypesWithCategory(newValue?.docCategory?._id, null , drawing ))
                   }
                 } else {
                   setTypeVal(null);
@@ -916,6 +917,7 @@ SearchBarCombo.propTypes = {
   onFilterPeriod: PropTypes.func,
   onCompareINI: PropTypes.func,
   logTypes: PropTypes.array,
+  drawing: PropTypes.bool,
 };
 
 export default SearchBarCombo;

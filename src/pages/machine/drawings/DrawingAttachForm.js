@@ -34,7 +34,7 @@ export default function DrawingAttachForm() {
 
   useEffect(() => {
     dispatch(getActiveDocumentCategories({drawing: true}));
-    dispatch(getActiveDocumentTypes());
+    dispatch(getActiveDocumentTypes( null, true ));
     setFilteredDocuments([]);
     return ()=> {
       dispatch(resetActiveDocumentCategories())
@@ -78,11 +78,19 @@ export default function DrawingAttachForm() {
 
   const { documentCategory, documentType } = watch();
 
-  // useEffect(() => {
-  //   if(documentCategory?._id){
-  //     dispatch(getActiveDocumentTypesWithCategory(documentCategory?._id, { drawing: true } ));
-  //   }
-  // },[ dispatch, documentCategory ]);
+  useEffect(() => {
+    if(Array.isArray(activeDocumentCategories) && activeDocumentCategories?.length > 0 && !documentCategory ){
+      let ddc = activeDocumentCategories?.find((el) => el.isDefault );
+      if(!ddc)
+        ddc = activeDocumentCategories?.find((el) => el?.name?.toLowerCase()?.trim() === 'assembly drawings' );
+      setValue('documentCategory', ddc );
+    }
+    if(Array.isArray(activeDocumentTypes) && activeDocumentTypes?.length > 0 && documentCategory ){
+      const ddt = activeDocumentTypes?.find((el) => el.isDefault && el?.docCategory?._id === documentCategory?._id )
+      setValue('documentType', ddt );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ activeDocumentCategories, activeDocumentTypes ]);
 
   useEffect(() => {
     if(documentCategory?._id && documentType?._id){

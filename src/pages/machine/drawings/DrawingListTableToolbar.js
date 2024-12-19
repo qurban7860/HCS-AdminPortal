@@ -14,6 +14,7 @@ import { BUTTONS } from '../../../constants/default-constants';
 
 DrawingListTableToolbar.propTypes = {
   isFiltered: PropTypes.bool,
+  drawing: PropTypes.bool,
   filterName: PropTypes.string,
   onFilterName: PropTypes.func,
   onResetFilter: PropTypes.func,
@@ -38,6 +39,7 @@ export default function DrawingListTableToolbar({
   setCategoryVal,
   typeVal,
   setTypeVal,
+  drawing
 }) {
 
   const navigate = useNavigate();
@@ -57,6 +59,7 @@ export default function DrawingListTableToolbar({
     sx={{ px: 2.5, py: 3 }}
     >
     <SearchBarCombo
+      drawing={drawing}
       isFiltered={isFiltered}
       value={filterName}
       onChange={onFilterName}
