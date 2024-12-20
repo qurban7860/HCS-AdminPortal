@@ -405,8 +405,8 @@ const TABLE_HEAD = useMemo(() => {
   };  
   
   useEffect(() => {
-      dispatch(getActiveDocumentCategories(null, null, machineDrawings ));
-      dispatch(getActiveDocumentTypes(null, machineDrawings ));
+      dispatch(getActiveDocumentCategories(null, null, machineDrawings || false ));
+      dispatch(getActiveDocumentTypes(null, machineDrawings || false ));
   }, [dispatch, machineDrawings]);
   
   const handleCategoryChange = (event, newValue) => {
