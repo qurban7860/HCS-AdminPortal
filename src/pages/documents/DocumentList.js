@@ -130,6 +130,11 @@ const onChangeRowsPerPage = (event) => {
   }else if(!machineDrawings && !customerPage && !machineDrawingPage){
     dispatch(ChangePage(0));
     dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10)));
+    dispatch(
+      getDocuments( null, null, null, page, documentRowsPerPage,
+        null, null, cancelTokenSource, filteredSearchKey || null, selectedSearchFilter || null, categoryVal, typeVal 
+      )
+    );
   }
 };
 
@@ -148,6 +153,11 @@ const onChangePage = (event, newPage) => {
     );
   }else if(!machineDrawings && !customerPage && !machineDrawingPage){
     dispatch(ChangePage(newPage))
+    dispatch(
+      getDocuments( null, null, null, page, documentRowsPerPage,
+        null, null, cancelTokenSource, filteredSearchKey || null, selectedSearchFilter || null, categoryVal, typeVal 
+      )
+    );
   }
 
 }
@@ -281,7 +291,7 @@ const TABLE_HEAD = useMemo(() => {
     filterName,
     filterStatus,
     categoryVal, 
-    typeVal,
+    typeVal, machinePage, machineDrawingPage
   });
   
   const { watch, handleSubmit } = methods;
@@ -405,9 +415,9 @@ const TABLE_HEAD = useMemo(() => {
   };  
   
   useEffect(() => {
-      dispatch(getActiveDocumentCategories(null, null, machineDrawings || false ));
-      dispatch(getActiveDocumentTypes(null, machineDrawings || false ));
-  }, [dispatch, machineDrawings]);
+    dispatch(getActiveDocumentCategories(null, null, machineDrawings || false ));
+    dispatch(getActiveDocumentTypes(null, machineDrawings || false ));
+}, [dispatch, machineDrawings]);
   
   const handleCategoryChange = (event, newValue) => {
     if (newValue) {
@@ -525,14 +535,16 @@ const TABLE_HEAD = useMemo(() => {
             machineDrawings={machineDrawings}
             customerPage={customerPage}
             machinePage={machinePage}
+            machineDrawingPage={machineDrawingPage}
             categoryVal={categoryVal}
-            setCategoryVal={ (!machineDrawings) ? setCategoryVal : undefined }
+            setCategoryVal={ (machinePage || machineDrawingPage) ? setCategoryVal : undefined }
             typeVal={typeVal}
-            setTypeVal={ (!machineDrawings) ? setTypeVal : undefined }
+            setTypeVal={ (machinePage || machineDrawingPage) ? setTypeVal : undefined }
             handleGalleryView={
               !isNotFound && (customerPage || machinePage) ? handleGalleryView : undefined
             }
-          />
+          /> 
+           <Box sx={{ mt:2 }}>
           { !isNotFound && <TablePaginationFilter
             columns={TABLE_HEAD}
             hiddenColumns={reportHiddenColumns}
@@ -545,8 +557,8 @@ const TABLE_HEAD = useMemo(() => {
           /> }
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <Scrollbar>
-            <Table size="small" sx={{ minWidth: 360, mt:2 }}>
-            {(!isNotFound || machinePage) && ( 
+            <Table size="small" sx={{ minWidth: 360 }}>
+            {(!isNotFound || machinePage || customerPage) && ( 
                 <TableHeadFilter
                   order={order}
                   orderBy={orderBy}
@@ -587,7 +599,7 @@ const TABLE_HEAD = useMemo(() => {
             </Scrollbar>
           </TableContainer>
 
-          {(!isNotFound || machinePage) && (
+          {(!isNotFound || machinePage || customerPage) && (
             <TablePaginationCustom
               count={totalRows}
               page={page}
@@ -596,7 +608,8 @@ const TABLE_HEAD = useMemo(() => {
               onRowsPerPageChange={onChangeRowsPerPage}
             />
           )}
-        </TableCard>
+          </Box>
+        </TableCard> 
         {/* </Container> */}
     </>
   );
@@ -604,7 +617,7 @@ const TABLE_HEAD = useMemo(() => {
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, orderBy, filterName, filterStatus, categoryVal, typeVal, machinePage, machineDrawingPage }) {
+function applyFilter({ inputData, comparator, orderBy, filterName, filterStatus, categoryVal, typeVal, machineDrawingPage, machinePage }) {
 
   if(inputData){
     const stabilizedThis = inputData && inputData.map((el, index) => [el, index]);
@@ -617,16 +630,15 @@ function applyFilter({ inputData, comparator, orderBy, filterName, filterStatus,
     }
   
     inputData = stabilizedThis?.map((el) => el[0]);
-  
-  
-    if (machinePage || machineDrawingPage) {
+
+    if (machineDrawingPage || machinePage) {
     if(categoryVal)
       inputData = inputData?.filter((drawing)=> drawing.docCategory?._id  === categoryVal?._id );
   
     if(typeVal)
       inputData = inputData?.filter((drawing)=> drawing.docType?._id === typeVal?._id );
-    }
-  
+   }
+   
     if (filterName) {
       inputData = inputData.filter(
         (document) =>
