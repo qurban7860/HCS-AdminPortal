@@ -39,11 +39,13 @@ export const tokenExpired = (exp) => {
   let expiredTimer;
   const currentTime = Date.now();
   const timeLeft = exp * 1000 - currentTime;
+  console.log('timeLeft : ',timeLeft)
+
   clearTimeout(expiredTimer);
   expiredTimer = setTimeout(() => {
     alert('Your session has expired. Please login again');
     localStorage.removeItem('accessToken');
-    window.location.href = PATH_AUTH.login;
+    // window.location.href = PATH_AUTH.login;
   }, timeLeft);
 };
 
@@ -54,6 +56,7 @@ export const setSession = async (accessToken) => {
     localStorage.setItem('accessToken', accessToken);
     axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
     const { exp } = await jwtDecode(accessToken);
+    console.log('exp : ',exp)
     await tokenExpired(exp);
   } else {
     localStorage.removeItem('accessToken');

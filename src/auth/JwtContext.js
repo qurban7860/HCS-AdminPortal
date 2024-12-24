@@ -311,7 +311,7 @@ export function AuthProvider({ children }) {
         isSecurityUserAccessAllowed,
         isEmailAccessAllowed,
         isDeveloper,
-    } = getUserAccess( user?.roles, user?.dataAccessibilityLevel )
+      } = getUserAccess( user?.roles, user?.dataAccessibilityLevel )
 
       const rolesArrayString = JSON.stringify(user.roles);
       localStorage.setItem('email', user.email);
@@ -363,7 +363,7 @@ export function AuthProvider({ children }) {
         isSecurityUserAccessAllowed,
         isEmailAccessAllowed,
         isDeveloper,
-    } = getUserAccess( user?.roles , user?.dataAccessibilityLevel )
+      } = getUserAccess( user?.roles , user?.dataAccessibilityLevel )
 
       const rolesArrayString = JSON.stringify(user.roles);
       localStorage.setItem('email', user.email);
