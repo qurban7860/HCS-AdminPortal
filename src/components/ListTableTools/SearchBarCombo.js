@@ -476,8 +476,10 @@ function SearchBarCombo({
           { !machineDrawings && setTypeVal &&  typeof setTypeVal === 'function'  && <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
             <Autocomplete 
               id="controllable-states-demo"
-              value={typeVal || null}
-              options={activeDocumentTypes}
+              // value={typeVal || null}
+              // options={activeDocumentTypes}
+              value={categoryVal ? typeVal : null} 
+              options={categoryVal ? activeDocumentTypes : []}
               isOptionEqualToValue={(option, val) => option?._id === val?._id}
               getOptionLabel={(option) =>  option.name }
               onChange={(event, newValue) => {
