@@ -90,6 +90,11 @@ export const FORMLABELS = {
   EMAILS: 'Emails',
   ARCHIVED_REPORTS: 'Archived Reports',
   LOGS_SETTINGS: 'Logs',
+
+  // @root - ticketSettings
+  ISSUE_TYPES: 'Issue Types',
+  COMPONENTS: 'Components',
+
   // @root DocumentAddForm in dashboard/documents
   SELECT_CUSTOMER: 'Select Customer',
   SELECT_SITE: 'Select Site',

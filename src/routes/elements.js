@@ -441,3 +441,19 @@ export const SitesReport = Loadable(lazy(() => import('../pages/sitesMap/Reports
 // Email
 export const Email = Loadable(lazy(() => import('../pages/settings/email/EmailList')));
 export const Emailview = Loadable(lazy(() => import('../pages/settings/email/EmailViewform')));
+
+// --------------------------- Ticket Setting -------------------------------------
+export const TicketSettings = Loadable(lazy(() => import('../pages/TicketSettings/ticketSetting')));
+
+// Issue Types
+export const SystemProblemForm = Loadable(lazy(() => import('../pages/TicketSettings/IssueTypes/SystemProblemForm')));
+export const SystemIncidentForm = Loadable(lazy(() => import('../pages/TicketSettings/IssueTypes/SystemIncidentForm')));
+export const SystemChangeForm = Loadable(lazy(() => import('../pages/TicketSettings/IssueTypes/SystemChangeForm')));
+export const ServiceRequestForm = Loadable(lazy(() => import('../pages/TicketSettings/IssueTypes/ServiceRequestForm')));
+export const ApprovalRequestForm = Loadable(lazy(() => import('../pages/TicketSettings/IssueTypes/ApprovalRequestForm')));
+
+// Components
+export const Electrical = Loadable(lazy(() => import('../pages/TicketSettings/Components/Electrical')));
+export const Hydraulic = Loadable(lazy(() => import('../pages/TicketSettings/Components/Hydraulic')));
+export const Mechanical = Loadable(lazy(() => import('../pages/TicketSettings/Components/Mechanical')));
+export const Offset = Loadable(lazy(() => import('../pages/TicketSettings/Components/Offset')));
