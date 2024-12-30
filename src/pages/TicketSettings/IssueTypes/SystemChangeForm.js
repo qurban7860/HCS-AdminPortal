@@ -208,7 +208,10 @@ export default function SystemChangeForm() {
                       </li>
                     )}
                   />
-                  <Box sx={{ mt: 2 }}>
+                  <Box sx={{ mt: 0 }}>
+                    <Typography variant="body1" sx={{ mb: 1, ml: 1 }}>
+                      Attachment
+                    </Typography>
                     <RHFUpload
                       multiple
                       thumbnail

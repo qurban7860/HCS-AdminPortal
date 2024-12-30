@@ -109,6 +109,9 @@ export default function SystemProblemForm() {
                   multiline
                 />
                 <Box sx={{ mt: 2 }}>
+                  <Typography variant="body1" sx={{ mb: 1, ml: 1 }}>
+                    Attachment
+                  </Typography>
                   <RHFUpload
                     multiple
                     thumbnail
