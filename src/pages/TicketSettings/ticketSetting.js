@@ -60,22 +60,22 @@ return (
                     icon={ICONS.SYSTEM_PROBLEM.icon}
                     content={ICONS.SYSTEM_PROBLEM.heading}
                   />
-                   <ListItem
+                  <ListItem
                     onClick={linkSystemChange}
                     icon={ICONS.SYSTEM_CHANGE.icon}
                     content={ICONS.SYSTEM_CHANGE.heading}
                   />
-                   <ListItem
+                  <ListItem
                     onClick={linkSystemIncident}
                     icon={ICONS.SYSTEM_INCIDENT.icon}
                     content={ICONS.SYSTEM_INCIDENT.heading}
                   />
-                   <ListItem
+                  <ListItem
                     onClick={linkServiceRequest}
                     icon={ICONS.SERVICE_REQUEST.icon}
                     content={ICONS.SERVICE_REQUEST.heading}
                   />
-                   <ListItem
+                  <ListItem
                     onClick={linkApprovalRequest}
                     icon={ICONS.APPROVALS.icon}
                     content={ICONS.APPROVALS.heading}
@@ -84,7 +84,7 @@ return (
                 
             </StyledSettingsCardContainer>
             }
-            <StyledSettingsCardContainer>
+            {/* <StyledSettingsCardContainer>
                 <List
                   component="nav"
                   aria-labelledby="nested-list-subheader"
@@ -112,9 +112,9 @@ return (
                   />
                 </List>
 
-            </StyledSettingsCardContainer>
+            </StyledSettingsCardContainer> */}
 
-            <StyledSettingsCardContainer >
+            {/* <StyledSettingsCardContainer >
                 <List
                   component="nav"
                   aria-labelledby="nested-list-subheader"
@@ -126,7 +126,7 @@ return (
                     content={ICONS.USER_INVITE.heading}
                   />
                 </List>
-            </StyledSettingsCardContainer>
+            </StyledSettingsCardContainer> */}
           </Box>
     </Container>
   );
