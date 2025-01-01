@@ -15,6 +15,7 @@ import { StyledCardContainer } from '../../theme/styles/default-styles';
 import { PATH_TICKET } from '../../routes/paths';
 import { useSnackbar } from '../../components/snackbar';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
+import options from './utils/constant';
 import FormProvider, { RHFTextField, RHFUpload, RHFAutocomplete, RHFDatePicker } from '../../components/hook-form';
 import { getActiveCustomerMachines, resetActiveCustomerMachines } from '../../redux/slices/products/machine';
 import { getActiveCustomers } from '../../redux/slices/customer/customer';
@@ -47,7 +48,16 @@ export default function TicketForm({ systemProblemPage, changeRequestPage, syste
   const { enqueueSnackbar } = useSnackbar();
   const { activeCustomerMachines } = useSelector((state) => state.machine);
   const { activeCustomers } = useSelector((state) => state.customer);
-
+  const { 
+    sharingOptions, 
+    changeReasonOptions, 
+    impactOptions, 
+    priorityOptions, 
+    reasonOptions, 
+    typeOptions, 
+    issueTypeOptions 
+  } = options;
+  
   const AddSystemProblemSchema = Yup.object().shape({
     customer: Yup.object().nullable().required('Customer is required'),
     machine: Yup.object().nullable(),
@@ -56,15 +66,24 @@ export default function TicketForm({ systemProblemPage, changeRequestPage, syste
 
   const defaultValues = useMemo(
     () => ({
-      issueType: null,
       customer: null,
       machine: null,
+      issueType: null,
       summary: '',
       description: '',
+      priority: '',
+      impact: '',
       files: [],
-      share: 'Sharing with TerminusTech',
-      start: getTimeObjectFromISOString(new Date().toISOString()),
-      end: getTimeObjectFromISOString(new Date().toISOString()),
+      changeType: '',
+      changeReason: '',
+      implementationPlan: '',
+      backoutPlan: '',
+      testPlan: '',
+      rootCause: '',
+      workaround: '',
+      shareWith: 'Sharing with TerminusTech',
+      plannedStartDate: getTimeObjectFromISOString(new Date().toISOString()),
+      plannedEndDate: getTimeObjectFromISOString(new Date().toISOString()),
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -131,13 +150,7 @@ export default function TicketForm({ systemProblemPage, changeRequestPage, syste
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [date]);
-  const issueTypeOptions =['System Problem', 'Change Request', 'System Incident', 'Service Request']
-  const typeOptions = ['Standard', 'Normal', 'Emergency'];
-  const reasonOptions = ['High impact incident', 'Recurring incident', 'Non-routine incident', 'Other'];
-  const priorityOptions = ['High', 'Medium', 'Low'];
-  const impactOptions = ['Extensive / Widespread', 'Significant / Large', 'Moderate / Limited', 'Minor / Localized'];
-  const changeReasonOptions = ['Repair', 'Upgrade', 'Maintenance', 'New functionality', 'Other'];
-  const sharingOptions = ['Sharing with TerminusTech', 'No one'];
+
 
   const onSubmit = async (data) => {
     try {
@@ -156,7 +169,7 @@ export default function TicketForm({ systemProblemPage, changeRequestPage, syste
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
-        <Cover name="Add Ticket Form" tickets />
+        <Cover name="New Ticket" tickets />
       </StyledCardContainer>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={3}>
@@ -283,7 +296,7 @@ export default function TicketForm({ systemProblemPage, changeRequestPage, syste
                    {issueType === 'Change Request' && (
                   <>
                   <RHFAutocomplete
-                    name="type"
+                    name="changeType"
                     options={typeOptions}
                     isOptionEqualToValue={(option, value) => option === value}
                     renderInput={(params) => (
@@ -311,9 +324,9 @@ export default function TicketForm({ systemProblemPage, changeRequestPage, syste
                       </li>
                     )}
                   />
-                  <RHFTextField name="implementation" label="Implementation Plan" minRows={4} multiline />
-                  <RHFTextField name="backout" label="Backout Plan" minRows={4} multiline />
-                  <RHFTextField name="test" label="Test Plan" minRows={4} multiline />
+                  <RHFTextField name="implementationPlan" label="Implementation Plan" minRows={4} multiline />
+                  <RHFTextField name="backoutPlan" label="Backout Plan" minRows={4} multiline />
+                  <RHFTextField name="testPlan" label="Test Plan" minRows={4} multiline />
                   </>
                 )}
                  {issueType === 'System Incident' && (
@@ -332,8 +345,8 @@ export default function TicketForm({ systemProblemPage, changeRequestPage, syste
                       </li>
                     )}
                   />
-                  <RHFTextField name="cause" label="Root cause" minRows={4} multiline />
-                  <RHFTextField name="work" label="Workaround" minRows={4} multiline />
+                  <RHFTextField name="rootCause" label="Root cause" minRows={4} multiline />
+                  <RHFTextField name="workaround" label="Workaround" minRows={4} multiline />
                   </>
                 )}
                 </Box>
@@ -347,7 +360,7 @@ export default function TicketForm({ systemProblemPage, changeRequestPage, syste
                   <RHFDatePicker label="Planned start date" name="date" />
                   <RHFAutocomplete
                     label="Planned start time"
-                    name="start"
+                    name="plannedStartDate"
                     options={time_list}
                     isOptionEqualToValue={(option, value) => option?.value === value?.value}
                     getOptionLabel={(option) => `${option?.label || ''}`}
@@ -358,7 +371,7 @@ export default function TicketForm({ systemProblemPage, changeRequestPage, syste
                   <RHFDatePicker label="Planned end date" name="end_date" />
                   <RHFAutocomplete
                     label="Planned end time"
-                    name="end"
+                    name="plannedEndDate"
                     options={time_list}
                     isOptionEqualToValue={(option, value) => option?.value === value?.value}
                     getOptionLabel={(option) => `${option?.label || ''}`}
@@ -369,11 +382,11 @@ export default function TicketForm({ systemProblemPage, changeRequestPage, syste
                 </Box>
                 )}
                 <RHFAutocomplete
-                  name="share"
+                  name="shareWith"
                   options={sharingOptions}
                   isOptionEqualToValue={(option, value) => option === value}
                   renderInput={(params) => (
-                    <RenderCustomInput label="Share with*" params={params} />
+                    <RenderCustomInput label="Share with" params={params} />
                   )}
                   renderOption={(props, option) => (
                     <li {...props} key={option}>
