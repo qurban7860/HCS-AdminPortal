@@ -36,11 +36,14 @@ import { StyledCardContainer } from '../../theme/styles/default-styles';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'description', label: 'Summary' ,align: 'left',},
-  { id: 'priority', label: 'Priority' , align: 'left', },
-  { id: 'impact', label: 'Impact', align: 'left', },
-  { id: 'share', label: 'Share', align: 'left',},
-  { id: 'createdAt', label: 'Created At', align: 'right',},
+  { id: 'customer', label: 'Customer', align: 'left' },
+  { id: 'machine', label: 'Machine', align: 'left' },
+  { id: 'issueType', label: 'Issue Type', align: 'left' },
+  { id: 'summary', label: 'Summary', align: 'left' },
+  { id: 'priority', label: 'Priority', align: 'left' },
+  { id: 'impact', label: 'Impact', align: 'left' },
+  { id: 'shareWith', label: 'Share', align: 'left' },
+  { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
 
 // ----------------------------------------------------------------------
@@ -200,10 +203,12 @@ function applyFilter({ inputData, comparator, filterName }) {
     console.log("filterName : ",filterName,'inputData : ',inputData)
     inputData = inputData.filter(
       (tickets) =>
-        tickets?.description?.toLowerCase().indexOf(filterName?.toLowerCase()) >= 0 ||
+        tickets?.machine?.serialNo?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        tickets?.customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        tickets?.summary?.toLowerCase().indexOf(filterName?.toLowerCase()) >= 0 ||
         tickets?.priority?.toLowerCase().indexOf(filterName?.toLowerCase()) >= 0 ||
         tickets?.impact?.toLowerCase().indexOf(filterName?.toLowerCase()) >= 0 ||
-        tickets?.share?.toLowerCase().indexOf(filterName?.toLowerCase()) >= 0 ||
+        tickets?.shareWith?.toLowerCase().indexOf(filterName?.toLowerCase()) >= 0 ||
         fDateTime(tickets?.createdAt)?.toLowerCase().indexOf(filterName?.toLowerCase())
     );
   }

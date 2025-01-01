@@ -22,16 +22,19 @@ export default function TicketFormTableRow({
   onViewRow,
 }) {
 
-  const { description, priority, impact, share, createdAt } = row;
+  const { customer, machine, issueType, summary, priority, impact, shareWith, createdAt } = row;
   return (
     <StyledTableRow hover selected={selected}>
+      <TableCell align="left">{customer?.name || ''}</TableCell>
+      <TableCell align='left' > { machine?.serialNo || ''} </TableCell> 
+      <TableCell align='left' > { issueType || ''} </TableCell> 
       <Stack direction="row" alignItems="center">
         {/* <LinkTableCell align="left" onClick={onViewRow} param={subject} /> */}
-        <TableCell align='left' > { description || ''} </TableCell> 
+        <TableCell align='left' > { summary || ''} </TableCell> 
       </Stack>
       <TableCell align='left' > { priority || ''} </TableCell> 
-      <TableCell align='left' > { impact } </TableCell>
-      <TableCell align='left' > { share } </TableCell>
+      <TableCell align='left' > { impact || ''} </TableCell>
+      <TableCell align='left' > { shareWith || ''} </TableCell>
       <TableCell align='right' > { fDateTime(createdAt) } </TableCell>
     </StyledTableRow>
   );
