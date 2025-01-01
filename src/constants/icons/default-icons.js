@@ -514,45 +514,7 @@ export const ICONS = {
     heading: 'API Logs',
   },
   
-  // @root - ticketsettings
-  // ------------ Issue Types --------------
-  SYSTEM_PROBLEM: {
-    icon: 'material-symbols-light:problem-rounded',
-    heading: 'System Problem',
-  },
-  SYSTEM_CHANGE: {
-    icon: 'material-symbols-light:convert-to-text-rounded',
-    heading: 'Change Request',
-  },
-  SYSTEM_INCIDENT: {
-    icon: 'pajamas:issue-type-incident',
-    heading: 'System Incident',
-  },
-  SERVICE_REQUEST: {
-    icon: 'carbon:mobile-request',
-    heading: 'Service Request',
-  },
-  APPROVALS: {
-    icon: 'mdi:clipboard-check-outline',
-    heading: 'Approvals',
-  },
-  // ------------ Components -----------------
-  ELECTRICAL: {
-    icon: 'ix:electrical-energy-filled',
-    heading: 'Electrical',
-  },
-  HYDRAULIC: {
-    icon: 'mdi:hydraulic-oil-temperature',
-    heading: 'Hydraulic',
-  },
-  MECHANICAL: {
-    icon: 'icon-park-outline:setting-config',
-    heading: 'Mechanical',
-  },
-  OFFSET: {
-    icon: 'fluent:table-offset-less-than-or-equal-to-24-filled',
-    heading: 'Offset',
-  },
+  
 
   MOVE_MACHINE: {
     icon: 'ri:swap-box-line',

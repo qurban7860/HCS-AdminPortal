@@ -1,0 +1,395 @@
+import * as Yup from 'yup';
+import PropTypes from 'prop-types';
+import { useCallback, useMemo, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+// routes
+import { useNavigate } from 'react-router-dom';
+// form
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+// @mui
+import { Box, Container, Card, Grid, Stack, Typography } from '@mui/material';
+// components
+import { Cover } from '../../components/Defaults/Cover';
+import { StyledCardContainer } from '../../theme/styles/default-styles';
+import { PATH_TICKET } from '../../routes/paths';
+import { useSnackbar } from '../../components/snackbar';
+import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
+import FormProvider, { RHFTextField, RHFUpload, RHFAutocomplete, RHFDatePicker } from '../../components/hook-form';
+import { getActiveCustomerMachines, resetActiveCustomerMachines } from '../../redux/slices/products/machine';
+import { getActiveCustomers } from '../../redux/slices/customer/customer';
+import { time_list } from '../../constants/time-list';
+import RenderCustomInput from '../../components/custom-input/RenderCustomInput';
+import PriorityIcon from '../calendar/utils/PriorityIcon';
+
+TicketForm.propTypes = {
+  systemProblemPage: PropTypes.bool,
+  changeRequestPage: PropTypes.bool,
+  systemIncidentPage: PropTypes.bool,
+  serviceRequestPage: PropTypes.bool,
+};
+
+function getTimeObjectFromISOString(dateString) {
+  const date = new Date(dateString);
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+  const formattedValueTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  const formattedHours = hours % 12 || 12;
+  const formattedTime = `${formattedHours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+  const timeObject = {value: formattedValueTime, label: `${formattedTime} ${ampm}`};
+  return timeObject;
+}
+
+export default function TicketForm({ systemProblemPage, changeRequestPage, systemIncidentPage, serviceRequestPage }) {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { enqueueSnackbar } = useSnackbar();
+  const { activeCustomerMachines } = useSelector((state) => state.machine);
+  const { activeCustomers } = useSelector((state) => state.customer);
+
+  const AddSystemProblemSchema = Yup.object().shape({
+    customer: Yup.object().nullable().required('Customer is required'),
+    machine: Yup.object().nullable(),
+    summary: Yup.string().max(10000).required('Summary is required!'),
+  });
+
+  const defaultValues = useMemo(
+    () => ({
+      issueType: null,
+      customer: null,
+      machine: null,
+      summary: '',
+      description: '',
+      files: [],
+      share: 'Sharing with TerminusTech',
+      start: getTimeObjectFromISOString(new Date().toISOString()),
+      end: getTimeObjectFromISOString(new Date().toISOString()),
+    }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
+
+  const methods = useForm({
+    resolver: yupResolver(AddSystemProblemSchema),
+    defaultValues,
+  });
+
+  const { reset, handleSubmit, watch, setValue, trigger, formState: { isSubmitting }} = methods;
+
+  const { issueType, customer, files, date } = watch();
+  
+  useEffect(() => {
+    dispatch(getActiveCustomers());
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (customer) {
+      dispatch(getActiveCustomerMachines(customer._id));
+    } else {
+      dispatch(resetActiveCustomerMachines());
+    }
+  }, [dispatch, customer]);
+
+   const handleCustomerChange = useCallback((newCustomer) => {
+      setValue('customer', newCustomer);
+      setValue('machine', null);
+      trigger(['customer', 'machine']);
+    }, [setValue, trigger]);
+  
+    const handleMachineChange = useCallback((newMachine) => {
+      setValue('machine', newMachine);
+      trigger('machine');
+    }, [setValue, trigger]);
+
+  const handleDropMultiFile = useCallback(
+    async (acceptedFiles) => {
+      const docFiles = files || [];
+
+      const newFiles = acceptedFiles.map((file, index) =>
+        Object.assign(file, {
+          preview: URL.createObjectURL(file),
+          src: URL.createObjectURL(file),
+          isLoaded: true,
+        })
+      );
+      setValue('files', [...docFiles, ...newFiles], { shouldValidate: true });
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [files]
+  );
+
+  useEffect(() => {
+    const { end_date } = watch();
+    if (date && end_date) {
+      const startDate = new Date(date);
+      const endDate = new Date(end_date);
+      if (startDate > endDate) {
+        setValue('end_date', startDate);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [date]);
+  const issueTypeOptions =['System Problem', 'Change Request', 'System Incident', 'Service Request']
+  const typeOptions = ['Standard', 'Normal', 'Emergency'];
+  const reasonOptions = ['High impact incident', 'Recurring incident', 'Non-routine incident', 'Other'];
+  const priorityOptions = ['High', 'Medium', 'Low'];
+  const impactOptions = ['Extensive / Widespread', 'Significant / Large', 'Moderate / Limited', 'Minor / Localized'];
+  const changeReasonOptions = ['Repair', 'Upgrade', 'Maintenance', 'New functionality', 'Other'];
+  const sharingOptions = ['Sharing with TerminusTech', 'No one'];
+
+  const onSubmit = async (data) => {
+    try {
+      // await dispatch(addTicket(data));
+      reset();
+      enqueueSnackbar('Ticket Add Successfully!');
+      navigate(PATH_TICKET.root);
+    } catch (error) {
+      enqueueSnackbar(error, { variant: `error` });
+      console.error(error);
+    }
+  };
+
+  const toggleCancel = () => navigate(PATH_TICKET.root);
+
+  return (
+    <Container maxWidth={false}>
+      <StyledCardContainer>
+        <Cover name="Add Ticket Form" tickets />
+      </StyledCardContainer>
+      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+        <Grid container spacing={3}>
+          <Grid item xs={12} md={12}>
+            <Card sx={{ p: 3 }}>
+              <Stack spacing={3}>
+                  <RHFAutocomplete
+                    name="issueType"
+                    options={issueTypeOptions}
+                    isOptionEqualToValue={(option, value) => option === value}
+                    renderInput={(params) => (
+                      <RenderCustomInput label="Issue Type" params={params} />
+                    )}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option}>
+                        {' '}
+                        <span style={{ marginLeft: 8 }}>{option}</span>{' '}
+                      </li>
+                    )}
+                  />
+                </Stack>
+              </Card>
+          </Grid>
+        </Grid>
+        {issueType && (
+        <Grid container spacing={3} sx={{ mt: 1 }}>
+          <Grid item xs={12} md={12}>
+            <Card sx={{ p: 3 }}>
+              <Stack spacing={3}>
+                <Stack spacing={1}>
+                  <Typography variant="h3" sx={{ color: 'text.secondary' }}>
+                    {issueType === 'System Problem' && 'Create a System Problem'}
+                    {issueType === 'Change Request' && 'Create a Change Request'}
+                    {issueType === 'System Incident' && 'Create a System Incident'}
+                    {issueType === 'Service Request' && 'Create a Service Request'}
+                  </Typography>
+                </Stack>
+                <Box
+                  rowGap={2}
+                  columnGap={2}
+                  display="grid"
+                  gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
+                >
+                  <RHFAutocomplete
+                    name="customer"
+                    label="Customer*"
+                    options={activeCustomers || []}
+                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    getOptionLabel={(option) => `${option?.name || ''}`}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option?._id}>
+                        {' '}
+                        {option?.name || ''}{' '}
+                      </li>
+                    )}
+                    onChange={(e, newValue) => handleCustomerChange(newValue)}
+                  />
+                  <RHFAutocomplete
+                    name="machine"
+                    label="Machine"
+                    options={activeCustomerMachines || []}
+                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    getOptionLabel={(option) =>
+                      `${option.serialNo || ''} ${option?.name ? '-' : ''} ${option?.name || ''}`
+                    }
+                    renderOption={(props, option) => (
+                      <li {...props} key={option?._id}>{`${option.serialNo || ''} ${
+                        option?.name ? '-' : ''
+                      } ${option?.name || ''}`}</li>
+                    )}
+                    onChange={(e, newValue) => handleMachineChange(newValue)}
+                  />
+                </Box>
+                <RHFTextField name="summary" label="Summary*" minRows={1} multiline />
+                <RHFTextField name="description" label="Description" minRows={3} multiline />
+                <Box
+                  sx={{
+                    display: 'grid',
+                    gap: 3,
+                    gridTemplateColumns: { xs: '1fr', sm: 'repeat(1, 1fr)' },
+                    alignItems: 'center',
+                    width: '100%',
+                  }}
+                >
+                  <Box sx={{ mt: 0 }}>
+                    <Typography variant="body1" sx={{ mb: 1, ml: 1 }}>
+                      Attachment
+                    </Typography>
+                    <RHFUpload
+                      multiple
+                      thumbnail
+                      name="files"
+                      imagesOnly
+                      onDrop={handleDropMultiFile}
+                      onRemove={(inputFile) => files.length > 1 ? setValue( 'files', files && files?.filter((file) => file !== inputFile), { shouldValidate: true }) : setValue('files', '', { shouldValidate: true })}
+                      onRemoveAll={() => setValue('files', '', { shouldValidate: true })}
+                    />{' '}
+                  </Box>
+                  <RHFAutocomplete
+                    name="priority"
+                    options={priorityOptions}
+                    isOptionEqualToValue={(option, value) => option === value}
+                    renderInput={(params) => <RenderCustomInput label="Priority" params={params} />}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option}>
+                        {' '}
+                        <PriorityIcon priority={option} />{' '}
+                        <span style={{ marginLeft: 8 }}>{option}</span>{' '}
+                      </li>
+                    )}
+                  />
+                   <RHFAutocomplete
+                    name="impact"
+                    options={impactOptions}
+                    isOptionEqualToValue={(option, value) => option === value}
+                    renderInput={(params) => <RenderCustomInput label="Impact" params={params} />}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option}>
+                        {' '}
+                        <span style={{ marginLeft: 8 }}>{option}</span>{' '}
+                      </li>
+                    )}
+                  />
+                   {issueType === 'Change Request' && (
+                  <>
+                  <RHFAutocomplete
+                    name="type"
+                    options={typeOptions}
+                    isOptionEqualToValue={(option, value) => option === value}
+                    renderInput={(params) => (
+                      <RenderCustomInput label="Change Type" params={params} />
+                    )}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option}>
+                        {' '}
+                        <span style={{ marginLeft: 8 }}>{option}</span>{' '}
+                      </li>
+                    )}
+                  />
+                  <RHFAutocomplete
+                    name="changeReason"
+                    options={changeReasonOptions}
+                    isOptionEqualToValue={(option, value) => option === value}
+                    renderInput={(params) => (
+                      <RenderCustomInput label="Change Reason" params={params} />
+                    )}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option}>
+                        {' '}
+                        <PriorityIcon priority={option} />{' '}
+                        <span style={{ marginLeft: 8 }}>{option}</span>{' '}
+                      </li>
+                    )}
+                  />
+                  <RHFTextField name="implementation" label="Implementation Plan" minRows={4} multiline />
+                  <RHFTextField name="backout" label="Backout Plan" minRows={4} multiline />
+                  <RHFTextField name="test" label="Test Plan" minRows={4} multiline />
+                  </>
+                )}
+                 {issueType === 'System Incident' && (
+                    <>
+                  <RHFAutocomplete
+                    name="investigationReason"
+                    options={reasonOptions}
+                    isOptionEqualToValue={(option, value) => option === value}
+                    renderInput={(params) => (
+                      <RenderCustomInput label="Investigation reason" params={params} />
+                    )}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option}>
+                        {' '}
+                        <span style={{ marginLeft: 8 }}>{option}</span>{' '}
+                      </li>
+                    )}
+                  />
+                  <RHFTextField name="cause" label="Root cause" minRows={4} multiline />
+                  <RHFTextField name="work" label="Workaround" minRows={4} multiline />
+                  </>
+                )}
+                </Box>
+                {issueType === 'Change Request' && (
+                <Box
+                  rowGap={2}
+                  columnGap={2}
+                  display="grid"
+                  gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(4, 1fr)' }}
+                >
+                  <RHFDatePicker label="Planned start date" name="date" />
+                  <RHFAutocomplete
+                    label="Planned start time"
+                    name="start"
+                    options={time_list}
+                    isOptionEqualToValue={(option, value) => option?.value === value?.value}
+                    getOptionLabel={(option) => `${option?.label || ''}`}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option?._id}>{`${option?.label || ''}`}</li>
+                    )}
+                  />
+                  <RHFDatePicker label="Planned end date" name="end_date" />
+                  <RHFAutocomplete
+                    label="Planned end time"
+                    name="end"
+                    options={time_list}
+                    isOptionEqualToValue={(option, value) => option?.value === value?.value}
+                    getOptionLabel={(option) => `${option?.label || ''}`}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option?._id}>{`${option?.label || ''}`}</li>
+                    )}
+                  />
+                </Box>
+                )}
+                <RHFAutocomplete
+                  name="share"
+                  options={sharingOptions}
+                  isOptionEqualToValue={(option, value) => option === value}
+                  renderInput={(params) => (
+                    <RenderCustomInput label="Share with*" params={params} />
+                  )}
+                  renderOption={(props, option) => (
+                    <li {...props} key={option}>
+                      {' '}
+                      <span style={{ marginLeft: 8 }}>{option}</span>{' '}
+                    </li>
+                  )}
+                  sx={{ maxWidth: 400 }}
+                />
+                <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+              </Stack>
+            </Card>
+          </Grid>
+        </Grid>
+       )}
+      </FormProvider>
+    </Container>
+  );
+}

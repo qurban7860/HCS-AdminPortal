@@ -318,20 +318,11 @@ import {
   MachineDrawingsEdit,
 
   // ----------------------------------------------------------------
+  
+  // TICKETS
+  TicketFormList,
+  TicketForm,
 
-  // TICKET SETTINGS
-  TicketSettings,
-  // IssueTypes
-  SystemProblemForm,
-  SystemIncidentForm,
-  SystemChangeForm,
-  ServiceRequestForm,
-  ApprovalRequestForm,
-  // Components
-  Electrical,
-  Hydraulic,
-  Mechanical,
-  Offset,
 
 // REPORTS / SETTINGS
   Setting,
@@ -1164,82 +1155,25 @@ export default function Router() {
         }
       ],
     },
-
-     // ----------------------------- TICKET SETTING -----------------------------------
-     {
-      path: 'TicketSettings',
+    
+    // ----------------------------- TICKETS -----------------------------------
+    {
+      path: 'tickets',
       element: (
         <AuthGuard>
           <DashboardLayout />
         </AuthGuard>
       ),
       children: [
-        {element: <TicketSettings  />, index: true },
-
+        {element: <TicketFormList />, index: true },
         {
-          path: 'SystemProblem',
+          path: 'tickets',
           children: [
-            { path: 'form', element: <SystemProblemForm /> },
+            { path: 'new', element: <TicketForm /> },
+            // { path: ':id/edit', element: <TicketFormEdit />},
+            // { path: ':id/view', element: <TicketFormView />}
           ],
         },
-        {
-          path: 'SystemIncident',
-          children: [
-            { path: 'form', element: <SystemIncidentForm /> },
-          ],
-        },
-        {
-          path: 'SystemChange',
-          children: [
-            { path: 'form', element: <SystemChangeForm /> },
-          ],
-        },
-        {
-          path: 'ServiceRequest',
-          children: [
-            { path: 'form', element: <ServiceRequestForm /> },
-          ],
-        },
-        {
-          path: 'ApprovalRequest',
-          children: [
-            { path: 'form', element: <ApprovalRequestForm /> },
-          ],
-        },
-
-        {
-          path: 'Electrical',
-          children: [
-            { path: 'form', element: <Electrical /> },
-          ],
-        },
-        {
-          path: 'Hydraulic',
-          children: [
-            { path: 'form', element: <Hydraulic /> },
-          ],
-        },
-        {
-          path: 'Mechanical',
-          children: [
-            { path: 'form', element: <Mechanical /> },
-          ],
-        },
-        {
-          path: 'Offset',
-          children: [
-            { path: 'form', element: <Offset /> },
-          ],
-        },
-        // ------------------------------ invite ----------------------------------
-        {
-          path: 'invite',
-          children: [
-            { path: 'list', element: <UserInvitationList /> },
-            { path: ':id/view', element: <UserInvitationView /> },
-          ],
-        },
-
       ],
     },
 
