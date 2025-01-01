@@ -14,9 +14,7 @@ function CoverSettingsIcons({
   handleBackLinks,
   machineDrawingsBackLink,
   generalSettings,
-  ticketSettings,
   handleSettingsNavigate,
-  handleTicketSettingsNavigate,
 }) {
 
   const { isSettingAccessAllowed } = useAuthContext()
@@ -58,23 +56,6 @@ function CoverSettingsIcons({
           <Iconify icon="mdi:cog" />
         </Link>
       )}
-       {ticketSettings && (
-        <Link
-          title="Settings"
-          sx={{
-            cursor: 'hover',
-            mt: 'auto',
-            color: 'common.white',
-            mx: 2,
-            mb: { xs: 0, md: 1 },
-          }}
-          component="button"
-          variant="body2"
-          onClick={handleTicketSettingsNavigate}
-        >
-          <Iconify icon="mdi:cog" />
-        </Link>
-      )}
     </Grid>
   );
 }
@@ -86,9 +67,7 @@ CoverSettingsIcons.propTypes = {
   handleBacklink: PropTypes.func,
   handleBackLinks: PropTypes.func,
   generalSettings: PropTypes.bool,
-  ticketSettings: PropTypes.bool,
   handleSettingsNavigate: PropTypes.func,
-  handleTicketSettingsNavigate: PropTypes.func,
   machineDrawingsBackLink: PropTypes.string,
 };
 

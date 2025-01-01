@@ -91,9 +91,6 @@ export const FORMLABELS = {
   ARCHIVED_REPORTS: 'Archived Reports',
   LOGS_SETTINGS: 'Logs',
 
-  // @root - ticketSettings
-  ISSUE_TYPES: 'Issue Types',
-  COMPONENTS: 'Components',
 
   // @root DocumentAddForm in dashboard/documents
   SELECT_CUSTOMER: 'Select Customer',
@@ -203,6 +200,8 @@ export const BUTTONS = {
   ADDSUPPLIER: 'Add Supplier',
   ADDSTATUS: 'Add Status',
   ADDTECHPARAM: 'Add Technical Parameter',
+  // Ticket settings
+  ADDTICKET: 'Add New Ticket',
   // Service settings
   ADDSERVICESETTING: 'Add Service Setting',
   EDITSERVICESETTING: 'Edit Service Setting',

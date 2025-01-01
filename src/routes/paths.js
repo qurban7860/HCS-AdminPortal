@@ -14,7 +14,7 @@ const ROOTS_MACHINE_SETTING_REPORT = '/machineSettingReports'
 const ROOTS_SERVICE_REPORTS = '/serviceReports'
 const ROOTS_SECURITY = '/security';
 const ROOTS_SETTING = '/settings';
-const ROOTS_TICKET_SETTING = '/ticketSettings';
+const ROOTS_TICKET = '/tickets';
 const ROOTS_DOCUMENT = '/documents';
 const ROOTS_MACHINE_DRAWING = '/machineDrawings';
 const ROOTS_SITEMAP = '/sites';
@@ -471,44 +471,19 @@ export const PATH_SETTING = {
   },
 };
 
-// ------------------------ TICKET SETTINGS ----------------------------------------
+// ------------------------ TICKETS ----------------------------------------
 
-export const PATH_TICKET_SETTING = {
-  permissionDenied: path(ROOTS_TICKET_SETTING, '/permission-denied'),
-  root: ROOTS_TICKET_SETTING,
-  SystemProblem: {
-    form: path(ROOTS_TICKET_SETTING, '/systemProblem/form'),
-  },
-  SystemChange: {
-    form: path(ROOTS_TICKET_SETTING, '/systemChange/form'),
-  },
-  SystemIncident: {
-    form: path(ROOTS_TICKET_SETTING, '/systemIncident/form'),
-  },
-  ServiceRequest: {
-    form: path(ROOTS_TICKET_SETTING, '/serviceRequest/form'),
-  },
-  ApprovalRequest: {
-    form: path(ROOTS_TICKET_SETTING, '/approvalRequest/form'),
-  },
-  Electrical: {
-    form: path(ROOTS_TICKET_SETTING, '/electrical/form'),
-  },
-  Hydraulic: {
-    form: path(ROOTS_TICKET_SETTING, '/hydraulic/form'),
-  },
-  Mechanical: {
-    form: path(ROOTS_TICKET_SETTING, '/mechanical/form'),
-  },
-  Offset: {
-    form: path(ROOTS_TICKET_SETTING, '/offset/form'),
-  },
-  // ------------------------ SECURITY USER INVITES ----------------------------------------
-  invite: {
-    list: path(ROOTS_TICKET_SETTING, '/invite/list'),
-    view: (id) => path(ROOTS_TICKET_SETTING, `/invite/${id}/view`)
+export const PATH_TICKET = {
+  permissionDenied: path(ROOTS_TICKET, '/permission-denied'),
+  root: ROOTS_TICKET,
+  tickets: {
+    list: path(ROOTS_TICKET, '/tickets/list'),
+    new: path(ROOTS_TICKET, '/tickets/new'),
+    // view: (id) => path(ROOTS_SETTING, `/systemProblem/${id}/view`),
+    // edit: (id) => path(ROOTS_SETTING, `/systemProblem/${id}/edit`),
   },
 };
+
 
 export const PATH_SECURITY = {
   root: ROOTS_SECURITY,

@@ -5,7 +5,7 @@ import { useSearchParams } from 'react-router-dom';
 import { Button, Grid, Typography, Box } from '@mui/material';
 import { StyledRoot, StyledInfo } from '../../theme/styles/default-styles';
 // utils
-import { PATH_CRM, PATH_MACHINE, PATH_SETTING, PATH_MACHINE_LOGS, PATH_TICKET_SETTING } from '../../routes/paths';
+import { PATH_CRM, PATH_MACHINE, PATH_SETTING, PATH_MACHINE_LOGS } from '../../routes/paths';
 // auth
 import CoverSettingsIcons from './CoverSettingsIcons';
 import CoverTitles from './CoverTitles';
@@ -31,7 +31,6 @@ Cover.propTypes = {
   productionLogs: PropTypes.bool,
   coilLogs: PropTypes.bool,
   erpLogGraphsToggle: PropTypes.bool,
-  ticketSettings: PropTypes.bool,
 };
 
 export function Cover({
@@ -49,12 +48,10 @@ export function Cover({
   productionLogs,
   coilLogs,
   erpLogGraphsToggle,
-  ticketSettings,
 }) {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const handleSettingsNavigate = () => navigate(PATH_SETTING.root);
-  const handleTicketSettingsNavigate = () => navigate(PATH_TICKET_SETTING.root);
   const linkCustomerSites = () => navigate(PATH_CRM.sites);
   const linkCustomerContacts = () =>  navigate(PATH_CRM.contacts);
   const linkArchivedCustomers = () =>  navigate(PATH_CRM.customers.archived.root);
@@ -102,8 +99,6 @@ export function Cover({
           setting={!isArchived && setting}
           handleSettingsNavigate={handleSettingsNavigate}
           generalSettings={generalSettings && !isArchived}
-          ticketSettings={ticketSettings}
-          handleTicketSettingsNavigate={handleTicketSettingsNavigate}
         />
       </StyledInfo>
       <Grid

@@ -9,7 +9,7 @@ import {
   PATH_SERVICE_REPORTS,
   PATH_DOCUMENT, 
   PATH_SETTING, 
-  PATH_TICKET_SETTING, 
+  PATH_TICKET, 
   PATH_SITEMAP, 
   PATH_SECURITY, 
   PATH_MACHINE_DRAWING, 
@@ -67,7 +67,7 @@ function NavigationConfig() {
     machineLogs: <Iconify icon="lucide:list-end" />,
     map: <Iconify icon="mdi:map-marker" />,
     machineSettingReports: <Iconify icon="tdesign:task-setting-filled" />,
-    ticketSettings: <Iconify icon="icon-park-solid:setting-web" />,
+    tickets: <Iconify icon="icon-park-solid:setting-web" />,
   }; 
 
   const { 
@@ -112,8 +112,8 @@ function NavigationConfig() {
       updatedConfig[0].items.push({ title: 'Settings', path: PATH_SETTING.root, icon: ICONS.setting });
     }
     
-    if (navConfig.some((config) => config.title?.toLowerCase() !== 'ticket Settings')) {
-      updatedConfig[0].items.push({ title: 'Ticket Settings', path: PATH_TICKET_SETTING.root, icon: ICONS.ticketSettings });
+    if (navConfig.some((config) => config.title?.toLowerCase() !== 'tickets')) {
+      updatedConfig[0].items.push({ title: 'Tickets', path: PATH_TICKET.root, icon: ICONS.tickets });
     }
 
     if (navConfig.some((config) => config.title?.toLowerCase() !== 'Calendar')) {
