@@ -22,7 +22,7 @@ export default function TicketFormTableRow({
   onViewRow,
 }) {
 
-  const { customer, machine, issueType, summary, priority, impact, shareWith, createdAt } = row;
+  const { customer, machine, issueType, summary, priority, impact, createdAt } = row;
   return (
     <StyledTableRow hover selected={selected}>
       <TableCell align="left">{customer?.name || ''}</TableCell>
@@ -34,7 +34,6 @@ export default function TicketFormTableRow({
       </Stack>
       <TableCell align='left' > { priority || ''} </TableCell> 
       <TableCell align='left' > { impact || ''} </TableCell>
-      <TableCell align='left' > { shareWith || ''} </TableCell>
       <TableCell align='right' > { fDateTime(createdAt) } </TableCell>
     </StyledTableRow>
   );
