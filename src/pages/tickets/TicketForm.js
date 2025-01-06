@@ -12,7 +12,7 @@ import { Box, Container, Card, Grid, Stack, Typography } from '@mui/material';
 // components
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
-import { PATH_TICKET } from '../../routes/paths';
+import { PATH_SUPPORT } from '../../routes/paths';
 import { useSnackbar } from '../../components/snackbar';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import options from './utils/constant';
@@ -159,14 +159,14 @@ export default function TicketForm({ systemProblemPage, changeRequestPage, syste
       await dispatch(postTicket(data));
       reset();
       enqueueSnackbar('Ticket Add Successfully!');
-      navigate(PATH_TICKET.root);
+      navigate(PATH_SUPPORT.supportTickets.root);
     } catch (error) {
       enqueueSnackbar(error, { variant: `error` });
       console.error(error);
     }
   };
   
-  const toggleCancel = () => navigate(PATH_TICKET.root);
+  const toggleCancel = () => navigate(PATH_SUPPORT.supportTickets.root);
 
   return (
     <Container maxWidth={false}>

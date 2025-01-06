@@ -17,7 +17,7 @@ import FormProvider, { RHFTextField } from '../../../components/hook-form';
 import { Cover } from '../../../components/Defaults/Cover';
 import { SecurityUserPasswordUpdate, sendResetPasswordEmail, resetLoadingResetPasswordEmail } from '../../../redux/slices/securityUser/securityUser';
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
-import { PATH_SECURITY } from '../../../routes/paths';
+import { PATH_SETTING } from '../../../routes/paths';
 import { StyledCardContainer, StyledTooltip } from '../../../theme/styles/default-styles';
 import { useAuthContext } from '../../../auth/useAuthContext';
 
@@ -64,7 +64,7 @@ export default function SecurityUserChangePassword() {
     formState: { isSubmitting },
   } = methods;
 
-  const toggleCancel = () => navigate(PATH_SECURITY.users.view(securityUser._id));
+  const toggleCancel = () => navigate(PATH_SETTING.security.users.view(securityUser._id));
 
   const senResetPasswordLink = async () => {
     try{
@@ -82,7 +82,7 @@ export default function SecurityUserChangePassword() {
       await dispatch(SecurityUserPasswordUpdate(data, securityUser._id, true));
       reset();
       enqueueSnackbar('Update success!');
-      navigate(PATH_SECURITY.users.view(securityUser._id));
+      navigate(PATH_SETTING.security.users.view(securityUser._id));
     } catch (error) {
       if (error.Message) {
         enqueueSnackbar(error.Message, { variant: `error` });

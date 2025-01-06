@@ -37,7 +37,7 @@ export default function Pm2LogsViewForm() {
       <Grid item md={12} mt={2}>
         <Card sx={{ p: 2 }}>
         <ViewFormEditDeleteButtons  
-          backLink={() => navigate(PATH_SETTING.pm2.logs.root)}
+          backLink={() => navigate(PATH_SETTING.logs.pm2.root)}
           settingPage
         />
           <Grid container sx={{mt:2}}>

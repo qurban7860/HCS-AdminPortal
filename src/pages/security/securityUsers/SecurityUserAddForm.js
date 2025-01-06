@@ -8,7 +8,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Box, Card, Grid, Stack, Checkbox } from '@mui/material';
 // routes
-import { PATH_SECURITY } from '../../../routes/paths';
+import { PATH_SETTING } from '../../../routes/paths';
 // assets
 // components
 import { useSnackbar } from '../../../components/snackbar';
@@ -145,7 +145,7 @@ const { contact, customer } = watch();
       reset();
       enqueueSnackbar(message);
       if(!isInvite){
-        navigate(PATH_SECURITY.users.view(response.data.user._id));
+        navigate(PATH_SETTING.security.users.view(response.data.user._id));
       }
     } catch (error) {
         enqueueSnackbar(error, { variant: `error` });
@@ -153,7 +153,7 @@ const { contact, customer } = watch();
     }
   };
 
-  const toggleCancel = () =>  navigate(PATH_SECURITY.root);
+  const toggleCancel = () =>  navigate(PATH_SETTING.security.root);
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>

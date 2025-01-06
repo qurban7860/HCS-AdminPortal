@@ -6,7 +6,7 @@ import { Table, TableBody, Container, TableContainer } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // routes
-import { PATH_SECURITY } from '../../../routes/paths';
+import { PATH_SETTING } from '../../../routes/paths';
 // components
 import Scrollbar from '../../../components/scrollbar';
 import { Cover } from '../../../components/Defaults/Cover';
@@ -197,7 +197,7 @@ useEffect(()=>{
   };
 
   const handleViewRow = (id) => {
-    navigate(PATH_SECURITY.users.view(id));
+    navigate(PATH_SETTING.security.users.view(id));
   };
 
   const handleResetFilter = () => {

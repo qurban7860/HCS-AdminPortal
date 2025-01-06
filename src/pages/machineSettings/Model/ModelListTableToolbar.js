@@ -37,6 +37,7 @@ export default function CustomerListTableToolbar({
   setSelectedCategory,
 }) {
   const navigate = useNavigate();
+  const { activeCategories } = useSelector((state) => state.category);
   const toggleAdd = () => navigate(PATH_MACHINE.machineSettings.models.new);
 
   return (

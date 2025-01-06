@@ -8,7 +8,6 @@ import CompactLayout from '../layouts/compact';
 import DashboardLayout from '../layouts/dashboard';
 // config
 import { PATH_AFTER_LOGIN } from '../config-global';
-import { PATH_MACHINE_LOGS } from './paths';
 //
 import {
   // Auth
@@ -512,20 +511,6 @@ export default function Router() {
       ],
     },
 
-    // --------------------- SUPPORT  ----------------------
-    {
-      path: 'support',
-      element: (
-        <AuthGuard>
-          <DashboardLayout />
-        </AuthGuard>
-      ),
-      children: [
-        { element: <Navigate to="/support/jiraTickets" replace />, index: true },
-        { path: 'jiraTickets', element: <JiraTickets /> },
-      ],
-    },
-
     // --------------------- CALENDAR  ----------------------
     {
       path: 'calendar',
@@ -970,6 +955,13 @@ export default function Router() {
           },
         ]
         },
+        // --------------------------- Machine Sites Map --------------------------------
+        {
+          path: 'sitesMap',
+          children: [
+            { element: <SitesReport />, index: true },
+          ]
+        },
         // ------------------------------ ARCHIVED MACHINES ----------------------------------
         {
           path: 'archived-machines',
@@ -982,55 +974,94 @@ export default function Router() {
         { path: 'blank', element: <BlankPage /> },
       ],
     },
-    // ------------------------- Machine Setting Report ---------------------------
-    { path: 'machineSettingReports',
-      element: (
-        <AuthGuard>
-          <DashboardLayout />
-        </AuthGuard>
-      ),
-      children:[
-        { element: <MachineSettingReportList />, index: true },
-        // { path: ':id/view', element: <MachineSettingReportView /> },
-      ]
-    },
-    // ------------------------- Service Report ---------------------------
-    { path: 'serviceReports',
-      element: (
-        <AuthGuard>
-          <DashboardLayout />
-        </AuthGuard>
-      ),
-      children:[
-        { element: <MachineServiceReportList to={PATH_AFTER_LOGIN} replace  reportsPage />, index: true },
-        { path: ':id/view', element: <MachineServiceReportView reportsPage /> },
-      ]
-    },
-    // SECURITY
+
+    // --------------------- SUPPORT  ----------------------
     {
-      path: 'security',
+      path: 'support',
       element: (
         <AuthGuard>
           <DashboardLayout />
         </AuthGuard>
       ),
       children: [
-        { element: <SecurityUserList />, index: true },
+        { element: <Navigate to="/support/supportTickets" replace />, index: true },
         {
-          path: 'users',
+          path: 'supportTickets',
           children: [
-            { path: 'profile', element: <SecurityUserProfile/> },
-            { path: 'editProfile', element: <SecurityUserProfileEdit/> },
-            { path: 'password', element: <SecurityUserChangePassword/> },
-            { path: 'changePassword', element: <SecurityUserChangePasswordByAdmin/> },
-            { path: 'new', element: <SecurityUserAdd /> },
-            { path: 'invite', element: <SecurityUserAdd isInvite /> },
-            { path: ':id/edit', element: <SecurityUserEdit /> },
-            { path: ':id/view', element: <SecurityUserView /> },
+            { element: <TicketFormList />, index: true },
+            { path: 'new', element: <TicketForm /> },
+            // { path: ':id/edit', element: <TicketFormEdit />},
+            // { path: ':id/view', element: <TicketFormView />}
+          ],
+        },
+        { path: 'jiraTickets', element: <JiraTickets /> },
+      ],
+    },
+    // --------------------- REPORTS  ----------------------
+    {
+      path: 'reports',
+      element: (
+        <AuthGuard>
+          <DashboardLayout />
+        </AuthGuard>
+      ),
+      children: [
+        { element: <Navigate to="/reports/serviceReports" replace />, index: true },
+        {
+          path: 'serviceReports',
+          children: [
+            {
+              element: <MachineServiceReportList to={PATH_AFTER_LOGIN} replace reportsPage />,
+              index: true,
+            },
+            { path: ':id/view', element: <MachineServiceReportView reportsPage /> },
           ],
         },
         {
-          path: 'config',
+          path: 'machineSettingsReport',
+          children: [
+            { element: <MachineSettingReportList />, index: true },
+            // { path: ':id/view', element: <MachineSettingReportView /> },
+          ],
+        },
+        { path: 'machineLogs', children: [{ element: <AllMachinesLogs />, index: true }] },
+      ],
+    },
+
+    // ----------------------------- SETTING -----------------------------------
+    {
+      path: 'settings',
+      element: (
+        <AuthGuard>
+          <DashboardLayout />
+        </AuthGuard>
+      ),
+      children: [
+        // {element: <Setting  />, index: true },
+        { element: <Navigate to="/settings/security" replace />, index: true },
+        {
+          path: 'security',
+          children: [
+            { element: <SecurityUserList />, index: true },
+            {
+              path: 'users',
+              children: [
+                { path: 'profile', element: <SecurityUserProfile/> },
+                { path: 'editProfile', element: <SecurityUserProfileEdit/> },
+                { path: 'password', element: <SecurityUserChangePassword/> },
+                { path: 'changePassword', element: <SecurityUserChangePasswordByAdmin/> },
+                { path: 'new', element: <SecurityUserAdd /> },
+                { path: 'invite', element: <SecurityUserAdd isInvite /> },
+                { path: ':id/edit', element: <SecurityUserEdit /> },
+                { path: ':id/view', element: <SecurityUserView /> },
+              ],
+            },
+            { path: 'permission-denied', element: <PermissionDeniedPage /> },
+            { path: 'blank', element: <BlankPage /> },
+          ],
+        },
+        {
+          path: 'restrictions',
           children: [
             {
               path: 'blockedCustomer',
@@ -1062,42 +1093,6 @@ export default function Router() {
             },
           ]
         },
-        { path: 'permission-denied', element: <PermissionDeniedPage /> },
-        { path: 'blank', element: <BlankPage /> },
-      ],
-    },
-
-        // ----------------------------- TICKETS -----------------------------------
-        {
-          path: 'tickets',
-          element: (
-            <AuthGuard>
-              <DashboardLayout />
-            </AuthGuard>
-          ),
-          children: [
-            {element: <TicketFormList />, index: true },
-            {
-              path: 'tickets',
-              children: [
-                { path: 'new', element: <TicketForm /> },
-                // { path: ':id/edit', element: <TicketFormEdit />},
-                // { path: ':id/view', element: <TicketFormView />}
-              ],
-            },
-          ],
-        },
-
-    // ----------------------------- SETTING -----------------------------------
-    {
-      path: 'settings',
-      element: (
-        <AuthGuard>
-          <DashboardLayout />
-        </AuthGuard>
-      ),
-      children: [
-        {element: <Setting  />, index: true },
         // ------------------------------ role ----------------------------------
         {
           path: 'role',
@@ -1152,44 +1147,69 @@ export default function Router() {
             { path: ':id/view', element: <Emailview/> }
           ]
         },
-        // ------------------------------ DB BACKUP LOGS  ----------------------------------
         {
-          path: 'dbBackup',
+          path: 'logs',
           children: [
             {
-              path: 'logs',
+              path: 'pm2',
+              children: [
+                { element: <Pm2LogsList /> , index: true },
+                { path: ':id/view', element: <Pm2LogView /> },
+              ]
+            },
+            {
+              path: 'dbBackup',
               children: [
                 { element: <DbBackupLogsList /> , index: true },
                 { path: ':id/view', element: <DbBackupLogsViewForm /> },
               ]
-            }
-          ],
-        },
-         // ------------------------------ API LOGS  ----------------------------------
-         {
-          path: 'api',
-          children: [
+            },
             {
-              path: 'logs',
+              path: 'api',
               children: [
                 { element: <ApiLogsList /> , index: true },
               ]
             }
           ],
         },
-        // ------------------------------ PM2 LOGS ----------------------------------
-        {
-          path: 'pm2',
-          children: [
-            {
-              path: 'logs',
-              children: [
-                { element: <Pm2LogsList /> , index: true },
-                { path: ':id/view', element: <Pm2LogView /> },
-              ]
-            }
-          ],
-        },
+        // // ------------------------------ DB BACKUP LOGS  ----------------------------------
+        // {
+        //   path: 'dbBackup',
+        //   children: [
+        //     {
+        //       path: 'logs',
+        //       children: [
+        //         { element: <DbBackupLogsList /> , index: true },
+        //         { path: ':id/view', element: <DbBackupLogsViewForm /> },
+        //       ]
+        //     }
+        //   ],
+        // },
+        //  // ------------------------------ API LOGS  ----------------------------------
+        //  {
+        //   path: 'api',
+        //   children: [
+        //     {
+        //       path: 'logs',
+        //       children: [
+        //         { element: <ApiLogsList /> , index: true },
+        //       ]
+        //     }
+        //   ],
+        // },
+        // // ------------------------------ PM2 LOGS ----------------------------------
+        // {
+        //   path: 'pm2',
+        //   children: [
+        //     {
+        //       path: 'logs',
+        //       children: [
+        //         { element: <Pm2LogsList /> , index: true },
+        //         { path: ':id/view', element: <Pm2LogView /> },
+        //       ]
+        //     }
+        //   ],
+        // },
         // ------------------------------ invite ----------------------------------
         {
           path: 'invite',
@@ -1207,34 +1227,6 @@ export default function Router() {
           ],
         }
       ],
-    },
-    // ----------------------------- MACHINE LOGS  -----------------------------------
-    {
-      path: PATH_MACHINE_LOGS.root, 
-      element: (
-        <AuthGuard>
-          <DashboardLayout />
-        </AuthGuard>
-      ),
-      children: [
-        { path: '', element: <AllMachinesLogs />, index: true },
-        // { path: 'coilLogs', element: <CoilLogs /> },
-        // { path: 'erpLogs', element: <ErpLogs /> },
-        // { path: 'productionLogs', element: <ProductionLogs /> },
-      ],
-    },    
-    // ----------------------------- Sites Report -----------------------------------
-    {
-      // Sites
-      path: 'sites',
-      element: (
-        <AuthGuard>
-          <DashboardLayout />
-        </AuthGuard>
-      ),
-      children: [
-        { element: <SitesReport />, index: true },
-      ]
     },
 
   ]);

@@ -7,19 +7,20 @@ function path(root, sublink) {
 const ROOTS_AUTH = '/auth';
 const ROOTS_DASHBOARD = '/dashboard';
 const ROOTS_PORTAL_REGISTRATIONS = '/crm/portalRegistrations';
-const ROOTS_CALENDAR = '/calendar';
 export const ROOTS_CRM = '/crm';
 export const ROOTS_MACHINE = '/products';
 export const ROOTS_SUPPORT = '/support';
-const ROOTS_MACHINE_SETTING_REPORT = '/machineSettingReports'
-const ROOTS_SERVICE_REPORTS = '/serviceReports'
-const ROOTS_SECURITY = '/security';
-const ROOTS_SETTING = '/settings';
+export const ROOTS_REPORTS = '/reports';
+export const ROOTS_CALENDAR = '/calendar';
+export const ROOTS_SETTING = '/settings';
+// const ROOTS_MACHINE_SETTING_REPORT = '/machineSettingReports'
+// const ROOTS_SERVICE_REPORTS = '/serviceReports'
+// const ROOTS_SECURITY = '/security';
 // const ROOTS_DOCUMENT = '/products/documents';
 const ROOTS_MACHINE_DRAWING = '/products/machineDrawings';
-const ROOTS_TICKET = '/tickets';
-const ROOTS_SITEMAP = '/sites';
-const ROOTS_MACHINE_LOGS = '/machineLogs';
+// const ROOTS_TICKET = '/tickets';
+// const ROOTS_SITEMAP = '/sites';
+// const ROOTS_MACHINE_LOGS = '/machineLogs';
 
 
 // ----------------------------------------------------------------------
@@ -60,14 +61,6 @@ export const PATH_DASHBOARD = {
     machineByModels: path(ROOTS_DASHBOARD, '/machineByModels'),
     machineByYears: path(ROOTS_DASHBOARD, '/machineByYears'),
   },
-};
-
-// --------------------- CALENDAR ----------------------
-export const PATH_CALENDAR = {
-  root: ROOTS_CALENDAR,
-  new: path(ROOTS_CALENDAR, `/new`),
-  edit: (id) => path(ROOTS_CALENDAR, `/{id}/edit`),
-  view: (id) => path(ROOTS_CALENDAR, `/{id}/view`),
 };
 
     // --------------------- Customer -----------------------
@@ -400,26 +393,96 @@ export const PATH_MACHINE = {
       edit: (id) => path(ROOTS_MACHINE, `/machineSettings/technicalParameters/${id}/edit`),
     },
   },
+  sitesMap: {
+    root: path(ROOTS_MACHINE, '/sitesMap'),
+  },
   // ------------------------ ARCHIVED MACHINES ----------------------------------------
   archived: {
     root: path(ROOTS_MACHINE, '/archived-machines'),
     view: (id) => path(ROOTS_MACHINE, `/archived-machines/${id}/view`),
   }, 
 };
- 
-export const PATH_MACHINE_SETTING_REPORT = {
-  root: ROOTS_MACHINE_SETTING_REPORT,
-  view: ( id ) => path(ROOTS_MACHINE_SETTING_REPORT, `/${id}/view`),
+
+// ----------------------- SUPPORT SERVICES -----------------------------------------
+export const PATH_SUPPORT = {
+  permissionDenied: path(ROOTS_SUPPORT, '/permission-denied'),
+  supportTickets: {
+    root: path(ROOTS_SUPPORT, '/supportTickets'),
+    new: path(ROOTS_SUPPORT, '/supportTickets/new'),
+    // view: (id) => path(ROOTS_SETTING, `/systemProblem/${id}/view`),
+    // edit: (id) => path(ROOTS_SETTING, `/systemProblem/${id}/edit`),
+  },
+  jiraTickets: {
+    root: path(ROOTS_SUPPORT, '/jiraTickets')
+  },
+};
+// ----------------------- REPORTS -----------------------------------------
+export const PATH_REPORTS = {
+  permissionDenied: path(ROOTS_REPORTS, '/permission-denied'),
+  serviceReports: {
+    root: path(ROOTS_REPORTS, '/serviceReports'),
+    view: ( id ) => path(ROOTS_REPORTS, `/serviceReports/${id}/view`),
+  },
+  machineSettingsReport: {
+    root: path(ROOTS_REPORTS, '/machineSettingsReport'),
+    // view: ( id ) => path(ROOTS_REPORTS, `/machineSettingsReport/${id}/view`),
+  },
+  machineLogs: {
+    root: path(ROOTS_REPORTS, '/machineLogs'),
+  }
 };
 
-export const PATH_SERVICE_REPORTS = {
-  root: ROOTS_SERVICE_REPORTS,
-  view: ( id ) => path(ROOTS_SERVICE_REPORTS, `/${id}/view`),
+// --------------------- CALENDAR ----------------------
+export const PATH_CALENDAR = {
+  root: ROOTS_CALENDAR,
+  new: path(ROOTS_CALENDAR, `/new`),
+  edit: (id) => path(ROOTS_CALENDAR, `/{id}/edit`),
+  view: (id) => path(ROOTS_CALENDAR, `/{id}/view`),
 };
 
 export const PATH_SETTING = {
   permissionDenied: path(ROOTS_SETTING, '/permission-denied'),
   root: ROOTS_SETTING,
+  security: {
+    root: path(ROOTS_SETTING, `/security`),
+    // ------------------------ SECURITY USERS ----------------------------------------
+    users: {
+      new: path(ROOTS_SETTING, `/security/users/new/`),
+      invite: path(ROOTS_SETTING, `/security/users/invite/`),
+      cards: path(ROOTS_SETTING, '/security/users/cards'),
+      profile: path(ROOTS_SETTING, '/security/users/profile'),
+      editProfile: path(ROOTS_SETTING, '/security/users/editProfile'),
+      password: path(ROOTS_SETTING, '/security/users/password'),
+      userPassword: path(ROOTS_SETTING, '/security/users/changePassword'),
+      account: path(ROOTS_SETTING, '/security/users/account'),
+      view: (id) => path(ROOTS_SETTING, `/security/users/${id}/view`),
+      edit: (id) => path(ROOTS_SETTING, `/security/users/${id}/edit`),
+      signInLogList: path(ROOTS_SETTING, '/security/users/signInLogList'),
+    },
+  },
+  restrictions: {
+    root: path(ROOTS_SETTING, `/restrictions`),
+    // ------------------------ BLOCKED CUSTOMERS ----------------------------------------
+    blockedCustomer: {
+      list: path(ROOTS_SETTING, '/restrictions/blockedCustomer/list'),
+      new: path(ROOTS_SETTING, `/restrictions/blockedCustomer/new`)
+    },
+  // ------------------------ BLOCKED USERS ----------------------------------------
+    blockedUser: {
+      list: path(ROOTS_SETTING, '/restrictions/blockedUser/list'),
+      new: path(ROOTS_SETTING, `/restrictions/blockedUser/new`)
+    },
+  // ------------------------ BLACK LIST IP ----------------------------------------
+    blacklistIP: {
+      list: path(ROOTS_SETTING, '/restrictions/blacklistIP/list'),
+      new: path(ROOTS_SETTING, `/restrictions/blacklistIP/new`)
+    },
+  // ------------------------ WHITE LIST IP ----------------------------------------
+    whitelistIP: {
+      list: path(ROOTS_SETTING, '/restrictions/whitelistIP/list'),
+      new: path(ROOTS_SETTING, `/restrictions/whitelistIP/new`)
+    },
+  },
   // ------------------------ SECURITY USER ROLE ----------------------------------------
   role: {
     new: path(ROOTS_SETTING, '/role/new'),
@@ -457,24 +520,20 @@ export const PATH_SETTING = {
     new: path(ROOTS_SETTING, '/email/new'), 
     view: (id) => path(ROOTS_SETTING, `/email/${id}/view`),
   },
-  // ------------------------ PM2 LOGS ----------------------------------------
-  pm2: {
-      logs: {
-        root: path(ROOTS_SETTING, '/pm2/logs/'),
-        view: (id) => path(ROOTS_SETTING, `/pm2/logs/${id}/view`),
-      }
-  },  
-  dbBackup: {
-    logs: {
-      root: path(ROOTS_SETTING, '/dbBackup/logs/'),
-      view: (id) => path(ROOTS_SETTING, `/dbBackup/logs/${id}/view`),
-    }
-},
-  api: {
-    logs: {
-      root: path(ROOTS_SETTING, '/api/logs/'),
-      view: (id) => path(ROOTS_SETTING, `/api/logs/${id}/view`),
-    }
+  logs: {
+    root: path(ROOTS_SETTING, '/logs'),
+    pm2: {
+      root: path(ROOTS_SETTING, '/logs/pm2/'),
+      view: (id) => path(ROOTS_SETTING, `/logs/pm2/${id}/view`),
+    },
+    dbBackup: {
+      root: path(ROOTS_SETTING, '/logs/dbBackup/'),
+      view: (id) => path(ROOTS_SETTING, `/logs/dbBackup/${id}/view`),
+    },
+    api: {
+      root: path(ROOTS_SETTING, '/logs/api/'),
+      view: (id) => path(ROOTS_SETTING, `/logs/api/${id}/view`),
+    },
   },
   // ------------------------ SECURITY USER INVITES ----------------------------------------
   invite: {
@@ -487,92 +546,6 @@ export const PATH_SETTING = {
     view: (id) => path(ROOTS_SETTING, `/releases/${id}/view`)
   },
 };
-
-// ------------------------ TICKETS ----------------------------------------
-
-export const PATH_TICKET = {
-  permissionDenied: path(ROOTS_TICKET, '/permission-denied'),
-  root: ROOTS_TICKET,
-  tickets: {
-    list: path(ROOTS_TICKET, '/tickets/list'),
-    new: path(ROOTS_TICKET, '/tickets/new'),
-    // view: (id) => path(ROOTS_SETTING, `/systemProblem/${id}/view`),
-    // edit: (id) => path(ROOTS_SETTING, `/systemProblem/${id}/edit`),
-  },
-};
-
-
-export const PATH_SECURITY = {
-  root: ROOTS_SECURITY,
-  permissionDenied: path(ROOTS_SECURITY, '/permission-denied'),
-  // ------------------------ SECURITY USERS ----------------------------------------
-  users: {
-    new: path(ROOTS_SECURITY, `/users/new/`),
-    invite: path(ROOTS_SECURITY, `/users/invite/`),
-    cards: path(ROOTS_SECURITY, '/users/cards'),
-    profile: path(ROOTS_SECURITY, '/users/profile'),
-    editProfile: path(ROOTS_SECURITY, '/users/editProfile'),
-    password: path(ROOTS_SECURITY, '/users/password'),
-    userPassword: path(ROOTS_SECURITY, '/users/changePassword'),
-    account: path(ROOTS_SECURITY, '/users/account'),
-    view: (id) => path(ROOTS_SECURITY, `/users/${id}/view`),
-    edit: (id) => path(ROOTS_SECURITY, `/users/${id}/edit`),
-    demoEdit: path(ROOTS_SECURITY, `/users/reece-chung/edit`),
-    signInLogList: path(ROOTS_SECURITY, '/users/signInLogList'),
-  },
-  // ------------------------ SECURITY USER SETTING ----------------------------------------
-  config:{
-    // ------------------------ BLOCKED CUSTOMERS ----------------------------------------
-    blockedCustomer: {
-      list: path(ROOTS_SECURITY, '/config/blockedCustomer/list'),
-      new: path(ROOTS_SECURITY, `/config/blockedCustomer/new`)
-    },
-  // ------------------------ BLOCKED USERS ----------------------------------------
-    blockedUser: {
-      list: path(ROOTS_SECURITY, '/config/blockedUser/list'),
-      new: path(ROOTS_SECURITY, `/config/blockedUser/new`)
-    },
-  // ------------------------ BLACK LIST IP ----------------------------------------
-    blacklistIP: {
-      list: path(ROOTS_SECURITY, '/config/blacklistIP/list'),
-      new: path(ROOTS_SECURITY, `/config/blacklistIP/new`)
-    },
-  // ------------------------ WHITE LIST IP ----------------------------------------
-    whitelistIP: {
-      list: path(ROOTS_SECURITY, '/config/whitelistIP/list'),
-      new: path(ROOTS_SECURITY, `/config/whitelistIP/new`)
-    },
-  }
-};
-
-export const PATH_SITEMAP = {
-  root: ROOTS_SITEMAP,
-  permissionDenied: path(ROOTS_SITEMAP, '/permission-denied'),
-  // general: {
-  //   app: path(ROOTS_SITEMAP, '/app'),
-  // },
-  // app: path(ROOTS_SITEMAP, '/app'),
-};
-
-// ----------------------- Documents -----------------------------------------
-// export const PATH_DOCUMENT = {
-//   root: ROOTS_DOCUMENT,
-//   permissionDenied: path(ROOTS_DOCUMENT, '/permission-denied'),
-//   // ----------------------- Documents -----------------------------------------
-//   document: {
-//     new: path(ROOTS_DOCUMENT, '/new'),
-//     newList: path(ROOTS_DOCUMENT, '/newList'),
-//     gallery: (id) => path(ROOTS_DOCUMENT, `/${id}/gallery`),
-//     edit: (id) => path(ROOTS_DOCUMENT, `/${id}/edit`),
-//     view: {
-//       root: ( id ) => path(ROOTS_DOCUMENT, `/${id}/view`),
-//       addFile: ( id ) => path(ROOTS_DOCUMENT, `/${id}/view/addFile`),
-//       newVersion: ( id ) => path(ROOTS_DOCUMENT, `/${id}/view/newVersion`),
-//     },
-//     customer: (id) => path(ROOTS_DOCUMENT, `/${id}/customer`),
-//     machine: (id) => path(ROOTS_DOCUMENT, `/${id}/machine`),
-//   },
-// };
 
 // ----------------------- MACHINE DRAWINGS -----------------------------------------
 export const PATH_MACHINE_DRAWING = {
@@ -589,24 +562,6 @@ export const PATH_MACHINE_DRAWING = {
       newVersion: ( id ) => path(ROOTS_MACHINE_DRAWING, `/${id}/view/newVersion`),
     },
   }
-};
-
-// ----------------------- MACHINE LOGS -----------------------------------------
-export const PATH_MACHINE_LOGS = {
-  root: ROOTS_MACHINE_LOGS,
-  permissionDenied: path(ROOTS_MACHINE_LOGS, '/permission-denied'),
-  // machineLogs: {
-  //   CoilLogs: path(ROOTS_MACHINE_LOGS, '/coilLogs'),
-  //   ErpLogs: path(ROOTS_MACHINE_LOGS, '/erpLogs'),
-  //   ProductionLogs: path(ROOTS_MACHINE_LOGS, '/productionLogs'),   
-  // },
-};
-
-// ----------------------- SUPPORT SERVICES -----------------------------------------
-export const PATH_SUPPORT = {
-  jiraTickets: {
-    root: path(ROOTS_SUPPORT, '/jiraTickets')
-  },
 };
 
 export const PATH_DOCS = {

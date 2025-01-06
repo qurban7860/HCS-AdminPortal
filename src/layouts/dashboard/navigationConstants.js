@@ -1,14 +1,20 @@
 import { useState } from "react";
 import { useAuthContext } from "../../auth/useAuthContext";
 import {
+  PATH_CALENDAR,
   PATH_CRM,
   PATH_DASHBOARD,
   PATH_MACHINE,
   PATH_MACHINE_DRAWING,
   PATH_PORTAL_REGISTRATION,
+  PATH_REPORTS,
+  PATH_SETTING,
   PATH_SUPPORT,
+  ROOTS_CALENDAR,
   ROOTS_CRM,
   ROOTS_MACHINE,
+  ROOTS_REPORTS,
+  ROOTS_SETTING,
   ROOTS_SUPPORT,
 } from '../../routes/paths';
 import Iconify from "../../components/iconify";
@@ -18,12 +24,12 @@ export const MAIN_CATEGORIES = [
   { title: 'Customers', id: 'customers', path: ROOTS_CRM },
   { title: 'Machines', id: 'machines', path: ROOTS_MACHINE },
   { title: 'Support Services', id: 'support', path: ROOTS_SUPPORT },
-  { title: 'Reports', id: 'reports', path: ROOTS_CRM }
+  { title: 'Reports', id: 'reports', path: ROOTS_REPORTS }
 ];
 
 export const OTHER_MAIN_CATEGORIES = [
-  { title: 'Calendar', id: 'calendar', icon: 'mdi:calendar-month', path: ROOTS_CRM },
-  { title: 'Settings', id: 'settings', icon: 'mdi:settings', path: ROOTS_CRM },
+  { title: 'Calendar', id: 'calendar', icon: 'mdi:calendar-month', path: ROOTS_CALENDAR },
+  { title: 'Settings', id: 'settings', icon: 'mdi:settings', path: ROOTS_SETTING },
 ];
 
 export const generalSideBarOptions = {
@@ -102,6 +108,11 @@ export const allSideBarOptions = {
         icon: <Iconify icon="mdi:cog" />,
       },
       {
+        title: 'Sites Map',
+        path: PATH_MACHINE.sitesMap.root,
+        icon: <Iconify icon="mdi:map-marker" />,
+      },
+      {
         title: 'Archived Machines',
         path: PATH_MACHINE.archived.root,
         icon: <Iconify icon="mdi:archive" />,
@@ -111,11 +122,15 @@ export const allSideBarOptions = {
   support: {
     subheader: 'Support Services',
     items: [
-      { title: 'Jira Tickets', path: PATH_SUPPORT.jiraTickets.root, icon: <Iconify icon="mdi:jira" /> },
       {
         title: 'Support Tickets',
-        path: PATH_DASHBOARD.root,
+        path: PATH_SUPPORT.supportTickets.root,
         icon: <Iconify icon="icomoon-free:ticket" />,
+      },
+      {
+        title: 'Jira Tickets',
+        path: PATH_SUPPORT.jiraTickets.root,
+        icon: <Iconify icon="mdi:jira" />,
       },
       {
         title: 'Knowledge base',
@@ -134,79 +149,96 @@ export const allSideBarOptions = {
     items: [
       {
         title: 'Service Reports',
-        path: PATH_DASHBOARD.root,
+        path: PATH_REPORTS.serviceReports.root,
         icon: <Iconify icon="mdi:file-chart" />,
       },
       {
-        title: 'ERP Logs',
-        path: PATH_DASHBOARD.root,
-        icon: <Iconify icon="mdi:file-document-outline" />,
+        title: 'Machine Settings Report',
+        path: PATH_REPORTS.machineSettingsReport.root,
+        icon: <Iconify icon="mdi:file-cog" />,
       },
-      { title: 'ERP Graphs', path: PATH_DASHBOARD.root, icon: <Iconify icon="mdi:chart-line" /> },
+      {
+        title: 'ERP Logs',
+        path: PATH_REPORTS.machineLogs.root,
+        icon: <Iconify icon="fluent:document-database-24-filled" />,
+      },
+      {
+        title: 'ERP Graphs',
+        path: PATH_REPORTS.machineLogs.root,
+        icon: <Iconify icon="mdi:chart-line" />,
+      },
     ],
   },
   calendar: {
     subheader: 'Calendar',
-    items: [
-      { title: 'Calendar', path: PATH_DASHBOARD.root, icon: <Iconify icon="mdi:calendar" /> },
-    ],
+    items: [{ title: 'Calendar', path: PATH_CALENDAR.root, icon: <Iconify icon="mdi:calendar" /> }],
   },
   settings: {
     subheader: 'Settings',
     items: [
       {
         title: 'Users',
-        path: PATH_DASHBOARD.root,
-        icon: <Iconify icon="mdi:account-multiple" />,
+        path: PATH_SETTING.security.root,
+        icon: <Iconify icon="mdi:security-account" />,
       },
-      { title: 'Invites', path: PATH_DASHBOARD.root, icon: <Iconify icon="mdi:email-plus" /> },
+      { title: 'Invites', path: PATH_SETTING.invite.list, icon: <Iconify icon="mdi:email-plus" /> },
       {
         title: 'User Roles',
-        path: PATH_DASHBOARD.root,
-        icon: <Iconify icon="mdi:shield-account" />,
+        path: PATH_SETTING.role.list,
+        icon: <Iconify icon="ph:user-list-bold" />,
       },
-      { title: 'Regions', path: PATH_DASHBOARD.root, icon: <Iconify icon="mdi:map-marker" /> },
+      { title: 'Regions', path: PATH_SETTING.regions.list, icon: <Iconify icon="grommet-icons:map" /> },
+      {
+        title: 'System Config',
+        path: PATH_SETTING.configs.list,
+        icon: <Iconify icon="icon-park-outline:setting-config" />,
+      },
+      { title: 'Emails', path: PATH_SETTING.email.list, icon: <Iconify icon="eva:email-fill" /> },
       {
         title: 'Restrictions',
-        path: PATH_DASHBOARD.root,
+        path: PATH_SETTING.restrictions.root,
         icon: <Iconify icon="mdi:shield-lock" />,
         children: [
           {
             title: 'Blocked Customers',
-            path: PATH_DASHBOARD.root,
-            icon: <Iconify icon="mdi:account-cancel" />,
+            path: PATH_SETTING.restrictions.blockedCustomer.list,
+            icon: <Iconify icon="tabler:home-off" />,
           },
           {
             title: 'Blocked Users',
-            path: PATH_DASHBOARD.root,
-            icon: <Iconify icon="mdi:account-off" />,
+            path: PATH_SETTING.restrictions.blockedUser.list,
+            icon: <Iconify icon="fluent:people-lock-20-regular" />,
           },
           {
             title: "Blacklist IP's",
-            path: PATH_DASHBOARD.root,
-            icon: <Iconify icon="mdi:ip-network" />,
+            path: PATH_SETTING.restrictions.blacklistIP.list,
+            icon: <Iconify icon="material-symbols:block" />,
           },
-          { title: "Whitelist IP's", path: PATH_DASHBOARD.root, icon: <Iconify icon="mdi:ip" /> },
+          {
+            title: "Whitelist IP's",
+            path: PATH_SETTING.restrictions.whitelistIP.list,
+            icon: <Iconify icon="material-symbols:check-circle-outline" />,
+          },
         ],
       },
-      { title: 'Sign-in Logs', path: PATH_DASHBOARD.root, icon: <Iconify icon="mdi:login" /> },
+      { title: 'Sign-in Logs', path: PATH_SETTING.signInLogs.list, icon: <Iconify icon="mdi:login" /> },
       {
         title: 'Software Releases',
-        path: PATH_DASHBOARD.root,
+        path: PATH_SETTING.releases.list,
         icon: <Iconify icon="mdi:package-variant" />,
       },
       {
         title: 'System Logs',
-        path: PATH_DASHBOARD.root,
+        path: PATH_SETTING.logs.root,
         icon: <Iconify icon="mdi:text-box-multiple" />,
         children: [
-          { title: 'PM2 Logs', path: PATH_DASHBOARD.root, icon: <Iconify icon="mdi:console" /> },
+          { title: 'PM2 Logs', path: PATH_SETTING.logs.pm2.root, icon: <Iconify icon="mdi:console" /> },
           {
             title: 'DB Backup Logs',
-            path: PATH_DASHBOARD.root,
+            path: PATH_SETTING.logs.dbBackup.root,
             icon: <Iconify icon="mdi:database" />,
           },
-          { title: 'Email logs', path: PATH_DASHBOARD.root, icon: <Iconify icon="mdi:email" /> },
+          { title: 'API logs', path: PATH_SETTING.logs.api.root, icon: <Iconify icon="mdi:api" /> },
         ],
       },
     ],
