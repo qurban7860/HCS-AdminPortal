@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 // @mui
 import { Box, Container, List } from '@mui/material';
 // routes
-import { PATH_SECURITY, PATH_SETTING } from '../../routes/paths';
+import { PATH_MACHINE, PATH_SECURITY, PATH_SETTING } from '../../routes/paths';
 // components
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
@@ -22,8 +22,8 @@ export default function Setting() {
 
   const navigate = useNavigate();
 
-  const linkDocumentType = () => navigate(PATH_SETTING.documentType.list);
-  const linkDocumentCategory = () => navigate(PATH_SETTING.documentCategory.list);
+  const linkDocumentType = () => navigate(PATH_MACHINE.documents.documentType.list);
+  const linkDocumentCategory = () => navigate(PATH_MACHINE.documents.documentCategory.list);
   const linkRole = () => navigate(PATH_SETTING.role.list);
   const linkSignInLogs = () => navigate(PATH_SETTING.signInLogs.list);
   const linkRegions = () => navigate(PATH_SETTING.regions.list);
@@ -124,11 +124,11 @@ return (
                     icon={ICONS.SYSTEM_CONFIG.icon}
                     content={ICONS.SYSTEM_CONFIG.heading}
                   />}
-                  <ListItem
-                    onClick={()=> navigate(PATH_SETTING.departments.list)}
+                  {/* <ListItem
+                    onClick={()=> navigate(PATH_CRM.departments.list)}
                     icon={ICONS.DEPARTMENNTS.icon}
                     content={ICONS.DEPARTMENNTS.heading}
-                  />
+                  /> */}
                 </List>
                 { isEmailAccessAllowed && isSettingAccessAllowed && <List
                   component="nav"

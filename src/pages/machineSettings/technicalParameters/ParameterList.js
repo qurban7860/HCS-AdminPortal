@@ -165,7 +165,7 @@ export default function StatusList() {
     }
   };
 
-  const handleViewRow = (id) => navigate(PATH_MACHINE.machines.machineSettings.technicalParameters.view(id));
+  const handleViewRow = (id) => navigate(PATH_MACHINE.machineSettings.technicalParameters.view(id));
 
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))

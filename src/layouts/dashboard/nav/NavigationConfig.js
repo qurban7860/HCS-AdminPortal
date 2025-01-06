@@ -1,141 +1,141 @@
-import { useEffect, useState } from 'react';
-import { 
-  PATH_CRM, 
-  PATH_PORTAL_REGISTRATION,
-  PATH_CALENDAR, 
-  PATH_DASHBOARD, 
-  PATH_MACHINE, 
-  PATH_MACHINE_SETTING_REPORT,
-  PATH_SERVICE_REPORTS,
-  PATH_DOCUMENT, 
-  PATH_SETTING, 
-  PATH_TICKET, 
-  PATH_SITEMAP, 
-  PATH_SECURITY, 
-  PATH_MACHINE_DRAWING, 
-  PATH_SUPPORT_TICKETS, 
-  PATH_MACHINE_LOGS 
-} from '../../../routes/paths';
 // components
-import Iconify from '../../../components/iconify';
-import SvgColor from '../../../components/svg-color';
-import { useAuthContext } from '../../../auth/useAuthContext';   
-import { MachineIcon } from '../../../theme/overrides/CustomIcons';
+import { allSideBarOptions, generalSideBarOptions } from '../navigationConstants';
 
 // ----------------------------------------------------------------------
 
-function NavigationConfig() {
+// function NavigationConfig({selectedCategory}) {
 
-  const icon = (name) => (
-    <SvgColor src={`/assets/icons/navbar/${name}.svg`} sx={{ width: 1, height: 1 }} />
-  );
+//   const icon = (name) => (
+//     <SvgColor src={`/assets/icons/navbar/${name}.svg`} sx={{ width: 1, height: 1 }} />
+//   );
   
-  const ICONS = {
-    blog: icon('ic_blog'),
-    cart: icon('ic_cart'),
-    chat: icon('ic_chat'),
-    mail: icon('ic_mail'),
-    user: icon('ic_user'),
-    register: <Iconify icon="mdi:users-add" />,
-    file: icon('ic_file'),
-    lock: icon('ic_lock'),
-    label: icon('ic_label'),
-    blank: icon('ic_blank'),
-    kanban: icon('ic_kanban'),
-    folder: icon('ic_folder'),
-    banking: icon('ic_banking'),
-    booking: icon('ic_booking'),
-    invoice: icon('ic_invoice'),
-    calendar: <Iconify icon="lets-icons:date-range-light" /> ,
-    disabled: icon('ic_disabled'),
-    external: icon('ic_external'),
-    menuItem: icon('ic_menu_item'),
-    ecommerce: icon('ic_ecommerce'),
-    asset: icon('ic_ecommerce'),
-    analytics: icon('ic_analytics'),
-    dashboard: <Iconify icon="mdi:view-dashboard" />,
-    setting: <Iconify icon="ant-design:setting-filled" />,
-    supportTickets: <Iconify icon="icomoon-free:ticket" />,
-    email: <Iconify icon ="eva:email-fill"/>,
-    document: <Iconify icon="lets-icons:file-dock-fill" />,
-    drawing: <Iconify icon="streamline:hand-held-tablet-drawing-solid" />,
-    reports: <Iconify icon="mdi:report-box-outline" />,
-    machines: <MachineIcon key="machine"/>,
-    serviceReports: <Iconify icon="mdi:clipboard-text-clock" />,
-    users: <Iconify icon="mdi:account-group" />,
-    security: <Iconify icon="mdi:security-account" />,
-    machineLogs: <Iconify icon="lucide:list-end" />,
-    map: <Iconify icon="mdi:map-marker" />,
-    machineSettingReports: <Iconify icon="tdesign:task-setting-filled" />,
-    tickets: <Iconify icon="icon-park-solid:setting-web" />,
-  }; 
+//   const ICONS = {
+//     blog: icon('ic_blog'),
+//     cart: icon('ic_cart'),
+//     chat: icon('ic_chat'),
+//     mail: icon('ic_mail'),
+//     user: icon('ic_user'),
+//     register: <Iconify icon="mdi:users-add" />,
+//     file: icon('ic_file'),
+//     lock: icon('ic_lock'),
+//     label: icon('ic_label'),
+//     blank: icon('ic_blank'),
+//     kanban: icon('ic_kanban'),
+//     folder: icon('ic_folder'),
+//     banking: icon('ic_banking'),
+//     booking: icon('ic_booking'),
+//     invoice: icon('ic_invoice'),
+//     calendar: <Iconify icon="lets-icons:date-range-light" /> ,
+//     disabled: icon('ic_disabled'),
+//     external: icon('ic_external'),
+//     menuItem: icon('ic_menu_item'),
+//     ecommerce: icon('ic_ecommerce'),
+//     asset: icon('ic_ecommerce'),
+//     analytics: icon('ic_analytics'),
+//     dashboard: <Iconify icon="mdi:view-dashboard" />,
+//     setting: <Iconify icon="ant-design:setting-filled" />,
+//     supportTickets: <Iconify icon="icomoon-free:ticket" />,
+//     email: <Iconify icon ="eva:email-fill"/>,
+//     document: <Iconify icon="lets-icons:file-dock-fill" />,
+//     drawing: <Iconify icon="streamline:hand-held-tablet-drawing-solid" />,
+//     reports: <Iconify icon="mdi:report-box-outline" />,
+//     machines: <MachineIcon key="machine"/>,
+//     serviceReports: <Iconify icon="mdi:clipboard-text-clock" />,
+//     users: <Iconify icon="mdi:account-group" />,
+//     security: <Iconify icon="mdi:security-account" />,
+//     machineLogs: <Iconify icon="lucide:list-end" />,
+//     map: <Iconify icon="mdi:map-marker" />,
+//     machineSettingReports: <Iconify icon="tdesign:task-setting-filled" />,
+//   };
 
-  const { 
-    isDocumentAccessAllowed, 
-    isDrawingAccessAllowed, 
-    isSettingAccessAllowed, 
-    isSecurityUserAccessAllowed, 
-    isEmailAccessAllowed,
-    isDeveloper,
-  } = useAuthContext();
+//   const { 
+//     isDocumentAccessAllowed, 
+//     isDrawingAccessAllowed, 
+//     isSettingAccessAllowed, 
+//     isSecurityUserAccessAllowed, 
+//     isEmailAccessAllowed,
+//     isDeveloper,
+//   } = useAuthContext();
     
-  const [navConfig, setConfig] = useState([
-    {
-      subheader: 'general',
-      items: [
-        { title: 'Dashboard', path: PATH_DASHBOARD.root, icon: ICONS.dashboard },
-        { title: 'Customers', path: PATH_CRM.customers.list, icon: ICONS.users },
-        { title: 'Portal Registrations', path: PATH_PORTAL_REGISTRATION.root, icon: ICONS.register },
-        { title: 'Machines', path: PATH_MACHINE.machines.root, icon: ICONS.machines },
-        { title: 'Machine Setting Reports', path:  PATH_MACHINE_SETTING_REPORT.root, icon: ICONS.machineSettingReports },
-        { title: 'Service Reports', path: PATH_SERVICE_REPORTS.root, icon: ICONS.serviceReports },
-      ],
-    },
-  ]);
+//   // const [navConfig, setConfig] = useState([
+//   //   {
+//   //     subheader: 'general',
+//   //     items: [
+//   //       { title: 'Dashboard', path: PATH_DASHBOARD.root,   },
+//   //       { title: 'Customers', path: PATH_CRM.customers.list, icon: ICONS.users },
+//   //       { title: 'Portal Registrations', path: PATH_PORTAL_REGISTRATION.root, icon: ICONS.register },
+//   //       { title: 'Machines', path: PATH_MACHINE.machines.root, icon: ICONS.machines },
+//   //       { title: 'Machine Setting Reports', path:  PATH_MACHINE_SETTING_REPORT.root, icon: ICONS.machineSettingReports },
+//   //       { title: 'Service Reports', path: PATH_SERVICE_REPORTS.root, icon: ICONS.serviceReports },
+//   //       { title: 'Support Tickets', path: PATH_SUPPORT_TICKETS.root, icon: ICONS.supportTickets },
+//   //       { title: 'Calendar', path: PATH_CALENDAR.root, icon: ICONS.calendar },
+//   //       { title: 'Machine Logs', path: PATH_MACHINE_LOGS.root, icon: ICONS.machineLogs },
+//   //       { title: 'Sites Map', path: PATH_SITEMAP.root, icon: ICONS.map },
+//   //     ],
+//   //   },
+//   // ]);
+//   const [navConfig, setConfig] = useState(allSideBarOptions[selectedCategory?.id || 'customers']);
+
+//   useEffect(() => {
+//     setConfig(allSideBarOptions[selectedCategory?.id]);
+//   }, [selectedCategory])
 
 
-  useEffect(() => {
-    const updatedConfig = [...navConfig];
+//   // useEffect(() => {
+//   //   const updatedConfig = [...navConfig];
 
-    if (isDocumentAccessAllowed && navConfig.some((config) => config.title?.toLowerCase() !== 'documents')) {
-      updatedConfig[0].items.push({ title: 'Documents', path: PATH_DOCUMENT.root, icon: ICONS.document });
-    }
+//   //   if (isDocumentAccessAllowed && navConfig.some((config) => config.title?.toLowerCase() !== 'documents')) {
+//   //     updatedConfig[0].items.push({ title: 'Documents', path: PATH_DOCUMENT.root, icon: ICONS.document });
+//   //   }
 
-    if (isDrawingAccessAllowed && navConfig.some((config) => config.title?.toLowerCase() !== 'machine drawings')) {
-      updatedConfig[0].items.push({ title: 'Machine Drawings', path: PATH_MACHINE_DRAWING.root, icon: ICONS.drawing });
-    }
+//   //   if (isDrawingAccessAllowed && navConfig.some((config) => config.title?.toLowerCase() !== 'machine drawings')) {
+//   //     updatedConfig[0].items.push({ title: 'Machine Drawings', path: PATH_MACHINE_DRAWING.root, icon: ICONS.drawing });
+//   //   }
 
-    // Jira Report
-    updatedConfig[0].items.push({ title: 'Jira Tickets', path: PATH_SUPPORT_TICKETS.root, icon: ICONS.supportTickets });
+//   //   if (isSettingAccessAllowed && navConfig.some((config) => config.title?.toLowerCase() !== 'settings')) {
+//   //     updatedConfig[0].items.push({ title: 'Settings', path: PATH_SETTING.root, icon: ICONS.setting });
+//   //   }
 
-    if (isSettingAccessAllowed && navConfig.some((config) => config.title?.toLowerCase() !== 'settings')) {
-      updatedConfig[0].items.push({ title: 'Settings', path: PATH_SETTING.root, icon: ICONS.setting });
-    }
-    
-    if (navConfig.some((config) => config.title?.toLowerCase() !== 'tickets')) {
-      updatedConfig[0].items.push({ title: 'Support Tickets', path: PATH_TICKET.root, icon: ICONS.tickets });
-    }
+//   //   if (isSecurityUserAccessAllowed && navConfig.some((config) => config?.title?.toLowerCase() !== 'security')) {
+//   //     updatedConfig[0].items.push({ title: 'Security', path: PATH_SECURITY.root, icon: ICONS.security });
+//   //   }
 
-    if (navConfig.some((config) => config.title?.toLowerCase() !== 'Calendar')) {
-      updatedConfig[0].items.push({ title: 'Calendar', path: PATH_CALENDAR.root, icon: ICONS.calendar });
-    }
+//   //   setConfig(updatedConfig);
+//   //   // eslint-disable-next-line react-hooks/exhaustive-deps
+//   // }, [ isDocumentAccessAllowed, isDrawingAccessAllowed, isSettingAccessAllowed, isSecurityUserAccessAllowed, isEmailAccessAllowed, isDeveloper ]);
 
-    if (!navConfig.some((config) => config.title?.toLowerCase() === 'machine logs')) {
-      updatedConfig[0].items.push({ title: 'Machine Logs', path: PATH_MACHINE_LOGS.root, icon: ICONS.machineLogs });
-    }    
-    
-    if (isSecurityUserAccessAllowed && navConfig.some((config) => config?.title?.toLowerCase() !== 'security')) {
-      updatedConfig[0].items.push({ title: 'Security', path: PATH_SECURITY.root, icon: ICONS.security });
-    }
+//   return navConfig;
+// };
+// export default NavigationConfig;
 
-    if ( navConfig.some((config) => config?.title?.toLowerCase() !== 'sites map')) {
-      updatedConfig[0].items.push({ title: 'Sites Map', path: PATH_SITEMAP.root, icon: ICONS.map });
-    }
+const NavigationConfig = (
+  selectedCategory,
+  isDocumentAccessAllowed,
+  isDrawingAccessAllowed,
+  isSettingAccessAllowed,
+  isSecurityUserAccessAllowed
+) => {
+  let navItems = allSideBarOptions[selectedCategory?.id] || allSideBarOptions.customers;
 
-    setConfig(updatedConfig);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ isDocumentAccessAllowed, isDrawingAccessAllowed, isSettingAccessAllowed, isSecurityUserAccessAllowed, isEmailAccessAllowed, isDeveloper ]);
+  if (!isDocumentAccessAllowed) {
+    navItems.items = navItems.items.filter((item) => !item.title.toLowerCase().includes("document"));
+  }
 
-  return navConfig;
+  if (!isDrawingAccessAllowed) {
+    navItems.items = navItems.items.filter((item) => !item.title.toLowerCase().includes("drawing"));
+  }
+  
+  if (!isSecurityUserAccessAllowed) {
+    navItems.items = navItems.items.filter((item) => !item.title.toLowerCase().includes("user"));
+  }
+
+  if (!isSettingAccessAllowed && selectedCategory?.id === 'settings') {
+    navItems.items = [];
+  }
+
+  navItems = [generalSideBarOptions, navItems]
+
+  return navItems;
 };
+
 export default NavigationConfig;

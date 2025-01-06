@@ -34,7 +34,7 @@ export default function CheckItemListTableToolbar({
   onFilterStatus,
 }) {
   const navigate = useNavigate();
-  const toggleAdd = () => navigate(PATH_MACHINE.machines.machineSettings.checkItems.new);
+  const toggleAdd = () => navigate(PATH_MACHINE.machineSettings.checkItems.new);
   return (
     <Stack {...options}>
       <SearchBarCombo

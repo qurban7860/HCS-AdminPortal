@@ -134,7 +134,7 @@ export default function TechParamCategoryList() {
 
 
 
-  const handleViewRow = (id) => navigate(PATH_MACHINE.machines.machineSettings.technicalParameterCategories.view(id));
+  const handleViewRow = (id) => navigate(PATH_MACHINE.machineSettings.technicalParameterCategories.view(id));
 
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))

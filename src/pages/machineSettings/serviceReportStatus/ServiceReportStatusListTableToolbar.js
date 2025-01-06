@@ -26,7 +26,7 @@ export default function ServiceReportStatusListTableToolbar({
   onResetFilter,
 }) {
   const navigate = useNavigate();
-  const toggleAdd = () => navigate(PATH_MACHINE.machines.machineSettings.serviceReportsStatus.new);
+  const toggleAdd = () => navigate(PATH_MACHINE.machineSettings.serviceReportsStatus.new);
 
   return (
     <Stack {...options}>

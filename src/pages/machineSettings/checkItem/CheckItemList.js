@@ -134,7 +134,7 @@ export default function CheckItemList() {
     setFilterStatus(event.target.value);
   };
 
-  const handleViewRow = (id) => navigate(PATH_MACHINE.machines.machineSettings.checkItems.view(id));
+  const handleViewRow = (id) => navigate(PATH_MACHINE.machineSettings.checkItems.view(id));
 
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))

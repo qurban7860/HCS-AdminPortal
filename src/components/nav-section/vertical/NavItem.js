@@ -30,12 +30,12 @@ export default function NavItem({ item, depth, open, active, isExternalLink, ...
   const renderContent = (
     <StyledItem depth={depth} active={active} disabled={disabled} caption={!!caption} {...other}>
       {icon && 
-        <StyledIcon>{icon?.key==='machine' && active? cloneElement(icon, { fill: "#2065D1" }): icon}</StyledIcon>}
-      {subItem && (
+        <StyledIcon sx={subItem ? { ml: 2 } : {}}>{icon?.key==='machine' && active? cloneElement(icon, { fill: "#2065D1" }): icon}</StyledIcon>}
+      {/* {subItem && (
         <StyledIcon>
           <StyledDotIcon active={active && subItem} />
         </StyledIcon>
-      )}
+      )} */}
 
       <ListItemText
         primary={`${translate(title)}`}

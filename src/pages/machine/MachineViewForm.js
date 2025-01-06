@@ -262,7 +262,7 @@ export default function MachineViewForm() {
     try {
       await dispatch(deleteMachine(machine._id));
       enqueueSnackbar('Machine Deleted Successfully!');
-      navigate(PATH_MACHINE.machines.archived.root);
+      navigate(PATH_MACHINE.archived.root);
     } catch (err) {
       enqueueSnackbar( typeof err === 'string' ? err : Snacks.machineFailedDelete, { variant: `error` });
       console.log('Error:', err);
@@ -287,7 +287,7 @@ export default function MachineViewForm() {
               onRestore={ machine?.isArchived ? onRestore : undefined }
               onDelete={ machine?.isArchived ? onDelete : undefined }
               handleTransfer={ machine?.isArchived ? undefined : () => navigate(PATH_MACHINE.machines.transfer(machine?._id))}
-              backLink={() => navigate( machine?.isArchived ? PATH_MACHINE.machines.archived.root : PATH_MACHINE.machines.root)}
+              backLink={() => navigate( machine?.isArchived ? PATH_MACHINE.archived.root : PATH_MACHINE.machines.root)}
               machineSupportDate={ machine?.isArchived ? undefined : defaultValues?.supportExpireDate}
               transferredHistory={ machine?.isArchived && MachineAddForm ? undefined : machine?.transferredHistory || []}
             />

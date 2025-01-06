@@ -167,7 +167,7 @@ export default function ServiceReportTemplateList() {
   };
 
   const handleViewRow = (id) => {
-    navigate(PATH_MACHINE.machines.machineSettings.serviceReportsTemplate.view(id));
+    navigate(PATH_MACHINE.machineSettings.serviceReportsTemplate.view(id));
   };
 
   const handleResetFilter = () => {

@@ -7,7 +7,7 @@ import { Card, Grid } from '@mui/material';
 import { deleteDepartment } from '../../../../redux/slices/department/department';
 import { useSnackbar } from '../../../../components/snackbar';
 // paths
-import { PATH_SETTING } from '../../../../routes/paths';
+import { PATH_CRM } from '../../../../routes/paths';
 //  components
 import ViewFormAudit from '../../../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../../../components/ViewForms/ViewFormField';
@@ -19,7 +19,7 @@ export default function DepartmentViewForm() {
 
   const { id } = useParams();
   const toggleEdit = () => {
-    navigate(PATH_SETTING.departments.edit(id));
+    navigate(PATH_CRM.departments.edit(id));
   };
 
   const { enqueueSnackbar } = useSnackbar();
@@ -50,7 +50,7 @@ export default function DepartmentViewForm() {
     try {
       await dispatch(deleteDepartment(id));
       enqueueSnackbar('Department Archived Successfullty!');
-      navigate(PATH_SETTING.departments.list);
+      navigate(PATH_CRM.departments.list);
     } catch (err) {
       enqueueSnackbar('Department Archive failed!', { variant: `error` });
       console.log('Error:', err);
@@ -64,7 +64,7 @@ export default function DepartmentViewForm() {
         forCustomer={defaultValues.forCustomer}
         handleEdit={toggleEdit} 
         onDelete={onDelete} 
-        backLink={() => navigate(PATH_SETTING.departments.list)}
+        backLink={() => navigate(PATH_CRM.departments.list)}
         settingPage
       />
       <Grid container sx={{mt:2}}>

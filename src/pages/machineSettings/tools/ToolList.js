@@ -147,7 +147,7 @@ export default function ToolList() {
     }
   };
 
-  const handleViewRow = async (id) => navigate(PATH_MACHINE.machines.machineSettings.tools.view(id));
+  const handleViewRow = async (id) => navigate(PATH_MACHINE.machineSettings.tools.view(id));
 
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))

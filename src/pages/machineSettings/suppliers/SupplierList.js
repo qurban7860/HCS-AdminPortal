@@ -175,7 +175,7 @@ export default function SupplierList() {
     }
   };
 
-  const handleViewRow = (id) => navigate(PATH_MACHINE.machines.machineSettings.suppliers.view(id));
+  const handleViewRow = (id) => navigate(PATH_MACHINE.machineSettings.suppliers.view(id));
 
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))

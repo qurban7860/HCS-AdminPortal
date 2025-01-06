@@ -33,7 +33,7 @@ export default function TechParamCategoryListTableToolbar({
   onFilterStatus,
 }) {
   const navigate = useNavigate();
-  const toggleAdd = () => navigate(PATH_MACHINE.machines.machineSettings.technicalParameterCategories.new);
+  const toggleAdd = () => navigate(PATH_MACHINE.machineSettings.technicalParameterCategories.new);
 
   return (
     <Stack {...options}>

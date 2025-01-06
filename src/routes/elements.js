@@ -61,7 +61,7 @@ export const EditVisits = Loadable(lazy(() => import('../pages/calendar/Calendar
 export const ViewVisits = Loadable(lazy(() => import('../pages/calendar/CalendarView')));
 
 // JIRA REPORT
-export const SupportTickets = Loadable(lazy(() => import('../pages/jira/JiraList')));
+export const JiraTickets = Loadable(lazy(() => import('../pages/jira/JiraList')));
 
 // CUSTOMER
 export const CustomerList = Loadable(lazy(() => import('../pages/crm/reports/customers/CustomerList')));

@@ -86,7 +86,7 @@ export default function SupplierEditForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [supplier]);
 
-  const toggleCancel = () => navigate(PATH_MACHINE.machines.machineSettings.suppliers.view(id));
+  const toggleCancel = () => navigate(PATH_MACHINE.machineSettings.suppliers.view(id));
 
   const onSubmit = async (data) => {
     try {
@@ -103,7 +103,7 @@ export default function SupplierEditForm() {
       await dispatch(updateSupplier(data, id));
       reset();
       enqueueSnackbar('Update success!');
-      navigate(PATH_MACHINE.machines.machineSettings.suppliers.view(id));
+      navigate(PATH_MACHINE.machineSettings.suppliers.view(id));
     } catch (error) {
       enqueueSnackbar(error, { variant: `error` });
       console.error(error);

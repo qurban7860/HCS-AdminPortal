@@ -18,17 +18,34 @@ import NavDocs from './NavDocs';
 import NavAccount from './NavAccount';
 import NavToggleButton from './NavToggleButton';
 import { PATH_SETTING } from '../../../routes/paths';
+import { useAuthContext } from '../../../auth/useAuthContext';
 
 // ----------------------------------------------------------------------
 
 NavVertical.propTypes = {
   openNav: PropTypes.bool,
-  onCloseNav: PropTypes.func,
+  onCloseNav: PropTypes.func,  
+  selectedCategory: PropTypes.object,
 };
 
-export default function NavVertical({ openNav, onCloseNav }) {
+export default function NavVertical({ openNav, onCloseNav, selectedCategory }) {
+
+  const {
+    isDocumentAccessAllowed,
+    isDrawingAccessAllowed,
+    isSettingAccessAllowed,
+    isSecurityUserAccessAllowed,
+    isEmailAccessAllowed,
+    isDeveloper,
+  } = useAuthContext();
   
-  const navConfig = NavigationConfig();
+  const navConfig = NavigationConfig(
+    selectedCategory,
+    isDocumentAccessAllowed,
+    isDrawingAccessAllowed,
+    isSettingAccessAllowed,
+    isSecurityUserAccessAllowed
+  );
 
   const { pathname } = useLocation();
   const isDesktop = useResponsive('up', 'lg');
@@ -60,7 +77,7 @@ export default function NavVertical({ openNav, onCloseNav }) {
           flexDirection: 'column',
         },
       }}
-      >
+    >
       <Stack
         sx={{
           pt: 3,
@@ -70,14 +87,36 @@ export default function NavVertical({ openNav, onCloseNav }) {
         }}
       >
         <Logo sx={{ width: '70%', margin: '0 auto' }} />
-        <Grid sx={{ margin: '0 auto', mb:2, display:'flex', alignItems:'baseline'}}>
+        <Grid sx={{ margin: '0 auto', mb: 2, display: 'flex', alignItems: 'baseline' }}>
           <Link
-            sx={{ margin: '0 auto', mb: 2, display: 'flex', alignItems: 'baseline', textDecoration: 'none' }}
+            sx={{
+              margin: '0 auto',
+              mb: 2,
+              display: 'flex',
+              alignItems: 'baseline',
+              textDecoration: 'none',
+            }}
             href={PATH_SETTING.releases.list}
-            >
-            {CONFIG.ENV.toLocaleLowerCase() !== 'live' && ( <Typography sx={{ background: envColor, borderRadius: '50px', fontSize: '10px', padding: '2px 5px', color: '#FFF', }} > 
-                    {`${CONFIG.ENV.toLocaleUpperCase()} ${CONFIG.Version}`} </Typography> )}
-            {CONFIG.ENV.toLocaleLowerCase() === 'live' && ( <Typography sx={{ color: '#897A69', fontSize: '10px' }}> {CONFIG.Version} </Typography> )}
+          >
+            {CONFIG.ENV.toLocaleLowerCase() !== 'live' && (
+              <Typography
+                sx={{
+                  background: envColor,
+                  borderRadius: '50px',
+                  fontSize: '10px',
+                  padding: '2px 5px',
+                  color: '#FFF',
+                }}
+              >
+                {`${CONFIG.ENV.toLocaleUpperCase()} ${CONFIG.Version}`}{' '}
+              </Typography>
+            )}
+            {CONFIG.ENV.toLocaleLowerCase() === 'live' && (
+              <Typography sx={{ color: '#897A69', fontSize: '10px' }}>
+                {' '}
+                {CONFIG.Version}{' '}
+              </Typography>
+            )}
           </Link>
         </Grid>
 

@@ -19,7 +19,7 @@ import {
 // schema
 import { DocumentTypeSchema } from '../../../schemas/document';
 // routes
-import { PATH_SETTING } from '../../../../routes/paths';
+import { PATH_MACHINE, PATH_SETTING } from '../../../../routes/paths';
 // components
 import { useSnackbar } from '../../../../components/snackbar';
 import FormProvider, { RHFTextField, RHFAutocomplete } from '../../../../components/hook-form';
@@ -74,14 +74,14 @@ export default function DocumentTypeEditForm() {
 
 
   const toggleCancel = () => {
-    navigate(PATH_SETTING.documentType.view(documentType._id));
+    navigate(PATH_MACHINE.documents.documentType.view(documentType._id));
   };
 
   const onSubmit = async (data) => {
     try {
       await dispatch(updateDocumentType(documentType._id, data));
       dispatch(getDocumentTypes(documentType._id));
-      navigate(PATH_SETTING.documentType.view(documentType._id));
+      navigate(PATH_MACHINE.documents.documentType.view(documentType._id));
       enqueueSnackbar('Document Type updated Successfully!');
       reset();
     } catch (error) {

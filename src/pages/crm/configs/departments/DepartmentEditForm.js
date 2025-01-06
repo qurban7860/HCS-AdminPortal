@@ -9,7 +9,7 @@ import { Box, Card, Grid, Stack } from '@mui/material';
 // slice
 import { updateDepartment } from '../../../../redux/slices/department/department';
 // routes
-import { PATH_SETTING } from '../../../../routes/paths';
+import { PATH_CRM } from '../../../../routes/paths';
 // components
 import { useSnackbar } from '../../../../components/snackbar';
 import FormProvider, { RHFTextField, RHFSwitch, RHFAutocomplete } from '../../../../components/hook-form';
@@ -74,14 +74,14 @@ export default function DepartmentEditForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [department]);
 
-  const toggleCancel = () => navigate(PATH_SETTING.departments.view(department?._id));
+  const toggleCancel = () => navigate(PATH_CRM.departments.view(department?._id));
   
   const onSubmit = async (data) => {
     try {
       await dispatch(updateDepartment(data, id));
       reset();
       enqueueSnackbar('Department Updated Successfully!');
-      navigate(PATH_SETTING.departments.view(department?._id));
+      navigate(PATH_CRM.departments.view(department?._id));
     } catch (err) {
       enqueueSnackbar('Saving failed!', { variant: `error` });
       console.error(err.message);

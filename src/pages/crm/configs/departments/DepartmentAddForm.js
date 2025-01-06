@@ -11,7 +11,7 @@ import { Box, Card, Grid, Stack, Container } from '@mui/material';
 import AddFormButtons from '../../../../components/DocumentForms/AddFormButtons';
 import { addDepartment } from '../../../../redux/slices/department/department';
 // routes
-import { PATH_SETTING } from '../../../../routes/paths';
+import { PATH_CRM } from '../../../../routes/paths';
 // components
 import { useSnackbar } from '../../../../components/snackbar';
 import FormProvider, { RHFTextField, RHFSwitch, RHFAutocomplete } from '../../../../components/hook-form';
@@ -67,7 +67,7 @@ export default function DepartmentAddForm() {
   } = methods;
 
   const toggleCancel = () => {
-    navigate(PATH_SETTING.departments.list);
+    navigate(PATH_CRM.departments.list);
   };
 
   const onSubmit = async (data) => {
@@ -75,7 +75,7 @@ export default function DepartmentAddForm() {
       await dispatch(addDepartment(data));
       reset();
       enqueueSnackbar('Department Added Successfully!');
-      navigate(PATH_SETTING.departments.list);
+      navigate(PATH_CRM.departments.list);
     } catch (error) {
       enqueueSnackbar(error?.message, { variant: `error` });
       console.error(error);

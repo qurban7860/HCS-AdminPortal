@@ -66,14 +66,14 @@ export default function CategoryEditForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [category]);
   
-  const toggleCancel = () => navigate(PATH_MACHINE.machines.machineSettings.categories.view(id));
+  const toggleCancel = () => navigate(PATH_MACHINE.machineSettings.categories.view(id));
 
   const onSubmit = async (data) => {
     try {
       await dispatch(updateCategory(data, id));
       reset();
       enqueueSnackbar('Update success!');
-      navigate(PATH_MACHINE.machines.machineSettings.categories.view(id));
+      navigate(PATH_MACHINE.machineSettings.categories.view(id));
     } catch (err) {
       enqueueSnackbar('Saving failed!', { variant: `error` });
       console.error(err.message);
@@ -85,7 +85,7 @@ export default function CategoryEditForm() {
         <Cover
           name="Edit Category"
           icon="material-symbols:category-outline"
-          url={PATH_MACHINE.machines.machineSettings.categories.root}
+          url={PATH_MACHINE.machineSettings.categories.root}
         />
       </StyledCardContainer>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>

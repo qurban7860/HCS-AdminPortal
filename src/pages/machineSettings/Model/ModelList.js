@@ -167,7 +167,8 @@ export default function ModelList() {
     }
   };
 
-  const handleViewRow = async (id) => navigate(PATH_MACHINE.machines.machineSettings.models.view(id));
+
+  const handleViewRow = async (id) => navigate(PATH_MACHINE.machineSettings.models.view(id));
 
   const handleResetFilter = () => {
     dispatch(setFilterBy(''));

@@ -61,7 +61,7 @@ export default function GroupAddForm() {
     formState: { isSubmitting },
   } = methods;
 
-  const toggleCancel = () => navigate(PATH_MACHINE.machines.machineSettings.groups.root);
+  const toggleCancel = () => navigate(PATH_MACHINE.machineSettings.groups.root);
 
   const onSubmit = async (data) => {
     data.categories = data.categories.map(category => category._id);
@@ -69,7 +69,7 @@ export default function GroupAddForm() {
       await dispatch(addGroup(data));
       reset();
       enqueueSnackbar('Group Added Successfully!');
-      navigate(PATH_MACHINE.machines.machineSettings.groups.root);
+      navigate(PATH_MACHINE.machineSettings.groups.root);
     } catch (error) {
       enqueueSnackbar(error?.message, { variant: `error` });
       console.error(error);

@@ -15,7 +15,7 @@ import {
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
 // routes
-import { PATH_SETTING } from '../../../../routes/paths';
+import { PATH_MACHINE, PATH_SETTING } from '../../../../routes/paths';
 // components
 import {
   useTable,
@@ -181,7 +181,7 @@ export default function DocumentTypeList() {
   };
 
   const handleViewRow = (id) => {
-    navigate(PATH_SETTING.documentType.view(id));
+    navigate(PATH_MACHINE.documents.documentType.view(id));
   };
 
   const handleResetFilter = () => {

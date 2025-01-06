@@ -55,7 +55,7 @@ export function Cover({
   const linkCustomerSites = () => navigate(PATH_CRM.sites);
   const linkCustomerContacts = () =>  navigate(PATH_CRM.contacts);
   const linkArchivedCustomers = () =>  navigate(PATH_CRM.customers.archived.root);
-  const linkArchivedMachines = () =>  navigate(PATH_MACHINE.machines.archived.root);
+  const linkArchivedMachines = () =>  navigate(PATH_MACHINE.archived.root);
   const handleBackLink = () => window.history.back();
   const handleCoilLog = () => navigate(PATH_MACHINE_LOGS.machineLogs.CoilLogs);
   const handleProductionLog = () => navigate(PATH_MACHINE_LOGS.machineLogs.ProductionLogs);

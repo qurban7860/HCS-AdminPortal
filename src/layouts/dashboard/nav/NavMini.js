@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 // @mui
 import { Stack, Box , Typography, Link } from '@mui/material';
@@ -12,12 +13,33 @@ import { NavSectionMini } from '../../../components/nav-section';
 import NavigationConfig from './NavigationConfig';
 import NavToggleButton from './NavToggleButton';
 import { PATH_SETTING } from '../../../routes/paths';
+import { useAuthContext } from '../../../auth/useAuthContext';
 
 // ----------------------------------------------------------------------
 
-export default function NavMini() {
+NavMini.propTypes = {
+  selectedCategory: PropTypes.object,
+};
+
+export default function NavMini({selectedCategory}) {
   const [envColor, setEnvColor]= useState('#897A69');
-  const navConfig = NavigationConfig();
+
+  const {
+    isDocumentAccessAllowed,
+    isDrawingAccessAllowed,
+    isSettingAccessAllowed,
+    isSecurityUserAccessAllowed,
+    isEmailAccessAllowed,
+    isDeveloper,
+  } = useAuthContext();
+
+  const navConfig = NavigationConfig(
+    selectedCategory,
+    isDocumentAccessAllowed,
+    isDrawingAccessAllowed,
+    isSettingAccessAllowed,
+    isSecurityUserAccessAllowed
+  );
 
   useEffect(() => {
     if (CONFIG.ENV.toLocaleLowerCase() === 'dev' || CONFIG.ENV.toLocaleLowerCase === 'development' ) {
@@ -53,14 +75,36 @@ export default function NavMini() {
           ...hideScrollbarX,
         }}
       >
-        <Logo src="/logo/HowickIcon.svg" sx={{ mx: 'auto', my: 1, width: '50px', height: '50px' }} />
+        <Logo
+          src="/logo/HowickIcon.svg"
+          sx={{ mx: 'auto', my: 1, width: '50px', height: '50px' }}
+        />
         <Link
-          sx={{ margin: '0 auto', mb: 2, display: 'flex', alignItems: 'baseline', textDecoration: 'none' }}
+          sx={{
+            margin: '0 auto',
+            mb: 2,
+            display: 'flex',
+            alignItems: 'baseline',
+            textDecoration: 'none',
+          }}
           href={PATH_SETTING.releases.list}
         >
-          {CONFIG.ENV.toLocaleLowerCase() !== 'live' && ( <Typography sx={{ background: envColor, borderRadius: '50px', fontSize: '10px', padding: '2px 5px', color: '#FFF', }} > 
-                  {`${CONFIG.ENV.toLocaleUpperCase()} ${CONFIG.Version}`} </Typography> )}
-          {CONFIG.ENV.toLocaleLowerCase() === 'live' && ( <Typography sx={{ color: '#897A69', fontSize: '10px' }}> {CONFIG.Version} </Typography> )}
+          {CONFIG.ENV.toLocaleLowerCase() !== 'live' && (
+            <Typography
+              sx={{
+                background: envColor,
+                borderRadius: '50px',
+                fontSize: '10px',
+                padding: '2px 5px',
+                color: '#FFF',
+              }}
+            >
+              {`${CONFIG.ENV.toLocaleUpperCase()} ${CONFIG.Version}`}{' '}
+            </Typography>
+          )}
+          {CONFIG.ENV.toLocaleLowerCase() === 'live' && (
+            <Typography sx={{ color: '#897A69', fontSize: '10px' }}> {CONFIG.Version} </Typography>
+          )}
         </Link>
 
         <NavSectionMini data={navConfig} />

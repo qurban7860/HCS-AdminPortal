@@ -149,7 +149,7 @@ export default function CategoryList() {
   };
 
 
-  const handleViewRow = (id) => navigate(PATH_MACHINE.machines.machineSettings.categories.view(id));
+  const handleViewRow = (id) => navigate(PATH_MACHINE.machineSettings.categories.view(id));
 
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))

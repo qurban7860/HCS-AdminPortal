@@ -18,23 +18,23 @@ import { ICONS } from '../../constants/icons/default-icons';
 export default function Machine() {
   const navigate = useNavigate();
   
-  const linkGroup = () => navigate(PATH_MACHINE.machines.machineSettings.groups.root);
-  const linkCategory = () => navigate(PATH_MACHINE.machines.machineSettings.categories.root);
-  const linkModel = () => navigate(PATH_MACHINE.machines.machineSettings.models.root);
-  const linkStatus = () => navigate(PATH_MACHINE.machines.machineSettings.status.root);
-  const linkSupplier = () => navigate(PATH_MACHINE.machines.machineSettings.suppliers.root);
-  const linkTechParam = () => navigate(PATH_MACHINE.machines.machineSettings.technicalParameters.root);
-  const linktpCategory = () => navigate(PATH_MACHINE.machines.machineSettings.technicalParameterCategories.root);
-  const linkTool = () => navigate(PATH_MACHINE.machines.machineSettings.tools.root);
-  const linkCheckItemCategory = () => navigate(PATH_MACHINE.machines.machineSettings.checkItemCategories.root);
-  const checkItems = () => navigate(PATH_MACHINE.machines.machineSettings.checkItems.root);
-  const linkServiceReportsTemplate = () => navigate(PATH_MACHINE.machines.machineSettings.serviceReportsTemplate.root);
-  const linkServiceReportsStatus = () => navigate(PATH_MACHINE.machines.machineSettings.serviceReportsStatus.root);
+  const linkGroup = () => navigate(PATH_MACHINE.machineSettings.groups.root);
+  const linkCategory = () => navigate(PATH_MACHINE.machineSettings.categories.root);
+  const linkModel = () => navigate(PATH_MACHINE.machineSettings.models.root);
+  const linkStatus = () => navigate(PATH_MACHINE.machineSettings.status.root);
+  const linkSupplier = () => navigate(PATH_MACHINE.machineSettings.suppliers.root);
+  const linkTechParam = () => navigate(PATH_MACHINE.machineSettings.technicalParameters.root);
+  const linktpCategory = () => navigate(PATH_MACHINE.machineSettings.technicalParameterCategories.root);
+  const linkTool = () => navigate(PATH_MACHINE.machineSettings.tools.root);
+  const linkCheckItemCategory = () => navigate(PATH_MACHINE.machineSettings.checkItemCategories.root);
+  const checkItems = () => navigate(PATH_MACHINE.machineSettings.checkItems.root);
+  const linkServiceReportsTemplate = () => navigate(PATH_MACHINE.machineSettings.serviceReportsTemplate.root);
+  const linkServiceReportsStatus = () => navigate(PATH_MACHINE.machineSettings.serviceReportsStatus.root);
 
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
-        <Cover name={FORMLABELS.COVER.SETTINGS} />
+        <Cover name={FORMLABELS.COVER.MACHINE_SETTINGS} />
       </StyledCardContainer>
       <Box
               rowGap={1}

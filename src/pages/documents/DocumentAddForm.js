@@ -10,7 +10,7 @@ import { pdfjs } from 'react-pdf';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import { Box, Card, Grid, Stack, Dialog } from '@mui/material';
 // PATH
-import { PATH_CRM, PATH_DOCUMENT, PATH_MACHINE, PATH_MACHINE_DRAWING } from '../../routes/paths';
+import { PATH_CRM, PATH_MACHINE, PATH_MACHINE_DRAWING } from '../../routes/paths';
 // slice
 import {
   resetActiveDocuments,
@@ -231,7 +231,7 @@ function DocumentAddForm({
         } else if ( machineDrawings ) {
           await navigate(PATH_MACHINE_DRAWING.machineDrawings.view.root( id ));
         } else if( !customerPage && !drawingPage && !machinePage && !machineDrawings ){
-          await navigate(PATH_DOCUMENT.document.view.root( id ));
+          await navigate(PATH_MACHINE.documents.document.view.root( id ));
         }
       } else if( customerPage ){
         navigate(PATH_CRM.customers.documents.root( customerId ));
@@ -242,7 +242,7 @@ function DocumentAddForm({
       }else if( machineDrawings ){
         navigate(PATH_MACHINE_DRAWING.root)
       }else if( !customerPage && !drawingPage && !machinePage && !machineDrawings ){
-        navigate(PATH_DOCUMENT.root)
+        navigate(PATH_MACHINE.documents.list)
       }
 
       setReadOnlyVal(false);
@@ -266,7 +266,7 @@ function DocumentAddForm({
       } else if ( machineDrawings ) {
         navigate(PATH_MACHINE_DRAWING.machineDrawings.view.root( documentVal._id ));
       } else if( !customerPage && !drawingPage && !machinePage && !machineDrawings ){
-        navigate(PATH_DOCUMENT.document.view.root( documentVal._id ));
+        navigate(PATH_MACHINE.documents.document.view.root( documentVal._id ));
       }
     } else if( historyNewVersion || historyAddFiles ) {
       if( customerPage && customerId ){
@@ -283,7 +283,7 @@ function DocumentAddForm({
     }else if( machineDrawings ){
       navigate(PATH_MACHINE_DRAWING.root)
     }else if( !customerPage && !drawingPage && !machinePage && !machineDrawings ){
-      navigate(PATH_DOCUMENT.root)
+      navigate(PATH_MACHINE.documents.list)
     }
   }
 

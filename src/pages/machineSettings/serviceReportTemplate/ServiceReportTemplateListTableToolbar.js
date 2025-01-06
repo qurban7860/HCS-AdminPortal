@@ -35,7 +35,7 @@ export default function ServiceReportTemplateListTableToolbar({
   onFilterStatus,
 }) {
   const navigate = useNavigate();
-  const toggleAdd = () => navigate(PATH_MACHINE.machines.machineSettings.serviceReportsTemplate.new);
+  const toggleAdd = () => navigate(PATH_MACHINE.machineSettings.serviceReportsTemplate.new);
 
   return (
     <Stack {...options}>
