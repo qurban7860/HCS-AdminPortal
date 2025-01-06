@@ -110,7 +110,6 @@ export default function MachineLogsListTableToolbar({
         dateFrom={dateFrom}
         dateTo={dateTo}
         isDateFromDateTo={!allMachineLogsPage}
-        // openGraph={ location.pathname !== PATH_MACHINE_LOGS.root ? toggleGraph : undefined }
         addButton={showAddbutton()}
         transferredMachine={machine?.status?.slug === 'transferred'}
       />

@@ -77,14 +77,14 @@ export default function ToolAddForm() {
       await dispatch(addTool(data));
       reset();
       enqueueSnackbar('Tool created successfully!');
-      navigate(PATH_MACHINE.machines.machineSettings.tools.root);
+      navigate(PATH_MACHINE.machineSettings.tools.root);
     } catch (error) {
       enqueueSnackbar(error, { variant: `error` });
       console.error(error);
     }
   };
 
-  const toggleCancel = () => navigate(PATH_MACHINE.machines.machineSettings.tools.root);
+  const toggleCancel = () => navigate(PATH_MACHINE.machineSettings.tools.root);
 
   return (
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>

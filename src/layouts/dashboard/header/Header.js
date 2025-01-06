@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router';
 // @mui
 import { useTheme } from '@mui/material/styles';
-import { Stack, AppBar, Toolbar, IconButton, } from '@mui/material';
+import { Stack, AppBar, Toolbar, IconButton, Box, Button, } from '@mui/material';
 // utils
 import { bgBlur } from '../../../utils/cssStyles';
 
@@ -18,14 +19,18 @@ import { useSettingsContext } from '../../../components/settings';
 import AccountPopover from './AccountPopover';
 import NotificationsPopover from './NotificationsPopover';
 import { useWebSocketContext } from '../../../auth/WebSocketContext';
+import { MAIN_CATEGORIES, OTHER_MAIN_CATEGORIES } from '../navigationConstants';
+import { useAuthContext } from '../../../auth/useAuthContext';
 
 // ----------------------------------------------------------------------
 
 Header.propTypes = {
   onOpenNav: PropTypes.func,
+  selectedCategory: PropTypes.object,
+  setSelectedCategory: PropTypes.func,
 };
 
-export default function Header({ onOpenNav }) {
+export default function Header({ onOpenNav, selectedCategory, setSelectedCategory }) {
   const theme = useTheme();
   const { themeLayout } = useSettingsContext();
   const isNavHorizontal = themeLayout === 'horizontal';
@@ -33,10 +38,17 @@ export default function Header({ onOpenNav }) {
   const isDesktop = useResponsive('up', 'lg');
   const isOffset = useOffSetTop(HEADER.H_DASHBOARD_DESKTOP) && !isNavHorizontal;
   const { sendJsonMessage } = useWebSocketContext();
+  const { isSettingAccessAllowed } = useAuthContext();
+  const navigate = useNavigate();
   
   useEffect(()=>{
     sendJsonMessage({eventName:'getNotifications'});
   },[sendJsonMessage])
+
+  const handleCategoryChange = (category) => {
+    setSelectedCategory(category);
+    navigate(category.path)
+  };
   
   const renderContent = (
     <>
@@ -46,13 +58,40 @@ export default function Header({ onOpenNav }) {
           <Iconify icon="eva:menu-2-fill" />
         </IconButton>
       )}
-      <Stack flexGrow={1} direction="row" alignItems="center" justifyContent="flex-end" spacing={{ xs: 0.5, sm: 1.5 }}>
+      <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+        {MAIN_CATEGORIES.map((item) => (
+          <Button
+            key={item.id}
+            sx={{ my: 2, mx: 0.5, display: 'block' }}
+            variant={item.id === selectedCategory.id ? "contained" : "text"}
+            onClick={() => handleCategoryChange(item)}
+          >
+            {item.title}
+          </Button>
+        ))}
+      </Box>
+      <Stack flexGrow={0} direction="row" alignItems="center" spacing={{ xs: 0.5, sm: 1.5 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', borderLeft: `2px solid ${theme.palette.divider}`, borderRight: `2px solid ${theme.palette.divider}`, px: 1 }}>
+          {OTHER_MAIN_CATEGORIES.map((item) => 
+            item?.id === "settings" && !isSettingAccessAllowed ? null : (
+            <Button 
+              key={item.id} 
+              onClick={() => handleCategoryChange(item)}
+              variant={item.id === selectedCategory.id ? "contained" : "text"}
+              sx={{ 
+                mx: 0.2,
+              }}
+            >
+              <Iconify icon={item.icon} />
+            </Button>
+            )
+          )}
+        </Box>
         <NotificationsPopover />
         <AccountPopover />
       </Stack>
     </>
   );
-
   return (
     <AppBar
       sx={{

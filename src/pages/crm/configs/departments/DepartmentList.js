@@ -137,7 +137,7 @@ export default function DepartmentList() {
 
 
   const handleViewRow = (id) => {
-    navigate(PATH_SETTING.departments.view(id));
+    navigate(PATH_CRM.departments.view(id));
   };
 
   const handleResetFilter = () => {

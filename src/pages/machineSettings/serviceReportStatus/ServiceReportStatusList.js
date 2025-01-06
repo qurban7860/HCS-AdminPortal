@@ -126,7 +126,7 @@ export default function ServiceReportStatusList() {
       setFilterName(filterBy)
   },[ filterBy ])
 
-  const handleViewRow = (id) => navigate(PATH_MACHINE.machines.machineSettings.serviceReportsStatus.view(id));
+  const handleViewRow = (id) => navigate(PATH_MACHINE.machineSettings.serviceReportsStatus.view(id));
 
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))

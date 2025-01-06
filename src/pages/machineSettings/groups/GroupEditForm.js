@@ -62,7 +62,7 @@ export default function GroupEditForm() {
     formState: { isSubmitting },
   } = methods;
 
-  const toggleCancel = () => navigate(PATH_MACHINE.machines.machineSettings.groups.view(id));
+  const toggleCancel = () => navigate(PATH_MACHINE.machineSettings.groups.view(id));
 
   const onSubmit = async (data) => {
     data.categories = data.categories.map(category => category._id);
@@ -70,7 +70,7 @@ export default function GroupEditForm() {
       await dispatch(updateGroup(data, id));
       reset();
       enqueueSnackbar('Group Updated Successfully!');
-      navigate(PATH_MACHINE.machines.machineSettings.groups.view(id));
+      navigate(PATH_MACHINE.machineSettings.groups.view(id));
     } catch (err) {
       enqueueSnackbar('Saving failed!', { variant: `error` });
       console.error(err.message);

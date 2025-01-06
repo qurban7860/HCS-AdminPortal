@@ -39,7 +39,7 @@ export default function ParameterListTableToolbar({
   const toggleAdd = () => {
     dispatch(getActiveCategories())
     dispatch(getActiveTechparamcategories());
-    navigate(PATH_MACHINE.machines.machineSettings.technicalParameters.new);
+    navigate(PATH_MACHINE.machineSettings.technicalParameters.new);
   };
   return (
     <Stack {...options}>

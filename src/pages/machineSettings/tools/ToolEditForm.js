@@ -62,7 +62,7 @@ export default function ToolEditForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tool]);
 
-  const toggleCancel = () => navigate(PATH_MACHINE.machines.machineSettings.tools.view(id));
+  const toggleCancel = () => navigate(PATH_MACHINE.machineSettings.tools.view(id));
 
 
   const onSubmit = async (data) => {
@@ -70,7 +70,7 @@ export default function ToolEditForm() {
       await dispatch(updateTool({ ...data, id }));
       reset();
       enqueueSnackbar('Update success!');
-      navigate(PATH_MACHINE.machines.machineSettings.tools.view(id));
+      navigate(PATH_MACHINE.machineSettings.tools.view(id));
     } catch (err) {
       enqueueSnackbar('Saving failed!', { variant: `error` });
       console.error(err.message);

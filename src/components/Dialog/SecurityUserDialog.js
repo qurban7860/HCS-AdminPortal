@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Grid, Dialog, DialogContent, DialogTitle, Divider } from '@mui/material';
 import { setSecurityUserDialog, resetSecurityUser } from '../../redux/slices/securityUser/securityUser';
-import { PATH_SECURITY } from '../../routes/paths';
+import { PATH_SETTING } from '../../routes/paths';
 import DialogLink from './DialogLink';
 import FormLabel from '../DocumentForms/FormLabel';
 import ViewFormField from '../ViewForms/ViewFormField';
@@ -74,7 +74,7 @@ function SecurityUserDialog() {
         onClose={handleSecurityUserDialog}
         onClick={() => {
           handleSecurityUserDialog();
-          navigate(PATH_SECURITY.users.view(securityUser._id));
+          navigate(PATH_SETTING.security.users.view(securityUser._id));
         }}
         content="Go to Security User"
       />

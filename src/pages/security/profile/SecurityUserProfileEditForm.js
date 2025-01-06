@@ -7,7 +7,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Box, Card, Grid, Stack, Container, Checkbox } from '@mui/material';
 // routes
-import { PATH_SECURITY } from '../../../routes/paths';
+import { PATH_SETTING } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFSwitch, RHFTextField, RHFAutocomplete, RHFPhoneInput } from '../../../components/hook-form';
@@ -105,14 +105,14 @@ useEffect(() => {
     try {
       await  dispatch(updateSecurityUser(data, securityUser._id));
       reset()
-      navigate(PATH_SECURITY.users.profile);
+      navigate(PATH_SETTING.security.users.profile);
     } catch (error) {
       enqueueSnackbar(error, { variant: `error` });
       console.log('Error:', error);
     }
   };
 
-  const toggleCancel = () => navigate(PATH_SECURITY.users.profile);
+  const toggleCancel = () => navigate(PATH_SETTING.security.users.profile);
 
 
   const onChangeContact = (contact) => {

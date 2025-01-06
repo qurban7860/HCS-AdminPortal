@@ -5,7 +5,7 @@ import { useSearchParams } from 'react-router-dom';
 import { Button, Grid, Typography, Box } from '@mui/material';
 import { StyledRoot, StyledInfo } from '../../theme/styles/default-styles';
 // utils
-import { PATH_CRM, PATH_MACHINE, PATH_SETTING, PATH_MACHINE_LOGS } from '../../routes/paths';
+import { PATH_CRM, PATH_MACHINE, PATH_REPORTS, PATH_SETTING } from '../../routes/paths';
 // auth
 import CoverSettingsIcons from './CoverSettingsIcons';
 import CoverTitles from './CoverTitles';
@@ -55,10 +55,10 @@ export function Cover({
   const linkCustomerSites = () => navigate(PATH_CRM.sites);
   const linkCustomerContacts = () =>  navigate(PATH_CRM.contacts);
   const linkArchivedCustomers = () =>  navigate(PATH_CRM.customers.archived.root);
-  const linkArchivedMachines = () =>  navigate(PATH_MACHINE.machines.archived.root);
+  const linkArchivedMachines = () =>  navigate(PATH_MACHINE.archived.root);
   const handleBackLink = () => window.history.back();
-  const handleCoilLog = () => navigate(PATH_MACHINE_LOGS.machineLogs.CoilLogs);
-  const handleProductionLog = () => navigate(PATH_MACHINE_LOGS.machineLogs.ProductionLogs);
+  const handleCoilLog = () => navigate(PATH_REPORTS.machineLogs.CoilLogs);
+  const handleProductionLog = () => navigate(PATH_REPORTS.machineLogs.ProductionLogs);
   const { isAllAccessAllowed, isSettingReadOnly } = useAuthContext();
   const isMobile = useResponsive('down', 'sm');
   const [expandedButton, setExpandedButton] = useState(null);
@@ -68,7 +68,6 @@ export function Cover({
     setCurrentLogPage(searchParams.get('type'))
   }, [searchParams])
   
-  // const handleErpLog = () => navigate(PATH_MACHINE_LOGS.machineLogs.erpLogGraphsToggle);
   const handleErpLogToggle = () => {
     // console.log(searchParams.get('page'));
     setSearchParams({type: currentLogPage === 'erpGraph' ? 'currentLogs' : 'erpGraph' });

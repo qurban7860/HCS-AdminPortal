@@ -37,7 +37,7 @@ export default function AccountPopover() {
   const displayName = localStorage.getItem('name')
   const { enqueueSnackbar } = useSnackbar();
   const [openPopover, setOpenPopover] = useState(null);
-  const { onChangeDrawer } = useSettingsContext();
+  // const { onChangeDrawer } = useSettingsContext();
   const handleOpenPopover = (event) => {
     setOpenPopover(event.currentTarget);
   };
@@ -111,13 +111,13 @@ export default function AccountPopover() {
               {option.label}
             </MenuItem>
           ))}
-          <MenuItem onClick={() => { 
+          {/* <MenuItem onClick={() => { 
               handleToggle(); 
               onChangeDrawer(); 
             }} 
           >
             <Typography variant="body2" noWrap>{TITLES.CUSTOMIZE}</Typography>
-          </MenuItem>
+          </MenuItem> */}
         </Stack>
 
         <Divider sx={{ borderStyle: 'solid' }} />

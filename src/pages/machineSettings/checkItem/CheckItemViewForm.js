@@ -26,7 +26,7 @@ export default function CheckItemViewForm() {
   const onDelete = async () => {
     try {
       await dispatch(deleteCheckItem(checkItem?._id));
-      navigate(PATH_MACHINE.machines.machineSettings.checkItems.root);
+      navigate(PATH_MACHINE.machineSettings.checkItems.root);
       enqueueSnackbar('Check item Archived Successfully!');
     } catch (error) {
       enqueueSnackbar(error, { variant: `error` });
@@ -34,7 +34,7 @@ export default function CheckItemViewForm() {
     }
   };
 
-  const handleEdit = async () => navigate(PATH_MACHINE.machines.machineSettings.checkItems.edit(checkItem?._id));
+  const handleEdit = async () => navigate(PATH_MACHINE.machineSettings.checkItems.edit(checkItem?._id));
 
   const defaultValues = useMemo(
     () => ({
@@ -70,7 +70,7 @@ export default function CheckItemViewForm() {
           isRequired={defaultValues.isRequired} 
           handleEdit={handleEdit} 
           onDelete={onDelete} 
-          backLink={() => navigate(PATH_MACHINE.machines.machineSettings.checkItems.root)}  
+          backLink={() => navigate(PATH_MACHINE.machineSettings.checkItems.root)}  
           machineSettingPage
         />
         <Grid container sx={{mt:2}}>

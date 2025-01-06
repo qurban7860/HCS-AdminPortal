@@ -82,14 +82,14 @@ export default function ParameterEditForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ techparam ]);
 
-  const toggleCancel = () => navigate(PATH_MACHINE.machines.machineSettings.technicalParameters.view(id));
+  const toggleCancel = () => navigate(PATH_MACHINE.machineSettings.technicalParameters.view(id));
 
   const onSubmit = async (data) => {
     try {
       await dispatch(updateTechparam(data, techparam._id));
       reset();
       enqueueSnackbar('Update success!');
-      navigate(PATH_MACHINE.machines.machineSettings.technicalParameters.view(id));
+      navigate(PATH_MACHINE.machineSettings.technicalParameters.view(id));
     } catch (err) {
       enqueueSnackbar(err, { variant: `error` });
       console.error(err);

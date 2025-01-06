@@ -79,14 +79,14 @@ export default function CheckItemAddForm() {
       await dispatch(addCheckItem(data));
       reset();
       enqueueSnackbar(Snacks.checkItemAdd);
-      navigate(PATH_MACHINE.machines.machineSettings.checkItems.root);
+      navigate(PATH_MACHINE.machineSettings.checkItems.root);
     } catch (error) {
       enqueueSnackbar(error?.message, { variant: `error` });
       console.error(error);
     }
   };
 
-  const toggleCancel = () => navigate(PATH_MACHINE.machines.machineSettings.checkItems.root);
+  const toggleCancel = () => navigate(PATH_MACHINE.machineSettings.checkItems.root);
   
   return (
     <Container maxWidth={false}>
@@ -94,7 +94,7 @@ export default function CheckItemAddForm() {
         <Cover
           name={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAM_ADD}
           setting
-          backLink={PATH_MACHINE.machines.machineSettings.checkItems.root}
+          backLink={PATH_MACHINE.machineSettings.checkItems.root}
         />
       </StyledCardContainer>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>

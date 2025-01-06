@@ -10,7 +10,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // import { LoadingButton } from '@mui/lab';
 import { Card, Grid, Stack, Container } from '@mui/material';
 // routes
-import { PATH_SETTING } from '../../../../routes/paths';
+import { PATH_MACHINE, PATH_SETTING } from '../../../../routes/paths';
 // schema
 import { DocumentTypeSchema } from '../../../schemas/document';
 // slice
@@ -80,7 +80,7 @@ export default function DocumentTypeAddForm({ currentDocument }) {
   await dispatch(addDocumentType(data));
       reset();
       enqueueSnackbar(Snacks.docSaved);
-      navigate(PATH_SETTING.documentType.list);
+      navigate(PATH_MACHINE.documents.documentType.list);
     } catch (error) {
       enqueueSnackbar(error, { variant: `error` });
       console.error(error);
@@ -88,7 +88,7 @@ export default function DocumentTypeAddForm({ currentDocument }) {
   };
 
   const toggleCancel = () => {
-    navigate(PATH_SETTING.documentType.list);
+    navigate(PATH_MACHINE.documents.documentType.list);
     dispatch(setDocumentTypeFormVisibility(false));
     dispatch(setMachineDocumentFormVisibility(true));
     dispatch(setCustomerDocumentFormVisibility(true));

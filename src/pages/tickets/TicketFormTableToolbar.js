@@ -4,7 +4,7 @@ import { Stack } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import SearchBarCombo from '../../components/ListTableTools/SearchBarCombo';
 // routes
-import { PATH_TICKET } from '../../routes/paths';
+import { PATH_SUPPORT } from '../../routes/paths';
 // constants
 import { BUTTONS } from '../../constants/default-constants';
 import { options } from '../../theme/styles/default-styles';
@@ -25,7 +25,7 @@ export default function TicketFormTableToolbar({
 }) {
     const navigate = useNavigate();
     const toggleAdd = () => {
-      navigate(PATH_TICKET.tickets.new);
+      navigate(PATH_SUPPORT.supportTickets.new);
     };
   return (
     <Stack {...options} >

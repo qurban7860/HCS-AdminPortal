@@ -35,7 +35,7 @@ ServiceReportTemplateViewForm.propTypes = {
 
 export default function ServiceReportTemplateViewForm({ currentServiceReportTemplate = null }) {
   const toggleEdit = () => {
-    navigate(PATH_MACHINE.machines.machineSettings.serviceReportsTemplate.edit(id));
+    navigate(PATH_MACHINE.machineSettings.serviceReportsTemplate.edit(id));
   };
   const { enqueueSnackbar } = useSnackbar();
 
@@ -85,7 +85,7 @@ export default function ServiceReportTemplateViewForm({ currentServiceReportTemp
     try {
       await dispatch(deleteServiceReportTemplate(id));
       enqueueSnackbar('Service report template Archived Successfullty!');
-      navigate(PATH_MACHINE.machines.machineSettings.serviceReportsTemplate.root);
+      navigate(PATH_MACHINE.machineSettings.serviceReportsTemplate.root);
     } catch (err) {
       enqueueSnackbar('Service report template Archive failed!', { variant: `error` });
       console.log('Error:', err);
@@ -138,10 +138,10 @@ export default function ServiceReportTemplateViewForm({ currentServiceReportTemp
         approveHandler={defaultValues.isActive && defaultValues?.status.toLowerCase() === 'submitted' && 
         serviceReportTemplate?.approvals?.length < serviceReportTemplate?.noOfApprovalsRequired && handleVerification}
         handleVerificationTitle="Approve"
-        copyConfiguration={defaultValues.isActive && defaultValues?.status.toLowerCase() === 'approved' && (() => navigate(PATH_MACHINE.machines.machineSettings.serviceReportsTemplate.copy(serviceReportTemplate._id)))}
+        copyConfiguration={defaultValues.isActive && defaultValues?.status.toLowerCase() === 'approved' && (() => navigate(PATH_MACHINE.machineSettings.serviceReportsTemplate.copy(serviceReportTemplate._id)))}
         handleEdit={defaultValues.isActive && defaultValues?.status.toLowerCase() !== 'approved' && defaultValues?.status.toLowerCase() !== 'submitted' && toggleEdit } 
         onDelete={defaultValues.isActive && onDelete} 
-        backLink={() => navigate(PATH_MACHINE.machines.machineSettings.serviceReportsTemplate.root)} 
+        backLink={() => navigate(PATH_MACHINE.machineSettings.serviceReportsTemplate.root)} 
         machineSettingPage
       />
       <Grid container sx={{mt:2}}>

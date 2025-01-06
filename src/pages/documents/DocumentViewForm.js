@@ -6,7 +6,7 @@ import { Grid, Card, Box, Dialog, DialogTitle, Button, DialogContent, Divider, T
 import download from 'downloadjs';
 import b64toBlob from 'b64-to-blob';
 import { StyledVersionChip } from '../../theme/styles/default-styles';
-import { PATH_CRM, PATH_DOCUMENT, PATH_MACHINE } from '../../routes/paths';
+import { PATH_CRM, PATH_MACHINE } from '../../routes/paths';
 import {
   deleteDocument,
   resetDocumentHistory,

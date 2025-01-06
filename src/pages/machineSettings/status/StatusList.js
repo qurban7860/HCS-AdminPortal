@@ -172,7 +172,7 @@ export default function StatusList() {
     }
   };
 
-  const handleViewRow = (id) => navigate(PATH_MACHINE.machines.machineSettings.status.view(id));
+  const handleViewRow = (id) => navigate(PATH_MACHINE.machineSettings.status.view(id));
 
 
   const handleResetFilter = () => {

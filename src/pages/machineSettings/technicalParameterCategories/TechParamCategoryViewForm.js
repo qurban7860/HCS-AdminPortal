@@ -42,12 +42,12 @@ export default function TechParamCategoryViewForm() {
     [ techparamcategory ]
     );
 
-  const toggleEdit = () => navigate(PATH_MACHINE.machines.machineSettings.technicalParameterCategories.edit(id));
+  const toggleEdit = () => navigate(PATH_MACHINE.machineSettings.technicalParameterCategories.edit(id));
   const onDelete = async () => {
     try {
       await dispatch(deleteTechparamcategory(techparamcategory._id));
       enqueueSnackbar('Archived Successfully!');
-      navigate(PATH_MACHINE.machines.machineSettings.technicalParameterCategories.root);
+      navigate(PATH_MACHINE.machineSettings.technicalParameterCategories.root);
     } catch (err) {
 
       enqueueSnackbar('Techparam category Archive failed!', { variant: `error` });
@@ -60,7 +60,7 @@ export default function TechParamCategoryViewForm() {
         isActive={defaultValues.isActive} 
         handleEdit={toggleEdit} 
         onDelete={onDelete} 
-        backLink={() => navigate(PATH_MACHINE.machines.machineSettings.technicalParameterCategories.root)}  
+        backLink={() => navigate(PATH_MACHINE.machineSettings.technicalParameterCategories.root)}  
         machineSettingPage
       />
       <Grid container sx={{mt:2}}>

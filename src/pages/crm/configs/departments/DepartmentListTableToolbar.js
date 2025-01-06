@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 // components
 import SearchBarCombo from '../../../../components/ListTableTools/SearchBarCombo';
 // routes
-import { PATH_SETTING } from '../../../../routes/paths';
+import { PATH_CRM } from '../../../../routes/paths';
 // constants
 import { options } from '../../../../theme/styles/default-styles';
 // ----------------------------------------------------------------------
@@ -31,7 +31,7 @@ export default function DepartmentListTableToolbar({
 }) {
 
   const navigate = useNavigate();
-  const toggleAdd = () => { navigate(PATH_SETTING.departments.new) };
+  const toggleAdd = () => { navigate(PATH_CRM.departments.new) };
 
   return (
     <Stack {...options}>

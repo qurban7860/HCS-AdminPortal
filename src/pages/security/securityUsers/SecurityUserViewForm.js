@@ -5,7 +5,7 @@ import { useDispatch, useSelector, batch } from 'react-redux';
 import { Card, Grid, Link, Button } from '@mui/material';
 import ConfirmDialog from '../../../components/confirm-dialog';
 // routes
-import { PATH_SECURITY } from '../../../routes/paths';
+import { PATH_SETTING } from '../../../routes/paths';
 // slices
 import {
   deleteSecurityUser,
@@ -65,7 +65,7 @@ export default function SecurityUserViewForm() {
   }, [dispatch, securityUser]);
 
   const handleEdit = () => {
-    navigate(PATH_SECURITY.users.edit(securityUser._id));
+    navigate(PATH_SETTING.security.users.edit(securityUser._id));
   };
 
   const handleCustomerDialog = (event) =>{
@@ -116,7 +116,7 @@ export default function SecurityUserViewForm() {
   const onDelete = async () => {
     try {
       await dispatch(deleteSecurityUser( id, { isArchived: true } ));
-      await navigate(PATH_SECURITY.root);
+      await navigate(PATH_SETTING.security.root);
       // await dispatch(getSecurityUsers());
     } catch (error) {
       enqueueSnackbar('User Delete failed!', { variant: `error` });
@@ -185,7 +185,7 @@ export default function SecurityUserViewForm() {
             onRestore={ securityUser?.isArchived ? onRestore : undefined }
             // onDelete={ securityUser?.isArchived ? onDelete : undefined }
             isInviteLoading={isLoading}
-            backLink={() => navigate(PATH_SECURITY.root)}
+            backLink={() => navigate(PATH_SETTING.security.root)}
             isActive={defaultValues.isActive}
             multiAuth={defaultValues?.multiFactorAuthentication} 
             formerEmployee={defaultValues?.formerEmployee}

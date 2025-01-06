@@ -118,14 +118,14 @@ export default function ServiceReportTemplateAddForm() {
       await dispatch(addServiceReportTemplate(data));
       reset();
       enqueueSnackbar('Service report template created successfully!');
-      navigate(PATH_MACHINE.machines.machineSettings.serviceReportsTemplate.root);
+      navigate(PATH_MACHINE.machineSettings.serviceReportsTemplate.root);
     } catch (error) {
       enqueueSnackbar(error, { variant: `error` });
       console.error(error);
     }
   };
   
-  const toggleCancel = () => navigate(PATH_MACHINE.machines.machineSettings.serviceReportsTemplate.root);
+  const toggleCancel = () => navigate(PATH_MACHINE.machineSettings.serviceReportsTemplate.root);
 
   const CategoryValHandler = (event, newValue) => {
     if (newValue) {
@@ -174,7 +174,7 @@ export default function ServiceReportTemplateAddForm() {
         <Cover
           name={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_CONFIGS_ADD}
           icon="material-symbols:category-outline"
-          url={PATH_MACHINE.machines.machineSettings.serviceReportsTemplate.root}
+          url={PATH_MACHINE.machineSettings.serviceReportsTemplate.root}
         />
       </StyledCardContainer>
         <Grid container>

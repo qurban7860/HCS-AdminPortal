@@ -105,7 +105,7 @@ export default function GroupList() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 
-  const handleViewRow = (id) => navigate(PATH_MACHINE.machines.machineSettings.groups.view(id));
+  const handleViewRow = (id) => navigate(PATH_MACHINE.machineSettings.groups.view(id));
 
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))

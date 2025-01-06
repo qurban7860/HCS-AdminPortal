@@ -4,7 +4,7 @@ import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { Container, Table, TableBody, TableContainer } from '@mui/material';
 // routes
 import { useNavigate, useParams } from 'react-router-dom';
-import { PATH_TICKET } from '../../routes/paths';
+import { PATH_SUPPORT } from '../../routes/paths';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 // components
@@ -114,7 +114,7 @@ export default function TicketFormList(){
   },[])
 
 
-  const handleViewRow = (id) => navigate(PATH_TICKET.tickets.view(id));
+  const handleViewRow = (id) => navigate(PATH_SUPPORT.supportTickets.view(id));
 
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))

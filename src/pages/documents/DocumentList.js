@@ -19,7 +19,7 @@ import axios from 'axios';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 // routes
-import { PATH_CRM, PATH_DOCUMENT, PATH_MACHINE, PATH_MACHINE_DRAWING } from '../../routes/paths';
+import { PATH_CRM, PATH_MACHINE, PATH_MACHINE_DRAWING } from '../../routes/paths';
 // components
 import {
   useTable,
@@ -354,7 +354,7 @@ const TABLE_HEAD = useMemo(() => {
     } else if( machineDrawings ){
         navigate(PATH_MACHINE_DRAWING.machineDrawings.view.root(Id));
     } else if( !customerPage && !machinePage && !machineDrawingPage && !machineDrawings ){
-        navigate(PATH_DOCUMENT.document.view.root(Id));
+        navigate(PATH_MACHINE.documents.document.view.root(Id));
     }
   };
   

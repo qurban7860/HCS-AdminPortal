@@ -9,7 +9,7 @@ import {
   Link,
 } from '@mui/material';
 // routes
-import { PATH_SECURITY } from '../../../routes/paths';
+import { PATH_SETTING } from '../../../routes/paths';
 // auth
 import { useAuthContext } from '../../../auth/useAuthContext';
 // _mock_
@@ -65,7 +65,7 @@ export default function SecurityUserProfile() {
 
   const handleEdit = () => {
     // dispatch(setSecurityUserEditFormVisibility(true));
-    navigate(PATH_SECURITY.users.editProfile);
+    navigate(PATH_SETTING.security.users.editProfile);
   };
 
   const defaultValues = useMemo(

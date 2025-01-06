@@ -54,7 +54,7 @@ export default function CategoryAddForm() {
     formState: { isSubmitting },
   } = methods;
 
-  const toggleCancel = () => navigate(PATH_MACHINE.machines.machineSettings.categories.root);
+  const toggleCancel = () => navigate(PATH_MACHINE.machineSettings.categories.root);
 
 
   const onSubmit = async (data) => {
@@ -62,7 +62,7 @@ export default function CategoryAddForm() {
       await dispatch(addCategory(data));
       reset();
       enqueueSnackbar('Category created successfully!');
-      navigate(PATH_MACHINE.machines.machineSettings.categories.root);
+      navigate(PATH_MACHINE.machineSettings.categories.root);
     } catch (error) {
       enqueueSnackbar(error?.message, { variant: `error` });
       console.error(error);
@@ -74,7 +74,7 @@ export default function CategoryAddForm() {
         <Cover
           name="New Machine Category"
           icon="material-symbols:category-outline"
-          url={PATH_MACHINE.machines.machineSettings.categories.root}
+          url={PATH_MACHINE.machineSettings.categories.root}
         />
       </StyledCardContainer>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>

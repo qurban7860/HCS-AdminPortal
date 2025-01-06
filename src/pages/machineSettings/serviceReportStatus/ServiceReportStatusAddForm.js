@@ -60,14 +60,14 @@ export default function ServiceReportStatusAddForm() {
       await dispatch(addServiceReportStatus(data));
       reset();
       enqueueSnackbar('Service Report Status created successfully!');
-      navigate(PATH_MACHINE.machines.machineSettings.serviceReportsStatus.root);
+      navigate(PATH_MACHINE.machineSettings.serviceReportsStatus.root);
     } catch (error) {
       enqueueSnackbar(typeof error === 'string' && error || "Service Report Status create failed!", { variant: `error` });
       console.error(error);
     }
   };
 
-  const toggleCancel = () => navigate(PATH_MACHINE.machines.machineSettings.serviceReportsStatus.root);
+  const toggleCancel = () => navigate(PATH_MACHINE.machineSettings.serviceReportsStatus.root);
 
   return (
     <Container maxWidth={false}>

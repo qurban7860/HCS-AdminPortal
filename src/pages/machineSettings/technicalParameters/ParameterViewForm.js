@@ -26,7 +26,7 @@ export default function ParameterViewForm() {
   const { techparam, isLoading } = useSelector((state) => state.techparam);
   const navigate = useNavigate();
 
-  const toggleEdit = () => navigate(PATH_MACHINE.machines.machineSettings.technicalParameters.edit(techparam._id));
+  const toggleEdit = () => navigate(PATH_MACHINE.machineSettings.technicalParameters.edit(techparam._id));
 
   const defaultValues = useMemo(
     () => ({
@@ -50,7 +50,7 @@ export default function ParameterViewForm() {
   const onDelete = () => {
     try {
       dispatch(deleteTechparams(id));
-      navigate(PATH_MACHINE.machines.machineSettings.technicalParameters.root);
+      navigate(PATH_MACHINE.machineSettings.technicalParameters.root);
     } catch (err) {
       enqueueSnackbar('Parameter value Archive failed!', { variant: `error` });
       console.log('Error:', err);
@@ -71,7 +71,7 @@ export default function ParameterViewForm() {
         isIniRead={defaultValues.isIniRead}
         handleEdit={toggleEdit} 
         onDelete={onDelete} 
-        backLink={() => navigate(PATH_MACHINE.machines.machineSettings.technicalParameters.root)}
+        backLink={() => navigate(PATH_MACHINE.machineSettings.technicalParameters.root)}
         machineSettingPage
         />
       <Grid container sx={{mt:2}}>

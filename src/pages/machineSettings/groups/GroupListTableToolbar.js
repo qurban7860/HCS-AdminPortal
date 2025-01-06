@@ -26,7 +26,7 @@ export default function GroupListTableToolbar({
 }) {
   const navigate = useNavigate();
 
-  const toggleAdd = () => navigate(PATH_MACHINE.machines.machineSettings.groups.new);
+  const toggleAdd = () => navigate(PATH_MACHINE.machineSettings.groups.new);
   
   return (
     <Stack {...options}>

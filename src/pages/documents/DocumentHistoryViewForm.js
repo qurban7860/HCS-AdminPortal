@@ -36,7 +36,7 @@ import { getCustomer, setCustomerDialog} from '../../redux/slices/customer/custo
 import { getMachineForDialog, setMachineDialog } from '../../redux/slices/products/machine';
 import FormLabel from '../../components/DocumentForms/FormLabel';
 import DocumentCover from '../../components/DocumentForms/DocumentCover';
-import { PATH_DOCUMENT, PATH_CRM, PATH_MACHINE, PATH_MACHINE_DRAWING } from '../../routes/paths';
+import { PATH_CRM, PATH_MACHINE, PATH_MACHINE_DRAWING } from '../../routes/paths';
 import { useSnackbar } from '../../components/snackbar';
 import { Snacks } from '../../constants/document-constants';
 import UpdateDocumentVersionDialog from '../../components/Dialog/UpdateDocumentVersionDialog';
@@ -134,7 +134,7 @@ function DocumentHistoryViewForm({ customerPage, machinePage, machineDrawingPage
     } else if( machinePage ){
       navigate(PATH_MACHINE.machines.documents.history.newVersion( machineId, id ));
     }else if(!customerPage && !machineDrawingPage && !machinePage && !machineDrawings ){
-      navigate(PATH_DOCUMENT.document.view.newVersion( id ));
+      navigate(PATH_MACHINE.documents.document.view.newVersion( id ));
     }else if(machineDrawings){
       navigate(PATH_MACHINE_DRAWING.machineDrawings.view.newVersion( id ));
     }
@@ -152,7 +152,7 @@ const handleNewFile = async () => {
   } else if( machinePage ){
     navigate(PATH_MACHINE.machines.documents.history.addFile( machineId, id ));
   }else if(!customerPage && !machineDrawingPage && !machinePage && !machineDrawings){
-    navigate(PATH_DOCUMENT.document.view.addFile( id ));
+    navigate(PATH_MACHINE.documents.document.view.addFile( id ));
   }else if(machineDrawings){
     navigate(PATH_MACHINE_DRAWING.machineDrawings.view.addFile( id ));
   }
@@ -188,7 +188,7 @@ const handleNewFile = async () => {
       }else if( machineDrawingPage ){
         navigate(PATH_MACHINE.machines.drawings.root( machineId ));
       }else if( !customerPage && !machineDrawingPage && !machinePage && !machineDrawings ){
-        navigate(PATH_DOCUMENT.root);
+        navigate(PATH_MACHINE.documents.list);
       }else if( machineDrawings ){
         navigate(PATH_MACHINE_DRAWING.root);
       }
@@ -209,7 +209,7 @@ const handleNewFile = async () => {
       }else if( machineDrawingPage ){
         navigate(PATH_MACHINE.machines.drawings.root( machineId ));
       }else if( !customerPage && !machineDrawingPage && !machinePage && !machineDrawings ){
-        navigate(PATH_DOCUMENT.root);
+        navigate(PATH_MACHINE.documents.list);
       }else if( machineDrawings ){
         navigate(PATH_MACHINE_DRAWING.root);
       }
@@ -363,7 +363,7 @@ const handleNewFile = async () => {
     } else if(machineDrawings){
       navigate(PATH_MACHINE_DRAWING.root) 
     } else{
-      navigate(PATH_DOCUMENT.root)
+      navigate(PATH_MACHINE.documents.list)
     }
   }
 console.log("check action  : ",!( ( !machinePage && documentHistory?.machine?._id ) || ( !customerPage && documentHistory?.customer?._id ) || ( machineDrawings && documentHistory?.productDrawings?.length > 0 ) ) && !allowActions)
