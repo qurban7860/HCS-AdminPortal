@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useCallback, useMemo, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // routes
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -16,7 +16,8 @@ import { PATH_TICKET } from '../../routes/paths';
 import { useSnackbar } from '../../components/snackbar';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import options from './utils/constant';
-import FormProvider, { RHFTextField, RHFUpload, RHFAutocomplete, RHFDatePicker } from '../../components/hook-form';
+import FormProvider, { RHFTextField, RHFUpload, RHFAutocomplete, RHFDatePicker, RHFSwitch } from '../../components/hook-form';
+import { postTicket } from '../../redux/slices/ticket/tickets';
 import { getActiveCustomerMachines, resetActiveCustomerMachines } from '../../redux/slices/products/machine';
 import { getActiveCustomers } from '../../redux/slices/customer/customer';
 import { time_list } from '../../constants/time-list';
@@ -45,11 +46,11 @@ function getTimeObjectFromISOString(dateString) {
 export default function TicketForm({ systemProblemPage, changeRequestPage, systemIncidentPage, serviceRequestPage }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { id } = useParams()
   const { enqueueSnackbar } = useSnackbar();
   const { activeCustomerMachines } = useSelector((state) => state.machine);
   const { activeCustomers } = useSelector((state) => state.customer);
   const { 
-    sharingOptions, 
     changeReasonOptions, 
     impactOptions, 
     priorityOptions, 
@@ -62,6 +63,7 @@ export default function TicketForm({ systemProblemPage, changeRequestPage, syste
     customer: Yup.object().nullable().required('Customer is required'),
     machine: Yup.object().nullable(),
     summary: Yup.string().max(10000).required('Summary is required!'),
+    shareWith: Yup.boolean(),
   });
 
   const defaultValues = useMemo(
@@ -81,7 +83,7 @@ export default function TicketForm({ systemProblemPage, changeRequestPage, syste
       testPlan: '',
       rootCause: '',
       workaround: '',
-      shareWith: 'Sharing with TerminusTech',
+      shareWith: true,
       plannedStartDate: getTimeObjectFromISOString(new Date().toISOString()),
       plannedEndDate: getTimeObjectFromISOString(new Date().toISOString()),
     }),
@@ -154,7 +156,7 @@ export default function TicketForm({ systemProblemPage, changeRequestPage, syste
 
   const onSubmit = async (data) => {
     try {
-      // await dispatch(addTicket(data));
+      await dispatch(postTicket(data));
       reset();
       enqueueSnackbar('Ticket Add Successfully!');
       navigate(PATH_TICKET.root);
@@ -163,50 +165,19 @@ export default function TicketForm({ systemProblemPage, changeRequestPage, syste
       console.error(error);
     }
   };
-
+  
   const toggleCancel = () => navigate(PATH_TICKET.root);
 
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
-        <Cover name="New Ticket" tickets />
+        <Cover name="New Support Ticket" tickets />
       </StyledCardContainer>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={3}>
-          <Grid item xs={12} md={12}>
-            <Card sx={{ p: 3 }}>
-              <Stack spacing={3}>
-                  <RHFAutocomplete
-                    name="issueType"
-                    options={issueTypeOptions}
-                    isOptionEqualToValue={(option, value) => option === value}
-                    renderInput={(params) => (
-                      <RenderCustomInput label="Issue Type" params={params} />
-                    )}
-                    renderOption={(props, option) => (
-                      <li {...props} key={option}>
-                        {' '}
-                        <span style={{ marginLeft: 8 }}>{option}</span>{' '}
-                      </li>
-                    )}
-                  />
-                </Stack>
-              </Card>
-          </Grid>
-        </Grid>
-        {issueType && (
-        <Grid container spacing={3} sx={{ mt: 1 }}>
-          <Grid item xs={12} md={12}>
-            <Card sx={{ p: 3 }}>
-              <Stack spacing={3}>
-                <Stack spacing={1}>
-                  <Typography variant="h3" sx={{ color: 'text.secondary' }}>
-                    {issueType === 'System Problem' && 'Create a System Problem'}
-                    {issueType === 'Change Request' && 'Create a Change Request'}
-                    {issueType === 'System Incident' && 'Create a System Incident'}
-                    {issueType === 'Service Request' && 'Create a Service Request'}
-                  </Typography>
-                </Stack>
+            <Grid item xs={12} md={12}>
+              <Card sx={{ p: 3 }}>
+                <Stack spacing={3}>
                 <Box
                   rowGap={2}
                   columnGap={2}
@@ -243,6 +214,29 @@ export default function TicketForm({ systemProblemPage, changeRequestPage, syste
                     onChange={(e, newValue) => handleMachineChange(newValue)}
                   />
                 </Box>
+                  <RHFAutocomplete
+                    name="issueType"
+                    options={issueTypeOptions}
+                    isOptionEqualToValue={(option, value) => option === value}
+                    renderInput={(params) => (
+                      <RenderCustomInput label="Issue Type" params={params} />
+                    )}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option}>
+                        {' '}
+                        <span style={{ marginLeft: 8 }}>{option}</span>{' '}
+                      </li>
+                    )}
+                  />
+                </Stack>
+              </Card>
+            </Grid>
+        </Grid>
+        {issueType && (
+        <Grid container spacing={3} sx={{ mt: 1 }}>
+          <Grid item xs={12} md={12}>
+            <Card sx={{ p: 3 }}>
+              <Stack spacing={3}>
                 <RHFTextField name="summary" label="Summary*" minRows={1} multiline />
                 <RHFTextField name="description" label="Description" minRows={3} multiline />
                 <Box
@@ -381,21 +375,9 @@ export default function TicketForm({ systemProblemPage, changeRequestPage, syste
                   />
                 </Box>
                 )}
-                <RHFAutocomplete
-                  name="shareWith"
-                  options={sharingOptions}
-                  isOptionEqualToValue={(option, value) => option === value}
-                  renderInput={(params) => (
-                    <RenderCustomInput label="Share with" params={params} />
-                  )}
-                  renderOption={(props, option) => (
-                    <li {...props} key={option}>
-                      {' '}
-                      <span style={{ marginLeft: 8 }}>{option}</span>{' '}
-                    </li>
-                  )}
-                  sx={{ maxWidth: 400 }}
-                />
+                <Grid display="flex" alignItems="end">
+                  <RHFSwitch name="shareWith" label="Shared with organization" />
+                </Grid>
                 <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Stack>
             </Card>

@@ -24,7 +24,7 @@ import {
   ChangeRowsPerPage,
   ChangePage,
   setFilterBy,
-  getTicket,
+  getTickets,
   resetTickets,
 } from '../../redux/slices/ticket/tickets';
 import { fDateTime } from '../../utils/formatTime';
@@ -42,13 +42,12 @@ const TABLE_HEAD = [
   { id: 'summary', label: 'Summary', align: 'left' },
   { id: 'priority', label: 'Priority', align: 'left' },
   { id: 'impact', label: 'Impact', align: 'left' },
-  { id: 'shareWith', label: 'Share', align: 'left' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
 
 // ----------------------------------------------------------------------
 
-export default function SystemProblemList(){
+export default function TicketFormList(){
   const { initial, tickets, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.tickets);
 
   const navigate = useNavigate();
@@ -71,12 +70,12 @@ export default function SystemProblemList(){
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
 
-  // useLayoutEffect(() => {
-  //       dispatch(getTickets(page, rowsPerPage ));
-  //       return () => {
-  //         dispatch(resetTickets());
-  //       }
-  // }, [dispatch, machineId, page, rowsPerPage ]);
+  useLayoutEffect(() => {
+    dispatch(getTickets(page, rowsPerPage ));
+    return () => {
+      dispatch(resetTickets());
+    }
+  }, [dispatch, machineId, page, rowsPerPage ]);
 
   useEffect(() => {
     if (initial) {
@@ -106,11 +105,11 @@ export default function SystemProblemList(){
   };
   
   useEffect(() => {
-      debouncedSearch.current.cancel();
+    debouncedSearch.current.cancel();
   }, [debouncedSearch]);
   
   useEffect(()=>{
-      setFilterName(filterBy)
+    setFilterName(filterBy)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 
@@ -125,7 +124,7 @@ export default function SystemProblemList(){
   return (
     <Container maxWidth={false} >
       <StyledCardContainer>
-        <Cover name="Tickets" icon="ph:users-light" />
+        <Cover name=" Support Tickets" icon="ph:users-light" />
       </StyledCardContainer>
         <TableCard>
           <TicketFormTableToolbar
@@ -200,17 +199,19 @@ function applyFilter({ inputData, comparator, filterName }) {
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    console.log("filterName : ",filterName,'inputData : ',inputData)
-    inputData = inputData.filter(
-      (tickets) =>
-        tickets?.machine?.serialNo?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        tickets?.customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        tickets?.summary?.toLowerCase().indexOf(filterName?.toLowerCase()) >= 0 ||
-        tickets?.priority?.toLowerCase().indexOf(filterName?.toLowerCase()) >= 0 ||
-        tickets?.impact?.toLowerCase().indexOf(filterName?.toLowerCase()) >= 0 ||
-        tickets?.shareWith?.toLowerCase().indexOf(filterName?.toLowerCase()) >= 0 ||
-        fDateTime(tickets?.createdAt)?.toLowerCase().indexOf(filterName?.toLowerCase())
-    );
+    inputData = inputData.filter((ticket) => {
+      const fieldsToFilter = [
+        ticket?.machine?.serialNo,
+        ticket?.customer?.name,
+        ticket?.summary,
+        ticket?.priority,
+        ticket?.impact,
+        fDateTime(ticket?.createdAt),
+      ];
+      return fieldsToFilter.some((field) =>
+        field?.toLowerCase().includes(filterName.toLowerCase())
+      );
+    });
   }
   
   return inputData;

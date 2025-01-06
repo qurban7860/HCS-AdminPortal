@@ -203,7 +203,7 @@ export default function JiraList() {
 
   return (
       <Container maxWidth={false}>
-        <StyledCardContainer><Cover name="Support Tickets" /></StyledCardContainer>
+        <StyledCardContainer><Cover name="Jira Tickets" /></StyledCardContainer>
         <TableCard>
           <JiraTableToolbar
             filterName={filterName}

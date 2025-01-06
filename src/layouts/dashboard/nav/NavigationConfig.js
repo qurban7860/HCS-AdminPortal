@@ -106,14 +106,14 @@ function NavigationConfig() {
     }
 
     // Jira Report
-    updatedConfig[0].items.push({ title: 'Support Tickets', path: PATH_SUPPORT_TICKETS.root, icon: ICONS.supportTickets });
+    updatedConfig[0].items.push({ title: 'Jira Tickets', path: PATH_SUPPORT_TICKETS.root, icon: ICONS.supportTickets });
 
     if (isSettingAccessAllowed && navConfig.some((config) => config.title?.toLowerCase() !== 'settings')) {
       updatedConfig[0].items.push({ title: 'Settings', path: PATH_SETTING.root, icon: ICONS.setting });
     }
     
     if (navConfig.some((config) => config.title?.toLowerCase() !== 'tickets')) {
-      updatedConfig[0].items.push({ title: 'Tickets', path: PATH_TICKET.root, icon: ICONS.tickets });
+      updatedConfig[0].items.push({ title: 'Support Tickets', path: PATH_TICKET.root, icon: ICONS.tickets });
     }
 
     if (navConfig.some((config) => config.title?.toLowerCase() !== 'Calendar')) {
