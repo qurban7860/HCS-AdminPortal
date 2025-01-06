@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getDepartments, deleteDepartment, ChangeRowsPerPage,
   ChangePage,
   setFilterBy, } from '../../../../redux/slices/department/department';
-import { PATH_SETTING } from '../../../../routes/paths';
+import { PATH_CRM } from '../../../../routes/paths';
 // components
 import { useSnackbar } from '../../../../components/snackbar';
 // import { useSettingsContext } from '../../../components/settings';
