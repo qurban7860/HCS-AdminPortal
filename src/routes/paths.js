@@ -14,6 +14,7 @@ const ROOTS_MACHINE_SETTING_REPORT = '/machineSettingReports'
 const ROOTS_SERVICE_REPORTS = '/serviceReports'
 const ROOTS_SECURITY = '/security';
 const ROOTS_SETTING = '/settings';
+const ROOTS_TICKET = '/tickets';
 const ROOTS_DOCUMENT = '/documents';
 const ROOTS_MACHINE_DRAWING = '/machineDrawings';
 const ROOTS_SITEMAP = '/sites';
@@ -469,6 +470,20 @@ export const PATH_SETTING = {
     view: (id) => path(ROOTS_SETTING, `/releases/${id}/view`)
   },
 };
+
+// ------------------------ TICKETS ----------------------------------------
+
+export const PATH_TICKET = {
+  permissionDenied: path(ROOTS_TICKET, '/permission-denied'),
+  root: ROOTS_TICKET,
+  tickets: {
+    list: path(ROOTS_TICKET, '/tickets/list'),
+    new: path(ROOTS_TICKET, '/tickets/new'),
+    // view: (id) => path(ROOTS_SETTING, `/systemProblem/${id}/view`),
+    // edit: (id) => path(ROOTS_SETTING, `/systemProblem/${id}/edit`),
+  },
+};
+
 
 export const PATH_SECURITY = {
   root: ROOTS_SECURITY,

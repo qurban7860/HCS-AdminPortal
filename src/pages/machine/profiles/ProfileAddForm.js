@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, useLayoutEffect } from 'react';
+import React, { useState, useMemo, useEffect, useLayoutEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // form
 import { useForm } from 'react-hook-form';
@@ -17,7 +17,7 @@ import { ProfileSchema } from './schemas/ProfileSchema';
 import { useSnackbar } from '../../../components/snackbar';
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 // assets
-import FormProvider, { RHFSwitch, RHFTextField, RHFChipsInput } from '../../../components/hook-form';
+import FormProvider, { RHFSwitch, RHFTextField, RHFChipsInput, RHFUpload } from '../../../components/hook-form';
 import MachineTabContainer from '../util/MachineTabContainer';
 
 // ----------------------------------------------------------------------
@@ -44,6 +44,7 @@ export default function ProfileAddForm() {
       thicknessStart: '',
       thicknessEnd:'',
       type:'CUSTOMER',
+      files: [],
       isActive: true,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -58,10 +59,13 @@ export default function ProfileAddForm() {
   const {
     reset,
     handleSubmit,
+    watch,
     setValue,
     formState: { isSubmitting },
   } = methods;
   
+  const { files } = watch();
+
   useEffect(() => {
     const hasManufacturer = profiles.some((profile) => profile.type === 'MANUFACTURER');
     const updatedProfileTypes = hasManufacturer? ProfileTypes.filter((type) => type !== 'MANUFACTUR') : ProfileTypes;
@@ -74,7 +78,25 @@ export default function ProfileAddForm() {
     setSelectedValue(event.target.value);
     setValue('type',event.target.value);
   };
-
+   
+  const handleDropMultiFile = useCallback(
+    async (acceptedFiles) => {
+      const docFiles = files || [];
+      
+      const newFiles = acceptedFiles.map((file, index) => 
+          Object.assign(file, {
+            preview: URL.createObjectURL(file),
+            src: URL.createObjectURL(file),
+            isLoaded:true
+          })
+        
+      );
+      setValue('files', [...docFiles, ...newFiles], { shouldValidate: true });
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [ files ]
+  );
+    
   const onSubmit = async (data) => {
     try {
           await dispatch(addProfile(machineId, data));
@@ -129,7 +151,21 @@ export default function ProfileAddForm() {
               <RHFTextField name="thicknessStart" label="Min. Thickness"/>
               <RHFTextField name="thicknessEnd" label="Max. Thickness"/>
             </Box>
-              <RHFSwitch name="isActive"label="Active" />
+            <Box sx={{mt:2}}>
+            <RHFUpload multiple  thumbnail name="files" imagesOnly
+              onDrop={handleDropMultiFile}
+              onRemove={(inputFile) =>
+                files.length > 1 ?
+                setValue(
+                  'files',
+                  files &&
+                    files?.filter((file) => file !== inputFile),
+                  { shouldValidate: true }
+                ): setValue('files', '', { shouldValidate: true })
+              }
+              onRemoveAll={() => setValue('files', '', { shouldValidate: true })}
+            /> </Box>
+            <RHFSwitch name="isActive"label="Active" />
             <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
           </Card>
         </Grid>

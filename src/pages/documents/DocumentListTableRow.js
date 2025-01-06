@@ -24,6 +24,7 @@ DocumentListTableRow.propTypes = {
   onDeleteRow: PropTypes.func,
   customerPage: PropTypes.bool,
   machinePage: PropTypes.bool,
+  machineDrawingPage: PropTypes.bool,
   machineDrawings: PropTypes.bool,
   handleMachineDialog: PropTypes.func,
   handleCustomerDialog: PropTypes.func,
@@ -40,6 +41,7 @@ export default function DocumentListTableRow({
   onViewRow,
   customerPage,
   machinePage,
+  machineDrawingPage,
   machineDrawings,
   handleMachineDialog,
   handleCustomerDialog,
@@ -73,11 +75,8 @@ export default function DocumentListTableRow({
       {/* {  lgScreen && <TableCell align="center">{documentVersions[0]?.versionNo}</TableCell>} */}
       {  !hiddenColumns?.stockNumber && machineDrawings && <TableCell align="left">{stockNumber}</TableCell>}
       {  !hiddenColumns?.productDrawings && machineDrawings && <TableCell align="left">{productDrawings?.map((m)=> m?.machine?.serialNo).join(', ')}</TableCell>}
-      {  !hiddenColumns?.['machine.serialNo'] && !customerPage && !machinePage && !machineDrawings && lgScreen && 
-          <>
-            {/* <LinkDialogTableCell onClick={handleCustomerDialog} align='left' param={customer?.name}/>   */}
-            <LinkDialogTableCell onClick={handleMachineDialog} align='left' param={machine?.serialNo}/>  
-          </>
+      {  !hiddenColumns?.['machine.serialNo'] && !customerPage && !machinePage && !machineDrawings && !machineDrawingPage && lgScreen && 
+          <LinkDialogTableCell onClick={handleMachineDialog} align='left' param={machine?.serialNo}/>  
       }
       {!hiddenColumns?.createdAt && <TableCell align="right">{fDate(createdAt)}</TableCell>}
     </StyledTableRow>

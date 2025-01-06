@@ -318,6 +318,11 @@ import {
   MachineDrawingsEdit,
 
   // ----------------------------------------------------------------
+  
+  // TICKETS
+  TicketFormList,
+  TicketForm,
+
 
 // REPORTS / SETTINGS
   Setting,
@@ -1150,6 +1155,28 @@ export default function Router() {
         }
       ],
     },
+    
+    // ----------------------------- TICKETS -----------------------------------
+    {
+      path: 'tickets',
+      element: (
+        <AuthGuard>
+          <DashboardLayout />
+        </AuthGuard>
+      ),
+      children: [
+        {element: <TicketFormList />, index: true },
+        {
+          path: 'tickets',
+          children: [
+            { path: 'new', element: <TicketForm /> },
+            // { path: ':id/edit', element: <TicketFormEdit />},
+            // { path: ':id/view', element: <TicketFormView />}
+          ],
+        },
+      ],
+    },
+
     // ------------------------------ DOCUMENNT ----------------------------------
     {
       path: 'documents',

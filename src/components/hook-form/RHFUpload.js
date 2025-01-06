@@ -66,14 +66,9 @@ RHFUpload.propTypes = {
   name: PropTypes.string,
   multiple: PropTypes.bool,
   rows: PropTypes.bool,
+  hideFiles: PropTypes.bool,
   helperText: PropTypes.node,
   machine:PropTypes.string,
-  onChangeDocType: PropTypes.func,
-  onChangeDocCategory: PropTypes.func,
-  onChangeVersionNo: PropTypes.func,
-  onChangeDisplayName: PropTypes.func,
-  onChangeReferenceNumber: PropTypes.func,
-  onChangeStockNumber: PropTypes.func,
   isDocumentList: PropTypes.bool,
   drawingPage:PropTypes.bool,
   imagesOnly:PropTypes.bool,
@@ -83,18 +78,22 @@ RHFUpload.propTypes = {
   onDownload: PropTypes.func,
 };
 
-export function RHFUpload({ name, multiple, rows, helperText, machine,
-  onChangeDocType,
-  onChangeDocCategory,
-  onChangeVersionNo,
-  onChangeDisplayName,
-  onChangeReferenceNumber,
-  onChangeStockNumber,
+export function RHFUpload({ 
+  name, 
+  multiple, 
+  rows, 
+  hideFiles,
+  helperText, 
+  machine,
   isDocumentList,
   onLoadImage,
   onLoadPDF,
   onDownload,
-  drawingPage, dropZone=true, imagesOnly, ...other }) {
+  drawingPage, 
+  dropZone=true, 
+  imagesOnly, 
+  ...other 
+}) {
 
   const { control } = useFormContext();
 
@@ -109,53 +108,17 @@ export function RHFUpload({ name, multiple, rows, helperText, machine,
             multiple
             imagesOnly={imagesOnly}
             isDocumentList={isDocumentList}
-            onChangeDocType={(index, newValue) => {
-              const updatedFiles = [...field.value];
-              updatedFiles[index] = { ...updatedFiles[index], docType: newValue || null };
-              field.onChange(updatedFiles);
-            }}
-
-            onChangeDocCategory={ ( index, newValue ) => {
-              const updatedFiles = [ ...field.value ];
-              updatedFiles[index] = { ...updatedFiles[index], docCategory: newValue || null };
-              field.onChange(updatedFiles);
-            }}
-
-            onChangeVersionNo={ ( index, value ) => {
-              const updatedFiles = [...field.value];
-              updatedFiles[index] = { ...updatedFiles[index], versionNo: value?.replace(/[^\d.]|(?<=\..*)\./g, "")
-              };
-              field.onChange(updatedFiles);
-            }}
-
-            onChangeDisplayName={ ( index, value ) => {
-              const updatedFiles = [...field.value];
-              updatedFiles[index] = { ...updatedFiles[index], displayName: value };
-              field.onChange(updatedFiles);
-            }}
-
-            onChangeReferenceNumber={ ( index, value ) => {
-              const updatedFiles = [...field.value];
-              updatedFiles[index] = { ...updatedFiles[index], referenceNumber: value };
-              field.onChange(updatedFiles);
-            }}
-
-            onChangeStockNumber={ ( index, value ) => {
-              const updatedFiles = [...field.value];
-              updatedFiles[index] = { ...updatedFiles[index], stockNumber: value};
-              field.onChange(updatedFiles);
-            }}
-
             onLoadImage={ onLoadImage }
             onLoadPDF={onLoadPDF}
             onDownload={ onDownload }
             rows={rows}
+            hideFiles={hideFiles}
             drawingPage
             machine={machine}
             files={field.value}
             error={!!error}
             helperText={
-              (!!error || helperText) && (
+              (!!error || helperText) && !hideFiles && (
                 <FormHelperText error={!!error} sx={{ px: 2 }}>
                   {error ? error?.message : helperText}
                 </FormHelperText>

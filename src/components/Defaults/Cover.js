@@ -47,7 +47,7 @@ export function Cover({
   isArchivedMachines,
   productionLogs,
   coilLogs,
-  erpLogGraphsToggle
+  erpLogGraphsToggle,
 }) {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();

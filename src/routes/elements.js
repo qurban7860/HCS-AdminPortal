@@ -441,3 +441,8 @@ export const SitesReport = Loadable(lazy(() => import('../pages/sitesMap/Reports
 // Email
 export const Email = Loadable(lazy(() => import('../pages/settings/email/EmailList')));
 export const Emailview = Loadable(lazy(() => import('../pages/settings/email/EmailViewform')));
+
+// --------------------------- Tickets -------------------------------------
+
+export const TicketFormList = Loadable(lazy(() => import('../pages/tickets/TicketFormList')));
+export const TicketForm = Loadable(lazy(() => import('../pages/tickets/TicketForm')));

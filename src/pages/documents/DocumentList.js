@@ -121,9 +121,20 @@ const onChangeRowsPerPage = (event) => {
   }else if(machineDrawings){
     dispatch(machineDrawingsChangePage(0))
     dispatch(machineDrawingsChangeRowsPerPage(parseInt(event.target.value, 10)))
+    dispatch(
+      getDocuments( null, null, machineDrawings || null, page,
+        machineDrawings ? machineDrawingsRowsPerPage : documentRowsPerPage,
+        null, null, cancelTokenSource, filteredSearchKey || null, selectedSearchFilter || null, categoryVal, typeVal 
+      )
+    );
   }else if(!machineDrawings && !customerPage && !machineDrawingPage){
     dispatch(ChangePage(0));
     dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10)));
+    dispatch(
+      getDocuments( null, null, null, page, documentRowsPerPage,
+        null, null, cancelTokenSource, filteredSearchKey || null, selectedSearchFilter || null, categoryVal, typeVal 
+      )
+    );
   }
 };
 
@@ -134,9 +145,21 @@ const onChangePage = (event, newPage) => {
     dispatch(customerDocumentChangePage(newPage))
   }else if(machineDrawings){
     dispatch(machineDrawingsChangePage(newPage))
+    dispatch(
+      getDocuments( null, null, machineDrawings || null, page,
+        machineDrawings ? machineDrawingsRowsPerPage : documentRowsPerPage,
+        null, null, cancelTokenSource, filteredSearchKey || null, selectedSearchFilter || null, categoryVal, typeVal  
+      )
+    );
   }else if(!machineDrawings && !customerPage && !machineDrawingPage){
     dispatch(ChangePage(newPage))
+    dispatch(
+      getDocuments( null, null, null, page, documentRowsPerPage,
+        null, null, cancelTokenSource, filteredSearchKey || null, selectedSearchFilter || null, categoryVal, typeVal 
+      )
+    );
   }
+
 }
 
 const TABLE_HEAD = useMemo(() => {
@@ -157,7 +180,7 @@ const TABLE_HEAD = useMemo(() => {
     ];
   }
 
-  if (!customerPage && !machineDrawingPage && !machineDrawings) {
+  if (!customerPage && !machineDrawingPage && !machineDrawings && !machinePage) {
     return [
       ...baseHeaders.slice(0, 4),
       { id: 'machine.serialNo', visibility: 'md4', label: 'Machine', align: 'left', allowSearch: true },
@@ -165,7 +188,7 @@ const TABLE_HEAD = useMemo(() => {
     ];
   }
   return baseHeaders;
-}, [customerPage, machineDrawingPage, machineDrawings]);
+}, [customerPage, machineDrawingPage, machineDrawings, machinePage]);
 
 // useLayoutEffect(() => {
 //     if(machineDrawingPage || machineDrawings || machinePage ){
@@ -268,7 +291,7 @@ const TABLE_HEAD = useMemo(() => {
     filterName,
     filterStatus,
     categoryVal, 
-    typeVal,
+    typeVal, machinePage, machineDrawingPage
   });
   
   const { watch, handleSubmit } = methods;
@@ -392,14 +415,9 @@ const TABLE_HEAD = useMemo(() => {
   };  
   
   useEffect(() => {
-    if (machineDrawings) {
-      dispatch(getActiveDocumentCategories(null, null, machineDrawings));
-      dispatch(getActiveDocumentTypes(null, machineDrawings));
-    } else {
-      dispatch(getActiveDocumentCategories(null));  
-      dispatch(getActiveDocumentTypes());
-    }
-  }, [dispatch, machineDrawings]);
+    dispatch(getActiveDocumentCategories(null, null, machineDrawings || false ));
+    dispatch(getActiveDocumentTypes(null, machineDrawings || false ));
+}, [dispatch, machineDrawings]);
   
   const handleCategoryChange = (event, newValue) => {
     if (newValue) {
@@ -445,12 +463,10 @@ const TABLE_HEAD = useMemo(() => {
         </StyledCardContainer>
       )}
       <FormProvider {...methods} onSubmit={handleSubmit(onGetDocuments)}>
-      {!customerPage && !machinePage && (
+      {!customerPage && !machinePage && !machineDrawingPage && (
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Card sx={{ p: 3 }}>
-
-           { !machineDrawingPage && !machinePage && (
            <Box rowGap={2} columnGap={2} mb={3} display="grid" gridTemplateColumns={{ xs: '1fr', sm: 'repeat(2, 1fr)' }} sx={{ flexGrow: 1, width: { xs: '100%', sm: '100%' } }}> 
           <Autocomplete
             id="category-autocomplete"
@@ -469,7 +485,6 @@ const TABLE_HEAD = useMemo(() => {
             renderInput={(params) => <TextField {...params} size="small" label="Type" />}
           />
         </Box>
-      )}
               <Stack
                 direction={{ xs: 'column', sm: 'row' }}
                 spacing={2}
@@ -508,7 +523,7 @@ const TABLE_HEAD = useMemo(() => {
             </Card>
           </Grid>
         </Grid>
-        )}
+        )}</FormProvider>
         <TableCard>
           <DocumentListTableToolbar
             filterName={filterName}
@@ -520,14 +535,16 @@ const TABLE_HEAD = useMemo(() => {
             machineDrawings={machineDrawings}
             customerPage={customerPage}
             machinePage={machinePage}
+            machineDrawingPage={machineDrawingPage}
             categoryVal={categoryVal}
-            setCategoryVal={ (!machineDrawings) ? setCategoryVal : undefined }
+            setCategoryVal={ (machinePage || machineDrawingPage) ? setCategoryVal : undefined }
             typeVal={typeVal}
-            setTypeVal={ (!machineDrawings) ? setTypeVal : undefined }
+            setTypeVal={ (machinePage || machineDrawingPage) ? setTypeVal : undefined }
             handleGalleryView={
               !isNotFound && (customerPage || machinePage) ? handleGalleryView : undefined
             }
-          />
+          /> 
+           <Box sx={{ mt:2 }}>
           { !isNotFound && <TablePaginationFilter
             columns={TABLE_HEAD}
             hiddenColumns={reportHiddenColumns}
@@ -540,14 +557,15 @@ const TABLE_HEAD = useMemo(() => {
           /> }
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <Scrollbar>
-              <Table size="small" sx={{ minWidth: 360 }}>
-                { !isNotFound && <TableHeadFilter
+            <Table size="small" sx={{ minWidth: 360 }}>
+            {(!isNotFound || machinePage || customerPage) && ( 
+                <TableHeadFilter
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
                   onSort={onSort}
                   hiddenColumns={reportHiddenColumns}
-                />}
+                />)}
 
                 <TableBody>
                   {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
@@ -560,7 +578,8 @@ const TABLE_HEAD = useMemo(() => {
                           onViewRow={() => handleViewRow(row._id)}
                           style={index % 2 ? { background: 'red' } : { background: 'green' }}
                           customerPage={customerPage}
-                          machinePage={machineDrawingPage}
+                          machinePage={machinePage}
+                          machineDrawingPage={machineDrawingPage}
                           machineDrawings={machineDrawings}
                           handleCustomerDialog={(e) =>
                             row?.customer && handleCustomerDialog(e, row?.customer?._id)
@@ -580,7 +599,7 @@ const TABLE_HEAD = useMemo(() => {
             </Scrollbar>
           </TableContainer>
 
-          {!isNotFound && (
+          {(!isNotFound || machinePage || customerPage) && (
             <TablePaginationCustom
               count={totalRows}
               page={page}
@@ -589,16 +608,16 @@ const TABLE_HEAD = useMemo(() => {
               onRowsPerPageChange={onChangeRowsPerPage}
             />
           )}
-        </TableCard>
+          </Box>
+        </TableCard> 
         {/* </Container> */}
-      </FormProvider>
     </>
   );
 }
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, orderBy, filterName, filterStatus, categoryVal, typeVal, machinePage, machineDrawingPage }) {
+function applyFilter({ inputData, comparator, orderBy, filterName, filterStatus, categoryVal, typeVal, machineDrawingPage, machinePage }) {
 
   if(inputData){
     const stabilizedThis = inputData && inputData.map((el, index) => [el, index]);
@@ -611,16 +630,15 @@ function applyFilter({ inputData, comparator, orderBy, filterName, filterStatus,
     }
   
     inputData = stabilizedThis?.map((el) => el[0]);
-  
-  
-    if (machinePage || machineDrawingPage) {
+
+    if (machineDrawingPage || machinePage) {
     if(categoryVal)
       inputData = inputData?.filter((drawing)=> drawing.docCategory?._id  === categoryVal?._id );
   
     if(typeVal)
       inputData = inputData?.filter((drawing)=> drawing.docType?._id === typeVal?._id );
-    }
-  
+   }
+   
     if (filterName) {
       inputData = inputData.filter(
         (document) =>

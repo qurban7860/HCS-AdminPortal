@@ -90,6 +90,8 @@ export const FORMLABELS = {
   EMAILS: 'Emails',
   ARCHIVED_REPORTS: 'Archived Reports',
   LOGS_SETTINGS: 'Logs',
+
+
   // @root DocumentAddForm in dashboard/documents
   SELECT_CUSTOMER: 'Select Customer',
   SELECT_SITE: 'Select Site',
@@ -198,6 +200,8 @@ export const BUTTONS = {
   ADDSUPPLIER: 'Add Supplier',
   ADDSTATUS: 'Add Status',
   ADDTECHPARAM: 'Add Technical Parameter',
+  // Ticket settings
+  ADDTICKET: 'Add New Ticket',
   // Service settings
   ADDSERVICESETTING: 'Add Service Setting',
   EDITSERVICESETTING: 'Edit Service Setting',

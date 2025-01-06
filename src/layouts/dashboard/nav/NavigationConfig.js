@@ -9,6 +9,7 @@ import {
   PATH_SERVICE_REPORTS,
   PATH_DOCUMENT, 
   PATH_SETTING, 
+  PATH_TICKET, 
   PATH_SITEMAP, 
   PATH_SECURITY, 
   PATH_MACHINE_DRAWING, 
@@ -66,7 +67,8 @@ function NavigationConfig() {
     machineLogs: <Iconify icon="lucide:list-end" />,
     map: <Iconify icon="mdi:map-marker" />,
     machineSettingReports: <Iconify icon="tdesign:task-setting-filled" />,
-  };
+    tickets: <Iconify icon="icon-park-solid:setting-web" />,
+  }; 
 
   const { 
     isDocumentAccessAllowed, 
@@ -104,10 +106,14 @@ function NavigationConfig() {
     }
 
     // Jira Report
-    updatedConfig[0].items.push({ title: 'Support Tickets', path: PATH_SUPPORT_TICKETS.root, icon: ICONS.supportTickets });
+    updatedConfig[0].items.push({ title: 'Jira Tickets', path: PATH_SUPPORT_TICKETS.root, icon: ICONS.supportTickets });
 
     if (isSettingAccessAllowed && navConfig.some((config) => config.title?.toLowerCase() !== 'settings')) {
       updatedConfig[0].items.push({ title: 'Settings', path: PATH_SETTING.root, icon: ICONS.setting });
+    }
+    
+    if (navConfig.some((config) => config.title?.toLowerCase() !== 'tickets')) {
+      updatedConfig[0].items.push({ title: 'Support Tickets', path: PATH_TICKET.root, icon: ICONS.tickets });
     }
 
     if (navConfig.some((config) => config.title?.toLowerCase() !== 'Calendar')) {
