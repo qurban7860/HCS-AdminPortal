@@ -41,6 +41,7 @@ const TABLE_HEAD = [
   { id: 'issueType', label: 'Issue Type', align: 'left' },
   { id: 'summary', label: 'Summary', align: 'left' },
   { id: 'priority', label: 'Priority', align: 'left' },
+  { id: 'status', label: 'Status', align: 'left' },
   { id: 'impact', label: 'Impact', align: 'left' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
@@ -69,6 +70,8 @@ export default function TicketFormList(){
   const dispatch = useDispatch();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
+  const [selectedIssueType, setSelectedIssueType] = useState(null);
+  const [ selectedStatus, setSelectedStatus ] = useState(null);
 
   useLayoutEffect(() => {
     dispatch(getTickets(page, rowsPerPage ));
@@ -87,6 +90,8 @@ export default function TicketFormList(){
     inputData: tableData,
     comparator: getComparator(order, orderBy),
     filterName,
+    selectedIssueType,
+    selectedStatus,
   });
 
   const isFiltered = filterName !== '';
@@ -115,16 +120,18 @@ export default function TicketFormList(){
 
 
   const handleViewRow = (id) => navigate(PATH_SUPPORT.supportTickets.view(id));
-
+  
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
     setFilterName('');
+    setSelectedIssueType(null);
+    setSelectedStatus(null);
   };
   
   return (
     <Container maxWidth={false} >
       <StyledCardContainer>
-        <Cover name=" Support Tickets" icon="ph:users-light" />
+        <Cover name="Support Tickets" icon="ph:users-light" />
       </StyledCardContainer>
         <TableCard>
           <TicketFormTableToolbar
@@ -132,6 +139,10 @@ export default function TicketFormList(){
             onFilterName={handleFilterName}
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
+            selectedStatus={selectedStatus}
+            setSelectedStatus={setSelectedStatus}
+            selectedIssueType={selectedIssueType}
+            setSelectedIssueType={setSelectedIssueType}
           />
 
           {!isNotFound && <TablePaginationCustom
@@ -158,7 +169,7 @@ export default function TicketFormList(){
                         <TicketFormTableRow
                           key={row._id}
                           row={row}
-                        //   onViewRow={() => handleViewRow(row._id)}
+                          onViewRow={() => handleViewRow(row._id)}
                           selected={selected.includes(row._id)}
                           selectedLength={selected.length}
                           style={index % 2 ? { background: 'red' } : { background: 'green' }}
@@ -186,7 +197,7 @@ export default function TicketFormList(){
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName }) {
+function applyFilter({ inputData, comparator, filterName, selectedIssueType, selectedStatus }) {
 
   const stabilizedThis = inputData?.map((el, index) => [el, index]);
 
@@ -205,6 +216,7 @@ function applyFilter({ inputData, comparator, filterName }) {
         ticket?.customer?.name,
         ticket?.summary,
         ticket?.priority,
+        ticket?.status,
         ticket?.impact,
         fDateTime(ticket?.createdAt),
       ];
@@ -212,6 +224,15 @@ function applyFilter({ inputData, comparator, filterName }) {
         field?.toLowerCase().includes(filterName.toLowerCase())
       );
     });
+  }
+  
+
+  if (selectedIssueType) {
+    inputData = inputData.filter((ticket) => ticket?.issueType === selectedIssueType?.value);
+  }
+
+  if (selectedStatus) {
+    inputData = inputData.filter((ticket) => ticket?.status === selectedStatus?.value);
   }
   
   return inputData;

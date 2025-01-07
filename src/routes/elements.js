@@ -446,3 +446,4 @@ export const Emailview = Loadable(lazy(() => import('../pages/settings/email/Ema
 
 export const TicketFormList = Loadable(lazy(() => import('../pages/tickets/TicketFormList')));
 export const TicketForm = Loadable(lazy(() => import('../pages/tickets/TicketForm')));
+export const TicketView = Loadable(lazy(() => import('../pages/tickets/TicketView')));

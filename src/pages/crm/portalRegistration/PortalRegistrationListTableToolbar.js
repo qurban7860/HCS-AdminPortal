@@ -41,6 +41,7 @@ export default function PortalRegistrationListTableToolbar({
                   onChangeStatus(null);
                 }
               }}
+              sx={{ width: 300 }}
               renderInput={(params) => <TextField {...params} size='small' label="Status" />}
             />  
         }

@@ -7,6 +7,7 @@ const reasonOptions = [
   'Other',
 ];
 const priorityOptions = ['High', 'Medium', 'Low'];
+const statusOptions = ['To Do', 'In Progress', 'Done', 'Cancelled'];
 const impactOptions = [
   'Extensive / Widespread',
   'Significant / Large',
@@ -21,6 +22,7 @@ export default {
   changeReasonOptions,
   impactOptions,
   priorityOptions,
+  statusOptions,
   reasonOptions,
   typeOptions,
   issueTypeOptions,

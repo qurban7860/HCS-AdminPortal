@@ -409,8 +409,8 @@ export const PATH_SUPPORT = {
   supportTickets: {
     root: path(ROOTS_SUPPORT, '/supportTickets'),
     new: path(ROOTS_SUPPORT, '/supportTickets/new'),
-    // view: (id) => path(ROOTS_SETTING, `/systemProblem/${id}/view`),
-    // edit: (id) => path(ROOTS_SETTING, `/systemProblem/${id}/edit`),
+    view: (id) => path(ROOTS_SUPPORT, `/supportTickets/${id}/view`),
+    edit: (id) => path(ROOTS_SUPPORT, `/supportTickets/${id}/edit`),
   },
   jiraTickets: {
     root: path(ROOTS_SUPPORT, '/jiraTickets')
