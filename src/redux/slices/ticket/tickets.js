@@ -5,7 +5,7 @@ import { CONFIG } from '../../../config-global';
 
 // ----------------------------------------------------------------------
 const initialState = {
-  ticket: {},
+  ticket: null,
   tickets: [],
   filterBy: '',
   page: 0,
@@ -56,6 +56,13 @@ const slice = createSlice({
       state.ticket = action.payload;
       state.responseMessage = 'Ticket created successfully';
     },
+    
+    deleteTicketSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.tickets = state.tickets.filter((ticket) => ticket._id !== action.payload);
+      state.responseMessage = 'Ticket deleted successfully.';
+    },
 
     // SET RESPONSE MESSAGE
     setResponseMessage(state, action) {
@@ -67,7 +74,7 @@ const slice = createSlice({
 
     // RESET Ticket
     resetTicket(state) {
-      state.ticket = {};
+      state.ticket = null;
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
@@ -126,6 +133,7 @@ export function postTicket(params) {
         changeType: params.changeType,
         impact: params.impact,
         priority: params.priority,
+        status: params.status,
         changeReason: params.changeReason,
         implementationPlan: params.implementationPlan,
         backoutPlan: params.backoutPlan,
@@ -136,6 +144,41 @@ export function postTicket(params) {
       }
       const response = await axios.post(`${CONFIG.SERVER_URL}tickets/`, data);
       dispatch(slice.actions.postTicketSuccess(response.data));
+      return response;
+    } catch (error) {
+      dispatch(slice.actions.hasError(error.message));
+      console.error(error);
+      throw error;
+    }
+  };
+}
+
+// PATCH Ticket
+export function patchTicket(id, params) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const data = {
+        customer: params?.customer?._id || null,
+        machine: params?.machine?._id || null,
+        issueType: params.issueType,
+        summary: params.summary,
+        description: params.description,
+        changeType: params.changeType,
+        impact: params.impact,
+        priority: params.priority,
+        status: params.status,
+        changeReason: params.changeReason,
+        implementationPlan: params.implementationPlan,
+        backoutPlan: params.backoutPlan,
+        testPlan: params.testPlan,
+        shareWith: params.shareWith,
+        rootCause: params.rootCause,
+        workaround: params.workaround,
+      };
+      const response = await axios.patch(`${CONFIG.SERVER_URL}tickets/${id}`, data);
+      dispatch(slice.actions.getTicketSuccess(response.data)); 
+      dispatch(slice.actions.setResponseMessage('Ticket updated successfully.'));
       return response;
     } catch (error) {
       dispatch(slice.actions.hasError(error.message));
@@ -171,9 +214,25 @@ export function getTicket(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}ticket/${id}`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}tickets/${id}`);
       dispatch(slice.actions.getTicketSuccess(response.data));
       return response;
+    } catch (error) {
+      dispatch(slice.actions.hasError(error.message));
+      console.error(error);
+      throw error;
+    }
+  };
+}
+
+// DELETE Ticket
+export function deleteTicket(id) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      await axios.delete(`${CONFIG.SERVER_URL}ticket/${id}`);
+      dispatch(slice.actions.deleteTicketSuccess(id));
+      dispatch(slice.actions.setResponseMessage('Ticket deleted successfully.'));
     } catch (error) {
       dispatch(slice.actions.hasError(error.message));
       console.error(error);

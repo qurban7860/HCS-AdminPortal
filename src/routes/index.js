@@ -321,8 +321,7 @@ import {
   // TICKETS
   TicketFormList,
   TicketForm,
-
-
+  TicketView,
 // REPORTS / SETTINGS
   Setting,
 
@@ -990,8 +989,8 @@ export default function Router() {
           children: [
             { element: <TicketFormList />, index: true },
             { path: 'new', element: <TicketForm /> },
-            // { path: ':id/edit', element: <TicketFormEdit />},
-            // { path: ':id/view', element: <TicketFormView />}
+            { path: ':id/edit', element: <TicketForm />},
+            { path: ':id/view', element: <TicketView />},
           ],
         },
         { path: 'jiraTickets', element: <JiraTickets /> },

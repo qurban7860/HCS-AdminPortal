@@ -1,9 +1,7 @@
-import * as Yup from 'yup';
-import PropTypes from 'prop-types';
 import { useCallback, useMemo, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // routes
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -15,21 +13,16 @@ import { StyledCardContainer } from '../../theme/styles/default-styles';
 import { PATH_SUPPORT } from '../../routes/paths';
 import { useSnackbar } from '../../components/snackbar';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
+import { AddTicketSchema } from '../schemas/ticketSchema';
 import options from './utils/constant';
 import FormProvider, { RHFTextField, RHFUpload, RHFAutocomplete, RHFDatePicker, RHFSwitch } from '../../components/hook-form';
-import { postTicket } from '../../redux/slices/ticket/tickets';
+import { postTicket, patchTicket, resetTicket } from '../../redux/slices/ticket/tickets';
 import { getActiveCustomerMachines, resetActiveCustomerMachines } from '../../redux/slices/products/machine';
 import { getActiveCustomers } from '../../redux/slices/customer/customer';
 import { time_list } from '../../constants/time-list';
 import RenderCustomInput from '../../components/custom-input/RenderCustomInput';
 import PriorityIcon from '../calendar/utils/PriorityIcon';
-
-TicketForm.propTypes = {
-  systemProblemPage: PropTypes.bool,
-  changeRequestPage: PropTypes.bool,
-  systemIncidentPage: PropTypes.bool,
-  serviceRequestPage: PropTypes.bool,
-};
+import { StatusColor } from '../calendar/utils/StatusColor';
 
 function getTimeObjectFromISOString(dateString) {
   const date = new Date(dateString);
@@ -43,68 +36,69 @@ function getTimeObjectFromISOString(dateString) {
   return timeObject;
 }
 
-export default function TicketForm({ systemProblemPage, changeRequestPage, systemIncidentPage, serviceRequestPage }) {
+export default function TicketForm() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { id } = useParams()
   const { enqueueSnackbar } = useSnackbar();
   const { activeCustomerMachines } = useSelector((state) => state.machine);
   const { activeCustomers } = useSelector((state) => state.customer);
+  const { ticket } = useSelector((state) => state.tickets); 
   const { 
     changeReasonOptions, 
     impactOptions, 
     priorityOptions, 
+    statusOptions,
     reasonOptions, 
     typeOptions, 
     issueTypeOptions 
   } = options;
-  
-  const AddSystemProblemSchema = Yup.object().shape({
-    customer: Yup.object().nullable().required('Customer is required'),
-    machine: Yup.object().nullable(),
-    summary: Yup.string().max(10000).required('Summary is required!'),
-    shareWith: Yup.boolean(),
-  });
 
   const defaultValues = useMemo(
     () => ({
-      customer: null,
-      machine: null,
-      issueType: null,
-      summary: '',
-      description: '',
-      priority: '',
-      impact: '',
-      files: [],
-      changeType: '',
-      changeReason: '',
-      implementationPlan: '',
-      backoutPlan: '',
-      testPlan: '',
-      rootCause: '',
-      workaround: '',
-      shareWith: true,
-      plannedStartDate: getTimeObjectFromISOString(new Date().toISOString()),
-      plannedEndDate: getTimeObjectFromISOString(new Date().toISOString()),
+      customer: ticket?.customer || null,
+      machine: ticket?.machine || null,
+      issueType: ticket?.issueType || '',
+      summary: ticket?.summary || '',
+      description: ticket?.description || '',
+      priority: ticket?.priority || '',
+      status: ticket?.status || '',
+      impact: ticket?.impact || '',
+      files: ticket?.files || [],
+      changeType: ticket?.changeType || '',
+      changeReason: ticket?.changeReason || '',
+      implementationPlan: ticket?.implementationPlan || '',
+      backoutPlan: ticket?.backoutPlan || '',
+      testPlan: ticket?.testPlan || '',
+      investigationReason: ticket?.investigationReason || '',
+      rootCause: ticket?.rootCause || '',
+      workaround: ticket?.workaround || '',
+      shareWith: ticket?.shareWith ?? true,
+      plannedStartDate: ticket?.plannedStartDate
+        ? getTimeObjectFromISOString(ticket.plannedStartDate)
+        : getTimeObjectFromISOString(new Date().toISOString()),
+      plannedEndDate: ticket?.plannedEndDate
+        ? getTimeObjectFromISOString(ticket.plannedEndDate)
+        : getTimeObjectFromISOString(new Date().toISOString()),
+      dateFrom: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+      dateTo: new Date(),
     }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [ ticket ] 
   );
 
   const methods = useForm({
-    resolver: yupResolver(AddSystemProblemSchema),
+    resolver: yupResolver(AddTicketSchema),
     defaultValues,
   });
 
-  const { reset, handleSubmit, watch, setValue, trigger, formState: { isSubmitting }} = methods;
+  const { reset, handleSubmit, watch, setValue, trigger, formState: { isSubmitting, errors }} = methods;
 
-  const { issueType, customer, files, date } = watch();
+  const { issueType, customer, files, dateFrom, dateTo } = watch();
   
   useEffect(() => {
     dispatch(getActiveCustomers());
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
+  
   useEffect(() => {
     if (customer) {
       dispatch(getActiveCustomerMachines(customer._id));
@@ -140,38 +134,35 @@ export default function TicketForm({ systemProblemPage, changeRequestPage, syste
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [files]
   );
-
-  useEffect(() => {
-    const { end_date } = watch();
-    if (date && end_date) {
-      const startDate = new Date(date);
-      const endDate = new Date(end_date);
-      if (startDate > endDate) {
-        setValue('end_date', startDate);
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [date]);
-
-
+  
   const onSubmit = async (data) => {
     try {
-      await dispatch(postTicket(data));
+      if (data.id) {
+        await dispatch(patchTicket(data.id, data));
+        enqueueSnackbar('Ticket Updated Successfully!');
+      } else {
+        await dispatch(postTicket(data));
+        enqueueSnackbar('Ticket Added Successfully!');
+      }
       reset();
+      dispatch(resetTicket())
       enqueueSnackbar('Ticket Add Successfully!');
       navigate(PATH_SUPPORT.supportTickets.root);
     } catch (error) {
-      enqueueSnackbar(error, { variant: `error` });
+      enqueueSnackbar(error, { variant: 'error' });
       console.error(error);
     }
   };
   
-  const toggleCancel = () => navigate(PATH_SUPPORT.supportTickets.root);
-
+  const toggleCancel = () => {
+    dispatch(resetTicket())
+    navigate(PATH_SUPPORT.supportTickets.root);
+  }
+  
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
-        <Cover name="New Support Ticket" tickets />
+      <Cover name='New Support Ticket' />
       </StyledCardContainer>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={3}>
@@ -275,7 +266,30 @@ export default function TicketForm({ systemProblemPage, changeRequestPage, syste
                       </li>
                     )}
                   />
-                   <RHFAutocomplete
+                  <RHFAutocomplete
+                    name="status"
+                    options={statusOptions}
+                    isOptionEqualToValue={(option, value) => option === value}
+                    renderInput={(params) => (
+                      <RenderCustomInput
+                       label="Status*"
+                       params={{ ...params, error: !!errors?.status, helperText: errors?.status?.message, 
+                        InputProps: {
+                        ...params.InputProps,
+                        style: { 
+                        ...params.InputProps.style, 
+                        color: StatusColor(params.InputProps.value) }},
+                        }}
+                      />
+                    )}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option} style={{ fontWeight: 'bold', color: StatusColor(option) }}>
+                        {option}
+                      </li>
+                    )}
+                    rules={{ required: 'Status is required' }}
+                  />
+                  <RHFAutocomplete
                     name="impact"
                     options={impactOptions}
                     isOptionEqualToValue={(option, value) => option === value}
@@ -351,7 +365,15 @@ export default function TicketForm({ systemProblemPage, changeRequestPage, syste
                   display="grid"
                   gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(4, 1fr)' }}
                 >
-                  <RHFDatePicker label="Planned start date" name="date" />
+                  <RHFDatePicker
+                    label="Planned start date"
+                    name="dateFrom"
+                    value={dateFrom}
+                    onChange={(newValue) => {
+                      setValue('dateFrom', newValue);
+                      trigger(['dateFrom', 'dateTo']);
+                    }}
+                  />
                   <RHFAutocomplete
                     label="Planned start time"
                     name="plannedStartDate"
@@ -362,7 +384,15 @@ export default function TicketForm({ systemProblemPage, changeRequestPage, syste
                       <li {...props} key={option?._id}>{`${option?.label || ''}`}</li>
                     )}
                   />
-                  <RHFDatePicker label="Planned end date" name="end_date" />
+                  <RHFDatePicker
+                    label="Planned end date"
+                    name="dateTo"
+                    value={dateTo}
+                    onChange={(newValue) => {
+                      setValue('dateTo', newValue);
+                      trigger(['dateFrom', 'dateTo']);
+                    }}
+                  />
                   <RHFAutocomplete
                     label="Planned end time"
                     name="plannedEndDate"
