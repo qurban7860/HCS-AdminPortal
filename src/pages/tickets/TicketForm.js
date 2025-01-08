@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // routes
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -16,13 +16,14 @@ import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import { AddTicketSchema } from '../schemas/ticketSchema';
 import options from './utils/constant';
 import FormProvider, { RHFTextField, RHFUpload, RHFAutocomplete, RHFDatePicker, RHFSwitch } from '../../components/hook-form';
-import { postTicket, patchTicket, resetTicket } from '../../redux/slices/ticket/tickets';
+import { getTicket, postTicket, patchTicket, resetTicket } from '../../redux/slices/ticket/tickets';
 import { getActiveCustomerMachines, resetActiveCustomerMachines } from '../../redux/slices/products/machine';
 import { getActiveCustomers } from '../../redux/slices/customer/customer';
 import { time_list } from '../../constants/time-list';
 import RenderCustomInput from '../../components/custom-input/RenderCustomInput';
 import PriorityIcon from '../calendar/utils/PriorityIcon';
 import { StatusColor } from '../calendar/utils/StatusColor';
+import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 
 function getTimeObjectFromISOString(dateString) {
   const date = new Date(dateString);
@@ -38,6 +39,7 @@ function getTimeObjectFromISOString(dateString) {
 
 export default function TicketForm() {
   const navigate = useNavigate();
+  const { id } = useParams();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const { activeCustomerMachines } = useSelector((state) => state.machine);
@@ -137,38 +139,45 @@ export default function TicketForm() {
   
   const onSubmit = async (data) => {
     try {
-      if (data.id) {
-        await dispatch(patchTicket(data.id, data));
+      if (id) { 
+        await dispatch(patchTicket(id, data)); 
+        dispatch(getTicket(id)); 
         enqueueSnackbar('Ticket Updated Successfully!');
+        navigate(PATH_SUPPORT.supportTickets.view(id));
       } else {
         await dispatch(postTicket(data));
         enqueueSnackbar('Ticket Added Successfully!');
+        navigate(PATH_SUPPORT.supportTickets.root);
       }
       reset();
-      dispatch(resetTicket())
-      enqueueSnackbar('Ticket Add Successfully!');
-      navigate(PATH_SUPPORT.supportTickets.root);
+      dispatch(resetTicket());
     } catch (error) {
-      enqueueSnackbar(error, { variant: 'error' });
+      enqueueSnackbar(error.message || 'An error occurred', { variant: 'error' });
       console.error(error);
     }
-  };
+  };  
   
   const toggleCancel = () => {
     dispatch(resetTicket())
     navigate(PATH_SUPPORT.supportTickets.root);
   }
-  
+
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
-      <Cover name='New Support Ticket' />
+      <Cover name={ticket?.customer?.name || 'New Support Ticket'} />
       </StyledCardContainer>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={3}>
             <Grid item xs={12} md={12}>
-              <Card sx={{ p: 3 }}>
-                <Stack spacing={3}>
+              <Card sx={{ p: 3, pt: 2 }}>
+                <ViewFormEditDeleteButtons
+                  backLink={() => { 
+                    dispatch(resetTicket()) 
+                    navigate(PATH_SUPPORT.supportTickets.root)}
+                  }
+                />
+                <Stack spacing={3} sx={{ mt: 1 }}>
                 <Box
                   rowGap={2}
                   columnGap={2}

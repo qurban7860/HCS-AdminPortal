@@ -5,9 +5,11 @@ import {
   Typography
 } from '@mui/material';
 // utils
-import { fDateTime } from '../../utils/formatTime';
+import { fDate } from '../../utils/formatTime';
 import { StyledTableRow } from '../../theme/styles/default-styles'
 import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
+import PriorityIcon from '../calendar/utils/PriorityIcon';
+import IssueTypeIcon from './utils/IssueTypeIcon';
 
 // ----------------------------------------------------------------------
 
@@ -26,13 +28,17 @@ export default function TicketFormTableRow({
   const { customer, machine, issueType, summary, priority, status, impact, createdAt } = row;
   return (
     <StyledTableRow hover selected={selected}>
+      <TableCell align="left" padding="checkbox">
+        <PriorityIcon priority={priority} />
+      </TableCell>
       <LinkTableCell align="left" onClick={onViewRow} param={customer?.name || ''} />
       <TableCell align='left' > { machine?.serialNo || ''} </TableCell> 
-      <TableCell align='left' > { issueType || ''} </TableCell> 
+      <TableCell align="left" padding="checkbox">
+        <IssueTypeIcon issueType={issueType} />
+      </TableCell>
       <Stack direction="row" alignItems="center">
         <TableCell align='left' > { summary || ''} </TableCell> 
       </Stack>
-      <TableCell align='left' > { priority || ''} </TableCell> 
       <TableCell align="left">
         <Typography variant='subtitle2' sx={{mr: 1,
           color: (
@@ -46,7 +52,7 @@ export default function TicketFormTableRow({
         </Typography>
       </TableCell>
       <TableCell align='left' > { impact || ''} </TableCell>
-      <TableCell align='right' > { fDateTime(createdAt) } </TableCell>
+      <TableCell align='right' > { fDate(createdAt) } </TableCell>
     </StyledTableRow>
   );
 }
