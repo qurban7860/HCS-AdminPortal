@@ -52,7 +52,7 @@ export default function ServiceReportTemplateAddForm() {
 
   useEffect(() => {
     if(id){
-      setCheckParams(serviceReportTemplate?.checkItemLists || [])
+      setCheckParams(serviceReportTemplate?.checkItemLists?.map( cil => ({ ...cil, isOpen: true })) || [])
     }
   }, [serviceReportTemplate, id]);
 
