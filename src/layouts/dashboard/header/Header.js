@@ -21,6 +21,7 @@ import NotificationsPopover from './NotificationsPopover';
 import { useWebSocketContext } from '../../../auth/WebSocketContext';
 import { MAIN_CATEGORIES, OTHER_MAIN_CATEGORIES } from '../navigationConstants';
 import { useAuthContext } from '../../../auth/useAuthContext';
+import { StyledTooltip } from '../../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
 
@@ -58,7 +59,41 @@ export default function Header({ onOpenNav, selectedCategory, setSelectedCategor
           <Iconify icon="eva:menu-2-fill" />
         </IconButton>
       )}
-      <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+      {isDesktop && (
+        <>
+          <Box sx={{ flexGrow: 1, display: 'flex' }}>
+            {MAIN_CATEGORIES.map((item) => (
+              <Button
+                key={item.id}
+                sx={{ my: 2, mx: 0.5, display: 'block' }}
+                variant={item.id === selectedCategory.id ? "contained" : "text"}
+                onClick={() => handleCategoryChange(item)}
+              >
+                {item.title}
+              </Button>
+            ))}
+          </Box>
+          <Stack flexGrow={0} direction="row" alignItems="center" spacing={{ xs: 0.5, sm: 1.5 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', borderLeft: `2px solid ${theme.palette.divider}`, borderRight: `2px solid ${theme.palette.divider}`, px: 1 }}>
+              {OTHER_MAIN_CATEGORIES.map((item) => 
+                item?.id === "settings" && !isSettingAccessAllowed ? null : (
+                <StyledTooltip title={item.title} tooltipcolor='#1976d2'>
+                  <Button 
+                    key={item.id} 
+                    onClick={() => handleCategoryChange(item)}
+                    variant={item.id === selectedCategory.id ? "contained" : "text"}
+                    sx={{ mx: 0.2 }}
+                  >
+                    <Iconify icon={item.icon} />
+                  </Button>
+                </StyledTooltip>
+                )
+              )}
+            </Box>
+          </Stack>
+        </>
+      )}
+      {/* <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
         {MAIN_CATEGORIES.map((item) => (
           <Button
             key={item.id}
@@ -74,19 +109,31 @@ export default function Header({ onOpenNav, selectedCategory, setSelectedCategor
         <Box sx={{ display: 'flex', alignItems: 'center', borderLeft: `2px solid ${theme.palette.divider}`, borderRight: `2px solid ${theme.palette.divider}`, px: 1 }}>
           {OTHER_MAIN_CATEGORIES.map((item) => 
             item?.id === "settings" && !isSettingAccessAllowed ? null : (
-            <Button 
-              key={item.id} 
-              onClick={() => handleCategoryChange(item)}
-              variant={item.id === selectedCategory.id ? "contained" : "text"}
-              sx={{ 
-                mx: 0.2,
-              }}
-            >
-              <Iconify icon={item.icon} />
-            </Button>
+            <StyledTooltip title={item.title} tooltipcolor='#1976d2'>
+              <Button 
+                key={item.id} 
+                onClick={() => handleCategoryChange(item)}
+                variant={item.id === selectedCategory.id ? "contained" : "text"}
+                sx={{ 
+                  mx: 0.2,
+                }}
+              >
+                <Iconify icon={item.icon} />
+              </Button>
+            </StyledTooltip>
             )
           )}
         </Box>
+        <NotificationsPopover />
+        <AccountPopover />
+      </Stack> */}
+      <Stack 
+        flexGrow={!isDesktop ? 1 : 0} 
+        direction="row" 
+        alignItems="center" 
+        spacing={{ xs: 0.5, sm: 1.5 }}
+        justifyContent={!isDesktop ? 'flex-end' : 'flex-start'}
+      >
         <NotificationsPopover />
         <AccountPopover />
       </Stack>

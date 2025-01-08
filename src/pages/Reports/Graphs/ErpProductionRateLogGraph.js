@@ -21,7 +21,7 @@ const ErpProductionRateLogGraph = ({timePeriod, customer}) => {
     if (machineLogsGraphData) {
       const convertedData = machineLogsGraphData.map(item => ({
         ...item,
-        productionRate: (item.componentLength / 1000) / (item.time / 3600000) // Convert length to meters and time to hours
+        productionRate: (item.componentLength / 1000) / (item.time / 3600000)
       }));
       setGraphData(convertedData);
     }
@@ -123,7 +123,7 @@ const ErpProductionRateLogGraph = ({timePeriod, customer}) => {
   }
 
   return (
-    <Grid xs={12} sm={12} md={12} lg={10} xl={6} sx={{ mt: 3}}>
+    <Grid item xs={12} sm={12} md={12} lg={10} xl={6} sx={{ mt: 3}}>
       <Card sx={{ p: 4, boxShadow: 3 }}>
         <Typography variant="h6" color="primary" gutterBottom>
           Production Rate Over Time (For the {getDataRangeText()})

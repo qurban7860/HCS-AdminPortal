@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 // @mui
-import { Box, Stack, Drawer,Typography, Link, Grid } from '@mui/material'
+import { Box, Stack, Drawer,Typography, Link, Grid, MenuItem, Select, FormControl } from '@mui/material'
 // hooks
 // import { useSettingsContext } from '../../../components/settings';
 import useResponsive from '../../../hooks/useResponsive';
@@ -19,6 +19,7 @@ import NavAccount from './NavAccount';
 import NavToggleButton from './NavToggleButton';
 import { PATH_SETTING } from '../../../routes/paths';
 import { useAuthContext } from '../../../auth/useAuthContext';
+import { MAIN_CATEGORIES, OTHER_MAIN_CATEGORIES } from '../navigationConstants';
 
 // ----------------------------------------------------------------------
 
@@ -26,9 +27,10 @@ NavVertical.propTypes = {
   openNav: PropTypes.bool,
   onCloseNav: PropTypes.func,  
   selectedCategory: PropTypes.object,
+  setSelectedCategory: PropTypes.func,
 };
 
-export default function NavVertical({ openNav, onCloseNav, selectedCategory }) {
+export default function NavVertical({ openNav, onCloseNav, selectedCategory, setSelectedCategory }) {
 
   const {
     isDocumentAccessAllowed,
@@ -39,16 +41,17 @@ export default function NavVertical({ openNav, onCloseNav, selectedCategory }) {
     isDeveloper,
   } = useAuthContext();
   
-  const navConfig = NavigationConfig(
+  const navConfig = NavigationConfig({
     selectedCategory,
     isDocumentAccessAllowed,
     isDrawingAccessAllowed,
     isSettingAccessAllowed,
-    isSecurityUserAccessAllowed
-  );
+    isSecurityUserAccessAllowed,
+  });
 
   const { pathname } = useLocation();
   const isDesktop = useResponsive('up', 'lg');
+  const navigate = useNavigate();
   const [envColor, setEnvColor]= useState('#897A69');
   useEffect(() => {
     if (openNav) {
@@ -122,6 +125,37 @@ export default function NavVertical({ openNav, onCloseNav, selectedCategory }) {
 
         <NavAccount />
       </Stack>
+      {!isDesktop && (
+        <FormControl fullWidth sx={{ px: 2, mb: 5 }}>
+          <Select
+            value={selectedCategory.id}
+            onChange={(e) => {
+              const category = [...MAIN_CATEGORIES, ...OTHER_MAIN_CATEGORIES].find(
+                (cat) => cat.id === e.target.value
+              );
+              setSelectedCategory(category);
+              navigate(category.path)
+            }}
+            sx={{ 
+              backgroundColor: 'background.paper',
+              '& .MuiSelect-select': { py: 1 }
+            }}
+          >
+            {MAIN_CATEGORIES.map((category) => (
+              <MenuItem key={category.id} value={category.id}>
+                {category.title}
+              </MenuItem>
+            ))}
+            {OTHER_MAIN_CATEGORIES.map((category) => (
+              category?.id === "settings" && !isSettingAccessAllowed ? null : (
+                <MenuItem key={category.id} value={category.id}>
+                  {category.title}
+                </MenuItem>
+              )
+            ))}
+          </Select>
+        </FormControl>
+      )}
       <NavSectionVertical sx={{ mt: '-50px' }} data={navConfig} />
       <Box sx={{ flexGrow: 1 }} />
       <NavDocs />

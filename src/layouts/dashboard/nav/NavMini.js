@@ -33,13 +33,13 @@ export default function NavMini({selectedCategory}) {
     isDeveloper,
   } = useAuthContext();
 
-  const navConfig = NavigationConfig(
+  const navConfig = NavigationConfig({
     selectedCategory,
     isDocumentAccessAllowed,
     isDrawingAccessAllowed,
     isSettingAccessAllowed,
-    isSecurityUserAccessAllowed
-  );
+    isSecurityUserAccessAllowed,
+  });
 
   useEffect(() => {
     if (CONFIG.ENV.toLocaleLowerCase() === 'dev' || CONFIG.ENV.toLocaleLowerCase === 'development' ) {

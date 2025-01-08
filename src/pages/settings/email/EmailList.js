@@ -1,10 +1,10 @@
 import debounce from 'lodash/debounce';
 import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 // @mui
-import { Container, Card, Table, Checkbox, TableBody, TableContainer, TableRow, TableCell, TableHead, TableSortLabel } from '@mui/material';
+import { Container, Table, TableBody, TableContainer } from '@mui/material';
 // routes
 import { useNavigate, useParams } from 'react-router-dom';
-import { PATH_SETTING } from '../../../routes/paths';
+import { ROOTS_REPORTS } from '../../../routes/paths';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // components
@@ -67,7 +67,6 @@ export default function EmailList(){
   const dispatch = useDispatch();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
-  const [ isCreatedAt, setIsCreatedAt ] = useState(false);
 
   useLayoutEffect(() => {
         dispatch(getEmails(page, rowsPerPage ));
@@ -113,7 +112,7 @@ export default function EmailList(){
   },[])
 
 
-  const handleViewRow = (id) => navigate(PATH_SETTING.email.view(id));
+  const handleViewRow = (id) => navigate(ROOTS_REPORTS.email.view(id));
 
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))

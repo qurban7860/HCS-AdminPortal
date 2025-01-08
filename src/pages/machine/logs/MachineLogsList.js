@@ -7,17 +7,16 @@ import { LoadingButton } from '@mui/lab';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 // routes
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // components
 import {
   getMachineLogRecords,
-  ChangePage,
-  getMachineLogGraphData,
+  ChangePage
 } from '../../../redux/slices/products/machineErpLogs';
 import MachineTabContainer from '../util/MachineTabContainer';
-import { machineLogGraphTypes, machineLogTypeFormats } from '../../../constants/machineLogTypeFormats';
+import { machineLogTypeFormats } from '../../../constants/machineLogTypeFormats';
 import { RHFAutocomplete, RHFDatePicker, RHFSelect } from '../../../components/hook-form';
 import RHFFilteredSearchBar from '../../../components/hook-form/RHFFilteredSearchBar';
 import { fetchIndMachineLogSchema } from '../../schemas/machine';
@@ -26,9 +25,6 @@ import Iconify from '../../../components/iconify';
 import { StyledTooltip } from '../../../theme/styles/default-styles';
 import { PATH_MACHINE } from '../../../routes/paths';
 import MachineLogsDataTable from './MachineLogsDataTable';
-import ErpProducedLengthLogGraph from '../../machineLogs/graph/ErpProducedLengthLogGraph';
-import ErpProductionRateLogGraph from '../../machineLogs/graph/ErpProductionRateLogGraph';
-import IconTooltip from '../../../components/Icons/IconTooltip';
 
 // ----------------------------------------------------------------------
 

@@ -114,7 +114,7 @@ const ErpProducedLengthLogGraph = ({timePeriod, customer, graphLabels}) => {
   }
 
   return (
-    <Grid xs={12} sm={12} md={12} lg={10} xl={6} sx={{ mt: 3}}>
+    <Grid item xs={12} sm={12} md={12} lg={10} xl={6} sx={{ mt: 3}}>
       <Card sx={{ p: 4, boxShadow: 3 }}>
         <Typography variant="h6" color="primary" gutterBottom>
           Produced Length & Waste Over Time (For the {getDataRangeText()})

@@ -312,6 +312,8 @@ export const TITLES = {
     tooltip: 'Only available at large resolutions > 1600px (xl)',
   },
   PRESETS: 'Presets',
+  REPORTS_TITLE: 'Reports',
+  REPORTS_DESC: 'Access comprehensive reports and analytics to monitor your machine performance, track maintenance history, and analyze operational data. Our reporting system provides detailed insights across various categories to help you make informed decisions.',
 };
 
 export const TOGGLE = {
