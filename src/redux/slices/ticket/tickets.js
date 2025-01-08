@@ -57,6 +57,13 @@ const slice = createSlice({
       state.responseMessage = 'Ticket created successfully';
     },
     
+    patchTicketSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.ticket = action.payload;
+      state.responseMessage = 'Ticket updated successfully.';
+    },
+
     deleteTicketSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
@@ -177,8 +184,7 @@ export function patchTicket(id, params) {
         workaround: params.workaround,
       };
       const response = await axios.patch(`${CONFIG.SERVER_URL}tickets/${id}`, data);
-      dispatch(slice.actions.getTicketSuccess(response.data)); 
-      dispatch(slice.actions.setResponseMessage('Ticket updated successfully.'));
+      dispatch(slice.actions.patchTicketSuccess(response.data)); 
       return response;
     } catch (error) {
       dispatch(slice.actions.hasError(error.message));

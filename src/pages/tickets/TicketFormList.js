@@ -27,7 +27,7 @@ import {
   getTickets,
   resetTickets,
 } from '../../redux/slices/ticket/tickets';
-import { fDateTime } from '../../utils/formatTime';
+import { fDate } from '../../utils/formatTime';
 import TableCard from '../../components/ListTableTools/TableCard';
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
@@ -36,13 +36,13 @@ import { StyledCardContainer } from '../../theme/styles/default-styles';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'customer', label: 'Customer', align: 'left' },
-  { id: 'machine', label: 'Machine', align: 'left' },
-  { id: 'issueType', label: 'Issue Type', align: 'left' },
+  { id: 'key', label: 'Ticket No.', align: 'left' },
+  { id: 'machine', label: 'Serial No', align: 'left' },
   { id: 'summary', label: 'Summary', align: 'left' },
-  { id: 'priority', label: 'Priority', align: 'left' },
+  { id: 'customer', label: 'Customer', align: 'left' },
+  { id: 'issueType', label: 'IssueType', align: 'left' },
   { id: 'status', label: 'Status', align: 'left' },
-  { id: 'impact', label: 'Impact', align: 'left' },
+  { id: 'priority', label: 'Priority', align: 'left' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
 
@@ -212,13 +212,13 @@ function applyFilter({ inputData, comparator, filterName, selectedIssueType, sel
   if (filterName) {
     inputData = inputData.filter((ticket) => {
       const fieldsToFilter = [
+        ticket?.key,
         ticket?.machine?.serialNo,
         ticket?.customer?.name,
         ticket?.summary,
         ticket?.priority,
         ticket?.status,
-        ticket?.impact,
-        fDateTime(ticket?.createdAt),
+        fDate(ticket?.createdAt),
       ];
       return fieldsToFilter.some((field) =>
         field?.toLowerCase().includes(filterName.toLowerCase())
