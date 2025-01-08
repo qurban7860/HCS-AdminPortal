@@ -9,10 +9,10 @@ const reasonOptions = [
 const priorityOptions = ['High', 'Medium', 'Low'];
 const statusOptions = ['To Do', 'In Progress', 'Done', 'Cancelled'];
 const impactOptions = [
-  'Extensive / Widespread',
-  'Significant / Large',
-  'Moderate / Limited',
-  'Minor / Localized',
+  'Extensive',
+  'Significant',
+  'Moderate',
+  'Minor',
 ];
 const changeReasonOptions = ['Repair', 'Upgrade', 'Maintenance', 'New functionality', 'Other'];
 const sharingOptions = ['Sharing with TerminusTech', 'No one'];
