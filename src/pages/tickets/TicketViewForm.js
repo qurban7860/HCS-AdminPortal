@@ -41,6 +41,7 @@ export default function TicketViewForm() {
 
   const defaultValues = useMemo(
     () => ({
+      key: ticket?.key || '',
       customer: ticket?.customer?.name || '',
       machine: ticket?.machine?.serialNo || '',
       issueType: ticket?.issueType || '',
@@ -77,10 +78,11 @@ export default function TicketViewForm() {
           onDelete={onDelete}
         />
         <Grid container spacing={2} sx={{ mt: 2 }}>
-          <ViewFormField isLoading={isLoading} sm={6} heading="Customer" param={defaultValues.customer} />
-          <ViewFormField isLoading={isLoading} sm={6} heading="Machine" param={defaultValues.machine} />
+          <ViewFormField isLoading={isLoading} sm={4} heading="Ticket No." param={defaultValues.key} />
+          <ViewFormField isLoading={isLoading} sm={4} heading="Customer" param={defaultValues.customer} />
+          <ViewFormField isLoading={isLoading} sm={4} heading="Machine" param={defaultValues.machine} />
           <ViewFormField
-            isLoading={isLoading} sm={6} heading="Issue Type"
+            isLoading={isLoading} sm={4} heading="Issue Type"
             param={
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <IssueTypeIcon issueType={defaultValues.issueType} />
@@ -92,7 +94,7 @@ export default function TicketViewForm() {
           <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues.description} />
           <ViewFormField isLoading={isLoading} sm={12} heading="Files" param={defaultValues.files} />
           <ViewFormField
-            isLoading={isLoading} sm={6} heading="Priority"
+            isLoading={isLoading} sm={4} heading="Priority"
             param={
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <PriorityIcon priority={defaultValues.priority} />
@@ -100,12 +102,12 @@ export default function TicketViewForm() {
               </Box>
             }
           />
-          <ViewFormField isLoading={isLoading} sm={6} heading="Status" param={defaultValues.status} />
-          <ViewFormField isLoading={isLoading} sm={6} heading="Impact" param={defaultValues.impact} />
+          <ViewFormField isLoading={isLoading} sm={4} heading="Status" param={defaultValues.status} />
+          <ViewFormField isLoading={isLoading} sm={4} heading="Impact" param={defaultValues.impact} />
           {ticket?.issueType === 'Change Request' && (
             <>
-              <ViewFormField isLoading={isLoading} sm={6} heading="Change Type" param={defaultValues.changeType} />
-              <ViewFormField isLoading={isLoading} sm={6} heading="Change Reason" param={defaultValues.changeReason} />
+              <ViewFormField isLoading={isLoading} sm={4} heading="Change Type" param={defaultValues.changeType} />
+              <ViewFormField isLoading={isLoading} sm={4} heading="Change Reason" param={defaultValues.changeReason} />
               <ViewFormField isLoading={isLoading} sm={12} heading="Implementation Plan" param={defaultValues.implementationPlan} />
               <ViewFormField isLoading={isLoading} sm={12} heading="Backout Plan" param={defaultValues.backoutPlan} />
               <ViewFormField isLoading={isLoading} sm={12} heading="Test Plan" param={defaultValues.testPlan} />

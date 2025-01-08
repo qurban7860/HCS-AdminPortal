@@ -25,21 +25,19 @@ export default function TicketFormTableRow({
   onViewRow,
 }) {
 
-  const { customer, machine, issueType, summary, priority, status, impact, createdAt } = row;
+  const { key, customer, machine, issueType, summary, priority, status, createdAt } = row;
   return (
     <StyledTableRow hover selected={selected}>
-      <TableCell align="left" padding="checkbox">
-        <PriorityIcon priority={priority} />
-      </TableCell>
-      <LinkTableCell align="left" onClick={onViewRow} param={customer?.name || ''} />
-      <TableCell align='left' > { machine?.serialNo || ''} </TableCell> 
-      <TableCell align="left" padding="checkbox">
-        <IssueTypeIcon issueType={issueType} />
-      </TableCell>
+      <LinkTableCell align="left" onClick={() => onViewRow( key )} param={key || ''} />
+      <TableCell align='left' > { machine?.serialNo || ''} </TableCell>
       <Stack direction="row" alignItems="center">
         <TableCell align='left' > { summary || ''} </TableCell> 
       </Stack>
-      <TableCell align="left">
+      <LinkTableCell align="left" padding="checkbox" onClick={onViewRow} param={customer?.name || ''} /> 
+      <TableCell align="left" padding="checkbox">
+        <IssueTypeIcon issueType={issueType} />
+      </TableCell>
+      <TableCell align="left" padding="checkbox">
         <Typography variant='subtitle2' sx={{mr: 1,
           color: (
             status === 'To Do' && '#FBC02D' ||
@@ -51,7 +49,9 @@ export default function TicketFormTableRow({
         >{status || ""}
         </Typography>
       </TableCell>
-      <TableCell align='left' > { impact || ''} </TableCell>
+      <TableCell align="left" padding="checkbox">
+        <PriorityIcon priority={priority} />
+      </TableCell>
       <TableCell align='right' > { fDate(createdAt) } </TableCell>
     </StyledTableRow>
   );
