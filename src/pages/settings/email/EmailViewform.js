@@ -6,7 +6,7 @@ import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEdi
 import { Cover } from '../../../components/Defaults/Cover';
 import { CONFIG } from '../../../config-global';
 import axios from '../../../utils/axios';
-import { PATH_SETTING } from '../../../routes/paths';
+import { PATH_REPORTS, PATH_SETTING } from '../../../routes/paths';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 
 export default function Emailviewform() {
@@ -41,7 +41,7 @@ export default function Emailviewform() {
       <Card sx={{ p: 3 }}>
      
         <Grid container>
-          <ViewFormEditDeleteButtons backLink={()=> navigate(ROOTS_REPORTS.email.list)} />
+          <ViewFormEditDeleteButtons backLink={()=> navigate(PATH_REPORTS.email.list)} />
           <ViewFormField sm={6} heading="name" param={email?.customerName} />
           <ViewFormField sm={6} heading="subject" param={email?.subject} />
           <ViewFormField sm={12} heading="body" param={email?.body} />
