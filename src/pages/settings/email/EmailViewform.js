@@ -41,7 +41,7 @@ export default function Emailviewform() {
       <Card sx={{ p: 3 }}>
      
         <Grid container>
-          <ViewFormEditDeleteButtons backLink={()=> navigate(PATH_SETTING.email.list)} />
+          <ViewFormEditDeleteButtons backLink={()=> navigate(ROOTS_REPORTS.email.list)} />
           <ViewFormField sm={6} heading="name" param={email?.customerName} />
           <ViewFormField sm={6} heading="subject" param={email?.subject} />
           <ViewFormField sm={12} heading="body" param={email?.body} />

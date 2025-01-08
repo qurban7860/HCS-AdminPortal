@@ -48,94 +48,49 @@ import { allSideBarOptions, generalSideBarOptions } from '../navigationConstants
 //     machineSettingReports: <Iconify icon="tdesign:task-setting-filled" />,
 //   };
 
-//   const { 
-//     isDocumentAccessAllowed, 
-//     isDrawingAccessAllowed, 
-//     isSettingAccessAllowed, 
-//     isSecurityUserAccessAllowed, 
-//     isEmailAccessAllowed,
-//     isDeveloper,
-//   } = useAuthContext();
-    
-//   // const [navConfig, setConfig] = useState([
-//   //   {
-//   //     subheader: 'general',
-//   //     items: [
-//   //       { title: 'Dashboard', path: PATH_DASHBOARD.root,   },
-//   //       { title: 'Customers', path: PATH_CRM.customers.list, icon: ICONS.users },
-//   //       { title: 'Portal Registrations', path: PATH_PORTAL_REGISTRATION.root, icon: ICONS.register },
-//   //       { title: 'Machines', path: PATH_MACHINE.machines.root, icon: ICONS.machines },
-//   //       { title: 'Machine Setting Reports', path:  PATH_MACHINE_SETTING_REPORT.root, icon: ICONS.machineSettingReports },
-//   //       { title: 'Service Reports', path: PATH_SERVICE_REPORTS.root, icon: ICONS.serviceReports },
-//   //       { title: 'Support Tickets', path: PATH_SUPPORT_TICKETS.root, icon: ICONS.supportTickets },
-//   //       { title: 'Calendar', path: PATH_CALENDAR.root, icon: ICONS.calendar },
-//   //       { title: 'Machine Logs', path: PATH_MACHINE_LOGS.root, icon: ICONS.machineLogs },
-//   //       { title: 'Sites Map', path: PATH_SITEMAP.root, icon: ICONS.map },
-//   //     ],
-//   //   },
-//   // ]);
-//   const [navConfig, setConfig] = useState(allSideBarOptions[selectedCategory?.id || 'customers']);
-
-//   useEffect(() => {
-//     setConfig(allSideBarOptions[selectedCategory?.id]);
-//   }, [selectedCategory])
-
-
-//   // useEffect(() => {
-//   //   const updatedConfig = [...navConfig];
-
-//   //   if (isDocumentAccessAllowed && navConfig.some((config) => config.title?.toLowerCase() !== 'documents')) {
-//   //     updatedConfig[0].items.push({ title: 'Documents', path: PATH_DOCUMENT.root, icon: ICONS.document });
-//   //   }
-
-//   //   if (isDrawingAccessAllowed && navConfig.some((config) => config.title?.toLowerCase() !== 'machine drawings')) {
-//   //     updatedConfig[0].items.push({ title: 'Machine Drawings', path: PATH_MACHINE_DRAWING.root, icon: ICONS.drawing });
-//   //   }
-
-//   //   if (isSettingAccessAllowed && navConfig.some((config) => config.title?.toLowerCase() !== 'settings')) {
-//   //     updatedConfig[0].items.push({ title: 'Settings', path: PATH_SETTING.root, icon: ICONS.setting });
-//   //   }
-
-//   //   if (isSecurityUserAccessAllowed && navConfig.some((config) => config?.title?.toLowerCase() !== 'security')) {
-//   //     updatedConfig[0].items.push({ title: 'Security', path: PATH_SECURITY.root, icon: ICONS.security });
-//   //   }
-
-//   //   setConfig(updatedConfig);
-//   //   // eslint-disable-next-line react-hooks/exhaustive-deps
-//   // }, [ isDocumentAccessAllowed, isDrawingAccessAllowed, isSettingAccessAllowed, isSecurityUserAccessAllowed, isEmailAccessAllowed, isDeveloper ]);
-
-//   return navConfig;
-// };
-// export default NavigationConfig;
-
-const NavigationConfig = (
+const NavigationConfig = ({
   selectedCategory,
   isDocumentAccessAllowed,
   isDrawingAccessAllowed,
   isSettingAccessAllowed,
-  isSecurityUserAccessAllowed
-) => {
+  isSecurityUserAccessAllowed,
+  requireDashboard = true
+}) => {
   let navItems = allSideBarOptions[selectedCategory?.id] || allSideBarOptions.customers;
 
   if (!isDocumentAccessAllowed) {
-    navItems.items = navItems.items.filter((item) => !item.title.toLowerCase().includes("document"));
+    navItems = navItems.map((section) => ({
+      ...section,
+      items: section.items.filter((item) => !item.title.toLowerCase().includes('document')),
+    }));
   }
 
   if (!isDrawingAccessAllowed) {
-    navItems.items = navItems.items.filter((item) => !item.title.toLowerCase().includes("drawing"));
+    navItems = navItems.map((section) => ({
+      ...section,
+      items: section.items.filter((item) => !item.title.toLowerCase().includes('drawing')),
+    }));
   }
-  
+
   if (!isSecurityUserAccessAllowed) {
-    navItems.items = navItems.items.filter((item) => !item.title.toLowerCase().includes("user"));
+    navItems = navItems.map((section) => ({
+      ...section,
+      items: section.items.filter((item) => !item.title.toLowerCase().includes('user')),
+    }));
   }
 
   if (!isSettingAccessAllowed && selectedCategory?.id === 'settings') {
-    navItems.items = [];
+    navItems = [];
   }
 
-  navItems = [generalSideBarOptions, navItems]
+  if (!isSettingAccessAllowed) {
+    navItems = navItems.filter((section) => section.subheader !== 'Config Reports');
+  }
+  
+  if (requireDashboard) {
+    navItems = [generalSideBarOptions, ...navItems];
+  }
 
   return navItems;
 };
-
 export default NavigationConfig;

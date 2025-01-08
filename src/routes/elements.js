@@ -227,18 +227,23 @@ export const MachineJiraList = Loadable(lazy(() => import('../pages/machine/jira
 
 export const MachineSetting = Loadable(lazy(() => import('../pages/machineSettings/Machine')));
 
+// ---------------------  REPORTS INTRODUCTION -------------------------------------------
+
+export const ReportsIntroduction = Loadable(lazy(() => import('../pages/Reports/ReportsIntroduction')));
+
 // ---------------------  MACHINE SETTING REPORT -------------------------------------------
 
 export const MachineSettingReportList = Loadable(lazy(() => import('../pages/machineSettingReports/MachineSettingReportList')));
 
 // ---------------------  MACHINE LOGS -------------------------------------------
 
-export const AllMachinesLogs = Loadable(lazy(() => import('../pages/machineLogs/AllMachinesLogs')));
+export const AllMachinesLogs = Loadable(lazy(() => import('../pages/Reports/AllMachineLogs')));
 // export const CoilLogs = Loadable(lazy(() => import('../pages/machineLogs/graph/CoilLogs')));
 // export const ErpLogs = Loadable(lazy(() => import('../pages/machineLogs/graph/ErpLogs')));
 // export const ProductionLogs = Loadable(lazy(() => import('../pages/machineLogs/graph/ProductionLogs')));
 
-
+// ---------------------  MACHINE Graphs -------------------------------------------
+export const AllMachinesGraphs = Loadable(lazy(() => import('../pages/Reports/AllMachineGraphs')));
 
 // --------------------- Categories & Models ----------------------
 
@@ -447,3 +452,7 @@ export const Emailview = Loadable(lazy(() => import('../pages/settings/email/Ema
 export const TicketFormList = Loadable(lazy(() => import('../pages/tickets/TicketFormList')));
 export const TicketForm = Loadable(lazy(() => import('../pages/tickets/TicketForm')));
 export const TicketView = Loadable(lazy(() => import('../pages/tickets/TicketView')));
+
+// --------------------------- Under Development -------------------------------------
+export const UnderDevelopment = Loadable(lazy(() => import('../pages/boundaries/UnderDevelopment')));
+export const SectionUnderConstruction = Loadable(lazy(() => import('../pages/boundaries/SectionUnderConstruction')));

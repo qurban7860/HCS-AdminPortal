@@ -6,15 +6,12 @@ import { useLocales } from '../../../locales';
 //
 import { StyledSubheader } from './styles';
 import NavList from './NavList';
-import NavItem from './NavItem';
-import Iconify from '../../iconify';
-import { PATH_CRM, PATH_DASHBOARD } from '../../../routes/paths';
 
 // ----------------------------------------------------------------------
 
 NavSectionVertical.propTypes = {
   sx: PropTypes.object,
-  data: PropTypes.object,
+  data: PropTypes.array,
 };
 
 export default function NavSectionVertical({ data, sx, ...other }) {
