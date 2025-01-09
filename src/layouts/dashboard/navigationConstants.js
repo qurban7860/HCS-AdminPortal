@@ -72,7 +72,7 @@ export const allSideBarOptions = {
         },
         {
           title: 'Sites Map',
-          path: PATH_MACHINE.sitesMap.root,
+          path: PATH_CRM.sitesMap.root,
           icon: <Iconify icon="mdi:map-marker" />,
         },
         {

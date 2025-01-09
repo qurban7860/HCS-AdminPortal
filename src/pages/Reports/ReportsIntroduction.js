@@ -4,7 +4,6 @@ import React from 'react';
 import { StyledContainer } from '../../theme/styles/default-styles';
 import { TITLES } from '../../constants/default-constants';
 import Iconify from '../../components/iconify';
-import { PATH_REPORTS } from '../../routes/paths';
 import NavigationConfig from '../../layouts/dashboard/nav/NavigationConfig';
 import { useAuthContext } from '../../auth/useAuthContext';
 
