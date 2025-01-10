@@ -165,6 +165,11 @@ export const allSideBarOptions = {
           icon: <Iconify icon="icomoon-free:ticket" />,
         },
         {
+          title: 'Support Ticket Settings',
+          path: PATH_SUPPORT.ticketSettings.root,
+          icon: <Iconify icon="mdi:settings" />,
+        },
+        {
           title: 'Jira Tickets',
           path: PATH_SUPPORT.jiraTickets.root,
           icon: <Iconify icon="mdi:jira" />,
