@@ -188,13 +188,13 @@ export const allSideBarOptions = {
       items: [
         {
           title: 'ERP Logs',
-          description: 'View and analyze machine operation logs from ERP system',
+          description: 'View and analyze machine operation logs from ERP system.',
           path: PATH_REPORTS.machineLogs.root,
           icon: <Iconify icon="fluent:document-database-24-filled" />,
         },
         {
           title: 'ERP Graphs',
-          description: 'Visualize machine performance data through graphs and charts',
+          description: 'Visualize machine performance data through graphs and charts.',
           path: PATH_REPORTS.machineGraphs.root,
           icon: <Iconify icon="mdi:chart-line" />,
         },
@@ -205,37 +205,37 @@ export const allSideBarOptions = {
       items: [
         {
           title: 'Emails',
-          description: 'View system email logs and communication history',
+          description: 'View system email logs and communication history.',
           path: PATH_REPORTS.email.list,
           icon: <Iconify icon="eva:email-fill" />,
         },
         {
           title: 'Sign-in Logs',
-          description: 'Track user authentication and login activities',
+          description: 'Track user authentication and login activities.',
           path: PATH_REPORTS.signInLogs.list,
           icon: <Iconify icon="mdi:login" />,
         },
         {
           title: 'System Logs',
-          description: 'Access various system-level logs and monitoring data',
+          description: 'Access various system-level logs and monitoring data.',
           path: PATH_REPORTS.logs.root,
           icon: <Iconify icon="mdi:text-box-multiple" />,
           children: [
             {
               title: 'PM2 Logs',
-              description: 'Monitor process manager logs and performance metrics',
+              description: 'Monitor process manager logs and performance metrics.',
               path: PATH_REPORTS.logs.pm2.root,
               icon: <Iconify icon="mdi:console" />,
             },
             {
               title: 'DB Backup Logs',
-              description: 'Track database backup operations and status',
+              description: 'Track database backup operations and status.',
               path: PATH_REPORTS.logs.dbBackup.root,
               icon: <Iconify icon="mdi:database" />,
             },
             {
               title: 'API logs',
-              description: 'Review API request and response logs',
+              description: 'Review API request and response logs.',
               path: PATH_REPORTS.logs.api.root,
               icon: <Iconify icon="mdi:api" />,
             },
