@@ -265,6 +265,9 @@ import {
   // CoilLogs,
   // ErpLogs,
   // ProductionLogs,
+
+  // --------------------------- MACHINE GRAPHS -------------------------------------
+  AllMachinesGraphs,
   
   // --------------------- Machine Settings --------------------------
 
@@ -372,6 +375,7 @@ import {
   // ----------------------------------------------------------------
 
   // REPORTS 
+  ReportsIntroduction,
 
   // REPORTS: User Blocked Customers
   BlockedCustomerAdd,
@@ -453,6 +457,8 @@ import {
   BlankPage,
   PermissionDeniedPage,
   JiraTickets,
+  UnderDevelopment,
+  SectionUnderConstruction,
 } from './elements';
 
 // ----------------------------------------------------------------------
@@ -650,6 +656,12 @@ export default function Router() {
           ],
         },
         {
+          path: 'sitesMap',
+          children: [
+            { element: <SitesReport />, index: true },
+          ]
+        },
+        {
           path: 'portalRegistrations',
           children: [
             { element: <PortalRegistrationList to={PATH_AFTER_LOGIN} replace />, index: true },
@@ -813,11 +825,35 @@ export default function Router() {
             },
           ]
         }, 
+        {
+          path: 'reports',
+          children: [
+            { element: <Navigate to="/products/reports/serviceReports" replace />, index: true },
+            {
+              path: 'serviceReports',
+              children: [
+                {
+                  element: <MachineServiceReportList reportsPage />,
+                  index: true,
+                },
+                { path: ':id/view', element: <MachineServiceReportView reportsPage /> },
+              ],
+            },
+            {
+              path: 'machineSettingsReport',
+              children: [
+                { element: <MachineSettingReportList />, index: true },
+                // { path: ':id/view', element: <MachineSettingReportView /> },
+              ],
+            }
+          ]
+        },
         
         // ------------------------------ DOCUMENNT ----------------------------------
         {
           path: 'documents',
           children: [
+            {element: <Navigate to="/products/documents/list" replace />, index: true },
             {path: 'list', element: <DocumentList />, index: true},
             {path: 'new', element: <DocumentAdd /> },
             {path: 'newList', element: <DocumentAddList /> },
@@ -1095,6 +1131,8 @@ export default function Router() {
         ],
       },
         { path: 'jiraTickets', element: <JiraTickets /> },
+        { path: 'knowledgeBase', element: <SectionUnderConstruction /> },
+        { path: 'manuals', element: <SectionUnderConstruction /> },
       ],
     },
 
@@ -1107,25 +1145,49 @@ export default function Router() {
         </AuthGuard>
       ),
       children: [
-        { element: <Navigate to="/reports/serviceReports" replace />, index: true },
-        {
-          path: 'serviceReports',
-          children: [
-            {
-              element: <MachineServiceReportList to={PATH_AFTER_LOGIN} replace reportsPage />,
-              index: true,
-            },
-            { path: ':id/view', element: <MachineServiceReportView reportsPage /> },
-          ],
-        },
-        {
-          path: 'machineSettingsReport',
-          children: [
-            { element: <MachineSettingReportList />, index: true },
-            // { path: ':id/view', element: <MachineSettingReportView /> },
-          ],
-        },
+        { element: <ReportsIntroduction />, index: true },
         { path: 'machineLogs', children: [{ element: <AllMachinesLogs />, index: true }] },
+        { path: 'machineGraphs', children: [{ element: <AllMachinesGraphs />, index: true }] },
+        { 
+          path: 'email',
+          children: [
+            { path: 'list', element: <Email /> },
+            { path: ':id/view', element: <Emailview/> }
+          ]
+        },
+        // ------------------------------ Sign In Logs ----------------------------------
+        {
+          path: 'signInLogs',
+          children: [
+            { path: 'list', element: <SignInLogList /> },
+          ],
+        },
+        {
+          path: 'logs',
+          children: [
+            { element: <Navigate to="/reports/logs/pm2" replace />, index: true },
+            {
+              path: 'pm2',
+              children: [
+                { element: <Pm2LogsList /> , index: true },
+                { path: ':id/view', element: <Pm2LogView /> },
+              ]
+            },
+            {
+              path: 'dbBackup',
+              children: [
+                { element: <DbBackupLogsList /> , index: true },
+                { path: ':id/view', element: <DbBackupLogsViewForm /> },
+              ]
+            },
+            {
+              path: 'api',
+              children: [
+                { element: <ApiLogsList /> , index: true },
+              ]
+            }
+          ],
+        },
       ],
     },
 
@@ -1204,13 +1266,6 @@ export default function Router() {
             { path: ':id/view', element: <RoleView />}
           ],
         },
-        // ------------------------------ Sign In Logs ----------------------------------
-        {
-          path: 'signInLogs',
-          children: [
-            { path: 'list', element: <SignInLogList /> },
-          ],
-        },
         // ------------------------------ regions ----------------------------------
         {
           path: 'regions',
@@ -1239,38 +1294,6 @@ export default function Router() {
             { path: 'new', element: <SystemConfigAdd /> },
             { path: ':id/view', element: <SystemConfigView /> },
             { path: ':id/edit', element: <SystemConfigEdit /> }
-          ],
-        },
-        { 
-          path: 'email',
-          children: [
-            { path: 'list', element: <Email /> },
-            { path: ':id/view', element: <Emailview/> }
-          ]
-        },
-        {
-          path: 'logs',
-          children: [
-            {
-              path: 'pm2',
-              children: [
-                { element: <Pm2LogsList /> , index: true },
-                { path: ':id/view', element: <Pm2LogView /> },
-              ]
-            },
-            {
-              path: 'dbBackup',
-              children: [
-                { element: <DbBackupLogsList /> , index: true },
-                { path: ':id/view', element: <DbBackupLogsViewForm /> },
-              ]
-            },
-            {
-              path: 'api',
-              children: [
-                { element: <ApiLogsList /> , index: true },
-              ]
-            }
           ],
         },
         // // ------------------------------ DB BACKUP LOGS  ----------------------------------

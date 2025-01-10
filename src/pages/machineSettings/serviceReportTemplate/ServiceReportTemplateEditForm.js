@@ -102,7 +102,9 @@ export default function ServiceReportTemplateEditForm() {
 
   /* eslint-enable */
   useEffect(() => {
-    setCheckParams(serviceReportTemplate?.checkItemLists || [])
+    if(Array.isArray( serviceReportTemplate?.checkItemLists ) && serviceReportTemplate?.checkItemLists?.length > 0 ){
+      setCheckParams( serviceReportTemplate?.checkItemLists?.map(cil => ({ ... cil, isOpen: true })) )
+    }
   }, [serviceReportTemplate]);
 
   useEffect(() => {

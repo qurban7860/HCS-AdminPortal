@@ -77,6 +77,23 @@ const CheckItemTable = ({ checkParams, setCheckParams, checkItemList, setCheckIt
   };
 
   const toggleEdit = (index) => {setCheckItemList(checkParams[index]?.checkItems); setCheckParamNumber(index); setValue('ListTitle',checkParams[index]?.ListTitle) };
+  
+  const setOpenIndex = (toggleIndex) => {
+    try {
+      const newArray = [...checkParams];
+      if (newArray[toggleIndex]){
+        newArray[toggleIndex] = {
+          ...newArray[toggleIndex],
+          isOpen: !checkParams[toggleIndex]?.isOpen,
+        };
+        setCheckParams(newArray);
+      }
+    } catch (err) {
+      enqueueSnackbar('Drop Down action failed!', { variant: 'error' });
+      console.error(err.message);
+    }
+  };
+  
 
   const deleteIndex = (indexToRemove) => {
     try {
@@ -117,7 +134,7 @@ const CheckItemTable = ({ checkParams, setCheckParams, checkItemList, setCheckIt
           if( !checkItemListError.trim() && !checkItemListTitleError.trim() ){
       try {
         const updatedCheckParam = [...checkParams]; 
-        const checkItemObject= { ListTitle, checkItems: checkItemList }
+        const checkItemObject= { ListTitle, checkItems: checkItemList, isOpen: true }
         if(prevCheckParamNumber > checkParams.length-1) {
           updatedCheckParam.splice(prevCheckParamNumber, 0, checkItemObject);
           setCheckParams(updatedCheckParam);
@@ -236,7 +253,7 @@ const CheckItemTable = ({ checkParams, setCheckParams, checkItemList, setCheckIt
                       <Table>
                         <TableBody>
                           {checkParams && checkParams.map((value, checkParamsIndex) =>( typeof value?.checkItems?.length === 'number' &&
-                          <CollapsibleCheckedItemRow key={uuidv4()} value={value} index={checkParamsIndex} toggleEdit={toggleEdit} deleteIndex={deleteIndex} handleListDragStart={handleListDragStart} handleListDrop={handleListDrop} />
+                          <CollapsibleCheckedItemRow key={uuidv4()} value={value} index={checkParamsIndex} setOpenIndex={setOpenIndex} toggleEdit={toggleEdit} deleteIndex={deleteIndex} handleListDragStart={handleListDragStart} handleListDrop={handleListDrop} />
                           ))}
                       </TableBody>
                       </Table>

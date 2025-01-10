@@ -227,18 +227,23 @@ export const MachineJiraList = Loadable(lazy(() => import('../pages/machine/jira
 
 export const MachineSetting = Loadable(lazy(() => import('../pages/machineSettings/Machine')));
 
+// ---------------------  REPORTS INTRODUCTION -------------------------------------------
+
+export const ReportsIntroduction = Loadable(lazy(() => import('../pages/Reports/ReportsIntroduction')));
+
 // ---------------------  MACHINE SETTING REPORT -------------------------------------------
 
 export const MachineSettingReportList = Loadable(lazy(() => import('../pages/machineSettingReports/MachineSettingReportList')));
 
 // ---------------------  MACHINE LOGS -------------------------------------------
 
-export const AllMachinesLogs = Loadable(lazy(() => import('../pages/machineLogs/AllMachinesLogs')));
+export const AllMachinesLogs = Loadable(lazy(() => import('../pages/Reports/AllMachineLogs')));
 // export const CoilLogs = Loadable(lazy(() => import('../pages/machineLogs/graph/CoilLogs')));
 // export const ErpLogs = Loadable(lazy(() => import('../pages/machineLogs/graph/ErpLogs')));
 // export const ProductionLogs = Loadable(lazy(() => import('../pages/machineLogs/graph/ProductionLogs')));
 
-
+// ---------------------  MACHINE Graphs -------------------------------------------
+export const AllMachinesGraphs = Loadable(lazy(() => import('../pages/Reports/AllMachineGraphs')));
 
 // --------------------- Categories & Models ----------------------
 
@@ -447,40 +452,7 @@ export const Emailview = Loadable(lazy(() => import('../pages/settings/email/Ema
 export const TicketFormList = Loadable(lazy(() => import('../pages/tickets/TicketFormList')));
 export const TicketForm = Loadable(lazy(() => import('../pages/tickets/TicketForm')));
 export const TicketView = Loadable(lazy(() => import('../pages/tickets/TicketView')));
-// Tickets / Ticket Settings
-export const TicketSetting = Loadable(lazy(() => import('../pages/tickets/ticketSettings/TicketSetting')));
-// Tickets / Ticket Settings / Collection
-// --------------------------- Issue Type -------------------------------------
-export const IssueTypeList = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/issueType/IssueTypeList')));
-export const IssueTypeForm = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/issueType/IssueTypeForm')));
-export const IssueTypeView = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/issueType/IssueTypeView')));
 
-// --------------------------- Priority -------------------------------------
-export const PriorityList = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/priority/PriorityList')));
-export const PriorityForm = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/priority/PriorityForm')));
-export const PriorityView = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/priority/PriorityView')));
-
-// --------------------------- Status -------------------------------------
-export const StatusList = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/status/StatusList')));
-export const StatusForm = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/status/StatusForm')));
-export const StatusView = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/status/StatusView')));
-
-// --------------------------- Impact -------------------------------------
-export const ImpactList = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/impact/ImpactList')));
-export const ImpactForm = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/impact/ImpactForm')));
-export const ImpactView = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/impact/ImpactView')));
-
-// --------------------------- Change Type -------------------------------------
-export const ChangeTypeList = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/changeType/ChangeTypeList')));
-export const ChangeTypeForm = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/changeType/ChangeTypeForm')));
-export const ChangeTypeView = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/changeType/ChangeTypeView')));
-
-// --------------------------- Change Reason -------------------------------------
-export const ChangeReasonList = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/changeReason/ChangeReasonList')));
-export const ChangeReasonForm = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/changeReason/ChangeReasonForm')));
-export const ChangeReasonView = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/changeReason/ChangeReasonView')));
-
-// --------------------------- Investigation Reason -------------------------------------
-export const InvestigationReasonList = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/investigationReason/InvestigationReasonList')));
-export const InvestigationReasonForm = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/investigationReason/InvestigationReasonForm')));
-export const InvestigationReasonView = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/investigationReason/InvestigationReasonView')));
+// --------------------------- Under Development -------------------------------------
+export const UnderDevelopment = Loadable(lazy(() => import('../pages/boundaries/UnderDevelopment')));
+export const SectionUnderConstruction = Loadable(lazy(() => import('../pages/boundaries/SectionUnderConstruction')));

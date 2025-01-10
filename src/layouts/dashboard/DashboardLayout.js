@@ -76,6 +76,7 @@ export default function DashboardLayout() {
             <NavVertical
               openNav={open}
               onCloseNav={handleClose}
+              setSelectedCategory={setSelectedCategory}
               selectedCategory={selectedCategory}
             />
           )}
@@ -101,7 +102,7 @@ export default function DashboardLayout() {
           minHeight: { lg: 1 },
         }}
       >
-        <NavVertical openNav={open} onCloseNav={handleClose} selectedCategory={selectedCategory} />
+        <NavVertical openNav={open} onCloseNav={handleClose} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />
         <Main>
           <Outlet />
         </Main>

@@ -24,7 +24,7 @@ export const StyledItem = styled(ListItemButton, {
   };
 
   const activeSubStyle = {
-    color: theme.palette.text.primary,
+    color: theme.palette.primary.main,
     backgroundColor: 'transparent',
   };
 

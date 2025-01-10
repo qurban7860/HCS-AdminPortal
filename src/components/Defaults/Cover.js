@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router';
-import { useSearchParams } from 'react-router-dom';
 import { Button, Grid, Typography, Box } from '@mui/material';
 import { StyledRoot, StyledInfo } from '../../theme/styles/default-styles';
 // utils
@@ -30,8 +29,8 @@ Cover.propTypes = {
   isArchivedMachines: PropTypes.bool,
   productionLogs: PropTypes.bool,
   coilLogs: PropTypes.bool,
-  erpLogGraphsToggle: PropTypes.bool,
-  supportTicketSettings: PropTypes.bool,
+  currentGraphsPage: PropTypes.bool,
+  currentLogsPage: PropTypes.bool,
 };
 
 export function Cover({
@@ -48,33 +47,24 @@ export function Cover({
   isArchivedMachines,
   productionLogs,
   coilLogs,
-  erpLogGraphsToggle,
-  supportTicketSettings,
+  currentGraphsPage,
+  currentLogsPage,
 }) {
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
   const handleSettingsNavigate = () => navigate(PATH_SETTING.root);
   const handleSupportTicketSettingsNavigate = () => navigate(PATH_SUPPORT.ticketSettings.root);
   const linkCustomerSites = () => navigate(PATH_CRM.sites);
   const linkCustomerContacts = () =>  navigate(PATH_CRM.contacts);
   const linkArchivedCustomers = () =>  navigate(PATH_CRM.customers.archived.root);
   const linkArchivedMachines = () =>  navigate(PATH_MACHINE.archived.root);
+  const linkAllMachineLogs = () =>  navigate(PATH_REPORTS.machineLogs.root);
+  const linkAllMachineGraphs = () =>  navigate(PATH_REPORTS.machineGraphs.root);
   const handleBackLink = () => window.history.back();
   const handleCoilLog = () => navigate(PATH_REPORTS.machineLogs.CoilLogs);
   const handleProductionLog = () => navigate(PATH_REPORTS.machineLogs.ProductionLogs);
   const { isAllAccessAllowed, isSettingReadOnly } = useAuthContext();
   const isMobile = useResponsive('down', 'sm');
   const [expandedButton, setExpandedButton] = useState(null);
-  const [currentLogPage, setCurrentLogPage] = useState("");
-
-  useEffect(() => {
-    setCurrentLogPage(searchParams.get('type'))
-  }, [searchParams])
-  
-  const handleErpLogToggle = () => {
-    // console.log(searchParams.get('page'));
-    setSearchParams({type: currentLogPage === 'erpGraph' ? 'currentLogs' : 'erpGraph' });
-  };
 
   const handleClick = (buttonId) => {
     setExpandedButton(prev => (prev === buttonId ? null : buttonId));
@@ -204,21 +194,40 @@ export function Cover({
                 Archived Machines
               </Button>
             )}
-            {erpLogGraphsToggle && (
+            {currentLogsPage && (
               <Button
                 size="small"
-                startIcon={<Iconify icon={currentLogPage === "erpGraph" ? "lucide:list-end" : "mdi:graph-bar"} sx={{ mr: 0.3 }} />}
+                startIcon={<Iconify icon="mdi:graph-bar" sx={{ mr: 0.3 }} />}
                 variant="outlined"
                 sx={{ mr: 1 }}
-                onClick={() => handleOnClick('erpLog', handleErpLogToggle)}
+                onClick={() => handleOnClick('erpGraph', linkAllMachineGraphs)}
               >
                 {' '}
-                {(!isMobile || expandedButton === 'erpLog') && (
+                {(!isMobile || expandedButton === 'Machine Logs') && (
                   <Typography
                     variant="caption"
                     sx={{ fontWeight: 'bold', fontSize: { xs: '0.65rem', sm: '0.75rem' } }}
                   >
-                  {currentLogPage === "erpGraph" ? "Machine Logs" : "Graphs"}
+                  ERP Graphs
+                  </Typography>
+                )}
+              </Button>
+            )}
+            {currentGraphsPage && (
+              <Button
+                size="small"
+                startIcon={<Iconify icon="lucide:list-end" sx={{ mr: 0.3 }} />}
+                variant="outlined"
+                sx={{ mr: 1 }}
+                onClick={() => handleOnClick('erpLog', linkAllMachineLogs)}
+              >
+                {' '}
+                {(!isMobile || expandedButton === 'Machine Logs') && (
+                  <Typography
+                    variant="caption"
+                    sx={{ fontWeight: 'bold', fontSize: { xs: '0.65rem', sm: '0.75rem' } }}
+                  >
+                  Machine Logs
                   </Typography>
                 )}
               </Button>

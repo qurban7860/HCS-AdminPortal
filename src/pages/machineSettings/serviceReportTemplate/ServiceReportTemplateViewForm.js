@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useLayoutEffect, useMemo } from 'react';
+import { useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
@@ -42,13 +42,22 @@ export default function ServiceReportTemplateViewForm({ currentServiceReportTemp
   const navigate = useNavigate();
   const { serviceReportTemplate, editFormVisibility, isLoading } = useSelector((state) => state.serviceReportTemplate);
   const { id } = useParams();
-  
+  const [ checkItemLists, setCheckItemLists ] = useState([])
   const dispatch = useDispatch();
+
+  
   useLayoutEffect(() => {
     if (id != null) {
       dispatch(getServiceReportTemplate(id));
     }
   }, [dispatch, id, editFormVisibility]);
+
+  useLayoutEffect(() => {
+    if(Array.isArray( serviceReportTemplate?.checkItemLists ) && serviceReportTemplate?.checkItemLists?.length > 0 ){
+      setCheckItemLists( serviceReportTemplate?.checkItemLists?.map(cil => ({ ... cil, isOpen: true })) )
+    }
+  }, [ serviceReportTemplate ]);
+
   const defaultValues = useMemo(
     () => ({
       reportType: serviceReportTemplate?.reportType || '',
@@ -58,7 +67,6 @@ export default function ServiceReportTemplateViewForm({ currentServiceReportTemp
       machineModel: serviceReportTemplate?.machineModel?.name || '',
       reportTitle: serviceReportTemplate?.reportTitle || '',
       textBeforeCheckItems: serviceReportTemplate?.textBeforeCheckItems || '',
-      checkItemLists: serviceReportTemplate?.checkItemLists ,
       textAfterCheckItems: serviceReportTemplate?.textAfterCheckItems || '',
       isOperatorSignatureRequired: serviceReportTemplate?.isOperatorSignatureRequired,
       enableNote: serviceReportTemplate?.enableNote,
@@ -80,6 +88,22 @@ export default function ServiceReportTemplateViewForm({ currentServiceReportTemp
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentServiceReportTemplate, serviceReportTemplate]
   );
+
+  const setOpenIndex = (toggleIndex) => {
+    try {
+      const newArray = [...checkItemLists];
+      if (newArray[toggleIndex]){
+        newArray[toggleIndex] = {
+          ...newArray[toggleIndex],
+          isOpen: !checkItemLists[toggleIndex]?.isOpen,
+        };
+        setCheckItemLists(newArray);
+      }
+    } catch (err) {
+      enqueueSnackbar('Drop Down action failed!', { variant: 'error' });
+      console.error(err.message);
+    }
+  };
 
   const onDelete = async () => {
     try {
@@ -161,12 +185,12 @@ export default function ServiceReportTemplateViewForm({ currentServiceReportTemp
           Check Items
         </Typography>
         {/* <Grid item md={12}>  */}
-        {!isLoading && defaultValues?.checkItemLists?.length > 0 ? (defaultValues?.checkItemLists.map((row, index) =>
+        {!isLoading && checkItemLists?.length > 0 ? (checkItemLists.map((row, index) =>
           ( typeof row?.checkItems?.length === 'number' && row?.checkItems?.length > 0 ? 
             <TableContainer >
                 <Table>
                     <TableBody>
-                        <CollapsibleCheckedItemRow key={uuidv4()} value={row} index={index} />
+                        <CollapsibleCheckedItemRow setOpenIndex={ setOpenIndex } key={uuidv4()} value={row} index={index} />
                     </TableBody>
                 </Table>
             </TableContainer>

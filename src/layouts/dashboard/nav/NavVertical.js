@@ -1,13 +1,13 @@
 import PropTypes from 'prop-types';
-import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useCallback, useEffect, useMemo } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 // @mui
-import { Box, Stack, Drawer,Typography, Link, Grid } from '@mui/material'
+import { Box, Stack, Drawer, MenuItem, Select, FormControl } from '@mui/material'
 // hooks
 // import { useSettingsContext } from '../../../components/settings';
 import useResponsive from '../../../hooks/useResponsive';
 // config
-import { CONFIG, NAV  } from '../../../config-global';
+import { NAV  } from '../../../config-global';
 // components
 import Logo from '../../../components/logo';
 import Scrollbar from '../../../components/scrollbar';
@@ -17,8 +17,9 @@ import NavigationConfig from './NavigationConfig';
 import NavDocs from './NavDocs';
 import NavAccount from './NavAccount';
 import NavToggleButton from './NavToggleButton';
-import { PATH_SETTING } from '../../../routes/paths';
 import { useAuthContext } from '../../../auth/useAuthContext';
+import { MAIN_CATEGORIES, OTHER_MAIN_CATEGORIES } from '../navigationConstants';
+import VersionBadge from '../../../components/nav-section/VersionBadge';
 
 // ----------------------------------------------------------------------
 
@@ -26,9 +27,10 @@ NavVertical.propTypes = {
   openNav: PropTypes.bool,
   onCloseNav: PropTypes.func,  
   selectedCategory: PropTypes.object,
+  setSelectedCategory: PropTypes.func,
 };
 
-export default function NavVertical({ openNav, onCloseNav, selectedCategory }) {
+export default function NavVertical({ openNav, onCloseNav, selectedCategory, setSelectedCategory }) {
 
   const {
     isDocumentAccessAllowed,
@@ -39,17 +41,22 @@ export default function NavVertical({ openNav, onCloseNav, selectedCategory }) {
     isDeveloper,
   } = useAuthContext();
   
-  const navConfig = NavigationConfig(
+  const navConfig = useMemo(() => NavigationConfig({
+    selectedCategory,
+    isDocumentAccessAllowed,
+    isDrawingAccessAllowed,
+    isSettingAccessAllowed,
+    isSecurityUserAccessAllowed,
+  }), [
     selectedCategory,
     isDocumentAccessAllowed,
     isDrawingAccessAllowed,
     isSettingAccessAllowed,
     isSecurityUserAccessAllowed
-  );
+  ]);
 
   const { pathname } = useLocation();
   const isDesktop = useResponsive('up', 'lg');
-  const [envColor, setEnvColor]= useState('#897A69');
   useEffect(() => {
     if (openNav) {
       onCloseNav();
@@ -57,17 +64,8 @@ export default function NavVertical({ openNav, onCloseNav, selectedCategory }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
-  useEffect(() => {
-    if (CONFIG.ENV.toLocaleLowerCase() === 'dev' || CONFIG.ENV.toLocaleLowerCase === 'development' ) {
-      setEnvColor('green');
-    }else if(CONFIG.ENV.toLocaleLowerCase() === 'test' ) {
-      
-      setEnvColor('#4082ed');
-    }
-  }, []);
-
   
-  const renderContent = (
+  const renderContent = useMemo(() => (
     <Scrollbar
       sx={{
         height: 1,
@@ -87,46 +85,21 @@ export default function NavVertical({ openNav, onCloseNav, selectedCategory }) {
         }}
       >
         <Logo sx={{ width: '70%', margin: '0 auto' }} />
-        <Grid sx={{ margin: '0 auto', mb: 2, display: 'flex', alignItems: 'baseline' }}>
-          <Link
-            sx={{
-              margin: '0 auto',
-              mb: 2,
-              display: 'flex',
-              alignItems: 'baseline',
-              textDecoration: 'none',
-            }}
-            href={PATH_SETTING.releases.list}
-          >
-            {CONFIG.ENV.toLocaleLowerCase() !== 'live' && (
-              <Typography
-                sx={{
-                  background: envColor,
-                  borderRadius: '50px',
-                  fontSize: '10px',
-                  padding: '2px 5px',
-                  color: '#FFF',
-                }}
-              >
-                {`${CONFIG.ENV.toLocaleUpperCase()} ${CONFIG.Version}`}{' '}
-              </Typography>
-            )}
-            {CONFIG.ENV.toLocaleLowerCase() === 'live' && (
-              <Typography sx={{ color: '#897A69', fontSize: '10px' }}>
-                {' '}
-                {CONFIG.Version}{' '}
-              </Typography>
-            )}
-          </Link>
-        </Grid>
-
+        <VersionBadge />
         <NavAccount />
       </Stack>
+      {!isDesktop && (
+        <CategoryDropdown 
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
+          isSettingAccessAllowed={isSettingAccessAllowed}
+        />
+      )}
       <NavSectionVertical sx={{ mt: '-50px' }} data={navConfig} />
       <Box sx={{ flexGrow: 1 }} />
       <NavDocs />
     </Scrollbar>
-  );
+  ), [isDesktop, selectedCategory, setSelectedCategory, isSettingAccessAllowed, navConfig]);
   return (
     <Box component="nav" sx={{ flexShrink: { lg: 0 }, width: { lg: NAV.W_DASHBOARD }}}>
       <NavToggleButton sx={{top: 22}}/>
@@ -164,3 +137,53 @@ export default function NavVertical({ openNav, onCloseNav, selectedCategory }) {
     </Box>
   );
 }
+
+const CategoryDropdown = ({ selectedCategory, setSelectedCategory, isSettingAccessAllowed }) => {
+  const navigate = useNavigate();
+
+  const categoryMap = useMemo(() => 
+    [...MAIN_CATEGORIES, ...OTHER_MAIN_CATEGORIES].reduce((acc, cat) => {
+      acc[cat.id] = cat;
+      return acc;
+    }, {}), 
+  []);
+
+  const handleCategoryChange = useCallback((event) => {
+    const category = categoryMap[event.target.value];
+    setSelectedCategory(category);
+    navigate(category.path);
+  }, [categoryMap, setSelectedCategory, navigate]);
+
+  const renderMenuItem = (category) => {
+    if (category?.id === "settings" && !isSettingAccessAllowed) {
+      return null;
+    }
+    return (
+      <MenuItem key={category.id} value={category.id}>
+        {category.title}
+      </MenuItem>
+    );
+  };
+
+  return (
+    <FormControl fullWidth sx={{ px: 2, mb: 5 }}>
+      <Select
+        value={selectedCategory.id}
+        onChange={handleCategoryChange}
+        sx={{ 
+          backgroundColor: 'background.paper',
+          '& .MuiSelect-select': { py: 1 }
+        }}
+      >
+        {MAIN_CATEGORIES.map(renderMenuItem)}
+        {OTHER_MAIN_CATEGORIES.map(renderMenuItem)}
+      </Select>
+    </FormControl>
+  );
+};
+
+CategoryDropdown.propTypes = {
+  selectedCategory: PropTypes.object,
+  setSelectedCategory: PropTypes.func,
+  isSettingAccessAllowed: PropTypes.bool,
+};

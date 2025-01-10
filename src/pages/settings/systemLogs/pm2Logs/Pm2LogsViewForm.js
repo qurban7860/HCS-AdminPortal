@@ -4,9 +4,8 @@ import { Card, Grid, Container } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 // hooks
 import { useSelector, useDispatch } from 'react-redux';
-import { PATH_SETTING } from '../../../../routes/paths';
+import { PATH_REPORTS } from '../../../../routes/paths';
 import { Cover } from '../../../../components/Defaults/Cover';
-import { fDate } from '../../../../utils/formatTime';
 import { getPm2Log } from '../../../../redux/slices/logs/pm2Logs';
 import ViewFormField from '../../../../components/ViewForms/ViewFormField';
 import ViewFormEditDeleteButtons from '../../../../components/ViewForms/ViewFormEditDeleteButtons';
@@ -37,7 +36,7 @@ export default function Pm2LogsViewForm() {
       <Grid item md={12} mt={2}>
         <Card sx={{ p: 2 }}>
         <ViewFormEditDeleteButtons  
-          backLink={() => navigate(PATH_SETTING.logs.pm2.root)}
+          backLink={() => navigate(PATH_REPORTS.logs.pm2.root)}
           settingPage
         />
           <Grid container sx={{mt:2}}>

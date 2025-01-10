@@ -131,6 +131,9 @@ export const PATH_CRM = {
       view: (id) => path(ROOTS_CRM, `/archived-customers/${id}/view`),
     },
   },
+  sitesMap: {
+    root: path(ROOTS_CRM, '/sitesMap'),
+  },
   // ------------------------ DEPARTMENTS ----------------------------------------
   departments: {
     list: path(ROOTS_CRM, '/departments/list'),
@@ -273,6 +276,17 @@ export const PATH_MACHINE = {
       // new: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/logs/new`),
       // view: (machineId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/logs/${id}/view`),
     },   
+  },
+  reports: {
+    root: path(ROOTS_MACHINE, '/reports'),
+    serviceReports: {
+      root: path(ROOTS_MACHINE, '/reports/serviceReports'),
+      // view: ( id ) => path(ROOTS_MACHINE, `/serviceReports/${id}/view`),
+    },
+    machineSettingsReport: {
+      root: path(ROOTS_MACHINE, '/reports/machineSettingsReport'),
+      // view: ( id ) => path(ROOTS_MACHINE, `/machineSettingsReport/${id}/view`),
+    },
   },
   documents: {
     root: path(ROOTS_MACHINE, '/documents'),
@@ -461,22 +475,48 @@ export const PATH_SUPPORT = {
   jiraTickets: {
     root: path(ROOTS_SUPPORT, '/jiraTickets')
   },
+  knowledgeBase: {
+    root: path(ROOTS_SUPPORT, '/knowledgeBase'),
+  },
+  manuals: {
+    root: path(ROOTS_SUPPORT, '/manuals'),
+  },
 };
 
 // ----------------------- REPORTS -----------------------------------------
 export const PATH_REPORTS = {
+  root: ROOTS_REPORTS,
   permissionDenied: path(ROOTS_REPORTS, '/permission-denied'),
-  serviceReports: {
-    root: path(ROOTS_REPORTS, '/serviceReports'),
-    view: ( id ) => path(ROOTS_REPORTS, `/serviceReports/${id}/view`),
-  },
-  machineSettingsReport: {
-    root: path(ROOTS_REPORTS, '/machineSettingsReport'),
-    // view: ( id ) => path(ROOTS_REPORTS, `/machineSettingsReport/${id}/view`),
-  },
   machineLogs: {
     root: path(ROOTS_REPORTS, '/machineLogs'),
-  }
+  },
+  machineGraphs: {
+    root: path(ROOTS_REPORTS, '/machineGraphs'),
+  },
+  email : {
+    list:path(ROOTS_REPORTS, '/email/list'),
+    new: path(ROOTS_REPORTS, '/email/new'), 
+    view: (id) => path(ROOTS_REPORTS, `/email/${id}/view`),
+  },
+  // ------------------------ SIGN IN LOGS ----------------------------------------
+  signInLogs: {
+    list: path(ROOTS_REPORTS, '/signInLogs/list'),
+  },
+  logs: {
+    root: path(ROOTS_REPORTS, '/logs'),
+    pm2: {
+      root: path(ROOTS_REPORTS, '/logs/pm2/'),
+      view: (id) => path(ROOTS_REPORTS, `/logs/pm2/${id}/view`),
+    },
+    dbBackup: {
+      root: path(ROOTS_REPORTS, '/logs/dbBackup/'),
+      view: (id) => path(ROOTS_REPORTS, `/logs/dbBackup/${id}/view`),
+    },
+    api: {
+      root: path(ROOTS_REPORTS, '/logs/api/'),
+      view: (id) => path(ROOTS_REPORTS, `/logs/api/${id}/view`),
+    },
+  },
 };
 
 // --------------------- CALENDAR ----------------------
@@ -537,10 +577,6 @@ export const PATH_SETTING = {
     view: (id) => path(ROOTS_SETTING, `/role/${id}/view`),
     edit: (id) => path(ROOTS_SETTING, `/role/${id}/edit`),
   },
-  // ------------------------ SIG IN LOGS ----------------------------------------
-  signInLogs: {
-    list: path(ROOTS_SETTING, '/signInLogs/list'),
-  },
   // ------------------------ REGIONS ----------------------------------------
   regions: {
     list: path(ROOTS_SETTING, '/regions/list'),
@@ -561,26 +597,6 @@ export const PATH_SETTING = {
     new: path(ROOTS_SETTING, '/configs/new'),
     view: (id) => path(ROOTS_SETTING, `/configs/${id}/view`),
     edit: (id) => path(ROOTS_SETTING, `/configs/${id}/edit`)
-  },
-  email : {
-    list:path(ROOTS_SETTING, '/email/list'),
-    new: path(ROOTS_SETTING, '/email/new'), 
-    view: (id) => path(ROOTS_SETTING, `/email/${id}/view`),
-  },
-  logs: {
-    root: path(ROOTS_SETTING, '/logs'),
-    pm2: {
-      root: path(ROOTS_SETTING, '/logs/pm2/'),
-      view: (id) => path(ROOTS_SETTING, `/logs/pm2/${id}/view`),
-    },
-    dbBackup: {
-      root: path(ROOTS_SETTING, '/logs/dbBackup/'),
-      view: (id) => path(ROOTS_SETTING, `/logs/dbBackup/${id}/view`),
-    },
-    api: {
-      root: path(ROOTS_SETTING, '/logs/api/'),
-      view: (id) => path(ROOTS_SETTING, `/logs/api/${id}/view`),
-    },
   },
   // ------------------------ SECURITY USER INVITES ----------------------------------------
   invite: {
