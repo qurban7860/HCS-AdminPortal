@@ -1,4 +1,3 @@
-
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { useCallback, useMemo, useEffect } from 'react';
@@ -9,7 +8,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Container, Card, Grid, Stack } from '@mui/material';
+import { Box, Container, Card, Grid, Stack, InputAdornment } from '@mui/material';
 // components
 import { Cover } from '../../../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../../../theme/styles/default-styles';
@@ -18,6 +17,7 @@ import { useSnackbar } from '../../../../../components/snackbar';
 import AddFormButtons from '../../../../../components/DocumentForms/AddFormButtons';
 import FormProvider, { RHFTextField, RHFSwitch } from '../../../../../components/hook-form';
 import { postTicketIssueType, patchTicketIssueType, getTicketIssueType, resetTicketIssueType } from '../../../../../redux/slices/ticket/ticketSettings/ticketIssueTypes';
+import Iconify from '../../../../../components/iconify';
 
 export default function IssueTypeForm() {
   const navigate = useNavigate();
@@ -29,6 +29,8 @@ export default function IssueTypeForm() {
   const defaultValues = useMemo(
     () => ({
       name: ticketIssueType?.name || '',
+      icon: ticketIssueType?.icon || '',
+      slug: ticketIssueType?.slug || '',
       description: ticketIssueType?.description || '',
       displayOrderNo: ticketIssueType?.displayOrderNo || '',
       isDefault: ticketIssueType?.isDefault ?? false,
@@ -39,6 +41,7 @@ export default function IssueTypeForm() {
   
   const TicketCollectionSchema = Yup.object().shape({
     name: Yup.string().min(2).max(50).required('Name is required!'),
+    icon: Yup.string().min(2).max(50).required('Icon is required!'),
     description: Yup.string().max(5000),
     isActive: Yup.boolean(),
     isDefault: Yup.boolean(),
@@ -54,8 +57,18 @@ export default function IssueTypeForm() {
     defaultValues,
   });
 
-  const { reset, handleSubmit, formState: { isSubmitting }} = methods;
+  const { 
+    reset, 
+    handleSubmit, 
+    watch,
+     formState: { isSubmitting }
+    } = methods;
   
+    const { icon } = watch()
+
+    useEffect(() => {
+    }, [icon]);
+
   const onSubmit = async (data) => {
     try {
       if (id) { 
@@ -77,14 +90,14 @@ export default function IssueTypeForm() {
   };  
   
   const toggleCancel = async () => {
-    // dispatch(resetTicket())
+    dispatch(resetTicketIssueType())
     await navigate(PATH_SUPPORT.ticketSettings.issueTypes.root);
   };
 
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
-        <Cover name="New Issue Type" />
+        <Cover name={ticketIssueType?.name || 'New Issue Type'} />
       </StyledCardContainer>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={3}>
@@ -98,9 +111,20 @@ export default function IssueTypeForm() {
                   gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
                 >
                   <RHFTextField name="name" label="Name*"/>
+                  <RHFTextField 
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start" >
+                          <Iconify icon={icon} sx={{ width: 25, height: 25, }} />
+                        </InputAdornment>
+                      )
+                    }}
+                    name="icon" 
+                    label="Icon*"
+                  />
                   <RHFTextField name="slug" label="Slug" />
-                </Box>
                   <RHFTextField name="displayOrderNo" label="Display Order No." />
+                </Box>
                   <RHFTextField name="description" label="Description" minRows={3} multiline />
                   <Grid display="flex" alignItems="end">
                     <RHFSwitch name="isDefault" label="Default" />

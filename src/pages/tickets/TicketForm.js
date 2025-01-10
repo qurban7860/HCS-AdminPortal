@@ -63,7 +63,7 @@ export default function TicketForm() {
       summary: ticket?.summary || '',
       description: ticket?.description || '',
       priority: ticket?.priority || '',
-      status: ticket?.status || '',
+      status: ticket?.status || 'To Do',
       impact: ticket?.impact || '',
       files: ticket?.files || [],
       changeType: ticket?.changeType || '',
@@ -281,7 +281,7 @@ export default function TicketForm() {
                     isOptionEqualToValue={(option, value) => option === value}
                     renderInput={(params) => (
                       <RenderCustomInput
-                       label="Status*"
+                       label="Status"
                        params={{ ...params, error: !!errors?.status, helperText: errors?.status?.message, 
                         InputProps: {
                         ...params.InputProps,

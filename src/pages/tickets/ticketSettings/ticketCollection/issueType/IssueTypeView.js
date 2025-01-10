@@ -23,13 +23,11 @@ export default function IssueTypeView() {
   },[dispatch, id ])
 
   return (
-    <>
     <Container maxWidth={false}>
     <StyledCardContainer>
       <Cover name={ticketIssueType?.name} />
     </StyledCardContainer>
-    </Container>
     <IssueTypeViewForm />
-    </>
+    </Container>
   );
 }
