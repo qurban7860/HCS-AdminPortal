@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router';
 import { Button, Grid, Typography, Box } from '@mui/material';
 import { StyledRoot, StyledInfo } from '../../theme/styles/default-styles';
 // utils
-import { PATH_CRM, PATH_MACHINE, PATH_REPORTS, PATH_SETTING } from '../../routes/paths';
+import { PATH_CRM, PATH_MACHINE, PATH_REPORTS, PATH_SETTING, PATH_SUPPORT} from '../../routes/paths';
 // auth
 import CoverSettingsIcons from './CoverSettingsIcons';
 import CoverTitles from './CoverTitles';
@@ -31,6 +31,7 @@ Cover.propTypes = {
   coilLogs: PropTypes.bool,
   currentGraphsPage: PropTypes.bool,
   currentLogsPage: PropTypes.bool,
+  supportTicketSettings: PropTypes.bool,
 };
 
 export function Cover({
@@ -49,9 +50,11 @@ export function Cover({
   coilLogs,
   currentGraphsPage,
   currentLogsPage,
+  supportTicketSettings,
 }) {
   const navigate = useNavigate();
   const handleSettingsNavigate = () => navigate(PATH_SETTING.root);
+  const handleSupportTicketSettingsNavigate = () => navigate(PATH_SUPPORT.ticketSettings.root);
   const linkCustomerSites = () => navigate(PATH_CRM.sites);
   const linkCustomerContacts = () =>  navigate(PATH_CRM.contacts);
   const linkArchivedCustomers = () =>  navigate(PATH_CRM.customers.archived.root);
@@ -90,6 +93,8 @@ export function Cover({
           setting={!isArchived && setting}
           handleSettingsNavigate={handleSettingsNavigate}
           generalSettings={generalSettings && !isArchived}
+          supportTicketSettings={supportTicketSettings}
+          handleSupportTicketSettingsNavigate={handleSupportTicketSettingsNavigate}
         />
       </StyledInfo>
       <Grid

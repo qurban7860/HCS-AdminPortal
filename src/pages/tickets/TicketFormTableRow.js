@@ -25,10 +25,10 @@ export default function TicketFormTableRow({
   onViewRow,
 }) {
 
-  const { key, customer, machine, issueType, summary, priority, status, createdAt } = row;
+  const { ticketNo, customer, machine, issueType, summary, priority, status, createdAt } = row;
   return (
     <StyledTableRow hover selected={selected}>
-      <LinkTableCell align="left" onClick={() => onViewRow( key )} param={key || ''} />
+      <LinkTableCell align="left" onClick={() => onViewRow( ticketNo )} param={ticketNo || ''} />
       <TableCell align='left' > { machine?.serialNo || ''} </TableCell>
       <Stack direction="row" alignItems="center">
         <TableCell align='left' > { summary || ''} </TableCell> 

@@ -325,6 +325,38 @@ import {
   TicketFormList,
   TicketForm,
   TicketView,
+  // Tickets / Ticket Settings
+  TicketSetting,
+  // Tickets / Ticket Settings / Collection
+  // --------------------------- Issue Type --------------------------
+  IssueTypeList,
+  IssueTypeForm,
+  IssueTypeView,
+  // --------------------------- Priority --------------------------
+  PriorityList,
+  PriorityForm,
+  PriorityView,
+  // --------------------------- Status --------------------------
+  StatusList,
+  StatusForm,
+  StatusView,
+  // --------------------------- Impact --------------------------
+  ImpactList,
+  ImpactForm,
+  ImpactView,
+  // --------------------------- Change Type --------------------------
+  ChangeTypeList,
+  ChangeTypeForm,
+  ChangeTypeView,
+  // --------------------------- Change Reason --------------------------
+  ChangeReasonList,
+  ChangeReasonForm,
+  ChangeReasonView,
+  // --------------------------- Investigation Reason --------------------------
+  InvestigationReasonList,
+  InvestigationReasonForm,
+  InvestigationReasonView,
+
 // REPORTS / SETTINGS
   Setting,
 
@@ -1029,11 +1061,81 @@ export default function Router() {
             { path: ':id/view', element: <TicketView />},
           ],
         },
+        { path: 'ticketSettings',
+          children: [
+          { element: <TicketSetting />, index: true },
+          // --------------------- Ticket Collection --------------------------------
+          {
+            path: 'issueTypes',
+            children:[
+              {element: <IssueTypeList />, index: true },
+              {path: 'new', element: <IssueTypeForm />},
+              {path: ':id/edit', element: <IssueTypeForm />},
+              {path: ':id/view', element: <IssueTypeView />},
+            ]
+          },
+          {
+            path: 'priorities',
+            children:[
+              {element: <PriorityList />, index: true },
+              {path: 'new', element: <PriorityForm />},
+              {path: ':id/edit', element: <PriorityForm />},
+              {path: ':id/view', element: <PriorityView />},
+            ]
+          },
+          {
+            path: 'statuses',
+            children:[
+              {element: <StatusList />, index: true },
+              {path: 'new', element: <StatusForm />},
+              {path: ':id/edit', element: <StatusForm />},
+              {path: ':id/view', element: <StatusView />},
+            ]
+          },
+          {
+            path: 'impacts',
+            children:[
+              {element: <ImpactList />, index: true },
+              {path: 'new', element: <ImpactForm />},
+              {path: ':id/edit', element: <ImpactForm />},
+              {path: ':id/view', element: <ImpactView />},
+            ]
+          },
+          {
+            path: 'changeTypes',
+            children:[
+              {element: <ChangeTypeList />, index: true },
+              {path: 'new', element: <ChangeTypeForm />},
+              {path: ':id/edit', element: <ChangeTypeForm />},
+              {path: ':id/view', element: <ChangeTypeView />},
+            ]
+          },
+          {
+            path: 'changeReasons',
+            children:[
+              {element: <ChangeReasonList />, index: true },
+              {path: 'new', element: <ChangeReasonForm />},
+              {path: ':id/edit', element: <ChangeReasonForm />},
+              {path: ':id/view', element: <ChangeReasonView />},
+            ]
+          },
+          {
+            path: 'investigationReasons',
+            children:[
+              {element: <InvestigationReasonList />, index: true },
+              {path: 'new', element: <InvestigationReasonForm />},
+              {path: ':id/edit', element: <InvestigationReasonForm />},
+              {path: ':id/view', element: <InvestigationReasonView />},
+            ]
+          },
+        ],
+      },
         { path: 'jiraTickets', element: <JiraTickets /> },
         { path: 'knowledgeBase', element: <SectionUnderConstruction /> },
         { path: 'manuals', element: <SectionUnderConstruction /> },
       ],
     },
+
     // --------------------- REPORTS  ----------------------
     {
       path: 'reports',

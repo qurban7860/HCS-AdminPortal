@@ -426,6 +426,52 @@ export const PATH_SUPPORT = {
     view: (id) => path(ROOTS_SUPPORT, `/supportTickets/${id}/view`),
     edit: (id) => path(ROOTS_SUPPORT, `/supportTickets/${id}/edit`),
   },
+  ticketSettings: {
+    root: path(ROOTS_SUPPORT, '/ticketSettings'),
+    // ----------------------- Ticket Collection -----------------------------------------
+    issueTypes: {
+      root: path(ROOTS_SUPPORT, '/ticketSettings/issueTypes'),
+      new: path(ROOTS_SUPPORT, '/ticketSettings/issueTypes/new'),
+      view: (id) => path(ROOTS_SUPPORT, `/ticketSettings/issueTypes/${id}/view`),
+      edit: (id) => path(ROOTS_SUPPORT, `/ticketSettings/issueTypes/${id}/edit`),
+    },
+    priorities: {
+      root: path(ROOTS_SUPPORT, '/ticketSettings/priorities'),
+      new: path(ROOTS_SUPPORT, '/ticketSettings/priorities/new'),
+      view: (id) => path(ROOTS_SUPPORT, `/ticketSettings/priorities/${id}/view`),
+      edit: (id) => path(ROOTS_SUPPORT, `/ticketSettings/priorities/${id}/edit`),
+    },
+    statuses: {
+      root: path(ROOTS_SUPPORT, '/ticketSettings/statuses'),
+      new: path(ROOTS_SUPPORT, '/ticketSettings/statuses/new'),
+      view: (id) => path(ROOTS_SUPPORT, `/ticketSettings/statuses/${id}/view`),
+      edit: (id) => path(ROOTS_SUPPORT, `/ticketSettings/statuses/${id}/edit`),
+    },
+    impacts: {
+      root: path(ROOTS_SUPPORT, '/ticketSettings/impacts'),
+      new: path(ROOTS_SUPPORT, '/ticketSettings/impacts/new'),
+      view: (id) => path(ROOTS_SUPPORT, `/ticketSettings/impacts/${id}/view`),
+      edit: (id) => path(ROOTS_SUPPORT, `/ticketSettings/impacts/${id}/edit`),
+    },
+    changeTypes: {
+      root: path(ROOTS_SUPPORT, '/ticketSettings/changeTypes'),
+      new: path(ROOTS_SUPPORT, '/ticketSettings/changeTypes/new'),
+      view: (id) => path(ROOTS_SUPPORT, `/ticketSettings/changeTypes/${id}/view`),
+      edit: (id) => path(ROOTS_SUPPORT, `/ticketSettings/changeTypes/${id}/edit`),
+    },
+    changeReasons: {
+      root: path(ROOTS_SUPPORT, '/ticketSettings/changeReasons'),
+      new: path(ROOTS_SUPPORT, '/ticketSettings/changeReasons/new'),
+      view: (id) => path(ROOTS_SUPPORT, `/ticketSettings/changeReasons/${id}/view`),
+      edit: (id) => path(ROOTS_SUPPORT, `/ticketSettings/changeReasons/${id}/edit`),
+    },
+    investigationReasons: {
+      root: path(ROOTS_SUPPORT, '/ticketSettings/investigationReasons'),
+      new: path(ROOTS_SUPPORT, '/ticketSettings/investigationReasons/new'),
+      view: (id) => path(ROOTS_SUPPORT, `/ticketSettings/investigationReasons/${id}/view`),
+      edit: (id) => path(ROOTS_SUPPORT, `/ticketSettings/investigationReasons/${id}/edit`),
+    },
+  },
   jiraTickets: {
     root: path(ROOTS_SUPPORT, '/jiraTickets')
   },
@@ -436,6 +482,7 @@ export const PATH_SUPPORT = {
     root: path(ROOTS_SUPPORT, '/manuals'),
   },
 };
+
 // ----------------------- REPORTS -----------------------------------------
 export const PATH_REPORTS = {
   root: ROOTS_REPORTS,
