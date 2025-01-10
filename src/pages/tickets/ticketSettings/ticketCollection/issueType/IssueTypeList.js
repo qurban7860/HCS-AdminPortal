@@ -1,12 +1,13 @@
 import debounce from 'lodash/debounce';
+import PropTypes from 'prop-types';
 import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 // @mui
 import { Container, Table, TableBody, TableContainer } from '@mui/material';
 // routes
-import { useNavigate, useParams } from 'react-router-dom';
-import { PATH_SUPPORT } from '../../routes/paths';
+import { useNavigate } from 'react-router-dom';
+import { PATH_SUPPORT } from '../../../../../routes/paths';
 // redux
-import { useDispatch, useSelector } from '../../redux/store';
+import { useDispatch, useSelector } from '../../../../../redux/store';
 // components
 import {
   useTable,
@@ -15,51 +16,44 @@ import {
   TableSkeleton,
   TableHeadCustom,
   TablePaginationCustom,
-} from '../../components/table';
-import Scrollbar from '../../components/scrollbar';
+} from '../../../../../components/table';
+import Scrollbar from '../../../../../components/scrollbar';
 // sections
-import TicketFormTableRow from './TicketFormTableRow';
-import TicketFormTableToolbar from './TicketFormTableToolbar';
+import IssueTypeListTableRow from './IssueTypeListTableRow';
+import IssueTypeListTableToolbar from './IssueTypeListTableToolbar';
 import {
+  getTicketIssueTypes,
+  resetTicketIssueTypes,
   ChangeRowsPerPage,
   ChangePage,
   setFilterBy,
-  getTickets,
-  resetTickets,
-} from '../../redux/slices/ticket/tickets';
-import { fDate } from '../../utils/formatTime';
-import TableCard from '../../components/ListTableTools/TableCard';
-import { Cover } from '../../components/Defaults/Cover';
-import { StyledCardContainer } from '../../theme/styles/default-styles';
-
+} from '../../../../../redux/slices/ticket/ticketSettings/ticketIssueTypes';
+import { fDate } from '../../../../../utils/formatTime';
+import TableCard from '../../../../../components/ListTableTools/TableCard';
+import { Cover } from '../../../../../components/Defaults/Cover';
+import { StyledCardContainer } from '../../../../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'ticketNo', label: 'Ticket No.', align: 'left' },
-  { id: 'machine', label: 'Serial No', align: 'left' },
-  { id: 'summary', label: 'Summary', align: 'left' },
-  { id: 'customer', label: 'Customer', align: 'left' },
-  { id: 'issueType', label: 'IssueType', align: 'left' },
-  { id: 'status', label: 'Status', align: 'left' },
-  { id: 'priority', label: 'Priority', align: 'left' },
+  { id: 'name', label: 'Name', align: 'left' },
+  { id: 'slug', visibility: 'xs1', label: 'Slug', align: 'left' },
+  { id: 'displayOrderNo', visibility: 'xs1', label: 'Order Number', align: 'left' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
 
 // ----------------------------------------------------------------------
 
-export default function TicketFormList(){
-  const { initial, tickets, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.tickets);
-
+export default function IssueTypeList() {
+  const { ticketIssueTypes, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.ticketIssueTypes);
   const navigate = useNavigate();
-  const { machineId } = useParams();
   const {
     order,
     orderBy,
     setPage,
     selected,
     onSort,
-  } = useTable({ defaultOrderBy: 'createdAt', defaultOrder: 'desc' });
+  } = useTable({ defaultOrderBy: 'displayOrderNo' , defaultOrder: 'asc' });
 
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));
@@ -70,28 +64,24 @@ export default function TicketFormList(){
   const dispatch = useDispatch();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
-  const [selectedIssueType, setSelectedIssueType] = useState(null);
-  const [ selectedStatus, setSelectedStatus ] = useState(null);
 
   useLayoutEffect(() => {
-    dispatch(getTickets(page, rowsPerPage ));
+    dispatch(getTicketIssueTypes(page, rowsPerPage));
     return () => {
-      dispatch(resetTickets());
+      dispatch(resetTicketIssueTypes());
     }
-  }, [dispatch, machineId, page, rowsPerPage ]);
-
+  }, [dispatch, page, rowsPerPage]);
+  
   useEffect(() => {
     if (initial) {
-      setTableData(tickets?.data || [] );
+      setTableData(ticketIssueTypes?.data || [] );
     }
-  }, [tickets?.data, initial]);
+  }, [ticketIssueTypes?.data, initial]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(order, orderBy),
     filterName,
-    selectedIssueType,
-    selectedStatus,
   });
 
   const isFiltered = filterName !== '';
@@ -118,35 +108,28 @@ export default function TicketFormList(){
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 
-
-  const handleViewRow = (id) => navigate(PATH_SUPPORT.supportTickets.view(id));
+  const handleViewRow = (id) => navigate(PATH_SUPPORT.ticketSettings.issueTypes.view(id));
   
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
     setFilterName('');
-    setSelectedIssueType(null);
-    setSelectedStatus(null);
   };
   
   return (
     <Container maxWidth={false} >
       <StyledCardContainer>
-        <Cover name="Support Tickets" icon="ph:users-light" />
+       <Cover name="Issue Types" supportTicketSettings/>
       </StyledCardContainer>
         <TableCard>
-          <TicketFormTableToolbar
+          <IssueTypeListTableToolbar
             filterName={filterName}
             onFilterName={handleFilterName}
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
-            selectedStatus={selectedStatus}
-            setSelectedStatus={setSelectedStatus}
-            selectedIssueType={selectedIssueType}
-            setSelectedIssueType={setSelectedIssueType}
           />
 
           {!isNotFound && <TablePaginationCustom
-            count={ tickets?.totalCount || 0 }
+            count={ ticketIssueTypes?.totalCount || 0 }
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
@@ -166,7 +149,7 @@ export default function TicketFormList(){
                   {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
                     .map((row, index) =>
                       row ? (
-                        <TicketFormTableRow
+                        <IssueTypeListTableRow
                           key={row._id}
                           row={row}
                           onViewRow={() => handleViewRow(row._id)}
@@ -184,7 +167,7 @@ export default function TicketFormList(){
             </Scrollbar>
           </TableContainer>
           {!isNotFound && <TablePaginationCustom
-            count={ tickets?.totalCount || 0 }
+            count={ ticketIssueTypes?.totalCount || 0 }
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
@@ -197,7 +180,7 @@ export default function TicketFormList(){
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName, selectedIssueType, selectedStatus }) {
+function applyFilter({ inputData, comparator, filterName }) {
 
   const stabilizedThis = inputData?.map((el, index) => [el, index]);
 
@@ -212,27 +195,15 @@ function applyFilter({ inputData, comparator, filterName, selectedIssueType, sel
   if (filterName) {
     inputData = inputData.filter((ticket) => {
       const fieldsToFilter = [
-        ticket?.ticketNo,
-        ticket?.machine?.serialNo,
-        ticket?.customer?.name,
-        ticket?.summary,
-        ticket?.priority,
-        ticket?.status,
+        ticket?.name,
+        ticket?.slug,
+        ticket?.displayOrderNo,
         fDate(ticket?.createdAt),
       ];
       return fieldsToFilter.some((field) =>
         field?.toLowerCase().includes(filterName.toLowerCase())
       );
     });
-  }
-  
-
-  if (selectedIssueType) {
-    inputData = inputData.filter((ticket) => ticket?.issueType === selectedIssueType?.value);
-  }
-
-  if (selectedStatus) {
-    inputData = inputData.filter((ticket) => ticket?.status === selectedStatus?.value);
   }
   
   return inputData;

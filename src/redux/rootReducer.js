@@ -58,6 +58,7 @@ import machineJiraReducer from './slices/products/machineJira';
 import emailsReducer from './slices/email/emails';
 import eventReducer from './slices/event/event';
 import ticketsReducer from './slices/ticket/tickets';
+import ticketIssueTypesReducer from './slices/ticket/ticketSettings/ticketIssueTypes';
 import customerJiraReducer from './slices/customer/customerJira';
 import jiraReducer from './slices/jira/jira';
 import apilogsReducer from './slices/logs/apiLogs';
@@ -451,6 +452,12 @@ export const ticketsPersistConfig = {
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 }
+export const ticketIssueTypesPersistConfig = {
+  key: 'ticketIssueTypes',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
 export const customerJiraPersistConfig = {
   key: 'customerJira',
   storage,
@@ -537,6 +544,7 @@ const rootReducer = combineReducers({
   emails: persistReducer(emailsPersistConfig, emailsReducer),
   event: persistReducer(eventPersistConfig, eventReducer),
   tickets: persistReducer(ticketsPersistConfig, ticketsReducer),
+  ticketIssueTypes: persistReducer(ticketIssueTypesPersistConfig, ticketIssueTypesReducer),
   customerJira: persistReducer(customerJiraPersistConfig, customerJiraReducer),
   jira: persistReducer(jiraPersistConfig, jiraReducer),
   portalRegistration: persistReducer( portalRegistrationPersistConfig, portalRegistrationReducer ),

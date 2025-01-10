@@ -514,7 +514,36 @@ export const ICONS = {
     heading: 'API Logs',
   },
   
-  
+  // @root - ticketsettings
+  // ------------ Ticket Collection --------------
+  ISSUE_TYPES: {
+    icon: 'material-symbols-light:problem-rounded',
+    heading: 'Issue Types',
+  },
+  IMPACTS: {
+    icon: 'material-symbols-light:convert-to-text-rounded',
+    heading: 'Impacts',
+  },
+  PRIORITIES: {
+    icon: 'pajamas:issue-type-incident',
+    heading: 'Priorities',
+  },
+  STATUSES: {
+    icon: 'carbon:mobile-request',
+    heading: 'Statuses',
+  },
+  CHANGE_TYPES: {
+    icon: 'material-symbols-light:problem-rounded',
+    heading: 'Change Types',
+  },
+  CHANGE_REASONS: {
+    icon: 'material-symbols-light:convert-to-text-rounded',
+    heading: 'Change Reasons',
+  },
+  INVESTIGATION_REASONS: {
+    icon: 'pajamas:issue-type-incident',
+    heading: 'Investigation Reasons',
+  },
 
   MOVE_MACHINE: {
     icon: 'ri:swap-box-line',

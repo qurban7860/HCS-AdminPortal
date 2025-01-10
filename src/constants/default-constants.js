@@ -92,6 +92,8 @@ export const FORMLABELS = {
   ARCHIVED_REPORTS: 'Archived Reports',
   LOGS_SETTINGS: 'Logs',
 
+  // @root - Ticket Settings
+  TICKET_COLLECTION: 'Ticket Collection',
 
   // @root DocumentAddForm in dashboard/documents
   SELECT_CUSTOMER: 'Select Customer',

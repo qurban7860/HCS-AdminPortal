@@ -1,0 +1,84 @@
+import PropTypes from 'prop-types';
+import {  useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { useNavigate, useParams } from 'react-router-dom';
+// @mui
+import { Card, Grid } from '@mui/material';
+// paths
+import { PATH_SUPPORT } from '../../../../../routes/paths';
+// components
+import { useSnackbar } from '../../../../../components/snackbar';
+import { deleteTicketIssueType } from '../../../../../redux/slices/ticket/ticketSettings/ticketIssueTypes';
+import ViewFormAudit from '../../../../../components/ViewForms/ViewFormAudit';
+import ViewFormEditDeleteButtons from '../../../../../components/ViewForms/ViewFormEditDeleteButtons';
+import ViewFormField from '../../../../../components/ViewForms/ViewFormField';
+
+// ----------------------------------------------------------------------
+
+export default function IssueTypeViewForm() {
+  const navigate = useNavigate();
+
+  const { enqueueSnackbar } = useSnackbar();
+  const { ticketIssueType, isLoading } = useSelector((state) => state.ticketIssueTypes);
+  const { id } = useParams();
+  const dispatch = useDispatch();
+
+  const defaultValues = useMemo(
+    () => ({
+      name: ticketIssueType?.name || '',
+      order: ticketIssueType?.order || '',
+      description: ticketIssueType?.description || '',
+      displayOrderNo: ticketIssueType?.displayOrderNo || '',
+      slug: ticketIssueType?.slug || '',
+      isDefault: ticketIssueType?.isDefault,
+      createdByFullName: ticketIssueType?.createdBy?.name || '',
+      createdAt: ticketIssueType?.createdAt || '',
+      createdIP: ticketIssueType?.createdIP || '',
+      updatedByFullName: ticketIssueType?.updatedBy?.name || '',
+      updatedAt: ticketIssueType?.updatedAt || '',
+      updatedIP: ticketIssueType?.updatedIP || '',
+    }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [ ticketIssueType]
+  );
+
+  const onDelete = () => {
+    try {
+      dispatch(deleteTicketIssueType(id));
+      navigate(PATH_SUPPORT.ticketSettings.issueTypes.root);
+    } catch (err) {
+      enqueueSnackbar('Status Archive failed!', { variant: `error` });
+      console.log('Error:', err);
+    }
+  };
+
+  const toggleEdit = () => navigate(PATH_SUPPORT.ticketSettings.issueTypes.edit(id));
+
+  return (
+  <Grid>
+    <Card sx={{ p: 2 }}>
+      <ViewFormEditDeleteButtons  
+        isDefault={defaultValues.isDefault} 
+        handleEdit={toggleEdit} 
+        onDelete={onDelete} 
+        backLink={() => navigate(PATH_SUPPORT.ticketSettings.issueTypes.root)} 
+        />
+      <Grid container sx={{mt:2}}>
+        <ViewFormField isLoading={isLoading} sm={12} heading="Name" param={defaultValues?.name} />
+        <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues?.description} />
+        <ViewFormField isLoading={isLoading}
+          sm={12}
+          heading="Display Order No."
+          param={defaultValues?.displayOrderNo?.toString()}
+          />
+        <ViewFormField isLoading={isLoading} sm={12} heading="Slug" param={defaultValues?.slug} />
+        <ViewFormField isLoading={isLoading} sm={12} heading="Order Number" param={defaultValues?.order} />
+        <Grid container>
+          <ViewFormAudit defaultValues={defaultValues} />
+        </Grid>
+      </Grid>
+    </Card>
+  </Grid>
+  );
+}
