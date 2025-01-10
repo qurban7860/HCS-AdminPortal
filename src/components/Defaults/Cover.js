@@ -31,6 +31,7 @@ Cover.propTypes = {
   coilLogs: PropTypes.bool,
   currentGraphsPage: PropTypes.bool,
   currentLogsPage: PropTypes.bool,
+  supportTicketSettings: PropTypes.bool,
 };
 
 export function Cover({
@@ -49,6 +50,7 @@ export function Cover({
   coilLogs,
   currentGraphsPage,
   currentLogsPage,
+  supportTicketSettings,
 }) {
   const navigate = useNavigate();
   const handleSettingsNavigate = () => navigate(PATH_SETTING.root);
