@@ -8,7 +8,7 @@ import { Card, Grid } from '@mui/material';
 import { PATH_SUPPORT } from '../../../../../routes/paths';
 // components
 import { useSnackbar } from '../../../../../components/snackbar';
-import { deleteTicketIssueType, resetTicketIssueType } from '../../../../../redux/slices/ticket/ticketSettings/ticketIssueTypes';
+import { deleteTicketChangeType, resetTicketChangeType } from '../../../../../redux/slices/ticket/ticketSettings/ticketChangeTypes';
 import ViewFormAudit from '../../../../../components/ViewForms/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../../../../../components/ViewForms/ViewFormEditDeleteButtons';
 import ViewFormField from '../../../../../components/ViewForms/ViewFormField';
@@ -16,44 +16,44 @@ import ViewFormSwitch from '../../../../../components/ViewForms/ViewFormSwitch';
 
 // ----------------------------------------------------------------------
 
-export default function IssueTypeViewForm() {
+export default function ChangeTypeViewForm() {
   const navigate = useNavigate();
 
   const { enqueueSnackbar } = useSnackbar();
-  const { ticketIssueType, isLoading } = useSelector((state) => state.ticketIssueTypes);
+  const { ticketChangeType, isLoading } = useSelector((state) => state.ticketChangeTypes);
   const { id } = useParams();
   const dispatch = useDispatch();
 
   const defaultValues = useMemo(
     () => ({
-      name: ticketIssueType?.name || '',
-      slug: ticketIssueType?.slug || '',
-      icon: ticketIssueType?.icon || '',
-      displayOrderNo: ticketIssueType?.displayOrderNo || '',
-      description: ticketIssueType?.description || '',
-      isDefault: ticketIssueType?.isDefault || false,
-      createdByFullName: ticketIssueType?.createdBy?.name || '',
-      createdAt: ticketIssueType?.createdAt || '',
-      createdIP: ticketIssueType?.createdIP || '',
-      updatedByFullName: ticketIssueType?.updatedBy?.name || '',
-      updatedAt: ticketIssueType?.updatedAt || '',
-      updatedIP: ticketIssueType?.updatedIP || '',
+      name: ticketChangeType?.name || '',
+      slug: ticketChangeType?.slug || '',
+      icon: ticketChangeType?.icon || '',
+      displayOrderNo: ticketChangeType?.displayOrderNo || '',
+      description: ticketChangeType?.description || '',
+      isDefault: ticketChangeType?.isDefault || false,
+      createdByFullName: ticketChangeType?.createdBy?.name || '',
+      createdAt: ticketChangeType?.createdAt || '',
+      createdIP: ticketChangeType?.createdIP || '',
+      updatedByFullName: ticketChangeType?.updatedBy?.name || '',
+      updatedAt: ticketChangeType?.updatedAt || '',
+      updatedIP: ticketChangeType?.updatedIP || '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [ ticketIssueType]
+    [ticketChangeType]
   );
 
   const onDelete = () => {
     try {
-      dispatch(deleteTicketIssueType(id));
-      navigate(PATH_SUPPORT.ticketSettings.issueTypes.root);
+      dispatch(deleteTicketChangeType(id));
+      navigate(PATH_SUPPORT.ticketSettings.changeTypes.root);
     } catch (err) {
-      enqueueSnackbar('Issue Type Archive failed!', { variant: `error` });
+      enqueueSnackbar('Change Type Archive failed!', { variant: `error` });
       console.log('Error:', err);
     }
   };
 
-  const toggleEdit = () => navigate(PATH_SUPPORT.ticketSettings.issueTypes.edit(id));
+  const toggleEdit = () => navigate(PATH_SUPPORT.ticketSettings.changeTypes.edit(id));
 
   return (
   <Grid>
@@ -63,8 +63,8 @@ export default function IssueTypeViewForm() {
         handleEdit={toggleEdit} 
         onDelete={onDelete} 
         backLink={() => {
-          dispatch(resetTicketIssueType());
-          navigate(PATH_SUPPORT.ticketSettings.issueTypes.root);
+          dispatch(resetTicketChangeType());
+          navigate(PATH_SUPPORT.ticketSettings.changeTypes.root);
         }}
       />
       <Grid container sx={{mt:2}}>

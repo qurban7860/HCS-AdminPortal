@@ -8,7 +8,7 @@ import { Card, Grid } from '@mui/material';
 import { PATH_SUPPORT } from '../../../../../routes/paths';
 // components
 import { useSnackbar } from '../../../../../components/snackbar';
-import { deleteTicketIssueType, resetTicketIssueType } from '../../../../../redux/slices/ticket/ticketSettings/ticketIssueTypes';
+import { deleteTicketChangeReason, resetTicketChangeReason } from '../../../../../redux/slices/ticket/ticketSettings/ticketChangeReasons';
 import ViewFormAudit from '../../../../../components/ViewForms/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../../../../../components/ViewForms/ViewFormEditDeleteButtons';
 import ViewFormField from '../../../../../components/ViewForms/ViewFormField';
@@ -16,44 +16,44 @@ import ViewFormSwitch from '../../../../../components/ViewForms/ViewFormSwitch';
 
 // ----------------------------------------------------------------------
 
-export default function IssueTypeViewForm() {
+export default function ChangeReasonViewForm() {
   const navigate = useNavigate();
 
   const { enqueueSnackbar } = useSnackbar();
-  const { ticketIssueType, isLoading } = useSelector((state) => state.ticketIssueTypes);
+  const { ticketChangeReason, isLoading } = useSelector((state) => state.ticketChangeReasons);
   const { id } = useParams();
   const dispatch = useDispatch();
 
   const defaultValues = useMemo(
     () => ({
-      name: ticketIssueType?.name || '',
-      slug: ticketIssueType?.slug || '',
-      icon: ticketIssueType?.icon || '',
-      displayOrderNo: ticketIssueType?.displayOrderNo || '',
-      description: ticketIssueType?.description || '',
-      isDefault: ticketIssueType?.isDefault || false,
-      createdByFullName: ticketIssueType?.createdBy?.name || '',
-      createdAt: ticketIssueType?.createdAt || '',
-      createdIP: ticketIssueType?.createdIP || '',
-      updatedByFullName: ticketIssueType?.updatedBy?.name || '',
-      updatedAt: ticketIssueType?.updatedAt || '',
-      updatedIP: ticketIssueType?.updatedIP || '',
+      name: ticketChangeReason?.name || '',
+      slug: ticketChangeReason?.slug || '',
+      icon: ticketChangeReason?.icon || '',
+      displayOrderNo: ticketChangeReason?.displayOrderNo || '',
+      description: ticketChangeReason?.description || '',
+      isDefault: ticketChangeReason?.isDefault || false,
+      createdByFullName: ticketChangeReason?.createdBy?.name || '',
+      createdAt: ticketChangeReason?.createdAt || '',
+      createdIP: ticketChangeReason?.createdIP || '',
+      updatedByFullName: ticketChangeReason?.updatedBy?.name || '',
+      updatedAt: ticketChangeReason?.updatedAt || '',
+      updatedIP: ticketChangeReason?.updatedIP || '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [ ticketIssueType]
+    [ ticketChangeReason]
   );
 
   const onDelete = () => {
     try {
-      dispatch(deleteTicketIssueType(id));
-      navigate(PATH_SUPPORT.ticketSettings.issueTypes.root);
+      dispatch(deleteTicketChangeReason(id));
+      navigate(PATH_SUPPORT.ticketSettings.changeReasons.root);
     } catch (err) {
-      enqueueSnackbar('Issue Type Archive failed!', { variant: `error` });
+      enqueueSnackbar('Change Reason Archive failed!', { variant: `error` });
       console.log('Error:', err);
     }
   };
 
-  const toggleEdit = () => navigate(PATH_SUPPORT.ticketSettings.issueTypes.edit(id));
+  const toggleEdit = () => navigate(PATH_SUPPORT.ticketSettings.changeReasons.edit(id));
 
   return (
   <Grid>
@@ -63,8 +63,8 @@ export default function IssueTypeViewForm() {
         handleEdit={toggleEdit} 
         onDelete={onDelete} 
         backLink={() => {
-          dispatch(resetTicketIssueType());
-          navigate(PATH_SUPPORT.ticketSettings.issueTypes.root);
+          dispatch(resetTicketChangeReason());
+          navigate(PATH_SUPPORT.ticketSettings.changeReasons.root);
         }}
       />
       <Grid container sx={{mt:2}}>

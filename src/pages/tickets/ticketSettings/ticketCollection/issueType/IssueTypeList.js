@@ -1,5 +1,4 @@
 import debounce from 'lodash/debounce';
-import PropTypes from 'prop-types';
 import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 // @mui
 import { Container, Table, TableBody, TableContainer } from '@mui/material';

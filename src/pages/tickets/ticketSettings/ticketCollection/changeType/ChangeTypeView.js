@@ -6,24 +6,28 @@ import { useParams } from 'react-router-dom';
 // sections
 import { Cover } from '../../../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../../../theme/styles/default-styles';
+import ChangeTypeViewForm from './ChangeTypeViewForm';
+import { getTicketChangeType } from '../../../../../redux/slices/ticket/ticketSettings/ticketChangeTypes';
+
 // ----------------------------------------------------------------------
 
 export default function ChangeTypeView() {
   const { id } = useParams()
   const dispatch = useDispatch()
-  const { ticketCollection } = useSelector((state) => state.ticketCollection);
+  const { ticketChangeType } = useSelector((state) => state.ticketChangeTypes);
 
   useLayoutEffect(()=>{
     if(id){
-      // dispatch(getTicketCollection(id))
+      dispatch(getTicketChangeType(id))
     }
   },[dispatch, id ])
 
   return (
     <Container maxWidth={false}>
     <StyledCardContainer>
-      <Cover  name={ticketCollection?.name} />
+      <Cover name={ticketChangeType?.name} />
     </StyledCardContainer>
+    <ChangeTypeViewForm />
     </Container>
   );
 }

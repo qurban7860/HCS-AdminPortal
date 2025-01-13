@@ -6,24 +6,28 @@ import { useParams } from 'react-router-dom';
 // sections
 import { Cover } from '../../../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../../../theme/styles/default-styles';
+import StatusViewForm from './StatusViewForm';
+import { getTicketStatus } from '../../../../../redux/slices/ticket/ticketSettings/ticketStatuses';
+
 // ----------------------------------------------------------------------
 
 export default function StatusView() {
   const { id } = useParams()
   const dispatch = useDispatch()
-  const { ticketCollection } = useSelector((state) => state.ticketCollection);
+  const { ticketStatus } = useSelector((state) => state.ticketStatuses);
 
   useLayoutEffect(()=>{
     if(id){
-      // dispatch(getTicketCollection(id))
+      dispatch(getTicketStatus(id))
     }
   },[dispatch, id ])
 
   return (
     <Container maxWidth={false}>
     <StyledCardContainer>
-      <Cover  name={ticketCollection?.name} />
+      <Cover name={ticketStatus?.name} />
     </StyledCardContainer>
+    <StatusViewForm />
     </Container>
   );
 }

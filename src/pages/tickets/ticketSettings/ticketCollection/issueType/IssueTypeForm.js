@@ -1,6 +1,4 @@
-import PropTypes from 'prop-types';
-import * as Yup from 'yup';
-import { useCallback, useMemo, useEffect } from 'react';
+import { useMemo, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // routes
 import { useNavigate, useParams } from 'react-router-dom';
@@ -14,6 +12,7 @@ import { Cover } from '../../../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../../../theme/styles/default-styles';
 import { PATH_SUPPORT } from '../../../../../routes/paths';
 import { useSnackbar } from '../../../../../components/snackbar';
+import { TicketCollectionSchema } from '../utils/constant';
 import AddFormButtons from '../../../../../components/DocumentForms/AddFormButtons';
 import FormProvider, { RHFTextField, RHFSwitch } from '../../../../../components/hook-form';
 import { postTicketIssueType, patchTicketIssueType, getTicketIssueType, resetTicketIssueType } from '../../../../../redux/slices/ticket/ticketSettings/ticketIssueTypes';
@@ -39,19 +38,6 @@ export default function IssueTypeForm() {
     [ ticketIssueType ] 
   );
   
-  const TicketCollectionSchema = Yup.object().shape({
-    name: Yup.string().min(2).max(50).required('Name is required!'),
-    icon: Yup.string().min(2).max(50).required('Icon is required!'),
-    description: Yup.string().max(5000),
-    isActive: Yup.boolean(),
-    isDefault: Yup.boolean(),
-    displayOrderNo: Yup.number()
-      .typeError('Display Order No. must be a number')
-      .nullable()
-      .transform((_, val) => (val !== '' ? Number(val) : null)),
-    slug: Yup.string().min(0).max(50).matches(/^(?!.*\s)[\S\s]{0,50}$/, 'Slug field cannot contain blankspaces'),
-  });
-
   const methods = useForm({
     resolver: yupResolver(TicketCollectionSchema),
     defaultValues,
