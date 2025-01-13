@@ -21,10 +21,10 @@ export default function InvestigationReasonListTableRow({
   onViewRow,
 }) {
 
-  const { name, slug, displayOrderNo, isDefault, createdAt } = row;
+  const { name, slug, displayOrderNo, createdAt } = row;
   return (
     <StyledTableRow hover selected={selected}>
-      <LinkTableCell align="left" onClick={onViewRow} param={name} isDefault={isDefault} />
+      <LinkTableCell align="left" onClick={onViewRow} param={name} />
       <TableCell align='left' > {slug} </TableCell> 
       <TableCell align='left' > { displayOrderNo} </TableCell>
       <TableCell align='right' > { fDate(createdAt) } </TableCell>

@@ -32,7 +32,7 @@ export default function StatusForm() {
       slug: ticketStatus?.slug || '',
       description: ticketStatus?.description || '',
       displayOrderNo: ticketStatus?.displayOrderNo || '',
-      isDefault: ticketStatus?.isDefault ?? false,
+      isDefault: ticketStatus?.isDefault || false,
       createdAt: ticketStatus?.createdAt || '',
     }),
     [ ticketStatus ] 

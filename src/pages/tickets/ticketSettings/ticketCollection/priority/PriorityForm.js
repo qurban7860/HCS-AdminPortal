@@ -32,7 +32,7 @@ export default function PriorityForm() {
       slug: ticketPriority?.slug || '',
       description: ticketPriority?.description || '',
       displayOrderNo: ticketPriority?.displayOrderNo || '',
-      isDefault: ticketPriority?.isDefault ?? false,
+      isDefault: ticketPriority?.isDefault || false,
       createdAt: ticketPriority?.createdAt || '',
     }),
     [ ticketPriority ] 

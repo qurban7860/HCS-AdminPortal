@@ -32,7 +32,7 @@ export default function StatusViewForm() {
       icon: ticketStatus?.icon || '',
       displayOrderNo: ticketStatus?.displayOrderNo || '',
       description: ticketStatus?.description || '',
-      isDefault: ticketStatus?.isDefault || false,
+      isDefault: ticketStatus?.isDefault,
       createdByFullName: ticketStatus?.createdBy?.name || '',
       createdAt: ticketStatus?.createdAt || '',
       createdIP: ticketStatus?.createdIP || '',

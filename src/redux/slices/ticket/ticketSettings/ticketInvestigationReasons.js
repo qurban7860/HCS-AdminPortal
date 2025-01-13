@@ -81,7 +81,7 @@ const slice = createSlice({
 
     // RESET Ticket
     resetTicketInvestigationReason(state) {
-      state.ticket = null;
+      state.ticketInvestigationReason = null;
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
@@ -89,7 +89,7 @@ const slice = createSlice({
 
     // RESET Tickets
     resetTicketInvestigationReasons(state) {
-      state.tickets = [];
+      state.ticketInvestigationReasons = [];
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;

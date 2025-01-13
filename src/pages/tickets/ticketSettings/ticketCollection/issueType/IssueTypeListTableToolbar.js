@@ -33,7 +33,7 @@ export default function IssueTypeListTableToolbar({
         onChange={onFilterName}
         onClick={onResetFilter}
         SubOnClick={toggleAdd}
-        addButton='Add New Issue Type'
+        addButton='New Issue Type'
       />
     </Stack>
   );
