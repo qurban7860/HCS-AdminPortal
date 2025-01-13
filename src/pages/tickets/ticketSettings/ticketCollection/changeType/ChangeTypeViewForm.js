@@ -7,6 +7,7 @@ import { Card, Grid } from '@mui/material';
 // paths
 import { PATH_SUPPORT } from '../../../../../routes/paths';
 // components
+import Iconify from '../../../../../components/iconify';
 import { useSnackbar } from '../../../../../components/snackbar';
 import { deleteTicketChangeType, resetTicketChangeType } from '../../../../../redux/slices/ticket/ticketSettings/ticketChangeTypes';
 import ViewFormAudit from '../../../../../components/ViewForms/ViewFormAudit';
@@ -69,7 +70,7 @@ export default function ChangeTypeViewForm() {
       />
       <Grid container sx={{mt:2}}>
         <ViewFormField isLoading={isLoading} sm={6} heading="Name" param={defaultValues?.name} />
-        <ViewFormField isLoading={isLoading} sm={6} heading="Icon" param={defaultValues?.icon} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Icon" param={<Iconify icon={defaultValues?.icon} sx={{ width: 25, height: 25 }} />} />
         <ViewFormField isLoading={isLoading} sm={6} heading="Slug" param={defaultValues?.slug} />
         <ViewFormField isLoading={isLoading}
           sm={6}
