@@ -6,25 +6,28 @@ import { useParams } from 'react-router-dom';
 // sections
 import { Cover } from '../../../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../../../theme/styles/default-styles';
+import InvestigationReasonViewForm from './InvestigationReasonViewForm';
+import { getTicketInvestigationReason } from '../../../../../redux/slices/ticket/ticketSettings/ticketInvestigationReasons';
 
 // ----------------------------------------------------------------------
 
 export default function InvestigationReasonView() {
   const { id } = useParams()
   const dispatch = useDispatch()
-  const { ticketCollection } = useSelector((state) => state.ticketCollection);
+  const { ticketInvestigationReason } = useSelector((state) => state.ticketInvestigationReasons);
 
   useLayoutEffect(()=>{
     if(id){
-      // dispatch(getTicketCollection(id))
+      dispatch(getTicketInvestigationReason(id))
     }
   },[dispatch, id ])
 
   return (
     <Container maxWidth={false}>
     <StyledCardContainer>
-      <Cover  name={ticketCollection?.name} />
+      <Cover name={ticketInvestigationReason?.name} />
     </StyledCardContainer>
+    <InvestigationReasonViewForm />
     </Container>
   );
 }

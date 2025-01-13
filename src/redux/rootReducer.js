@@ -59,6 +59,12 @@ import emailsReducer from './slices/email/emails';
 import eventReducer from './slices/event/event';
 import ticketsReducer from './slices/ticket/tickets';
 import ticketIssueTypesReducer from './slices/ticket/ticketSettings/ticketIssueTypes';
+import ticketChangeReasonsReducer from './slices/ticket/ticketSettings/ticketChangeReasons';
+import ticketChangeTypesReducer from './slices/ticket/ticketSettings/ticketChangeTypes';
+import ticketImpactsReducer from './slices/ticket/ticketSettings/ticketImpacts';
+import ticketInvestigationReasonsReducer from './slices/ticket/ticketSettings/ticketInvestigationReasons';
+import ticketPrioritiesReducer from './slices/ticket/ticketSettings/ticketPriorities';
+import ticketStatusesReducer from './slices/ticket/ticketSettings/ticketStatuses';
 import customerJiraReducer from './slices/customer/customerJira';
 import jiraReducer from './slices/jira/jira';
 import apilogsReducer from './slices/logs/apiLogs';
@@ -458,6 +464,42 @@ export const ticketIssueTypesPersistConfig = {
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 }
+export const ticketChangeReasonsPersistConfig = {
+  key: 'ticketChangeReasons',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
+export const ticketChangeTypesPersistConfig = {
+  key: 'ticketChangeTypes',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
+export const ticketImpactsPersistConfig = {
+  key: 'ticketImpacts',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
+export const ticketInvestigationReasonsPersistConfig = {
+  key: 'ticketInvestigationReasons',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
+export const ticketPrioritiesPersistConfig = {
+  key: 'ticketPriorities',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
+export const ticketStatusesPersistConfig = {
+  key: 'ticketStatuses',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
 export const customerJiraPersistConfig = {
   key: 'customerJira',
   storage,
@@ -545,6 +587,12 @@ const rootReducer = combineReducers({
   event: persistReducer(eventPersistConfig, eventReducer),
   tickets: persistReducer(ticketsPersistConfig, ticketsReducer),
   ticketIssueTypes: persistReducer(ticketIssueTypesPersistConfig, ticketIssueTypesReducer),
+  ticketChangeReasons: persistReducer(ticketChangeReasonsPersistConfig, ticketChangeReasonsReducer),
+  ticketChangeTypes: persistReducer(ticketChangeTypesPersistConfig, ticketChangeTypesReducer),
+  ticketImpacts: persistReducer(ticketImpactsPersistConfig, ticketImpactsReducer),
+  ticketInvestigationReasons: persistReducer(ticketInvestigationReasonsPersistConfig, ticketInvestigationReasonsReducer),
+  ticketPriorities: persistReducer(ticketPrioritiesPersistConfig, ticketPrioritiesReducer),
+  ticketStatuses: persistReducer(ticketStatusesPersistConfig, ticketStatusesReducer),
   customerJira: persistReducer(customerJiraPersistConfig, customerJiraReducer),
   jira: persistReducer(jiraPersistConfig, jiraReducer),
   portalRegistration: persistReducer( portalRegistrationPersistConfig, portalRegistrationReducer ),

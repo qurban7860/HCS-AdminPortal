@@ -9,7 +9,7 @@ import { PATH_SUPPORT } from '../../../../../routes/paths';
 // components
 import Iconify from '../../../../../components/iconify';
 import { useSnackbar } from '../../../../../components/snackbar';
-import { deleteTicketIssueType, resetTicketIssueType } from '../../../../../redux/slices/ticket/ticketSettings/ticketIssueTypes';
+import { deleteTicketInvestigationReason, resetTicketInvestigationReasons } from '../../../../../redux/slices/ticket/ticketSettings/ticketInvestigationReasons';
 import ViewFormAudit from '../../../../../components/ViewForms/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../../../../../components/ViewForms/ViewFormEditDeleteButtons';
 import ViewFormField from '../../../../../components/ViewForms/ViewFormField';
@@ -17,44 +17,44 @@ import ViewFormSwitch from '../../../../../components/ViewForms/ViewFormSwitch';
 
 // ----------------------------------------------------------------------
 
-export default function IssueTypeViewForm() {
+export default function InvestigationReasonViewForm() {
   const navigate = useNavigate();
 
   const { enqueueSnackbar } = useSnackbar();
-  const { ticketIssueType, isLoading } = useSelector((state) => state.ticketIssueTypes);
+  const { ticketInvestigationReason, isLoading } = useSelector((state) => state.ticketInvestigationReasons);
   const { id } = useParams();
   const dispatch = useDispatch();
 
   const defaultValues = useMemo(
     () => ({
-      name: ticketIssueType?.name || '',
-      slug: ticketIssueType?.slug || '',
-      icon: ticketIssueType?.icon || '',
-      displayOrderNo: ticketIssueType?.displayOrderNo || '',
-      description: ticketIssueType?.description || '',
-      isDefault: ticketIssueType?.isDefault || false,
-      createdByFullName: ticketIssueType?.createdBy?.name || '',
-      createdAt: ticketIssueType?.createdAt || '',
-      createdIP: ticketIssueType?.createdIP || '',
-      updatedByFullName: ticketIssueType?.updatedBy?.name || '',
-      updatedAt: ticketIssueType?.updatedAt || '',
-      updatedIP: ticketIssueType?.updatedIP || '',
+      name: ticketInvestigationReason?.name || '',
+      slug: ticketInvestigationReason?.slug || '',
+      icon: ticketInvestigationReason?.icon || '',
+      displayOrderNo: ticketInvestigationReason?.displayOrderNo || '',
+      description: ticketInvestigationReason?.description || '',
+      isDefault: ticketInvestigationReason?.isDefault || false,
+      createdByFullName: ticketInvestigationReason?.createdBy?.name || '',
+      createdAt: ticketInvestigationReason?.createdAt || '',
+      createdIP: ticketInvestigationReason?.createdIP || '',
+      updatedByFullName: ticketInvestigationReason?.updatedBy?.name || '',
+      updatedAt: ticketInvestigationReason?.updatedAt || '',
+      updatedIP: ticketInvestigationReason?.updatedIP || '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [ ticketIssueType]
+    [ ticketInvestigationReason]
   );
 
   const onDelete = () => {
     try {
-      dispatch(deleteTicketIssueType(id));
-      navigate(PATH_SUPPORT.ticketSettings.issueTypes.root);
+      dispatch(deleteTicketInvestigationReason(id));
+      navigate(PATH_SUPPORT.ticketSettings.investigationReasons.root);
     } catch (err) {
-      enqueueSnackbar('Issue Type Archive failed!', { variant: `error` });
+      enqueueSnackbar('investigation Reason Archive failed!', { variant: `error` });
       console.log('Error:', err);
     }
   };
 
-  const toggleEdit = () => navigate(PATH_SUPPORT.ticketSettings.issueTypes.edit(id));
+  const toggleEdit = () => navigate(PATH_SUPPORT.ticketSettings.investigationReasons.edit(id));
 
   return (
   <Grid>
@@ -64,8 +64,8 @@ export default function IssueTypeViewForm() {
         handleEdit={toggleEdit} 
         onDelete={onDelete} 
         backLink={() => {
-          dispatch(resetTicketIssueType());
-          navigate(PATH_SUPPORT.ticketSettings.issueTypes.root);
+          dispatch(resetTicketInvestigationReasons());
+          navigate(PATH_SUPPORT.ticketSettings.investigationReasons.root);
         }}
       />
       <Grid container sx={{mt:2}}>

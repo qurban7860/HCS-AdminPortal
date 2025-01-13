@@ -9,7 +9,7 @@ import { PATH_SUPPORT } from '../../../../../routes/paths';
 // components
 import Iconify from '../../../../../components/iconify';
 import { useSnackbar } from '../../../../../components/snackbar';
-import { deleteTicketIssueType, resetTicketIssueType } from '../../../../../redux/slices/ticket/ticketSettings/ticketIssueTypes';
+import { deleteTicketPriority, resetTicketPriority } from '../../../../../redux/slices/ticket/ticketSettings/ticketPriorities';
 import ViewFormAudit from '../../../../../components/ViewForms/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../../../../../components/ViewForms/ViewFormEditDeleteButtons';
 import ViewFormField from '../../../../../components/ViewForms/ViewFormField';
@@ -17,44 +17,44 @@ import ViewFormSwitch from '../../../../../components/ViewForms/ViewFormSwitch';
 
 // ----------------------------------------------------------------------
 
-export default function IssueTypeViewForm() {
+export default function PriorityViewForm() {
   const navigate = useNavigate();
 
   const { enqueueSnackbar } = useSnackbar();
-  const { ticketIssueType, isLoading } = useSelector((state) => state.ticketIssueTypes);
+  const { ticketPriority, isLoading } = useSelector((state) => state.ticketPriorities);
   const { id } = useParams();
   const dispatch = useDispatch();
 
   const defaultValues = useMemo(
     () => ({
-      name: ticketIssueType?.name || '',
-      slug: ticketIssueType?.slug || '',
-      icon: ticketIssueType?.icon || '',
-      displayOrderNo: ticketIssueType?.displayOrderNo || '',
-      description: ticketIssueType?.description || '',
-      isDefault: ticketIssueType?.isDefault || false,
-      createdByFullName: ticketIssueType?.createdBy?.name || '',
-      createdAt: ticketIssueType?.createdAt || '',
-      createdIP: ticketIssueType?.createdIP || '',
-      updatedByFullName: ticketIssueType?.updatedBy?.name || '',
-      updatedAt: ticketIssueType?.updatedAt || '',
-      updatedIP: ticketIssueType?.updatedIP || '',
+      name: ticketPriority?.name || '',
+      slug: ticketPriority?.slug || '',
+      icon: ticketPriority?.icon || '',
+      displayOrderNo: ticketPriority?.displayOrderNo || '',
+      description: ticketPriority?.description || '',
+      isDefault: ticketPriority?.isDefault || false,
+      createdByFullName: ticketPriority?.createdBy?.name || '',
+      createdAt: ticketPriority?.createdAt || '',
+      createdIP: ticketPriority?.createdIP || '',
+      updatedByFullName: ticketPriority?.updatedBy?.name || '',
+      updatedAt: ticketPriority?.updatedAt || '',
+      updatedIP: ticketPriority?.updatedIP || '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [ ticketIssueType]
+    [ticketPriority]
   );
 
   const onDelete = () => {
     try {
-      dispatch(deleteTicketIssueType(id));
-      navigate(PATH_SUPPORT.ticketSettings.issueTypes.root);
+      dispatch(deleteTicketPriority(id));
+      navigate(PATH_SUPPORT.ticketSettings.priorities.root);
     } catch (err) {
-      enqueueSnackbar('Issue Type Archive failed!', { variant: `error` });
+      enqueueSnackbar('Priority Archive failed!', { variant: `error` });
       console.log('Error:', err);
     }
   };
 
-  const toggleEdit = () => navigate(PATH_SUPPORT.ticketSettings.issueTypes.edit(id));
+  const toggleEdit = () => navigate(PATH_SUPPORT.ticketSettings.priorities.edit(id));
 
   return (
   <Grid>
@@ -64,8 +64,8 @@ export default function IssueTypeViewForm() {
         handleEdit={toggleEdit} 
         onDelete={onDelete} 
         backLink={() => {
-          dispatch(resetTicketIssueType());
-          navigate(PATH_SUPPORT.ticketSettings.issueTypes.root);
+          dispatch(resetTicketPriority());
+          navigate(PATH_SUPPORT.ticketSettings.priorities.root);
         }}
       />
       <Grid container sx={{mt:2}}>
