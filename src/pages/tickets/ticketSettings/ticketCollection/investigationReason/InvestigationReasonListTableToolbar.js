@@ -33,7 +33,7 @@ export default function InvestigationReasonListTableToolbar({
         onChange={onFilterName}
         onClick={onResetFilter}
         SubOnClick={toggleAdd}
-        addButton='Add New Issue Type'
+        addButton='New Investigation Reason'
       />
     </Stack>
   );

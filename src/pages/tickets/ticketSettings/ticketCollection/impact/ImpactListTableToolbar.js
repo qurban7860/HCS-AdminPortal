@@ -33,7 +33,7 @@ export default function ImpactListTableToolbar({
         onChange={onFilterName}
         onClick={onResetFilter}
         SubOnClick={toggleAdd}
-        addButton='Add New Impact'
+        addButton='New Impact'
       />
     </Stack>
   );

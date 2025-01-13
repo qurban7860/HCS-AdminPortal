@@ -79,7 +79,7 @@ export default function StatusViewForm({ currentMachinestatus = null }) {
         isActive={defaultValues.isActive} 
         isDefault={defaultValues.isDefault} 
         handleEdit={toggleEdit} 
-        onDelete={onDelete} b
+        onDelete={onDelete} 
         backLink={() => navigate(PATH_MACHINE.machineSettings.status.root)} 
         machineSettingPage
         />

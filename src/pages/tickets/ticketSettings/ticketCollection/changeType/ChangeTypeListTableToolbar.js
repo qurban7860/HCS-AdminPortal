@@ -33,7 +33,7 @@ export default function ChangeTypeListTableToolbar({
         onChange={onFilterName}
         onClick={onResetFilter}
         SubOnClick={toggleAdd}
-        addButton='Add New Change Type'
+        addButton='New Change Type'
       />
     </Stack>
   );

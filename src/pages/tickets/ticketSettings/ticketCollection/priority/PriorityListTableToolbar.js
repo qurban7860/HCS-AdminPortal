@@ -33,7 +33,7 @@ export default function PriorityListTableToolbar({
         onChange={onFilterName}
         onClick={onResetFilter}
         SubOnClick={toggleAdd}
-        addButton='Add New Priority'
+        addButton='New Priority'
       />
     </Stack>
   );

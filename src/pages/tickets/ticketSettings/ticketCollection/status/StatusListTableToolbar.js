@@ -33,7 +33,7 @@ export default function StatusListTableToolbar({
         onChange={onFilterName}
         onClick={onResetFilter}
         SubOnClick={toggleAdd}
-        addButton='Add New Status'
+        addButton='New Status'
       />
     </Stack>
   );

@@ -33,7 +33,7 @@ export default function ChangeReasonListTableToolbar({
         onChange={onFilterName}
         onClick={onResetFilter}
         SubOnClick={toggleAdd}
-        addButton='Add New Change Reason'
+        addButton='New Change Reason'
       />
     </Stack>
   );

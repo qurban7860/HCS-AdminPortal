@@ -9,7 +9,7 @@ import { PATH_SUPPORT } from '../../../../../routes/paths';
 // components
 import Iconify from '../../../../../components/iconify';
 import { useSnackbar } from '../../../../../components/snackbar';
-import { deleteTicketInvestigationReason, resetTicketInvestigationReasons } from '../../../../../redux/slices/ticket/ticketSettings/ticketInvestigationReasons';
+import { deleteTicketInvestigationReason, resetTicketInvestigationReason } from '../../../../../redux/slices/ticket/ticketSettings/ticketInvestigationReasons';
 import ViewFormAudit from '../../../../../components/ViewForms/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../../../../../components/ViewForms/ViewFormEditDeleteButtons';
 import ViewFormField from '../../../../../components/ViewForms/ViewFormField';
@@ -64,7 +64,7 @@ export default function InvestigationReasonViewForm() {
         handleEdit={toggleEdit} 
         onDelete={onDelete} 
         backLink={() => {
-          dispatch(resetTicketInvestigationReasons());
+          dispatch(resetTicketInvestigationReason());
           navigate(PATH_SUPPORT.ticketSettings.investigationReasons.root);
         }}
       />
