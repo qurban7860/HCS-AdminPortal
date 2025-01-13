@@ -120,7 +120,7 @@ function MachineServiceReportAddForm() {
           <Grid item xs={12} md={12}>
             <Card>
               <CardHeader 
-                title={machineServiceReport?.serviceReportUID && `Service ID : ${machineServiceReport?.serviceReportUID || ''}  (${machineServiceReport?.status?.name || ''})`}
+                title={ id && machineServiceReport?.serviceReportUID && `Service ID : ${machineServiceReport?.serviceReportUID || ''}  (${machineServiceReport?.status?.name || ''})`}
                 action={
                   !isLoading &&
                     <Grid item display='flex' columnGap={1} mr={1}>

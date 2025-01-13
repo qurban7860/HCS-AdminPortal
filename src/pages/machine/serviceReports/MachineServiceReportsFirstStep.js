@@ -100,7 +100,7 @@ function MachineServiceReportsFirstStep( { handleComplete, handleDraftRequest, h
     const { docReportType, reportSubmition, files } = watch();
     
     useEffect(() => {
-      if ( machineServiceReport ){
+      if ( id && machineServiceReport ){
         reset( defaultValues );
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -144,7 +144,7 @@ function MachineServiceReportsFirstStep( { handleComplete, handleDraftRequest, h
             await dispatch(setFormActiveStep(1));
             await handleComplete(0);
           }
-    
+          await reset();
         } catch (err) {
           console.error(err);
           enqueueSnackbar( handleError( err ) || 'Service report save failed!', { variant: `error` });
