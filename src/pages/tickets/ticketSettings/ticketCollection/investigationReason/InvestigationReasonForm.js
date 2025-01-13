@@ -100,7 +100,7 @@ export default function InvestigationReasonForm() {
                   <RHFTextField 
                     InputProps={{
                       startAdornment: (
-                        <InputAdornment position="start" >
+                        <InputAdornment position="end" >
                           <Iconify icon={icon} sx={{ width: 25, height: 25, }} />
                         </InputAdornment>
                       )
