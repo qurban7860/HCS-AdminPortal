@@ -193,18 +193,12 @@ function applyFilter({ inputData, comparator, filterName }) {
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    inputData = inputData.filter((ticket) => {
-      const fieldsToFilter = [
-        ticket?.name,
-        ticket?.slug,
-        ticket?.displayOrderNo,
-        fDate(ticket?.createdAt),
-      ];
-      return fieldsToFilter.some((field) =>
-        field?.toLowerCase().includes(filterName.toLowerCase())
-      );
-    });
+    inputData = inputData.filter(
+      (issueType) =>
+        issueType?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        issueType?.slug?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        fDate(issueType?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+    );
   }
-  
   return inputData;
 }

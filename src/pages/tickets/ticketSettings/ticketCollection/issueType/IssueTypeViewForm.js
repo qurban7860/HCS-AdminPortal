@@ -9,10 +9,11 @@ import { Card, Grid } from '@mui/material';
 import { PATH_SUPPORT } from '../../../../../routes/paths';
 // components
 import { useSnackbar } from '../../../../../components/snackbar';
-import { deleteTicketIssueType } from '../../../../../redux/slices/ticket/ticketSettings/ticketIssueTypes';
+import { deleteTicketIssueType, resetTicketIssueType } from '../../../../../redux/slices/ticket/ticketSettings/ticketIssueTypes';
 import ViewFormAudit from '../../../../../components/ViewForms/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../../../../../components/ViewForms/ViewFormEditDeleteButtons';
 import ViewFormField from '../../../../../components/ViewForms/ViewFormField';
+import ViewFormSwitch from '../../../../../components/ViewForms/ViewFormSwitch';
 
 // ----------------------------------------------------------------------
 
@@ -27,11 +28,11 @@ export default function IssueTypeViewForm() {
   const defaultValues = useMemo(
     () => ({
       name: ticketIssueType?.name || '',
-      order: ticketIssueType?.order || '',
-      description: ticketIssueType?.description || '',
-      displayOrderNo: ticketIssueType?.displayOrderNo || '',
       slug: ticketIssueType?.slug || '',
-      isDefault: ticketIssueType?.isDefault,
+      icon: ticketIssueType?.icon || '',
+      displayOrderNo: ticketIssueType?.displayOrderNo || '',
+      description: ticketIssueType?.description || '',
+      isDefault: ticketIssueType?.isDefault || false,
       createdByFullName: ticketIssueType?.createdBy?.name || '',
       createdAt: ticketIssueType?.createdAt || '',
       createdIP: ticketIssueType?.createdIP || '',
@@ -62,18 +63,22 @@ export default function IssueTypeViewForm() {
         isDefault={defaultValues.isDefault} 
         handleEdit={toggleEdit} 
         onDelete={onDelete} 
-        backLink={() => navigate(PATH_SUPPORT.ticketSettings.issueTypes.root)} 
-        />
+        backLink={() => {
+          dispatch(resetTicketIssueType());
+          navigate(PATH_SUPPORT.ticketSettings.issueTypes.root);
+        }}
+      />
       <Grid container sx={{mt:2}}>
-        <ViewFormField isLoading={isLoading} sm={12} heading="Name" param={defaultValues?.name} />
-        <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues?.description} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Name" param={defaultValues?.name} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Icon" param={defaultValues?.icon} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Slug" param={defaultValues?.slug} />
         <ViewFormField isLoading={isLoading}
-          sm={12}
+          sm={6}
           heading="Display Order No."
           param={defaultValues?.displayOrderNo?.toString()}
-          />
-        <ViewFormField isLoading={isLoading} sm={12} heading="Slug" param={defaultValues?.slug} />
-        <ViewFormField isLoading={isLoading} sm={12} heading="Order Number" param={defaultValues?.order} />
+        />
+        <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues?.description} />
+        <ViewFormSwitch isLoading={isLoading} sm={12} isActiveHeading="Default" isActive={defaultValues.isDefault} />
         <Grid container>
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>

@@ -133,11 +133,11 @@ export function postTicketIssueType(params) {
     try {
         const data = {
             name: params.name,
+            icon: params.icon,
+            slug: params.slug,
             displayOrderNo: params.displayOrderNo,
             description: params.description,
-            isActive: params.isActive,
             isDefault: params.isDefault,
-            slug: params.slug,
         };
       const response = await axios.post(`${CONFIG.SERVER_URL}tickets/settings/issueTypes/`, data);
       dispatch(slice.actions.postTicketIssueTypeSuccess(response.data));
@@ -156,12 +156,12 @@ export function patchTicketIssueType(id, params) {
     dispatch(slice.actions.startLoading());
     try {
         const data = {
-            name: params.name,
-            displayOrderNo: params.displayOrderNo,
-            description: params.description,
-            isActive: params.isActive,
-            isDefault: params.isDefault,
-            slug: params.slug,
+          name: params.name,
+          icon: params.icon,
+          slug: params.slug,
+          displayOrderNo: params.displayOrderNo,
+          description: params.description,
+          isDefault: params.isDefault,
         };
       const response = await axios.patch(`${CONFIG.SERVER_URL}tickets/settings/issueTypes/${id}`, data);
       dispatch(slice.actions.patchTicketIssueTypeSuccess(response.data)); 

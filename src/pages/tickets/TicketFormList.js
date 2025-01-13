@@ -73,12 +73,12 @@ export default function TicketFormList(){
   const [selectedIssueType, setSelectedIssueType] = useState(null);
   const [ selectedStatus, setSelectedStatus ] = useState(null);
 
-  useLayoutEffect(() => {
-    dispatch(getTickets(page, rowsPerPage ));
-    return () => {
-      dispatch(resetTickets());
-    }
-  }, [dispatch, machineId, page, rowsPerPage ]);
+  // useLayoutEffect(() => {
+  //   dispatch(getTickets(page, rowsPerPage ));
+  //   return () => {
+  //     dispatch(resetTickets());
+  //   }
+  // }, [dispatch, machineId, page, rowsPerPage ]);
 
   useEffect(() => {
     if (initial) {
