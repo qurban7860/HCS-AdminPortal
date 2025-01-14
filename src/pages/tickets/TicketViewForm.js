@@ -11,8 +11,7 @@ import { PATH_SUPPORT } from '../../routes/paths';
 import { useSnackbar } from '../../components/snackbar';
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
-import PriorityIcon from '../calendar/utils/PriorityIcon';
-import IssueTypeIcon from './utils/IssueTypeIcon';
+import Iconify from '../../components/iconify';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 import ViewFormSwitch from '../../components/ViewForms/ViewFormSwitch';
 
@@ -44,20 +43,20 @@ export default function TicketViewForm() {
       key: ticket?.key || '',
       customer: ticket?.customer?.name || '',
       machine: ticket?.machine?.serialNo || '',
-      issueType: ticket?.issueType || '',
+      issueType: ticket?.issueType?.name || '',
       summary: ticket?.summary || '',
       description: ticket?.description || '',
       files: ticket?.files || '',
-      priority: ticket?.priority || '',
-      status: ticket?.status || '',
-      impact: ticket?.impact || '',
-      shareWith: ticket?.shareWith || false,
-      changeType: ticket?.changeType || '',
-      changeReason: ticket?.changeReason || '',
+      priority: ticket?.priority?.name || '',
+      status: ticket?.status?.name || '',
+      impact: ticket?.impact?.name || '',
+      shareWith: ticket?.shareWith,
+      changeType: ticket?.changeType?.name || '',
+      changeReason: ticket?.changeReason?.name || '',
       implementationPlan: ticket?.implementationPlan || '',
       backoutPlan: ticket?.backoutPlan || '',
       testPlan: ticket?.testPlan || '',
-      investigationReason: ticket?.investigationReason || '',
+      investigationReason: ticket?.investigationReason?.name || '',
       rootCause: ticket?.rootCause || '',
       workaround: ticket?.workaround || '',
       createdBy: ticket?.createdBy || '',
@@ -85,8 +84,10 @@ export default function TicketViewForm() {
             isLoading={isLoading} sm={4} heading="Issue Type"
             param={
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <IssueTypeIcon issueType={defaultValues.issueType} />
-                <Typography sx={{ marginLeft: 0.5 }}>{defaultValues.issueType}</Typography>
+                {ticket?.issueType?.icon ? (
+                  <Iconify icon={ticket.issueType.icon} sx={{ width: 25, height: 25 }} />
+                ) : null}
+                <Typography sx={{ marginLeft: 0.5 }}>{ticket?.issueType?.name}</Typography>
               </Box>
             }
           />
@@ -97,14 +98,26 @@ export default function TicketViewForm() {
             isLoading={isLoading} sm={4} heading="Priority"
             param={
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <PriorityIcon priority={defaultValues.priority} />
-                {defaultValues.priority}
+               {ticket?.priority?.icon ? (
+                 <Iconify icon={ticket.priority.icon} sx={{ width: 25, height: 25 }} />
+                ) : null}
+                <Typography sx={{ marginLeft: 0.5 }}>{ticket?.priority?.name}</Typography>
               </Box>
             }
           />
-          <ViewFormField isLoading={isLoading} sm={4} heading="Status" param={defaultValues.status} />
+          <ViewFormField
+            isLoading={isLoading} sm={4} heading="Status"
+            param={
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+               {ticket?.status?.icon ? (
+                 <Iconify icon={ticket.status.icon} sx={{ width: 24, height: 24 }} />
+                ) : null}
+                <Typography sx={{ marginLeft: 0.5 }}>{ticket?.status?.name}</Typography>
+              </Box>
+            }
+          />
           <ViewFormField isLoading={isLoading} sm={4} heading="Impact" param={defaultValues.impact} />
-          {ticket?.issueType === 'Change Request' && (
+          {ticket?.issueType.name === 'Change Request' && (
             <>
               <ViewFormField isLoading={isLoading} sm={4} heading="Change Type" param={defaultValues.changeType} />
               <ViewFormField isLoading={isLoading} sm={4} heading="Change Reason" param={defaultValues.changeReason} />
@@ -113,7 +126,7 @@ export default function TicketViewForm() {
               <ViewFormField isLoading={isLoading} sm={12} heading="Test Plan" param={defaultValues.testPlan} />
             </>
           )}
-          {ticket?.issueType === 'System Incident' && (
+          {ticket?.issueType.name === 'System Incident' && (
             <>
               <ViewFormField isLoading={isLoading} sm={6} heading="Investigation Reason" param={defaultValues.investigationReason} />
               <ViewFormField isLoading={isLoading} sm={12} heading="Root Cause" param={defaultValues.rootCause} />

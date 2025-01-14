@@ -11,6 +11,7 @@ import { useSnackbar } from '../../../../../components/snackbar';
 import { deleteTicketStatus, resetTicketStatus } from '../../../../../redux/slices/ticket/ticketSettings/ticketStatuses';
 import ViewFormAudit from '../../../../../components/ViewForms/ViewFormAudit';
 import Iconify from '../../../../../components/iconify';
+import { StyledTooltip } from '../../../../../theme/styles/default-styles'
 import ViewFormEditDeleteButtons from '../../../../../components/ViewForms/ViewFormEditDeleteButtons';
 import ViewFormField from '../../../../../components/ViewForms/ViewFormField';
 import ViewFormSwitch from '../../../../../components/ViewForms/ViewFormSwitch';
@@ -70,7 +71,13 @@ export default function StatusViewForm() {
       />
       <Grid container sx={{mt:2}}>
         <ViewFormField isLoading={isLoading} sm={6} heading="Name" param={defaultValues?.name} />
-        <ViewFormField isLoading={isLoading} sm={6} heading="Icon" param={<Iconify icon={defaultValues?.icon} sx={{ width: 25, height: 25 }} />} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Icon" param={
+          <StyledTooltip 
+           placement="top" 
+           title={defaultValues?.name || ''} > 
+           <Iconify icon={defaultValues?.icon} sx={{ width: 25, height: 25 }} />
+          </StyledTooltip> } 
+        />
         <ViewFormField isLoading={isLoading} sm={6} heading="Slug" param={defaultValues?.slug} />
         <ViewFormField isLoading={isLoading}
           sm={6}

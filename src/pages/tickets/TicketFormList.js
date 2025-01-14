@@ -4,6 +4,7 @@ import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { Container, Table, TableBody, TableContainer } from '@mui/material';
 // routes
 import { useNavigate, useParams } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
 import { PATH_SUPPORT } from '../../routes/paths';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
@@ -17,6 +18,7 @@ import {
   TablePaginationCustom,
 } from '../../components/table';
 import Scrollbar from '../../components/scrollbar';
+import FormProvider from '../../components/hook-form';
 // sections
 import TicketFormTableRow from './TicketFormTableRow';
 import TicketFormTableToolbar from './TicketFormTableToolbar';
@@ -53,6 +55,7 @@ export default function TicketFormList(){
 
   const navigate = useNavigate();
   const { machineId } = useParams();
+  const methods = useForm();
   const {
     order,
     orderBy,
@@ -73,12 +76,12 @@ export default function TicketFormList(){
   const [selectedIssueType, setSelectedIssueType] = useState(null);
   const [ selectedStatus, setSelectedStatus ] = useState(null);
 
-  // useLayoutEffect(() => {
-  //   dispatch(getTickets(page, rowsPerPage ));
-  //   return () => {
-  //     dispatch(resetTickets());
-  //   }
-  // }, [dispatch, machineId, page, rowsPerPage ]);
+  useLayoutEffect(() => {
+    dispatch(getTickets(page, rowsPerPage ));
+    return () => {
+      dispatch(resetTickets());
+    }
+  }, [dispatch, machineId, page, rowsPerPage ]);
 
   useEffect(() => {
     if (initial) {
@@ -133,6 +136,7 @@ export default function TicketFormList(){
       <StyledCardContainer>
         <Cover name="Support Tickets" icon="ph:users-light" />
       </StyledCardContainer>
+      <FormProvider {...methods}>
         <TableCard>
           <TicketFormTableToolbar
             filterName={filterName}
@@ -191,6 +195,7 @@ export default function TicketFormList(){
             onRowsPerPageChange={onChangeRowsPerPage}
           />}
         </TableCard>
+        </FormProvider>
       </Container>
   );
 }
@@ -216,8 +221,7 @@ function applyFilter({ inputData, comparator, filterName, selectedIssueType, sel
         ticket?.machine?.serialNo,
         ticket?.customer?.name,
         ticket?.summary,
-        ticket?.priority,
-        ticket?.status,
+        ticket?.priority?.name,
         fDate(ticket?.createdAt),
       ];
       return fieldsToFilter.some((field) =>
@@ -226,7 +230,6 @@ function applyFilter({ inputData, comparator, filterName, selectedIssueType, sel
     });
   }
   
-
   if (selectedIssueType) {
     inputData = inputData.filter((ticket) => ticket?.issueType === selectedIssueType?.value);
   }

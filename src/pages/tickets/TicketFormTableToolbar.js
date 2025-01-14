@@ -1,13 +1,19 @@
 import PropTypes from 'prop-types';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 // @mui
-import { Stack, TextField, Autocomplete } from '@mui/material';
+import { Stack } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import SearchBarCombo from '../../components/ListTableTools/SearchBarCombo';
+import { RHFAutocomplete } from '../../components/hook-form';
 // routes
 import { PATH_SUPPORT } from '../../routes/paths';
 // constants
+import { getTicketIssueTypes, resetTicketIssueTypes } from '../../redux/slices/ticket/ticketSettings/ticketIssueTypes';
+import { getTicketStatuses, resetTicketStatuses } from '../../redux/slices/ticket/ticketSettings/ticketStatuses';
 import { BUTTONS } from '../../constants/default-constants';
 import { options } from '../../theme/styles/default-styles';
+
 // ----------------------------------------------------------------------
 
 TicketFormTableToolbar.propTypes = {
@@ -32,24 +38,23 @@ export default function TicketFormTableToolbar({
   setSelectedIssueType,
 }) {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const { ticketIssueTypes } = useSelector((state) => state.ticketIssueTypes);
+  const { ticketStatuses } = useSelector((state) => state.ticketStatuses);
+
+  useEffect(() => {
+    dispatch(getTicketIssueTypes());
+    dispatch(getTicketStatuses());
+    return () => {
+      dispatch(resetTicketIssueTypes());
+      dispatch(resetTicketStatuses());
+    };
+  }, [dispatch]);
 
   const toggleAdd = () => {
     navigate(PATH_SUPPORT.supportTickets.new);
   };
-
-  const statusOptions = [
-    { label: 'To Do', value: 'To Do', color: '#FBC02D' },
-    { label: 'In Progress', value: 'In Progress', color: '#1E88E5' },
-    { label: 'Done', value: 'Done', color: '#388E3C' },
-    { label: 'Cancelled', value: 'Cancelled', color: '#D32F2F' },
-  ];
-
-  const issueTypeOptions = [
-    { label: 'System Problem', value: 'System Problem' },
-    { label: 'Change Request', value: 'Change Request' },
-    { label: 'System Incident', value: 'System Incident' },
-    { label: 'Service Request', value: 'Service Request' },
-  ];
 
   return (
     <Stack {...options}>
@@ -58,41 +63,58 @@ export default function TicketFormTableToolbar({
         value={filterName}
         onChange={onFilterName}
         onClick={onResetFilter}
-        node={
-          <Stack direction="row" spacing={1}>
-            <Autocomplete
-              value={selectedIssueType || null}
-              options={issueTypeOptions}
-              isOptionEqualToValue={(option, val) => option.value === val?.value}
-              getOptionLabel={(option) => option?.label || ''}
-              onChange={(event, newValue) => {
-                if (newValue) {
-                  setSelectedIssueType(newValue);
-                } else {
-                  setSelectedIssueType(null);
-                }
-              }}
-              sx={{ width: 300 }}
-              renderInput={(params) => <TextField {...params} size="small" label="Issue Type" />}
-            />
-            <Autocomplete
-              value={selectedStatus || null}
-              options={statusOptions}
-              isOptionEqualToValue={(option, val) => option.value === val?.value}
-              getOptionLabel={(option) => option?.label || ''}
-              onChange={(event, newValue) => {
-                if (newValue) {
-                  setSelectedStatus(newValue);
-                } else {
-                  setSelectedStatus(null);
-                }
-              }}
-              sx={{ width: 300 }}
-              renderOption={(props, option) => ( <li {...props} key={option.value} style={{ color: option.color }}> {option.label} </li> )}
-              renderInput={(params) => ( <TextField {...params} size="small" label="Status" InputProps={{ ...params.InputProps, style: { color: selectedStatus?.color || 'inherit' } }}/> )}
-            />
-          </Stack>
-        }
+        // node={
+        //   <Stack direction="row" spacing={1}>
+        //     {ticketIssueTypes?.length > 0 && (
+        //       <RHFAutocomplete
+        //         value={selectedIssueType || null}
+        //         name="issueType"
+        //         label="Issue Type"
+        //         sx={{ width: 300 }}
+        //         size="small"
+        //         options={ticketIssueTypes || []}
+        //         isOptionEqualToValue={(option, value) => option._id === value._id}
+        //         getOptionLabel={(option) => `${option.name || ''}`}
+        //         renderOption={(props, option) => (
+        //           <li {...props} key={option?._id}>
+        //             {option.name || ''}
+        //           </li>
+        //         )}
+        //         onChange={(event, newValue) => {
+        //           if (newValue) {
+        //             setSelectedIssueType(newValue);
+        //           } else {
+        //             setSelectedIssueType(null);
+        //           }
+        //         }}
+        //       />
+        //     )}
+        //     {ticketStatuses?.length > 0 && (
+        //       <RHFAutocomplete
+        //         value={selectedStatus || null}
+        //         name="status"
+        //         label="Status"
+        //         sx={{ width: 300 }}
+        //         size="small"
+        //         options={ticketStatuses || []}
+        //         isOptionEqualToValue={(option, value) => option._id === value._id}
+        //         getOptionLabel={(option) => `${option.name || ''}`}
+        //         renderOption={(props, option) => (
+        //           <li {...props} key={option?._id}>
+        //             {option.name || ''}
+        //           </li>
+        //         )}
+        //         onChange={(event, newValue) => {
+        //           if (newValue) {
+        //             setSelectedStatus(newValue);
+        //           } else {
+        //             setSelectedStatus(null);
+        //           }
+        //         }}
+        //       />
+        //     )}
+        //   </Stack>
+        // }
         SubOnClick={toggleAdd}
         addButton={BUTTONS.ADDTICKET}
       />
