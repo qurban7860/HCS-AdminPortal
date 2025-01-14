@@ -14,15 +14,18 @@ import { PATH_SUPPORT } from '../../routes/paths';
 import { useSnackbar } from '../../components/snackbar';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import { AddTicketSchema } from '../schemas/ticketSchema';
-import options from './utils/constant';
 import FormProvider, { RHFTextField, RHFUpload, RHFAutocomplete, RHFDatePicker, RHFSwitch } from '../../components/hook-form';
 import { getTicket, postTicket, patchTicket, resetTicket } from '../../redux/slices/ticket/tickets';
 import { getActiveCustomerMachines, resetActiveCustomerMachines } from '../../redux/slices/products/machine';
+import { getTicketIssueTypes, resetTicketIssueTypes } from '../../redux/slices/ticket/ticketSettings/ticketIssueTypes';
+import { getTicketChangeTypes, resetTicketChangeTypes } from '../../redux/slices/ticket/ticketSettings/ticketChangeTypes';
+import { getTicketPriorities, resetTicketPriorities } from '../../redux/slices/ticket/ticketSettings/ticketPriorities';
+import { getTicketStatuses, resetTicketStatuses } from '../../redux/slices/ticket/ticketSettings/ticketStatuses';
+import { getTicketImpacts, resetTicketImpacts } from '../../redux/slices/ticket/ticketSettings/ticketImpacts';
+import { getTicketChangeReasons, resetTicketChangeReasons } from '../../redux/slices/ticket/ticketSettings/ticketChangeReasons';
+import { getTicketInvestigationReasons, resetTicketInvestigationReasons } from '../../redux/slices/ticket/ticketSettings/ticketInvestigationReasons';
 import { getActiveCustomers } from '../../redux/slices/customer/customer';
 import { time_list } from '../../constants/time-list';
-import RenderCustomInput from '../../components/custom-input/RenderCustomInput';
-import PriorityIcon from '../calendar/utils/PriorityIcon';
-import { StatusColor } from '../calendar/utils/StatusColor';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 
 function getTimeObjectFromISOString(dateString) {
@@ -44,37 +47,35 @@ export default function TicketForm() {
   const { enqueueSnackbar } = useSnackbar();
   const { activeCustomerMachines } = useSelector((state) => state.machine);
   const { activeCustomers } = useSelector((state) => state.customer);
-  const { ticket } = useSelector((state) => state.tickets); 
-  const { 
-    changeReasonOptions, 
-    impactOptions, 
-    priorityOptions, 
-    statusOptions,
-    reasonOptions, 
-    typeOptions, 
-    issueTypeOptions 
-  } = options;
+  const { ticket } = useSelector((state) => state.tickets);
+  const { ticketIssueTypes } = useSelector((state) => state.ticketIssueTypes);
+  const { ticketChangeTypes } = useSelector((state) => state.ticketChangeTypes); 
+  const { ticketPriorities } = useSelector((state) => state.ticketPriorities); 
+  const { ticketStatuses } = useSelector((state) => state.ticketStatuses); 
+  const { ticketImpacts } = useSelector((state) => state.ticketImpacts); 
+  const { ticketInvestigationReasons } = useSelector((state) => state.ticketInvestigationReasons); 
+  const { ticketChangeReasons } = useSelector((state) => state.ticketChangeReasons); 
 
   const defaultValues = useMemo(
     () => ({
       customer: ticket?.customer || null,
       machine: ticket?.machine || null,
-      issueType: ticket?.issueType || '',
+      issueType: ticket?.issueType || null,
       summary: ticket?.summary || '',
       description: ticket?.description || '',
-      priority: ticket?.priority || '',
-      status: ticket?.status || 'To Do',
-      impact: ticket?.impact || '',
+      priority: ticket?.priority || null,
+      status: ticket?.status || null,
+      impact: ticket?.impact || null,
       files: ticket?.files || [],
-      changeType: ticket?.changeType || '',
-      changeReason: ticket?.changeReason || '',
+      changeType: ticket?.changeType || null,
+      changeReason: ticket?.changeReason || null,
       implementationPlan: ticket?.implementationPlan || '',
       backoutPlan: ticket?.backoutPlan || '',
       testPlan: ticket?.testPlan || '',
-      investigationReason: ticket?.investigationReason || '',
+      investigationReason: ticket?.investigationReason || null,
       rootCause: ticket?.rootCause || '',
       workaround: ticket?.workaround || '',
-      shareWith: ticket?.shareWith ?? true,
+      shareWith: ticket?.shareWith ?? false,
       plannedStartDate: ticket?.plannedStartDate
         ? getTimeObjectFromISOString(ticket.plannedStartDate)
         : getTimeObjectFromISOString(new Date().toISOString()),
@@ -98,8 +99,23 @@ export default function TicketForm() {
   
   useEffect(() => {
     dispatch(getActiveCustomers());
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    dispatch(getTicketIssueTypes());
+    dispatch(getTicketChangeTypes());
+    dispatch(getTicketPriorities());
+    dispatch(getTicketStatuses());
+    dispatch(getTicketImpacts());
+    dispatch(getTicketInvestigationReasons());
+    dispatch(getTicketChangeReasons());
+    return ()=> { 
+      dispatch(resetTicketIssueTypes()); 
+      dispatch(resetTicketChangeTypes()); 
+      dispatch(resetTicketPriorities()); 
+      dispatch(resetTicketStatuses())
+      dispatch(resetTicketImpacts()); 
+      dispatch(resetTicketInvestigationReasons());
+      dispatch(resetTicketChangeReasons())
+    }
+  }, [dispatch]);  
   
   useEffect(() => {
     if (customer) {
@@ -216,17 +232,15 @@ export default function TicketForm() {
                 </Box>
                   <RHFAutocomplete
                     name="issueType"
-                    options={issueTypeOptions}
-                    isOptionEqualToValue={(option, value) => option === value}
-                    renderInput={(params) => (
-                      <RenderCustomInput label="Issue Type" params={params} />
-                    )}
-                    renderOption={(props, option) => (
-                      <li {...props} key={option}>
-                        {' '}
-                        <span style={{ marginLeft: 8 }}>{option}</span>{' '}
-                      </li>
-                    )}
+                    label="Issue Type"
+                    options={ticketIssueTypes || []}
+                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    getOptionLabel={(option) => `${option.name || ''}`}
+                    renderOption={(props, option) => (<li {...props} key={option?._id}> {option.name || ''} </li> )}
+                    onChange={(e, newValue) => {
+                      setValue('issueType', newValue);
+                      trigger('issueType'); 
+                    }}
                   />
                 </Stack>
               </Card>
@@ -264,110 +278,67 @@ export default function TicketForm() {
                   </Box>
                   <RHFAutocomplete
                     name="priority"
-                    options={priorityOptions}
-                    isOptionEqualToValue={(option, value) => option === value}
-                    renderInput={(params) => <RenderCustomInput label="Priority" params={params} />}
-                    renderOption={(props, option) => (
-                      <li {...props} key={option}>
-                        {' '}
-                        <PriorityIcon priority={option} />{' '}
-                        <span style={{ marginLeft: 8 }}>{option}</span>{' '}
-                      </li>
-                    )}
+                    label="Priority"
+                    options={ticketPriorities || []}
+                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    getOptionLabel={(option) => `${option.name || ''}`}
+                    renderOption={(props, option) => (<li {...props} key={option?._id}> {option.name && option.name} </li> )}
                   />
-                  <RHFAutocomplete
+                   <RHFAutocomplete
                     name="status"
-                    options={statusOptions}
-                    isOptionEqualToValue={(option, value) => option === value}
-                    renderInput={(params) => (
-                      <RenderCustomInput
-                       label="Status"
-                       params={{ ...params, error: !!errors?.status, helperText: errors?.status?.message, 
-                        InputProps: {
-                        ...params.InputProps,
-                        style: { 
-                        ...params.InputProps.style, 
-                        color: StatusColor(params.InputProps.value) }},
-                        }}
-                      />
-                    )}
-                    renderOption={(props, option) => (
-                      <li {...props} key={option} style={{ fontWeight: 'bold', color: StatusColor(option) }}>
-                        {option}
-                      </li>
-                    )}
-                    rules={{ required: 'Status is required' }}
+                    label="Status"
+                    options={ticketStatuses || []}
+                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    getOptionLabel={(option) => `${option.name || ''}`}
+                    renderOption={(props, option) => (<li {...props} key={option?._id}> {option.name && option.name} </li> )}
                   />
                   <RHFAutocomplete
                     name="impact"
-                    options={impactOptions}
-                    isOptionEqualToValue={(option, value) => option === value}
-                    renderInput={(params) => <RenderCustomInput label="Impact" params={params} />}
-                    renderOption={(props, option) => (
-                      <li {...props} key={option}>
-                        {' '}
-                        <span style={{ marginLeft: 8 }}>{option}</span>{' '}
-                      </li>
-                    )}
+                    label="Impact"
+                    options={ticketImpacts || []}
+                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    getOptionLabel={(option) => `${option.name || ''}`}
+                    renderOption={(props, option) => (<li {...props} key={option?._id}> {option.name && option.name} </li> )}
                   />
-                   {issueType === 'Change Request' && (
+                  {issueType.name === 'Change Request' && (
                   <>
                   <RHFAutocomplete
                     name="changeType"
-                    options={typeOptions}
-                    isOptionEqualToValue={(option, value) => option === value}
-                    renderInput={(params) => (
-                      <RenderCustomInput label="Change Type" params={params} />
-                    )}
-                    renderOption={(props, option) => (
-                      <li {...props} key={option}>
-                        {' '}
-                        <span style={{ marginLeft: 8 }}>{option}</span>{' '}
-                      </li>
-                    )}
+                    label="Change Type"
+                    options={ticketChangeTypes || []}
+                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    getOptionLabel={(option) => `${option.name || ''}`}
+                    renderOption={(props, option) => (<li {...props} key={option?._id}> {option.name && option.name} </li> )}
                   />
                   <RHFAutocomplete
                     name="changeReason"
-                    options={changeReasonOptions}
-                    isOptionEqualToValue={(option, value) => option === value}
-                    renderInput={(params) => (
-                      <RenderCustomInput label="Change Reason" params={params} />
-                    )}
-                    renderOption={(props, option) => (
-                      <li {...props} key={option}>
-                        {' '}
-                        <PriorityIcon priority={option} />{' '}
-                        <span style={{ marginLeft: 8 }}>{option}</span>{' '}
-                      </li>
-                    )}
+                    label="Change Reason"
+                    options={ticketChangeReasons || []}
+                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    getOptionLabel={(option) => `${option.name || ''}`}
+                    renderOption={(props, option) => (<li {...props} key={option?._id}> {option.name && option.name} </li> )}
                   />
                   <RHFTextField name="implementationPlan" label="Implementation Plan" minRows={4} multiline />
                   <RHFTextField name="backoutPlan" label="Backout Plan" minRows={4} multiline />
                   <RHFTextField name="testPlan" label="Test Plan" minRows={4} multiline />
                   </>
                 )}
-                 {issueType === 'System Incident' && (
+                 {issueType.name === 'System Incident' && (
                     <>
-                  <RHFAutocomplete
+                   <RHFAutocomplete
                     name="investigationReason"
-                    options={reasonOptions}
-                    isOptionEqualToValue={(option, value) => option === value}
-                    renderInput={(params) => (
-                      <RenderCustomInput label="Investigation reason" params={params} />
-                    )}
-                    renderOption={(props, option) => (
-                      <li {...props} key={option}>
-                        {' '}
-                        <span style={{ marginLeft: 8 }}>{option}</span>{' '}
-                      </li>
-                    )}
+                    label="Investigation Reason"
+                    options={ticketInvestigationReasons || []}
+                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    getOptionLabel={(option) => `${option.name || ''}`}
+                    renderOption={(props, option) => (<li {...props} key={option?._id}> {option.name && option.name} </li> )}
                   />
                   <RHFTextField name="rootCause" label="Root cause" minRows={4} multiline />
                   <RHFTextField name="workaround" label="Workaround" minRows={4} multiline />
                   </>
                 )}
                 </Box>
-                {issueType === 'Change Request' && (
+                {issueType.name === 'Change Request' && (
                 <Box
                   rowGap={2}
                   columnGap={2}

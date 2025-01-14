@@ -6,10 +6,9 @@ import {
 } from '@mui/material';
 // utils
 import { fDate } from '../../utils/formatTime';
-import { StyledTableRow } from '../../theme/styles/default-styles'
+import { StyledTableRow, StyledTooltip } from '../../theme/styles/default-styles'
 import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
-import PriorityIcon from '../calendar/utils/PriorityIcon';
-import IssueTypeIcon from './utils/IssueTypeIcon';
+import Iconify from '../../components/iconify';
 
 // ----------------------------------------------------------------------
 
@@ -35,22 +34,37 @@ export default function TicketFormTableRow({
       </Stack>
       <LinkTableCell align="left" padding="checkbox" onClick={onViewRow} param={customer?.name || ''} /> 
       <TableCell align="left" padding="checkbox">
-        <IssueTypeIcon issueType={issueType} />
+        {issueType?.icon ? (
+          <StyledTooltip 
+           placement="top" 
+           title={issueType.name || ''} >
+           <Iconify icon={issueType.icon} width={24} height={24} />
+          </StyledTooltip>
+        ) : (
+          ''
+        )}
       </TableCell>
       <TableCell align="left" padding="checkbox">
-        <Typography variant='subtitle2' sx={{mr: 1,
-          color: (
-            status === 'To Do' && '#FBC02D' ||
-            status === 'In Progress' && '#1E88E5' ||
-            status === 'Done' && '#388E3C' ||
-            status === 'Cancelled' && '#D32F2F'
-          ) || 'inherit'
-          }}
-        >{status || ""}
-        </Typography>
+        {status?.icon ? (
+          <StyledTooltip 
+           placement="top" 
+           title={status.name || ''} >
+           <Iconify icon={status.icon} width={24} height={24} />
+          </StyledTooltip>
+        ) : (
+          ''
+        )}
       </TableCell>
       <TableCell align="left" padding="checkbox">
-        <PriorityIcon priority={priority} />
+        {priority?.icon ? (
+          <StyledTooltip 
+           placement="top" 
+           title={priority.name || ''} >
+           <Iconify icon={priority.icon} width={24} height={24} />
+          </StyledTooltip>
+        ) : (
+          ''
+        )}
       </TableCell>
       <TableCell align='right' > { fDate(createdAt) } </TableCell>
     </StyledTableRow>
