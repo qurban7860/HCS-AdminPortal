@@ -124,6 +124,11 @@ export default function TicketForm() {
       dispatch(resetActiveCustomerMachines());
     }
   }, [dispatch, customer]);
+  
+  useEffect(() => {
+    setValue('status', ticketStatuses.find((element) => element.name === 'To Do') )
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[ ticketStatuses ])
 
    const handleCustomerChange = useCallback((newCustomer) => {
       setValue('customer', newCustomer);
@@ -251,7 +256,7 @@ export default function TicketForm() {
           <Grid item xs={12} md={12}>
             <Card sx={{ p: 3 }}>
               <Stack spacing={3}>
-                <RHFTextField name="summary" label="Summary*" minRows={1} multiline />
+                <RHFTextField name="summary" label="Summary*" minRows={1} />
                 <RHFTextField name="description" label="Description" minRows={3} multiline />
                 <Box
                   sx={{
@@ -284,7 +289,7 @@ export default function TicketForm() {
                     getOptionLabel={(option) => `${option.name || ''}`}
                     renderOption={(props, option) => (<li {...props} key={option?._id}> {option.name && option.name} </li> )}
                   />
-                   <RHFAutocomplete
+                  <RHFAutocomplete
                     name="status"
                     label="Status"
                     options={ticketStatuses || []}
@@ -300,7 +305,7 @@ export default function TicketForm() {
                     getOptionLabel={(option) => `${option.name || ''}`}
                     renderOption={(props, option) => (<li {...props} key={option?._id}> {option.name && option.name} </li> )}
                   />
-                  {issueType.name === 'Change Request' && (
+                  {issueType?.name === 'Change Request' && (
                   <>
                   <RHFAutocomplete
                     name="changeType"
@@ -323,7 +328,7 @@ export default function TicketForm() {
                   <RHFTextField name="testPlan" label="Test Plan" minRows={4} multiline />
                   </>
                 )}
-                 {issueType.name === 'System Incident' && (
+                 {issueType?.name === 'System Incident' && (
                     <>
                    <RHFAutocomplete
                     name="investigationReason"
@@ -333,12 +338,12 @@ export default function TicketForm() {
                     getOptionLabel={(option) => `${option.name || ''}`}
                     renderOption={(props, option) => (<li {...props} key={option?._id}> {option.name && option.name} </li> )}
                   />
-                  <RHFTextField name="rootCause" label="Root cause" minRows={4} multiline />
+                  <RHFTextField name="rootCause" label="Root Cause" minRows={4} multiline />
                   <RHFTextField name="workaround" label="Workaround" minRows={4} multiline />
                   </>
                 )}
                 </Box>
-                {issueType.name === 'Change Request' && (
+                {issueType?.name === 'Change Request' && (
                 <Box
                   rowGap={2}
                   columnGap={2}
@@ -346,7 +351,7 @@ export default function TicketForm() {
                   gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(4, 1fr)' }}
                 >
                   <RHFDatePicker
-                    label="Planned start date"
+                    label="Planned Start Date"
                     name="dateFrom"
                     value={dateFrom}
                     onChange={(newValue) => {
@@ -355,7 +360,7 @@ export default function TicketForm() {
                     }}
                   />
                   <RHFAutocomplete
-                    label="Planned start time"
+                    label="Planned Start Time"
                     name="plannedStartDate"
                     options={time_list}
                     isOptionEqualToValue={(option, value) => option?.value === value?.value}
@@ -365,7 +370,7 @@ export default function TicketForm() {
                     )}
                   />
                   <RHFDatePicker
-                    label="Planned end date"
+                    label="Planned End Date"
                     name="dateTo"
                     value={dateTo}
                     onChange={(newValue) => {
@@ -374,7 +379,7 @@ export default function TicketForm() {
                     }}
                   />
                   <RHFAutocomplete
-                    label="Planned end time"
+                    label="Planned End Time"
                     name="plannedEndDate"
                     options={time_list}
                     isOptionEqualToValue={(option, value) => option?.value === value?.value}
@@ -386,7 +391,7 @@ export default function TicketForm() {
                 </Box>
                 )}
                 <Grid display="flex" alignItems="end">
-                  <RHFSwitch name="shareWith" label="Shared with organization" />
+                  <RHFSwitch name="shareWith" label="Shared With Organization" />
                 </Grid>
                 <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Stack>

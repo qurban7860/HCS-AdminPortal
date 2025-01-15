@@ -39,12 +39,11 @@ import { StyledCardContainer } from '../../theme/styles/default-styles';
 
 const TABLE_HEAD = [
   { id: 'ticketNo', label: 'Ticket No.', align: 'left' },
-  { id: 'machine', label: 'Serial No', align: 'left' },
   { id: 'summary', label: 'Summary', align: 'left' },
-  { id: 'customer', label: 'Customer', align: 'left' },
-  { id: 'issueType', label: 'IssueType', align: 'left' },
   { id: 'status', label: 'Status', align: 'left' },
   { id: 'priority', label: 'Priority', align: 'left' },
+  { id: 'customer', label: 'Customer', align: 'left' },
+  { id: 'machine', label: 'Serial No', align: 'left' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
 

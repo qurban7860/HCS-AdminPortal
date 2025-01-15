@@ -99,8 +99,8 @@ export default function StatusForm() {
                   <RHFTextField name="name" label="Name*"/>
                   <RHFTextField 
                     InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="end" >
+                      endAdornment: (
+                        <InputAdornment position="start" >
                           <Iconify icon={icon} sx={{ width: 25, height: 25, }} />
                         </InputAdornment>
                       )

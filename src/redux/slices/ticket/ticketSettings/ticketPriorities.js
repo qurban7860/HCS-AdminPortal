@@ -54,21 +54,21 @@ const slice = createSlice({
       state.isLoading = false;
       state.success = true;
       state.ticketPriority = action.payload;
-      state.responseMessage = 'Ticket created successfully';
+      state.responseMessage = 'Priority created successfully';
     },
     
     patchTicketPrioritySuccess(state, action) {
       state.isLoading = false;
       state.success = true;
       state.ticketPriority = action.payload;
-      state.responseMessage = 'Ticket updated successfully.';
+      state.responseMessage = 'Priority updated successfully.';
     },
 
     deleteTicketPrioritySuccess(state, action) {
       state.isLoading = false;
       state.success = true;
       state.ticketPriorities = state.ticketPriorities.filter((ticketPriority) => ticketPriority._id !== action.payload);
-      state.responseMessage = 'Ticket deleted successfully.';
+      state.responseMessage = 'Priority Archived successfully.';
     },
 
     // SET RESPONSE MESSAGE
@@ -182,6 +182,7 @@ export function getTicketPriorities(page, pageSize) {
       const params = {
         orderBy: { createdAt: -1 },
         pagination: { page, pageSize },
+        isArchived: false,
       };
 
       const response = await axios.get(`${CONFIG.SERVER_URL}tickets/settings/priorities`, { params });
@@ -211,14 +212,15 @@ export function getTicketPriority(id) {
   };
 }
 
-// DELETE Ticket
-export function deleteTicketPriority(id) {
+// Archive Ticket
+export function deleteTicketPriority(id, isArchived) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      await axios.delete(`${CONFIG.SERVER_URL}tickets/settings/priorities/${id}`);
-      dispatch(slice.actions.deleteTicketPrioritySuccess(id));
-      dispatch(slice.actions.setResponseMessage('Ticket deleted successfully.'));
+      const data = { isArchived }; 
+      const response = await axios.patch(`${CONFIG.SERVER_URL}tickets/settings/priorities/${id}`, data);
+      dispatch(slice.actions.deleteTicketPrioritySuccess(response.data));
+      return response;
     } catch (error) {
       dispatch(slice.actions.hasError(error.message));
       console.error(error);

@@ -47,14 +47,16 @@ export default function StatusViewForm() {
 
   const onDelete = () => {
     try {
-      dispatch(deleteTicketStatus(id));
+      dispatch(deleteTicketStatus(id, true));
+      enqueueSnackbar('Status Archived Successfully!', { variant: 'success' });
       navigate(PATH_SUPPORT.ticketSettings.statuses.root);
+      dispatch(resetTicketStatus());
     } catch (err) {
       enqueueSnackbar('Status Archive failed!', { variant: `error` });
       console.log('Error:', err);
     }
   };
-
+  
   const toggleEdit = () => navigate(PATH_SUPPORT.ticketSettings.statuses.edit(id));
 
   return (
@@ -74,8 +76,8 @@ export default function StatusViewForm() {
         <ViewFormField isLoading={isLoading} sm={6} heading="Icon" param={
           <StyledTooltip 
            placement="top" 
-           title={defaultValues?.name || ''} > 
-           <Iconify icon={defaultValues?.icon} sx={{ width: 25, height: 25 }} />
+           title={defaultValues?.name || ''} color="#2065d1"  sx={{ '& .MuiTooltip-tooltip': { backgroundColor: '#2065d1', color: '#ffffff' }, '& .MuiTooltip-arrow': { color: '#2065d1'} }}> 
+           <Iconify icon={defaultValues?.icon} style={{ width: 25, height: 25, color: '#2065d1' }} />
           </StyledTooltip> } 
         />
         <ViewFormField isLoading={isLoading} sm={6} heading="Slug" param={defaultValues?.slug} />

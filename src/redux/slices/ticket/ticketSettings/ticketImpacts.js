@@ -182,6 +182,7 @@ export function getTicketImpacts(page, pageSize) {
       const params = {
         orderBy: { createdAt: -1 },
         pagination: { page, pageSize },
+        isArchived: false,
       };
 
       const response = await axios.get(`${CONFIG.SERVER_URL}tickets/settings/impacts/`, { params });
@@ -211,14 +212,15 @@ export function getTicketImpact(id) {
   };
 }
 
-// DELETE Ticket
-export function deleteTicketImpact(id) {
+// Archive Ticket
+export function deleteTicketImpact(id, isArchived) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      await axios.delete(`${CONFIG.SERVER_URL}tickets/settings/impacts/${id}`);
-      dispatch(slice.actions.deleteTicketImpactSuccess(id));
-      dispatch(slice.actions.setResponseMessage('Ticket deleted successfully.'));
+      const data = { isArchived }; 
+      const response = await axios.patch(`${CONFIG.SERVER_URL}tickets/settings/impacts/${id}`, data);
+      dispatch(slice.actions.deleteTicketImpactSuccess(response.data));
+      return response;
     } catch (error) {
       dispatch(slice.actions.hasError(error.message));
       console.error(error);
@@ -226,3 +228,4 @@ export function deleteTicketImpact(id) {
     }
   };
 }
+

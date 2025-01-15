@@ -27,23 +27,19 @@ export default function TicketFormTableRow({
   const { ticketNo, customer, machine, issueType, summary, priority, status, createdAt } = row;
   return (
     <StyledTableRow hover selected={selected}>
-      <LinkTableCell align="left" onClick={() => onViewRow( ticketNo )} param={ticketNo || ''} />
-      <TableCell align='left' > { machine?.serialNo || ''} </TableCell>
-      <Stack direction="row" alignItems="center">
-        <TableCell align='left' > { summary || ''} </TableCell> 
-      </Stack>
-      <LinkTableCell align="left" padding="checkbox" onClick={onViewRow} param={customer?.name || ''} /> 
-      <TableCell align="left" padding="checkbox">
-        {issueType?.icon ? (
-          <StyledTooltip 
-           placement="top" 
-           title={issueType.name || ''} >
-           <Iconify icon={issueType.icon} width={24} height={24} />
-          </StyledTooltip>
-        ) : (
-          ''
-        )}
+      <TableCell align="left">
+        <Stack direction="row" alignItems="center" spacing={-1} >
+          {issueType?.icon && (
+            <StyledTooltip placement="top" title={issueType.name || ''} >
+              <Iconify icon={issueType.icon} width={24} height={24} />
+            </StyledTooltip>
+          )}
+          <LinkTableCell align="left" onClick={() => onViewRow(ticketNo)} param={ticketNo || ''} />
+        </Stack>
       </TableCell>
+      <Stack direction="row" alignItems="center">
+        <LinkTableCell align="left" onClick={onViewRow} param={summary || ''} /> 
+      </Stack>
       <TableCell align="left" padding="checkbox">
         {status?.icon ? (
           <StyledTooltip 
@@ -55,7 +51,7 @@ export default function TicketFormTableRow({
           ''
         )}
       </TableCell>
-      <TableCell align="left" padding="checkbox">
+      <TableCell align="left" >
         {priority?.icon ? (
           <StyledTooltip 
            placement="top" 
@@ -66,6 +62,8 @@ export default function TicketFormTableRow({
           ''
         )}
       </TableCell>
+      <TableCell align='left' > { customer?.name || ''} </TableCell>
+      <TableCell align='left' > { machine?.serialNo || ''} </TableCell>
       <TableCell align='right' > { fDate(createdAt) } </TableCell>
     </StyledTableRow>
   );
