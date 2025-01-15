@@ -28,7 +28,7 @@ export default function TicketFormTableRow({
   return (
     <StyledTableRow hover selected={selected}>
       <TableCell align="left">
-        <Stack direction="row" alignItems="center" spacing={-1} >
+        <Stack direction="row" alignItems="center" spacing={-1.5} >
           {issueType?.icon && (
             <StyledTooltip placement="top" title={issueType.name || ''} >
               <Iconify icon={issueType.icon} width={24} height={24} />

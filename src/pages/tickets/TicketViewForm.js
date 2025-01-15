@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 // @mui
 import { Card, Grid, Box, Typography } from '@mui/material';
 // redux
@@ -20,15 +20,17 @@ import ViewFormSwitch from '../../components/ViewForms/ViewFormSwitch';
 
 export default function TicketViewForm() {
   const { ticket, isLoading } = useSelector((state) => state.tickets);
+  const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
 
   const onDelete = async () => {
     try {
-      await dispatch(deleteTicket(ticket?._id));
-      navigate(PATH_SUPPORT.root);
-      enqueueSnackbar('Ticket archived successfully!');
+      await dispatch(deleteTicket(id, true));
+      enqueueSnackbar('Ticket Archived Successfully!', { variant: 'success' });
+      navigate(PATH_SUPPORT.supportTickets.root);
+      dispatch(resetTicket());
     } catch (error) {
       enqueueSnackbar(error.message, { variant: 'error' });
       console.error('Error:', error);
