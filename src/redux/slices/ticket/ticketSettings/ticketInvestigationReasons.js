@@ -182,6 +182,7 @@ export function getTicketInvestigationReasons(page, pageSize) {
       const params = {
         orderBy: { createdAt: -1 },
         pagination: { page, pageSize },
+        isArchived: false,
       };
 
       const response = await axios.get(`${CONFIG.SERVER_URL}tickets/settings/investigationReasons`, { params });
@@ -212,13 +213,14 @@ export function getTicketInvestigationReason(id) {
 }
 
 // DELETE Ticket
-export function deleteTicketInvestigationReason(id) {
+export function deleteTicketInvestigationReason(id, isArchived) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      await axios.delete(`${CONFIG.SERVER_URL}tickets/settings/investigationReasons/${id}`);
-      dispatch(slice.actions.deleteTicketInvestigationReasonSuccess(id));
-      dispatch(slice.actions.setResponseMessage('Ticket deleted successfully.'));
+      const data = { isArchived }; 
+      const response = await axios.patch(`${CONFIG.SERVER_URL}tickets/settings/investigationReasons/${id}`, data);
+      dispatch(slice.actions.deleteTicketInvestigationReasonSuccess(response.data));
+      return response;
     } catch (error) {
       dispatch(slice.actions.hasError(error.message));
       console.error(error);
@@ -226,3 +228,4 @@ export function deleteTicketInvestigationReason(id) {
     }
   };
 }
+

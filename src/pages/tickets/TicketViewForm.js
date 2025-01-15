@@ -12,6 +12,7 @@ import { useSnackbar } from '../../components/snackbar';
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
 import Iconify from '../../components/iconify';
+import { StyledTooltip } from '../../theme/styles/default-styles'
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 import ViewFormSwitch from '../../components/ViewForms/ViewFormSwitch';
 
@@ -40,7 +41,7 @@ export default function TicketViewForm() {
 
   const defaultValues = useMemo(
     () => ({
-      key: ticket?.key || '',
+      ticketNo: ticket?.ticketNo || '',
       customer: ticket?.customer?.name || '',
       machine: ticket?.machine?.serialNo || '',
       issueType: ticket?.issueType?.name || '',
@@ -59,8 +60,12 @@ export default function TicketViewForm() {
       investigationReason: ticket?.investigationReason?.name || '',
       rootCause: ticket?.rootCause || '',
       workaround: ticket?.workaround || '',
-      createdBy: ticket?.createdBy || '',
-      updatedBy: ticket?.updatedBy || '',
+      createdByFullName: ticket?.createdBy?.name || '',
+      createdAt: ticket?.createdAt || '',
+      createdIP: ticket?.createdIP || '',
+      updatedByFullName: ticket?.updatedBy?.name || '',
+      updatedAt: ticket?.updatedAt || '',
+      updatedIP: ticket?.updatedIP || '',
     }),
     [ticket]
   );
@@ -77,20 +82,23 @@ export default function TicketViewForm() {
           onDelete={onDelete}
         />
         <Grid container spacing={2} sx={{ mt: 2 }}>
-          <ViewFormField isLoading={isLoading} sm={4} heading="Ticket No." param={defaultValues.key} />
-          <ViewFormField isLoading={isLoading} sm={4} heading="Customer" param={defaultValues.customer} />
-          <ViewFormField isLoading={isLoading} sm={4} heading="Machine" param={defaultValues.machine} />
-          <ViewFormField
-            isLoading={isLoading} sm={4} heading="Issue Type"
+          <ViewFormField isLoading={isLoading} sm={4} heading="Ticket No."
             param={
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <StyledTooltip 
+                 placement="top" 
+                 title={ticket?.issueType?.name} 
+                 sx={{ '& .MuiTooltip-tooltip': { backgroundColor: '#2065d1', color: '#ffffff' }, '& .MuiTooltip-arrow': { color: '#2065d1'} }}> 
                 {ticket?.issueType?.icon ? (
-                  <Iconify icon={ticket.issueType.icon} sx={{ width: 25, height: 25 }} />
+                  <Iconify icon={ticket.issueType.icon} style={{ width: 25, height: 25, color: '#2065d1' }} />
                 ) : null}
-                <Typography sx={{ marginLeft: 0.5 }}>{ticket?.issueType?.name}</Typography>
+                </StyledTooltip>
+                <Typography sx={{ marginLeft: 0.5 }}>{ticket?.ticketNo}</Typography>
               </Box>
             }
           />
+          <ViewFormField isLoading={isLoading} sm={4} heading="Customer" param={defaultValues.customer} />
+          <ViewFormField isLoading={isLoading} sm={4} heading="Machine" param={defaultValues.machine} />
           <ViewFormField isLoading={isLoading} sm={12} heading="Summary" param={defaultValues.summary} />
           <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues.description} />
           <ViewFormField isLoading={isLoading} sm={12} heading="Files" param={defaultValues.files} />
@@ -99,7 +107,7 @@ export default function TicketViewForm() {
             param={
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                {ticket?.priority?.icon ? (
-                 <Iconify icon={ticket.priority.icon} sx={{ width: 25, height: 25 }} />
+                 <Iconify icon={ticket.priority.icon} style={{ width: 25, height: 25, color: '#2065d1' }} />
                 ) : null}
                 <Typography sx={{ marginLeft: 0.5 }}>{ticket?.priority?.name}</Typography>
               </Box>
@@ -110,14 +118,14 @@ export default function TicketViewForm() {
             param={
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                {ticket?.status?.icon ? (
-                 <Iconify icon={ticket.status.icon} sx={{ width: 24, height: 24 }} />
+                 <Iconify icon={ticket.status.icon} style={{ width: 25, height: 25, color: '#2065d1' }} />
                 ) : null}
                 <Typography sx={{ marginLeft: 0.5 }}>{ticket?.status?.name}</Typography>
               </Box>
             }
           />
           <ViewFormField isLoading={isLoading} sm={4} heading="Impact" param={defaultValues.impact} />
-          {ticket?.issueType.name === 'Change Request' && (
+          {ticket?.issueType?.name === 'Change Request' && (
             <>
               <ViewFormField isLoading={isLoading} sm={4} heading="Change Type" param={defaultValues.changeType} />
               <ViewFormField isLoading={isLoading} sm={4} heading="Change Reason" param={defaultValues.changeReason} />
@@ -126,14 +134,14 @@ export default function TicketViewForm() {
               <ViewFormField isLoading={isLoading} sm={12} heading="Test Plan" param={defaultValues.testPlan} />
             </>
           )}
-          {ticket?.issueType.name === 'System Incident' && (
+          {ticket?.issueType?.name === 'System Incident' && (
             <>
               <ViewFormField isLoading={isLoading} sm={6} heading="Investigation Reason" param={defaultValues.investigationReason} />
               <ViewFormField isLoading={isLoading} sm={12} heading="Root Cause" param={defaultValues.rootCause} />
               <ViewFormField isLoading={isLoading} sm={12} heading="Workaround" param={defaultValues.workaround} />
             </>
           )}
-          <ViewFormSwitch isLoading={isLoading} sm={12} isActiveHeading="Share With" isActive={defaultValues.shareWith} />
+          <ViewFormSwitch isLoading={isLoading} sm={12} isActiveHeading="Shared With Organization" isActive={defaultValues.shareWith} />
         </Grid>
         <ViewFormAudit defaultValues={defaultValues} />
       </Grid>

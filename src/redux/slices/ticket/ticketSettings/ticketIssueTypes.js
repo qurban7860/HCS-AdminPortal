@@ -182,6 +182,7 @@ export function getTicketIssueTypes(page, pageSize) {
       const params = {
         orderBy: { createdAt: -1 },
         pagination: { page, pageSize },
+        isArchived: false,
       };
 
       const response = await axios.get(`${CONFIG.SERVER_URL}tickets/settings/issueTypes`, { params });
@@ -211,14 +212,15 @@ export function getTicketIssueType(id) {
   };
 }
 
-// DELETE Ticket
-export function deleteTicketIssueType(id) {
+// Archive Ticket
+export function deleteTicketIssueType(id, isArchived) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      await axios.delete(`${CONFIG.SERVER_URL}tickets/settings/issueTypes/${id}`);
-      dispatch(slice.actions.deleteTicketIssueTypeSuccess(id));
-      dispatch(slice.actions.setResponseMessage('Ticket deleted successfully.'));
+      const data = { isArchived }; 
+      const response = await axios.patch(`${CONFIG.SERVER_URL}tickets/settings/issueTypes/${id}`, data);
+      dispatch(slice.actions.deleteTicketIssueTypeSuccess(response.data));
+      return response;
     } catch (error) {
       dispatch(slice.actions.hasError(error.message));
       console.error(error);

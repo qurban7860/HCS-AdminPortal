@@ -64,7 +64,7 @@ const slice = createSlice({
       state.responseMessage = 'Ticket updated successfully.';
     },
 
-    deleteTicketSuccess(state, action) {
+    deleteTicketChangeTypeSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
       state.ticketChangeTypes = state.ticketChangeTypes.filter((ticketChangeType) => ticketChangeType._id !== action.payload);
@@ -182,6 +182,7 @@ export function getTicketChangeTypes(page, pageSize) {
       const params = {
         orderBy: { createdAt: -1 },
         pagination: { page, pageSize },
+        isArchived: false,
       };
 
       const response = await axios.get(`${CONFIG.SERVER_URL}tickets/settings/changeTypes`, { params });
@@ -211,14 +212,31 @@ export function getTicketChangeType(id) {
   };
 }
 
-// DELETE Ticket
-export function deleteTicketChangeType(id) {
+// Archive Ticket
+export function deleteTicketChangeType(id, isArchived) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      await axios.delete(`${CONFIG.SERVER_URL}tickets/settings/changeTypes/${id}`);
-      dispatch(slice.actions.deleteTicketChangeTypeSuccess(id));
-      dispatch(slice.actions.setResponseMessage('Ticket deleted successfully.'));
+      const data = { isArchived }; 
+      const response = await axios.patch(`${CONFIG.SERVER_URL}tickets/settings/changeTypes/${id}`, data);
+      dispatch(slice.actions.deleteTicketChangeTypeSuccess(response.data));
+      return response;
+    } catch (error) {
+      dispatch(slice.actions.hasError(error.message));
+      console.error(error);
+      throw error;
+    }
+  };
+}
+
+export function deleteTicketPriority(id, isArchived) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const data = { isArchived }; 
+      const response = await axios.patch(`${CONFIG.SERVER_URL}tickets/settings/priorities/${id}`, data);
+      dispatch(slice.actions.deleteTicketPrioritySuccess(response.data));
+      return response;
     } catch (error) {
       dispatch(slice.actions.hasError(error.message));
       console.error(error);

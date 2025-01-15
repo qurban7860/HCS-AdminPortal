@@ -47,10 +47,12 @@ export default function InvestigationReasonViewForm() {
 
   const onDelete = () => {
     try {
-      dispatch(deleteTicketInvestigationReason(id));
+      dispatch(deleteTicketInvestigationReason(id, true));
       navigate(PATH_SUPPORT.ticketSettings.investigationReasons.root);
+      enqueueSnackbar('Investigation Reason Archived Successfully!', { variant: 'success' });
+      dispatch(resetTicketInvestigationReason());
     } catch (err) {
-      enqueueSnackbar('investigation Reason Archive failed!', { variant: `error` });
+      enqueueSnackbar('Investigation Reason Archive failed!', { variant: `error` });
       console.log('Error:', err);
     }
   };
@@ -74,8 +76,8 @@ export default function InvestigationReasonViewForm() {
         <ViewFormField isLoading={isLoading} sm={6} heading="Icon" param={
           <StyledTooltip 
            placement="top" 
-           title={defaultValues?.name || ''} > 
-           <Iconify icon={defaultValues?.icon} sx={{ width: 25, height: 25 }} />
+           title={defaultValues?.name || ''} sx={{ '& .MuiTooltip-tooltip': { backgroundColor: '#2065d1', color: '#ffffff' }, '& .MuiTooltip-arrow': { color: '#2065d1'} }}> 
+           <Iconify icon={defaultValues?.icon} style={{ width: 25, height: 25, color: '#2065d1' }} />
           </StyledTooltip> } 
         />
         <ViewFormField isLoading={isLoading} sm={6} heading="Slug" param={defaultValues?.slug} />

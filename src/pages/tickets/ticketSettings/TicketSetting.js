@@ -50,7 +50,7 @@ return (
                 <List
                   component="nav"
                   aria-labelledby="nested-list-subheader"
-                  subheader={<ListItemsHeader header={FORMLABELS.TICKET_COLLECTION} />}
+                  subheader={<ListItemsHeader header={FORMLABELS.TICKET_SETTINGS} />}
                 >
                   <ListItem
                     onClick={linkIssueType}

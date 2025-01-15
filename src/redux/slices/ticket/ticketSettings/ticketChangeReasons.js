@@ -182,6 +182,7 @@ export function getTicketChangeReasons(page, pageSize) {
       const params = {
         orderBy: { createdAt: -1 },
         pagination: { page, pageSize },
+        isArchived: false,
       };
 
       const response = await axios.get(`${CONFIG.SERVER_URL}tickets/settings/changeReasons`, { params });
@@ -211,14 +212,15 @@ export function getTicketChangeReason(id) {
   };
 }
 
-// DELETE Ticket
-export function deleteTicketChangeReason(id) {
+// Archive Ticket
+export function deleteTicketChangeReason(id, isArchived) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      await axios.delete(`${CONFIG.SERVER_URL}tickets/settings/changeReasons/${id}`);
-      dispatch(slice.actions.deleteTicketChangeReasonSuccess(id));
-      dispatch(slice.actions.setResponseMessage('Ticket deleted successfully.'));
+      const data = { isArchived }; 
+      const response = await axios.patch(`${CONFIG.SERVER_URL}tickets/settings/changeReasons/${id}`, data);
+      dispatch(slice.actions.deleteTicketChangeReasonSuccess(response.data));
+      return response;
     } catch (error) {
       dispatch(slice.actions.hasError(error.message));
       console.error(error);
@@ -226,3 +228,4 @@ export function deleteTicketChangeReason(id) {
     }
   };
 }
+

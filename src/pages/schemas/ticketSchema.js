@@ -4,7 +4,6 @@ export const AddTicketSchema = Yup.object().shape({
     customer: Yup.object().nullable().required('Customer is required'),
     machine: Yup.object().nullable(),
     summary: Yup.string().max(10000).required('Summary is required!'),
-    status: Yup.object().nullable().label('Status'),
     dateFrom: Yup.date()
        .nullable()
        .test('dateFromTest', 'Start Date must be earlier than End Date', function (value) {

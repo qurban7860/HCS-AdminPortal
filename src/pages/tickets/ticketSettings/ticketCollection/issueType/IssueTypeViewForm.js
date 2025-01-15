@@ -47,8 +47,10 @@ export default function IssueTypeViewForm() {
 
   const onDelete = () => {
     try {
-      dispatch(deleteTicketIssueType(id));
+      dispatch(deleteTicketIssueType(id, true));
+      enqueueSnackbar('Issue Type Archived Successfully!', { variant: 'success' });
       navigate(PATH_SUPPORT.ticketSettings.issueTypes.root);
+      dispatch(resetTicketIssueType());
     } catch (err) {
       enqueueSnackbar('Issue Type Archive failed!', { variant: `error` });
       console.log('Error:', err);
@@ -74,8 +76,8 @@ export default function IssueTypeViewForm() {
         <ViewFormField isLoading={isLoading} sm={6} heading="Icon" param={
           <StyledTooltip 
            placement="top" 
-           title={defaultValues?.name || ''} > 
-           <Iconify icon={defaultValues?.icon} sx={{ width: 25, height: 25 }} />
+           title={defaultValues?.name || ''} sx={{ '& .MuiTooltip-tooltip': { backgroundColor: '#2065d1', color: '#ffffff' }, '& .MuiTooltip-arrow': { color: '#2065d1'} }}> 
+           <Iconify icon={defaultValues?.icon} style={{ width: 25, height: 25, color: '#2065d1' }} />
           </StyledTooltip> } 
         />
         <ViewFormField isLoading={isLoading} sm={6} heading="Slug" param={defaultValues?.slug} />

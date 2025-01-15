@@ -43,14 +43,14 @@ export default function TicketFormTableToolbar({
   const { ticketIssueTypes } = useSelector((state) => state.ticketIssueTypes);
   const { ticketStatuses } = useSelector((state) => state.ticketStatuses);
 
-  useEffect(() => {
-    dispatch(getTicketIssueTypes());
-    dispatch(getTicketStatuses());
-    return () => {
-      dispatch(resetTicketIssueTypes());
-      dispatch(resetTicketStatuses());
-    };
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(getTicketIssueTypes());
+  //   dispatch(getTicketStatuses());
+  //   return () => {
+  //     dispatch(resetTicketIssueTypes());
+  //     dispatch(resetTicketStatuses());
+  //   };
+  // }, [dispatch]);
 
   const toggleAdd = () => {
     navigate(PATH_SUPPORT.supportTickets.new);

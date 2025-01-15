@@ -93,7 +93,7 @@ export const FORMLABELS = {
   LOGS_SETTINGS: 'Logs',
 
   // @root - Ticket Settings
-  TICKET_COLLECTION: 'Ticket Collection',
+  TICKET_SETTINGS: 'Ticket Settings',
 
   // @root DocumentAddForm in dashboard/documents
   SELECT_CUSTOMER: 'Select Customer',
