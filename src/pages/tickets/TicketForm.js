@@ -82,8 +82,8 @@ export default function TicketForm() {
       plannedEndDate: ticket?.plannedEndDate
         ? getTimeObjectFromISOString(ticket.plannedEndDate)
         : getTimeObjectFromISOString(new Date().toISOString()),
-      dateFrom: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
-      dateTo: new Date(),
+      dateFrom: new Date(),
+      dateTo: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
     }),
     [ ticket ] 
   );
@@ -160,14 +160,25 @@ export default function TicketForm() {
   
   const onSubmit = async (data) => {
     try {
-      if (id) { 
-        await dispatch(patchTicket(id, data)); 
-        dispatch(getTicket(id)); 
-        enqueueSnackbar('Ticket Updated Successfully!');
+      const fetchData = {
+        ...data,
+        issueType: data.issueType?._id || null, 
+        priority: data.priority?._id || null, 
+        status: data.status?._id || null, 
+        impact: data.impact?._id || null, 
+        changeType: data.changeType?._id || null, 
+        changeReason: data.changeReason?._id || null, 
+        investigationReason: data.investigationReason?._id || null, 
+      };
+  
+      if (id) {
+        await dispatch(patchTicket(id, fetchData));
+        dispatch(getTicket(id));
+        enqueueSnackbar('Ticket Updated Successfully!', { variant: 'success' });
         navigate(PATH_SUPPORT.supportTickets.view(id));
-      } else {
-        await dispatch(postTicket(data));
-        enqueueSnackbar('Ticket Added Successfully!');
+      } else { 
+        await dispatch(postTicket(fetchData));
+        enqueueSnackbar('Ticket Added Successfully!', { variant: 'success' });
         navigate(PATH_SUPPORT.supportTickets.root);
       }
       reset();
@@ -176,7 +187,7 @@ export default function TicketForm() {
       enqueueSnackbar(error.message || 'An error occurred', { variant: 'error' });
       console.error(error);
     }
-  };  
+  };
   
   const toggleCancel = () => {
     dispatch(resetTicket())
@@ -242,10 +253,6 @@ export default function TicketForm() {
                     isOptionEqualToValue={(option, value) => option._id === value._id}
                     getOptionLabel={(option) => `${option.name || ''}`}
                     renderOption={(props, option) => (<li {...props} key={option?._id}> {option.name || ''} </li> )}
-                    onChange={(e, newValue) => {
-                      setValue('issueType', newValue);
-                      trigger('issueType'); 
-                    }}
                   />
                 </Stack>
               </Card>
