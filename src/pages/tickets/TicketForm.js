@@ -82,8 +82,8 @@ export default function TicketForm() {
       plannedEndDate: ticket?.plannedEndDate
         ? getTimeObjectFromISOString(ticket.plannedEndDate)
         : getTimeObjectFromISOString(new Date().toISOString()),
-      dateFrom: new Date(),
-      dateTo: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+        dateFrom: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+        dateTo: new Date().toISOString(),
     }),
     [ ticket ] 
   );
@@ -253,6 +253,10 @@ export default function TicketForm() {
                     isOptionEqualToValue={(option, value) => option._id === value._id}
                     getOptionLabel={(option) => `${option.name || ''}`}
                     renderOption={(props, option) => (<li {...props} key={option?._id}> {option.name || ''} </li> )}
+                    onChange={(e, newValue) => {
+                      setValue('issueType', newValue);
+                      trigger('issueType')
+                    }}
                   />
                 </Stack>
               </Card>
