@@ -45,7 +45,7 @@ export default function IssueTypeViewForm() {
     [ ticketIssueType]
   );
 
-  const onDelete = () => {
+  const onArchive = () => {
     try {
       dispatch(deleteTicketIssueType(id, true));
       enqueueSnackbar('Issue Type Archived Successfully!', { variant: 'success' });
@@ -65,7 +65,7 @@ export default function IssueTypeViewForm() {
       <ViewFormEditDeleteButtons  
         isDefault={defaultValues.isDefault} 
         handleEdit={toggleEdit} 
-        onDelete={onDelete} 
+        onArchive={onArchive} 
         backLink={() => {
           dispatch(resetTicketIssueType());
           navigate(PATH_SUPPORT.ticketSettings.issueTypes.root);

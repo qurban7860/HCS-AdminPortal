@@ -25,7 +25,7 @@ export default function TicketViewForm() {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
 
-  const onDelete = async () => {
+  const onArchive = async () => {
     try {
       await dispatch(deleteTicket(id, true));
       enqueueSnackbar('Ticket Archived Successfully!', { variant: 'success' });
@@ -81,7 +81,7 @@ export default function TicketViewForm() {
             navigate(PATH_SUPPORT.supportTickets.root);
           }}
           handleEdit={handleEdit}
-          onDelete={onDelete}
+          onArchive={onArchive}
         />
         <Grid container spacing={2} sx={{ mt: 2 }}>
           <ViewFormField isLoading={isLoading} sm={4} heading="Ticket No."

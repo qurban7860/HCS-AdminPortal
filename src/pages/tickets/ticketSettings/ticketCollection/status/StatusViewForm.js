@@ -45,7 +45,7 @@ export default function StatusViewForm() {
     [ticketStatus]
   );
 
-  const onDelete = () => {
+  const onArchive = () => {
     try {
       dispatch(deleteTicketStatus(id, true));
       enqueueSnackbar('Status Archived Successfully!', { variant: 'success' });
@@ -65,7 +65,7 @@ export default function StatusViewForm() {
       <ViewFormEditDeleteButtons  
         isDefault={defaultValues.isDefault} 
         handleEdit={toggleEdit} 
-        onDelete={onDelete} 
+        onArchive={onArchive} 
         backLink={() => {
           dispatch(resetTicketStatus());
           navigate(PATH_SUPPORT.ticketSettings.statuses.root);

@@ -45,7 +45,7 @@ export default function PriorityViewForm() {
     [ticketPriority]
   );
 
-  const onDelete = () => {
+  const onArchive = () => {
     try {
       dispatch(deleteTicketPriority(id, true));
       enqueueSnackbar('Priority Archived Successfully!', { variant: 'success' });
@@ -65,7 +65,7 @@ export default function PriorityViewForm() {
       <ViewFormEditDeleteButtons  
         isDefault={defaultValues.isDefault} 
         handleEdit={toggleEdit} 
-        onDelete={onDelete} 
+        onArchive={onArchive} 
         backLink={() => {
           dispatch(resetTicketPriority());
           navigate(PATH_SUPPORT.ticketSettings.priorities.root);

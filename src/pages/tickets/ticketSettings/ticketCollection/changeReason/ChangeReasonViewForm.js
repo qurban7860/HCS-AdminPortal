@@ -45,7 +45,7 @@ export default function ChangeReasonViewForm() {
     [ ticketChangeReason]
   );
 
-  const onDelete = () => {
+  const onArchive = () => {
     try {
       dispatch(deleteTicketChangeReason(id, true));
       enqueueSnackbar('Change Reason Archived Successfully!', { variant: 'success' });
@@ -65,7 +65,7 @@ export default function ChangeReasonViewForm() {
       <ViewFormEditDeleteButtons  
         isDefault={defaultValues.isDefault} 
         handleEdit={toggleEdit} 
-        onDelete={onDelete} 
+        onArchive={onArchive} 
         backLink={() => {
           dispatch(resetTicketChangeReason());
           navigate(PATH_SUPPORT.ticketSettings.changeReasons.root);
