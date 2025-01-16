@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 // @mui
-import { Card, Grid, Box, Typography } from '@mui/material';
+import { Card, Grid, Box, Typography, useTheme } from '@mui/material';
 // redux
 import { deleteTicket, resetTicket } from '../../redux/slices/ticket/tickets';
 // paths
@@ -23,6 +23,7 @@ export default function TicketViewForm() {
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
 
   const onArchive = async () => {
@@ -87,14 +88,15 @@ export default function TicketViewForm() {
           <ViewFormField isLoading={isLoading} sm={4} heading="Ticket No."
             param={
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <StyledTooltip 
-                 placement="top" 
-                 title={ticket?.issueType?.name} 
-                 sx={{ '& .MuiTooltip-tooltip': { backgroundColor: '#2065d1', color: '#ffffff' }, '& .MuiTooltip-arrow': { color: '#2065d1'} }}> 
                 {ticket?.issueType?.icon ? (
-                  <Iconify icon={ticket.issueType.icon} style={{ width: 25, height: 25, color: '#2065d1' }} />
+                  <StyledTooltip 
+                    placement="top" 
+                    title={ticket?.issueType?.name} 
+                    tooltipcolor={theme.palette.primary.main}
+                    > 
+                      <Iconify icon={ticket.issueType.icon} style={{ width: 25, height: 25, color: theme.palette.primary.main }} />
+                  </StyledTooltip>
                 ) : null}
-                </StyledTooltip>
                 <Typography sx={{ marginLeft: 0.5 }}>{ticket?.ticketNo}</Typography>
               </Box>
             }
