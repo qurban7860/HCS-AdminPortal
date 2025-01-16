@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { useNavigate, useParams } from 'react-router-dom';
 // @mui
-import { Card, Grid } from '@mui/material';
+import { Card, Grid, useTheme } from '@mui/material';
 // paths
 import { PATH_SUPPORT } from '../../../../../routes/paths';
 // components
@@ -23,6 +23,7 @@ export default function StatusViewForm() {
 
   const { enqueueSnackbar } = useSnackbar();
   const { ticketStatus, isLoading } = useSelector((state) => state.ticketStatuses);
+  const theme = useTheme();
   const { id } = useParams();
   const dispatch = useDispatch();
 
@@ -70,14 +71,15 @@ export default function StatusViewForm() {
           dispatch(resetTicketStatus());
           navigate(PATH_SUPPORT.ticketSettings.statuses.root);
         }}
-      />
+      />               
       <Grid container sx={{mt:2}}>
         <ViewFormField isLoading={isLoading} sm={6} heading="Name" param={defaultValues?.name} />
         <ViewFormField isLoading={isLoading} sm={6} heading="Icon" param={
           <StyledTooltip 
            placement="top" 
-           title={defaultValues?.name || ''} color="#2065d1"  sx={{ '& .MuiTooltip-tooltip': { backgroundColor: '#2065d1', color: '#ffffff' }, '& .MuiTooltip-arrow': { color: '#2065d1'} }}> 
-           <Iconify icon={defaultValues?.icon} style={{ width: 25, height: 25, color: '#2065d1' }} />
+           title={defaultValues?.name || ''} 
+           tooltipcolor={theme.palette.primary.main}> 
+           <Iconify icon={defaultValues?.icon} style={{ width: 25, height: 25, color: theme.palette.primary.main }} />
           </StyledTooltip> } 
         />
         <ViewFormField isLoading={isLoading} sm={6} heading="Slug" param={defaultValues?.slug} />

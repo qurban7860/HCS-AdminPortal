@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import {
   TableCell,
   Stack,
-  Typography
+  useTheme,
 } from '@mui/material';
 // utils
 import { fDate } from '../../utils/formatTime';
@@ -25,13 +25,16 @@ export default function TicketFormTableRow({
 }) {
 
   const { ticketNo, customer, machine, issueType, summary, priority, status, createdAt } = row;
+  const theme = useTheme();
+
   return (
     <StyledTableRow hover selected={selected}>
       <TableCell align="left">
         <Stack direction="row" alignItems="center" spacing={-1.5} >
           {issueType?.icon && (
-            <StyledTooltip placement="top" title={issueType.name || ''} sx={{ '& .MuiTooltip-tooltip': { backgroundColor: '#2065d1', color: '#ffffff' }, '& .MuiTooltip-arrow': { color: '#2065d1'} }}>
-              <Iconify icon={issueType.icon} style={{ width: 25, height: 25, color: '#2065d1' }}  />
+            <StyledTooltip placement="top" title={issueType.name || ''} 
+              tooltipcolor={theme.palette.primary.main} >
+              <Iconify icon={issueType.icon} style={{ width: 25, height: 25,  color: theme.palette.primary.main }}  />
             </StyledTooltip>
           )}
           <LinkTableCell align="left" onClick={() => onViewRow(ticketNo)} param={ticketNo || ''} />
@@ -45,8 +48,8 @@ export default function TicketFormTableRow({
           <StyledTooltip 
            placement="top" 
            title={status.name || ''} 
-           sx={{ '& .MuiTooltip-tooltip': { backgroundColor: '#2065d1', color: '#ffffff' }, '& .MuiTooltip-arrow': { color: '#2065d1'} }} >
-           <Iconify icon={status.icon} style={{ width: 25, height: 25, color: '#2065d1' }}  />
+           tooltipcolor={theme.palette.primary.main} >
+           <Iconify icon={status.icon} style={{ width: 25, height: 25, color: theme.palette.primary.main }}  />
           </StyledTooltip>
         ) : (
           ''
@@ -57,8 +60,8 @@ export default function TicketFormTableRow({
           <StyledTooltip 
            placement="top" 
            title={priority.name || ''} 
-           sx={{ '& .MuiTooltip-tooltip': { backgroundColor: '#2065d1', color: '#ffffff' }, '& .MuiTooltip-arrow': { color: '#2065d1'} }} >
-           <Iconify icon={priority.icon} style={{ width: 25, height: 25, color: '#2065d1' }}  />
+           tooltipcolor={theme.palette.primary.main} >
+           <Iconify icon={priority.icon} style={{ width: 25, height: 25, color: theme.palette.primary.main }}  />
           </StyledTooltip>
         ) : (
           ''

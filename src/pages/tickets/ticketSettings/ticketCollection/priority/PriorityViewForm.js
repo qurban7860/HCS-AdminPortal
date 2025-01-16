@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { useNavigate, useParams } from 'react-router-dom';
 // @mui
-import { Card, Grid } from '@mui/material';
+import { Card, Grid, useTheme } from '@mui/material';
 // paths
 import { PATH_SUPPORT } from '../../../../../routes/paths';
 // components
@@ -20,7 +20,7 @@ import ViewFormSwitch from '../../../../../components/ViewForms/ViewFormSwitch';
 
 export default function PriorityViewForm() {
   const navigate = useNavigate();
-
+  const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
   const { ticketPriority, isLoading } = useSelector((state) => state.ticketPriorities);
   const { id } = useParams();
@@ -76,8 +76,9 @@ export default function PriorityViewForm() {
         <ViewFormField isLoading={isLoading} sm={6} heading="Icon" param={
           <StyledTooltip 
             placement="top" 
-            title={defaultValues?.name || ''} sx={{ '& .MuiTooltip-tooltip': { backgroundColor: '#2065d1', color: '#ffffff' }, '& .MuiTooltip-arrow': { color: '#2065d1'} }}> 
-            <Iconify icon={defaultValues?.icon} style={{ width: 25, height: 25, color: '#2065d1' }} />
+            title={defaultValues?.name || ''} 
+            tooltipcolor={theme.palette.primary.main} >
+            <Iconify icon={defaultValues?.icon} style={{ width: 25, height: 25,  color: theme.palette.primary.main }} />
           </StyledTooltip> } 
         />
         <ViewFormField isLoading={isLoading} sm={6} heading="Slug" param={defaultValues?.slug} />

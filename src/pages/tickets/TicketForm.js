@@ -160,24 +160,13 @@ export default function TicketForm() {
   
   const onSubmit = async (data) => {
     try {
-      const fetchData = {
-        ...data,
-        issueType: data.issueType?._id || null, 
-        priority: data.priority?._id || null, 
-        status: data.status?._id || null, 
-        impact: data.impact?._id || null, 
-        changeType: data.changeType?._id || null, 
-        changeReason: data.changeReason?._id || null, 
-        investigationReason: data.investigationReason?._id || null, 
-      };
-  
       if (id) {
-        await dispatch(patchTicket(id, fetchData));
+        await dispatch(patchTicket(id, data));
         dispatch(getTicket(id));
         enqueueSnackbar('Ticket Updated Successfully!', { variant: 'success' });
         navigate(PATH_SUPPORT.supportTickets.view(id));
       } else { 
-        await dispatch(postTicket(fetchData));
+        await dispatch(postTicket(data));
         enqueueSnackbar('Ticket Added Successfully!', { variant: 'success' });
         navigate(PATH_SUPPORT.supportTickets.root);
       }

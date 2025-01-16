@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import _ from 'lodash';
 // utils
 import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
@@ -70,6 +71,7 @@ const slice = createSlice({
       state.tickets = state.tickets.filter((ticket) => ticket._id !== action.payload);
       state.responseMessage = 'Ticket deleted successfully.';
     },
+    
 
     // SET RESPONSE MESSAGE
     setResponseMessage(state, action) {
@@ -134,21 +136,22 @@ export function postTicket(params) {
       const data = {
         customer: params?.customer?._id || null,
         machine: params?.machine?._id || null,
-        issueType: params.issueType,
-        summary: params.summary,
-        description: params.description,
-        changeType: params.changeType,
-        impact: params.impact,
-        priority: params.priority,
-        status: params.status,
-        changeReason: params.changeReason,
-        investigationReason: params.investigationReason,
-        implementationPlan: params.implementationPlan,
-        backoutPlan: params.backoutPlan,
-        testPlan: params.testPlan,
+        issueType: params.issueType?._id || null,
+        summary: params.summary || '',
+        description: params.description || '',
+        files: params.files || [],
+        changeType: params.changeType?._id || null,
+        impact: params.impact?._id || null,
+        priority: params.priority?._id || null,
+        status: params.status?._id || null,
+        changeReason: params.changeReason?._id || null,
+        investigationReason: params.investigationReason?._id || null,
+        implementationPlan: params.implementationPlan || '',
+        backoutPlan: params.backoutPlan || '',
+        testPlan: params.testPlan || '',
         shareWith: params.shareWith,
-        rootCause: params.rootCause,
-        workaround: params.workaround,
+        rootCause: params.rootCause || '',
+        workaround: params.workaround || '',
       }
       const response = await axios.post(`${CONFIG.SERVER_URL}tickets/`, data);
       dispatch(slice.actions.postTicketSuccess(response.data));
@@ -161,6 +164,7 @@ export function postTicket(params) {
   };
 }
 
+
 // PATCH Ticket
 export function patchTicket(id, params) {
   return async (dispatch) => {
@@ -169,21 +173,22 @@ export function patchTicket(id, params) {
       const data = {
         customer: params?.customer?._id || null,
         machine: params?.machine?._id || null,
-        issueType: params.issueType,
-        summary: params.summary,
-        description: params.description,
-        changeType: params.changeType,
-        impact: params.impact,
-        priority: params.priority,
-        status: params.status,
-        changeReason: params.changeReason,
-        investigationReason: params.investigationReason,
-        implementationPlan: params.implementationPlan,
-        backoutPlan: params.backoutPlan,
-        testPlan: params.testPlan,
+        issueType: params.issueType?._id || null,
+        summary: params.summary || '',
+        description: params.description || '',
+        files: params.files || [],
+        changeType: params.changeType?._id || null,
+        impact: params.impact?._id || null,
+        priority: params.priority?._id || null,
+        status: params.status?._id || null,
+        changeReason: params.changeReason?._id || null,
+        investigationReason: params.investigationReason?._id || null,
+        implementationPlan: params.implementationPlan || '',
+        backoutPlan: params.backoutPlan || '',
+        testPlan: params.testPlan || '',
         shareWith: params.shareWith,
-        rootCause: params.rootCause,
-        workaround: params.workaround,
+        rootCause: params.rootCause || '',
+        workaround: params.workaround || '',
       };
       const response = await axios.patch(`${CONFIG.SERVER_URL}tickets/${id}`, data);
       dispatch(slice.actions.patchTicketSuccess(response.data)); 
@@ -250,3 +255,4 @@ export function deleteTicket(id, isArchived) {
     }
   };
 }
+
