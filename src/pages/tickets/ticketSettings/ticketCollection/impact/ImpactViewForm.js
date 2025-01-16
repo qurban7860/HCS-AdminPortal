@@ -45,7 +45,7 @@ export default function ImpactViewForm() {
     [ ticketImpact]
   );
 
-  const onDelete = () => {
+  const onArchive = () => {
     try {
       dispatch(deleteTicketImpact(id, true));
       enqueueSnackbar('Impacts Archived Successfully!', { variant: 'success' });
@@ -65,7 +65,7 @@ export default function ImpactViewForm() {
       <ViewFormEditDeleteButtons  
         isDefault={defaultValues.isDefault} 
         handleEdit={toggleEdit} 
-        onDelete={onDelete} 
+        onArchive={onArchive} 
         backLink={() => {
           dispatch(resetTicketImpact());
           navigate(PATH_SUPPORT.ticketSettings.impacts.root);

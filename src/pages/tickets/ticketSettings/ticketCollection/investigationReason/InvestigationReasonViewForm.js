@@ -45,7 +45,7 @@ export default function InvestigationReasonViewForm() {
     [ ticketInvestigationReason]
   );
 
-  const onDelete = () => {
+  const onArchive = () => {
     try {
       dispatch(deleteTicketInvestigationReason(id, true));
       navigate(PATH_SUPPORT.ticketSettings.investigationReasons.root);
@@ -65,7 +65,7 @@ export default function InvestigationReasonViewForm() {
       <ViewFormEditDeleteButtons  
         isDefault={defaultValues.isDefault} 
         handleEdit={toggleEdit} 
-        onDelete={onDelete} 
+        onArchive={onArchive} 
         backLink={() => {
           dispatch(resetTicketInvestigationReason());
           navigate(PATH_SUPPORT.ticketSettings.investigationReasons.root);

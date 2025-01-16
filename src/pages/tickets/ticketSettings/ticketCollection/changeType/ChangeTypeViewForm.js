@@ -45,7 +45,7 @@ export default function ChangeTypeViewForm() {
     [ticketChangeType]
   );
 
-  const onDelete = () => {
+  const onArchive = () => {
     try {
       dispatch(deleteTicketChangeType(id, true));
       enqueueSnackbar('Change Type Archived Successfully!', { variant: 'success' });
@@ -65,7 +65,7 @@ export default function ChangeTypeViewForm() {
       <ViewFormEditDeleteButtons  
         isDefault={defaultValues.isDefault} 
         handleEdit={toggleEdit} 
-        onDelete={onDelete} 
+        onArchive={onArchive} 
         backLink={() => {
           dispatch(resetTicketChangeType());
           navigate(PATH_SUPPORT.ticketSettings.changeTypes.root);

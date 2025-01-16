@@ -30,8 +30,8 @@ export default function TicketFormTableRow({
       <TableCell align="left">
         <Stack direction="row" alignItems="center" spacing={-1.5} >
           {issueType?.icon && (
-            <StyledTooltip placement="top" title={issueType.name || ''} >
-              <Iconify icon={issueType.icon} width={24} height={24} />
+            <StyledTooltip placement="top" title={issueType.name || ''} sx={{ '& .MuiTooltip-tooltip': { backgroundColor: '#2065d1', color: '#ffffff' }, '& .MuiTooltip-arrow': { color: '#2065d1'} }}>
+              <Iconify icon={issueType.icon} style={{ width: 25, height: 25, color: '#2065d1' }}  />
             </StyledTooltip>
           )}
           <LinkTableCell align="left" onClick={() => onViewRow(ticketNo)} param={ticketNo || ''} />
@@ -44,8 +44,9 @@ export default function TicketFormTableRow({
         {status?.icon ? (
           <StyledTooltip 
            placement="top" 
-           title={status.name || ''} >
-           <Iconify icon={status.icon} width={24} height={24} />
+           title={status.name || ''} 
+           sx={{ '& .MuiTooltip-tooltip': { backgroundColor: '#2065d1', color: '#ffffff' }, '& .MuiTooltip-arrow': { color: '#2065d1'} }} >
+           <Iconify icon={status.icon} style={{ width: 25, height: 25, color: '#2065d1' }}  />
           </StyledTooltip>
         ) : (
           ''
@@ -55,8 +56,9 @@ export default function TicketFormTableRow({
         {priority?.icon ? (
           <StyledTooltip 
            placement="top" 
-           title={priority.name || ''} >
-           <Iconify icon={priority.icon} width={24} height={24} />
+           title={priority.name || ''} 
+           sx={{ '& .MuiTooltip-tooltip': { backgroundColor: '#2065d1', color: '#ffffff' }, '& .MuiTooltip-arrow': { color: '#2065d1'} }} >
+           <Iconify icon={priority.icon} style={{ width: 25, height: 25, color: '#2065d1' }}  />
           </StyledTooltip>
         ) : (
           ''
