@@ -34,7 +34,7 @@ export default function SettingListTableRow({
     },
     techParamValue,
     history,
-    createdAt
+    updatedAt
   } = row;
 
   const smScreen = useScreenSize('sm')
@@ -56,7 +56,7 @@ export default function SettingListTableRow({
         <LinkTableCell align="left" param={name||""} onClick={onViewRow} />
         <TableCell align="left"  >
             {techParamValue || ""}
-            {history !== undefined && history?.length > 0 &&
+            {history !== undefined && history?.length > 1 &&
               <StyledBadge badgeContent={history?.length || '0' } color="info" sx={{top:-2, left:-2}} >
                 <IconButtonTooltip
                   title='History'
@@ -76,7 +76,7 @@ export default function SettingListTableRow({
         <TableCell align="left">
           {category?.name||""}
         </TableCell>
-        { smScreen && <TableCell align="right">{fDate(createdAt)}</TableCell>}
+        { smScreen && <TableCell align="right">{fDate(updatedAt)}</TableCell>}
       </StyledTableRow>
 
       <ViewFormMachineSettingHistoryMenuPopover
