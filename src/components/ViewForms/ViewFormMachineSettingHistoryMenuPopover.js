@@ -16,7 +16,7 @@ function ViewFormMachineSettingHistoryMenuPopover({ open, onClose, ListArr, List
               <TableRow>
                 <TableCell align='left' >Value</TableCell>
                 <TableCell align='left' >Updated By</TableCell>
-                <TableCell align='right' >Date</TableCell>
+                <TableCell align='right' >Updated At</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
