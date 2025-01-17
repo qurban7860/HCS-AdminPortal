@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, memo } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 // @mui
 import { Box } from '@mui/material';
@@ -16,6 +16,8 @@ import { CONFIG } from '../../config-global';
 import { MAIN_CATEGORIES, OTHER_MAIN_CATEGORIES } from './navigationConstants';
 
 // ----------------------------------------------------------------------
+
+const MemoizedHeader = memo(Header);
 
 export default function DashboardLayout() {
   const { themeLayout } = useSettingsContext();
@@ -58,7 +60,7 @@ export default function DashboardLayout() {
   if (isNavMini) {
     return (
       <>
-        <Header
+        <MemoizedHeader
           onOpenNav={handleOpen}
           selectedCategory={selectedCategory}
           setSelectedCategory={setSelectedCategory}
@@ -91,7 +93,7 @@ export default function DashboardLayout() {
 
   return (
     <>
-      <Header
+      <MemoizedHeader
         selectedCategory={selectedCategory}
         setSelectedCategory={setSelectedCategory}
         onOpenNav={handleOpen}
