@@ -77,9 +77,8 @@ export default function Header({ onOpenNav, selectedCategory, setSelectedCategor
             <Box sx={{ display: 'flex', alignItems: 'center', borderLeft: `2px solid ${theme.palette.divider}`, borderRight: `2px solid ${theme.palette.divider}`, px: 1 }}>
               {OTHER_MAIN_CATEGORIES.map((item) => 
                 item?.id === "settings" && !isSettingAccessAllowed ? null : (
-                <StyledTooltip title={item.title} tooltipcolor='#1976d2'>
-                  <Button 
-                    key={item.id} 
+                <StyledTooltip title={item.title} tooltipcolor='#1976d2' key={item.id}>
+                  <Button
                     onClick={() => handleCategoryChange(item)}
                     variant={item.id === selectedCategory.id ? "contained" : "text"}
                     sx={{ mx: 0.2 }}
@@ -159,12 +158,12 @@ export default function Header({ onOpenNav, selectedCategory, setSelectedCategor
           ...(isOffset && {
             height: HEADER.H_DASHBOARD_DESKTOP_OFFSET,
           }),
-          ...(isNavHorizontal && {
-            width: 1,
-            bgcolor: 'background.default',
-            height: HEADER.H_DASHBOARD_DESKTOP_OFFSET,
-            borderBottom: `solid 1px ${theme.palette.divider}`,
-          }),
+          // ...(isNavHorizontal && {
+          //   width: 1,
+          //   bgcolor: 'background.default',
+          //   height: HEADER.H_DASHBOARD_DESKTOP_OFFSET,
+          //   borderBottom: `solid 1px ${theme.palette.divider}`,
+          // }),
           ...(isNavMini && {
             width: `calc(100% - ${NAV.W_DASHBOARD_MINI + 1}px)`,
           }),

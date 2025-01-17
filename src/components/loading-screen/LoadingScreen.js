@@ -6,7 +6,7 @@ import { Box, LinearProgress } from '@mui/material';
 // hooks
 import useResponsive from '../../hooks/useResponsive';
 // config
-import { NAV } from '../../config-global';
+import { HEADER, NAV } from '../../config-global';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
 //
@@ -52,15 +52,14 @@ export default function LoadingScreen() {
       <ProgressBar />
       <StyledRoot
         sx={{
-          ...(
-            // isDashboard && 
-            isDesktop &&
-            {
+          height: `calc(100% - ${HEADER.H_MOBILE}px)`,
+          ...(isDesktop && {
             width: `calc(100% - ${size}px)`,
-            ...(themeLayout === 'horizontal' && {
-              width: 1,
-              height: `calc(100% - ${size}px)`,
-            }),
+            height: `calc(100% - ${HEADER.H_DASHBOARD_DESKTOP}px)`,
+            // ...(themeLayout === 'horizontal' && {
+            //   width: 1,
+            //   height: `calc(100% - ${size}px)`,
+            // }),
           }),
         }}
       >
