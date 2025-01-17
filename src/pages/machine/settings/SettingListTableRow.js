@@ -56,7 +56,7 @@ export default function SettingListTableRow({
         <LinkTableCell align="left" param={name||""} onClick={onViewRow} />
         <TableCell align="left"  >
             {techParamValue || ""}
-            {history !== undefined && history?.length > 1 &&
+            {history !== undefined && history?.length > 0 &&
               <StyledBadge badgeContent={history?.length || '0' } color="info" sx={{top:-2, left:-2}} >
                 <IconButtonTooltip
                   title='History'
