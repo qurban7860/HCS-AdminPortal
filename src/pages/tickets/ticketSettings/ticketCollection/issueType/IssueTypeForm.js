@@ -6,7 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Container, Card, Grid, Stack, InputAdornment } from '@mui/material';
+import { Box, Container, Card, Grid, Stack, InputAdornment, TextField } from '@mui/material';
 // components
 import { Cover } from '../../../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../../../theme/styles/default-styles';
@@ -23,12 +23,13 @@ export default function IssueTypeForm() {
   const { id } = useParams();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
-  const {  ticketIssueType } = useSelector((state) => state.ticketIssueTypes);
+  const { ticketIssueType } = useSelector((state) => state.ticketIssueTypes);
   
   const defaultValues = useMemo(
     () => ({
       name: ticketIssueType?.name || '',
       icon: ticketIssueType?.icon || '',
+      color: ticketIssueType?.color || '',
       slug: ticketIssueType?.slug || '',
       description: ticketIssueType?.description || '',
       displayOrderNo: ticketIssueType?.displayOrderNo || '',
@@ -47,13 +48,13 @@ export default function IssueTypeForm() {
     reset, 
     handleSubmit, 
     watch,
-     formState: { isSubmitting }
-    } = methods;
+    formState: { isSubmitting }
+  } = methods;
   
-    const { icon } = watch()
+  const { icon, color } = watch();
 
-    useEffect(() => {
-    }, [icon]);
+  useEffect(() => {
+  }, [color]);
 
   const onSubmit = async (data) => {
     try {
@@ -97,25 +98,48 @@ export default function IssueTypeForm() {
                   gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
                 >
                   <RHFTextField name="name" label="Name*"/>
+                  <RHFTextField name="slug" label="Slug" />
                   <RHFTextField 
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="start" >
-                          <Iconify icon={icon} sx={{ width: 25, height: 25, }} />
+                          <Iconify icon={icon} sx={{ width: 25, height: 25, color: color || 'black' }} />
                         </InputAdornment>
                       )
                     }}
                     name="icon" 
                     label="Icon*"
                   />
-                  <RHFTextField name="slug" label="Slug" />
-                  <RHFTextField name="displayOrderNo" label="Display Order No." />
+                  <RHFTextField 
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="start" >
+                          {/* <TextField
+                            value={color}
+                            onChange={(e) => methods.setValue('color', e.target.value)}
+                            label="Color"
+                            type="color"
+                            sx={{ width: 40 }}
+                          /> */}
+                        </InputAdornment>
+                      )
+                    }}
+                    name="color" 
+                    label="Color"
+                  />
                 </Box>
-                  <RHFTextField name="description" label="Description" minRows={3} multiline />
+                <RHFTextField name="description" label="Description" minRows={3} multiline />
+                <Box
+                  rowGap={2}
+                  columnGap={2}
+                  display="grid"
+                  gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
+                >
+                  <RHFTextField name="displayOrderNo" label="Display Order No." />
                   <Grid display="flex" alignItems="end">
                     <RHFSwitch name="isDefault" label="Default" />
                   </Grid>
-
+                </Box>
                 <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Stack>
             </Card>

@@ -35,9 +35,11 @@ import { StyledCardContainer } from '../../../../../theme/styles/default-styles'
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
+  { id: 'isActive', label: ' ', align: 'left' },
   { id: 'name', label: 'Name', align: 'left' },
   { id: 'slug', visibility: 'xs1', label: 'Slug', align: 'left' },
   { id: 'displayOrderNo', visibility: 'xs1', label: 'Order Number', align: 'left' },
+  { id: 'icon', label: 'Icon ', align: 'left' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
 

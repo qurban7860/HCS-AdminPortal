@@ -29,6 +29,7 @@ export default function ChangeReasonForm() {
     () => ({
       name: ticketChangeReason?.name || '',
       icon: ticketChangeReason?.icon || '',
+      color: ticketChangeReason?.color || '',
       slug: ticketChangeReason?.slug || '',
       description: ticketChangeReason?.description || '',
       displayOrderNo: ticketChangeReason?.displayOrderNo || '',
@@ -50,10 +51,10 @@ export default function ChangeReasonForm() {
      formState: { isSubmitting }
     } = methods;
   
-    const { icon } = watch()
+    const { icon, color } = watch()
 
     useEffect(() => {
-    }, [icon]);
+    }, [color]);
 
   const onSubmit = async (data) => {
     try {
@@ -86,42 +87,57 @@ export default function ChangeReasonForm() {
         <Cover name={ticketChangeReason?.name || 'New Change Reason'} />
       </StyledCardContainer>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={12}>
-            <Card sx={{ p: 3 }}>
-              <Stack spacing={3}>
-                <Box
-                  rowGap={2}
-                  columnGap={2}
-                  display="grid"
-                  gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
-                >
-                  <RHFTextField name="name" label="Name*"/>
-                  <RHFTextField 
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="start" >
-                          <Iconify icon={icon} sx={{ width: 25, height: 25, }} />
-                        </InputAdornment>
-                      )
-                    }}
-                    name="icon" 
-                    label="Icon*"
-                  />
-                  <RHFTextField name="slug" label="Slug" />
-                  <RHFTextField name="displayOrderNo" label="Display Order No." />
-                </Box>
-                  <RHFTextField name="description" label="Description" minRows={3} multiline />
-                  <Grid display="flex" alignItems="end">
-                    <RHFSwitch name="isDefault" label="Default" />
-                  </Grid>
-
-                <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
-              </Stack>
-            </Card>
-          </Grid>
+      <Grid container spacing={3}>
+        <Grid item xs={12} md={12}>
+          <Card sx={{ p: 3 }}>
+            <Stack spacing={3}>
+              <Box
+                rowGap={2}
+                columnGap={2}
+                display="grid"
+                gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
+              >
+                <RHFTextField name="name" label="Name*"/>
+                <RHFTextField name="slug" label="Slug" />
+                <RHFTextField 
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="start" >
+                        <Iconify icon={icon} sx={{ width: 25, height: 25, color: color || 'black' }} />
+                      </InputAdornment>
+                    )
+                  }}
+                  name="icon" 
+                  label="Icon*"
+                />
+                <RHFTextField 
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="start" />
+                    )
+                  }}
+                  name="color" 
+                  label="Color"
+                />
+              </Box>
+              <RHFTextField name="description" label="Description" minRows={3} multiline />
+              <Box
+                rowGap={2}
+                columnGap={2}
+                display="grid"
+                gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
+              >
+                <RHFTextField name="displayOrderNo" label="Display Order No." />
+                <Grid display="flex" alignItems="end">
+                  <RHFSwitch name="isDefault" label="Default" />
+                </Grid>
+              </Box>
+              <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+            </Stack>
+          </Card>
         </Grid>
-      </FormProvider>
+      </Grid>
+    </FormProvider>
     </Container>
   );
 }

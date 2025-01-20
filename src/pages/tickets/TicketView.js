@@ -24,7 +24,7 @@ export default function TicketView() {
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
-        <Cover name={ticket?.customer?.name} />
+        <Cover name={ticket?.ticketNo} />
       </StyledCardContainer>
       <TicketViewForm />
     </Container>

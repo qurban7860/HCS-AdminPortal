@@ -31,6 +31,7 @@ export default function IssueTypeViewForm() {
       name: ticketIssueType?.name || '',
       slug: ticketIssueType?.slug || '',
       icon: ticketIssueType?.icon || '',
+      color: ticketIssueType?.color || '',
       displayOrderNo: ticketIssueType?.displayOrderNo || '',
       description: ticketIssueType?.description || '',
       isDefault: ticketIssueType?.isDefault || false,
@@ -77,8 +78,9 @@ export default function IssueTypeViewForm() {
           <StyledTooltip 
            placement="top" 
            title={defaultValues?.name || ''} 
-           tooltipcolor={theme.palette.primary.main} >
-           <Iconify icon={defaultValues?.icon} style={{ width: 25, height: 25, color: theme.palette.primary.main }} />
+          //  tooltipcolor={theme.palette.primary.main} 
+          tooltipcolor={defaultValues.color} >
+           <Iconify icon={defaultValues?.icon} style={{ width: 25, height: 25, color: defaultValues.color }} />
           </StyledTooltip> } 
         />
         <ViewFormField isLoading={isLoading} sm={6} heading="Slug" param={defaultValues?.slug} />

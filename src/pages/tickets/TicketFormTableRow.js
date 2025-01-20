@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import {
   TableCell,
   Stack,
-  useTheme,
 } from '@mui/material';
 // utils
 import { fDate } from '../../utils/formatTime';
@@ -25,50 +24,39 @@ export default function TicketFormTableRow({
 }) {
 
   const { ticketNo, customer, machine, issueType, summary, priority, status, createdAt } = row;
-  const theme = useTheme();
 
   return (
     <StyledTableRow hover selected={selected}>
-      <TableCell align="left">
-        <Stack direction="row" alignItems="center" spacing={-1.5} >
-          {issueType?.icon && (
-            <StyledTooltip placement="top" title={issueType.name || ''} 
-              tooltipcolor={theme.palette.primary.main} >
-              <Iconify icon={issueType.icon} style={{ width: 25, height: 25,  color: theme.palette.primary.main }}  />
-            </StyledTooltip>
-          )}
-          <LinkTableCell align="left" onClick={() => onViewRow(ticketNo)} param={ticketNo || ''} />
+      <TableCell align="left" padding="checkbox">
+        <Stack direction="row" alignItems="center" >
+        <StyledTooltip placement="top" title={issueType?.name || ''} 
+          tooltipcolor={issueType?.color} >
+          <Iconify icon={issueType?.icon} style={{ width: 25, height: 25,  color: issueType?.color }}  />
+        </StyledTooltip>
         </Stack>
       </TableCell>
+      <LinkTableCell align="left" onClick={() => onViewRow(ticketNo)} param={ticketNo || ''} />
       <Stack direction="row" alignItems="center">
         <LinkTableCell align="left" onClick={onViewRow} param={summary || ''} /> 
       </Stack>
-      <TableCell align="left" padding="checkbox">
-        {status?.icon ? (
-          <StyledTooltip 
-           placement="top" 
-           title={status.name || ''} 
-           tooltipcolor={theme.palette.primary.main} >
-           <Iconify icon={status.icon} style={{ width: 25, height: 25, color: theme.palette.primary.main }}  />
-          </StyledTooltip>
-        ) : (
-          ''
-        )}
-      </TableCell>
-      <TableCell align="left" >
-        {priority?.icon ? (
-          <StyledTooltip 
-           placement="top" 
-           title={priority.name || ''} 
-           tooltipcolor={theme.palette.primary.main} >
-           <Iconify icon={priority.icon} style={{ width: 25, height: 25, color: theme.palette.primary.main }}  />
-          </StyledTooltip>
-        ) : (
-          ''
-        )}
-      </TableCell>
-      <TableCell align='left' > { customer?.name || ''} </TableCell>
       <TableCell align='left' > { machine?.serialNo || ''} </TableCell>
+      <TableCell align='left' > { customer?.name || ''} </TableCell>
+      <TableCell align="left" padding="checkbox">
+        <StyledTooltip 
+          placement="top" 
+          title={status?.name || ''} 
+          tooltipcolor={status?.color} >
+          <Iconify icon={status?.icon} style={{ width: 25, height: 25, color: status?.color }}  />
+        </StyledTooltip>
+      </TableCell>
+      <TableCell align="left" padding="checkbox">
+        <StyledTooltip 
+          placement="top" 
+          title={priority?.name || ''} 
+          tooltipcolor={priority?.color} >
+          <Iconify icon={priority?.icon} style={{ width: 25, height: 25, color: priority?.color }}  />
+        </StyledTooltip>
+      </TableCell>
       <TableCell align='right' > { fDate(createdAt) } </TableCell>
     </StyledTableRow>
   );
