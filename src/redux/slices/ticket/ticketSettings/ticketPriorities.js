@@ -134,6 +134,7 @@ export function postTicketPriority(params) {
         const data = {
           name: params.name,
           icon: params.icon,
+          color: params.color,
           slug: params.slug,
           displayOrderNo: params.displayOrderNo,
           description: params.description,
@@ -158,6 +159,7 @@ export function patchTicketPriority(id, params) {
         const data = {
           name: params.name,
           icon: params.icon,
+          color: params.color,
           slug: params.slug,
           displayOrderNo: params.displayOrderNo,
           description: params.description,

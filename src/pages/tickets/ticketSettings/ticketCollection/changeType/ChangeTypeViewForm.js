@@ -32,6 +32,7 @@ export default function ChangeTypeViewForm() {
       name: ticketChangeType?.name || '',
       slug: ticketChangeType?.slug || '',
       icon: ticketChangeType?.icon || '',
+      color: ticketChangeType?.color || '',
       displayOrderNo: ticketChangeType?.displayOrderNo || '',
       description: ticketChangeType?.description || '',
       isDefault: ticketChangeType?.isDefault || false,
@@ -78,8 +79,8 @@ export default function ChangeTypeViewForm() {
           <StyledTooltip 
            placement="top" 
            title={defaultValues?.name || ''} 
-           tooltipcolor={theme.palette.primary.main} >
-           <Iconify icon={defaultValues?.icon} style={{ width: 25, height: 25,  color: theme.palette.primary.main }} />
+           tooltipcolor={defaultValues?.color} >
+           <Iconify icon={defaultValues?.icon} style={{ width: 25, height: 25,  color: defaultValues?.color }} />
           </StyledTooltip> } 
         />
         <ViewFormField isLoading={isLoading} sm={6} heading="Slug" param={defaultValues?.slug} />

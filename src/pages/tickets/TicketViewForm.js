@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 // @mui
-import { Card, Grid, Box, Typography, useTheme } from '@mui/material';
+import { Card, Grid, Box, Typography } from '@mui/material';
 // redux
 import { deleteTicket, resetTicket } from '../../redux/slices/ticket/tickets';
 // paths
@@ -23,7 +23,6 @@ export default function TicketViewForm() {
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
 
   const onArchive = async () => {
@@ -88,15 +87,13 @@ export default function TicketViewForm() {
           <ViewFormField isLoading={isLoading} sm={4} heading="Ticket No."
             param={
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                {ticket?.issueType?.icon ? (
                   <StyledTooltip 
                     placement="top" 
                     title={ticket?.issueType?.name} 
-                    tooltipcolor={theme.palette.primary.main}
+                    tooltipcolor={ticket?.issueType?.color}
                     > 
-                      <Iconify icon={ticket.issueType.icon} style={{ width: 25, height: 25, color: theme.palette.primary.main }} />
+                      <Iconify icon={ticket.issueType.icon} style={{ width: 25, height: 25, color: ticket?.issueType?.color }} />
                   </StyledTooltip>
-                ) : null}
                 <Typography sx={{ marginLeft: 0.5 }}>{ticket?.ticketNo}</Typography>
               </Box>
             }
@@ -111,7 +108,7 @@ export default function TicketViewForm() {
             param={
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                {ticket?.priority?.icon ? (
-                 <Iconify icon={ticket.priority.icon} style={{ width: 25, height: 25, color: '#2065d1' }} />
+                 <Iconify icon={ticket.priority.icon} color={ticket.priority.color} style={{ width: 25, height: 25 }} />
                 ) : null}
                 <Typography sx={{ marginLeft: 0.5 }}>{ticket?.priority?.name}</Typography>
               </Box>
@@ -122,7 +119,7 @@ export default function TicketViewForm() {
             param={
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                {ticket?.status?.icon ? (
-                 <Iconify icon={ticket.status.icon} style={{ width: 25, height: 25, color: '#2065d1' }} />
+                 <Iconify icon={ticket.status.icon} color={ticket.status.color} style={{ width: 25, height: 25 }} />
                 ) : null}
                 <Typography sx={{ marginLeft: 0.5 }}>{ticket?.status?.name}</Typography>
               </Box>
@@ -138,7 +135,7 @@ export default function TicketViewForm() {
               <ViewFormField isLoading={isLoading} sm={12} heading="Test Plan" param={defaultValues.testPlan} />
             </>
           )}
-          {ticket?.issueType?.name === 'System Incident' && (
+          {ticket?.issueType?.name === 'Service Request' && (
             <>
               <ViewFormField isLoading={isLoading} sm={6} heading="Investigation Reason" param={defaultValues.investigationReason} />
               <ViewFormField isLoading={isLoading} sm={12} heading="Root Cause" param={defaultValues.rootCause} />

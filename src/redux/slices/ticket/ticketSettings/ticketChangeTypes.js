@@ -134,6 +134,7 @@ export function postTicketChangeType(params) {
         const data = {
           name: params.name,
           icon: params.icon,
+          color: params.color,
           slug: params.slug,
           displayOrderNo: params.displayOrderNo,
           description: params.description,
@@ -158,6 +159,7 @@ export function patchTicketChangeType(id, params) {
         const data = {
           name: params.name,
           icon: params.icon,
+          color: params.color,
           slug: params.slug,
           displayOrderNo: params.displayOrderNo,
           description: params.description,

@@ -32,6 +32,7 @@ export default function ChangeReasonViewForm() {
       name: ticketChangeReason?.name || '',
       slug: ticketChangeReason?.slug || '',
       icon: ticketChangeReason?.icon || '',
+      color: ticketChangeReason?.color || '',
       displayOrderNo: ticketChangeReason?.displayOrderNo || '',
       description: ticketChangeReason?.description || '',
       isDefault: ticketChangeReason?.isDefault || false,
@@ -78,8 +79,8 @@ export default function ChangeReasonViewForm() {
           <StyledTooltip 
            placement="top" 
            title={defaultValues?.name || ''} 
-           tooltipcolor={theme.palette.primary.main} >
-           <Iconify icon={defaultValues?.icon} style={{ width: 25, height: 25, color: theme.palette.primary.main }} />
+           tooltipcolor={defaultValues?.color} >
+           <Iconify icon={defaultValues?.icon} style={{ width: 25, height: 25, color: defaultValues?.color }} />
           </StyledTooltip> } 
         />
         <ViewFormField isLoading={isLoading} sm={6} heading="Slug" param={defaultValues?.slug} />

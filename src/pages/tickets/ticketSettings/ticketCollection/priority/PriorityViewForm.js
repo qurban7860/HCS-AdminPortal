@@ -31,6 +31,7 @@ export default function PriorityViewForm() {
       name: ticketPriority?.name || '',
       slug: ticketPriority?.slug || '',
       icon: ticketPriority?.icon || '',
+      color: ticketPriority?.color || '',
       displayOrderNo: ticketPriority?.displayOrderNo || '',
       description: ticketPriority?.description || '',
       isDefault: ticketPriority?.isDefault || false,
@@ -77,8 +78,8 @@ export default function PriorityViewForm() {
           <StyledTooltip 
             placement="top" 
             title={defaultValues?.name || ''} 
-            tooltipcolor={theme.palette.primary.main} >
-            <Iconify icon={defaultValues?.icon} style={{ width: 25, height: 25,  color: theme.palette.primary.main }} />
+            tooltipcolor={defaultValues?.color} >
+            <Iconify icon={defaultValues?.icon} style={{ width: 25, height: 25,  color: defaultValues?.color }} />
           </StyledTooltip> } 
         />
         <ViewFormField isLoading={isLoading} sm={6} heading="Slug" param={defaultValues?.slug} />
