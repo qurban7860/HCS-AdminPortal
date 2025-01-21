@@ -24,6 +24,17 @@ export const ICONS = {
     color: '#FF0000',
     heading: 'Inactive',
   },
+  // shareWith
+  SHARED: {
+    icon: 'ri:user-shared-fill',
+    color: '#008000',
+    heading: 'Shared',
+  },
+  NONSHARED: {
+    icon: 'nonicons:not-found-16',
+    color: '#FF0000',
+    heading: 'Nonshared',
+  },
 
   // Status
   STATUS: {

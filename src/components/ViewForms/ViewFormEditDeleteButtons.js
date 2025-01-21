@@ -29,6 +29,7 @@ import ViewFormServiceReportApprovalHistoryPopover from './ViewFormServiceReport
 function ViewFormEditDeleteButtons({
   backLink,
   isActive,
+  shareWith,
   isReleased,
   isDefault,
   isIniRead,
@@ -403,6 +404,14 @@ function ViewFormEditDeleteButtons({
               title={isActive?ICONS.ACTIVE.heading:ICONS.INACTIVE.heading}
               color={isActive?ICONS.ACTIVE.color:ICONS.INACTIVE.color}
               icon={isActive?ICONS.ACTIVE.icon:ICONS.INACTIVE.icon}
+            />
+          }
+
+          {shareWith!==undefined &&
+            <IconTooltip
+              title={shareWith?ICONS.SHARED.heading:ICONS.NONSHARED.heading}
+              color={shareWith?ICONS.SHARED.color:ICONS.NONSHARED.color}
+              icon={shareWith?ICONS.SHARED.icon:ICONS.NONSHARED.icon}
             />
           }
           {isIniRead!==undefined &&
@@ -1012,6 +1021,7 @@ ViewFormEditDeleteButtons.propTypes = {
   isVerifiedTitle: PropTypes.string,
   approveConfiglength: PropTypes.string,
   isActive: PropTypes.bool,
+  shareWith: PropTypes.bool,
   isReleased: PropTypes.bool,
   isIniRead: PropTypes.bool,
   isManufacture: PropTypes.bool,

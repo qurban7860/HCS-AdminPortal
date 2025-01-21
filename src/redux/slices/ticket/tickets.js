@@ -150,6 +150,7 @@ export function postTicket(params) {
         backoutPlan: params.backoutPlan || '',
         testPlan: params.testPlan || '',
         shareWith: params.shareWith,
+        isActive: params.isActive,
         rootCause: params.rootCause || '',
         workaround: params.workaround || '',
       }
@@ -187,6 +188,7 @@ export function patchTicket(id, params) {
         backoutPlan: params.backoutPlan || '',
         testPlan: params.testPlan || '',
         shareWith: params.shareWith,
+        isActive: params.isActive,
         rootCause: params.rootCause || '',
         workaround: params.workaround || '',
       };

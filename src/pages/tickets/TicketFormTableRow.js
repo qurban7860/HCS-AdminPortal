@@ -6,6 +6,7 @@ import {
 // utils
 import { fDate } from '../../utils/formatTime';
 import { StyledTableRow, StyledTooltip } from '../../theme/styles/default-styles'
+import { ICONS } from '../../constants/icons/default-icons';
 import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
 import Iconify from '../../components/iconify';
 
@@ -23,7 +24,7 @@ export default function TicketFormTableRow({
   onViewRow,
 }) {
 
-  const { ticketNo, customer, machine, issueType, summary, priority, status, createdAt } = row;
+  const { ticketNo, customer, machine, issueType, summary, priority, status, isActive, createdAt } = row;
 
   return (
     <StyledTableRow hover selected={selected}>
@@ -40,6 +41,7 @@ export default function TicketFormTableRow({
         <LinkTableCell align="left" onClick={onViewRow} param={summary || ''} /> 
       </Stack>
       <TableCell align='left' > { machine?.serialNo || ''} </TableCell>
+      <TableCell align='left' > { machine?.machineModel?.name || ''} </TableCell>
       <TableCell align='left' > { customer?.name || ''} </TableCell>
       <TableCell align="left" padding="checkbox">
         <StyledTooltip 
@@ -55,6 +57,16 @@ export default function TicketFormTableRow({
           title={priority?.name || ''} 
           tooltipcolor={priority?.color} >
           <Iconify icon={priority?.icon} style={{ width: 25, height: 25, color: priority?.color }}  />
+        </StyledTooltip>
+      </TableCell>
+      <TableCell align="left" padding="checkbox"  >
+        <StyledTooltip
+          placement="top" 
+          title={ isActive ? ICONS.ACTIVE.heading : ICONS.INACTIVE.heading} 
+          disableFocusListener tooltipcolor={isActive ? ICONS.ACTIVE.color : ICONS.INACTIVE.color} 
+          color={ isActive ? ICONS.ACTIVE.color : ICONS.INACTIVE.color}
+          >
+          <Iconify icon={ isActive ? ICONS.ACTIVE.icon : ICONS.INACTIVE.icon }/>
         </StyledTooltip>
       </TableCell>
       <TableCell align='right' > { fDate(createdAt) } </TableCell>

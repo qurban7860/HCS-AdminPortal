@@ -62,34 +62,35 @@ export default function TicketForm() {
 
   const defaultValues = useMemo(
     () => ({
-      customer: ticket?.customer || null,
-      machine: ticket?.machine || null,
-      issueType: ticket?.issueType || null,
-      summary: ticket?.summary || '',
-      description: ticket?.description || '',
-      priority: ticket?.priority || null,
-      status: ticket?.status || null,
-      impact: ticket?.impact || null,
-      files: ticket ? manipulateFiles(ticket?.files) : [],
-      changeType: ticket?.changeType || null,
-      changeReason: ticket?.changeReason || null,
-      implementationPlan: ticket?.implementationPlan || '',
-      backoutPlan: ticket?.backoutPlan || '',
-      testPlan: ticket?.testPlan || '',
-      investigationReason: ticket?.investigationReason || null,
-      rootCause: ticket?.rootCause || '',
-      workaround: ticket?.workaround || '',
-      shareWith: ticket?.shareWith ?? false,
-      plannedStartDate: ticket?.plannedStartDate
+      customer: id && ticket?.customer || null,
+      machine: id && ticket?.machine || null,
+      issueType: id && ticket?.issueType || null,
+      summary: id && ticket?.summary || '',
+      description: id && ticket?.description || '',
+      priority: id && ticket?.priority || null,
+      status: id && ticket?.status || null,
+      impact: id && ticket?.impact || null,
+      files: id && ticket ? manipulateFiles(ticket?.files) : [],
+      changeType: id && ticket?.changeType || null,
+      changeReason: id && ticket?.changeReason || null,
+      implementationPlan: id && ticket?.implementationPlan || '',
+      backoutPlan: id && ticket?.backoutPlan || '',
+      testPlan: id && ticket?.testPlan || '',
+      investigationReason: id && ticket?.investigationReason || null,
+      rootCause: id && ticket?.rootCause || '',
+      workaround: id && ticket?.workaround || '',
+      shareWith: id && ticket?.shareWith || false,
+      isActive: id && ticket?.isActive || false,
+      plannedStartDate: id && ticket?.plannedStartDate
         ? getTimeObjectFromISOString(ticket.plannedStartDate)
         : getTimeObjectFromISOString(new Date().toISOString()),
-      plannedEndDate: ticket?.plannedEndDate
+      plannedEndDate: id && ticket?.plannedEndDate
         ? getTimeObjectFromISOString(ticket.plannedEndDate)
         : getTimeObjectFromISOString(new Date().toISOString()),
         dateFrom: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
         dateTo: new Date().toISOString(),
     }),
-    [ ticket ] 
+    [ id, ticket ] 
   );
 
   const methods = useForm({
@@ -434,6 +435,7 @@ export default function TicketForm() {
                 )}
                 <Grid display="flex" alignItems="end">
                   <RHFSwitch name="shareWith" label="Shared With Organization" />
+                  <RHFSwitch name="isActive" label="Active" />
                 </Grid>
                 <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Stack>
