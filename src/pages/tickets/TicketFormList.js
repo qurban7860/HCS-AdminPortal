@@ -17,6 +17,7 @@ import {
   TableHeadCustom,
   TablePaginationCustom,
 } from '../../components/table';
+import { getCustomer, setCustomerDialog } from '../../redux/slices/customer/customer';
 import Scrollbar from '../../components/scrollbar';
 import FormProvider from '../../components/hook-form';
 // sections
@@ -64,6 +65,7 @@ export default function TicketFormList(){
     setPage,
     selected,
     onSort,
+    onSelectRow,
   } = useTable({ defaultOrderBy: 'createdAt', defaultOrder: 'desc' });
 
   const onChangeRowsPerPage = (event) => {
@@ -113,6 +115,11 @@ export default function TicketFormList(){
     setFilterName(event.target.value)
     setPage(0);
   };
+  
+  const handleCustomerDialog = (e, id) => {
+    dispatch(getCustomer(id))
+    dispatch(setCustomerDialog(true))
+  }
   
   useEffect(() => {
     debouncedSearch.current.cancel();
@@ -175,9 +182,13 @@ export default function TicketFormList(){
                         <TicketFormTableRow
                           key={row._id}
                           row={row}
+                          onSelectRow={() => onSelectRow(row._id)}
                           onViewRow={() => handleViewRow(row._id)}
                           selected={selected.includes(row._id)}
                           selectedLength={selected.length}
+                          handleCustomerDialog={(e) =>
+                            row?.customer && handleCustomerDialog(e, row?.customer?._id)
+                          }
                           style={index % 2 ? { background: 'red' } : { background: 'green' }}
                         />
                       ) : (

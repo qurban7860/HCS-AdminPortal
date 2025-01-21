@@ -17,6 +17,7 @@ import AddFormButtons from '../../../../../components/DocumentForms/AddFormButto
 import FormProvider, { RHFTextField, RHFSwitch } from '../../../../../components/hook-form';
 import { postTicketImpact, patchTicketImpact, getTicketImpact, resetTicketImpact } from '../../../../../redux/slices/ticket/ticketSettings/ticketImpacts';
 import Iconify from '../../../../../components/iconify';
+import { handleError } from '../../../../../utils/errorHandler';
 
 export default function ImpactForm() {
   const navigate = useNavigate();

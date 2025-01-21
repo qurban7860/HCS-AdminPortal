@@ -17,6 +17,7 @@ import AddFormButtons from '../../../../../components/DocumentForms/AddFormButto
 import FormProvider, { RHFTextField, RHFSwitch } from '../../../../../components/hook-form';
 import { postTicketIssueType, patchTicketIssueType, getTicketIssueType, resetTicketIssueType } from '../../../../../redux/slices/ticket/ticketSettings/ticketIssueTypes';
 import Iconify from '../../../../../components/iconify';
+import { handleError } from '../../../../../utils/errorHandler';
 
 export default function IssueTypeForm() {
   const navigate = useNavigate();
@@ -39,7 +40,7 @@ export default function IssueTypeForm() {
     }),
     [ id, ticketIssueType ] 
   );
-  
+
   const methods = useForm({
     resolver: yupResolver(TicketCollectionSchema),
     defaultValues,

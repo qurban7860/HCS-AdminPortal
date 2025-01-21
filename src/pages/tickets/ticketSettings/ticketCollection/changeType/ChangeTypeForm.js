@@ -17,6 +17,7 @@ import { TicketCollectionSchema } from '../utils/constant';
 import FormProvider, { RHFTextField, RHFSwitch } from '../../../../../components/hook-form';
 import { postTicketChangeType, patchTicketChangeType, getTicketChangeType, resetTicketChangeType } from '../../../../../redux/slices/ticket/ticketSettings/ticketChangeTypes';
 import Iconify from '../../../../../components/iconify';
+import { handleError } from '../../../../../utils/errorHandler';
 
 export default function ChangeTypeForm() {
   const navigate = useNavigate();
