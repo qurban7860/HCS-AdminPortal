@@ -27,16 +27,17 @@ export default function PriorityForm() {
   
   const defaultValues = useMemo(
     () => ({
-      name: ticketPriority?.name || '',
-      icon: ticketPriority?.icon || '',
-      color: ticketPriority?.color || '',
-      slug: ticketPriority?.slug || '',
-      description: ticketPriority?.description || '',
-      displayOrderNo: ticketPriority?.displayOrderNo || '',
-      isDefault: ticketPriority?.isDefault || false,
-      createdAt: ticketPriority?.createdAt || '',
+      name: id && ticketPriority?.name || '',
+      icon: id && ticketPriority?.icon || '',
+      color: id && ticketPriority?.color || '',
+      slug: id && ticketPriority?.slug || '',
+      description: id && ticketPriority?.description || '',
+      displayOrderNo: id && ticketPriority?.displayOrderNo || '',
+      isDefault: id && ticketPriority?.isDefault || false,
+      isActive: id && ticketPriority?.isActive || false,
+      createdAt: id && ticketPriority?.createdAt || '',
     }),
-    [ ticketPriority ] 
+    [ id, ticketPriority ] 
   );
 
   const methods = useForm({
@@ -128,8 +129,9 @@ export default function PriorityForm() {
                 gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
               >
                 <RHFTextField name="displayOrderNo" label="Display Order No." />
-                <Grid display="flex" alignItems="end">
+                <Grid display="flex" alignItems="center">
                   <RHFSwitch name="isDefault" label="Default" />
+                  <RHFSwitch name="isActive" label="Active" />
                 </Grid>
               </Box>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />

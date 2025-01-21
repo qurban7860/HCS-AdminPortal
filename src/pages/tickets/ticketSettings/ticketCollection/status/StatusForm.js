@@ -27,16 +27,17 @@ export default function StatusForm() {
   
   const defaultValues = useMemo(
     () => ({
-      name: ticketStatus?.name || '',
-      icon: ticketStatus?.icon || '',
-      color: ticketStatus?.color || '',
-      slug: ticketStatus?.slug || '',
-      description: ticketStatus?.description || '',
-      displayOrderNo: ticketStatus?.displayOrderNo || '',
-      isDefault: ticketStatus?.isDefault || false,
-      createdAt: ticketStatus?.createdAt || '',
+      name: id && ticketStatus?.name || '',
+      icon: id && ticketStatus?.icon || '',
+      color: id && ticketStatus?.color || '',
+      slug: id && ticketStatus?.slug || '',
+      description: id && ticketStatus?.description || '',
+      displayOrderNo: id && ticketStatus?.displayOrderNo || '',
+      isDefault: id && ticketStatus?.isDefault || false,
+      isActive: id && ticketStatus?.isActive || false,
+      createdAt: id && ticketStatus?.createdAt || '',
     }),
-    [ ticketStatus ] 
+    [ id, ticketStatus ] 
   );
 
   const methods = useForm({
@@ -128,8 +129,9 @@ export default function StatusForm() {
                 gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
               >
                 <RHFTextField name="displayOrderNo" label="Display Order No." />
-                <Grid display="flex" alignItems="end">
+                <Grid display="flex" alignItems="center">
                   <RHFSwitch name="isDefault" label="Default" />
+                  <RHFSwitch name="isActive" label="Active" />
                 </Grid>
               </Box>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
