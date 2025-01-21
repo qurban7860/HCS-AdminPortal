@@ -26,17 +26,18 @@ export default function ChangeTypeForm() {
   const {  ticketChangeType } = useSelector((state) => state.ticketChangeTypes);
   
   const defaultValues = useMemo(
-    () => ({
-      name: ticketChangeType?.name || '',
-      icon: ticketChangeType?.icon || '',
-      color: ticketChangeType?.color || '',
-      slug: ticketChangeType?.slug || '',
-      description: ticketChangeType?.description || '',
-      displayOrderNo: ticketChangeType?.displayOrderNo || '',
-      isDefault: ticketChangeType?.isDefault ?? false,
-      createdAt: ticketChangeType?.createdAt || '',
+    () => ({ 
+      name: id && ticketChangeType?.name || '',
+      icon: id && ticketChangeType?.icon || '',
+      color: id && ticketChangeType?.color || '',
+      slug: id && ticketChangeType?.slug || '',
+      description: id && ticketChangeType?.description || '',
+      displayOrderNo: id && ticketChangeType?.displayOrderNo || '',
+      isDefault: id && ticketChangeType?.isDefault || false,
+      isActive: id && ticketChangeType?.isActive || false,
+      createdAt: id && ticketChangeType?.createdAt || '',
     }),
-    [ ticketChangeType ] 
+    [ id, ticketChangeType ] 
   );
 
   const methods = useForm({
@@ -128,8 +129,9 @@ export default function ChangeTypeForm() {
                 gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
               >
                 <RHFTextField name="displayOrderNo" label="Display Order No." />
-                <Grid display="flex" alignItems="end">
+                <Grid display="flex" alignItems="center">
                   <RHFSwitch name="isDefault" label="Default" />
+                  <RHFSwitch name="isActive" label="Active" />
                 </Grid>
               </Box>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />

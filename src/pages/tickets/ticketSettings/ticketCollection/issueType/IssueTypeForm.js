@@ -27,16 +27,17 @@ export default function IssueTypeForm() {
   
   const defaultValues = useMemo(
     () => ({
-      name: ticketIssueType?.name || '',
-      icon: ticketIssueType?.icon || '',
-      color: ticketIssueType?.color || '',
-      slug: ticketIssueType?.slug || '',
-      description: ticketIssueType?.description || '',
-      displayOrderNo: ticketIssueType?.displayOrderNo || '',
-      isDefault: ticketIssueType?.isDefault ?? false,
-      createdAt: ticketIssueType?.createdAt || '',
+      name: id && ticketIssueType?.name || '',
+      icon: id && ticketIssueType?.icon || '',
+      color: id && ticketIssueType?.color || '',
+      slug: id && ticketIssueType?.slug || '',
+      description: id && ticketIssueType?.description || '',
+      displayOrderNo: id && ticketIssueType?.displayOrderNo || '',
+      isDefault: id && ticketIssueType?.isDefault || false,
+      isActive: id && ticketIssueType?.isActive || false,
+      createdAt: id && ticketIssueType?.createdAt || '',
     }),
-    [ ticketIssueType ] 
+    [ id, ticketIssueType ] 
   );
   
   const methods = useForm({
@@ -111,19 +112,19 @@ export default function IssueTypeForm() {
                     label="Icon*"
                   />
                   <RHFTextField 
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="start" >
-                          {/* <TextField
-                            value={color}
-                            onChange={(e) => methods.setValue('color', e.target.value)}
-                            label="Color"
-                            type="color"
-                            sx={{ width: 40 }}
-                          /> */}
-                        </InputAdornment>
-                      )
-                    }}
+                    // InputProps={{
+                    //   endAdornment: (
+                    //     <InputAdornment position="start" >
+                    //       <TextField
+                    //         value={color}
+                    //         onChange={(e) => methods.setValue('color', e.target.value)}
+                    //         label="Color"
+                    //         type="color"
+                    //         sx={{ width: 40 }}
+                    //       />
+                    //     </InputAdornment>
+                    //   )
+                    // }}
                     name="color" 
                     label="Color"
                   />
@@ -136,8 +137,9 @@ export default function IssueTypeForm() {
                   gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
                 >
                   <RHFTextField name="displayOrderNo" label="Display Order No." />
-                  <Grid display="flex" alignItems="end">
+                  <Grid display="flex" alignItems="center">
                     <RHFSwitch name="isDefault" label="Default" />
+                    <RHFSwitch name="isActive" label="Active" />
                   </Grid>
                 </Box>
                 <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />

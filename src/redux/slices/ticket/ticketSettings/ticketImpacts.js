@@ -139,6 +139,7 @@ export function postTicketImpact(params) {
           displayOrderNo: params.displayOrderNo,
           description: params.description,
           isDefault: params.isDefault,
+          isActive: params.isActive,
         };
       const response = await axios.post(`${CONFIG.SERVER_URL}tickets/settings/impacts/`, data);
       dispatch(slice.actions.postTicketImpactSuccess(response.data));
@@ -164,6 +165,7 @@ export function patchTicketImpact(id, params) {
           displayOrderNo: params.displayOrderNo,
           description: params.description,
           isDefault: params.isDefault,
+          isActive: params.isActive,
         };
       const response = await axios.patch(`${CONFIG.SERVER_URL}tickets/settings/impacts/${id}`, data);
       dispatch(slice.actions.patchTicketImpactSuccess(response.data)); 

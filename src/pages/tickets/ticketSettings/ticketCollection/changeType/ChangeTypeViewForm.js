@@ -36,6 +36,7 @@ export default function ChangeTypeViewForm() {
       displayOrderNo: ticketChangeType?.displayOrderNo || '',
       description: ticketChangeType?.description || '',
       isDefault: ticketChangeType?.isDefault || false,
+      isActive: ticketChangeType?.isActive || false,
       createdByFullName: ticketChangeType?.createdBy?.name || '',
       createdAt: ticketChangeType?.createdAt || '',
       createdIP: ticketChangeType?.createdIP || '',
@@ -66,6 +67,7 @@ export default function ChangeTypeViewForm() {
     <Card sx={{ p: 2 }}>
       <ViewFormEditDeleteButtons  
         isDefault={defaultValues.isDefault} 
+        isActive={defaultValues.isActive}
         handleEdit={toggleEdit} 
         onArchive={onArchive} 
         backLink={() => {
@@ -90,7 +92,6 @@ export default function ChangeTypeViewForm() {
           param={defaultValues?.displayOrderNo?.toString()}
         />
         <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues?.description} />
-        <ViewFormSwitch isLoading={isLoading} sm={12} isActiveHeading="Default" isActive={defaultValues.isDefault} />
         <Grid container>
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>

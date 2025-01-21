@@ -15,7 +15,6 @@ import ViewFormAudit from '../../../../../components/ViewForms/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../../../../../components/ViewForms/ViewFormEditDeleteButtons';
 import ViewFormField from '../../../../../components/ViewForms/ViewFormField';
 import ViewFormSwitch from '../../../../../components/ViewForms/ViewFormSwitch';
-
 // ----------------------------------------------------------------------
 
 export default function ChangeReasonViewForm() {
@@ -36,6 +35,7 @@ export default function ChangeReasonViewForm() {
       displayOrderNo: ticketChangeReason?.displayOrderNo || '',
       description: ticketChangeReason?.description || '',
       isDefault: ticketChangeReason?.isDefault || false,
+      isActive: ticketChangeReason?.isActive || false,
       createdByFullName: ticketChangeReason?.createdBy?.name || '',
       createdAt: ticketChangeReason?.createdAt || '',
       createdIP: ticketChangeReason?.createdIP || '',
@@ -66,6 +66,7 @@ export default function ChangeReasonViewForm() {
     <Card sx={{ p: 2 }}>
       <ViewFormEditDeleteButtons  
         isDefault={defaultValues.isDefault} 
+        isActive={defaultValues.isActive}
         handleEdit={toggleEdit} 
         onArchive={onArchive} 
         backLink={() => {
@@ -90,7 +91,6 @@ export default function ChangeReasonViewForm() {
           param={defaultValues?.displayOrderNo?.toString()}
         />
         <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues?.description} />
-        <ViewFormSwitch isLoading={isLoading} sm={12} isActiveHeading="Default" isActive={defaultValues.isDefault} />
         <Grid container>
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>

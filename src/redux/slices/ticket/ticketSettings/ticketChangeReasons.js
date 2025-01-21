@@ -139,6 +139,7 @@ export function postTicketChangeReason(params) {
           displayOrderNo: params.displayOrderNo,
           description: params.description,
           isDefault: params.isDefault,
+          isActive: params.isActive,
         };
       const response = await axios.post(`${CONFIG.SERVER_URL}tickets/settings/changeReasons/`, data);
       dispatch(slice.actions.postTicketChangeReasonSuccess(response.data));
@@ -164,6 +165,7 @@ export function patchTicketChangeReason(id, params) {
           displayOrderNo: params.displayOrderNo,
           description: params.description,
           isDefault: params.isDefault,
+          isActive: params.isActive,
         };
       const response = await axios.patch(`${CONFIG.SERVER_URL}tickets/settings/changeReasons/${id}`, data);
       dispatch(slice.actions.patchTicketChangeReasonSuccess(response.data)); 
