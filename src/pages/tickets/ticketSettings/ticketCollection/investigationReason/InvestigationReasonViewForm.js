@@ -34,7 +34,8 @@ export default function InvestigationReasonViewForm() {
       color: ticketInvestigationReason?.color || '',
       displayOrderNo: ticketInvestigationReason?.displayOrderNo || '',
       description: ticketInvestigationReason?.description || '',
-      isDefault: ticketInvestigationReason?.isDefault || false,
+      isDefault: ticketInvestigationReason?.isDefault,
+      isActive: ticketInvestigationReason?.isActive,
       createdByFullName: ticketInvestigationReason?.createdBy?.name || '',
       createdAt: ticketInvestigationReason?.createdAt || '',
       createdIP: ticketInvestigationReason?.createdIP || '',
@@ -65,6 +66,7 @@ export default function InvestigationReasonViewForm() {
     <Card sx={{ p: 2 }}>
       <ViewFormEditDeleteButtons  
         isDefault={defaultValues.isDefault} 
+        isActive={defaultValues.isActive}
         handleEdit={toggleEdit} 
         onArchive={onArchive} 
         backLink={() => {
@@ -89,7 +91,6 @@ export default function InvestigationReasonViewForm() {
           param={defaultValues?.displayOrderNo?.toString()}
         />
         <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues?.description} />
-        <ViewFormSwitch isLoading={isLoading} sm={12} isActiveHeading="Default" isActive={defaultValues.isDefault} />
         <Grid container>
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>

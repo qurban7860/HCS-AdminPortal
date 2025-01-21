@@ -34,7 +34,8 @@ export default function ImpactViewForm() {
       color: ticketImpact?.color || '',
       displayOrderNo: ticketImpact?.displayOrderNo || '',
       description: ticketImpact?.description || '',
-      isDefault: ticketImpact?.isDefault || false,
+      isDefault: ticketImpact?.isDefault,
+      isActive: ticketImpact?.isActive,
       createdByFullName: ticketImpact?.createdBy?.name || '',
       createdAt: ticketImpact?.createdAt || '',
       createdIP: ticketImpact?.createdIP || '',
@@ -65,6 +66,7 @@ export default function ImpactViewForm() {
     <Card sx={{ p: 2 }}>
       <ViewFormEditDeleteButtons  
         isDefault={defaultValues.isDefault} 
+        isActive={defaultValues.isActive}
         handleEdit={toggleEdit} 
         onArchive={onArchive} 
         backLink={() => {
@@ -89,7 +91,6 @@ export default function ImpactViewForm() {
           param={defaultValues?.displayOrderNo?.toString()}
         />
         <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues?.description} />
-        <ViewFormSwitch isLoading={isLoading} sm={12} isActiveHeading="Default" isActive={defaultValues.isDefault} />
         <Grid container>
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>

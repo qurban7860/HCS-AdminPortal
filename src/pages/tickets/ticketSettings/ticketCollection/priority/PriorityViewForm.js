@@ -34,7 +34,8 @@ export default function PriorityViewForm() {
       color: ticketPriority?.color || '',
       displayOrderNo: ticketPriority?.displayOrderNo || '',
       description: ticketPriority?.description || '',
-      isDefault: ticketPriority?.isDefault || false,
+      isDefault: ticketPriority?.isDefault,
+      isActive: ticketPriority?.isActive,
       createdByFullName: ticketPriority?.createdBy?.name || '',
       createdAt: ticketPriority?.createdAt || '',
       createdIP: ticketPriority?.createdIP || '',
@@ -65,6 +66,7 @@ export default function PriorityViewForm() {
     <Card sx={{ p: 2 }}>
       <ViewFormEditDeleteButtons  
         isDefault={defaultValues.isDefault} 
+        isActive={defaultValues.isActive}
         handleEdit={toggleEdit} 
         onArchive={onArchive} 
         backLink={() => {
@@ -89,7 +91,6 @@ export default function PriorityViewForm() {
           param={defaultValues?.displayOrderNo?.toString()}
         />
         <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues?.description} />
-        <ViewFormSwitch isLoading={isLoading} sm={12} isActiveHeading="Default" isActive={defaultValues.isDefault} />
         <Grid container>
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>

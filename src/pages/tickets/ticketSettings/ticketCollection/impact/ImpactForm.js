@@ -27,16 +27,17 @@ export default function ImpactForm() {
   
   const defaultValues = useMemo(
     () => ({
-      name: ticketImpact?.name || '',
-      icon: ticketImpact?.icon || '',
-      color: ticketImpact?.color || '',
-      slug: ticketImpact?.slug || '',
-      description: ticketImpact?.description || '',
-      displayOrderNo: ticketImpact?.displayOrderNo || '',
-      isDefault: ticketImpact?.isDefault ?? false,
-      createdAt: ticketImpact?.createdAt || '',
+      name: id && ticketImpact?.name || '',
+      icon: id && ticketImpact?.icon || '',
+      color: id && ticketImpact?.color || '',
+      slug: id && ticketImpact?.slug || '',
+      description: id && ticketImpact?.description || '',
+      displayOrderNo: id && ticketImpact?.displayOrderNo || '',
+      isDefault: id && ticketImpact?.isDefault || false,
+      isActive: id && ticketImpact?.isActive || false,
+      createdAt: id && ticketImpact?.createdAt || '',
     }),
-    [ ticketImpact ] 
+    [ id, ticketImpact ] 
   );
 
   const methods = useForm({
@@ -128,8 +129,9 @@ export default function ImpactForm() {
                 gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
               >
                 <RHFTextField name="displayOrderNo" label="Display Order No." />
-                <Grid display="flex" alignItems="end">
+                <Grid display="flex" alignItems="center">
                   <RHFSwitch name="isDefault" label="Default" />
+                  <RHFSwitch name="isActive" label="Active" />
                 </Grid>
               </Box>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />

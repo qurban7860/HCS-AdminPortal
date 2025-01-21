@@ -36,6 +36,7 @@ export default function StatusViewForm() {
       displayOrderNo: ticketStatus?.displayOrderNo || '',
       description: ticketStatus?.description || '',
       isDefault: ticketStatus?.isDefault,
+      isActive: ticketStatus?.isActive,
       createdByFullName: ticketStatus?.createdBy?.name || '',
       createdAt: ticketStatus?.createdAt || '',
       createdIP: ticketStatus?.createdIP || '',
@@ -66,6 +67,7 @@ export default function StatusViewForm() {
     <Card sx={{ p: 2 }}>
       <ViewFormEditDeleteButtons  
         isDefault={defaultValues.isDefault} 
+        isActive={defaultValues.isActive}
         handleEdit={toggleEdit} 
         onArchive={onArchive} 
         backLink={() => {
@@ -90,7 +92,6 @@ export default function StatusViewForm() {
           param={defaultValues?.displayOrderNo?.toString()}
         />
         <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues?.description} />
-        <ViewFormSwitch isLoading={isLoading} sm={12} isActiveHeading="Default" isActive={defaultValues.isDefault} />
         <Grid container>
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>

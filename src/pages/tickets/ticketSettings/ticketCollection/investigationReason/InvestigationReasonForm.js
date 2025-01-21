@@ -27,16 +27,17 @@ export default function InvestigationReasonForm() {
   
   const defaultValues = useMemo(
     () => ({
-      name: ticketInvestigationReason?.name || '',
-      icon: ticketInvestigationReason?.icon || '',
-      color: ticketInvestigationReason?.color || '',
-      slug: ticketInvestigationReason?.slug || '',
-      description: ticketInvestigationReason?.description || '',
-      displayOrderNo: ticketInvestigationReason?.displayOrderNo || '',
-      isDefault: ticketInvestigationReason?.isDefault ?? false,
-      createdAt: ticketInvestigationReason?.createdAt || '',
+      name: id && ticketInvestigationReason?.name || '',
+      icon: id && ticketInvestigationReason?.icon || '',
+      color: id && ticketInvestigationReason?.color || '',
+      slug: id && ticketInvestigationReason?.slug || '',
+      description: id && ticketInvestigationReason?.description || '',
+      displayOrderNo: id && ticketInvestigationReason?.displayOrderNo || '',
+      isDefault: id && ticketInvestigationReason?.isDefault || false,
+      isActive: id && ticketInvestigationReason?.isActive || false,
+      createdAt: id && ticketInvestigationReason?.createdAt || '',
     }),
-    [ ticketInvestigationReason ] 
+    [ id, ticketInvestigationReason ] 
   );
   
   const methods = useForm({
@@ -128,8 +129,9 @@ export default function InvestigationReasonForm() {
                 gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
               >
                 <RHFTextField name="displayOrderNo" label="Display Order No." />
-                <Grid display="flex" alignItems="end">
+                <Grid display="flex" alignItems="center">
                   <RHFSwitch name="isDefault" label="Default" />
+                  <RHFSwitch name="isActive" label="Active" />
                 </Grid>
               </Box>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
