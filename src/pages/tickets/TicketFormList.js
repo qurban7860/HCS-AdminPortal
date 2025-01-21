@@ -42,9 +42,11 @@ const TABLE_HEAD = [
   { id: 'ticketNo', label: 'Ticket No.', align: 'left' },
   { id: 'summary', label: 'Summary', align: 'left' },
   { id: 'machine.serialNo', label: 'Machine', align: 'left' },
+  { id: 'machine.machineModel.name', label: 'Model', align: 'left' },
   { id: 'customer.name', label: 'Customer', align: 'left' },
   { id: 'status.name', label: 'Status', align: 'left' },
   { id: 'priority.name', label: 'Priority', align: 'left' },
+  { id: 'isActive', label: 'Active', align: 'center' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
 

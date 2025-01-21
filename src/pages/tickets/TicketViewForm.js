@@ -1,11 +1,10 @@
-import { useMemo, useState, useEffect} from 'react';
+import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 // @mui
-import { Card, Grid, Box, Typography, useTheme, Select, MenuItem } from '@mui/material';
+import { Card, Grid, Box, Typography } from '@mui/material';
 // redux
-import { patchTicket, getTicket, deleteTicket, resetTicket } from '../../redux/slices/ticket/tickets';
-import { getTicketStatuses, resetTicketStatuses } from '../../redux/slices/ticket/ticketSettings/ticketStatuses';
+import { deleteTicket, resetTicket } from '../../redux/slices/ticket/tickets';
 // paths
 import { PATH_SUPPORT } from '../../routes/paths';
 // components
@@ -21,35 +20,11 @@ import TicketComments from './TicketComments';
 
 export default function TicketViewForm() {
   const { ticket, isLoading } = useSelector((state) => state.tickets);
-  const { ticketStatuses } = useSelector((state) => state.ticketStatuses);
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { user, userId } = useAuthContext();
-  const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
-  const [selectedStatus, setSelectedStatus] = useState(ticket?.status?.name || '');
-
-  const handleStatusChange = async (event) => {
-    const updatedStatus = event.target.value;
-    setSelectedStatus(updatedStatus);
-  
-    try {
-      const response = await dispatch(patchTicket({ id, data: { status: updatedStatus } }));
-      console.log('Patch Response:', response);
-      await dispatch(getTicket(id));
-      enqueueSnackbar('Status updated successfully!', { variant: 'success' });
-    } catch (error) {
-      enqueueSnackbar('Failed to update status. Please try again.', { variant: 'error' });
-    }
-  };
-  
-  useEffect(() => {
-    dispatch(getTicketStatuses());
-    return ()=> { 
-      dispatch(resetTicketStatuses())
-    }
-  }, [dispatch]);  
 
   const onArchive = async () => {
     try {
@@ -71,8 +46,9 @@ export default function TicketViewForm() {
     () => ({
       ticketNo: id && ticket?.ticketNo || '',
       customer: id && ticket?.customer?.name || '',
-      machine: id && ticket?.machine?.serialNo || '',
+      machine: id && ticket?.machine ? `${ticket.machine.serialNo || ''} - ${ticket.machine.name || ''}` : '',
       issueType: id && ticket?.issueType?.name || '',
+      reporter: id && ticket?.reporter ? `${ticket.reporter.firstName || ''} ${ticket.reporter.lastName || ''}` : '',
       summary: id && ticket?.summary || '',
       description: id && ticket?.description || '',
       files: id && ticket?.files || '',
@@ -88,6 +64,7 @@ export default function TicketViewForm() {
       investigationReason: id && ticket?.investigationReason?.name || '',
       rootCause: id && ticket?.rootCause || '',
       workaround: id && ticket?.workaround || '',
+      isActive: id && ticket?.isActive || '',
       createdByFullName: id && ticket?.createdBy?.name || '',
       createdAt: id && ticket?.createdAt || '',
       createdIP: id && ticket?.createdIP || '',
@@ -107,6 +84,8 @@ export default function TicketViewForm() {
               dispatch(resetTicket());
               navigate(PATH_SUPPORT.supportTickets.root);
             }}
+            isActive={defaultValues.isActive}
+            shareWith={defaultValues.shareWith}
             handleEdit={handleEdit}
             onArchive={onArchive}
           />
@@ -127,45 +106,49 @@ export default function TicketViewForm() {
                 </Box>
               }
             />
-            <ViewFormField isLoading={isLoading} sm={4} heading="Customer" param={defaultValues.customer} />
-            <ViewFormField isLoading={isLoading} sm={4} heading="Machine" param={defaultValues.machine} />
-            <ViewFormField isLoading={isLoading} sm={12} heading="Summary" param={defaultValues.summary} />
-            <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues.description} />
-            <ViewFormField isLoading={isLoading} sm={12} heading="Files" param={defaultValues.files} />
-            <ViewFormField
-              isLoading={isLoading} sm={4} heading="Priority"
-              param={
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  {ticket?.priority?.icon ? (
-                    <Iconify icon={ticket.priority.icon} style={{ width: 25, height: 25, color: ticket.priority.color }} />
-                  ) : null}
-                  <Typography sx={{ marginLeft: 0.5 }}>{ticket?.priority?.name}</Typography>
-                </Box>
-              }
-            />
             <ViewFormField
               isLoading={isLoading} sm={4} heading="Status"
               param={
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                   {ticket?.status?.icon ? (
+                    <StyledTooltip
+                     placement="top"
+                     title={ticket?.status?.name}
+                     tooltipcolor={ticket.status.color}
+                    >
                     <Iconify icon={ticket.status.icon} style={{ width: 25, height: 25, color: ticket.status.color }} />
+                    </StyledTooltip>
                   ) : null}
                   {/* <Typography sx={{ marginLeft: 0.5 }}>{ticket?.status?.name}</Typography> */}
-                  <Select
-                    value={selectedStatus}
-                    onChange={handleStatusChange}
-                    sx={{ marginLeft: 1, fontSize: 12 }}
-                    size="small"
-                  >
-                    {ticketStatuses.map((status) => (
-                      <MenuItem key={status._id} value={status.name}>
-                        {status.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
                 </Box>
               }
             />
+            <ViewFormField
+              isLoading={isLoading} sm={4} heading="Priority"
+              param={
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  {ticket?.priority?.icon ? (
+                    <StyledTooltip
+                     placement="top"
+                     title={ticket?.priority?.name}
+                     tooltipcolor={ticket.priority.color}
+                    >
+                    <Iconify icon={ticket.priority.icon} style={{ width: 25, height: 25, color: ticket.priority.color }} />
+                    </StyledTooltip>
+                  ) : null}
+                  {/* <Typography sx={{ marginLeft: 0.5 }}>{ticket?.priority?.name}</Typography> */}
+                </Box>
+              }
+            />
+            <ViewFormField isLoading={isLoading} sm={4} heading="Customer" param={defaultValues.customer} />
+            <ViewFormField isLoading={isLoading} sm={4} heading="Machine" param={defaultValues.machine} />
+            <ViewFormField isLoading={isLoading} sm={4} heading="HLC/PLC" />
+            <ViewFormField isLoading={isLoading} sm={4} heading="Reporter" param={defaultValues.reporter}/>
+            <ViewFormField isLoading={isLoading} sm={4} heading="Assignee" />
+            <ViewFormField isLoading={isLoading} sm={4} heading="Approvers" />
+            <ViewFormField isLoading={isLoading} sm={12} heading="Summary" param={defaultValues.summary} />
+            <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues.description} />
+            <ViewFormField isLoading={isLoading} sm={12} heading="Files" param={defaultValues.files} />
             <ViewFormField isLoading={isLoading} sm={4} heading="Impact" param={defaultValues.impact} />
             {ticket?.issueType?.name === 'Change Request' && (
               <>
@@ -183,7 +166,6 @@ export default function TicketViewForm() {
                 <ViewFormField isLoading={isLoading} sm={12} heading="Workaround" param={defaultValues.workaround} />
               </>
             )}
-            <ViewFormSwitch isLoading={isLoading} sm={12} isActiveHeading="Shared With Organization" isActive={defaultValues.shareWith} />
           </Grid>
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>
