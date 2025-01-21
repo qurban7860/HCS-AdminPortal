@@ -61,6 +61,8 @@ export const FORMLABELS = {
     MACHINE_CHECK_ITEM_SERVICE_CHECK_PARAM_REPORT_ADD: 'New Check Items Service Parameter',
     MACHINE_CHECK_ITEM_SERVICE_REPORT_EDIT: 'Edit Check Items Service Report',
     MACHINE_SERVICE_REPORT_NOTES: 'Notes / Comments',
+    TICKET_ATTACHMENTS: 'Attachments',
+    TICKET_COMMENTS: 'Notes / Comments',
     EDIT_DOCUMENT: 'Edit Document',
   },
 

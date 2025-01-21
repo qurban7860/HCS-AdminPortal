@@ -139,6 +139,7 @@ export function postTicketChangeType(params) {
           displayOrderNo: params.displayOrderNo,
           description: params.description,
           isDefault: params.isDefault,
+          isActive: params.isActive,
         };
       const response = await axios.post(`${CONFIG.SERVER_URL}tickets/settings/changeTypes/`, data);
       dispatch(slice.actions.postTicketChangeTypeSuccess(response.data));
@@ -164,6 +165,7 @@ export function patchTicketChangeType(id, params) {
           displayOrderNo: params.displayOrderNo,
           description: params.description,
           isDefault: params.isDefault,
+          isActive: params.isActive,
         };
       const response = await axios.patch(`${CONFIG.SERVER_URL}tickets/settings/changeTypes/${id}`, data);
       dispatch(slice.actions.patchTicketChangeTypeSuccess(response.data)); 

@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { enc, MD5, lib } from 'crypto-js';
 // routes
 import { useNavigate, useParams } from 'react-router-dom';
 // form
@@ -25,6 +26,9 @@ import { getTicketImpacts, resetTicketImpacts } from '../../redux/slices/ticket/
 import { getTicketChangeReasons, resetTicketChangeReasons } from '../../redux/slices/ticket/ticketSettings/ticketChangeReasons';
 import { getTicketInvestigationReasons, resetTicketInvestigationReasons } from '../../redux/slices/ticket/ticketSettings/ticketInvestigationReasons';
 import { getActiveCustomers } from '../../redux/slices/customer/customer';
+import FormLabel from '../../components/DocumentForms/FormLabel';
+import { FORMLABELS } from '../../constants/default-constants';
+import { manipulateFiles } from '../documents/util/Util';
 import { time_list } from '../../constants/time-list';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 
@@ -66,7 +70,7 @@ export default function TicketForm() {
       priority: ticket?.priority || null,
       status: ticket?.status || null,
       impact: ticket?.impact || null,
-      files: ticket?.files || [],
+      files: ticket ? manipulateFiles(ticket?.files) : [],
       changeType: ticket?.changeType || null,
       changeReason: ticket?.changeReason || null,
       implementationPlan: ticket?.implementationPlan || '',
@@ -141,22 +145,57 @@ export default function TicketForm() {
       trigger('machine');
     }, [setValue, trigger]);
 
-  const handleDropMultiFile = useCallback(
-    async (acceptedFiles) => {
-      const docFiles = files || [];
-
-      const newFiles = acceptedFiles.map((file, index) =>
-        Object.assign(file, {
-          preview: URL.createObjectURL(file),
-          src: URL.createObjectURL(file),
-          isLoaded: true,
-        })
-      );
-      setValue('files', [...docFiles, ...newFiles], { shouldValidate: true });
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [files]
-  );
+  const hashFilesMD5 = async (_files) => {
+      const hashPromises = _files.map((file) => new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const arrayBuffer = reader.result;
+          const wordArray = MD5(lib.WordArray.create(arrayBuffer));
+          const hashHex = wordArray.toString(enc.Hex);
+          resolve(hashHex);
+        };
+        reader.onerror = () => {
+          reject(new Error(`Error reading file: ${file?.name || '' }`));
+        };
+        reader.readAsArrayBuffer(file);
+      }));
+      try {
+        const hashes = await Promise.all(hashPromises);
+        return hashes;
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
+    };
+  
+    const handleDropMultiFile = useCallback(async (acceptedFiles) => {
+      const hashes = await hashFilesMD5(acceptedFiles);
+      const newFiles = ( Array.isArray(files) && files?.length > 0 ) ? [ ...files ] : [];
+      acceptedFiles.forEach((file, index) => {
+        const eTag = hashes[index];
+        if( !newFiles?.some(( el ) => el?.eTag === eTag ) ){
+          const newFile = Object.assign(file, {
+            preview: URL.createObjectURL(file),
+            src: URL.createObjectURL(file),
+            isLoaded: true,
+            eTag,
+          });
+          newFiles.push(newFile);
+        }
+      });
+      setValue('files', newFiles, { shouldValidate: true });
+    }, [setValue, files]);
+  
+    const handleFileRemove = useCallback( async (inputFile) => {
+      try{
+        setValue('files', files?.filter((el) => ( inputFile?._id ? el?._id !== inputFile?._id : el !== inputFile )), { shouldValidate: true } )
+        if( inputFile?._id ){
+          // dispatch(deleteTicketFile( inputFile?.ticket, inputFile?._id))
+        }
+      } catch(e){
+        console.error(e)
+      }
+    }, [ setValue, files ] );
   
   const onSubmit = async (data) => {
     try {
@@ -198,13 +237,15 @@ export default function TicketForm() {
                     navigate(PATH_SUPPORT.supportTickets.root)}
                   }
                 />
-                <Stack spacing={3} sx={{ mt: 1 }}>
+                <Stack spacing={id ? 1 : 3} sx={{ mt: id ? 0 : 1 }}>
                 <Box
                   rowGap={2}
                   columnGap={2}
                   display="grid"
                   gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
                 >
+                  {!id && (
+                    <>
                   <RHFAutocomplete
                     name="customer"
                     label="Customer*"
@@ -234,6 +275,8 @@ export default function TicketForm() {
                     )}
                     onChange={(e, newValue) => handleMachineChange(newValue)}
                   />
+                  </>
+                  )}
                 </Box>
                   <RHFAutocomplete
                     name="issueType"
@@ -267,19 +310,18 @@ export default function TicketForm() {
                     width: '100%',
                   }}
                 >
+                  <FormLabel content={FORMLABELS.COVER.TICKET_ATTACHMENTS} />
                   <Box sx={{ mt: 0 }}>
-                    <Typography variant="body1" sx={{ mb: 1, ml: 1 }}>
-                      Attachment
-                    </Typography>
                     <RHFUpload
+                      dropZone={false}
                       multiple
                       thumbnail
                       name="files"
                       imagesOnly
                       onDrop={handleDropMultiFile}
-                      onRemove={(inputFile) => files.length > 1 ? setValue( 'files', files && files?.filter((file) => file !== inputFile), { shouldValidate: true }) : setValue('files', '', { shouldValidate: true })}
+                      onRemove={handleFileRemove}
                       onRemoveAll={() => setValue('files', '', { shouldValidate: true })}
-                    />{' '}
+                    />
                   </Box>
                   <RHFAutocomplete
                     name="priority"
@@ -328,7 +370,7 @@ export default function TicketForm() {
                   <RHFTextField name="testPlan" label="Test Plan" minRows={4} multiline />
                   </>
                 )}
-                 {issueType?.name === 'System Incident' && (
+                 {issueType?.name === 'Service Request' && (
                     <>
                    <RHFAutocomplete
                     name="investigationReason"

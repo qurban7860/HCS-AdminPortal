@@ -139,6 +139,7 @@ export function postTicketStatus(params) {
           displayOrderNo: params.displayOrderNo,
           description: params.description,
           isDefault: params.isDefault,
+          isActive: params.isActive,
         };
       const response = await axios.post(`${CONFIG.SERVER_URL}tickets/settings/statuses/`, data);
       dispatch(slice.actions.postTicketStatusSuccess(response.data));
@@ -164,6 +165,7 @@ export function patchTicketStatus(id, params) {
           displayOrderNo: params.displayOrderNo,
           description: params.description,
           isDefault: params.isDefault,
+          isActive: params.isActive,
         };
       const response = await axios.patch(`${CONFIG.SERVER_URL}tickets/settings/statuses/${id}`, data);
       dispatch(slice.actions.patchTicketStatusSuccess(response.data)); 

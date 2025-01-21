@@ -35,6 +35,7 @@ export default function IssueTypeViewForm() {
       displayOrderNo: ticketIssueType?.displayOrderNo || '',
       description: ticketIssueType?.description || '',
       isDefault: ticketIssueType?.isDefault || false,
+      isActive: ticketIssueType?.isActive || false,
       createdByFullName: ticketIssueType?.createdBy?.name || '',
       createdAt: ticketIssueType?.createdAt || '',
       createdIP: ticketIssueType?.createdIP || '',
@@ -65,6 +66,7 @@ export default function IssueTypeViewForm() {
     <Card sx={{ p: 2 }}>
       <ViewFormEditDeleteButtons  
         isDefault={defaultValues.isDefault} 
+        isActive={defaultValues.isActive}
         handleEdit={toggleEdit} 
         onArchive={onArchive} 
         backLink={() => {
@@ -73,7 +75,7 @@ export default function IssueTypeViewForm() {
         }}
       />
       <Grid container sx={{mt:2}}>
-        <ViewFormField isLoading={isLoading} sm={6} heading="Name" param={defaultValues?.name} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Name" param={defaultValues.name} />
         <ViewFormField isLoading={isLoading} sm={6} heading="Icon" param={
           <StyledTooltip 
            placement="top" 
@@ -90,7 +92,6 @@ export default function IssueTypeViewForm() {
           param={defaultValues?.displayOrderNo?.toString()}
         />
         <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues?.description} />
-        <ViewFormSwitch isLoading={isLoading} sm={12} isActiveHeading="Default" isActive={defaultValues.isDefault} />
         <Grid container>
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>

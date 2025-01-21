@@ -139,6 +139,7 @@ export function postTicketPriority(params) {
           displayOrderNo: params.displayOrderNo,
           description: params.description,
           isDefault: params.isDefault,
+          isActive: params.isActive,
         };
       const response = await axios.post(`${CONFIG.SERVER_URL}tickets/settings/priorities/`, data);
       dispatch(slice.actions.postTicketPrioritySuccess(response.data));
@@ -164,6 +165,7 @@ export function patchTicketPriority(id, params) {
           displayOrderNo: params.displayOrderNo,
           description: params.description,
           isDefault: params.isDefault,
+          isActive: params.isActive,
         };
       const response = await axios.patch(`${CONFIG.SERVER_URL}tickets/settings/priorities/${id}`, data);
       dispatch(slice.actions.patchTicketPrioritySuccess(response.data)); 
