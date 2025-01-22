@@ -73,7 +73,7 @@ export default function IssueTypeForm() {
       reset();
       dispatch(resetTicketIssueType());
     } catch (error) {
-      enqueueSnackbar(error.message || 'An error occurred', { variant: 'error' });
+      enqueueSnackbar( handleError( error ) || 'IssueType save failed!', { variant: 'error' });
       console.error(error);
     }
   };  

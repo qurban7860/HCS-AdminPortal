@@ -73,7 +73,7 @@ export default function ImpactForm() {
       reset();
       dispatch(resetTicketImpact());
     } catch (error) {
-      enqueueSnackbar(error.message || 'An error occurred', { variant: 'error' });
+      enqueueSnackbar( handleError( error ) || 'Impact save failed!', { variant: 'error' });
       console.error(error);
     }
   };  

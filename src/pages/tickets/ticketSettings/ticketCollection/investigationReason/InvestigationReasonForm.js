@@ -73,7 +73,7 @@ export default function InvestigationReasonForm() {
       reset();
       dispatch(resetTicketInvestigationReason());
     } catch (error) {
-      enqueueSnackbar(error.message || 'An error occurred', { variant: 'error' });
+      enqueueSnackbar( handleError( error ) || 'Investigation reason save failed!', { variant: 'error' });
       console.error(error);
     }
   };  

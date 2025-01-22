@@ -73,11 +73,11 @@ export default function StatusForm() {
       reset();
       dispatch(resetTicketStatus());
     } catch (error) {
-      enqueueSnackbar(error.message || 'An error occurred', { variant: 'error' });
+      enqueueSnackbar( handleError( error ) || 'Status save failed!', { variant: 'error' });
       console.error(error);
     }
   };  
-  
+ 
   const toggleCancel = async () => {
     dispatch(resetTicketStatus())
     await navigate(PATH_SUPPORT.ticketSettings.statuses.root);

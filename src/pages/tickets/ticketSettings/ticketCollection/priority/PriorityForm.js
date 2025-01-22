@@ -73,7 +73,7 @@ export default function PriorityForm() {
       reset();
       dispatch(resetTicketPriority());
     } catch (error) {
-      enqueueSnackbar(error.message || 'An error occurred', { variant: 'error' });
+      enqueueSnackbar( handleError( error ) || 'Priority save failed!', { variant: 'error' });
       console.error(error);
     }
   };  

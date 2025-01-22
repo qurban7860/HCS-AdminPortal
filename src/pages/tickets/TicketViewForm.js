@@ -49,7 +49,7 @@ export default function TicketViewForm() {
       machine: id && `${ticket?.machine?.serialNo || ''} - ${ticket?.machine?.machineModel?.name || ''}` || '',
       issueType: id && ticket?.issueType?.name || '',
       // reporter: id && `${ticket.reporter?.firstName || ''} ${ticket.reporter?.lastName || ''}` || '',
-      reporter: id && ticket?.reporter ? `${ticket.reporter.firstName || ''} ${ticket.reporter.lastName || ''}` : '',
+      reporter: id && ticket?.reporter && `${ticket.reporter.firstName || ''} ${ticket.reporter.lastName || ''}` || '',
       summary: id && ticket?.summary || '',
       description: id && ticket?.description || '',
       files: id && ticket?.files || [],

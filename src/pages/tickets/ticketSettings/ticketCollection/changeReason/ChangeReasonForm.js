@@ -73,7 +73,7 @@ export default function ChangeReasonForm() {
       reset();
       dispatch(postTicketChangeReason());
     } catch (error) {
-      enqueueSnackbar(error.message || 'An error occurred', { variant: 'error' });
+      enqueueSnackbar( handleError( error ) || 'ChangeReason save failed!', { variant: 'error' });
       console.error(error);
     }
   };  
