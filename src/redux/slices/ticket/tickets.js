@@ -72,6 +72,12 @@ const slice = createSlice({
       state.responseMessage = 'Ticket deleted successfully.';
     },
     
+    deleteTicketFileSuccess(state, action) {
+      state.isLoading = false;
+      const ticketClone = _.cloneDeep(state.ticket);
+      ticketClone.extendedProps.files = ticketClone.extendedProps.files?.filter(file => file._id !== action.payload?._id);
+      state.ticket = ticketClone;
+    },
 
     // SET RESPONSE MESSAGE
     setResponseMessage(state, action) {
@@ -133,28 +139,33 @@ export function postTicket(params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const data = {
-        customer: params?.customer?._id || null,
-        machine: params?.machine?._id || null,
-        issueType: params.issueType?._id || null,
-        summary: params.summary || '',
-        description: params.description || '',
-        files: params.files || [],
-        changeType: params.changeType?._id || null,
-        impact: params.impact?._id || null,
-        priority: params.priority?._id || null,
-        status: params.status?._id || null,
-        changeReason: params.changeReason?._id || null,
-        investigationReason: params.investigationReason?._id || null,
-        implementationPlan: params.implementationPlan || '',
-        backoutPlan: params.backoutPlan || '',
-        testPlan: params.testPlan || '',
-        shareWith: params.shareWith,
-        isActive: params.isActive,
-        rootCause: params.rootCause || '',
-        workaround: params.workaround || '',
-      }
-      const response = await axios.post(`${CONFIG.SERVER_URL}tickets/`, data);
+      const formData = new FormData();
+
+      formData.append('customer', params?.customer?._id );
+      formData.append('machine', params?.machine?._id );
+      formData.append('issueType', params?.issueType?._id );
+      formData.append('summary', params?.summary || '');
+      formData.append('description', params?.description || '');
+      formData.append('changeType', params?.changeType?._id || null);
+      formData.append('impact', params?.impact?._id || null);
+      formData.append('priority', params?.priority?._id || null);
+      formData.append('status', params?.status?._id || null);
+      formData.append('changeReason', params?.changeReason?._id || null);
+      formData.append('investigationReason', params?.investigationReason?._id || null);
+      formData.append('implementationPlan', params?.implementationPlan || '');
+      formData.append('backoutPlan', params?.backoutPlan || '');
+      formData.append('testPlan', params?.testPlan || '');
+      formData.append('shareWith', params?.shareWith );
+      formData.append('isActive', params?.isActive );
+      formData.append('rootCause', params?.rootCause || '');
+      formData.append('workaround', params?.workaround || '');
+
+      (params?.files || []).forEach((file, index) => {
+        formData.append(`images`, file);
+      });
+
+      const response = await axios.post(`${CONFIG.SERVER_URL}tickets/`, formData);
+
       dispatch(slice.actions.postTicketSuccess(response.data));
       return response;
     } catch (error) {
@@ -165,35 +176,39 @@ export function postTicket(params) {
   };
 }
 
-
 // PATCH Ticket
 export function patchTicket(id, params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const data = {
-        customer: params?.customer?._id || null,
-        machine: params?.machine?._id || null,
-        issueType: params.issueType?._id || null,
-        summary: params.summary || '',
-        description: params.description || '',
-        files: params.files || [],
-        changeType: params.changeType?._id || null,
-        impact: params.impact?._id || null,
-        priority: params.priority?._id || null,
-        status: params.status?._id || null,
-        changeReason: params.changeReason?._id || null,
-        investigationReason: params.investigationReason?._id || null,
-        implementationPlan: params.implementationPlan || '',
-        backoutPlan: params.backoutPlan || '',
-        testPlan: params.testPlan || '',
-        shareWith: params.shareWith,
-        isActive: params.isActive,
-        rootCause: params.rootCause || '',
-        workaround: params.workaround || '',
-      };
-      const response = await axios.patch(`${CONFIG.SERVER_URL}tickets/${id}`, data);
-      dispatch(slice.actions.patchTicketSuccess(response.data)); 
+      const formData = new FormData();
+
+      formData.append('customer', params?.customer?._id );
+      formData.append('machine', params?.machine?._id );
+      formData.append('issueType', params?.issueType?._id );
+      formData.append('summary', params?.summary || '');
+      formData.append('description', params?.description || '');
+      formData.append('changeType', params?.changeType?._id || null);
+      formData.append('impact', params?.impact?._id || null);
+      formData.append('priority', params?.priority?._id || null);
+      formData.append('status', params?.status?._id || null);
+      formData.append('changeReason', params?.changeReason?._id || null);
+      formData.append('investigationReason', params?.investigationReason?._id || null);
+      formData.append('implementationPlan', params?.implementationPlan || '');
+      formData.append('backoutPlan', params?.backoutPlan || '');
+      formData.append('testPlan', params?.testPlan || '');
+      formData.append('shareWith', params?.shareWith );
+      formData.append('isActive', params?.isActive );
+      formData.append('rootCause', params?.rootCause || '');
+      formData.append('workaround', params?.workaround || '');
+
+      (params?.files || []).forEach((file, index) => {
+        formData.append(`files`, file);
+      });
+
+      const response = await axios.patch(`${CONFIG.SERVER_URL}tickets/${id}`, formData);
+
+      dispatch(slice.actions.patchTicketSuccess(response.data));
       return response;
     } catch (error) {
       dispatch(slice.actions.hasError(error.message));
@@ -258,3 +273,15 @@ export function deleteTicket(id, isArchived) {
   };
 }
 
+export function deleteTicketFile( ticketId, id ) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      await axios.patch(`${CONFIG.SERVER_URL}tickets/${ticketId}/files/${id}`, { isActive: false, isArchived: true, });
+      await dispatch(slice.actions.deleteTicketFileSuccess({ _id: id }));
+      } catch (error) {
+      dispatch(slice.actions.hasError(error?.Message));
+      throw error;
+    }
+  };
+}
