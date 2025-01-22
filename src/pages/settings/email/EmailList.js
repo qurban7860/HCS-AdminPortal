@@ -36,16 +36,15 @@ import { StyledCardContainer } from '../../../theme/styles/default-styles';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'subject', label: 'Subject' ,align: 'left',},
-  { id: 'customer.name', label: 'Customer' , align: 'left', },
-  { id: 'fromEmail', label: 'From', align: 'left', },
-  { id: 'toEmails', label: 'To', align: 'left',},
-  { id: 'createdAt', label: 'Created At', align: 'right',},
+  { id: 'toEmails', label: 'To', align: 'left', },
+  { id: 'subject', label: 'Subject', align: 'left', },
+  { id: 'customer.name', label: 'Customer', align: 'left', },
+  { id: 'createdAt', label: 'Created At', align: 'right', },
 ];
 
 // ----------------------------------------------------------------------
 
-export default function EmailList(){
+export default function EmailList() {
   const { initial, emails, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.emails);
 
   const navigate = useNavigate();
@@ -63,21 +62,21 @@ export default function EmailList(){
     dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
   };
 
-  const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
+  const onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) };
   const dispatch = useDispatch();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
 
   useLayoutEffect(() => {
-        dispatch(getEmails(page, rowsPerPage ));
-        return () => {
-          dispatch(resetEmails());
-        }
-  }, [dispatch, machineId, page, rowsPerPage ]);
+    dispatch(getEmails(page, rowsPerPage));
+    return () => {
+      dispatch(resetEmails());
+    };
+  }, [dispatch, machineId, page, rowsPerPage]);
 
   useEffect(() => {
     if (initial) {
-      setTableData(emails?.data || [] );
+      setTableData(emails?.data || []);
     }
   }, [emails?.data, initial]);
 
@@ -92,100 +91,102 @@ export default function EmailList(){
   const denseHeight = 60;
 
   const debouncedSearch = useRef(debounce((value) => {
-    dispatch(ChangePage(0))
-    dispatch(setFilterBy(value))
-  }, 500))
+    dispatch(ChangePage(0));
+    dispatch(setFilterBy(value));
+  }, 500));
 
   const handleFilterName = (event) => {
     debouncedSearch.current(event.target.value);
-    setFilterName(event.target.value)
+    setFilterName(event.target.value);
     setPage(0);
   };
-  
-  useEffect(() => {
-      debouncedSearch.current.cancel();
-  }, [debouncedSearch]);
-  
-  useEffect(()=>{
-      setFilterName(filterBy)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[])
 
+  useEffect(() => {
+    debouncedSearch.current.cancel();
+  }, [debouncedSearch]);
+
+  useEffect(() => {
+    setFilterName(filterBy);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleViewRow = (id) => navigate(ROOTS_REPORTS.email.view(id));
 
   const handleResetFilter = () => {
-    dispatch(setFilterBy(''))
+    dispatch(setFilterBy(''));
     setFilterName('');
   };
-  
+
   return (
-    <Container maxWidth={false} >
+    <Container maxWidth={false}>
       <StyledCardContainer>
         <Cover name="Email" icon="ph:users-light" generalSettings />
       </StyledCardContainer>
-        <TableCard>
-          <EmailListTableToolbar
-            filterName={filterName}
-            onFilterName={handleFilterName}
-            isFiltered={isFiltered}
-            onResetFilter={handleResetFilter}
+      <TableCard>
+        <EmailListTableToolbar
+          filterName={filterName}
+          onFilterName={handleFilterName}
+          isFiltered={isFiltered}
+          onResetFilter={handleResetFilter}
+        />
+
+        {!isNotFound && (
+          <TablePaginationCustom
+            count={emails?.totalCount || 0}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
           />
+        )}
 
-          {!isNotFound && <TablePaginationCustom
-            count={ emails?.totalCount || 0 }
+        <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+          <Scrollbar>
+            <Table size="small" sx={{ minWidth: 360 }}>
+              <TableHeadCustom
+                order={order}
+                orderBy={orderBy}
+                headLabel={TABLE_HEAD}
+                onSort={onSort}
+              />
+              <TableBody>
+                {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
+                  .map((row, index) =>
+                    row ? (
+                      <EmailListTableRow
+                        key={row._id}
+                        row={row}
+                        onViewRow={() => handleViewRow(row._id)}
+                        selected={selected.includes(row._id)}
+                        selectedLength={selected.length}
+                        style={index % 2 ? { background: 'red' } : { background: 'green' }}
+                      />
+                    ) : (
+                      !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
+                    )
+                  )}
+                <TableNoData isNotFound={isNotFound} />
+              </TableBody>
+            </Table>
+          </Scrollbar>
+        </TableContainer>
+        {!isNotFound && (
+          <TablePaginationCustom
+            count={emails?.totalCount || 0}
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-          />}
-
-          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            <Scrollbar>
-              <Table size="small" sx={{ minWidth: 360 }}>
-                <TableHeadCustom
-                  order={order}
-                  orderBy={orderBy}
-                  headLabel={TABLE_HEAD}
-                  onSort={onSort}
-                />
-                <TableBody>
-                  {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
-                    .map((row, index) =>
-                      row ? (
-                        <EmailListTableRow
-                          key={row._id}
-                          row={row}
-                          onViewRow={() => handleViewRow(row._id)}
-                          selected={selected.includes(row._id)}
-                          selectedLength={selected.length}
-                          style={index % 2 ? { background: 'red' } : { background: 'green' }}
-                        />
-                      ) : (
-                        !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
-                      )
-                    )}
-                  <TableNoData isNotFound={isNotFound} />
-                </TableBody>
-              </Table>
-            </Scrollbar>
-          </TableContainer>
-          {!isNotFound && <TablePaginationCustom
-            count={ emails?.totalCount || 0 }
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-          />}
-        </TableCard>
-      </Container>
+          />
+        )}
+      </TableCard>
+    </Container>
   );
 }
 
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filterName }) {
-
   const stabilizedThis = inputData?.map((el, index) => [el, index]);
 
   stabilizedThis.sort((a, b) => {
@@ -197,16 +198,14 @@ function applyFilter({ inputData, comparator, filterName }) {
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    console.log("filterName : ",filterName,'inputData : ',inputData)
     inputData = inputData.filter(
       (email) =>
-        email?.subject?.toLowerCase().indexOf(filterName?.toLowerCase()) >= 0 ||
-        email?.customer?.name?.toLowerCase().indexOf(filterName?.toLowerCase()) >= 0 ||
-        email?.fromEmail?.toLowerCase().indexOf(filterName?.toLowerCase()) >= 0 ||
-        email?.toEmails?.some((toEmail) => toEmail.toLowerCase().indexOf(filterName.toLowerCase()))  >= 0 ||
-        fDateTime(email?.createdAt)?.toLowerCase().indexOf(filterName?.toLowerCase())
+        email?.toEmails?.some((toEmail) => toEmail.toLowerCase().includes(filterName.toLowerCase())) ||
+        email?.subject?.toLowerCase().includes(filterName.toLowerCase()) ||
+        email?.customer?.name?.toLowerCase().includes(filterName.toLowerCase()) ||
+        fDateTime(email?.createdAt)?.toLowerCase().includes(filterName.toLowerCase())
     );
   }
-  
+
   return inputData;
 }
