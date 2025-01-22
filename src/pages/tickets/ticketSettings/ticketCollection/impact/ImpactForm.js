@@ -17,6 +17,7 @@ import AddFormButtons from '../../../../../components/DocumentForms/AddFormButto
 import FormProvider, { RHFTextField, RHFSwitch } from '../../../../../components/hook-form';
 import { postTicketImpact, patchTicketImpact, getTicketImpact, resetTicketImpact } from '../../../../../redux/slices/ticket/ticketSettings/ticketImpacts';
 import Iconify from '../../../../../components/iconify';
+import { handleError } from '../../../../../utils/errorHandler';
 
 export default function ImpactForm() {
   const navigate = useNavigate();
@@ -72,7 +73,7 @@ export default function ImpactForm() {
       reset();
       dispatch(resetTicketImpact());
     } catch (error) {
-      enqueueSnackbar(error.message || 'An error occurred', { variant: 'error' });
+      enqueueSnackbar( handleError( error ) || 'Impact save failed!', { variant: 'error' });
       console.error(error);
     }
   };  

@@ -17,6 +17,7 @@ import AddFormButtons from '../../../../../components/DocumentForms/AddFormButto
 import FormProvider, { RHFTextField, RHFSwitch } from '../../../../../components/hook-form';
 import { postTicketPriority, patchTicketPriority, getTicketPriority, resetTicketPriority } from '../../../../../redux/slices/ticket/ticketSettings/ticketPriorities';
 import Iconify from '../../../../../components/iconify';
+import { handleError } from '../../../../../utils/errorHandler';
 
 export default function PriorityForm() {
   const navigate = useNavigate();
@@ -72,7 +73,7 @@ export default function PriorityForm() {
       reset();
       dispatch(resetTicketPriority());
     } catch (error) {
-      enqueueSnackbar(error.message || 'An error occurred', { variant: 'error' });
+      enqueueSnackbar( handleError( error ) || 'Priority save failed!', { variant: 'error' });
       console.error(error);
     }
   };  

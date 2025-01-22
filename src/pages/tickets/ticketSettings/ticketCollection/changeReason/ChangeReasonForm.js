@@ -14,6 +14,7 @@ import { PATH_SUPPORT } from '../../../../../routes/paths';
 import { useSnackbar } from '../../../../../components/snackbar';
 import AddFormButtons from '../../../../../components/DocumentForms/AddFormButtons';
 import { TicketCollectionSchema } from '../utils/constant';
+import { handleError } from '../../../../../utils/errorHandler';
 import FormProvider, { RHFTextField, RHFSwitch } from '../../../../../components/hook-form';
 import { postTicketChangeReason, patchTicketChangeReason, getTicketChangeReason, resetTicketChangeReason } from '../../../../../redux/slices/ticket/ticketSettings/ticketChangeReasons';
 import Iconify from '../../../../../components/iconify';
@@ -72,7 +73,7 @@ export default function ChangeReasonForm() {
       reset();
       dispatch(postTicketChangeReason());
     } catch (error) {
-      enqueueSnackbar(error.message || 'An error occurred', { variant: 'error' });
+      enqueueSnackbar( handleError( error ) || 'ChangeReason save failed!', { variant: 'error' });
       console.error(error);
     }
   };  

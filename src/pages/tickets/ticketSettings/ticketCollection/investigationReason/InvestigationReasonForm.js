@@ -17,6 +17,7 @@ import AddFormButtons from '../../../../../components/DocumentForms/AddFormButto
 import FormProvider, { RHFTextField, RHFSwitch } from '../../../../../components/hook-form';
 import { postTicketInvestigationReason, patchTicketInvestigationReason, getTicketInvestigationReason, resetTicketInvestigationReason } from '../../../../../redux/slices/ticket/ticketSettings/ticketInvestigationReasons';
 import Iconify from '../../../../../components/iconify';
+import { handleError } from '../../../../../utils/errorHandler';
 
 export default function InvestigationReasonForm() {
   const navigate = useNavigate();
@@ -72,7 +73,7 @@ export default function InvestigationReasonForm() {
       reset();
       dispatch(resetTicketInvestigationReason());
     } catch (error) {
-      enqueueSnackbar(error.message || 'An error occurred', { variant: 'error' });
+      enqueueSnackbar( handleError( error ) || 'Investigation reason save failed!', { variant: 'error' });
       console.error(error);
     }
   };  

@@ -1,14 +1,17 @@
 import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
 import {
   TableCell,
   Stack,
 } from '@mui/material';
 // utils
 import { fDate } from '../../utils/formatTime';
+import { getMachineForDialog, setMachineDialog } from '../../redux/slices/products/machine';
 import { StyledTableRow, StyledTooltip } from '../../theme/styles/default-styles'
 import { ICONS } from '../../constants/icons/default-icons';
 import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
 import Iconify from '../../components/iconify';
+import LinkDialogTableCell from '../../components/ListTableTools/LinkDialogTableCell';
 
 // ----------------------------------------------------------------------
 
@@ -16,16 +19,26 @@ TicketFormTableRow.propTypes = {
   row: PropTypes.object,
   selected: PropTypes.bool,
   onViewRow: PropTypes.func,
+  onSelectRow: PropTypes.func,
+  handleCustomerDialog:PropTypes.func,
 };
 
 export default function TicketFormTableRow({
   row,
   selected,
   onViewRow,
+  onSelectRow,
+  handleCustomerDialog,
 }) {
-
+  const dispatch = useDispatch();
   const { ticketNo, customer, machine, issueType, summary, priority, status, isActive, createdAt } = row;
-
+  
+  const handleMachineDialog = async ( event, MachineID ) => {
+    event.preventDefault(); 
+    await dispatch(getMachineForDialog(MachineID));
+    await dispatch(setMachineDialog(true)); 
+  };
+  
   return (
     <StyledTableRow hover selected={selected}>
       <TableCell align="left" padding="checkbox">
@@ -40,9 +53,10 @@ export default function TicketFormTableRow({
       <Stack direction="row" alignItems="center">
         <LinkTableCell align="left" onClick={onViewRow} param={summary || ''} /> 
       </Stack>
-      <TableCell align='left' > { machine?.serialNo || ''} </TableCell>
+      
+      <LinkTableCell align="left" onClick={(event) => handleMachineDialog(event, row.machine?._id)} param={machine?.serialNo || ''} /> 
       <TableCell align='left' > { machine?.machineModel?.name || ''} </TableCell>
-      <TableCell align='left' > { customer?.name || ''} </TableCell>
+      <LinkDialogTableCell onClick={handleCustomerDialog} align='center' param={customer?.name || ''}/> 
       <TableCell align="left" padding="checkbox">
         <StyledTooltip 
           placement="top" 

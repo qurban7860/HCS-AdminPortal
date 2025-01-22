@@ -46,12 +46,14 @@ export default function TicketViewForm() {
     () => ({
       ticketNo: id && ticket?.ticketNo || '',
       customer: id && ticket?.customer?.name || '',
-      machine: id && ticket?.machine ? `${ticket.machine.serialNo || ''} - ${ticket.machine.name || ''}` : '',
+      machine: id && `${ticket?.machine?.serialNo || ''} - ${ticket?.machine?.machineModel?.name || ''}` || '',
       issueType: id && ticket?.issueType?.name || '',
-      reporter: id && ticket?.reporter ? `${ticket.reporter.firstName || ''} ${ticket.reporter.lastName || ''}` : '',
+      // reporter: id && `${ticket.reporter?.firstName || ''} ${ticket.reporter?.lastName || ''}` || '',
+      reporter: id && ticket?.reporter && `${ticket.reporter.firstName || ''} ${ticket.reporter.lastName || ''}` || '',
       summary: id && ticket?.summary || '',
       description: id && ticket?.description || '',
-      files: id && ticket?.files || '',
+      files: id && ticket?.files || [],
+      hlcPlc: id && `${ticket?.hlc || ''} ${ ticket?.hlc && ticket?.plc && " / "} ${ticket?.plc || ''}` || '',
       priority: id && ticket?.priority?.name || '',
       status: id && ticket?.status?.name || '',
       impact: id && ticket?.impact?.name || '',
@@ -142,7 +144,7 @@ export default function TicketViewForm() {
             />
             <ViewFormField isLoading={isLoading} sm={4} heading="Customer" param={defaultValues.customer} />
             <ViewFormField isLoading={isLoading} sm={4} heading="Machine" param={defaultValues.machine} />
-            <ViewFormField isLoading={isLoading} sm={4} heading="HLC/PLC" />
+            <ViewFormField isLoading={isLoading} sm={4} heading="HLC/PLC" param={defaultValues.hlcPlc}/>
             <ViewFormField isLoading={isLoading} sm={4} heading="Reporter" param={defaultValues.reporter}/>
             <ViewFormField isLoading={isLoading} sm={4} heading="Assignee" />
             <ViewFormField isLoading={isLoading} sm={4} heading="Approvers" />
