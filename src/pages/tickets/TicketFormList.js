@@ -47,7 +47,6 @@ const TABLE_HEAD = [
   { id: 'customer.name', label: 'Customer', align: 'left' },
   { id: 'status.name', label: 'Status', align: 'left' },
   { id: 'priority.name', label: 'Priority', align: 'left' },
-  { id: 'isActive', label: 'Active', align: 'center' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
 

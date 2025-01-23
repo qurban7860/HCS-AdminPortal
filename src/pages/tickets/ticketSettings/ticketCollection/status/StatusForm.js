@@ -35,7 +35,7 @@ export default function StatusForm() {
       description: id && ticketStatus?.description || '',
       displayOrderNo: id && ticketStatus?.displayOrderNo || '',
       isDefault: id && ticketStatus?.isDefault || false,
-      isActive: id && ticketStatus?.isActive || false,
+      isActive: id && ticketStatus?.isActive || true,
       createdAt: id && ticketStatus?.createdAt || '',
     }),
     [ id, ticketStatus ] 
@@ -132,7 +132,9 @@ export default function StatusForm() {
                 <RHFTextField name="displayOrderNo" label="Display Order No." />
                 <Grid display="flex" alignItems="center">
                   <RHFSwitch name="isDefault" label="Default" />
+                  {id && (
                   <RHFSwitch name="isActive" label="Active" />
+                  )}
                 </Grid>
               </Box>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
