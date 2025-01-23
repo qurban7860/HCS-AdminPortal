@@ -53,11 +53,15 @@ const TABLE_HEAD = [
 // ----------------------------------------------------------------------
 
 export default function TicketFormList(){
-  const { initial, tickets, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.tickets);
+
+  const { tickets, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.tickets);
 
   const navigate = useNavigate();
   const { machineId } = useParams();
   const methods = useForm();
+
+
+
   const {
     order,
     orderBy,
@@ -87,10 +91,8 @@ export default function TicketFormList(){
   }, [dispatch, machineId, page, rowsPerPage ]);
 
   useEffect(() => {
-    if (initial) {
       setTableData(tickets?.data || [] );
-    }
-  }, [tickets?.data, initial]);
+  }, [tickets?.data ]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
