@@ -72,6 +72,15 @@ const slice = createSlice({
       state.responseMessage = 'Ticket deleted successfully.';
     },
     
+    // ADD  Files
+    addFilesSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.files = action.payload;
+      state.initial = true;
+      state.responseMessage = 'File saved successfully';
+    },
+
     deleteTicketFileSuccess(state, action) {
       state.isLoading = false;
       const ticketClone = _.cloneDeep(state.ticket);
@@ -273,11 +282,28 @@ export function deleteTicket(id, isArchived) {
   };
 }
 
-export function deleteTicketFile( ticketId, id ) {
+// ADD FILES
+export function addFiles({id, params}) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      await axios.patch(`${CONFIG.SERVER_URL}tickets/${ticketId}/files/${id}`, { isActive: false, isArchived: true, });
+      const data = { ...params};
+      const response = await axios.post(`${CONFIG.SERVER_URL}tickets/${id}/files/`, data);
+      dispatch(slice.actions.addFilesSuccess(response.data?.filesList));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+// DELETE FILE
+export function deleteFile( id, fileId ) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      await axios.patch(`${CONFIG.SERVER_URL}tickets/${id}/files/${fileId}`, { isActive: false, isArchived: true, });
       await dispatch(slice.actions.deleteTicketFileSuccess({ _id: id }));
       } catch (error) {
       dispatch(slice.actions.hasError(error?.Message));

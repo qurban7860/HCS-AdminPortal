@@ -35,7 +35,7 @@ export default function InvestigationReasonForm() {
       description: id && ticketInvestigationReason?.description || '',
       displayOrderNo: id && ticketInvestigationReason?.displayOrderNo || '',
       isDefault: id && ticketInvestigationReason?.isDefault || false,
-      isActive: id && ticketInvestigationReason?.isActive || false,
+      isActive: id && ticketInvestigationReason?.isActive || true,
       createdAt: id && ticketInvestigationReason?.createdAt || '',
     }),
     [ id, ticketInvestigationReason ] 
@@ -132,7 +132,9 @@ export default function InvestigationReasonForm() {
                 <RHFTextField name="displayOrderNo" label="Display Order No." />
                 <Grid display="flex" alignItems="center">
                   <RHFSwitch name="isDefault" label="Default" />
-                  <RHFSwitch name="isActive" label="Active" />
+                  {id && (
+                   <RHFSwitch name="isActive" label="Active" />
+                  )}
                 </Grid>
               </Box>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />

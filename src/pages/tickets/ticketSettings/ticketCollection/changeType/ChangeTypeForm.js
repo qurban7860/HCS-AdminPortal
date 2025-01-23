@@ -35,7 +35,7 @@ export default function ChangeTypeForm() {
       description: id && ticketChangeType?.description || '',
       displayOrderNo: id && ticketChangeType?.displayOrderNo || '',
       isDefault: id && ticketChangeType?.isDefault || false,
-      isActive: id && ticketChangeType?.isActive || false,
+      isActive: id && ticketChangeType?.isActive || true,
       createdAt: id && ticketChangeType?.createdAt || '',
     }),
     [ id, ticketChangeType ] 
@@ -132,7 +132,9 @@ export default function ChangeTypeForm() {
                 <RHFTextField name="displayOrderNo" label="Display Order No." />
                 <Grid display="flex" alignItems="center">
                   <RHFSwitch name="isDefault" label="Default" />
-                  <RHFSwitch name="isActive" label="Active" />
+                  {id && (
+                   <RHFSwitch name="isActive" label="Active" />
+                  )}
                 </Grid>
               </Box>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />

@@ -31,7 +31,7 @@ export const ICONS = {
     heading: 'Shared',
   },
   NONSHARED: {
-    icon: 'nonicons:not-found-16',
+    icon: 'ri:user-shared-fill',
     color: '#FF0000',
     heading: 'Nonshared',
   },

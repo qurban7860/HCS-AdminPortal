@@ -31,7 +31,7 @@ export default function TicketFormTableRow({
   handleCustomerDialog,
 }) {
   const dispatch = useDispatch();
-  const { ticketNo, customer, machine, issueType, summary, priority, status, isActive, createdAt } = row;
+  const { ticketNo, customer, machine, issueType, summary, priority, status, createdAt } = row;
   
   const handleMachineDialog = async ( event, MachineID ) => {
     event.preventDefault(); 
@@ -71,16 +71,6 @@ export default function TicketFormTableRow({
           title={priority?.name || ''} 
           tooltipcolor={priority?.color} >
           <Iconify icon={priority?.icon} style={{ width: 25, height: 25, color: priority?.color }}  />
-        </StyledTooltip>
-      </TableCell>
-      <TableCell align="left" padding="checkbox"  >
-        <StyledTooltip
-          placement="top" 
-          title={ isActive ? ICONS.ACTIVE.heading : ICONS.INACTIVE.heading} 
-          disableFocusListener tooltipcolor={isActive ? ICONS.ACTIVE.color : ICONS.INACTIVE.color} 
-          color={ isActive ? ICONS.ACTIVE.color : ICONS.INACTIVE.color}
-          >
-          <Iconify icon={ isActive ? ICONS.ACTIVE.icon : ICONS.INACTIVE.icon }/>
         </StyledTooltip>
       </TableCell>
       <TableCell align='right' > { fDate(createdAt) } </TableCell>
