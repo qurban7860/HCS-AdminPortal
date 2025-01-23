@@ -8,7 +8,6 @@ import {
 import { fDate } from '../../utils/formatTime';
 import { getMachineForDialog, setMachineDialog } from '../../redux/slices/products/machine';
 import { StyledTableRow, StyledTooltip } from '../../theme/styles/default-styles'
-import { ICONS } from '../../constants/icons/default-icons';
 import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
 import Iconify from '../../components/iconify';
 import LinkDialogTableCell from '../../components/ListTableTools/LinkDialogTableCell';
