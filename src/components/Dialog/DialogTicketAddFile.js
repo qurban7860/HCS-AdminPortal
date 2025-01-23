@@ -1,19 +1,19 @@
 import PropTypes from 'prop-types';
 import { useCallback, useMemo } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { Dialog, DialogContent, Button, DialogTitle, Divider, DialogActions } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useSnackbar } from 'notistack';
-import { addFiles } from '../../redux/slices/ticket/ticketFiles/ticketFile';
+import { addFiles } from '../../redux/slices/ticket/tickets';
 import FormProvider from '../hook-form/FormProvider';
 import { RHFUpload } from '../hook-form';
 import { MachineServiceReportPart3Schema } from '../../pages/schemas/machine';
 
 DialogTicketAddFile.propTypes = {
-  open: PropTypes.object,
+  open: PropTypes.bool,
   handleClose: PropTypes.func
 };
 

@@ -6,8 +6,7 @@ import { Card, Grid, Box, Typography, Dialog, Divider, Button, DialogTitle } fro
 import download from 'downloadjs';
 import b64toBlob from 'b64-to-blob';
 // redux
-import { deleteTicket, resetTicket } from '../../redux/slices/ticket/tickets';
-import { getFile, deleteFile } from '../../redux/slices/ticket/ticketFiles/ticketFile';
+import { deleteTicket, resetTicket, getFile, deleteFile } from '../../redux/slices/ticket/tickets';
 // paths
 import { PATH_SUPPORT } from '../../routes/paths';
 // components
@@ -37,9 +36,9 @@ export default function TicketViewForm() {
   const { user, userId } = useAuthContext();
   const { enqueueSnackbar } = useSnackbar();
   const regEx = /^[^2]*/;
-  const [selectedImage, setSelectedImage] = useState(-1);
-  const [ fileDialog, setFileDialog ] = useState(-1);
-  const [slides, setSlides] = useState([]);
+  const [ selectedImage, setSelectedImage ] = useState(-1);
+  const [ fileDialog, setFileDialog ] = useState( false );
+  const [ slides, setSlides ] = useState([]);
 
     useEffect(() => {
         const newSlides = ticket?.files?.map((file) => {
@@ -60,7 +59,8 @@ export default function TicketViewForm() {
             return null;
         })?.filter(Boolean) 
         setSlides(newSlides || [] );
-    }, [ ticket ]);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [ ticket?.files?.length ]);
 
   
   const handleEdit = () => {
@@ -78,7 +78,7 @@ export default function TicketViewForm() {
       summary: id && ticket?.summary || '',
       description: id && ticket?.description || '',
       files: id && ticket?.files || [],
-      hlcPlc: id && `${ticket?.hlc || ''} ${ ticket?.hlc && ticket?.plc && " / "} ${ticket?.plc || ''}` || '',
+      hlcPlc: id && `${ticket?.hlc || ' - - '} / ${ticket?.plc || ' - - '}` || '',
       priority: id && ticket?.priority?.name || '',
       status: id && ticket?.status?.name || '',
       impact: id && ticket?.impact?.name || '',
@@ -120,10 +120,9 @@ export default function TicketViewForm() {
   const handleOpenLightbox = async (index) => {
     setSelectedImage(index);
     const image = slides[index];
-
     if(!image?.isLoaded && image?.fileType?.startsWith('image')){
       try {
-        const response = await dispatch(getFile(image?._id));
+        const response = await dispatch(getFile( id, image?._id));
         if (regEx.test(response.status)) {
           const updatedSlides = [ ...slides.slice(0, index),
             {
@@ -180,7 +179,6 @@ export default function TicketViewForm() {
     try {
       const response = await dispatch(getFile( id, fileId));
       if (regEx.test(response.status)) {
-        const pdfData = `data:application/pdf;base64,${encodeURI(response.data)}`;
         const blob = b64toBlob(encodeURI(response.data), 'application/pdf')
         const url = URL.createObjectURL(blob);
         setPDF(url);
@@ -210,7 +208,7 @@ export default function TicketViewForm() {
             handleEdit={handleEdit}
             onArchive={onArchive}
           />
-          <Grid container spacing={2} sx={{ mt: 2 }}>
+          <Grid container >
             <ViewFormField isLoading={isLoading} sm={4} heading="Ticket No."
               param={
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -286,10 +284,13 @@ export default function TicketViewForm() {
                     >
 
                       {slides?.map((file, _index) => (
-                        <DocumentGalleryItem isLoading={isLoading} key={file?._id} image={file} 
+                        <DocumentGalleryItem 
+                          isLoading={ isLoading } 
+                          key={file?._id} 
+                          image={file} 
                           onOpenLightbox={()=> handleOpenLightbox(_index)}
-                          onDownloadFile={()=> handleDownloadFile( id, file._id, file?.name, file?.extension)}
-                          onDeleteFile={()=> handleDeleteFile( id, file._id)}
+                          onDownloadFile={()=> handleDownloadFile( file._id, file?.name, file?.extension)}
+                          onDeleteFile={()=> handleDeleteFile( file._id)}
                           toolbar
                           size={150}
                         />
@@ -298,7 +299,8 @@ export default function TicketViewForm() {
                       { ticket?.files?.map((file, _index) =>  
                           {
                             if(!file.fileType.startsWith('image')){
-                              return <DocumentGalleryItem key={file?._id} image={{
+                              return <DocumentGalleryItem key={file?._id} 
+                              image={{
                                 thumbnail: `data:image/png;base64, ${file.thumbnail}`,
                                 src: `data:image/png;base64, ${file.thumbnail}`,
                                 downloadFilename: `${file?.name}.${file?.extension}`,
@@ -309,10 +311,11 @@ export default function TicketViewForm() {
                                 id: file?._id,
                                 width: '100%',
                                 height: '100%',
-                              }} isLoading={isLoading} 
-                              onDownloadFile={()=> handleDownloadFile( id, file._id, file?.name, file?.extension)}
-                              onDeleteFile={()=> handleDeleteFile(id, file._id)}
-                              onOpenFile={()=> handleOpenFile( id, file._id, file?.name, file?.extension)}
+                              }} 
+                              isLoading={ isLoading } 
+                              onDownloadFile={()=> handleDownloadFile( file._id, file?.name, file?.extension)}
+                              onDeleteFile={()=> handleDeleteFile( file._id)}
+                              onOpenFile={()=> handleOpenFile( file._id, file?.name, file?.extension)}
                               toolbar
                               />
                             }
@@ -352,7 +355,7 @@ export default function TicketViewForm() {
         </Grid>
       </Card>
       <Card sx={{ mt: 2 }}>
-        <TicketComments ticketData={ticket} currentUser={{ ...user, userId }} />
+        <TicketComments currentUser={{ ...user, userId }} />
       </Card>
       {fileDialog  && <DialogTicketAddFile open={ fileDialog } handleClose={ () => setFileDialog(false) } />}
       {PDFViewerDialog && (

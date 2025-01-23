@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import _ from 'lodash';
 // utils
 import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
@@ -13,9 +12,8 @@ const initialState = {
   rowsPerPage: 100,
   initial: false,
   error: null,
-  success: false,
   isLoading: false,
-  responseMessage: null,
+  isLoadingTicketFile: false,
 };
 
 const slice = createSlice({
@@ -27,9 +25,15 @@ const slice = createSlice({
       state.isLoading = true;
     },
 
+    // START LOADING File
+    setLoadingFile( state, action ) {
+      state.isLoadingTicketFile = action.payload;;
+    },
+    
     // HAS ERROR
     hasError(state, action) {
       state.isLoading = false;
+      state.isLoadingTicketFile = false;
       state.error = action.payload;
       state.initial = true;
     },
@@ -37,70 +41,77 @@ const slice = createSlice({
     // GET Tickets Success
     getTicketsSuccess(state, action) {
       state.isLoading = false;
-      state.success = true;
       state.tickets = action.payload;
-      state.initial = true;
     },
 
     // GET Ticket Success
     getTicketSuccess(state, action) {
       state.isLoading = false;
-      state.success = true;
       state.ticket = action.payload;
-      state.initial = true;
     },
 
     // POST Ticket Success
     postTicketSuccess(state, action) {
       state.isLoading = false;
-      state.success = true;
       state.ticket = action.payload;
-      state.responseMessage = 'Ticket created successfully';
     },
     
     patchTicketSuccess(state, action) {
       state.isLoading = false;
-      state.success = true;
       state.ticket = action.payload;
-      state.responseMessage = 'Ticket updated successfully.';
     },
 
     deleteTicketSuccess(state, action) {
       state.isLoading = false;
-      state.success = true;
       state.tickets = state.tickets.filter((ticket) => ticket._id !== action.payload);
-      state.responseMessage = 'Ticket deleted successfully.';
+    },
+
+    getTicketFileSuccess(state, action) {
+      const { id, data } = action.payload;
+      const fArray = state.ticket.files;
+      if (Array.isArray(fArray) && fArray.length > 0) {
+        const fIndex = fArray.findIndex(f => f?._id === id);
+        if ( fIndex !== -1) {
+          const uFile = { ...fArray[fIndex], src: data };
+          state.ticket = { ...state.ticket,
+            files: [ ...fArray.slice(0, fIndex), uFile, ...fArray.slice(fIndex + 1) ],
+          };
+        }
+      }
+      state.isLoadingTicketFile = false;
     },
     
-    // ADD  Files
-    addFilesSuccess(state, action) {
-      state.isLoading = false;
-      state.success = true;
-      state.files = action.payload;
-      state.initial = true;
-      state.responseMessage = 'File saved successfully';
+
+    addTicketFilesSuccess(state, action) {
+      state.ticket = {
+        ...state.ticket,
+        files: [ ...( state.ticket?.files || [] ), ...( action.payload || [] ) ]
+      }
+      state.isLoadingTicketFile = false;
     },
 
     deleteTicketFileSuccess(state, action) {
-      state.isLoading = false;
-      const ticketClone = _.cloneDeep(state.ticket);
-      ticketClone.extendedProps.files = ticketClone.extendedProps.files?.filter(file => file._id !== action.payload?._id);
-      state.ticket = ticketClone;
+      const { id } = action.payload;
+      const array = state.ticket.files;
+      if (Array.isArray(array) && array?.length > 0 ) {
+        state.ticket = {
+          ...state.ticket,
+          files: state.ticket?.files?.filter( f => f?._id !== id ) || []
+        };
+      }
+      state.isLoadingTicketFile = false;
     },
 
     // SET RESPONSE MESSAGE
     setResponseMessage(state, action) {
       state.responseMessage = action.payload;
       state.isLoading = false;
-      state.success = true;
-      state.initial = true;
     },
 
     // RESET Ticket
     resetTicket(state) {
       state.ticket = null;
       state.responseMessage = null;
-      state.success = false;
       state.isLoading = false;
     },
 
@@ -108,7 +119,6 @@ const slice = createSlice({
     resetTickets(state) {
       state.tickets = [];
       state.responseMessage = null;
-      state.success = false;
       state.isLoading = false;
     },
 
@@ -212,7 +222,7 @@ export function patchTicket(id, params) {
       formData.append('workaround', params?.workaround || '');
 
       (params?.files || []).forEach((file, index) => {
-        formData.append(`files`, file);
+        formData.append(`images`, file);
       });
 
       const response = await axios.patch(`${CONFIG.SERVER_URL}tickets/${id}`, formData);
@@ -282,14 +292,32 @@ export function deleteTicket(id, isArchived) {
   };
 }
 
-// ADD FILES
-export function addFiles({id, params}) {
+export function getFile( id, fileId ) {
   return async (dispatch) => {
-    dispatch(slice.actions.startLoading());
+    dispatch(slice.actions.setLoadingFile(true));
     try {
-      const data = { ...params};
-      const response = await axios.post(`${CONFIG.SERVER_URL}tickets/${id}/files/`, data);
-      dispatch(slice.actions.addFilesSuccess(response.data?.filesList));
+      const response = await axios.get(`${CONFIG.SERVER_URL}tickets/${id}/files/${fileId}`);
+      dispatch(slice.actions.getTicketFileSuccess({ id: fileId, data: response.data } ));
+      return response;
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+export function addFiles( id, params ) {
+  return async (dispatch) => {
+    dispatch(slice.actions.setLoadingFile(true));
+    try {
+      const formData = new FormData();
+      (params?.files || []).forEach((file, index) => {
+        formData.append(`images`, file);
+      });
+      const response = await axios.post(`${CONFIG.SERVER_URL}tickets/${id}/files/`, formData);
+      dispatch(slice.actions.addTicketFilesSuccess( response.data ));
+      return response;
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -298,15 +326,15 @@ export function addFiles({id, params}) {
   };
 }
 
-// DELETE FILE
 export function deleteFile( id, fileId ) {
   return async (dispatch) => {
-    dispatch(slice.actions.startLoading());
+    dispatch(slice.actions.setLoadingFile(true));
     try {
-      await axios.patch(`${CONFIG.SERVER_URL}tickets/${id}/files/${fileId}`, { isActive: false, isArchived: true, });
-      await dispatch(slice.actions.deleteTicketFileSuccess({ _id: id }));
-      } catch (error) {
-      dispatch(slice.actions.hasError(error?.Message));
+      await axios.delete(`${CONFIG.SERVER_URL}tickets/${id}/files/${fileId}`);
+      dispatch(slice.actions.deleteTicketFileSuccess( { id: fileId } ));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
       throw error;
     }
   };

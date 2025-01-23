@@ -160,11 +160,11 @@ export function getComments({id}) {
   };
 }
 
-export function addComment({id, params}) {
+export function addComment( id, comment ) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const data = { ...params};
+      const data = { comment };
       const response = await axios.post(`${CONFIG.SERVER_URL}tickets/${id}/comments/`, data);
       dispatch(slice.actions.addCommentsSuccess(response.data?.commentsList));
     } catch (error) {

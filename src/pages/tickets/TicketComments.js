@@ -1,6 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useParams } from 'react-router-dom';
 import {
   Paper,
   Button,
@@ -38,29 +39,24 @@ const CommentSchema = Yup.object().shape({
     .max(300, 'Comment must not exceed 300 characters'),
 });
 
-const TicketComments = ({ currentUser, ticketData }) => {
+const TicketComments = ({ currentUser }) => {
   const [editingCommentId, setEditingCommentId] = useState(null);
   const [editValue, setEditValue] = useState('');
   const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
   const [commentToDelete, setCommentToDelete] = useState(null);
-
+  const { id } = useParams();
 
   const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
 
-  const { error, comments, isLoading } = useSelector(
-    (state) => state.ticketComments
-  );
+  const { error, comments, isLoading } = useSelector( (state) => state.ticketComments );
+
 
   useEffect(() => {
     let controller;
     
-    if (ticketData?._id) {
-      dispatch(
-        getComments({
-          id: ticketData?._id,
-        })
-      );
+    if (id) {
+      dispatch( getComments({ id }) );
     }
   
     return () => {
@@ -69,7 +65,7 @@ const TicketComments = ({ currentUser, ticketData }) => {
       }
       dispatch(resetComments());
     };
-  }, [dispatch, ticketData]);
+  }, [ dispatch, id ]);
 
   const methods = useForm({
     resolver: yupResolver(CommentSchema),
@@ -83,22 +79,15 @@ const TicketComments = ({ currentUser, ticketData }) => {
   const commentValue = watch('comment');
 
   const onSubmit = async (data) => {
-    await dispatch(
-      addComment({
-        id: ticketData?._id,
-        params: {
-          comment: data.comment,
-        },
-      })
-    );
+    await dispatch( addComment( id, data.comment || "" ));
     reset();
     if (error) enqueueSnackbar(error, { variant: 'error' });
     else enqueueSnackbar("Comment saved successfully", { variant: 'success' });
   };
 
-  const handleSaveEdit = async (editCommentId) => {
+  const handleSaveEdit = async (cID) => {
     await dispatch(
-      updateComment(ticketData?._id, editCommentId, {
+      updateComment( id, cID, {
         comment: editValue,
       })
     );
@@ -110,9 +99,7 @@ const TicketComments = ({ currentUser, ticketData }) => {
 
   const handleConfirmDelete = async () => {
     await dispatch(
-      deleteComment(ticketData?._id, commentToDelete?._id, {
-        isArchived: true,
-      })
+      deleteComment( id, commentToDelete?._id, { isArchived: true,})
     );
     setOpenConfirmDelete(false);
     setCommentToDelete(null);
@@ -306,7 +293,6 @@ const TicketComments = ({ currentUser, ticketData }) => {
 };
 
 TicketComments.propTypes = {
-  ticketData: PropTypes.object.isRequired,
   currentUser: PropTypes.object.isRequired,
 };
 
