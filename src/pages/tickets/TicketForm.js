@@ -80,7 +80,7 @@ export default function TicketForm() {
       rootCause: id && ticket?.rootCause || '',
       workaround: id && ticket?.workaround || '',
       shareWith: id && ticket?.shareWith || false,
-      isActive: id && ticket?.isActive || false,
+      isActive: id && ticket?.isActive || true,
       plannedStartDate: id && ticket?.plannedStartDate
         ? getTimeObjectFromISOString(ticket.plannedStartDate)
         : getTimeObjectFromISOString(new Date().toISOString()),
@@ -97,8 +97,8 @@ export default function TicketForm() {
     resolver: yupResolver(AddTicketSchema),
     defaultValues,
   });
-
-  const { reset, handleSubmit, watch, setValue, trigger, formState: { isSubmitting, errors }} = methods;
+  
+  const { reset, setError, handleSubmit, watch, setValue, trigger, clearErrors, formState: { isSubmitting, errors }} = methods;
 
   const { issueType, customer, files, dateFrom, dateTo } = watch();
   
@@ -131,20 +131,23 @@ export default function TicketForm() {
   }, [dispatch, customer]);
   
   useEffect(() => {
-    setValue('status', ticketStatuses.find((element) => element.name === 'To Do') )
+    setValue(
+      'status', 
+      ticketStatuses.find((element) => element.name.toLowerCase() === 'to do'.toLowerCase()) 
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[ ticketStatuses ])
+  }, [ticketStatuses]);  
 
-   const handleCustomerChange = useCallback((newCustomer) => {
+  const handleCustomerChange = useCallback((newCustomer) => {
       setValue('customer', newCustomer);
       setValue('machine', null);
       trigger(['customer', 'machine']);
-    }, [setValue, trigger]);
+  }, [setValue, trigger]);
   
-    const handleMachineChange = useCallback((newMachine) => {
+  const handleMachineChange = useCallback((newMachine) => {
       setValue('machine', newMachine);
       trigger('machine');
-    }, [setValue, trigger]);
+  }, [setValue, trigger]);
 
   const hashFilesMD5 = async (_files) => {
       const hashPromises = _files.map((file) => new Promise((resolve, reject) => {
@@ -212,12 +215,22 @@ export default function TicketForm() {
       }
       reset();
       dispatch(resetTicket());
-    } catch (error) {
-      enqueueSnackbar(error.message || 'An error occurred', { variant: 'error' });
-      console.error(error);
+    } catch (err) {
+      if (err?.errors && Array.isArray(err?.errors)) {
+        err?.errors?.forEach((error) => {
+          if (error?.field && error?.message) {
+            setError(error?.field, {
+              type: 'manual',
+              message: error?.message
+            });
+          }
+        });
+      } else {
+        enqueueSnackbar( typeof err === 'string' ? err : 'Ticket Update Failed!', { variant: `error` });
+      }
     }
   };
-  
+
   const toggleCancel = () => {
     dispatch(resetTicket())
     navigate(PATH_SUPPORT.supportTickets.root);
@@ -324,6 +337,12 @@ export default function TicketForm() {
                       onRemoveAll={() => setValue('files', '', { shouldValidate: true })}
                     />
                   </Box>
+                  <Box
+                  rowGap={2}
+                  columnGap={2}
+                  display="grid"
+                  gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
+                  >
                   <RHFAutocomplete
                     name="priority"
                     label="Priority"
@@ -332,6 +351,7 @@ export default function TicketForm() {
                     getOptionLabel={(option) => `${option.name || ''}`}
                     renderOption={(props, option) => (<li {...props} key={option?._id}> {option.name && option.name} </li> )}
                   />
+                  {id && (
                   <RHFAutocomplete
                     name="status"
                     label="Status"
@@ -339,7 +359,7 @@ export default function TicketForm() {
                     isOptionEqualToValue={(option, value) => option._id === value._id}
                     getOptionLabel={(option) => `${option.name || ''}`}
                     renderOption={(props, option) => (<li {...props} key={option?._id}> {option.name && option.name} </li> )}
-                  />
+                  /> )}
                   <RHFAutocomplete
                     name="impact"
                     label="Impact"
@@ -348,8 +368,15 @@ export default function TicketForm() {
                     getOptionLabel={(option) => `${option.name || ''}`}
                     renderOption={(props, option) => (<li {...props} key={option?._id}> {option.name && option.name} </li> )}
                   />
+                  </Box>
                   {issueType?.name === 'Change Request' && (
                   <>
+                  <Box
+                  rowGap={2}
+                  columnGap={2}
+                  display="grid"
+                  gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
+                  >
                   <RHFAutocomplete
                     name="changeType"
                     label="Change Type"
@@ -366,6 +393,7 @@ export default function TicketForm() {
                     getOptionLabel={(option) => `${option.name || ''}`}
                     renderOption={(props, option) => (<li {...props} key={option?._id}> {option.name && option.name} </li> )}
                   />
+                  </Box>
                   <RHFTextField name="implementationPlan" label="Implementation Plan" minRows={4} multiline />
                   <RHFTextField name="backoutPlan" label="Backout Plan" minRows={4} multiline />
                   <RHFTextField name="testPlan" label="Test Plan" minRows={4} multiline />
@@ -435,7 +463,9 @@ export default function TicketForm() {
                 )}
                 <Grid display="flex" alignItems="end">
                   <RHFSwitch name="shareWith" label="Shared With Organization" />
-                  <RHFSwitch name="isActive" label="Active" />
+                  {id && (
+                   <RHFSwitch name="isActive" label="Active" />
+                  )}
                 </Grid>
                 <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Stack>

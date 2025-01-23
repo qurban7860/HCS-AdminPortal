@@ -35,7 +35,7 @@ export default function ChangeReasonForm() {
       description: id && ticketChangeReason?.description || '',
       displayOrderNo: id && ticketChangeReason?.displayOrderNo || '',
       isDefault: id && ticketChangeReason?.isDefault || false,
-      isActive: id && ticketChangeReason?.isActive || false,
+      isActive: id && ticketChangeReason?.isActive || true,
       createdAt: id && ticketChangeReason?.createdAt || '',
     }),
     [ id, ticketChangeReason ] 
@@ -132,7 +132,9 @@ export default function ChangeReasonForm() {
                 <RHFTextField name="displayOrderNo" label="Display Order No." />
                 <Grid display="flex" alignItems="center">
                   <RHFSwitch name="isDefault" label="Default" />
-                  <RHFSwitch name="isActive" label="Active" />
+                  {id && (
+                   <RHFSwitch name="isActive" label="Active" />
+                  )}
                 </Grid>
               </Box>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />

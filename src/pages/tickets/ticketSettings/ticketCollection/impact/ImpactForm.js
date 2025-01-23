@@ -35,7 +35,7 @@ export default function ImpactForm() {
       description: id && ticketImpact?.description || '',
       displayOrderNo: id && ticketImpact?.displayOrderNo || '',
       isDefault: id && ticketImpact?.isDefault || false,
-      isActive: id && ticketImpact?.isActive || false,
+      isActive: id && ticketImpact?.isActive || true,
       createdAt: id && ticketImpact?.createdAt || '',
     }),
     [ id, ticketImpact ] 
@@ -132,7 +132,9 @@ export default function ImpactForm() {
                 <RHFTextField name="displayOrderNo" label="Display Order No." />
                 <Grid display="flex" alignItems="center">
                   <RHFSwitch name="isDefault" label="Default" />
-                  <RHFSwitch name="isActive" label="Active" />
+                  {id && (
+                   <RHFSwitch name="isActive" label="Active" />
+                  )}
                 </Grid>
               </Box>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />

@@ -35,7 +35,7 @@ export default function IssueTypeForm() {
       description: id && ticketIssueType?.description || '',
       displayOrderNo: id && ticketIssueType?.displayOrderNo || '',
       isDefault: id && ticketIssueType?.isDefault || false,
-      isActive: id && ticketIssueType?.isActive || false,
+      isActive: id && ticketIssueType?.isActive || true,
       createdAt: id && ticketIssueType?.createdAt || '',
     }),
     [ id, ticketIssueType ] 
@@ -140,7 +140,9 @@ export default function IssueTypeForm() {
                   <RHFTextField name="displayOrderNo" label="Display Order No." />
                   <Grid display="flex" alignItems="center">
                     <RHFSwitch name="isDefault" label="Default" />
-                    <RHFSwitch name="isActive" label="Active" />
+                    {id && (
+                     <RHFSwitch name="isActive" label="Active" />
+                    )}
                   </Grid>
                 </Box>
                 <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />

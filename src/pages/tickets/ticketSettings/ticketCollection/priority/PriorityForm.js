@@ -35,7 +35,7 @@ export default function PriorityForm() {
       description: id && ticketPriority?.description || '',
       displayOrderNo: id && ticketPriority?.displayOrderNo || '',
       isDefault: id && ticketPriority?.isDefault || false,
-      isActive: id && ticketPriority?.isActive || false,
+      isActive: id && ticketPriority?.isActive || true,
       createdAt: id && ticketPriority?.createdAt || '',
     }),
     [ id, ticketPriority ] 
@@ -132,7 +132,9 @@ export default function PriorityForm() {
                 <RHFTextField name="displayOrderNo" label="Display Order No." />
                 <Grid display="flex" alignItems="center">
                   <RHFSwitch name="isDefault" label="Default" />
-                  <RHFSwitch name="isActive" label="Active" />
+                  {id && (
+                   <RHFSwitch name="isActive" label="Active" />
+                  )}
                 </Grid>
               </Box>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
