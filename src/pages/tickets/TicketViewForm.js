@@ -7,6 +7,8 @@ import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
 // @mui
 import { Card, Grid, Box, Typography, Dialog, Divider, Button, DialogTitle, TextField, Stack } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
+import { Card, Grid, Box, Typography, Dialog, Divider, Button, DialogTitle, TextField, Stack } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 import download from 'downloadjs';
 import b64toBlob from 'b64-to-blob';
 // redux
@@ -46,6 +48,9 @@ export default function TicketViewForm() {
   const configurations = JSON.parse(localStorage.getItem('configurations'));
   const prefix = configurations?.find((config) => config?.name?.toLowerCase() === 'ticket_prefix')?.value || '';
  
+  const configurations = JSON.parse(localStorage.getItem('configurations'));
+  const prefix = configurations?.find((config) => config?.name?.toLowerCase() === 'ticket_prefix')?.value || '';
+ 
     useEffect(() => {
         const newSlides = ticket?.files?.map((file) => {
             if (file?.fileType && file.fileType.startsWith("image")) {
@@ -73,8 +78,10 @@ export default function TicketViewForm() {
     navigate(PATH_SUPPORT.supportTickets.edit(ticket._id));
   };
  
+ 
   const defaultValues = useMemo(
     () => ({
+      ticketNo: id && `${prefix || ''} - ${ticket?.ticketNo || ''}` || '',
       ticketNo: id && `${prefix || ''} - ${ticket?.ticketNo || ''}` || '',
       customer: id && ticket?.customer?.name || '',
       machine: id && `${ticket?.machine?.serialNo || ''} - ${ticket?.machine?.machineModel?.name || ''}` || '',
@@ -97,6 +104,7 @@ export default function TicketViewForm() {
       rootCause: id && ticket?.rootCause || '',
       workaround: id && ticket?.workaround || '',
       isActive: id && ticket?.isActive,
+      isActive: id && ticket?.isActive,
       createdByFullName: id && ticket?.createdBy?.name || '',
       createdAt: id && ticket?.createdAt || '',
       createdIP: id && ticket?.createdIP || '',
@@ -104,6 +112,7 @@ export default function TicketViewForm() {
       updatedAt: id && ticket?.updatedAt || '',
       updatedIP:  id && ticket?.updatedIP || '',
     }),
+    [ ticket, id, prefix ]
     [ ticket, id, prefix ]
   );
 
@@ -223,6 +232,7 @@ export default function TicketViewForm() {
     }
   };
   
+  
   //  ---------------------------------- Files Helper ------------------------------------------
 
   const handleOpenLightbox = async (index) => {
@@ -328,6 +338,7 @@ export default function TicketViewForm() {
                       <Iconify icon={ticket.issueType.icon} style={{ width: 25, height: 25, color: ticket.issueType.color }} />
                     </StyledTooltip>
                   ) : null}
+                  <Typography sx={{ marginLeft: 0.5 }}>{defaultValues.ticketNo || ''}</Typography>
                   <Typography sx={{ marginLeft: 0.5 }}>{defaultValues.ticketNo || ''}</Typography>
                 </Box>
               }
@@ -480,6 +491,7 @@ export default function TicketViewForm() {
               )}
         </Dialog>
       )}
+      </FormProvider>
       </FormProvider>
   );
 }

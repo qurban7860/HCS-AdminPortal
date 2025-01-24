@@ -7,7 +7,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Container, Card, Grid, Stack } from '@mui/material';
+import { Box, Container, Card, Grid, Stack, Typography } from '@mui/material';
 // components
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
@@ -98,7 +98,7 @@ export default function TicketForm() {
     defaultValues,
   });
   
-  const { reset, setError, handleSubmit, watch, setValue, trigger, formState: { isSubmitting }} = methods;
+  const { reset, setError, handleSubmit, watch, setValue, trigger, clearErrors, formState: { isSubmitting, errors }} = methods;
 
   const { issueType, customer, files, dateFrom, dateTo } = watch();
   
