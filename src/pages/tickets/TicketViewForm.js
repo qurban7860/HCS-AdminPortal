@@ -130,7 +130,6 @@ export default function TicketViewForm() {
   const onSubmit = async (fieldName, value) => {
     try {
       await dispatch(updateTicketField(id, fieldName, value)); 
-      dispatch(getTicket(id));
       enqueueSnackbar(`${fieldName} updated successfully!`, { variant: 'success' });
     } catch (error) {
       reset();
