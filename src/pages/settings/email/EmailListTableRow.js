@@ -5,18 +5,18 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
-  IconButton,
+  Divider,
 } from '@mui/material';
 // utils
 import { useState } from 'react';
+import DialogLink from '../../../components/Dialog/DialogLink';
 import axios from '../../../utils/axios';
-import LoadingScreen from '../../../components/loading-screen/LoadingScreen';
 import { fDateTime } from '../../../utils/formatTime';
-import { StyledTableRow } from '../../../theme/styles/default-styles';
+import { StyledTableRow, StyledTooltip } from '../../../theme/styles/default-styles';
 import CustomAvatar from '../../../components/custom-avatar/CustomAvatar';
 import EmailViewform from './EmailViewform'; // Assuming EmailViewform.js is in the same folder
-import Iconify from '../../../components/iconify';
 import { CONFIG } from '../../../config-global';
+
 
 
 // ----------------------------------------------------------------------
@@ -37,13 +37,11 @@ export default function EmailListTableRow({
   // State to manage the dialog visibility
   const [openDialog, setOpenDialog] = useState(false);
   const [openDialogData, setOpenDialogData] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
 
   // Function to handle dialog open
   const handleOpenDialog = (rowId) => {
     const fetchData = async () => {
       try {
-        setIsLoading(true);
         const response = await axios.get(`${CONFIG.SERVER_URL}emails/${rowId}`);
         const emailData = {
           ...response.data,
@@ -52,7 +50,6 @@ export default function EmailListTableRow({
           toUsers: response.data.toUsers?.[0] || ''
         };
         setOpenDialogData(emailData);
-        setIsLoading(false);
         setOpenDialog(true);
       } catch (error) {
         console.error('Error fetching email:', error);
@@ -68,15 +65,22 @@ export default function EmailListTableRow({
 
   return (
     <>
-      {isLoading && <LoadingScreen />}
       <StyledTableRow
         hover
         selected={selected}
-        onClick={() => handleOpenDialog(row?._id)} // Open dialog on row click
-        style={{ cursor: 'pointer' }} // Add pointer cursor for better UX
       >
         <TableCell align='left' sx={{ maxWidth: '200px' }}>
-          {Array.isArray(toEmails) && toEmails?.join(', ')}
+          {Array.isArray(toEmails) && toEmails.length > 1 ? (
+            <StyledTooltip
+              title={toEmails.slice(1).join(', ')}
+              placement="top"
+              tooltipcolor="#2065D1"
+            >
+              <span>{toEmails[0]} ,...</span>
+            </StyledTooltip>
+          ) : (
+            toEmails?.[0] || ''
+          )}
         </TableCell>
         <Stack direction="row" alignItems="center">
           <CustomAvatar
@@ -84,7 +88,18 @@ export default function EmailListTableRow({
             alt={subject}
             sx={{ ml: 1, my: 0.5, width: '30px', height: '30px' }}
           />
-          <TableCell align='left' sx={{ maxWidth: '400px', fontWeight: 'bold' }}>
+          <TableCell 
+            align='left' 
+            sx={{ 
+              maxWidth: '400px', 
+              fontWeight: 'bold',
+              cursor: 'pointer',
+              '&:hover': {
+                textDecoration: 'underline'
+              }
+            }}
+            onClick={() => handleOpenDialog(row?._id)}
+          >
             {subject || ''}
           </TableCell>
         </Stack>
@@ -95,27 +110,16 @@ export default function EmailListTableRow({
           {fDateTime(createdAt)}
         </TableCell>
       </StyledTableRow>
-
       {/* Dialog to show EmailViewform */}
       <Dialog open={openDialog} onClose={handleCloseDialog} fullWidth maxWidth="md">
-        <DialogTitle sx={{ p: 4 }}>
-          <Stack direction="row" alignItems="center" justifyContent="space-between">
-            Email Details
-            <IconButton
-              aria-label="close"
-              onClick={handleCloseDialog}
-              sx={{
-                width: 44,
-                height: 44
-              }}
-            >
-              <Iconify icon="eva:close-fill" width={24} height={24} />
-            </IconButton>
-          </Stack>
-        </DialogTitle>
+      <DialogTitle variant='h3' sx={{pb:1, pt:2}}>Email Details</DialogTitle>
+      <Divider orientation="horizontal" flexItem />
         <DialogContent>
           <EmailViewform emailData={openDialogData} />
         </DialogContent>
+        <DialogLink
+        onClose={handleCloseDialog}
+      />
       </Dialog>
     </>
   );
