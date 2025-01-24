@@ -31,6 +31,8 @@ export default function TicketFormTableRow({
 }) {
   const dispatch = useDispatch();
   const { ticketNo, customer, machine, issueType, summary, priority, status, createdAt } = row;
+  const configurations = JSON.parse(localStorage.getItem('configurations'));
+  const prefix = configurations?.find((config) => config?.name?.toLowerCase() === 'ticket_prefix')?.value || '';
   
   const handleMachineDialog = async ( event, MachineID ) => {
     event.preventDefault(); 
@@ -44,11 +46,12 @@ export default function TicketFormTableRow({
         <Stack direction="row" alignItems="center" >
         <StyledTooltip placement="top" title={issueType?.name || ''} 
           tooltipcolor={issueType?.color} >
-          <Iconify icon={issueType?.icon} style={{ width: 25, height: 25,  color: issueType?.color }}  />
+          <Iconify icon={issueType?.icon} color={issueType?.color} />
         </StyledTooltip>
         </Stack>
       </TableCell>
-      <LinkTableCell align="left" onClick={() => onViewRow(ticketNo)} param={ticketNo || ''} />
+      <LinkTableCell align="left" onClick={() => onViewRow(`${prefix}${ticketNo}`)} param={`${prefix || ''} - ${ticketNo || ''}`} />
+
       <Stack direction="row" alignItems="center">
         <LinkTableCell align="left" onClick={onViewRow} param={summary || ''} /> 
       </Stack>
@@ -61,7 +64,7 @@ export default function TicketFormTableRow({
           placement="top" 
           title={status?.name || ''} 
           tooltipcolor={status?.color} >
-          <Iconify icon={status?.icon} style={{ width: 25, height: 25, color: status?.color }}  />
+          <Iconify icon={status?.icon} color={status?.color} />
         </StyledTooltip>
       </TableCell>
       <TableCell align="left" padding="checkbox">
@@ -69,7 +72,7 @@ export default function TicketFormTableRow({
           placement="top" 
           title={priority?.name || ''} 
           tooltipcolor={priority?.color} >
-          <Iconify icon={priority?.icon} style={{ width: 25, height: 25, color: priority?.color }}  />
+          <Iconify icon={priority?.icon} color={priority?.color} />
         </StyledTooltip>
       </TableCell>
       <TableCell align='right' > { fDate(createdAt) } </TableCell>

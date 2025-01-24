@@ -44,7 +44,7 @@ export default function ChangeReasonListTableRow({
           placement="top" 
           title={name || ''} 
           tooltipcolor={color} >
-          <Iconify icon={icon} color={color} style={{ width: 25, height: 25 }}  />
+          <Iconify icon={icon} color={color} />
         </StyledTooltip>
       </TableCell>
       <TableCell align="right">{fDate(createdAt)}</TableCell>
