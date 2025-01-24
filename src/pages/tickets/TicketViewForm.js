@@ -1,12 +1,14 @@
 import { useMemo, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useForm, FormProvider, Controller } from 'react-hook-form';
 // @mui
-import { Card, Grid, Box, Typography, Dialog, Divider, Button, DialogTitle } from '@mui/material';
+import { Card, Grid, Box, Typography, Dialog, Divider, Button, DialogTitle, TextField, Stack } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 import download from 'downloadjs';
 import b64toBlob from 'b64-to-blob';
 // redux
-import { deleteTicket, resetTicket, getFile, deleteFile } from '../../redux/slices/ticket/tickets';
+import { deleteTicket, resetTicket, getFile, deleteFile, patchTicket } from '../../redux/slices/ticket/tickets';
 // paths
 import { PATH_SUPPORT } from '../../routes/paths';
 // components
@@ -39,7 +41,9 @@ export default function TicketViewForm() {
   const [ selectedImage, setSelectedImage ] = useState(-1);
   const [ fileDialog, setFileDialog ] = useState( false );
   const [ slides, setSlides ] = useState([]);
-
+  const configurations = JSON.parse(localStorage.getItem('configurations'));
+  const prefix = configurations?.find((config) => config?.name?.toLowerCase() === 'ticket_prefix')?.value || '';
+ 
     useEffect(() => {
         const newSlides = ticket?.files?.map((file) => {
             if (file?.fileType && file.fileType.startsWith("image")) {
@@ -66,14 +70,13 @@ export default function TicketViewForm() {
   const handleEdit = () => {
     navigate(PATH_SUPPORT.supportTickets.edit(ticket._id));
   };
-
+ 
   const defaultValues = useMemo(
     () => ({
-      ticketNo: id && ticket?.ticketNo || '',
+      ticketNo: id && `${prefix || ''} - ${ticket?.ticketNo || ''}` || '',
       customer: id && ticket?.customer?.name || '',
       machine: id && `${ticket?.machine?.serialNo || ''} - ${ticket?.machine?.machineModel?.name || ''}` || '',
       issueType: id && ticket?.issueType?.name || '',
-      // reporter: id && `${ticket.reporter?.firstName || ''} ${ticket.reporter?.lastName || ''}` || '',
       reporter: id && ticket?.reporter && `${ticket.reporter.firstName || ''} ${ticket.reporter.lastName || ''}` || '',
       summary: id && ticket?.summary || '',
       description: id && ticket?.description || '',
@@ -91,7 +94,7 @@ export default function TicketViewForm() {
       investigationReason: id && ticket?.investigationReason?.name || '',
       rootCause: id && ticket?.rootCause || '',
       workaround: id && ticket?.workaround || '',
-      isActive: id && ticket?.isActive || '',
+      isActive: id && ticket?.isActive,
       createdByFullName: id && ticket?.createdBy?.name || '',
       createdAt: id && ticket?.createdAt || '',
       createdIP: id && ticket?.createdIP || '',
@@ -99,8 +102,92 @@ export default function TicketViewForm() {
       updatedAt: id && ticket?.updatedAt || '',
       updatedIP:  id && ticket?.updatedIP || '',
     }),
-    [ ticket, id ]
+    [ ticket, id, prefix ]
   );
+
+  const methods = useForm({
+    defaultValues, 
+  });
+  const { handleSubmit, control, formState: { isSubmitting } } = methods;
+
+  const [editableField, setEditableField] = useState(null); 
+
+  const handleEditField = (fieldName) => {
+    setEditableField(fieldName);
+  };
+
+  const onSubmit = async (fieldName, value) => {
+    try {
+      await dispatch(patchTicket(id, { [fieldName]: value }));
+      enqueueSnackbar(`${fieldName} updated successfully!`, { variant: 'success' });
+      setEditableField(null);
+    } catch (error) {
+      enqueueSnackbar(`Failed to update ${fieldName}.`, { variant: 'error' });
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditableField(null); 
+  };
+
+  const renderField = (name, label, value) => {
+    if (editableField === name) {
+      return (
+        <Controller
+          name={name}
+          control={control}
+          render={({ field, fieldState: { error } }) => (
+            <Box>
+              <TextField
+                {...field}
+                label={label}
+                defaultValue={value}
+                variant="outlined"
+                multiline
+                rows={2}
+                fullWidth
+                error={!!error}
+                helperText={error?.message}
+              />
+              <Stack direction="row" spacing={2} sx={{ mt: 1 }}>
+                <LoadingButton
+                  variant="contained"
+                  color="primary"
+                  size="small"
+                  sx={{ width: 'fit-content' }}
+                  onClick={() => onSubmit(name, field.value)}
+                  type="submit"
+                  disabled={isLoading}
+                  loading={isSubmitting}
+                >
+                  Save
+                </LoadingButton>
+                <Button
+                  type="button"
+                  variant="outlined"
+                  size="small"
+                  sx={{ width: 'fit-content' }}
+                  onClick={handleCancelEdit}
+                >
+                  Cancel
+                </Button>
+              </Stack>
+            </Box>
+          )}
+        />
+      );
+    }
+
+    return (
+      <Typography
+        variant="body1"
+        onClick={() => handleEditField(name)} 
+        sx={{ cursor: 'pointer', color: 'primary.main', '&:hover': { textDecoration: 'underline' } }}
+      >
+        {value || '—'}
+      </Typography>
+    );
+  };
 
   const onArchive = async () => {
     try {
@@ -113,8 +200,7 @@ export default function TicketViewForm() {
       console.error('Error:', error);
     }
   };
-
-
+  
   //  ---------------------------------- Files Helper ------------------------------------------
 
   const handleOpenLightbox = async (index) => {
@@ -196,7 +282,7 @@ export default function TicketViewForm() {
 
 
   return (
-    <>
+       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Card sx={{ p: 2 }}>
         <Grid>
           <ViewFormEditDeleteButtons
@@ -221,7 +307,7 @@ export default function TicketViewForm() {
                       <Iconify icon={ticket.issueType.icon} style={{ width: 25, height: 25, color: ticket.issueType.color }} />
                     </StyledTooltip>
                   ) : null}
-                  <Typography sx={{ marginLeft: 0.5 }}>{`  ${ticket?.ticketNo || ''}`}</Typography>
+                  <Typography sx={{ marginLeft: 0.5 }}>{defaultValues.ticketNo || ''}</Typography>
                 </Box>
               }
             />
@@ -265,8 +351,8 @@ export default function TicketViewForm() {
             <ViewFormField isLoading={isLoading} sm={4} heading="Reporter" param={defaultValues.reporter}/>
             <ViewFormField isLoading={isLoading} sm={4} heading="Assignee" />
             <ViewFormField isLoading={isLoading} sm={4} heading="Approvers" />
-            <ViewFormField isLoading={isLoading} sm={12} heading="Summary" param={defaultValues.summary} />
-            <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues.description} />
+            <ViewFormField isLoading={isLoading} sm={12} heading={editableField === 'summary' ? "" : "Summary"} param={renderField('summary', 'Summary', defaultValues.summary)} />
+            <ViewFormField isLoading={isLoading} sm={12} heading={editableField === 'description' ? "" : "Description"}  param={renderField('description', 'Description', defaultValues.description)} />
             {/* <ViewFormField isLoading={isLoading} sm={12} heading="Files" param={defaultValues.files} /> */}
 
                     <FormLabel content='Documents' />
@@ -338,16 +424,16 @@ export default function TicketViewForm() {
               <>
                 <ViewFormField isLoading={isLoading} sm={4} heading="Change Type" param={defaultValues.changeType} />
                 <ViewFormField isLoading={isLoading} sm={4} heading="Change Reason" param={defaultValues.changeReason} />
-                <ViewFormField isLoading={isLoading} sm={12} heading="Implementation Plan" param={defaultValues.implementationPlan} />
-                <ViewFormField isLoading={isLoading} sm={12} heading="Backout Plan" param={defaultValues.backoutPlan} />
-                <ViewFormField isLoading={isLoading} sm={12} heading="Test Plan" param={defaultValues.testPlan} />
+                <ViewFormField isLoading={isLoading} sm={12} heading={editableField === 'implementationPlan' ? "" : "Implementation Plan"} param={renderField('implementationPlan', 'Implementation Plan', defaultValues.implementationPlan)} />
+                <ViewFormField isLoading={isLoading} sm={12} heading={editableField === 'backoutPlan' ? "" : "Backout Plan"} param={renderField('backoutPlan', 'Backout Plan', defaultValues.backoutPlan)} />
+                <ViewFormField isLoading={isLoading} sm={12} heading={editableField === 'testPlan' ? "" : "Test Plan"} param={renderField('testPlan', 'Test Plan', defaultValues.testPlan)} />
               </>
             )}
             {ticket?.issueType?.name === 'Service Request' && (
               <>
                 <ViewFormField isLoading={isLoading} sm={6} heading="Investigation Reason" param={defaultValues.investigationReason} />
-                <ViewFormField isLoading={isLoading} sm={12} heading="Root Cause" param={defaultValues.rootCause} />
-                <ViewFormField isLoading={isLoading} sm={12} heading="Workaround" param={defaultValues.workaround} />
+                <ViewFormField isLoading={isLoading} sm={12} heading={editableField === 'rootCause' ? "" : "Root Cause"} param={renderField('rootCause', 'Root Cause', defaultValues.rootCause)} />
+                <ViewFormField isLoading={isLoading} sm={12} heading={editableField === 'workaround' ? "" : "Workaround"} param={renderField('workaround', 'Workaround', defaultValues.workaround)} />
               </>
             )}
           </Grid>
@@ -372,6 +458,6 @@ export default function TicketViewForm() {
               )}
         </Dialog>
       )}
-    </>
+      </FormProvider>
   );
 }
