@@ -10,7 +10,7 @@ import { LoadingButton } from '@mui/lab';
 import download from 'downloadjs';
 import b64toBlob from 'b64-to-blob';
 // redux
-import { deleteTicket, resetTicket, getFile, deleteFile, getTicket, updateTicketField } from '../../redux/slices/ticket/tickets';
+import { deleteTicket, resetTicket, getFile, deleteFile, updateTicketField } from '../../redux/slices/ticket/tickets';
 // paths
 import { PATH_SUPPORT } from '../../routes/paths';
 // components
@@ -176,9 +176,9 @@ export default function TicketViewForm() {
               spacing={1} 
               sx={{
                 position: 'absolute',
-                bottom: -53, // Adjust vertically
-                right: 0,   // Align to the right
-                transform: 'translateY(-50%)', // Center vertically
+                bottom: -53, 
+                right: 0,   
+                transform: 'translateY(-50%)',
               }}
               // sx={{ mt: 1, 
               // justifyContent: 'flex-end',
@@ -330,7 +330,6 @@ export default function TicketViewForm() {
                       <Iconify icon={ticket.issueType.icon} style={{ width: 25, height: 25, color: ticket.issueType.color }} />
                     </StyledTooltip>
                   ) : null}
-                  <Typography sx={{ marginLeft: 0.5 }}>{defaultValues.ticketNo || ''}</Typography>
                   <Typography sx={{ marginLeft: 0.5 }}>{defaultValues.ticketNo || ''}</Typography>
                 </Box>
               }
