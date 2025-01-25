@@ -61,6 +61,15 @@ const slice = createSlice({
       state.ticket = action.payload;
     },
 
+    updateTicketFieldSuccess(state, action) {
+      state.isLoading = false;
+      const { name, value } = action.payload;
+      state.ticket = {
+        ...state.ticket,
+       [name]: value
+      }
+    },
+
     deleteTicketSuccess(state, action) {
       state.isLoading = false;
       state.tickets = state.tickets.filter((ticket) => ticket._id !== action.payload);
@@ -228,6 +237,25 @@ export function patchTicket(id, params) {
       const response = await axios.patch(`${CONFIG.SERVER_URL}tickets/${id}`, formData);
 
       dispatch(slice.actions.patchTicketSuccess(response.data));
+      return response;
+    } catch (error) {
+      dispatch(slice.actions.hasError(error.message));
+      console.error(error);
+      throw error;
+    }
+  };
+}
+
+export function updateTicketField(id, name, value) {
+  return async (dispatch) => {
+    // dispatch(slice.actions.startLoading());
+    try {
+      const data = {
+        [name]: value,  
+      };
+      const response = await axios.patch(`${CONFIG.SERVER_URL}tickets/${id}`, data);
+
+      dispatch(slice.actions.updateTicketFieldSuccess({ name, value }));
       return response;
     } catch (error) {
       dispatch(slice.actions.hasError(error.message));
