@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { useNavigate, useParams } from 'react-router-dom';
 // @mui
-import { Card, Grid, useTheme } from '@mui/material';
+import { Card, Grid } from '@mui/material';
 // paths
 import { PATH_SUPPORT } from '../../../../../routes/paths';
 // components
@@ -14,7 +14,6 @@ import Iconify from '../../../../../components/iconify';
 import { StyledTooltip } from '../../../../../theme/styles/default-styles'
 import ViewFormEditDeleteButtons from '../../../../../components/ViewForms/ViewFormEditDeleteButtons';
 import ViewFormField from '../../../../../components/ViewForms/ViewFormField';
-import ViewFormSwitch from '../../../../../components/ViewForms/ViewFormSwitch';
 
 // ----------------------------------------------------------------------
 
@@ -23,7 +22,6 @@ export default function StatusViewForm() {
 
   const { enqueueSnackbar } = useSnackbar();
   const { ticketStatus, isLoading } = useSelector((state) => state.ticketStatuses);
-  const theme = useTheme();
   const { id } = useParams();
   const dispatch = useDispatch();
 

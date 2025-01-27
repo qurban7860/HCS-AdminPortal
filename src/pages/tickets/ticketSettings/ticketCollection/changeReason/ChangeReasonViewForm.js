@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { useNavigate, useParams } from 'react-router-dom';
 // @mui
-import { Card, Grid, useTheme } from '@mui/material';
+import { Card, Grid } from '@mui/material';
 // paths
 import { PATH_SUPPORT } from '../../../../../routes/paths';
 // components
@@ -14,7 +14,6 @@ import { deleteTicketChangeReason, resetTicketChangeReason } from '../../../../.
 import ViewFormAudit from '../../../../../components/ViewForms/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../../../../../components/ViewForms/ViewFormEditDeleteButtons';
 import ViewFormField from '../../../../../components/ViewForms/ViewFormField';
-import ViewFormSwitch from '../../../../../components/ViewForms/ViewFormSwitch';
 // ----------------------------------------------------------------------
 
 export default function ChangeReasonViewForm() {
@@ -24,7 +23,6 @@ export default function ChangeReasonViewForm() {
   const { ticketChangeReason, isLoading } = useSelector((state) => state.ticketChangeReasons);
   const { id } = useParams();
   const dispatch = useDispatch();
-  const theme = useTheme();
 
   const defaultValues = useMemo(
     () => ({

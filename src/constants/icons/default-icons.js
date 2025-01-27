@@ -532,7 +532,7 @@ export const ICONS = {
     heading: 'Issue Types',
   },
   IMPACTS: {
-    icon: 'material-symbols-light:convert-to-text-rounded',
+    icon: 'game-icons:bullet-impacts',
     heading: 'Impacts',
   },
   PRIORITIES: {
@@ -543,16 +543,20 @@ export const ICONS = {
     icon: 'carbon:mobile-request',
     heading: 'Statuses',
   },
+  STATUS_TYPES: {
+    icon: 'grommet-icons:status-warning',
+    heading: 'Status Types',
+  },
   CHANGE_TYPES: {
-    icon: 'material-symbols-light:problem-rounded',
+    icon: 'material-symbols-light:change-circle-outline-rounded',
     heading: 'Change Types',
   },
   CHANGE_REASONS: {
-    icon: 'material-symbols-light:convert-to-text-rounded',
+    icon: 'mdi:file-exchange-outline',
     heading: 'Change Reasons',
   },
   INVESTIGATION_REASONS: {
-    icon: 'pajamas:issue-type-incident',
+    icon: 'hugeicons:investigation',
     heading: 'Investigation Reasons',
   },
 

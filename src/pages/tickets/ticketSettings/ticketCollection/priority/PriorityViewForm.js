@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { useNavigate, useParams } from 'react-router-dom';
 // @mui
-import { Card, Grid, useTheme } from '@mui/material';
+import { Card, Grid } from '@mui/material';
 // paths
 import { PATH_SUPPORT } from '../../../../../routes/paths';
 // components
@@ -14,13 +14,11 @@ import { deleteTicketPriority, resetTicketPriority } from '../../../../../redux/
 import ViewFormAudit from '../../../../../components/ViewForms/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../../../../../components/ViewForms/ViewFormEditDeleteButtons';
 import ViewFormField from '../../../../../components/ViewForms/ViewFormField';
-import ViewFormSwitch from '../../../../../components/ViewForms/ViewFormSwitch';
 
 // ----------------------------------------------------------------------
 
 export default function PriorityViewForm() {
   const navigate = useNavigate();
-  const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
   const { ticketPriority, isLoading } = useSelector((state) => state.ticketPriorities);
   const { id } = useParams();
