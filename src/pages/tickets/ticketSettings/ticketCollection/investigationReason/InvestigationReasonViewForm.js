@@ -14,6 +14,7 @@ import { deleteTicketInvestigationReason, resetTicketInvestigationReason } from 
 import ViewFormAudit from '../../../../../components/ViewForms/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../../../../../components/ViewForms/ViewFormEditDeleteButtons';
 import ViewFormField from '../../../../../components/ViewForms/ViewFormField';
+import { handleError } from '../../../../../utils/errorHandler';
 
 // ----------------------------------------------------------------------
 
@@ -45,14 +46,13 @@ export default function InvestigationReasonViewForm() {
     [ ticketInvestigationReason]
   );
 
-  const onArchive = () => {
+  const onArchive = async () => {
     try {
-      dispatch(deleteTicketInvestigationReason(id, true));
+      await dispatch(deleteTicketInvestigationReason(id, true));
       navigate(PATH_SUPPORT.ticketSettings.investigationReasons.root);
       enqueueSnackbar('Investigation Reason Archived Successfully!', { variant: 'success' });
-      dispatch(resetTicketInvestigationReason());
     } catch (err) {
-      enqueueSnackbar('Investigation Reason Archive failed!', { variant: `error` });
+      enqueueSnackbar( handleError( err ) || 'Investigation Reason Archive failed!', { variant: `error` });
       console.log('Error:', err);
     }
   };

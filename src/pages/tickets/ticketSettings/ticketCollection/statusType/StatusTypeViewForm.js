@@ -14,6 +14,7 @@ import { deleteTicketStatusType, resetTicketStatusType } from '../../../../../re
 import ViewFormAudit from '../../../../../components/ViewForms/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../../../../../components/ViewForms/ViewFormEditDeleteButtons';
 import ViewFormField from '../../../../../components/ViewForms/ViewFormField';
+import { handleError } from '../../../../../utils/errorHandler';
 
 // ----------------------------------------------------------------------
 
@@ -45,14 +46,13 @@ export default function StatusTypeViewForm() {
     [ ticketStatusType]
   );
 
-  const onArchive = () => {
+  const onArchive = async () => {
     try {
-      dispatch(deleteTicketStatusType(id, true));
+      await dispatch(deleteTicketStatusType(id, true));
       enqueueSnackbar('Status Type Archived Successfully!', { variant: 'success' });
       navigate(PATH_SUPPORT.ticketSettings.statusTypes.root);
-      dispatch(resetTicketStatusType());
     } catch (err) {
-      enqueueSnackbar('Status Type Archive failed!', { variant: `error` });
+      enqueueSnackbar( handleError( err ) || 'Status Type Archive failed!', { variant: `error` } );
       console.log('Error:', err);
     }
   };

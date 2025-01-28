@@ -33,7 +33,7 @@ export default function ChangeTypeListTableRow({
           disableFocusListener tooltipcolor={isActive ? ICONS.ACTIVE.color : ICONS.INACTIVE.color} 
           color={ isActive ? ICONS.ACTIVE.color : ICONS.INACTIVE.color}
           >
-          <Iconify icon={ isActive ? ICONS.ACTIVE.icon : ICONS.INACTIVE.icon }/>
+          <Iconify icon={ isActive ? ICONS.ACTIVE.icon : ICONS.INACTIVE.icon } sx={{mt: 1}} />
         </StyledTooltip>
       </TableCell>
       <LinkTableCell align="left" onClick={onViewRow} param={name} isDefault={isDefault}/>

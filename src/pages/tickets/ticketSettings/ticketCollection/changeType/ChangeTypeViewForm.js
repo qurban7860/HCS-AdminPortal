@@ -14,6 +14,7 @@ import { deleteTicketChangeType, resetTicketChangeType } from '../../../../../re
 import ViewFormAudit from '../../../../../components/ViewForms/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../../../../../components/ViewForms/ViewFormEditDeleteButtons';
 import ViewFormField from '../../../../../components/ViewForms/ViewFormField';
+import { handleError } from '../../../../../utils/errorHandler';
 
 // ----------------------------------------------------------------------
 
@@ -46,14 +47,13 @@ export default function ChangeTypeViewForm() {
     [ticketChangeType]
   );
 
-  const onArchive = () => {
+  const onArchive = async () => {
     try {
-      dispatch(deleteTicketChangeType(id, true));
+      await dispatch(deleteTicketChangeType(id, true));
       enqueueSnackbar('Change Type Archived Successfully!', { variant: 'success' });
       navigate(PATH_SUPPORT.ticketSettings.changeTypes.root);
-      dispatch(resetTicketChangeType());
     } catch (err) {
-      enqueueSnackbar('Change Type Archive failed!', { variant: `error` });
+      enqueueSnackbar( handleError( err ) || 'Change Type Archive failed!', { variant: `error` });
       console.log('Error:', err);
     }
   };

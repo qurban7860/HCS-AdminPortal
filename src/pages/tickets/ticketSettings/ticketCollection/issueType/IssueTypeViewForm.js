@@ -14,6 +14,7 @@ import { deleteTicketIssueType, resetTicketIssueType } from '../../../../../redu
 import ViewFormAudit from '../../../../../components/ViewForms/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../../../../../components/ViewForms/ViewFormEditDeleteButtons';
 import ViewFormField from '../../../../../components/ViewForms/ViewFormField';
+import { handleError } from '../../../../../utils/errorHandler';
 
 // ----------------------------------------------------------------------
 
@@ -45,14 +46,13 @@ export default function IssueTypeViewForm() {
     [ ticketIssueType]
   );
 
-  const onArchive = () => {
+  const onArchive = async () => {
     try {
-      dispatch(deleteTicketIssueType(id, true));
+      await dispatch(deleteTicketIssueType(id, true));
       enqueueSnackbar('Issue Type Archived Successfully!', { variant: 'success' });
       navigate(PATH_SUPPORT.ticketSettings.issueTypes.root);
-      dispatch(resetTicketIssueType());
     } catch (err) {
-      enqueueSnackbar('Issue Type Archive failed!', { variant: `error` });
+      enqueueSnackbar( handleError( err ) || 'Issue Type Archive failed!', { variant: `error` });
       console.log('Error:', err);
     }
   };

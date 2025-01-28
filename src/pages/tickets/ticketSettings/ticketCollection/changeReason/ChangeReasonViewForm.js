@@ -14,6 +14,7 @@ import { deleteTicketChangeReason, resetTicketChangeReason } from '../../../../.
 import ViewFormAudit from '../../../../../components/ViewForms/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../../../../../components/ViewForms/ViewFormEditDeleteButtons';
 import ViewFormField from '../../../../../components/ViewForms/ViewFormField';
+import { handleError } from '../../../../../utils/errorHandler';
 // ----------------------------------------------------------------------
 
 export default function ChangeReasonViewForm() {
@@ -45,14 +46,13 @@ export default function ChangeReasonViewForm() {
     [ ticketChangeReason]
   );
 
-  const onArchive = () => {
+  const onArchive = async () => {
     try {
-      dispatch(deleteTicketChangeReason(id, true));
+      await dispatch(deleteTicketChangeReason(id, true));
       enqueueSnackbar('Change Reason Archived Successfully!', { variant: 'success' });
       navigate(PATH_SUPPORT.ticketSettings.changeReasons.root);
-      dispatch(resetTicketChangeReason());
     } catch (err) {
-      enqueueSnackbar('Change Reason Archive failed!', { variant: `error` });
+      enqueueSnackbar( handleError( err ) || 'Change Reason Archive failed!', { variant: `error` });
       console.log('Error:', err);
     }
   };

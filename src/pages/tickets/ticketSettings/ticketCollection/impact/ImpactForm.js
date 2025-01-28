@@ -35,7 +35,7 @@ export default function ImpactForm() {
       description: id && ticketImpact?.description || '',
       displayOrderNo: id && ticketImpact?.displayOrderNo || '',
       isDefault: id && ticketImpact?.isDefault || false,
-      isActive: id && ticketImpact?.isActive || true,
+      isActive: id ? ticketImpact?.isActive : true,
       createdAt: id && ticketImpact?.createdAt || '',
     }),
     [ id, ticketImpact ] 

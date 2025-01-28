@@ -14,6 +14,7 @@ import Iconify from '../../../../../components/iconify';
 import { StyledTooltip } from '../../../../../theme/styles/default-styles'
 import ViewFormEditDeleteButtons from '../../../../../components/ViewForms/ViewFormEditDeleteButtons';
 import ViewFormField from '../../../../../components/ViewForms/ViewFormField';
+import { handleError } from '../../../../../utils/errorHandler';
 
 // ----------------------------------------------------------------------
 
@@ -46,14 +47,13 @@ export default function StatusViewForm() {
     [ticketStatus]
   );
 
-  const onArchive = () => {
+  const onArchive = async () => {
     try {
-      dispatch(deleteTicketStatus(id, true));
+      await dispatch(deleteTicketStatus(id, true));
       enqueueSnackbar('Status Archived Successfully!', { variant: 'success' });
       navigate(PATH_SUPPORT.ticketSettings.statuses.root);
-      dispatch(resetTicketStatus());
     } catch (err) {
-      enqueueSnackbar('Status Archive failed!', { variant: `error` });
+      enqueueSnackbar( handleError( err ) || 'Status Archive failed!', { variant: `error` });
       console.log('Error:', err);
     }
   };

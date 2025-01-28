@@ -14,6 +14,7 @@ import { deleteTicketPriority, resetTicketPriority } from '../../../../../redux/
 import ViewFormAudit from '../../../../../components/ViewForms/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../../../../../components/ViewForms/ViewFormEditDeleteButtons';
 import ViewFormField from '../../../../../components/ViewForms/ViewFormField';
+import { handleError } from '../../../../../utils/errorHandler';
 
 // ----------------------------------------------------------------------
 
@@ -45,14 +46,13 @@ export default function PriorityViewForm() {
     [ticketPriority]
   );
 
-  const onArchive = () => {
+  const onArchive = async () => {
     try {
-      dispatch(deleteTicketPriority(id, true));
+      await dispatch(deleteTicketPriority(id, true));
       enqueueSnackbar('Priority Archived Successfully!', { variant: 'success' });
       navigate(PATH_SUPPORT.ticketSettings.priorities.root);
-      dispatch(resetTicketPriority());
     } catch (err) {
-      enqueueSnackbar('Priority Archive failed!', { variant: `error` });
+      enqueueSnackbar( handleError( err ) || 'Priority Archive failed!', { variant: `error` });
       console.log('Error:', err);
     }
   };

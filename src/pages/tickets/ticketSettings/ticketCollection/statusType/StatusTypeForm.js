@@ -35,7 +35,7 @@ export default function StatusTypeForm() {
       description: id && ticketStatusType?.description || '',
       displayOrderNo: id && ticketStatusType?.displayOrderNo || '',
       isDefault: id && ticketStatusType?.isDefault || false,
-      isActive: id && ticketStatusType?.isActive || true,
+      isActive: id ? ticketStatusType?.isActive : true,
       createdAt: id && ticketStatusType?.createdAt || '',
     }),
     [ id, ticketStatusType ] 

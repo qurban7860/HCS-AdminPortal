@@ -14,6 +14,7 @@ import { deleteTicketImpact, resetTicketImpact } from '../../../../../redux/slic
 import ViewFormAudit from '../../../../../components/ViewForms/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../../../../../components/ViewForms/ViewFormEditDeleteButtons';
 import ViewFormField from '../../../../../components/ViewForms/ViewFormField';
+import { handleError } from '../../../../../utils/errorHandler';
 
 // ----------------------------------------------------------------------
 
@@ -45,14 +46,13 @@ export default function ImpactViewForm() {
     [ ticketImpact]
   );
 
-  const onArchive = () => {
+  const onArchive = async () => {
     try {
-      dispatch(deleteTicketImpact(id, true));
+      await dispatch(deleteTicketImpact(id, true));
       enqueueSnackbar('Impacts Archived Successfully!', { variant: 'success' });
-      dispatch(resetTicketImpact());
       navigate(PATH_SUPPORT.ticketSettings.impacts.root);
     } catch (err) {
-      enqueueSnackbar('Impacts Archive failed!', { variant: `error` });
+      enqueueSnackbar( handleError( err ) || 'Impacts Archive failed!', { variant: `error` });
       console.log('Error:', err);
     }
   };

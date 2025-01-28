@@ -35,7 +35,7 @@ export default function InvestigationReasonForm() {
       description: id && ticketInvestigationReason?.description || '',
       displayOrderNo: id && ticketInvestigationReason?.displayOrderNo || '',
       isDefault: id && ticketInvestigationReason?.isDefault || false,
-      isActive: id && ticketInvestigationReason?.isActive || true,
+      isActive: id ? ticketInvestigationReason?.isActive : true,
       createdAt: id && ticketInvestigationReason?.createdAt || '',
     }),
     [ id, ticketInvestigationReason ] 

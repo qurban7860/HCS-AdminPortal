@@ -35,7 +35,7 @@ export default function IssueTypeForm() {
       description: id && ticketIssueType?.description || '',
       displayOrderNo: id && ticketIssueType?.displayOrderNo || '',
       isDefault: id && ticketIssueType?.isDefault || false,
-      isActive: id && ticketIssueType?.isActive || true,
+      isActive: id ? ticketIssueType?.isActive : true,
       createdAt: id && ticketIssueType?.createdAt || '',
     }),
     [ id, ticketIssueType ] 

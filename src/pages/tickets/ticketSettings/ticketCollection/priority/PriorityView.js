@@ -7,7 +7,7 @@ import { useParams } from 'react-router-dom';
 import { Cover } from '../../../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../../../theme/styles/default-styles';
 import PriorityViewForm from './PriorityViewForm';
-import { getTicketPriority } from '../../../../../redux/slices/ticket/ticketSettings/ticketPriorities';
+import { getTicketPriority, resetTicketPriority } from '../../../../../redux/slices/ticket/ticketSettings/ticketPriorities';
 
 // ----------------------------------------------------------------------
 
@@ -20,6 +20,7 @@ export default function PriorityView() {
     if(id){
       dispatch(getTicketPriority(id))
     }
+    return () => { resetTicketPriority() }
   },[dispatch, id ])
 
   return (

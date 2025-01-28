@@ -7,7 +7,7 @@ import { useParams } from 'react-router-dom';
 import { Cover } from '../../../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../../../theme/styles/default-styles';
 import IssueTypeViewForm from './IssueTypeViewForm';
-import { getTicketIssueType } from '../../../../../redux/slices/ticket/ticketSettings/ticketIssueTypes';
+import { getTicketIssueType, resetTicketIssueType } from '../../../../../redux/slices/ticket/ticketSettings/ticketIssueTypes';
 
 // ----------------------------------------------------------------------
 
@@ -20,6 +20,7 @@ export default function IssueTypeView() {
     if(id){
       dispatch(getTicketIssueType(id))
     }
+    return () => { resetTicketIssueType() }
   },[dispatch, id ])
 
   return (

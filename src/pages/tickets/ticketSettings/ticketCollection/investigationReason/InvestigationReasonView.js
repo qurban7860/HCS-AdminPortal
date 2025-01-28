@@ -7,7 +7,7 @@ import { useParams } from 'react-router-dom';
 import { Cover } from '../../../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../../../theme/styles/default-styles';
 import InvestigationReasonViewForm from './InvestigationReasonViewForm';
-import { getTicketInvestigationReason } from '../../../../../redux/slices/ticket/ticketSettings/ticketInvestigationReasons';
+import { getTicketInvestigationReason, resetTicketInvestigationReason } from '../../../../../redux/slices/ticket/ticketSettings/ticketInvestigationReasons';
 
 // ----------------------------------------------------------------------
 
@@ -20,6 +20,7 @@ export default function InvestigationReasonView() {
     if(id){
       dispatch(getTicketInvestigationReason(id))
     }
+    return () => { resetTicketInvestigationReason() }
   },[dispatch, id ])
 
   return (

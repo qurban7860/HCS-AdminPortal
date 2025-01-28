@@ -35,7 +35,7 @@ export default function ChangeTypeForm() {
       description: id && ticketChangeType?.description || '',
       displayOrderNo: id && ticketChangeType?.displayOrderNo || '',
       isDefault: id && ticketChangeType?.isDefault || false,
-      isActive: id && ticketChangeType?.isActive || true,
+      isActive: id ? ticketChangeType?.isActive : true,
       createdAt: id && ticketChangeType?.createdAt || '',
     }),
     [ id, ticketChangeType ] 

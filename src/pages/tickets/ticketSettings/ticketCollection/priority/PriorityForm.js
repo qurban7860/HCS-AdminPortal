@@ -35,7 +35,7 @@ export default function PriorityForm() {
       description: id && ticketPriority?.description || '',
       displayOrderNo: id && ticketPriority?.displayOrderNo || '',
       isDefault: id && ticketPriority?.isDefault || false,
-      isActive: id && ticketPriority?.isActive || true,
+      isActive: id ? ticketPriority?.isActive : true,
       createdAt: id && ticketPriority?.createdAt || '',
     }),
     [ id, ticketPriority ] 
