@@ -257,7 +257,7 @@ export const {
 } = slice.actions;
 // ----------------------------------------------------------------------
 
-export function addSecurityUser(param, isInvite) {
+export function addSecurityUser(param) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try{
@@ -274,7 +274,6 @@ export function addSecurityUser(param, isInvite) {
         regions: param.regions?.map(region => region?._id ),
         customers: param.customers?.map(customer => customer?._id),
         machines: param.machines?.map(machines => machines?._id),
-        isInvite: param.isInvite,
         isActive: param.isActive,
         currentEmployee: param.currentEmployee,
         multiFactorAuthentication: param.multiFactorAuthentication,

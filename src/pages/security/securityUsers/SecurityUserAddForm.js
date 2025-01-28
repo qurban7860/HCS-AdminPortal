@@ -23,6 +23,7 @@ import { getActiveRegions, resetActiveRegions } from '../../../redux/slices/regi
 import { addUserSchema , editUserSchema} from '../../schemas/securityUser';
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
+import { postSecurityUserInvitation } from '../../../redux/slices/securityUser/invite';
 
 SecurityUserAddForm.propTypes = {
   isEdit: PropTypes.bool,
@@ -140,8 +141,15 @@ const { contact, customer } = watch();
       if (!data.phone || phoneRegex.test(data.phone.trim())) {
         data.phone = ''; 
       }
-      const message = !isInvite ? "User Added Successfully":"User Invitation Sent Successfullfy";
-      const response = await dispatch(addSecurityUser(data, isInvite));
+      let message;
+      let response;
+      if (!isInvite) {
+        message = "User Added Successfully";
+        response = await dispatch(addSecurityUser(data));
+      } else {
+        message = "User Invitation Sent Successfullfy";
+        response = await dispatch(postSecurityUserInvitation(data));
+      }
       reset();
       enqueueSnackbar(message);
       if(!isInvite){
