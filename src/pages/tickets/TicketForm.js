@@ -16,15 +16,8 @@ import { useSnackbar } from '../../components/snackbar';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import { AddTicketSchema } from '../schemas/ticketSchema';
 import FormProvider, { RHFTextField, RHFUpload, RHFAutocomplete, RHFDatePicker, RHFSwitch } from '../../components/hook-form';
-import { getTicket, postTicket, patchTicket, resetTicket } from '../../redux/slices/ticket/tickets';
+import { getTicket, postTicket, patchTicket, resetTicket, getTicketSettings, resetTicketSettings } from '../../redux/slices/ticket/tickets';
 import { getActiveCustomerMachines, resetActiveCustomerMachines } from '../../redux/slices/products/machine';
-import { getTicketIssueTypes, resetTicketIssueTypes } from '../../redux/slices/ticket/ticketSettings/ticketIssueTypes';
-import { getTicketChangeTypes, resetTicketChangeTypes } from '../../redux/slices/ticket/ticketSettings/ticketChangeTypes';
-import { getTicketPriorities, resetTicketPriorities } from '../../redux/slices/ticket/ticketSettings/ticketPriorities';
-import { getTicketStatuses, resetTicketStatuses } from '../../redux/slices/ticket/ticketSettings/ticketStatuses';
-import { getTicketImpacts, resetTicketImpacts } from '../../redux/slices/ticket/ticketSettings/ticketImpacts';
-import { getTicketChangeReasons, resetTicketChangeReasons } from '../../redux/slices/ticket/ticketSettings/ticketChangeReasons';
-import { getTicketInvestigationReasons, resetTicketInvestigationReasons } from '../../redux/slices/ticket/ticketSettings/ticketInvestigationReasons';
 import { getActiveCustomers } from '../../redux/slices/customer/customer';
 import FormLabel from '../../components/DocumentForms/FormLabel';
 import { FORMLABELS } from '../../constants/default-constants';
@@ -51,14 +44,7 @@ export default function TicketForm() {
   const { enqueueSnackbar } = useSnackbar();
   const { activeCustomerMachines } = useSelector((state) => state.machine);
   const { activeCustomers } = useSelector((state) => state.customer);
-  const { ticket } = useSelector((state) => state.tickets);
-  const { ticketIssueTypes } = useSelector((state) => state.ticketIssueTypes);
-  const { ticketChangeTypes } = useSelector((state) => state.ticketChangeTypes); 
-  const { ticketPriorities } = useSelector((state) => state.ticketPriorities); 
-  const { ticketStatuses } = useSelector((state) => state.ticketStatuses); 
-  const { ticketImpacts } = useSelector((state) => state.ticketImpacts); 
-  const { ticketInvestigationReasons } = useSelector((state) => state.ticketInvestigationReasons); 
-  const { ticketChangeReasons } = useSelector((state) => state.ticketChangeReasons); 
+  const { ticket, ticketSettings } = useSelector((state) => state.tickets);
 
   const defaultValues = useMemo(
     () => ({
@@ -104,21 +90,9 @@ export default function TicketForm() {
   
   useEffect(() => {
     dispatch(getActiveCustomers());
-    dispatch(getTicketIssueTypes());
-    dispatch(getTicketChangeTypes());
-    dispatch(getTicketPriorities());
-    dispatch(getTicketStatuses());
-    dispatch(getTicketImpacts());
-    dispatch(getTicketInvestigationReasons());
-    dispatch(getTicketChangeReasons());
+    dispatch(getTicketSettings());
     return ()=> { 
-      dispatch(resetTicketIssueTypes()); 
-      dispatch(resetTicketChangeTypes()); 
-      dispatch(resetTicketPriorities()); 
-      dispatch(resetTicketStatuses())
-      dispatch(resetTicketImpacts()); 
-      dispatch(resetTicketInvestigationReasons());
-      dispatch(resetTicketChangeReasons())
+      dispatch(resetTicketSettings());
     }
   }, [dispatch]);  
   
@@ -129,14 +103,6 @@ export default function TicketForm() {
       dispatch(resetActiveCustomerMachines());
     }
   }, [dispatch, customer]);
-  
-  useEffect(() => {
-    setValue(
-      'status', 
-      ticketStatuses.find((element) => element.name.toLowerCase() === 'to do'.toLowerCase()) 
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ticketStatuses]);  
 
   const handleCustomerChange = useCallback((newCustomer) => {
       setValue('customer', newCustomer);
@@ -295,7 +261,7 @@ export default function TicketForm() {
                   <RHFAutocomplete
                     name="issueType"
                     label="Issue Type"
-                    options={ticketIssueTypes || []}
+                    options={ticketSettings?.issueTypes || []}
                     isOptionEqualToValue={(option, value) => option._id === value._id}
                     getOptionLabel={(option) => `${option.name || ''}`}
                     renderOption={(props, option) => (<li {...props} key={option?._id}> {option.name || ''} </li> )}
@@ -346,7 +312,7 @@ export default function TicketForm() {
                   <RHFAutocomplete
                     name="priority"
                     label="Priority"
-                    options={ticketPriorities || []}
+                    options={ticketSettings?.priorities || []}
                     isOptionEqualToValue={(option, value) => option._id === value._id}
                     getOptionLabel={(option) => `${option.name || ''}`}
                     renderOption={(props, option) => (<li {...props} key={option?._id}> {option.name && option.name} </li> )}
@@ -355,7 +321,7 @@ export default function TicketForm() {
                   <RHFAutocomplete
                     name="status"
                     label="Status"
-                    options={ticketStatuses || []}
+                    options={ticketSettings?.statuses || []}
                     isOptionEqualToValue={(option, value) => option._id === value._id}
                     getOptionLabel={(option) => `${option.name || ''}`}
                     renderOption={(props, option) => (<li {...props} key={option?._id}> {option.name && option.name} </li> )}
@@ -363,7 +329,7 @@ export default function TicketForm() {
                   <RHFAutocomplete
                     name="impact"
                     label="Impact"
-                    options={ticketImpacts || []}
+                    options={ticketSettings?.impacts || []}
                     isOptionEqualToValue={(option, value) => option._id === value._id}
                     getOptionLabel={(option) => `${option.name || ''}`}
                     renderOption={(props, option) => (<li {...props} key={option?._id}> {option.name && option.name} </li> )}
@@ -380,7 +346,7 @@ export default function TicketForm() {
                   <RHFAutocomplete
                     name="changeType"
                     label="Change Type"
-                    options={ticketChangeTypes || []}
+                    options={ticketSettings?.changeTypes || []}
                     isOptionEqualToValue={(option, value) => option._id === value._id}
                     getOptionLabel={(option) => `${option.name || ''}`}
                     renderOption={(props, option) => (<li {...props} key={option?._id}> {option.name && option.name} </li> )}
@@ -388,7 +354,7 @@ export default function TicketForm() {
                   <RHFAutocomplete
                     name="changeReason"
                     label="Change Reason"
-                    options={ticketChangeReasons || []}
+                    options={ticketSettings?.changeReasons || []}
                     isOptionEqualToValue={(option, value) => option._id === value._id}
                     getOptionLabel={(option) => `${option.name || ''}`}
                     renderOption={(props, option) => (<li {...props} key={option?._id}> {option.name && option.name} </li> )}
@@ -404,7 +370,7 @@ export default function TicketForm() {
                    <RHFAutocomplete
                     name="investigationReason"
                     label="Investigation Reason"
-                    options={ticketInvestigationReasons || []}
+                    options={ticketSettings?.investigationReasons || []}
                     isOptionEqualToValue={(option, value) => option._id === value._id}
                     getOptionLabel={(option) => `${option.name || ''}`}
                     renderOption={(props, option) => (<li {...props} key={option?._id}> {option.name && option.name} </li> )}

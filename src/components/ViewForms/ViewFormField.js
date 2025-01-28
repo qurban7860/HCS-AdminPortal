@@ -1,7 +1,7 @@
 import React, { useEffect, useState, memo } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { Typography, Grid, Chip, createTheme, IconButton, TextField, Link } from '@mui/material';
+import { Typography, Grid, Chip, createTheme, IconButton, Link } from '@mui/material';
 import { green } from '@mui/material/colors';
 import IconPopover from '../Icons/IconPopover';
 import ViewFormMenuPopover from './ViewFormMenuPopover';
@@ -122,7 +122,7 @@ function ViewFormField({
         {multiAuth !== undefined && <IconPopover multiAuth={multiAuth} />}
         {currentEmp !== undefined && <IconPopover currentEmp={currentEmp} />}
         {customerAccess !== undefined && <IconPopover customerAccess={customerAccess} />}
-        <Typography variant={variant}>
+        <Typography variant={variant}  sx={{ width: "100%" }} >
           {param && typeof param === 'string' && param.trim().length > 0 && param}
           {objectString && typeof objectString === 'string' && objectString.length > 0 && objectString}
           {param &&
@@ -132,7 +132,9 @@ function ViewFormField({
             typeof secondParam === 'string' &&
             secondParam.trim().length > 0 &&
             '  '}
-          {param && typeof param !== 'string' && param}
+              <Grid container >
+                 {param && typeof param !== 'string' && param}
+              </Grid>
           {secondParam &&
           typeof secondParam === 'string' &&
           secondParam.trim().length > 0 &&

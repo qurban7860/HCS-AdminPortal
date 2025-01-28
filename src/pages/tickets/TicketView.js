@@ -14,6 +14,8 @@ import { StyledCardContainer } from '../../theme/styles/default-styles';
 
 export default function TicketView() {
   const dispatch = useDispatch();
+  const configurations = JSON.parse(localStorage.getItem('configurations'));
+  const prefix = configurations?.find((config) => config?.name?.toLowerCase() === 'ticket_prefix')?.value || '';
 
   const { id } = useParams();
   useLayoutEffect(() => {
@@ -24,7 +26,7 @@ export default function TicketView() {
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
-        <Cover name={ticket?.ticketNo} />
+      <Cover name={`${prefix || ''} - ${ticket?.ticketNo || ''}`} />
       </StyledCardContainer>
       <TicketViewForm />
     </Container>

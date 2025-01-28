@@ -26,14 +26,14 @@ export const ICONS = {
   },
   // shareWith
   SHARED: {
-    icon: 'ri:user-shared-fill',
+    icon: 'fa6-solid:users',
     color: '#008000',
-    heading: 'Shared',
+    heading: 'Organization Share On',
   },
   NONSHARED: {
-    icon: 'ri:user-shared-fill',
+    icon: 'fa6-solid:users-slash',
     color: '#FF0000',
-    heading: 'Nonshared',
+    heading: 'Organization Share Off',
   },
 
   // Status

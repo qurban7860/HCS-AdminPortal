@@ -7,6 +7,7 @@ import { CONFIG } from '../../../config-global';
 const initialState = {
   ticket: null,
   tickets: [],
+  ticketSettings:[],
   filterBy: '',
   page: 0,
   rowsPerPage: 100,
@@ -60,6 +61,13 @@ const slice = createSlice({
       state.isLoading = false;
       state.ticket = action.payload;
     },
+    
+    getTicketSettingsSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.ticketSettings = action.payload;
+      state.initial = true;
+    },
 
     // POST Ticket Success
     postTicketSuccess(state, action) {
@@ -70,6 +78,15 @@ const slice = createSlice({
     patchTicketSuccess(state, action) {
       state.isLoading = false;
       state.ticket = action.payload;
+    },
+
+    updateTicketFieldSuccess(state, action) {
+      state.isLoading = false;
+      const { name, value } = action.payload;
+      state.ticket = {
+        ...state.ticket,
+       [name]: value
+      }
     },
 
     deleteTicketSuccess(state, action) {
@@ -132,6 +149,14 @@ const slice = createSlice({
       state.responseMessage = null;
       state.isLoading = false;
     },
+    
+    // RESET 
+    resetTicketSettings(state){
+      state.ticketSettings = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
 
     // SET FILTER BY
     setFilterBy(state, action) {
@@ -161,6 +186,7 @@ export default slice.reducer;
 export const {
   resetTicket,
   resetTickets,
+  resetTicketSettings,
   setFilterBy,
   ChangeRowsPerPage,
   ChangePage,
@@ -253,6 +279,25 @@ export function patchTicket(id, params) {
   };
 }
 
+export function updateTicketField(id, name, value) {
+  return async (dispatch) => {
+    // dispatch(slice.actions.startLoading());
+    try {
+      const data = {
+        [name]: value,  
+      };
+      const response = await axios.patch(`${CONFIG.SERVER_URL}tickets/${id}`, data);
+
+      dispatch(slice.actions.updateTicketFieldSuccess({ name, value }));
+      return response;
+    } catch (error) {
+      dispatch(slice.actions.hasError(error.message));
+      console.error(error);
+      throw error;
+    }
+  };
+}
+
 // GET Tickets
 export function getTickets(page, pageSize) {
   return async (dispatch) => {
@@ -289,6 +334,28 @@ export function getTicket(id) {
       throw error;
     }
   };
+}
+
+export function getTicketSettings ( cancelToken ){
+  return async (dispatch) =>{
+    dispatch(slice.actions.startLoading());
+    try{
+      const response = await axios.get(`${CONFIG.SERVER_URL}tickets/settings`, 
+      {
+        params: {
+          isArchived: false,
+          isActive: true,
+        },
+        cancelToken: cancelToken?.token,
+      });
+      dispatch(slice.actions.getTicketSettingsSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('statuses loaded successfully'));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  }
 }
 
 // ARCHIVE Ticket
