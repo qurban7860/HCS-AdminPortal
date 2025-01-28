@@ -14,8 +14,9 @@ import {
   getComparator,
   TableNoData,
   TableSkeleton,
-  TableHeadCustom,
   TablePaginationCustom,
+  TablePaginationFilter,
+  TableHeadFilter,
 } from '../../components/table';
 import { getCustomer, setCustomerDialog } from '../../redux/slices/customer/customer';
 import Scrollbar from '../../components/scrollbar';
@@ -29,11 +30,13 @@ import {
   setFilterBy,
   getTickets,
   resetTickets,
+  setReportHiddenColumns,
 } from '../../redux/slices/ticket/tickets';
 import { fDate } from '../../utils/formatTime';
 import TableCard from '../../components/ListTableTools/TableCard';
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
+import useResponsive from '../../hooks/useResponsive';
 
 
 // ----------------------------------------------------------------------
@@ -54,7 +57,7 @@ const TABLE_HEAD = [
 
 export default function TicketFormList(){
 
-  const { tickets, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.tickets);
+  const { tickets, filterBy, page, rowsPerPage, isLoading, reportHiddenColumns } = useSelector((state) => state.tickets);
 
   const navigate = useNavigate();
   const { machineId } = useParams();
@@ -82,6 +85,7 @@ export default function TicketFormList(){
   const [tableData, setTableData] = useState([]);
   const [selectedIssueType, setSelectedIssueType] = useState(null);
   const [ selectedStatus, setSelectedStatus ] = useState(null);
+  const isMobile = useResponsive('down', 'sm');
 
   useLayoutEffect(() => {
     dispatch(getTickets(page, rowsPerPage ));
@@ -141,6 +145,10 @@ export default function TicketFormList(){
     setSelectedStatus(null);
   };
   
+  const handleHiddenColumns = async (arg) => {
+    dispatch(setReportHiddenColumns(arg));
+  };
+
   return (
     <Container maxWidth={false} >
       <StyledCardContainer>
@@ -159,21 +167,37 @@ export default function TicketFormList(){
             setSelectedIssueType={setSelectedIssueType}
           />
 
-          {!isNotFound && <TablePaginationCustom
-            count={ tickets?.totalCount || 0 }
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-          />}
+          {!isNotFound && !isMobile && (
+            <TablePaginationFilter
+              columns={TABLE_HEAD}
+              hiddenColumns={reportHiddenColumns}
+              handleHiddenColumns={handleHiddenColumns}
+              count={tickets?.totalCount || 0}
+              page={page}
+              rowsPerPage={rowsPerPage}
+              onPageChange={onChangePage}
+              onRowsPerPageChange={onChangeRowsPerPage}
+            />
+          )}
+
+          {!isNotFound && isMobile && (
+            <TablePaginationCustom
+              count={tickets?.totalCount || 0}
+              page={page}
+              rowsPerPage={rowsPerPage}
+              onPageChange={onChangePage}
+              onRowsPerPageChange={onChangeRowsPerPage}
+            />
+          )}
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <Scrollbar>
               <Table size="small" sx={{ minWidth: 360 }}>
-                <TableHeadCustom
+                <TableHeadFilter
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
+                  hiddenColumns={reportHiddenColumns}
                   onSort={onSort}
                 />
                 <TableBody>
@@ -183,6 +207,7 @@ export default function TicketFormList(){
                         <TicketFormTableRow
                           key={row._id}
                           row={row}
+                          hiddenColumns={reportHiddenColumns}
                           onSelectRow={() => onSelectRow(row._id)}
                           onViewRow={() => handleViewRow(row._id)}
                           selected={selected.includes(row._id)}
@@ -201,13 +226,6 @@ export default function TicketFormList(){
               </Table>
             </Scrollbar>
           </TableContainer>
-          {!isNotFound && <TablePaginationCustom
-            count={ tickets?.totalCount || 0 }
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-          />}
         </TableCard>
         </FormProvider>
       </Container>

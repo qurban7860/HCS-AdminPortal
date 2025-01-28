@@ -18,6 +18,13 @@ const initialState = {
   filterBy: '',
   page: 0,
   rowsPerPage: 100,
+  reportHiddenColumns: {
+    name: false,
+    customer: false,
+    customerAccess: false,
+    isActive: false,
+    createdAt: false,
+  },
 };
 
 const slice = createSlice({
@@ -111,6 +118,10 @@ const slice = createSlice({
     ChangePage(state, action) {
       state.page = action.payload;
     },
+    // Add new reducer for hidden columns
+    setReportHiddenColumns(state, action) {
+      state.reportHiddenColumns = action.payload;
+    },
   },
 });
 
@@ -128,6 +139,7 @@ export const {
   setFilterBy,
   ChangeRowsPerPage,
   ChangePage,
+  setReportHiddenColumns,
 } = slice.actions;
 
 // ----------------------------Add Document Category------------------------------------------

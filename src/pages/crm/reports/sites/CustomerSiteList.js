@@ -20,21 +20,23 @@ import {
   getComparator,
   TableNoData,
   TableSkeleton,
-  TableHeadCustom,
   TablePaginationCustom,
+  TablePaginationFilter,
+  TableHeadFilter,
 } from '../../../../components/table';
 import Scrollbar from '../../../../components/scrollbar';
 import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 // sections
 import CustomerSiteListTableRow from './CustomerSiteListTableRow';
 import CustomerSiteListTableToolbar from './CustomerSiteListTableToolbar';
-import { getSites, resetSites, ChangePage, ChangeRowsPerPage, setFilterBy, setIsExpanded, setCardActiveIndex  } from '../../../../redux/slices/customer/site';
+import { getSites, resetSites, ChangePage, ChangeRowsPerPage, setFilterBy, setIsExpanded, setCardActiveIndex, setReportHiddenColumns } from '../../../../redux/slices/customer/site';
 import { getCustomer } from '../../../../redux/slices/customer/customer';
 import { Cover } from '../../../../components/Defaults/Cover';
 import TableCard from '../../../../components/ListTableTools/TableCard';
 import { fDate } from '../../../../utils/formatTime';
 import { useSnackbar } from '../../../../components/snackbar';
 import { exportCSV } from '../../../../utils/exportCSV';
+import useResponsive from '../../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -58,7 +60,8 @@ export default function CustomerSiteList({ isCustomerSitePage = false }) {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   
-  const { sites, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.site);
+  const { sites, filterBy, page, rowsPerPage, isLoading, reportHiddenColumns } = useSelector((state) => state.site);
+  const isMobile = useResponsive('down', 'sm');
 
   const [exportingCSV, setExportingCSV] = useState(false);
   const [ tableData, setTableData ] = useState([]);
@@ -155,6 +158,10 @@ export default function CustomerSiteList({ isCustomerSitePage = false }) {
     });
   };
 
+  const handleHiddenColumns = async (arg) => {
+    dispatch(setReportHiddenColumns(arg));
+  };
+
   return (
     <Container maxWidth={false}>
       {!isCustomerSitePage ? (
@@ -172,21 +179,37 @@ export default function CustomerSiteList({ isCustomerSitePage = false }) {
           onExportLoading={exportingCSV}
         />
 
-        {!isNotFound && <TablePaginationCustom
-          count={sites?sites.length : 0}
-          page={page}
-          rowsPerPage={rowsPerPage}
-          onPageChange={onChangePage}
-          onRowsPerPageChange={onChangeRowsPerPage}
-        />}
-        <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+        {!isNotFound && !isMobile && (
+          <TablePaginationFilter
+            columns={TABLE_HEAD}
+            hiddenColumns={reportHiddenColumns}
+            handleHiddenColumns={handleHiddenColumns}
+            count={sites ? sites.length : 0}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
+          />
+        )}
 
+        {!isNotFound && isMobile && (
+          <TablePaginationCustom
+            count={sites ? sites.length : 0}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
+          />
+        )}
+
+        <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
           <Scrollbar>
             <Table size="small" sx={{ minWidth: 360 }}>
-              <TableHeadCustom
+              <TableHeadFilter
                 order={order}
                 orderBy={orderBy}
                 headLabel={TABLE_HEAD}
+                hiddenColumns={reportHiddenColumns}
                 onSort={onSort}
               />
 
@@ -198,6 +221,7 @@ export default function CustomerSiteList({ isCustomerSitePage = false }) {
                       <CustomerSiteListTableRow
                         key={row._id}
                         row={row}
+                        hiddenColumns={reportHiddenColumns}
                         selected={selected.includes(row._id)}
                         onSelectRow={() => onSelectRow(row._id)}
                         onViewRow={() => handleViewCustomer(row?.customer?._id)}
@@ -217,14 +241,6 @@ export default function CustomerSiteList({ isCustomerSitePage = false }) {
             </Table>
           </Scrollbar>
         </TableContainer>
-
-        {!isNotFound && <TablePaginationCustom
-          count={sites?sites.length : 0}
-          page={page}
-          rowsPerPage={rowsPerPage}
-          onPageChange={onChangePage}
-          onRowsPerPageChange={onChangeRowsPerPage}
-        />}
       </TableCard>
     </Container>
   );

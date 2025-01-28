@@ -8,7 +8,8 @@ import { useDispatch, useSelector } from 'react-redux';
 // routes
 import { getDepartments, deleteDepartment, ChangeRowsPerPage,
   ChangePage,
-  setFilterBy, } from '../../../../redux/slices/department/department';
+  setFilterBy,
+  setReportHiddenColumns, } from '../../../../redux/slices/department/department';
 import { PATH_CRM } from '../../../../routes/paths';
 // components
 import { useSnackbar } from '../../../../components/snackbar';
@@ -18,8 +19,9 @@ import {
   getComparator,
   TableNoData,
   TableSkeleton,
-  TableHeadCustom,
   TablePaginationCustom,
+  TablePaginationFilter,
+  TableHeadFilter,
 } from '../../../../components/table';
 import Scrollbar from '../../../../components/scrollbar';
 // sections
@@ -30,6 +32,7 @@ import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 import { fDate } from '../../../../utils/formatTime';
 import TableCard from '../../../../components/ListTableTools/TableCard';
 import { FORMLABELS } from '../../../../constants/default-constants';
+import useResponsive from '../../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -64,7 +67,8 @@ export default function DepartmentList() {
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
-  const { departments, filterBy, page, rowsPerPage, isLoading, error, initial, responseMessage } = useSelector((state) => state.department);
+  const { departments, filterBy, page, rowsPerPage, isLoading, error, initial, responseMessage, reportHiddenColumns } = useSelector((state) => state.department);
+  const isMobile = useResponsive('down', 'sm');
     
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));
@@ -145,6 +149,10 @@ export default function DepartmentList() {
     setFilterName('');
   };
 
+  const handleHiddenColumns = async (arg) => {
+    dispatch(setReportHiddenColumns(arg));
+  };
+
   return (
       <Container maxWidth={false}>
         <StyledCardContainer>
@@ -160,20 +168,35 @@ export default function DepartmentList() {
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
           />
-          {!isNotFound && <TablePaginationCustom
-            count={dataFiltered.length}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-          />}
+          {!isNotFound && !isMobile && (
+            <TablePaginationFilter
+              columns={TABLE_HEAD}
+              hiddenColumns={reportHiddenColumns}
+              handleHiddenColumns={handleHiddenColumns}
+              count={dataFiltered.length}
+              page={page}
+              rowsPerPage={rowsPerPage}
+              onPageChange={onChangePage}
+              onRowsPerPageChange={onChangeRowsPerPage}
+            />
+          )}
+          {!isNotFound && isMobile && (
+            <TablePaginationCustom
+              count={dataFiltered.length}
+              page={page}
+              rowsPerPage={rowsPerPage}
+              onPageChange={onChangePage}
+              onRowsPerPageChange={onChangeRowsPerPage}
+            />
+          )}
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <Scrollbar>
               <Table size="small" sx={{ minWidth: 360 }}>
-                <TableHeadCustom
+                <TableHeadFilter
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
+                  hiddenColumns={reportHiddenColumns}
                   onSort={onSort}
                 />
 
@@ -185,6 +208,7 @@ export default function DepartmentList() {
                         <ListTableRow
                           key={row._id}
                           row={row}
+                          hiddenColumns={reportHiddenColumns}
                           selected={selected.includes(row._id)}
                           onSelectRow={() => onSelectRow(row._id)}
                           onDeleteRow={() => handleDeleteRow(row._id)}
@@ -200,14 +224,6 @@ export default function DepartmentList() {
               </Table>
             </Scrollbar>
           </TableContainer>
-
-          {!isNotFound && <TablePaginationCustom
-            count={dataFiltered.length}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-          />}
         </TableCard>
       </Container>
   );

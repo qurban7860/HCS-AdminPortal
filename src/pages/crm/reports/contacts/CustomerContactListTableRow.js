@@ -11,6 +11,7 @@ import LinkTableCellWithIconTargetBlank from '../../../../components/ListTableTo
 import IconButtonTooltip from '../../../../components/Icons/IconButtonTooltip';
 import { ICONS } from '../../../../constants/icons/default-icons';
 
+
 // ----------------------------------------------------------------------
 
 CustomerContactListTableRow.propTypes = {
@@ -25,6 +26,7 @@ CustomerContactListTableRow.propTypes = {
   onSelectRow: PropTypes.func,
   onDeleteRow: PropTypes.func,
   isCustomerContactPage: PropTypes.bool,
+  hiddenColumns: PropTypes.object,
 };
 
 export default function CustomerContactListTableRow({
@@ -38,7 +40,8 @@ export default function CustomerContactListTableRow({
   openInNewPage,
   handleContactView,
   handleContactViewInNewPage,
-  isCustomerContactPage
+  isCustomerContactPage,
+  hiddenColumns,
 }) {
   const { _id, customer, firstName, title, lastName, phoneNumbers, email, address, isActive, formerEmployee, createdAt } = row;
   const contactName = `${firstName || ''} ${lastName || ''}`;
@@ -50,10 +53,13 @@ export default function CustomerContactListTableRow({
     setShowAllPhones((prev) => !prev);
   };
 
+  const isSmallScreen = useScreenSize('sm');
+  const isLargeScreen = useScreenSize('lg');
+
   return (
     <>
       {/* Render rows with column names in bold for small screens */}
-      {!useScreenSize('sm') && (
+      {!isSmallScreen && (
         <StyledTableRow hover selected={selected} style={{ display: 'block' }} >
           <LinkTableCellWithIconTargetBlank style={{ width: '100%', display: 'inline-block' }}
             onViewRow={() => handleContactView(customer?._id, _id)}
@@ -85,56 +91,83 @@ export default function CustomerContactListTableRow({
         </StyledTableRow>
       )}
 
-      {useScreenSize('sm') && (
+      {isSmallScreen && (
         <StyledTableRow hover selected={selected}>
-          {isCustomerContactPage && <TableCell align="center">
-            <IconButtonTooltip 
-              title={ isActive ? ICONS.ACTIVE.heading : ICONS.INACTIVE.heading } 
-              color={ isActive ? ICONS.ACTIVE.color : ICONS.INACTIVE.color } 
-              icon={ isActive ? ICONS.ACTIVE.icon : ICONS.INACTIVE.icon} 
-            />
-          </TableCell>}
-          {isCustomerContactPage && <TableCell align="center">
-            <IconButtonTooltip
-              title={ formerEmployee ? ICONS.FORMEREMPLOYEE.heading : ICONS.NOTFORMEREMPLOYEE.heading }
-              color={ formerEmployee ? ICONS.FORMEREMPLOYEE.color : ICONS.NOTFORMEREMPLOYEE.color }
-              icon={ formerEmployee ? ICONS.FORMEREMPLOYEE.icon : ICONS.NOTFORMEREMPLOYEE.icon }
-            />
-          </TableCell>}
-          {!isCustomerContactPage && (  
+          {isCustomerContactPage && isLargeScreen && !hiddenColumns?.isActive && (
+            <TableCell align="center">
+              <IconButtonTooltip 
+                title={isActive ? ICONS.ACTIVE.heading : ICONS.INACTIVE.heading} 
+                color={isActive ? ICONS.ACTIVE.color : ICONS.INACTIVE.color} 
+                icon={isActive ? ICONS.ACTIVE.icon : ICONS.INACTIVE.icon} 
+              />
+            </TableCell>
+          )}
+          
+          {isCustomerContactPage && isLargeScreen && !hiddenColumns?.formerEmployee && (
+            <TableCell align="center">
+              <IconButtonTooltip
+                title={formerEmployee ? ICONS.FORMEREMPLOYEE.heading : ICONS.NOTFORMEREMPLOYEE.heading}
+                color={formerEmployee ? ICONS.FORMEREMPLOYEE.color : ICONS.NOTFORMEREMPLOYEE.color}
+                icon={formerEmployee ? ICONS.FORMEREMPLOYEE.icon : ICONS.NOTFORMEREMPLOYEE.icon}
+              />
+            </TableCell>
+          )}
+
+          {!isCustomerContactPage && isLargeScreen && !hiddenColumns?.["customer.name"] && (
             <TableCell>{customer?.name}</TableCell>
           )}
-          <LinkTableCellWithIconTargetBlank
-            onViewRow={() => handleContactView(customer?._id, _id)}
-            onClick={() => handleContactViewInNewPage(customer?._id, _id)}
-            param={contactName}
-          /> 
-          {isCustomerContactPage && <TableCell>{title}</TableCell>}  
-          <TableCell>
-            {phone.length > 1 ? (
-              <>
-                {showAllPhones ? (phone.join(', ')
-                ) : (
-                  <>
-                    {phone[0]}{' '}                     
-                      <IconButtonTooltip onClick={handleTogglePhoneDisplay}
-                        title={ ICONS.SEE_MORE.heading } 
-                        color={ ICONS.SEE_MORE.color } 
-                        icon={ ICONS.SEE_MORE.icon } 
-                      />
-                  </>
-                )}
-              </>
-            ) : (
-              phone[0]
-            )}
-          </TableCell>
-          <TableCell>{email}</TableCell>
-          <TableCell>{address?.country}</TableCell>
-          {!isCustomerContactPage && <TableCell align="center">
-            <Switch checked={isActive} disabled size="small" />
-          </TableCell>}
-          <TableCell align="right"> {fDate(createdAt)}</TableCell>
+
+          {isLargeScreen && !hiddenColumns?.firstName && (
+            <LinkTableCellWithIconTargetBlank
+              onViewRow={() => handleContactView(customer?._id, _id)}
+              onClick={() => handleContactViewInNewPage(customer?._id, _id)}
+              param={contactName}
+            />
+          )}
+
+          {isCustomerContactPage && isLargeScreen && !hiddenColumns?.title && (
+            <TableCell>{title}</TableCell>
+          )}
+
+          {isLargeScreen && !hiddenColumns?.phoneNumbers && (
+            <TableCell>
+              {phone.length > 1 ? (
+                <>
+                  {showAllPhones ? (phone.join(', ')
+                  ) : (
+                    <>
+                      {phone[0]}{' '}                     
+                        <IconButtonTooltip onClick={handleTogglePhoneDisplay}
+                          title={ ICONS.SEE_MORE.heading } 
+                          color={ ICONS.SEE_MORE.color } 
+                          icon={ ICONS.SEE_MORE.icon } 
+                        />
+                    </>
+                  )}
+                </>
+              ) : (
+                phone[0]
+              )}
+            </TableCell>
+          )}
+
+          {isLargeScreen && !hiddenColumns?.email && (
+            <TableCell>{email}</TableCell>
+          )}
+
+          {isLargeScreen && !hiddenColumns?.["address.country"] && (
+            <TableCell>{address?.country}</TableCell>
+          )}
+
+          {!isCustomerContactPage && isLargeScreen && !hiddenColumns?.isActive && (
+            <TableCell align="center">
+              <Switch checked={isActive} disabled size="small" />
+            </TableCell>
+          )}
+
+          {isLargeScreen && !hiddenColumns?.createdAt && (
+            <TableCell align="right">{fDate(createdAt)}</TableCell>
+          )}
         </StyledTableRow>
       )}
     </>

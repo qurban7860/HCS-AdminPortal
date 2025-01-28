@@ -11,6 +11,7 @@ import { StyledTableRow, StyledTooltip } from '../../theme/styles/default-styles
 import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
 import Iconify from '../../components/iconify';
 import LinkDialogTableCell from '../../components/ListTableTools/LinkDialogTableCell';
+import { useScreenSize } from '../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -20,6 +21,7 @@ TicketFormTableRow.propTypes = {
   onViewRow: PropTypes.func,
   onSelectRow: PropTypes.func,
   handleCustomerDialog:PropTypes.func,
+  hiddenColumns: PropTypes.object,
 };
 
 export default function TicketFormTableRow({
@@ -28,6 +30,7 @@ export default function TicketFormTableRow({
   onViewRow,
   onSelectRow,
   handleCustomerDialog,
+  hiddenColumns,
 }) {
   const dispatch = useDispatch();
   const { ticketNo, customer, machine, issueType, summary, priority, status, createdAt } = row;

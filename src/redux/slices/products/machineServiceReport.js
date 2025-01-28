@@ -37,6 +37,15 @@ const initialState = {
   reportFilterByStatusType: [ 'To Do', 'In Progress' ],
   page: 0,
   rowsPerPage: 100,
+  reportHiddenColumns: {
+    "checkboxes": false,
+    "serviceDate": false,
+    "serviceReportTemplate.reportType": false,
+    "serviceReportUID": false,
+    "customer.name": false,
+    "status.name": false,
+    "createdBy.name": false,
+},
 };
 
 const slice = createSlice({
@@ -450,6 +459,9 @@ const slice = createSlice({
     ChangePage(state, action) {
       state.page = action.payload;
     },
+    setReportHiddenColumns(state, action){
+      state.reportHiddenColumns = action.payload;  
+    },
   },
 });
 
@@ -481,6 +493,7 @@ export const {
   setReportFilterByStatusType,
   ChangeRowsPerPage,
   ChangePage,
+  setReportHiddenColumns,
 } = slice.actions;
 
 // ----------------------------------------------------------------------
