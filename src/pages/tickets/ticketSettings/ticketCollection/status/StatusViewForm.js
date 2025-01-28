@@ -29,6 +29,7 @@ export default function StatusViewForm() {
   const defaultValues = useMemo(
     () => ({
       name: ticketStatus?.name || '',
+      statusType: ticketStatus?.statusType?.name || '',
       slug: ticketStatus?.slug || '',
       icon: ticketStatus?.icon || '',
       color: ticketStatus?.color || '',
@@ -75,6 +76,7 @@ export default function StatusViewForm() {
       />               
       <Grid container sx={{mt:2}}>
         <ViewFormField isLoading={isLoading} sm={6} heading="Name" param={defaultValues?.name} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Status Type" param={defaultValues?.statusType} />
         <ViewFormField isLoading={isLoading} sm={6} heading="Icon" param={
           <StyledTooltip 
            placement="top" 
@@ -83,12 +85,12 @@ export default function StatusViewForm() {
            <Iconify icon={defaultValues?.icon} style={{ width: 25, height: 25, color: defaultValues?.color }} />
           </StyledTooltip> } 
         />
-        <ViewFormField isLoading={isLoading} sm={6} heading="Slug" param={defaultValues?.slug} />
         <ViewFormField isLoading={isLoading}
           sm={6}
           heading="Display Order No."
           param={defaultValues?.displayOrderNo?.toString()}
         />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Slug" param={defaultValues?.slug} />
         <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues?.description} />
         <Grid container>
           <ViewFormAudit defaultValues={defaultValues} />

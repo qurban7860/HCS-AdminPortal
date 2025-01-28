@@ -133,6 +133,7 @@ export function postTicketStatus(params) {
     try {
         const data = {
           name: params.name,
+          statusType: params.statusType?._id || null,
           icon: params.icon,
           color: params.color,
           slug: params.slug,
@@ -159,6 +160,7 @@ export function patchTicketStatus(id, params) {
     try {
         const data = {
           name: params.name,
+          statusType: params.statusType?._id || null,
           icon: params.icon,
           color: params.color,
           slug: params.slug,
