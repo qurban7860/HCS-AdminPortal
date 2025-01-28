@@ -471,6 +471,11 @@ export const StatusList = Loadable(lazy(() => import('../pages/tickets/ticketSet
 export const StatusForm = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/status/StatusForm')));
 export const StatusView = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/status/StatusView')));
 
+// --------------------------- Status Type -------------------------------------
+export const StatusTypeList = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/statusType/StatusTypeList')));
+export const StatusTypeForm = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/statusType/StatusTypeForm')));
+export const StatusTypeView = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/statusType/StatusTypeView')));
+
 // --------------------------- Impact -------------------------------------
 export const ImpactList = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/impact/ImpactList')));
 export const ImpactForm = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/impact/ImpactForm')));

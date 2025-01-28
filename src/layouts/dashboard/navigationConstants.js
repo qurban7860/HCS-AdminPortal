@@ -165,7 +165,7 @@ export const allSideBarOptions = {
           icon: <Iconify icon="icomoon-free:ticket" />,
         },
         {
-          title: 'Support Ticket Settings',
+          title: 'Settings',
           path: PATH_SUPPORT.ticketSettings.root,
           icon: <Iconify icon="mdi:settings" />,
         },

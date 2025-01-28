@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { useNavigate, useParams } from 'react-router-dom';
 // @mui
-import { Card, Grid, useTheme } from '@mui/material';
+import { Card, Grid } from '@mui/material';
 // paths
 import { PATH_SUPPORT } from '../../../../../routes/paths';
 // components
@@ -14,13 +14,12 @@ import { deleteTicketIssueType, resetTicketIssueType } from '../../../../../redu
 import ViewFormAudit from '../../../../../components/ViewForms/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../../../../../components/ViewForms/ViewFormEditDeleteButtons';
 import ViewFormField from '../../../../../components/ViewForms/ViewFormField';
-import ViewFormSwitch from '../../../../../components/ViewForms/ViewFormSwitch';
+import { handleError } from '../../../../../utils/errorHandler';
 
 // ----------------------------------------------------------------------
 
 export default function IssueTypeViewForm() {
   const navigate = useNavigate();
-  const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
   const { ticketIssueType, isLoading } = useSelector((state) => state.ticketIssueTypes);
   const { id } = useParams();
@@ -47,14 +46,13 @@ export default function IssueTypeViewForm() {
     [ ticketIssueType]
   );
 
-  const onArchive = () => {
+  const onArchive = async () => {
     try {
-      dispatch(deleteTicketIssueType(id, true));
+      await dispatch(deleteTicketIssueType(id, true));
       enqueueSnackbar('Issue Type Archived Successfully!', { variant: 'success' });
       navigate(PATH_SUPPORT.ticketSettings.issueTypes.root);
-      dispatch(resetTicketIssueType());
     } catch (err) {
-      enqueueSnackbar('Issue Type Archive failed!', { variant: `error` });
+      enqueueSnackbar( handleError( err ) || 'Issue Type Archive failed!', { variant: `error` });
       console.log('Error:', err);
     }
   };

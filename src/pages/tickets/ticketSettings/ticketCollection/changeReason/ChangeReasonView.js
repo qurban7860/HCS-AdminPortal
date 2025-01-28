@@ -7,7 +7,7 @@ import { useParams } from 'react-router-dom';
 import { Cover } from '../../../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../../../theme/styles/default-styles';
 import ChangeReasonViewForm from './ChangeReasonViewForm';
-import { getTicketChangeReason } from '../../../../../redux/slices/ticket/ticketSettings/ticketChangeReasons';
+import { getTicketChangeReason, resetTicketChangeReason} from '../../../../../redux/slices/ticket/ticketSettings/ticketChangeReasons';
 
 // ----------------------------------------------------------------------
 
@@ -20,6 +20,7 @@ export default function ChangeReasonView() {
     if(id){
       dispatch(getTicketChangeReason(id))
     }
+    return () => { resetTicketChangeReason() }
   },[dispatch, id ])
 
   return (

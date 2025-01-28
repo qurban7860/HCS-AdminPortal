@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { useNavigate, useParams } from 'react-router-dom';
 // @mui
-import { Card, Grid, useTheme } from '@mui/material';
+import { Card, Grid } from '@mui/material';
 // paths
 import { PATH_SUPPORT } from '../../../../../routes/paths';
 // components
@@ -14,7 +14,7 @@ import { deleteTicketChangeReason, resetTicketChangeReason } from '../../../../.
 import ViewFormAudit from '../../../../../components/ViewForms/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../../../../../components/ViewForms/ViewFormEditDeleteButtons';
 import ViewFormField from '../../../../../components/ViewForms/ViewFormField';
-import ViewFormSwitch from '../../../../../components/ViewForms/ViewFormSwitch';
+import { handleError } from '../../../../../utils/errorHandler';
 // ----------------------------------------------------------------------
 
 export default function ChangeReasonViewForm() {
@@ -24,7 +24,6 @@ export default function ChangeReasonViewForm() {
   const { ticketChangeReason, isLoading } = useSelector((state) => state.ticketChangeReasons);
   const { id } = useParams();
   const dispatch = useDispatch();
-  const theme = useTheme();
 
   const defaultValues = useMemo(
     () => ({
@@ -47,14 +46,13 @@ export default function ChangeReasonViewForm() {
     [ ticketChangeReason]
   );
 
-  const onArchive = () => {
+  const onArchive = async () => {
     try {
-      dispatch(deleteTicketChangeReason(id, true));
+      await dispatch(deleteTicketChangeReason(id, true));
       enqueueSnackbar('Change Reason Archived Successfully!', { variant: 'success' });
       navigate(PATH_SUPPORT.ticketSettings.changeReasons.root);
-      dispatch(resetTicketChangeReason());
     } catch (err) {
-      enqueueSnackbar('Change Reason Archive failed!', { variant: `error` });
+      enqueueSnackbar( handleError( err ) || 'Change Reason Archive failed!', { variant: `error` });
       console.log('Error:', err);
     }
   };
