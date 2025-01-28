@@ -7,7 +7,7 @@ import { useParams } from 'react-router-dom';
 import { Cover } from '../../../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../../../theme/styles/default-styles';
 import StatusViewForm from './StatusViewForm';
-import { getTicketStatus } from '../../../../../redux/slices/ticket/ticketSettings/ticketStatuses';
+import { getTicketStatus, resetTicketStatus } from '../../../../../redux/slices/ticket/ticketSettings/ticketStatuses';
 
 // ----------------------------------------------------------------------
 
@@ -20,6 +20,7 @@ export default function StatusView() {
     if(id){
       dispatch(getTicketStatus(id))
     }
+    return () => { resetTicketStatus() }
   },[dispatch, id ])
 
   return (

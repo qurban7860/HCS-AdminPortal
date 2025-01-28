@@ -35,7 +35,7 @@ export default function ChangeReasonForm() {
       description: id && ticketChangeReason?.description || '',
       displayOrderNo: id && ticketChangeReason?.displayOrderNo || '',
       isDefault: id && ticketChangeReason?.isDefault || false,
-      isActive: id && ticketChangeReason?.isActive || true,
+      isActive: id ? ticketChangeReason?.isActive : true,
       createdAt: id && ticketChangeReason?.createdAt || '',
     }),
     [ id, ticketChangeReason ] 
@@ -71,7 +71,7 @@ export default function ChangeReasonForm() {
         navigate(PATH_SUPPORT.ticketSettings.changeReasons.root);
       }
       reset();
-      dispatch(postTicketChangeReason());
+      dispatch(resetTicketChangeReason());
     } catch (error) {
       enqueueSnackbar( handleError( error ) || 'ChangeReason save failed!', { variant: 'error' });
       console.error(error);

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { useNavigate, useParams } from 'react-router-dom';
 // @mui
-import { Card, Grid, useTheme } from '@mui/material';
+import { Card, Grid } from '@mui/material';
 // paths
 import { PATH_SUPPORT } from '../../../../../routes/paths';
 // components
@@ -14,13 +14,12 @@ import { deleteTicketImpact, resetTicketImpact } from '../../../../../redux/slic
 import ViewFormAudit from '../../../../../components/ViewForms/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../../../../../components/ViewForms/ViewFormEditDeleteButtons';
 import ViewFormField from '../../../../../components/ViewForms/ViewFormField';
-import ViewFormSwitch from '../../../../../components/ViewForms/ViewFormSwitch';
+import { handleError } from '../../../../../utils/errorHandler';
 
 // ----------------------------------------------------------------------
 
 export default function ImpactViewForm() {
   const navigate = useNavigate();
-  const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
   const { ticketImpact, isLoading } = useSelector((state) => state.ticketImpacts);
   const { id } = useParams();
@@ -47,14 +46,13 @@ export default function ImpactViewForm() {
     [ ticketImpact]
   );
 
-  const onArchive = () => {
+  const onArchive = async () => {
     try {
-      dispatch(deleteTicketImpact(id, true));
+      await dispatch(deleteTicketImpact(id, true));
       enqueueSnackbar('Impacts Archived Successfully!', { variant: 'success' });
-      dispatch(resetTicketImpact());
       navigate(PATH_SUPPORT.ticketSettings.impacts.root);
     } catch (err) {
-      enqueueSnackbar('Impacts Archive failed!', { variant: `error` });
+      enqueueSnackbar( handleError( err ) || 'Impacts Archive failed!', { variant: `error` });
       console.log('Error:', err);
     }
   };

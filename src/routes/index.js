@@ -340,6 +340,10 @@ import {
   StatusList,
   StatusForm,
   StatusView,
+  // --------------------------- Status Type --------------------------
+  StatusTypeList,
+  StatusTypeForm,
+  StatusTypeView,
   // --------------------------- Impact --------------------------
   ImpactList,
   ImpactForm,
@@ -1090,6 +1094,15 @@ export default function Router() {
               {path: 'new', element: <StatusForm />},
               {path: ':id/edit', element: <StatusForm />},
               {path: ':id/view', element: <StatusView />},
+            ]
+          },
+          {
+            path: 'StatusTypes',
+            children:[
+              {element: <StatusTypeList />, index: true },
+              {path: 'new', element: <StatusTypeForm />},
+              {path: ':id/edit', element: <StatusTypeForm />},
+              {path: ':id/view', element: <StatusTypeView />},
             ]
           },
           {

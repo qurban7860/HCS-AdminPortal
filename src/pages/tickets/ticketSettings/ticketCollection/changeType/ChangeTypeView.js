@@ -7,7 +7,7 @@ import { useParams } from 'react-router-dom';
 import { Cover } from '../../../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../../../theme/styles/default-styles';
 import ChangeTypeViewForm from './ChangeTypeViewForm';
-import { getTicketChangeType } from '../../../../../redux/slices/ticket/ticketSettings/ticketChangeTypes';
+import { getTicketChangeType, resetTicketChangeType } from '../../../../../redux/slices/ticket/ticketSettings/ticketChangeTypes';
 
 // ----------------------------------------------------------------------
 
@@ -20,6 +20,7 @@ export default function ChangeTypeView() {
     if(id){
       dispatch(getTicketChangeType(id))
     }
+    return () => { resetTicketChangeType() }
   },[dispatch, id ])
 
   return (

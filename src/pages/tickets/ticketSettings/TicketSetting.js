@@ -12,18 +12,16 @@ import ListItem from '../../../components/ListTableTools/ListItem';
 // constants
 import { FORMLABELS } from '../../../constants/default-constants';
 import { ICONS } from '../../../constants/icons/default-icons';
-import { useAuthContext } from '../../../auth/useAuthContext';
 
 // ----------------------------------------------------------------------
 
 export default function TicketSetting() {
 
-  const { isSettingAccessAllowed } = useAuthContext()
-
   const navigate = useNavigate();
   const linkIssueType = () => navigate(PATH_SUPPORT.ticketSettings.issueTypes.root);
   const linkPriority = () => navigate(PATH_SUPPORT.ticketSettings.priorities.root);
   const linkStatus = () => navigate(PATH_SUPPORT.ticketSettings.statuses.root);
+  const linkStatusType = () => navigate(PATH_SUPPORT.ticketSettings.statusTypes.root);
   const linkImpact = () => navigate(PATH_SUPPORT.ticketSettings.impacts.root);
   const linkChangeType = () => navigate(PATH_SUPPORT.ticketSettings.changeTypes.root);
   const linkChangeReason = () => navigate(PATH_SUPPORT.ticketSettings.changeReasons.root);
@@ -32,10 +30,9 @@ export default function TicketSetting() {
 return (
     <Container maxWidth={false}>
       <StyledCardContainer>
-        <Cover name="Support Ticket Settings" />
+        <Cover name="Settings" />
       </StyledCardContainer>
-
-          <Box
+            <Box
               rowGap={1}
               columnGap={4}
               display="grid"
@@ -45,8 +42,7 @@ return (
                 lg: 'repeat(3, 1fr)',
               }}
             >
-          { isSettingAccessAllowed &&
-            <StyledSettingsCardContainer>
+              <StyledSettingsCardContainer>
                 <List
                   component="nav"
                   aria-labelledby="nested-list-subheader"
@@ -68,6 +64,20 @@ return (
                     content={ICONS.STATUSES.heading}
                   />
                    <ListItem
+                    onClick={linkStatusType}
+                    icon={ICONS.STATUS_TYPES.icon}
+                    content={ICONS.STATUS_TYPES.heading}
+                  />
+                </List>
+              </StyledSettingsCardContainer>
+
+              <StyledSettingsCardContainer>
+                <List
+                  component="nav"
+                  aria-labelledby="nested-list-subheader"
+                  subheader={<ListItemsHeader header={FORMLABELS.TICKET_SETTINGS} />}
+                >
+                  <ListItem
                     onClick={linkImpact}
                     icon={ICONS.IMPACTS.icon}
                     content={ICONS.IMPACTS.heading}
@@ -88,10 +98,8 @@ return (
                     content={ICONS.INVESTIGATION_REASONS.heading}
                   />
                 </List>
-                
-            </StyledSettingsCardContainer>
-            }
-          </Box>
+              </StyledSettingsCardContainer>
+            </Box>
     </Container>
   );
 }

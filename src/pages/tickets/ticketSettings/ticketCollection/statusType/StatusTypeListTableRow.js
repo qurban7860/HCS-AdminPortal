@@ -11,13 +11,13 @@ import LinkTableCell from '../../../../../components/ListTableTools/LinkTableCel
 
 // ----------------------------------------------------------------------
 
-StatusListTableRow.propTypes = {
+StatusTypeListTableRow.propTypes = {
   row: PropTypes.object,
   selected: PropTypes.bool,
   onViewRow: PropTypes.func,
 };
 
-export default function StatusListTableRow({
+export default function StatusTypeListTableRow({
   row,
   selected,
   onViewRow,
@@ -26,7 +26,7 @@ export default function StatusListTableRow({
   const { name, icon, color, slug, displayOrderNo, isActive, isDefault, createdAt } = row;
   return (
     <StyledTableRow hover selected={selected}>
-      <TableCell align="left" padding="checkbox"  >
+      <TableCell align="left" padding="checkbox" >
         <StyledTooltip
           placement="top" 
           title={ isActive ? ICONS.ACTIVE.heading : ICONS.INACTIVE.heading} 

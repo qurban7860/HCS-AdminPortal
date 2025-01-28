@@ -1,5 +1,6 @@
 import { useMemo, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import * as Yup from 'yup';
 // routes
 import { useNavigate, useParams } from 'react-router-dom';
 // form
@@ -12,10 +13,10 @@ import { Cover } from '../../../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../../../theme/styles/default-styles';
 import { PATH_SUPPORT } from '../../../../../routes/paths';
 import { useSnackbar } from '../../../../../components/snackbar';
-import { TicketCollectionSchema } from '../utils/constant';
 import AddFormButtons from '../../../../../components/DocumentForms/AddFormButtons';
-import FormProvider, { RHFTextField, RHFSwitch } from '../../../../../components/hook-form';
+import FormProvider, { RHFTextField, RHFSwitch, RHFAutocomplete } from '../../../../../components/hook-form';
 import { postTicketStatus, patchTicketStatus, getTicketStatus, resetTicketStatus } from '../../../../../redux/slices/ticket/ticketSettings/ticketStatuses';
+import { getTicketStatusTypes, resetTicketStatusTypes } from '../../../../../redux/slices/ticket/ticketSettings/ticketStatusTypes';
 import Iconify from '../../../../../components/iconify';
 import { handleError } from '../../../../../utils/errorHandler';
 
@@ -25,24 +26,47 @@ export default function StatusForm() {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const {  ticketStatus } = useSelector((state) => state.ticketStatuses);
+  const { ticketStatusTypes } = useSelector((state) => state.ticketStatusTypes);
   
+  const AddStatusSchema = Yup.object().shape({
+    name: Yup.string().min(2).max(50).required('Name is required!'),
+    statusType: Yup.object().nullable().required('Status Type is required!'),
+    icon: Yup.string().max(50).required('Icon is required!'),
+    description: Yup.string().max(5000),
+    isActive: Yup.boolean(),
+    isDefault: Yup.boolean(),
+    displayOrderNo: Yup.number()
+      .typeError('Display Order No. must be a number')
+      .nullable()
+      .transform((_, val) => (val !== '' ? Number(val) : null)),
+    slug: Yup.string().min(0).max(50).matches(/^(?!.*\s)[\S\s]{0,50}$/, 'Slug field cannot contain blankspaces'),
+  });
+  
+  useEffect(() => {
+    dispatch(getTicketStatusTypes());
+    return ()=> { 
+      dispatch(resetTicketStatusTypes());
+    }
+  }, [dispatch]);  
+
   const defaultValues = useMemo(
     () => ({
       name: id && ticketStatus?.name || '',
+      statusType: id && ticketStatus?.statusType || null,
       icon: id && ticketStatus?.icon || '',
       color: id && ticketStatus?.color || '',
       slug: id && ticketStatus?.slug || '',
       description: id && ticketStatus?.description || '',
       displayOrderNo: id && ticketStatus?.displayOrderNo || '',
       isDefault: id && ticketStatus?.isDefault || false,
-      isActive: id && ticketStatus?.isActive || true,
+      isActive: id ? ticketStatus?.isActive : true,
       createdAt: id && ticketStatus?.createdAt || '',
     }),
     [ id, ticketStatus ] 
   );
 
   const methods = useForm({
-    resolver: yupResolver(TicketCollectionSchema),
+    resolver: yupResolver(AddStatusSchema),
     defaultValues,
   });
 
@@ -100,7 +124,14 @@ export default function StatusForm() {
                 gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
               >
                 <RHFTextField name="name" label="Name*"/>
-                <RHFTextField name="slug" label="Slug" />
+                <RHFAutocomplete
+                  name="statusType"
+                  label="Status Type*"
+                  options={ticketStatusTypes || []}
+                  isOptionEqualToValue={(option, value) => option._id === value._id}
+                  getOptionLabel={(option) => `${option.name || ''}`}
+                  renderOption={(props, option) => (<li {...props} key={option?._id}> {option.name && option.name} </li> )}
+                />
                 <RHFTextField 
                   InputProps={{
                     endAdornment: (
@@ -121,22 +152,16 @@ export default function StatusForm() {
                   name="color" 
                   label="Color"
                 />
+                <RHFTextField name="slug" label="Slug" />
+                <RHFTextField name="displayOrderNo" label="Display Order No." />
               </Box>
               <RHFTextField name="description" label="Description" minRows={3} multiline />
-              <Box
-                rowGap={2}
-                columnGap={2}
-                display="grid"
-                gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
-              >
-                <RHFTextField name="displayOrderNo" label="Display Order No." />
                 <Grid display="flex" alignItems="center">
                   <RHFSwitch name="isDefault" label="Default" />
                   {id && (
                   <RHFSwitch name="isActive" label="Active" />
                   )}
                 </Grid>
-              </Box>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
             </Stack>
           </Card>

@@ -7,7 +7,7 @@ import { useParams } from 'react-router-dom';
 import { Cover } from '../../../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../../../theme/styles/default-styles';
 import ImpactViewForm from './ImpactViewForm';
-import { getTicketImpact } from '../../../../../redux/slices/ticket/ticketSettings/ticketImpacts';
+import { getTicketImpact, resetTicketImpact } from '../../../../../redux/slices/ticket/ticketSettings/ticketImpacts';
 
 // ----------------------------------------------------------------------
 
@@ -20,6 +20,7 @@ export default function ImpactView() {
     if(id){
       dispatch(getTicketImpact(id))
     }
+    return () => { resetTicketImpact() }
   },[dispatch, id ])
 
   return (

@@ -15,30 +15,30 @@ import { useSnackbar } from '../../../../../components/snackbar';
 import { TicketCollectionSchema } from '../utils/constant';
 import AddFormButtons from '../../../../../components/DocumentForms/AddFormButtons';
 import FormProvider, { RHFTextField, RHFSwitch } from '../../../../../components/hook-form';
-import { postTicketIssueType, patchTicketIssueType, getTicketIssueType, resetTicketIssueType } from '../../../../../redux/slices/ticket/ticketSettings/ticketIssueTypes';
+import { postTicketStatusType, patchTicketStatusType, getTicketStatusType, resetTicketStatusType } from '../../../../../redux/slices/ticket/ticketSettings/ticketStatusTypes';
 import Iconify from '../../../../../components/iconify';
 import { handleError } from '../../../../../utils/errorHandler';
 
-export default function IssueTypeForm() {
+export default function StatusTypeForm() {
   const navigate = useNavigate();
   const { id } = useParams();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
-  const { ticketIssueType } = useSelector((state) => state.ticketIssueTypes);
+  const { ticketStatusType } = useSelector((state) => state.ticketStatusTypes);
   
   const defaultValues = useMemo(
     () => ({
-      name: id && ticketIssueType?.name || '',
-      icon: id && ticketIssueType?.icon || '',
-      color: id && ticketIssueType?.color || '',
-      slug: id && ticketIssueType?.slug || '',
-      description: id && ticketIssueType?.description || '',
-      displayOrderNo: id && ticketIssueType?.displayOrderNo || '',
-      isDefault: id && ticketIssueType?.isDefault || false,
-      isActive: id ? ticketIssueType?.isActive : true,
-      createdAt: id && ticketIssueType?.createdAt || '',
+      name: id && ticketStatusType?.name || '',
+      icon: id && ticketStatusType?.icon || '',
+      color: id && ticketStatusType?.color || '',
+      slug: id && ticketStatusType?.slug || '',
+      description: id && ticketStatusType?.description || '',
+      displayOrderNo: id && ticketStatusType?.displayOrderNo || '',
+      isDefault: id && ticketStatusType?.isDefault || false,
+      isActive: id ? ticketStatusType?.isActive : true,
+      createdAt: id && ticketStatusType?.createdAt || '',
     }),
-    [ id, ticketIssueType ] 
+    [ id, ticketStatusType ] 
   );
 
   const methods = useForm({
@@ -61,32 +61,32 @@ export default function IssueTypeForm() {
   const onSubmit = async (data) => {
     try {
       if (id) { 
-        await dispatch(patchTicketIssueType(id, data)); 
-        dispatch(getTicketIssueType(id)); 
-        enqueueSnackbar('Issue Type Updated Successfully!');
-        navigate(PATH_SUPPORT.ticketSettings.issueTypes.view(id));
+        await dispatch(patchTicketStatusType(id, data)); 
+        dispatch(getTicketStatusType(id)); 
+        enqueueSnackbar('Status Type Updated Successfully!');
+        navigate(PATH_SUPPORT.ticketSettings.statusTypes.view(id));
       } else {
-        await dispatch(postTicketIssueType(data));
-        enqueueSnackbar('Issue Type Added Successfully!');
-        navigate(PATH_SUPPORT.ticketSettings.issueTypes.root);
+        await dispatch(postTicketStatusType(data));
+        enqueueSnackbar('Status Type Added Successfully!');
+        navigate(PATH_SUPPORT.ticketSettings.statusTypes.root);
       }
       reset();
-      dispatch(resetTicketIssueType());
+      dispatch(resetTicketStatusType());
     } catch (error) {
-      enqueueSnackbar( handleError( error ) || 'IssueType save failed!', { variant: 'error' });
+      enqueueSnackbar( handleError( error ) || 'StatusType save failed!', { variant: 'error' });
       console.error(error);
     }
   };  
   
   const toggleCancel = async () => {
-    dispatch(resetTicketIssueType())
-    await navigate(PATH_SUPPORT.ticketSettings.issueTypes.root);
+    dispatch(resetTicketStatusType())
+    await navigate(PATH_SUPPORT.ticketSettings.statusTypes.root);
   };
 
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
-        <Cover name={ticketIssueType?.name || 'New Issue Type'} />
+        <Cover name={ticketStatusType?.name || 'New Status Type'} />
       </StyledCardContainer>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={3}>

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { useNavigate, useParams } from 'react-router-dom';
 // @mui
-import { Card, Grid, useTheme } from '@mui/material';
+import { Card, Grid } from '@mui/material';
 // paths
 import { PATH_SUPPORT } from '../../../../../routes/paths';
 // components
@@ -14,7 +14,7 @@ import { deleteTicketChangeType, resetTicketChangeType } from '../../../../../re
 import ViewFormAudit from '../../../../../components/ViewForms/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../../../../../components/ViewForms/ViewFormEditDeleteButtons';
 import ViewFormField from '../../../../../components/ViewForms/ViewFormField';
-import ViewFormSwitch from '../../../../../components/ViewForms/ViewFormSwitch';
+import { handleError } from '../../../../../utils/errorHandler';
 
 // ----------------------------------------------------------------------
 
@@ -25,7 +25,6 @@ export default function ChangeTypeViewForm() {
   const { ticketChangeType, isLoading } = useSelector((state) => state.ticketChangeTypes);
   const { id } = useParams();
   const dispatch = useDispatch();
-  const theme = useTheme();
 
   const defaultValues = useMemo(
     () => ({
@@ -48,14 +47,13 @@ export default function ChangeTypeViewForm() {
     [ticketChangeType]
   );
 
-  const onArchive = () => {
+  const onArchive = async () => {
     try {
-      dispatch(deleteTicketChangeType(id, true));
+      await dispatch(deleteTicketChangeType(id, true));
       enqueueSnackbar('Change Type Archived Successfully!', { variant: 'success' });
       navigate(PATH_SUPPORT.ticketSettings.changeTypes.root);
-      dispatch(resetTicketChangeType());
     } catch (err) {
-      enqueueSnackbar('Change Type Archive failed!', { variant: `error` });
+      enqueueSnackbar( handleError( err ) || 'Change Type Archive failed!', { variant: `error` });
       console.log('Error:', err);
     }
   };

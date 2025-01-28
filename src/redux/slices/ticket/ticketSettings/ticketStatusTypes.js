@@ -5,8 +5,8 @@ import { CONFIG } from '../../../../config-global';
 
 // ----------------------------------------------------------------------
 const initialState = {
-  ticketStatus: null,
-  ticketStatuses: [],
+  ticketStatusType: null,
+  ticketStatusTypes: [],
   filterBy: '',
   page: 0,
   rowsPerPage: 100,
@@ -18,7 +18,7 @@ const initialState = {
 };
 
 const slice = createSlice({
-  name: 'ticketStatuses',
+  name: 'ticketStatusTypes',
   initialState,
   reducers: {
     // START LOADING
@@ -34,40 +34,40 @@ const slice = createSlice({
     },
 
     // GET Tickets Success
-    getTicketStatusesSuccess(state, action) {
+    getTicketStatusTypesSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.ticketStatuses = action.payload;
+      state.ticketStatusTypes = action.payload;
       state.initial = true;
     },
 
     // GET Ticket Success
-    getTicketStatusSuccess(state, action) {
+    getTicketStatusTypeSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.ticketStatus = action.payload;
+      state.ticketStatusType = action.payload;
       state.initial = true;
     },
 
     // POST Ticket Success
-    postTicketStatusSuccess(state, action) {
+    postTicketStatusTypeSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.ticketStatus = action.payload;
+      state.ticketStatusType = action.payload;
       state.responseMessage = 'Ticket created successfully';
     },
     
-    patchTicketStatusSuccess(state, action) {
+    patchTicketStatusTypeSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.ticketStatus = action.payload;
+      state.ticketStatusType = action.payload;
       state.responseMessage = 'Ticket updated successfully.';
     },
 
-    deleteTicketStatusSuccess(state, action) {
+    deleteTicketStatusTypeSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.ticketStatuses = state.ticketStatuses.filter((ticketStatus) => ticketStatus._id !== action.payload);
+      state.ticketStatusTypes = state.ticketStatusTypes.filter((ticketStatusType) => ticketStatusType._id !== action.payload);
       state.responseMessage = 'Ticket deleted successfully.';
     },
 
@@ -80,16 +80,16 @@ const slice = createSlice({
     },
 
     // RESET Ticket
-    resetTicketStatus(state) {
-      state.ticketStatus = null;
+    resetTicketStatusType(state) {
+      state.ticketStatusType = null;
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
     },
 
     // RESET Tickets
-    resetTicketStatuses(state) {
-      state.ticketStatuses = [];
+    resetTicketStatusTypes(state) {
+      state.ticketStatusTypes = [];
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
@@ -117,8 +117,8 @@ export default slice.reducer;
 
 // Actions
 export const {
-  resetTicketStatus,
-  resetTicketStatuses,
+  resetTicketStatusType,
+  resetTicketStatusTypes,
   setFilterBy,
   ChangeRowsPerPage,
   ChangePage,
@@ -127,23 +127,22 @@ export const {
 // ----------------------------------------------------------------------
 
 // POST Ticket
-export function postTicketStatus(params) {
+export function postTicketStatusType(params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
         const data = {
-          name: params.name,
-          statusType: params.statusType?._id || null,
-          icon: params.icon,
-          color: params.color,
-          slug: params.slug,
-          displayOrderNo: params.displayOrderNo,
-          description: params.description,
-          isDefault: params.isDefault,
-          isActive: params.isActive,
+            name: params.name,
+            icon: params.icon,
+            color: params.color,
+            slug: params.slug,
+            displayOrderNo: params.displayOrderNo,
+            description: params.description,
+            isDefault: params.isDefault,
+            isActive: params.isActive,
         };
-      const response = await axios.post(`${CONFIG.SERVER_URL}tickets/settings/statuses/`, data);
-      dispatch(slice.actions.postTicketStatusSuccess(response.data));
+      const response = await axios.post(`${CONFIG.SERVER_URL}tickets/settings/statusTypes/`, data);
+      dispatch(slice.actions.postTicketStatusTypeSuccess(response.data));
       return response;
     } catch (error) {
       dispatch(slice.actions.hasError(error.message));
@@ -154,13 +153,12 @@ export function postTicketStatus(params) {
 }
 
 // PATCH Ticket
-export function patchTicketStatus(id, params) {
+export function patchTicketStatusType(id, params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
         const data = {
           name: params.name,
-          statusType: params.statusType?._id || null,
           icon: params.icon,
           color: params.color,
           slug: params.slug,
@@ -169,8 +167,8 @@ export function patchTicketStatus(id, params) {
           isDefault: params.isDefault,
           isActive: params.isActive,
         };
-      const response = await axios.patch(`${CONFIG.SERVER_URL}tickets/settings/statuses/${id}`, data);
-      dispatch(slice.actions.patchTicketStatusSuccess(response.data)); 
+      const response = await axios.patch(`${CONFIG.SERVER_URL}tickets/settings/statusTypes/${id}`, data);
+      dispatch(slice.actions.patchTicketStatusTypeSuccess(response.data)); 
       return response;
     } catch (error) {
       dispatch(slice.actions.hasError(error.message));
@@ -181,18 +179,18 @@ export function patchTicketStatus(id, params) {
 }
 
 // GET Tickets
-export function getTicketStatuses(page, pageSize) {
+export function getTicketStatusTypes(page, pageSize) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const params = {
         orderBy: { createdAt: -1 },
         pagination: { page, pageSize },
-        isArchived: false
+        isArchived: false,
       };
 
-      const response = await axios.get(`${CONFIG.SERVER_URL}tickets/settings/statuses`, { params });
-      dispatch(slice.actions.getTicketStatusesSuccess(response.data));
+      const response = await axios.get(`${CONFIG.SERVER_URL}tickets/settings/statusTypes`, { params });
+      dispatch(slice.actions.getTicketStatusTypesSuccess(response.data));
       return response;
     } catch (error) {
       dispatch(slice.actions.hasError(error.message));
@@ -203,12 +201,12 @@ export function getTicketStatuses(page, pageSize) {
 }
 
 // GET Ticket
-export function getTicketStatus(id) {
+export function getTicketStatusType(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}tickets/settings/statuses/${id}`);
-      dispatch(slice.actions.getTicketStatusSuccess(response.data));
+      const response = await axios.get(`${CONFIG.SERVER_URL}tickets/settings/statusTypes/${id}`);
+      dispatch(slice.actions.getTicketStatusTypeSuccess(response.data));
       return response;
     } catch (error) {
       dispatch(slice.actions.hasError(error.message));
@@ -219,14 +217,13 @@ export function getTicketStatus(id) {
 }
 
 // Archive Ticket
-
-export function deleteTicketStatus(id, isArchived) {
+export function deleteTicketStatusType(id, isArchived) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const data = { isArchived }; 
-      const response = await axios.patch(`${CONFIG.SERVER_URL}tickets/settings/statuses/${id}`, data);
-      dispatch(slice.actions.deleteTicketStatusSuccess(response.data));
+      const response = await axios.patch(`${CONFIG.SERVER_URL}tickets/settings/statusTypes/${id}`, data);
+      dispatch(slice.actions.deleteTicketStatusTypeSuccess(response.data));
       return response;
     } catch (error) {
       dispatch(slice.actions.hasError(error.message));

@@ -6,29 +6,29 @@ import { useParams } from 'react-router-dom';
 // sections
 import { Cover } from '../../../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../../../theme/styles/default-styles';
-import InvestigationReasonViewForm from './InvestigationReasonViewForm';
-import { getTicketInvestigationReason, resetTicketInvestigationReason } from '../../../../../redux/slices/ticket/ticketSettings/ticketInvestigationReasons';
+import StatusTypeViewForm from './StatusTypeViewForm';
+import { getTicketStatusType, resetTicketStatusType } from '../../../../../redux/slices/ticket/ticketSettings/ticketStatusTypes';
 
 // ----------------------------------------------------------------------
 
-export default function InvestigationReasonView() {
+export default function StatusTypeView() {
   const { id } = useParams()
   const dispatch = useDispatch()
-  const { ticketInvestigationReason } = useSelector((state) => state.ticketInvestigationReasons);
+  const { ticketStatusType } = useSelector((state) => state.ticketStatusTypes);
 
   useLayoutEffect(()=>{
     if(id){
-      dispatch(getTicketInvestigationReason(id))
+      dispatch(getTicketStatusType(id))
     }
-    return () => { resetTicketInvestigationReason() }
+    return () => { resetTicketStatusType() }
   },[dispatch, id ])
 
   return (
     <Container maxWidth={false}>
     <StyledCardContainer>
-      <Cover name={ticketInvestigationReason?.name} />
+      <Cover name={ticketStatusType?.name} />
     </StyledCardContainer>
-    <InvestigationReasonViewForm />
+    <StatusTypeViewForm />
     </Container>
   );
 }
