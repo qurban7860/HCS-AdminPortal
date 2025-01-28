@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 // @mui
 import { TableCell } from '@mui/material';
 // utils
+import { useScreenSize } from '../../../hooks/useResponsive';
 import { fDate } from '../../../utils/formatTime';
 // components
 import LinkTableCell from '../../../components/ListTableTools/LinkTableCell';
@@ -26,6 +27,7 @@ MachineServiceReportListTableRow.propTypes = {
   onSelectRow: PropTypes.func,
   onDeleteRow: PropTypes.func,
   reportsPage: PropTypes.bool,
+  hiddenColumns: PropTypes.object,
 };
 
 
@@ -38,7 +40,8 @@ export default function MachineServiceReportListTableRow({
   onEditRow,
   onViewRow,
   openInNewPage,
-  reportsPage
+  reportsPage,
+  hiddenColumns,
 }) {
 
   const { serviceReportTemplate, serviceReportUID, status, currentApprovalStatus, customer, machine, serviceDate, isActive, createdBy } = row;
@@ -64,36 +67,52 @@ export default function MachineServiceReportListTableRow({
 
   return (
       <StyledTableRow hover selected={selected} >
-        <TableCell align="left" padding="checkbox"  >
-          <StyledTooltip
-            placement="top" 
-            title={ isActive ? ICONS.ACTIVE.heading : ICONS.INACTIVE.heading} 
-            disableFocusListener tooltipcolor={isActive ? ICONS.ACTIVE.color : ICONS.INACTIVE.color} 
-            color={ isActive ? ICONS.ACTIVE.color : ICONS.INACTIVE.color}
-          >
-            <Iconify icon={ isActive ? ICONS.ACTIVE.icon : ICONS.INACTIVE.icon }/>
-          </StyledTooltip>
-        </TableCell>
-        <TableCell>
-          { fDate(serviceDate) }
-        </TableCell>
-        <TableCell>
-          {serviceReportTemplate?.reportType || "" }
-        </TableCell>
-        <LinkTableCellWithIconTargetBlank align="left" onClick={ reportsPage ? openInNewPage : undefined } onViewRow={onViewRow} param={ serviceReportUID } />
-        { reportsPage && <LinkTableCell align="left" 
-          onClick={ (event)=> handleMachineDialog(event, machine?._id) } 
-          param={ machine?.serialNo || "" } 
-        />}
-        <LinkTableCell align="left" 
-          onClick={(event)=> handleCustomerDialog(event, customer?._id)} 
-          param={ customer?.name || "" } 
-        />
-        <TableCell align="left">{ `${currentApprovalStatus !== "PENDING" ? currentApprovalStatus : status?.name || ''} `}</TableCell>
-        <LinkTableCell align="left" 
-          onClick={(event)=> handleUserDialog(event, createdBy?._id || '')} 
-          param={ createdBy.name || "" } 
-        />
+        {useScreenSize('lg') && !hiddenColumns?.checkboxes && 
+          <TableCell align="left" padding="checkbox"  >
+            <StyledTooltip
+              placement="top" 
+              title={ isActive ? ICONS.ACTIVE.heading : ICONS.INACTIVE.heading} 
+              disableFocusListener tooltipcolor={isActive ? ICONS.ACTIVE.color : ICONS.INACTIVE.color} 
+              color={ isActive ? ICONS.ACTIVE.color : ICONS.INACTIVE.color}
+            >
+              <Iconify icon={ isActive ? ICONS.ACTIVE.icon : ICONS.INACTIVE.icon }/>
+            </StyledTooltip>
+          </TableCell>
+        }
+        {useScreenSize('lg') && !hiddenColumns?.serviceDate &&
+          <TableCell>
+            { fDate(serviceDate) }
+          </TableCell>
+        }
+        {useScreenSize('lg') && !hiddenColumns?.["serviceReportTemplate.reportType"] &&
+          <TableCell>
+            {serviceReportTemplate?.reportType || "" }
+          </TableCell>
+        }
+        {useScreenSize('lg') && !hiddenColumns?.serviceReportUID &&
+          <LinkTableCellWithIconTargetBlank align="left" onClick={ reportsPage ? openInNewPage : undefined } onViewRow={onViewRow} param={ serviceReportUID } />
+        }
+        {useScreenSize('lg') && reportsPage && !hiddenColumns?.["machine.serialNo"] &&
+          <LinkTableCell align="left" 
+            onClick={ (event)=> handleMachineDialog(event, machine?._id) } 
+            param={ machine?.serialNo || "" } 
+          />
+        }
+        {useScreenSize('lg') && !hiddenColumns?.["customer.name"] &&
+          <LinkTableCell align="left" 
+            onClick={(event)=> handleCustomerDialog(event, customer?._id)} 
+            param={ customer?.name || "" } 
+          />
+        }
+        {useScreenSize('lg') && !hiddenColumns?.["status.name"] &&
+          <TableCell align="left">{ `${currentApprovalStatus !== "PENDING" ? currentApprovalStatus : status?.name || ''} `}</TableCell>
+        }
+        {useScreenSize('lg') && !hiddenColumns?.["createdBy.name"] &&
+          <LinkTableCell align="left" 
+            onClick={(event)=> handleUserDialog(event, createdBy?._id || '')} 
+            param={ createdBy.name || "" } 
+          />
+        }
       </StyledTableRow>
 
   );

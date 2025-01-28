@@ -20,15 +20,16 @@ import {
   getComparator,
   TableNoData,
   TableSkeleton,
-  TableHeadCustom,
   TablePaginationCustom,
+  TablePaginationFilter,
+  TableHeadFilter,
 } from '../../../../components/table';
 import Scrollbar from '../../../../components/scrollbar';
 import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 // sections
 import CustomerContactListTableRow from './CustomerContactListTableRow';
 import CustomerContactListTableToolbar from './CustomerContactListTableToolbar';
-import { getCustomerContacts, resetCustomersContacts, ChangePage, ChangeRowsPerPage, setFilterBy, setCardActiveIndex, setIsExpanded } from '../../../../redux/slices/customer/contact';
+import { getCustomerContacts, resetCustomersContacts, ChangePage, ChangeRowsPerPage, setFilterBy, setCardActiveIndex, setIsExpanded, setReportHiddenColumns } from '../../../../redux/slices/customer/contact';
 import { Cover } from '../../../../components/Defaults/Cover';
 import TableCard from '../../../../components/ListTableTools/TableCard';
 import { fDate } from '../../../../utils/formatTime';
@@ -36,6 +37,7 @@ import { useSnackbar } from '../../../../components/snackbar';
 import { exportCSV } from '../../../../utils/exportCSV';
 import IconButtonTooltip from '../../../../components/Icons/IconButtonTooltip';
 import { ICONS } from '../../../../constants/icons/default-icons';
+import useResponsive from '../../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -59,9 +61,10 @@ export default function CustomerContactList({isCustomerContactPage = false, filt
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const { customersContacts, contacts, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.contact);
+  const { customersContacts, contacts, filterBy, page, rowsPerPage, isLoading, reportHiddenColumns } = useSelector((state) => state.contact);
   const [filterName, setFilterName] = useState(filterBy);
   const [exportingCSV, setExportingCSV] = useState(false);
+  const isMobile = useResponsive('down', 'sm');
   
   // ----------------------------------------------------------------------
 
@@ -161,6 +164,10 @@ export default function CustomerContactList({isCustomerContactPage = false, filt
     });
   };
 
+  const handleHiddenColumns = async (arg) => {
+    dispatch(setReportHiddenColumns(arg))
+  };
+
   return (
     <Container maxWidth={false}>
       {!isCustomerContactPage ? (
@@ -178,20 +185,36 @@ export default function CustomerContactList({isCustomerContactPage = false, filt
           onExportLoading={exportingCSV}
         />
 
-        {!isNotFound && <TablePaginationCustom
-          count={ ( isCustomerContactPage ? contacts : customersContacts )?.length || 0 }
-          page={page}
-          rowsPerPage={rowsPerPage}
-          onPageChange={onChangePage}
-          onRowsPerPageChange={onChangeRowsPerPage}
-        />}
+        {!isNotFound && !isMobile && (
+          <TablePaginationFilter
+            columns={TABLE_HEAD}
+            hiddenColumns={reportHiddenColumns}
+            handleHiddenColumns={handleHiddenColumns}
+            count={(isCustomerContactPage ? contacts : customersContacts)?.length || 0}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
+          />
+        )}
+
+        {!isNotFound && isMobile && (
+          <TablePaginationCustom
+            count={(isCustomerContactPage ? contacts : customersContacts)?.length || 0}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
+          />
+        )}
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
           <Scrollbar>
             <Table size="small" sx={{ minWidth: 360 }}>
-              <TableHeadCustom
+            <TableHeadFilter
                 order={order}
                 orderBy={orderBy}
                 headLabel={TABLE_HEAD}
+                hiddenColumns={reportHiddenColumns}
                 onSort={onSort}
               />
 
@@ -203,6 +226,7 @@ export default function CustomerContactList({isCustomerContactPage = false, filt
                       <CustomerContactListTableRow
                         key={row._id}
                         row={row}
+                        hiddenColumns={reportHiddenColumns}
                         selected={selected.includes(row._id)}
                         onSelectRow={() => onSelectRow(row._id)}
                         onViewRow={() => handleViewCustomer(row?.customer?._id)}
@@ -221,14 +245,6 @@ export default function CustomerContactList({isCustomerContactPage = false, filt
             </Table>
           </Scrollbar>
         </TableContainer>
-
-        {!isNotFound && <TablePaginationCustom
-          count={ ( isCustomerContactPage ? contacts : customersContacts )?.length || 0 }
-          page={page}
-          rowsPerPage={rowsPerPage}
-          onPageChange={onChangePage}
-          onRowsPerPageChange={onChangeRowsPerPage}
-        />}
       </TableCard>
     </Container>
   );

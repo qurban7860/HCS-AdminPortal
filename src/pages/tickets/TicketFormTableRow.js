@@ -11,6 +11,7 @@ import { StyledTableRow, StyledTooltip } from '../../theme/styles/default-styles
 import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
 import Iconify from '../../components/iconify';
 import LinkDialogTableCell from '../../components/ListTableTools/LinkDialogTableCell';
+import { useScreenSize } from '../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -20,6 +21,7 @@ TicketFormTableRow.propTypes = {
   onViewRow: PropTypes.func,
   onSelectRow: PropTypes.func,
   handleCustomerDialog:PropTypes.func,
+  hiddenColumns: PropTypes.object,
 };
 
 export default function TicketFormTableRow({
@@ -28,6 +30,7 @@ export default function TicketFormTableRow({
   onViewRow,
   onSelectRow,
   handleCustomerDialog,
+  hiddenColumns,
 }) {
   const dispatch = useDispatch();
   const { ticketNo, customer, machine, issueType, summary, priority, status, createdAt } = row;
@@ -40,39 +43,57 @@ export default function TicketFormTableRow({
   
   return (
     <StyledTableRow hover selected={selected}>
-      <TableCell align="left" padding="checkbox">
-        <Stack direction="row" alignItems="center" >
-        <StyledTooltip placement="top" title={issueType?.name || ''} 
-          tooltipcolor={issueType?.color} >
-          <Iconify icon={issueType?.icon} style={{ width: 25, height: 25,  color: issueType?.color }}  />
-        </StyledTooltip>
-        </Stack>
-      </TableCell>
-      <LinkTableCell align="left" onClick={() => onViewRow(ticketNo)} param={ticketNo || ''} />
-      <Stack direction="row" alignItems="center">
-        <LinkTableCell align="left" onClick={onViewRow} param={summary || ''} /> 
-      </Stack>
+      {useScreenSize('lg') && !hiddenColumns?.["issueType.name"] && (
+        <TableCell align="left" padding="checkbox">
+          <Stack direction="row" alignItems="center">
+            <StyledTooltip placement="top" title={issueType?.name || ''} tooltipcolor={issueType?.color}>
+              <Iconify icon={issueType?.icon} style={{ width: 25, height: 25, color: issueType?.color }} />
+            </StyledTooltip>
+          </Stack>
+        </TableCell>
+      )}
       
-      <LinkTableCell align="left" onClick={(event) => handleMachineDialog(event, row.machine?._id)} param={machine?.serialNo || ''} /> 
-      <TableCell align='left' > { machine?.machineModel?.name || ''} </TableCell>
-      <LinkDialogTableCell onClick={handleCustomerDialog} align='center' param={customer?.name || ''}/> 
-      <TableCell align="left" padding="checkbox">
-        <StyledTooltip 
-          placement="top" 
-          title={status?.name || ''} 
-          tooltipcolor={status?.color} >
-          <Iconify icon={status?.icon} style={{ width: 25, height: 25, color: status?.color }}  />
-        </StyledTooltip>
-      </TableCell>
-      <TableCell align="left" padding="checkbox">
-        <StyledTooltip 
-          placement="top" 
-          title={priority?.name || ''} 
-          tooltipcolor={priority?.color} >
-          <Iconify icon={priority?.icon} style={{ width: 25, height: 25, color: priority?.color }}  />
-        </StyledTooltip>
-      </TableCell>
-      <TableCell align='right' > { fDate(createdAt) } </TableCell>
+      {useScreenSize('lg') && !hiddenColumns?.ticketNo && (
+        <LinkTableCell align="left" onClick={() => onViewRow(ticketNo)} param={ticketNo || ''} />
+      )}
+
+      {useScreenSize('lg') && !hiddenColumns?.summary && (
+        <Stack direction="row" alignItems="center">
+          <LinkTableCell align="left" onClick={onViewRow} param={summary || ''} />
+        </Stack>
+      )}
+
+      {useScreenSize('lg') && !hiddenColumns?.["machine.serialNo"] && (
+        <LinkTableCell align="left" onClick={(event) => handleMachineDialog(event, row.machine?._id)} param={machine?.serialNo || ''} />
+      )}
+
+      {useScreenSize('lg') && !hiddenColumns?.["machine.machineModel.name"] && (
+        <TableCell align='left'>{machine?.machineModel?.name || ''}</TableCell>
+      )}
+
+      {useScreenSize('lg') && !hiddenColumns?.["customer.name"] && (
+        <LinkDialogTableCell onClick={handleCustomerDialog} align='center' param={customer?.name || ''} />
+      )}
+
+      {useScreenSize('lg') && !hiddenColumns?.["status.name"] && (
+        <TableCell align="left" padding="checkbox">
+          <StyledTooltip placement="top" title={status?.name || ''} tooltipcolor={status?.color}>
+            <Iconify icon={status?.icon} style={{ width: 25, height: 25, color: status?.color }} />
+          </StyledTooltip>
+        </TableCell>
+      )}
+
+      {useScreenSize('lg') && !hiddenColumns?.["priority.name"] && (
+        <TableCell align="left" padding="checkbox">
+          <StyledTooltip placement="top" title={priority?.name || ''} tooltipcolor={priority?.color}>
+            <Iconify icon={priority?.icon} style={{ width: 25, height: 25, color: priority?.color }} />
+          </StyledTooltip>
+        </TableCell>
+      )}
+
+      {useScreenSize('lg') && !hiddenColumns?.createdAt && (
+        <TableCell align='right'>{fDate(createdAt)}</TableCell>
+      )}
     </StyledTableRow>
   );
 }

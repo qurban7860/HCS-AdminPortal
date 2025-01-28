@@ -8,10 +8,10 @@ import {
 import { fDate } from '../../../../utils/formatTime';
 // components
 import LinkTableCellWithIconTargetBlank from '../../../../components/ListTableTools/LinkTableCellWithIconTargetBlank';
-import { useScreenSize } from '../../../../hooks/useResponsive';
 import { StyledTableRow } from '../../../../theme/styles/default-styles';
 import { TableAddressRow } from '../../../../components/table';
 import useLimitString from '../../../../hooks/useLimitString';
+import { useScreenSize } from '../../../../hooks/useResponsive';
 // ----------------------------------------------------------------------
 
 CustomerSiteListTableRow.propTypes = {
@@ -26,6 +26,7 @@ CustomerSiteListTableRow.propTypes = {
   onSelectRow: PropTypes.func,
   onDeleteRow: PropTypes.func,
   isCustomerSitePage: PropTypes.bool,
+  hiddenColumns: PropTypes.object,
 };
 
 export default function CustomerSiteListTableRow({
@@ -39,33 +40,53 @@ export default function CustomerSiteListTableRow({
   openInNewPage,
   handleSiteView,
   handleSiteViewInNewPage,
-  isCustomerSitePage
+  isCustomerSitePage,
+  hiddenColumns
 }) {
   const { _id, customer, name, email, phoneNumbers, address, lat, long,
     primaryBillingContact, primaryTechnicalContact, isActive, createdAt } = row;
   const phone = phoneNumbers[0];
   const limitedName = useLimitString(customer?.name, 35);
+  const isLargeScreen = useScreenSize('lg');
+  const isSmallScreen = useScreenSize('sm');
+
   return (
     <>
-      {useScreenSize('sm') && (
-        <StyledTableRow hover selected={selected}>
-          {!isCustomerSitePage && ( <TableCell>{ limitedName || ''}</TableCell>)}
+      <StyledTableRow hover selected={selected}>
+        {!isCustomerSitePage && isLargeScreen && !hiddenColumns?.["customer.name"] && (
+          <TableCell>{limitedName || ''}</TableCell>
+        )}
+        {isLargeScreen && !hiddenColumns?.name && (
           <LinkTableCellWithIconTargetBlank
             onViewRow={() => handleSiteView(customer?._id, _id)}
             onClick={() => handleSiteViewInNewPage(customer?._id, _id)}
             param={name || ''}
           />
+        )}
+        {isLargeScreen && !hiddenColumns?.["address.country"] && (
           <TableAddressRow address={address} lat={lat} long={long} />
+        )}
+        {isLargeScreen && !hiddenColumns?.phoneNumbers && (
           <TableCell>{phone?.countryCode ? `+${phone?.countryCode} ` : ''}{phone?.contactNumber}</TableCell>
+        )}
+        {isLargeScreen && !hiddenColumns?.email && (
           <TableCell>{email}</TableCell>
+        )}
+        {isLargeScreen && !hiddenColumns?.["primaryTechnicalContact.firstName"] && (
           <TableCell>{primaryTechnicalContact?.firstName || ''} {primaryTechnicalContact?.lastName || ''}</TableCell>
+        )}
+        {isLargeScreen && !hiddenColumns?.["primaryBillingContact.firstName"] && (
           <TableCell>{primaryBillingContact?.firstName || ''} {primaryBillingContact?.lastName || ''}</TableCell>
+        )}
+        {isLargeScreen && !hiddenColumns?.isActive && (
           <TableCell align='center'><Switch checked={isActive} disabled size="small" /></TableCell>
+        )}
+        {isLargeScreen && !hiddenColumns?.createdAt && (
           <TableCell align='right'>{fDate(createdAt)}</TableCell>
-        </StyledTableRow>
-      )}
+        )}
+      </StyledTableRow>
   
-      {!useScreenSize('sm') && (
+      {!isSmallScreen && (
           <StyledTableRow hover selected={selected} style={{ display: 'block' }} >
             <LinkTableCellWithIconTargetBlank 
               style={{ width: '100%', display: 'inline-block' }}

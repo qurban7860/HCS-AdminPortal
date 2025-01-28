@@ -16,6 +16,7 @@ import { StyledTableRow, StyledTooltip } from '../../../theme/styles/default-sty
 import CustomAvatar from '../../../components/custom-avatar/CustomAvatar';
 import EmailViewform from './EmailViewform'; // Assuming EmailViewform.js is in the same folder
 import { CONFIG } from '../../../config-global';
+import { useScreenSize } from '../../../hooks/useResponsive';
 
 
 
@@ -25,14 +26,16 @@ EmailListTableRow.propTypes = {
   row: PropTypes.object,
   selected: PropTypes.bool,
   onViewRow: PropTypes.func,
+  hiddenColumns: PropTypes.object,
 };
 
 export default function EmailListTableRow({
   row,
   selected,
   onViewRow,
+  hiddenColumns,
 }) {
-  const { subject, customer, toEmails, createdAt } = row;
+  const { subject, customer, toEmails, createdAt, fromEmail} = row;
 
   // State to manage the dialog visibility
   const [openDialog, setOpenDialog] = useState(false);
@@ -69,46 +72,55 @@ export default function EmailListTableRow({
         hover
         selected={selected}
       >
-        <TableCell align='left' sx={{ maxWidth: '200px' }}>
-          {Array.isArray(toEmails) && toEmails.length > 1 ? (
-            <StyledTooltip
-              title={toEmails.slice(1).join(', ')}
-              placement="top"
-              tooltipcolor="#2065D1"
-            >
-              <span>{toEmails[0]} ,...</span>
-            </StyledTooltip>
-          ) : (
-            toEmails?.[0] || ''
-          )}
-        </TableCell>
-        <Stack direction="row" alignItems="center">
-          <CustomAvatar
-            name={subject}
-            alt={subject}
-            sx={{ ml: 1, my: 0.5, width: '30px', height: '30px' }}
-          />
-          <TableCell 
-            align='left' 
-            sx={{ 
-              maxWidth: '400px', 
-              fontWeight: 'bold',
-              cursor: 'pointer',
-              '&:hover': {
-                textDecoration: 'underline'
-              }
-            }}
-            onClick={() => handleOpenDialog(row?._id)}
-          >
-            {subject || ''}
+        {useScreenSize('lg') && !hiddenColumns?.toEmails && 
+          <TableCell align='left'>
+            {Array.isArray(toEmails) && toEmails.length > 1 ? (
+              <StyledTooltip
+                title={toEmails.slice(1).join(', ')}
+                placement="top"
+                tooltipcolor="#2065D1"
+              >
+                <span>{toEmails[0]} ,...</span>
+              </StyledTooltip>
+            ) : (
+              toEmails?.[0] || ''
+            )}
           </TableCell>
-        </Stack>
-        <TableCell align='left' sx={{ maxWidth: '200px' }}>
-          {customer?.name || ''}
-        </TableCell>
-        <TableCell align='right' sx={{ maxWidth: '200px' }}>
-          {fDateTime(createdAt)}
-        </TableCell>
+        }
+        {useScreenSize('lg') && !hiddenColumns?.fromEmail &&
+          <TableCell align='left'>
+            {fromEmail || ''}
+          </TableCell>
+        }
+        {useScreenSize('lg') && !hiddenColumns?.subject &&
+          <Stack direction="row" alignItems="center">
+            <CustomAvatar
+              name={subject}
+              alt={subject}
+              sx={{ ml: 1, my: 0.5, width: '30px', height: '30px' }}
+            />
+            <TableCell 
+              align='left' 
+              sx={{ 
+                fontWeight: 'bold',
+                cursor: 'pointer',
+              }}
+              onClick={() => handleOpenDialog(row?._id)}
+            >
+              {subject || ''}
+            </TableCell>
+          </Stack>
+        }
+        {useScreenSize('lg') && !hiddenColumns?.["customer.name"] &&
+          <TableCell align='left' >
+            {customer?.name || ''}
+          </TableCell>
+        }
+        {useScreenSize('lg') && !hiddenColumns?.createdAt &&
+          <TableCell align='right'>
+            {fDateTime(createdAt)}
+          </TableCell>
+        }
       </StyledTableRow>
       {/* Dialog to show EmailViewform */}
       <Dialog open={openDialog} onClose={handleCloseDialog} fullWidth maxWidth="md">

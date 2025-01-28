@@ -13,10 +13,12 @@ import {
   getComparator,
   TableNoData,
   TableSkeleton,
-  TableHeadCustom,
   TablePaginationCustom,
+  TablePaginationFilter,
+  TableHeadFilter,
 } from '../../../components/table';
 import Scrollbar from '../../../components/scrollbar';
+import useResponsive from '../../../hooks/useResponsive';
 // sections
 import EmailListTableRow from './EmailListTableRow';
 import EmailListTableToolbar from './EmailListTableToolbar';
@@ -25,7 +27,8 @@ import {
   resetEmails,
   ChangeRowsPerPage,
   ChangePage,
-  setFilterBy
+  setFilterBy,
+  setReportHiddenColumns,
 } from '../../../redux/slices/email/emails';
 import { fDateTime } from '../../../utils/formatTime';
 import TableCard from '../../../components/ListTableTools/TableCard';
@@ -37,6 +40,7 @@ import { StyledCardContainer } from '../../../theme/styles/default-styles';
 
 const TABLE_HEAD = [
   { id: 'toEmails', label: 'To', align: 'left', },
+  { id: 'fromEmail', label: 'From', align: 'left', },
   { id: 'subject', label: 'Subject', align: 'left', },
   { id: 'customer.name', label: 'Customer', align: 'left', },
   { id: 'createdAt', label: 'Created At', align: 'right', },
@@ -45,7 +49,7 @@ const TABLE_HEAD = [
 // ----------------------------------------------------------------------
 
 export default function EmailList() {
-  const { initial, emails, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.emails);
+  const { initial, emails, filterBy, page, rowsPerPage, isLoading, reportHiddenColumns } = useSelector((state) => state.emails);
 
   const navigate = useNavigate();
   const { machineId } = useParams();
@@ -66,6 +70,8 @@ export default function EmailList() {
   const dispatch = useDispatch();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
+
+  const isMobile = useResponsive('down', 'sm');
 
   useLayoutEffect(() => {
     dispatch(getEmails(page, rowsPerPage));
@@ -117,6 +123,10 @@ export default function EmailList() {
     setFilterName('');
   };
 
+  const handleHiddenColumns = async (arg) => {
+    dispatch(setReportHiddenColumns(arg))
+   };
+
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
@@ -130,7 +140,20 @@ export default function EmailList() {
           onResetFilter={handleResetFilter}
         />
 
-        {!isNotFound && (
+        {!isNotFound && !isMobile && (
+          <TablePaginationFilter
+            columns={TABLE_HEAD}
+            hiddenColumns={reportHiddenColumns}
+            handleHiddenColumns={handleHiddenColumns}
+            count={emails?.totalCount || 0}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
+          />
+        )}
+
+        {!isNotFound && isMobile && (
           <TablePaginationCustom
             count={emails?.totalCount || 0}
             page={page}
@@ -143,19 +166,23 @@ export default function EmailList() {
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
           <Scrollbar>
             <Table size="small" sx={{ minWidth: 360 }}>
-              <TableHeadCustom
+            <TableHeadFilter
                 order={order}
                 orderBy={orderBy}
                 headLabel={TABLE_HEAD}
+                hiddenColumns={reportHiddenColumns}
                 onSort={onSort}
               />
+
               <TableBody>
-                {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
+              {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) =>
                     row ? (
                       <EmailListTableRow
                         key={row._id}
                         row={row}
+                        hiddenColumns={reportHiddenColumns}
                         onViewRow={() => handleViewRow(row._id)}
                         selected={selected.includes(row._id)}
                         selectedLength={selected.length}

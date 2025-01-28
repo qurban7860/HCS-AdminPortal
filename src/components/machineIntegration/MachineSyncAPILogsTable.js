@@ -23,6 +23,7 @@ import {
   TableNoData,
   TableSkeleton,
   TablePaginationCustom,
+  TableHeadFilter,
 } from '../table';
 import {
   getApiLogs,
@@ -78,7 +79,12 @@ const tableColumns = [
     id: 'additionalContextualInformation',
     label: 'Description',
     width: 200,
-  }
+  },
+  {
+    id: 'environment',
+    label: 'Environment',
+    width: 150,
+  },
 ];
 
 const MachineSyncAPILogsTable = ({
@@ -206,32 +212,12 @@ const MachineSyncAPILogsTable = ({
             <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
               <Scrollbar>
                 <Table stickyHeader size="small" sx={{ minWidth: 360 }}>
-                  <TableHead>
-                    <TableRow>
-                      {dataSorted.length > 0 &&
-                        tableColumns?.map((headCell, index) => (
-                          <TableCell
-                            key={headCell.id}
-                            align="left"
-                            sortDirection={orderBy === headCell.id ? order : false}
-                            sx={{ width: headCell.width, minWidth: headCell.minWidth }}
-                          >
-                            {onSort ? (
-                              <TableSortLabel
-                                hideSortIcon
-                                active={orderBy === headCell.id}
-                                direction={orderBy === headCell.id ? order : 'asc'}
-                                onClick={() => onSort(headCell.id)}
-                              >
-                                {headCell.label}
-                              </TableSortLabel>
-                            ) : (
-                              headCell.label
-                            )}
-                          </TableCell>
-                        ))}
-                    </TableRow>
-                  </TableHead>
+                  <TableHeadFilter
+                    order={order}
+                    orderBy={orderBy}
+                    headLabel={tableColumns}
+                    onSort={onSort}
+                  />
                   <TableBody>
                     {(isLoading ? [...Array(rowsPerPage)] : dataSorted).map((row, index) =>
                       row ? (

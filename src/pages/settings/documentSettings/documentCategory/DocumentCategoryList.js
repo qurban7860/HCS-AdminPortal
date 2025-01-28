@@ -21,9 +21,10 @@ import {
   getComparator,
   TableNoData,
   TableSkeleton,
-  TableHeadCustom,
   TableSelectedAction,
   TablePaginationCustom,
+  TablePaginationFilter,
+  TableHeadFilter,
 } from '../../../../components/table';
 import Iconify from '../../../../components/iconify';
 import Scrollbar from '../../../../components/scrollbar';
@@ -36,12 +37,14 @@ import {
   getDocumentCategories,
   ChangeRowsPerPage,
   ChangePage,
-  setFilterBy
+  setFilterBy,
+  setReportHiddenColumns,
 } from '../../../../redux/slices/document/documentCategory';
 import { Cover } from '../../../../components/Defaults/Cover';
 import { fDate } from '../../../../utils/formatTime';
 import TableCard from '../../../../components/ListTableTools/TableCard';
 import { StyledCardContainer } from '../../../../theme/styles/default-styles';
+import useResponsive from '../../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -89,9 +92,11 @@ export default function DocumentCategoryList() {
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
-  const { documentCategories, filterBy, page, rowsPerPage, isLoading, initial } = useSelector(
+  const { documentCategories, filterBy, page, rowsPerPage, isLoading, initial, reportHiddenColumns } = useSelector(
     (state) => state.documentCategory
   );
+
+  const isMobile = useResponsive('down', 'sm');
 
   useLayoutEffect(() => {
     dispatch(getDocumentCategories());
@@ -193,6 +198,10 @@ export default function DocumentCategoryList() {
     setFilterName('');
   };
 
+  const handleHiddenColumns = async (arg) => {
+    dispatch(setReportHiddenColumns(arg));
+  };
+
   return (
     <>
       <Container maxWidth={false}>
@@ -208,13 +217,30 @@ export default function DocumentCategoryList() {
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
           />
-          {!isNotFound && <TablePaginationCustom
-            count={dataFiltered.length}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-          />}
+
+          {!isNotFound && !isMobile && (
+            <TablePaginationFilter
+              columns={TABLE_HEAD}
+              hiddenColumns={reportHiddenColumns}
+              handleHiddenColumns={handleHiddenColumns}
+              count={dataFiltered.length}
+              page={page}
+              rowsPerPage={rowsPerPage}
+              onPageChange={onChangePage}
+              onRowsPerPageChange={onChangeRowsPerPage}
+            />
+          )}
+
+          {!isNotFound && isMobile && (
+            <TablePaginationCustom
+              count={dataFiltered.length}
+              page={page}
+              rowsPerPage={rowsPerPage}
+              onPageChange={onChangePage}
+              onRowsPerPageChange={onChangeRowsPerPage}
+            />
+          )}
+
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <TableSelectedAction
               numSelected={selected.length}
@@ -236,10 +262,11 @@ export default function DocumentCategoryList() {
 
             <Scrollbar>
               <Table size="small" sx={{ minWidth: 360 }}>
-                <TableHeadCustom
+                <TableHeadFilter
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
+                  hiddenColumns={reportHiddenColumns}
                   onSort={onSort}
                 />
 
@@ -251,6 +278,7 @@ export default function DocumentCategoryList() {
                         <DocumentCategoryListTableRow
                           key={row._id}
                           row={row}
+                          hiddenColumns={reportHiddenColumns}
                           selected={selected.includes(row._id)}
                           onSelectRow={() => onSelectRow(row._id)}
                           onDeleteRow={() => handleDeleteRow(row._id)}
@@ -268,14 +296,6 @@ export default function DocumentCategoryList() {
               </Table>
             </Scrollbar>
           </TableContainer>
-
-          {!isNotFound && <TablePaginationCustom
-            count={dataFiltered.length}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-          />}
         </TableCard>
       </Container>
 

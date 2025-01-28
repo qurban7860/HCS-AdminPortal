@@ -14,6 +14,17 @@ const initialState = {
   error: null,
   isLoading: false,
   isLoadingTicketFile: false,
+  reportHiddenColumns: {
+    "issueType.name": false,
+    "ticketNo": false,
+    "summary": false,
+    "machine.serialNo": false,
+    "machine.machineModel.name": false,
+    "customer.name": false,
+    "status.name": false,
+    "priority.name": false,
+    "createdAt": false,
+  },
 };
 
 const slice = createSlice({
@@ -136,6 +147,10 @@ const slice = createSlice({
     ChangePage(state, action) {
       state.page = action.payload;
     },
+
+    setReportHiddenColumns(state, action) {
+      state.reportHiddenColumns = action.payload;
+    },
   },
 });
 
@@ -149,6 +164,7 @@ export const {
   setFilterBy,
   ChangeRowsPerPage,
   ChangePage,
+  setReportHiddenColumns,
 } = slice.actions;
 
 // ----------------------------------------------------------------------
