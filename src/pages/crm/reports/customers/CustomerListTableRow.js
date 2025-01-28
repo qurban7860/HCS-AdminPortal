@@ -71,7 +71,7 @@ export default function CustomerListTableRow({
       
       {!hiddenColumns?.['groupCustomer.name'] && <LinkTableCell align="left" onClick={onViewGroupCustomer} param={groupCustomer?.name} />}
       {/* {!hiddenColumns?.customerGroup && <TableCell align="center">{groupCustomer?.name || ''}</TableCell>} */}
-      { smScreen && !hiddenColumns?.['mainSite.address.country'] && <TableCell>
+      { smScreen && !hiddenColumns?.address && <TableCell>
         {Object.values(address ?? {}).reverse()
           .map((value) => (typeof value === 'string' ? value.trim() : ''))
           .filter((value) => value !== '')
