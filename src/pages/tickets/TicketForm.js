@@ -14,28 +14,16 @@ import { StyledCardContainer } from '../../theme/styles/default-styles';
 import { PATH_SUPPORT } from '../../routes/paths';
 import { useSnackbar } from '../../components/snackbar';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
-import { AddTicketSchema } from '../schemas/ticketSchema';
-import FormProvider, { RHFTextField, RHFUpload, RHFAutocomplete, RHFDatePicker, RHFSwitch } from '../../components/hook-form';
-import { getTicket, postTicket, patchTicket, resetTicket, getTicketSettings, resetTicketSettings } from '../../redux/slices/ticket/tickets';
+import { ticketSchema } from '../schemas/ticketSchema';
+import FormProvider, { RHFTextField, RHFUpload, RHFAutocomplete, RHFDatePicker, RHFTimePicker, RHFSwitch } from '../../components/hook-form';
+import { getTicket, postTicket, patchTicket, resetTicket, deleteFile, getTicketSettings, resetTicketSettings } from '../../redux/slices/ticket/tickets';
 import { getActiveCustomerMachines, resetActiveCustomerMachines } from '../../redux/slices/products/machine';
-import { getActiveCustomers } from '../../redux/slices/customer/customer';
+import { getActiveCustomers, resetActiveCustomers } from '../../redux/slices/customer/customer';
 import FormLabel from '../../components/DocumentForms/FormLabel';
 import { FORMLABELS } from '../../constants/default-constants';
 import { manipulateFiles } from '../documents/util/Util';
-import { time_list } from '../../constants/time-list';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 
-function getTimeObjectFromISOString(dateString) {
-  const date = new Date(dateString);
-  const hours = date.getHours();
-  const minutes = date.getMinutes();
-  const formattedValueTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
-  const ampm = hours >= 12 ? 'PM' : 'AM';
-  const formattedHours = hours % 12 || 12;
-  const formattedTime = `${formattedHours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
-  const timeObject = {value: formattedValueTime, label: `${formattedTime} ${ampm}`};
-  return timeObject;
-}
 
 export default function TicketForm() {
   const navigate = useNavigate();
@@ -45,6 +33,19 @@ export default function TicketForm() {
   const { activeCustomerMachines } = useSelector((state) => state.machine);
   const { activeCustomers } = useSelector((state) => state.customer);
   const { ticket, ticketSettings } = useSelector((state) => state.tickets);
+
+  useEffect(() => {
+    if( id )
+      dispatch(getTicket( id ));
+    dispatch(resetActiveCustomers());
+    dispatch(getActiveCustomers());
+    dispatch(getTicketSettings());
+    return ()=> { 
+      dispatch(resetTicketSettings());
+      dispatch(resetActiveCustomerMachines());
+      dispatch(resetActiveCustomers());
+    }
+  }, [ dispatch, id ]); 
 
   const defaultValues = useMemo(
     () => ({
@@ -67,53 +68,26 @@ export default function TicketForm() {
       workaround: id && ticket?.workaround || '',
       shareWith: id && ticket?.shareWith || false,
       isActive: id && ticket?.isActive || true,
-      plannedStartDate: id && ticket?.plannedStartDate
-        ? getTimeObjectFromISOString(ticket.plannedStartDate)
-        : getTimeObjectFromISOString(new Date().toISOString()),
-      plannedEndDate: id && ticket?.plannedEndDate
-        ? getTimeObjectFromISOString(ticket.plannedEndDate)
-        : getTimeObjectFromISOString(new Date().toISOString()),
-        dateFrom: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
-        dateTo: new Date().toISOString(),
+      plannedStartDate: new Date(),
+      plannedEndDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
     }),
     [ id, ticket ] 
   );
 
   const methods = useForm({
-    resolver: yupResolver(AddTicketSchema),
+    resolver: yupResolver(ticketSchema( !id && 'new' || '' )),
     defaultValues,
+    mode: 'onChange',
+    reValidateMode: 'onChange'
   });
   
   const { reset, setError, handleSubmit, watch, setValue, trigger, formState: { isSubmitting }} = methods;
 
-  const { issueType, customer, files, dateFrom, dateTo } = watch();
-  
-  useEffect(() => {
-    dispatch(getActiveCustomers());
-    dispatch(getTicketSettings());
-    return ()=> { 
-      dispatch(resetTicketSettings());
-    }
-  }, [dispatch]);  
-  
-  useEffect(() => {
-    if (customer) {
-      dispatch(getActiveCustomerMachines(customer._id));
-    } else {
-      dispatch(resetActiveCustomerMachines());
-    }
-  }, [dispatch, customer]);
+  const { issueType, customer, files, plannedStartDate, plannedEndDate } = watch();
 
-  const handleCustomerChange = useCallback((newCustomer) => {
-      setValue('customer', newCustomer);
-      setValue('machine', null);
-      trigger(['customer', 'machine']);
-  }, [setValue, trigger]);
-  
-  const handleMachineChange = useCallback((newMachine) => {
-      setValue('machine', newMachine);
-      trigger('machine');
-  }, [setValue, trigger]);
+  useEffect(() => {
+    trigger([ "plannedStartDate", "plannedEndDate" ]);
+  },[ trigger, plannedStartDate, plannedEndDate ])
 
   const hashFilesMD5 = async (_files) => {
       const hashPromises = _files.map((file) => new Promise((resolve, reject) => {
@@ -160,27 +134,26 @@ export default function TicketForm() {
       try{
         setValue('files', files?.filter((el) => ( inputFile?._id ? el?._id !== inputFile?._id : el !== inputFile )), { shouldValidate: true } )
         if( inputFile?._id ){
-          // dispatch(deleteTicketFile( inputFile?.ticket, inputFile?._id))
+          dispatch(deleteFile( inputFile?.ticket, inputFile?._id))
         }
       } catch(e){
         console.error(e)
       }
-    }, [ setValue, files ] );
+    }, [ setValue, files, dispatch ] );
   
   const onSubmit = async (data) => {
     try {
+      let ticketData;
       if (id) {
         await dispatch(patchTicket(id, data));
-        dispatch(getTicket(id));
         enqueueSnackbar('Ticket Updated Successfully!', { variant: 'success' });
-        navigate(PATH_SUPPORT.supportTickets.view(id));
       } else { 
-        await dispatch(postTicket(data));
+        ticketData = await dispatch(postTicket(data));
+        console.log(" ticketData : ",ticketData)
         enqueueSnackbar('Ticket Added Successfully!', { variant: 'success' });
-        navigate(PATH_SUPPORT.supportTickets.root);
       }
       reset();
-      dispatch(resetTicket());
+      navigate(PATH_SUPPORT.supportTickets.view( id && id || ticketData?.data?._id ));
     } catch (err) {
       if (err?.errors && Array.isArray(err?.errors)) {
         err?.errors?.forEach((error) => {
@@ -238,37 +211,41 @@ export default function TicketForm() {
                         {option?.name || ''}{' '}
                       </li>
                     )}
-                    onChange={(e, newValue) => handleCustomerChange(newValue)}
+                    onChange={(event, newValue) =>{
+                      if(newValue && newValue?._id !== customer?._id ){
+                          setValue('customer',newValue)
+                          dispatch(getActiveCustomerMachines(newValue?._id))
+                        } else {
+                          setValue('customer',null )
+                          dispatch(resetActiveCustomerMachines())
+                        }
+                      }
+                    }
                   />
                   <RHFAutocomplete
                     name="machine"
-                    label="Machine"
-                    options={activeCustomerMachines || []}
-                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    label="Machine*"
+                    options={ activeCustomerMachines || [] }
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) =>
-                      `${option.serialNo || ''} ${option?.name ? '-' : ''} ${option?.name || ''}`
+                      `${option?.serialNo || ''} ${option?.name ? '-' : ''} ${option?.name || ''}`
                     }
                     renderOption={(props, option) => (
-                      <li {...props} key={option?._id}>{`${option.serialNo || ''} ${
-                        option?.name ? '-' : ''
-                      } ${option?.name || ''}`}</li>
+                      <li {...props} key={option?._id} >
+                        {`${option?.serialNo || ''} ${ option?.name && '-' } ${option?.name || '' }`}
+                      </li>
                     )}
-                    onChange={(e, newValue) => handleMachineChange(newValue)}
                   />
                   </>
                   )}
                 </Box>
                   <RHFAutocomplete
                     name="issueType"
-                    label="Issue Type"
+                    label="Issue Type*"
                     options={ticketSettings?.issueTypes || []}
                     isOptionEqualToValue={(option, value) => option._id === value._id}
                     getOptionLabel={(option) => `${option.name || ''}`}
                     renderOption={(props, option) => (<li {...props} key={option?._id}> {option.name || ''} </li> )}
-                    onChange={(e, newValue) => {
-                      setValue('issueType', newValue);
-                      trigger('issueType')
-                    }}
                   />
                 </Stack>
               </Card>
@@ -335,7 +312,7 @@ export default function TicketForm() {
                     renderOption={(props, option) => (<li {...props} key={option?._id}> {option.name && option.name} </li> )}
                   />
                   </Box>
-                  {issueType?.name === 'Change Request' && (
+                  {issueType?.name?.trim()?.toLowerCase() === 'change request' && (
                   <>
                   <Box
                   rowGap={2}
@@ -365,7 +342,7 @@ export default function TicketForm() {
                   <RHFTextField name="testPlan" label="Test Plan" minRows={4} multiline />
                   </>
                 )}
-                 {issueType?.name === 'Service Request' && (
+                 {issueType?.name?.trim()?.toLowerCase() === 'service request' && (
                     <>
                    <RHFAutocomplete
                     name="investigationReason"
@@ -380,50 +357,31 @@ export default function TicketForm() {
                   </>
                 )}
                 </Box>
-                {issueType?.name === 'Change Request' && (
+                {issueType?.name?.trim()?.toLowerCase() === 'change request' && (
                 <Box
                   rowGap={2}
                   columnGap={2}
                   display="grid"
-                  gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(4, 1fr)' }}
+                  gridTemplateColumns={{ sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }}
                 >
                   <RHFDatePicker
                     label="Planned Start Date"
-                    name="dateFrom"
-                    value={dateFrom}
-                    onChange={(newValue) => {
-                      setValue('dateFrom', newValue);
-                      trigger(['dateFrom', 'dateTo']);
-                    }}
+                    name="plannedStartDate"
                   />
-                  <RHFAutocomplete
+
+                  <RHFTimePicker
                     label="Planned Start Time"
                     name="plannedStartDate"
-                    options={time_list}
-                    isOptionEqualToValue={(option, value) => option?.value === value?.value}
-                    getOptionLabel={(option) => `${option?.label || ''}`}
-                    renderOption={(props, option) => (
-                      <li {...props} key={option?._id}>{`${option?.label || ''}`}</li>
-                    )}
                   />
+
                   <RHFDatePicker
                     label="Planned End Date"
-                    name="dateTo"
-                    value={dateTo}
-                    onChange={(newValue) => {
-                      setValue('dateTo', newValue);
-                      trigger(['dateFrom', 'dateTo']);
-                    }}
-                  />
-                  <RHFAutocomplete
-                    label="Planned End Time"
                     name="plannedEndDate"
-                    options={time_list}
-                    isOptionEqualToValue={(option, value) => option?.value === value?.value}
-                    getOptionLabel={(option) => `${option?.label || ''}`}
-                    renderOption={(props, option) => (
-                      <li {...props} key={option?._id}>{`${option?.label || ''}`}</li>
-                    )}
+                  />
+
+                  <RHFTimePicker
+                    label="Planned Start Time"
+                    name="plannedEndDate"
                   />
                 </Box>
                 )}
