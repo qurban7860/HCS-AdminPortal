@@ -54,6 +54,21 @@ export default function PriorityForm() {
     } = methods;
   
     const { icon, color } = watch()
+    
+    useEffect(()=>{
+      if(id){
+        dispatch(getTicketPriority(id));
+      }
+      return () => { 
+        dispatch(resetTicketPriority());
+      }
+    },[dispatch, id ])
+    
+    useEffect(() => {
+      if (id && ticketPriority) {
+        reset(defaultValues);
+      }
+    }, [id, ticketPriority, defaultValues, reset]);
 
     useEffect(() => {
     }, [color]);
@@ -62,7 +77,6 @@ export default function PriorityForm() {
     try {
       if (id) { 
         await dispatch(patchTicketPriority(id, data)); 
-        dispatch(getTicketPriority(id)); 
         enqueueSnackbar('Priority Updated Successfully!');
         navigate(PATH_SUPPORT.ticketSettings.priorities.view(id));
       } else {
@@ -71,7 +85,6 @@ export default function PriorityForm() {
         navigate(PATH_SUPPORT.ticketSettings.priorities.root);
       }
       reset();
-      dispatch(resetTicketPriority());
     } catch (error) {
       enqueueSnackbar( handleError( error ) || 'Priority save failed!', { variant: 'error' });
       console.error(error);

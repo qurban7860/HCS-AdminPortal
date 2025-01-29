@@ -54,6 +54,21 @@ export default function IssueTypeForm() {
   } = methods;
   
   const { icon, color } = watch();
+  
+  useEffect(()=>{
+    if(id){
+      dispatch(getTicketIssueType(id));
+    }
+    return () => { 
+      dispatch(resetTicketIssueType());
+    }
+  },[dispatch, id ])
+  
+  useEffect(() => {
+    if (id && ticketIssueType) {
+      reset(defaultValues);
+    }
+  }, [id, ticketIssueType, defaultValues, reset]);
 
   useEffect(() => {
   }, [color]);
@@ -62,7 +77,6 @@ export default function IssueTypeForm() {
     try {
       if (id) { 
         await dispatch(patchTicketIssueType(id, data)); 
-        dispatch(getTicketIssueType(id)); 
         enqueueSnackbar('Issue Type Updated Successfully!');
         navigate(PATH_SUPPORT.ticketSettings.issueTypes.view(id));
       } else {
@@ -71,7 +85,6 @@ export default function IssueTypeForm() {
         navigate(PATH_SUPPORT.ticketSettings.issueTypes.root);
       }
       reset();
-      dispatch(resetTicketIssueType());
     } catch (error) {
       enqueueSnackbar( handleError( error ) || 'IssueType save failed!', { variant: 'error' });
       console.error(error);
