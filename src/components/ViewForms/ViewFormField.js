@@ -103,6 +103,7 @@ function ViewFormField({
             alignItems: 'center',
             whiteSpace: 'pre-line',
             wordBreak: 'break-word',
+            width: '100%',
           }}
         >
         <IconPopover isActive={isActive} />
@@ -132,7 +133,7 @@ function ViewFormField({
             typeof secondParam === 'string' &&
             secondParam.trim().length > 0 &&
             '  '}
-              <Grid container >
+              <Grid container sx={{ width: "100%" }} >
                  {param && typeof param !== 'string' && param}
               </Grid>
           {secondParam &&
