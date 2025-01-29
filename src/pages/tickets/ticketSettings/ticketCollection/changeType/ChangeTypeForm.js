@@ -51,18 +51,32 @@ export default function ChangeTypeForm() {
     handleSubmit, 
     watch,
      formState: { isSubmitting }
-    } = methods;
+  } = methods;
   
-    const { icon, color } = watch()
+  const { icon, color } = watch()
+  
+  useEffect(()=>{
+    if(id){
+      dispatch(getTicketChangeType(id));
+    }
+    return () => { 
+      dispatch(resetTicketChangeType());
+    }
+  },[dispatch, id ])
+  
+  useEffect(() => {
+    if (id && ticketChangeType) {
+      reset(defaultValues);
+    }
+  }, [id, ticketChangeType, defaultValues, reset]);
 
-    useEffect(() => {
-    }, [color]);
+  useEffect(() => {
+  }, [color]);
 
   const onSubmit = async (data) => {
     try {
       if (id) { 
         await dispatch(patchTicketChangeType(id, data)); 
-        dispatch(getTicketChangeType(id)); 
         enqueueSnackbar('Change Type Updated Successfully!');
         navigate(PATH_SUPPORT.ticketSettings.changeTypes.view(id));
       } else {
@@ -71,7 +85,6 @@ export default function ChangeTypeForm() {
         navigate(PATH_SUPPORT.ticketSettings.changeTypes.root);
       }
       reset();
-      dispatch(resetTicketChangeType());
     } catch (error) {
       enqueueSnackbar( handleError( error ) || 'ChangeType save failed!', { variant: 'error' });
       console.error(error);

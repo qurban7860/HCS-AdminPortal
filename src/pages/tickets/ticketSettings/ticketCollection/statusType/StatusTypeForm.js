@@ -54,7 +54,22 @@ export default function StatusTypeForm() {
   } = methods;
   
   const { icon, color } = watch();
-
+  
+  useEffect(()=>{
+    if(id){
+      dispatch(getTicketStatusType(id));
+    }
+    return () => { 
+      dispatch(resetTicketStatusType());
+    }
+  },[dispatch, id ])
+  
+  useEffect(() => {
+    if (id && ticketStatusType) {
+      reset(defaultValues);
+    }
+  }, [id, ticketStatusType, defaultValues, reset]);
+  
   useEffect(() => {
   }, [color]);
 
@@ -62,7 +77,6 @@ export default function StatusTypeForm() {
     try {
       if (id) { 
         await dispatch(patchTicketStatusType(id, data)); 
-        dispatch(getTicketStatusType(id)); 
         enqueueSnackbar('Status Type Updated Successfully!');
         navigate(PATH_SUPPORT.ticketSettings.statusTypes.view(id));
       } else {
@@ -71,7 +85,6 @@ export default function StatusTypeForm() {
         navigate(PATH_SUPPORT.ticketSettings.statusTypes.root);
       }
       reset();
-      dispatch(resetTicketStatusType());
     } catch (error) {
       enqueueSnackbar( handleError( error ) || 'StatusType save failed!', { variant: 'error' });
       console.error(error);
