@@ -16,7 +16,7 @@ import { useSnackbar } from '../../../../../components/snackbar';
 import AddFormButtons from '../../../../../components/DocumentForms/AddFormButtons';
 import FormProvider, { RHFTextField, RHFSwitch, RHFAutocomplete } from '../../../../../components/hook-form';
 import { postTicketStatus, patchTicketStatus, getTicketStatus, resetTicketStatus } from '../../../../../redux/slices/ticket/ticketSettings/ticketStatuses';
-import { getTicketStatusTypes, resetTicketStatusTypes } from '../../../../../redux/slices/ticket/ticketSettings/ticketStatusTypes';
+import { getActiveTicketStatusTypes, resetActiveTicketStatusTypes } from '../../../../../redux/slices/ticket/ticketSettings/ticketStatusTypes';
 import Iconify from '../../../../../components/iconify';
 import { handleError } from '../../../../../utils/errorHandler';
 
@@ -26,7 +26,7 @@ export default function StatusForm() {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const {  ticketStatus } = useSelector((state) => state.ticketStatuses);
-  const { ticketStatusTypes } = useSelector((state) => state.ticketStatusTypes);
+  const { activeTicketStatusTypes } = useSelector((state) => state.ticketStatusTypes);
   
   const AddStatusSchema = Yup.object().shape({
     name: Yup.string().min(2).max(50).required('Name is required!'),
@@ -43,9 +43,9 @@ export default function StatusForm() {
   });
   
   useEffect(() => {
-    dispatch(getTicketStatusTypes());
+    dispatch(getActiveTicketStatusTypes());
     return ()=> { 
-      dispatch(resetTicketStatusTypes());
+      dispatch(resetActiveTicketStatusTypes());
     }
   }, [dispatch]);  
 
@@ -127,7 +127,7 @@ export default function StatusForm() {
                 <RHFAutocomplete
                   name="statusType"
                   label="Status Type*"
-                  options={ticketStatusTypes || []}
+                  options={activeTicketStatusTypes || []}
                   isOptionEqualToValue={(option, value) => option._id === value._id}
                   getOptionLabel={(option) => `${option.name || ''}`}
                   renderOption={(props, option) => (<li {...props} key={option?._id}> {option.name && option.name} </li> )}
