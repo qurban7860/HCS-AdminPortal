@@ -198,6 +198,7 @@ function applyFilter({ inputData, comparator, filterName }) {
       (status) =>
         status?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         status?.slug?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        status?.displayOrderNo?.toString().toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         fDate(status?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }

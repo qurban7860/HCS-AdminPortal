@@ -18,9 +18,11 @@ export default function IssueTypeView() {
 
   useLayoutEffect(()=>{
     if(id){
-      dispatch(getTicketIssueType(id))
+      dispatch(getTicketIssueType(id));
     }
-    return () => { resetTicketIssueType() }
+    return () => { 
+      dispatch(resetTicketIssueType());
+    }
   },[dispatch, id ])
 
   return (
