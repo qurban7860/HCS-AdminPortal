@@ -4,25 +4,22 @@ import * as Yup from 'yup';
     const isNewRequest = reqType === 'new';
     return Yup.object().shape({
 
-        customer: Yup.object().label('Customer')
+        customer: Yup.object().label('Customer').nullable()
         .when([], {
             is: () => isNewRequest,
             then: (schema) => schema.required(),
-            otherwise: (schema) => schema.nullable().notRequired(),
         }), 
 
-        machine: Yup.object().label('Machine')
+        machine: Yup.object().label('Machine').nullable()
         .when([], {
             is: () => isNewRequest,
             then: (schema) => schema.required(),
-            otherwise: (schema) => schema.nullable().notRequired(),
         }), 
 
-        issueType: Yup.object().label('Issue Type')
+        issueType: Yup.object().label('Issue Type').nullable()
         .when([], {
             is: () => isNewRequest,
             then: (schema) => schema.required(),
-            otherwise: (schema) => schema.nullable().notRequired(),
         }), 
 
         reporter: Yup.object().nullable().label('Reporter'),
@@ -47,15 +44,15 @@ import * as Yup from 'yup';
         workaround: Yup.string().label('Work Around').trim().max(10000).nullable(),
 
         plannedStartDate: Yup.date().label("Planned Start Date").nullable()
-        .test('dateFromTest', 'Start Date must be earlier than End Date', function (value) {
-          const { dateTo } = this.parent;
-          return value && (!dateTo || value < dateTo);
+        .test('plannedStartDate', 'Start Date must be earlier than End Date', ( value, context ) => {
+          const { plannedEndDate } = context.parent;
+          return value && (!plannedEndDate || value < plannedEndDate);
         }),
 
         plannedEndDate: Yup.date().label("Planned End Date").nullable()
-        .test('dateToTest', 'End Date must be later than Start Date', function (value) {
-          const { dateFrom } = this.parent;
-          return value && (!dateFrom || value > dateFrom);
+        .test('plannedEndDate', 'End Date must be later than Start Date', ( value, context ) => {
+          const { plannedStartDate } = context.parent;
+          return value && (!plannedStartDate || value > plannedStartDate);
         }),
 
         shareWith: Yup.boolean().label("Share With"),
