@@ -18,9 +18,11 @@ export default function PriorityView() {
 
   useLayoutEffect(()=>{
     if(id){
-      dispatch(getTicketPriority(id))
+      dispatch(getTicketPriority(id));
     }
-    return () => { resetTicketPriority() }
+    return () => { 
+      dispatch(resetTicketPriority());
+    }
   },[dispatch, id ])
 
   return (

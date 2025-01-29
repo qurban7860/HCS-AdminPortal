@@ -18,9 +18,11 @@ export default function ImpactView() {
 
   useLayoutEffect(()=>{
     if(id){
-      dispatch(getTicketImpact(id))
+      dispatch(getTicketImpact(id));
     }
-    return () => { resetTicketImpact() }
+    return () => { 
+      dispatch(resetTicketImpact());
+    }
   },[dispatch, id ])
 
   return (

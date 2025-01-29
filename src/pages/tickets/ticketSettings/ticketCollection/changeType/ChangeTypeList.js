@@ -195,10 +195,11 @@ function applyFilter({ inputData, comparator, filterName }) {
 
   if (filterName) {
     inputData = inputData.filter(
-      (issueType) =>
-        issueType?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        issueType?.slug?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        fDate(issueType?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+      (changeType) =>
+        changeType?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        changeType?.slug?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        changeType?.displayOrderNo?.toString().toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        fDate(changeType?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }
   return inputData;

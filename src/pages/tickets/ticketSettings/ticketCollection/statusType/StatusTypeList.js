@@ -195,10 +195,11 @@ function applyFilter({ inputData, comparator, filterName }) {
 
   if (filterName) {
     inputData = inputData.filter(
-      (StatusType) =>
-        StatusType?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        StatusType?.slug?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        fDate(StatusType?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+      (statusType) =>
+        statusType?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        statusType?.slug?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        statusType?.displayOrderNo?.toString().toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        fDate(statusType?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }
   return inputData;
