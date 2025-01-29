@@ -8,8 +8,8 @@ import SearchBarCombo from '../../components/ListTableTools/SearchBarCombo';
 // routes
 import { PATH_SUPPORT } from '../../routes/paths';
 // constants
-import { getTicketStatuses, resetTicketStatuses } from '../../redux/slices/ticket/ticketSettings/ticketStatuses';
-import { getTicketStatusTypes, resetTicketStatusTypes } from '../../redux/slices/ticket/ticketSettings/ticketStatusTypes';
+import { getActiveTicketStatuses, resetActiveTicketStatuses } from '../../redux/slices/ticket/ticketSettings/ticketStatuses';
+import { getActiveTicketStatusTypes, resetActiveTicketStatusTypes } from '../../redux/slices/ticket/ticketSettings/ticketStatusTypes';
 import { BUTTONS } from '../../constants/default-constants';
 import { options } from '../../theme/styles/default-styles';
 
@@ -39,15 +39,15 @@ export default function TicketFormTableToolbar({
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { ticketStatuses } = useSelector((state) => state.ticketStatuses);
-  const { ticketStatusTypes } = useSelector((state) => state.ticketStatusTypes);
+  const { activeTicketStatuses } = useSelector((state) => state.ticketStatuses);
+  const { activeTicketStatusTypes } = useSelector((state) => state.ticketStatusTypes);
 
   useEffect(() => {
-    dispatch(getTicketStatuses());
-    dispatch(getTicketStatusTypes());
+    dispatch(getActiveTicketStatuses());
+    dispatch(getActiveTicketStatusTypes());
     return () => {
-      dispatch(resetTicketStatuses());
-      dispatch(resetTicketStatusTypes());
+      dispatch(resetActiveTicketStatuses());
+      dispatch(resetActiveTicketStatusTypes());
     };
   }, [dispatch]);
 
@@ -68,7 +68,7 @@ export default function TicketFormTableToolbar({
                 value={filterStatus || null}
                 name="status"
                 sx={{ width: 300 }}
-                options={ticketStatuses}
+                options={activeTicketStatuses}
                 isOptionEqualToValue={(option, value) => option?._id === value?._id}
                 getOptionLabel={(option) => option?.name}
                 renderInput={(params) => <TextField {...params} size='small' label="Status" />}
@@ -85,7 +85,7 @@ export default function TicketFormTableToolbar({
                 value={filterStatusType || null}
                 name="statusType"
                 sx={{ width: 300 }}
-                options={ticketStatusTypes}
+                options={activeTicketStatusTypes}
                 isOptionEqualToValue={(option, value) => option?._id === value?._id}
                 getOptionLabel={(option) => option?.name}
                 renderInput={(params) => <TextField {...params} size='small' label="Status Type" />}
