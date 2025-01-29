@@ -50,7 +50,7 @@ const TABLE_HEAD = [
   { id: 'email', label: 'Email', align: 'left', },
   { id: 'phoneNumber', label: 'Phone Number', align: 'left', },
   { id: 'address', label: 'Address', align: 'left', },
-  { id: 'customerName', label: 'organization', align: 'left', },
+  { id: 'customerName', label: 'Organization', align: 'left', },
   { id: 'machineSerialNos', label: 'Machines', align: 'left', },
   { id: 'status', label: 'Status', align: 'left' },
   { id: 'customer.name', label: 'Customer', align: 'left' },
