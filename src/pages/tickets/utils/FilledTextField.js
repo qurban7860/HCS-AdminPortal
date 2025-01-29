@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
 import { Box, Button, Stack } from '@mui/material';
@@ -6,26 +6,47 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
+import { ticketSchema } from '../../schemas/ticketSchema';
 import FormProvider, { RHFTextField } from '../../../components/hook-form';
 
+FilledTextField.propTypes = {
+  name: PropTypes.string,
+  label: PropTypes.string,
+  value: PropTypes.any,
+  onSubmit: PropTypes.func,
+  minRows: PropTypes.number,
+};
 
-function FilledTextField( name, label, value, onSubmit ) {
+function FilledTextField( { name, label, value, onSubmit, minRows } ) {
+
+      const defaultValues = useMemo(
+        () => ({
+          [name]: value || "",
+        }),[ value, name ]);
 
       const methods = useForm({
-        resolver: yupResolver(AddTicketSchema),
-        value,
+        // resolver: yupResolver( ticketSchema ),
+        defaultValues,
       });
-
       const { handleSubmit, reset, formState: { isSubmitting, isDirty }} = methods;
 
+      const handleFormSubmit = handleSubmit( async (data) => {
+        try{
+          await onSubmit( name, data[name] );
+          await reset({ [name]: data[name] }, { keepDirty: false });
+        } catch( error ){
+          console.error(error);
+        }
+      });
   return (
-    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)} >
     <Box sx={{ position: "relative", width: "100%" }} >
+      <FormProvider methods={methods} onSubmit={handleFormSubmit} sx={{ width: "100%" }} >
         <RHFTextField
             name={name} 
             label={label}
-            value={value}
-            multiline
+            defaultValue={value}
+            multiline={name !== "summary"}
+            minRows={ minRows || 1 }
             variant="filled"
             fullWidth
             sx={{ 
@@ -77,8 +98,8 @@ function FilledTextField( name, label, value, onSubmit ) {
                 <ClearRoundedIcon/>
             </Button>
         </Stack>}
+      </FormProvider>
     </Box>
-    </FormProvider>
   )
 }
 

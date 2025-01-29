@@ -284,7 +284,7 @@ export function updateTicketField(id, name, value) {
     // dispatch(slice.actions.startLoading());
     try {
       const data = {
-        [name]: value,  
+        [name]: value?._id || value,  
       };
       const response = await axios.patch(`${CONFIG.SERVER_URL}tickets/${id}`, data);
 
