@@ -149,7 +149,6 @@ export default function TicketForm() {
         enqueueSnackbar('Ticket Updated Successfully!', { variant: 'success' });
       } else { 
         ticketData = await dispatch(postTicket(data));
-        console.log(" ticketData : ",ticketData)
         enqueueSnackbar('Ticket Added Successfully!', { variant: 'success' });
       }
       reset();
