@@ -228,7 +228,7 @@ export default function TicketViewForm() {
               navigate(PATH_SUPPORT.supportTickets.root);
             }}
             shareWith={defaultValues.shareWith}
-            handleEdit={handleEdit}
+            // handleEdit={handleEdit}
             onArchive={onArchive}
           />
           <Grid container >
@@ -349,7 +349,7 @@ export default function TicketViewForm() {
             {ticket?.issueType?.name === 'Change Request' && (
               <>
                 <ViewFormField isLoading={isLoading} sm={4} heading="Change Type"
-                  node={<DropDownField name="changeType" value={ticket?.reporter} options={ticketSettings?.changeTypes} onSubmit={onSubmit}  />} 
+                  node={<DropDownField name="changeType" value={ticket?.changeType} options={ticketSettings?.changeTypes} onSubmit={onSubmit}  />} 
                 />
                 <ViewFormField isLoading={isLoading} sm={4} heading="Change Reason" 
                   node={<DropDownField name="changeReason" value={ticket?.changeReason} options={ticketSettings?.changeReasons} onSubmit={onSubmit} />} 

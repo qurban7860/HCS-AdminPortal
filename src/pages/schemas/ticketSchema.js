@@ -35,7 +35,7 @@ import * as Yup from 'yup';
         hlc: Yup.string().label('HLC').trim().max(500).nullable(),
         plc: Yup.string().label('PLC').trim().max(500).nullable(),
         description: Yup.string().label('Description').trim().max(10000).nullable(),
-        summary: Yup.string().label('Summary').trim().max(150).nullable(),
+        summary: Yup.string().label('Summary').trim().max(200).nullable(),
         implementationPlan: Yup.string().label('Implementation Plan').trim().max(10000).nullable(),
         backoutPlan: Yup.string().label('Backout Plan').trim().max(10000).nullable(),
         testPlan: Yup.string().label('Test Plan').trim().max(10000).nullable(),
