@@ -63,12 +63,14 @@ export default function TicketFormTableToolbar({
         onChange={onFilterName}
         onClick={onResetFilter}
         node={
-          <Stack direction="row" spacing={1}>
+          <Stack direction="row" spacing={1} sx={{ flexShrink: 0, display: 'flex' }}>
               <Autocomplete
-                value={filterStatus || null}
+                value={filterStatus || []}
                 name="status"
-                sx={{ width: 300 }}
+                sx={{ minWidth: { sm: 400 } }}
                 options={activeTicketStatuses}
+                multiple
+                disableCloseOnSelect
                 isOptionEqualToValue={(option, value) => option?._id === value?._id}
                 getOptionLabel={(option) => option?.name}
                 renderInput={(params) => <TextField {...params} size='small' label="Status" />}
@@ -84,7 +86,7 @@ export default function TicketFormTableToolbar({
               <Autocomplete
                 value={filterStatusType || null}
                 name="statusType"
-                sx={{ width: 300 }}
+                sx={{ minWidth: { sm: 200 } }}
                 options={activeTicketStatusTypes}
                 isOptionEqualToValue={(option, value) => option?._id === value?._id}
                 getOptionLabel={(option) => option?.name}
