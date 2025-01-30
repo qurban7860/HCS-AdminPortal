@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -65,6 +65,10 @@ export default function DropDownField( { value, name, label, options = [], isLoa
   const { handleSubmit, setValue, reset, watch, formState: { isSubmitting }} = methods;
   const watchedValue = watch( name );
 
+  useEffect(() => {
+    reset({ [name]: value || "" }, { keepDirty: false });
+  }, [value, name, reset]);
+
   const handleClick = (event) => setAnchorEl(event.currentTarget);
   const handleClose = () => setAnchorEl(null);
 
@@ -113,7 +117,7 @@ export default function DropDownField( { value, name, label, options = [], isLoa
           { watchedValue?.name || `Select ${label || ""}` }
         </Button>
         </Box>
-        <StyledMenu
+        { Array.isArray( options ) && options?.length > 0 && <StyledMenu
           anchorEl={anchorEl}
           open={open}
           onClose={handleClose}
@@ -142,7 +146,7 @@ export default function DropDownField( { value, name, label, options = [], isLoa
                 <Iconify icon={p.icon} size="40px" sx={{ mr: 1 }}/> { p?.name || ""}
               </MenuItem>
           )}
-        </StyledMenu>
+        </StyledMenu>}
         { value?._id !== watchedValue?._id && 
         <Stack 
         direction="row" 
