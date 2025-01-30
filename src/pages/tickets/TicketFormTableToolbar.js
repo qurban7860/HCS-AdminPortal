@@ -70,6 +70,7 @@ export default function TicketFormTableToolbar({
                 sx={{ minWidth: { sm: 400 } }}
                 options={activeTicketStatuses}
                 multiple
+                disableCloseOnSelect
                 isOptionEqualToValue={(option, value) => option?._id === value?._id}
                 getOptionLabel={(option) => option?.name}
                 renderInput={(params) => <TextField {...params} size='small' label="Status" />}
