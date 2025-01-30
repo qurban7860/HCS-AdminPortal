@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useEffect } from 'react'
 import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
 import { Box, Button, Stack } from '@mui/material';
@@ -30,6 +30,10 @@ function FilledTextField( { name, label, value, onSubmit, minRows } ) {
       });
       const { handleSubmit, reset, formState: { isSubmitting, isDirty }} = methods;
 
+      useEffect(() => {
+        reset({ [name]: value || "" }, { keepDirty: false });
+      }, [value, name, reset]);
+      
       const handleFormSubmit = handleSubmit( async (data) => {
         try{
           await onSubmit( name, data[name] );
