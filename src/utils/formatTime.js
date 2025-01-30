@@ -29,6 +29,13 @@ export function fDate(date, newFormat) {
     return date
 }
 
+export function fTime(date, newFormat = 'hh:mm a') {
+  if (isValid(new Date(date))) {
+    return format(new Date(date), newFormat);
+  }
+  return date;
+}
+
 export function GetDifferenceInDays( definedDay ) {
   const today = new Date();
     

@@ -1,16 +1,10 @@
 import PropTypes from 'prop-types';
-import { useState, useMemo, useEffect } from 'react';
+import { useState } from 'react';
 import { styled } from '@mui/material/styles';
 import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, Button, Menu, MenuItem, Typography, Stack } from '@mui/material';
-import { LoadingButton } from '@mui/lab';
-import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
-import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
+import { Box, Button, Menu, MenuItem } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { ticketSchema } from '../../schemas/ticketSchema';
 import Iconify from '../../../components/iconify';
-import FormProvider from '../../../components/hook-form';
 
 const StyledMenu = styled((props) => (
   <Menu
@@ -51,45 +45,24 @@ DropDownField.propTypes = {
 export default function DropDownField( { value, name, label, options = [], isLoading, onSubmit } ) {
   const [ anchorEl, setAnchorEl ] = useState(null);
   const open = Boolean(anchorEl);
-
-    const defaultValues = useMemo(
-      () => ({
-        [name]: value || null,
-      }),[ value, name ]);
-      
-  const methods = useForm({
-    // resolver: yupResolver( ticketSchema ),
-    defaultValues,
-  });
   
-  const { handleSubmit, setValue, reset, watch, formState: { isSubmitting }} = methods;
-  const watchedValue = watch( name );
-
-  useEffect(() => {
-    reset({ [name]: value || "" }, { keepDirty: false });
-  }, [value, name, reset]);
+  const methods = useForm({ });
+  const { handleSubmit, formState: { isSubmitting }} = methods;
 
   const handleClick = (event) => setAnchorEl(event.currentTarget);
   const handleClose = () => setAnchorEl(null);
 
-  const handleMenuItemClick = (iVal) => {
-      setValue(name,iVal)
-      handleClose();
-  };
-
-  const handleFormSubmit = handleSubmit( async (data) => {
+  const handleMenuItemClick = async ( data ) => {
     try{
-      await onSubmit( name, data[name] || null );
-      await reset({ [name]: data[name] }, { keepDirty: false });
+      await onSubmit( name, data );
+      handleClose();
     } catch(e){
       console.log(e);
     }
-  });
+  };
 
   return (
-    <Box sx={{ position: "relative", width: "100%" }} >
-        <FormProvider methods={methods} onSubmit={handleFormSubmit} >
-        <Box sx={{ width: "100%" }} >
+    <Box >
         <Button
           aria-controls={open ? 'demo-customized-menu' : undefined}
           aria-haspopup="true"
@@ -97,26 +70,28 @@ export default function DropDownField( { value, name, label, options = [], isLoa
           variant="contained"
           disableElevation
           onClick={handleClick}
-          color={ !watchedValue?.color && "inherit" || undefined }
-          startIcon={ watchedValue?.icon && <Iconify icon={ watchedValue?.icon } /> }
+          color={ !value?.color && "inherit" || undefined }
+          startIcon={ value?.icon && <Iconify icon={ value?.icon } /> }
           endIcon={
             (
-              ( Array.isArray( options ) && 
-              options?.length > 0 && 
-              <KeyboardArrowDownIcon /> )
+              ( isSubmitting ? 
+                <Iconify icon="eos-icons:loading" /> : 
+                ( Array.isArray( options ) && options?.length > 0 && 
+                  <KeyboardArrowDownIcon />
+                ) 
+              )
             )
           }
-          disabled={ isSubmitting }
+          // disabled={ isSubmitting }
           sx={{ 
-            backgroundColor: watchedValue?.color || "",
+            backgroundColor: value?.color || "",
             '&:hover': {
-              backgroundColor: watchedValue?.color,
+              backgroundColor: value?.color,
             },
           }}
         >
-          { watchedValue?.name || `Select ${label || ""}` }
+          { value?.name || `Select ${label || ""}` }
         </Button>
-        </Box>
         { Array.isArray( options ) && options?.length > 0 && <StyledMenu
           anchorEl={anchorEl}
           open={open}
@@ -132,12 +107,13 @@ export default function DropDownField( { value, name, label, options = [], isLoa
               <MenuItem 
                 key={p?._id}
                 size="small"
-                color={ value?.color || "inherit" }
-                onClick={() => handleMenuItemClick(p) }
-                // disabled={ value?._id === p?._id } 
+                onClick={() => handleSubmit(handleMenuItemClick(p)) }
+                disabled={ value?._id === p?._id } 
                 selected={ value?._id === p?._id } 
+                color={ !p?.color && "inherit" || "#fff" }
                 sx={{
                   backgroundColor: p.color ,
+                  // color: p?.color && '#fff',
                   '&:hover': {
                     backgroundColor: p?.color,
                   },
@@ -147,38 +123,6 @@ export default function DropDownField( { value, name, label, options = [], isLoa
               </MenuItem>
           )}
         </StyledMenu>}
-        { value?._id !== watchedValue?._id && 
-        <Stack 
-        direction="row" 
-        spacing={1} 
-        sx={{
-            position: 'absolute',
-            bottom: -53, 
-            right: 0,   
-            transform: 'translateY(-50%)',
-        }}
-    >
-          <LoadingButton
-              variant="contained"
-              color="primary"
-              size="small"
-              type="submit"
-              disabled={ isSubmitting }
-              loading={isSubmitting}
-              sx={{minWidth: 32, padding: '2px', height: 32}}
-          >
-              <CheckRoundedIcon/>
-          </LoadingButton>
-          <Button
-              variant="outlined"
-              size="small"
-              onClick={() => reset()}
-              sx={{minWidth: 32, padding: '2px', height: 32}}
-          >
-              <ClearRoundedIcon/>
-          </Button>
-        </Stack>}
-      </FormProvider>
     </Box>
   );
 }

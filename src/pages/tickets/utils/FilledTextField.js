@@ -48,7 +48,6 @@ function FilledTextField( { name, label, value, onSubmit, minRows } ) {
         <RHFTextField
             name={name} 
             label={label}
-            defaultValue={value}
             multiline={name !== "summary"}
             minRows={ minRows || 1 }
             variant="filled"
