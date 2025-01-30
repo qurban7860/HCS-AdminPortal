@@ -220,7 +220,8 @@ export function postTicket(params) {
       formData.append('isActive', params?.isActive );
       formData.append('rootCause', params?.rootCause || '');
       formData.append('workaround', params?.workaround || '');
-
+      formData.append('plannedStartDate', params?.plannedStartDate || '');
+      formData.append('plannedEndDate', params?.plannedEndDate || '');
       (params?.files || []).forEach((file, index) => {
         formData.append(`images`, file);
       });
@@ -262,7 +263,8 @@ export function patchTicket(id, params) {
       formData.append('isActive', params?.isActive );
       formData.append('rootCause', params?.rootCause || '');
       formData.append('workaround', params?.workaround || '');
-
+      formData.append('plannedStartDate', params?.plannedStartDate || '');
+      formData.append('plannedEndDate', params?.plannedEndDate || '');
       (params?.files || []).forEach((file, index) => {
         formData.append(`images`, file);
       });

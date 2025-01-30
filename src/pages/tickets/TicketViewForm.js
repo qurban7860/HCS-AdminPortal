@@ -28,11 +28,13 @@ import SkeletonPDF from '../../components/skeleton/SkeletonPDF';
 import DialogTicketAddFile from '../../components/Dialog/DialogTicketAddFile';
 import DropDownField from './utils/DropDownField';
 import FilledTextField from './utils/FilledTextField';
+import { getCustomerContacts, getActiveSPContacts, resetCustomersContacts, resetActiveSPContacts } from '../../redux/slices/customer/contact';
 
 
 
 export default function TicketViewForm() {
   const { ticket, ticketSettings, isLoading } = useSelector((state) => state.tickets);
+  const { customersContacts, activeSpContacts } = useSelector((state) => state.contact);
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -42,10 +44,49 @@ export default function TicketViewForm() {
   const [ selectedImage, setSelectedImage ] = useState(-1);
   const [ fileDialog, setFileDialog ] = useState( false );
   const [ slides, setSlides ] = useState([]);
+  const [ approvers, setApprovers ] = useState([]);
  
   const configurations = JSON.parse(localStorage.getItem('configurations'));
   const prefix = configurations?.find((config) => config?.name?.toLowerCase() === 'ticket_prefix')?.value || '';
- 
+
+  useEffect(() => { 
+    dispatch(getCustomerContacts( ticket?.customer?._id ));
+    dispatch(getActiveSPContacts());
+    return () => {
+      dispatch(resetCustomersContacts());
+      dispatch(resetActiveSPContacts());
+    }
+  }, [ dispatch, ticket?.customer?._id ])
+
+  useEffect(() => { 
+
+    if (configurations?.length > 0 && activeSpContacts?.length > 0) {
+      let approvingContactsArray = [];
+
+      const approvingContactsConfig = configurations.find(
+        (config) => config?.name?.trim()?.toLowerCase() === 'approving_contacts'
+      );
+
+      if (approvingContactsConfig?.value) {
+        const configEmails = approvingContactsConfig.value
+        ?.split(',')
+        .map((email) => email.trim().toLowerCase());
+
+        approvingContactsArray = activeSpContacts
+          .map((activeSpUser) => activeSpUser?.contact)
+          .filter((contact) => contact?.email && configEmails.includes(contact.email.toLowerCase()))
+          .sort((a, b) => {
+            const nameA = `${a.firstName} ${a.lastName}`.toLowerCase();
+            const nameB = `${b.firstName} ${b.lastName}`.toLowerCase();
+            return nameA.localeCompare(nameB);
+          });
+      } else {
+        approvingContactsArray = activeSpContacts.map((activeSpUser) => activeSpUser.contact);
+      }
+      setApprovers(approvingContactsArray)
+    }
+  }, [ activeSpContacts, configurations ])
+
     useEffect(() => {
         const newSlides = ticket?.files?.map((file) => {
             if (file?.fileType && file.fileType.startsWith("image")) {
@@ -101,9 +142,7 @@ export default function TicketViewForm() {
       rootCause: id && ticket?.rootCause || '',
       workaround: id && ticket?.workaround || '',
       plannedStartDate: fDate( ticket?.plannedStartDate ),
-      plannedStartTime: ticket?.plannedStartTime || '',
       plannedEndDate: fDate( ticket?.plannedEndDate ),
-      plannedEndTime: ticket?.plannedEndTime || '', 
       isActive: id && ticket?.isActive,
       createdByFullName: id && ticket?.createdBy?.name || '',
       createdAt: id && ticket?.createdAt || '',
@@ -263,13 +302,13 @@ export default function TicketViewForm() {
               node={<FilledTextField name="plc" value={defaultValues.plc} onSubmit={onSubmit}  />}
             />
             <ViewFormField isLoading={isLoading} sm={4} heading="Reporter" 
-              node={<DropDownField name="reporter" value={defaultValues.reporter} onSubmit={onSubmit} options={[]} />}
+              node={<DropDownField name="reporter" label='Reporter' value={ticket.reporter} onSubmit={onSubmit} options={ customersContacts } />}
             />
             <ViewFormField isLoading={isLoading} sm={4} heading="Assignee" 
-              node={<DropDownField name="assignee" value={defaultValues.assignee} onSubmit={onSubmit} options={[]} />}
+              node={<DropDownField name="assignee" label='Assignee' value={ticket.assignee} onSubmit={onSubmit} options={ customersContacts } />}
             />
             <ViewFormField isLoading={isLoading} sm={4} heading="Approvers" 
-              node={<DropDownField name="approvers" value={defaultValues.approvers} onSubmit={onSubmit} options={[]} />}
+              node={<DropDownField name="approvers" label='Approvers' value={ticket.approvers} onSubmit={onSubmit} options={ approvers } />}
             />
             <ViewFormField isLoading={isLoading} sm={12} heading="Summary"
               node={<FilledTextField name="summary" value={defaultValues.summary} onSubmit={onSubmit}  />}
@@ -344,15 +383,15 @@ export default function TicketViewForm() {
                       disabledSlideshow
                     />
             <ViewFormField isLoading={isLoading} sm={4} heading="Impact"
-              node={<DropDownField name="impact" value={ticket?.impact} options={ticketSettings?.impacts} onSubmit={onSubmit}  />} 
+              node={<DropDownField name="impact" label='Impact' value={ticket?.impact} options={ticketSettings?.impacts} onSubmit={onSubmit}  />} 
             />
             {ticket?.issueType?.name === 'Change Request' && (
               <>
                 <ViewFormField isLoading={isLoading} sm={4} heading="Change Type"
-                  node={<DropDownField name="changeType" value={ticket?.changeType} options={ticketSettings?.changeTypes} onSubmit={onSubmit}  />} 
+                  node={<DropDownField name="changeType" label='Change Type' value={ticket?.changeType} options={ticketSettings?.changeTypes} onSubmit={onSubmit}  />} 
                 />
                 <ViewFormField isLoading={isLoading} sm={4} heading="Change Reason" 
-                  node={<DropDownField name="changeReason" value={ticket?.changeReason} options={ticketSettings?.changeReasons} onSubmit={onSubmit} />} 
+                  node={<DropDownField name="changeReason" label='Change Reason' value={ticket?.changeReason} options={ticketSettings?.changeReasons} onSubmit={onSubmit} />} 
                 />
                 <ViewFormField isLoading={isLoading} sm={12} heading="Implementation Plan"
                   node={<FilledTextField name="implementationPlan" value={defaultValues.implementationPlan} onSubmit={onSubmit} minRows={4}  />}
@@ -368,7 +407,7 @@ export default function TicketViewForm() {
             {ticket?.issueType?.name?.trim()?.toLowerCase() === 'service request' && (
               <>
                 <ViewFormField isLoading={isLoading} sm={6} heading="Investigation Reason" 
-                  node={<DropDownField name="investigationReason" value={ticket?.investigationReason} options={ticketSettings?.investigationReasons} onSubmit={onSubmit}  />}
+                  node={<DropDownField name="investigationReason" label='Investigation Reason' value={ticket?.investigationReason} options={ticketSettings?.investigationReasons} onSubmit={onSubmit}  />}
                 />
                 <ViewFormField isLoading={isLoading} sm={12} heading="Root Cause"
                   node={<FilledTextField name="rootCause" value={defaultValues.rootCause} onSubmit={onSubmit} minRows={4} />}

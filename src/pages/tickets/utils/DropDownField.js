@@ -90,7 +90,7 @@ export default function DropDownField( { value, name, label, options = [], isLoa
             },
           }}
         >
-          { value?.name || `Select ${label || ""}` }
+          {  value?._id && ( value?.name ? value?.name : `${value?.firstName || "" } ${value?.lastName || ""}`) || `Select ${label || ""}` }
         </Button>
         { Array.isArray( options ) && options?.length > 0 && <StyledMenu
           anchorEl={anchorEl}
@@ -119,7 +119,7 @@ export default function DropDownField( { value, name, label, options = [], isLoa
                   },
                 }}
               >
-                <Iconify icon={p.icon} size="40px" sx={{ mr: 1 }}/> { p?.name || ""}
+                <Iconify icon={p.icon} size="40px" sx={{ mr: 1 }}/> { p?.name ? p?.name : `${p?.firstName || "" } ${p?.lastName || ""}` || ""}
               </MenuItem>
           )}
         </StyledMenu>}
