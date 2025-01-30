@@ -22,7 +22,7 @@ import { StyledTooltip } from '../../theme/styles/default-styles';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 import TicketComments from './TicketComments';
 import { handleError } from '../../utils/errorHandler';
-import { fDate } from '../../utils/formatTime';
+import { fDate, fTime } from '../../utils/formatTime';
 import Lightbox from '../../components/lightbox/Lightbox';
 import SkeletonPDF from '../../components/skeleton/SkeletonPDF';
 import DialogTicketAddFile from '../../components/Dialog/DialogTicketAddFile';
@@ -380,10 +380,10 @@ export default function TicketViewForm() {
             )}
             {ticket?.issueType?.name?.trim()?.toLowerCase() === 'change request' && (
               <>
-                <ViewFormField isLoading={isLoading} sm={3} heading="Planned Start Date" param={defaultValues.plannedStartDate} />
-                <ViewFormField isLoading={isLoading} sm={3} heading="Planned Start Time" param={ defaultValues.plannedStartTime} />
-                <ViewFormField isLoading={isLoading} sm={3} heading="Planned End Date" param={defaultValues.plannedEndDate} />
-                <ViewFormField isLoading={isLoading} sm={3} heading="Planned End Time" param={defaultValues.plannedEndTime} />
+                <ViewFormField isLoading={isLoading} sm={3} heading="Planned Start Date" param={  fDate( defaultValues.plannedStartDate ) } />
+                <ViewFormField isLoading={isLoading} sm={3} heading="Planned Start Time" param={ fTime( defaultValues.plannedStartDate ) } />
+                <ViewFormField isLoading={isLoading} sm={3} heading="Planned End Date" param={ fDate( defaultValues.plannedEndDate ) } />
+                <ViewFormField isLoading={isLoading} sm={3} heading="Planned End Time" param={ fTime( defaultValues.plannedEndDate ) } />
               </>
             )}
           </Grid>
