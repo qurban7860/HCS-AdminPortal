@@ -34,9 +34,9 @@ export default function RHFTimePicker({ name, label, size, helperText, Error, ..
               }}
               error={!!error || !!Error}
               helperText={error ? error?.message : helperText}
+              {...other}
             />
           )}
-          {...other}
         />
       )}
     />

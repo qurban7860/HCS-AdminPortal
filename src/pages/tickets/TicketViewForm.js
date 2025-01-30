@@ -28,6 +28,8 @@ import SkeletonPDF from '../../components/skeleton/SkeletonPDF';
 import DialogTicketAddFile from '../../components/Dialog/DialogTicketAddFile';
 import DropDownField from './utils/DropDownField';
 import FilledTextField from './utils/FilledTextField';
+import FilledDateField from './utils/FilledDateField';
+import FilledTimeField from './utils/FilledTimeField';
 import { getCustomerContacts, getActiveSPContacts, resetCustomersContacts, resetActiveSPContacts } from '../../redux/slices/customer/contact';
 
 
@@ -302,13 +304,13 @@ export default function TicketViewForm() {
               node={<FilledTextField name="plc" value={defaultValues.plc} onSubmit={onSubmit}  />}
             />
             <ViewFormField isLoading={isLoading} sm={4} heading="Reporter" 
-              node={<DropDownField name="reporter" label='Reporter' value={ticket.reporter} onSubmit={onSubmit} options={ customersContacts } />}
+              node={<DropDownField name="reporter" label='Reporter' value={ticket?.reporter} onSubmit={onSubmit} options={ customersContacts } />}
             />
             <ViewFormField isLoading={isLoading} sm={4} heading="Assignee" 
-              node={<DropDownField name="assignee" label='Assignee' value={ticket.assignee} onSubmit={onSubmit} options={ customersContacts } />}
+              node={<DropDownField name="assignee" label='Assignee' value={ticket?.assignee} onSubmit={onSubmit} options={ customersContacts } />}
             />
             <ViewFormField isLoading={isLoading} sm={4} heading="Approvers" 
-              node={<DropDownField name="approvers" label='Approvers' value={ticket.approvers} onSubmit={onSubmit} options={ approvers } />}
+              node={<DropDownField name="approvers" label='Approvers' value={ticket?.approvers} onSubmit={onSubmit} options={ approvers } />}
             />
             <ViewFormField isLoading={isLoading} sm={12} heading="Summary"
               node={<FilledTextField name="summary" value={defaultValues.summary} onSubmit={onSubmit}  />}
@@ -419,10 +421,18 @@ export default function TicketViewForm() {
             )}
             {ticket?.issueType?.name?.trim()?.toLowerCase() === 'change request' && (
               <>
-                <ViewFormField isLoading={isLoading} sm={3} heading="Planned Start Date" param={  fDate( defaultValues.plannedStartDate ) } />
-                <ViewFormField isLoading={isLoading} sm={3} heading="Planned Start Time" param={ fTime( defaultValues.plannedStartDate ) } />
-                <ViewFormField isLoading={isLoading} sm={3} heading="Planned End Date" param={ fDate( defaultValues.plannedEndDate ) } />
-                <ViewFormField isLoading={isLoading} sm={3} heading="Planned End Time" param={ fTime( defaultValues.plannedEndDate ) } />
+                <ViewFormField isLoading={isLoading} sm={3} heading="Planned Start Date" 
+                  node={<FilledDateField name="plannedStartDate" value={ defaultValues.plannedStartDate } onSubmit={onSubmit} />}
+                />
+                <ViewFormField isLoading={isLoading} sm={3} heading="Planned Start Time" 
+                  node={<FilledTimeField name="plannedStartDate" value={ defaultValues.plannedStartDate } onSubmit={onSubmit} />}
+                />
+                <ViewFormField isLoading={isLoading} sm={3} heading="Planned End Date" 
+                  node={<FilledDateField name="plannedStartDate" value={ defaultValues.plannedEndDate } onSubmit={onSubmit} />}
+                />
+                <ViewFormField isLoading={isLoading} sm={3} heading="Planned End Time" 
+                  node={<FilledTimeField name="plannedStartDate" value={ defaultValues.plannedEndDate } onSubmit={onSubmit} />}
+                />
               </>
             )}
           </Grid>
