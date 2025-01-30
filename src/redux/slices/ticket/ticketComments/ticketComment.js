@@ -49,7 +49,7 @@ const slice = createSlice({
       state.success = true;
       state.comments = action.payload;
       state.initial = true;
-      // state.responseMessage = 'Comments loaded successfully';
+       // state.responseMessage = 'Comments loaded successfully';
     },
 
     // ADD  Comments
@@ -60,6 +60,7 @@ const slice = createSlice({
       state.initial = true;
       state.responseMessage = 'Comment saved successfully';
     },
+
     // UPDATE  Comments
     updateCommentsSuccess(state, action) {
       state.isLoading = false;
@@ -76,6 +77,7 @@ const slice = createSlice({
       state.comment = action.payload;
       state.initial = true;
     },
+
     // DELETE Comment
     deleteCommentSuccess(state, action) {
       state.isLoading = false;
@@ -115,14 +117,17 @@ const slice = createSlice({
     nextStep(state) {
       state.checkout.activeStep += 1;
     },
+
     // Set FilterBy
     setFilterBy(state, action) {
       state.filterBy = action.payload;
     },
+
     // Set PageRowCount
     ChangeRowsPerPage(state, action) {
       state.rowsPerPage = action.payload;
     },
+
     // Set PageNo
     ChangePage(state, action) {
       state.page = action.payload;
@@ -159,12 +164,11 @@ export function getComments({id}) {
     }
   };
 }
-
-export function addComment( id, comment ) {
+export function addComment( id, comment, isInternal ) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const data = { comment };
+      const data = { comment, isInternal };  
       const response = await axios.post(`${CONFIG.SERVER_URL}tickets/${id}/comments/`, data);
       dispatch(slice.actions.addCommentsSuccess(response.data?.commentsList));
     } catch (error) {
@@ -181,8 +185,7 @@ export function updateComment(id, commentId, params) {
     try {
       const data = {
         comment: params.comment,
-        isActive: true,
-        isArchived: false,
+        isInternal: params.isInternal,
       };
       const response = await axios.patch(
         `${CONFIG.SERVER_URL}tickets/${id}/comments/${commentId}`,

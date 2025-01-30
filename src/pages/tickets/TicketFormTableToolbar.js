@@ -68,7 +68,7 @@ export default function TicketFormTableToolbar({
                 value={filterStatus || []}
                 name="status"
                 sx={{ minWidth: { sm: 400 } }}
-                options={activeTicketStatuses}
+                options={[...activeTicketStatuses].sort((a, b) => a.displayOrderNo - b.displayOrderNo)}
                 multiple
                 disableCloseOnSelect
                 isOptionEqualToValue={(option, value) => option?._id === value?._id}
@@ -87,7 +87,7 @@ export default function TicketFormTableToolbar({
                 value={filterStatusType || null}
                 name="statusType"
                 sx={{ minWidth: { sm: 200 } }}
-                options={activeTicketStatusTypes}
+                options={[...activeTicketStatusTypes].sort((a, b) => a.displayOrderNo - b.displayOrderNo)}
                 isOptionEqualToValue={(option, value) => option?._id === value?._id}
                 getOptionLabel={(option) => option?.name}
                 renderInput={(params) => <TextField {...params} size='small' label="Status Type" />}
