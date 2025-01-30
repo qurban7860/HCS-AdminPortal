@@ -43,7 +43,7 @@ export default function CustomerContactListTableRow({
   isCustomerContactPage,
   hiddenColumns,
 }) {
-  const { _id, customer, firstName, title, lastName, phoneNumbers, email, address, isActive, formerEmployee, createdAt } = row;
+  const { _id, customer, firstName, title, lastName, phoneNumbers, email, address, isActive, formerEmployee, updatedAt } = row;
   const contactName = `${firstName || ''} ${lastName || ''}`;
   const [showAllPhones, setShowAllPhones] = useState(false);
 
@@ -94,7 +94,7 @@ export default function CustomerContactListTableRow({
       {isSmallScreen && (
         <StyledTableRow hover selected={selected}>
           {isCustomerContactPage && isLargeScreen && !hiddenColumns?.isActive && (
-            <TableCell align="center">
+            <TableCell align="center" padding="checkbox">
               <IconButtonTooltip 
                 title={isActive ? ICONS.ACTIVE.heading : ICONS.INACTIVE.heading} 
                 color={isActive ? ICONS.ACTIVE.color : ICONS.INACTIVE.color} 
@@ -104,7 +104,7 @@ export default function CustomerContactListTableRow({
           )}
           
           {isCustomerContactPage && isLargeScreen && !hiddenColumns?.formerEmployee && (
-            <TableCell align="center">
+            <TableCell align="center" padding="checkbox">
               <IconButtonTooltip
                 title={formerEmployee ? ICONS.FORMEREMPLOYEE.heading : ICONS.NOTFORMEREMPLOYEE.heading}
                 color={formerEmployee ? ICONS.FORMEREMPLOYEE.color : ICONS.NOTFORMEREMPLOYEE.color}
@@ -165,8 +165,8 @@ export default function CustomerContactListTableRow({
             </TableCell>
           )}
 
-          {isLargeScreen && !hiddenColumns?.createdAt && (
-            <TableCell align="right">{fDate(createdAt)}</TableCell>
+          {isLargeScreen && !hiddenColumns?.updatedAt && (
+            <TableCell align="right">{fDate(updatedAt)}</TableCell>
           )}
         </StyledTableRow>
       )}

@@ -78,7 +78,7 @@ export default function CustomerContactList({isCustomerContactPage = false, filt
     { id: 'email', visibility: 'xs', label: 'Email', align: 'left' },
     { id: 'address.country', visibility: 'xs', label: 'Country', align: 'left' },
     ...(!isCustomerContactPage ? [{ id: 'isActive', visibility: 'xs', label: 'Active', align: 'center' }] : []),
-    { id: 'createdAt',visibility: 'xs', label: 'Created At', align: 'right' },
+    { id: 'updatedAt',visibility: 'xs', label: 'Updated At', align: 'right' },
   ];
 
   const onChangeRowsPerPage = (event) => {
@@ -292,7 +292,7 @@ function applyFilter({ inputData, comparator, filterName, filterFormer, orderBy 
         phoneNumbers.indexOf(filterName.replace(/[^\d]/g, '')) >= 0 || 
         contact?.email?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         contact?.address?.country?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        fDate(contact?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+        fDate(contact?.updatedAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
       );
     });
   }

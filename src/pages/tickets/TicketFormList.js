@@ -259,9 +259,11 @@ function applyFilter({ inputData, comparator, filterName, selectedStatus, select
     });
   }
   
-  if (selectedStatus) {
-    inputData = inputData.filter((ticket) => ticket?.status?._id === selectedStatus?._id);
-  }
+  if (selectedStatus?.length) {
+    inputData = inputData.filter((ticket) =>
+      selectedStatus.some((status) => status._id === ticket?.status?._id)
+    );
+  }  
 
   if (selectedStatusType) {
     inputData = inputData.filter((ticket) => ticket?.status?.statusType?._id === selectedStatusType?._id);
