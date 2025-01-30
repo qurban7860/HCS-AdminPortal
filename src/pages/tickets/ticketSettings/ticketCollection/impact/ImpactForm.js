@@ -51,18 +51,32 @@ export default function ImpactForm() {
     handleSubmit, 
     watch,
      formState: { isSubmitting }
-    } = methods;
+  } = methods;
   
-    const { icon, color } = watch()
+  const { icon, color } = watch()
+  
+  useEffect(()=>{
+    if(id){
+      dispatch(getTicketImpact(id));
+    }
+    return () => { 
+      dispatch(resetTicketImpact());
+    }
+  },[dispatch, id ])
+  
+  useEffect(() => {
+    if (id && ticketImpact) {
+      reset(defaultValues);
+    }
+  }, [id, ticketImpact, defaultValues, reset]);
 
-    useEffect(() => {
-    }, [color]);
+  useEffect(() => {
+  }, [color]);
 
   const onSubmit = async (data) => {
     try {
       if (id) { 
         await dispatch(patchTicketImpact(id, data)); 
-        dispatch(getTicketImpact(id)); 
         enqueueSnackbar('Impact Updated Successfully!');
         navigate(PATH_SUPPORT.ticketSettings.impacts.view(id));
       } else {
@@ -71,7 +85,6 @@ export default function ImpactForm() {
         navigate(PATH_SUPPORT.ticketSettings.impacts.root);
       }
       reset();
-      dispatch(resetTicketImpact());
     } catch (error) {
       enqueueSnackbar( handleError( error ) || 'Impact save failed!', { variant: 'error' });
       console.error(error);

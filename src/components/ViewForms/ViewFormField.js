@@ -122,7 +122,7 @@ function ViewFormField({
         {multiAuth !== undefined && <IconPopover multiAuth={multiAuth} />}
         {currentEmp !== undefined && <IconPopover currentEmp={currentEmp} />}
         {customerAccess !== undefined && <IconPopover customerAccess={customerAccess} />}
-        <Typography variant={variant}  sx={{ width: "100%" }} >
+        <Typography variant={variant} >
           {param && typeof param === 'string' && param.trim().length > 0 && param}
           {objectString && typeof objectString === 'string' && objectString.length > 0 && objectString}
           {param &&

@@ -15,8 +15,8 @@ import { PATH_SUPPORT } from '../../../../../routes/paths';
 import { useSnackbar } from '../../../../../components/snackbar';
 import AddFormButtons from '../../../../../components/DocumentForms/AddFormButtons';
 import FormProvider, { RHFTextField, RHFSwitch, RHFAutocomplete } from '../../../../../components/hook-form';
-import { postTicketStatus, patchTicketStatus, getTicketStatus, resetTicketStatus } from '../../../../../redux/slices/ticket/ticketSettings/ticketStatuses';
-import { getTicketStatusTypes, resetTicketStatusTypes } from '../../../../../redux/slices/ticket/ticketSettings/ticketStatusTypes';
+import { postTicketStatus, patchTicketStatus, resetTicketStatus, getTicketStatus } from '../../../../../redux/slices/ticket/ticketSettings/ticketStatuses';
+import { getActiveTicketStatusTypes, resetActiveTicketStatusTypes } from '../../../../../redux/slices/ticket/ticketSettings/ticketStatusTypes';
 import Iconify from '../../../../../components/iconify';
 import { handleError } from '../../../../../utils/errorHandler';
 
@@ -26,7 +26,7 @@ export default function StatusForm() {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const {  ticketStatus } = useSelector((state) => state.ticketStatuses);
-  const { ticketStatusTypes } = useSelector((state) => state.ticketStatusTypes);
+  const { activeTicketStatusTypes } = useSelector((state) => state.ticketStatusTypes);
   
   const AddStatusSchema = Yup.object().shape({
     name: Yup.string().min(2).max(50).required('Name is required!'),
@@ -43,9 +43,9 @@ export default function StatusForm() {
   });
   
   useEffect(() => {
-    dispatch(getTicketStatusTypes());
+    dispatch(getActiveTicketStatusTypes());
     return ()=> { 
-      dispatch(resetTicketStatusTypes());
+      dispatch(resetActiveTicketStatusTypes());
     }
   }, [dispatch]);  
 
@@ -78,7 +78,22 @@ export default function StatusForm() {
     } = methods;
   
     const { icon, color } = watch()
-
+    
+    useEffect(()=>{
+      if(id){
+        dispatch(getTicketStatus(id));
+      }
+      return () => { 
+        dispatch(resetTicketStatus());
+      }
+    },[dispatch, id ])
+      
+    useEffect(() => {
+      if (id && ticketStatus) {
+        reset(defaultValues);
+      }
+    }, [id, ticketStatus, defaultValues, reset]);
+    
     useEffect(() => {
     }, [color]);
 
@@ -86,7 +101,6 @@ export default function StatusForm() {
     try {
       if (id) { 
         await dispatch(patchTicketStatus(id, data)); 
-        dispatch(getTicketStatus(id)); 
         enqueueSnackbar('Status Updated Successfully!');
         navigate(PATH_SUPPORT.ticketSettings.statuses.view(id));
       } else {
@@ -95,7 +109,6 @@ export default function StatusForm() {
         navigate(PATH_SUPPORT.ticketSettings.statuses.root);
       }
       reset();
-      dispatch(resetTicketStatus());
     } catch (error) {
       enqueueSnackbar( handleError( error ) || 'Status save failed!', { variant: 'error' });
       console.error(error);
@@ -127,7 +140,7 @@ export default function StatusForm() {
                 <RHFAutocomplete
                   name="statusType"
                   label="Status Type*"
-                  options={ticketStatusTypes || []}
+                  options={activeTicketStatusTypes || []}
                   isOptionEqualToValue={(option, value) => option._id === value._id}
                   getOptionLabel={(option) => `${option.name || ''}`}
                   renderOption={(props, option) => (<li {...props} key={option?._id}> {option.name && option.name} </li> )}

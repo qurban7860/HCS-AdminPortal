@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import { Container } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 // redux
-import { getTicket } from '../../redux/slices/ticket/tickets';
+import { getTicket, getTicketSettings, resetTicket, resetTicketSettings } from '../../redux/slices/ticket/tickets';
 // sections
 import { Cover } from '../../components/Defaults/Cover';
 import TicketViewForm from './TicketViewForm';
@@ -20,6 +20,11 @@ export default function TicketView() {
   const { id } = useParams();
   useLayoutEffect(() => {
     dispatch(getTicket(id));
+    dispatch(getTicketSettings());
+    return () => {
+      dispatch(resetTicket());
+      dispatch(resetTicketSettings());
+    }
   }, [id, dispatch]);
 
   const { ticket } = useSelector((state) => state.tickets);

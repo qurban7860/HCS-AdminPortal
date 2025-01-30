@@ -18,11 +18,13 @@ export default function ChangeTypeView() {
 
   useLayoutEffect(()=>{
     if(id){
-      dispatch(getTicketChangeType(id))
+      dispatch(getTicketChangeType(id));
     }
-    return () => { resetTicketChangeType() }
+    return () => { 
+      dispatch(resetTicketChangeType());
+    }
   },[dispatch, id ])
-
+  
   return (
     <Container maxWidth={false}>
     <StyledCardContainer>

@@ -51,18 +51,32 @@ export default function ChangeReasonForm() {
     handleSubmit, 
     watch,
      formState: { isSubmitting }
-    } = methods;
+  } = methods;
   
-    const { icon, color } = watch()
+  const { icon, color } = watch()
+  
+  useEffect(()=>{
+    if(id){
+      dispatch(getTicketChangeReason(id));
+    }
+    return () => { 
+      dispatch(resetTicketChangeReason());
+    }
+  },[dispatch, id ])
+  
+  useEffect(() => {
+    if (id && ticketChangeReason) {
+      reset(defaultValues);
+    }
+  }, [id, ticketChangeReason, defaultValues, reset]);
 
-    useEffect(() => {
-    }, [color]);
+  useEffect(() => {
+  }, [color]);
 
   const onSubmit = async (data) => {
     try {
       if (id) { 
         await dispatch(patchTicketChangeReason(id, data)); 
-        dispatch(getTicketChangeReason(id)); 
         enqueueSnackbar('Change Reason Updated Successfully!');
         navigate(PATH_SUPPORT.ticketSettings.changeReasons.view(id));
       } else {
@@ -71,7 +85,6 @@ export default function ChangeReasonForm() {
         navigate(PATH_SUPPORT.ticketSettings.changeReasons.root);
       }
       reset();
-      dispatch(resetTicketChangeReason());
     } catch (error) {
       enqueueSnackbar( handleError( error ) || 'ChangeReason save failed!', { variant: 'error' });
       console.error(error);

@@ -7,6 +7,7 @@ import { CONFIG } from '../../../../config-global';
 const initialState = {
   ticketStatus: null,
   ticketStatuses: [],
+  activeTicketStatuses: [],
   filterBy: '',
   page: 0,
   rowsPerPage: 100,
@@ -38,6 +39,14 @@ const slice = createSlice({
       state.isLoading = false;
       state.success = true;
       state.ticketStatuses = action.payload;
+      state.initial = true;
+    },
+
+    // GET Active Tickets Success
+    getActiveTicketStatusesSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.activeTicketStatuses = action.payload;
       state.initial = true;
     },
 
@@ -95,6 +104,14 @@ const slice = createSlice({
       state.isLoading = false;
     },
 
+    // RESET Tickets
+    resetActiveTicketStatuses(state) {
+      state.activeTicketStatuses = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+
     // SET FILTER BY
     setFilterBy(state, action) {
       state.filterBy = action.payload;
@@ -119,6 +136,7 @@ export default slice.reducer;
 export const {
   resetTicketStatus,
   resetTicketStatuses,
+  resetActiveTicketStatuses,
   setFilterBy,
   ChangeRowsPerPage,
   ChangePage,
@@ -200,6 +218,29 @@ export function getTicketStatuses(page, pageSize) {
       throw error;
     }
   };
+}
+
+// GET Active Statuses
+export function getActiveTicketStatuses ( cancelToken ){
+  return async (dispatch) =>{
+    dispatch(slice.actions.startLoading());
+    try{
+      const response = await axios.get(`${CONFIG.SERVER_URL}tickets/settings/statuses`, 
+      {
+        params: {
+          isArchived: false,
+          isActive: true,
+        },
+        cancelToken: cancelToken?.token,
+      });
+      dispatch(slice.actions.getActiveTicketStatusesSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('statuses loaded successfully'));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  }
 }
 
 // GET Ticket

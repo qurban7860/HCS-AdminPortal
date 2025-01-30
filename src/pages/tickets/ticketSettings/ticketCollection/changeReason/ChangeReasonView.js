@@ -18,9 +18,11 @@ export default function ChangeReasonView() {
 
   useLayoutEffect(()=>{
     if(id){
-      dispatch(getTicketChangeReason(id))
+      dispatch(getTicketChangeReason(id));
     }
-    return () => { resetTicketChangeReason() }
+    return () => { 
+      dispatch(resetTicketChangeReason());
+    }
   },[dispatch, id ])
 
   return (

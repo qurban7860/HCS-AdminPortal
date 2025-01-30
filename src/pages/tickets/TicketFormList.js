@@ -63,8 +63,6 @@ export default function TicketFormList(){
   const { machineId } = useParams();
   const methods = useForm();
 
-
-
   const {
     order,
     orderBy,
@@ -83,8 +81,8 @@ export default function TicketFormList(){
   const dispatch = useDispatch();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
-  const [selectedIssueType, setSelectedIssueType] = useState(null);
   const [ selectedStatus, setSelectedStatus ] = useState(null);
+  const [selectedStatusType, setSelectedStatusType] = useState(null);
   const isMobile = useResponsive('down', 'sm');
 
   useLayoutEffect(() => {
@@ -102,8 +100,8 @@ export default function TicketFormList(){
     inputData: tableData,
     comparator: getComparator(order, orderBy),
     filterName,
-    selectedIssueType,
     selectedStatus,
+    selectedStatusType,
   });
 
   const isFiltered = filterName !== '';
@@ -135,14 +133,13 @@ export default function TicketFormList(){
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 
-
   const handleViewRow = (id) => navigate(PATH_SUPPORT.supportTickets.view(id));
   
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
     setFilterName('');
-    setSelectedIssueType(null);
     setSelectedStatus(null);
+    setSelectedStatusType(null);
   };
   
   const handleHiddenColumns = async (arg) => {
@@ -161,10 +158,10 @@ export default function TicketFormList(){
             onFilterName={handleFilterName}
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
-            selectedStatus={selectedStatus}
-            setSelectedStatus={setSelectedStatus}
-            selectedIssueType={selectedIssueType}
-            setSelectedIssueType={setSelectedIssueType}
+            filterStatus={selectedStatus}
+            onFilterStatus={setSelectedStatus}
+            filterStatusType={selectedStatusType}
+            onFilterStatusType={setSelectedStatusType}
           />
 
           {!isNotFound && !isMobile && (
@@ -234,7 +231,7 @@ export default function TicketFormList(){
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName, selectedIssueType, selectedStatus }) {
+function applyFilter({ inputData, comparator, filterName, selectedStatus, selectedStatusType }) {
 
   const stabilizedThis = inputData?.map((el, index) => [el, index]);
 
@@ -262,12 +259,14 @@ function applyFilter({ inputData, comparator, filterName, selectedIssueType, sel
     });
   }
   
-  if (selectedIssueType) {
-    inputData = inputData.filter((ticket) => ticket?.issueType === selectedIssueType?.value);
-  }
+  if (selectedStatus?.length) {
+    inputData = inputData.filter((ticket) =>
+      selectedStatus.some((status) => status._id === ticket?.status?._id)
+    );
+  }  
 
-  if (selectedStatus) {
-    inputData = inputData.filter((ticket) => ticket?.status === selectedStatus?.value);
+  if (selectedStatusType) {
+    inputData = inputData.filter((ticket) => ticket?.status?.statusType?._id === selectedStatusType?._id);
   }
   
   return inputData;

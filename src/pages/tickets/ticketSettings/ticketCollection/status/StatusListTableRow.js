@@ -23,7 +23,7 @@ export default function StatusListTableRow({
   onViewRow,
 }) {
 
-  const { name, icon, color, slug, displayOrderNo, isActive, isDefault, createdAt } = row;
+  const { name, icon, color, statusType, displayOrderNo, isActive, isDefault, createdAt } = row;
   return (
     <StyledTableRow hover selected={selected}>
       <TableCell align="left" padding="checkbox"  >
@@ -36,9 +36,9 @@ export default function StatusListTableRow({
           <Iconify icon={ isActive ? ICONS.ACTIVE.icon : ICONS.INACTIVE.icon } sx={{mt: 1}} />
         </StyledTooltip>
       </TableCell>
-      <LinkTableCell align="left" onClick={onViewRow} param={name} isDefault={isDefault}/>
-      <TableCell align='left' > {slug} </TableCell> 
-      <TableCell align='left' > { displayOrderNo} </TableCell>
+      <LinkTableCell align="left" onClick={onViewRow} param={name || ''} isDefault={isDefault}/>
+      <TableCell align='left' > {statusType?.name || ''} </TableCell> 
+      <TableCell align='left' > { displayOrderNo || ''} </TableCell>
       <TableCell align="left" padding="checkbox">
         <StyledTooltip 
           placement="top" 

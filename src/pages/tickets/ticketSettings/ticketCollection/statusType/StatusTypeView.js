@@ -18,9 +18,11 @@ export default function StatusTypeView() {
 
   useLayoutEffect(()=>{
     if(id){
-      dispatch(getTicketStatusType(id))
+      dispatch(getTicketStatusType(id));
     }
-    return () => { resetTicketStatusType() }
+    return () => { 
+      dispatch(resetTicketStatusType());
+    }
   },[dispatch, id ])
 
   return (

@@ -20,7 +20,9 @@ export default function InvestigationReasonView() {
     if(id){
       dispatch(getTicketInvestigationReason(id))
     }
-    return () => { resetTicketInvestigationReason() }
+    return () => { 
+      dispatch(resetTicketInvestigationReason());
+    }
   },[dispatch, id ])
 
   return (

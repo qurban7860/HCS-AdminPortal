@@ -51,18 +51,32 @@ export default function InvestigationReasonForm() {
     handleSubmit, 
     watch,
      formState: { isSubmitting }
-    } = methods;
+  } = methods;
   
-    const { icon, color } = watch()
+  const { icon, color } = watch()
+  
+  useEffect(()=>{
+    if(id){
+      dispatch(getTicketInvestigationReason(id));
+    }
+    return () => { 
+      dispatch(resetTicketInvestigationReason());
+    }
+  },[dispatch, id ])
+  
+  useEffect(() => {
+    if (id && ticketInvestigationReason) {
+      reset(defaultValues);
+    }
+  }, [id, ticketInvestigationReason, defaultValues, reset]);
 
-    useEffect(() => {
-    }, [color]);
+  useEffect(() => {
+  }, [color]);
 
   const onSubmit = async (data) => {
     try {
       if (id) { 
         await dispatch(patchTicketInvestigationReason(id, data)); 
-        dispatch(getTicketInvestigationReason(id)); 
         enqueueSnackbar('Investigation Reason Updated Successfully!');
         navigate(PATH_SUPPORT.ticketSettings.investigationReasons.view(id));
       } else {
@@ -71,7 +85,6 @@ export default function InvestigationReasonForm() {
         navigate(PATH_SUPPORT.ticketSettings.investigationReasons.root);
       }
       reset();
-      dispatch(resetTicketInvestigationReason());
     } catch (error) {
       enqueueSnackbar( handleError( error ) || 'Investigation reason save failed!', { variant: 'error' });
       console.error(error);

@@ -281,14 +281,10 @@ export function patchTicket(id, params) {
 
 export function updateTicketField(id, name, value) {
   return async (dispatch) => {
-    // dispatch(slice.actions.startLoading());
     try {
-      const data = {
-        [name]: value,  
-      };
+      const data = { [name]: value?._id || value };
       const response = await axios.patch(`${CONFIG.SERVER_URL}tickets/${id}`, data);
-
-      dispatch(slice.actions.updateTicketFieldSuccess({ name, value }));
+      await dispatch(slice.actions.updateTicketFieldSuccess({ name, value }));
       return response;
     } catch (error) {
       dispatch(slice.actions.hasError(error.message));

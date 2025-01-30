@@ -1,12 +1,8 @@
 import { useMemo, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useForm, FormProvider, Controller } from 'react-hook-form';
-import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
-import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
 // @mui
-import { Card, Grid, Box, Typography, Dialog, Divider, Button, DialogTitle, TextField, Stack } from '@mui/material';
-import { LoadingButton } from '@mui/lab';
+import { Card, Grid, Box, Typography, Dialog, Divider, Button, DialogTitle } from '@mui/material';
 import download from 'downloadjs';
 import b64toBlob from 'b64-to-blob';
 // redux
@@ -26,14 +22,17 @@ import { StyledTooltip } from '../../theme/styles/default-styles';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 import TicketComments from './TicketComments';
 import { handleError } from '../../utils/errorHandler';
+import { fDate, fTime } from '../../utils/formatTime';
 import Lightbox from '../../components/lightbox/Lightbox';
 import SkeletonPDF from '../../components/skeleton/SkeletonPDF';
 import DialogTicketAddFile from '../../components/Dialog/DialogTicketAddFile';
+import DropDownField from './utils/DropDownField';
+import FilledTextField from './utils/FilledTextField';
 
 
 
 export default function TicketViewForm() {
-  const { ticket, isLoading } = useSelector((state) => state.tickets);
+  const { ticket, ticketSettings, isLoading } = useSelector((state) => state.tickets);
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -80,24 +79,31 @@ export default function TicketViewForm() {
       ticketNo: id && `${prefix || ''} - ${ticket?.ticketNo || ''}` || '',
       customer: id && ticket?.customer?.name || '',
       machine: id && `${ticket?.machine?.serialNo || ''} - ${ticket?.machine?.machineModel?.name || ''}` || '',
-      issueType: id && ticket?.issueType?.name || '',
-      reporter: id && ticket?.reporter && `${ticket.reporter.firstName || ''} ${ticket.reporter.lastName || ''}` || '',
+      // issueType: id && ticket?.issueType?.name || '',
+      reporter: id && ticket?.reporter && { _id: ticket?.reporter?._id, name: `${ticket.reporter.firstName || ''} ${ticket.reporter.lastName || ''}` } || '',
+      assignee: id && ticket?.assignee && { _id: ticket?.assignee?._id, name: `${ticket.assignee.firstName || ''} ${ticket.assignee.lastName || ''}` } || '',
+      // approvers: id && ticket?.approvers && approvers?.map{ _id: ticket?.assignee?._id, name: `${ticket.assignee.firstName || ''} ${ticket.assignee.lastName || ''}` } || '',
       summary: id && ticket?.summary || '',
       description: id && ticket?.description || '',
       files: id && ticket?.files || [],
-      hlcPlc: id && `${ticket?.hlc || ' - - '} / ${ticket?.plc || ' - - '}` || '',
-      priority: id && ticket?.priority?.name || '',
-      status: id && ticket?.status?.name || '',
-      impact: id && ticket?.impact?.name || '',
+      hlc: id && ticket?.hlc || '',
+      plc: id && ticket?.plc || '',
+      // priority: id && ticket?.priority?.name || '',
+      // status: id && ticket?.status?.name || '',
+      // impact: id && ticket?.impact?.name || '',
       shareWith: id && ticket?.shareWith,
-      changeType: id && ticket?.changeType?.name || '',
-      changeReason: id && ticket?.changeReason?.name || '',
+      // changeType: id && ticket?.changeType?.name || '',
+      // changeReason: id && ticket?.changeReason?.name || '',
       implementationPlan: id && ticket?.implementationPlan || '',
       backoutPlan: id && ticket?.backoutPlan || '',
       testPlan: id && ticket?.testPlan || '',
-      investigationReason: id && ticket?.investigationReason?.name || '',
+      // investigationReason: id && ticket?.investigationReason?.name || '',
       rootCause: id && ticket?.rootCause || '',
       workaround: id && ticket?.workaround || '',
+      plannedStartDate: fDate( ticket?.plannedStartDate ),
+      plannedStartTime: ticket?.plannedStartTime || '',
+      plannedEndDate: fDate( ticket?.plannedEndDate ),
+      plannedEndTime: ticket?.plannedEndTime || '', 
       isActive: id && ticket?.isActive,
       createdByFullName: id && ticket?.createdBy?.name || '',
       createdAt: id && ticket?.createdAt || '',
@@ -109,108 +115,16 @@ export default function TicketViewForm() {
     [ ticket, id, prefix ]
   );
 
-  const methods = useForm({ defaultValues });
-  const { handleSubmit, reset, control, formState: { isSubmitting } } = methods;
-  
-  useEffect(() => {
-    if (id) {
-      methods.reset({
-        summary: ticket?.summary || '',
-        description: ticket?.description || '',
-        implementationPlan: ticket?.implementationPlan || '',
-        backoutPlan: ticket?.backoutPlan || '',
-        testPlan: ticket?.testPlan || '',
-        rootCause: ticket?.rootCause || '',
-        workaround: ticket?.workaround || '',
-      });
-    }
-  }, [id, prefix, methods, ticket]);
 
   
   const onSubmit = async (fieldName, value) => {
     try {
       await dispatch(updateTicketField(id, fieldName, value)); 
-      enqueueSnackbar(`${fieldName} updated successfully!`, { variant: 'success' });
+      enqueueSnackbar(`Ticket updated successfully!`, { variant: 'success' });
     } catch (error) {
-      reset();
-      dispatch(resetTicket());
-      enqueueSnackbar(`Failed to update ${fieldName}.`, { variant: 'error' });
+      enqueueSnackbar(`Ticket update failed!`, { variant: 'error' });
     }
   };
-
- const renderField = (name, value ) => (
-      <Controller
-        name={name}
-        control={control}
-        render={({ field, fieldState: { error } }) => (
-          <Box sx={{ position: "relative", width: "100%" }}>
-            <TextField
-              {...field}
-              defaultValue={value}
-              variant="filled"
-              multiline
-              fullWidth
-              error={!!error}
-              helperText={error?.message}
-              sx={{ 
-                "& .MuiInputBase-root": {
-                  padding: "8px", 
-                },
-                "& .MuiInput-underline:before": {
-                  borderBottom: "none", 
-                },
-                "& .MuiInput-underline:hover:not(.Mui-disabled):before": {
-                  borderBottom: "none", 
-                },
-                "& .MuiInput-underline.Mui-focused:before": {
-                  borderBottom: "none", 
-                },
-                "& .MuiInputBase-input": {
-                  padding: "0",
-                  margin: "0" 
-                }
-              }}
-            /> 
-            <Stack 
-              direction="row" 
-              spacing={1} 
-              sx={{
-                position: 'absolute',
-                bottom: -53, 
-                right: 0,   
-                transform: 'translateY(-50%)',
-              }}
-              // sx={{ mt: 1, 
-              // justifyContent: 'flex-end',
-              //  width: '100%' 
-              //  }}
-            >
-              <LoadingButton
-                variant="contained"
-                color="primary"
-                size="small"
-                onClick={() => onSubmit(name, field.value)}
-                type="submit"
-                disabled={isLoading}
-                loading={isSubmitting}
-                sx={{minWidth: 32, padding: '2px', height: 32}}
-              >
-                <CheckRoundedIcon/>
-              </LoadingButton>
-              <Button
-                variant="outlined"
-                size="small"
-                onClick={() => reset()}
-                sx={{minWidth: 32, padding: '2px', height: 32}}
-              >
-                <ClearRoundedIcon/>
-              </Button>
-            </Stack>
-          </Box>
-        )}
-      />
-    );
-
 
   const onArchive = async () => {
     try {
@@ -305,7 +219,7 @@ export default function TicketViewForm() {
   };
 
   return (
-      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+      <>
       <Card sx={{ p: 2 }}>
         <Grid>
           <ViewFormEditDeleteButtons
@@ -334,49 +248,35 @@ export default function TicketViewForm() {
                 </Box>
               }
             />
-            <ViewFormField
-              isLoading={isLoading} sm={4} heading="Status"
-              param={
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  {ticket?.status?.icon ? (
-                    <StyledTooltip
-                     placement="top"
-                     title={ticket?.status?.name}
-                     tooltipcolor={ticket.status.color}
-                    >
-                    <Iconify icon={ticket.status.icon} style={{ width: 25, height: 25, color: ticket.status.color }} />
-                    </StyledTooltip>
-                  ) : null}
-                  <Typography sx={{ marginLeft: 0.5 }}>{ticket?.status?.name}</Typography>
-                </Box>
-              }
+            <ViewFormField isLoading={isLoading} sm={4} heading="Status"
+              node={<DropDownField name="status" value={ticket?.status} onSubmit={onSubmit} options={ ticketSettings?.statuses} />}
             />
-            <ViewFormField
-              isLoading={isLoading} sm={4} heading="Priority"
-              param={
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  {ticket?.priority?.icon ? (
-                    <StyledTooltip
-                     placement="top"
-                     title={ticket?.priority?.name}
-                     tooltipcolor={ticket.priority.color}
-                    >
-                    <Iconify icon={ticket.priority.icon} style={{ width: 25, height: 25, color: ticket.priority.color }} />
-                    </StyledTooltip>
-                  ) : null}
-                  <Typography sx={{ marginLeft: 0.5 }}>{ticket?.priority?.name}</Typography>
-                </Box>
-              }
+            <ViewFormField isLoading={isLoading} sm={4} heading="Priority"
+              node={<DropDownField name="priority" value={ticket?.priority} onSubmit={onSubmit} options={ticketSettings?.priorities} />}
             />
             <ViewFormField isLoading={isLoading} sm={4} heading="Customer" param={defaultValues.customer} />
             <ViewFormField isLoading={isLoading} sm={4} heading="Machine" param={defaultValues.machine} />
-            <ViewFormField isLoading={isLoading} sm={4} heading="HLC/PLC" param={defaultValues.hlcPlc}/>
-            <ViewFormField isLoading={isLoading} sm={4} heading="Reporter" param={defaultValues.reporter}/>
-            <ViewFormField isLoading={isLoading} sm={4} heading="Assignee" />
-            <ViewFormField isLoading={isLoading} sm={4} heading="Approvers" />
-            <ViewFormField isLoading={isLoading} sm={12} heading="Summary" param={renderField('summary', defaultValues.summary )} />
-            <ViewFormField isLoading={isLoading} sm={12} heading="Description"  param={renderField('description', defaultValues.description )} />
-            {/* <ViewFormField isLoading={isLoading} sm={12} heading="Files" param={defaultValues.files} /> */}
+            <ViewFormField isLoading={isLoading} sm={2} heading="HLC" 
+              node={<FilledTextField name="hlc" value={defaultValues.hlc} onSubmit={onSubmit} />}
+            />
+            <ViewFormField isLoading={isLoading} sm={2} heading="PLC" 
+              node={<FilledTextField name="plc" value={defaultValues.plc} onSubmit={onSubmit}  />}
+            />
+            <ViewFormField isLoading={isLoading} sm={4} heading="Reporter" 
+              node={<DropDownField name="reporter" value={defaultValues.reporter} onSubmit={onSubmit} options={[]} />}
+            />
+            <ViewFormField isLoading={isLoading} sm={4} heading="Assignee" 
+              node={<DropDownField name="assignee" value={defaultValues.assignee} onSubmit={onSubmit} options={[]} />}
+            />
+            <ViewFormField isLoading={isLoading} sm={4} heading="Approvers" 
+              node={<DropDownField name="approvers" value={defaultValues.approvers} onSubmit={onSubmit} options={[]} />}
+            />
+            <ViewFormField isLoading={isLoading} sm={12} heading="Summary"
+              node={<FilledTextField name="summary" value={defaultValues.summary} onSubmit={onSubmit}  />}
+            />
+            <ViewFormField isLoading={isLoading} sm={12} heading="Description"
+              node={<FilledTextField name="description" value={defaultValues.description} onSubmit={onSubmit} minRows={4}  />}
+            />
                   <Grid container sx={{ mt:4 }}>
                     <FormLabel content='Documents' />
                   </Grid>
@@ -443,21 +343,47 @@ export default function TicketViewForm() {
                       onGetCurrentIndex={(index) => handleOpenLightbox(index)}
                       disabledSlideshow
                     />
-            <ViewFormField isLoading={isLoading} sm={4} heading="Impact" param={defaultValues.impact} />
+            <ViewFormField isLoading={isLoading} sm={4} heading="Impact"
+              node={<DropDownField name="impact" value={ticket?.impact} options={ticketSettings?.impacts} onSubmit={onSubmit}  />} 
+            />
             {ticket?.issueType?.name === 'Change Request' && (
               <>
-                <ViewFormField isLoading={isLoading} sm={4} heading="Change Type" param={defaultValues.changeType} />
-                <ViewFormField isLoading={isLoading} sm={4} heading="Change Reason" param={defaultValues.changeReason} />
-                <ViewFormField isLoading={isLoading} sm={12} heading="Implementation Plan" param={renderField('implementationPlan', defaultValues.implementationPlan)} />
-                <ViewFormField isLoading={isLoading} sm={12} heading="Backout Plan" param={renderField('backoutPlan', defaultValues.backoutPlan)} />
-                <ViewFormField isLoading={isLoading} sm={12} heading="Test Plan" param={renderField('testPlan', defaultValues.testPlan)} />
+                <ViewFormField isLoading={isLoading} sm={4} heading="Change Type"
+                  node={<DropDownField name="changeType" value={ticket?.reporter} options={ticketSettings?.changeTypes} onSubmit={onSubmit}  />} 
+                />
+                <ViewFormField isLoading={isLoading} sm={4} heading="Change Reason" 
+                  node={<DropDownField name="changeReason" value={ticket?.changeReason} options={ticketSettings?.changeReasons} onSubmit={onSubmit} />} 
+                />
+                <ViewFormField isLoading={isLoading} sm={12} heading="Implementation Plan"
+                  node={<FilledTextField name="implementationPlan" value={defaultValues.implementationPlan} onSubmit={onSubmit} minRows={4}  />}
+                />
+                <ViewFormField isLoading={isLoading} sm={12} heading="Backout Plan"
+                  node={<FilledTextField name="backoutPlan" value={defaultValues.backoutPlan} onSubmit={onSubmit} minRows={4}  />}
+                />
+                <ViewFormField isLoading={isLoading} sm={12} heading="Test Plan"
+                  node={<FilledTextField name="testPlan" value={defaultValues.testPlan} onSubmit={onSubmit} minRows={4}  />}
+                />
               </>
             )}
-            {ticket?.issueType?.name === 'Service Request' && (
+            {ticket?.issueType?.name?.trim()?.toLowerCase() === 'service request' && (
               <>
-                <ViewFormField isLoading={isLoading} sm={6} heading="Investigation Reason" param={defaultValues.investigationReason} />
-                <ViewFormField isLoading={isLoading} sm={12} heading="Root Cause" param={renderField('rootCause', defaultValues.rootCause)} />
-                <ViewFormField isLoading={isLoading} sm={12} heading="Workaround" param={renderField('workaround', defaultValues.workaround)} />
+                <ViewFormField isLoading={isLoading} sm={6} heading="Investigation Reason" 
+                  node={<DropDownField name="investigationReason" value={ticket?.investigationReason} options={ticketSettings?.investigationReasons} onSubmit={onSubmit}  />}
+                />
+                <ViewFormField isLoading={isLoading} sm={12} heading="Root Cause"
+                  node={<FilledTextField name="rootCause" value={defaultValues.rootCause} onSubmit={onSubmit} minRows={4} />}
+                />
+                <ViewFormField isLoading={isLoading} sm={12} heading="Workaround"
+                  node={<FilledTextField name="workaround" value={defaultValues.workaround} onSubmit={onSubmit} minRows={4} />}
+                />
+              </>
+            )}
+            {ticket?.issueType?.name?.trim()?.toLowerCase() === 'change request' && (
+              <>
+                <ViewFormField isLoading={isLoading} sm={3} heading="Planned Start Date" param={  fDate( defaultValues.plannedStartDate ) } />
+                <ViewFormField isLoading={isLoading} sm={3} heading="Planned Start Time" param={ fTime( defaultValues.plannedStartDate ) } />
+                <ViewFormField isLoading={isLoading} sm={3} heading="Planned End Date" param={ fDate( defaultValues.plannedEndDate ) } />
+                <ViewFormField isLoading={isLoading} sm={3} heading="Planned End Time" param={ fTime( defaultValues.plannedEndDate ) } />
               </>
             )}
           </Grid>
@@ -482,6 +408,6 @@ export default function TicketViewForm() {
               )}
         </Dialog>
       )}
-      </FormProvider>
+      </>
   );
 }
