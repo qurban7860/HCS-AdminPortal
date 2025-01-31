@@ -54,8 +54,10 @@ export default function DropDownField( { value, name, label, options = [], isLoa
 
   const handleMenuItemClick = async ( data ) => {
     try{
-      await onSubmit( name, data );
-      handleClose();
+      if(value?._id !== data?._id ){
+        await onSubmit( name, data );
+        handleClose();
+      }
     } catch(e){
       console.log(e);
     }
@@ -108,8 +110,8 @@ export default function DropDownField( { value, name, label, options = [], isLoa
                 key={p?._id}
                 size="small"
                 onClick={() => handleSubmit(handleMenuItemClick(p)) }
-                disabled={ value?._id === p?._id } 
-                selected={ value?._id === p?._id } 
+                // disabled={ value?._id === p?._id } 
+                // selected={ value?._id === p?._id } 
                 color={ !p?.color && "inherit" || "#fff" }
                 sx={{
                   backgroundColor: p.color ,

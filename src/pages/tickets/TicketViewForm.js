@@ -159,9 +159,6 @@ export default function TicketViewForm() {
     [ ticket, id, prefix ]
   );
 
-console.log(" ticket  : ",ticket )
-console.log(" defaultValues : ",defaultValues )
-  
   const onSubmit = async (fieldName, value) => {
     try {
       await dispatch(updateTicketField(id, fieldName, value)); 
