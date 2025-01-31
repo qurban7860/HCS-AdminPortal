@@ -43,14 +43,14 @@ import useResponsive from '../../hooks/useResponsive';
 
 const TABLE_HEAD = [
   { id: 'issueType.name', label: '', align: 'left' },
-  { id: 'ticketNo', label: 'Ticket No.', align: 'left', allowColumn : true },
+  { id: 'ticketNo', label: 'Ticket No.', align: 'left' },
   { id: 'summary', label: 'Summary', align: 'left', allowColumn : true },
   { id: 'machine.serialNo', label: 'Machine', align: 'left', allowColumn : true },
   { id: 'machine.machineModel.name', label: 'Model', align: 'left', allowColumn : true },
   { id: 'customer.name', label: 'Customer', align: 'left', allowColumn : true },
   { id: 'status.name', label: 'Status', align: 'left', allowColumn : true },
   { id: 'priority.name', label: 'Priority', align: 'left', allowColumn : true },
-  { id: 'createdAt', label: 'Created At', align: 'right', allowColumn : true },
+  { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
 
 // ----------------------------------------------------------------------
