@@ -70,6 +70,8 @@ export default function TicketForm() {
       isActive: id && ticket?.isActive || true,
       plannedStartDate: id && ticket?.plannedStartDate || null,
       plannedEndDate: id && ticket?.plannedEndDate || null,
+      startTime: id && ticket?.startTime || null,
+      endTime: id && ticket?.endTime || null,
       hlc: softwareVersion?.hlc || '',  
       plc: softwareVersion?.plc || '',
     }),
@@ -399,8 +401,8 @@ export default function TicketForm() {
                   />
 
                   <RHFTimePicker
-                    label="Planned Start Time"
-                    name="plannedStartDate"
+                    label="Start Time"
+                    name="startTime"
                   />
 
                   <RHFDatePicker
@@ -409,8 +411,8 @@ export default function TicketForm() {
                   />
 
                   <RHFTimePicker
-                    label="Planned Start Time"
-                    name="plannedEndDate"
+                    label="End Time"
+                    name="endTime"
                   />
                 </Box>
                 )}

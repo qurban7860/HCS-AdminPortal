@@ -87,7 +87,8 @@ export default function TicketViewForm() {
       }
       setApprovers(approvingContactsArray)
     }
-  }, [ activeSpContacts, configurations ])
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ activeSpContacts ])
 
     useEffect(() => {
         const newSlides = ticket?.files?.map((file) => {
@@ -143,8 +144,10 @@ export default function TicketViewForm() {
       // investigationReason: id && ticket?.investigationReason?.name || '',
       rootCause: id && ticket?.rootCause || '',
       workaround: id && ticket?.workaround || '',
-      plannedStartDate: fDate( ticket?.plannedStartDate ),
-      plannedEndDate: fDate( ticket?.plannedEndDate ),
+      plannedStartDate: ticket?.plannedStartDate || null,
+      startTime: ticket?.startTime || null,
+      plannedEndDate: ticket?.plannedEndDate || null,
+      endTime: ticket?.endTime || null,
       isActive: id && ticket?.isActive,
       createdByFullName: id && ticket?.createdBy?.name || '',
       createdAt: id && ticket?.createdAt || '',
@@ -156,7 +159,8 @@ export default function TicketViewForm() {
     [ ticket, id, prefix ]
   );
 
-
+console.log(" ticket  : ",ticket )
+console.log(" defaultValues : ",defaultValues )
   
   const onSubmit = async (fieldName, value) => {
     try {
@@ -164,6 +168,7 @@ export default function TicketViewForm() {
       enqueueSnackbar(`Ticket updated successfully!`, { variant: 'success' });
     } catch (error) {
       enqueueSnackbar(`Ticket update failed!`, { variant: 'error' });
+      throw error
     }
   };
 
@@ -420,20 +425,20 @@ export default function TicketViewForm() {
               </>
             )}
             {ticket?.issueType?.name?.trim()?.toLowerCase() === 'change request' && (
-              <>
+              <Grid container  sx={{pb: 3 }}>
                 <ViewFormField isLoading={isLoading} sm={3} heading="Planned Start Date" 
                   node={<FilledDateField name="plannedStartDate" value={ defaultValues.plannedStartDate } onSubmit={onSubmit} />}
                 />
                 <ViewFormField isLoading={isLoading} sm={3} heading="Planned Start Time" 
-                  node={<FilledTimeField name="plannedStartDate" value={ defaultValues.plannedStartDate } onSubmit={onSubmit} />}
+                  node={<FilledTimeField name="startTime" value={ defaultValues.startTime } onSubmit={onSubmit} />}
                 />
                 <ViewFormField isLoading={isLoading} sm={3} heading="Planned End Date" 
-                  node={<FilledDateField name="plannedStartDate" value={ defaultValues.plannedEndDate } onSubmit={onSubmit} />}
+                  node={<FilledDateField name="plannedEndDate" value={ defaultValues.plannedEndDate } onSubmit={onSubmit} />}
                 />
                 <ViewFormField isLoading={isLoading} sm={3} heading="Planned End Time" 
-                  node={<FilledTimeField name="plannedStartDate" value={ defaultValues.plannedEndDate } onSubmit={onSubmit} />}
+                  node={<FilledTimeField name="endTime" value={ defaultValues.endTime } onSubmit={onSubmit} />}
                 />
-              </>
+              </Grid>
             )}
           </Grid>
           <ViewFormAudit defaultValues={defaultValues} />
