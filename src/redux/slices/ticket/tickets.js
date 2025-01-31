@@ -8,6 +8,7 @@ const initialState = {
   ticket: null,
   tickets: [],
   ticketSettings:[],
+  softwareVersion: null,
   filterBy: '',
   page: 0,
   rowsPerPage: 100,
@@ -62,6 +63,12 @@ const slice = createSlice({
       state.ticket = action.payload;
     },
     
+    // GET Versions Success
+    getSoftwareVersionSuccess(state, action) {
+      state.isLoading = false;
+      state.softwareVersion = action.payload;
+    },
+
     getTicketSettingsSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
@@ -157,6 +164,12 @@ const slice = createSlice({
       state.success = false;
       state.isLoading = false;
     },
+    
+    resetSoftwareVersion(state) {
+      state.softwareVersion = null;
+      state.responseMessage = null;
+      state.isLoading = false;
+    },
 
     // SET FILTER BY
     setFilterBy(state, action) {
@@ -187,6 +200,7 @@ export const {
   resetTicket,
   resetTickets,
   resetTicketSettings,
+  resetSoftwareVersion,
   setFilterBy,
   ChangeRowsPerPage,
   ChangePage,
@@ -220,8 +234,9 @@ export function postTicket(params) {
       formData.append('isActive', params?.isActive );
       formData.append('rootCause', params?.rootCause || '');
       formData.append('workaround', params?.workaround || '');
-      formData.append('plannedStartDate', params?.plannedStartDate || '');
-      formData.append('plannedEndDate', params?.plannedEndDate || '');
+      formData.append('hlc', params?.hlc || '');
+      formData.append('plc', params?.plc || '');
+
       (params?.files || []).forEach((file, index) => {
         formData.append(`images`, file);
       });
@@ -263,11 +278,9 @@ export function patchTicket(id, params) {
       formData.append('isActive', params?.isActive );
       formData.append('rootCause', params?.rootCause || '');
       formData.append('workaround', params?.workaround || '');
-      formData.append('plannedStartDate', params?.plannedStartDate || null );
-      formData.append('startTime', params?.startTime || null );
-      formData.append('plannedEndDate', params?.plannedEndDate || null );
-      formData.append('endTime', params?.endTime || null );
-      
+      formData.append('hlc', params?.hlc || '');
+      formData.append('plc', params?.plc || '');
+
       (params?.files || []).forEach((file, index) => {
         formData.append(`images`, file);
       });
@@ -286,10 +299,14 @@ export function patchTicket(id, params) {
 
 export function updateTicketField(id, name, value) {
   return async (dispatch) => {
+    // dispatch(slice.actions.startLoading());
     try {
-      const data = { [name]: value?._id || value };
+      const data = {
+        [name]: value?._id || value,  
+      };
       const response = await axios.patch(`${CONFIG.SERVER_URL}tickets/${id}`, data);
-      await dispatch(slice.actions.updateTicketFieldSuccess({ name, value }));
+
+      dispatch(slice.actions.updateTicketFieldSuccess({ name, value }));
       return response;
     } catch (error) {
       dispatch(slice.actions.hasError(error.message));
@@ -328,6 +345,22 @@ export function getTicket(id) {
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}tickets/${id}`);
       dispatch(slice.actions.getTicketSuccess(response.data));
+      return response;
+    } catch (error) {
+      dispatch(slice.actions.hasError(error.message));
+      console.error(error);
+      throw error;
+    }
+  };
+}
+
+// GET Software Versions
+export function getSoftwareVersion(id) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${id}/techparamvalues/softwareVersion/`);
+      dispatch(slice.actions.getSoftwareVersionSuccess(response.data));
       return response;
     } catch (error) {
       dispatch(slice.actions.hasError(error.message));

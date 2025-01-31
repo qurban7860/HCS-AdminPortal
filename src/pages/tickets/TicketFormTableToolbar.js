@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // @mui
-import { Stack, TextField, Autocomplete} from '@mui/material';
+import { Stack, TextField, Autocomplete, Grid} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import SearchBarCombo from '../../components/ListTableTools/SearchBarCombo';
 // routes
@@ -64,11 +64,12 @@ export default function TicketFormTableToolbar({
         onClick={onResetFilter}
         node={
           <Stack direction="row" spacing={1} sx={{ flexShrink: 0, display: 'flex' }}>
+              <Grid item xs={12} sm={6} md={8} lg={7} >
               <Autocomplete
                 value={filterStatus || []}
                 name="status"
-                sx={{ minWidth: { sm: 400 } }}
-                options={activeTicketStatuses}
+                // sx={{ minWidth: { sm: 400 } }}
+                options={[...activeTicketStatuses].sort((a, b) => a.displayOrderNo - b.displayOrderNo)}
                 multiple
                 disableCloseOnSelect
                 isOptionEqualToValue={(option, value) => option?._id === value?._id}
@@ -83,11 +84,13 @@ export default function TicketFormTableToolbar({
                   }
                 }}
               />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4} lg={4} xl={2}>
               <Autocomplete
                 value={filterStatusType || null}
                 name="statusType"
-                sx={{ minWidth: { sm: 200 } }}
-                options={activeTicketStatusTypes}
+                sx={{ minWidth: { sm: 175 } }}
+                options={[...activeTicketStatusTypes].sort((a, b) => a.displayOrderNo - b.displayOrderNo)}
                 isOptionEqualToValue={(option, value) => option?._id === value?._id}
                 getOptionLabel={(option) => option?.name}
                 renderInput={(params) => <TextField {...params} size='small' label="Status Type" />}
@@ -100,6 +103,7 @@ export default function TicketFormTableToolbar({
                   }
                 }}
               />
+            </Grid>
           </Stack>
         }
         SubOnClick={toggleAdd}

@@ -14,6 +14,7 @@ import {
   Stack,
   Typography,
   TextField,
+  Switch
 } from '@mui/material';
 import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
@@ -26,7 +27,7 @@ import { LoadingButton } from '@mui/lab';
 
 import FormLabel from '../../components/DocumentForms/FormLabel';
 import { FORMLABELS } from '../../constants/default-constants';
-import FormProvider, { RHFTextField } from '../../components/hook-form';
+import FormProvider, { RHFTextField, RHFSwitch } from '../../components/hook-form';
 import { CustomAvatar } from '../../components/custom-avatar';
 import { addComment, deleteComment, getComments, resetComments, updateComment } from '../../redux/slices/ticket/ticketComments/ticketComment';
 import ConfirmDialog from '../../components/confirm-dialog';
@@ -37,28 +38,27 @@ const CommentSchema = Yup.object().shape({
   comment: Yup.string()
     .required('Comment is required')
     .max(300, 'Comment must not exceed 300 characters'),
+    isInternal: Yup.boolean(),
 });
 
 const TicketComments = ({ currentUser }) => {
   const [editingCommentId, setEditingCommentId] = useState(null);
   const [editValue, setEditValue] = useState('');
+  const [editIsInternal, setEditIsInternal] = useState(false);
   const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
   const [commentToDelete, setCommentToDelete] = useState(null);
   const { id } = useParams();
-
   const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
 
   const { error, comments, isLoading } = useSelector( (state) => state.ticketComments );
 
-
   useEffect(() => {
     let controller;
-    
     if (id) {
       dispatch( getComments({ id }) );
     }
-  
+
     return () => {
       if (controller) {
         controller.abort();
@@ -71,6 +71,7 @@ const TicketComments = ({ currentUser }) => {
     resolver: yupResolver(CommentSchema),
     defaultValues: {
       comment: '',
+      isInternal: false,
     },
   });
 
@@ -79,7 +80,7 @@ const TicketComments = ({ currentUser }) => {
   const commentValue = watch('comment');
 
   const onSubmit = async (data) => {
-    await dispatch( addComment( id, data.comment || "" ));
+    await dispatch( addComment( id, data.comment || "", data.isInternal ));
     reset();
     if (error) enqueueSnackbar(error, { variant: 'error' });
     else enqueueSnackbar("Comment saved successfully", { variant: 'success' });
@@ -89,17 +90,19 @@ const TicketComments = ({ currentUser }) => {
     await dispatch(
       updateComment( id, cID, {
         comment: editValue,
+        isInternal: editIsInternal,
       })
     );
     setEditingCommentId(null);
     setEditValue('');
+    setEditIsInternal(false);
     if (error) enqueueSnackbar(error, { variant: 'error' });
     else enqueueSnackbar("Comment updated successfully", { variant: 'success' });
   };
 
   const handleConfirmDelete = async () => {
     await dispatch(
-      deleteComment( id, commentToDelete?._id, { isArchived: true,})
+      deleteComment( id, commentToDelete?._id, { isArchived: true })
     );
     setOpenConfirmDelete(false);
     setCommentToDelete(null);
@@ -110,11 +113,13 @@ const TicketComments = ({ currentUser }) => {
   const handleEditClick = (comment) => {
     setEditingCommentId(comment._id);
     setEditValue(comment.comment);
+    setEditIsInternal(comment.isInternal);
   };
 
   const handleCancelEdit = () => {
     setEditingCommentId(null);
     setEditValue('');
+    setEditIsInternal(false);
   };
 
   const handleDeleteClick = (comment) => {
@@ -127,52 +132,56 @@ const TicketComments = ({ currentUser }) => {
       <Paper sx={{ width: '100%', p: 2 }}>
         <FormLabel content={FORMLABELS.COVER.TICKET_COMMENTS} />
         <Box sx={{ py: 2 }}>
+          {/* Wrapping the form with FormProvider to ensure form context is available */}
           <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-            <Stack direction="row" spacing={2}>
-              <CustomAvatar
-                src={currentUser?.photoURL}
-                alt={currentUser?.displayName}
-                name={currentUser?.displayName}
-              />
-              <Stack sx={{ width: '100%' }}>
-                <RHFTextField
-                  name="comment"
-                  placeholder="Add a comment..."
-                  multiline
-                  rows={2}
-                  inputProps={{ maxLength: 300 }}
-                  helperText={`${commentValue?.length || 0}/300 characters`}
-                  FormHelperTextProps={{ sx: { textAlign: 'right' } }}
+              <Stack direction="row" spacing={2}>
+                <CustomAvatar
+                  src={currentUser?.photoURL}
+                  alt={currentUser?.displayName}
+                  name={currentUser?.displayName}
                 />
-                {!!commentValue?.trim() && (
-                  <Stack spacing={1} direction="row">
-                    <LoadingButton
-                      type="submit"
-                      disabled={isLoading}
-                      loading={isSubmitting}
-                      variant="contained"
-                      color="primary"
-                      size="small"
-                      sx={{ width: 'fit-content' }}
-                    >
-                      Save
-                    </LoadingButton>
-                    <Button
-                      type="button"
-                      variant="text"
-                      size="small"
-                      sx={{ width: 'fit-content' }}
-                      onClick={() => reset()}
-                    >
-                      Cancel
-                    </Button>
+                <Stack sx={{ width: '100%' }}>
+                  <RHFTextField
+                    name="comment"
+                    placeholder="Add a comment..."
+                    multiline
+                    rows={2}
+                    inputProps={{ maxLength: 300 }}
+                    helperText={`${commentValue?.length || 0}/300 characters`}
+                    FormHelperTextProps={{ sx: { textAlign: 'right' } }}
+                  />
+                  <Stack display="flex" alignItems="start"  sx={{ position: 'absolute', transform: 'translateY(225%)' }}>
+                    <RHFSwitch name="isInternal" label="Internal" />
                   </Stack>
-                )}
+                  {!!commentValue?.trim() && (
+                    <Stack spacing={1} direction="row" sx={{mt: 2}}>
+                      <LoadingButton
+                        type="submit"
+                        disabled={isLoading}
+                        loading={isSubmitting}
+                        variant="contained"
+                        color="primary"
+                        size="small"
+                        sx={{ width: 'fit-content' }}
+                      >
+                        Save
+                      </LoadingButton>
+                      <Button
+                        type="button"
+                        variant="text"
+                        size="small"
+                        sx={{ width: 'fit-content' }}
+                        onClick={() => reset()}
+                      >
+                        Cancel
+                      </Button>
+                    </Stack>
+                  )}
+                </Stack>
               </Stack>
-            </Stack>
           </FormProvider>
 
-          <List sx={{ width: '100%', bgcolor: 'background.paper', maxHeight: 300, overflow: 'auto' }}>
+          <List sx={{ width: '100%', bgcolor: 'background.paper', maxHeight: 300, overflow: 'auto', mt: 1.5 }}>
             {comments.map((item, index) => (
               <React.Fragment key={index}>
                 {index > 0 && <Divider component="li" />}
@@ -199,6 +208,7 @@ const TicketComments = ({ currentUser }) => {
                     secondary={
                       <Box>
                         {editingCommentId === item._id ? (
+                          <FormProvider methods={methods} key={item._id}>
                           <Stack spacing={2}>
                             <TextField
                               fullWidth
@@ -208,7 +218,15 @@ const TicketComments = ({ currentUser }) => {
                               onChange={(e) => setEditValue(e.target.value)}
                               inputProps={{ maxLength: 300 }}
                               helperText={`${editValue.length}/300 characters`}
+                              FormHelperTextProps={{ sx: { textAlign: 'right' } }}
                             />
+                            <Stack display="flex" alignItems="start"  sx={{ position: 'absolute', transform: 'translateY(185%)' }}>
+                             <Switch
+                              label="Internal"
+                              checked={editIsInternal}
+                              onChange={() => setEditIsInternal(!editIsInternal)}
+                            />
+                            </Stack>
                             <Stack direction="row" spacing={1}>
                               <LoadingButton
                                 type="submit"
@@ -232,32 +250,34 @@ const TicketComments = ({ currentUser }) => {
                               </Button>
                             </Stack>
                           </Stack>
+                          </FormProvider>
                         ) : (
                           <>
-                          <Typography component="span" variant="body2" color="text.primary">
-                            {item.comment}
-                            {item.updatedAt !== item.createdAt && (
-                              <Typography 
-                                component="span" 
-                                variant="caption" 
-                                sx={{ color: 'text.secondary', ml: 1 }}
-                              >
-                                (edited)
-                              </Typography>
-                            )}
-                          </Typography>
+                            <Typography component="span" variant="body2" color="text.primary">
+                              {item.comment}
+                              {item.isInternal && <Typography component="span" variant="caption" sx={{ color: 'text.secondary', ml: 1 }}>(Internal)</Typography>}
+                              {item.updatedAt !== item.createdAt && (
+                                <Typography
+                                  component="span"
+                                  variant="caption"
+                                  sx={{ color: 'text.secondary', ml: 1 }}
+                                >
+                                  (edited)
+                                </Typography>
+                              )}
+                            </Typography>
                             {item?.createdBy?._id === currentUser?.userId && (
                               <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
-                                <Button 
-                                  size="small" 
-                                  color="primary" 
+                                <Button
+                                  size="small"
+                                  color="primary"
                                   onClick={() => handleEditClick(item)}
                                   sx={{ minWidth: 'unset', px: 1 }}
                                 >
                                   Edit
                                 </Button>
-                                <Button 
-                                  size="small" 
+                                <Button
+                                  size="small"
                                   color="error"
                                   onClick={() => handleDeleteClick(item)}
                                   sx={{ minWidth: 'unset', px: 1 }}
