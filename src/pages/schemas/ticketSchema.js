@@ -49,8 +49,20 @@ import * as Yup from 'yup';
           return value && (!plannedEndDate || value < plannedEndDate);
         }),
 
+        startTime: Yup.date().label("Start Time").nullable()
+        .test('startTime', 'Start Time must be earlier than End Time', ( value, context ) => {
+          const { plannedEndDate } = context.parent;
+          return value && (!plannedEndDate || value < plannedEndDate);
+        }),
+
         plannedEndDate: Yup.date().label("Planned End Date").nullable()
         .test('plannedEndDate', 'End Date must be later than Start Date', ( value, context ) => {
+          const { plannedStartDate } = context.parent;
+          return value && (!plannedStartDate || value > plannedStartDate);
+        }),
+
+        endTime: Yup.date().label("End Time").nullable()
+        .test('endTime', 'End Time must be later than Start Time', ( value, context ) => {
           const { plannedStartDate } = context.parent;
           return value && (!plannedStartDate || value > plannedStartDate);
         }),

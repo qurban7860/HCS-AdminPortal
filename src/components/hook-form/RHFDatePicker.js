@@ -41,6 +41,7 @@ export default function RHFDatePicker({ name, label, size, helperText, Error, ..
               {...other}
             />
           )}
+          {...other}
         />
       )}
     />

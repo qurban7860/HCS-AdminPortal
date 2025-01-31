@@ -28,18 +28,31 @@ function FilledTextField( { name, label, value, onSubmit, minRows } ) {
         // resolver: yupResolver( ticketSchema ),
         defaultValues,
       });
-      const { handleSubmit, reset, formState: { isSubmitting, isDirty }} = methods;
-
+      const { handleSubmit, reset, setError, formState: { isSubmitting, isDirty, errors }} = methods;
       useEffect(() => {
-        reset({ [name]: value || "" }, { keepDirty: false });
+        reset({ [name]: value || "" });
       }, [value, name, reset]);
       
       const handleFormSubmit = handleSubmit( async (data) => {
         try{
           await onSubmit( name, data[name] );
-          await reset({ [name]: data[name] }, { keepDirty: false });
+          // await reset({ [name]: data[name] }, { keepDirty: false, keepErrors: true });
+
         } catch( error ){
           console.error(error);
+
+          if (Array.isArray(error?.errors) && error?.errors?.length > 0) {
+            const fieldError = error?.errors?.find((e) => e?.field === name);
+            console.log(" fieldError : ",fieldError )
+
+            if (fieldError) {
+              setError(name, {
+                type: "manual",
+                message: fieldError.message,
+              });
+            }
+          }
+
         }
       });
   return (

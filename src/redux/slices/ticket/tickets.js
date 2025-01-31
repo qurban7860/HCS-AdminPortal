@@ -263,8 +263,10 @@ export function patchTicket(id, params) {
       formData.append('isActive', params?.isActive );
       formData.append('rootCause', params?.rootCause || '');
       formData.append('workaround', params?.workaround || '');
-      formData.append('plannedStartDate', params?.plannedStartDate || '');
-      formData.append('plannedEndDate', params?.plannedEndDate || '');
+      formData.append('plannedStartDate', params?.plannedStartDate || null );
+      formData.append('startTime', params?.startTime || null );
+      formData.append('plannedEndDate', params?.plannedEndDate || null );
+      formData.append('endTime', params?.endTime || null );
       
       (params?.files || []).forEach((file, index) => {
         formData.append(`images`, file);
