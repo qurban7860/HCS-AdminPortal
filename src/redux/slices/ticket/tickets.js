@@ -234,6 +234,10 @@ export function postTicket(params) {
       formData.append('isActive', params?.isActive );
       formData.append('rootCause', params?.rootCause || '');
       formData.append('workaround', params?.workaround || '');
+      formData.append('plannedStartDate', params?.plannedStartDate || '');
+      formData.append('startTime', params?.startTime || '');
+      formData.append('plannedEndDate', params?.plannedEndDate || '');
+      formData.append('endTime', params?.endTime || '');
       formData.append('hlc', params?.hlc || '');
       formData.append('plc', params?.plc || '');
 
@@ -278,6 +282,10 @@ export function patchTicket(id, params) {
       formData.append('isActive', params?.isActive );
       formData.append('rootCause', params?.rootCause || '');
       formData.append('workaround', params?.workaround || '');
+      formData.append('plannedStartDate', params?.plannedStartDate || '');
+      formData.append('startTime', params?.startTime || '');
+      formData.append('plannedEndDate', params?.plannedEndDate || '');
+      formData.append('endTime', params?.endTime || '');
       formData.append('hlc', params?.hlc || '');
       formData.append('plc', params?.plc || '');
 

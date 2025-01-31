@@ -28,7 +28,7 @@ function FilledTextField( { name, label, value, onSubmit, minRows } ) {
         // resolver: yupResolver( ticketSchema ),
         defaultValues,
       });
-      const { handleSubmit, reset, setError, formState: { isSubmitting, isDirty, errors }} = methods;
+      const { handleSubmit, reset, setError, formState: { isSubmitting, isDirty }} = methods;
       useEffect(() => {
         reset({ [name]: value || "" });
       }, [value, name, reset]);
@@ -36,14 +36,12 @@ function FilledTextField( { name, label, value, onSubmit, minRows } ) {
       const handleFormSubmit = handleSubmit( async (data) => {
         try{
           await onSubmit( name, data[name] );
-          // await reset({ [name]: data[name] }, { keepDirty: false, keepErrors: true });
 
         } catch( error ){
           console.error(error);
 
           if (Array.isArray(error?.errors) && error?.errors?.length > 0) {
             const fieldError = error?.errors?.find((e) => e?.field === name);
-            console.log(" fieldError : ",fieldError )
 
             if (fieldError) {
               setError(name, {
