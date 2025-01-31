@@ -16,7 +16,7 @@ import { useSnackbar } from '../../components/snackbar';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import { ticketSchema } from '../schemas/ticketSchema';
 import FormProvider, { RHFTextField, RHFUpload, RHFAutocomplete, RHFDatePicker, RHFTimePicker, RHFSwitch } from '../../components/hook-form';
-import { getTicket, postTicket, patchTicket, resetTicket, deleteFile, getTicketSettings, resetTicketSettings } from '../../redux/slices/ticket/tickets';
+import { getTicket, postTicket, patchTicket, resetTicket, deleteFile, getTicketSettings, resetTicketSettings, getSoftwareVersion, resetSoftwareVersion } from '../../redux/slices/ticket/tickets';
 import { getActiveCustomerMachines, resetActiveCustomerMachines } from '../../redux/slices/products/machine';
 import { getActiveCustomers, resetActiveCustomers } from '../../redux/slices/customer/customer';
 import FormLabel from '../../components/DocumentForms/FormLabel';
@@ -32,7 +32,7 @@ export default function TicketForm() {
   const { enqueueSnackbar } = useSnackbar();
   const { activeCustomerMachines } = useSelector((state) => state.machine);
   const { activeCustomers } = useSelector((state) => state.customer);
-  const { ticket, ticketSettings } = useSelector((state) => state.tickets);
+  const { ticket, ticketSettings, softwareVersion } = useSelector((state) => state.tickets);
 
   useEffect(() => {
     if( id )
@@ -68,10 +68,12 @@ export default function TicketForm() {
       workaround: id && ticket?.workaround || '',
       shareWith: id && ticket?.shareWith || false,
       isActive: id && ticket?.isActive || true,
-      plannedStartDate: new Date(),
-      plannedEndDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
+      plannedStartDate: id && ticket?.plannedStartDate || null,
+      plannedEndDate: id && ticket?.plannedEndDate || null,
+      hlc: softwareVersion?.hlc || '',  
+      plc: softwareVersion?.plc || '',
     }),
-    [ id, ticket ] 
+    [ id, ticket, softwareVersion ] 
   );
 
   const methods = useForm({
@@ -83,11 +85,27 @@ export default function TicketForm() {
   
   const { reset, setError, handleSubmit, watch, setValue, trigger, formState: { isSubmitting }} = methods;
 
-  const { issueType, customer, files, plannedStartDate, plannedEndDate } = watch();
+  const { issueType, customer, machine, files, plannedStartDate, plannedEndDate } = watch();
 
   useEffect(() => {
     trigger([ "plannedStartDate", "plannedEndDate" ]);
   },[ trigger, plannedStartDate, plannedEndDate ])
+  
+  useEffect(() => {
+    if (machine?._id) {
+      dispatch(getSoftwareVersion(machine._id)); 
+    }
+    return () => { 
+      dispatch(resetSoftwareVersion());
+    }
+  }, [dispatch, machine]);
+
+  useEffect(() => {
+    if (softwareVersion) {
+      setValue('hlc', softwareVersion.hlc || '');
+      setValue('plc', softwareVersion.plc || '');
+    }
+  }, [softwareVersion, setValue]);
 
   const hashFilesMD5 = async (_files) => {
       const hashPromises = _files.map((file) => new Promise((resolve, reject) => {
@@ -238,6 +256,18 @@ export default function TicketForm() {
                   </>
                   )}
                 </Box>
+                  {machine && (
+                    <Box
+                     rowGap={2}
+                     columnGap={2}
+                     display="grid"
+                     gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(3, 1fr)' }}
+                    >
+                    <RHFTextField name="machineModel" label="Machine Model" value={machine?.machineModel?.name || ''} InputProps={{ readOnly: true }} />
+                    <RHFTextField name="hlc" label="HLC" />
+                    <RHFTextField name="plc" label="PLC" />
+                    </Box>
+                  )}
                   <RHFAutocomplete
                     name="issueType"
                     label="Issue Type*"
