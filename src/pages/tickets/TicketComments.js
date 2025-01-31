@@ -255,6 +255,7 @@ const TicketComments = ({ currentUser }) => {
                           <>
                             <Typography component="span" variant="body2" color="text.primary">
                               {item.comment}
+                              {item.isInternal && <Typography component="span" variant="caption" sx={{ color: 'text.secondary', ml: 1 }}>(Internal)</Typography>}
                               {item.updatedAt !== item.createdAt && (
                                 <Typography
                                   component="span"
