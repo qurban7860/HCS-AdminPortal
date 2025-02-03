@@ -52,7 +52,7 @@ export default function UserInviteList() {
 
   const { userInvites, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.userInvite );
   const TABLE_HEAD = [
-    { id: 'receiverInvitationUser.name', label: 'Invited User', align: 'left' },
+    { id: 'name', label: 'Invited User', align: 'left' },
     { id: 'senderInvitationUser.name', visibility: 'xs1', label: 'Invited By', align: 'left' },
     { id: 'invitationStatus', label: 'Status', align: 'left' },
     { id: 'inviteExpireTime', label: 'Expiry Time', align: 'left' },
@@ -199,8 +199,9 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   if (filterName) {
     inputData = inputData.filter(
       (invite) =>
-        invite?.receiverInvitationUser?.name?.toString().toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        invite?.name?.toString().toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         invite?.receiverInvitationEmail?.toString().toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        invite?.email?.toString().toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         invite?.senderInvitationUser?.name?.toString().toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         invite?.invitationStatus?.toString().toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         fDate(invite?.inviteExpireTime)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||

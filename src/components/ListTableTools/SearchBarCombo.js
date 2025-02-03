@@ -697,7 +697,7 @@ function SearchBarCombo({
                           color:"#fff"
                         }
                       }}>
-                        <Iconify color="#fff" sx={{ height: '24px', width: '24px'}} icon='mdi:user-plus' />
+                        <Iconify color="#fff" sx={{ height: '24px', width: '24px'}} icon='mdi:email-plus' />
                       </IconButton>
                     </StyledTooltip>
                   </Grid>
