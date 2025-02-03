@@ -24,7 +24,8 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import { useSnackbar } from 'notistack';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
-
+import { useAuthContext } from '../../auth/useAuthContext';
+import TicketHistory from './TicketHistory';
 import FormLabel from '../../components/DocumentForms/FormLabel';
 import { FORMLABELS } from '../../constants/default-constants';
 import FormProvider, { RHFTextField, RHFSwitch } from '../../components/hook-form';
@@ -50,8 +51,14 @@ const TicketComments = ({ currentUser }) => {
   const { id } = useParams();
   const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
+  const { user, userId } = useAuthContext();
 
   const { error, comments, isLoading } = useSelector( (state) => state.ticketComments );
+  const [value, setValue] = useState('Comments');
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
 
   useEffect(() => {
     let controller;
@@ -130,6 +137,31 @@ const TicketComments = ({ currentUser }) => {
   return (
     <>
       <Paper sx={{ width: '100%', p: 2 }}>
+        <Box sx={{ml: 1, mb: 1.5}}>
+          <LoadingButton
+            value="Comments"
+            onClick={(e) => handleChange(e, 'Comments')}
+            variant={value === 'Comments' ? 'contained' : 'text'}
+            color="primary"
+            size="small"
+            sx={{ width: 'fit-content', mr: 2 }}
+          >
+            Comments
+          </LoadingButton>
+          <LoadingButton
+            value="History"
+            onClick={(e) => handleChange(e, 'History')}
+            color="primary"
+            variant={value === 'History' ? 'contained' : 'text'}
+            size="small"
+            sx={{ width: 'fit-content' }}
+          >
+            History
+          </LoadingButton>
+        </Box>
+    {value === 'History' && <TicketHistory currentUser={{ ...user, userId }}/>} 
+      {value === 'Comments' && (
+        <>
         <FormLabel content={FORMLABELS.COVER.TICKET_COMMENTS} />
         <Box sx={{ py: 2 }}>
           {/* Wrapping the form with FormProvider to ensure form context is available */}
@@ -296,6 +328,8 @@ const TicketComments = ({ currentUser }) => {
             ))}
           </List>
         </Box>
+        </>
+      )}
       </Paper>
       <ConfirmDialog
         open={openConfirmDelete}
