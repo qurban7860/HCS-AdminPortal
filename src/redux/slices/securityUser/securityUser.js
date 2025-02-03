@@ -633,7 +633,7 @@ export function updateInvitedUser(data, Id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try{
-      const response = await axios.patch(`${CONFIG.SERVER_URL}security/invites/updatePasswordUserInvite/${Id}`,
+      const response = await axios.patch(`${CONFIG.SERVER_URL}security/invites/setInvitedUserPasswordDetails/${Id}`,
         data
       );
       if(regEx.test(response.status)){
