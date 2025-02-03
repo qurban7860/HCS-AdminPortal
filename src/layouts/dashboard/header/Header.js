@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router';
+import { Link as RouterLink } from 'react-router-dom';
 // @mui
 import { useTheme } from '@mui/material/styles';
-import { Stack, AppBar, Toolbar, IconButton, Box, Button, } from '@mui/material';
+import { Stack, AppBar, Toolbar, IconButton, Box, Button, Link } from '@mui/material';
 // utils
 import { bgBlur } from '../../../utils/cssStyles';
 
@@ -40,16 +40,11 @@ export default function Header({ onOpenNav, selectedCategory, setSelectedCategor
   const isOffset = useOffSetTop(HEADER.H_DASHBOARD_DESKTOP) && !isNavHorizontal;
   const { sendJsonMessage } = useWebSocketContext();
   const { isSettingAccessAllowed } = useAuthContext();
-  const navigate = useNavigate();
   
   useEffect(()=>{
     sendJsonMessage({eventName:'getNotifications'});
   },[sendJsonMessage])
 
-  const handleCategoryChange = (category) => {
-    setSelectedCategory(category);
-    navigate(category.path)
-  };
   
   const renderContent = (
     <>
@@ -63,14 +58,26 @@ export default function Header({ onOpenNav, selectedCategory, setSelectedCategor
         <>
           <Box sx={{ flexGrow: 1, display: 'flex' }}>
             {MAIN_CATEGORIES.map((item) => (
-              <Button
+              <Link
                 key={item.id}
-                sx={{ my: 2, mx: 0.5, display: 'block' }}
-                variant={item.id === selectedCategory.id ? "contained" : "text"}
-                onClick={() => handleCategoryChange(item)}
+                component={RouterLink}
+                to={item.path}
+                sx={{ 
+                  my: 2, 
+                  mx: 0.5, 
+                  display: 'block',
+                  textDecoration: 'none',
+                  color: 'inherit'
+                }}
+                onClick={() => setSelectedCategory(item)}
               >
-                {item.title}
-              </Button>
+                <Button
+                  variant={item.id === selectedCategory.id ? "contained" : "text"}
+                  sx={{ width: '100%', height: '100%' }}
+                >
+                  {item.title}
+                </Button>
+              </Link>
             ))}
           </Box>
           <Stack flexGrow={0} direction="row" alignItems="center" spacing={{ xs: 0.5, sm: 1.5 }}>
@@ -78,13 +85,19 @@ export default function Header({ onOpenNav, selectedCategory, setSelectedCategor
               {OTHER_MAIN_CATEGORIES.map((item) => 
                 item?.id === "settings" && !isSettingAccessAllowed ? null : (
                 <StyledTooltip title={item.title} tooltipcolor='#1976d2' key={item.id}>
-                  <Button
-                    onClick={() => handleCategoryChange(item)}
-                    variant={item.id === selectedCategory.id ? "contained" : "text"}
-                    sx={{ mx: 0.2 }}
+                  <Link
+                    component={RouterLink}
+                    to={item.path}
+                    sx={{ textDecoration: 'none' }}
+                    onClick={() => setSelectedCategory(item)}
                   >
-                    <Iconify icon={item.icon} />
-                  </Button>
+                    <Button
+                      variant={item.id === selectedCategory.id ? "contained" : "text"}
+                      sx={{ mx: 0.2 }}
+                    >
+                      <Iconify icon={item.icon} />
+                    </Button>
+                  </Link>
                 </StyledTooltip>
                 )
               )}
@@ -92,40 +105,6 @@ export default function Header({ onOpenNav, selectedCategory, setSelectedCategor
           </Stack>
         </>
       )}
-      {/* <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-        {MAIN_CATEGORIES.map((item) => (
-          <Button
-            key={item.id}
-            sx={{ my: 2, mx: 0.5, display: 'block' }}
-            variant={item.id === selectedCategory.id ? "contained" : "text"}
-            onClick={() => handleCategoryChange(item)}
-          >
-            {item.title}
-          </Button>
-        ))}
-      </Box>
-      <Stack flexGrow={0} direction="row" alignItems="center" spacing={{ xs: 0.5, sm: 1.5 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', borderLeft: `2px solid ${theme.palette.divider}`, borderRight: `2px solid ${theme.palette.divider}`, px: 1 }}>
-          {OTHER_MAIN_CATEGORIES.map((item) => 
-            item?.id === "settings" && !isSettingAccessAllowed ? null : (
-            <StyledTooltip title={item.title} tooltipcolor='#1976d2'>
-              <Button 
-                key={item.id} 
-                onClick={() => handleCategoryChange(item)}
-                variant={item.id === selectedCategory.id ? "contained" : "text"}
-                sx={{ 
-                  mx: 0.2,
-                }}
-              >
-                <Iconify icon={item.icon} />
-              </Button>
-            </StyledTooltip>
-            )
-          )}
-        </Box>
-        <NotificationsPopover />
-        <AccountPopover />
-      </Stack> */}
       <Stack 
         flexGrow={!isDesktop ? 1 : 0} 
         direction="row" 
