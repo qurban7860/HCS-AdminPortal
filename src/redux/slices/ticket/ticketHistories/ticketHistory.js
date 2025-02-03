@@ -105,6 +105,7 @@ export const {
 
 // ----------------------------------------------------------------------
 
+// GET Single History (by historyId)
 export function getHistory(id, historyId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
@@ -121,11 +122,14 @@ export function getHistory(id, historyId) {
   };
 }
 
-export function getHistories({id}) {
+// GET All Histories (by ticket id)
+export function getHistories(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}tickets/${id}/history`);
+      const response = await axios.get(
+        `${CONFIG.SERVER_URL}tickets/${id}/history`
+      );
       dispatch(slice.actions.getHistoriesSuccess(response.data));
     } catch (error) {
       console.log(error);
