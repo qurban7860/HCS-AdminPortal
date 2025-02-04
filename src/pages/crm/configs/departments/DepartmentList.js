@@ -19,9 +19,9 @@ import {
   getComparator,
   TableNoData,
   TableSkeleton,
-  TablePaginationCustom,
   TablePaginationFilter,
   TableHeadFilter,
+
 } from '../../../../components/table';
 import Scrollbar from '../../../../components/scrollbar';
 // sections
@@ -32,7 +32,7 @@ import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 import { fDate } from '../../../../utils/formatTime';
 import TableCard from '../../../../components/ListTableTools/TableCard';
 import { FORMLABELS } from '../../../../constants/default-constants';
-import useResponsive from '../../../../hooks/useResponsive';
+
 
 // ----------------------------------------------------------------------
 
@@ -68,7 +68,6 @@ export default function DepartmentList() {
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
   const { departments, filterBy, page, rowsPerPage, isLoading, error, initial, responseMessage, reportHiddenColumns } = useSelector((state) => state.department);
-  const isMobile = useResponsive('down', 'sm');
     
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));
@@ -168,7 +167,7 @@ export default function DepartmentList() {
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
           />
-          {!isNotFound && !isMobile && (
+          {!isNotFound && (
             <TablePaginationFilter
               columns={TABLE_HEAD}
               hiddenColumns={reportHiddenColumns}
@@ -180,18 +179,10 @@ export default function DepartmentList() {
               onRowsPerPageChange={onChangeRowsPerPage}
             />
           )}
-          {!isNotFound && isMobile && (
-            <TablePaginationCustom
-              count={dataFiltered.length}
-              page={page}
-              rowsPerPage={rowsPerPage}
-              onPageChange={onChangePage}
-              onRowsPerPageChange={onChangeRowsPerPage}
-            />
-          )}
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <Scrollbar>
               <Table size="small" sx={{ minWidth: 360 }}>
+
                 <TableHeadFilter
                   order={order}
                   orderBy={orderBy}
@@ -212,7 +203,6 @@ export default function DepartmentList() {
                           selected={selected.includes(row._id)}
                           onSelectRow={() => onSelectRow(row._id)}
                           onDeleteRow={() => handleDeleteRow(row._id)}
-                          // onEditRow={() => handleEditRow(row._id)}
                           onViewRow={() => handleViewRow(row._id)}
                         />
                       ) : (

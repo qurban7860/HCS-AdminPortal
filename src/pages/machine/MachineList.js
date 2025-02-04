@@ -16,10 +16,10 @@ import {
   TablePaginationCustom,
   TablePaginationFilter
 } from '../../components/table';
-import useResponsive from '../../hooks/useResponsive';
 import Scrollbar from '../../components/scrollbar';
 import MachineListTableRow from './MachineListTableRow';
 import MachineListTableToolbar from './MachineListTableToolbar';
+
 
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
@@ -66,14 +66,15 @@ MachineList.propTypes = {
 
 const TABLE_HEAD = [
   { id: 'serialNo', label: 'Serial Number', align: 'left', hideable:false },
-  { id: 'name', visibility: 'md1',label: 'Name', align: 'left' },
-  { id: 'machineModel.name', visibility: 'xs1', label: 'Model', align: 'left' },
-  { id: 'customer.name', visibility: 'md2', label: 'Customer', align: 'left' },
-  { id: 'installationDate', visibility: 'md3', label: 'Installation Date', align: 'left' },
-  { id: 'shippingDate', visibility: 'md3', label: 'Shipping Date', align: 'left' },
-  { id: 'manufactureDate', visibility: 'md3', label: 'Manufacture Date', align: 'left'},
-  { id: 'status', visibility: 'xs2',  label: 'Status', align: 'left' },
-  { id: 'profiles', visibility: 'md2',label: 'Profile', align: 'left' },
+  { id: 'name', label: 'Name', align: 'left' },
+  { id: 'machineModel.name', label: 'Model', align: 'left' },
+  { id: 'customer.name', label: 'Customer', align: 'left' },
+  { id: 'installationDate', label: 'Installation Date', align: 'left' },
+  { id: 'shippingDate', label: 'Shipping Date', align: 'left' },
+  { id: 'manufactureDate', label: 'Manufacture Date', align: 'left'},
+  { id: 'status', label: 'Status', align: 'left' },
+  { id: 'profiles', label: 'Profile', align: 'left' },
+
   { id: 'isActive', label: 'Active', align: 'center' },
 ];
 
@@ -115,7 +116,6 @@ export default function MachineList({ isArchived }) {
 
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const isMobile = useResponsive('down', 'sm');
 
   useLayoutEffect(() => {
     dispatch(resetMachine());
@@ -274,23 +274,14 @@ export default function MachineList({ isArchived }) {
           isArchived={isArchived}
         />
 
-        {!isNotFound && !isMobile &&(
+        {!isNotFound && (
           <TablePaginationFilter
             columns={TABLE_HEAD}
             hiddenColumns={reportHiddenColumns}
             handleHiddenColumns={handleHiddenColumns}
             count={machines? machines.length : 0}
             page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-          />
-        )}
 
-        {!isNotFound && isMobile && (
-          <TablePaginationCustom
-            count={machines ? machines.length : 0}
-            page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}

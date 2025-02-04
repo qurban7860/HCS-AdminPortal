@@ -12,7 +12,6 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 // eslint-disable-next-line import/no-unresolved
-import useResponsive from 'src/hooks/useResponsive';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
 // routes
@@ -56,9 +55,9 @@ import { exportCSV } from '../../../../utils/exportCSV';
 const TABLE_HEAD = [
   { id: 'name', label: 'Customer', align: 'left', hideable:false },
   { id: 'clientCode', label: 'Code', align: 'left' },
-  { id: 'tradingName', visibility: 's1', label: 'Trading Name', align: 'left' },
-  { id: 'groupCustomer.name', visibility: 's1', label: 'Group Customer', align: 'left' },
-  { id: 'address', visibility: 'xs2', label: 'Address', align: 'left' },
+  { id: 'tradingName',  label: 'Trading Name', align: 'left' },
+  { id: 'groupCustomer.name', label: 'Group Customer', align: 'left' },
+  { id: 'address', label: 'Address', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
   { id: 'createdAt', label: 'Created At', align: 'left' },
 ];
@@ -99,7 +98,6 @@ export default function CustomerList({ isArchived }) {
     dispatch(ChangePage(newPage)) 
   }
   
-  const isMobile = useResponsive('down', 'sm');
 
   useEffect(() => {
     dispatch(getCustomers( null, null, isArchived, cancelTokenSource ));
@@ -221,7 +219,7 @@ export default function CustomerList({ isArchived }) {
           isArchived={isArchived}
         />
 
-        {!isNotFound && !isMobile && (
+        {!isNotFound && (
           <TablePaginationFilter
             columns={TABLE_HEAD}
             hiddenColumns={reportHiddenColumns}
@@ -233,17 +231,6 @@ export default function CustomerList({ isArchived }) {
             onRowsPerPageChange={onChangeRowsPerPage}
           />
         )}
-
-        {!isNotFound && isMobile && (
-          <TablePaginationCustom
-            count={customers ? customers.length : 0}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-          />
-        )}
-
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
           <Scrollbar>
             <Table stickyHeader size="small" sx={{ minWidth: 360 }}>

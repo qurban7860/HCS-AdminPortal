@@ -16,7 +16,6 @@ import { StyledTableRow, StyledTooltip } from '../../../theme/styles/default-sty
 import CustomAvatar from '../../../components/custom-avatar/CustomAvatar';
 import EmailViewform from './EmailViewform'; // Assuming EmailViewform.js is in the same folder
 import { CONFIG } from '../../../config-global';
-import { useScreenSize } from '../../../hooks/useResponsive';
 
 
 
@@ -72,10 +71,11 @@ export default function EmailListTableRow({
         hover
         selected={selected}
       >
-        {useScreenSize('lg') && !hiddenColumns?.toEmails && 
+        {!hiddenColumns?.toEmails && 
           <TableCell align='left'>
             {Array.isArray(toEmails) && toEmails.length > 1 ? (
               <StyledTooltip
+
                 title={toEmails.slice(1).join(', ')}
                 placement="top"
                 tooltipcolor="#2065D1"
@@ -87,15 +87,17 @@ export default function EmailListTableRow({
             )}
           </TableCell>
         }
-        {useScreenSize('lg') && !hiddenColumns?.fromEmail &&
+        {!hiddenColumns?.fromEmail &&
           <TableCell align='left'>
             {fromEmail || ''}
           </TableCell>
         }
-        {useScreenSize('lg') && !hiddenColumns?.subject &&
+
+        {!hiddenColumns?.subject &&
           <Stack direction="row" alignItems="center">
             <CustomAvatar
               name={subject}
+
               alt={subject}
               sx={{ ml: 1, my: 0.5, width: '30px', height: '30px' }}
             />
@@ -111,16 +113,18 @@ export default function EmailListTableRow({
             </TableCell>
           </Stack>
         }
-        {useScreenSize('lg') && !hiddenColumns?.["customer.name"] &&
+        {!hiddenColumns?.["customer.name"] &&
           <TableCell align='left' >
             {customer?.name || ''}
           </TableCell>
         }
-        {useScreenSize('lg') && !hiddenColumns?.createdAt &&
+
+        {!hiddenColumns?.createdAt &&
           <TableCell align='right'>
             {fDateTime(createdAt)}
           </TableCell>
         }
+
       </StyledTableRow>
       {/* Dialog to show EmailViewform */}
       <Dialog open={openDialog} onClose={handleCloseDialog} fullWidth maxWidth="md">

@@ -18,7 +18,6 @@ import {
   TableHeadFilter,
 } from '../../../components/table';
 import Scrollbar from '../../../components/scrollbar';
-import useResponsive from '../../../hooks/useResponsive';
 // sections
 import EmailListTableRow from './EmailListTableRow';
 import EmailListTableToolbar from './EmailListTableToolbar';
@@ -70,8 +69,6 @@ export default function EmailList() {
   const dispatch = useDispatch();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
-
-  const isMobile = useResponsive('down', 'sm');
 
   useLayoutEffect(() => {
     dispatch(getEmails(page, rowsPerPage));
@@ -140,29 +137,19 @@ export default function EmailList() {
           onResetFilter={handleResetFilter}
         />
 
-        {!isNotFound && !isMobile && (
+        {!isNotFound && (
           <TablePaginationFilter
             columns={TABLE_HEAD}
             hiddenColumns={reportHiddenColumns}
             handleHiddenColumns={handleHiddenColumns}
             count={emails?.totalCount || 0}
             page={page}
+
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
           />
         )}
-
-        {!isNotFound && isMobile && (
-          <TablePaginationCustom
-            count={emails?.totalCount || 0}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-          />
-        )}
-
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
           <Scrollbar>
             <Table size="small" sx={{ minWidth: 360 }}>

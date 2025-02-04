@@ -5,7 +5,6 @@ import { Switch, TableRow, TableCell, Chip } from '@mui/material';
 import LinkTableCell from '../../../../components/ListTableTools/LinkTableCell';
 // utils
 import { fDate } from '../../../../utils/formatTime';
-import { useScreenSize } from '../../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -32,29 +31,34 @@ export default function DepartmentListTableRow({
   
   return (
     <TableRow hover selected={selected}>
-      {useScreenSize('lg') && !hiddenColumns?.departmentName && (
+      {!hiddenColumns?.departmentName && (
         <LinkTableCell align="left" onClick={onViewRow} param={departmentName} isDefault={isDefault}/>
       )}
       
-      {useScreenSize('lg') && !hiddenColumns?.departmentType && (
+
+        {!hiddenColumns?.departmentType && (
         <TableCell align="center">{departmentType ? <Chip label={departmentType} /> : ""}</TableCell>
       )}
       
-      {useScreenSize('lg') && !hiddenColumns?.isActive && (
+
+      {!hiddenColumns?.isActive && (
         <TableCell align="center">
           <Switch checked={isActive} disabled sx={{ my: -1 }} />
         </TableCell>
       )}
+
       
-      {useScreenSize('lg') && !hiddenColumns?.forCustomer && (
+      {!hiddenColumns?.forCustomer && (
         <TableCell align="center">
           <Switch checked={forCustomer} disabled sx={{ my: -1 }} />
         </TableCell>
       )}
+
       
-      {useScreenSize('lg') && !hiddenColumns?.createdAt && (
+      {!hiddenColumns?.createdAt && (
         <TableCell align="right">{fDate(createdAt)}</TableCell>
       )}
     </TableRow>
+
   );
 }

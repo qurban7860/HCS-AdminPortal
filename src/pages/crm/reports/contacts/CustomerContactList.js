@@ -20,7 +20,6 @@ import {
   getComparator,
   TableNoData,
   TableSkeleton,
-  TablePaginationCustom,
   TablePaginationFilter,
   TableHeadFilter,
 } from '../../../../components/table';
@@ -37,7 +36,6 @@ import { useSnackbar } from '../../../../components/snackbar';
 import { exportCSV } from '../../../../utils/exportCSV';
 import IconButtonTooltip from '../../../../components/Icons/IconButtonTooltip';
 import { ICONS } from '../../../../constants/icons/default-icons';
-import useResponsive from '../../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -64,22 +62,21 @@ export default function CustomerContactList({isCustomerContactPage = false, filt
   const { customersContacts, contacts, filterBy, page, rowsPerPage, isLoading, reportHiddenColumns } = useSelector((state) => state.contact);
   const [filterName, setFilterName] = useState(filterBy);
   const [exportingCSV, setExportingCSV] = useState(false);
-  const isMobile = useResponsive('down', 'sm');
-  
   // ----------------------------------------------------------------------
 
   const TABLE_HEAD = [
-    ...(isCustomerContactPage ? [{ id: 'isActive', visibility: 'xs',  label: ( <IconButtonTooltip title={ ICONS.STATUS.heading } color={ ICONS.STATUS.color } icon={ ICONS.STATUS.icon } />), align: 'center' }] : []),
-    ...(isCustomerContactPage ? [{ id: 'formerEmployee', visibility: 'xs',  label: ( <IconButtonTooltip title={ ICONS.CURR_EMP_ACTIVE.heading } color={ ICONS.CURR_EMP_ACTIVE.color } icon={ ICONS.CURR_EMP_ACTIVE.icon } />), align: 'center' }] : []),
-    ...(!isCustomerContactPage ? [{ id: 'customer.name', visibility: 'xs', label: 'Customer', align: 'left'}] : []),
+    ...(isCustomerContactPage ? [{ id: 'isActive',  label: ( <IconButtonTooltip title={ ICONS.STATUS.heading } color={ ICONS.STATUS.color } icon={ ICONS.STATUS.icon } />), align: 'center' }] : []),
+    ...(isCustomerContactPage ? [{ id: 'formerEmployee',  label: ( <IconButtonTooltip title={ ICONS.CURR_EMP_ACTIVE.heading } color={ ICONS.CURR_EMP_ACTIVE.color } icon={ ICONS.CURR_EMP_ACTIVE.icon } />), align: 'center' }] : []),
+    ...(!isCustomerContactPage ? [{ id: 'customer.name', label: 'Customer', align: 'left'}] : []),
     { id: 'firstName', label: 'Contact Name', align: 'left' },
     ...(isCustomerContactPage ? [{ id: 'title', label: 'Title', align: 'left' }] : []),
-    { id: 'phoneNumbers', visibility: 'xs', label: 'Phone', align: 'left' },
-    { id: 'email', visibility: 'xs', label: 'Email', align: 'left' },
-    { id: 'address.country', visibility: 'xs', label: 'Country', align: 'left' },
-    ...(!isCustomerContactPage ? [{ id: 'isActive', visibility: 'xs', label: 'Active', align: 'center' }] : []),
-    { id: 'updatedAt',visibility: 'xs', label: 'Updated At', align: 'right' },
+    { id: 'phoneNumbers', label: 'Phone', align: 'left' },
+    { id: 'email', label: 'Email', align: 'left' },
+    { id: 'address.country', label: 'Country', align: 'left' },
+    ...(!isCustomerContactPage ? [{ id: 'isActive', label: 'Active', align: 'center' }] : []),
+    { id: 'updatedAt', label: 'Updated At', align: 'right' },
   ];
+
 
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));
@@ -185,21 +182,11 @@ export default function CustomerContactList({isCustomerContactPage = false, filt
           onExportLoading={exportingCSV}
         />
 
-        {!isNotFound && !isMobile && (
+        {!isNotFound && (
           <TablePaginationFilter
             columns={TABLE_HEAD}
             hiddenColumns={reportHiddenColumns}
             handleHiddenColumns={handleHiddenColumns}
-            count={(isCustomerContactPage ? contacts : customersContacts)?.length || 0}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-          />
-        )}
-
-        {!isNotFound && isMobile && (
-          <TablePaginationCustom
             count={(isCustomerContactPage ? contacts : customersContacts)?.length || 0}
             page={page}
             rowsPerPage={rowsPerPage}
