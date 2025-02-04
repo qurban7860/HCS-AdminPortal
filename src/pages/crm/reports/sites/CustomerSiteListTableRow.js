@@ -47,41 +47,40 @@ export default function CustomerSiteListTableRow({
     primaryBillingContact, primaryTechnicalContact, isActive, createdAt } = row;
   const phone = phoneNumbers[0];
   const limitedName = useLimitString(customer?.name, 35);
-  const isLargeScreen = useScreenSize('lg');
   const isSmallScreen = useScreenSize('sm');
 
   return (
     <>
       <StyledTableRow hover selected={selected}>
-        {!isCustomerSitePage && isLargeScreen && !hiddenColumns?.["customer.name"] && (
+        {!isCustomerSitePage && !hiddenColumns?.["customer.name"] && (
           <TableCell>{limitedName || ''}</TableCell>
         )}
-        {isLargeScreen && !hiddenColumns?.name && (
+        {!hiddenColumns?.name && (
           <LinkTableCellWithIconTargetBlank
             onViewRow={() => handleSiteView(customer?._id, _id)}
             onClick={() => handleSiteViewInNewPage(customer?._id, _id)}
             param={name || ''}
           />
         )}
-        {isLargeScreen && !hiddenColumns?.["address.country"] && (
+        {!hiddenColumns?.["address.country"] && (
           <TableAddressRow address={address} lat={lat} long={long} />
         )}
-        {isLargeScreen && !hiddenColumns?.phoneNumbers && (
+        {!hiddenColumns?.phoneNumbers && (
           <TableCell>{phone?.countryCode ? `+${phone?.countryCode} ` : ''}{phone?.contactNumber}</TableCell>
         )}
-        {isLargeScreen && !hiddenColumns?.email && (
+        {!hiddenColumns?.email && (
           <TableCell>{email}</TableCell>
         )}
-        {isLargeScreen && !hiddenColumns?.["primaryTechnicalContact.firstName"] && (
+        {!hiddenColumns?.["primaryTechnicalContact.firstName"] && (
           <TableCell>{primaryTechnicalContact?.firstName || ''} {primaryTechnicalContact?.lastName || ''}</TableCell>
         )}
-        {isLargeScreen && !hiddenColumns?.["primaryBillingContact.firstName"] && (
+        {!hiddenColumns?.["primaryBillingContact.firstName"] && (
           <TableCell>{primaryBillingContact?.firstName || ''} {primaryBillingContact?.lastName || ''}</TableCell>
         )}
-        {isLargeScreen && !hiddenColumns?.isActive && (
-          <TableCell align='center'><Switch checked={isActive} disabled size="small" /></TableCell>
+        {!hiddenColumns?.isActive && (
+          <TableCell align='center'><Switch checked={isActive} /></TableCell>
         )}
-        {isLargeScreen && !hiddenColumns?.createdAt && (
+        {!hiddenColumns?.createdAt && (
           <TableCell align='right'>{fDate(createdAt)}</TableCell>
         )}
       </StyledTableRow>

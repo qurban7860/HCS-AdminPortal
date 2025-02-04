@@ -5,7 +5,6 @@ import { Switch, TableCell } from '@mui/material';
 // utils
 import { fDate } from '../../../../utils/formatTime';
 // components
-import { useScreenSize } from '../../../../hooks/useResponsive';
 import { StyledTableRow } from '../../../../theme/styles/default-styles';
 import LinkTableCellWithIconTargetBlank from '../../../../components/ListTableTools/LinkTableCellWithIconTargetBlank';
 import IconButtonTooltip from '../../../../components/Icons/IconButtonTooltip';
@@ -53,13 +52,9 @@ export default function CustomerContactListTableRow({
     setShowAllPhones((prev) => !prev);
   };
 
-  const isSmallScreen = useScreenSize('sm');
-  const isLargeScreen = useScreenSize('lg');
 
   return (
     <>
-      {/* Render rows with column names in bold for small screens */}
-      {!isSmallScreen && (
         <StyledTableRow hover selected={selected} style={{ display: 'block' }} >
           <LinkTableCellWithIconTargetBlank style={{ width: '100%', display: 'inline-block' }}
             onViewRow={() => handleContactView(customer?._id, _id)}
@@ -89,11 +84,9 @@ export default function CustomerContactListTableRow({
           </TableCell>
           {email && <TableCell style={{ width: '100%', display: 'inline-block' }} >{email}</TableCell> }
         </StyledTableRow>
-      )}
 
-      {isSmallScreen && (
         <StyledTableRow hover selected={selected}>
-          {isCustomerContactPage && isLargeScreen && !hiddenColumns?.isActive && (
+          {isCustomerContactPage &&  !hiddenColumns?.isActive && (
             <TableCell align="center" padding="checkbox">
               <IconButtonTooltip 
                 title={isActive ? ICONS.ACTIVE.heading : ICONS.INACTIVE.heading} 
@@ -103,7 +96,7 @@ export default function CustomerContactListTableRow({
             </TableCell>
           )}
           
-          {isCustomerContactPage && isLargeScreen && !hiddenColumns?.formerEmployee && (
+          {isCustomerContactPage &&  !hiddenColumns?.formerEmployee && (
             <TableCell align="center" padding="checkbox">
               <IconButtonTooltip
                 title={formerEmployee ? ICONS.FORMEREMPLOYEE.heading : ICONS.NOTFORMEREMPLOYEE.heading}
@@ -113,11 +106,11 @@ export default function CustomerContactListTableRow({
             </TableCell>
           )}
 
-          {!isCustomerContactPage && isLargeScreen && !hiddenColumns?.["customer.name"] && (
+          {!isCustomerContactPage &&  !hiddenColumns?.["customer.name"] && (
             <TableCell>{customer?.name}</TableCell>
           )}
 
-          {isLargeScreen && !hiddenColumns?.firstName && (
+          { !hiddenColumns?.firstName && (
             <LinkTableCellWithIconTargetBlank
               onViewRow={() => handleContactView(customer?._id, _id)}
               onClick={() => handleContactViewInNewPage(customer?._id, _id)}
@@ -125,11 +118,11 @@ export default function CustomerContactListTableRow({
             />
           )}
 
-          {isCustomerContactPage && isLargeScreen && !hiddenColumns?.title && (
+          {isCustomerContactPage &&  !hiddenColumns?.title && (
             <TableCell>{title}</TableCell>
           )}
 
-          {isLargeScreen && !hiddenColumns?.phoneNumbers && (
+          { !hiddenColumns?.phoneNumbers && (
             <TableCell>
               {phone.length > 1 ? (
                 <>
@@ -151,25 +144,24 @@ export default function CustomerContactListTableRow({
             </TableCell>
           )}
 
-          {isLargeScreen && !hiddenColumns?.email && (
+          { !hiddenColumns?.email && (
             <TableCell>{email}</TableCell>
           )}
 
-          {isLargeScreen && !hiddenColumns?.["address.country"] && (
+          { !hiddenColumns?.["address.country"] && (
             <TableCell>{address?.country}</TableCell>
           )}
 
-          {!isCustomerContactPage && isLargeScreen && !hiddenColumns?.isActive && (
+          {!isCustomerContactPage &&  !hiddenColumns?.isActive && (
             <TableCell align="center">
               <Switch checked={isActive} disabled size="small" />
             </TableCell>
           )}
 
-          {isLargeScreen && !hiddenColumns?.updatedAt && (
+          { !hiddenColumns?.updatedAt && (
             <TableCell align="right">{fDate(updatedAt)}</TableCell>
           )}
         </StyledTableRow>
-      )}
     </>
   );
 }

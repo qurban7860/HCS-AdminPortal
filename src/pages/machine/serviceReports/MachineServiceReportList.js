@@ -62,7 +62,7 @@ export default function MachineServiceReportList( { reportsPage }) {
   
   const TABLE_HEAD = useMemo(() => {
     const baseHeaders =  [
-      { id: 'checkboxes', label: ' ', align: 'left' },
+      { id: 'checkboxes', label: 'Active', align: 'left' },
       { id: 'serviceDate', label: 'Service Date', align: 'left' },
       { id: 'serviceReportTemplate.reportType', label: 'Type', align: 'left' },
       { id: 'serviceReportUID', label: 'Service ID', align: 'left' },

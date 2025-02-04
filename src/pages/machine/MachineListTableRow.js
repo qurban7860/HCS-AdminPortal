@@ -8,7 +8,6 @@ import { createTheme } from '@mui/material/styles';
 import { fDate } from '../../utils/formatTime';
 // components
 import LinkTableCellWithIconTargetBlank from '../../components/ListTableTools/LinkTableCellWithIconTargetBlank';
-import { useScreenSize } from '../../hooks/useResponsive';
 import LinkDialogTableCell from '../../components/ListTableTools/LinkDialogTableCell';
 import ChipInPopover from '../../components/ViewForms/ChipInPopover';
 import { StyledTooltip } from '../../theme/styles/default-styles';
@@ -88,18 +87,22 @@ export default function MachineListTableRow({
         param={serialNo}
         isVerified={verifications?.length > 0}
       />
-      { useScreenSize('lg') && !hiddenColumns?.name && <TableCell>{name || ''}</TableCell>}
-      {  useScreenSize('sm') && !hiddenColumns['machineModel.name'] && <TableCell>{ machineModel?.name || ''}</TableCell>}
-      {  useScreenSize('lg') &&  !hiddenColumns['customer.name'] &&
+      {!hiddenColumns?.name && <TableCell>{name || ''}</TableCell>}
+      {!hiddenColumns['machineModel.name'] && <TableCell>{ machineModel?.name || ''}</TableCell>}
+
+      {!hiddenColumns['customer.name'] &&
         <LinkDialogTableCell onClick={handleCustomerDialog} align='center' param={customer?.name}/>  
       }
-      {  useScreenSize('lg') && !hiddenColumns?.installationDate && <TableCell >{fDate(installationDate)}</TableCell>}
-      {  useScreenSize('lg') && !hiddenColumns?.shippingDate && <TableCell >{fDate(shippingDate)}</TableCell>}
-      {  useScreenSize('lg') && !hiddenColumns?.manufactureDate && <TableCell >{fDate(manufactureDate)}</TableCell>}
-      {  useScreenSize('sm') && !hiddenColumns?.status &&
+      {!hiddenColumns?.installationDate && <TableCell >{fDate(installationDate)}</TableCell>}
+
+      {!hiddenColumns?.shippingDate && <TableCell >{fDate(shippingDate)}</TableCell>}
+      {!hiddenColumns?.manufactureDate && <TableCell >{fDate(manufactureDate)}</TableCell>}
+
+      {!hiddenColumns?.status &&
         <TableCell>
           <span style={{color:row?.status?.slug==='transferred'?'red':''}}>{status?.name || ''} </span>
           {row?.status?.slug ==='transferred' &&
+
             <StyledTooltip
               title={`${status?.name || ''}${transferredToMachine?.customer?.name?` to ${transferredToMachine?.customer?.name}`:''} on ${fDate(transferredDate)}`}
               placement="top"
@@ -113,9 +116,10 @@ export default function MachineListTableRow({
           }
         </TableCell>
       }
-      {  useScreenSize('lg') && !hiddenColumns?.profiles && <TableCell >{ Array.isArray(profiles) && profiles?.length > 0 && profiles?.length === 1 ? profiles[0]?.defaultName :
+      {!hiddenColumns?.profiles && <TableCell >{ Array.isArray(profiles) && profiles?.length > 0 && profiles?.length === 1 ? profiles[0]?.defaultName :
       (profiles?.length > 1 && <Grid sx={{ display: "flex", alignItems: "center", alignContent:"center" }} >
           {`${profiles[0]?.defaultName}, ` }
+
           <StyledTooltip title="Profiles" placement="top" disableFocusListener tooltipcolor={theme.palette.primary.main}  color="primary.main" >
               <Iconify icon="mingcute:profile-line" onClick={handleManufacturePopoverOpen} sx={{mr: 0.5}} /> 
           </StyledTooltip>

@@ -20,7 +20,6 @@ import {
   getComparator,
   TableNoData,
   TableSkeleton,
-  TablePaginationCustom,
   TablePaginationFilter,
   TableHeadFilter,
 } from '../../../../components/table';
@@ -68,15 +67,15 @@ export default function CustomerSiteList({ isCustomerSitePage = false }) {
   const [ filterName, setFilterName ] = useState(filterBy);
   
   const TABLE_HEAD = [
-    ...(!isCustomerSitePage ? [{ id: 'customer.name', visibility: 'xs', label: 'Customer', align: 'left'}] : []),
+    { id: 'customer.name', label: 'Customer', align: 'left'},
     { id: 'name', label: 'Site', align: 'left' },
-    { id: 'address.country', visibility: 'xs', label: 'Address', align: 'left' },
-    { id: 'phoneNumbers', visibility: 'xs', label: 'Phone', align: 'left' },
-    { id: 'email', visibility: 'xs', label: 'Email', align: 'left' },
-    { id: 'primaryTechnicalContact.firstName', visibility: 'xs', label: 'Technical Contact', align: 'left' },
-    { id: 'primaryBillingContact.firstName', visibility: 'xs', label: 'Billing Contact', align: 'left' },
-    { id: 'isActive', visibility: 'xs', label: 'Active', align: 'center' },
-    { id: 'createdAt',visibility: 'xs', label: 'Created At', align: 'right' },
+    { id: 'address.country', label: 'Address', align: 'left' },
+    { id: 'phoneNumbers', label: 'Phone', align: 'left' },
+    { id: 'email', label: 'Email', align: 'left' },
+    { id: 'primaryTechnicalContact.firstName', label: 'Technical Contact', align: 'left' },
+    { id: 'primaryBillingContact.firstName', label: 'Billing Contact', align: 'left' },
+    { id: 'isActive', label: 'Active', align: 'center' },
+    { id: 'createdAt', label: 'Created At', align: 'right' },
   ];
   
   // ----------------------------------------------------------------------
@@ -179,7 +178,7 @@ export default function CustomerSiteList({ isCustomerSitePage = false }) {
           onExportLoading={exportingCSV}
         />
 
-        {!isNotFound && !isMobile && (
+        {!isNotFound && (
           <TablePaginationFilter
             columns={TABLE_HEAD}
             hiddenColumns={reportHiddenColumns}
@@ -191,20 +190,9 @@ export default function CustomerSiteList({ isCustomerSitePage = false }) {
             onRowsPerPageChange={onChangeRowsPerPage}
           />
         )}
-
-        {!isNotFound && isMobile && (
-          <TablePaginationCustom
-            count={sites ? sites.length : 0}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-          />
-        )}
-
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
           <Scrollbar>
-            <Table size="small" sx={{ minWidth: 360 }}>
+          <Table stickyHeader size="small" sx={{ minWidth: 360 }}>
               <TableHeadFilter
                 order={order}
                 orderBy={orderBy}
