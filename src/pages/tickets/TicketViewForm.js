@@ -30,13 +30,14 @@ import DropDownField from './utils/DropDownField';
 import FilledTextField from './utils/FilledTextField';
 import FilledDateField from './utils/FilledDateField';
 import FilledTimeField from './utils/FilledTimeField';
-import { getCustomerContacts, getActiveSPContacts, resetCustomersContacts, resetActiveSPContacts } from '../../redux/slices/customer/contact';
+import DropDownMultipleSelection from './utils/DropDownMultipleSelection';
+import { getContact, getCustomerContacts, getActiveSPContacts, resetContact, resetCustomersContacts, resetActiveSPContacts } from '../../redux/slices/customer/contact';
 
 
 
 export default function TicketViewForm() {
   const { ticket, ticketSettings, isLoading } = useSelector((state) => state.tickets);
-  const { customersContacts, activeSpContacts } = useSelector((state) => state.contact);
+  const { contact, customersContacts, activeSpContacts } = useSelector((state) => state.contact);
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -47,17 +48,37 @@ export default function TicketViewForm() {
   const [ fileDialog, setFileDialog ] = useState( false );
   const [ slides, setSlides ] = useState([]);
   const [ approvers, setApprovers ] = useState([]);
- 
+  const [ reportersList, setReportersList ] = useState([]);
   const configurations = JSON.parse(localStorage.getItem('configurations'));
   const prefix = configurations?.find((config) => config?.name?.toLowerCase() === 'ticket_prefix')?.value || '';
 
   useEffect(() => { 
+    if (Array.isArray(customersContacts)) {
+      const updatedList = [...customersContacts];
+  
+      if (ticket?.createdBy?.contact?._id && 
+          !updatedList.some(c => c?._id === ticket?.createdBy?.contact?._id)) {
+        updatedList.unshift(ticket.createdBy.contact);
+      }
+  
+      if (contact?._id && !updatedList.some(c => c._id === contact._id)) {
+        updatedList.unshift(contact);
+      }
+  
+      setReportersList(updatedList);
+    }
+  }, [ customersContacts, ticket, contact ]);
+
+  useEffect(() => { 
     dispatch(getCustomerContacts( ticket?.customer?._id ));
     dispatch(getActiveSPContacts());
+    dispatch(getContact( user?.customer, user?.contact ));
     return () => {
+      dispatch(resetContact( ));
       dispatch(resetCustomersContacts());
       dispatch(resetActiveSPContacts());
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ dispatch, ticket?.customer?._id ])
 
   useEffect(() => { 
@@ -76,7 +97,7 @@ export default function TicketViewForm() {
 
         approvingContactsArray = activeSpContacts
           .map((activeSpUser) => activeSpUser?.contact)
-          .filter((contact) => contact?.email && configEmails.includes(contact.email.toLowerCase()))
+          .filter((c) => c?.email && configEmails.includes(c.email.toLowerCase()))
           .sort((a, b) => {
             const nameA = `${a.firstName} ${a.lastName}`.toLowerCase();
             const nameB = `${b.firstName} ${b.lastName}`.toLowerCase();
@@ -305,14 +326,14 @@ export default function TicketViewForm() {
             <ViewFormField isLoading={isLoading} sm={2} heading="PLC" 
               node={<FilledTextField name="plc" value={defaultValues.plc} onSubmit={onSubmit}  />}
             />
-            <ViewFormField isLoading={isLoading} sm={4} heading="Reporter" 
-              node={<DropDownField name="reporter" label='Reporter' value={ticket?.reporter} onSubmit={onSubmit} options={ customersContacts } />}
+            <ViewFormField isLoading={isLoading} sm={4} heading="Raise ticket on behalf of / Reporter" 
+              node={<DropDownField name="reporter" label='Reporter' value={ticket?.reporter} onSubmit={onSubmit} options={ reportersList } />}
             />
             <ViewFormField isLoading={isLoading} sm={4} heading="Assignee" 
               node={<DropDownField name="assignee" label='Assignee' value={ticket?.assignee} onSubmit={onSubmit} options={ customersContacts } />}
             />
             <ViewFormField isLoading={isLoading} sm={4} heading="Approvers" 
-              node={<DropDownField name="approvers" label='Approvers' value={ticket?.approvers} onSubmit={onSubmit} options={ approvers } />}
+              node={<DropDownMultipleSelection name="approvers" label='Approvers' value={ticket?.approvers} onSubmit={onSubmit} options={ approvers } />}
             />
             <ViewFormField isLoading={isLoading} sm={12} heading="Summary"
               node={<FilledTextField name="summary" value={defaultValues.summary} onSubmit={onSubmit}  />}

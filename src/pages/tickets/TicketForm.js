@@ -85,8 +85,8 @@ export default function TicketForm() {
     reValidateMode: 'onChange'
   });
   
-  const { reset, setError, handleSubmit, watch, setValue, trigger, formState: { isSubmitting }} = methods;
-
+  const { reset, setError, handleSubmit, watch, setValue, trigger, formState: { isSubmitting, errors }} = methods;
+console.log(" errors  : ",errors)
   const { issueType, customer, machine, files, plannedStartDate, plannedEndDate } = watch();
 
   useEffect(() => {
@@ -236,6 +236,7 @@ export default function TicketForm() {
                           dispatch(getActiveCustomerMachines(newValue?._id))
                         } else {
                           setValue('customer',null )
+                          setValue('machine',null )
                           dispatch(resetActiveCustomerMachines())
                         }
                       }

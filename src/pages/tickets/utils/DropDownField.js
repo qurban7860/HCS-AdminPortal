@@ -72,8 +72,8 @@ export default function DropDownField( { value, name, label, options = [], isLoa
           variant="contained"
           disableElevation
           onClick={handleClick}
-          color={ !value?.color && "inherit" || undefined }
-          startIcon={ value?.icon && <Iconify icon={ value?.icon } /> }
+          color="inherit"
+          startIcon={ value?.icon && <Iconify icon={ value?.icon } color={value?.color || ""} /> }
           endIcon={
             (
               ( isSubmitting ? 
@@ -85,12 +85,6 @@ export default function DropDownField( { value, name, label, options = [], isLoa
             )
           }
           // disabled={ isSubmitting }
-          sx={{ 
-            backgroundColor: value?.color || "",
-            '&:hover': {
-              backgroundColor: value?.color,
-            },
-          }}
         >
           {  value?._id && ( value?.name ? value?.name : `${value?.firstName || "" } ${value?.lastName || ""}`) || `Select ${label || ""}` }
         </Button>
@@ -111,17 +105,10 @@ export default function DropDownField( { value, name, label, options = [], isLoa
                 size="small"
                 onClick={() => handleSubmit(handleMenuItemClick(p)) }
                 // disabled={ value?._id === p?._id } 
-                // selected={ value?._id === p?._id } 
+                selected={ value?._id === p?._id } 
                 color={ !p?.color && "inherit" || "#fff" }
-                sx={{
-                  backgroundColor: p.color ,
-                  // color: p?.color && '#fff',
-                  '&:hover': {
-                    backgroundColor: p?.color,
-                  },
-                }}
               >
-                <Iconify icon={p.icon} size="40px" sx={{ mr: 1 }}/> { p?.name ? p?.name : `${p?.firstName || "" } ${p?.lastName || ""}` || ""}
+                <Iconify color={p?.color || ""} icon={p.icon} size="40px" sx={{ mr: 1 }} /> { p?.name ? p?.name : `${p?.firstName || "" } ${p?.lastName || ""}` || ""}
               </MenuItem>
           )}
         </StyledMenu>}
