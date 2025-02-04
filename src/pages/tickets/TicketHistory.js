@@ -49,7 +49,7 @@ const TicketHistory = ({ currentUser }) => {
       <Box>
         {histories.length > 0 ? (
           <List
-            sx={{ width: '100%', bgcolor: 'background.paper', maxHeight: 300, overflow: 'auto' }}
+            sx={{ width: '100%', bgcolor: 'background.paper', }}
           >
             {histories.map((history, index) => (
               <React.Fragment key={history._id}>
@@ -81,7 +81,7 @@ const TicketHistory = ({ currentUser }) => {
                     }
                     secondary={
                       <>
-                        <Typography variant="body1">
+                        { ( history?.previousStatus?._id || history?.newStatus?._id ) && <Typography variant="body1">
                           Status:
                           <span
                             style={{ backgroundColor: getLightBackgroundColor( history.previousStatus?.color ),
@@ -103,8 +103,8 @@ const TicketHistory = ({ currentUser }) => {
                           >
                             {history.newStatus?.name || 'None'}
                           </span>
-                        </Typography>
-                        <Typography variant="body1">
+                        </Typography>}
+                        { ( history?.previousPriority?._id || history?.newPriority?._id ) && <Typography variant="body1">
                           Priority:
                           <span
                             style={{ backgroundColor: getLightBackgroundColor( history.previousPriority?.color ),
@@ -126,15 +126,15 @@ const TicketHistory = ({ currentUser }) => {
                           >
                             {history.newPriority?.name || 'None'}
                           </span>
-                        </Typography>
-                        <Typography variant="body1" color="textSecondary">
+                        </Typography>}
+                        { ( history?.previousReporter?._id || history?.newReporter?._id ) && <Typography variant="body1" color="textSecondary">
                           Reporter: {history.previousReporter?.firstName} {history.previousReporter?.lastName || 'None'} →{' '}
                           {history.newReporter?.firstName} {history.newReporter?.lastName || 'None'}
-                        </Typography>
-                        <Typography variant="body1" color="textSecondary">
+                        </Typography>}
+                        { ( history?.previousAssignee?._id || history?.newAssignee?._id ) && <Typography variant="body1" color="textSecondary">
                           Assignee: {history.previousAssignee?.firstName} {history.previousAssignee?.lastName || 'None'} →{' '}
                           {history.newAssignee?.firstName} {history.newAssignee?.lastName || 'None'}
-                        </Typography>
+                        </Typography>}
                       </>
                     }
                   />

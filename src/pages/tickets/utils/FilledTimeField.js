@@ -51,23 +51,24 @@ function FilledTextField( { name, label, value, onSubmit, minRows } ) {
             variant="filled"
             fullWidth
             sx={{ 
-                "& .MuiInputBase-root": {
-                  padding: "8px", 
-                },
-                "& .MuiInput-underline:before": {
-                  borderBottom: "none", 
-                },
-                "& .MuiInput-underline:hover:not(.Mui-disabled):before": {
-                  borderBottom: "none", 
-                },
-                "& .MuiInput-underline.Mui-focused:before": {
-                  borderBottom: "none", 
-                },
-                "& .MuiInputBase-input": {
-                  padding: "0",
-                  margin: "0" 
-                }
-            }}
+              "& .MuiInputBase-root": {
+                padding: "8px",
+                boxSizing: "border-box",
+              },
+              "& .MuiInput-underline:before, & .MuiInput-underline:hover:not(.Mui-disabled):before, & .MuiInput-underline.Mui-focused:before": {
+                borderBottom: "none",
+              },
+              "&:hover .MuiInputBase-root, & .Mui-focused .MuiInputBase-root": {
+                backgroundColor: "transparent !important",
+                borderRadius: "8px",
+                transition: "border 0.3s ease-in-out",
+                outline: "1px solid",
+              },
+              "& .MuiInputBase-input": {
+                padding: "0",
+                margin: "0" 
+              }
+          }}
         />
         { isDirty && <Stack 
             direction="row" 
