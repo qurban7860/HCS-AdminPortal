@@ -100,7 +100,7 @@ export default function DropDownMultipleSelection( { value, name, label, options
           /> 
         )}
       />
-          { !val?.every(v => value?.some(vc => vc?._id === v?._id)) && <Stack 
+          { Array.isArray( val ) && Array.isArray( value ) && !val?.every(v => value?.some(vc => vc?._id === v?._id)) && <Stack 
             direction="row" 
             spacing={1} 
             sx={{
