@@ -63,6 +63,7 @@ export const FORMLABELS = {
     MACHINE_SERVICE_REPORT_NOTES: 'Notes / Comments',
     TICKET_ATTACHMENTS: 'Attachments',
     TICKET_COMMENTS: 'Notes / Comments',
+    TICKET_HISTORY: 'Ticket History',
     EDIT_DOCUMENT: 'Edit Document',
   },
 
