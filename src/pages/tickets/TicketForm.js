@@ -49,7 +49,7 @@ export default function TicketForm() {
 
   const defaultValues = useMemo(
     () => ({
-      customer: id && ticket?.customer || null,
+      customer: id && ticket?.customer ||  null,
       machine: id && ticket?.machine || null,
       issueType: id && ticket?.issueType || null,
       summary: id && ticket?.summary || '',
@@ -84,7 +84,7 @@ export default function TicketForm() {
     mode: 'onChange',
     reValidateMode: 'onChange'
   });
-  
+
   const { reset, setError, handleSubmit, watch, setValue, trigger, formState: { isSubmitting, errors }} = methods;
 console.log(" errors  : ",errors)
   const { issueType, customer, machine, files, plannedStartDate, plannedEndDate } = watch();
@@ -101,11 +101,22 @@ console.log(" errors  : ",errors)
       dispatch(resetSoftwareVersion());
     }
   }, [dispatch, machine]);
+  
+  useEffect(() => {
+    if (ticketSettings) {
+      setValue('priority', id && ticket?.priority || ( ticketSettings?.priorities?.find( p => p?.isDefault ) || null ));
+      setValue('status', id && ticket?.status || ( ticketSettings?.statuses?.find( s => s?.isDefault ) || null ));
+      setValue('impact', id && ticket?.impact || ( ticketSettings?.impacts?.find( i => i?.isDefault ) || null ));
+      setValue('changeType', id && ticket?.changeType || ( ticketSettings?.changeTypes?.find( t => t?.isDefault ) || null ));
+      setValue('changeReason', id && ticket?.changeReason || ( ticketSettings?.changeReasons?.find( r => r?.isDefault ) || null ));
+      setValue('investigationReason', id && ticket?.investigationReason || ( ticketSettings?.investigationReasons?.find( i => i?.isDefault ) || null ));
+    }
+  }, [ticketSettings, setValue, id, ticket]);
 
   useEffect(() => {
     if (softwareVersion) {
-      setValue('hlc', softwareVersion.hlc || '');
-      setValue('plc', softwareVersion.plc || '');
+      setValue('hlc', softwareVersion?.hlc || '');
+      setValue('plc', softwareVersion?.plc || '');
     }
   }, [softwareVersion, setValue]);
 
@@ -237,6 +248,9 @@ console.log(" errors  : ",errors)
                         } else {
                           setValue('customer',null )
                           setValue('machine',null )
+                          setValue('machineModel',"" )
+                          setValue('hlc',"" )
+                          setValue('plc',"" )
                           dispatch(resetActiveCustomerMachines())
                         }
                       }

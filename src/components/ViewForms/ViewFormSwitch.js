@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-duplicate-props */
 import { useEffect, memo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Typography, Grid,Switch} from '@mui/material';
@@ -9,6 +10,10 @@ ViewFormSWitch.propTypes = {
   isActive: PropTypes.bool,
   customerAccessHeading: PropTypes.string,
   customerAccess: PropTypes.bool,
+  shareWith: PropTypes.bool,
+  shareWithHeading: PropTypes.string,
+  onChange: PropTypes.func, 
+  isEditable: PropTypes.bool, 
   customer: PropTypes.bool,
   customerHeading: PropTypes.string,
   machine: PropTypes.bool,
@@ -21,9 +26,10 @@ ViewFormSWitch.propTypes = {
 };
 
 function ViewFormSWitch({sm, isActiveHeading, isActive, isMultiFactorAuthentication, 
-  isMultiFactorAuthenticationVal, customerAccessHeading, customerAccess, customer, 
+  isMultiFactorAuthenticationVal, customerAccessHeading, customerAccess, shareWith, shareWithHeading, onChange, isEditable, customer, 
   customerHeading, machine, machineHeading, drawing, drawingHeading, isLoading}) {
     const [isActiveVal, setIsActiveVal] = useState(isActive);
+    const [shareWithVal, setShareWithVal] = useState(shareWith);
     const [customerAccessVal, setCustomerAccessVal] = useState(customerAccess);
     const [multiFactorAuthenticationVal, setIsMultiFactorAuthenticationVal] = useState(isMultiFactorAuthenticationVal)
     useEffect(() => {
@@ -34,13 +40,27 @@ function ViewFormSWitch({sm, isActiveHeading, isActive, isMultiFactorAuthenticat
         setCustomerAccessVal(customerAccess);
     },[customerAccess])
 
-    const handleIsActiveChange = (event) => {
-        setIsActiveVal(event.target.checked);
-      };
+    useEffect(() => {
+      setShareWithVal(shareWith);
+    }, [shareWith]); 
 
-      const handleMultiFactorAuthentication = (event) => {
-        setIsMultiFactorAuthenticationVal(event.target.checked);
-      };
+    const handleIsActiveChange = (event) => {
+      setIsActiveVal(event.target.checked);
+      if (onChange) {
+        onChange(event); 
+      }
+    };
+
+    const handleShareWithChange = (event) => {
+      setShareWithVal(event.target.checked);
+      if (onChange) {
+        onChange(event); 
+      }
+    };
+
+    const handleMultiFactorAuthentication = (event) => {
+      setIsMultiFactorAuthenticationVal(event.target.checked);
+    };
 
     const handleCustomerAccessChange = (event) => {
         setCustomerAccessVal(event.target.checked);
@@ -69,7 +89,7 @@ function ViewFormSWitch({sm, isActiveHeading, isActive, isMultiFactorAuthenticat
               />
           </Grid>
         ) }
-
+        
         { isActiveHeading && (
         <Grid sx={{  display: 'flex', alignItems: 'center', mx:1 }}>
           <Typography
@@ -82,10 +102,28 @@ function ViewFormSWitch({sm, isActiveHeading, isActive, isMultiFactorAuthenticat
           disabled
               sx={{ mb: 0.6 }} checked={isActiveVal || false}
               onChange={handleIsActiveChange}
+              disabled={!isEditable}
               />
           </Grid>
         )}
-
+        
+        { shareWithHeading && (
+        <Grid sx={{  display: 'flex', alignItems: 'center', mx:1 }}>
+          <Typography
+          variant="subtitle2"
+          sx={{ pb: 1, color: 'text.disabled', display: 'flex',  }}
+         >
+          {shareWithHeading || ''}
+        </Typography>
+          <Switch
+          disabled
+              sx={{ mb: 0.6 }} checked={shareWithVal || false}
+              onChange={handleShareWithChange}
+              disabled={!isEditable}
+              />
+          </Grid>
+        )}
+        
         { isMultiFactorAuthentication && (
                 <Grid sx={{  display: 'flex', mx:1 }}>
                   <Typography
