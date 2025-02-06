@@ -2,9 +2,11 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { styled } from '@mui/material/styles';
 import { useForm } from 'react-hook-form';
-import { Box, Button, Menu, MenuItem } from '@mui/material';
+import { Box, Button, Menu, MenuItem, Typography, IconButton } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import Iconify from '../../../components/iconify';
+import IconButtonTooltip from '../../../components/Icons/IconButtonTooltip';
+import { StyledTooltip } from '../../../theme/styles/default-styles';
 
 const StyledMenu = styled((props) => (
   <Menu
@@ -37,12 +39,14 @@ DropDownField.propTypes = {
   value: PropTypes.object, 
   name: PropTypes.string, 
   label: PropTypes.string, 
+  isNullable: PropTypes.bool,
+  iconButton: PropTypes.bool,
   options: PropTypes.array, 
   onSubmit: PropTypes.func,
   isLoading: PropTypes.bool,
 };
 
-export default function DropDownField( { value, name, label, options = [], isLoading, onSubmit } ) {
+export default function DropDownField( { value, name, label, isNullable, iconButton, options = [], isLoading, onSubmit } ) {
   const [ anchorEl, setAnchorEl ] = useState(null);
   const open = Boolean(anchorEl);
   
@@ -65,6 +69,26 @@ export default function DropDownField( { value, name, label, options = [], isLoa
 
   return (
     <Box >
+        {iconButton ?
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <StyledTooltip 
+                  title={value.name || ""} 
+                  placement="top" 
+                  disableFocusListener 
+                  color={value?.color || "inherit" } 
+                  tooltipcolor={value?.color}
+                >
+                  <IconButton 
+                    variant="outlined"
+                    onClick={handleClick}
+                  >
+                    <Iconify icon={value?.icon || ""} color={value?.color || "inherit" } />
+                  </IconButton>
+                </StyledTooltip>
+
+                <Typography sx={{ marginLeft: 0.5 }}>{value.ticketNo || ''}</Typography>
+              </Box>
+               :
         <Button
           aria-controls={open ? 'demo-customized-menu' : undefined}
           aria-haspopup="true"
@@ -87,7 +111,7 @@ export default function DropDownField( { value, name, label, options = [], isLoa
           // disabled={ isSubmitting }
         >
           {  value?._id && ( value?.name ? value?.name : `${value?.firstName || "" } ${value?.lastName || ""}`) || `Select ${label || ""}` }
-        </Button>
+        </Button>}
         { Array.isArray( options ) && options?.length > 0 && <StyledMenu
           anchorEl={anchorEl}
           open={open}
@@ -98,7 +122,16 @@ export default function DropDownField( { value, name, label, options = [], isLoa
               <Iconify icon="eos-icons:loading" size="40px" sx={{ ml:1 }}/> Loading... 
             </MenuItem>
           )}
+                      { isNullable && <MenuItem 
+                        key="null"
+                        size="small"
+                        onClick={() => handleSubmit(handleMenuItemClick( null )) }
+                        selected={ value === null } 
+                        color="inherit"
+                      >Select { label || ""}
+                        </MenuItem>}
           { !isLoading && Array.isArray( options ) && 
+
             options?.map( ( p ) => 
               <MenuItem 
                 key={p?._id}
@@ -106,9 +139,9 @@ export default function DropDownField( { value, name, label, options = [], isLoa
                 onClick={() => handleSubmit(handleMenuItemClick(p)) }
                 // disabled={ value?._id === p?._id } 
                 selected={ value?._id === p?._id } 
-                color={ !p?.color && "inherit" || "#fff" }
+                // color={ !p?.color && "inherit" || "#fff" }
               >
-                <Iconify color={p?.color || ""} icon={p.icon} size="40px" sx={{ mr: 1 }} /> { p?.name ? p?.name : `${p?.firstName || "" } ${p?.lastName || ""}` || ""}
+                <Iconify icon={p.icon} color={p?.color || "inherit" } size="40px" sx={{ mr: 1 }} /> { p?.name ? p?.name : `${p?.firstName || "" } ${p?.lastName || ""}` || ""}
               </MenuItem>
           )}
         </StyledMenu>}
