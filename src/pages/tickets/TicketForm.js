@@ -244,6 +244,10 @@ console.log(" errors  : ",errors)
                     onChange={(event, newValue) =>{
                       if(newValue && newValue?._id !== customer?._id ){
                           setValue('customer',newValue)
+                          setValue('machine',null )
+                          setValue('machineModel',"" )
+                          setValue('hlc',"" )
+                          setValue('plc',"" )
                           dispatch(getActiveCustomerMachines(newValue?._id))
                         } else {
                           setValue('customer',null )
