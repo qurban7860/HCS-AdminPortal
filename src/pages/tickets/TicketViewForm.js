@@ -30,6 +30,7 @@ import DropDownField from './utils/DropDownField';
 import FilledTextField from './utils/FilledTextField';
 import FilledDateField from './utils/FilledDateField';
 import FilledTimeField from './utils/FilledTimeField';
+import ViewFormSWitch from '../../components/ViewForms/ViewFormSwitch';
 import DropDownMultipleSelection from './utils/DropDownMultipleSelection';
 import { getContact, getCustomerContacts, getActiveSPContacts, resetContact, resetCustomersContacts, resetActiveSPContacts } from '../../redux/slices/customer/contact';
 
@@ -202,6 +203,26 @@ export default function TicketViewForm() {
     }
   };
   
+  const [shareWith, setShareWith] = useState(defaultValues.shareWith); 
+  const [isActive, setIsActive] = useState(defaultValues.isActive); 
+
+  useEffect(() => {
+    setShareWith(defaultValues.shareWith); 
+  }, [defaultValues.shareWith]);
+
+  const handleShareWithChange = (event) => {
+    setShareWith(event.target.checked);
+    onSubmit('shareWith', event.target.checked); 
+  };
+
+  useEffect(() => {
+    setIsActive(defaultValues.isActive); 
+  }, [defaultValues.isActive]);
+
+  const handleIsActiveChange = (event) => {
+    setIsActive(event.target.checked);
+    onSubmit('isActive', event.target.checked); 
+  };
   
   //  ---------------------------------- Files Helper ------------------------------------------
 
@@ -461,6 +482,18 @@ export default function TicketViewForm() {
                 />
               </Grid>
             )}
+            <ViewFormSWitch isLoading={isLoading} sm={4}
+              shareWithHeading="Shared With Organization"
+              shareWith={shareWith} 
+              onChange={handleShareWithChange}
+              isEditable 
+            />
+            <ViewFormSWitch isLoading={isLoading} sm={4}
+              isActiveHeading="Active"
+              isActive={isActive} 
+              onChange={handleIsActiveChange}
+              isEditable 
+            />
           </Grid>
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>

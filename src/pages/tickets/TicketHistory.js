@@ -14,7 +14,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import dayjs from 'dayjs';
 import FormLabel from '../../components/DocumentForms/FormLabel';
 import { FORMLABELS } from '../../constants/default-constants';
-import { getHistories } from '../../redux/slices/ticket/ticketHistories/ticketHistory';
+import { getHistories, resetHistories } from '../../redux/slices/ticket/ticketHistories/ticketHistory';
 import { CustomAvatar } from '../../components/custom-avatar';
 
 const TicketHistory = ({ currentUser }) => {
@@ -25,6 +25,9 @@ const TicketHistory = ({ currentUser }) => {
   useEffect(() => {
     if (id) {
       dispatch(getHistories(id));
+    }
+    return () => { 
+      dispatch(resetHistories());
     }
   }, [id, dispatch]);
 
@@ -143,7 +146,9 @@ const TicketHistory = ({ currentUser }) => {
             ))}
           </List>
         ) : (
-          <Typography>No ticket histories available.</Typography>
+        <Typography variant="h6" color="text.secondary" align="center" sx={{mt: 2}}> 
+          No ticket histories available.
+        </Typography>
         )}
       </Box>
     </>
@@ -155,3 +160,4 @@ TicketHistory.propTypes = {
 };
 
 export default TicketHistory;
+
