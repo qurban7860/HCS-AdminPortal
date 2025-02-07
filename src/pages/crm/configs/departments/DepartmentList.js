@@ -41,7 +41,7 @@ const TABLE_HEAD = [
   { id: 'departmentType', label: 'Type', align: 'center' },
   { id: 'isActive', label: 'Active', align: 'center' },
   { id: 'forCustomer', label: 'Customer', align: 'center' },
-  { id: 'createdAt', label: 'Updated At', align: 'right' },
+  { id: 'updatedAt', label: 'Updated At', align: 'right' },
 ];
 
 // ----------------------------------------------------------------------

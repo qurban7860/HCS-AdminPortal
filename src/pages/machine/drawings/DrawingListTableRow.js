@@ -36,7 +36,7 @@ export default function DrawingListTableRow({
     documentType,
     documentCategory,
     isActive,
-    createdAt,
+    updatedAt,
   } = row;
 
   const smScreen = useScreenSize('sm')
@@ -49,7 +49,7 @@ export default function DrawingListTableRow({
         { smScreen && <TableCell>{documentType?.name}</TableCell>}
         { smScreen && <TableCell>{documentCategory?.name}</TableCell>}
         <TableCell align="center"><Switch checked={isActive} disabled size="small" /></TableCell>
-        <TableCell align="right">{fDate(createdAt)}</TableCell>
+        <TableCell align="right">{fDate(updatedAt)}</TableCell>
       </StyledTableRow>
   );
 }

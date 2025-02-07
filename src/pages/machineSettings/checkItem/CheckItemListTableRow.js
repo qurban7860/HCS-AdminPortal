@@ -33,7 +33,7 @@ export default function CheckItemListTableRow({
   onViewRow,
 }) {
 
-  const { name, isRequired, inputType, category,  isActive, createdAt } = row;
+  const { name, isRequired, inputType, category,  isActive, updatedAt } = row;
 
 
  const smScreen = useScreenSize('sm')
@@ -51,7 +51,7 @@ export default function CheckItemListTableRow({
           {' '}
           <Switch checked={isActive} disabled size="small" />{' '}
         </TableCell>
-        <TableCell align="right">{fDate(createdAt)}</TableCell>
+        <TableCell align="right">{fDate(updatedAt)}</TableCell>
       </StyledTableRow>
 
   );

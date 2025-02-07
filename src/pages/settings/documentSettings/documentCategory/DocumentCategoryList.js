@@ -53,7 +53,7 @@ const TABLE_HEAD = [
   { id: 'customer', visibility: 'xs1', label: 'Types', align: 'left' },
   { id: 'customerAccess', visibility: 'xs2', label: 'Customer Access', align: 'center' },
   { id: 'isActive', label: 'Active', align: 'center' },
-  { id: 'createdAt', label: 'Updated At', align: 'right' },
+  { id: 'updatedAt', label: 'Updated At', align: 'right' },
 ];
 
 // ----------------------------------------------------------------------

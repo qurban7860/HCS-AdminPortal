@@ -41,7 +41,7 @@ export default function CustomerListTableRow({
   isArchived,
   hiddenColumns
 }) {
-  const { clientCode, name, tradingName, groupCustomer, mainSite, isActive, createdAt, verifications, type } = row;
+  const { clientCode, name, tradingName, groupCustomer, mainSite, isActive, updatedAt, verifications, type } = row;
   const address = [];
   
   if (mainSite?.address?.city) {
@@ -81,9 +81,9 @@ export default function CustomerListTableRow({
           <Switch checked={isActive} />
         </TableCell>
       )}
-      {!hiddenColumns?.createdAt && (
+      {!hiddenColumns?.updatedAt && (
         <TableCell>
-          {fDate(createdAt)}
+          {fDate(updatedAt)}
         </TableCell>
       )}
     </StyledTableRow>

@@ -51,7 +51,7 @@ export default function ApiLogsList() {
   );
 
   const TABLE_HEAD = [
-    { id: 'createdAt', label: 'Timestamp', align: 'left' },
+    { id: 'updatedAt', label: 'Timestamp', align: 'left' },
     { id: 'apiType', label: 'API Type', align: 'left' },
     { id: 'requestMethod', label: 'Method', align: 'left' },
     { id: 'requestURL', label: 'Endpoint', align: 'left', allowSearch: true },

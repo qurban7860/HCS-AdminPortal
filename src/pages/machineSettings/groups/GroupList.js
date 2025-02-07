@@ -34,7 +34,7 @@ const TABLE_HEAD = [
   { id: 'group', label: 'Group'},
   { id: 'category', label: 'Category'},
   { id: 'isActive', label: 'Active', align: 'center' },
-  { id: 'createdAt', label: 'Updated At', align: 'right' },
+  { id: 'updatedAt', label: 'Updated At', align: 'right' },
 ];
 
 // ----------------------------------------------------------------------

@@ -27,7 +27,7 @@ export default function DepartmentListTableRow({
   onViewRow,
   hiddenColumns,
 }) {
-  const { departmentName, departmentType, isActive, forCustomer, isDefault, createdAt } = row;
+  const { departmentName, departmentType, isActive, forCustomer, isDefault, updatedAt } = row;
   
   return (
     <TableRow hover selected={selected}>
@@ -56,7 +56,7 @@ export default function DepartmentListTableRow({
 
       
       {!hiddenColumns?.createdAt && (
-        <TableCell align="right">{fDate(createdAt)}</TableCell>
+        <TableCell align="right">{fDate(updatedAt)}</TableCell>
       )}
     </TableRow>
 

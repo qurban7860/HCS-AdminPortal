@@ -56,7 +56,7 @@ export default function UserInviteList() {
     { id: 'senderInvitationUser.name', visibility: 'xs1', label: 'Invited By', align: 'left' },
     { id: 'invitationStatus', label: 'Status', align: 'left' },
     { id: 'inviteExpireTime', label: 'Expiry Time', align: 'left' },
-    { id: 'createdAt', visibility: 'xs2', label: 'Updated At', align: 'left' },
+    { id: 'updatedAt', visibility: 'xs2', label: 'Updated At', align: 'left' },
   ];
 
   const onChangeRowsPerPage = (event) => {

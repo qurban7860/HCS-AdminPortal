@@ -75,7 +75,7 @@ export default function CustomerSiteList({ isCustomerSitePage = false }) {
     { id: 'primaryTechnicalContact.firstName', label: 'Technical Contact', align: 'left' },
     { id: 'primaryBillingContact.firstName', label: 'Billing Contact', align: 'left' },
     { id: 'isActive', label: 'Active', align: 'center' },
-    { id: 'createdAt', label: 'Updated At', align: 'right' },
+    { id: 'updatedAt', label: 'Updated At', align: 'right' },
   ];
   
   // ----------------------------------------------------------------------

@@ -30,7 +30,7 @@ export default function ServiceReportTemplateListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { reportType, category, reportTitle, status, docVersionNo, approvals, noOfApprovalsRequired, machineModel, isActive, createdAt } = row;
+  const { reportType, category, reportTitle, status, docVersionNo, approvals, noOfApprovalsRequired, machineModel, isActive, updatedAt } = row;
   const [openConfirm, setOpenConfirm] = useState(false);
   const [openPopover, setOpenPopover] = useState(null);
 
@@ -66,7 +66,7 @@ export default function ServiceReportTemplateListTableRow({
           <Switch checked={isActive} disabled sx={{ my: -1 }} />{' '}
         </TableCell>
 
-        <TableCell align="right">{fDate(createdAt)}</TableCell>
+        <TableCell align="right">{fDate(updatedAt)}</TableCell>
       </TableRow>
 
       <MenuPopover

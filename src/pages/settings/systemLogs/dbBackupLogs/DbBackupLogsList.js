@@ -46,7 +46,7 @@ export default function DbBackupLogsList() {
   const { dbBackupLogs, filterBy, isLoading, initial } = useSelector((state) => state.dbBackupLogs );
 
   const TABLE_HEAD = [
-    { id: 'createdAt', label: 'Date', align: 'left' },
+    { id: 'updatedAt', label: 'Date', align: 'left' },
     { id: 'backupLocation', label: 'Name', align: 'left' },
     { id: 'backupSize', label: 'Size', align: 'left' },
     { id: 'databaseName', label: 'User', align: 'left' },

@@ -50,7 +50,7 @@ const TABLE_HEAD = [
   { id: 'customer.name', label: 'Customer', align: 'left', allowColumn : true },
   { id: 'status.name', label: 'Status', align: 'left', allowColumn : true },
   { id: 'priority.name', label: 'Priority', align: 'left', allowColumn : true },
-  { id: 'createdAt', label: 'Updated At', align: 'right' },
+  { id: 'updatedAt', label: 'Updated At', align: 'right' },
 ];
 
 // ----------------------------------------------------------------------

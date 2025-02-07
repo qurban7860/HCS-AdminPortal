@@ -64,7 +64,7 @@ const TABLE_HEAD = [
   { id: 'groupCustomer.name', label: 'Group Customer', align: 'left' },
   { id: 'address', label: 'Address', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
-  { id: 'createdAt', label: 'Updated At', align: 'left' },
+  { id: 'updatedAt', label: 'Updated At', align: 'left' },
 ];
 
 // ----------------------------------------------------------------------
@@ -81,7 +81,7 @@ export default function CustomerList({ isArchived }) {
     onSelectRow,
     onSort,
   } = useTable({
-    defaultOrderBy: 'createdAt', defaultOrder: 'desc',
+    defaultOrderBy: 'updatedAt', defaultOrder: 'desc',
   });
 
   const dispatch = useDispatch();
@@ -387,7 +387,7 @@ function applyFilter({ inputData, comparator, filterName, filterVerify, filterEx
         customer?.groupCustomer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         // customer?.mainSite?.address?.country?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         // (customer?.isActive ? "Active" : "InActive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
-        fDate(customer?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+        fDate(customer?.updatedAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }
 
