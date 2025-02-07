@@ -100,16 +100,19 @@ export default function DropDownMultipleSelection( { value, name, label, options
           /> 
         )}
       />
-          { Array.isArray( val ) && Array.isArray( value ) && !val?.every(v => value?.some(vc => vc?._id === v?._id)) && <Stack 
-            direction="row" 
-            spacing={1} 
-            sx={{
+          { Array.isArray( val ) && 
+            Array.isArray( value ) && 
+            ( ( val?.length !== value?.length ) || !val?.every(v => value?.some(vc => vc?._id === v?._id)) ) && 
+            <Stack 
+              direction="row" 
+              spacing={1} 
+              sx={{
                 position: 'absolute',
                 bottom: -53, 
                 right: 0,   
                 transform: 'translateY(-50%)',
-            }}
-        >
+              }}
+            >
             <LoadingButton
                 variant="contained"
                 color="primary"
