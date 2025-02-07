@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useEffect } from 'react';
+import { useCallback, useMemo, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { enc, MD5, lib } from 'crypto-js';
 // routes
@@ -8,6 +8,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Box, Container, Card, Grid, Stack } from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
 // components
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
@@ -33,6 +34,7 @@ export default function TicketForm() {
   const { activeCustomerMachines } = useSelector((state) => state.machine);
   const { activeCustomers } = useSelector((state) => state.customer);
   const { ticket, ticketSettings, softwareVersion } = useSelector((state) => state.tickets);
+  const [isSoftwareLoading, setIsSoftwareLoading] = useState(true);
 
   useEffect(() => {
     if( id )
@@ -72,10 +74,8 @@ export default function TicketForm() {
       plannedEndDate: id && ticket?.plannedEndDate || null,
       startTime: id && ticket?.startTime || null,
       endTime: id && ticket?.endTime || null,
-      hlc: softwareVersion?.hlc || '',  
-      plc: softwareVersion?.plc || '',
     }),
-    [ id, ticket, softwareVersion ] 
+    [ id, ticket ] 
   );
 
   const methods = useForm({
@@ -95,11 +95,14 @@ console.log(" errors  : ",errors)
   
   useEffect(() => {
     if (machine?._id) {
-      dispatch(getSoftwareVersion(machine._id)); 
+      setIsSoftwareLoading(true);
+      dispatch(getSoftwareVersion(machine._id)).finally(() => {
+        setIsSoftwareLoading(false);
+      });
     }
     return () => { 
       dispatch(resetSoftwareVersion());
-    }
+    };
   }, [dispatch, machine]);
   
   useEffect(() => {
@@ -285,8 +288,16 @@ console.log(" errors  : ",errors)
                      gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(3, 1fr)' }}
                     >
                     <RHFTextField name="machineModel" label="Machine Model" value={machine?.machineModel?.name || ''} InputProps={{ readOnly: true }} />
-                    <RHFTextField name="hlc" label="HLC" />
-                    <RHFTextField name="plc" label="PLC" />
+                    <RHFTextField name="hlc" label="HLC" 
+                      InputProps={{
+                        endAdornment: isSoftwareLoading ? <CircularProgress size={20} /> : null
+                      }}
+                    />
+                    <RHFTextField name="plc" label="PLC" 
+                      InputProps={{
+                        endAdornment: isSoftwareLoading ? <CircularProgress size={20} /> : null
+                      }}  
+                    />
                     </Box>
                   )}
                   <RHFAutocomplete
