@@ -41,7 +41,7 @@ const TABLE_HEAD = [
   { id: 'departmentType', label: 'Type', align: 'center' },
   { id: 'isActive', label: 'Active', align: 'center' },
   { id: 'forCustomer', label: 'Customer', align: 'center' },
-  { id: 'createdAt', label: 'Created At', align: 'right' },
+  { id: 'createdAt', label: 'Updated At', align: 'right' },
 ];
 
 // ----------------------------------------------------------------------
@@ -181,7 +181,7 @@ export default function DepartmentList() {
           )}
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <Scrollbar>
-              <Table size="small" sx={{ minWidth: 360 }}>
+              <Table stickyHeader size="small" sx={{ minWidth: 360 }}>
 
                 <TableHeadFilter
                   order={order}

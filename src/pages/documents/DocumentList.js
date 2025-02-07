@@ -168,7 +168,7 @@ const TABLE_HEAD = useMemo(() => {
     { id: 'referenceNumber', visibility: 'xs2', label: 'Ref. No.', align: 'left', allowSearch: true },
     { id: 'docCategory.name', visibility: 'xs1', label: 'Category', align: 'left', allowSearch: false },
     { id: 'docType.name', visibility: 'xs2', label: 'Type', align: 'left', allowSearch: false },
-    { id: 'createdAt', visibility: 'xs2', label: 'Created At', align: 'right' },
+    { id: 'createdAt', visibility: 'xs2', label: 'Updated At', align: 'right' },
   ];
 
   if (machineDrawings) {
@@ -557,7 +557,7 @@ const TABLE_HEAD = useMemo(() => {
           /> }
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <Scrollbar>
-            <Table size="small" sx={{ minWidth: 360 }}>
+            <Table stickyHeader size="small" sx={{ minWidth: 360 }}>
             {(!isNotFound || machinePage || customerPage) && ( 
                 <TableHeadFilter
                   order={order}

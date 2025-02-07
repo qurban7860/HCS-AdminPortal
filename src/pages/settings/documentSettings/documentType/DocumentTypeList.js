@@ -54,7 +54,7 @@ const TABLE_HEAD = [
   { id: 'docCategory.name', visibility: 'xs1' , label: 'Category', align: 'left' },
   { id: 'customerAccess', visibility: 'xs2' , label: 'Customer Access', align: 'center' },
   { id: 'isActive', label: 'Active', align: 'center' },
-  { id: 'createdAt', label: 'Created At', align: 'right' },
+  { id: 'createdAt', label: 'Updated At', align: 'right' },
 ];
 
 // ----------------------------------------------------------------------
@@ -257,7 +257,7 @@ export default function DocumentTypeList() {
             />
 
             <Scrollbar>
-              <Table size="small" sx={{ minWidth: 360 }}>
+              <Table stickyHeader size="small" sx={{ minWidth: 360 }}>
                 <TableHeadFilter
                   order={order}
                   orderBy={orderBy}
