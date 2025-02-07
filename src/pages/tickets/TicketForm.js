@@ -7,7 +7,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Container, Card, Grid, Stack } from '@mui/material';
+import { Box, Container, Card, Grid, Stack, CircularProgress } from '@mui/material';
 // components
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
@@ -32,7 +32,7 @@ export default function TicketForm() {
   const { enqueueSnackbar } = useSnackbar();
   const { activeCustomerMachines } = useSelector((state) => state.machine);
   const { activeCustomers } = useSelector((state) => state.customer);
-  const { ticket, ticketSettings, softwareVersion } = useSelector((state) => state.tickets);
+  const { ticket, ticketSettings, softwareVersion, isLoadingSoftwareVersion } = useSelector((state) => state.tickets);
 
   useEffect(() => {
     if( id )
@@ -285,8 +285,16 @@ console.log(" errors  : ",errors)
                      gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(3, 1fr)' }}
                     >
                     <RHFTextField name="machineModel" label="Machine Model" value={machine?.machineModel?.name || ''} InputProps={{ readOnly: true }} />
-                    <RHFTextField name="hlc" label="HLC" />
-                    <RHFTextField name="plc" label="PLC" />
+                    <RHFTextField name="hlc" label="HLC" 
+                      InputProps={{
+                        endAdornment: isLoadingSoftwareVersion ? <CircularProgress size={20} /> : null
+                      }}
+                    />
+                     <RHFTextField name="plc" label="PLC" 
+                      InputProps={{
+                        endAdornment: isLoadingSoftwareVersion ? <CircularProgress size={20} /> : null
+                      }}  
+                    />
                     </Box>
                   )}
                   <RHFAutocomplete
