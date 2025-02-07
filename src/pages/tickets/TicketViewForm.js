@@ -2,7 +2,7 @@ import { useMemo, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 // @mui
-import { Card, Grid, Box, Typography, Dialog, Divider, Button, DialogTitle } from '@mui/material';
+import { Card, Grid, Box, Dialog, Divider, Button, DialogTitle } from '@mui/material';
 import download from 'downloadjs';
 import b64toBlob from 'b64-to-blob';
 // redux
@@ -16,13 +16,10 @@ import { DocumentGalleryItem } from '../../components/gallery/DocumentGalleryIte
 import FormLabel from '../../components/DocumentForms/FormLabel';
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
-import Iconify from '../../components/iconify';
 import { useAuthContext } from '../../auth/useAuthContext';
-import { StyledTooltip } from '../../theme/styles/default-styles';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 import TicketComments from './TicketComments';
 import { handleError } from '../../utils/errorHandler';
-import { fDate, fTime } from '../../utils/formatTime';
 import Lightbox from '../../components/lightbox/Lightbox';
 import SkeletonPDF from '../../components/skeleton/SkeletonPDF';
 import DialogTicketAddFile from '../../components/Dialog/DialogTicketAddFile';
@@ -33,8 +30,6 @@ import FilledTimeField from './utils/FilledTimeField';
 import ViewFormSWitch from '../../components/ViewForms/ViewFormSwitch';
 import DropDownMultipleSelection from './utils/DropDownMultipleSelection';
 import { getContact, getCustomerContacts, getActiveSPContacts, resetContact, resetCustomersContacts, resetActiveSPContacts } from '../../redux/slices/customer/contact';
-
-
 
 export default function TicketViewForm() {
   const { ticket, ticketSettings, isLoading } = useSelector((state) => state.tickets);
@@ -135,10 +130,9 @@ export default function TicketViewForm() {
     }, [ ticket?.files?.length ]);
 
   
-  const handleEdit = () => {
-    navigate(PATH_SUPPORT.supportTickets.edit(ticket._id));
-  };
- 
+  // const handleEdit = () => {
+  //   navigate(PATH_SUPPORT.supportTickets.edit(ticket._id));
+  // };
  
   const defaultValues = useMemo(
     () => ({

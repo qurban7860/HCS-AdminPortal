@@ -255,8 +255,10 @@ function applyFilter({ inputData, comparator, filterName, selectedStatus, select
       const fieldsToFilter = [
         ticket?.ticketNo,
         ticket?.machine?.serialNo,
+        ticket?.machine?.machineModel?.name,
         ticket?.customer?.name,
         ticket?.summary,
+        ticket?.status?.name,
         ticket?.priority?.name,
         fDate(ticket?.createdAt),
       ];

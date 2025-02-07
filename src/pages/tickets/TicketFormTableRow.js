@@ -11,7 +11,7 @@ import { StyledTableRow, StyledTooltip } from '../../theme/styles/default-styles
 import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
 import Iconify from '../../components/iconify';
 import LinkDialogTableCell from '../../components/ListTableTools/LinkDialogTableCell';
-import { useScreenSize } from '../../hooks/useResponsive';
+// import { useScreenSize } from '../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -45,7 +45,7 @@ export default function TicketFormTableRow({
   
   return (
     <StyledTableRow hover selected={selected}>
-      {useScreenSize('lg') && !hiddenColumns?.['issueType.name'] && (
+      { !hiddenColumns?.['issueType.name'] && (
         <TableCell align="left" padding="checkbox">
           <Stack direction="row" alignItems="center" >
             <StyledTooltip placement="top" title={issueType?.name || ''} 
@@ -55,24 +55,24 @@ export default function TicketFormTableRow({
           </Stack>
         </TableCell>
       )}
-      {useScreenSize('lg') && !hiddenColumns?.ticketNo && (
+      { !hiddenColumns?.ticketNo && (
         <LinkTableCell align="left" onClick={() => onViewRow(`${prefix}${ticketNo}`)} param={`${prefix || ''} - ${ticketNo || ''}`} />
       )}
-      {useScreenSize('lg') && !hiddenColumns?.summary && (
+      { !hiddenColumns?.summary && (
         <Stack direction="row" alignItems="center">
           <LinkTableCell align="left" onClick={onViewRow} param={summary || ''} /> 
         </Stack>
       )}
-      {useScreenSize('lg') && !hiddenColumns?.['machine.serialNo'] && (
+      { !hiddenColumns?.['machine.serialNo'] && (
         <LinkTableCell align="left" onClick={(event) => handleMachineDialog(event, row.machine?._id)} param={machine?.serialNo || ''} />
       )}
-      {useScreenSize('lg') && !hiddenColumns?.['machine.machineModel.name'] && (
+      { !hiddenColumns?.['machine.machineModel.name'] && (
         <TableCell align='left' > { machine?.machineModel?.name || ''} </TableCell>
       )}
-      {useScreenSize('lg') && !hiddenColumns?.['customer.name'] && (
+      { !hiddenColumns?.['customer.name'] && (
         <LinkDialogTableCell onClick={handleCustomerDialog} align='center' param={customer?.name || ''}/>
       )}
-      {useScreenSize('lg') && !hiddenColumns?.['status.name'] && (
+      { !hiddenColumns?.['status.name'] && (
         <TableCell align="left" padding="checkbox">
           <StyledTooltip 
             placement="top" 
@@ -82,7 +82,7 @@ export default function TicketFormTableRow({
           </StyledTooltip>
         </TableCell>
       )}
-      {useScreenSize('lg') && !hiddenColumns?.['priority.name'] && (
+      { !hiddenColumns?.['priority.name'] && (
         <TableCell align="left" padding="checkbox">
           <StyledTooltip 
             placement="top" 
@@ -92,7 +92,7 @@ export default function TicketFormTableRow({
           </StyledTooltip>
         </TableCell>
       )}
-      {useScreenSize('lg') && !hiddenColumns?.createdAt && (
+      { !hiddenColumns?.createdAt && (
         <TableCell align='right' > { fDate(createdAt) } </TableCell>
       )}
     </StyledTableRow>
