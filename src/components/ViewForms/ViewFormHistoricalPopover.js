@@ -14,7 +14,7 @@ function ViewFormHistoricalPopover({ open, onClose, ListArr, ListTitle }) {
         <TableRow>
           <TableCell>Value</TableCell>
           <TableCell>Created By</TableCell>
-          <TableCell>Created At</TableCell>
+          <TableCell>Updated At</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
@@ -54,7 +54,7 @@ function ViewFormHistoricalPopover({ open, onClose, ListArr, ListTitle }) {
                 <b>Created By: </b>{history?.createdBy?.name || ''}
                 </Typography>
                 <Typography variant="body2" >
-                  <b>Created At: </b>{fDate(history?.createdAt) || ''}
+                  <b>Updated At: </b>{fDate(history?.createdAt) || ''}
                 </Typography>
               </Grid>
             </Grid>

@@ -53,7 +53,7 @@ export default function MachineList() {
 
   const TABLE_HEAD = [
     { id: 'serialNo', label: 'SerialNo'},
-    { id: 'name', visibility: 'xs1', label: 'name'},
+    { id: 'name', visibility: 'xs1', label: 'Name'},
     { id: 'machineModel.name', label: 'Model'},
     { id: 'status.name', label: 'Status'},
     { id: 'instalationSite.address.country', label: 'Address'},

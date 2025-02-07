@@ -55,7 +55,7 @@ const TABLE_HEAD = [
   { id: 'status', label: 'Status', align: 'left' },
   { id: 'customer.name', label: 'Customer', align: 'left' },
   { id: 'contact.firstName', label: 'Contact', align: 'left' },
-  { id: 'createdAt', label: 'Created At', align: 'right' },
+  { id: 'createdAt', label: 'Updated At', align: 'right' },
 ];
 
 // ----------------------------------------------------------------------

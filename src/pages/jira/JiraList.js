@@ -249,7 +249,7 @@ export default function JiraList() {
             />
 
             <Scrollbar>
-              <Table size="small" sx={{ minWidth: 360 }}>
+              <Table stickyHeader size="small" sx={{ minWidth: 360 }}>
                 <TableHeadFilter
                   order={order}
                   orderBy={orderBy}

@@ -80,7 +80,7 @@ export default function Emailviewform({ emailData }) {
           />
           <ViewFormField
             sm={6}
-            heading="Created At"
+            heading="Updated At"
             param={emailData && emailData.createdAt ? emailData.createdAt : 'N/A'}
           />
         </Grid>

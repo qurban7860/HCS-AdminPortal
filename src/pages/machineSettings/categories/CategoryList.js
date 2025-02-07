@@ -35,7 +35,7 @@ const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
   { id: 'connections', visibbility: 'xs1', label: 'Connectable as child', align: 'center' },
   { id: 'isActive', label: 'Active', align: 'center' },
-  { id: 'createdAt', label: 'Created At', align: 'right' },
+  { id: 'createdAt', label: 'Updated At', align: 'right' },
 ];
 
 

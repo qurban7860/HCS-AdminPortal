@@ -36,7 +36,7 @@ import { FORMLABELS } from '../../../constants/default-constants';
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
-  { id: 'createdAt', label: 'Created At', align: 'right' },
+  { id: 'createdAt', label: 'Updated At', align: 'right' },
 ];
 
 // ----------------------------------------------------------------------

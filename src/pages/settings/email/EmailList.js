@@ -42,7 +42,7 @@ const TABLE_HEAD = [
   { id: 'fromEmail', label: 'From', align: 'left', },
   { id: 'subject', label: 'Subject', align: 'left', },
   { id: 'customer.name', label: 'Customer', align: 'left', },
-  { id: 'createdAt', label: 'Created At', align: 'right', },
+  { id: 'createdAt', label: 'Updated At', align: 'right', },
 ];
 
 // ----------------------------------------------------------------------
@@ -152,7 +152,7 @@ export default function EmailList() {
         )}
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
           <Scrollbar>
-            <Table size="small" sx={{ minWidth: 360 }}>
+            <Table stickyHeader size="small" sx={{ minWidth: 360 }}>
             <TableHeadFilter
                 order={order}
                 orderBy={orderBy}

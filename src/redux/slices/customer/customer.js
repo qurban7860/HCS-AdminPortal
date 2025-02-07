@@ -33,6 +33,7 @@ const initialState = {
       "isActive": false,
       "createdAt": false
   },
+  isFullScreen: false,
 };
 
 const slice = createSlice({
@@ -196,6 +197,15 @@ const slice = createSlice({
       state.reportHiddenColumns = action.payload;  
     },
     
+    // Open Full Screen Dialog
+    openFullScreen(state) {
+      state.isFullScreen = true;
+    },
+    
+    // Close Full Screen Dialog
+    closeFullScreen(state) {
+      state.isFullScreen = false;
+    },
   },
 });
 
@@ -219,7 +229,9 @@ export const {
   ChangeRowsPerPage,
   ChangePage,
   setCustomerDialog,
-  setReportHiddenColumns
+  setReportHiddenColumns,
+  openFullScreen,
+  closeFullScreen,
 } = slice.actions;
 
 // ----------------------------------------------------------------------

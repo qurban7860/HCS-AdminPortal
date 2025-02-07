@@ -12,6 +12,9 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 // eslint-disable-next-line import/no-unresolved
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
 // routes
@@ -30,6 +33,7 @@ import Scrollbar from '../../../../components/scrollbar';
 import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 import { FORMLABELS } from '../../../../constants/default-constants';
 
+
 // sections
 import CustomerListTableRow from './CustomerListTableRow';
 import CustomerListTableToolbar from './CustomerListTableToolbar';
@@ -43,7 +47,8 @@ import { getCustomers,
   setExcludeReporting, 
   setReportHiddenColumns, 
   getCustomer,
-  setCustomerDialog} from '../../../../redux/slices/customer/customer';
+  setCustomerDialog,
+  closeFullScreen} from '../../../../redux/slices/customer/customer';
 import { Cover } from '../../../../components/Defaults/Cover';
 import TableCard from '../../../../components/ListTableTools/TableCard';
 import { fDate } from '../../../../utils/formatTime';
@@ -59,7 +64,7 @@ const TABLE_HEAD = [
   { id: 'groupCustomer.name', label: 'Group Customer', align: 'left' },
   { id: 'address', label: 'Address', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
-  { id: 'createdAt', label: 'Created At', align: 'left' },
+  { id: 'createdAt', label: 'Updated At', align: 'left' },
 ];
 
 // ----------------------------------------------------------------------
@@ -89,6 +94,7 @@ export default function CustomerList({ isArchived }) {
   const [filterVerify, setFilterVerify] = useState(verified);
   const [filterExcludeRepoting, setFilterExcludeRepoting] = useState(excludeReporting);
   const [filterName, setFilterName] = useState(filterBy);
+  const openFullScreen = useSelector((state) => state.customer.isFullScreen);
 
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));
@@ -189,37 +195,110 @@ export default function CustomerList({ isArchived }) {
     dispatch(setCustomerDialog(true))
   }
 
-  return (
-    <Container maxWidth={false}>
-      <StyledCardContainer>
-        <Cover
-          name={isArchived ? FORMLABELS.COVER.ARCHIVED_CUSTOMERS : FORMLABELS.COVER.CUSTOMERS}
-          customerSites
-          customerContacts
-          isArchivedCustomers={!isArchived}
-          isArchived={isArchived}
-        />
-      </StyledCardContainer>
-      <TableCard>
-        <CustomerListTableToolbar
-          filterName={filterName}
-          onFilterName={handleFilterName}
-          filterVerify={isArchived ? undefined : filterVerify}
-          onFilterVerify={isArchived ? undefined : handleFilterVerify}
-          filterStatus={isArchived ? undefined : filterStatus}
-          onFilterStatus={isArchived ? undefined : handleFilterStatus}
-          isFiltered={isFiltered}
-          onResetFilter={handleResetFilter}
-          customerDocList
-          machineDocList
-          onExportCSV={onExportCSV}
-          onExportLoading={exportingCSV}
-          filterExcludeRepoting={isArchived ? undefined : filterExcludeRepoting}
-          handleExcludeRepoting={isArchived ? undefined : handleExcludeRepoting}
-          isArchived={isArchived}
-        />
+  const handleFullScreenOpen = () => {
+    dispatch(openFullScreen());
+  };
 
-        {!isNotFound && (
+  const handleFullScreenClose = () => {
+    dispatch(closeFullScreen());
+  };
+
+  return (
+    <>
+      <Container maxWidth={false}>
+        <StyledCardContainer>
+          <Cover
+            name={isArchived ? FORMLABELS.COVER.ARCHIVED_CUSTOMERS : FORMLABELS.COVER.CUSTOMERS}
+            customerSites
+            customerContacts
+            isArchivedCustomers={!isArchived}
+            isArchived={isArchived}
+          />
+        </StyledCardContainer>
+        <TableCard>
+          <CustomerListTableToolbar
+            filterName={filterName}
+            onFilterName={handleFilterName}
+            filterVerify={isArchived ? undefined : filterVerify}
+            onFilterVerify={isArchived ? undefined : handleFilterVerify}
+            filterStatus={isArchived ? undefined : filterStatus}
+            onFilterStatus={isArchived ? undefined : handleFilterStatus}
+            isFiltered={isFiltered}
+            onResetFilter={handleResetFilter}
+            customerDocList
+            machineDocList
+            onExportCSV={onExportCSV}
+            onExportLoading={exportingCSV}
+            filterExcludeRepoting={isArchived ? undefined : filterExcludeRepoting}
+            handleExcludeRepoting={isArchived ? undefined : handleExcludeRepoting}
+            isArchived={isArchived}
+            handleFullScreen={handleFullScreenOpen}
+          />
+
+          {!isNotFound && (
+            <TablePaginationFilter
+              columns={TABLE_HEAD}
+              hiddenColumns={reportHiddenColumns}
+              handleHiddenColumns={handleHiddenColumns}
+              count={customers ? customers.length : 0}
+              page={page}
+              rowsPerPage={rowsPerPage}
+              onPageChange={onChangePage}
+              onRowsPerPageChange={onChangeRowsPerPage}
+            />
+          )}
+          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+            <Scrollbar>
+              <Table stickyHeader size="small" sx={{ minWidth: 360 }}>
+                <TableHeadFilter
+                  order={order}
+                  orderBy={orderBy}
+                  headLabel={TABLE_HEAD}
+                  hiddenColumns={reportHiddenColumns}
+                  onSort={onSort}
+                />
+
+                <TableBody>
+                  {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row, index) =>
+                      row ? (
+                        <CustomerListTableRow
+                          hiddenColumns={reportHiddenColumns}
+                          key={row._id}
+                          row={row}
+                          selected={selected.includes(row._id)}
+                          onSelectRow={() => onSelectRow(row._id)}
+                          onViewRow={() => handleViewRow(row._id)}
+                          onViewGroupCustomer={() => handleCustomerDialog(row?.groupCustomer?._id)}
+                          style={index % 2 ? { background: 'red' } : { background: 'green' }}
+                          isArchived={isArchived}
+                        />
+                      ) : (
+                        !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
+                      )
+                    )}
+                  <TableNoData isNotFound={isNotFound} />
+                </TableBody>
+              </Table>
+            </Scrollbar>
+          </TableContainer>
+
+          {!isNotFound && (
+            <TablePaginationCustom
+              count={customers ? customers.length : 0}
+              page={page}
+              rowsPerPage={rowsPerPage}
+              onPageChange={onChangePage}
+              onRowsPerPageChange={onChangeRowsPerPage}
+            />
+          )}
+        </TableCard>
+      </Container>
+
+      <Dialog open={openFullScreen} onClose={handleFullScreenClose} fullWidth maxWidth="lg">
+        <DialogTitle onClose={handleFullScreenClose}>Full Screen View</DialogTitle>
+        <DialogContent>
           <TablePaginationFilter
             columns={TABLE_HEAD}
             hiddenColumns={reportHiddenColumns}
@@ -230,55 +309,45 @@ export default function CustomerList({ isArchived }) {
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
           />
-        )}
-        <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-          <Scrollbar>
-            <Table stickyHeader size="small" sx={{ minWidth: 360 }}>
-              <TableHeadFilter
-                order={order}
-                orderBy={orderBy}
-                headLabel={TABLE_HEAD}
-                hiddenColumns={reportHiddenColumns}
-                onSort={onSort}
-              />
+          <TableContainer>
+            <Scrollbar>
+              <Table stickyHeader size="small" sx={{ minWidth: 360 }}>
+                <TableHeadFilter
+                  order={order}
+                  orderBy={orderBy}
+                  headLabel={TABLE_HEAD}
+                  hiddenColumns={reportHiddenColumns}
+                  onSort={onSort}
+                />
 
-              <TableBody>
-                {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row, index) =>
-                    row ? (
-                      <CustomerListTableRow
-                        hiddenColumns={reportHiddenColumns}
-                        key={row._id}
-                        row={row}
-                        selected={selected.includes(row._id)}
-                        onSelectRow={() => onSelectRow(row._id)}
-                        onViewRow={() => handleViewRow(row._id)}
-                        onViewGroupCustomer={() => handleCustomerDialog(row?.groupCustomer?._id)}
-                        style={index % 2 ? { background: 'red' } : { background: 'green' }}
-                        isArchived={isArchived}
-                      />
-                    ) : (
-                      !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
-                    )
-                  )}
-                <TableNoData isNotFound={isNotFound} />
-              </TableBody>
-            </Table>
-          </Scrollbar>
-        </TableContainer>
-
-        {!isNotFound && (
-          <TablePaginationCustom
-            count={customers ? customers.length : 0}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-          />
-        )}
-      </TableCard>
-    </Container>
+                <TableBody>
+                  {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row, index) =>
+                      row ? (
+                        <CustomerListTableRow
+                          hiddenColumns={reportHiddenColumns}
+                          key={row._id}
+                          row={row}
+                          selected={selected.includes(row._id)}
+                          onSelectRow={() => onSelectRow(row._id)}
+                          onViewRow={() => handleViewRow(row._id)}
+                          onViewGroupCustomer={() => handleCustomerDialog(row?.groupCustomer?._id)}
+                          style={index % 2 ? { background: 'red' } : { background: 'green' }}
+                          isArchived={isArchived}
+                        />
+                      ) : (
+                        !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
+                      )
+                    )}
+                  <TableNoData isNotFound={isNotFound} />
+                </TableBody>
+              </Table>
+            </Scrollbar>
+          </TableContainer>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
 

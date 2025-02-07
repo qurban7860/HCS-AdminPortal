@@ -48,7 +48,7 @@ const TABLE_HEAD = [
   { id: 'address.city', visibility: 'md1', label: 'City', align: 'left' },
   { id: 'address.country', visibility: 'xs2', label: 'Country', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
-  { id: 'createdAt', label: 'Created At', align: 'right' },
+  { id: 'createdAt', label: 'Updated At', align: 'right' },
 ];
 
 

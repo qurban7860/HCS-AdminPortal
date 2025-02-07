@@ -37,7 +37,7 @@ export const FORMLABELS = {
     SETTINGS: 'Settings',
     MACHINE_SETTINGS: 'Machine Settings',
     CUSTOMERS: 'Customers',
-    REGISTERED_REQUESTS: "Portal Registration Requests",
+    REGISTERED_REQUESTS: "Portal Registrations",
     ARCHIVED_CUSTOMERS: 'Archived Customers',
     DOCUMENTS: 'Documents',
     ADD_DOCUMENTS: 'Add Documents',

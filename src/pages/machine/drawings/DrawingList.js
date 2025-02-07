@@ -69,7 +69,7 @@ export default function DrawingList() {
     { id: 'documentType.name', visibility: 'xs2', label: 'Type', align: 'left' },
     { id: 'documentCategory.name', visibility: 'xs1', label: 'Category', align: 'left' },
     { id: 'isActive', label: 'Active', align: 'center' },
-    { id: 'createdAt', label: 'Created At', align: 'right' },
+    { id: 'createdAt', label: 'Updated At', align: 'right' },
   ];
     
   const onChangeRowsPerPage = (event) => {

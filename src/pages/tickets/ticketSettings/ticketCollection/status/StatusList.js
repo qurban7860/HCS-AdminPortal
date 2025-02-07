@@ -35,12 +35,12 @@ import { StyledCardContainer } from '../../../../../theme/styles/default-styles'
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'isActive', label: ' ', align: 'left' },
+  { id: 'isActive', label: 'Active', align: 'left' },
   { id: 'name', label: 'Name', align: 'left' },
   { id: 'statusType.name', visibility: 'xs1', label: 'Status Type', align: 'left' },
   { id: 'displayOrderNo', visibility: 'xs1', label: 'Order Number', align: 'left' },
   { id: 'icon', label: 'Icon ', align: 'left' },
-  { id: 'createdAt', label: 'Created At', align: 'right' },
+  { id: 'createdAt', label: 'Updated At', align: 'right' },
 ];
 
 // ----------------------------------------------------------------------

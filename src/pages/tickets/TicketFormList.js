@@ -42,7 +42,7 @@ import useResponsive from '../../hooks/useResponsive';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'issueType.name', label: '', align: 'left' },
+  { id: 'issueType.name', label: 'Issue Type', align: 'left' },
   { id: 'ticketNo', label: 'Ticket No.', align: 'left' },
   { id: 'summary', label: 'Summary', align: 'left', allowColumn : true },
   { id: 'machine.serialNo', label: 'Machine', align: 'left', allowColumn : true },
@@ -50,7 +50,7 @@ const TABLE_HEAD = [
   { id: 'customer.name', label: 'Customer', align: 'left', allowColumn : true },
   { id: 'status.name', label: 'Status', align: 'left', allowColumn : true },
   { id: 'priority.name', label: 'Priority', align: 'left', allowColumn : true },
-  { id: 'createdAt', label: 'Created At', align: 'right' },
+  { id: 'createdAt', label: 'Updated At', align: 'right' },
 ];
 
 // ----------------------------------------------------------------------
@@ -189,7 +189,7 @@ export default function TicketFormList(){
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <Scrollbar>
-              <Table size="small" sx={{ minWidth: 360 }}>
+              <Table stickyHeader size="small" sx={{ minWidth: 360 }}>
                 <TableHeadFilter
                   order={order}
                   orderBy={orderBy}

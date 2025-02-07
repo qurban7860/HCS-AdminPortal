@@ -53,7 +53,7 @@ const TABLE_HEAD = [
   { id: 'roles.name.[]', visibility: 'md1', label: 'Roles', align: 'left' },
   { id: 'contact.firstName', visibility: 'xl', label: 'Contact', align: 'left' },
   { id: 'isActive', label: "   ", align: 'left' },
-  { id: 'createdAt', visibility: 'md', label: 'Created At', align: 'right' },
+  { id: 'createdAt', visibility: 'md', label: 'Updated At', align: 'right' },
 ];
 
 // ----------------------------------------------------------------------
@@ -259,7 +259,7 @@ useEffect(()=>{
             />
 
             <Scrollbar>
-              <Table size="small" sx={{ minWidth: 360 }}>
+              <Table stickyHeader size="small" sx={{ minWidth: 360 }}>
                 <TableHeadFilter
                   order={order}
                   orderBy={orderBy}
