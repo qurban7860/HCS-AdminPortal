@@ -16,6 +16,7 @@ const initialState = {
   error: null,
   isLoading: false,
   isLoadingTicketFile: false,
+  isLoadingSoftwareVersion: false,
   reportHiddenColumns: {
     "issueType.name": false,
     "ticketNo": false,
@@ -43,14 +44,19 @@ const slice = createSlice({
       state.isLoadingTicketFile = action.payload;;
     },
     
+    startLoadingSoftwareVersion(state) {
+      state.isLoadingSoftwareVersion = true;
+    },
+
     // HAS ERROR
     hasError(state, action) {
       state.isLoading = false;
       state.isLoadingTicketFile = false;
+      state.isLoadingSoftwareVersion = false;
       state.error = action.payload;
       state.initial = true;
     },
-
+   
     // GET Tickets Success
     getTicketsSuccess(state, action) {
       state.isLoading = false;
@@ -65,7 +71,7 @@ const slice = createSlice({
     
     // GET Versions Success
     getSoftwareVersionSuccess(state, action) {
-      state.isLoading = false;
+      state.isLoadingSoftwareVersion = false;
       state.softwareVersion = action.payload;
     },
 
@@ -168,7 +174,7 @@ const slice = createSlice({
     resetSoftwareVersion(state) {
       state.softwareVersion = null;
       state.responseMessage = null;
-      state.isLoading = false;
+      state.isLoadingSoftwareVersion = false;
     },
 
     // SET FILTER BY
@@ -368,7 +374,7 @@ export function getTicket(id) {
 // GET Software Versions
 export function getSoftwareVersion(id) {
   return async (dispatch) => {
-    dispatch(slice.actions.startLoading());
+    dispatch(slice.actions.startLoadingSoftwareVersion());
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${id}/techparamvalues/softwareVersion/`);
       dispatch(slice.actions.getSoftwareVersionSuccess(response.data));

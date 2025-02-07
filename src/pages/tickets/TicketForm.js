@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useEffect, useState } from 'react';
+import { useCallback, useMemo, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { enc, MD5, lib } from 'crypto-js';
 // routes
@@ -7,8 +7,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Container, Card, Grid, Stack } from '@mui/material';
-import CircularProgress from '@mui/material/CircularProgress';
+import { Box, Container, Card, Grid, Stack, CircularProgress } from '@mui/material';
 // components
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
@@ -33,8 +32,7 @@ export default function TicketForm() {
   const { enqueueSnackbar } = useSnackbar();
   const { activeCustomerMachines } = useSelector((state) => state.machine);
   const { activeCustomers } = useSelector((state) => state.customer);
-  const { ticket, ticketSettings, softwareVersion } = useSelector((state) => state.tickets);
-  const [isSoftwareLoading, setIsSoftwareLoading] = useState(true);
+  const { ticket, ticketSettings, softwareVersion, isLoadingSoftwareVersion } = useSelector((state) => state.tickets);
 
   useEffect(() => {
     if( id )
@@ -74,8 +72,10 @@ export default function TicketForm() {
       plannedEndDate: id && ticket?.plannedEndDate || null,
       startTime: id && ticket?.startTime || null,
       endTime: id && ticket?.endTime || null,
+      hlc: softwareVersion?.hlc || '',  
+      plc: softwareVersion?.plc || '',
     }),
-    [ id, ticket ] 
+    [ id, ticket, softwareVersion ] 
   );
 
   const methods = useForm({
@@ -95,14 +95,11 @@ console.log(" errors  : ",errors)
   
   useEffect(() => {
     if (machine?._id) {
-      setIsSoftwareLoading(true);
-      dispatch(getSoftwareVersion(machine._id)).finally(() => {
-        setIsSoftwareLoading(false);
-      });
+      dispatch(getSoftwareVersion(machine._id)); 
     }
     return () => { 
       dispatch(resetSoftwareVersion());
-    };
+    }
   }, [dispatch, machine]);
   
   useEffect(() => {
@@ -290,12 +287,12 @@ console.log(" errors  : ",errors)
                     <RHFTextField name="machineModel" label="Machine Model" value={machine?.machineModel?.name || ''} InputProps={{ readOnly: true }} />
                     <RHFTextField name="hlc" label="HLC" 
                       InputProps={{
-                        endAdornment: isSoftwareLoading ? <CircularProgress size={20} /> : null
+                        endAdornment: isLoadingSoftwareVersion ? <CircularProgress size={20} /> : null
                       }}
                     />
-                    <RHFTextField name="plc" label="PLC" 
+                     <RHFTextField name="plc" label="PLC" 
                       InputProps={{
-                        endAdornment: isSoftwareLoading ? <CircularProgress size={20} /> : null
+                        endAdornment: isLoadingSoftwareVersion ? <CircularProgress size={20} /> : null
                       }}  
                     />
                     </Box>
