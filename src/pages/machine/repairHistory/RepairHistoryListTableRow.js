@@ -101,7 +101,7 @@ export default function RepairHistoryListTableRow({
           </Label>
         </TableCell>
 
-        <TableCell>{fDate(createdAt)}</TableCell>
+        <TableCell>{fDate(updatedAt)}</TableCell>
 
         <TableCell align="center">
           <IconButton color={openPopover ? 'primary' : 'default'} onClick={handleOpenPopover}>

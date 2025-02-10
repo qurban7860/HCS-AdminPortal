@@ -22,7 +22,7 @@ export default function ChangeReasonListTableRow({
   selected,
   onViewRow,
 }) {
-  const { name, icon, color, slug, displayOrderNo, isActive, isDefault, createdAt } = row;
+  const { name, icon, color, slug, displayOrderNo, isActive, isDefault, updatedAt } = row;
 
   return (
     <StyledTableRow hover selected={selected}>
@@ -47,7 +47,7 @@ export default function ChangeReasonListTableRow({
           <Iconify icon={icon} color={color} />
         </StyledTooltip>
       </TableCell>
-      <TableCell align="right">{fDate(createdAt)}</TableCell>
+      <TableCell align="right">{fDate(updatedAt)}</TableCell>
     </StyledTableRow>
   );
 }

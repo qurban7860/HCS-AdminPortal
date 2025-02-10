@@ -36,7 +36,7 @@ import TableCard from '../../../components/ListTableTools/TableCard';
 const TABLE_HEAD = [
   { id: 'name', label: 'Technnical Parameter Category', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
-  { id: 'createdAt', label: 'Updated At', align: 'right' },
+  { id: 'updatedAt', label: 'Updated At', align: 'right' },
 ];
 
 

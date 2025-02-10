@@ -42,7 +42,7 @@ const TABLE_HEAD = [
   { id: 'fromEmail', label: 'From', align: 'left', },
   { id: 'subject', label: 'Subject', align: 'left', },
   { id: 'customer.name', label: 'Customer', align: 'left', },
-  { id: 'createdAt', label: 'Updated At', align: 'right', },
+  { id: 'updatedAt', label: 'Updated At', align: 'right', },
 ];
 
 // ----------------------------------------------------------------------

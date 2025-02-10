@@ -30,6 +30,7 @@ export default function APILogsTableRow({
     responseTime,
     machine,
     customer,
+    updatedAt,
     additionalContextualInformation,
     requestHeaders = {},
     createdIP = '', 
@@ -107,7 +108,7 @@ export default function APILogsTableRow({
         open={dialogOpen}
         onClose={handleCloseDialog}
         logDetails={{
-          createdAt: fDateTime(createdAt),
+          updatedAt: fDateTime(updatedAt),
           apiType,
           requestMethod,
           requestURL,

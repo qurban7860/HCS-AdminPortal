@@ -34,7 +34,7 @@ export default function DocumentTypeListTableRow({
   onViewRow,
   hiddenColumns,
 }) {
-  const { name, docCategory, customerAccess, isActive, isDefault, createdAt } = row;
+  const { name, docCategory, customerAccess, isActive, isDefault, updatedAt } = row;
   const smScreen = useScreenSize('sm');
 
   return (
@@ -60,7 +60,7 @@ export default function DocumentTypeListTableRow({
       )}
       
       {useScreenSize('lg') && !hiddenColumns?.createdAt && (
-        <TableCell align="right">{fDate(createdAt)}</TableCell>
+        <TableCell align="right">{fDate(updatedAt)}</TableCell>
       )}
     </StyledTableRow>
   );

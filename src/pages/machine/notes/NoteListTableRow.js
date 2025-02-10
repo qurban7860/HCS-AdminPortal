@@ -24,7 +24,7 @@ export default function NoteListTableRow({
 }) {
   const {
     note,
-    createdAt,
+    updatedAt,
     isActive
   } = row;
 
@@ -32,7 +32,7 @@ export default function NoteListTableRow({
       <StyledTableRow hover selected={selected}>
         <LinkTableCell align="left" param={note} stringLength={100} onClick={onViewRow} />
         <TableCell align="left"><Switch checked={isActive} disabled size="small" /></TableCell>
-        <TableCell align="right">{fDate(createdAt)}</TableCell>
+        <TableCell align="right">{fDate(updatedAt)}</TableCell>
       </StyledTableRow>
 
   );

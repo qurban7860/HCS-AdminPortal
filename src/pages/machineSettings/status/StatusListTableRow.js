@@ -28,7 +28,7 @@ export default function StatusListTableRow({
 
   const smScreen = useScreenSize('sm')
 
-  const { name, slug, displayOrderNo, isActive, isDefault, createdAt } = row;
+  const { name, slug, displayOrderNo, isActive, isDefault, updatedAt } = row;
 
   return (
       <TableRow hover selected={selected}>
@@ -38,7 +38,7 @@ export default function StatusListTableRow({
         <TableCell align="center">
           <Switch checked={isActive} disabled size="small" sx={{ my: -1 }} />{' '}
         </TableCell>
-        <TableCell align="right">{fDate(createdAt)}</TableCell>
+        <TableCell align="right">{fDate(updatedAt)}</TableCell>
       </TableRow>
   );
 }

@@ -49,7 +49,7 @@ const TABLE_HEAD = [
   { id: 'category.name', visibility: 'xs3', label: 'Item Category', align: 'left' },
   { id: 'isRequired', visibility: 'xs4', label: 'Required', align: 'center' },
   { id: 'isActive', label: 'Active', align: 'center' },
-  { id: 'createdAt', label: 'Updated At', align: 'right' },
+  { id: 'updatedAt', label: 'Updated At', align: 'right' },
 ];
 
 // ----------------------------------------------------------------------

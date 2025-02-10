@@ -33,7 +33,7 @@ export default function ProfileListTableRow({
     thicknessStart,
     thicknessEnd,
     type,
-    createdAt,
+    updatedAt,
     isActive,
   } = row;
 
@@ -55,7 +55,7 @@ export default function ProfileListTableRow({
         <TableCell align="left">{`${web || '___'} x ${flange || '___' } `}</TableCell>
         <TableCell align="left">{`${thicknessStart || '___' }-${thicknessEnd || '___' }`}</TableCell>
         <TableCell align="left"><Switch checked={isActive} disabled size="small"/></TableCell>
-        <TableCell align="right">{fDate(createdAt)}</TableCell>
+        <TableCell align="right">{fDate(updatedAt)}</TableCell>
   
       </StyledTableRow>
   );

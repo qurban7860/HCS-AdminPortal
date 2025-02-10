@@ -26,7 +26,7 @@ export default function PortalRegistrationListTableRow({
   handleCustomerDialog,
   hiddenColumns,
 }) {
-  const { contactPersonName, email, phoneNumber, address, customerName, machineSerialNos, status, customer = null, contact, createdAt } = row;
+  const { contactPersonName, email, phoneNumber, address, customerName, machineSerialNos, status, customer = null, contact, updatedAt } = row;
   
   return (
     <StyledTableRow hover >
@@ -56,7 +56,7 @@ export default function PortalRegistrationListTableRow({
       </TableCell> }
       {!hiddenColumns?.['customer.name'] && <TableCell align="left">{customer?.name || ''}</TableCell>}
       {!hiddenColumns?.['contact.firstName'] && <TableCell align="left">{`${contact?.firstName || '' } ${contact?.lastName || ""}`}</TableCell>}
-      {!hiddenColumns?.createdAt && <TableCell align="right" >{fDate(createdAt)}</TableCell>}
+      {!hiddenColumns?.createdAt && <TableCell align="right" >{fDate(updatedAt)}</TableCell>}
     </StyledTableRow>
   );
 }

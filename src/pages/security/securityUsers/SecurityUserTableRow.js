@@ -34,7 +34,7 @@ export default function SecurityUserTableRow({
   onDeleteRow,
   hiddenColumns
 }) {
-  const { login, email, name, roles, phone, createdAt, contact, isActive, registrationRequest, isOnline } = row;
+  const { login, email, name, roles, phone, updatedAt, contact, isActive, registrationRequest, isOnline } = row;
   const dispatch = useDispatch();
   const smScreen = useScreenSize('sm')
   const lgScreen = useScreenSize('lg')
@@ -99,7 +99,7 @@ export default function SecurityUserTableRow({
             <IconButtonTooltip title='Portal Request' color='#388e3c' icon="mdi:user-details" onClick={handleRequestDialog} /> 
           }
         </TableCell>}
-        { useScreenSize('lg') && !hiddenColumns?.createdAt && <TableCell align="right">{fDate(createdAt)}</TableCell>}
+        { useScreenSize('lg') && !hiddenColumns?.createdAt && <TableCell align="right">{fDate(updatedAt)}</TableCell>}
       </TableRow>
   );
 }

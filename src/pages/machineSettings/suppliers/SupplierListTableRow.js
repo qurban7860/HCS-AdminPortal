@@ -33,7 +33,7 @@ export default function SupplierListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { name, contactName, address, isActive, isDefault, createdAt } = row;
+  const { name, contactName, address, isActive, isDefault, updatedAt } = row;
 
   const smScreen = useScreenSize('sm')
   const lgScreen = useScreenSize('lg')
@@ -48,7 +48,7 @@ export default function SupplierListTableRow({
           {' '}
           <Switch checked={isActive} disabled size="small" sx={{ my: -1 }} />{' '}
         </TableCell>
-        <TableCell align="right">{fDate(createdAt)}</TableCell>
+        <TableCell align="right">{fDate(updatedAt)}</TableCell>
       </TableRow>
   );
 }

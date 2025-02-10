@@ -44,7 +44,7 @@ export default function CustomerSiteListTableRow({
   hiddenColumns
 }) {
   const { _id, customer, name, email, phoneNumbers, address, lat, long,
-    primaryBillingContact, primaryTechnicalContact, isActive, createdAt } = row;
+    primaryBillingContact, primaryTechnicalContact, isActive, updatedAt } = row;
   const phone = phoneNumbers[0];
   const limitedName = useLimitString(customer?.name, 35);
   const isSmallScreen = useScreenSize('sm');
@@ -81,7 +81,7 @@ export default function CustomerSiteListTableRow({
           <TableCell align='center'><Switch checked={isActive} /></TableCell>
         )}
         {!hiddenColumns?.createdAt && (
-          <TableCell align='right'>{fDate(createdAt)}</TableCell>
+          <TableCell align='right'>{fDate(updatedAt)}</TableCell>
         )}
       </StyledTableRow>
   

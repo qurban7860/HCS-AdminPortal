@@ -40,7 +40,7 @@ const TABLE_HEAD = [
   { id: 'slug', visibility: 'xs1', label: 'Slug', align: 'left' },
   { id: 'displayOrderNo', visibility: 'xs1', label: 'Order Number', align: 'left' },
   { id: 'icon', label: 'Icon ', align: 'left' },
-  { id: 'createdAt', label: 'Updated At', align: 'right' },
+  { id: 'updatedAt', label: 'Updated At', align: 'right' },
 ];
 
 // ----------------------------------------------------------------------

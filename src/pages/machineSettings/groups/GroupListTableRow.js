@@ -26,7 +26,7 @@ export default function GroupListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { name, categories, isActive, isDefault, createdAt } = row;
+  const { name, categories, isActive, isDefault, updatedAt } = row;
   
   // const smScreen = useScreenSize('sm')
 
@@ -39,7 +39,7 @@ export default function GroupListTableRow({
           )}
         </TableCell>
         <TableCell align="center"><Switch checked={isActive} disabled /></TableCell>
-        <TableCell align="right">{fDate(createdAt)}</TableCell>
+        <TableCell align="right">{fDate(updatedAt)}</TableCell>
       </TableRow>
 
   );
