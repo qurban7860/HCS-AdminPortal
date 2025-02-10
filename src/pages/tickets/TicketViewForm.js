@@ -45,37 +45,46 @@ export default function TicketViewForm() {
   const [ slides, setSlides ] = useState([]);
   const [ approvers, setApprovers ] = useState([]);
   const [ reportersList, setReportersList ] = useState([]);
+  const [assigneesList, setAssigneesList] = useState([]);
   const configurations = JSON.parse(localStorage.getItem('configurations'));
   const prefix = configurations?.find((config) => config?.name?.toLowerCase() === 'ticket_prefix')?.value || '';
 
-  useEffect(() => { 
+  useEffect(() => {
     if (Array.isArray(customersContacts)) {
-      const updatedList = [...customersContacts];
-  
-      if (ticket?.createdBy?.contact?._id && 
-          !updatedList.some(c => c?._id === ticket?.createdBy?.contact?._id)) {
-        updatedList.unshift(ticket.createdBy.contact);
+      const updatedReportersList = [...customersContacts];
+
+      if (ticket?.createdBy?.contact?._id && !updatedReportersList.some(c => c?._id === ticket?.createdBy?.contact?._id)) {
+        updatedReportersList.unshift(ticket.createdBy.contact);
       }
-  
-      if (contact?._id && !updatedList.some(c => c._id === contact._id)) {
-        updatedList.unshift(contact);
+
+      if (contact?._id && !updatedReportersList.some(c => c._id === contact._id)) {
+        updatedReportersList.unshift(contact);
       }
-  
-      setReportersList(updatedList);
+
+      setReportersList(updatedReportersList);
+
+      const updatedAssigneesList = [...customersContacts];
+       if (ticket?.assignee?._id && !updatedAssigneesList.some(c => c._id === ticket?.assignee?._id)) {
+        updatedAssigneesList.unshift(ticket.assignee);
+      }
+      setAssigneesList(updatedAssigneesList);
     }
   }, [ customersContacts, ticket, contact ]);
 
-  useEffect(() => { 
-    dispatch(getCustomerContacts( ticket?.customer?._id ));
+  useEffect(() => {
+    if (ticket?.customer?._id) {
+      dispatch(getCustomerContacts( ticket?.customer?._id ));
+    }
     dispatch(getActiveSPContacts());
     dispatch(getContact( user?.customer, user?.contact ));
+
     return () => {
-      dispatch(resetContact( ));
+      dispatch(resetContact());
       dispatch(resetCustomersContacts());
       dispatch(resetActiveSPContacts());
-    }
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ dispatch, ticket?.customer?._id ])
+  }, [ dispatch, ticket?.customer?._id ]);
 
   useEffect(() => { 
 
@@ -348,7 +357,7 @@ export default function TicketViewForm() {
               node={<DropDownField name="reporter" isNullable label='Reporter' value={ticket?.reporter} onSubmit={onSubmit} options={ reportersList } />}
             />
             <ViewFormField isLoading={isLoading} sm={4} heading="Assignee" 
-              node={<DropDownField name="assignee" isNullable label='Assignee' value={ticket?.assignee} onSubmit={onSubmit} options={ customersContacts } />}
+              node={<DropDownField name="assignee" isNullable label='Assignee' value={ticket?.assignee} onSubmit={onSubmit} options={ assigneesList } />}
             />
             <ViewFormField isLoading={isLoading} sm={4} heading="Approvers" 
               node={<DropDownMultipleSelection name="approvers" label='Approvers' value={ticket?.approvers} onSubmit={onSubmit} options={ approvers } />}
