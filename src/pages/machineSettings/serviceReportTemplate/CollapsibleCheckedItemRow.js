@@ -5,9 +5,7 @@ import { Box, Table, TableBody, TableCell, TableRow,  IconButton, Collapse } fro
 import Iconify from '../../../components/iconify';
 import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons'
 
-const CollapsibleCheckedItemRow = ({value, index, toggleEdit, deleteIndex, handleListDragStart, handleListDrop }) => {
-  const [open, setOpen] = useState(true);
-  return (
+const CollapsibleCheckedItemRow = ({value, index, toggleEdit, setOpenIndex, deleteIndex, handleListDragStart, handleListDrop }) => (
     <>
         <TableRow
                 key={index}
@@ -21,19 +19,19 @@ const CollapsibleCheckedItemRow = ({value, index, toggleEdit, deleteIndex, handl
                 <IconButton
                   aria-label="expand row"
                   size="small"
-                  color={open ? 'default' :  'primary'}
-                  onClick={() => setOpen(!open)}
+                  color={value?.isOpen  ? 'default' :  'primary'}
+                  onClick={() => setOpenIndex( index ) }
                 >
-                  {open ? <Iconify icon="mingcute:up-line" /> : <Iconify icon="mingcute:down-line" /> }
+                  <Iconify icon={ value?.isOpen ? "mingcute:up-line" : "mingcute:down-line" } />
                 </IconButton>
-                </TableCell>
+              </TableCell>
               <TableCell size='small' align='right' >
                   {toggleEdit && <ViewFormEditDeleteButtons handleEdit={()=>toggleEdit(index)} onDelete={()=>deleteIndex(index)} /> }
               </TableCell>
         </TableRow>
         <TableRow key={uuidv4()}>
           <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-            <Collapse in={open} timeout="auto" unmountOnExit>
+            <Collapse in={value?.isOpen } timeout="auto" unmountOnExit>
               <Box sx={{ margin: 1 }}>
                 <Table size="small" aria-label="purchases">
 
@@ -51,11 +49,12 @@ const CollapsibleCheckedItemRow = ({value, index, toggleEdit, deleteIndex, handl
         </TableRow>
         </>
   )
-}
+
 CollapsibleCheckedItemRow.propTypes = {
     index: PropTypes.number,
     value: PropTypes.object,
     toggleEdit: PropTypes.func,
+    setOpenIndex: PropTypes.func,
     deleteIndex: PropTypes.func,
     handleListDragStart: PropTypes.func,
     handleListDrop: PropTypes.func,

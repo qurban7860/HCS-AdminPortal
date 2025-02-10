@@ -26,9 +26,12 @@ export default function NoteListTableRow({
   onViewRow,
   hiddenColumns
 }) {
+
+
+  console.log(row)
   const {
     note,
-    createdAt,
+    updatedAt,
     isActive
   } = row;
 
@@ -37,7 +40,7 @@ export default function NoteListTableRow({
 
         <LinkTableCell align="left" param={note} stringLength={100} onClick={onViewRow} />
         { useScreenSize('sm') && !hiddenColumns?.isActive && <TableCell align="center" sx={{width:'100px'}}> <Switch checked={isActive} disabled size="small"/>  </TableCell> }
-        <TableCell align="right">{fDate(createdAt)}</TableCell>
+        <TableCell align="right">{fDate(updatedAt)}</TableCell>
 
       </StyledTableRow>
 

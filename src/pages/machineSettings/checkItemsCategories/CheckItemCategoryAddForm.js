@@ -55,14 +55,14 @@ export default function CheckItemCategoryAddForm() {
     formState: { isSubmitting },
   } = methods;
 
-  const toggleCancel = () => navigate(PATH_MACHINE.machines.machineSettings.checkItemCategories.root);
+  const toggleCancel = () => navigate(PATH_MACHINE.machineSettings.checkItemCategories.root);
 
   const onSubmit = async (data) => {
     try {
       await dispatch(addServiceCategory(data));
       reset();
       enqueueSnackbar('Service Category Added Successfully!');
-      navigate(PATH_MACHINE.machines.machineSettings.checkItemCategories.root);
+      navigate(PATH_MACHINE.machineSettings.checkItemCategories.root);
     } catch (error) {
       enqueueSnackbar(error?.message, { variant: `error` });
       console.error(error);

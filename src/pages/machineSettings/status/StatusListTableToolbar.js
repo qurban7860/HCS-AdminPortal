@@ -32,7 +32,7 @@ export default function StatusListTableToolbar({
   onFilterStatus,
 }) {
   const navigate = useNavigate();
-  const toggleAdd = () => navigate(PATH_MACHINE.machines.machineSettings.status.new);
+  const toggleAdd = () => navigate(PATH_MACHINE.machineSettings.status.new);
 
   return (
     <Stack {...options}>

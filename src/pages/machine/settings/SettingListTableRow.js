@@ -34,7 +34,7 @@ export default function SettingListTableRow({
     },
     techParamValue,
     history,
-    createdAt
+    updatedAt
   } = row;
 
   const smScreen = useScreenSize('sm')
@@ -76,7 +76,7 @@ export default function SettingListTableRow({
         <TableCell align="left">
           {category?.name||""}
         </TableCell>
-        { smScreen && <TableCell align="right">{fDate(createdAt)}</TableCell>}
+        { smScreen && <TableCell align="right">{fDate(updatedAt)}</TableCell>}
       </StyledTableRow>
 
       <ViewFormMachineSettingHistoryMenuPopover

@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { useEffect, useMemo, useState, memo } from 'react';
+import { Outlet, useLocation } from 'react-router-dom';
 // @mui
 import { Box } from '@mui/material';
 // hooks
@@ -11,18 +11,42 @@ import Main from './Main';
 import Header from './header';
 import NavMini from './nav/NavMini';
 import NavVertical from './nav/NavVertical';
-import NavHorizontal from './nav/NavHorizontal';
+// import NavHorizontal from './nav/NavHorizontal';
 import { CONFIG } from '../../config-global';
+import { MAIN_CATEGORIES, OTHER_MAIN_CATEGORIES } from './navigationConstants';
 
 // ----------------------------------------------------------------------
+
+const MemoizedHeader = memo(Header);
 
 export default function DashboardLayout() {
   const { themeLayout } = useSettingsContext();
   const isDesktop = useResponsive('up', 'lg');
   const [open, setOpen] = useState(false);
-  const isNavHorizontal = themeLayout === 'horizontal';
+  const allCategories = useMemo(() => [...MAIN_CATEGORIES, ...OTHER_MAIN_CATEGORIES], []);
+  const [selectedCategory, setSelectedCategory] = useState(allCategories[0] || MAIN_CATEGORIES[0]);
+  const location = useLocation();
+
   const isNavMini = themeLayout === 'mini';
 
+  useEffect(() => {
+    const pathMap = {
+      '/crm': 0,
+      '/products': 1,
+      '/support': 2,
+      '/reports': 3,
+      '/calendar': 4,
+      '/settings': 5
+    };
+
+    const path = location.pathname;
+    const categoryIndex = Object.entries(pathMap).find(([key]) => path.includes(key))?.[1];
+    
+    if (categoryIndex !== undefined) {
+      setSelectedCategory(allCategories[categoryIndex]);
+    }
+  }, [location.pathname, allCategories]);
+  
   const handleOpen = () => {
     setOpen(true);
   };
@@ -31,31 +55,33 @@ export default function DashboardLayout() {
     setOpen(false);
   };
 
-  const renderNavVertical = <NavVertical openNav={open} onCloseNav={handleClose} />;
   const bgcolor = CONFIG.Background_Color;
-  if (isNavHorizontal) {
-    return (
-      <>
-        <Header onOpenNav={handleOpen} sx={{ backgroundColor: bgcolor }} />
-        {isDesktop ? <NavHorizontal /> : renderNavVertical}
-        <Main>
-          <Outlet />
-        </Main>
-      </>
-    );
-  }
 
   if (isNavMini) {
     return (
       <>
-        <Header onOpenNav={handleOpen} sx={{ backgroundColor: bgcolor }} />
+        <MemoizedHeader
+          onOpenNav={handleOpen}
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
+          sx={{ backgroundColor: bgcolor }}
+        />
         <Box
           sx={{
             display: { lg: 'flex' },
             minHeight: { lg: 1 },
           }}
         >
-          {isDesktop ? <NavMini /> : renderNavVertical}
+          {isDesktop ? (
+            <NavMini selectedCategory={selectedCategory} />
+          ) : (
+            <NavVertical
+              openNav={open}
+              onCloseNav={handleClose}
+              setSelectedCategory={setSelectedCategory}
+              selectedCategory={selectedCategory}
+            />
+          )}
 
           <Main>
             <Outlet />
@@ -67,15 +93,18 @@ export default function DashboardLayout() {
 
   return (
     <>
-      <Header onOpenNav={handleOpen} />
+      <MemoizedHeader
+        selectedCategory={selectedCategory}
+        setSelectedCategory={setSelectedCategory}
+        onOpenNav={handleOpen}
+      />
       <Box
         sx={{
           display: { lg: 'flex' },
           minHeight: { lg: 1 },
         }}
       >
-        {renderNavVertical}
-
+        <NavVertical openNav={open} onCloseNav={handleClose} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />
         <Main>
           <Outlet />
         </Main>

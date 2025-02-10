@@ -55,13 +55,11 @@ export default function DocumentListTableRow({
     stockNumber,
     machine,
     productDrawings,
-    customer,
     docCategory,
-    createdAt,
+    updatedAt,
   } = row;
 
   const lgScreen = useScreenSize('lg')
-  const smScreen = useScreenSize('sm')
   const referenceNumberString = useLimitString( referenceNumber )
   const docCategoryNameString = useLimitString( docCategory?.name )
   const docTypeNameString = useLimitString( docType?.name )
@@ -78,7 +76,7 @@ export default function DocumentListTableRow({
       {  !hiddenColumns?.['machine.serialNo'] && !customerPage && !machinePage && !machineDrawings && !machineDrawingPage && lgScreen && 
           <LinkDialogTableCell onClick={handleMachineDialog} align='left' param={machine?.serialNo}/>  
       }
-      {!hiddenColumns?.createdAt && <TableCell align="right">{fDate(createdAt)}</TableCell>}
+      {!hiddenColumns?.createdAt && <TableCell align="right">{fDate(updatedAt)}</TableCell>}
     </StyledTableRow>
   );
 }

@@ -11,8 +11,8 @@ import { getMachineLogGraphData } from '../../../redux/slices/products/machineEr
 // utils
 import { machineLogGraphTypes } from '../../../constants/machineLogTypeFormats';
 import MachineTabContainer from '../util/MachineTabContainer';
-import ErpProducedLengthLogGraph from '../../machineLogs/graph/ErpProducedLengthLogGraph';
-import ErpProductionRateLogGraph from '../../machineLogs/graph/ErpProductionRateLogGraph';
+import ErpProducedLengthLogGraph from '../../Reports/Graphs/ErpProducedLengthLogGraph';
+import ErpProductionRateLogGraph from '../../Reports/Graphs/ErpProductionRateLogGraph';
 import { RHFAutocomplete } from '../../../components/hook-form';
 
 // ----------------------------------------------------------------------

@@ -3,17 +3,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   Box,
   Card,
-  Dialog,
-  DialogContent,
-  DialogTitle,
+
   IconButton,
   Table,
   TableBody,
-  TableCell,
+
   TableContainer,
-  TableHead,
-  TableRow,
-  TableSortLabel,
 } from '@mui/material';
 import PropTypes from 'prop-types';
 import TableCard from '../ListTableTools/TableCard';
@@ -23,6 +18,7 @@ import {
   TableNoData,
   TableSkeleton,
   TablePaginationCustom,
+  TableHeadFilter,
 } from '../table';
 import {
   getApiLogs,
@@ -38,47 +34,18 @@ import FormLabel from '../DocumentForms/FormLabel';
 import { FORMLABELS } from '../../constants/document-constants';
 import { StyledTooltip } from '../../theme/styles/default-styles';
 
-const tableColumns = [
-  {
-    id: 'createdAt',
-    label: 'Timestamp',
-    width: 180,
-  },
-  {
-    id: 'requestMethod',
-    label: 'Method',
-    width: 100,
-  },
-  {
-    id: 'requestURL',
-    label: 'Endpoint',
-    width: 250,
-  },
-  {
-    id: 'responseStatusCode',
-    label: 'Status',
-    width: 100,
-  },
-  {
-    id: 'responseTime',
-    label: 'Response Time (ms)',
-    width: 120,
-  },
-  {
-    id: 'machine',
-    label: 'Machine',
-    width: 150,
-  },
-  {
-    id: 'customer',
-    label: 'Customer',
-    width: 150,
-  },
-  {
-    id: 'additionalContextualInformation',
-    label: 'Description',
-    width: 200,
-  }
+
+
+const TABLE_HEAD = [
+  { id: 'createdAt', label: 'Timestamp', align: 'left' },
+  { id: 'apiType', label: 'API Type', align: 'left' },
+  { id: 'requestMethod', label: 'Method', align: 'left' },
+  { id: 'requestURL', label: 'Endpoint', align: 'left', allowSearch: true },
+  { id: 'responseStatusCode', label: 'Status', align: 'left' },
+  { id: 'responseTime', label: 'Time(ms)', align: 'left', allowSearch: true },
+  { id: 'additionalContextualInformation', label: 'Response', align: 'left', allowSearch: true },
+  { id: 'customer.name', label: 'Customer', align: 'left' },
+  { id: 'machine', label: 'Machine', align: 'left' },
 ];
 
 const MachineSyncAPILogsTable = ({
@@ -206,32 +173,12 @@ const MachineSyncAPILogsTable = ({
             <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
               <Scrollbar>
                 <Table stickyHeader size="small" sx={{ minWidth: 360 }}>
-                  <TableHead>
-                    <TableRow>
-                      {dataSorted.length > 0 &&
-                        tableColumns?.map((headCell, index) => (
-                          <TableCell
-                            key={headCell.id}
-                            align="left"
-                            sortDirection={orderBy === headCell.id ? order : false}
-                            sx={{ width: headCell.width, minWidth: headCell.minWidth }}
-                          >
-                            {onSort ? (
-                              <TableSortLabel
-                                hideSortIcon
-                                active={orderBy === headCell.id}
-                                direction={orderBy === headCell.id ? order : 'asc'}
-                                onClick={() => onSort(headCell.id)}
-                              >
-                                {headCell.label}
-                              </TableSortLabel>
-                            ) : (
-                              headCell.label
-                            )}
-                          </TableCell>
-                        ))}
-                    </TableRow>
-                  </TableHead>
+                  <TableHeadFilter
+                    order={order}
+                    orderBy={orderBy}
+                    headLabel={TABLE_HEAD}
+                    onSort={onSort}
+                  />
                   <TableBody>
                     {(isLoading ? [...Array(rowsPerPage)] : dataSorted).map((row, index) =>
                       row ? (

@@ -28,7 +28,7 @@ export default function RoleListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { name, roleType, isActive, isDefault, createdAt } = row;
+  const { name, roleType, isActive, isDefault, updatedAt } = row;
 
   // const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -65,7 +65,7 @@ export default function RoleListTableRow({
           {' '}
           <Switch checked={isActive} disabled size="small" />{' '}
         </TableCell>
-        <TableCell align="right">{fDate(createdAt)}</TableCell>
+        <TableCell align="right">{fDate(updatedAt)}</TableCell>
         {/* <TableCell align="center">
           <IconButton color={openPopover ? 'primary' : 'default'} onClick={handleOpenPopover}>
             <Iconify icon="eva:more-vertical-fill" />

@@ -20,6 +20,7 @@ DocumentListTableToolbar.propTypes = {
   statusOptions: PropTypes.array,
   customerPage: PropTypes.bool,
   machinePage: PropTypes.bool,
+  machineDrawingPage: PropTypes.bool,
   machineDrawings: PropTypes.bool,
   categoryVal: PropTypes.object,
   setCategoryVal: PropTypes.func,
@@ -38,6 +39,7 @@ export default function DocumentListTableToolbar({
   onFilterStatus,
   customerPage,
   machinePage,
+  machineDrawingPage,
   machineDrawings,
   categoryVal,
   setCategoryVal,
@@ -88,9 +90,9 @@ export default function DocumentListTableToolbar({
         addButton={ ( !machineDrawings && ( customer?.isArchived || machine?.isArchived ) ) ? undefined : addButton }
         transferredMachine={machinePage && machine?.status?.slug === 'transferred'}
         categoryVal={categoryVal}
-        setCategoryVal={(machinePage) ? setCategoryVal : null }
+        setCategoryVal={(machinePage || machineDrawingPage) ? setCategoryVal : null }
         typeVal={typeVal}
-        setTypeVal={(machinePage) ? setTypeVal : null }
+        setTypeVal={(machinePage || machineDrawingPage) ? setTypeVal : null }
         machineDrawings={machineDrawings}
         handleGalleryView={ ( customer?.isArchived || machine?.isArchived ) ? undefined : handleGalleryView}
       />

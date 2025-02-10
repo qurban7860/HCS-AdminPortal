@@ -1,8 +1,10 @@
 import { memo, useState } from 'react'
 import PropTypes from 'prop-types';
 // @mui
-import { Box, TablePagination, Button, Grid, MenuItem, Checkbox, Menu } from '@mui/material';
+import { Box, TablePagination, Button, Grid, MenuItem, Checkbox, Menu, IconButton } from '@mui/material';
+import { StyledTooltip } from '../../theme/styles/default-styles';
 import Iconify from '../iconify';
+
 
 // ----------------------------------------------------------------------
 
@@ -10,18 +12,20 @@ const ITEM_HEIGHT = 48;
 
 TablePaginationFilter.propTypes = {
   rowsPerPageOptions: PropTypes.arrayOf(PropTypes.number),
-  columns:PropTypes.array,
-  hiddenColumns:PropTypes.object,
-  handleHiddenColumns:PropTypes.func,
+  columns: PropTypes.array,
+  hiddenColumns: PropTypes.object,
+  handleHiddenColumns: PropTypes.func,
   sx: PropTypes.object,
+  handleFullScreen: PropTypes.func,
 };
 
 function TablePaginationFilter({
-  rowsPerPageOptions = [10, 20,50,100],
+  rowsPerPageOptions = [10, 20, 50, 100],
   columns,
   hiddenColumns,
   handleHiddenColumns,
   sx,
+  handleFullScreen,
   ...other
 }) {
   
@@ -56,49 +60,75 @@ function TablePaginationFilter({
       // Dispatch the action with the new hidden columns
       handleHiddenColumns(newHiddenColumns);
 
-       // Return the new state
+      // Return the new state
       return newSelectedColumns;
     });
   };
 
   return (
-    <Box rowGap={2} columnGap={2} display="grid" sx={{borderTop:'1px solid #919eab3d'}}
-        gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}>
-          <Grid item sx={{py:1, px:2}}>
-            <Button startIcon={<Iconify icon='flowbite:column-solid'/>} variant={selectedColumns.length===0?"":"outlined"} onClick={handleClick}>Columns</Button>
-            <Menu
-              id="long-menu"
-              MenuListProps={{
-                'aria-labelledby': 'long-button',
-              }}
-              anchorEl={anchorEl}
-              open={open}
-              onClose={handleClose}
-              PaperProps={{
-                style: {
-                  maxHeight: ITEM_HEIGHT * 4.5,
-                  width: '20ch',
-                },
-              }}
-            >
-              {columns.map((column) => column?.hideable!==false && (
-                <MenuItem dense sx={{p:0}} key={column.id} onClick={() => handleColumnClick(column)}>
-                  <Checkbox checked={!selectedColumns.some((col) => col.id === column.id)} />
-                  {column.label}
-                </MenuItem>
-              ))}
-            </Menu>
-          </Grid>
-          <TablePagination labelRowsPerPage="Rows:" colSpan={2} rowsPerPageOptions={rowsPerPageOptions} component="div" showLastButton showFirstButton {...other} 
-            sx={{
-              borderTop:'none !important',
-              '.MuiTablePagination-toolbar': {
-                height: '20px',
-                width: '!important 200px',
-              },
-            }}
+    <Box display="flex" alignItems="center" sx={{ borderTop: '1px solid #919eab3d', py: 1, px: 2 }}>
+      <Button startIcon={<Iconify icon='flowbite:column-solid' />} variant={selectedColumns.length === 0 ? "" : "outlined"} onClick={handleClick}>Columns</Button>
+      <Menu
+        id="long-menu"
+        MenuListProps={{
+          'aria-labelledby': 'long-button',
+        }}
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        PaperProps={{
+          style: {
+            maxHeight: ITEM_HEIGHT * 4.5,
+            width: '20ch',
+          },
+        }}
+      >
+        {columns.map((column) => column?.hideable !== false && (
+          <MenuItem dense sx={{ p: 0 }} key={column.id} onClick={() => handleColumnClick(column)}>
+            <Checkbox checked={!selectedColumns.some((col) => col.id === column.id)} />
+            {column.label}
+          </MenuItem>
+        ))}
+      </Menu>
+      {/* full screen dialogue box toggle button */}
+      <Box sx={{ flexGrow: 1 }} />
+      <TablePagination labelRowsPerPage="Rows:" colSpan={2} rowsPerPageOptions={rowsPerPageOptions} component="div" showLastButton showFirstButton {...other} 
+        sx={{
+          borderTop: 'none !important',
+          '.MuiTablePagination-toolbar': {
+            height: '20px',
+            width: '!important 200px',
+          },
+        }}
+      />
+      {/* <StyledTooltip
+        title="Full Screen"
+        placement="top"
+        disableFocusListener
+        tooltipcolor="#103996"
+        color="#103996"
+      >
+        <IconButton
+          onClick={handleFullScreen}
+          color="#fff"
+          sx={{
+            background: '#2065D1',
+            borderRadius: 1,
+            height: '1.7em',
+            p: '8.5px 14px',
+            '&:hover': {
+              background: '#103996',
+              color: '#fff',
+            },
+          }}
+        >
+          <Iconify
+            color="#fff"
+            sx={{ height: '24px', width: '24px' }}
+            icon="icon-park-outline:full-screen-two"
           />
-    
+        </IconButton>
+      </StyledTooltip> */}
     </Box>
   );
 }

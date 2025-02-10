@@ -15,16 +15,17 @@ import {
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
 // routes
-import { PATH_SETTING } from '../../../../routes/paths';
+import { PATH_MACHINE, PATH_SETTING } from '../../../../routes/paths';
 // components
 import {
   useTable,
   getComparator,
   TableNoData,
   TableSkeleton,
-  TableHeadCustom,
   TableSelectedAction,
   TablePaginationCustom,
+  TablePaginationFilter,
+  TableHeadFilter,
 } from '../../../../components/table';
 import Iconify from '../../../../components/iconify';
 import Scrollbar from '../../../../components/scrollbar';
@@ -37,12 +38,14 @@ import {
   getDocumentTypes,
   ChangeRowsPerPage,
   ChangePage,
-  setFilterBy
+  setFilterBy,
+  setReportHiddenColumns,
 } from '../../../../redux/slices/document/documentType';
 import { Cover } from '../../../../components/Defaults/Cover';
 import { fDate } from '../../../../utils/formatTime';
 import TableCard from '../../../../components/ListTableTools/TableCard';
 import { StyledCardContainer } from '../../../../theme/styles/default-styles';
+import useResponsive from '../../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -51,7 +54,7 @@ const TABLE_HEAD = [
   { id: 'docCategory.name', visibility: 'xs1' , label: 'Category', align: 'left' },
   { id: 'customerAccess', visibility: 'xs2' , label: 'Customer Access', align: 'center' },
   { id: 'isActive', label: 'Active', align: 'center' },
-  { id: 'createdAt', label: 'Created At', align: 'right' },
+  { id: 'updatedAt', label: 'Updated At', align: 'right' },
 ];
 
 // ----------------------------------------------------------------------
@@ -89,7 +92,8 @@ export default function DocumentTypeList() {
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
   const [openConfirm, setOpenConfirm] = useState(false);
-  const { documentTypes, filterBy, page, rowsPerPage, isLoading , initial } = useSelector(
+  const isMobile = useResponsive('down', 'sm');
+  const { documentTypes, filterBy, page, rowsPerPage, isLoading, initial, reportHiddenColumns } = useSelector(
     (state) => state.documentType
   );
 
@@ -181,12 +185,16 @@ export default function DocumentTypeList() {
   };
 
   const handleViewRow = (id) => {
-    navigate(PATH_SETTING.documentType.view(id));
+    navigate(PATH_MACHINE.documents.documentType.view(id));
   };
 
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
     setFilterName('');
+  };
+
+  const handleHiddenColumns = async (arg) => {
+    dispatch(setReportHiddenColumns(arg));
   };
 
   return (
@@ -205,13 +213,30 @@ export default function DocumentTypeList() {
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
           />
-          {!isNotFound && <TablePaginationCustom
-            count={dataFiltered.length}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-          />}
+
+          {!isNotFound && !isMobile && (
+            <TablePaginationFilter
+              columns={TABLE_HEAD}
+              hiddenColumns={reportHiddenColumns}
+              handleHiddenColumns={handleHiddenColumns}
+              count={dataFiltered.length}
+              page={page}
+              rowsPerPage={rowsPerPage}
+              onPageChange={onChangePage}
+              onRowsPerPageChange={onChangeRowsPerPage}
+            />
+          )}
+
+          {!isNotFound && isMobile && (
+            <TablePaginationCustom
+              count={dataFiltered.length}
+              page={page}
+              rowsPerPage={rowsPerPage}
+              onPageChange={onChangePage}
+              onRowsPerPageChange={onChangeRowsPerPage}
+            />
+          )}
+
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <TableSelectedAction
               numSelected={selected.length}
@@ -232,11 +257,12 @@ export default function DocumentTypeList() {
             />
 
             <Scrollbar>
-              <Table size="small" sx={{ minWidth: 360 }}>
-                <TableHeadCustom
+              <Table stickyHeader size="small" sx={{ minWidth: 360 }}>
+                <TableHeadFilter
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
+                  hiddenColumns={reportHiddenColumns}
                   onSort={onSort}
                 />
 
@@ -248,6 +274,7 @@ export default function DocumentTypeList() {
                         <DocumentTypeListTableRow
                           key={row._id}
                           row={row}
+                          hiddenColumns={reportHiddenColumns}
                           selected={selected.includes(row._id)}
                           onSelectRow={() => onSelectRow(row._id)}
                           onDeleteRow={() => handleDeleteRow(row._id)}
@@ -264,14 +291,6 @@ export default function DocumentTypeList() {
               </Table>
             </Scrollbar>
           </TableContainer>
-
-          {!isNotFound && <TablePaginationCustom
-            count={dataFiltered.length}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-          />}
         </TableCard>
       </Container>
 

@@ -8,7 +8,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Box, Card, Grid, Stack, Checkbox } from '@mui/material';
 // routes
-import { PATH_SECURITY } from '../../../routes/paths';
+import { PATH_SETTING } from '../../../routes/paths';
 // assets
 // components
 import { useSnackbar } from '../../../components/snackbar';
@@ -23,6 +23,7 @@ import { getActiveRegions, resetActiveRegions } from '../../../redux/slices/regi
 import { addUserSchema , editUserSchema} from '../../schemas/securityUser';
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
+import { postSecurityUserInvitation } from '../../../redux/slices/securityUser/invite';
 
 SecurityUserAddForm.propTypes = {
   isEdit: PropTypes.bool,
@@ -140,12 +141,19 @@ const { contact, customer } = watch();
       if (!data.phone || phoneRegex.test(data.phone.trim())) {
         data.phone = ''; 
       }
-      const message = !isInvite ? "User Added Successfully":"User Invitation Sent Successfullfy";
-      const response = await dispatch(addSecurityUser(data, isInvite));
+      let message;
+      let response;
+      if (!isInvite) {
+        message = "User Added Successfully";
+        response = await dispatch(addSecurityUser(data));
+      } else {
+        message = "User Invitation Sent Successfullfy";
+        response = await dispatch(postSecurityUserInvitation(data));
+      }
       reset();
       enqueueSnackbar(message);
       if(!isInvite){
-        navigate(PATH_SECURITY.users.view(response.data.user._id));
+        navigate(PATH_SETTING.security.users.view(response.data.user._id));
       }
     } catch (error) {
         enqueueSnackbar(error, { variant: `error` });
@@ -153,7 +161,7 @@ const { contact, customer } = watch();
     }
   };
 
-  const toggleCancel = () =>  navigate(PATH_SECURITY.root);
+  const toggleCancel = () =>  navigate(PATH_SETTING.security.root);
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>

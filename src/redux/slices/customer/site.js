@@ -24,6 +24,17 @@ const initialState = {
   filterBy: '',
   page: 0,
   rowsPerPage: 100,
+  reportHiddenColumns: {
+    "customer.name": false,
+    "name": false,
+    "address.country": false,
+    "phoneNumbers": false,
+    "email": false,
+    "primaryTechnicalContact.firstName": false,
+    "primaryBillingContact.firstName": false,
+    "isActive": false,
+    "createdAt": false
+  },
 };
 
 const slice = createSlice({
@@ -145,6 +156,9 @@ const slice = createSlice({
     ChangePage(state, action) {
       state.page = action.payload;
     },
+    setReportHiddenColumns(state, action) {
+      state.reportHiddenColumns = action.payload;
+    },
   },
 });
 
@@ -168,6 +182,7 @@ export const {
   ChangeRowsPerPage,
   ChangePage,
   setSiteDialog,
+  setReportHiddenColumns,
 } = slice.actions;
 
 // ----------------------------------------------------------------------

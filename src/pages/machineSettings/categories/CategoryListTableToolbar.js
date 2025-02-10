@@ -31,7 +31,7 @@ export default function CustomerListTableToolbar({
   onFilterStatus,
 }) {
   const navigate = useNavigate();
-  const toggleAdd = () => navigate(PATH_MACHINE.machines.machineSettings.categories.new);
+  const toggleAdd = () => navigate(PATH_MACHINE.machineSettings.categories.new);
   return (
     <Stack {...options}>
       <SearchBarCombo

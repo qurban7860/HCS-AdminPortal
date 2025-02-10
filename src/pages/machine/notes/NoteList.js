@@ -45,7 +45,7 @@ export default function NoteList() {
   const TABLE_HEAD = [
     { id: 'note', label: 'Note', align: 'left' },
     { id: 'isActive', label: 'Active', align: 'left' },
-    { id: 'createdAt', label: 'Created At', align: 'right' },
+    { id: 'updatedAt', label: 'Updated At', align: 'right' },
   ];
 
   const onChangeRowsPerPage = (event) => {

@@ -42,7 +42,7 @@ const TABLE_HEAD = [
   { id: 'verifications', visibility: 'md1', label: 'Approvals', align: 'left' },
   { id: 'machineModel.name', visibility: 'md1', label: 'Machine Model', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
-  { id: 'createdAt', label: 'Created At', align: 'right' },
+  { id: 'updatedAt', label: 'Updated At', align: 'right' },
 ];
 
 
@@ -167,7 +167,7 @@ export default function ServiceReportTemplateList() {
   };
 
   const handleViewRow = (id) => {
-    navigate(PATH_MACHINE.machines.machineSettings.serviceReportsTemplate.view(id));
+    navigate(PATH_MACHINE.machineSettings.serviceReportsTemplate.view(id));
   };
 
   const handleResetFilter = () => {

@@ -57,14 +57,14 @@ export default function StatusViewForm({ currentMachinestatus = null }) {
   const onDelete = () => {
     try {
       dispatch(deleteMachinestatus(id));
-      navigate(PATH_MACHINE.machines.machineSettings.status.root);
+      navigate(PATH_MACHINE.machineSettings.status.root);
     } catch (err) {
       enqueueSnackbar('Status Archive failed!', { variant: `error` });
       console.log('Error:', err);
     }
   };
 
-  const toggleEdit = () => navigate(PATH_MACHINE.machines.machineSettings.status.edit(id));
+  const toggleEdit = () => navigate(PATH_MACHINE.machineSettings.status.edit(id));
 
   return (
   <Grid>
@@ -79,8 +79,8 @@ export default function StatusViewForm({ currentMachinestatus = null }) {
         isActive={defaultValues.isActive} 
         isDefault={defaultValues.isDefault} 
         handleEdit={toggleEdit} 
-        onDelete={onDelete} b
-        backLink={() => navigate(PATH_MACHINE.machines.machineSettings.status.root)} 
+        onDelete={onDelete} 
+        backLink={() => navigate(PATH_MACHINE.machineSettings.status.root)} 
         machineSettingPage
         />
       <Grid container sx={{mt:2}}>

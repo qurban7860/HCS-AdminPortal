@@ -385,8 +385,7 @@ export function addServiceReportTemplate(params) {
           .map((param) => ({
             ListTitle: param.ListTitle || '', 
             checkItems: (param.checkItems || [])
-              .map((paramlist) => (paramlist?._id || null))
-              .filter((item) => item !== null), 
+              .map((pl) => (pl?._id || null)).filter((el) => el !== null), 
           }))
           .filter((param) => param.checkItems.length > 0);
         }

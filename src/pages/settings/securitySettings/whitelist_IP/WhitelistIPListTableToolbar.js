@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 // components
 import SearchBarCombo from '../../../../components/ListTableTools/SearchBarCombo';
 // routes
-import { PATH_SECURITY} from '../../../../routes/paths';
+import { PATH_SETTING} from '../../../../routes/paths';
 // styles
 import { options } from '../../../../theme/styles/default-styles';
 
@@ -32,7 +32,7 @@ export default function WhitelistIPListTableToolbar({
 }) {
   const navigate = useNavigate();
   const toggleAdd = () => {
-    navigate(PATH_SECURITY.config.whitelistIP.new);
+    navigate(PATH_SETTING.restrictions.whitelistIP.new);
   };
   return (
     <Stack {...options}>

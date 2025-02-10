@@ -26,7 +26,7 @@ export default function ToolViewForm() {
   const { tool, isLoading } = useSelector((state) => state.tool);
   const { id } = useParams();
   const dispatch = useDispatch();
-  const handleEdit = () => navigate(PATH_MACHINE.machines.machineSettings.tools.edit(id));
+  const handleEdit = () => navigate(PATH_MACHINE.machineSettings.tools.edit(id));
 
   
   const defaultValues = useMemo(
@@ -48,7 +48,7 @@ export default function ToolViewForm() {
   const onDelete = async () => {
     try {
       await dispatch(deleteTool(id));
-      navigate(PATH_MACHINE.machines.machineSettings.tools.root);
+      navigate(PATH_MACHINE.machineSettings.tools.root);
     } catch (error) {
       enqueueSnackbar(error, { variant: `error` });
       console.log(error);
@@ -61,7 +61,7 @@ export default function ToolViewForm() {
         isActive={defaultValues.isActive} 
         handleEdit={handleEdit} 
         onDelete={onDelete} 
-        backLink={() => navigate(PATH_MACHINE.machines.machineSettings.tools.root)}
+        backLink={() => navigate(PATH_MACHINE.machineSettings.tools.root)}
         machineSettingPage
       />
       <Grid container sx={{mt:2}}>

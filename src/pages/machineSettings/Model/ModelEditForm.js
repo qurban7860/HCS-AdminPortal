@@ -68,7 +68,7 @@ export default function ModelEditForm() {
   } = methods;
 
 
-  const toggleCancel = () => navigate(PATH_MACHINE.machines.machineSettings.models.view(id));
+  const toggleCancel = () => navigate(PATH_MACHINE.machineSettings.models.view(id));
 
 
   const onSubmit = async (data) => {
@@ -76,7 +76,7 @@ export default function ModelEditForm() {
       await dispatch(updateMachineModel(data, id));
       await reset();
       await enqueueSnackbar(Snacks.modelUpdated);
-      await navigate(PATH_MACHINE.machines.machineSettings.models.view(id));
+      await navigate(PATH_MACHINE.machineSettings.models.view(id));
     } catch (error) {
       console.log(error);
       enqueueSnackbar( error, { variant: 'error' } );

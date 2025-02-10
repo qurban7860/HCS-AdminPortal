@@ -41,7 +41,7 @@ import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 const TABLE_HEAD = [
   { id: 'whiteListIP', label: 'Whitelist IPs', align: 'left' },
   { id: 'createdBy.name', label: 'Updated By', align: 'left' },
-  { id: 'createdAt', label: 'Updated At', align: 'left' },
+  { id: 'updatedAt', label: 'Updated At', align: 'left' },
   { id: 'action', label: 'Action', align: 'right'},
 ];
 

@@ -19,7 +19,7 @@ import {
   updateDocument,
 } from '../../redux/slices/document/document';
 import { Snacks } from '../../constants/document-constants';
-import { PATH_CRM, PATH_DOCUMENT, PATH_MACHINE, PATH_MACHINE_DRAWING } from '../../routes/paths';
+import { PATH_CRM, PATH_MACHINE, PATH_MACHINE_DRAWING } from '../../routes/paths';
 
 // ----------------------------------------------------------------------
 DocumentEditForm.propTypes = {
@@ -105,7 +105,7 @@ function DocumentEditForm({ customerPage, machinePage, drawingPage, machineDrawi
     } else if( machineDrawings && id ){
       navigate(PATH_MACHINE_DRAWING.machineDrawings.view.root(id))
     } else if( !customerPage && !drawingPage && !machinePage && id ){
-      navigate(PATH_DOCUMENT.document.view.root(id))
+      navigate(PATH_MACHINE.documents.document.view.root(id))
     }
   }
 

@@ -26,6 +26,11 @@ const slice = createSlice({
       state.isLoading = true;
     },
 
+    // STOP LOADING
+    stopLoading(state) {
+      state.isLoading = false;
+    },
+
     // HAS ERROR
     hasError(state, action) {
       state.isLoading = false;
@@ -116,6 +121,37 @@ export function getUserInvites (){
       const response = await axios.get(`${CONFIG.SERVER_URL}security/invites/`);
       dispatch(slice.actions.getUserInvitesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('User Invites loaded successfully'));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  }
+}
+
+// ----------------------------------------------------------------------
+
+export function postSecurityUserInvitation(param) {
+  return async (dispatch) =>{
+    dispatch(slice.actions.startLoading());
+    try{
+      const data = {
+        customer: param.customer?._id,
+        contact: param.contact?._id,
+        name: param.name,
+        phone:  param.phone,
+        email: param.email,
+        login: param.email,
+        password: param.password,
+        roles: param.roles.map(role => role?._id ),
+        dataAccessibilityLevel: param?.dataAccessibilityLevel?.toUpperCase() ,
+        regions: param.regions?.map(region => region?._id ),
+        customers: param.customers?.map(customer => customer?._id),
+        machines: param.machines?.map(machines => machines?._id),
+      }
+      const response = await axios.post(`${CONFIG.SERVER_URL}security/invites/postUserInvite`, data);
+      dispatch(slice.actions.stopLoading());
+      return response;
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));

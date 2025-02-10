@@ -60,14 +60,14 @@ export default function ServiceReportStatusEditForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [serviceReportStatus]);
 
-  const toggleCancel = () => navigate(PATH_MACHINE.machines.machineSettings.serviceReportsStatus.view(id));
+  const toggleCancel = () => navigate(PATH_MACHINE.machineSettings.serviceReportsStatus.view(id));
 
   const onSubmit = async (data) => {
     try {
       await dispatch(updateServiceReportStatus(data, id));
       reset();
       enqueueSnackbar('Status Updated successfully!');
-      navigate(PATH_MACHINE.machines.machineSettings.serviceReportsStatus.view(id));
+      navigate(PATH_MACHINE.machineSettings.serviceReportsStatus.view(id));
     } catch (err) {
       enqueueSnackbar('Status Update failed!', { variant: `error` });
       console.error(err.message);

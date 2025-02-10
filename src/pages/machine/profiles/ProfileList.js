@@ -56,7 +56,7 @@ export default function ProfileList() {
     { id: 'web', label: 'Web X Flange', align: 'left'},
     { id: 'thicknessStart', label: 'Thickness', align: 'left'},
     { id: 'isActive', label: 'Active', align: 'left'},
-    { id: 'createdAt', label: 'Created At', align: 'right' },
+    { id: 'updatedAt', label: 'Updated At', align: 'right' },
   ];
 
   const onChangeRowsPerPage = (event) => {

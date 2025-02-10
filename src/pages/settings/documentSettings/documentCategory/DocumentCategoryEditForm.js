@@ -10,7 +10,7 @@ import { useSnackbar } from '../../../../components/snackbar';
 // schema
 import { DocumentCategorySchema } from '../../../schemas/document';
 // routes
-import { PATH_SETTING } from '../../../../routes/paths';
+import { PATH_MACHINE, PATH_SETTING } from '../../../../routes/paths';
 // components
 import FormProvider, { RHFTextField } from '../../../../components/hook-form';
 import {
@@ -116,7 +116,7 @@ export default function DocumentCategoryeEditForm() {
     watch();
 
   const toggleCancel = () => {
-    navigate(PATH_SETTING.documentCategory.view(documentCategory._id));
+    navigate(PATH_MACHINE.documents.documentCategory.view(documentCategory._id));
   };
 
   const onSubmit = async (data) => {
@@ -124,7 +124,7 @@ export default function DocumentCategoryeEditForm() {
       data.type = state
       await dispatch(updateDocumentCategory(documentCategory._id, data));
       dispatch(getDocumentCategory(documentCategory._id));
-      navigate(PATH_SETTING.documentCategory.view(documentCategory._id));
+      navigate(PATH_MACHINE.documents.documentCategory.view(documentCategory._id));
       enqueueSnackbar(Snacks.updatedDocCategory, { variant: `success` });
       reset();
     } catch (error) {
@@ -139,7 +139,7 @@ export default function DocumentCategoryeEditForm() {
         <Cover
           name={documentCategory?.name}
           generalSettings
-          backLink={PATH_SETTING.documentCategory.view(documentCategory?._id)}
+          backLink={PATH_MACHINE.documents.documentCategory.view(documentCategory?._id)}
         />
       </StyledCardContainer>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>

@@ -12,7 +12,7 @@ import {
   Box,
 } from '@mui/material';
 // ROUTES
-import { PATH_SECURITY } from '../../../../routes/paths';
+import { PATH_SETTING } from '../../../../routes/paths';
 // slice
 import { addBlacklistIPs } from '../../../../redux/slices/securityConfig/blacklistIP';
 // components
@@ -52,7 +52,7 @@ export default function BlacklistIPAddForm() {
       await dispatch(addBlacklistIPs(data));
       enqueueSnackbar('IP blacklisted successfully!');
       reset();
-      navigate(PATH_SECURITY.config.blacklistIP.list);
+      navigate(PATH_SETTING.restrictions.blacklistIP.list);
     } catch (error) {
       enqueueSnackbar('IP adding failed!', { variant: `error` });
       console.error(error);
@@ -60,7 +60,7 @@ export default function BlacklistIPAddForm() {
   };
 
   const toggleCancel = () => {
-    navigate(PATH_SECURITY.config.blacklistIP.list);
+    navigate(PATH_SETTING.restrictions.blacklistIP.list);
   };
 
  

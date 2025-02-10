@@ -43,7 +43,7 @@ export default function RegionTableRow({
   onSelectRow,
   onDeleteRow,
 }) {
-  const { name, countries, createdAt, isActive, isDefault } = row;
+  const { name, countries, updatedAt, isActive, isDefault } = row;
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -91,7 +91,7 @@ export default function RegionTableRow({
         </TableCell>
        
         <TableCell align="right" sx={{ textTransform: 'capitalize' }}>
-          {fDate(createdAt)}
+          {fDate(updatedAt)}
         </TableCell>
        </TableRow>
 

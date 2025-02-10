@@ -49,7 +49,17 @@ export default function ServiceRecodStepButtons({
     <Grid container sx={{ px: 2, pt:2 }} spacing={2} >
       <Grid item sm={12} md={6} display='flex' columnGap={2}>
         <Button size={isMobile ? 'medium' : 'large'} onClick={handleCancle} variant="outlined">Exit</Button> 
-        { handleDraft && (<LoadingButton loading={isSubmitting && isDraft} size={isMobile ? 'medium' : 'large'} onClick={handleDraft} type='submit' variant="outlined" fullWidth={isMobile}>Save</LoadingButton> )}
+        { handleDraft && (
+          <LoadingButton 
+            loading={isSubmitting && isDraft && !isSubmitted } 
+            size={isMobile ? 'medium' : 'large'} 
+            onClick={handleDraft} 
+            type='submit' 
+            variant="outlined" 
+            fullWidth={isMobile}
+          >
+            Save
+          </LoadingButton> )}
       </Grid>
       <Grid item sm={12} md={6} display='flex' columnGap={2} justifyContent='flex-end' >
           {formActiveStep > 0 && 
@@ -62,12 +72,12 @@ export default function ServiceRecodStepButtons({
             </Button>
           }
           <LoadingButton 
+            loading={ isSubmitting && !isDraft && isSubmitted }
             onClick={ handleSubmit }
             disabled={!isActive && formActiveStep===2} 
             size={isMobile ? 'medium' : 'large'} 
             type='submit' 
             variant="contained"  
-            loading={ isSubmitting && !isDraft && !isSubmitted }
           >
             { ( formActiveStep === 2 || handleSubmit ) ? "Complete" : "Next" }
           </LoadingButton>

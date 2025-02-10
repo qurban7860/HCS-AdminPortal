@@ -53,13 +53,13 @@ export default function GroupViewForm() {
     [group]
   );
 
-  const handleEdit = () => navigate(PATH_MACHINE.machines.machineSettings.groups.edit(group?._id));
+  const handleEdit = () => navigate(PATH_MACHINE.machineSettings.groups.edit(group?._id));
 
   const handleDelete = async () => {
     try {
       await dispatch(deleteGroup(id));
       enqueueSnackbar('Group Archived Successfully!');
-      navigate(PATH_MACHINE.machines.machineSettings.groups.root);
+      navigate(PATH_MACHINE.machineSettings.groups.root);
     } catch (err) {
       enqueueSnackbar("Group Archive Failed", { variant: `error` });
       console.log('Error:', err);
@@ -75,7 +75,7 @@ export default function GroupViewForm() {
             isDefault={defaultValues.isDefault} 
             handleEdit={handleEdit} 
             onDelete={handleDelete} 
-            backLink={() => navigate(PATH_MACHINE.machines.machineSettings.groups.root)}
+            backLink={() => navigate(PATH_MACHINE.machineSettings.groups.root)}
             machineSettingPage
             />
           <Grid container sx={{mt:2}}>

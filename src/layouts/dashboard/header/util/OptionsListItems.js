@@ -1,4 +1,4 @@
-import { PATH_SECURITY, PATH_CRM } from '../../../../routes/paths';
+import { PATH_CRM, PATH_SETTING } from '../../../../routes/paths';
 
 export const OPTIONS = [
   {
@@ -7,11 +7,11 @@ export const OPTIONS = [
   },
   {
     label: 'Profile',
-    linkTo: PATH_SECURITY.users.profile,
+    linkTo: PATH_SETTING.security.users.profile,
   },
   // {
   //   label: 'Change Password',
-  //   linkTo: PATH_SECURITY.users.password,
+  //   linkTo: PATH_SETTING.security.users.password,
   // },
   {
     label: 'Organization',

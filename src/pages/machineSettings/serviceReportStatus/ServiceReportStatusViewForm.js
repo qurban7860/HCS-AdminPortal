@@ -50,14 +50,14 @@ export default function ServiceReportStatusViewForm( ) {
     try {
       await dispatch(deleteServiceReportStatus(id));
       enqueueSnackbar('Service Report Status Archive Successfully!');
-      navigate(PATH_MACHINE.machines.machineSettings.serviceReportsStatus.root);
+      navigate(PATH_MACHINE.machineSettings.serviceReportsStatus.root);
     } catch (err) {
       enqueueSnackbar('Status Archive failed!', { variant: `error` });
       console.log('Error:', err);
     }
   };
 
-  const toggleEdit = () => navigate(PATH_MACHINE.machines.machineSettings.serviceReportsStatus.edit(id));
+  const toggleEdit = () => navigate(PATH_MACHINE.machineSettings.serviceReportsStatus.edit(id));
 
   return (
   <Grid>
@@ -73,7 +73,7 @@ export default function ServiceReportStatusViewForm( ) {
         isDefault={defaultValues.isDefault} 
         handleEdit={toggleEdit} 
         onDelete={onDelete} b
-        backLink={() => navigate(PATH_MACHINE.machines.machineSettings.serviceReportsStatus.root)} 
+        backLink={() => navigate(PATH_MACHINE.machineSettings.serviceReportsStatus.root)} 
         machineSettingPage
         />
       <Grid container sx={{mt:2}}>

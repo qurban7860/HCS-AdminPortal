@@ -47,7 +47,7 @@ export default function SettingList() {
     { id: 'techParam.name', label: 'Parameter Name', align: 'left' },
     { id: 'techParamValue', label: 'Parameter Value', align: 'left' },
     { id: 'techParam.category.name', label: 'Category', align: 'left' },
-    { id: 'createdAt', visibility: 'xs1',  label: 'Created At', align: 'right' },
+    { id: 'updatedAt', visibility: 'xs1',  label: 'Updated At', align: 'right' },
   ];
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));

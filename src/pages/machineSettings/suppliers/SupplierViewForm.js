@@ -34,7 +34,7 @@ export default function SupplierViewForm({ currentSupplier = null }) {
   const { id } = useParams();
   const dispatch = useDispatch();
   
-  const toggleEdit = () => navigate(PATH_MACHINE.machines.machineSettings.suppliers.edit(id));
+  const toggleEdit = () => navigate(PATH_MACHINE.machineSettings.suppliers.edit(id));
 
   useLayoutEffect(() => {
     if (id != null) {
@@ -74,7 +74,7 @@ export default function SupplierViewForm({ currentSupplier = null }) {
     try {
       await dispatch(deleteSupplier(id));
       enqueueSnackbar('Supplier Archived Successfully!');
-      navigate(PATH_MACHINE.machines.machineSettings.suppliers.root);
+      navigate(PATH_MACHINE.machineSettings.suppliers.root);
     } catch (err) {
       enqueueSnackbar('Supplier Archive failed!', { variant: `error` } );
       console.log('Error:', err);
@@ -87,7 +87,7 @@ export default function SupplierViewForm({ currentSupplier = null }) {
         isDefault={defaultValues.isDefault} 
         handleEdit={toggleEdit} 
         onDelete={onDelete} b
-        backLink={() => navigate(PATH_MACHINE.machines.machineSettings.status.root)}  
+        backLink={() => navigate(PATH_MACHINE.machineSettings.status.root)}  
         machineSettingPage
       />
       <Grid container sx={{mt:2}}>

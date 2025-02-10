@@ -41,7 +41,7 @@ const TABLE_HEAD = [
   { id: 'code.[0]', label: 'Code', align: 'left' },
   { id: 'category.name', visibility: 'xs1', label: 'Category', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
-  { id: 'createdAt', label: 'Created At', align: 'right' },
+  { id: 'updatedAt', label: 'Updated At', align: 'right' },
 ];
 
 // ----------------------------------------------------------------------
@@ -165,7 +165,7 @@ export default function StatusList() {
     }
   };
 
-  const handleViewRow = (id) => navigate(PATH_MACHINE.machines.machineSettings.technicalParameters.view(id));
+  const handleViewRow = (id) => navigate(PATH_MACHINE.machineSettings.technicalParameters.view(id));
 
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))

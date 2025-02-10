@@ -28,7 +28,7 @@ export default function ServiceReportStatusListTableRow({
 
   const smScreen = useScreenSize('sm')
 
-  const { name, type, displayOrderNo, isActive, isDefault, createdAt } = row;
+  const { name, type, displayOrderNo, isActive, isDefault, updatedAt } = row;
 
   return (
       <TableRow hover selected={selected}>
@@ -38,7 +38,7 @@ export default function ServiceReportStatusListTableRow({
         <TableCell align="center">
           <Switch checked={isActive} disabled size="small" sx={{ my: -1 }} />{' '}
         </TableCell>
-        <TableCell align="right">{fDate(createdAt)}</TableCell>
+        <TableCell align="right">{fDate(updatedAt)}</TableCell>
       </TableRow>
   );
 }

@@ -20,15 +20,15 @@ import {
   getComparator,
   TableNoData,
   TableSkeleton,
-  TableHeadCustom,
-  TablePaginationCustom,
+  TablePaginationFilter,
+  TableHeadFilter,
 } from '../../../../components/table';
 import Scrollbar from '../../../../components/scrollbar';
 import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 // sections
 import CustomerContactListTableRow from './CustomerContactListTableRow';
 import CustomerContactListTableToolbar from './CustomerContactListTableToolbar';
-import { getCustomerContacts, resetCustomersContacts, ChangePage, ChangeRowsPerPage, setFilterBy, setCardActiveIndex, setIsExpanded } from '../../../../redux/slices/customer/contact';
+import { getCustomerContacts, resetCustomersContacts, ChangePage, ChangeRowsPerPage, setFilterBy, setCardActiveIndex, setIsExpanded, setReportHiddenColumns } from '../../../../redux/slices/customer/contact';
 import { Cover } from '../../../../components/Defaults/Cover';
 import TableCard from '../../../../components/ListTableTools/TableCard';
 import { fDate } from '../../../../utils/formatTime';
@@ -59,24 +59,24 @@ export default function CustomerContactList({isCustomerContactPage = false, filt
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const { customersContacts, contacts, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.contact);
+  const { customersContacts, contacts, filterBy, page, rowsPerPage, isLoading, reportHiddenColumns } = useSelector((state) => state.contact);
   const [filterName, setFilterName] = useState(filterBy);
   const [exportingCSV, setExportingCSV] = useState(false);
-  
   // ----------------------------------------------------------------------
 
   const TABLE_HEAD = [
-    ...(isCustomerContactPage ? [{ id: 'isActive', visibility: 'xs',  label: ( <IconButtonTooltip title={ ICONS.STATUS.heading } color={ ICONS.STATUS.color } icon={ ICONS.STATUS.icon } />), align: 'center' }] : []),
-    ...(isCustomerContactPage ? [{ id: 'formerEmployee', visibility: 'xs',  label: ( <IconButtonTooltip title={ ICONS.CURR_EMP_ACTIVE.heading } color={ ICONS.CURR_EMP_ACTIVE.color } icon={ ICONS.CURR_EMP_ACTIVE.icon } />), align: 'center' }] : []),
-    ...(!isCustomerContactPage ? [{ id: 'customer.name', visibility: 'xs', label: 'Customer', align: 'left'}] : []),
+    ...(isCustomerContactPage ? [{ id: 'isActive',  label: ( <IconButtonTooltip title={ ICONS.STATUS.heading } color={ ICONS.STATUS.color } icon={ ICONS.STATUS.icon } />), align: 'center' }] : []),
+    ...(isCustomerContactPage ? [{ id: 'formerEmployee',  label: ( <IconButtonTooltip title={ ICONS.CURR_EMP_ACTIVE.heading } color={ ICONS.CURR_EMP_ACTIVE.color } icon={ ICONS.CURR_EMP_ACTIVE.icon } />), align: 'center' }] : []),
+    ...(!isCustomerContactPage ? [{ id: 'customer.name', label: 'Customer', align: 'left'}] : []),
     { id: 'firstName', label: 'Contact Name', align: 'left' },
     ...(isCustomerContactPage ? [{ id: 'title', label: 'Title', align: 'left' }] : []),
-    { id: 'phoneNumbers', visibility: 'xs', label: 'Phone', align: 'left' },
-    { id: 'email', visibility: 'xs', label: 'Email', align: 'left' },
-    { id: 'address.country', visibility: 'xs', label: 'Country', align: 'left' },
-    ...(!isCustomerContactPage ? [{ id: 'isActive', visibility: 'xs', label: 'Active', align: 'center' }] : []),
-    { id: 'createdAt',visibility: 'xs', label: 'Created At', align: 'right' },
+    { id: 'phoneNumbers', label: 'Phone', align: 'left' },
+    { id: 'email', label: 'Email', align: 'left' },
+    { id: 'address.country', label: 'Country', align: 'left' },
+    ...(!isCustomerContactPage ? [{ id: 'isActive', label: 'Active', align: 'center' }] : []),
+    { id: 'updatedAt', label: 'Updated At', align: 'right' },
   ];
+
 
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));
@@ -161,6 +161,10 @@ export default function CustomerContactList({isCustomerContactPage = false, filt
     });
   };
 
+  const handleHiddenColumns = async (arg) => {
+    dispatch(setReportHiddenColumns(arg))
+  };
+
   return (
     <Container maxWidth={false}>
       {!isCustomerContactPage ? (
@@ -178,20 +182,26 @@ export default function CustomerContactList({isCustomerContactPage = false, filt
           onExportLoading={exportingCSV}
         />
 
-        {!isNotFound && <TablePaginationCustom
-          count={ ( isCustomerContactPage ? contacts : customersContacts )?.length || 0 }
-          page={page}
-          rowsPerPage={rowsPerPage}
-          onPageChange={onChangePage}
-          onRowsPerPageChange={onChangeRowsPerPage}
-        />}
+        {!isNotFound && (
+          <TablePaginationFilter
+            columns={TABLE_HEAD}
+            hiddenColumns={reportHiddenColumns}
+            handleHiddenColumns={handleHiddenColumns}
+            count={(isCustomerContactPage ? contacts : customersContacts)?.length || 0}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
+          />
+        )}
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
           <Scrollbar>
-            <Table size="small" sx={{ minWidth: 360 }}>
-              <TableHeadCustom
+            <Table stickyHeader size="small" sx={{ minWidth: 360 }}>
+            <TableHeadFilter
                 order={order}
                 orderBy={orderBy}
                 headLabel={TABLE_HEAD}
+                hiddenColumns={reportHiddenColumns}
                 onSort={onSort}
               />
 
@@ -203,6 +213,7 @@ export default function CustomerContactList({isCustomerContactPage = false, filt
                       <CustomerContactListTableRow
                         key={row._id}
                         row={row}
+                        hiddenColumns={reportHiddenColumns}
                         selected={selected.includes(row._id)}
                         onSelectRow={() => onSelectRow(row._id)}
                         onViewRow={() => handleViewCustomer(row?.customer?._id)}
@@ -221,14 +232,6 @@ export default function CustomerContactList({isCustomerContactPage = false, filt
             </Table>
           </Scrollbar>
         </TableContainer>
-
-        {!isNotFound && <TablePaginationCustom
-          count={ ( isCustomerContactPage ? contacts : customersContacts )?.length || 0 }
-          page={page}
-          rowsPerPage={rowsPerPage}
-          onPageChange={onChangePage}
-          onRowsPerPageChange={onChangeRowsPerPage}
-        />}
       </TableCard>
     </Container>
   );
@@ -276,7 +279,7 @@ function applyFilter({ inputData, comparator, filterName, filterFormer, orderBy 
         phoneNumbers.indexOf(filterName.replace(/[^\d]/g, '')) >= 0 || 
         contact?.email?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         contact?.address?.country?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        fDate(contact?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+        fDate(contact?.updatedAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
       );
     });
   }

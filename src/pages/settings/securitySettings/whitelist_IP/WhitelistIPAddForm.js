@@ -7,7 +7,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Card, Grid, Container, Box } from '@mui/material';
 // ROUTES
-import { PATH_SECURITY } from '../../../../routes/paths';
+import { PATH_SETTING } from '../../../../routes/paths';
 // slice
 import { addWhitelistIPs } from '../../../../redux/slices/securityConfig/whitelistIP';
 // components
@@ -48,7 +48,7 @@ export default function WhitelistIPAddForm() {
       await dispatch(addWhitelistIPs(data));
       enqueueSnackbar('IP whitelisted successfully!');
       reset();
-      navigate(PATH_SECURITY.config.whitelistIP.list);
+      navigate(PATH_SETTING.restrictions.whitelistIP.list);
     } catch (error) {
       enqueueSnackbar('IP adding failed!', { variant: `error` });
       console.error(error);
@@ -56,7 +56,7 @@ export default function WhitelistIPAddForm() {
   };
 
   const toggleCancel = () => {
-    navigate(PATH_SECURITY.config.whitelistIP.list);
+    navigate(PATH_SETTING.restrictions.whitelistIP.list);
   };
 
  

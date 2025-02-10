@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import { TableRow, TableCell } from '@mui/material';
 import { styled } from '@mui/system';
 import { useDispatch } from '../../../../redux/store';
-import { PATH_CRM, PATH_SECURITY } from '../../../../routes/paths';
 import { fDateTime } from '../../../../utils/formatTime';
 import { useScreenSize } from '../../../../hooks/useResponsive';
 import { getCustomer, setCustomerDialog } from '../../../../redux/slices/customer/customer';
@@ -67,7 +66,7 @@ export default function SignInLogListTableRow({
         {user?._id ?
         <LinkTableCellWithIconTargetBlank
           onViewRow={handleSecurityUserDialog}
-          // onClick={ !user?._id ? undefined : () => window.open(PATH_SECURITY.users.view( user?._id ), '_blank') }
+          // onClick={ !user?._id ? undefined : () => window.open(PATH_SETTING.security.users.view( user?._id ), '_blank') }
           param={user?.name || "" }
           align='left'
         />

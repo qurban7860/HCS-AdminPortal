@@ -19,7 +19,7 @@ import axios from 'axios';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 // routes
-import { PATH_CRM, PATH_DOCUMENT, PATH_MACHINE, PATH_MACHINE_DRAWING } from '../../routes/paths';
+import { PATH_CRM, PATH_MACHINE, PATH_MACHINE_DRAWING } from '../../routes/paths';
 // components
 import {
   useTable,
@@ -130,6 +130,11 @@ const onChangeRowsPerPage = (event) => {
   }else if(!machineDrawings && !customerPage && !machineDrawingPage){
     dispatch(ChangePage(0));
     dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10)));
+    dispatch(
+      getDocuments( null, null, null, page, documentRowsPerPage,
+        null, null, cancelTokenSource, filteredSearchKey || null, selectedSearchFilter || null, categoryVal, typeVal 
+      )
+    );
   }
 };
 
@@ -148,6 +153,11 @@ const onChangePage = (event, newPage) => {
     );
   }else if(!machineDrawings && !customerPage && !machineDrawingPage){
     dispatch(ChangePage(newPage))
+    dispatch(
+      getDocuments( null, null, null, page, documentRowsPerPage,
+        null, null, cancelTokenSource, filteredSearchKey || null, selectedSearchFilter || null, categoryVal, typeVal 
+      )
+    );
   }
 
 }
@@ -158,7 +168,7 @@ const TABLE_HEAD = useMemo(() => {
     { id: 'referenceNumber', visibility: 'xs2', label: 'Ref. No.', align: 'left', allowSearch: true },
     { id: 'docCategory.name', visibility: 'xs1', label: 'Category', align: 'left', allowSearch: false },
     { id: 'docType.name', visibility: 'xs2', label: 'Type', align: 'left', allowSearch: false },
-    { id: 'createdAt', visibility: 'xs2', label: 'Created At', align: 'right' },
+    { id: 'updatedAt', visibility: 'xs2', label: 'Updated At', align: 'right' },
   ];
 
   if (machineDrawings) {
@@ -281,7 +291,7 @@ const TABLE_HEAD = useMemo(() => {
     filterName,
     filterStatus,
     categoryVal, 
-    typeVal,
+    typeVal, machinePage, machineDrawingPage
   });
   
   const { watch, handleSubmit } = methods;
@@ -344,7 +354,7 @@ const TABLE_HEAD = useMemo(() => {
     } else if( machineDrawings ){
         navigate(PATH_MACHINE_DRAWING.machineDrawings.view.root(Id));
     } else if( !customerPage && !machinePage && !machineDrawingPage && !machineDrawings ){
-        navigate(PATH_DOCUMENT.document.view.root(Id));
+        navigate(PATH_MACHINE.documents.document.view.root(Id));
     }
   };
   
@@ -405,9 +415,9 @@ const TABLE_HEAD = useMemo(() => {
   };  
   
   useEffect(() => {
-      dispatch(getActiveDocumentCategories(null, null, machineDrawings || false ));
-      dispatch(getActiveDocumentTypes(null, machineDrawings || false ));
-  }, [dispatch, machineDrawings]);
+    dispatch(getActiveDocumentCategories(null, null, machineDrawings || false ));
+    dispatch(getActiveDocumentTypes(null, machineDrawings || false ));
+}, [dispatch, machineDrawings]);
   
   const handleCategoryChange = (event, newValue) => {
     if (newValue) {
@@ -453,12 +463,10 @@ const TABLE_HEAD = useMemo(() => {
         </StyledCardContainer>
       )}
       <FormProvider {...methods} onSubmit={handleSubmit(onGetDocuments)}>
-      {!customerPage && !machinePage && (
+      {!customerPage && !machinePage && !machineDrawingPage && (
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Card sx={{ p: 3 }}>
-
-           { !machineDrawingPage && !machinePage && (
            <Box rowGap={2} columnGap={2} mb={3} display="grid" gridTemplateColumns={{ xs: '1fr', sm: 'repeat(2, 1fr)' }} sx={{ flexGrow: 1, width: { xs: '100%', sm: '100%' } }}> 
           <Autocomplete
             id="category-autocomplete"
@@ -477,7 +485,6 @@ const TABLE_HEAD = useMemo(() => {
             renderInput={(params) => <TextField {...params} size="small" label="Type" />}
           />
         </Box>
-      )}
               <Stack
                 direction={{ xs: 'column', sm: 'row' }}
                 spacing={2}
@@ -528,14 +535,16 @@ const TABLE_HEAD = useMemo(() => {
             machineDrawings={machineDrawings}
             customerPage={customerPage}
             machinePage={machinePage}
+            machineDrawingPage={machineDrawingPage}
             categoryVal={categoryVal}
-            setCategoryVal={ (!machineDrawings) ? setCategoryVal : undefined }
+            setCategoryVal={ (machinePage || machineDrawingPage) ? setCategoryVal : undefined }
             typeVal={typeVal}
-            setTypeVal={ (!machineDrawings) ? setTypeVal : undefined }
+            setTypeVal={ (machinePage || machineDrawingPage) ? setTypeVal : undefined }
             handleGalleryView={
               !isNotFound && (customerPage || machinePage) ? handleGalleryView : undefined
             }
-          />
+          /> 
+           <Box sx={{ mt:2 }}>
           { !isNotFound && <TablePaginationFilter
             columns={TABLE_HEAD}
             hiddenColumns={reportHiddenColumns}
@@ -548,14 +557,15 @@ const TABLE_HEAD = useMemo(() => {
           /> }
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <Scrollbar>
-              <Table size="small" sx={{ minWidth: 360 }}>
-                { !isNotFound && <TableHeadFilter
+            <Table stickyHeader size="small" sx={{ minWidth: 360 }}>
+            {(!isNotFound || machinePage || customerPage) && ( 
+                <TableHeadFilter
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
                   onSort={onSort}
                   hiddenColumns={reportHiddenColumns}
-                />}
+                />)}
 
                 <TableBody>
                   {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
@@ -589,7 +599,7 @@ const TABLE_HEAD = useMemo(() => {
             </Scrollbar>
           </TableContainer>
 
-          {!isNotFound && (
+          {(!isNotFound || machinePage || customerPage) && (
             <TablePaginationCustom
               count={totalRows}
               page={page}
@@ -598,7 +608,8 @@ const TABLE_HEAD = useMemo(() => {
               onRowsPerPageChange={onChangeRowsPerPage}
             />
           )}
-        </TableCard>
+          </Box>
+        </TableCard> 
         {/* </Container> */}
     </>
   );
@@ -606,7 +617,7 @@ const TABLE_HEAD = useMemo(() => {
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, orderBy, filterName, filterStatus, categoryVal, typeVal, machinePage, machineDrawingPage }) {
+function applyFilter({ inputData, comparator, orderBy, filterName, filterStatus, categoryVal, typeVal, machineDrawingPage, machinePage }) {
 
   if(inputData){
     const stabilizedThis = inputData && inputData.map((el, index) => [el, index]);
@@ -619,16 +630,15 @@ function applyFilter({ inputData, comparator, orderBy, filterName, filterStatus,
     }
   
     inputData = stabilizedThis?.map((el) => el[0]);
-  
-  
-    if (machinePage || machineDrawingPage) {
+
+    if (machineDrawingPage || machinePage) {
     if(categoryVal)
       inputData = inputData?.filter((drawing)=> drawing.docCategory?._id  === categoryVal?._id );
   
     if(typeVal)
       inputData = inputData?.filter((drawing)=> drawing.docType?._id === typeVal?._id );
-    }
-  
+   }
+   
     if (filterName) {
       inputData = inputData.filter(
         (document) =>

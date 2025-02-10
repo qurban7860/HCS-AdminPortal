@@ -15,6 +15,7 @@ DepartmentListTableRow.propTypes = {
   onViewRow: PropTypes.func,
   onSelectRow: PropTypes.func,
   onDeleteRow: PropTypes.func,
+  hiddenColumns: PropTypes.object,
 };
 
 export default function DepartmentListTableRow({
@@ -24,20 +25,40 @@ export default function DepartmentListTableRow({
   onDeleteRow,
   onEditRow,
   onViewRow,
+  hiddenColumns,
 }) {
-  const { departmentName, departmentType, isActive, forCustomer, isDefault, createdAt } = row;
+  const { departmentName, departmentType, isActive, forCustomer, isDefault, updatedAt } = row;
   
   return (
-      <TableRow hover selected={selected}>
+    <TableRow hover selected={selected}>
+      {!hiddenColumns?.departmentName && (
         <LinkTableCell align="left" onClick={onViewRow} param={departmentName} isDefault={isDefault}/>
+      )}
+      
+
+        {!hiddenColumns?.departmentType && (
         <TableCell align="center">{departmentType ? <Chip label={departmentType} /> : ""}</TableCell>
+      )}
+      
+
+      {!hiddenColumns?.isActive && (
         <TableCell align="center">
-          <Switch checked={isActive} disabled sx={{ my: -1 }} />{' '}
-        </TableCell>        
-        <TableCell align="center">
-          <Switch checked={forCustomer} disabled sx={{ my: -1 }} />{' '}
+          <Switch checked={isActive} disabled sx={{ my: -1 }} />
         </TableCell>
-        <TableCell align="right">{fDate(createdAt)}</TableCell>
-      </TableRow>
+      )}
+
+      
+      {!hiddenColumns?.forCustomer && (
+        <TableCell align="center">
+          <Switch checked={forCustomer} disabled sx={{ my: -1 }} />
+        </TableCell>
+      )}
+
+      
+      {!hiddenColumns?.createdAt && (
+        <TableCell align="right">{fDate(updatedAt)}</TableCell>
+      )}
+    </TableRow>
+
   );
 }

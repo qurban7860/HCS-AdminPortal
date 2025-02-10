@@ -6,7 +6,7 @@ import { Table, TableBody, Container, TableContainer } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // routes
-import { PATH_SECURITY } from '../../../routes/paths';
+import { PATH_SETTING } from '../../../routes/paths';
 // components
 import Scrollbar from '../../../components/scrollbar';
 import { Cover } from '../../../components/Defaults/Cover';
@@ -53,7 +53,7 @@ const TABLE_HEAD = [
   { id: 'roles.name.[]', visibility: 'md1', label: 'Roles', align: 'left' },
   { id: 'contact.firstName', visibility: 'xl', label: 'Contact', align: 'left' },
   { id: 'isActive', label: "   ", align: 'left' },
-  { id: 'createdAt', visibility: 'md', label: 'Created At', align: 'right' },
+  { id: 'updatedAt', visibility: 'md', label: 'Updated At', align: 'right' },
 ];
 
 // ----------------------------------------------------------------------
@@ -197,7 +197,7 @@ useEffect(()=>{
   };
 
   const handleViewRow = (id) => {
-    navigate(PATH_SECURITY.users.view(id));
+    navigate(PATH_SETTING.security.users.view(id));
   };
 
   const handleResetFilter = () => {
@@ -259,7 +259,7 @@ useEffect(()=>{
             />
 
             <Scrollbar>
-              <Table size="small" sx={{ minWidth: 360 }}>
+              <Table stickyHeader size="small" sx={{ minWidth: 360 }}>
                 <TableHeadFilter
                   order={order}
                   orderBy={orderBy}

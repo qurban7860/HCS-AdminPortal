@@ -35,8 +35,9 @@ export const FORMLABELS = {
     TOOLS: 'Tools',
     LOGS: 'Logs',
     SETTINGS: 'Settings',
+    MACHINE_SETTINGS: 'Machine Settings',
     CUSTOMERS: 'Customers',
-    REGISTERED_REQUESTS: "Portal Registration Requests",
+    REGISTERED_REQUESTS: "Portal Registrations",
     ARCHIVED_CUSTOMERS: 'Archived Customers',
     DOCUMENTS: 'Documents',
     ADD_DOCUMENTS: 'Add Documents',
@@ -60,6 +61,9 @@ export const FORMLABELS = {
     MACHINE_CHECK_ITEM_SERVICE_CHECK_PARAM_REPORT_ADD: 'New Check Items Service Parameter',
     MACHINE_CHECK_ITEM_SERVICE_REPORT_EDIT: 'Edit Check Items Service Report',
     MACHINE_SERVICE_REPORT_NOTES: 'Notes / Comments',
+    TICKET_ATTACHMENTS: 'Attachments',
+    TICKET_COMMENTS: 'Notes / Comments',
+    TICKET_HISTORY: 'Ticket History',
     EDIT_DOCUMENT: 'Edit Document',
   },
 
@@ -90,6 +94,10 @@ export const FORMLABELS = {
   EMAILS: 'Emails',
   ARCHIVED_REPORTS: 'Archived Reports',
   LOGS_SETTINGS: 'Logs',
+
+  // @root - Ticket Settings
+  TICKET_SETTINGS: 'Ticket Settings',
+
   // @root DocumentAddForm in dashboard/documents
   SELECT_CUSTOMER: 'Select Customer',
   SELECT_SITE: 'Select Site',
@@ -198,6 +206,8 @@ export const BUTTONS = {
   ADDSUPPLIER: 'Add Supplier',
   ADDSTATUS: 'Add Status',
   ADDTECHPARAM: 'Add Technical Parameter',
+  // Ticket settings
+  ADDTICKET: 'Add New Ticket',
   // Service settings
   ADDSERVICESETTING: 'Add Service Setting',
   EDITSERVICESETTING: 'Edit Service Setting',
@@ -307,6 +317,8 @@ export const TITLES = {
     tooltip: 'Only available at large resolutions > 1600px (xl)',
   },
   PRESETS: 'Presets',
+  REPORTS_TITLE: 'Reports',
+  REPORTS_DESC: 'Access comprehensive reports and analytics to monitor your machine performance, track maintenance history, and analyze operational data. Our reporting system provides detailed insights across various categories to help you make informed decisions.',
 };
 
 export const TOGGLE = {

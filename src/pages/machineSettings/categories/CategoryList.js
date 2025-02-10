@@ -35,7 +35,7 @@ const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
   { id: 'connections', visibbility: 'xs1', label: 'Connectable as child', align: 'center' },
   { id: 'isActive', label: 'Active', align: 'center' },
-  { id: 'createdAt', label: 'Created At', align: 'right' },
+  { id: 'updatedAt', label: 'Updated At', align: 'right' },
 ];
 
 
@@ -149,7 +149,7 @@ export default function CategoryList() {
   };
 
 
-  const handleViewRow = (id) => navigate(PATH_MACHINE.machines.machineSettings.categories.view(id));
+  const handleViewRow = (id) => navigate(PATH_MACHINE.machineSettings.categories.view(id));
 
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))

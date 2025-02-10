@@ -13,7 +13,7 @@ import {
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
 // routes
-import { PATH_SECURITY } from '../../../../routes/paths';
+import { PATH_SETTING } from '../../../../routes/paths';
 // components
 import { useSnackbar } from '../../../../components/snackbar';
 import {
@@ -46,7 +46,7 @@ const TABLE_HEAD = [
   { id: 'blockedUser.email', label: 'User Email', align: 'left' },
   { id: 'customer.name', label: 'Customer', align: 'left' },
   { id: 'createdBy.name', label: 'Updated By', align: 'left' },
-  { id: 'createdAt', label: 'Updated At', align: 'left' },
+  { id: 'updatedAt', label: 'Updated At', align: 'left' },
   { id: 'action', label: 'Action', align: 'right'},
 ];
 
@@ -157,7 +157,7 @@ export default function BlockedUserList() {
   };
 
   const handleViewRow = (id) => {
-    navigate(PATH_SECURITY.users.view(id));
+    navigate(PATH_SETTING.security.users.view(id));
   };
 
   return (

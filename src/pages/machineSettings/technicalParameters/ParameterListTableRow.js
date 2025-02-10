@@ -31,7 +31,7 @@ export default function ParameterListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { name, category, code, isActive, createdAt } = row;
+  const { name, category, code, isActive, updatedAt } = row;
 
   const smScreen = useScreenSize('sm')
 
@@ -68,7 +68,7 @@ export default function ParameterListTableRow({
           {' '}
           <Switch checked={isActive} disabled size="small" sx={{ my: -1 }} />{' '}
         </TableCell>
-        <TableCell align="right">{fDate(createdAt)}</TableCell>
+        <TableCell align="right">{fDate(updatedAt)}</TableCell>
       </StyledTableRow>
 
       <ViewFormCodeMenuPopover

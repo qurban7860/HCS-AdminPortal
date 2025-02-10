@@ -15,6 +15,13 @@ const initialState = {
   success: false,
   isLoading: false,
   responseMessage: null,
+  reportHiddenColumns: {
+    "toEmails": false,
+    "fromEmail": true,
+    "subject": false,
+    "customer.name": false,
+    "createdAt": false,
+},
 };
 
 const slice = createSlice({
@@ -84,6 +91,9 @@ const slice = createSlice({
     ChangePage(state, action) {
       state.page = action.payload;
     },
+    setReportHiddenColumns(state, action){
+      state.reportHiddenColumns = action.payload;  
+    },
   },
 });
 
@@ -97,6 +107,7 @@ export const {
   setFilterBy,
   ChangeRowsPerPage,
   ChangePage,
+  setReportHiddenColumns,
 } = slice.actions;
 
 

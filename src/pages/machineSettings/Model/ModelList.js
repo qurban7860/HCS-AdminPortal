@@ -48,7 +48,7 @@ const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
   { id: 'category.name', visibbility: 'xs1', label: 'Category', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
-  { id: 'createdAt', label: 'Created At', align: 'right' },
+  { id: 'updatedAt', label: 'Updated At', align: 'right' },
 ];
 
 // ----------------------------------------------------------------------
@@ -167,7 +167,8 @@ export default function ModelList() {
     }
   };
 
-  const handleViewRow = async (id) => navigate(PATH_MACHINE.machines.machineSettings.models.view(id));
+
+  const handleViewRow = async (id) => navigate(PATH_MACHINE.machineSettings.models.view(id));
 
   const handleResetFilter = () => {
     dispatch(setFilterBy(''));

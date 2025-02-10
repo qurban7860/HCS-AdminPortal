@@ -102,7 +102,9 @@ export default function ServiceReportTemplateEditForm() {
 
   /* eslint-enable */
   useEffect(() => {
-    setCheckParams(serviceReportTemplate?.checkItemLists || [])
+    if(Array.isArray( serviceReportTemplate?.checkItemLists ) && serviceReportTemplate?.checkItemLists?.length > 0 ){
+      setCheckParams( serviceReportTemplate?.checkItemLists?.map(cil => ({ ... cil, isOpen: true })) )
+    }
   }, [serviceReportTemplate]);
 
   useEffect(() => {
@@ -113,7 +115,7 @@ export default function ServiceReportTemplateEditForm() {
   }, [serviceReportTemplate]);
 
   const toggleCancel = () => {
-    navigate(PATH_MACHINE.machines.machineSettings.serviceReportsTemplate.view(id));
+    navigate(PATH_MACHINE.machineSettings.serviceReportsTemplate.view(id));
   };
   
   const onSubmit = async (data) => {
@@ -126,7 +128,7 @@ export default function ServiceReportTemplateEditForm() {
       }
       await dispatch(updateServiceReportTemplate(data, id));
       enqueueSnackbar('Update success!');
-      navigate(PATH_MACHINE.machines.machineSettings.serviceReportsTemplate.view(id));
+      navigate(PATH_MACHINE.machineSettings.serviceReportsTemplate.view(id));
       reset();
     } catch (err) {
       enqueueSnackbar('Saving failed!', { variant: `error` });
@@ -139,7 +141,7 @@ export default function ServiceReportTemplateEditForm() {
         <Cover
           name={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_CONFIGS_EDIT}
           icon="material-symbols:category-outline"
-          url={PATH_MACHINE.machines.machineSettings.serviceReportsTemplate.root}
+          url={PATH_MACHINE.machineSettings.serviceReportsTemplate.root}
         />
       </StyledCardContainer>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>

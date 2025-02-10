@@ -15,7 +15,7 @@ import {
   Tabs,
 } from '@mui/material';
 // routes
-import { PATH_DASHBOARD, PATH_SECURITY } from '../../../../routes/paths';
+import { PATH_SETTING } from '../../../../routes/paths';
 // auth
 import { useAuthContext } from '../../../../auth/useAuthContext';
 // _mock_
@@ -78,12 +78,12 @@ export default function SecurityUserProfile() {
   }, [dispatch, userId, securityUser]);
 
   const handleViewCustomer = (id) => {
-    navigate(PATH_SECURITY.users.view(id));
+    navigate(PATH_SETTING.security.users.view(id));
   };
 
   const handleEdit = () => {
     dispatch(setSecurityUserEditFormVisibility(true));
-    navigate(PATH_SECURITY.users.edit(securityUser?._id));
+    navigate(PATH_SETTING.security.users.edit(securityUser?._id));
   };
 
   const defaultValues = useMemo(

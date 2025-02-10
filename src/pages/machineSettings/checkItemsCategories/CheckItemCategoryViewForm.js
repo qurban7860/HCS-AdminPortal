@@ -50,13 +50,13 @@ export default function CheckItemCategoryViewForm() {
     [serviceCategory]
   );
 
-  const toggleEdit = () => navigate(PATH_MACHINE.machines.machineSettings.checkItemCategories.edit(id));
+  const toggleEdit = () => navigate(PATH_MACHINE.machineSettings.checkItemCategories.edit(id));
 
   const onDelete = async () => {
     try {
       await dispatch(deleteServiceCategory(id));
       enqueueSnackbar('Service Category Archived Successfullty!');
-      navigate(PATH_MACHINE.machines.machineSettings.checkItemCategories.root);
+      navigate(PATH_MACHINE.machineSettings.checkItemCategories.root);
     } catch (err) {
       enqueueSnackbar('Service Category Archive failed!', { variant: `error` });
       console.log('Error:', err);
@@ -68,7 +68,7 @@ export default function CheckItemCategoryViewForm() {
         isActive={defaultValues.isActive} 
         handleEdit={toggleEdit} 
         onDelete={onDelete} 
-        backLink={() => navigate(PATH_MACHINE.machines.machineSettings.checkItemCategories.root)}
+        backLink={() => navigate(PATH_MACHINE.machineSettings.checkItemCategories.root)}
         machineSettingPage
       />
       <Grid container sx={{mt:2}}>

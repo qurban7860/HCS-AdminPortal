@@ -20,6 +20,7 @@ DocumentTypeListTableRow.propTypes = {
   onViewRow: PropTypes.func,
   onSelectRow: PropTypes.func,
   onDeleteRow: PropTypes.func,
+  hiddenColumns: PropTypes.object,
 };
 
 
@@ -31,23 +32,36 @@ export default function DocumentTypeListTableRow({
   onDeleteRow,
   onEditRow,
   onViewRow,
+  hiddenColumns,
 }) {
-  const { name, docCategory, customerAccess, isActive, isDefault, createdAt } = row;
+  const { name, docCategory, customerAccess, isActive, isDefault, updatedAt } = row;
+  const smScreen = useScreenSize('sm');
 
- const smScreen = useScreenSize('sm')
   return (
-      <StyledTableRow hover selected={selected}>
+    <StyledTableRow hover selected={selected}>
+      {useScreenSize('lg') && !hiddenColumns?.name && (
         <LinkTableCell align="left" param={name} onClick={onViewRow} isDefault={isDefault} />
-        { smScreen && <TableCell align="left">{docCategory?.name}</TableCell>}
-        { smScreen && <TableCell align="center">
-          {' '}
-          <Switch checked={customerAccess} disabled size="small" />{' '}
-        </TableCell>}
+      )}
+      
+      {useScreenSize('lg') && !hiddenColumns?.["docCategory.name"] && (
+        <TableCell align="left">{docCategory?.name}</TableCell>
+      )}
+      
+      {useScreenSize('lg') && !hiddenColumns?.customerAccess && (
         <TableCell align="center">
-          {' '}
-          <Switch checked={isActive} disabled size="small" />{' '}
+          <Switch checked={customerAccess} disabled size="small" />
         </TableCell>
-        <TableCell align="right">{fDate(createdAt)}</TableCell>
-      </StyledTableRow>
+      )}
+      
+      {useScreenSize('lg') && !hiddenColumns?.isActive && (
+        <TableCell align="center">
+          <Switch checked={isActive} disabled size="small" />
+        </TableCell>
+      )}
+      
+      {useScreenSize('lg') && !hiddenColumns?.createdAt && (
+        <TableCell align="right">{fDate(updatedAt)}</TableCell>
+      )}
+    </StyledTableRow>
   );
 }

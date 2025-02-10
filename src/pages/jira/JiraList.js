@@ -203,7 +203,7 @@ export default function JiraList() {
 
   return (
       <Container maxWidth={false}>
-        <StyledCardContainer><Cover name="Support Tickets" /></StyledCardContainer>
+        <StyledCardContainer><Cover name="Jira Tickets" /></StyledCardContainer>
         <TableCard>
           <JiraTableToolbar
             filterName={filterName}
@@ -249,7 +249,7 @@ export default function JiraList() {
             />
 
             <Scrollbar>
-              <Table size="small" sx={{ minWidth: 360 }}>
+              <Table stickyHeader size="small" sx={{ minWidth: 360 }}>
                 <TableHeadFilter
                   order={order}
                   orderBy={orderBy}

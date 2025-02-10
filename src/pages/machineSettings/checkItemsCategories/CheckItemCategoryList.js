@@ -36,7 +36,7 @@ import { FORMLABELS } from '../../../constants/default-constants';
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
-  { id: 'createdAt', label: 'Created At', align: 'right' },
+  { id: 'updatedAt', label: 'Updated At', align: 'right' },
 ];
 
 // ----------------------------------------------------------------------
@@ -143,7 +143,7 @@ export default function ServiceCategoryList() {
   };
 
 
-  const handleViewRow = (id) => navigate(PATH_MACHINE.machines.machineSettings.checkItemCategories.view(id));
+  const handleViewRow = (id) => navigate(PATH_MACHINE.machineSettings.checkItemCategories.view(id));
 
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))

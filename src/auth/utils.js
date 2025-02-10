@@ -39,6 +39,7 @@ export const tokenExpired = (exp) => {
   let expiredTimer;
   const currentTime = Date.now();
   const timeLeft = exp * 1000 - currentTime;
+
   clearTimeout(expiredTimer);
   expiredTimer = setTimeout(() => {
     alert('Your session has expired. Please login again');

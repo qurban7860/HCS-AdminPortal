@@ -31,7 +31,7 @@ import { getSignInLogs,
 import { Cover } from '../../../../components/Defaults/Cover';
 import { fDateTime } from '../../../../utils/formatTime';
 import TableCard from '../../../../components/ListTableTools/TableCard';
-import { PATH_SECURITY } from '../../../../routes/paths';
+import { PATH_SETTING } from '../../../../routes/paths';
 import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
@@ -141,7 +141,7 @@ export default function SignInLogList() {
   };
 
   const handleViewRow = (id) => {
-    navigate(PATH_SECURITY.users.view(id));
+    navigate(PATH_SETTING.security.users.view(id));
   };
 
   const configurations = JSON.parse(localStorage.getItem('configurations'));

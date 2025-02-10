@@ -22,7 +22,7 @@ export default function ModelViewForm() {
   const { machineModel, isLoading } = useSelector((state) => state.machinemodel);
   const { id } = useParams();
   const dispatch = useDispatch();
-  const toggleEdit = () => { navigate(PATH_MACHINE.machines.machineSettings.models.edit(id)) };
+  const toggleEdit = () => { navigate(PATH_MACHINE.machineSettings.models.edit(id)) };
 
   useLayoutEffect(()=>{
     if(id){
@@ -53,7 +53,7 @@ export default function ModelViewForm() {
     try {
       await dispatch(deleteMachineModel(id));
       enqueueSnackbar('Model Archived Successfully!');
-      navigate(PATH_MACHINE.machines.machineSettings.models.root);
+      navigate(PATH_MACHINE.machineSettings.models.root);
     } catch (err) {
       enqueueSnackbar('Model Archive failed!', { variant: `error` });
       console.log('Error:', err);
@@ -65,7 +65,7 @@ export default function ModelViewForm() {
           isDefault={defaultValues.isDefault}
           handleEdit={toggleEdit} 
           onDelete={onDelete} 
-          backLink={() => navigate(PATH_MACHINE.machines.machineSettings.models.root)}
+          backLink={() => navigate(PATH_MACHINE.machineSettings.models.root)}
           machineSettingPage
           />
       <Grid container sx={{mt:2}}>

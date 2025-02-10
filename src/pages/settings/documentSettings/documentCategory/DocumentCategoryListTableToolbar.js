@@ -4,7 +4,7 @@ import { Stack } from '@mui/material';
 // hooks
 import { useNavigate } from 'react-router-dom';
 // routes
-import { PATH_SETTING } from '../../../../routes/paths';
+import { PATH_MACHINE, PATH_SETTING } from '../../../../routes/paths';
 // components
 import SearchBarCombo from '../../../../components/ListTableTools/SearchBarCombo';
 // constants
@@ -35,7 +35,7 @@ export default function DocumentCategoryListTableToolbar({
 }) {
   const navigate = useNavigate();
   const toggleAdd = () => {
-    navigate(PATH_SETTING.documentCategory.new);
+    navigate(PATH_MACHINE.documents.documentCategory.new);
   };
   return (
     <Stack {...options}>

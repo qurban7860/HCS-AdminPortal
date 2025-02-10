@@ -24,6 +24,17 @@ export const ICONS = {
     color: '#FF0000',
     heading: 'Inactive',
   },
+  // shareWith
+  SHARED: {
+    icon: 'fa6-solid:users',
+    color: '#008000',
+    heading: 'Organization Share On',
+  },
+  NONSHARED: {
+    icon: 'fa6-solid:users-slash',
+    color: '#FF0000',
+    heading: 'Organization Share Off',
+  },
 
   // Status
   STATUS: {
@@ -512,6 +523,41 @@ export const ICONS = {
   API_LOGS: {
     icon: 'tabler:api-app',
     heading: 'API Logs',
+  },
+  
+  // @root - ticketsettings
+  // ------------ Ticket Collection --------------
+  ISSUE_TYPES: {
+    icon: 'material-symbols-light:problem-rounded',
+    heading: 'Issue Types',
+  },
+  IMPACTS: {
+    icon: 'game-icons:bullet-impacts',
+    heading: 'Impacts',
+  },
+  PRIORITIES: {
+    icon: 'pajamas:issue-type-incident',
+    heading: 'Priorities',
+  },
+  STATUSES: {
+    icon: 'carbon:mobile-request',
+    heading: 'Statuses',
+  },
+  STATUS_TYPES: {
+    icon: 'grommet-icons:status-warning',
+    heading: 'Status Types',
+  },
+  CHANGE_TYPES: {
+    icon: 'material-symbols-light:change-circle-outline-rounded',
+    heading: 'Change Types',
+  },
+  CHANGE_REASONS: {
+    icon: 'mdi:file-exchange-outline',
+    heading: 'Change Reasons',
+  },
+  INVESTIGATION_REASONS: {
+    icon: 'hugeicons:investigation',
+    heading: 'Investigation Reasons',
   },
 
   MOVE_MACHINE: {

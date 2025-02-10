@@ -55,7 +55,7 @@ export default function LicenseList() {
     { id: 'licenseDetail.version', visibility: 'xs1', label: 'Version', align: 'left' },
     { id: 'licenseDetail.type', visibility: 'xs2', label: 'Type', align: 'left' },
     { id: 'licenseDetail.extensionTime', label: 'Extension Time', align: 'right' },
-    { id: 'createdAt', label: 'Created At', align: 'right' },
+    { id: 'updatedAt', label: 'Updated At', align: 'right' },
   ];
 
   const onChangeRowsPerPage = (event) => {

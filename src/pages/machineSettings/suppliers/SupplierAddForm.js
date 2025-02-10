@@ -71,7 +71,7 @@ export default function StatusAddForm() {
     formState: { isSubmitting },
   } = methods;
 
-  const toggleCancel = () => navigate(PATH_MACHINE.machines.machineSettings.suppliers.root);
+  const toggleCancel = () => navigate(PATH_MACHINE.machineSettings.suppliers.root);
 
   const onSubmit = async (data) => {
     try {
@@ -84,7 +84,7 @@ export default function StatusAddForm() {
       await dispatch(addSupplier(data));
       reset();
       enqueueSnackbar('Supplier created successfully!');
-      navigate(PATH_MACHINE.machines.machineSettings.suppliers.root);
+      navigate(PATH_MACHINE.machineSettings.suppliers.root);
     } catch (error) {
       enqueueSnackbar(error, { variant: `error` });
       console.error(error);

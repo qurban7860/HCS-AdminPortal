@@ -27,7 +27,7 @@ CategoryViewForm.propTypes = {
 // ----------------------------------------------------------------------
 
 export default function CategoryViewForm({ currentCategory = null }) {
-  const toggleEdit = () => navigate(PATH_MACHINE.machines.machineSettings.categories.edit(id));
+  const toggleEdit = () => navigate(PATH_MACHINE.machineSettings.categories.edit(id));
   const { enqueueSnackbar } = useSnackbar();
 
   const navigate = useNavigate();
@@ -49,7 +49,7 @@ export default function CategoryViewForm({ currentCategory = null }) {
       isActive: category.isActive,
       isDefault: category?.isDefault,
       connection: category.connections || false,
-      models: category.models?.map((model, index) => ( <Chip sx={{ml:index===0?0:1}} onClick={()=> navigate(PATH_MACHINE.machines.machineSettings.models.view(model?._id))} label={`${model?.name || ''}`} /> )) || [],
+      models: category.models?.map((model, index) => ( <Chip sx={{ml:index===0?0:1}} onClick={()=> navigate(PATH_MACHINE.machineSettings.models.view(model?._id))} label={`${model?.name || ''}`} /> )) || [],
       createdByFullName: category?.createdBy?.name || '',
       createdAt: category?.createdAt || '',
       createdIP: category?.createdIP || '',
@@ -65,7 +65,7 @@ export default function CategoryViewForm({ currentCategory = null }) {
     try {
       await dispatch(deleteCategory(id));
       enqueueSnackbar('Category Archived Successfullty!');
-      navigate(PATH_MACHINE.machines.machineSettings.categories.root);
+      navigate(PATH_MACHINE.machineSettings.categories.root);
     } catch (err) {
       enqueueSnackbar(err, { variant: `error` });
       console.log('Error:', err);
@@ -78,7 +78,7 @@ export default function CategoryViewForm({ currentCategory = null }) {
         isDefault={defaultValues.isDefault} 
         handleEdit={toggleEdit} 
         onDelete={onDelete} 
-        backLink={() => navigate(PATH_MACHINE.machines.machineSettings.categories.root)}
+        backLink={() => navigate(PATH_MACHINE.machineSettings.categories.root)}
         isConectable={defaultValues.connection}
         machineSettingPage
         />

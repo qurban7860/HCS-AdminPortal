@@ -24,7 +24,7 @@ export default function TechParamCategoryListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { name, isActive, createdAt } = row;
+  const { name, isActive, updatedAt } = row;
 
   return (
       <TableRow hover selected={selected}>
@@ -33,7 +33,7 @@ export default function TechParamCategoryListTableRow({
           {' '}
           <Switch checked={isActive} disabled size="small" sx={{ my: -1 }} />{' '}
         </TableCell>
-        <TableCell align="right">{fDate(createdAt)}</TableCell>
+        <TableCell align="right">{fDate(updatedAt)}</TableCell>
       </TableRow>
   );
 }

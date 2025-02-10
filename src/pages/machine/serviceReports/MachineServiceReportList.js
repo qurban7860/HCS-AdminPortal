@@ -5,7 +5,8 @@ import { useState, useEffect, useLayoutEffect, useRef, useCallback, useMemo } fr
 import { Container, Table, TableBody, TableContainer } from '@mui/material';
 // routes
 import { useNavigate, useParams } from 'react-router-dom';
-import { PATH_MACHINE, PATH_SERVICE_REPORTS } from '../../../routes/paths';
+import useResponsive from '../../../hooks/useResponsive';
+import { PATH_MACHINE } from '../../../routes/paths';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // components
@@ -14,8 +15,9 @@ import {
   getComparator,
   TableNoData,
   TableSkeleton,
-  TableHeadCustom,
   TablePaginationCustom,
+  TablePaginationFilter,
+  TableHeadFilter,
 } from '../../../components/table';
 import Scrollbar from '../../../components/scrollbar';
 // sections
@@ -35,12 +37,14 @@ import {
   setReportFilterByStatus,
   setReportFilterByStatusType,
   setSendEmailDialog,
+  setReportHiddenColumns,
 } from '../../../redux/slices/products/machineServiceReport';
 import { fDate, fDateTime } from '../../../utils/formatTime';
 import TableCard from '../../../components/ListTableTools/TableCard';
 import { Cover } from '../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import MachineTabContainer from '../util/MachineTabContainer';
+
 
 // ----------------------------------------------------------------------
 
@@ -51,14 +55,14 @@ MachineServiceReportList.propTypes = {
 export default function MachineServiceReportList( { reportsPage }) {
   
   const { machine } = useSelector((state) => state.machine);
-  const { machineServiceReports, filterBy, filterByStatus, filterByStatusType, reportFilterBy, reportFilterByStatus, reportFilterByStatusType, page, rowsPerPage, isLoading } = useSelector((state) => state.machineServiceReport);
+  const { machineServiceReports, filterBy, filterByStatus, filterByStatusType, reportFilterBy, reportFilterByStatus, reportFilterByStatusType, page, rowsPerPage, isLoading, reportHiddenColumns } = useSelector((state) => state.machineServiceReport);
   const { activeServiceReportStatuses, isLoadingReportStatus } = useSelector( (state) => state.serviceReportStatuses );
   const navigate = useNavigate();
   const { machineId } = useParams();
   
   const TABLE_HEAD = useMemo(() => {
     const baseHeaders =  [
-      { id: 'checkboxes', label: ' ', align: 'left' },
+      { id: 'checkboxes', label: 'Active', align: 'left' },
       { id: 'serviceDate', label: 'Service Date', align: 'left' },
       { id: 'serviceReportTemplate.reportType', label: 'Type', align: 'left' },
       { id: 'serviceReportUID', label: 'Service ID', align: 'left' },
@@ -95,6 +99,8 @@ export default function MachineServiceReportList( { reportsPage }) {
   const [filterName, setFilterName] = useState('');
   const [filterStatus, setFilterStatus] = useState(null);
   const [statusType, setStatusType] = useState( [] );
+
+  const isMobile = useResponsive('down', 'sm');
 
   useLayoutEffect(() => {
     if( !isLoadingReportStatus ){
@@ -236,6 +242,11 @@ export default function MachineServiceReportList( { reportsPage }) {
     setFilterName('');
   };
 
+  
+  const handleHiddenColumns = async (arg) => {
+    dispatch(setReportHiddenColumns(arg))
+   };
+
   return (
     <Container maxWidth={false} >
           { machineId && <MachineTabContainer currentTabValue='serviceReports' />}
@@ -258,34 +269,51 @@ export default function MachineServiceReportList( { reportsPage }) {
             onResetFilter={ handleResetFilter }
           />
 
-          {!isNotFound && <TablePaginationCustom
-            count={machineServiceReports?.totalCount || 0 }
-            page={machineServiceReports?.currentPage || 0 }
+
+{!isNotFound && !isMobile &&(
+          <TablePaginationFilter
+            columns={TABLE_HEAD}
+            hiddenColumns={reportHiddenColumns}
+            handleHiddenColumns={handleHiddenColumns}
+            count={machineServiceReports?.totalCount || 0}
+            page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-          />}
+          />
+        )}
 
+        {!isNotFound && isMobile && (
+          <TablePaginationCustom
+            count={machineServiceReports ? machineServiceReports.length : 0}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
+          />
+        )}
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
 
             <Scrollbar>
-              <Table size="small" sx={{ minWidth: 360 }}>
-                <TableHeadCustom
-                  order={order}
-                  orderBy={orderBy}
-                  headLabel={TABLE_HEAD}
-                  onSort={onSort}
-                />
+              <Table stickyHeader size="small" sx={{ minWidth: 360 }}>
+              <TableHeadFilter
+                order={order}
+                orderBy={orderBy}
+                headLabel={TABLE_HEAD}
+                hiddenColumns={reportHiddenColumns}
+                onSort={onSort}
+              />
 
                 <TableBody>
-                  {( ( isLoading || isLoadingReportStatus ) ? [...Array(rowsPerPage)] : dataFiltered)
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row, index) =>
-                      row ? (
+                {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row, index) =>
+                    row ? (
                         <MachineServiceReportListTableRow
                           reportsPage={reportsPage}
                           key={row._id}
                           row={row}
+                          hiddenColumns={reportHiddenColumns}
                           onViewRow={() => handleViewRow( row?.machine?._id, row._id )}
                           openInNewPage={() => openInNewPage( row?.machine?._id, row._id ) }
                           style={index % 2 ? { background: 'red' } : { background: 'green' }}

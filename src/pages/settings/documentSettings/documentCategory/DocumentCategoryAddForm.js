@@ -9,7 +9,7 @@ import { Card, Grid, Stack, Container} from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { useSnackbar } from '../../../../components/snackbar';
 // routes
-import { PATH_SETTING } from '../../../../routes/paths';
+import { PATH_MACHINE, PATH_SETTING } from '../../../../routes/paths';
 // schema
 import { DocumentCategorySchema } from '../../../schemas/document';
 // slice
@@ -112,7 +112,7 @@ export default function DocumentCategoryAddForm({ currentDocument }) {
       await dispatch(addDocumentCategory(data));
       reset();
       enqueueSnackbar(Snacks.docSaved);
-      navigate(PATH_SETTING.documentCategory.list);
+      navigate(PATH_MACHINE.documents.documentCategory.list);
     } catch (error) {
       enqueueSnackbar(error, { variant: `error` });
       console.error(error);
@@ -120,7 +120,7 @@ export default function DocumentCategoryAddForm({ currentDocument }) {
   };
 
   const toggleCancel = () => {
-    navigate(PATH_SETTING.documentCategory.list);
+    navigate(PATH_MACHINE.documents.documentCategory.list);
   };
   return (
     <Container maxWidth={false}>
@@ -128,7 +128,7 @@ export default function DocumentCategoryAddForm({ currentDocument }) {
         <Cover
           name={FORMLABELS.COVER.NEW_DOCUMENT_CATEGORY} // New Document Category
           generalSettings
-          backLink={PATH_SETTING.documentCategory.list}
+          backLink={PATH_MACHINE.documents.documentCategory.list}
         />
       </StyledCardContainer>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>

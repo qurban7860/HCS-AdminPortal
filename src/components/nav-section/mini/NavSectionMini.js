@@ -23,9 +23,21 @@ function NavSectionMini({ data, sx, ...other }) {
       }}
       {...other}
     >
-      {data.map((group, index) => (
-        <Items key={group.subheader} items={group.items} isLastGroup={index + 1 === data.length} />
+      {data?.length > 0 && data.map((group, groupIndex) => (
+          <Items key={group.subheader} items={group.items} isLastGroup={groupIndex + 1 === data.length} />
       ))}
+      {/* {data.items.map((group, index) => (
+        <Items key={group.subheader} items={group.items} isLastGroup={index + 1 === data.length} />
+      ))} */}
+      {/* {data &&
+        Object.keys(data).length > 0 &&
+        data.items.map((group, index) => (
+          <Items
+            key={group.subheader}
+            items={group.items}
+            isLastGroup={index + 1 === data.length}
+          />
+        ))} */}
     </Stack>
   );
 }
@@ -42,7 +54,7 @@ Items.propTypes = {
 function Items({ items, isLastGroup }) {
   return (
     <>
-      {items.map((list) => (
+      {items?.map((list) => (
         <NavList key={list.title + list.path} data={list} depth={1} hasChild={!!list.children} />
       ))}
 
