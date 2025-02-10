@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+import validateFileType from '../documents/util/validateFileType';
   
   export const ticketSchema = ( reqType ) => {
     const isNewRequest = reqType === 'new';
@@ -31,7 +32,12 @@ import * as Yup from 'yup';
         changeReason: Yup.object().nullable().label('Change Reason'),
         investigationReason: Yup.object().nullable().label('Investigation Reason'),
 
-        files: Yup.mixed().label("Files").nullable(),
+        files: Yup.mixed().label('Files')
+        .test(
+          'fileType',
+          'Only the following formats are accepted: .jpeg, .jpg, gif, .bmp, .webp, .pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx',
+          validateFileType
+        ).nullable(),
         hlc: Yup.string().label('HLC').trim().max(500).nullable(),
         plc: Yup.string().label('PLC').trim().max(500).nullable(),
         description: Yup.string().label('Description').trim().max(10000).nullable(),
