@@ -34,8 +34,6 @@ import TableCard from '../../../../components/ListTableTools/TableCard';
 import { fDate } from '../../../../utils/formatTime';
 import { useSnackbar } from '../../../../components/snackbar';
 import { exportCSV } from '../../../../utils/exportCSV';
-import IconButtonTooltip from '../../../../components/Icons/IconButtonTooltip';
-import { ICONS } from '../../../../constants/icons/default-icons';
 
 // ----------------------------------------------------------------------
 
@@ -65,8 +63,8 @@ export default function CustomerContactList({isCustomerContactPage = false, filt
   // ----------------------------------------------------------------------
 
   const TABLE_HEAD = [
-    ...(isCustomerContactPage ? [{ id: 'isActive',  label: ( <IconButtonTooltip title={ ICONS.STATUS.heading } color={ ICONS.STATUS.color } icon={ ICONS.STATUS.icon } />), align: 'center' }] : []),
-    ...(isCustomerContactPage ? [{ id: 'formerEmployee',  label: ( <IconButtonTooltip title={ ICONS.CURR_EMP_ACTIVE.heading } color={ ICONS.CURR_EMP_ACTIVE.color } icon={ ICONS.CURR_EMP_ACTIVE.icon } />), align: 'center' }] : []),
+    ...(isCustomerContactPage ? [{ id: 'isActive',  label: <span style={{ marginRight: 3 }}>A</span>, align: 'right' }] : []),
+    ...(isCustomerContactPage ? [{ id: 'formerEmployee',  label: <span style={{ marginRight: 3 }}>E</span>, align: 'right' }] : []),
     ...(!isCustomerContactPage ? [{ id: 'customer.name', label: 'Customer', align: 'left'}] : []),
     { id: 'firstName', label: 'Contact Name', align: 'left' },
     ...(isCustomerContactPage ? [{ id: 'title', label: 'Title', align: 'left' }] : []),

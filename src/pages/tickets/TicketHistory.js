@@ -26,9 +26,9 @@ const TicketHistory = ({ currentUser }) => {
     if (id) {
       dispatch(getHistories(id));
     }
-    return () => { 
-      dispatch(resetHistories());
-    }
+    // return () => { 
+    //   dispatch(resetHistories());
+    // }
   }, [id, dispatch]);
 
   const getLightBackgroundColor = (color) => {

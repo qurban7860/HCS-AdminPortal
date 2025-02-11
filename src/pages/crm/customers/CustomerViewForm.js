@@ -139,14 +139,12 @@ const onArchive = async () => {
 
                 <ViewFormField isLoading={isLoading} sm={6}
                   heading={formLABELS.CUSTOMER.BILLING_CONTACT}
-                  param={defaultValues?.primaryBillingContact?.firstName}
-                  secondParam={defaultValues?.primaryBillingContact?.lastName}
+                  param={`${defaultValues?.primaryBillingContact?.firstName} ${defaultValues?.primaryBillingContact?.lastName}`}
                 />
                 <ViewFormField isLoading={isLoading}
                   sm={6}
                   heading={formLABELS.CUSTOMER.TECHNICAL_CONTACT}
-                  param={defaultValues?.primaryTechnicalContact?.firstName}
-                  secondParam={defaultValues?.primaryTechnicalContact?.lastName}
+                  param={`${defaultValues?.primaryTechnicalContact?.firstName} ${defaultValues?.primaryTechnicalContact?.lastName}`}
                 />
             </Grid>
             

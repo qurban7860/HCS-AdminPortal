@@ -30,6 +30,8 @@ import FilledTimeField from './utils/FilledTimeField';
 import ViewFormSWitch from '../../components/ViewForms/ViewFormSwitch';
 import DropDownMultipleSelection from './utils/DropDownMultipleSelection';
 import { getContact, getCustomerContacts, getActiveSPContacts, resetContact, resetCustomersContacts, resetActiveSPContacts } from '../../redux/slices/customer/contact';
+import { resetComments } from '../../redux/slices/ticket/ticketComments/ticketComment';
+import { resetHistories } from '../../redux/slices/ticket/ticketHistories/ticketHistory';
 
 export default function TicketViewForm() {
   const { ticket, ticketSettings, isLoading } = useSelector((state) => state.tickets);
@@ -57,14 +59,14 @@ export default function TicketViewForm() {
         updatedReportersList.unshift(ticket.createdBy.contact);
       }
 
-      if (contact?._id && !updatedReportersList.some(c => c._id === contact._id)) {
+      if (contact?._id && !updatedReportersList.some(c => c?._id === contact?._id)) {
         updatedReportersList.unshift(contact);
       }
 
       setReportersList(updatedReportersList);
 
       const updatedAssigneesList = [...customersContacts];
-       if (ticket?.assignee?._id && !updatedAssigneesList.some(c => c._id === ticket?.assignee?._id)) {
+      if (ticket?.assignee?._id && !updatedAssigneesList.some(c => c?._id === ticket?.assignee?._id)) {
         updatedAssigneesList.unshift(ticket.assignee);
       }
       setAssigneesList(updatedAssigneesList);
@@ -82,6 +84,8 @@ export default function TicketViewForm() {
       dispatch(resetContact());
       dispatch(resetCustomersContacts());
       dispatch(resetActiveSPContacts());
+      dispatch(resetComments());
+      dispatch(resetHistories());
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ dispatch, ticket?.customer?._id ]);
@@ -98,18 +102,18 @@ export default function TicketViewForm() {
       if (approvingContactsConfig?.value) {
         const configEmails = approvingContactsConfig.value
         ?.split(',')
-        .map((email) => email.trim().toLowerCase());
+        ?.map((email) => email.trim()?.toLowerCase());
 
         approvingContactsArray = activeSpContacts
-          .map((activeSpUser) => activeSpUser?.contact)
-          .filter((c) => c?.email && configEmails.includes(c.email.toLowerCase()))
-          .sort((a, b) => {
+          ?.map((activeSpUser) => activeSpUser?.contact)
+          ?.filter((c) => c?.email && configEmails.includes(c.email.toLowerCase()))
+          ?.sort((a, b) => {
             const nameA = `${a.firstName} ${a.lastName}`.toLowerCase();
             const nameB = `${b.firstName} ${b.lastName}`.toLowerCase();
             return nameA.localeCompare(nameB);
           });
       } else {
-        approvingContactsArray = activeSpContacts.map((activeSpUser) => activeSpUser.contact);
+        approvingContactsArray = activeSpContacts?.map((activeSpUser) => activeSpUser.contact);
       }
       setApprovers(approvingContactsArray)
     }
@@ -390,8 +394,8 @@ export default function TicketViewForm() {
                           key={file?._id} 
                           image={file} 
                           onOpenLightbox={()=> handleOpenLightbox(_index)}
-                          onDownloadFile={()=> handleDownloadFile( file._id, file?.name, file?.extension)}
-                          onDeleteFile={()=> handleDeleteFile( file._id)}
+                          onDownloadFile={()=> handleDownloadFile( file?._id, file?.name, file?.extension)}
+                          onDeleteFile={()=> handleDeleteFile( file?._id)}
                           toolbar
                           size={150}
                         />
@@ -414,9 +418,9 @@ export default function TicketViewForm() {
                                 height: '100%',
                               }} 
                               isLoading={ isLoading } 
-                              onDownloadFile={()=> handleDownloadFile( file._id, file?.name, file?.extension)}
-                              onDeleteFile={()=> handleDeleteFile( file._id)}
-                              onOpenFile={()=> handleOpenFile( file._id, file?.name, file?.extension)}
+                              onDownloadFile={()=> handleDownloadFile( file?._id, file?.name, file?.extension)}
+                              onDeleteFile={()=> handleDeleteFile( file?._id)}
+                              onOpenFile={()=> handleOpenFile( file?._id, file?.name, file?.extension)}
                               toolbar
                               />
                             }
