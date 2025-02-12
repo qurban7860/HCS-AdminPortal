@@ -47,7 +47,6 @@ export default function TicketViewForm() {
   const [ slides, setSlides ] = useState([]);
   const [ approvers, setApprovers ] = useState([]);
   const [ reportersList, setReportersList ] = useState([]);
-  const [assigneesList, setAssigneesList] = useState([]);
   const configurations = JSON.parse(localStorage.getItem('configurations'));
   const prefix = configurations?.find((config) => config?.name?.toLowerCase() === 'ticket_prefix')?.value || '';
 
@@ -65,11 +64,6 @@ export default function TicketViewForm() {
 
       setReportersList(updatedReportersList);
 
-      const updatedAssigneesList = [...customersContacts];
-      if (ticket?.assignee?._id && !updatedAssigneesList.some(c => c?._id === ticket?.assignee?._id)) {
-        updatedAssigneesList.unshift(ticket.assignee);
-      }
-      setAssigneesList(updatedAssigneesList);
     }
   }, [ customersContacts, ticket, contact ]);
 
@@ -361,7 +355,7 @@ export default function TicketViewForm() {
               node={<DropDownField name="reporter" isNullable label='Reporter' value={ticket?.reporter} onSubmit={onSubmit} options={ reportersList } />}
             />
             <ViewFormField isLoading={isLoading} sm={4} heading="Assignee" 
-              node={<DropDownField name="assignee" isNullable label='Assignee' value={ticket?.assignee} onSubmit={onSubmit} options={ assigneesList } />}
+              node={<DropDownField name="assignee" isNullable label='Assignee' value={ticket?.assignee} onSubmit={onSubmit} options={ activeSpContacts } />}
             />
             <ViewFormField isLoading={isLoading} sm={4} heading="Approvers" 
               node={<DropDownMultipleSelection name="approvers" label='Approvers' value={ticket?.approvers} onSubmit={onSubmit} options={ approvers } />}
