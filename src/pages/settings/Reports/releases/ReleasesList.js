@@ -32,7 +32,7 @@ export default function ReleasesList() {
     onChangePage,
     onChangeRowsPerPage,
   } = useTable({
-    defaultOrderBy: 'id', defaultOrder: 'desc',
+    defaultOrderBy: 'releaseDate', defaultOrder: 'desc',
   });
 
   const dispatch = useDispatch();

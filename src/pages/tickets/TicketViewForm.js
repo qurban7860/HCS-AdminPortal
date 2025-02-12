@@ -66,8 +66,8 @@ export default function TicketViewForm() {
       setReportersList(updatedReportersList);
 
       const updatedAssigneesList = [...customersContacts];
-      if (ticket?.assignee?._id && !updatedAssigneesList.some(c => c?._id === ticket?.assignee?._id)) {
-        updatedAssigneesList.unshift(ticket.assignee);
+      if (ticket?.customer?._id && !updatedAssigneesList.some(c => c?._id === ticket?.customer?._id)) {
+        updatedAssigneesList.unshift(ticket.customer);
       }
       setAssigneesList(updatedAssigneesList);
     }
