@@ -42,7 +42,7 @@ import useResponsive from '../../hooks/useResponsive';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'issueType.name', label: 'Issue Type', align: 'left' },
+  { id: 'issueType.name', label: <span style={{ marginLeft: 4 }}>T</span>, align: 'left' },
   { id: 'ticketNo', label: 'Ticket No.', align: 'left' },
   { id: 'summary', label: 'Summary', align: 'left', allowColumn : true },
   { id: 'machine.serialNo', label: 'Machine', align: 'left', allowColumn : true },
