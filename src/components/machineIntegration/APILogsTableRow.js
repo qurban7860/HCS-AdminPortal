@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Chip, TableCell } from '@mui/material';
+import { useNavigate } from 'react-router';
 import { fDateTime } from '../../utils/formatTime';
 import { StyledTableRow } from '../../theme/styles/default-styles';
 import LinkTableCell from '../ListTableTools/LinkTableCell';
 import DialogViewApiLogDetails from '../Dialog/DialogViewApiLogDetails';
+import { PATH_MACHINE } from '../../routes/paths';
 
 APILogsTableRow.propTypes = {
   row: PropTypes.object,
@@ -14,13 +16,7 @@ APILogsTableRow.propTypes = {
   hiddenColumns: PropTypes.object,
 };
 
-export default function APILogsTableRow({
-  row,
-  style,
-  selected,
-  onViewRow,
-  hiddenColumns
-}) {
+export default function APILogsTableRow({ row, style, selected, onViewRow, hiddenColumns }) {
   const {
     createdAt,
     apiType,
@@ -33,11 +29,12 @@ export default function APILogsTableRow({
     updatedAt,
     additionalContextualInformation,
     requestHeaders = {},
-    createdIP = '', 
-    createdBy = '' 
+    createdIP = '',
+    createdBy = '',
   } = row;
-  
+
   const [dialogOpen, setDialogOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handleRowClick = () => {
     setDialogOpen(true);
@@ -72,24 +69,26 @@ export default function APILogsTableRow({
     return 'default';
   };
 
-  return (  
+  return (
     <>
-    <StyledTableRow hover selected={selected}>
-      {!hiddenColumns?.createdAt && <LinkTableCell align="left" onClick={handleRowClick} param={fDateTime(createdAt)}/>}
-      {!hiddenColumns?.apiType &&<TableCell align="left"><i>{apiType}</i></TableCell>}
-      {!hiddenColumns?.requestMethod &&
+      <StyledTableRow hover selected={selected}>
+        {!hiddenColumns?.createdAt && (
+          <LinkTableCell align="left" onClick={handleRowClick} param={fDateTime(createdAt)} />
+        )}
+        {!hiddenColumns?.apiType && (
           <TableCell align="left">
-            <Chip
-              label={requestMethod}
-              size="small"
-              color={getChipColor(requestMethod)}
-            />
+            <i>{apiType}</i>
           </TableCell>
-      }
-      {!hiddenColumns?.requestURL &&<TableCell align="left">
-        {requestURL?.replace('/api/1.0.0/', '') || requestURL}
-      </TableCell>}
-      {!hiddenColumns?.responseStatusCode && 
+        )}
+        {!hiddenColumns?.requestMethod && (
+          <TableCell align="left">
+            <Chip label={requestMethod} size="small" color={getChipColor(requestMethod)} />
+          </TableCell>
+        )}
+        {!hiddenColumns?.requestURL && (
+          <TableCell align="left">{requestURL?.replace('/api/1.0.0/', '') || requestURL}</TableCell>
+        )}
+        {!hiddenColumns?.responseStatusCode && (
           <TableCell align="left">
             <Chip
               label={responseStatusCode}
@@ -97,14 +96,29 @@ export default function APILogsTableRow({
               color={getResponseStatusColor(responseStatusCode)}
             />
           </TableCell>
-      }
-      {!hiddenColumns?.responseTime &&<TableCell align="left"><i>{responseTime}</i></TableCell>}
-      {!hiddenColumns?.additionalContextualInformation && <TableCell align="left">{additionalContextualInformation}</TableCell>}
-      {!hiddenColumns?.['customer.name'] && <TableCell align="left">{customer?.name || ''}</TableCell>}
-      {!hiddenColumns?.machine &&<LinkTableCell align="left" onClick={handleRowClick} param={machine?.[0]?.serialNo || ''}/>}
-    </StyledTableRow>
+        )}
+        {!hiddenColumns?.responseTime && (
+          <TableCell align="left">
+            <i>{responseTime}</i>
+          </TableCell>
+        )}
+        {!hiddenColumns?.additionalContextualInformation && (
+          <TableCell align="left">{additionalContextualInformation}</TableCell>
+        )}
+        {!hiddenColumns?.['customer.name'] && (
+          <TableCell align="left">{customer?.name || ''}</TableCell>
+        )}
+        {!hiddenColumns?.machine && (
+          <LinkTableCell
+            align="left"
+            onClick={() => navigate(PATH_MACHINE.machines.view(machine?.[0]?._id))}
+            param={machine?.[0]?.serialNo || ''}
+            paramTooltip="Open Machine"
+          />
+        )}
+      </StyledTableRow>
 
-    <DialogViewApiLogDetails
+      <DialogViewApiLogDetails
         open={dialogOpen}
         onClose={handleCloseDialog}
         logDetails={{
@@ -123,12 +137,12 @@ export default function APILogsTableRow({
             'content-type': requestHeaders['content-type'],
             'content-length': requestHeaders['content-length'],
             connection: requestHeaders.connection,
-            host: requestHeaders.host
+            host: requestHeaders.host,
           },
           createdIP,
           createdBy: createdBy?.name || '',
         }}
       />
-     </>
+    </>
   );
 }
