@@ -113,7 +113,6 @@ export default function APILogsTableRow({ row, style, selected, onViewRow, hidde
             align="left"
             onClick={() => navigate(PATH_MACHINE.machines.view(machine?.[0]?._id))}
             param={machine?.[0]?.serialNo || ''}
-            paramTooltip="Open Machine"
           />
         )}
       </StyledTableRow>
