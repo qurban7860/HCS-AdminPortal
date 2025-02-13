@@ -352,10 +352,29 @@ export default function TicketViewForm() {
               node={<FilledTextField name="plc" value={defaultValues.plc} onSubmit={onSubmit}  />}
             />
             <ViewFormField isLoading={isLoading} sm={4} heading="Raise ticket on behalf of / Reporter" 
-              node={<DropDownField name="reporter" isNullable label='Reporter' value={ticket?.reporter} onSubmit={onSubmit} options={ reportersList } />}
+              node={
+                <DropDownMultipleSelection 
+                  name="reporter" 
+                  isNullable 
+                  label='Reporter' 
+                  value={ticket?.reporter} 
+                  onSubmit={onSubmit} 
+                  options={reportersList} 
+                  multiple={false} 
+                />
+              } 
             />
             <ViewFormField isLoading={isLoading} sm={4} heading="Assignee" 
-              node={<DropDownField name="assignee" isNullable label='Assignee' value={ticket?.assignee} onSubmit={onSubmit} options={ activeSpContacts } />}
+              node={
+                <DropDownMultipleSelection 
+                  name="assignee" 
+                  isNullable
+                  label='Assignee' 
+                  value={ticket?.assignee} 
+                  onSubmit={onSubmit} 
+                  options={activeSpContacts} 
+                  multiple={false} 
+                />}
             />
             <ViewFormField isLoading={isLoading} sm={4} heading="Approvers" 
               node={<DropDownMultipleSelection name="approvers" label='Approvers' value={ticket?.approvers} onSubmit={onSubmit} options={ approvers } />}

@@ -15,25 +15,29 @@ import CustomAvatar from '../../../components/custom-avatar/CustomAvatar';
   options: PropTypes.array, 
   onSubmit: PropTypes.func,
   isLoading: PropTypes.bool,
+  multiple: PropTypes.bool,
 };
 
-export default function DropDownMultipleSelection( { value, name, label, options = [], isLoading, onSubmit } ) {
+export default function DropDownMultipleSelection( { value, name, label, options = [], isLoading, onSubmit, multiple = true } ) {
 
-  const defaultValues = useMemo(
-    () => ({
-      [name]: value || "",
-  }),[ value, name ]);
+  const defaultValues = useMemo(() => {
+    const initialValue = multiple ? [] : ""; 
+    return {
+      [name]: value || initialValue,
+    };
+  }, [value, name, multiple]);
   
   const methods = useForm({
     // resolver: yupResolver( ticketSchema ),
     defaultValues,
   });
         
-  const { handleSubmit, watch, reset, formState: { isSubmitting }} = methods;
+  const { handleSubmit, watch, setValue, reset, formState: { isSubmitting }} = methods;
 
   useEffect(() => {
-    reset({ [name]: value || "" });
-  }, [value, name, reset]);
+    const initialValue = multiple ? [] : ""; 
+    reset({ [name]: value || initialValue });
+  }, [value, name, reset, multiple]);
 
   const val = watch( name )
 
@@ -47,19 +51,27 @@ export default function DropDownMultipleSelection( { value, name, label, options
     }
   };
 
+  const handleOnChange = (event, newValue) => {
+    setValue(name, newValue);
+    if (!multiple) {
+      onSubmit(name, newValue);
+    }
+  };
+
   return (
     <Box sx={{ position: "relative", width: "100%" }} >
       <FormProvider methods={methods} onSubmit={ handleSubmit( handleOnSubmit )} sx={{ width: "100%" }} >
       <RHFAutocomplete
-        multiple
+        multiple={multiple}
         id="size-small-standard"
         name={name}
-        disableCloseOnSelect
+        disableCloseOnSelect={multiple}
         limitTags={3}
         size="small"
         options={options}
         isOptionEqualToValue={(option, v ) => option._id === v._id }
         getOptionLabel={(option) => `${option?.firstName || "" } ${option?.lastName || ""}`}
+        onChange={handleOnChange}
         renderOption={(props, option) => (
           <li {...props} key={option?._id}>
               <Box display="flex" alignItems="center">
@@ -94,13 +106,14 @@ export default function DropDownMultipleSelection( { value, name, label, options
               },
               "& .MuiInputBase-input": {
                 padding: "0",
-                margin: "0" 
+                marginBottom: "5px",
+                // ...( !multiple && { marginBottom: "5px" } ),
               }
             }}
           /> 
         )}
       />
-          { Array.isArray( val ) && 
+          { Array.isArray( val ) &&
             Array.isArray( value ) && 
             ( ( val?.length !== value?.length ) || !val?.every(v => value?.some(vc => vc?._id === v?._id)) ) && 
             <Stack 
