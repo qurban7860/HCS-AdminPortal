@@ -5,9 +5,9 @@ import { CONFIG } from '../../../../config-global';
 
 // ----------------------------------------------------------------------
 const initialState = {
-  ticketIssueType: null,
-  ticketIssueTypes: [],
-  activeTicketIssueTypes: [],
+  ticketRequestType: null,
+  ticketRequestTypes: [],
+  activeTicketRequestTypes: [],
   filterBy: '',
   page: 0,
   rowsPerPage: 100,
@@ -19,7 +19,7 @@ const initialState = {
 };
 
 const slice = createSlice({
-  name: 'ticketIssueTypes',
+  name: 'ticketRequestTypes',
   initialState,
   reducers: {
     // START LOADING
@@ -35,48 +35,48 @@ const slice = createSlice({
     },
 
     // GET Tickets Success
-    getTicketIssueTypesSuccess(state, action) {
+    getTicketRequestTypesSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.ticketIssueTypes = action.payload;
+      state.ticketRequestTypes = action.payload;
       state.initial = true;
     },
-    
-     // GET  Active Tickets Success
-     getActiveTicketIssueTypesSuccess(state, action) {
+
+    // GET  Active Tickets Success
+    getActiveTicketRequestTypesSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.activeTicketIssueTypes = action.payload;
+      state.activeTicketRequestTypes = action.payload;
       state.initial = true;
     },
 
     // GET Ticket Success
-    getTicketIssueTypeSuccess(state, action) {
+    getTicketRequestTypeSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.ticketIssueType = action.payload;
+      state.ticketRequestType = action.payload;
       state.initial = true;
     },
 
     // POST Ticket Success
-    postTicketIssueTypeSuccess(state, action) {
+    postTicketRequestTypeSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.ticketIssueType = action.payload;
+      state.ticketRequestType = action.payload;
       state.responseMessage = 'Ticket created successfully';
     },
     
-    patchTicketIssueTypeSuccess(state, action) {
+    patchTicketRequestTypeSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.ticketIssueType = action.payload;
+      state.ticketRequestType = action.payload;
       state.responseMessage = 'Ticket updated successfully.';
     },
 
-    deleteTicketIssueTypeSuccess(state, action) {
+    deleteTicketRequestTypeSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.ticketIssueTypes = state.ticketIssueTypes.filter((ticketIssueType) => ticketIssueType._id !== action.payload);
+      state.ticketRequestTypes = state.ticketRequestTypes.filter((ticketRequestType) => ticketRequestType._id !== action.payload);
       state.responseMessage = 'Ticket deleted successfully.';
     },
 
@@ -89,24 +89,24 @@ const slice = createSlice({
     },
 
     // RESET Ticket
-    resetTicketIssueType(state) {
-      state.ticketIssueType = null;
+    resetTicketRequestType(state) {
+      state.ticketRequestType = null;
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
     },
 
     // RESET Tickets
-    resetTicketIssueTypes(state) {
-      state.ticketIssueTypes = [];
+    resetTicketRequestTypes(state) {
+      state.ticketRequestTypes = [];
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
     },
-    
+
     // RESET Active Tickets
-    resetActiveTicketIssueTypes(state) {
-      state.activeTicketIssueTypes = [];
+    resetActiveTicketRequestTypes(state) {
+      state.activeTicketRequestTypes = [];
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
@@ -134,9 +134,9 @@ export default slice.reducer;
 
 // Actions
 export const {
-  resetTicketIssueType,
-  resetTicketIssueTypes,
-  resetActiveTicketIssueTypes,
+  resetTicketRequestType,
+  resetTicketRequestTypes,
+  resetActiveTicketRequestTypes,
   setFilterBy,
   ChangeRowsPerPage,
   ChangePage,
@@ -145,12 +145,13 @@ export const {
 // ----------------------------------------------------------------------
 
 // POST Ticket
-export function postTicketIssueType(params) {
+export function postTicketRequestType(params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
         const data = {
             name: params.name,
+            issueType: params.issueType?._id || null,
             icon: params.icon,
             color: params.color,
             slug: params.slug,
@@ -159,8 +160,8 @@ export function postTicketIssueType(params) {
             isDefault: params.isDefault,
             isActive: params.isActive,
         };
-      const response = await axios.post(`${CONFIG.SERVER_URL}tickets/settings/issueTypes/`, data);
-      dispatch(slice.actions.postTicketIssueTypeSuccess(response.data));
+      const response = await axios.post(`${CONFIG.SERVER_URL}tickets/settings/RequestTypes/`, data);
+      dispatch(slice.actions.postTicketRequestTypeSuccess(response.data));
       return response;
     } catch (error) {
       dispatch(slice.actions.hasError(error.message));
@@ -171,12 +172,13 @@ export function postTicketIssueType(params) {
 }
 
 // PATCH Ticket
-export function patchTicketIssueType(id, params) {
+export function patchTicketRequestType(id, params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
         const data = {
           name: params.name,
+          issueType: params.issueType?._id || null,
           icon: params.icon,
           color: params.color,
           slug: params.slug,
@@ -185,8 +187,8 @@ export function patchTicketIssueType(id, params) {
           isDefault: params.isDefault,
           isActive: params.isActive,
         };
-      const response = await axios.patch(`${CONFIG.SERVER_URL}tickets/settings/issueTypes/${id}`, data);
-      dispatch(slice.actions.patchTicketIssueTypeSuccess(response.data)); 
+      const response = await axios.patch(`${CONFIG.SERVER_URL}tickets/settings/RequestTypes/${id}`, data);
+      dispatch(slice.actions.patchTicketRequestTypeSuccess(response.data)); 
       return response;
     } catch (error) {
       dispatch(slice.actions.hasError(error.message));
@@ -197,7 +199,7 @@ export function patchTicketIssueType(id, params) {
 }
 
 // GET Tickets
-export function getTicketIssueTypes(page, pageSize) {
+export function getTicketRequestTypes(page, pageSize) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -207,8 +209,8 @@ export function getTicketIssueTypes(page, pageSize) {
         isArchived: false,
       };
 
-      const response = await axios.get(`${CONFIG.SERVER_URL}tickets/settings/issueTypes`, { params });
-      dispatch(slice.actions.getTicketIssueTypesSuccess(response.data));
+      const response = await axios.get(`${CONFIG.SERVER_URL}tickets/settings/RequestTypes`, { params });
+      dispatch(slice.actions.getTicketRequestTypesSuccess(response.data));
       return response;
     } catch (error) {
       dispatch(slice.actions.hasError(error.message));
@@ -219,12 +221,12 @@ export function getTicketIssueTypes(page, pageSize) {
 }
 
 // GET Ticket
-export function getTicketIssueType(id) {
+export function getTicketRequestType(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}tickets/settings/issueTypes/${id}`);
-      dispatch(slice.actions.getTicketIssueTypeSuccess(response.data));
+      const response = await axios.get(`${CONFIG.SERVER_URL}tickets/settings/RequestTypes/${id}`);
+      dispatch(slice.actions.getTicketRequestTypeSuccess(response.data));
       return response;
     } catch (error) {
       dispatch(slice.actions.hasError(error.message));
@@ -234,11 +236,11 @@ export function getTicketIssueType(id) {
   };
 }
 
-export function getActiveTicketIssueTypes ( cancelToken ){
+export function getActiveTicketRequestTypes ( cancelToken ){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
-      const response = await axios.get(`${CONFIG.SERVER_URL}tickets/settings/issueTypes`, 
+      const response = await axios.get(`${CONFIG.SERVER_URL}tickets/settings/RequestTypes`, 
       {
         params: {
           isArchived: false,
@@ -246,8 +248,8 @@ export function getActiveTicketIssueTypes ( cancelToken ){
         },
         cancelToken: cancelToken?.token,
       });
-      dispatch(slice.actions.getActiveTicketIssueTypesSuccess(response.data));
-      dispatch(slice.actions.setResponseMessage('Issue loaded successfully'));
+      dispatch(slice.actions.getActiveTicketRequestTypesSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Request loaded successfully'));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -257,13 +259,13 @@ export function getActiveTicketIssueTypes ( cancelToken ){
 }
 
 // Archive Ticket
-export function deleteTicketIssueType(id, isArchived) {
+export function deleteTicketRequestType(id, isArchived) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const data = { isArchived }; 
-      const response = await axios.patch(`${CONFIG.SERVER_URL}tickets/settings/issueTypes/${id}`, data);
-      dispatch(slice.actions.deleteTicketIssueTypeSuccess(response.data));
+      const response = await axios.patch(`${CONFIG.SERVER_URL}tickets/settings/RequestTypes/${id}`, data);
+      dispatch(slice.actions.deleteTicketRequestTypeSuccess(response.data));
       return response;
     } catch (error) {
       dispatch(slice.actions.hasError(error.message));

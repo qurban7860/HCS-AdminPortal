@@ -531,6 +531,10 @@ export const ICONS = {
     icon: 'material-symbols-light:problem-rounded',
     heading: 'Issue Types',
   },
+  REQUEST_TYPES: {
+    icon: 'grommet-icons:status-warning',
+    heading: 'Request Types',
+  },
   IMPACTS: {
     icon: 'game-icons:bullet-impacts',
     heading: 'Impacts',

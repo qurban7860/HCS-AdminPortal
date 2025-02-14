@@ -332,6 +332,10 @@ import {
   IssueTypeList,
   IssueTypeForm,
   IssueTypeView,
+  // --------------------------- Request Type --------------------------
+  RequestTypeList,
+  RequestTypeForm,
+  RequestTypeView,
   // --------------------------- Priority --------------------------
   PriorityList,
   PriorityForm,
@@ -1076,6 +1080,15 @@ export default function Router() {
               {path: 'new', element: <IssueTypeForm />},
               {path: ':id/edit', element: <IssueTypeForm />},
               {path: ':id/view', element: <IssueTypeView />},
+            ]
+          },
+          {
+            path: 'RequestTypes',
+            children:[
+              {element: <RequestTypeList />, index: true },
+              {path: 'new', element: <RequestTypeForm />},
+              {path: ':id/edit', element: <RequestTypeForm />},
+              {path: ':id/view', element: <RequestTypeView />},
             ]
           },
           {
