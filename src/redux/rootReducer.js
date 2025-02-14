@@ -60,6 +60,7 @@ import eventReducer from './slices/event/event';
 import ticketsReducer from './slices/ticket/tickets';
 import ticketIssueTypesReducer from './slices/ticket/ticketSettings/ticketIssueTypes';
 import ticketStatusTypesReducer from './slices/ticket/ticketSettings/ticketStatusTypes';
+import ticketRequestTypesReducer from './slices/ticket/ticketSettings/ticketRequestTypes';
 import ticketChangeReasonsReducer from './slices/ticket/ticketSettings/ticketChangeReasons';
 import ticketChangeTypesReducer from './slices/ticket/ticketSettings/ticketChangeTypes';
 import ticketImpactsReducer from './slices/ticket/ticketSettings/ticketImpacts';
@@ -473,6 +474,12 @@ export const ticketStatusTypesPersistConfig = {
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 }
+export const ticketRequestTypesPersistConfig = {
+  key: 'ticketRequestTypes',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
 export const ticketChangeReasonsPersistConfig = {
   key: 'ticketChangeReasons',
   storage,
@@ -608,6 +615,7 @@ const rootReducer = combineReducers({
   event: persistReducer(eventPersistConfig, eventReducer),
   tickets: persistReducer(ticketsPersistConfig, ticketsReducer),
   ticketIssueTypes: persistReducer(ticketIssueTypesPersistConfig, ticketIssueTypesReducer),
+  ticketRequestTypes: persistReducer(ticketRequestTypesPersistConfig, ticketRequestTypesReducer),
   ticketStatusTypes: persistReducer(ticketStatusTypesPersistConfig, ticketStatusTypesReducer),
   ticketChangeReasons: persistReducer(ticketChangeReasonsPersistConfig, ticketChangeReasonsReducer),
   ticketChangeTypes: persistReducer(ticketChangeTypesPersistConfig, ticketChangeTypesReducer),

@@ -19,6 +19,7 @@ export default function TicketSetting() {
 
   const navigate = useNavigate();
   const linkIssueType = () => navigate(PATH_SUPPORT.ticketSettings.issueTypes.root);
+  const linkRequestType = () => navigate(PATH_SUPPORT.ticketSettings.requestTypes.root);
   const linkPriority = () => navigate(PATH_SUPPORT.ticketSettings.priorities.root);
   const linkStatus = () => navigate(PATH_SUPPORT.ticketSettings.statuses.root);
   const linkStatusType = () => navigate(PATH_SUPPORT.ticketSettings.statusTypes.root);
@@ -52,6 +53,11 @@ return (
                     onClick={linkIssueType}
                     icon={ICONS.ISSUE_TYPES.icon}
                     content={ICONS.ISSUE_TYPES.heading}
+                  />
+                  <ListItem
+                    onClick={linkRequestType}
+                    icon={ICONS.REQUEST_TYPES.icon}
+                    content={ICONS.REQUEST_TYPES.heading}
                   />
                    <ListItem
                     onClick={linkPriority}
