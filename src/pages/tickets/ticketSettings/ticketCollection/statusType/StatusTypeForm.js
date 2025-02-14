@@ -154,10 +154,10 @@ export default function StatusTypeForm() {
                   <RHFTextField name="displayOrderNo" label="Display Order No." />
                   <Grid display="flex" alignItems="center">
                     <RHFSwitch name="isResolved" label="Resolved" />
-                    <RHFSwitch name="isDefault" label="Default" />
                     {id && (
                      <RHFSwitch name="isActive" label="Active" />
                     )}
+                    <RHFSwitch name="isDefault" label="Default" />
                   </Grid>
                 </Box>
                 <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
