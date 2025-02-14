@@ -5,10 +5,9 @@ import { green } from '@mui/material/colors';
 import { StyledTooltip } from '../../theme/styles/default-styles';
 import Iconify from '../iconify';
 import { ICONS } from '../../constants/icons/default-icons';
-// import useLimitString from '../../hooks/useLimitString';
-import limitString from '../../utils/limitString';
+import useLimitString from '../../hooks/useLimitString';
 
-export default function LinkTableCell({ align, onClick, param, node, stringLength, isDefault, paramTooltip }) {
+export default function LinkTableCell({ align, onClick, param, node, stringLength, isDefault }) {
 
   const theme = createTheme({
     palette: { success: green },
@@ -31,16 +30,12 @@ export default function LinkTableCell({ align, onClick, param, node, stringLengt
             },
           }}
           >
-          {paramTooltip ? (
-            <StyledTooltip title={paramTooltip} tooltipcolor={theme.palette.primary.main}>{limitString(param, stringLength || 30)}</StyledTooltip>
-          ) : (
-            limitString(param, stringLength || 30)
-          )}
-          {isDefault && 
-            <StyledTooltip onClick={onClick} title={ICONS.DEFAULT.heading} placement="top" disableFocusListener tooltipcolor={theme.palette.primary.main}>
-              <Iconify icon={ICONS.DEFAULT.icon} color={theme.palette.primary.main} width="17px" height="17px" sx={{ mb: -0.3, ml: 0.5, cursor:"pointer"}}/>
-            </StyledTooltip>
-          }
+        { useLimitString( param , stringLength || 30) } 
+        {isDefault && 
+          <StyledTooltip onClick={onClick} title={ICONS.DEFAULT.heading} placement="top" disableFocusListener tooltipcolor={theme.palette.primary.main}>
+            <Iconify icon={ICONS.DEFAULT.icon} color={theme.palette.primary.main} width="17px" height="17px" sx={{ mb: -0.3, ml: 0.5, cursor:"pointer"}}/>
+          </StyledTooltip>
+        }
         { node }
       </TableCell>
   );
@@ -51,7 +46,6 @@ LinkTableCell.propTypes = {
   onClick: PropTypes.func,
   node: PropTypes.node,
   param: PropTypes.string,
-  paramTooltip: PropTypes.string,
   stringLength: PropTypes.number,
   isDefault: PropTypes.bool,
 };

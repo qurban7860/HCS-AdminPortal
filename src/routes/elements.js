@@ -461,6 +461,11 @@ export const IssueTypeList = Loadable(lazy(() => import('../pages/tickets/ticket
 export const IssueTypeForm = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/issueType/IssueTypeForm')));
 export const IssueTypeView = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/issueType/IssueTypeView')));
 
+// --------------------------- Request Type -------------------------------------
+export const RequestTypeList = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/requestType/RequestTypeList')));
+export const RequestTypeForm = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/requestType/RequestTypeForm')));
+export const RequestTypeView = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/requestType/RequestTypeView')));
+
 // --------------------------- Priority -------------------------------------
 export const PriorityList = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/priority/PriorityList')));
 export const PriorityForm = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/priority/PriorityForm')));

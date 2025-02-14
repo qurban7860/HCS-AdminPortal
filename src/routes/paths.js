@@ -435,6 +435,12 @@ export const PATH_SUPPORT = {
       view: (id) => path(ROOTS_SUPPORT, `/ticketSettings/issueTypes/${id}/view`),
       edit: (id) => path(ROOTS_SUPPORT, `/ticketSettings/issueTypes/${id}/edit`),
     },
+    requestTypes: {
+      root: path(ROOTS_SUPPORT, '/ticketSettings/requestTypes'),
+      new: path(ROOTS_SUPPORT, '/ticketSettings/requestTypes/new'),
+      view: (id) => path(ROOTS_SUPPORT, `/ticketSettings/requestTypes/${id}/view`),
+      edit: (id) => path(ROOTS_SUPPORT, `/ticketSettings/requestTypes/${id}/edit`),
+    },
     priorities: {
       root: path(ROOTS_SUPPORT, '/ticketSettings/priorities'),
       new: path(ROOTS_SUPPORT, '/ticketSettings/priorities/new'),

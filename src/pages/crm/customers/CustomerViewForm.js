@@ -139,12 +139,12 @@ const onArchive = async () => {
 
                 <ViewFormField isLoading={isLoading} sm={6}
                   heading={formLABELS.CUSTOMER.BILLING_CONTACT}
-                  param={`${defaultValues?.primaryBillingContact?.firstName} ${defaultValues?.primaryBillingContact?.lastName}`}
+                  param={`${defaultValues?.primaryBillingContact?.firstName || ""} ${defaultValues?.primaryBillingContact?.lastName || ""}`}
                 />
                 <ViewFormField isLoading={isLoading}
                   sm={6}
                   heading={formLABELS.CUSTOMER.TECHNICAL_CONTACT}
-                  param={`${defaultValues?.primaryTechnicalContact?.firstName} ${defaultValues?.primaryTechnicalContact?.lastName}`}
+                  param={`${defaultValues?.primaryTechnicalContact?.firstName || ""} ${defaultValues?.primaryTechnicalContact?.lastName || ""}`}
                 />
             </Grid>
             
@@ -165,14 +165,12 @@ const onArchive = async () => {
                 <ViewFormField 
                   isLoading={isLoading} sm={6} 
                   heading='Primary Billing Contact' 
-                  param={defaultValues?.mainSite?.primaryBillingContact?.firstName} 
-                  secondParam={defaultValues?.mainSite?.primaryTechnicalContact?.lastName}
+                  param={`${defaultValues?.primaryBillingContact?.firstName || ""} ${defaultValues?.primaryBillingContact?.lastName || ""}`}
                 />
                 <ViewFormField 
                   isLoading={isLoading} sm={6} 
                   heading='Primary Technical Contact'
-                  param={defaultValues?.mainSite?.primaryTechnicalContact?.firstName} 
-                  secondParam={defaultValues?.mainSite?.primaryTechnicalContact?.lastName}
+                  param={`${defaultValues?.primaryTechnicalContact?.firstName || ""} ${defaultValues?.primaryTechnicalContact?.lastName || ""}`}
                 />
               </Grid>
             )}
