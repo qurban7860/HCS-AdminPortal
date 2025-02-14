@@ -170,10 +170,10 @@ export default function StatusForm() {
               </Box>
               <RHFTextField name="description" label="Description" minRows={3} multiline />
                 <Grid display="flex" alignItems="center">
-                  <RHFSwitch name="isDefault" label="Default" />
                   {id && (
                   <RHFSwitch name="isActive" label="Active" />
                   )}
+                  <RHFSwitch name="isDefault" label="Default" />
                 </Grid>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
             </Stack>
