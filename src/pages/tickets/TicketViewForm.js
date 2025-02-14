@@ -47,6 +47,7 @@ export default function TicketViewForm() {
   const [ slides, setSlides ] = useState([]);
   const [ approvers, setApprovers ] = useState([]);
   const [ reportersList, setReportersList ] = useState([]);
+  const [filteredRequestTypes, setFilteredRequestTypes] = useState([]);
   const configurations = JSON.parse(localStorage.getItem('configurations'));
   const prefix = configurations?.find((config) => config?.name?.toLowerCase() === 'ticket_prefix')?.value || '';
 
@@ -83,6 +84,17 @@ export default function TicketViewForm() {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ dispatch, ticket?.customer?._id ]);
+  
+  useEffect(() => {
+    if (ticketSettings?.requestTypes && ticket?.issueType) {  
+      const filtered = ticketSettings.requestTypes.filter(
+        (requestType) => requestType.issueType._id === ticket.issueType._id 
+      );
+      setFilteredRequestTypes(filtered);
+    } else {
+      setFilteredRequestTypes([]); 
+    }
+  }, [ticketSettings?.requestTypes, ticket?.issueType]);
 
   useEffect(() => { 
 
@@ -113,7 +125,7 @@ export default function TicketViewForm() {
     }
       // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ activeSpContacts ])
-
+  
     useEffect(() => {
         const newSlides = ticket?.files?.map((file) => {
             if (file?.fileType && file.fileType.startsWith("image")) {
@@ -321,6 +333,9 @@ export default function TicketViewForm() {
             <ViewFormField isLoading={isLoading} sm={4} heading="Ticket No."
               node={<DropDownField name="issueType" iconButton label='Issue Type' value={{ ...(ticket?.issueType || {}), ticketNo: defaultValues.ticketNo }} onSubmit={onSubmit} options={ ticketSettings?.issueTypes } />}
             />
+             <ViewFormField isLoading={isLoading} sm={4} heading="Request Type"
+              node={<DropDownField name="requestType" label='Request Type' value={ticket?.requestType} onSubmit={onSubmit} options={ filteredRequestTypes } />}
+            />
             {/* <ViewFormField isLoading={isLoading} sm={4} heading=""
               param={
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -337,10 +352,10 @@ export default function TicketViewForm() {
                 </Box>
               }
             /> */}
-            <ViewFormField isLoading={isLoading} sm={4} heading="Status"
+            <ViewFormField isLoading={isLoading} sm={2} heading="Status"
               node={<DropDownField name="status" label='Status' value={ticket?.status} onSubmit={onSubmit} options={ ticketSettings?.statuses} />}
             />
-            <ViewFormField isLoading={isLoading} sm={4} heading="Priority"
+            <ViewFormField isLoading={isLoading} sm={2} heading="Priority"
               node={<DropDownField name="priority" isNullable label='Priority' value={ticket?.priority} onSubmit={onSubmit} options={ticketSettings?.priorities} />}
             />
             <ViewFormField isLoading={isLoading} sm={4} heading="Customer" param={defaultValues.customer} />
@@ -352,29 +367,10 @@ export default function TicketViewForm() {
               node={<FilledTextField name="plc" value={defaultValues.plc} onSubmit={onSubmit}  />}
             />
             <ViewFormField isLoading={isLoading} sm={4} heading="Raise ticket on behalf of / Reporter" 
-              node={
-                <DropDownMultipleSelection 
-                  name="reporter" 
-                  isNullable 
-                  label='Reporter' 
-                  value={ticket?.reporter} 
-                  onSubmit={onSubmit} 
-                  options={reportersList} 
-                  multiple={false} 
-                />
-              } 
+              node={<DropDownMultipleSelection name="reporter" isNullable label='Reporter' value={ticket?.reporter} onSubmit={onSubmit} options={reportersList} multiple={false} />} 
             />
             <ViewFormField isLoading={isLoading} sm={4} heading="Assignee" 
-              node={
-                <DropDownMultipleSelection 
-                  name="assignee" 
-                  isNullable
-                  label='Assignee' 
-                  value={ticket?.assignee} 
-                  onSubmit={onSubmit} 
-                  options={activeSpContacts} 
-                  multiple={false} 
-                />}
+              node={<DropDownMultipleSelection name="assignee" isNullable label='Assignee' value={ticket?.assignee} onSubmit={onSubmit} options={activeSpContacts} multiple={false} />}
             />
             <ViewFormField isLoading={isLoading} sm={4} heading="Approvers" 
               node={<DropDownMultipleSelection name="approvers" label='Approvers' value={ticket?.approvers} onSubmit={onSubmit} options={ approvers } />}

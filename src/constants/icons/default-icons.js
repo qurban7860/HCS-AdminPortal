@@ -98,6 +98,16 @@ export const ICONS = {
     heading: 'Not Manufacture',
   },
   //
+  RESOLVED: {
+    icon: 'oui:security-signal-resolved',
+    color: '#008000',
+    heading: 'Resolved',
+  },
+  UNRESOLVED: {
+    icon: 'oui:security-signal-resolved',
+    color: '#FF0000',
+    heading: 'UnResolved',
+  },
   DEFAULT: {
     icon: 'carbon:settings-check',
     color: '#008000',
