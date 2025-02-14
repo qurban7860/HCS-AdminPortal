@@ -1,6 +1,6 @@
 import { useLayoutEffect, useMemo } from 'react';
 // @mui
-import { Container, Card, Grid } from '@mui/material';
+import { Container, Card, Grid, Box } from '@mui/material';
 // hooks
 import { useDispatch, useSelector } from 'react-redux';
 // routes
@@ -16,6 +16,7 @@ import {
 } from '../../../redux/slices/products/profile';
 import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
 import MachineTabContainer from '../util/MachineTabContainer';
+import { Upload } from '../../../components/upload';
 
 export default function ProfileViewForm() {
   const { profile, isLoading} = useSelector((state) => state.profile);
@@ -53,6 +54,7 @@ export default function ProfileViewForm() {
       thicknessStart: profile?.thicknessStart || '',
       thicknessEnd: profile?.thicknessEnd || '',
       type:profile?.type || '',
+      files: profile?.files || [],
       isActive: profile?.isActive,
       createdByFullName: profile?.createdBy?.name || '',
       createdAt: profile?.createdAt || '',
@@ -61,8 +63,7 @@ export default function ProfileViewForm() {
       updatedAt: profile?.updatedAt || '',
       updatedIP: profile?.updatedIP || '',
     }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [profile, machine]
+    [profile]
   );
 
   return (
@@ -85,6 +86,21 @@ export default function ProfileViewForm() {
         <ViewFormField isLoading={isLoading} sm={2} heading="Flange" param={`${defaultValues?.flange || '' }`} />
         <ViewFormField isLoading={isLoading} sm={2} heading="Min. Thickness" param={`${defaultValues?.thicknessStart || '' } `} />
         <ViewFormField isLoading={isLoading} sm={2} heading="Max. Thickness" param={`${defaultValues?.thicknessEnd || '' } `} />
+
+        {defaultValues.files && defaultValues.files.length > 0 && (
+          <Grid item xs={12}>
+            <Box sx={{ mt: 2 }}>
+              <Upload
+                multiple
+                thumbnail
+                files={defaultValues.files}
+                disabled
+                onRemove={null}
+                onRemoveAll={null}
+              />
+            </Box>
+          </Grid>
+        )}
 
         <ViewFormAudit defaultValues={defaultValues} /> 
       </Grid>

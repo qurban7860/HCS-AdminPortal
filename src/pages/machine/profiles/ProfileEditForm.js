@@ -1,8 +1,10 @@
-import { useLayoutEffect, useMemo, useState} from 'react';
+import React, { useState, useMemo, useEffect, useLayoutEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { pdfjs } from 'react-pdf';
+import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 // @mui
 import { Container, Box, Card, Stack, FormControl, Grid, InputLabel, MenuItem, Select } from '@mui/material';
 // routes
@@ -12,10 +14,12 @@ import { PATH_MACHINE } from '../../../routes/paths';
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 import { useSnackbar } from '../../../components/snackbar';
 import { updateProfile, getProfile, ProfileTypes } from '../../../redux/slices/products/profile';
+import { getMachine } from '../../../redux/slices/products/machine';
 import { ProfileSchema } from './schemas/ProfileSchema';
-import FormProvider, { RHFSwitch, RHFTextField, RHFChipsInput } from '../../../components/hook-form';
+import FormProvider, { RHFSwitch, RHFTextField, RHFChipsInput, RHFUpload } from '../../../components/hook-form';
 import { useAuthContext } from '../../../auth/useAuthContext';
 import MachineTabContainer from '../util/MachineTabContainer';
+import { removeFileExtension, getRefferenceNumber, getVersionNumber } from '../../documents/util/Util';
 
 // ----------------------------------------------------------------------
 
@@ -43,6 +47,7 @@ export default function ProfileEditForm() {
       thicknessStart: profile?.thicknessStart || '',
       thicknessEnd: profile?.thicknessEnd || '',
       type:profile?.type ||'CUSTOMER',
+      files: profile?.files || [],
       isActive: profile?.isActive || false,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -57,9 +62,65 @@ export default function ProfileEditForm() {
   const {
     reset,
     handleSubmit,
+    watch,
     setValue,
     formState: { isSubmitting },
   } = methods;
+
+  const { files } = watch();
+
+  const handleDropMultiFile = useCallback(
+    async (acceptedFiles) => {
+      pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
+      const docFiles = files || [];
+      
+      const newFiles = await Promise.all(acceptedFiles.map(async (file) => {
+        const displayName = removeFileExtension(file.name);
+        const referenceNumber = getRefferenceNumber(file.name);
+        const versionNo = getVersionNumber(file.name);
+        let stockNumber = '';
+
+        if (file.type.indexOf('pdf') > -1) {
+          const arrayBuffer = await file.arrayBuffer();
+          const pdfDocument = await pdfjs.getDocument(arrayBuffer).promise;
+          const page = await pdfDocument.getPage(1);
+          const textContent = await page.getTextContent();
+          try {
+            textContent.items.some((item, index) => {
+              if (item.str === 'DRAWN BY' && textContent?.items[index + 2]?.str?.length < 15) {
+                stockNumber = textContent.items[index + 2].str;
+                return true;
+              }
+              if (item.str === "STOCK NO." && textContent?.items[index + 2]?.str?.length < 15) {
+                stockNumber = textContent.items[index + 2].str;
+                return true;
+              }
+              if (item.str === 'APPROVED' && textContent?.items[index - 2]?.str?.length < 15) {
+                stockNumber = textContent.items[index - 2].str;
+                return true;
+              }
+              return false;
+            });
+          } catch (e) {
+            console.log(e);
+          }
+        }
+
+        return Object.assign(file, {
+          preview: URL.createObjectURL(file),
+          src: URL.createObjectURL(file),
+          displayName,
+          referenceNumber,
+          versionNo: versionNo?.replace(/[^\d.]+/g, ""),
+          stockNumber,
+          isLoaded: true
+        });
+      }));
+
+      setValue('files', [...docFiles, ...newFiles], { shouldValidate: true });
+    },
+    [files, setValue]
+  );
 
   const toggleCancel = async() => navigate(PATH_MACHINE.machines.profiles.view(machineId, id));
 
@@ -72,7 +133,32 @@ export default function ProfileEditForm() {
 
   const onSubmit = async (data) => {
     try {
-      await dispatch(await updateProfile(machineId, id, data));
+      const formData = new FormData();
+      
+      // Add profile data
+      formData.append('defaultName', data.defaultName);
+      formData.append('type', data.type);
+      formData.append('web', data.web);
+      formData.append('flange', data.flange);
+      formData.append('thicknessStart', data.thicknessStart);
+      formData.append('thicknessEnd', data.thicknessEnd);
+      formData.append('isActive', data.isActive);
+      
+      // Add names array
+      if (data.names && data.names.length > 0) {
+        data.names.forEach((name) => {
+          formData.append('names[]', name);
+        });
+      }
+
+      // Add files
+      if (data.files && data.files.length > 0) {
+        data.files.forEach((file) => {
+          formData.append('images', file);
+        });
+      }
+
+      await dispatch(updateProfile(machineId, id, formData));
       reset();
       enqueueSnackbar("Profile updated successfully");
       navigate(PATH_MACHINE.machines.profiles.view(machineId, id))
@@ -125,6 +211,23 @@ export default function ProfileEditForm() {
               <RHFTextField name="thicknessEnd" label="Max. Thickness"/>
               
             </Box>
+              <Box sx={{ mt: 2 }}>
+                <RHFUpload
+                  multiple
+                  thumbnail
+                  name="files"
+                  imagesOnly
+                  onDrop={handleDropMultiFile}
+                  onRemove={(inputFile) =>
+                    files.length > 1
+                      ? setValue('files', files && files?.filter((file) => file !== inputFile), {
+                          shouldValidate: true,
+                        })
+                      : setValue('files', '', { shouldValidate: true })
+                  }
+                  onRemoveAll={() => setValue('files', '', { shouldValidate: true })}
+                />
+              </Box>
               <RHFSwitch name="isActive" label="Active" />
             </Stack>
             <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
