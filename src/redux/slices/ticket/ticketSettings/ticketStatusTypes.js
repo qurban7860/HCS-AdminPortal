@@ -156,6 +156,7 @@ export function postTicketStatusType(params) {
             slug: params.slug,
             displayOrderNo: params.displayOrderNo,
             description: params.description,
+            isResolved: params.isResolved,
             isDefault: params.isDefault,
             isActive: params.isActive,
         };
@@ -182,6 +183,7 @@ export function patchTicketStatusType(id, params) {
           slug: params.slug,
           displayOrderNo: params.displayOrderNo,
           description: params.description,
+          isResolved: params.isResolved,
           isDefault: params.isDefault,
           isActive: params.isActive,
         };

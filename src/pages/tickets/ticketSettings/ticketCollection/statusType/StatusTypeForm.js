@@ -34,6 +34,7 @@ export default function StatusTypeForm() {
       slug: id && ticketStatusType?.slug || '',
       description: id && ticketStatusType?.description || '',
       displayOrderNo: id && ticketStatusType?.displayOrderNo || '',
+      isResolved: id && ticketStatusType?.isResolved || false,
       isDefault: id && ticketStatusType?.isDefault || false,
       isActive: id ? ticketStatusType?.isActive : true,
       createdAt: id && ticketStatusType?.createdAt || '',
@@ -152,10 +153,11 @@ export default function StatusTypeForm() {
                 >
                   <RHFTextField name="displayOrderNo" label="Display Order No." />
                   <Grid display="flex" alignItems="center">
-                    <RHFSwitch name="isDefault" label="Default" />
+                    <RHFSwitch name="isResolved" label="Resolved" />
                     {id && (
                      <RHFSwitch name="isActive" label="Active" />
                     )}
+                    <RHFSwitch name="isDefault" label="Default" />
                   </Grid>
                 </Box>
                 <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />

@@ -33,6 +33,7 @@ export default function StatusTypeViewForm() {
       color: ticketStatusType?.color || '',
       displayOrderNo: ticketStatusType?.displayOrderNo || '',
       description: ticketStatusType?.description || '',
+      isResolved: ticketStatusType?.isResolved || false,
       isDefault: ticketStatusType?.isDefault || false,
       isActive: ticketStatusType?.isActive || false,
       createdByFullName: ticketStatusType?.createdBy?.name || '',
@@ -63,6 +64,7 @@ export default function StatusTypeViewForm() {
   <Grid>
     <Card sx={{ p: 2 }}>
       <ViewFormEditDeleteButtons  
+        isResolved={defaultValues.isResolved} 
         isDefault={defaultValues.isDefault} 
         isActive={defaultValues.isActive}
         handleEdit={toggleEdit} 
