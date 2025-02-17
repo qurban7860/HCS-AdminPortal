@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import {
   TableCell,
+  Switch
 } from '@mui/material';
 // utils
 import { fDate } from '../../../../../utils/formatTime';
@@ -23,7 +24,7 @@ export default function StatusTypeListTableRow({
   onViewRow,
 }) {
 
-  const { name, icon, color, slug, displayOrderNo, isActive, isDefault, createdAt } = row;
+  const { name, icon, color, slug, displayOrderNo, isActive, isResolved, isDefault, updatedAt } = row;
   return (
     <StyledTableRow hover selected={selected}>
       <TableCell align="left" padding="checkbox" >
@@ -47,7 +48,8 @@ export default function StatusTypeListTableRow({
           <Iconify icon={icon} color={color} />
         </StyledTooltip>
       </TableCell>
-      <TableCell align='right' > { fDate(createdAt) } </TableCell>
+      <TableCell align="center"><Switch checked={isResolved} disabled size="small" /></TableCell>
+      <TableCell align='right' > { fDate(updatedAt) } </TableCell>
     </StyledTableRow>
   );
 }

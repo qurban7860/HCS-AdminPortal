@@ -40,6 +40,7 @@ const TABLE_HEAD = [
   { id: 'slug', visibility: 'xs1', label: 'Slug', align: 'left' },
   { id: 'displayOrderNo', visibility: 'xs1', label: 'Order Number', align: 'left' },
   { id: 'icon', label: 'Icon ', align: 'left' },
+  { id: 'isResolved', label: 'Resolved', align: 'center' },
   { id: 'updatedAt', label: 'Updated At', align: 'right' },
 ];
 
@@ -199,7 +200,7 @@ function applyFilter({ inputData, comparator, filterName }) {
         statusType?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         statusType?.slug?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         statusType?.displayOrderNo?.toString().toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        fDate(statusType?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+        fDate(statusType?.updatedAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }
   return inputData;
