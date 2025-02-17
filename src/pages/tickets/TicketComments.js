@@ -24,7 +24,6 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import { useSnackbar } from 'notistack';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
-import { useAuthContext } from '../../auth/useAuthContext';
 import TicketHistory from './TicketHistory';
 import FormLabel from '../../components/DocumentForms/FormLabel';
 import { FORMLABELS } from '../../constants/default-constants';
@@ -51,7 +50,6 @@ const TicketComments = ({ currentUser }) => {
   const { id } = useParams();
   const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
-  const { user, userId } = useAuthContext();
 
   const { error, comments, isLoading } = useSelector( (state) => state.ticketComments );
   const [activeTab, setActiveTab] = useState('Comments'); 
@@ -329,7 +327,7 @@ const TicketComments = ({ currentUser }) => {
         </Box>
         </>
       )}
-      {activeTab === 'History' && <TicketHistory currentUser={{ ...user, userId }}/>} 
+      {activeTab === 'History' && <TicketHistory />} 
       </Paper>
       <ConfirmDialog
         open={openConfirmDelete}
