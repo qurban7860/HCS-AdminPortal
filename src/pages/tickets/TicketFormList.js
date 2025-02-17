@@ -81,8 +81,10 @@ export default function TicketFormList(){
   const dispatch = useDispatch();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
+  const [ selectedIssueType, setSelectedIssueType ] = useState(null);
   const [ selectedStatus, setSelectedStatus ] = useState(null);
-  const [selectedStatusType, setSelectedStatusType] = useState(null);
+  const [ selectedStatusType, setSelectedStatusType ] = useState(null);
+  const [ selectedResolvedStatus, setSelectedResolvedStatus ] = useState('all');
   const isMobile = useResponsive('down', 'sm');
 
   useLayoutEffect(() => {
@@ -100,8 +102,10 @@ export default function TicketFormList(){
     inputData: tableData,
     comparator: getComparator(order, orderBy),
     filterName,
+    selectedIssueType,
     selectedStatus,
     selectedStatusType,
+    selectedResolvedStatus
   });
 
   const isFiltered = filterName !== '';
@@ -138,8 +142,10 @@ export default function TicketFormList(){
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
     setFilterName('');
+    setSelectedIssueType(null);
     setSelectedStatus(null);
     setSelectedStatusType(null);
+    setSelectedResolvedStatus('all');
   };
   
   const handleHiddenColumns = async (arg) => {
@@ -158,10 +164,14 @@ export default function TicketFormList(){
             onFilterName={handleFilterName}
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
+            filterIssueType={selectedIssueType}
+            onFilterIssueType={setSelectedIssueType}
             filterStatus={selectedStatus}
             onFilterStatus={setSelectedStatus}
             filterStatusType={selectedStatusType}
             onFilterStatusType={setSelectedStatusType}
+            filterResolvedStatus={selectedResolvedStatus} 
+            onFilterResolvedStatus={setSelectedResolvedStatus} 
           />
 
           {!isNotFound && !isMobile && (
@@ -238,7 +248,7 @@ export default function TicketFormList(){
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName, selectedStatus, selectedStatusType }) {
+function applyFilter({ inputData, comparator, filterName, selectedIssueType, selectedStatus, selectedStatusType, selectedResolvedStatus }) {
 
   const stabilizedThis = inputData?.map((el, index) => [el, index]);
 
@@ -268,6 +278,10 @@ function applyFilter({ inputData, comparator, filterName, selectedStatus, select
     });
   }
   
+  if (selectedIssueType) {
+    inputData = inputData.filter((ticket) => ticket?.issueType?._id === selectedIssueType?._id);
+  }
+
   if (selectedStatus?.length) {
     inputData = inputData.filter((ticket) =>
       selectedStatus.some((status) => status._id === ticket?.status?._id)
@@ -277,6 +291,15 @@ function applyFilter({ inputData, comparator, filterName, selectedStatus, select
   if (selectedStatusType) {
     inputData = inputData.filter((ticket) => ticket?.status?.statusType?._id === selectedStatusType?._id);
   }
-  
+
+ if (selectedResolvedStatus === 'resolved') {
+    inputData = inputData.filter((ticket) => ticket?.status?.statusType?.isResolved === true);
+  }
+
+  if (selectedResolvedStatus === 'unresolved') {
+    inputData = inputData.filter((ticket) => ticket?.status?.statusType?.isResolved === false);
+  }
+
   return inputData;
 }
+
