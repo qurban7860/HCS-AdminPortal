@@ -48,7 +48,6 @@ export default function TicketViewForm() {
   const [ approvers, setApprovers ] = useState([]);
   const [ reportersList, setReportersList ] = useState([]);
   const [filteredRequestTypes, setFilteredRequestTypes] = useState([]);
-  const [assigneeOptions, setAssigneeOptions] = useState([]);
   const configurations = JSON.parse(localStorage.getItem('configurations'));
   const prefix = configurations?.find((config) => config?.name?.toLowerCase() === 'ticket_prefix')?.value || '';
 
@@ -68,15 +67,6 @@ export default function TicketViewForm() {
 
     }
   }, [ customersContacts, ticket, contact ]);
-  
-  useEffect(() => {
-    if (activeSpContacts) {
-      setAssigneeOptions(activeSpContacts.map(spContact => ({ 
-        ...spContact.contact, 
-        name: `${spContact.contact?.firstName || ''} ${spContact.contact?.lastName || ''}` 
-      })));
-    }
-  }, [activeSpContacts]);
 
   useEffect(() => {
     if (ticket?.customer?._id) {
@@ -170,7 +160,7 @@ export default function TicketViewForm() {
       machine: id && `${ticket?.machine?.serialNo || ''} - ${ticket?.machine?.machineModel?.name || ''}` || '',
       // issueType: id && ticket?.issueType?.name || '',
       reporter: id && ticket?.reporter && { _id: ticket?.reporter?._id, name: `${ticket.reporter.firstName || ''} ${ticket.reporter.lastName || ''}` } || '',
-      assignee: id && ticket?.assignee && { _id: ticket?.assignee?._id, name: `${ticket.assignee.firstName || ''} ${ticket.assignee.lastName || ''}` } || '',
+      assignee: id && ticket?.assignee && { _id: ticket?.assignee?._id, name: `${ticket.assignee.firstName || ''} ${ticket.assignee.lastName || ''}` } || null,
       // approvers: id && ticket?.approvers && approvers?.map{ _id: ticket?.assignee?._id, name: `${ticket.assignee.firstName || ''} ${ticket.assignee.lastName || ''}` } || '',
       summary: id && ticket?.summary || '',
       description: id && ticket?.description || '',
@@ -380,7 +370,7 @@ export default function TicketViewForm() {
               node={<DropDownMultipleSelection name="reporter" isNullable label='Reporter' value={ticket?.reporter} onSubmit={onSubmit} options={reportersList} multiple={false} />} 
             />
             <ViewFormField isLoading={isLoading} sm={4} heading="Assignee" 
-              node={<DropDownMultipleSelection name="assignee" isNullable label='Assignee' value={ticket?.assignee} onSubmit={onSubmit} options={assigneeOptions} multiple={false} />}
+              node={<DropDownMultipleSelection name="assignee" isNullable label='Assignee' value={ticket?.assignee} onSubmit={onSubmit} options={activeSpContacts} multiple={false} />}
             />
             <ViewFormField isLoading={isLoading} sm={4} heading="Approvers" 
               node={<DropDownMultipleSelection name="approvers" label='Approvers' value={ticket?.approvers} onSubmit={onSubmit} options={ approvers } />}
