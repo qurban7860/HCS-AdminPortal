@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router';
-import { Button, Grid, Typography, Box } from '@mui/material';
-import { StyledRoot, StyledInfo } from '../../theme/styles/default-styles';
+import { Button, Grid, Typography, Box, IconButton } from '@mui/material';
+import { StyledRoot, StyledInfo, StyledTooltip } from '../../theme/styles/default-styles';
 // utils
 import { PATH_CRM, PATH_MACHINE, PATH_REPORTS, PATH_SETTING, PATH_SUPPORT} from '../../routes/paths';
 // auth
@@ -32,6 +32,9 @@ Cover.propTypes = {
   currentGraphsPage: PropTypes.bool,
   currentLogsPage: PropTypes.bool,
   supportTicketSettings: PropTypes.bool,
+  SubOnClick: PropTypes.func,
+  addButton: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
+  buttonIcon: PropTypes.string,
 };
 
 export function Cover({
@@ -51,6 +54,9 @@ export function Cover({
   currentGraphsPage,
   currentLogsPage,
   supportTicketSettings,
+  SubOnClick,
+  addButton,
+  buttonIcon
 }) {
   const navigate = useNavigate();
   const handleSettingsNavigate = () => navigate(PATH_SETTING.root);
@@ -133,6 +139,7 @@ export function Cover({
               justifyContent: isMobile ? 'center' : 'flex-start',
               textAlign: 'center',
               '& .MuiButton-startIcon': { marginRight: 0 },
+              marginBottom: addButton ? -0.6 : 0, 
             }}
           >
             {!isArchived && customerSites && (
@@ -270,6 +277,21 @@ export function Cover({
                   </Typography>
                 )}
               </Button>
+            )}
+            {addButton  && SubOnClick && (
+              <Grid item >
+                <StyledTooltip title={addButton} placement="top" disableFocusListener tooltipcolor="#103996" color="#fff">
+                  <IconButton color="#fff" onClick={SubOnClick} 
+                      sx={{background:"#2065D1", borderRadius:1, height:'1.7em', p:'8.5px 14px',
+                        '&:hover': {
+                          background:"#103996", 
+                          color:"#fff"
+                        }
+                      }}>
+                      <Iconify color="#fff" sx={{ height: '24px', width: '24px'}} icon={buttonIcon || 'eva:plus-fill'} />
+                  </IconButton>
+                </StyledTooltip>
+              </Grid>
             )}
           </Box>
         </Grid>

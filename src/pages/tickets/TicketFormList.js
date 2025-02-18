@@ -37,6 +37,7 @@ import TableCard from '../../components/ListTableTools/TableCard';
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
 import useResponsive from '../../hooks/useResponsive';
+import { BUTTONS } from '../../constants/default-constants';
 
 
 // ----------------------------------------------------------------------
@@ -48,9 +49,9 @@ const TABLE_HEAD = [
   { id: 'machine.serialNo', label: 'Machine', align: 'left', allowColumn : true },
   { id: 'machine.machineModel.name', label: 'Model', align: 'left', allowColumn : true },
   { id: 'customer.name', label: 'Customer', align: 'left', allowColumn : true },
-  { id: 'status.name', label: 'Status', align: 'left', allowColumn : true },
-  { id: 'priority.name', label: 'Priority', align: 'left', allowColumn : true },
-  { id: 'updatedAt', label: 'Updated At', align: 'right' },
+  { id: 'status.name', label: 'S', align: 'left', allowColumn : true },
+  { id: 'priority.name', label: 'P', align: 'left', allowColumn : true },
+  { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
 
 // ----------------------------------------------------------------------
@@ -151,11 +152,17 @@ export default function TicketFormList(){
   const handleHiddenColumns = async (arg) => {
     dispatch(setReportHiddenColumns(arg));
   };
+  
+  const toggleAdd = () => {
+    navigate(PATH_SUPPORT.supportTickets.new);
+  };
 
   return (
     <Container maxWidth={false} >
       <StyledCardContainer>
-        <Cover name="Support Tickets" icon="ph:users-light" />
+        <Cover name="Support Tickets" icon="ph:users-light" 
+        SubOnClick={toggleAdd} 
+        addButton={BUTTONS.ADDTICKET}/>
       </StyledCardContainer>
       <FormProvider {...methods}>
         <TableCard>
