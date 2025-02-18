@@ -7,18 +7,18 @@ import { LoadingButton } from '@mui/lab';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useSnackbar } from 'notistack';
-import { addFiles } from '../../redux/slices/ticket/tickets';
+import { addFiles } from '../../redux/slices/products/profile';
 import FormProvider from '../hook-form/FormProvider';
 import { RHFUpload } from '../hook-form';
-import { MachineServiceReportPart3Schema } from '../../pages/schemas/machine';
+import { filesValidations } from '../../pages/schemas/machine';
 
-DialogTicketAddFile.propTypes = {
+DialogProfileAddFile.propTypes = {
   open: PropTypes.bool,
   handleClose: PropTypes.func
 };
 
-function DialogTicketAddFile({ open, handleClose }) {
-  const { id } = useParams()
+function DialogProfileAddFile({ open, handleClose }) {
+  const { machineId, id } = useParams()
 
   const dispatch = useDispatch();
 
@@ -33,10 +33,8 @@ function DialogTicketAddFile({ open, handleClose }) {
   );
 
   const methods = useForm({
-    resolver: yupResolver(MachineServiceReportPart3Schema),
-    defaultValues,
-    mode: 'onChange',
-    reValidateMode: 'onChange'
+    resolver: yupResolver(filesValidations),
+    defaultValues
   });
 
   const {
@@ -44,9 +42,8 @@ function DialogTicketAddFile({ open, handleClose }) {
     watch,
     setValue,
     handleSubmit,
-    formState: { isSubmitting, },
+    formState: { isSubmitting, errors },
   } = methods;
-
   const { files } = watch();
 
   const handleDropMultiFile = useCallback(
@@ -69,16 +66,18 @@ function DialogTicketAddFile({ open, handleClose }) {
 
   const onSubmit = async (data) => {
     try {
-      if (id) {
-        await dispatch(addFiles(id, data))
+      if (id && data?.files.length > 0) {
+        await dispatch(addFiles(machineId, id, data))
         await handleClose();
         await reset();
         await enqueueSnackbar('Files uploaded successfully!');
+      } else if (!data?.files.length > 0) {
+        enqueueSnackbar('Documents required!', { variant: `error` });
       } else {
-        enqueueSnackbar('File upload failed, parameters missing!', { variant: `error` });
+        enqueueSnackbar('Upload document failed!, parameters missing!', { variant: `error` });
       }
     } catch (error) {
-      enqueueSnackbar('Failed to upload files. Please try again.', { variant: `error` });
+      enqueueSnackbar('Upload document failed! Please try again.', { variant: `error` });
       console.error(error);
     }
   };
@@ -113,4 +112,4 @@ function DialogTicketAddFile({ open, handleClose }) {
   );
 }
 
-export default DialogTicketAddFile;
+export default DialogProfileAddFile;

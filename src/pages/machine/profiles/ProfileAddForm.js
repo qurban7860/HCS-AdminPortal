@@ -21,7 +21,7 @@ import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 // assets
 import FormProvider, { RHFSwitch, RHFTextField, RHFChipsInput, RHFUpload } from '../../../components/hook-form';
 import MachineTabContainer from '../util/MachineTabContainer';
-import { removeFileExtension, getRefferenceNumber, getVersionNumber } from '../../documents/util/Util';
+import FormLabel from '../../../components/DocumentForms/FormLabel';
 
 // ----------------------------------------------------------------------
 
@@ -34,19 +34,19 @@ export default function ProfileAddForm() {
   const { enqueueSnackbar } = useSnackbar();
   const [profileTypes, setProfileTypes] = useState([]);
 
-  useLayoutEffect(()=>{
+  useLayoutEffect(() => {
     dispatch(getProfiles(machineId))
-  },[ dispatch, machineId ])
+  }, [dispatch, machineId])
 
   const defaultValues = useMemo(
     () => ({
       defaultName: '',
-      names:[],
-      web:'',
-      flange:'',
+      names: [],
+      web: '',
+      flange: '',
       thicknessStart: '',
-      thicknessEnd:'',
-      type:'CUSTOMER',
+      thicknessEnd: '',
+      type: 'CUSTOMER',
       files: [],
       isActive: true,
     }),
@@ -66,12 +66,12 @@ export default function ProfileAddForm() {
     setValue,
     formState: { isSubmitting },
   } = methods;
-  
+
   const { files } = watch();
 
   useEffect(() => {
     const hasManufacturer = profiles.some((profile) => profile.type === 'MANUFACTURER');
-    const updatedProfileTypes = hasManufacturer? ProfileTypes.filter((type) => type !== 'MANUFACTUR') : ProfileTypes;
+    const updatedProfileTypes = hasManufacturer ? ProfileTypes.filter((type) => type !== 'MANUFACTUR') : ProfileTypes;
     setProfileTypes(updatedProfileTypes);
   }, [profiles]);
 
@@ -79,92 +79,27 @@ export default function ProfileAddForm() {
   const [selectedValue, setSelectedValue] = useState('CUSTOMER');
   const handleChange = (event) => {
     setSelectedValue(event.target.value);
-    setValue('type',event.target.value);
+    setValue('type', event.target.value);
   };
-   
-  const handleDropMultiFile = useCallback(
-    async (acceptedFiles) => {
-      pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
-      const docFiles = files || [];
-      
-      const newFiles = await Promise.all(acceptedFiles.map(async (file) => {
-        const displayName = removeFileExtension(file.name);
-        const referenceNumber = getRefferenceNumber(file.name);
-        const versionNo = getVersionNumber(file.name);
-        let stockNumber = '';
 
-        if (file.type.indexOf('pdf') > -1) {
-          const arrayBuffer = await file.arrayBuffer();
-          const pdfDocument = await pdfjs.getDocument(arrayBuffer).promise;
-          const page = await pdfDocument.getPage(1);
-          const textContent = await page.getTextContent();
-          try {
-            textContent.items.some((item, index) => {
-              if (item.str === 'DRAWN BY' && textContent?.items[index + 2]?.str?.length < 15) {
-                stockNumber = textContent.items[index + 2].str;
-                return true;
-              }
-              if (item.str === "STOCK NO." && textContent?.items[index + 2]?.str?.length < 15) {
-                stockNumber = textContent.items[index + 2].str;
-                return true;
-              }
-              if (item.str === 'APPROVED' && textContent?.items[index - 2]?.str?.length < 15) {
-                stockNumber = textContent.items[index - 2].str;
-                return true;
-              }
-              return false;
-            });
-          } catch (e) {
-            console.log(e);
-          }
-        }
+  const handleDropMultiFile = useCallback(async (acceptedFiles) => {
+    const newFiles = [];
+    acceptedFiles.forEach((file, index) => {
+      const newFile = Object.assign(file, {
+        preview: URL.createObjectURL(file),
+        src: URL.createObjectURL(file),
+        isLoaded: true,
+      });
+      newFiles.push(newFile);
+    });
+    setValue('files', [...files, ...newFiles], { shouldValidate: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [setValue, files]);
 
-        return Object.assign(file, {
-          preview: URL.createObjectURL(file),
-          src: URL.createObjectURL(file),
-          displayName,
-          referenceNumber,
-          versionNo: versionNo?.replace(/[^\d.]+/g, ""),
-          stockNumber,
-          isLoaded: true
-        });
-      }));
-
-      setValue('files', [...docFiles, ...newFiles], { shouldValidate: true });
-    },
-    [files, setValue]
-  );
-    
   const onSubmit = async (data) => {
     try {
-      const formData = new FormData();
-      
-      // Add profile data
-      formData.append('defaultName', data.defaultName);
-      formData.append('type', data.type);
-      formData.append('web', data.web);
-      formData.append('flange', data.flange);
-      formData.append('thicknessStart', data.thicknessStart);
-      formData.append('thicknessEnd', data.thicknessEnd);
-      formData.append('isActive', data.isActive);
-      
-      // Add names array
-      if (data.names && data.names.length > 0) {
-        data.names.forEach((name) => {
-          formData.append('names[]', name);
-        });
-      }
-
-      // Add files
-      if (data.files && data.files.length > 0) {
-        data.files.forEach((file) => {
-          formData.append('images', file);
-        });
-      }
-
-      await dispatch(addProfile(machineId, formData));
+      await dispatch(addProfile(machineId, data));
       await enqueueSnackbar('Profile added successfully');
-      await dispatch(getMachine(machineId));
       await reset();
       await navigate(PATH_MACHINE.machines.profiles.root(machineId))
     } catch (err) {
@@ -228,18 +163,20 @@ export default function ProfileAddForm() {
                 <RHFTextField name="thicknessStart" label="Min. Thickness" />
                 <RHFTextField name="thicknessEnd" label="Max. Thickness" />
               </Box>
-              <Box sx={{ mt: 2 }}>
+              <Grid container sx={{ mt: 4 }}>
+                <FormLabel content='Documents' />
+              </Grid>
+              <Box>
                 <RHFUpload
                   multiple
                   thumbnail
                   name="files"
-                  imagesOnly
                   onDrop={handleDropMultiFile}
                   onRemove={(inputFile) =>
                     files.length > 1
                       ? setValue('files', files && files?.filter((file) => file !== inputFile), {
-                          shouldValidate: true,
-                        })
+                        shouldValidate: true,
+                      })
                       : setValue('files', '', { shouldValidate: true })
                   }
                   onRemoveAll={() => setValue('files', '', { shouldValidate: true })}
