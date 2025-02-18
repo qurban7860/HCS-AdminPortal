@@ -96,7 +96,10 @@ export const FORMLABELS = {
   LOGS_SETTINGS: 'Logs',
 
   // @root - Ticket Settings
-  TICKET_SETTINGS: 'Ticket Settings',
+  REQUEST_SETTINGS: 'Request Settings',
+  REQUEST_STATUS_SETTINGS: 'Request Status Settings',
+  CHANGE_SETTINGS: 'Change Settings',
+  PRIORITY_SETTINGS: 'Priority Settings',
 
   // @root DocumentAddForm in dashboard/documents
   SELECT_CUSTOMER: 'Select Customer',

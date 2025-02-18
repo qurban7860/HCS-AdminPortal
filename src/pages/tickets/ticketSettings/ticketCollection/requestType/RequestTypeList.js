@@ -65,6 +65,7 @@ export default function RequestTypeList() {
   const dispatch = useDispatch();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
+  const [ selectedIssueType, setSelectedIssueType ] = useState(null);
 
   useLayoutEffect(() => {
     dispatch(getTicketRequestTypes(page, rowsPerPage));
@@ -83,6 +84,7 @@ export default function RequestTypeList() {
     inputData: tableData,
     comparator: getComparator(order, orderBy),
     filterName,
+    selectedIssueType,
   });
 
   const isFiltered = filterName !== '';
@@ -114,6 +116,7 @@ export default function RequestTypeList() {
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
     setFilterName('');
+    setSelectedIssueType(null);
   };
   
   return (
@@ -127,6 +130,8 @@ export default function RequestTypeList() {
             onFilterName={handleFilterName}
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
+            filterIssueType={selectedIssueType}
+            onFilterIssueType={setSelectedIssueType}
           />
 
           {!isNotFound && <TablePaginationCustom
@@ -181,7 +186,7 @@ export default function RequestTypeList() {
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName }) {
+function applyFilter({ inputData, comparator, filterName, selectedIssueType }) {
 
   const stabilizedThis = inputData?.map((el, index) => [el, index]);
 
@@ -202,5 +207,10 @@ function applyFilter({ inputData, comparator, filterName }) {
         fDate(RequestType?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }
+
+  if (selectedIssueType) {
+    inputData = inputData.filter((requestType) => requestType?.issueType?._id === selectedIssueType?._id);
+  }
+  
   return inputData;
 }
