@@ -35,6 +35,7 @@ const slice = createSlice({
     // HAS ERROR
     hasError(state, action) {
       state.isLoading = false;
+      state.isLoadingProfileFile = false;
       state.error = action.payload;
       state.initial = true;
     },
@@ -146,9 +147,6 @@ export const ProfileTypes = ['MANUFACTURE', 'CUSTOMER']
 
 // Actions
 export const {
-  setProfileFormVisibility,
-  setProfileEditFormVisibility,
-  setProfileViewFormVisibility,
   resetProfile,
   resetProfiles,
   setResponseMessage,
@@ -187,9 +185,10 @@ export function addProfile(machineId, data) {
           formData.append('images', file);
         });
       }
-      await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/profiles`, formData);
-      await dispatch(setProfileFormVisibility(false));
+      const result = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/profiles`, formData);
+      return result
     } catch (error) {
+      dispatch(slice.actions.hasError(error.Message));
       console.log(error);
       throw error;
     }
@@ -264,7 +263,7 @@ export function deleteProfile(machineId, Id) {
 
 // --------------------------------------------------------------------------
 
-export async function updateProfile(machineId, Id, data) {
+export function updateProfile(machineId, Id, data) {
 
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
@@ -281,21 +280,20 @@ export async function updateProfile(machineId, Id, data) {
       formData.append('isActive', data.isActive);
 
       // Add names array
-      if (data.names && data.names.length > 0) {
-        data.names.forEach((name) => {
+      if (data?.names && data?.names?.length > 0) {
+        data?.names?.forEach((name) => {
           formData.append('names[]', name);
         });
       }
 
       // Add files
-      if (data.files && data.files.length > 0) {
-        data.files.forEach((file) => {
+      if (data?.files && data?.files?.length > 0) {
+        data?.files?.forEach((file) => {
           formData.append('images', file);
         });
       }
 
       await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/profiles/${Id}`, formData);
-      await dispatch(setProfileEditFormVisibility(false));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));

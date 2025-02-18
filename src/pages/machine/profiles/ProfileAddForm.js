@@ -98,10 +98,14 @@ export default function ProfileAddForm() {
 
   const onSubmit = async (data) => {
     try {
-      await dispatch(addProfile(machineId, data));
+      const result = await dispatch(addProfile(machineId, data));
       await enqueueSnackbar('Profile added successfully');
       await reset();
+      if (result?.data?.ProductProfile?._id)
+        await navigate(PATH_MACHINE.machines.profiles.view(machineId, result?.data?.ProductProfile?._id))
+
       await navigate(PATH_MACHINE.machines.profiles.root(machineId))
+
     } catch (err) {
       enqueueSnackbar(err, { variant: 'error' });
     }
@@ -163,7 +167,7 @@ export default function ProfileAddForm() {
                 <RHFTextField name="thicknessStart" label="Min. Thickness" />
                 <RHFTextField name="thicknessEnd" label="Max. Thickness" />
               </Box>
-              <Grid container sx={{ mt: 4 }}>
+              <Grid container sx={{ my: 2 }}>
                 <FormLabel content='Documents' />
               </Grid>
               <Box>
