@@ -14,6 +14,13 @@ const clearLocalStorageAndLogout = () => {
   window.location.reload();
 };
 
+class NotAcceptableError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'NotAcceptableError';
+  }
+}
+
 const axiosInstance = axios.create({ baseURL: HOST_API_KEY });
 
 axiosInstance.interceptors.response.use(
@@ -24,6 +31,12 @@ axiosInstance.interceptors.response.use(
       // If the response status is 403 (Forbidden), clear localStorage and log out the user
       clearLocalStorageAndLogout();
     }
+    
+    // Handle 406 Not Acceptable
+    if (error.response && error.response.status === 406) {
+      throw new NotAcceptableError(error.response.data?.message || 'Not Acceptable Request');
+    }
+    
     return Promise.reject((error.response && error.response.data) || 'Something went wrong');
   }
 );
