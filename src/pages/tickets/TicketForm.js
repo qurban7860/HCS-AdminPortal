@@ -327,7 +327,7 @@ console.log(" errors  : ",errors)
                   />
                   <RHFAutocomplete
                     name="requestType"
-                    label="Request Type"
+                    label="Request Type*"
                     options={filteredRequestTypes || []}
                     isOptionEqualToValue={(option, value) => option._id === value._id}
                     getOptionLabel={(option) => `${option.name || ''}`}

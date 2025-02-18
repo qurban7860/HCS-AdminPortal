@@ -23,7 +23,12 @@ import validateFileType from '../documents/util/validateFileType';
             then: (schema) => schema.required(),
         }), 
         
-        requestType: Yup.object().label('Request Type').nullable(),
+        requestType: Yup.object().label('Request Type').nullable()
+        .when([], {
+            is: () => isNewRequest,
+            then: (schema) => schema.required(),
+        }), 
+
         reporter: Yup.object().nullable().label('Reporter'),
         assignee: Yup.object().nullable().label('Assignee'),
         changeType: Yup.object().nullable().label('Change Type'),

@@ -11,7 +11,7 @@ import { PATH_SUPPORT } from '../../routes/paths';
 import { getActiveTicketStatuses, resetActiveTicketStatuses } from '../../redux/slices/ticket/ticketSettings/ticketStatuses';
 import { getActiveTicketStatusTypes, resetActiveTicketStatusTypes } from '../../redux/slices/ticket/ticketSettings/ticketStatusTypes';
 import { getActiveTicketIssueTypes, resetActiveTicketIssueTypes } from '../../redux/slices/ticket/ticketSettings/ticketIssueTypes'; 
-import { BUTTONS } from '../../constants/default-constants';
+// import { BUTTONS } from '../../constants/default-constants';
 import { options } from '../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
@@ -63,18 +63,14 @@ export default function TicketFormTableToolbar({
     };
   }, [dispatch]);
 
-  const toggleAdd = () => {
-    navigate(PATH_SUPPORT.supportTickets.new);
-  };
+  // const toggleAdd = () => {
+  //   navigate(PATH_SUPPORT.supportTickets.new);
+  // };
 
   return (
+    <>
     <Stack {...options}>
       <SearchBarCombo
-        isFiltered={isFiltered}
-        value={filterName}
-        onChange={onFilterName}
-        onClick={onResetFilter}
-        reduceFilterSize
         nodes={
           <>
               <Grid item xs={12} sm={6} md={4} lg={2}> 
@@ -91,6 +87,44 @@ export default function TicketFormTableToolbar({
                   }}
                 />
               </Grid> 
+              <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-label">Resolved</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    size='small'
+                    name="isResolved"
+                    value={filterResolvedStatus || 'all'}
+                    label="Resolved"
+                    onChange={(event) => {
+                      onFilterResolvedStatus(event.target.value);
+                    }}
+                  >
+                    <MenuItem key="all" value="all">All</MenuItem>
+                    <MenuItem key="resolved" value="resolved">Resolved</MenuItem>
+                    <MenuItem key="unresolved" value="unresolved">Unresolved</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
+              <Autocomplete
+                value={filterStatusType || null}
+                name="statusType"
+                options={[...activeTicketStatusTypes].sort((a, b) => a.displayOrderNo - b.displayOrderNo)}
+                isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                getOptionLabel={(option) => option?.name}
+                renderInput={(params) => <TextField {...params} size='small' label="Status Type" />}
+                renderOption={(props, option) => ( <li {...props} key={option?._id}> {`${option?.name || ''}`} </li> )}
+                onChange={(event, newValue) => {
+                  if (newValue) {
+                    onFilterStatusType(newValue);
+                  } else {
+                    onFilterStatusType(null);
+                  }
+                }}
+              />
+              </Grid>
               <Grid item xs={12} sm={6} md={3} >
               <Autocomplete
                 value={filterStatus || []}
@@ -112,50 +146,22 @@ export default function TicketFormTableToolbar({
                 }}
               />
               </Grid>
-              <Grid item xs={12} sm={6} md={4} lg={4} xl={2}>
-              <Autocomplete
-                value={filterStatusType || null}
-                name="statusType"
-                options={[...activeTicketStatusTypes].sort((a, b) => a.displayOrderNo - b.displayOrderNo)}
-                isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                getOptionLabel={(option) => option?.name}
-                renderInput={(params) => <TextField {...params} size='small' label="Status Type" />}
-                renderOption={(props, option) => ( <li {...props} key={option?._id}> {`${option?.name || ''}`} </li> )}
-                onChange={(event, newValue) => {
-                  if (newValue) {
-                    onFilterStatusType(newValue);
-                  } else {
-                    onFilterStatusType(null);
-                  }
-                }}
-              />
-            </Grid>
-              <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
-                <FormControl fullWidth>
-                  <InputLabel id="demo-simple-select-label">Resolved</InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    size='small'
-                    name="isResolved"
-                    value={filterResolvedStatus || 'all'}
-                    label="Resolved"
-                    onChange={(event) => {
-                      onFilterResolvedStatus(event.target.value);
-                    }}
-                  >
-                    <MenuItem key="all" value="all">All</MenuItem>
-                    <MenuItem key="resolved" value="resolved">Resolved</MenuItem>
-                    <MenuItem key="unresolved" value="unresolved">Unresolved</MenuItem>
-                  </Select>
-                </FormControl>
-              </Grid>
           </>         
         }
-        SubOnClick={toggleAdd}
-        addButton={BUTTONS.ADDTICKET}
+        // SubOnClick={toggleAdd}
+        // addButton={BUTTONS.ADDTICKET}
       />
     </Stack>
+    <Stack {...options}  sx={{ mt: -2.5, mb: 2, ml: 2.5, mr: 2 }}>
+    <SearchBarCombo
+     isFiltered={isFiltered}
+     value={filterName}
+     onChange={onFilterName}
+     onClick={onResetFilter}
+    //  reduceFilterSize
+   />
+   </Stack>
+   </>
   );
 }
 

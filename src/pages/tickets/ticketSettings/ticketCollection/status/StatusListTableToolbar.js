@@ -54,25 +54,7 @@ export default function StatusListTableToolbar({
         onClick={onResetFilter}
         nodes={
           <>
-          <Grid item xs={12} sm={6} md={4} lg={4} xl={2}>
-              <Autocomplete
-                value={filterStatusType || null}
-                name="statusType"
-                options={[...activeTicketStatusTypes].sort((a, b) => a.displayOrderNo - b.displayOrderNo)}
-                isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                getOptionLabel={(option) => option?.name}
-                renderInput={(params) => <TextField {...params} size='small' label="Status Type" />}
-                renderOption={(props, option) => ( <li {...props} key={option?._id}> {`${option?.name || ''}`} </li> )}
-                onChange={(event, newValue) => {
-                  if (newValue) {
-                    onFilterStatusType(newValue);
-                  } else {
-                    onFilterStatusType(null);
-                  }
-                }}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6} md={4} lg={4} xl={2}>
+           <Grid item xs={12} sm={6} md={4} lg={4} xl={2}>
               <FormControl fullWidth>
                 <InputLabel id="demo-simple-select-label">Resolved</InputLabel>
                   <Select
@@ -91,6 +73,24 @@ export default function StatusListTableToolbar({
                     <MenuItem key="unresolved" value="unresolved">Unresolved</MenuItem>
                   </Select>
               </FormControl>
+            </Grid>
+          <Grid item xs={12} sm={6} md={4} lg={4} xl={2}>
+              <Autocomplete
+                value={filterStatusType || null}
+                name="statusType"
+                options={[...activeTicketStatusTypes].sort((a, b) => a.displayOrderNo - b.displayOrderNo)}
+                isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                getOptionLabel={(option) => option?.name}
+                renderInput={(params) => <TextField {...params} size='small' label="Status Type" />}
+                renderOption={(props, option) => ( <li {...props} key={option?._id}> {`${option?.name || ''}`} </li> )}
+                onChange={(event, newValue) => {
+                  if (newValue) {
+                    onFilterStatusType(newValue);
+                  } else {
+                    onFilterStatusType(null);
+                  }
+                }}
+              />
             </Grid>
           </>
         }
