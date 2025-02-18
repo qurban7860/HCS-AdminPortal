@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // @mui
-import { Stack, TextField, Autocomplete, Grid, MenuItem, Select, InputLabel, FormControl, Box } from '@mui/material';
+import { Stack, TextField, Autocomplete, Grid, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import SearchBarCombo from '../../components/ListTableTools/SearchBarCombo';
 // routes
@@ -131,26 +131,26 @@ export default function TicketFormTableToolbar({
               />
             </Grid>
               <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
-                          <FormControl fullWidth>
-                            <InputLabel id="demo-simple-select-label">Resolved</InputLabel>
-                            <Select
-                              labelId="demo-simple-select-label"
-                              id="demo-simple-select"
-                              size='small'
-                              name="isResolved"
-                              value={filterResolvedStatus || 'all'}
-                              label="Resolved"
-                              onChange={(event) => {
-                                onFilterResolvedStatus(event.target.value);
-                              }}
-                            >
-                              <MenuItem key="all" value="all">All</MenuItem>
-                              <MenuItem key="resolved" value="resolved">Resolved</MenuItem>
-                              <MenuItem key="unresolved" value="unresolved">Un Resolved</MenuItem>
-                              </Select>
-                          </FormControl>
-                        </Grid>
-              </>
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-label">Resolved</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    size='small'
+                    name="isResolved"
+                    value={filterResolvedStatus || 'all'}
+                    label="Resolved"
+                    onChange={(event) => {
+                      onFilterResolvedStatus(event.target.value);
+                    }}
+                  >
+                    <MenuItem key="all" value="all">All</MenuItem>
+                    <MenuItem key="resolved" value="resolved">Resolved</MenuItem>
+                    <MenuItem key="unresolved" value="unresolved">Unresolved</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+          </>         
         }
         SubOnClick={toggleAdd}
         addButton={BUTTONS.ADDTICKET}
