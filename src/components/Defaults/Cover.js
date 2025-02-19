@@ -280,7 +280,7 @@ export function Cover({
             )}
             {addButton  && SubOnClick && (
               <Grid item >
-                <StyledTooltip title={addButton} placement="top" disableFocusListener tooltipcolor="#103996" color="#fff">
+                <StyledTooltip title={addButton} placement="bottom" disableFocusListener tooltipcolor="#103996" color="#fff">
                   <IconButton color="#fff" onClick={SubOnClick} 
                       sx={{background:"#2065D1", borderRadius:1, height:'1.7em', p:'8.5px 14px',
                         '&:hover': {
