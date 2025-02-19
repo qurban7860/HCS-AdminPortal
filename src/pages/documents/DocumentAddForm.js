@@ -66,15 +66,7 @@ function DocumentAddForm({
   addFiles,
   historyAddFiles,
 }) {
-  console.log(currentDocument,
-    customerPage,
-    machinePage,
-    drawingPage,
-    machineDrawings,
-    newVersion,
-    historyNewVersion,
-    addFiles,
-    historyAddFiles)
+
   const navigate = useNavigate();
   const { customerId, machineId, id } = useParams()
   const dispatch = useDispatch();
