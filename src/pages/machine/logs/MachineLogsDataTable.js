@@ -113,7 +113,7 @@ const MachineLogsDataTable = ({
 
   const { order, orderBy, selected, onSort } = useTable({
     defaultOrderBy: 'date',
-    defaultOrder: 'asc',
+    defaultOrder: 'desc',
   });
 
   const dataFiltered = applySort({

@@ -65,18 +65,20 @@ export default function TicketFormTableToolbar({
   }, [dispatch]);
   
   useEffect(() => {
-    const isResolved = filterResolvedStatus === 'resolved';
-    setFilteredStatusTypes(
-      filterResolvedStatus === 'all'
-        ? activeTicketStatuses?.map(status => status.statusType)?.filter((v, i, a) => a?.findIndex(t => t?._id === v?._id) === i) 
-        : activeTicketStatuses
+    if (activeTicketStatuses) {
+      if (filterResolvedStatus !== null) {
+        const isResolved = filterResolvedStatus === 'resolved';
+        setFilteredStatusTypes(
+          activeTicketStatuses
             ?.filter(status => status.statusType.isResolved === isResolved)
-            ?.map(status => status.statusType)?.filter((v, i, a) => a?.findIndex(t => t._id === v._id) === i) 
-    );
-    setFilteredStatuses([]);
-    onFilterStatus([]);
-    onFilterStatusType(null);
-  }, [filterResolvedStatus, activeTicketStatuses, onFilterStatus, onFilterStatusType]);
+            ?.map(status => status.statusType)?.filter((v, i, a) => a?.findIndex(t => t._id === v._id) === i)
+        );
+      } else {
+        onFilterStatusType(null); 
+      }
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterResolvedStatus, activeTicketStatuses]);
 
   useEffect(() => {
     if (filterStatusType) {
@@ -114,19 +116,18 @@ export default function TicketFormTableToolbar({
               </Grid> 
               <Grid item xs={12} sm={6} md={6} lg={3} xl={3}>
                 <FormControl fullWidth>
-                  <InputLabel id="demo-simple-select-label">Resolved</InputLabel>
+                  <InputLabel id="demo-simple-select-label" sx={{ mt:-0.7  }}>Resolved</InputLabel>
                   <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
                     size='small'
                     name="isResolved"
-                    value={filterResolvedStatus || 'all'}
+                    value={filterResolvedStatus || null}
                     label="Resolved"
                     onChange={(event) => {
                       onFilterResolvedStatus(event.target.value);
                     }}
                   >
-                    <MenuItem key="all" value="all">All</MenuItem>
                     <MenuItem key="resolved" value="resolved">Resolved</MenuItem>
                     <MenuItem key="unresolved" value="unresolved">Unresolved</MenuItem>
                   </Select>
@@ -169,7 +170,7 @@ export default function TicketFormTableToolbar({
         // addButton={BUTTONS.ADDTICKET}
       />
     </Stack>
-    <Stack {...options}  sx={{ mt: -1, mb: 2, ml: 2.5, mr: 2 }}>
+    <Stack {...options}  sx={{ mt: -1.5, mb: 2, ml: 2.5, mr: 2 }}>
     <SearchBarCombo
      isFiltered={isFiltered}
      value={filterName}
