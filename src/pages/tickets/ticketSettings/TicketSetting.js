@@ -47,7 +47,7 @@ return (
                 <List
                   component="nav"
                   aria-labelledby="nested-list-subheader"
-                  subheader={<ListItemsHeader header={FORMLABELS.TICKET_SETTINGS} />}
+                  subheader={<ListItemsHeader header={FORMLABELS.REQUEST_SETTINGS} />}
                 >
                   <ListItem
                     onClick={linkIssueType}
@@ -59,20 +59,43 @@ return (
                     icon={ICONS.REQUEST_TYPES.icon}
                     content={ICONS.REQUEST_TYPES.heading}
                   />
-                   <ListItem
-                    onClick={linkPriority}
-                    icon={ICONS.PRIORITIES.icon}
-                    content={ICONS.PRIORITIES.heading}
-                  />
-                   <ListItem
+                </List>
+              </StyledSettingsCardContainer>
+
+              <StyledSettingsCardContainer>
+                <List
+                  component="nav"
+                  aria-labelledby="nested-list-subheader"
+                  subheader={<ListItemsHeader header={FORMLABELS.REQUEST_STATUS_SETTINGS} />}
+                >
+                  <ListItem
                     onClick={linkStatus}
                     icon={ICONS.STATUSES.icon}
                     content={ICONS.STATUSES.heading}
                   />
-                   <ListItem
+                  <ListItem
                     onClick={linkStatusType}
                     icon={ICONS.STATUS_TYPES.icon}
                     content={ICONS.STATUS_TYPES.heading}
+                  />
+                </List>
+              </StyledSettingsCardContainer>
+              
+              <StyledSettingsCardContainer>
+                <List
+                  component="nav"
+                  aria-labelledby="nested-list-subheader"
+                  subheader={<ListItemsHeader header={FORMLABELS.CHANGE_SETTINGS} />}
+                >
+                  <ListItem
+                    onClick={linkChangeType}
+                    icon={ICONS.CHANGE_TYPES.icon}
+                    content={ICONS.CHANGE_TYPES.heading}
+                  />
+                  <ListItem
+                    onClick={linkChangeReason}
+                    icon={ICONS.CHANGE_REASONS.icon}
+                    content={ICONS.CHANGE_REASONS.heading}
                   />
                 </List>
               </StyledSettingsCardContainer>
@@ -81,24 +104,28 @@ return (
                 <List
                   component="nav"
                   aria-labelledby="nested-list-subheader"
-                  subheader={<ListItemsHeader header={FORMLABELS.TICKET_SETTINGS} />}
+                  subheader={<ListItemsHeader header={FORMLABELS.PRIORITY_SETTINGS} />}
+                >
+                  <ListItem
+                    onClick={linkPriority}
+                    icon={ICONS.PRIORITIES.icon}
+                    content={ICONS.PRIORITIES.heading}
+                  />
+                </List>
+              </StyledSettingsCardContainer>
+
+              <StyledSettingsCardContainer>
+                <List
+                  component="nav"
+                  aria-labelledby="nested-list-subheader"
+                  subheader={<ListItemsHeader header={FORMLABELS.OTHERS} />}
                 >
                   <ListItem
                     onClick={linkImpact}
                     icon={ICONS.IMPACTS.icon}
                     content={ICONS.IMPACTS.heading}
                   />
-                   <ListItem
-                    onClick={linkChangeType}
-                    icon={ICONS.CHANGE_TYPES.icon}
-                    content={ICONS.CHANGE_TYPES.heading}
-                  />
-                   <ListItem
-                    onClick={linkChangeReason}
-                    icon={ICONS.CHANGE_REASONS.icon}
-                    content={ICONS.CHANGE_REASONS.heading}
-                  />
-                   <ListItem
+                  <ListItem
                     onClick={linkInvestigationReason}
                     icon={ICONS.INVESTIGATION_REASONS.icon}
                     content={ICONS.INVESTIGATION_REASONS.heading}

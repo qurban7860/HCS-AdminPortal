@@ -93,23 +93,6 @@ export const allSideBarOptions = {
           icon: <MachineIcon key="machine" />,
         },
         {
-          title: 'Reports',
-          path: PATH_MACHINE.reports.root,
-          icon: <Iconify icon="mdi:file-chart-outline" />,
-          children: [
-            {
-              title: 'Service Reports',
-              path: PATH_MACHINE.reports.serviceReports.root,
-              icon: <Iconify icon="mdi:file-chart" />,
-            },
-            {
-              title: 'Machine Settings Report',
-              path: PATH_MACHINE.reports.machineSettingsReport.root,
-              icon: <Iconify icon="mdi:file-cog" />,
-            },
-          ],
-        },
-        {
           title: 'Documents',
           path: PATH_MACHINE.documents.root,
           icon: <Iconify icon="mdi:file-document" />,
@@ -136,6 +119,35 @@ export const allSideBarOptions = {
           path: PATH_MACHINE_DRAWING.root,
           icon: icon('drawing'),
           // icon: <Iconify icon="streamline:hand-held-tablet-drawing-solid" />,
+        },
+        {
+          title: 'Reports',
+          path: PATH_MACHINE.reports.root,
+          icon: <Iconify icon="mdi:file-chart-outline" />,
+          children: [
+            {
+              title: 'Service Reports',
+              path: PATH_MACHINE.reports.serviceReports.root,
+              icon: <Iconify icon="mdi:file-chart" />,
+            },
+            {
+              title: 'Machine Settings Report',
+              path: PATH_MACHINE.reports.machineSettingsReport.root,
+              icon: <Iconify icon="mdi:file-cog" />,
+            },
+            {
+              title: 'ERP Logs',
+              description: 'View and analyze machine operation logs from ERP system.',
+              path: PATH_MACHINE.reports.machineLogs.root,
+              icon: <Iconify icon="fluent:document-database-24-filled" />,
+            },
+            {
+              title: 'ERP Graphs',
+              description: 'Visualize machine performance data through graphs and charts.',
+              path: PATH_MACHINE.reports.machineGraphs.root,
+              icon: <Iconify icon="mdi:chart-line" />,
+            },
+          ],
         },
         {
           title: 'Settings',

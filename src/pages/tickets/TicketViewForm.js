@@ -30,8 +30,8 @@ import FilledTimeField from './utils/FilledTimeField';
 import ViewFormSWitch from '../../components/ViewForms/ViewFormSwitch';
 import DropDownMultipleSelection from './utils/DropDownMultipleSelection';
 import { getContact, getCustomerContacts, getActiveSPContacts, resetContact, resetCustomersContacts, resetActiveSPContacts } from '../../redux/slices/customer/contact';
-import { resetComments } from '../../redux/slices/ticket/ticketComments/ticketComment';
-import { resetHistories } from '../../redux/slices/ticket/ticketHistories/ticketHistory';
+import {resetComments} from '../../redux/slices/ticket/ticketComments/ticketComment';
+import {resetHistories} from '../../redux/slices/ticket/ticketHistories/ticketHistory';
 
 export default function TicketViewForm() {
   const { ticket, ticketSettings, isLoading } = useSelector((state) => state.tickets);
@@ -79,6 +79,7 @@ export default function TicketViewForm() {
       dispatch(resetContact());
       dispatch(resetCustomersContacts());
       dispatch(resetActiveSPContacts());
+
       dispatch(resetComments());
       dispatch(resetHistories());
     };
@@ -160,7 +161,7 @@ export default function TicketViewForm() {
       machine: id && `${ticket?.machine?.serialNo || ''} - ${ticket?.machine?.machineModel?.name || ''}` || '',
       // issueType: id && ticket?.issueType?.name || '',
       reporter: id && ticket?.reporter && { _id: ticket?.reporter?._id, name: `${ticket.reporter.firstName || ''} ${ticket.reporter.lastName || ''}` } || '',
-      assignee: id && ticket?.assignee && { _id: ticket?.assignee?._id, name: `${ticket.assignee.firstName || ''} ${ticket.assignee.lastName || ''}` } || '',
+      assignee: id && ticket?.assignee && { _id: ticket?.assignee?._id, name: `${ticket.assignee.firstName || ''} ${ticket.assignee.lastName || ''}` } || null,
       // approvers: id && ticket?.approvers && approvers?.map{ _id: ticket?.assignee?._id, name: `${ticket.assignee.firstName || ''} ${ticket.assignee.lastName || ''}` } || '',
       summary: id && ticket?.summary || '',
       description: id && ticket?.description || '',
@@ -352,8 +353,11 @@ export default function TicketViewForm() {
                 </Box>
               }
             /> */}
+            {/* <ViewFormField isLoading={isLoading} sm={4} heading="Status"
+              node={<DropDownMultipleSelection name="status" label='Status' value={ticket?.status} onSubmit={onSubmit} options={ticketSettings?.statuses} multiple={false} isStatus/>}
+            /> */}
             <ViewFormField isLoading={isLoading} sm={2} heading="Status"
-              node={<DropDownField name="status" label='Status' value={ticket?.status} onSubmit={onSubmit} options={ ticketSettings?.statuses} />}
+              node={<DropDownField name="status" isNullable label='Status' value={ticket?.status} onSubmit={onSubmit} options={ticketSettings?.statuses} />}
             />
             <ViewFormField isLoading={isLoading} sm={2} heading="Priority"
               node={<DropDownField name="priority" isNullable label='Priority' value={ticket?.priority} onSubmit={onSubmit} options={ticketSettings?.priorities} />}

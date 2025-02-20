@@ -25,7 +25,7 @@ import Scrollbar from '../../../components/scrollbar';
 // sections
 import ProfileListTableRow from './ProfileListTableRow';
 import ProfileListTableToolbar from './ProfileListTableToolbar';
-import { getProfiles, ChangeRowsPerPage, ChangePage, setFilterBy } from '../../../redux/slices/products/profile';
+import { getProfiles, resetProfiles, ChangeRowsPerPage, ChangePage, setFilterBy } from '../../../redux/slices/products/profile';
 import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../../components/ListTableTools/TableCard';
 import MachineTabContainer from '../util/MachineTabContainer';
@@ -47,30 +47,33 @@ export default function ProfileList() {
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
   const { machine } = useSelector((state) => state.machine);
-  const { profiles, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.profile );
+  const { profiles, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.profile);
 
   const TABLE_HEAD = [
     { id: 'defaultName', label: 'Default Name', align: 'left' },
     { id: 'names', visibility: 'xs1', label: 'Other Names', align: 'left' },
     { id: 'type', label: 'Type', align: 'left' },
-    { id: 'web', label: 'Web X Flange', align: 'left'},
-    { id: 'thicknessStart', label: 'Thickness', align: 'left'},
-    { id: 'isActive', label: 'Active', align: 'left'},
+    { id: 'web', label: 'Web X Flange', align: 'left' },
+    { id: 'thicknessStart', label: 'Thickness', align: 'left' },
+    { id: 'isActive', label: 'Active', align: 'left' },
     { id: 'updatedAt', label: 'Updated At', align: 'right' },
   ];
 
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));
-    dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
+    dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10)));
   };
 
-  const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
+  const onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
 
   useEffect(() => {
-    if(machineId){
-      dispatch(getProfiles(machineId, machine?.isArchived ));
+    if (machineId) {
+      dispatch(getProfiles(machineId, machine?.isArchived));
     }
-  }, [ dispatch, machineId, machine ]);
+    return () => {
+      dispatch(resetProfiles());
+    }
+  }, [dispatch, machineId, machine]);
 
   useEffect(() => {
     setTableData(profiles);
@@ -81,7 +84,7 @@ export default function ProfileList() {
     comparator: getComparator(order, orderBy),
     filterName,
     filterStatus,
-  });  
+  });
   const denseHeight = 60;
   const isFiltered = filterName !== '' || !!filterStatus.length;
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
@@ -96,15 +99,15 @@ export default function ProfileList() {
     setFilterName(event.target.value)
     setPage(0);
   };
-  
+
   useEffect(() => {
-      debouncedSearch.current.cancel();
+    debouncedSearch.current.cancel();
   }, [debouncedSearch]);
-  
-  useEffect(()=>{
-      setFilterName(filterBy)
+
+  useEffect(() => {
+    setFilterName(filterBy)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[])
+  }, [])
 
   const handleFilterStatus = (event) => {
     setPage(0);
@@ -131,13 +134,13 @@ export default function ProfileList() {
           isFiltered={isFiltered}
           onResetFilter={handleResetFilter}
         />
-          {!isNotFound && <TablePaginationCustom
-            count={dataFiltered.length}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-          />}
+        {!isNotFound && <TablePaginationCustom
+          count={dataFiltered.length}
+          page={page}
+          rowsPerPage={rowsPerPage}
+          onPageChange={onChangePage}
+          onRowsPerPageChange={onChangeRowsPerPage}
+        />}
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
           <Scrollbar>
             <Table size="small" sx={{ minWidth: 360 }}>
@@ -169,7 +172,7 @@ export default function ProfileList() {
           </Scrollbar>
         </TableContainer>
 
-        {!isNotFound &&<TablePaginationCustom
+        {!isNotFound && <TablePaginationCustom
           count={dataFiltered.length}
           page={page}
           rowsPerPage={rowsPerPage}

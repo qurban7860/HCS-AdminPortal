@@ -1,5 +1,5 @@
+/* eslint-disable no-nested-ternary */
 import React, { useEffect } from 'react';
-import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
 import {
   Box,
@@ -9,18 +9,19 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
+  CircularProgress,
 } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
 import dayjs from 'dayjs';
 import FormLabel from '../../components/DocumentForms/FormLabel';
 import { FORMLABELS } from '../../constants/default-constants';
-import { getHistories, resetHistories } from '../../redux/slices/ticket/ticketHistories/ticketHistory';
+import { getHistories } from '../../redux/slices/ticket/ticketHistories/ticketHistory';
 import { CustomAvatar } from '../../components/custom-avatar';
 
-const TicketHistory = ({ currentUser }) => {
+const TicketHistory = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
-  const { histories } = useSelector((state) => state.ticketHistories);
+  const { histories, isLoading } = useSelector((state) => state.ticketHistories);
 
   useEffect(() => {
     if (id) {
@@ -50,7 +51,11 @@ const TicketHistory = ({ currentUser }) => {
     <>
       <FormLabel content={FORMLABELS.COVER.TICKET_HISTORY} />
       <Box>
-        {histories.length > 0 ? (
+        {isLoading ? (
+          <Box display="flex" justifyContent="center" alignItems="center" sx={{ mt: 2 }}>
+           <CircularProgress />
+          </Box>
+        ) : histories.length > 0 ? (
           <List
             sx={{ width: '100%', bgcolor: 'background.paper', }}
           >
@@ -60,9 +65,9 @@ const TicketHistory = ({ currentUser }) => {
                 <ListItem alignItems="flex-start" sx={{ padding: '8px 0' }}>
                   <ListItemAvatar>
                     <CustomAvatar
-                      src={currentUser?.photoURL}
-                      alt={currentUser?.displayName}
-                      name={currentUser?.displayName || history?.createdBy?.name || 'Unknown User'}
+                      src={ history?.updatedBy?.photoURL }
+                      alt={ history?.updatedBy?.name }
+                      name={ history?.updatedBy?.name }
                       sx={{ mt: -1 }}
                     />
                   </ListItemAvatar>
@@ -70,7 +75,7 @@ const TicketHistory = ({ currentUser }) => {
                     primary={
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         <Typography variant="subtitle2" sx={{ mr: 1 }}>
-                          {currentUser?.displayName || history?.createdBy?.name || 'Unknown User'}
+                          { history?.updatedBy?.name }
                         </Typography>
                         <Typography
                           sx={{ color: 'text.secondary', fontSize: '0.875rem' }}
@@ -153,10 +158,6 @@ const TicketHistory = ({ currentUser }) => {
       </Box>
     </>
   );
-};
-
-TicketHistory.propTypes = {
-  currentUser: PropTypes.object.isRequired,
 };
 
 export default TicketHistory;
