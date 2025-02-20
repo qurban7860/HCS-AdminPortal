@@ -541,10 +541,10 @@ function DocumentAddForm({
                   />
                 )}
 
-                {selectedValue === 'new' && (
+                {(selectedValue === 'new' || documentVal) && (
                   <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ sm: '1fr', md: '3fr 1fr' }} >
-                    <RHFTextField multiline name="displayName" id="displayName" label="Document Name*" />
-                    <RHFTextField name='versionNo' label='Version Number' InputLabelProps={{ shrink: versionNo }} />
+                    <RHFTextField multiline name="displayName" id="displayName" disabled={readOnlyVal} label="Document Name*" />
+                    <RHFTextField name='versionNo' label='Version Number' disabled={readOnlyVal} InputLabelProps={{ shrink: versionNo }} />
                   </Box>
                 )}
 
