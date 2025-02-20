@@ -73,26 +73,24 @@ export default function TicketFormTableToolbar({
             ?.filter(status => status.statusType.isResolved === isResolved)
             ?.map(status => status.statusType)?.filter((v, i, a) => a?.findIndex(t => t._id === v._id) === i)
         );
-      } else {
-        onFilterStatusType(null); 
-      }
+      }  
+      setFilteredStatuses([]);
+      onFilterStatus([]);
+      onFilterStatusType(null); 
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterResolvedStatus, activeTicketStatuses]);
 
   useEffect(() => {
     if (filterStatusType) {
-      setFilteredStatuses(activeTicketStatuses?.filter(status => status?.statusType?._id === filterStatusType?._id));
+      const newFilteredStatuses = activeTicketStatuses?.filter(status => status?.statusType?._id === filterStatusType?._id);
+      setFilteredStatuses(newFilteredStatuses);
+      onFilterStatus(filterStatus.filter(selectedStatus => newFilteredStatuses.some(fs => fs._id === selectedStatus._id)));
     } else {
       setFilteredStatuses([]);
-      onFilterStatus([]);
+      onFilterStatus([]); 
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filterStatusType, activeTicketStatuses]);
-
-  // const toggleAdd = () => {
-  //   navigate(PATH_SUPPORT.supportTickets.new);
-  // };
+  }, [filterStatusType, activeTicketStatuses, onFilterStatus, filterStatus]);
 
   return (
     <>
