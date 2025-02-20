@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Button, Card, Container, Grid, Link, Typography, Dialog, DialogTitle, DialogContent, DialogActions, Chip, Box, useTheme, Stack } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
@@ -20,6 +20,7 @@ import ViewFormMachinePortalKeyHistory from '../../../components/ViewForms/ViewF
 import MachineSyncAPILogsTable from '../../../components/machineIntegration/MachineSyncAPILogsTable';
 import CopyIcon from '../../../components/Icons/CopyIcon';
 import AnimatedIntegrationStatusChip from '../../../components/machineIntegration/AnimatedIntegrationStatusChip';
+import generatePortalKeyConfigFileContent from './utils/generateKeyDownloadFile';
 
 const IntegrationViewForm = () => {
   const [openAddMoreInfoDialog, setOpenAddMoreInfoDialog] = useState(false);
@@ -101,7 +102,7 @@ const IntegrationViewForm = () => {
   };
 
   const handleKeyDownload = () => {
-    const fileContent = `Machine_Serial_No = ${serialNo}\nHowick_Portal_Key = ${currentPortalKey?.key}`;
+    const fileContent = generatePortalKeyConfigFileContent(currentPortalKey?.key, serialNo);
     const blob = new Blob([fileContent], { type: 'text/plain' });
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
