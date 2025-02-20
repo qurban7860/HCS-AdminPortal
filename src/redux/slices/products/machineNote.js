@@ -15,7 +15,6 @@ const initialState = {
   isLoading: false,
   error: null,
   comment: {},
-  comment: {},
   notes: [],
   filterBy: '',
   page: 0,
@@ -37,18 +36,11 @@ const slice = createSlice({
       state.isLoading = false;
       state.success = true;
       state.initial = true;
-    // HAS ERROR
-    updateNotesFromSSE(state, action) {
-      state.notes = action.payload;
-      state.isLoading = false;
-      state.success = true;
-      state.initial = true;
     },
 
     hasError(state, action) {
       state.isLoading = false;
       state.error = action.payload;
-      state.success = false;
       state.success = false;
       state.initial = true;
     },
@@ -82,24 +74,6 @@ const slice = createSlice({
        // state.responseMessage = 'Comments loaded successfully';
     },
 
-    // ADD  Notes
-    addNotesSuccess(state, action) {
-      state.isLoading = false;
-      state.success = true;
-      state.notes = action.payload;
-      state.initial = true;
-      state.responseMessage = 'Note saved successfully';
-    },
-
-    // UPDATE  Notes
-    updateNotesSuccess(state, action) {
-      state.isLoading = false;
-      state.success = true;
-      state.notes = action.payload;
-      state.initial = true;
-      state.responseMessage = 'Note updated successfully';
-    },
-
     // GET Note
     getNoteSuccess(state, action) {
       state.isLoading = false;
@@ -107,17 +81,6 @@ const slice = createSlice({
       state.note = action.payload;
       state.initial = true;
     },
-
-    // DELETE Note
-    deleteNoteSuccess(state, action) {
-      state.isLoading = false;
-      state.success = true;
-      state.notes = state.notes.filter((note) => note._id !== action.payload);
-      state.responseMessage = 'Note deleted successfully';
-    },
-    
-    
-    
 
     // DELETE Note
     deleteNoteSuccess(state, action) {
@@ -138,7 +101,6 @@ const slice = createSlice({
     },
 
     // RESET LICENSE
-    resetNote(state) {
     resetNote(state) {
       state.note = {};
       state.responseMessage = null;
@@ -190,7 +152,6 @@ export default slice.reducer;
 // Actions
 export const {
   updateNotesFromSSE,
-  updateNotesFromSSE,
   resetNote,
   resetNotes,
   setResponseMessage,
@@ -214,7 +175,6 @@ export function getNotes(machineId) {
       dispatch(slice.actions.hasError(error.response?.data?.message || "Failed to fetch notes"));
     }
   };
-  };
 }
 
 
@@ -231,23 +191,12 @@ export function addNote( machineId, note) {
       throw error;
     }
   };
-  };
 }
 
-export function updateNote(machineId, noteId, params) {
 export function updateNote(machineId, noteId, params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const data = {
-        note: params.note,
-        isInternal: params.isInternal,
-      };
-      const response = await axios.patch(
-        `${CONFIG.SERVER_URL}products/machines/${machineId}/notes/${noteId}`,
-        data
-      );
-      dispatch(slice.actions.updateNotesSuccess(response.data?.notesList));
       const data = {
         note: params.note,
         isInternal: params.isInternal,
@@ -280,29 +229,17 @@ export function getNote(machineId,noteId) {
 }
 
 export function deleteNote(machineId, noteId) {
-export function deleteNote(machineId, noteId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/notes/${noteId}`, {
         isArchived: true,
-      await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/notes/${noteId}`, {
-        isArchived: true,
       });
-      dispatch(slice.actions.deleteNoteSuccess(noteId));
       dispatch(slice.actions.deleteNoteSuccess(noteId));
     } catch (error) {
       console.error(error);
-      dispatch(slice.actions.hasError(error.response?.data?.message || 'Failed to archive note'));
       dispatch(slice.actions.hasError(error.response?.data?.message || 'Failed to archive note'));
       throw error;
     }
   };
 }
-
-
-
-
-
-
-
