@@ -1,4 +1,6 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import { createSlice } from '@reduxjs/toolkit';
+
 // utils
 import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
@@ -6,14 +8,11 @@ import { CONFIG } from '../../../config-global';
 // ----------------------------------------------------------------------
 const initialState = {
   initial: false,
-  noteFormVisibility: false,
-  noteViewFormVisibility: false,
-  noteEditFormVisibility: false,
   responseMessage: null,
   success: false,
   isLoading: false,
   error: null,
-  note: {},
+  comment: {},
   notes: [],
   filterBy: '',
   page: 0,
@@ -29,34 +28,46 @@ const slice = createSlice({
       state.isLoading = true;
     },
 
-    // SET ADD FORM TOGGLE
-    setNoteFormVisibility(state, action){
-      state.noteFormVisibility = action.payload;
-    },
-
-    // SET EDIT FORM TOGGLE
-    setNoteEditFormVisibility(state, action){
-      state.noteEditFormVisibility = action.payload;
-    },
-
-    // SET VIEW TOGGLE
-    setNoteViewFormVisibility(state, action){
-      state.noteViewFormVisibility = action.payload;
-    },
-
     // HAS ERROR
-    hasError(state, action) {
+    updateNotesFromSSE(state, action) {
+      state.notes = action.payload;
       state.isLoading = false;
-      state.error = action.payload;
+      state.success = true;
       state.initial = true;
     },
 
-    // GET  Note
+    hasError(state, action) {
+      state.isLoading = false;
+      state.error = action.payload;
+      state.success = false;
+      state.initial = true;
+    },
+
+    // GET  Notes
     getNotesSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
       state.notes = action.payload;
       state.initial = true;
+       // state.responseMessage = 'Comments loaded successfully';
+    },
+
+    // ADD  Notes
+    addNotesSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.notes = action.payload;
+      state.initial = true;
+      state.responseMessage = 'Note saved successfully';
+    },
+
+    // UPDATE  Notes
+    updateNotesSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.notes = action.payload;
+      state.initial = true;
+      state.responseMessage = 'Note updated successfully';
     },
 
     // GET Note
@@ -67,6 +78,17 @@ const slice = createSlice({
       state.initial = true;
     },
 
+    // DELETE Note
+    deleteNoteSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.notes = state.notes.filter((note) => note._id !== action.payload);
+      state.responseMessage = 'Note deleted successfully';
+    },
+    
+    
+    
+
     setResponseMessage(state, action) {
       state.responseMessage = action.payload;
       state.isLoading = false;
@@ -74,9 +96,8 @@ const slice = createSlice({
       state.initial = true;
     },
 
-
     // RESET LICENSE
-    resetNote(state){
+    resetNote(state) {
       state.note = {};
       state.responseMessage = null;
       state.success = false;
@@ -84,13 +105,14 @@ const slice = createSlice({
     },
 
     // RESET LICENSE
-    resetNotes(state){
-      state.notes = [];
+    resetNotes(state) {
+      state.notes = [];  // Keep this to clear old data on unmount
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
+      state.error = null;
     },
-
+    
 
     backStep(state) {
       state.checkout.activeStep -= 1;
@@ -99,14 +121,17 @@ const slice = createSlice({
     nextStep(state) {
       state.checkout.activeStep += 1;
     },
+
     // Set FilterBy
     setFilterBy(state, action) {
       state.filterBy = action.payload;
     },
+
     // Set PageRowCount
     ChangeRowsPerPage(state, action) {
       state.rowsPerPage = action.payload;
     },
+
     // Set PageNo
     ChangePage(state, action) {
       state.page = action.payload;
@@ -119,9 +144,7 @@ export default slice.reducer;
 
 // Actions
 export const {
-  setNoteFormVisibility,
-  setNoteEditFormVisibility,
-  setNoteViewFormVisibility,
+  updateNotesFromSSE,
   resetNote,
   resetNotes,
   setResponseMessage,
@@ -130,70 +153,52 @@ export const {
   ChangePage,
 } = slice.actions;
 
-export const NoteTypes = [ 'Type 1','Type 2','Type 3','Type 4']
-
 // ----------------------------------------------------------------------
 
-export function addNote (machineId, params){
 
+
+
+export function getNotes(machineId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-        const data = {
-            note:     params.note,
-            isActive: params.isActive,
-        }
-        if(params.user){
-            data.user =    params.user;
-        }
-      await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/notes/`, data);
-      dispatch(slice.actions.setNoteFormVisibility(false));
-      dispatch(slice.actions.setResponseMessage('Note saved successfully'));
+      const response = await axios.get(`${CONFIG.SERVER_URL}/products/machines/${machineId}/notes`);
+      dispatch(slice.actions.getNotesSuccess(response.data)); // Ensure response structure is correct
+    } catch (error) {
+      dispatch(slice.actions.hasError(error.response?.data?.message || "Failed to fetch notes"));
+    }
+  };
+}
+
+
+export function addNote( machineId, note) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const data = { note};  
+      const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/notes`, data);
+      dispatch(slice.actions.addNotesSuccess(response.data?.notesList));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
       throw error;
     }
-  }
+  };
 }
 
-export function updateNote(machineId,noteId,params) {
+export function updateNote(machineId, noteId, params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const data = {
-        note:     params.note,
-        isActive: params.isActive,
-      }
-      await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/notes/${noteId}`, data, );
-      dispatch(slice.actions.setResponseMessage('Note updated successfully'));
-
-    } catch (error) {
-      console.log(error);
-      dispatch(slice.actions.hasError(error.Message));
-      throw error;
-    }
-  }
-}
-
-export function getNotes( id, isMachineArchived) {
-  return async (dispatch) => {
-    dispatch(slice.actions.startLoading());
-    try {
-      const params = {
-        isArchived: false,
-        orderBy : {
-          createdAt: -1
-        }
-      }
-    if( isMachineArchived ){
-      params.archivedByMachine = true;
-      params.isArchived = true;
-    } 
-      
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${id}/notes`, { params });
-      dispatch(slice.actions.getNotesSuccess(response.data));
-      dispatch(slice.actions.setResponseMessage('Notes loaded successfully'));
+        note: params.note,
+        isInternal: params.isInternal,
+      };
+      const response = await axios.patch(
+        `${CONFIG.SERVER_URL}products/machines/${machineId}/notes/${noteId}`,
+        data
+      );
+      dispatch(slice.actions.updateNotesSuccess(response.data?.notesList));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -216,19 +221,21 @@ export function getNote(machineId,noteId) {
   };
 }
 
-export function deleteNote(machineId,id) {
+export function deleteNote(machineId, noteId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/notes/${id}` , 
-      {
-          isArchived: true, 
+      await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/notes/${noteId}`, {
+        isArchived: true,
       });
-      dispatch(slice.actions.setResponseMessage(response.data));
+      dispatch(slice.actions.deleteNoteSuccess(noteId));
     } catch (error) {
       console.error(error);
-      dispatch(slice.actions.hasError(error.Message));
+      dispatch(slice.actions.hasError(error.response?.data?.message || 'Failed to archive note'));
       throw error;
     }
   };
 }
+
+
+

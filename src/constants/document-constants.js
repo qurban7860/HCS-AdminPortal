@@ -329,5 +329,8 @@ export const FORMLABELS = {
   INTEGRATION: {
     MAIN_HEADER: 'Portal Integration Details',
     SYNC_LOGS_HISTORY: 'Machine Sync Connection Logs',
-  }
+  },
+  NOTES: {
+    HEADER: 'Machine Notes',
+  },
 };
