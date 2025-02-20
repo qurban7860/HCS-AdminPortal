@@ -76,7 +76,7 @@ export default function DocumentListTableRow({
       {  !hiddenColumns?.['machine.serialNo'] && !customerPage && !machinePage && !machineDrawings && !machineDrawingPage && lgScreen && 
           <LinkDialogTableCell onClick={handleMachineDialog} align='left' param={machine?.serialNo}/>  
       }
-      {!hiddenColumns?.createdAt && <TableCell align="right">{fDate(updatedAt)}</TableCell>}
+      {!hiddenColumns?.updatedAt && <TableCell align="right">{fDate(updatedAt)}</TableCell>}
     </StyledTableRow>
   );
 }

@@ -85,7 +85,7 @@ export default function TicketFormList(){
   const [ selectedIssueType, setSelectedIssueType ] = useState(null);
   const [ selectedStatus, setSelectedStatus ] = useState([]);
   const [ selectedStatusType, setSelectedStatusType ] = useState(null);
-  const [ selectedResolvedStatus, setSelectedResolvedStatus ] = useState('all');
+  const [ selectedResolvedStatus, setSelectedResolvedStatus ] = useState(null);
   const isMobile = useResponsive('down', 'sm');
 
   useLayoutEffect(() => {
@@ -151,7 +151,7 @@ export default function TicketFormList(){
     setSelectedIssueType(null);
     setSelectedStatus([]);
     setSelectedStatusType(null);
-    setSelectedResolvedStatus('all');
+    setSelectedResolvedStatus(null);
   };
   
   const handleHiddenColumns = async (arg) => {
@@ -305,7 +305,7 @@ function applyFilter({ inputData, comparator, filterName, selectedIssueType, sel
     inputData = inputData.filter((ticket) => ticket?.status?.statusType?._id === selectedStatusType?._id);
   }
   
-  if (selectedResolvedStatus !== 'all') {  
+  if (selectedResolvedStatus !== null) {  
     const isResolved = selectedResolvedStatus === 'resolved'; 
     inputData = inputData.filter((ticket) => ticket?.status?.statusType?.isResolved === isResolved);
   } 

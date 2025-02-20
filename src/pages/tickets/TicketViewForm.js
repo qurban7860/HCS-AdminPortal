@@ -352,8 +352,11 @@ export default function TicketViewForm() {
                 </Box>
               }
             /> */}
+            {/* <ViewFormField isLoading={isLoading} sm={4} heading="Status"
+              node={<DropDownMultipleSelection name="status" label='Status' value={ticket?.status} onSubmit={onSubmit} options={ticketSettings?.statuses} multiple={false} isStatus/>}
+            /> */}
             <ViewFormField isLoading={isLoading} sm={2} heading="Status"
-              node={<DropDownField name="status" label='Status' value={ticket?.status} onSubmit={onSubmit} options={ ticketSettings?.statuses} />}
+              node={<DropDownField name="status" isNullable label='Status' value={ticket?.status} onSubmit={onSubmit} options={ticketSettings?.statuses} />}
             />
             <ViewFormField isLoading={isLoading} sm={2} heading="Priority"
               node={<DropDownField name="priority" isNullable label='Priority' value={ticket?.priority} onSubmit={onSubmit} options={ticketSettings?.priorities} />}
