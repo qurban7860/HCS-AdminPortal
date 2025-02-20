@@ -53,7 +53,8 @@ const MachineNotes = ({ currentUser }) => {
 
   useEffect(() => {
     if (machineId) {
-      dispatch(getNotes({ machineId }));
+
+      dispatch(getNotes(machineId ));
     }
     return () => {
       dispatch(resetNotes());
@@ -177,7 +178,7 @@ const MachineNotes = ({ currentUser }) => {
               </FormProvider>
 
               <List sx={{ width: '100%', bgcolor: 'background.paper', maxHeight: 500, overflow: 'auto', mt: 1.5 }}>
-                {notes?.map((item, index) => (
+              {(Array.isArray(notes) ? notes : []).map((item, index) => (
                   <React.Fragment key={item._id || index}>
                     {index > 0 && <Divider component="li" />}
                     <ListItem alignItems="flex-start" sx={{ padding: '8px 0' }}>

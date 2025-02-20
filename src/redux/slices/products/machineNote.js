@@ -1,5 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable import/no-extraneous-dependencies */
 import { createSlice } from '@reduxjs/toolkit';
+
 
 // utils
 import axios from '../../../utils/axios';
@@ -44,6 +46,7 @@ const slice = createSlice({
     },
 
     // GET  Notes
+    // GET  Notes
     getNotesSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
@@ -68,6 +71,7 @@ const slice = createSlice({
       state.notes = action.payload;
       state.initial = true;
       state.responseMessage = 'Note updated successfully';
+       // state.responseMessage = 'Comments loaded successfully';
     },
 
     // GET Note
@@ -106,12 +110,13 @@ const slice = createSlice({
 
     // RESET LICENSE
     resetNotes(state) {
-      state.notes = [];
-      state.note = {};
+      state.notes = [];  // Keep this to clear old data on unmount
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
+      state.error = null;
     },
+    
 
     backStep(state) {
       state.checkout.activeStep -= 1;
@@ -121,15 +126,18 @@ const slice = createSlice({
       state.checkout.activeStep += 1;
     },
 
+
     // Set FilterBy
     setFilterBy(state, action) {
       state.filterBy = action.payload;
     },
 
+
     // Set PageRowCount
     ChangeRowsPerPage(state, action) {
       state.rowsPerPage = action.payload;
     },
+
 
     // Set PageNo
     ChangePage(state, action) {
@@ -154,28 +162,27 @@ export const {
 
 // ----------------------------------------------------------------------
 
+
+
+
 export function getNotes(machineId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/notes`);
-
-      // Only return notes that are NOT archived
-      const activeNotes = response.data.notes.filter((note) => !note.isArchived);
-
-      dispatch(slice.actions.getNotesSuccess(activeNotes));
+      dispatch(slice.actions.getNotesSuccess(response.data)); // Ensure response structure is correct
     } catch (error) {
-      console.error(error);
-      dispatch(slice.actions.hasError(error.response?.data?.message || 'Failed to fetch notes'));
+      dispatch(slice.actions.hasError(error.response?.data?.message || "Failed to fetch notes"));
     }
   };
 }
 
-export function addNote( machineId, note, isInternal ) {
+
+export function addNote( machineId, note) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const data = { note, isInternal };  
+      const data = { note};  
       const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/notes`, data);
       dispatch(slice.actions.addNotesSuccess(response.data?.notesList));
     } catch (error) {
@@ -236,6 +243,3 @@ export function deleteNote(machineId, noteId) {
     }
   };
 }
-
-
-
