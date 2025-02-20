@@ -853,7 +853,9 @@ export default function Router() {
                 { element: <MachineSettingReportList />, index: true },
                 // { path: ':id/view', element: <MachineSettingReportView /> },
               ],
-            }
+            },
+            { path: 'machineLogs', children: [{ element: <AllMachinesLogs />, index: true }] },
+            { path: 'machineGraphs', children: [{ element: <AllMachinesGraphs />, index: true }] },
           ]
         },
         

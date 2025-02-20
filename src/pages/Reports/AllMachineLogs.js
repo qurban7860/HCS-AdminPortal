@@ -115,7 +115,7 @@ function AllMachineLogs() {
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
-        <Cover name="Machine Logs" currentLogsPage />
+        <Cover name="Machine Logs" />
       </StyledCardContainer>
       <FormProvider methods={methods} onSubmit={handleSubmit(onGetLogs)}>
         <Grid container spacing={2}>

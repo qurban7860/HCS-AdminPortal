@@ -287,6 +287,12 @@ export const PATH_MACHINE = {
       root: path(ROOTS_MACHINE, '/reports/machineSettingsReport'),
       // view: ( id ) => path(ROOTS_MACHINE, `/machineSettingsReport/${id}/view`),
     },
+    machineLogs: {
+      root: path(ROOTS_MACHINE, '/reports/machineLogs'),
+    },
+    machineGraphs: {
+      root: path(ROOTS_MACHINE, '/reports/machineGraphs'),
+    },
   },
   documents: {
     root: path(ROOTS_MACHINE, '/documents'),

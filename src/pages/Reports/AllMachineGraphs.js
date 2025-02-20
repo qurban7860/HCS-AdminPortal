@@ -99,7 +99,7 @@ const AllMachineGraphs = () => {
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
-        <Cover name="ERP Graphs" currentGraphsPage />
+        <Cover name="ERP Graphs" />
       </StyledCardContainer>
       <FormProvider {...methods}>
         <Grid container spacing={2}>
