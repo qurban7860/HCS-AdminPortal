@@ -3,6 +3,14 @@ import axios from 'axios';
 import { HOST_API_KEY } from '../config-global';
 
 // ----------------------------------------------------------------------
+// Global error handler to trigger Error Boundary
+export const triggerErrorBoundary = (error) => {
+  // This will be caught by the Error Boundary
+  window.dispatchEvent(new CustomEvent('app-error', { detail: error }));
+  // Force re-render to trigger error boundary
+  throw error;
+};
+
 // Function to clear localStorage and log out user
 const clearLocalStorageAndLogout = () => {
   // Clear access token from localStorage
@@ -34,12 +42,12 @@ axiosInstance.interceptors.response.use(
     
     // Handle 406 Not Acceptable
     if (error.response && error.response.status === 406) {
-      throw new NotAcceptableError(error.response.data?.message || 'Not Acceptable Request');
+      const notAcceptableError = new NotAcceptableError(error.response.data?.message || 'Not Acceptable Request');
+      triggerErrorBoundary(notAcceptableError);
     }
     
     return Promise.reject((error.response && error.response.data) || 'Something went wrong');
   }
 );
-
 
 export default axiosInstance;

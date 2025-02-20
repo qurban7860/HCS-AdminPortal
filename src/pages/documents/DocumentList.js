@@ -108,7 +108,7 @@ function DocumentList({ customerPage, machinePage, machineDrawingPage, machineDr
     orderBy,
     onSort,
   } = useTable({
-    defaultOrderBy: machineDrawings ? 'doNotOrder' : 'createdAt', defaultOrder: 'desc',
+    defaultOrderBy: machineDrawings ? 'doNotOrder' : 'updatedAt', defaultOrder: 'desc',
   });
 
 const onChangeRowsPerPage = (event) => {
@@ -651,7 +651,7 @@ function applyFilter({ inputData, comparator, orderBy, filterName, filterStatus,
           document?.stockNumber?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
           document?.productDrawings?.some((m) => m?.machine?.serialNo?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0) ||
           document?.documentVersions[0]?.versionNo?.toString().indexOf(filterName.toLowerCase()) >= 0 ||
-          fDate(document?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+          fDate(document?.updatedAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
       );
     }
   

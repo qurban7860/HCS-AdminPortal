@@ -83,9 +83,9 @@ export default function TicketFormList(){
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [ selectedIssueType, setSelectedIssueType ] = useState(null);
-  const [ selectedStatus, setSelectedStatus ] = useState(null);
+  const [ selectedStatus, setSelectedStatus ] = useState([]);
   const [ selectedStatusType, setSelectedStatusType ] = useState(null);
-  const [ selectedResolvedStatus, setSelectedResolvedStatus ] = useState('all');
+  const [ selectedResolvedStatus, setSelectedResolvedStatus ] = useState(null);
   const isMobile = useResponsive('down', 'sm');
 
   useLayoutEffect(() => {
@@ -93,10 +93,15 @@ export default function TicketFormList(){
     return () => {
       dispatch(resetTickets());
     }
-  }, [dispatch, machineId, page, rowsPerPage ]);
+  }, [dispatch, page, rowsPerPage ]);
+  
+  const onRefresh = () => {
+    dispatch(ChangePage(0));
+    dispatch(getTickets(0, rowsPerPage)); 
+  };
 
   useEffect(() => {
-      setTableData(tickets?.data || [] );
+    setTableData(tickets?.data || [] );
   }, [tickets?.data ]);
 
   const dataFiltered = applyFilter({
@@ -144,9 +149,9 @@ export default function TicketFormList(){
     dispatch(setFilterBy(''))
     setFilterName('');
     setSelectedIssueType(null);
-    setSelectedStatus(null);
+    setSelectedStatus([]);
     setSelectedStatusType(null);
-    setSelectedResolvedStatus('all');
+    setSelectedResolvedStatus(null);
   };
   
   const handleHiddenColumns = async (arg) => {
@@ -179,6 +184,7 @@ export default function TicketFormList(){
             onFilterStatusType={setSelectedStatusType}
             filterResolvedStatus={selectedResolvedStatus} 
             onFilterResolvedStatus={setSelectedResolvedStatus} 
+            onReload={onRefresh}
           />
 
           {!isNotFound && !isMobile && (
@@ -291,22 +297,19 @@ function applyFilter({ inputData, comparator, filterName, selectedIssueType, sel
 
   if (selectedStatus?.length) {
     inputData = inputData.filter((ticket) =>
-      selectedStatus.some((status) => status._id === ticket?.status?._id)
+      selectedStatus.some((status) => status?._id === ticket?.status?._id)
     );
   }  
-
+  
   if (selectedStatusType) {
     inputData = inputData.filter((ticket) => ticket?.status?.statusType?._id === selectedStatusType?._id);
   }
-
- if (selectedResolvedStatus === 'resolved') {
-    inputData = inputData.filter((ticket) => ticket?.status?.statusType?.isResolved === true);
-  }
-
-  if (selectedResolvedStatus === 'unresolved') {
-    inputData = inputData.filter((ticket) => ticket?.status?.statusType?.isResolved === false);
-  }
-
+  
+  if (selectedResolvedStatus !== null) {  
+    const isResolved = selectedResolvedStatus === 'resolved'; 
+    inputData = inputData.filter((ticket) => ticket?.status?.statusType?.isResolved === isResolved);
+  } 
+  
   return inputData;
 }
 

@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
@@ -19,6 +20,7 @@ import { useDebouncedEffect } from '../../hooks/useDebouncedEffect';
 function SearchBarCombo({
   node,
   reduceFilterSize,
+  increaseFilterSize,
   nodes,
   isFiltered,
   value,
@@ -132,7 +134,7 @@ function SearchBarCombo({
 
   return (
     <Grid container rowSpacing={logTypes?.length > 0 ? 2:1} columnSpacing={1} sx={{display:'flex', }}>
-          { onChange && <Grid item xs={12} sm={12} md={12} lg={logTypes?.length > 0 || reduceFilterSize || (setAccountManagerFilter && setSupportManagerFilter) ? 4:6} xl={logTypes?.length > 0 || reduceFilterSize || (setAccountManagerFilter && setSupportManagerFilter) ? 4:6}>
+          { onChange && <Grid item xs={12} sm={12} md={12} lg={increaseFilterSize ? 10 :(logTypes?.length > 0 || reduceFilterSize || (setAccountManagerFilter && setSupportManagerFilter) ? 4:6)} xl={increaseFilterSize ? 10 : (logTypes?.length > 0 || reduceFilterSize || (setAccountManagerFilter && setSupportManagerFilter) ? 4:6)}> 
             <TextField
               fullWidth
               value={value}
@@ -857,6 +859,7 @@ SearchBarCombo.propTypes = {
   nodes: PropTypes.node,
   isFiltered: PropTypes.bool,
   reduceFilterSize: PropTypes.bool,
+  increaseFilterSize: PropTypes.bool,
   onClick: PropTypes.func,
   onChange: PropTypes.func,
   value: PropTypes.string,

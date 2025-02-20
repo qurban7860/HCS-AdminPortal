@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, useLayoutEffect, useCallback } from 'react';
+import React, { useMemo, useState, useLayoutEffect, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // form
 import { useForm } from 'react-hook-form';
@@ -7,19 +7,16 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Container, Box, Card, Stack, FormControl, Grid, InputLabel, MenuItem, Select, Dialog, DialogTitle, Divider, Button } from '@mui/material';
 // routes
 import { useNavigate, useParams } from 'react-router-dom';
-import download from 'downloadjs';
 import b64toBlob from 'b64-to-blob';
 import { PATH_MACHINE } from '../../../routes/paths';
 // Components
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 import { useSnackbar } from '../../../components/snackbar';
-import { updateProfile, getProfile, getFile, deleteFile, ProfileTypes } from '../../../redux/slices/products/profile';
-import { getMachine } from '../../../redux/slices/products/machine';
+import { updateProfile, getProfile, getFile, deleteFile, ProfileTypes, resetProfile } from '../../../redux/slices/products/profile';
 import { ProfileSchema } from './schemas/ProfileSchema';
 import FormProvider, { RHFSwitch, RHFTextField, RHFChipsInput, RHFUpload } from '../../../components/hook-form';
 import { useAuthContext } from '../../../auth/useAuthContext';
 import MachineTabContainer from '../util/MachineTabContainer';
-import { removeFileExtension, getRefferenceNumber, getVersionNumber } from '../../documents/util/Util';
 import { handleError } from '../../../utils/errorHandler';
 import SkeletonPDF from '../../../components/skeleton/SkeletonPDF';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
@@ -39,6 +36,9 @@ export default function ProfileEditForm() {
   useLayoutEffect(() => {
     if (machineId && id) {
       dispatch(getProfile(machineId, id))
+    }
+    return () => {
+      dispatch(resetProfile())
     }
   }, [dispatch, machineId, id])
 
@@ -65,7 +65,7 @@ export default function ProfileEditForm() {
       isActive: profile?.isActive || false,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [profile]
   );
 
   const methods = useForm({
@@ -81,6 +81,11 @@ export default function ProfileEditForm() {
     getValues,
     formState: { isSubmitting },
   } = methods;
+
+  useEffect(() => {
+    reset(defaultValues)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [reset, profile])
 
   const { files } = watch();
 
@@ -114,7 +119,7 @@ export default function ProfileEditForm() {
       enqueueSnackbar("Profile updated successfully");
       navigate(PATH_MACHINE.machines.profiles.view(machineId, id))
     } catch (err) {
-      enqueueSnackbar("Profile update failed!", { variant: 'error' });
+      enqueueSnackbar(handleError(err) || "Profile update failed!", { variant: 'error' });
       console.error(err.message);
     }
   };

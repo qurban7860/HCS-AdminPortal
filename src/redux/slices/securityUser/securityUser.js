@@ -14,6 +14,7 @@ const initialState = {
   responseMessage: null,
   success: false,
   isLoading: false,
+  isLoadingLogs: false,
   isLoadingResetPasswordEmail: false,
   error: null,
   securityUsers: [],
@@ -31,7 +32,7 @@ const initialState = {
   filterBy: '',
   page: 0,
   rowsPerPage: 100,
-  verifiedInvite:null,
+  verifiedInvite: null,
   activeFilterList: 'active',
   employeeFilterList: 'all',
   filterRegion: null,
@@ -55,6 +56,10 @@ const slice = createSlice({
     startLoading(state) {
       state.isLoading = true;
     },
+    // SET LOADING
+    setLoadingLogs(state) {
+      state.isLoadingLogs = true;
+    },
     // STOP LOADING
     stopLoading(state) {
       state.isLoading = false;
@@ -66,46 +71,47 @@ const slice = createSlice({
     // HAS ERROR
     hasError(state, action) {
       state.isLoadingResetPasswordEmail = false;
+      state.isLoadingLogs = false;
       state.isLoading = false;
       state.error = action.payload;
       state.initial = true;
     },
 
     // SET VISIBILITY
-    setSecurityUserFormVisibility(state, action){
+    setSecurityUserFormVisibility(state, action) {
       state.formVisibility = action.payload;
     },
 
     // SET VISIBILITY
-    setSecurityUserEditFormVisibility(state, action){
+    setSecurityUserEditFormVisibility(state, action) {
       state.editFormVisibility = action.payload;
     },
 
     // SET VISIBILITY
-    setChangePasswordByAdminDialog(state, action){
+    setChangePasswordByAdminDialog(state, action) {
       state.changePasswordByAdminDialog = action.payload;
     },
 
-    
+
     // SET VISIBILITY
-    setChangePasswordDialog(state, action){
+    setChangePasswordDialog(state, action) {
       state.changePasswordDialog = action.payload;
     },
 
-    
+
 
     // SET ACTIVE RESTRICTED LIST
-    setActiveFilterList(state, action){
+    setActiveFilterList(state, action) {
       state.activeFilterList = action.payload;
     },
-    
+
     // SET EMPLOYEE RESTRICTED LIST
-    setFilterRegion(state, action){
+    setFilterRegion(state, action) {
       state.filterRegion = action.payload;
     },
 
     // SET USER PROPERTIES
-    setSecurityUserProperties(state, userData){
+    setSecurityUserProperties(state, userData) {
       const { UserId, User } = userData;
       state.userId = UserId;
       state.userEmail = User.email;
@@ -135,7 +141,7 @@ const slice = createSlice({
       state.activeSPTechnicalSecurityUsers = action.payload;
       state.initial = true;
     },
-    
+
     getLoggedInSecurityUserSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
@@ -161,7 +167,7 @@ const slice = createSlice({
 
     // GET Active Sign in Logs
     getSignInLogsSuccess(state, action) {
-      state.isLoading = false;
+      state.isLoadingLogs = false;
       state.success = true;
       state.signInLogs = action.payload;
       state.initial = true;
@@ -179,13 +185,13 @@ const slice = createSlice({
       state.success = true;
       state.initial = true;
     },
-    
+
     // SET RES MESSAGE
     setSecurityUserDialog(state, action) {
       state.securityUserDialog = action.payload;
     },
     // RESET SECURITY USER
-    resetSecurityUser(state){
+    resetSecurityUser(state) {
       state.securityUser = {};
       state.responseMessage = null;
       state.success = false;
@@ -193,7 +199,7 @@ const slice = createSlice({
     },
 
     // RESET SECURITY USERS
-    resetSecurityUsers(state){
+    resetSecurityUsers(state) {
       state.securityUsers = [];
       state.responseMessage = null;
       state.success = false;
@@ -201,7 +207,7 @@ const slice = createSlice({
     },
 
     // RESET SIGNINLOGS
-    resetSignInLogs(state){
+    resetSignInLogs(state) {
       state.signInLogs = [];
       state.responseMessage = null;
       state.success = false;
@@ -227,8 +233,8 @@ const slice = createSlice({
       state.page = action.payload;
     },
     // set ColumnFilter
-    setReportHiddenColumns(state, action){
-      state.reportHiddenColumns = action.payload;  
+    setReportHiddenColumns(state, action) {
+      state.reportHiddenColumns = action.payload;
     },
   },
 });
@@ -251,6 +257,7 @@ export const {
   setEmployeeFilterList,
   setFilterRegion,
   setSecurityUserDialog,
+  setLoadingLogs,
   ChangeRowsPerPage,
   ChangePage,
   setReportHiddenColumns,
@@ -260,18 +267,18 @@ export const {
 export function addSecurityUser(param) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-    try{
+    try {
       const data = {
         customer: param.customer?._id,
         contact: param.contact?._id,
         name: param.name,
-        phone:  param.phone,
+        phone: param.phone,
         email: param.email,
         login: param.email,
         password: param.password,
-        roles: param.roles.map(role => role?._id ),
-        dataAccessibilityLevel: param?.dataAccessibilityLevel?.toUpperCase() ,
-        regions: param.regions?.map(region => region?._id ),
+        roles: param.roles.map(role => role?._id),
+        dataAccessibilityLevel: param?.dataAccessibilityLevel?.toUpperCase(),
+        regions: param.regions?.map(region => region?._id),
         customers: param.customers?.map(customer => customer?._id),
         machines: param.machines?.map(machines => machines?._id),
         isActive: param.isActive,
@@ -295,29 +302,29 @@ export function addSecurityUser(param) {
 
 // ----------------------------------------------------------------------
 
-export function  updateSecurityUser(param,id) {
+export function updateSecurityUser(param, id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-    try{
+    try {
       const data = {
         customer: param.customer,
         contact: param.contact?._id || null,
         name: param.name,
-        phone:  param.phone,
+        phone: param.phone,
         email: param.email,
         login: param.loginEmail,
-        roles: param?.roles?.map( role => role?._id),
+        roles: param?.roles?.map(role => role?._id),
         dataAccessibilityLevel: param.dataAccessibilityLevel.toUpperCase(),
-        regions: param.regions?.map( region => region?._id ),
-        customers: param.customers?.map(customer => customer?._id ),
-        machines: param.machines?.map( machine => machine?._id ),
+        regions: param.regions?.map(region => region?._id),
+        customers: param.customers?.map(customer => customer?._id),
+        machines: param.machines?.map(machine => machine?._id),
         isActive: param.isActive,
         multiFactorAuthentication: param.multiFactorAuthentication,
         currentEmployee: param.currentEmployee,
-        }
-        if(param.password !== ""){
-            data.password = param.password 
-        }
+      }
+      if (param.password !== "") {
+        data.password = param.password
+      }
       const response = await axios.patch(`${CONFIG.SERVER_URL}security/users/${id}`, data);
       dispatch(slice.actions.stopLoading());
       return response;
@@ -334,7 +341,7 @@ export function  updateSecurityUser(param,id) {
 export function getActiveSecurityUsers(type) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-    try{ 
+    try {
 
       const query = {
         params: {
@@ -345,8 +352,8 @@ export function getActiveSecurityUsers(type) {
       }
 
       Object.assign(query.params, type)
-      const response = await axios.get(`${CONFIG.SERVER_URL}security/users`,query);
-      if(regEx.test(response.status)){
+      const response = await axios.get(`${CONFIG.SERVER_URL}security/users`, query);
+      if (regEx.test(response.status)) {
         dispatch(slice.actions.getActiveSecurityUsersSuccess(response.data));
       }
       return response;
@@ -361,7 +368,7 @@ export function getActiveSecurityUsers(type) {
 export function getActiveSPTechnicalSecurityUsers(type) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-    try{ 
+    try {
 
       const query = {
         params: {
@@ -372,14 +379,14 @@ export function getActiveSPTechnicalSecurityUsers(type) {
             type: "SP"
           },
           contact: {
-            department: {departmentType: "Technical"}
+            department: { departmentType: "Technical" }
           }
         }
       }
-      const fields = {fields: "contact,customer,email,name"}
+      const fields = { fields: "contact,customer,email,name" }
       Object.assign(query.params, type, fields)
-      const response = await axios.get(`${CONFIG.SERVER_URL}security/users`,query);
-      if(regEx.test(response.status)){
+      const response = await axios.get(`${CONFIG.SERVER_URL}security/users`, query);
+      if (regEx.test(response.status)) {
         dispatch(slice.actions.getActiveSPTechnicalSecurityUsersSuccess(response.data));
       }
       return response;
@@ -393,11 +400,11 @@ export function getActiveSPTechnicalSecurityUsers(type) {
 
 // ----------------------------------------------------------------------
 
-export function getValidateUserEmail( login ) {
+export function getValidateUserEmail(login) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-    try{ 
-      const response = await axios.get(`${CONFIG.SERVER_URL}security/users/validate`, { params: { login, isArchived: false } } );
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}security/users/validate`, { params: { login, isArchived: false } });
       return response;
     } catch (error) {
       await dispatch(slice.actions.stopLoading());
@@ -408,16 +415,16 @@ export function getValidateUserEmail( login ) {
 
 // ----------------------------------------------------------------------
 
-export function getSecurityUsers( param ) {
+export function getSecurityUsers(param) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-    try{ 
+    try {
       const params = {
         isArchived: param?.isArchived || false,
         invitationStatus: param?.invitationStatus || false
       }
       const response = await axios.get(`${CONFIG.SERVER_URL}security/users`, { params });
-      if(regEx.test(response.status)){
+      if (regEx.test(response.status)) {
         dispatch(slice.actions.getSecurityUsersSuccess(response.data));
       }
       return response;
@@ -434,16 +441,16 @@ export function getSecurityUsers( param ) {
 export function getAssignedSecurityUsers(roleId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-    try{ 
+    try {
       const response = await axios.get(`${CONFIG.SERVER_URL}security/users`,
-      {
-        params: {
-          isArchived: false,
-          roles: roleId,
+        {
+          params: {
+            isArchived: false,
+            roles: roleId,
+          }
         }
-      }
       );
-        dispatch(slice.actions.getAssignedSecurityUserSuccess(response.data));
+      dispatch(slice.actions.getAssignedSecurityUserSuccess(response.data));
       return response;
     } catch (error) {
       dispatch(slice.actions.hasError(error.Message));
@@ -457,9 +464,9 @@ export function getAssignedSecurityUsers(roleId) {
 export function getSecurityUser(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-    try{
+    try {
       const response = await axios.get(`${CONFIG.SERVER_URL}security/users/${id}`);
-      if(regEx.test(response.status)){
+      if (regEx.test(response.status)) {
         dispatch(slice.actions.getSecurityUserSuccess(response.data));
       }
       return response;
@@ -473,10 +480,10 @@ export function getSecurityUser(id) {
 
 // ---------------------------SET LoginUser Data -------------------------------------------
 
-export function setLoginUser(userId,User) {
+export function setLoginUser(userId, User) {
   return async (dispatch) => {
-        dispatch(slice.actions.setSecurityUserProperties({userId, User}));
-      }
+    dispatch(slice.actions.setSecurityUserProperties({ userId, User }));
+  }
 }
 
 // ----------------------------------------------------------------------
@@ -484,24 +491,24 @@ export function setLoginUser(userId,User) {
 export function getLoggedInSecurityUser(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-    try{  
+    try {
       const response = await axios.get(`${CONFIG.SERVER_URL}security/users/${id}`);
-        if(regEx.test(response.status)){
-          dispatch(slice.actions.getLoggedInSecurityUserSuccess(response.data));
-        }
-        return response;
-      } catch (error) {
-        dispatch(slice.actions.hasError(error.Message));
-        throw error;
+      if (regEx.test(response.status)) {
+        dispatch(slice.actions.getLoggedInSecurityUserSuccess(response.data));
       }
+      return response;
+    } catch (error) {
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
   };
 }
 
-export function archiveSecurityUser( id, params ) {
+export function archiveSecurityUser(id, params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-    try{
-      const response = await axios.patch(`${CONFIG.SERVER_URL}security/users/${id}`, { isArchived: params?.isArchived } );
+    try {
+      const response = await axios.patch(`${CONFIG.SERVER_URL}security/users/${id}`, { isArchived: params?.isArchived });
       dispatch(slice.actions.getSecurityUserSuccess(response.data));
       return response;
     } catch (error) {
@@ -516,8 +523,8 @@ export function archiveSecurityUser( id, params ) {
 export function deleteSecurityUser(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-    try{
-      const response = await axios.delete(`${CONFIG.SERVER_URL}security/users/${id}`, { isArchived: true, } );
+    try {
+      const response = await axios.delete(`${CONFIG.SERVER_URL}security/users/${id}`, { isArchived: true, });
       dispatch(slice.actions.getSecurityUserSuccess(response.data));
       return response;
     } catch (error) {
@@ -532,15 +539,15 @@ export function deleteSecurityUser(id) {
 export function SecurityUserPasswordUpdate(data, Id, isAdmin) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-    try{
-      if(isAdmin){
+    try {
+      if (isAdmin) {
         data.isAdmin = true
       };
 
       const response = await axios.patch(`${CONFIG.SERVER_URL}security/users/updatePassword/${Id}`,
         data
       );
-      if(regEx.test(response.status)){
+      if (regEx.test(response.status)) {
         dispatch(slice.actions.setResponseMessage(response.data));
       }
       return response; // eslint-disable-line
@@ -556,7 +563,7 @@ export function SecurityUserPasswordUpdate(data, Id, isAdmin) {
 
 export function getSignInLogs(id) {
   return async (dispatch) => {
-    dispatch(slice.actions.startLoading());
+    dispatch(slice.actions.setLoadingLogs(true));
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}security/users/${id}/signinlogs/`);
       dispatch(slice.actions.getSignInLogsSuccess(response.data));
@@ -571,7 +578,7 @@ export function getSignInLogs(id) {
 export function sendUserInvite(Id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-    try{
+    try {
       const response = await axios.get(`${CONFIG.SERVER_URL}security/invites/sendUserInvite/${Id}`);
       dispatch(slice.actions.setResponseMessage(response.data));
       return response; // eslint-disable-line
@@ -586,13 +593,13 @@ export function sendUserInvite(Id) {
 export function sendResetPasswordEmail(email) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoadingResetPasswordEmail());
-    try{
+    try {
       const data = {
         email
       }
-      const response = await axios.post(`${CONFIG.SERVER_URL}security/forgetPassword`,data);
+      const response = await axios.post(`${CONFIG.SERVER_URL}security/forgetPassword`, data);
       dispatch(slice.actions.resetLoadingResetPasswordEmail());
-      return response; 
+      return response;
     } catch (error) {
       dispatch(slice.actions.resetLoadingResetPasswordEmail());
       console.error(error);
@@ -604,7 +611,7 @@ export function sendResetPasswordEmail(email) {
 export function changeUserStatus(Id, status, lockUntil) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-    try{
+    try {
       const response = await axios.get(`${CONFIG.SERVER_URL}security/users/changeUserStatus/${Id}/${status}/${lockUntil}`);
       dispatch(slice.actions.setResponseMessage(response.data));
       return response; // eslint-disable-line
@@ -616,10 +623,10 @@ export function changeUserStatus(Id, status, lockUntil) {
   };
 }
 
-export function verifyUserInvite(Id,code) {
+export function verifyUserInvite(Id, code) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-    try{
+    try {
       const response = await axios.get(`${CONFIG.SERVER_URL}security/invites/verifyInviteCode/${Id}/${code}`);
       dispatch(slice.actions.getVerifyInvite(response.data));
     } catch (error) {
@@ -632,11 +639,11 @@ export function verifyUserInvite(Id,code) {
 export function updateInvitedUser(data, Id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-    try{
+    try {
       const response = await axios.patch(`${CONFIG.SERVER_URL}security/invites/setInvitedUserPasswordDetails/${Id}`,
         data
       );
-      if(regEx.test(response.status)){
+      if (regEx.test(response.status)) {
         dispatch(slice.actions.setResponseMessage(response.data));
       }
       return response; // eslint-disable-line

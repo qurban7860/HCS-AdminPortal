@@ -59,9 +59,7 @@ export default function TicketFormTableRow({
         <LinkTableCell align="left" onClick={() => onViewRow(`${prefix}${ticketNo}`)} param={`${prefix || ''} - ${ticketNo || ''}`} />
       )}
       { !hiddenColumns?.summary && (
-        <Stack direction="row" alignItems="center">
           <LinkTableCell align="left" onClick={onViewRow} param={summary || ''} /> 
-        </Stack>
       )}
       { !hiddenColumns?.['machine.serialNo'] && (
         <LinkTableCell align="left" onClick={(event) => handleMachineDialog(event, row.machine?._id)} param={machine?.serialNo || ''} />

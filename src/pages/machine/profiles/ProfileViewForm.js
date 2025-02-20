@@ -12,7 +12,7 @@ import { PATH_MACHINE } from '../../../routes/paths';
 import ViewFormField from '../../../components/ViewForms/ViewFormField';
 import { useSnackbar } from '../../../components/snackbar';
 import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
-import { getProfile, getFile, deleteFile, deleteProfile } from '../../../redux/slices/products/profile';
+import { getProfile, getFile, deleteFile, deleteProfile, resetProfile } from '../../../redux/slices/products/profile';
 import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
 import MachineTabContainer from '../util/MachineTabContainer';
 import { Upload } from '../../../components/upload';
@@ -41,6 +41,9 @@ export default function ProfileViewForm() {
     if (machineId && id) {
       dispatch(getProfile(machineId, id))
     }
+    // return () => {
+    //   dispatch(resetProfile())
+    // }
   }, [dispatch, machineId, id])
 
   const onDelete = async () => {
