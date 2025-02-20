@@ -29,8 +29,6 @@ Cover.propTypes = {
   isArchivedMachines: PropTypes.bool,
   productionLogs: PropTypes.bool,
   coilLogs: PropTypes.bool,
-  currentGraphsPage: PropTypes.bool,
-  currentLogsPage: PropTypes.bool,
   supportTicketSettings: PropTypes.bool,
   SubOnClick: PropTypes.func,
   addButton: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
@@ -51,8 +49,6 @@ export function Cover({
   isArchivedMachines,
   productionLogs,
   coilLogs,
-  currentGraphsPage,
-  currentLogsPage,
   supportTicketSettings,
   SubOnClick,
   addButton,
@@ -65,8 +61,6 @@ export function Cover({
   const linkCustomerContacts = () =>  navigate(PATH_CRM.contacts);
   const linkArchivedCustomers = () =>  navigate(PATH_CRM.customers.archived.root);
   const linkArchivedMachines = () =>  navigate(PATH_MACHINE.archived.root);
-  const linkAllMachineLogs = () =>  navigate(PATH_REPORTS.machineLogs.root);
-  const linkAllMachineGraphs = () =>  navigate(PATH_REPORTS.machineGraphs.root);
   const handleBackLink = () => window.history.back();
   const handleCoilLog = () => navigate(PATH_REPORTS.machineLogs.CoilLogs);
   const handleProductionLog = () => navigate(PATH_REPORTS.machineLogs.ProductionLogs);
@@ -201,44 +195,6 @@ export function Cover({
                 onClick={linkArchivedMachines}
               >
                 Archived Machines
-              </Button>
-            )}
-            {currentLogsPage && (
-              <Button
-                size="small"
-                startIcon={<Iconify icon="mdi:graph-bar" sx={{ mr: 0.3 }} />}
-                variant="outlined"
-                sx={{ mr: 1 }}
-                onClick={() => handleOnClick('erpGraph', linkAllMachineGraphs)}
-              >
-                {' '}
-                {(!isMobile || expandedButton === 'Machine Logs') && (
-                  <Typography
-                    variant="caption"
-                    sx={{ fontWeight: 'bold', fontSize: { xs: '0.65rem', sm: '0.75rem' } }}
-                  >
-                  ERP Graphs
-                  </Typography>
-                )}
-              </Button>
-            )}
-            {currentGraphsPage && (
-              <Button
-                size="small"
-                startIcon={<Iconify icon="lucide:list-end" sx={{ mr: 0.3 }} />}
-                variant="outlined"
-                sx={{ mr: 1 }}
-                onClick={() => handleOnClick('erpLog', linkAllMachineLogs)}
-              >
-                {' '}
-                {(!isMobile || expandedButton === 'Machine Logs') && (
-                  <Typography
-                    variant="caption"
-                    sx={{ fontWeight: 'bold', fontSize: { xs: '0.65rem', sm: '0.75rem' } }}
-                  >
-                  Machine Logs
-                  </Typography>
-                )}
               </Button>
             )}
             {coilLogs && (
