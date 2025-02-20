@@ -30,8 +30,8 @@ import FilledTimeField from './utils/FilledTimeField';
 import ViewFormSWitch from '../../components/ViewForms/ViewFormSwitch';
 import DropDownMultipleSelection from './utils/DropDownMultipleSelection';
 import { getContact, getCustomerContacts, getActiveSPContacts, resetContact, resetCustomersContacts, resetActiveSPContacts } from '../../redux/slices/customer/contact';
-import { resetComments } from '../../redux/slices/ticket/ticketComments/ticketComment';
-import { resetHistories } from '../../redux/slices/ticket/ticketHistories/ticketHistory';
+import {resetComments} from '../../redux/slices/ticket/ticketComments/ticketComment';
+import {resetHistories} from '../../redux/slices/ticket/ticketHistories/ticketHistory';
 
 export default function TicketViewForm() {
   const { ticket, ticketSettings, isLoading } = useSelector((state) => state.tickets);
@@ -79,6 +79,7 @@ export default function TicketViewForm() {
       dispatch(resetContact());
       dispatch(resetCustomersContacts());
       dispatch(resetActiveSPContacts());
+
       dispatch(resetComments());
       dispatch(resetHistories());
     };

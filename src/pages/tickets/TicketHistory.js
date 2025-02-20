@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import {
@@ -8,6 +9,7 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
+  CircularProgress,
 } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
 import dayjs from 'dayjs';
@@ -19,7 +21,7 @@ import { CustomAvatar } from '../../components/custom-avatar';
 const TicketHistory = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
-  const { histories } = useSelector((state) => state.ticketHistories);
+  const { histories, isLoading } = useSelector((state) => state.ticketHistories);
 
   useEffect(() => {
     if (id) {
@@ -49,7 +51,11 @@ const TicketHistory = () => {
     <>
       <FormLabel content={FORMLABELS.COVER.TICKET_HISTORY} />
       <Box>
-        {histories.length > 0 ? (
+        {isLoading ? (
+          <Box display="flex" justifyContent="center" alignItems="center" sx={{ mt: 2 }}>
+           <CircularProgress />
+          </Box>
+        ) : histories.length > 0 ? (
           <List
             sx={{ width: '100%', bgcolor: 'background.paper', }}
           >

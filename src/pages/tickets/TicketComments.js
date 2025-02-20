@@ -59,17 +59,16 @@ const TicketComments = ({ currentUser }) => {
   };
 
   useEffect(() => {
-    let controller;
+    // let controller;
     if (id) {
       dispatch( getComments({ id }) );
     }
-
-    return () => {
-      if (controller) {
-        controller.abort();
-      }
-      dispatch(resetComments());
-    };
+    // return () => {
+    //   if (controller) {
+    //     controller.abort();
+    //   }
+    //   dispatch(resetComments());
+    // };
   }, [ dispatch, id ]);
 
   const methods = useForm({
