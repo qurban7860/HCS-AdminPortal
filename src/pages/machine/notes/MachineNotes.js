@@ -35,7 +35,7 @@ dayjs.extend(relativeTime);
 const NoteSchema = Yup.object().shape({
   note: Yup.string()
     .required('Note is required')
-    .max(300, 'Note must not exceed 300 characters'),
+    .max(2000, 'Note must not exceed 2000 characters'),
   isInternal: Yup.boolean(),
 });
 
@@ -215,8 +215,8 @@ const MachineNotes = ({ currentUser }) => {
                                   rows={2}
                                   value={editValue}
                                   onChange={(e) => setEditValue(e.target.value)}
-                                  inputProps={{ maxLength: 300 }}
-                                  helperText={`${editValue.length}/300 characters`}
+                                  inputProps={{ maxLength: 2000 }}
+                                  helperText={`${editValue.length}/2000 characters`}
                                   FormHelperTextProps={{ sx: { textAlign: 'right' } }}
                                 />
                                 {/* <Stack display="flex" alignItems="start" sx={{ position: 'absolute', transform: 'translateY(185%)' }}>
