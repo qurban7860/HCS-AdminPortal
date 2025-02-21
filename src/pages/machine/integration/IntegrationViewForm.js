@@ -102,7 +102,7 @@ const IntegrationViewForm = () => {
   };
 
   const handleKeyDownload = () => {
-    const fileContent = generatePortalKeyConfigFileContent(currentPortalKey?.key, serialNo);
+    const fileContent = generatePortalKeyConfigFileContent(currentPortalKey?.key, serialNo, IPC_SerialNo, computerGUID);
     const blob = new Blob([fileContent], { type: 'text/plain' });
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -112,6 +112,29 @@ const IntegrationViewForm = () => {
     window.URL.revokeObjectURL(url);
     enqueueSnackbar('Portal key download started', { variant: 'success' });
   };
+
+  const renderConfigDetails = () => {
+    const configs = JSON.parse(localStorage.getItem('configurations'));
+
+    const extractedConfigs = configs?.reduce((acc, config) => {
+      if (config.type === "MACHINE-INTEGRATION") {
+        acc[config.name] = config.value;
+      }
+      return acc;
+    }, {});
+
+    console.log(extractedConfigs);
+
+    return (
+      <Stack>
+        {Object.entries(extractedConfigs || {}).map(([key, value]) => (
+          <Stack key={key}>
+            <Typography variant="body2">{key} = {value}</Typography>
+          </Stack>
+        ))}
+      </Stack>
+    )
+  }
 
   // const handleKeyCopy = (textToCopy) => {
   //   navigator.clipboard.writeText(textToCopy);
@@ -233,6 +256,13 @@ const IntegrationViewForm = () => {
                     )}
                   />
                 } 
+                />
+                <ViewFormField 
+                  isLoading={isLoading} 
+                  sm={12} 
+                  variant='h6' 
+                  heading="Config Details" 
+                  node={renderConfigDetails()}
                 />
               </Grid>
             </Card>
