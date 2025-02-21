@@ -86,7 +86,7 @@ const slice = createSlice({
     deleteNoteSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.notes = state.notes.filter((note) => note._id !== action.payload);
+      state.notes = action.payload;
       state.responseMessage = 'Note deleted successfully';
     },
     
@@ -164,12 +164,13 @@ export const {
 
 
 
-
 export function getNotes(machineId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/notes`);
+      const data = { isArchived: false };
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/notes`, { params: data });
+      console.log("Notes Data", response.data)
       dispatch(slice.actions.getNotesSuccess(response.data)); // Ensure response structure is correct
     } catch (error) {
       dispatch(slice.actions.hasError(error.response?.data?.message || "Failed to fetch notes"));
@@ -177,12 +178,11 @@ export function getNotes(machineId) {
   };
 }
 
-
-export function addNote( machineId, note) {
+export function addNote(machineId, note) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const data = { note};  
+      const data = {note,isArchived: false };  // Ensure new notes are not archived
       const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/notes`, data);
       dispatch(slice.actions.addNotesSuccess(response.data?.notesList));
     } catch (error) {
@@ -198,8 +198,7 @@ export function updateNote(machineId, noteId, params) {
     dispatch(slice.actions.startLoading());
     try {
       const data = {
-        note: params.note,
-        isInternal: params.isInternal,
+        note: params.note
       };
       const response = await axios.patch(
         `${CONFIG.SERVER_URL}products/machines/${machineId}/notes/${noteId}`,
@@ -218,6 +217,7 @@ export function getNote(machineId,noteId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
+      
       const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/notes/${noteId}`);
       dispatch(slice.actions.getNoteSuccess(response.data));
     } catch (error) {
@@ -232,14 +232,17 @@ export function deleteNote(machineId, noteId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/notes/${noteId}`, {
+      const data = {
         isArchived: true,
-      });
-      dispatch(slice.actions.deleteNoteSuccess(noteId));
+      };
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/notes/${noteId}`, data);
+      console.log("Deleted note success:",response.data.notesList)
+      dispatch(slice.actions.deleteNoteSuccess(response.data?.notesList));
     } catch (error) {
       console.error(error);
-      dispatch(slice.actions.hasError(error.response?.data?.message || 'Failed to archive note'));
+      dispatch(slice.actions.hasError(error.Message));
       throw error;
     }
   };
 }
+
