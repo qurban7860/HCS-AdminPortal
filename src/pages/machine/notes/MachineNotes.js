@@ -45,6 +45,7 @@ const MachineNotes = ({ currentUser }) => {
   // const [editIsInternal, setEditIsInternal] = useState(false);
   const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
   const [noteToDelete, setNoteToDelete] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   const { machineId } = useParams();
   const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
@@ -101,6 +102,7 @@ const MachineNotes = ({ currentUser }) => {
   };
 
   const handleConfirmDelete = async () => {
+    setIsDeleting(true);
     try {
       await dispatch(deleteNote(machineId, noteToDelete?._id));
       setOpenConfirmDelete(false);
@@ -108,6 +110,8 @@ const MachineNotes = ({ currentUser }) => {
       enqueueSnackbar("Note deleted successfully", { variant: 'success' });
     } catch (err) {
       enqueueSnackbar(error || "Failed to delete note", { variant: 'error' });
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -145,8 +149,8 @@ const MachineNotes = ({ currentUser }) => {
                       placeholder="Add a note..."
                       multiline
                       rows={2}
-                      inputProps={{ maxLength: 300 }}
-                      helperText={`${noteValue?.length || 0}/300 characters`}
+                      inputProps={{ maxLength: 2000 }}
+                      helperText={`${noteValue?.length || 0}/2000 characters`}
                       FormHelperTextProps={{ sx: { textAlign: 'right' } }}
                     />
                     {!!noteValue?.trim() && (
@@ -293,13 +297,21 @@ const MachineNotes = ({ currentUser }) => {
       </Paper>
       <ConfirmDialog
         open={openConfirmDelete}
-        onClose={() => setOpenConfirmDelete(false)}
+        onClose={() => {
+          setOpenConfirmDelete(false);
+          setNoteToDelete(null);
+        }}
         title="Delete Note"
         content="Are you sure you want to delete this note?"
         action={
-          <Button variant="contained" color="error" onClick={handleConfirmDelete}>
+          <LoadingButton
+            variant="contained"
+            color="error"
+            onClick={handleConfirmDelete}
+            loading={isDeleting}
+          >
             Delete
-          </Button>
+          </LoadingButton>
         }
       />
     </>
