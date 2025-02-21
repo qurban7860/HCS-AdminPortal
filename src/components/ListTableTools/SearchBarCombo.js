@@ -531,9 +531,9 @@ function SearchBarCombo({
               onChange={onApiLogsTypeFilter}
             >
               <MenuItem value="ALL">All</MenuItem>
-              <MenuItem value="MACHINE-INTEGRATION">synch</MenuItem>
-              <MenuItem value="INI" >ini</MenuItem>
-              <MenuItem value="OTHER">others</MenuItem>
+              <MenuItem value="MACHINE-INTEGRATION">Sync</MenuItem>
+              <MenuItem value="INI" >INI</MenuItem>
+              <MenuItem value="OTHER">Others</MenuItem>
             </Select>
           </FormControl>
         )}
