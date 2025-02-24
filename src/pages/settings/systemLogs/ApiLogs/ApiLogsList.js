@@ -96,10 +96,8 @@ export default function ApiLogsList() {
 
   const handleFetchLogs = () => {
     const query = {
-      createdAt: {
-        $gte: new Date(dateFrom).toISOString(),
-        $lte: new Date(dateTo).toISOString(),
-      },
+      fromDate: new Date(defaultValues.dateFrom).toISOString(),
+      toDate: new Date(defaultValues.dateTo).toISOString(),
     };
 
     if (filteredSearchKey && selectedSearchFilter) {
@@ -169,10 +167,8 @@ export default function ApiLogsList() {
 
   const afterClearHandler = () => {
     const initialQuery = {
-      createdAt: {
-        $gte: new Date(defaultValues.dateFrom).toISOString(),
-        $lte: new Date(defaultValues.dateTo).toISOString(),
-      },
+      fromDate: new Date(defaultValues.dateFrom).toISOString(),
+      toDate: new Date(defaultValues.dateTo).toISOString(),
     };
 
     dispatch(
