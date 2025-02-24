@@ -120,7 +120,7 @@ const MachineSyncAPILogsTable = ({
       getApiLogs({
         machineId,
         orderBy: 'createdAt:desc',
-        query: { apiType: 'MACHINE-INTEGRATION' },
+        query: { apiType: 'MACHINE-SYNC' },
         page,
         pageSize: rowsPerPage,
       })
