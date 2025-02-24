@@ -132,7 +132,7 @@ export default function ApiLogsList() {
     dispatch(
       getApiLogs({
         machineId,
-        orderBy: 'createdAt:desc',
+        orderBy: 'createdAt:-1',
         query,
         page,
         pageSize: rowsPerPage,
@@ -177,7 +177,7 @@ export default function ApiLogsList() {
     dispatch(
       getApiLogs({
         machineId,
-        orderBy: 'createdAt:desc',
+        orderBy: 'createdAt:-1',
         query: initialQuery,
         page: 0,
         pageSize: rowsPerPage,
