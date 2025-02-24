@@ -1,26 +1,18 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 // @mui
-import { Table, TableBody, Container, TableContainer } from '@mui/material';
+import { Container, Box, Typography, Divider } from '@mui/material';
 import debounce from 'lodash/debounce';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
 // routes
 import { PATH_SETTING } from '../../../../routes/paths';
 // components
-import Scrollbar from '../../../../components/scrollbar';
 import { Cover } from '../../../../components/Defaults/Cover';
-import {
-  useTable,
-  getComparator,
-  TableNoData,
-  TableSkeleton,
-  TableHeadCustom,
-  TablePaginationCustom,
-} from '../../../../components/table';
+import { TablePaginationCustom } from '../../../../components/table';
 // sections
 import ConfigListTableToolbar from './ConfigListTableToolbar';
-import ConfigListTableRow from './ConfigListTableRow';
+import ConfigCard from './ConfigCard';
 import {
   getConfigs,
   ChangeRowsPerPage,
@@ -36,35 +28,9 @@ import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 
 const ROLE_OPTIONS = ['Administrator', 'Normal User', 'Guest User', 'Restriced User'];
 
-const TABLE_HEAD = [
-  { id: 'name', label: 'Config Name'},
-  { id: 'value', label: 'Config Value'},
-  { id: 'type', visibility: 'xs1', label: 'Type'},
-  { id: 'isActive', label: 'Active', align: 'center' },
-  { id: 'updateBy', visibility: 'md1', label: 'Update By'},
-  { id: 'updateAt', visibility: 'md2', label: 'Update At', align: 'right' },
-];
-
 // ----------------------------------------------------------------------
 
 export default function ConfigList() {
-  const {
-    order,
-    orderBy,
-    setPage,
-    //
-    onSort,
-  } = useTable({
-    defaultOrderBy: 'updateAt', defaultOrder: 'desc'
-  });
-
-  const onChangeRowsPerPage = (event) => {
-    dispatch(ChangePage(0));
-    dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
-  };
-
-  const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
-
   const dispatch = useDispatch();
 
   const { configs, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.config);
@@ -76,12 +42,10 @@ export default function ConfigList() {
 
   useEffect(() => {
     dispatch(getConfigs());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ dispatch ]);
+  }, [dispatch]);
 
   const dataFiltered = applyFilter({
     inputData: configs || [],
-    comparator: getComparator(order, orderBy),
     filterName,
     filterRole,
     filterStatus,
@@ -98,24 +62,21 @@ export default function ConfigList() {
   const handleFilterName = (event) => {
     debouncedSearch.current(event.target.value);
     setFilterName(event.target.value)
-    setPage(0);
   };
   
   useEffect(() => {
-      debouncedSearch.current.cancel();
+    debouncedSearch.current.cancel();
   }, [debouncedSearch]);
   
   useEffect(()=>{
-      setFilterName(filterBy)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[])
+    setFilterName(filterBy)
+  },[filterBy])
 
   const handleFilterRole = (event) => {
-    setPage(0);
     setFilterRole(event.target.value);
   };
 
-  const handleViewRow = (id) => {
+  const handleViewConfig = (id) => {
     navigate(PATH_SETTING.configs.view(id));
   };
 
@@ -126,88 +87,102 @@ export default function ConfigList() {
     setFilterStatus('all');
   };
 
+  const onChangeRowsPerPage = (event) => {
+    dispatch(ChangePage(0));
+    dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
+  };
+
+  const onChangePage = (event, newPage) => { 
+    dispatch(ChangePage(newPage)) 
+  };
+
   return (
-      <Container maxWidth={false}>
-        <StyledCardContainer>
-          <Cover generalSettings name="Configs" icon="ph:users-light" />
-        </StyledCardContainer>
-        <TableCard>
-          <ConfigListTableToolbar
-            isFiltered={isFiltered}
-            filterName={filterName}
-            filterRole={filterRole}
-            optionsRole={ROLE_OPTIONS}
-            onFilterName={handleFilterName}
-            onFilterRole={handleFilterRole}
-            onResetFilter={handleResetFilter}
+    <Container maxWidth={false}>
+      <StyledCardContainer>
+        <Cover generalSettings name="Configs" icon="ph:users-light" />
+      </StyledCardContainer>
+      <TableCard>
+        <ConfigListTableToolbar
+          isFiltered={isFiltered}
+          filterName={filterName}
+          filterRole={filterRole}
+          optionsRole={ROLE_OPTIONS}
+          onFilterName={handleFilterName}
+          onFilterRole={handleFilterRole}
+          onResetFilter={handleResetFilter}
+        />
+        
+        {!isNotFound && (
+          <TablePaginationCustom
+            count={dataFiltered.length}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
+            sx={{ px: 2, py: 1 }}
           />
-          {!isNotFound && <TablePaginationCustom
+        )}
+
+        <Box sx={{ p: { xs: 1.5, md: 2 } }}>
+          {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
+            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            .map((config, index, array) => (
+              <Box 
+                key={config?.id || index}
+                sx={{
+                  '&:not(:last-child)': {
+                    mb: 2
+                  }
+                }}
+              >
+                {config ? (
+                  <ConfigCard
+                    config={config}
+                    onClick={() => handleViewConfig(config?._id)}
+                  />
+                ) : (
+                  <Box
+                    sx={{
+                      height: 100,
+                      bgcolor: 'background.neutral',
+                      borderRadius: 2,
+                    }}
+                  />
+                )}
+              </Box>
+            ))}
+
+          {isNotFound && (
+            <Box sx={{ py: 3, textAlign: 'center' }}>
+              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                No configs found
+              </Typography>
+            </Box>
+          )}
+        </Box>
+
+        {!isNotFound && (
+          <TablePaginationCustom
             count={dataFiltered.length}
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-          />}
-          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-
-            <Scrollbar>
-              <Table size="small" sx={{ minWidth: 360 }}>
-                <TableHeadCustom
-                  order={order}
-                  orderBy={orderBy}
-                  headLabel={TABLE_HEAD}
-                  onSort={onSort}
-                />
-                <TableBody>
-                  {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row, index) =>
-                      row ? (
-                        <ConfigListTableRow
-                          key={row.id}
-                          index={index}
-                          page={page}
-                          row={row}
-                          onViewRow={() => handleViewRow(row?._id)}
-                          style={index % 2 ? { background: 'red' } : { background: 'green' }}
-                        />
-                      ) : (
-                        !isNotFound && <TableSkeleton key={index} sx={{ height: 60 }} />
-                      )
-                    )}
-                  <TableNoData isNotFound={isNotFound} />
-                </TableBody>
-              </Table>
-            </Scrollbar>
-          </TableContainer>
-
-          {!isNotFound && <TablePaginationCustom
-            count={dataFiltered.length}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-          />}
-        </TableCard>
-      </Container>
+            sx={{ px: 2, py: 2 }}
+          />
+        )}
+      </TableCard>
+    </Container>
   );
 }
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName, filterStatus }) {
-  const stabilizedThis = inputData.map((el, index) => [el, index]);
-
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-
-  inputData = stabilizedThis.map((el) => el[0]);
+function applyFilter({ inputData, filterName, filterStatus }) {
+  let filteredData = [...inputData];
 
   if (filterName) {
-    inputData = inputData.filter(
+    filteredData = filteredData.filter(
       (config) =>
         config?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         config?.value?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
@@ -215,5 +190,5 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
     );
   }
 
-  return inputData;
+  return filteredData;
 }

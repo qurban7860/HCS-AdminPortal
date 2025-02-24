@@ -140,6 +140,8 @@ const MachineLogsDataTable = ({
       machine: log.machine?.serialNo || '',
       createdBy: log.createdBy?.name || '',
       updatedBy: log.updatedBy?.name || '',
+      ...(log.createdByIdentifier && { createdBy: log.createdByIdentifier }),
+      ...(log.updatedByIdentifier && { updatedBy: log.updatedByIdentifier }),
     });
     setOpenLogDetailsDialog(true);
   };

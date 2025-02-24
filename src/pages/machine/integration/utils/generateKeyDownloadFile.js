@@ -1,20 +1,25 @@
-const generatePortalKeyConfigFileContent = (portalKey, serialNo) => {
+const generatePortalKeyConfigFileContent = (portalKey, serialNo, ipcSerialNo = '', computerGuid = '') => {
   const configs = JSON.parse(localStorage.getItem('configurations'));
-  const requiredKeys = [
-    'machine_portal_server',
-    'synch_macine_connection_endpoint',
-    'post_machine_logs_endpoint',
-    'post_machine_config_endpoint'
-  ];
-
+  // eslint-disable-next-line no-debugger
+  debugger;
   const extractedConfigs = configs?.reduce((acc, config) => {
-    if (requiredKeys.includes(config.name)) {
+    if (config.type === "MACHINE-INTEGRATION") {
       acc[config.name] = config.value;
     }
     return acc;
   }, {});
+  // eslint-disable-next-line no-debugger
+  debugger;
+  const configLines = [
+    `howickportalkey = ${portalKey}\n`,
+    `machineserialno = ${serialNo}\n`,
+    `ipcserialno = ${ipcSerialNo || ''}\n`, 
+    `computerguid = ${computerGuid || ''}\n`,
+    'contentType = application/json\n\n',
+    ...Object.entries(extractedConfigs || {}).map(([key, value]) => `${key} = ${value}\n`)
+  ];
 
-  return `x-howickportalkey = ${portalKey}\nx-machineserialno = ${serialNo}\n\nx-ipcserialno = find_in_hmi_software_application\nx-computerguid = find_in_hmi_software_application\n\nmachine_portal_server = ${extractedConfigs?.machine_portal_server}\nsynch_macine_connection_endpoint = ${extractedConfigs?.synch_macine_connection_endpoint}\npost_machine_logs_endpoint = ${extractedConfigs?.post_machine_logs_endpoint}\npost_machine_config_endpoint = ${extractedConfigs?.post_machine_config_endpoint}`;
+  return configLines.join('');
 }
 
 export default generatePortalKeyConfigFileContent;

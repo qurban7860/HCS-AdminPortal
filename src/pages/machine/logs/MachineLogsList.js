@@ -43,7 +43,7 @@ export default function MachineLogsList({ allMachineLogsType }){
   const methods = useForm({
     defaultValues: {
       logType: machineLogTypeFormats.find(option => option.type === 'ERP') || null,
-      dateFrom: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+      dateFrom: new Date(),
       dateTo: new Date(),
       filteredSearchKey: '',
       activeStatus: 'active',

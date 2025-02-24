@@ -35,7 +35,7 @@ export default function ConfigListTableRow({
   return (
       <TableRow hover selected={selected}>
         <LinkTableCell align="left" onClick={onViewRow} param={name} />
-        <TableCell sx={{ textTransform: 'capitalize' }}>{value}</TableCell>
+        <TableCell>{value}</TableCell>
         { smScreen && <TableCell>{type}</TableCell>}
         <TableCell align="center"><Switch checked={isActive} disabled size="small" /></TableCell>
         { mdScreen && <TableCell >{updatedBy?.name}</TableCell>}
