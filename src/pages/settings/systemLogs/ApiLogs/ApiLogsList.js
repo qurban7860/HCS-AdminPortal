@@ -25,6 +25,7 @@ import APILogsTableRow from '../../../../components/machineIntegration/APILogsTa
 import {
   getApiLogs,
   setFilterBy,
+  ChangeRowsPerPage,
   ChangePage,
   setReportHiddenColumns,
 } from '../../../../redux/slices/logs/apiLogs';
@@ -33,7 +34,7 @@ import SearchBarCombo from '../../../../components/ListTableTools/SearchBarCombo
 import RHFFilteredSearchBar from '../../../../components/hook-form/RHFFilteredSearchBar';
 
 export default function ApiLogsList() {
-  const { order, orderBy, page, rowsPerPage, setPage, onSort, onChangePage, onChangeRowsPerPage } =
+  const { order, orderBy, setPage, onSort, onChangePage, onChangeRowsPerPage } =
     useTable({
       defaultOrderBy: 'createdAt',
       defaultOrder: 'desc',
@@ -46,7 +47,7 @@ export default function ApiLogsList() {
   const [filterRequestMethod, setFilterRequestMethod] = useState('default');
   const [filterRequestType, setFilterRequestType] = useState('ALL');
   const [selectedSearchFilter, setSelectedSearchFilter] = useState('');
-  const { apiLogs, isLoading, initial, reportHiddenColumns } = useSelector(
+  const { apiLogs, isLoading, page, rowsPerPage, initial, reportHiddenColumns } = useSelector(
     (state) => state.apiLogs
   );
 
@@ -78,7 +79,7 @@ export default function ApiLogsList() {
   useEffect(() => {
     handleFetchLogs(defaultValues);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [page, rowsPerPage]);
 
   useEffect(() => {
     if (initial) {
@@ -93,7 +94,7 @@ export default function ApiLogsList() {
   const denseHeight = 60;
   const isNotFound = !dataFiltered.length || (!isLoading && !dataFiltered.length);
 
-  const handleFetchLogs = (data) => {
+  const handleFetchLogs = () => {
     const query = {
       fromDate: new Date(defaultValues.dateFrom).toISOString(),
       toDate: new Date(defaultValues.dateTo).toISOString(),
@@ -106,7 +107,7 @@ export default function ApiLogsList() {
         query.responseMessage = { $regex: filteredSearchKey, $options: 'i' };
       } else if (selectedSearchFilter === 'requestURL') {
         query.requestURL = { $regex: filteredSearchKey, $options: 'i' };
-      } 
+      }
     }
 
     if (filterRequestStatus !== -1) {
@@ -297,8 +298,8 @@ export default function ApiLogsList() {
             count={apiLogs?.totalCount || 0}
             page={page}
             rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
+            onPageChange={(e, p) => dispatch(ChangePage(p))}
+            onRowsPerPageChange={(e, r) => { dispatch(ChangeRowsPerPage(e.target.value,)) }}
           />
         )}
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
@@ -313,7 +314,7 @@ export default function ApiLogsList() {
               />
               <TableBody>
                 {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) =>
                     row ? (
                       <APILogsTableRow
@@ -338,8 +339,8 @@ export default function ApiLogsList() {
             count={apiLogs?.totalCount || 0}
             page={page}
             rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
+            onPageChange={(e, p) => dispatch(ChangePage(p))}
+            onRowsPerPageChange={(e, r) => { dispatch(ChangeRowsPerPage(e.target.value,)) }}
           />
         )}
       </TableCard>
