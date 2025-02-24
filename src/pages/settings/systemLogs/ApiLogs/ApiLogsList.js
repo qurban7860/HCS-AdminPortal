@@ -96,8 +96,8 @@ export default function ApiLogsList() {
 
   const handleFetchLogs = () => {
     const query = {
-      fromDate: new Date(defaultValues.dateFrom).toISOString(),
-      toDate: new Date(defaultValues.dateTo).toISOString(),
+      fromDate: new Date(dateFrom).toISOString(),
+      toDate: new Date(dateTo).toISOString(),
     };
 
     if (filteredSearchKey && selectedSearchFilter) {
@@ -111,13 +111,7 @@ export default function ApiLogsList() {
     }
 
     if (filterRequestStatus !== -1) {
-      if (filterRequestStatus === '200-299') {
-        query.responseStatusCode = { $gte: 200, $lt: 300 };
-      } else if (filterRequestStatus === '400-499') {
-        query.responseStatusCode = { $gte: 400, $lte: 500 };
-      } else {
-        query.responseStatusCode = filterRequestStatus;
-      }
+      query.responseStatusCode = getStatusCodeFilter(filterRequestStatus);
     }
 
     if (filterRequestMethod !== 'default') {
@@ -166,32 +160,33 @@ export default function ApiLogsList() {
   }, [debouncedSearch]);
 
   const afterClearHandler = () => {
-    const initialQuery = {
-      fromDate: new Date(defaultValues.dateFrom).toISOString(),
-      toDate: new Date(defaultValues.dateTo).toISOString(),
+    const query = {
+      fromDate: new Date(dateFrom).toISOString(),
+      toDate: new Date(dateTo).toISOString(),
+      ...(filterRequestStatus !== -1 && {
+        responseStatusCode: getStatusCodeFilter(filterRequestStatus)
+      }),
+      ...(filterRequestMethod !== 'default' && {
+        requestMethod: filterRequestMethod
+      }),
+      ...(filterRequestType !== 'ALL' && {
+        apiType: filterRequestType
+      })
     };
 
     dispatch(
       getApiLogs({
         machineId,
         orderBy: 'createdAt:-1',
-        query: initialQuery,
+        query,
         page: 0,
         pageSize: rowsPerPage,
       })
     );
 
-    setValue('dateFrom', defaultValues.dateFrom);
-    setValue('dateTo', defaultValues.dateTo);
     setValue('filteredSearchKey', defaultValues.filteredSearchKey);
   };
-
-  // const handleViewRow = (id) => {
-  //   const url = `https://howickltd.atlassian.net/projects/HPS/versions/${id}/tab/release-report-all-issues`
-  //   window.open(url, '_blank');
-  //   // navigate(PATH_SETTING.releases.view(link))
-  // };
-
+  
   const handleHiddenColumns = async (arg) => {
     dispatch(setReportHiddenColumns(arg));
   };
@@ -362,4 +357,10 @@ function applyFilter({ inputData, comparator, filterName }) {
   inputData = stabilizedThis.map((el) => el[0]);
 
   return inputData;
+}
+
+function getStatusCodeFilter(status) {
+  if (status === '200-299') return { $gte: 200, $lt: 300 };
+  if (status === '400-499') return { $gte: 400, $lte: 500 };
+  return status;
 }
