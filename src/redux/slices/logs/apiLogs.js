@@ -24,7 +24,7 @@ const initialState = {
     "responseTime": false,
     "machine.serialNo": false,
     "customer.name": true,
-    "additionalContextualInformation": true,
+    "responseMessage": true,
 },
 };
 const slice = createSlice({

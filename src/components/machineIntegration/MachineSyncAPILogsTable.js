@@ -43,7 +43,7 @@ const TABLE_HEAD = [
   { id: 'requestURL', label: 'Endpoint', align: 'left', allowSearch: true },
   { id: 'responseStatusCode', label: 'Status', align: 'left' },
   { id: 'responseTime', label: 'Time(ms)', align: 'left', allowSearch: true },
-  { id: 'additionalContextualInformation', label: 'Response', align: 'left', allowSearch: true },
+  { id: 'responseMessage', label: 'Response', align: 'left', allowSearch: true },
   { id: 'customer.name', label: 'Customer', align: 'left' },
   { id: 'machine', label: 'Machine', align: 'left' },
 ];

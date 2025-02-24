@@ -29,28 +29,38 @@ export default function ConfigCard({ config, onClick }) {
   return (
     <Paper 
       sx={{ 
-        p: 2, 
-        mb: 2, 
+        p: 2.5,
         cursor: 'pointer',
+        borderRadius: 2,
+        boxShadow: theme.customShadows.card,
+        transition: () =>
+          theme.transitions.create(['box-shadow', 'transform', 'background-color'], {
+            duration: theme.transitions.duration.standard,
+          }),
         '&:hover': {
-          bgcolor: 'background.neutral',
+          transform: 'translateY(-2px)',
+          boxShadow: theme.customShadows.z24,
+          bgcolor: 'background.paper',
+          '& .value-container': {
+            bgcolor: 'background.neutral',
+          }
         },
       }}
       onClick={onClick}
     >
-        <Stack sx={{ width: '100%', px: { xs: 1, sm: 2 }}} spacing={2}>
+        <Stack sx={{ width: '100%' }} spacing={2}>
           <Box sx={{ 
             display: 'flex', 
             alignItems: 'flex-start', 
             flexDirection: { xs: 'column', sm: 'row' },
-            gap: { xs: 2, sm: 0 },
+            gap: { xs: 1.5, sm: 0 },
             justifyContent: 'space-between' 
           }}>
             <Stack direction="row" spacing={1} alignItems="center">
               <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
                 Name:
               </Typography>
-              <Typography variant="subtitle2" sx={{ wordBreak: 'break-word' }}>
+              <Typography variant="subtitle2" sx={{ wordBreak: 'break-word', color: 'text.primary', fontWeight: 600 }}>
                 {name}
               </Typography>
             </Stack>
@@ -71,39 +81,44 @@ export default function ConfigCard({ config, onClick }) {
             </Stack>
           </Box>
           
-          <Stack spacing={0.5}>
+          <Stack spacing={1}>
             <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
               Value:
             </Typography>
             <Typography 
               variant="body2" 
               onClick={handleValueClick}
+              className="value-container"
               sx={{ 
-                bgcolor: 'background.neutral',
-                p: 1.5,
-                borderRadius: 1,
+                bgcolor: theme.palette.background.neutral,
+                p: 2,
+                borderRadius: 1.5,
                 wordBreak: 'break-all',
                 fontFamily: 'monospace',
                 overflowX: 'auto',
                 cursor: 'text',
-                userSelect: 'text'
+                userSelect: 'text',
+                transition: () =>
+                  theme.transitions.create('background-color', {
+                    duration: theme.transitions.duration.shorter,
+                  }),
               }}
             >
               {value}
             </Typography>
           </Stack>
-
           <Stack spacing={1}>
             <Box sx={{ 
               display: 'flex', 
               flexDirection: { xs: 'column', sm: 'row' },
               gap: 1,
-              alignItems: { xs: 'flex-start', sm: 'center' }
+              alignItems: { xs: 'flex-start', sm: 'center' },
+              justifyContent: { sm: 'space-between' }
             }}>
               <Typography 
                 variant="caption" 
                 sx={{ 
-                  color: 'text.secondary',
+                  color: 'text.disabled',
                   wordBreak: 'break-word',
                   display: 'flex',
                   alignItems: 'center',
@@ -112,20 +127,10 @@ export default function ConfigCard({ config, onClick }) {
               >
                 Created by {createdBy?.name} • {fDateTime(createdAt)}
               </Typography>
-              <Box 
-                component="span" 
-                sx={{ 
-                  width: '4px', 
-                  height: '4px', 
-                  borderRadius: '50%', 
-                  bgcolor: 'text.disabled',
-                  display: { xs: 'none', sm: 'block' }
-                }} 
-              />
               <Typography 
                 variant="caption" 
                 sx={{ 
-                  color: 'text.secondary',
+                  color: 'text.disabled',
                   wordBreak: 'break-word',
                   display: 'flex',
                   alignItems: 'center',

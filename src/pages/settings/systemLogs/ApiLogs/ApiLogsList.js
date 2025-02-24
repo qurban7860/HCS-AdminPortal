@@ -57,7 +57,7 @@ export default function ApiLogsList() {
     { id: 'requestURL', label: 'Endpoint', align: 'left', allowSearch: true },
     { id: 'responseStatusCode', label: 'Status', align: 'left' },
     { id: 'responseTime', label: 'Time(ms)', align: 'left', allowSearch: true },
-    { id: 'additionalContextualInformation', label: 'Response', align: 'left', allowSearch: true },
+    { id: 'responseMessage', label: 'Response', align: 'left', allowSearch: true },
     { id: 'customer.name', label: 'Customer', align: 'left' },
     { id: 'machine', label: 'Machine', align: 'left' },
   ];
@@ -104,8 +104,8 @@ export default function ApiLogsList() {
     if (filteredSearchKey && selectedSearchFilter) {
       if (selectedSearchFilter === 'responseTime') {
         query.responseTime = { $regex: filteredSearchKey, $options: 'i' };
-      } else if (selectedSearchFilter === 'additionalContextualInformation') {
-        query.additionalContextualInformation = { $regex: filteredSearchKey, $options: 'i' };
+      } else if (selectedSearchFilter === 'responseMessage') {
+        query.responseMessage = { $regex: filteredSearchKey, $options: 'i' };
       } else if (selectedSearchFilter === 'requestURL') {
         query.requestURL = { $regex: filteredSearchKey, $options: 'i' };
       } 

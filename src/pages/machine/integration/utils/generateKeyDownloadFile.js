@@ -11,11 +11,11 @@ const generatePortalKeyConfigFileContent = (portalKey, serialNo, ipcSerialNo = '
   // eslint-disable-next-line no-debugger
   debugger;
   const configLines = [
-    `x_howickportalkey = ${portalKey}\n`,
-    `x_machineserialno = ${serialNo}\n`,
-    `x_ipcserialno = ${ipcSerialNo}\n`, 
-    `x_computerguid = ${computerGuid}\n`,
-    'x_contentType = application/json\n\n',
+    `howickportalkey = ${portalKey}\n`,
+    `machineserialno = ${serialNo}\n`,
+    `ipcserialno = ${ipcSerialNo}\n`, 
+    `computerguid = ${computerGuid}\n`,
+    'contentType = application/json\n\n',
     ...Object.entries(extractedConfigs || {}).map(([key, value]) => `${key} = ${value}\n`)
   ];
 

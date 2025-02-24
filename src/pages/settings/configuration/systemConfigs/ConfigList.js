@@ -119,14 +119,22 @@ export default function ConfigList() {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
+            sx={{ px: 2, py: 1 }}
           />
         )}
 
-        <Box sx={{ mt: 2 }}>
+        <Box sx={{ p: { xs: 1.5, md: 2 } }}>
           {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             .map((config, index, array) => (
-              <Box key={config?.id || index}>
+              <Box 
+                key={config?.id || index}
+                sx={{
+                  '&:not(:last-child)': {
+                    mb: 2
+                  }
+                }}
+              >
                 {config ? (
                   <ConfigCard
                     config={config}
@@ -135,15 +143,11 @@ export default function ConfigList() {
                 ) : (
                   <Box
                     sx={{
-                      height: 120,
-                      mb: 2,
+                      height: 100,
                       bgcolor: 'background.neutral',
-                      borderRadius: 1,
+                      borderRadius: 2,
                     }}
                   />
-                )}
-                {index < array.length - 1 && (
-                  <Divider sx={{ my: 2 }} />
                 )}
               </Box>
             ))}
@@ -164,6 +168,7 @@ export default function ConfigList() {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
+            sx={{ px: 2, py: 2 }}
           />
         )}
       </TableCard>
