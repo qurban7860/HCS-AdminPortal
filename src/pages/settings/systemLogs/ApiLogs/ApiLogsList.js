@@ -34,11 +34,10 @@ import SearchBarCombo from '../../../../components/ListTableTools/SearchBarCombo
 import RHFFilteredSearchBar from '../../../../components/hook-form/RHFFilteredSearchBar';
 
 export default function ApiLogsList() {
-  const { order, orderBy, setPage, onSort, onChangePage, onChangeRowsPerPage } =
-    useTable({
-      defaultOrderBy: 'createdAt',
-      defaultOrder: 'desc',
-    });
+  const { order, orderBy, setPage, onSort, onChangePage, onChangeRowsPerPage } = useTable({
+    defaultOrderBy: 'createdAt',
+    defaultOrder: 'desc',
+  });
 
   const dispatch = useDispatch();
   const { machineId } = useParams();
@@ -125,9 +124,8 @@ export default function ApiLogsList() {
     dispatch(
       getApiLogs({
         machineId,
-        orderBy: 'createdAt:-1',
         query,
-        page,
+        page: 0,
         pageSize: rowsPerPage,
       })
     );
@@ -177,7 +175,6 @@ export default function ApiLogsList() {
     dispatch(
       getApiLogs({
         machineId,
-        orderBy: 'createdAt:-1',
         query,
         page: 0,
         pageSize: rowsPerPage,
@@ -186,13 +183,14 @@ export default function ApiLogsList() {
 
     setValue('filteredSearchKey', defaultValues.filteredSearchKey);
   };
-  
+
   const handleHiddenColumns = async (arg) => {
     dispatch(setReportHiddenColumns(arg));
   };
 
   const onHandleSubmit = (data) => {
     handleFetchLogs(data);
+    dispatch(ChangePage(0));
   };
 
   return (

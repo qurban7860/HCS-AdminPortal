@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { useState, useEffect, useCallback } from 'react';
 // @mui
-import { Container, Card, Stack, Box, Typography, IconButton, MenuItem, useTheme, Divider } from '@mui/material';
+import { Container, Card, Stack, Box, Typography, IconButton, MenuItem } from '@mui/material';
 import { FormProvider, useForm } from 'react-hook-form';
 import { LoadingButton } from '@mui/lab';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -38,7 +38,6 @@ export default function MachineLogsList({ allMachineLogsType }){
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { machineId } = useParams();
-  const theme = useTheme();
 
   const methods = useForm({
     defaultValues: {

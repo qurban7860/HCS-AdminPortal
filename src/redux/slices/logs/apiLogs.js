@@ -130,7 +130,7 @@ export function getApiLogs({ machineId, fields = '', orderBy = '', query = {}, p
     dispatch(slice.actions.startLoading());
     try {
       const params = {
-        orderBy,
+        ...(orderBy && { orderBy }),
         ...query,
         machine: machineId,
         pagination: { page, pageSize },

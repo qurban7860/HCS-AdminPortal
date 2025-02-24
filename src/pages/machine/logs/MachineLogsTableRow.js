@@ -20,6 +20,7 @@ MachineLogsTableRow.propTypes = {
   onDeleteRow: PropTypes.func,
   columnsToShow: PropTypes.array,
   allMachineLogsPage: PropTypes.bool,
+  numericalLengthValues: PropTypes.array,
 };
 
 export default function MachineLogsTableRow({
@@ -33,6 +34,7 @@ export default function MachineLogsTableRow({
   onViewRow,
   columnsToShow,
   allMachineLogsPage,
+  numericalLengthValues
 }) {
   row = {...row, machineSerialNo: row?.machine?.serialNo}
   const { date } = row;
@@ -55,7 +57,7 @@ export default function MachineLogsTableRow({
             sx={{ cursor: 'pointer' }}
             align={column?.numerical ? 'right' : 'left'}
           >
-            {cellValue}
+            {numericalLengthValues.includes(column.id) ? (cellValue / 1000).toFixed(3) : cellValue}
           </TableCell>
         );
       })}
