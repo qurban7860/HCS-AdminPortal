@@ -27,7 +27,7 @@ export default function APILogsTableRow({ row, style, selected, onViewRow, hidde
     machine,
     customer,
     updatedAt,
-    additionalContextualInformation,
+    responseMessage,
     requestHeaders = {},
     createdIP = '',
     createdBy = '',
@@ -102,8 +102,8 @@ export default function APILogsTableRow({ row, style, selected, onViewRow, hidde
             <i>{responseTime}</i>
           </TableCell>
         )}
-        {!hiddenColumns?.additionalContextualInformation && (
-          <TableCell align="left">{additionalContextualInformation}</TableCell>
+        {!hiddenColumns?.responseMessage && (
+          <TableCell align="left">{responseMessage}</TableCell>
         )}
         {!hiddenColumns?.['customer.name'] && (
           <TableCell align="left">{customer?.name || ''}</TableCell>
@@ -127,7 +127,7 @@ export default function APILogsTableRow({ row, style, selected, onViewRow, hidde
           requestURL,
           responseStatusCode,
           responseTime,
-          additionalContextualInformation,
+          responseMessage,
           customerName: customer?.name || '',
           serialNo: machine?.[0]?.serialNo || '',
           machineName: machine?.[0]?.name || '',
