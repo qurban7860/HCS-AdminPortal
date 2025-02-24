@@ -13,8 +13,8 @@ const generatePortalKeyConfigFileContent = (portalKey, serialNo, ipcSerialNo = '
   const configLines = [
     `howickportalkey = ${portalKey}\n`,
     `machineserialno = ${serialNo}\n`,
-    `ipcserialno = ${ipcSerialNo}\n`, 
-    `computerguid = ${computerGuid}\n`,
+    `ipcserialno = ${ipcSerialNo || ''}\n`, 
+    `computerguid = ${computerGuid || ''}\n`,
     'contentType = application/json\n\n',
     ...Object.entries(extractedConfigs || {}).map(([key, value]) => `${key} = ${value}\n`)
   ];
