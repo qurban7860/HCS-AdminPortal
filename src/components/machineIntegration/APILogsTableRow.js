@@ -31,6 +31,7 @@ export default function APILogsTableRow({ row, style, selected, onViewRow, hidde
     requestHeaders = {},
     createdIP = '',
     createdBy = '',
+    createdByIdentifier = '',
   } = row;
 
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -121,7 +122,6 @@ export default function APILogsTableRow({ row, style, selected, onViewRow, hidde
         open={dialogOpen}
         onClose={handleCloseDialog}
         logDetails={{
-          updatedAt: fDateTime(updatedAt),
           apiType,
           requestMethod,
           requestURL,
@@ -139,7 +139,9 @@ export default function APILogsTableRow({ row, style, selected, onViewRow, hidde
             host: requestHeaders.host,
           },
           createdIP,
-          createdBy: createdBy?.name || '',
+          createdBy: createdBy?.name || createdByIdentifier|| '',
+          createdAt: fDateTime(createdAt),
+          updatedAt: fDateTime(updatedAt),
         }}
       />
     </>
