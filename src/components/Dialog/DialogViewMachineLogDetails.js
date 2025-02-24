@@ -40,7 +40,7 @@ const ResponsiveGrid = styled(Grid)(({ theme }) => ({
 }));
 
 const extraInfo = [
-  "customer",  "machine",  "createdBy",  "createdAt",  "updatedBy",  "updatedAt",  "isActive",  "isArchived", "createdIP",  "updatedIP", "archivedByMachine", "batchId"
+  "customer",  "machine",  "createdBy",  "createdAt",  "updatedBy",  "updatedAt",  "isActive",  "isArchived", "createdIP",  "updatedIP", "archivedByMachine", "batchId", "apiLogId"
 ]
 
 
@@ -80,14 +80,14 @@ function DialogViewMachineLogDetails({
 
   const formatMachineLogToShow = (log) => {
     // eslint-disable-next-line no-unused-vars
-    const { createdIP, updatedIP, __v, machine, customer, updatedBy, createdBy, archivedByMachine, createdAt, updatedAt, isActive, isArchived, type, version, batchId, ...rest } = log;
+    const { createdIP, updatedIP, __v, machine, customer, updatedBy, createdBy, createdByIdentifier, updatedByIdentifier, archivedByMachine, createdAt, updatedAt, isActive, isArchived, type, version, batchId, apiLogId, ...rest } = log;
 
     return {...rest};
   };
 
   const handleLogAction = async (action) => {
     // eslint-disable-next-line no-unused-vars
-    const { archivedByMachine, createdAt, createdBy, createdIP, customer, machine, type, updatedAt, updatedBy, updatedIP, __v, _id, ...rest } = { ...logDetails };
+    const { archivedByMachine, createdAt, createdBy, createdIP, customer, machine, type, updatedAt, updatedBy, updatedIP, createdByIdentifier, updatedByIdentifier, __v, _id, apiLogId, ...rest } = { ...logDetails };
     
     let dataToSend;
     
@@ -137,7 +137,7 @@ function DialogViewMachineLogDetails({
 
   const handleEdit = () => {
     // eslint-disable-next-line no-unused-vars
-    const { archivedByMachine, createdAt, createdBy, createdIP, customer, machine, type, version, updatedAt, updatedBy, updatedIP, __v, _id, isActive, isArchived, batchId, srcInfo, ...rest } = { ...logsToShow };
+    const { archivedByMachine, createdAt, createdBy, createdIP, customer, machine, type, version, updatedAt, updatedBy, updatedIP, createdByIdentifier, updatedByIdentifier, __v, _id, isActive, isArchived, batchId, srcInfo, apiLogId, ...rest } = { ...logsToShow };
     setEditedLogs(rest);
     setLogEditState(true);
   };
