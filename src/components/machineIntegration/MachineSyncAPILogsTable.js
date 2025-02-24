@@ -70,7 +70,7 @@ const MachineSyncAPILogsTable = ({
   useEffect(() => {
     dispatch(getApiLogs({
       machineId,
-      orderBy: 'createdAt:desc',
+      orderBy: 'createdAt:-1',
       query: { apiType: 'MACHINE-SYNC' },
       page,
       pageSize: rowsPerPage,
@@ -119,7 +119,7 @@ const MachineSyncAPILogsTable = ({
     dispatch(
       getApiLogs({
         machineId,
-        orderBy: 'createdAt:desc',
+        orderBy: 'createdAt:-1',
         query: { apiType: 'MACHINE-SYNC' },
         page,
         pageSize: rowsPerPage,
