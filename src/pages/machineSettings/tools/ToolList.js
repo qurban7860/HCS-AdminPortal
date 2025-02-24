@@ -39,7 +39,7 @@ import TableCard from '../../../components/ListTableTools/TableCard';
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
-  { id: 'createdAt', label: 'Created At', align: 'right' },
+  { id: 'updatedAt', label: 'Updated At', align: 'right' },
 ];
 
 
@@ -147,7 +147,7 @@ export default function ToolList() {
     }
   };
 
-  const handleViewRow = async (id) => navigate(PATH_MACHINE.machines.machineSettings.tools.view(id));
+  const handleViewRow = async (id) => navigate(PATH_MACHINE.machineSettings.tools.view(id));
 
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
@@ -259,7 +259,7 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
     inputData = inputData.filter(
       (filtertool) =>
         filtertool?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        // (filtertool?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+        // (filtertool?.isActive ? "Active" : "InActive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
         fDate(filtertool?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }

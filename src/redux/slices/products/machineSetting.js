@@ -6,9 +6,7 @@ import { CONFIG } from '../../../config-global';
 // ----------------------------------------------------------------------
 const initialState = {
   initial: false,
-  settingFormVisibility: false,
-  settingViewFormVisibility: false,
-  settingEditFormVisibility: false,
+  settingValueDialog: false,
   responseMessage: null,
   success: false,
   isLoading: false,
@@ -29,19 +27,9 @@ const slice = createSlice({
       state.isLoading = true;
     },
 
-    // SET ADD FORM TOGGLE
-    setSettingFormVisibility(state, action){
-      state.settingFormVisibility = action.payload;
-    },
-
-    // SET EDIT FORM TOGGLE
-    setSettingEditFormVisibility(state, action){
-      state.settingEditFormVisibility = action.payload;
-    },
-
     // SET VIEW TOGGLE
-    setSettingViewFormVisibility(state, action){
-      state.settingViewFormVisibility = action.payload;
+    setSettingValueDialog(state, action){
+      state.settingValueDialog = action.payload;
     },
 
     // HAS ERROR
@@ -119,11 +107,10 @@ export default slice.reducer;
 
 // Actions
 export const {
-  setSettingFormVisibility,
-  setSettingEditFormVisibility,
-  setSettingViewFormVisibility,
+  setSettingValueDialog,
   resetSetting,
   resetSettings,
+  getSettingSuccess,
   setResponseMessage,
   setFilterBy,
   ChangeRowsPerPage,
@@ -155,21 +142,23 @@ export function addSetting (machineId, params){
 // ----------------------------------------------------------------------
 
 
-export function getSettings (id ){
-
+export function getSettings ( id, isMachineArchived ){
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${id}/techparamvalues` , 
-      {
-        params: {
-          isArchived: false,
-          orderBy : {
-            createdAt:-1
-          }
+
+      const params = {
+        isArchived: false,
+        orderBy : {
+          createdAt: -1
         }
       }
-      );
+    if( isMachineArchived ){
+      params.archivedByMachine = true;
+      params.isArchived = true;
+    } 
+
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${id}/techparamvalues` , { params } );
       dispatch(slice.actions.getSettingsSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Setting loaded successfully'));
     } catch (error) {
@@ -221,14 +210,14 @@ export function deleteSetting(machineId, Id) {
 
 // --------------------------------------------------------------------------
 
-export async function updateSetting(machineId,settingId,params) {
+export function updateSetting(machineId,settingId,params) {
 
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const data = {
-        techParamValue: params.techParamValue,
-        isActive: params.isActive,
+        techParamValue: params?.techParamValue,
+        isActive: params?.isActive,
       }
       await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/techparamvalues/${settingId}`, data, );
     } catch (error) {

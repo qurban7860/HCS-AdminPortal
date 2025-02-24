@@ -34,7 +34,7 @@ const TABLE_HEAD = [
   { id: 'group', label: 'Group'},
   { id: 'category', label: 'Category'},
   { id: 'isActive', label: 'Active', align: 'center' },
-  { id: 'createdAt', label: 'Created At', align: 'right' },
+  { id: 'updatedAt', label: 'Updated At', align: 'right' },
 ];
 
 // ----------------------------------------------------------------------
@@ -105,7 +105,7 @@ export default function GroupList() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 
-  const handleViewRow = (id) => navigate(PATH_MACHINE.machines.machineSettings.groups.view(id));
+  const handleViewRow = (id) => navigate(PATH_MACHINE.machineSettings.groups.view(id));
 
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))

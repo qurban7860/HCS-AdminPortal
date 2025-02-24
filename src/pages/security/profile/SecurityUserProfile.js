@@ -9,7 +9,7 @@ import {
   Link,
 } from '@mui/material';
 // routes
-import { PATH_SECURITY } from '../../../routes/paths';
+import { PATH_SETTING } from '../../../routes/paths';
 // auth
 import { useAuthContext } from '../../../auth/useAuthContext';
 // _mock_
@@ -25,8 +25,6 @@ import { Cover } from '../../../components/Defaults/Cover';
 import LogoAvatar from '../../../components/logo-avatar/LogoAvatar';
 import CustomAvatar from '../../../components/custom-avatar/CustomAvatar';
 import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
-import CustomerDialog from '../../../components/Dialog/CustomerDialog';
-import ContactDialog from '../../../components/Dialog/ContactDialog';
 
 // ----------------------------------------------------------------------
 
@@ -67,7 +65,7 @@ export default function SecurityUserProfile() {
 
   const handleEdit = () => {
     // dispatch(setSecurityUserEditFormVisibility(true));
-    navigate(PATH_SECURITY.users.editProfile);
+    navigate(PATH_SETTING.security.users.editProfile);
   };
 
   const defaultValues = useMemo(
@@ -96,7 +94,6 @@ export default function SecurityUserProfile() {
     [securityUser]
   );
   return (
-    <>
       <Container maxWidth={false}>
         <Card
           sx={{
@@ -177,10 +174,5 @@ export default function SecurityUserProfile() {
           </Grid>
         </Card>
       </Container>
-
-      <CustomerDialog />
-      <ContactDialog />
-
-    </>
   );
 }

@@ -1,5 +1,6 @@
-import { styled, alpha, lighten, darken } from '@mui/material/styles';
-import { Popover, Stack, Card, Chip, Container, TableRow, Badge } from '@mui/material';
+import PropTypes from 'prop-types';
+import { styled, alpha } from '@mui/material/styles';
+import { Popover, Stack, Card, Chip, Container, TableRow, Badge, StepConnector, stepConnectorClasses } from '@mui/material';
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import { bgBlur } from '../../utils/cssStyles';
 
@@ -69,11 +70,12 @@ export const StyledTooltip = styled(({ className, ...props }) => (
 ))(({ theme, tooltipcolor }) => ({
   [`& .${tooltipClasses.arrow}`]: {
     color: tooltipcolor,
+    bottom:'1px !important'
   },
   [`& .${tooltipClasses.tooltip}`]: {
     fontSize: '1rem',
     backgroundColor: tooltipcolor,
-  },
+  }
 }));
 
 export const StyledTooltipSliding = styled(({ className, ...props }) => (
@@ -217,7 +219,8 @@ export const StyledCardContainer = styled(Card)(({ theme }) => ({
   height: 160,
   position: 'sticky',
   top:'60px',
-  zIndex:'2'
+  zIndex:'2',
+  [theme.breakpoints.down('sm')]: { height: 140 },
 }));
 
 // @root - MachineEditForm - spacing
@@ -252,3 +255,64 @@ export const GroupHeader = styled('div')(({ theme }) => ({
 export const GroupItems = styled('ul')({
   padding: 0,
 });
+
+export const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
+  [`&.${stepConnectorClasses.alternativeLabel}`]: {
+    top: 22,
+  },
+  [`&.${stepConnectorClasses.active}`]: {
+    [`& .${stepConnectorClasses.line}`]: {
+      backgroundImage:
+        'linear-gradient(95deg, rgb(183 183 183) 0%, #2b64cd 50%, #103996 100%)',
+    },
+  },
+  [`&.${stepConnectorClasses.completed}`]: {
+    [`& .${stepConnectorClasses.line}`]: {
+      backgroundImage:
+        'linear-gradient(95deg, rgb(183 183 183) 0%, #2b64cd 50%, #103996 100%)',
+    },
+  },
+  [`& .${stepConnectorClasses.line}`]: {
+    height: 3,
+    border: 0,
+    backgroundColor:
+      theme.palette.mode === 'dark' ? theme.palette.grey[800] : '#eaeaf0',
+    borderRadius: 1,
+  },
+}));
+
+const ColorlibStepIconRoot = styled('div')(({ theme, ownerState }) => ({
+  backgroundColor: theme.palette.mode === 'dark' ? theme.palette.grey[700] : '#ccc',
+  zIndex: 1,
+  color: '#fff',
+  width: 40,
+  height: 40,
+  display: 'flex',
+  borderRadius: '10px',
+  justifyContent: 'center',
+  alignItems: 'center',
+  fontSize:14,
+  ...(ownerState.active && {
+    background:'#2065d1',
+    // boxShadow: '0 4px 10px 0 rgba(0,0,0,.25)',
+  }),
+  ...(ownerState.completed && {
+    background:'#2065d1',
+  }),
+}));
+
+export function ColorlibStepIcon(props) {
+  const { active, completed, className, icon } = props;
+  return (
+    <ColorlibStepIconRoot ownerState={{ completed, active }} className={className}>
+      {icon}
+    </ColorlibStepIconRoot>
+  );
+}
+
+ColorlibStepIcon.propTypes = {
+  active: PropTypes.bool,
+  className: PropTypes.string,
+  completed: PropTypes.bool,
+  icon: PropTypes.node,
+};

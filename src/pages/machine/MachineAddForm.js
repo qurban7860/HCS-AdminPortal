@@ -32,6 +32,7 @@ import IconTooltip from '../../components/Icons/IconTooltip';
 import IconButtonTooltip from '../../components/Icons/IconButtonTooltip';
 import IconPopover from '../../components/Icons/IconPopover';
 import { GroupHeader, GroupItems } from '../../theme/styles/default-styles';
+import { handleError } from '../../utils/errorHandler';
 
 MachineAddForm.propTypes = {
   isEdit: PropTypes.bool,
@@ -161,8 +162,8 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     
     try {
       const response = await dispatch(addMachine(data));
-      reset();
       enqueueSnackbar('Machine created successfully!');
+      reset();
       if( landToCustomerMachinePage && customer._id ){
         await navigate(PATH_CRM.customers.machines.root(customer?._id));
       }else if(response?.data?.Machine?._id){
@@ -171,7 +172,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
         await navigate(PATH_MACHINE.machines.root);
       }
     } catch (error) {
-      enqueueSnackbar(error, { variant: `error` });
+      enqueueSnackbar( handleError( error ) || 'Machine save failed!', { variant: `error` });
       console.error(error);
     }
   };
@@ -202,7 +203,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     <>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)} >
         <Grid container>
-          <Grid item xs={18} md={12} >
+          <Grid item xs={12} md={12} >
             <Card sx={{ p: 3 }}>
               <Stack spacing={2}>
                 <Box rowGap={2} columnGap={2} display="grid"
@@ -341,7 +342,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     filterSelectedOptions
                     name="machineConnectionVal"
                     id="tags-outlined"
-                    defaultValues={newConnectedMachines}
+                    defaultValue={newConnectedMachines}
                     options={connectedMachinesOption}
                     groupBy={(option) => option?.group}
                     getOptionLabel={(option) => `${option?.serialNo || ''} ${option?.name ? '-' : ''} ${option?.name || ''}`}
@@ -375,7 +376,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                   ChipProps={{ size: 'small' }}
                 />
                 <Box rowGap={2} columnGap={2} display="grid"
-                  gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
+                  gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
                 >
 
                   {/* <RHFDatePicker inputFormat='dd/MM/yyyy' name="decommissionedDate" label="De-Commissioned Date" /> */}

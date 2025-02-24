@@ -1,23 +1,21 @@
-import { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 // @mui
-import { Card, Table, Button, TableBody, Container, TableContainer } from '@mui/material';
+import { Card, Table, TableBody, Container, TableContainer } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
 // routes
-import { PATH_SECURITY, PATH_SETTING } from '../../../../routes/paths';
+import { PATH_SETTING } from '../../../../routes/paths';
 // components
-import { useSnackbar } from '../../../../components/snackbar';
 import Scrollbar from '../../../../components/scrollbar';
-import ConfirmDialog from '../../../../components/confirm-dialog';
 import { Cover } from '../../../../components/Defaults/Cover';
 import {
   useTable,
   getComparator,
   TableNoData,
+  TableSkeleton,
   TableHeadCustom,
-  TableSelectedAction,
   TablePaginationCustom,
 } from '../../../../components/table';
 // sections
@@ -25,15 +23,12 @@ import RegionTableRow from './RegionTableRow'
 import RegionTableToolbar from './RegionTableToolbar';
 import {
   getRegions,
-  deleteRegion,
-  setRegionEditFormVisibility,
   ChangeRowsPerPage,
   ChangePage,
   setFilterBy,
 } from '../../../../redux/slices/region/region';
 import { fDate } from '../../../../utils/formatTime';
 // constants
-import { DIALOGS } from '../../../../constants/default-constants';
 import TableCard from '../../../../components/ListTableTools/TableCard';
 // ----------------------------------------------------------------------
 
@@ -41,22 +36,18 @@ const ROLE_OPTIONS = ['Administrator', 'Normal User', 'Guest User', 'Restriced U
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
-  { id: 'countries.country_name.[]', visibility: 'xs1', label: 'countries', align: 'left' },
+  { id: 'countries.country_name.[]', visibility: 'xs1', label: 'Countries', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
-  { id: 'createdAt', label: 'Created At', align: 'right' },
+  { id: 'createdAt', label: 'Updated At', align: 'right' },
 ];
 
 // ----------------------------------------------------------------------
 
 export default function RegionList() {
   const {
-    dense,
     order,
     orderBy,
     setPage,
-    selected,
-    setSelected,
-    onSelectRow,
     onSort,
   } = useTable({
     defaultOrderBy: 'createdAt', defaultOrder: 'desc',
@@ -71,53 +62,27 @@ export default function RegionList() {
 
   const dispatch = useDispatch();
 
-  const {
-    regions,
-    filterBy, page, rowsPerPage,
-    error,
-    responseMessage,
-    initial,
-    regionEditFormVisibility,
-    regionAddFormVisibility,
-  } = useSelector((state) => state.region);
+  const { regions, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.region);
 
-  const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
-  const [tableData, setTableData] = useState([]);
-  const [openConfirm, setOpenConfirm] = useState(false);
   const [filterName, setFilterName] = useState('');
   const [filterRole, setFilterRole] = useState('all');
   const [filterStatus, setFilterStatus] = useState('all');
 
-  useLayoutEffect(() => {
-    dispatch(getRegions());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, regionEditFormVisibility, regionAddFormVisibility]);
-
   useEffect(() => {
-    if (initial) {
-      setTableData(regions);
-    }
-  }, [regions, error, enqueueSnackbar, responseMessage, initial]);
+    dispatch(getRegions());
+  }, [dispatch ]);
 
   const dataFiltered = applyFilter({
-    inputData: tableData,
+    inputData: regions || [],
     comparator: getComparator(order, orderBy),
     filterName,
     filterStatus,
     filterRole
   });
 
-  const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
   const isFiltered = filterName !== '' || filterRole !== 'all' || filterStatus !== 'all';
-  const isNotFound =
-    (!dataFiltered.length && !!filterName) ||
-    (!dataFiltered.length && !!filterRole) ||
-    (!dataFiltered.length && !!filterStatus);
-
-  const handleCloseConfirm = () => {
-    setOpenConfirm(false);
-  };
+  const isNotFound =  (!isLoading && !dataFiltered.length);
 
   const debouncedSearch = useRef(debounce((value) => {
     dispatch(ChangePage(0))
@@ -144,47 +109,6 @@ export default function RegionList() {
     setFilterRole(event.target.value);
   };
 
-  const handleDeleteRow = async (id) => {
-    try {
-      try {
-        dispatch(deleteRegion(id));
-        dispatch(getRegions());
-        setSelected([]);
-
-        if (page > 0) {
-          if (dataInPage.length < 2) {
-            setPage(page - 1);
-          }
-        }
-      } catch (err) {
-        console.log(err);
-      }
-    } catch (err) {
-      console.log(err.message);
-    }
-  };
-
-  const handleDeleteRows = (selectedRows) => {
-    const deleteRows = tableData.filter((row) => !selectedRows.includes(row.id));
-    setSelected([]);
-    setTableData(deleteRows);
-
-    if (page > 0) {
-      if (selectedRows.length === dataInPage.length) {
-        setPage(page - 1);
-      } else if (selectedRows.length === dataFiltered.length) {
-        setPage(0);
-      } else if (selectedRows.length > dataInPage.length) {
-        const newPage = Math.ceil((tableData.length - selectedRows.length) / rowsPerPage) - 1;
-        setPage(newPage);
-      }
-    }
-  };
-
-  const handleEditRow = (id) => {
-    dispatch(setRegionEditFormVisibility(true));
-    navigate(PATH_SECURITY.users.edit(id));
-  };
   const handleViewRow = (id) => {
     navigate(PATH_SETTING.regions.view(id));
   };
@@ -196,7 +120,6 @@ export default function RegionList() {
     setFilterStatus('all');
   };
   return (
-    <>
       <Container maxWidth={false}>
         <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
           <Cover name="Regions" icon="ph:users-light" generalSettings/>
@@ -219,12 +142,6 @@ export default function RegionList() {
             onRowsPerPageChange={onChangeRowsPerPage}
           />}
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            <TableSelectedAction
-              dense={dense}
-              numSelected={selected.length}
-              rowCount={tableData.length}
-            />
-
             <Scrollbar>
               <Table size="small" sx={{ minWidth: 360 }}>
                 <TableHeadCustom
@@ -233,21 +150,23 @@ export default function RegionList() {
                   headLabel={TABLE_HEAD}
                   onSort={onSort}
                 />
-
                 <TableBody>
-                  {dataFiltered
+                  {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row) => (
-                      <RegionTableRow
-                        key={row._id}
-                        row={row}
-                        selected={selected.includes(row._id)}
-                        onSelectRow={() => onSelectRow(row._id)}
-                        onDeleteRow={() => handleDeleteRow(row._id)}
-                        onEditRow={() => handleEditRow(row._id)}
-                        onViewRow={() => handleViewRow(row._id)}
-                      />
-                    ))}
+                    .map((row, index) =>
+                      row ? (
+                        <RegionTableRow
+                          key={row.id}
+                          index={index}
+                          page={page}
+                          row={row}
+                          onViewRow={() => handleViewRow(row?._id)}
+                          style={index % 2 ? { background: 'red' } : { background: 'green' }}
+                        />
+                      ) : (
+                        !isNotFound && <TableSkeleton key={index} sx={{ height: 60 }} />
+                      )
+                    )}
                   <TableNoData isNotFound={isNotFound} />
                 </TableBody>
               </Table>
@@ -260,32 +179,9 @@ export default function RegionList() {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-
-            // dense={dense}
-            // onChangeDense={onChangeDense}
           />
         </TableCard>
       </Container>
-
-      <ConfirmDialog
-        open={openConfirm}
-        onClose={handleCloseConfirm}
-        title={DIALOGS.DELETE.title}
-        content={DIALOGS.DELETE.content}
-        action={
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => {
-              handleDeleteRows(selected);
-              handleCloseConfirm();
-            }}
-          >
-            {DIALOGS.DELETE.title}
-          </Button>
-        }
-      />
-    </>
   );
 }
 
@@ -311,7 +207,7 @@ function applyFilter({ inputData, comparator, filterName, filterStatus, filterRo
           .join(', ')
           .toLowerCase()
           .indexOf(filterName.toLowerCase()) >= 0 ||
-        // (securityUser?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+        // (securityUser?.isActive ? "Active" : "InActive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
         fDate(region?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }

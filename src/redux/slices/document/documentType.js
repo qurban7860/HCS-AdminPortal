@@ -19,6 +19,13 @@ const initialState = {
   filterBy: '',
   page: 0,
   rowsPerPage: 100,
+  reportHiddenColumns: {
+    "name": false,
+    "docCategory.name": false,
+    "customerAccess": false,
+    "isActive": false,
+    "createdAt": false,
+  },
 };
 
 const slice = createSlice({
@@ -118,6 +125,9 @@ const slice = createSlice({
     ChangePage(state, action) {
       state.page = action.payload;
     },
+    setReportHiddenColumns(state, action) {
+      state.reportHiddenColumns = action.payload;
+    },
   },
 });
 
@@ -136,6 +146,7 @@ export const {
   setFilterBy,
   ChangeRowsPerPage,
   ChangePage,
+  setReportHiddenColumns,
 } = slice.actions;
 
 // ----------------------------Add Document Type------------------------------------------
@@ -223,12 +234,9 @@ export function getActiveDocumentTypes(cancelToken, drawing ) {
         params: {
           isArchived: false,
           isActive: true,
+          drawing
         },
         cancelToken: cancelToken?.token,
-      }
-
-      if(drawing) {
-        query.params.drawing = true;
       }
 
       const response = await axios.get(`${CONFIG.SERVER_URL}documents/documentType/`, query);
@@ -271,7 +279,7 @@ export function getActiveDrawingTypes(cancelToken) {
 
 // -----------------------------------Get Active Document Types of Categories-----------------------------------
 
-export function getActiveDocumentTypesWithCategory(typeCategory, categoryBy ) {
+export function getActiveDocumentTypesWithCategory(typeCategory, categoryBy, drawing ) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -280,6 +288,7 @@ export function getActiveDocumentTypesWithCategory(typeCategory, categoryBy ) {
           isArchived: false,
           isActive: true,
           docCategory: typeCategory,
+          drawing,
         }
       }
       if( categoryBy ){

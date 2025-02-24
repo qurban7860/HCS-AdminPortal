@@ -64,14 +64,14 @@ export default function TechParamCategoryAddForm() {
       await dispatch(addTechparamcategory(data));
       reset();
       enqueueSnackbar('Technical Parameter Category created successfully!');
-      navigate(PATH_MACHINE.machines.machineSettings.technicalParameterCategories.root);
+      navigate(PATH_MACHINE.machineSettings.technicalParameterCategories.root);
     } catch (error) {
       enqueueSnackbar('Save Failed!', { variant: `error` });
 
       console.error(error);
     }
   };
-  const toggleCancel = () => navigate(PATH_MACHINE.machines.machineSettings.technicalParameterCategories.root);
+  const toggleCancel = () => navigate(PATH_MACHINE.machineSettings.technicalParameterCategories.root);
 
   return (
     <Container maxWidth={false}>

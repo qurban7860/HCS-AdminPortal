@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 // @mui
-import { Container, Table, TableBody, TableContainer } from '@mui/material';
+import { Card, Container, Table, TableBody, TableContainer } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // routes
@@ -30,6 +30,8 @@ import {
 import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../../components/ListTableTools/TableCard';
 import { PATH_CRM } from '../../../routes/paths';
+import MachineNotes from '../../machine/notes/MachineNotes';
+import { useAuthContext } from '../../../auth/useAuthContext';
 
 export default function NoteList() {
   const {
@@ -41,6 +43,7 @@ export default function NoteList() {
     defaultOrderBy: '-createdAt',
   });
   useSettingsContext();
+  const { userId, user } = useAuthContext();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
@@ -54,18 +57,18 @@ export default function NoteList() {
   const TABLE_HEAD = [
     { id: 'note', label: 'Note', align: 'left' },
     { id: 'isActive', visibility: 'xs1', label: 'Active', align: 'left' },
-    { id: 'createdAt', label: 'Created At', align: 'right' },
+    { id: 'updatedAt', label: 'Updated At', align: 'right' },
   ];
 
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));
     dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
   };
-
+  
   const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
 
   useEffect(() => {
-    if(customerId){
+    if( customerId && customerId !== "undefined" ){
       dispatch(getNotes(customerId, customer?.isArchived));
     }
     return ()=>{ dispatch(resetNotes()) };
@@ -74,7 +77,7 @@ export default function NoteList() {
   useEffect(() => {
     setTableData(notes);
   }, [notes]);
-
+  
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(order, orderBy),
@@ -169,11 +172,13 @@ export default function NoteList() {
           onPageChange={onChangePage}
           onRowsPerPageChange={onChangeRowsPerPage}
         />
+              <Card sx={{ mt: 2 }}>
+        <MachineNotes  currentUser={{ ...user, userId }} />
+      </Card>
       </TableCard>
     </Container>
   );
 }
-
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filterName, filterStatus }) {

@@ -3,38 +3,40 @@ import { useDispatch, useSelector } from 'react-redux';
 // form
 import { useForm } from 'react-hook-form';
 // @mui
-import { Container ,Card, Grid, Stack, Button, FormHelperText, Checkbox, Typography } from '@mui/material';
+import { Container ,Card, Grid, Stack, Button, FormHelperText, Checkbox, Typography, Box, useTheme, Chip, Divider, Alert } from '@mui/material';
 // routes
 import { useNavigate, useParams } from 'react-router-dom';
 import { PATH_MACHINE } from '../../../routes/paths';
 // slice
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
-import { addMachineErpLogRecord } from '../../../redux/slices/products/machineErpLogs';
+import { addMachineLogRecord } from '../../../redux/slices/products/machineErpLogs';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-  import FormProvider from '../../../components/hook-form';
+import FormProvider, { RHFAutocomplete } from '../../../components/hook-form';
 // constants
 import CodeMirror from '../../../components/CodeMirror/JsonEditor';
 import Iconify from '../../../components/iconify/Iconify';
 import { ICONS } from '../../../constants/icons/default-icons';
-import { HeaderArr, unitHeaders } from './Index';
 import MachineTabContainer from '../util/MachineTabContainer';
-import { isValidDate } from '../../../utils/formatTime';
-
+import { machineLogTypeFormats } from '../../../constants/machineLogTypeFormats';
+import IconTooltip from '../../../components/Icons/IconTooltip';
 
 // ----------------------------------------------------------------------
 
 export default function MachineLogsAddForm() {
 
   const { machine } = useSelector((state) => state.machine);
-  
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { machineId } = useParams();
   const { enqueueSnackbar } = useSnackbar();
   const [ error, setError ] = useState(false);
+  const [fileInputKey, setFileInputKey] = useState(0);
+  const [selectedCheckbox, setSelectedCheckbox] = useState(1);
+  const [inchesMeasurementExists, setInchesMeasurementExists] = useState(false);
 
-  const [selectedCheckbox, setSelectedCheckbox] = useState(null);
+  const theme = useTheme();
 
   const handleCheckboxChange = (index) => {
     setSelectedCheckbox(index === selectedCheckbox ? null : index);
@@ -42,12 +44,14 @@ export default function MachineLogsAddForm() {
 
   const checkboxes = [
     { label: 'Skip', value: 'skip' },
-    { label: 'Update', value: 'update' },
+    { label: 'Update', value: 'update', default: 'checked' },
   ];
 
   const defaultValues = useMemo(
     () => ({
-      erpLog: '',
+      logTextValue: '',
+      logType: machineLogTypeFormats.find(option => option.type === 'ERP') || null,
+      logVersion: null,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -66,164 +70,369 @@ export default function MachineLogsAddForm() {
     formState: { isSubmitting },
   } = methods;
 
-  const { erpLog } = watch();
+  const { logTextValue, logType, logVersion } = watch();
+
+  useEffect(() => {
+    setValue('logTextValue', "" )
+    setInchesMeasurementExists(false);
+    if (logType?.versions?.length > 0) {
+      setValue('logVersion', logType.versions[0]);
+    } else {
+      setValue('logVersion', null);
+    }
+
+  },[ logType, setValue ]);
+
+  useEffect(() => {
+    setValue('logTextValue', "" )
+    setInchesMeasurementExists(false);
+  },[ logVersion, setValue ]);
 
   useEffect(() => {
     if(error) setError(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[ erpLog ]);
+  },[ logTextValue ]);
 
-  const onSubmit = async (data) => {
-    try{
-      
-        const csvData = JSON.parse(data.erpLog)
-          try {
-            if(Array.isArray(csvData) && csvData?.length > 5000 ){
-              setError(true)
-            } else if( Array.isArray(csvData) &&  !csvData?.some(item => item && ( item?.date ))){
-              enqueueSnackbar("date is Missing!", { variant: `error` });
-            } else if( Array.isArray(csvData) && csvData?.some(item => !isValidDate( item?.date ))){
-              enqueueSnackbar("Invalid Date Format!", { variant: `error` });
-            } else if( !Array.isArray(csvData) && typeof csvData === 'object' && !('date' in csvData )){
-                enqueueSnackbar("date is Missing!", { variant: `error` });
-            } else if( !Array.isArray(csvData) && typeof csvData === 'object' && !isValidDate( csvData.date )){
-                enqueueSnackbar("Invalid Date Format!", { variant: `error` });
-            } else {
-              setError(false);
-              // ADD Log
-              const action = {}
-              if( selectedCheckbox === 0 ){
-                action.skipExistingRecords = true;
-              } else if( selectedCheckbox){
-                action.updateExistingRecords = true;
-              }
-              await dispatch(addMachineErpLogRecord(machineId, machine?.customer?._id, csvData, action));
-              await enqueueSnackbar(`Log's uploaded successfully!`);
-              await navigate(PATH_MACHINE.machines.logs.root(machineId))
-              await reset();
-            }
-          } catch (err) {
-            enqueueSnackbar(err, { variant: `error` });
-            console.error(err);
-          }
-    }catch(err){
-      enqueueSnackbar('JSON validation Failed!',{ variant: `error` });
+  const validateJson = (jsonString) => {
+    try {
+      JSON.parse(jsonString);
+      return true;
+    } catch (e) {
+      return false;
     }
   };
 
-  const txtToJson = async (data) => {
-    const csvData = [];
+  const onSubmit = async (data) => {
+    if (!validateJson(data.logTextValue)) {
+      setError("Invalid JSON. Please format the data before submitting.");
+      return;
+    }
+
     try {
-      if (typeof data === 'string' && data.trim() !== '') {
-        const rows = data.split("\n");
-        rows?.map((row ) => {
-          const columns = row.split(",");
-          if (Array.isArray(columns) && columns.length > 12) {
-            const Obj = {};
-            HeaderArr.map((header, index) => {
-              if (unitHeaders.includes(header)) {
-                const newArr = columns[index].split(' ');
-                Obj[[header]] = newArr[0];
-                // Obj[[header, 'Unit']] = newArr[1];
-              } else {
-                Obj[[header]] = columns[index];
-              }
-              return null;
-            });
-            csvData.push(Obj);
+      const csvData = JSON.parse(data.logTextValue);
+
+      if (Array.isArray(csvData) && csvData.length > 5000) {
+        setError("JSON size should not be greater than 5000 objects.");
+        return;
+      }
+      // Convert inches data to mm
+      let logData = csvData;
+      if (csvData.some((item) => item?.measurementUnit === "in")) {
+        logData = convertAllInchesBitsToMM(csvData);
+        if (!logData) {
+          throw new Error("Error converting inches to mm. Inches data format is Invalid!");
+        }
+      }
+
+      if (logData.some((item) => item?.timestamp && !item?.date)) {
+        logData = logData.map((item) => {
+          if (item?.timestamp && !item?.date) {
+            const { timestamp, srcInfo, ...rest } = item;
+            return {
+              date: timestamp,
+              ...rest,
+              srcInfo: { timestamp, ...srcInfo },
+            };
           }
-          return null;
+          return item;
         });
       }
-    } catch (e) {
-      enqueueSnackbar( "Found error While Converting text to json!",{ variant: `error` } )
+
+      setError(null);
+      const action = {};
+      if (selectedCheckbox === 0) {
+        action.skipExistingRecords = true;
+      } else if (selectedCheckbox) {
+        action.updateExistingRecords = true;
+      }
+
+      const response = await dispatch(addMachineLogRecord(machineId, machine?.customer?._id, logData, action, logVersion ,logType?.type));
+      if (response.success) {
+        enqueueSnackbar("Logs uploaded successfully!");
+        navigate(PATH_MACHINE.machines.logs.root(machineId));
+        reset();
+      } else throw new Error(response.message);
+    } catch (err) {
+      enqueueSnackbar(err.message || 'JSON validation failed!', { variant: 'error' });
     }
+  };
+
+  const convertAllInchesBitsToMM = (csvData) => {
+    let inchesError = false;
+    const convertedData = csvData.map((row) => {
+      const dataInInches = {};
+      if (row?.measurementUnit === 'in') {
+        Object.entries(row).forEach(([key, value]) => {
+          if (logType?.numericalLengthValues?.includes(key)) {
+            const numValue = Number(value);
+            if (Number.isNaN(numValue)) {
+              inchesError = true
+            }
+            dataInInches[key] = numValue;
+            const mmValue = (numValue * 25.4).toFixed(2);
+            row[key] = Number(mmValue).toLocaleString('en-US', { maximumFractionDigits: 2 });
+          }
+        });
+        row = {
+          ...row,
+          srcInfo: { measurementUnit: 'in', ...dataInInches },
+          measurementUnit: 'mm',
+        };
+      }
+      return row;
+    });
+    if (inchesError) return null
+    return convertedData;
+  };
+
+  const formatTxtToJson = async (data = logTextValue) => {
+    if (typeof data !== 'string' || data.trim() === '') return null;
+
+    try {
+      const parsedData = JSON.parse(data);
+      if (Array.isArray(parsedData) && parsedData.every(item => typeof item === 'object')) {
+        enqueueSnackbar("Data already in JSON Format");
+        return null;
+      }
+    } catch {
+      // Not valid JSON, continue to CSV check
+    }
+
+    const lines = data.trim().split('\n');
+    const isCSV = lines.length >= 1 && lines.every(line => {
+      const columns = line.split(',');
+      return columns.length > 1 && Math.abs(columns.length - lines[0].split(',').length) <= 2;
+    });
+
+    if (!isCSV) {
+      enqueueSnackbar("Data is not in correct format", { variant: 'error' });
+      return null;
+    }
+
+    const csvData = [];
+    try {
+      lines.forEach((row) => {
+        const columns = row.trim().split(',');
+        if (Array.isArray(columns)) {
+          const Obj = {};
+          logType.formats[logVersion]?.forEach((header, index) => {
+            Obj[header] = columns[index];
+          });
+          csvData.push(Obj);
+        } else {
+          throw new Error('Invalid Data Format');
+        }
+      });
+
+    } catch (e) {
+      enqueueSnackbar(e.message || 'Found error While Converting text to json!', { variant: 'error' });
+      return null;
+    }
+
+    if (csvData.some((item) => item?.measurementUnit === "in")) {
+      setInchesMeasurementExists(true);
+    }
+
     return csvData;
-  };  
+  };
 
   // TEXT FILE READER
-const readFile = (selectedFile) => 
-  new Promise((resolve, reject) => {
+  const readFile = (selectedFile) =>
+    new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = (e) => {
-          const content = e.target.result;
-          resolve(content);
+        const content = e.target.result;
+        resolve(content);
       };
       reader.onerror = (err) => {
-          console.log(err);
-        enqueueSnackbar( "Found error while Reading File!",{ variant: `error` } )
+        console.log(err);
+        enqueueSnackbar('Found error while Reading File!', { variant: `error` });
       };
       reader.readAsText(selectedFile);
     });
-    // STRINGIFY JSON FORMATED FILE
 
   // FILE HANDLER FUNCTION
   const handleFileChange = async (event) => {
-    let selectedFile 
-    if (event.target.files.length === 1) {
-      selectedFile = await readFile(event.target.files[0]);
-      txtToJson(selectedFile).then(result => {
-        if(result.length > 0) {
-        const stringifyJSON = JSON.stringify(result, null, 2)
-          setValue('erpLog', stringifyJSON )
-        } else{
-          enqueueSnackbar( "No Data Found to Import!",{ variant: `error` } )
-          setValue('erpLog', '' )
-        }
-      }).catch(err => {
-        enqueueSnackbar( "Found error While Converting text to json!",{ variant: `error` } )
-      });
-    } else if (event.target.files.length > 1) {
-      selectedFile = await Promise.all(Array.from(event.target.files).map(file => readFile(file)));
-        const multipleSelectedFiles = [];
-        await Promise.all(Array.from(selectedFile.map((file) =>{
-          txtToJson(file).then(result => {
-            multipleSelectedFiles.push(...result)
-            }).catch(err => {
-              enqueueSnackbar( "Found error While Converting text to json!",{ variant: `error` } )
-            });
-            return null;
-        })))
-        const stringifyJSON = JSON.stringify(multipleSelectedFiles, null, 2)
-        setValue('erpLog', stringifyJSON )
+    setValue('logTextValue', '');
+    const files = Array.from(event.target.files);
+    if (files.length === 0) {
+      return;
     }
-    return null
+
+    try {
+      const fileContents = await Promise.all(files.map((file) => readFile(file)));
+
+      const allResults = await Promise.all(fileContents.map((content) => formatTxtToJson(content)));
+      const flattenedResults = allResults.filter(result => result !== null).flat();
+
+      if (flattenedResults.length > 0) {
+        const stringifyJSON = JSON.stringify(flattenedResults, null, 2);
+        setValue('logTextValue', stringifyJSON);
+        if (flattenedResults.some((item) => item?.measurementUnit === 'in'))
+          setInchesMeasurementExists(true);
+      } else {
+        enqueueSnackbar('No Data Found to Import!', { variant: 'error' });
+      }
+    } catch (err) {
+      console.log(err);
+      enqueueSnackbar('Found error while processing files!', { variant: 'error' });
+    }
+
+    setFileInputKey((prevKey) => prevKey + 1);
   };
 
-const HandleChangeIniJson = async (e) => { setValue('erpLog', e) }
+  const handleFormatButtonClick = async (unformattedData) => {
+    const formattedData = await formatTxtToJson(unformattedData);
+    if (formattedData) {
+      const stringifyJSON = JSON.stringify(formattedData, null, 2);
+      setValue('logTextValue', stringifyJSON);
+    }
+  }
 
-const toggleCancel = () => navigate(PATH_MACHINE.machines.logs.root(machineId));
+  const HandleChangeIniJson = async (e) => { setValue('logTextValue', e) }
+
+  const toggleCancel = () => navigate(PATH_MACHINE.machines.logs.root(machineId));
 
   return (
-    <Container maxWidth={false} >
-      <MachineTabContainer currentTabValue='logs' />
+    <Container maxWidth={false}>
+      <MachineTabContainer currentTabValue="logs" />
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container>
-          <Grid item xs={18} md={12} >
+          <Grid item xs={18} md={12}>
             <Card sx={{ p: 3 }}>
               <Stack spacing={2}>
-                <Grid >
-                  <Grid item md={12} sx={{ display: 'flex', justifyContent: 'flex-end' }} >
-                      <Button variant="contained" component="label" startIcon={<Iconify icon={ICONS.UPLOAD_FILE.icon} />} > Import Files  
-                        <input type="file" accept='.txt' multiple hidden onChange={handleFileChange} /> 
+                <Stack
+                  direction="row"
+                  spacing={1}
+                  sx={{ alignSelf: 'flex-start', alignItems: 'center', mb: 1 }}
+                >
+                  <IconTooltip
+                    title="Back"
+                    onClick={() => navigate(PATH_MACHINE.machines.logs.root(machineId))}
+                    color={theme.palette.primary.main}
+                    icon="mdi:arrow-left"
+                  />
+                  <Divider orientation="vertical" flexItem />
+                  <Box sx={{ borderBottom: 2, borderColor: 'primary.main', pb: 1 }}>
+                    <Typography variant="h5" color="text.primary">
+                      Add New Logs
+                    </Typography>
+                  </Box>
+                </Stack>
+                <Stack spacing={0.5} direction="row" sx={{ alignItems: 'center' }}>
+                  <Iconify icon="mdi:information-outline" color={theme.palette.text.secondary} />
+                  <Typography variant="caption" color='text.secondary'>
+                    You need to select Log Type before you can import any Log Files
+                  </Typography>
+                </Stack>
+                <Grid>
+                  <Grid container spacing={2} sx={{ alignItems: 'flex-end', mb: 1 }}>
+                    <Grid item md={4}>
+                      <RHFAutocomplete
+                        label="Log Type"
+                        placeholder="Select Log Type"
+                        name="logType"
+                        options={machineLogTypeFormats}
+                        size="small"
+                        getOptionLabel={(option) => option.type}
+                        isOptionEqualToValue={(option, value) => option?.type === value?.type}
+                        nonEditable
+                        // helperText="You need to select Log Type before you can import any log Files"
+                        renderOption={(props, option) => (
+                          <li {...props} key={option?.type}>
+                            {option.type || ''}
+                          </li>
+                        )}
+                        getOptionDisabled={(option) => option?.disabled}
+                      />
+                    </Grid>
+                    <Grid item md={2}>
+                      {logType && (
+                        <RHFAutocomplete
+                          label="Version"
+                          placeholder="Select Version"
+                          name="logVersion"
+                          options={logType?.versions}
+                          getOptionLabel={(option) => option}
+                          value={logVersion}
+                          size="small"
+                          nonEditable
+                          // defaultValue={watch('logType')?.versions?.[0] || null}
+                          // isOptionEqualToValue={(option, value) => option?.type === value?.type}
+                          // renderOption={(props, option) => (
+                          //   <li {...props} key={option?.type}>
+                          //     {option.type || ''}
+                          //   </li>
+                          // )}
+                        />
+                      )}
+                    </Grid>
+                    <Grid item md={6} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                      <Button
+                        variant="contained"
+                        component="label"
+                        disabled={!logType || !logVersion}
+                        startIcon={<Iconify icon={ICONS.UPLOAD_FILE.icon} />}
+                      >
+                        {' '}
+                        Import Files
+                        <input
+                          key={fileInputKey}
+                          type="file"
+                          accept=".txt"
+                          multiple
+                          hidden
+                          onChange={handleFileChange}
+                        />
                       </Button>
+                    </Grid>
                   </Grid>
-                  <CodeMirror value={erpLog} HandleChangeIniJson={HandleChangeIniJson}/>     
-                  <Grid sx={{ display: 'flex', alignItems: 'center' }} >
-                      <Typography variant="subtitle2" >Action to perform on existing records?  </Typography>
-                        {checkboxes.map((checkbox, index) => (
-                          <Typography variant="subtitle2" sx={{ml: 2}} >{checkbox.label}
-                            <Checkbox
-                              key={index}
-                              checked={index === selectedCheckbox}
-                              onChange={() => handleCheckboxChange(index)}
-                              label={checkbox.label}
-                            />
-                          </Typography>
-                        ))}
-                  </Grid>           
+                  {logType && logVersion && (
+                    <Grid item xs={10}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                        <Chip
+                          label={<Typography variant="overline">Log Format</Typography>}
+                          icon={<Iconify icon="tabler:logs" color={theme.palette.primary.main} />}
+                          sx={{ mr: 1 }}
+                        />
+                        <Typography variant="body2" color="text.secondary">
+                          {logType?.formats?.[logVersion]?.map((format) => format).join(', ')}
+                        </Typography>
+                      </Box>
+                    </Grid>
+                  )}
+                  <CodeMirror
+                    value={logTextValue}
+                    HandleChangeIniJson={HandleChangeIniJson}
+                    editable={!!logType && !!logVersion}
+                    formatButton
+                    formatButtonOnClick={handleFormatButtonClick}
+                  />
+                  {inchesMeasurementExists && (
+                    <Grid item xs={12} sx={{ mt: 2 }}>
+                      <Alert severity="info" variant="filled">
+                        Logs contain some measurements in inches. These will be converted to millimeters.
+                      </Alert>
+                    </Grid>
+                  )}
+                  <Grid sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Typography variant="subtitle2">
+                      Action to perform on existing records?{' '}
+                    </Typography>
+                    {checkboxes.map((checkbox, index) => (
+                      <Typography variant="subtitle2" sx={{ ml: 2 }} key={checkbox.value}>
+                        {checkbox.label}
+                        <Checkbox
+                          key={index}
+                          checked={index === selectedCheckbox}
+                          onChange={() => handleCheckboxChange(index)}
+                          label={checkbox.label}
+                        />
+                      </Typography>
+                    ))}
+                  </Grid>
                 </Grid>
-                { error && <FormHelperText error >Json Size should not be greater than 5000 Objects.</FormHelperText> }
+                {error && <FormHelperText error>{error}</FormHelperText>}
                 <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Stack>
             </Card>

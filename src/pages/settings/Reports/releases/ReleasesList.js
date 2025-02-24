@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import debounce from 'lodash/debounce';
 // @mui
-import { Table, TableBody, TableContainer, Container, Card } from '@mui/material';
+import { Table, TableBody, TableContainer, Container } from '@mui/material';
 import { Cover } from '../../../../components/Defaults/Cover';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
@@ -32,7 +32,7 @@ export default function ReleasesList() {
     onChangePage,
     onChangeRowsPerPage,
   } = useTable({
-    defaultOrderBy: 'id', defaultOrder: 'desc',
+    defaultOrderBy: 'releaseDate', defaultOrder: 'desc',
   });
 
   const dispatch = useDispatch();
@@ -58,7 +58,7 @@ export default function ReleasesList() {
   });  
   const denseHeight = 60;
   const isFiltered = filterName !== '';
-  const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
+  const isNotFound = (!isLoading && !dataFiltered.length);
 
   const debouncedSearch = useRef(debounce((value) => {
     setPage(0)

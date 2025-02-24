@@ -18,9 +18,26 @@ import {
   allowedImageExtensions,
   allowedDocumentExtension,
 } from '../../constants/document-constants';
+import { ThumbnailDocButton } from '../Thumbnails';
 // ----------------------------------------------------------------------
 
 const StyledDropZone = styled('div')(({ theme }) => ({
+  outline: 'none',
+  cursor: 'pointer',
+  overflow: 'hidden',
+  position: 'relative',
+  padding: theme.spacing(5),
+  borderRadius: theme.shape.borderRadius,
+  transition: theme.transitions.create('padding'),
+  backgroundColor: theme.palette.background.neutral,
+  height: 'auto',
+  border: `1px solid ${alpha(theme.palette.grey[500], 0.32)}`,
+  '&:hover': {
+    opacity: 0.72,
+  },
+}));
+
+const StyledDropSmall = styled('div')(({ theme }) => ({
   outline: 'none',
   cursor: 'pointer',
   overflow: 'hidden',
@@ -51,17 +68,17 @@ Upload.propTypes = {
   onUpload: PropTypes.func,
   thumbnail: PropTypes.bool,
   rows: PropTypes.bool,
+  hideFiles: PropTypes.bool,
   helperText: PropTypes.node,
   onRemoveAll: PropTypes.func,
   machine:PropTypes.string,
-  onChangeDocType: PropTypes.func,
-  onChangeDocCategory: PropTypes.func,
-  onChangeVersionNo: PropTypes.func,
-  onChangeDisplayName: PropTypes.func,
-  onChangeReferenceNumber: PropTypes.func,
-  onChangeStockNumber: PropTypes.func,
   drawingPage:PropTypes.bool,
-  imagesOnly:PropTypes.bool
+  imagesOnly:PropTypes.bool,
+  dropZone:PropTypes.bool,
+  onLoadImage: PropTypes.func,
+  onLoadPDF: PropTypes.func,
+  onDownload: PropTypes.func,
+            
 };
 
 export default function Upload({
@@ -77,18 +94,17 @@ export default function Upload({
   files,
   thumbnail,
   rows,
+  hideFiles,
   onUpload,
   onRemove,
   onRemoveAll,
   machine,
-  onChangeDocType,
-  onChangeDocCategory,
-  onChangeVersionNo,
-  onChangeDisplayName,
-  onChangeReferenceNumber,
-  onChangeStockNumber,
   drawingPage,
+  onLoadImage,
+  onLoadPDF,
+  onDownload,
   imagesOnly,
+  dropZone,
   sx,
   ...other
 }) {
@@ -106,71 +122,66 @@ export default function Upload({
     setVerifiedAnchorEl(null);
   };
   const hasFile = !!file && !multiple;
-
   const hasFiles = files && multiple && files.length > 0;
-
   const isError = isDragReject || !!error;
-
   const fileExtension = file?.name?.split('.').pop().toLowerCase();
   
   return (
     <Box sx={{ width: 1, position: 'relative', ...sx }}>
-      <StyledDropZone
-        {...getRootProps()}
-        sx={{
-          ...(isDragActive && {
-            opacity: 0.42,
-            height: '232px',
-          }),
-          ...(isError && {
-            color: 'error.main',
-            bgcolor: 'error.lighter',
-            borderColor: 'error.light',
-          }),
-          ...(disabled && {
-            opacity: 0.48,
-            height: '165px',
-            pointerEvents: 'none',
-          }),
-          ...(hasFile && {
-            padding: '8% 0',
-            width: '250px',
-            height: '165px',
-            // maxWidth:"100%",
-            // height: "100%",
-            objectFit: 'cover',
-          }),
-        }}
-      >
-        <input {...getInputProps()} />
+      {dropZone && 
+        <>
+          <StyledDropZone
+            {...getRootProps()}
+            sx={{
+              ...(isDragActive && {
+                opacity: 0.42,
+                height: '232px',
+              }),
+              ...(isError && {
+                color: 'error.main',
+                bgcolor: 'error.lighter',
+                borderColor: 'error.light',
+              }),
+              ...(disabled && {
+                opacity: 0.48,
+                height: '165px',
+                pointerEvents: 'none',
+              }),
+              ...(hasFile && {
+                padding: '8% 0',
+                width: '250px',
+                height: '165px',
+                // maxWidth:"100%",
+                // height: "100%",
+                objectFit: 'cover',
+              }),
+            }}
+          >
+            <input {...getInputProps()} />
 
-        <Placeholder
-          sx={{
-            ...(hasFile && {
-              opacity: 0,
-            }),
-          }}
-        />
-
-        {hasFile && <SingleFilePreview file={file} />}
-      </StyledDropZone>
-      <Typography
-        variant="body2"
-        sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center', ml: 2, mt: 0.5 }}
-      >
-        Allowed Formats:
-        <Iconify
-          onClick={handleExtensionsPopoverOpen}
-          icon="iconamoon:question-mark-circle-bold"
-          sx={{ cursor: 'pointer' }}
-        />
-      </Typography>
-      <AllowedExtensionsMenuePopover
-        open={verifiedAnchorEl}
-        onClose={handleExtensionsPopoverClose}
-        imagesOnly={imagesOnly}
-      />
-      {helperText && helperText}
+            <Placeholder
+              sx={{
+                ...(hasFile && {
+                  opacity: 0,
+                }),
+              }}
+            />
+            {hasFile && <SingleFilePreview file={file} />}
+          </StyledDropZone>
+        <Typography
+          variant="body2"
+          sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center', ml: 2, mt: 0.5 }}
+        >
+          Allowed Formats:
+          <Iconify
+            onClick={handleExtensionsPopoverOpen}
+            icon="iconamoon:question-mark-circle-bold"
+            sx={{ cursor: 'pointer' }}
+            />
+        </Typography>
+        <AllowedExtensionsMenuePopover open={verifiedAnchorEl} onClose={handleExtensionsPopoverClose} imagesOnly={imagesOnly} />
+      </>
+      }
 
       <RejectionFiles fileRejections={fileRejections} />
 
@@ -243,12 +254,12 @@ export default function Upload({
         </IconButton>
       )}
 
-      {hasFiles && (
+      {(hasFiles || !dropZone) && (
         <>
           <Box
-            sx={{mt:2, width:'100%'}}
             gap={2}
             display={rows ? "" : "grid"}
+            sx={{ width:'100%',  alignItems: 'center' }}
             gridTemplateColumns={{
               xs: 'repeat(1, 1fr)',
               sm: 'repeat(3, 1fr)',
@@ -257,32 +268,36 @@ export default function Upload({
               xl: 'repeat(8, 1fr)',
             }}
           >
-            <MultiFilePreview 
-              onChangeDocType={onChangeDocType}
-              onChangeDocCategory={onChangeDocCategory}
-              onChangeVersionNo={onChangeVersionNo}
-              onChangeDisplayName={onChangeDisplayName}
-              onChangeReferenceNumber={onChangeReferenceNumber}
-              onChangeStockNumber={onChangeStockNumber}
-              machine={machine||''} 
-              rows={rows} 
-              drawingPage 
-              files={files} 
-              thumbnail={thumbnail} 
-              onRemove={onRemove} 
-            />
+            {hasFiles && !hideFiles &&
+              <MultiFilePreview 
+                onLoadImage={ onLoadImage }
+                onLoadPDF={onLoadPDF}
+                onDownload={ onDownload }
+                machine={machine||''}
+                drawingPage 
+                files={files} 
+                thumbnail={thumbnail} 
+                onRemove={onRemove} 
+              />
+            }
+            {!dropZone && <Button {...getRootProps()} variant='outlined' sx={{display:'block', height:'150px'}} >
+              <input {...getInputProps()} />
+              <Iconify icon="mdi:plus" width={50} />
+              <Typography variant="subtitle2">Add / Upload File</Typography>
+            </Button>}
           </Box>
-
-          <Stack direction="row" justifyContent="flex-end" spacing={1.5} sx={{mt:1}}>
-            {onRemoveAll && (
-              <Button color="error" variant="outlined" size="small" onClick={onRemoveAll}>
-                Remove all
-              </Button>
-            )}
-            
-          </Stack>
+          {hasFiles &&
+            <Stack direction="row" justifyContent="flex-end" spacing={1.5} sx={{mt:1}}>
+              {onRemoveAll && (
+                <Button color="error" variant="outlined" size="small" onClick={onRemoveAll}>
+                  Remove all
+                </Button>
+              )} 
+            </Stack>
+          }  
         </>
       )}
+      {helperText && helperText}
     </Box>
   );
 }

@@ -2,13 +2,13 @@ import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // @mui
-import { Card, Grid, Link, Chip, Typography, IconButton, Tab, tabsClasses} from '@mui/material';
+import { Card, Grid, Link, Chip, Typography } from '@mui/material';
 // routes
 import { PATH_CRM, PATH_MACHINE } from '../../routes/paths';
 // slices
 import {
-  getMachines,
   getMachine,
+  updateMachine,
   deleteMachine,
   setMachineEditFormVisibility,
   setMachineVerification,
@@ -36,15 +36,13 @@ import { TITLES, FORMLABELS } from '../../constants/default-constants';
 import { Snacks } from '../../constants/machine-constants';
 // utils
 import { fDate } from '../../utils/formatTime';
-// dialog
-import MachineDialog from '../../components/Dialog/MachineDialog'
-import CustomerDialog from '../../components/Dialog/CustomerDialog';
 import MachineTransferDialog from '../../components/Dialog/MachineTransferDialog';
 import SiteDialog from '../../components/Dialog/SiteDialog';
 import OpenInNewPage from '../../components/Icons/OpenInNewPage';
 import Iconify from '../../components/iconify';
 import IconButtonTooltip from '../../components/Icons/IconButtonTooltip';
 import MachineStatusChangeDialog from '../../components/Dialog/MachineStatusChangeDialog';
+import MachineAddForm from './MachineAddForm';
 
 // ----------------------------------------------------------------------
 
@@ -53,8 +51,7 @@ export default function MachineViewForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const { machine, machineDialog, machineTransferDialog, machineStatusChangeDialog, isLoading } = useSelector((state) => state.machine);
-  const { customerDialog } = useSelector((state) => state.customer);
+  const { machine, machineTransferDialog, machineStatusChangeDialog, isLoading } = useSelector((state) => state.machine);
   const { siteDialog } = useSelector((state) => state.site);
   const [disableTransferButton, setDisableTransferButton] = useState(true);
   const [disableEditButton, setDisableEditButton] = useState(false);
@@ -120,7 +117,6 @@ export default function MachineViewForm() {
     if (machine?.status?.slug === 'transferred') {
       setDisableTransferButton(true);
       setDisableEditButton(true);
-      // setDisableDeleteButton(true);
     } else {
       setDisableTransferButton(false);
       setDisableEditButton(false);
@@ -135,18 +131,6 @@ export default function MachineViewForm() {
     }
   };
 
-  const onDelete = async () => {
-    try {
-      await dispatch(deleteMachine(machine._id));
-      dispatch(getMachines());
-      enqueueSnackbar('Machine Archived Successfully!');
-      navigate(PATH_MACHINE.machines.root);
-    } catch (err) {
-      enqueueSnackbar(Snacks.machineFailedDelete, { variant: `error` });
-      console.log('Error:', err);
-    }
-  };
-
   const handleVerification = async () => {
     try {
       await dispatch(setMachineVerification(machine._id, machine?.isVerified));
@@ -158,15 +142,15 @@ export default function MachineViewForm() {
     }
   };
   
-  const handleCustomerDialog = (event, customerId) => {
+  const handleCustomerDialog = async (event, customerId) => {
     event.preventDefault(); 
-    dispatch(getCustomer(customerId));
-    dispatch(setCustomerDialog(true));
+    await dispatch(getCustomer(customerId));
+    await dispatch(setCustomerDialog(true));
   };
 
-  const handleMachineDialog = (MachineID) => {
-    dispatch(getMachineForDialog(MachineID));
-    dispatch(setMachineDialog(true)); 
+  const handleMachineDialog = async ( MachineID ) => {
+    await dispatch(getMachineForDialog(MachineID));
+    await dispatch(setMachineDialog(true)); 
   };
 
   const handleStatusChangeDialog = () => {
@@ -175,7 +159,7 @@ export default function MachineViewForm() {
   
   const linkedMachines = machine?.machineConnections?.map((machineConnection, index) => (
       <Chip 
-        sx={{ml:index===0?0:1}} 
+        sx={{ml:index===0?0:1, my:0.2}} 
         onClick={() => handleMachineDialog(machineConnection.connectedMachine._id)} 
         deleteIcon={<Iconify icon="fluent:open-12-regular"/>}
         onDelete={()=> {
@@ -187,7 +171,7 @@ export default function MachineViewForm() {
   
   const paranetMachines = machine?.parentMachines?.map((parentMachine, index) => (  
     <Chip 
-        sx={{ml:index===0?0:1}} 
+        sx={{ml:index===0?0:1, my:0.2}} 
         onClick={() => handleMachineDialog(parentMachine.machine._id)} 
         deleteIcon={<Iconify icon="fluent:open-12-regular"/>}
         onDelete={()=> {
@@ -242,10 +226,48 @@ export default function MachineViewForm() {
     [machine]
   );
   
-  const handleJiraNaviagte = ( )=>{
-    const url = `https://howickltd.atlassian.net/jira/servicedesk/projects/HWKSC/queues/custom/3/HWKSC-492`
-    window.open( url, '_blank')
-  }
+
+  const onArchive = async () => {
+    try {
+      const data = {
+        ...machine,
+        isActive: true,
+        isArchived: true,
+      }
+      await dispatch(updateMachine(machine._id, data ));
+      enqueueSnackbar('Machine Archived Successfully!');
+      navigate(PATH_MACHINE.machines.root);
+    } catch (err) {
+      enqueueSnackbar( typeof err === 'string' ? err : Snacks.machineFailedArchive, { variant: `error` });
+      console.log('Error:', err);
+    }
+  };
+
+  const onRestore = async () => {
+    try {
+      const data = {
+        ...machine,
+        isActive: true,
+        isArchived: false,
+      }
+      await dispatch(updateMachine(machine._id, data ));
+      enqueueSnackbar('Machine Restored Successfully!');
+      dispatch(getMachine(machine._id));
+    } catch (err) {
+      enqueueSnackbar( typeof err === 'string' ? err : Snacks.machineFailedRestore, { variant: `error` });
+    }
+  };
+  
+  const onDelete = async () => {
+    try {
+      await dispatch(deleteMachine(machine._id));
+      enqueueSnackbar('Machine Deleted Successfully!');
+      navigate(PATH_MACHINE.archived.root);
+    } catch (err) {
+      enqueueSnackbar( typeof err === 'string' ? err : Snacks.machineFailedDelete, { variant: `error` });
+      console.log('Error:', err);
+    }
+  };
 
   return (
     <>
@@ -261,11 +283,13 @@ export default function MachineViewForm() {
               disableDeleteButton={disableDeleteButton}
               handleEdit={ machine?.isArchived ? undefined : handleEdit}
               // handleJiraNaviagte={handleJiraNaviagte}
-              onDelete={ machine?.isArchived ? undefined : onDelete}
+              onArchive={ machine?.isArchived ? undefined : onArchive }
+              onRestore={ machine?.isArchived ? onRestore : undefined }
+              onDelete={ machine?.isArchived ? onDelete : undefined }
               handleTransfer={ machine?.isArchived ? undefined : () => navigate(PATH_MACHINE.machines.transfer(machine?._id))}
-              backLink={() => navigate(PATH_MACHINE.machines.root)}
+              backLink={() => navigate( machine?.isArchived ? PATH_MACHINE.archived.root : PATH_MACHINE.machines.root)}
               machineSupportDate={ machine?.isArchived ? undefined : defaultValues?.supportExpireDate}
-              transferredHistory={ machine?.isArchived ? undefined : machine?.transferredHistory || []}
+              transferredHistory={ machine?.isArchived && MachineAddForm ? undefined : machine?.transferredHistory || []}
             />
             <FormLabel content={FORMLABELS.KEYDETAILS} />
             <Grid container>
@@ -275,7 +299,7 @@ export default function MachineViewForm() {
                 node={
                   defaultValues.customer && (
                     <>
-                    <Link onClick={(event)=> handleCustomerDialog(event, defaultValues.customer?._id)} underline="none" sx={{ cursor: 'pointer'}}>
+                    <Link variant='h4' onClick={(event)=> handleCustomerDialog(event, defaultValues.customer?._id)} underline="none" sx={{ cursor: 'pointer'}}>
                       {defaultValues.customer?.name}
                     </Link>
                       <OpenInNewPage onClick={()=> window.open( PATH_CRM.customers.view(defaultValues.customer?._id), '_blank' ) }/>
@@ -295,35 +319,43 @@ export default function MachineViewForm() {
                   node={ 
                     <>
                       <Typography variant='h4' sx={{mr: 1,color: machine?.status?.slug === "transferred" && 'red'  }}>{ defaultValues?.status }</Typography> 
-                      { machine?.status?.slug!=='transferred' && <IconButtonTooltip title='Change Status' icon="grommet-icons:sync" onClick={handleStatusChangeDialog} />}
+                      { machine?.status?.slug!=='transferred' && !machine?.isArchived && <IconButtonTooltip title='Change Status' icon="grommet-icons:sync" onClick={handleStatusChangeDialog} />}
                     </>
                     } />
             <ViewFormField isLoading={isLoading} sm={6} heading="De-Commissioned Date" param={fDate(defaultValues?.decommissionedDate)} />
-            {machine?.status?.slug==='transferred' && 
+            
+            { ( machine?.status?.slug==='transferred' || defaultValues?.transferredFromMachine || defaultValues?.transferredToMachine ) && 
 
-            <ViewFormField isLoading={isLoading} sm={6} heading="Transfer Detail"
-              node={
-                <Grid display="flex" alignItems="center">
-                  { defaultValues?.transferredFromMachine && 
-                    <Typography variant='body2' sx={{mt: 0.5}} >
-                      {`from >`}
-                      <Link onClick={(event)=> handleCustomerDialog(event, defaultValues?.transferredFromMachine?.customer?._id)} underline="none" sx={{ cursor: 'pointer', ml:1}}>
-                        <b>{defaultValues?.transferredFromMachine?.customer?.name}</b>
-                      </Link>
-                        <OpenInNewPage onClick={()=> window.open( PATH_CRM.customers.view(defaultValues?.transferredFromMachine?.customer?._id), '_blank' ) }/>
-                    </Typography>}
-                    { defaultValues?.transferredFromMachine && defaultValues?.transferredToMachine && <Typography variant='body2'>,</Typography> }
-                    { defaultValues?.transferredToMachine && 
-                      <Typography variant='body2' sx={{mt: 0.5, ml:1 }} >
-                          {`to >  `}
-                          <Link onClick={(event)=> handleCustomerDialog(event, defaultValues?.transferredToMachine?.customer?._id)} underline="none" sx={{ cursor: 'pointer', ml:1}}>
-                            <b>{defaultValues?.transferredToMachine?.customer?.name}</b>
-                          </Link>
-                            <OpenInNewPage onClick={()=> window.open( PATH_CRM.customers.view(defaultValues?.transferredToMachine?.customer?._id), '_blank' ) }/>
-                      </Typography> }
-                </Grid>
-              }
-            />
+              <ViewFormField isLoading={isLoading} sm={6} heading="Transfer Detail"
+                node={
+                  <Grid display="flex" alignItems="center">
+                      { defaultValues?.transferredFromMachine && 
+                        <Typography variant='body2' sx={{mt: 0.5}} >
+                          {` from > `}
+                            <Link onClick={(event)=> handleCustomerDialog(event, defaultValues?.transferredFromMachine?.customer?._id)} underline="none" sx={{ cursor: 'pointer', ml:1}}>
+                              <b>{defaultValues?.transferredFromMachine?.customer?.name}</b>
+                            </Link>
+                            <OpenInNewPage onClick={()=> window.open( PATH_CRM.customers.view(defaultValues?.transferredFromMachine?.customer?._id), '_blank' ) }/>
+                        </Typography>
+                      }
+
+                      { defaultValues?.transferredFromMachine 
+                        && defaultValues?.transferredToMachine 
+                        && <Typography variant='body2'>,</Typography> 
+                      }
+
+                      { defaultValues?.transferredToMachine && 
+                        <Typography variant='body2' sx={{mt: 0.5, ml:1 }} >
+                            {` to >  `}
+                            <Link onClick={(event)=> handleCustomerDialog(event, defaultValues?.transferredToMachine?.customer?._id)} underline="none" sx={{ cursor: 'pointer', ml:1}}>
+                              <b>{defaultValues?.transferredToMachine?.customer?.name}</b>
+                            </Link>
+                              <OpenInNewPage onClick={()=> window.open( PATH_CRM.customers.view(defaultValues?.transferredToMachine?.customer?._id), '_blank' ) }/>
+                        </Typography> 
+                      }
+                  </Grid>
+                }
+              />
             }
             
             <ViewFormField isLoading={isLoading} sm={12} variant='h4' heading="Profiles" param={ Array.isArray(defaultValues?.machineProfiles) && defaultValues?.machineProfiles?.map( el => `${el?.defaultName} ${(el?.web && el?.flange)? `(${el?.web} X ${el?.flange})` :""}`)?.join(', ') || ''} />
@@ -390,8 +422,6 @@ export default function MachineViewForm() {
       </Grid>
       
       { siteDialog && <SiteDialog title={siteDialogTitle}/>}
-      { machineDialog  && <MachineDialog />}
-      { customerDialog  && <CustomerDialog />}
       { machineTransferDialog && <MachineTransferDialog />}
       { machineStatusChangeDialog && <MachineStatusChangeDialog />}
       

@@ -10,13 +10,8 @@ export default function HistoryIcon({ callFunction }) {
   const theme = createTheme({ palette: { success: green } });
 
   return (
-      <StyledTooltip
-        arrow
-        title="History"
-        placement='top'
-        tooltipcolor={theme.palette.primary.main}
-      >
-        <Iconify icon="lucide:list-restart" sx={{ml:0.7, cursor: 'pointer'}} onClick={callFunction} />
+      <StyledTooltip arrow title="History" placement='top' tooltipcolor={theme.palette.primary.main} >
+        <Iconify icon="lucide:list-restart" width={25} height={25} sx={{ml:1, cursor: 'pointer'}} onClick={callFunction} />
       </StyledTooltip>
   );
 }

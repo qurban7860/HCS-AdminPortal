@@ -55,7 +55,7 @@ export default function SettingEditForm() {
   
   const onSubmit = async (data) => {
     try {
-      await dispatch(await updateSetting(machineId, id, data));
+      await dispatch( updateSetting(machineId, id, data));
       await navigate(PATH_MACHINE.machines.settings.view( machineId, id ));
       reset();
     } catch (err) {
@@ -84,7 +84,7 @@ export default function SettingEditForm() {
                 <RHFTextField name="techParamCategory" label="Category" disabled />
                 <RHFTextField name="techParam" label="Technical Parameters" disabled/>
               </Box>
-              <RHFTextField name="techParamValue" label="Technical Parameter Value" />
+              <RHFTextField name="techParamValue" label="Technical Parameter Value*" />
               <RHFSwitch name="isActive" label="Active" />
             </Stack>
             <AddFormButtons isSubmitting={isSubmitting} disabled={isSubmitting} toggleCancel={toggleCancel} />

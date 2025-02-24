@@ -75,14 +75,14 @@ export default function DocumentCategoryeEditForm() {
     formState: { isSubmitting },
   } = methods;
   const { inputType } = watch();
-  const toggleCancel = () => navigate(PATH_MACHINE.machines.machineSettings.checkItems.view(checkItem._id));
+  const toggleCancel = () => navigate(PATH_MACHINE.machineSettings.checkItems.view(checkItem._id));
 
   const onSubmit = async (data) => {
     try {
       await dispatch(updateCheckItem(checkItem._id, data));
       enqueueSnackbar(Snacks.checkItemUpdate, { variant: `success` });
       reset();
-      navigate(PATH_MACHINE.machines.machineSettings.checkItems.view(checkItem._id));
+      navigate(PATH_MACHINE.machineSettings.checkItems.view(checkItem._id));
     } catch (error) {
       enqueueSnackbar(error, { variant: `error` });
       console.error(error);

@@ -67,20 +67,26 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
   const navigate = useNavigate();
 
   const theme = createTheme({ palette: { success: green } });
-  const systemConfig= JSON.parse( localStorage.getItem('configurations'))
   
-  const sPContactTypes = systemConfig?.find( ( c )=> c?.name?.trim() === 'SP_CONTACT_TYPES' )?.value?.split(',')?.map(item => item?.trim());
-  const CustomerContactTypes = systemConfig?.find( ( c )=> c?.name?.trim() === 'CUSTOMER_CONTACT_TYPES')?.value?.split(',')?.map(item => item?.trim());
-
+  
   useEffect(()=>{
-    if( customer?.type?.toLowerCase() === 'sp'){
-      setContactTypes(sPContactTypes)
-    } else {
-      setContactTypes(CustomerContactTypes)
+    const systemConfig= JSON.parse( localStorage.getItem('configurations'))
+    if( customer?.type?.toLowerCase() === 'sp' && systemConfig ){
+      const configSPContactTypes = systemConfig?.find( ( c )=> c?.name?.trim() === 'SP_CONTACT_TYPES' )?.value?.split(',');
+      const sPContactTypes = configSPContactTypes?.map(item => item?.trim())?.sort();
+      if( Array.isArray(sPContactTypes) && sPContactTypes?.length > 0 ){
+        setContactTypes(sPContactTypes)
+      }
+    } else if( customer?.type?.toLowerCase() !== 'sp' && systemConfig ) {
+      const configCustomerContactTypes = systemConfig?.find( ( c )=> c?.name?.trim() === 'CUSTOMER_CONTACT_TYPES')?.value?.split(',');
+      const CustomerContactTypes = configCustomerContactTypes?.map(item => item?.trim())?.sort()
+      if( Array.isArray(CustomerContactTypes) && CustomerContactTypes?.length > 0 ){
+        setContactTypes(CustomerContactTypes)
+      }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   },[ customer?.type ])
 
+  const systemConfig= JSON.parse( localStorage.getItem('configurations'))
   const PHONE_TYPES_ = systemConfig?.find( ( c )=> c?.name === 'PHONE_TYPES' )
   let PHONE_TYPES = ['Mobile', 'Home', 'Work', 'Fax', 'Others'];
   if(PHONE_TYPES_) {
@@ -177,8 +183,12 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
       const respone = await dispatch(addContact(data));
       await dispatch(setIsExpanded(true));
       enqueueSnackbar('Contact added successfully');
-      await dispatch(getContacts(customerId));
-      if(customerId && respone?.data?.customerCategory?._id ) await navigate(PATH_CRM.customers.contacts.view(customerId, respone?.data?.customerCategory?._id ))
+      if( customerId && customerId !== "undefined"){
+        await dispatch(getContacts(customerId));
+        if( respone?.data?.customerCategory?._id ){
+          await navigate(PATH_CRM.customers.contacts.view(customerId, respone?.data?.customerCategory?._id ))
+        }
+      }
       await reset();
     } catch (error) {
       enqueueSnackbar(error, { variant: `error` });
@@ -212,7 +222,7 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
                 filterSelectedOptions
                 name={FORMLABELS.CONTACT_TYPES.name}
                 label={FORMLABELS.CONTACT_TYPES.label}
-                options={contactTypes?.sort() || []}
+                options={ contactTypes }
                 isOptionEqualToValue={(option, value) => option === value}
               />
 
@@ -282,64 +292,45 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
                 Update country code in phone/fax.
               </Typography>
             </Box>
-            <Grid>
-              {phoneNumbers?.map((pN, index) => (
-                <Grid sx={{ py: 1 }} display="flex" alignItems="center">
-                  <RHFCustomPhoneInput
-                    name={`phoneNumbers[${index}]`}
-                    value={pN}
-                    label={pN?.type || 'Contact Number'}
-                    index={index}
-                  />
-                  <IconButton
-                    disabled={phoneNumbers?.length === 1}
-                    onClick={() => removeContactNumber(index)}
-                    size="small"
-                    variant="contained"
-                    color="error"
-                    sx={{ mx: 1 }}
-                  >
-                    <StyledTooltip
-                      title="Remove Contact Number"
-                      placement="top"
-                      disableFocusListener
-                      tooltipcolor={theme.palette.error.main}
-                      color={
-                        phoneNumbers?.length > 1
-                          ? theme.palette.error.main
-                          : theme.palette.text.main
-                      }
-                    >
-                      <Iconify icon="icons8:minus" sx={{ width: 25, height: 25 }} />
-                    </StyledTooltip>
-                  </IconButton>
-                </Grid>
-              ))}
-              <Grid>
-                <IconButton
-                  disabled={phoneNumbers?.length > 9}
-                  onClick={addContactNumber}
-                  size="small"
-                  variant="contained"
-                  color="success"
-                  sx={{ ml: 'auto', mr: 1 }}
-                >
-                  <StyledTooltip
-                    title="Add Contact Number"
-                    placement="top"
-                    disableFocusListener
-                    tooltipcolor={theme.palette.success.dark}
-                    color={
-                      phoneNumbers?.length < 10
-                      ? theme.palette.success.dark
-                      : theme.palette.text.main
-                    }
-                  >
-                    <Iconify icon="icons8:plus" sx={{ width: 25, height: 25 }} />
-                  </StyledTooltip>
-                </IconButton>
-              </Grid>
-            </Grid>
+            
+            <Box sx={{ width: '100%', overflowX: { xs: 'auto', sm: 'hidden', }, maxWidth: '100%', display: 'flex', flexDirection: 'column' }} >
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, flexWrap: { xs: 'nowrap', sm: 'wrap', }, }} >
+                  {phoneNumbers?.map((pN, index) => (
+                    <Box key={index} sx={{ display: 'flex', alignItems: 'center', flex: '1 1 auto', minWidth: 300, ml: { xs: 'auto',  sm: 0 }, mt: 1 }} >
+                      <RHFCustomPhoneInput
+                        name={`phoneNumbers[${index}]`}
+                        value={pN}
+                        label={pN?.type || 'Contact Number'}
+                        index={index}
+                        sx={{ flex: 1 }}
+                      />
+                      <IconButton disabled={phoneNumbers?.length === 1} onClick={ () => removeContactNumber(index) } size="small" variant="contained" color='error' sx={{ mx: 1 }} >
+                        <StyledTooltip
+                          title="Remove Contact Number"
+                          placement="top"
+                          disableFocusListener
+                          tooltipcolor={theme.palette.error.main}
+                          color={
+                            phoneNumbers?.length > 1
+                              ? theme.palette.error.main
+                              : theme.palette.text.main
+                          }
+                        >
+                          <Iconify icon="icons8:minus" sx={{ width: 25, height: 25 }} />
+                        </StyledTooltip>
+                      </IconButton>
+                    </Box>
+                  ))}
+                  <Box>
+                  <IconButton disabled={ phoneNumbers?.length > 9 } onClick={ addContactNumber } size="small" variant="contained" color='success' sx={{ ml: 'auto', mr:1 }} >
+                        <StyledTooltip title="Add Contact Number" placement="top" disableFocusListener tooltipcolor={theme.palette.success.dark} color={ phoneNumbers?.length < 10 ? theme.palette.success.dark : theme.palette.text.main }  >
+                          <Iconify icon="icons8:plus" sx={{width: 25, height: 25}}  />
+                        </StyledTooltip>
+                      </IconButton>
+                  </Box>
+                </Box>
+              </Box>
+
               <RHFTextField name={FORMLABELS.EMAIL.name} label={FORMLABELS.EMAIL.label} />
               <Grid sx={{ display: 'flex' }} >  
                 <RHFSwitch name="isActive" label="Active" />

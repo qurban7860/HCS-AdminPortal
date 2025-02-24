@@ -44,6 +44,16 @@ const initialState = {
   machineDocumentsFilterBy: '',
   machineDocumentsPage: 0,
   machineDocumentsRowsPerPage: 100,
+  reportHiddenColumns: {
+    "displayName": false,
+    "referenceNumber": false,
+    "docCategory.name": false,
+    "docType.name": false,
+    "stockNumber": false,
+    "productDrawings": true,
+    "machine.serialNo": false,
+    "createdAt": false,
+  },
 };
 
 const slice = createSlice({
@@ -73,31 +83,7 @@ const slice = createSlice({
     setDocumentViewFormVisibility(state, action){
       state.documentViewFormVisibility = action.payload;
     },
-    // SET TOGGLE
-    setDrawingAndDocumentVisibility(state, action){
-      state.documentHistoryAddFilesViewFormVisibility = false;
-      state.documentHistoryNewVersionFormVisibility = false;
-      state.documentAddFilesViewFormVisibility = false;
-      state.documentNewVersionFormVisibility = false;
-    },
-    // SET TOGGLE
-    setViewVisiilityNoOthers(state, action){
-      state.documentHistoryAddFilesViewFormVisibility =false;
-      state.documentHistoryNewVersionFormVisibility = false;
-      state.documentAddFilesViewFormVisibility = false;
-      state.documentNewVersionFormVisibility = false;
-      state.documentViewFormVisibility = true;
-      state.documentFormVisibility = false;
-    },
-    // // SET TOGGLE
-    setViewHistoryVisiilityNoOthers(state, action){
-      state.documentHistoryAddFilesViewFormVisibility = false;
-      state.documentHistoryNewVersionFormVisibility = false;
-      state.documentAddFilesViewFormVisibility = false;
-      state.documentNewVersionFormVisibility = false;
-      state.documentHistoryViewFormVisibility = true;
-      state.documentFormVisibility = false;
-    },
+
     // // SET TOGGLE
     setDocumentEditFormVisibility(state, action){
       state.documentEditFormVisibility = action.payload;
@@ -115,14 +101,6 @@ const slice = createSlice({
     setDocumentAddFilesViewFormVisibility(state, action){
       state.documentAddFilesViewFormVisibility = action.payload;
     },
-    // SET TOGGLE
-    setDocumentHistoryNewVersionFormVisibility(state, action){
-      state.documentHistoryNewVersionFormVisibility = action.payload;
-    },
-     // SET TOGGLE
-    setDocumentHistoryAddFilesViewFormVisibility(state, action){
-      state.documentHistoryAddFilesViewFormVisibility = action.payload;
-    },
     setDocumentEdit(state, action){
       state.documentEdit = action.payload;
     },
@@ -136,10 +114,8 @@ const slice = createSlice({
     // GET Documents
     getDocumentsSuccess(state, action) {
       state.isLoading = false;
-      state.success = true;
       state.documents = action.payload;
       state.documentRowsTotal = action.payload?.totalCount;
-      state.initial = true;
     },
 
     // GET ACTIVE Documents
@@ -268,6 +244,10 @@ const slice = createSlice({
     machineDrawingsChangePage(state, action) {
       state.machineDrawingsPage = action.payload;
     },
+    // set HiddenColumns
+    setReportHiddenColumns(state, action){
+      state.reportHiddenColumns = action.payload;  
+    },
   },
 });
 
@@ -283,12 +263,7 @@ export const {
   setDocumentHistoryViewFormVisibility,
   setDocumentNewVersionFormVisibility,
   setDocumentAddFilesViewFormVisibility,
-  setDocumentHistoryNewVersionFormVisibility,
-  setDocumentHistoryAddFilesViewFormVisibility,
   setDocumentVersionEditDialogVisibility,
-  setDrawingAndDocumentVisibility,
-  setViewHistoryVisiilityNoOthers,
-  setViewVisiilityNoOthers,
   setDocumentGalleryVisibility,
   setDocumentEdit,
   resetDocument,
@@ -308,6 +283,7 @@ export const {
   setMachineDrawingsFilterBy,
   machineDrawingsChangePage,
   machineDrawingsChangeRowsPerPage,
+  setReportHiddenColumns
 } = slice.actions;
 
 // ----------------------------Add Document------------------------------------------
@@ -473,53 +449,65 @@ export function updateDocumentVersionNo(documentId , data) {
 
 // -----------------------------------Get Documents-----------------------------------
 
-export function getDocuments(customerId, machineId, drawing, page, pageSize, isCustomerArchived, isMachineArchived, cancelToken) {
+export function getDocuments(customerId, machineId, drawing, page, pageSize, isCustomerArchived, isMachineArchived, cancelToken, searchKey, searchColumn, docCategory, docType) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-    const params = {
-      basic: true,
-    }
-    if(!drawing) {
-      params.orderBy = {
-        createdAt:-1
-      }
-    }
-    if(drawing) {
-      params.forDrawing = true;
-    }else if (customerId) {
-      params.customer = customerId
-      params.forCustomer = true;
-    }else if(machineId){
-      params.machine = machineId
-      params.forMachine = true;
-    }else{
-      params.forCustomer = true;
-      params.forMachine = true;
-    }
-
-    params.pagination = {
-      page,
-      pageSize  
-    }
-    
-    if(isCustomerArchived){
-      params.archivedByCustomer = true;
-      params.isArchived = true;
-    }else{
-      params.isArchived = false;
-    }
-
     try {
-
+      const params = {
+        basic: true,
+      }
+      if(!drawing) {
+        params.orderBy = {
+          createdAt:-1
+        }
+      }
+      if(drawing) {
+        params.forDrawing = true;
+      }else if (customerId) {
+        params.customer = customerId
+        params.forCustomer = true;
+      }else if(machineId){
+        params.machine = machineId
+        params.forMachine = true;
+      }else{
+        params.forCustomer = true;
+        params.forMachine = true;
+      }
+  
+      params.pagination = {
+        page,
+        pageSize  
+      }
+      
+      if(isCustomerArchived){
+        params.archivedByCustomer = true;
+        params.isArchived = true;
+      } else if( isMachineArchived ){
+        params.archivedByMachine = true;
+        params.isArchived = true;
+      } else {
+        params.isArchived = false;
+      }
+      
+      if (searchKey?.length > 0) {
+        params.searchKey = searchKey;
+        params.searchColumn = searchColumn;
+      }
+      
+      if (docCategory) {
+        params.docCategory = docCategory; 
+      }
+      if (docType) {
+        params.docType = docType; 
+      }      
+      
       const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/` ,
       {
         params,
         cancelToken: cancelToken?.token,
       }
       );
-
       dispatch(slice.actions.getDocumentsSuccess(response.data));
-      dispatch(slice.actions.setResponseMessage('Document loaded successfully'));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));

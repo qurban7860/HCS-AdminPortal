@@ -3,6 +3,24 @@ import { isNumberLatitude , isNumberLongitude } from '../crm/sites/util/index'
 
 const stringLengthMessage = 'Trading name must not exceed 500 characters';
 
+export const editPortalRegistrationSchema = Yup.object().shape({
+  customerName: Yup.string().trim().max(200).label('Customer Name').required(),
+  contactPersonName: Yup.string().trim().max(200).label('Contact Person Name'),
+  email: Yup.string().email().label('Email').required(),
+  phoneNumber: Yup.string().trim().matches(/^[+0-9 ]+$/, 'Phone number must be digits only!').max(20).label('Phone Number'),
+  status: Yup.string().max(200).label('Status').nullable(),
+  customerNote: Yup.string().trim().max(5000).label('Customer Note'),
+  internalNote: Yup.string().trim().max(5000).label('Internal Note'),
+  machineSerialNos: Yup.array().typeError("Invalid Machine Serial Nos!")
+  .min(1, 'At least one machine serial number is required')
+  // .test( 'all-valid-serial-numbers','Each serial number must be exactly 6 digits',
+  // (value) => value?.every(serialNo => /^\d{6}$/.test(serialNo)))
+  .label('Machine Serial Nos')
+  .required('Machine serial numbers are required'),
+  address: Yup.string().trim().max(200).label('Address'),
+  isActive: Yup.boolean().label('IsActive'),
+});
+
 // @root - DocumentEditForm
 export const EditCustomerDocumentSchema = Yup.object().shape({
   displayName: Yup.string().max(50),
@@ -92,7 +110,24 @@ export const ContactSchema = Yup.object().shape({
   postcode: Yup.string(),
   isActive: Yup.boolean(),
   formerEmployee: Yup.boolean(),
-  country: Yup.object().nullable()
+  country: Yup.object().nullable(),
+  phoneNumbers: Yup.array().of(
+    Yup.object().shape({
+      type: Yup.string().label("Number Type")
+      .when('contactNumber', {
+        is: (contactNumber) => !!contactNumber,
+        then: Yup.string().required('Type is required when contact number is defined!'),
+      }).nullable(),
+      countryCode: Yup.string().label("Country Code")
+        .when('contactNumber', {
+          is: (contactNumber) => !!contactNumber,
+          then: Yup.string().required('Country code is required when contact number is defined!'),
+        })
+        .nullable(),
+      contactNumber: Yup.string().label("Contact Number").nullable(),
+      extensions: Yup.string().label("Extension").nullable(),
+    })
+  ),
   // isPrimary: Yup.boolean(),
 });
 
@@ -101,14 +136,22 @@ export const SiteSchema = Yup.object().shape({
   customer: Yup.string(),
   billingSite: Yup.string(),
   email: Yup.string().trim('The contact name cannot include leading and trailing spaces'),
-  // phone: Yup.object().shape({
-  //   countryCode: Yup.number().max(999999).label("Phone Country Code"),
-  //   number: Yup.number().max(999999999999).label("Phone Number"),
-  // }),
-  // fax: Yup.object().shape({
-  //   countryCode: Yup.number().max(999999).label("Fax Country Code"),
-  //   number: Yup.number().max(999999999999).label("Fax Number"),
-  // }),
+  phoneNumbers: Yup.array().of(
+    Yup.object().shape({
+      type: Yup.string().label("Number Type")
+      .when('contactNumber', {
+        is: (contactNumber) => !!contactNumber,
+        then: Yup.string().required('Type is required when contact number is defined!'),
+      }).nullable(),
+      countryCode: Yup.string().label("Country Code")
+        .when('contactNumber', {
+          is: (contactNumber) => !!contactNumber,
+          then: Yup.string().required('Country code is required when contact number is defined!'),
+        }).nullable(),
+      contactNumber: Yup.string().label("Contact Number").nullable(),
+      extensions: Yup.string().label("Extension").nullable(),
+    })
+  ),
   website: Yup.string(),
   lat: Yup.string().nullable()
   .max(25, 'Latitude must be less than or equal to 90.9999999999999999999999')

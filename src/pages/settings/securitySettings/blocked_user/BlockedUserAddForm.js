@@ -13,7 +13,7 @@ import {
   Box,
 } from '@mui/material';
 // ROUTES
-import { PATH_SECURITY } from '../../../../routes/paths';
+import { PATH_SETTING} from '../../../../routes/paths';
 // slice
 import { getActiveSecurityUsers, resetSecurityUsers } from '../../../../redux/slices/securityUser/securityUser';
 import { addBlockedUsers, getBlockedUsers, resetBlockedUsers } from '../../../../redux/slices/securityConfig/blockedUsers';
@@ -76,7 +76,7 @@ export default function BlockedUserAddForm() {
       await dispatch(addBlockedUsers(data));
       enqueueSnackbar('User blocked successfully!');
       reset();
-      navigate(PATH_SECURITY.config.blockedUser.list);
+      navigate(PATH_SETTING.restrictions.blockedUser.list);
     } catch (error) {
       enqueueSnackbar('User blocking failed!', { variant: `error` });
       console.error(error);
@@ -84,7 +84,7 @@ export default function BlockedUserAddForm() {
   };
 
   const toggleCancel = () => {
-    navigate(PATH_SECURITY.config.blockedUser.list);
+    navigate(PATH_SETTING.restrictions.blockedUser.list);
   };
 
  

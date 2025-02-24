@@ -1,135 +1,58 @@
-import { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 // @mui
-import { Card, Table, Button, TableBody, Container, TableContainer } from '@mui/material';
+import { Container, Box, Typography, Divider } from '@mui/material';
 import debounce from 'lodash/debounce';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
 // routes
-import { PATH_SECURITY, PATH_SETTING } from '../../../../routes/paths';
+import { PATH_SETTING } from '../../../../routes/paths';
 // components
-import { useSnackbar } from '../../../../components/snackbar';
-import Scrollbar from '../../../../components/scrollbar';
-import ConfirmDialog from '../../../../components/confirm-dialog';
 import { Cover } from '../../../../components/Defaults/Cover';
-import {
-  useTable,
-  getComparator,
-  TableNoData,
-  TableHeadCustom,
-  TableSelectedAction,
-  TablePaginationCustom,
-} from '../../../../components/table';
+import { TablePaginationCustom } from '../../../../components/table';
 // sections
 import ConfigListTableToolbar from './ConfigListTableToolbar';
-import ConfigListTableRow from './ConfigListTableRow';
+import ConfigCard from './ConfigCard';
 import {
   getConfigs,
-  deleteConfig,
-  setConfigEditFormVisibility,
   ChangeRowsPerPage,
   ChangePage,
   setFilterBy
 } from '../../../../redux/slices/config/config';
 import { fDate } from '../../../../utils/formatTime';
 // constants
-import { DIALOGS } from '../../../../constants/default-constants';
 import TableCard from '../../../../components/ListTableTools/TableCard';
 import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
 
-// const STATUS_OPTIONS = ['all', 'active', 'banned'];
-
 const ROLE_OPTIONS = ['Administrator', 'Normal User', 'Guest User', 'Restriced User'];
-
-const TABLE_HEAD = [
-  { id: 'name', label: 'Config Name'},
-  { id: 'value', label: 'Config Value'},
-  { id: 'type', visibility: 'xs1', label: 'Type'},
-  { id: 'isActive', label: 'Active', align: 'center' },
-  { id: 'updateBy', visibility: 'md1', label: 'Update By'},
-  { id: 'updateAt', visibility: 'md2', label: 'Update At', align: 'right' },
-];
 
 // ----------------------------------------------------------------------
 
 export default function ConfigList() {
-  const {
-    dense,
-    // page,
-    order,
-    orderBy,
-    // rowsPerPage,
-    setPage,
-    //
-    selected,
-    setSelected,
-    onSelectRow,
-    //
-    onSort,
-    // onChangePage,
-    // onChangeRowsPerPage,
-  } = useTable({
-    defaultOrderBy: 'updateAt', defaultOrder: 'desc'
-  });
-
-  const onChangeRowsPerPage = (event) => {
-    dispatch(ChangePage(0));
-    dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
-  };
-
-  const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
-
   const dispatch = useDispatch();
 
-  const {
-    configs,
-    filterBy, page, rowsPerPage,
-    error,
-    responseMessage,
-    initial,
-    configEditFormVisibility,
-    configAddFormVisibility,
-  } = useSelector((state) => state.config);
+  const { configs, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.config);
 
-  const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
-  const [tableData, setTableData] = useState([]);
-  const [openConfirm, setOpenConfirm] = useState(false);
   const [filterName, setFilterName] = useState('');
   const [filterRole, setFilterRole] = useState('all');
   const [filterStatus, setFilterStatus] = useState('all');
 
-  useLayoutEffect(() => {
-    dispatch(getConfigs());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, configEditFormVisibility, configAddFormVisibility]);
-
   useEffect(() => {
-    if (initial) {
-      setTableData(configs);
-    }
-  }, [configs, error, enqueueSnackbar, responseMessage, initial]);
+    dispatch(getConfigs());
+  }, [dispatch]);
 
   const dataFiltered = applyFilter({
-    inputData: tableData,
-    comparator: getComparator(order, orderBy),
+    inputData: configs || [],
     filterName,
     filterRole,
     filterStatus,
   });
 
-  const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
   const isFiltered = filterName !== '' || filterRole !== 'all' || filterStatus !== 'all';
-  const isNotFound =
-    (!dataFiltered.length && !!filterName) ||
-    (!dataFiltered.length && !!filterRole) ||
-    (!dataFiltered.length && !!filterStatus);
-
-  const handleCloseConfirm = () => {
-    setOpenConfirm(false);
-  };
+  const isNotFound = (!isLoading && !dataFiltered.length);
 
   const debouncedSearch = useRef(debounce((value) => {
     dispatch(ChangePage(0))
@@ -139,65 +62,21 @@ export default function ConfigList() {
   const handleFilterName = (event) => {
     debouncedSearch.current(event.target.value);
     setFilterName(event.target.value)
-    setPage(0);
   };
   
   useEffect(() => {
-      debouncedSearch.current.cancel();
+    debouncedSearch.current.cancel();
   }, [debouncedSearch]);
   
   useEffect(()=>{
-      setFilterName(filterBy)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[])
+    setFilterName(filterBy)
+  },[filterBy])
 
   const handleFilterRole = (event) => {
-    setPage(0);
     setFilterRole(event.target.value);
   };
 
-  const handleDeleteRow = async (id) => {
-    try {
-      try {
-        dispatch(deleteConfig(id));
-        dispatch(getConfigs());
-        setSelected([]);
-
-        if (page > 0) {
-          if (dataInPage.length < 2) {
-            setPage(page - 1);
-          }
-        }
-      } catch (err) {
-        console.log(err);
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const handleDeleteRows = (selectedRows) => {
-    const deleteRows = tableData.filter((row) => !selectedRows.includes(row.id));
-    setSelected([]);
-    setTableData(deleteRows);
-
-    if (page > 0) {
-      if (selectedRows.length === dataInPage.length) {
-        setPage(page - 1);
-      } else if (selectedRows.length === dataFiltered.length) {
-        setPage(0);
-      } else if (selectedRows.length > dataInPage.length) {
-        const newPage = Math.ceil((tableData.length - selectedRows.length) / rowsPerPage) - 1;
-        setPage(newPage);
-      }
-    }
-  };
-
-  const handleEditRow = (id) => {
-    dispatch(setConfigEditFormVisibility(true));
-    navigate(PATH_SECURITY.users.edit(id));
-  };
-  const handleViewRow = (id) => {
+  const handleViewConfig = (id) => {
     navigate(PATH_SETTING.configs.view(id));
   };
 
@@ -208,112 +87,102 @@ export default function ConfigList() {
     setFilterStatus('all');
   };
 
+  const onChangeRowsPerPage = (event) => {
+    dispatch(ChangePage(0));
+    dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
+  };
+
+  const onChangePage = (event, newPage) => { 
+    dispatch(ChangePage(newPage)) 
+  };
+
   return (
-    <>
-      <Container maxWidth={false}>
-        <StyledCardContainer>
-          <Cover generalSettings name="Configs" icon="ph:users-light" />
-        </StyledCardContainer>
-        <TableCard>
-          <ConfigListTableToolbar
-            isFiltered={isFiltered}
-            filterName={filterName}
-            filterRole={filterRole}
-            optionsRole={ROLE_OPTIONS}
-            onFilterName={handleFilterName}
-            onFilterRole={handleFilterRole}
-            onResetFilter={handleResetFilter}
+    <Container maxWidth={false}>
+      <StyledCardContainer>
+        <Cover generalSettings name="Configs" icon="ph:users-light" />
+      </StyledCardContainer>
+      <TableCard>
+        <ConfigListTableToolbar
+          isFiltered={isFiltered}
+          filterName={filterName}
+          filterRole={filterRole}
+          optionsRole={ROLE_OPTIONS}
+          onFilterName={handleFilterName}
+          onFilterRole={handleFilterRole}
+          onResetFilter={handleResetFilter}
+        />
+        
+        {!isNotFound && (
+          <TablePaginationCustom
+            count={dataFiltered.length}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
+            sx={{ px: 2, py: 1 }}
           />
-          {!isNotFound && <TablePaginationCustom
+        )}
+
+        <Box sx={{ p: { xs: 1.5, md: 2 } }}>
+          {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
+            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            .map((config, index, array) => (
+              <Box 
+                key={config?.id || index}
+                sx={{
+                  '&:not(:last-child)': {
+                    mb: 2
+                  }
+                }}
+              >
+                {config ? (
+                  <ConfigCard
+                    config={config}
+                    onClick={() => handleViewConfig(config?._id)}
+                  />
+                ) : (
+                  <Box
+                    sx={{
+                      height: 100,
+                      bgcolor: 'background.neutral',
+                      borderRadius: 2,
+                    }}
+                  />
+                )}
+              </Box>
+            ))}
+
+          {isNotFound && (
+            <Box sx={{ py: 3, textAlign: 'center' }}>
+              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                No configs found
+              </Typography>
+            </Box>
+          )}
+        </Box>
+
+        {!isNotFound && (
+          <TablePaginationCustom
             count={dataFiltered.length}
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-          />}
-          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            <TableSelectedAction
-              dense={dense}
-              numSelected={selected.length}
-              rowCount={tableData.length}
-            />
-
-            <Scrollbar>
-              <Table size="small" sx={{ minWidth: 360 }}>
-                <TableHeadCustom
-                  order={order}
-                  orderBy={orderBy}
-                  headLabel={TABLE_HEAD}
-                  onSort={onSort}
-                />
-
-                <TableBody>
-                  {dataFiltered
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row) => (
-                      <ConfigListTableRow
-                        key={row._id}
-                        row={row}
-                        selected={selected.includes(row._id)}
-                        onSelectRow={() => onSelectRow(row._id)}
-                        onDeleteRow={() => handleDeleteRow(row._id)}
-                        onEditRow={() => handleEditRow(row._id)}
-                        onViewRow={() => handleViewRow(row._id)}
-                      />
-                    ))}
-                  <TableNoData isNotFound={isNotFound} />
-                </TableBody>
-              </Table>
-            </Scrollbar>
-          </TableContainer>
-
-          {!isNotFound && <TablePaginationCustom
-            count={dataFiltered.length}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-          />}
-        </TableCard>
-      </Container>
-
-      <ConfirmDialog
-        open={openConfirm}
-        onClose={handleCloseConfirm}
-        title={DIALOGS.DELETE.title}
-        content={DIALOGS.DELETE.content}
-        action={
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => {
-              handleDeleteRows(selected);
-              handleCloseConfirm();
-            }}
-          >
-            {DIALOGS.DELETE.title}
-          </Button>
-        }
-      />
-    </>
+            sx={{ px: 2, py: 2 }}
+          />
+        )}
+      </TableCard>
+    </Container>
   );
 }
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName, filterStatus }) {
-  const stabilizedThis = inputData.map((el, index) => [el, index]);
-
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-
-  inputData = stabilizedThis.map((el) => el[0]);
+function applyFilter({ inputData, filterName, filterStatus }) {
+  let filteredData = [...inputData];
 
   if (filterName) {
-    inputData = inputData.filter(
+    filteredData = filteredData.filter(
       (config) =>
         config?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         config?.value?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
@@ -321,5 +190,5 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
     );
   }
 
-  return inputData;
+  return filteredData;
 }

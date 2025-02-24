@@ -12,15 +12,18 @@ RHFCountryAutocomplete.propTypes = {
   name: PropTypes.string,
   label: PropTypes.string,
   helperText: PropTypes.node,
+  disableDefaultValue: PropTypes.bool,
   Error: PropTypes.bool,
 };
 
-export default function RHFCountryAutocomplete({ name, label, helperText, Error, ...other }) {
+export default function RHFCountryAutocomplete({ name, label, helperText, disableDefaultValue = false, Error, ...other }) {
   const { control, setValue } = useFormContext();
 
   useEffect(()=>{
-    setValue(name,countries?.find(country => country?.code?.toLocaleLowerCase() === 'nz'))
-  },[ name,setValue ])
+    if( !disableDefaultValue ){
+      setValue(name,countries?.find(country => country?.code?.toLocaleLowerCase() === 'nz'))
+    }
+  },[ name, disableDefaultValue, setValue ])
 
   return (
     <Controller
@@ -32,7 +35,7 @@ export default function RHFCountryAutocomplete({ name, label, helperText, Error,
           options={ countries || [] }
           onChange={(event, newValue) => setValue(name, newValue, { shouldValidate: true })}
           isOptionEqualToValue={(option, value) => option?.code === value?.code}
-          getOptionLabel={(option) => `${option?.label || '' } (${option.code || '' })  +${option.phone}`}
+          getOptionLabel={(option) => `${option?.label || '' } (${option?.code || '' })  +${option?.phone  || '' }`}
           renderOption={(props, option) => (
             <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
               <img
@@ -42,7 +45,7 @@ export default function RHFCountryAutocomplete({ name, label, helperText, Error,
                 src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
                 alt=""
               />
-              {option.label} ({option.code}) +{option.phone}
+              {option?.label || '' } ({option?.code || '' }) +{option?.phone || '' }
             </Box>
           )}
           renderInput={(params) => (

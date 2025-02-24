@@ -38,7 +38,7 @@ export default function ModuleListTableRow({
   onSelectRow,
   onDeleteRow,
 }) {
-  const { name, value, createdAt, isActive } = row;
+  const { name, value, updatedAt, isActive } = row;
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -84,7 +84,7 @@ export default function ModuleListTableRow({
         </TableCell>
        
         <TableCell align="right" sx={{ textTransform: 'capitalize' }}>
-          {fDate(createdAt)}
+          {fDate(updatedAt)}
         </TableCell>
        </TableRow>
 

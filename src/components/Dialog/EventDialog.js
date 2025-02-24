@@ -1,28 +1,29 @@
 import PropTypes from 'prop-types';
-import React,{ useEffect, useLayoutEffect, useRef, useState } from 'react';
-import * as Yup from 'yup';
-import merge from 'lodash/merge';
-import { isBefore } from 'date-fns';
-// form
-import { useForm, Controller } from 'react-hook-form';
+import React,{ useEffect, useLayoutEffect, useRef, memo, useState, useCallback } from 'react';
+import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { enc, MD5, lib } from 'crypto-js';
 // @mui
-import { Box, Stack, Button, Tooltip, TextField, IconButton, DialogActions, DialogContent, Grid, Dialog, DialogTitle, Divider, MenuItem, Typography } from '@mui/material';
+import { Box, Stack, Button, DialogActions, DialogContent, Grid, Dialog, DialogTitle, Divider, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
-
-// components
-import { setEventModel } from '../../redux/slices/event/event';
-import DialogLink from './DialogLink';
-import Iconify from '../iconify';
+import { eventSchema } from '../../pages/schemas/calendarSchema';
+import { manipulateFiles } from '../../pages/documents/util/Util';
+// slices
+import { setEventModel, createEvent, updateEvent, deleteEvent, deleteEventFile } from '../../redux/slices/event/event';
 import { getActiveCustomerMachines, resetActiveCustomerMachines } from '../../redux/slices/products/machine';
 import { getActiveSites, resetActiveSites } from '../../redux/slices/customer/site';
-import FormProvider, { RHFDatePicker, RHFTimePicker, RHFTextField, RHFAutocomplete, RHFSwitch } from '../hook-form';
+import FormProvider, { RHFDatePicker, RHFTextField, RHFAutocomplete, RHFUpload } from '../hook-form';
 import IconTooltip from '../Icons/IconTooltip';
 import ConfirmDialog from '../confirm-dialog/ConfirmDialog';
-import ViewFormAudit from '../ViewForms/ViewFormAudit';
-import ViewFormField from '../ViewForms/ViewFormField';
 import { fDateTime } from '../../utils/formatTime';
+import { time_list } from '../../constants/time-list';
+import { useAuthContext } from '../../auth/useAuthContext';
+import { useSnackbar } from '../snackbar';
+import PriorityIcon from '../../pages/calendar/utils/PriorityIcon';
+import { StatusColor } from '../../pages/calendar/utils/StatusColor';
+import RenderCustomInput from '../custom-input/RenderCustomInput';
+import EventToggleButton from '../custom-input/EventToggleButton';
 
 
 function getTimeObjectFromISOString(dateString) {
@@ -34,27 +35,33 @@ function getTimeObjectFromISOString(dateString) {
   const formattedHours = hours % 12 || 12;
   const formattedTime = `${formattedHours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
   const timeObject = {
-      value: formattedValueTime,
-      label: `${formattedTime} ${ampm}`
-  };
-  return timeObject;
+    value: formattedValueTime,
+    label: `${formattedTime} ${ampm}`
+};
+return timeObject;
 }
 
-const getInitialValues = (selectedEvent, range) => {
+
+const getInitialValues = (selectedEvent, range, contacts) => {
   const initialEvent = {
     _id: selectedEvent ? selectedEvent?._id : null ,
+    isCustomerEvent: ( selectedEvent?.isCustomerEvent || selectedEvent?.isCustomerEvent === undefined ) && true || false,
+    eventType: selectedEvent && ( selectedEvent?.isCustomerEvent ? "customerVisit" : "InternalTask" ) || "customerVisit",
     date: selectedEvent ? selectedEvent?.start : (range?.start || new Date() ) ,
-    end_date: selectedEvent ? selectedEvent?.end : (range?.start || new Date() ) ,
+    end_date: selectedEvent ? selectedEvent?.end : (range?.end || new Date() ) ,
     start: selectedEvent ? getTimeObjectFromISOString(selectedEvent?.start) : { value: '07:30', label: '7:30 AM' },
     end: selectedEvent ?  getTimeObjectFromISOString(selectedEvent?.end) : { value: '18:00', label: '6:00 PM' },
     customer: selectedEvent ? selectedEvent?.customer : null,
+    priority: selectedEvent?.priority?.trim() ? selectedEvent?.priority : null,
+    status: selectedEvent?.status?.trim() ? selectedEvent?.status : null,
     machines: selectedEvent ? selectedEvent?.machines :  [],
     site: selectedEvent ? selectedEvent?.site :  null,
     jiraTicket: selectedEvent ? selectedEvent?.jiraTicket :  '',
     primaryTechnician: selectedEvent ? selectedEvent?.primaryTechnician :  null,
     supportingTechnicians: selectedEvent ? selectedEvent?.supportingTechnicians :  [],
-    notifyContacts: selectedEvent ? selectedEvent?.notifyContacts :  [],
+    notifyContacts: selectedEvent ? selectedEvent?.notifyContacts :  contacts,
     description: selectedEvent ? selectedEvent?.description :  '',
+    files: selectedEvent ? manipulateFiles(selectedEvent?.files) : [],
     createdAt: selectedEvent?.createdAt || '',
     createdByFullName: selectedEvent?.createdBy?.name || '',
     createdIP: selectedEvent?.createdIP || '',
@@ -68,366 +75,522 @@ const getInitialValues = (selectedEvent, range) => {
 
 EventDialog.propTypes = {
   range: PropTypes.object,
-  onDeleteEvent: PropTypes.func,
-  onCreateUpdateEvent: PropTypes.func,
-  colorOptions: PropTypes.arrayOf(PropTypes.string),
+  contacts:PropTypes.array
 };
-  
+
 function EventDialog({
-    range,
-    colorOptions,
-    onCreateUpdateEvent,
-    onDeleteEvent,
-  }) {
-    
-    const dispatch = useDispatch();
-    const { selectedEvent, eventModel } = useSelector((state) => state.event );
-    const { activeCustomers } = useSelector((state) => state.customer);
-    const { activeContacts, activeSpContacts } = useSelector((state) => state.contact);
-    const { activeSites } = useSelector((state) => state.site);
-    const { activeCustomerMachines } = useSelector( (state) => state.machine );
-    const [openConfirm, setOpenConfirm] = useState(false);
-    const dialogRef = useRef(null)
-    const EventSchema = Yup.object().shape({
-      date: Yup.date().nullable().label('Event Date').typeError('End Time should be a valid Date').required(),
-      end_date: Yup.date().nullable().label('Event Date').typeError('End Time should be a valid Date').required()
-      .test('is-greater-than-start-date', 'End Date must be later than Start Date', (value, context) => {
-        const start_date = context.parent.date;
-        if (start_date && value) {
-          
-          const startDate = new Date(start_date).setHours(0,0,0,0);
-          const endDate = new Date(value).setHours(0,0,0,0);
-          
-          if(startDate!==endDate){
-            clearErrors('end')
-          }
-          
-          return  startDate <= endDate;
+  range,
+  contacts,
+}) {
 
-        }
-        return true; // If start_date or end_date is not defined, skip this test
-      }),
-      start: Yup.object().nullable().label('Start Time').required('Start Time is required'),
-      end: Yup.object().nullable().label('End Time').required('End Time is required')
-      .test('is-greater-than-start-time-if-same-date', 'End Time must be later than Start Time', (value, context) => {
-        const { start, date, end_date } = context.parent;
-        if (start && date && end_date && value) {
-          
-          let startDate = new Date(date);
-          let endDate = new Date(end_date);
-          const [start_hours, start_minutes] = start.value.split(':').map(Number);
-          const [end_hours, end_minutes] = value.value.split(':').map(Number);
-          
-          startDate.setHours(start_hours, start_minutes);
-          startDate = new Date(startDate);
-          
-          endDate.setHours(end_hours, end_minutes);
-          endDate = new Date(endDate);
+  const { user } = useAuthContext();
+  const dispatch = useDispatch();
+  const { enqueueSnackbar } = useSnackbar();
+  const { selectedEvent, eventModel, isLoading } = useSelector((state) => state.event );
+  const { activeCustomers } = useSelector((state) => state.customer);
+  const { activeSpContacts } = useSelector((state) => state.contact);
+  const { activeSites } = useSelector((state) => state.site);
+  const { activeCustomerMachines } = useSelector( (state) => state.machine );
+  const [ openConfirm, setOpenConfirm ] = useState(false);
+  const dialogRef = useRef(null);
+  const defaultValues = getInitialValues(selectedEvent?.extendedProps, range, contacts);
+  const methods = useForm({
+    resolver: yupResolver(eventSchema(() => methods.clearErrors())),
+    defaultValues
+  });
+  
+  const {
+    reset,
+    watch,
+    setValue,
+    handleSubmit,
+    formState: { isSubmitting, errors },
+  } = methods;
 
-          if(startDate.getDate()===endDate.getDate()){
-            return startDate < endDate;
-          }
-        }
-        return true; // If start or end is not defined, skip this test
-      }),
-      jiraTicket: Yup.string().max(200).label('Jira Ticket'),
-      customer: Yup.object().nullable().label('Customer').required(),
-      machines: Yup.array().nullable().label('Machines'),
-      site: Yup.object().nullable().label('Site'),
-      primaryTechnician: Yup.object().nullable().label('Primary Technician').required(),
-      supportingTechnicians: Yup.array().nullable().label('Supporting Technicians').required(),
-      notifyContacts: Yup.array().nullable().label('Notify Contacts').required(),
-      description: Yup.string().max(500).label('Description'),
-    });
-
-    const defaultValues = getInitialValues(selectedEvent?.extendedProps, range);
-
-    const methods = useForm({
-      resolver: yupResolver(EventSchema),
-      defaultValues
-    });
-
-    const {
-      reset,
-      watch,
-      setValue,
-      control,
-      handleSubmit,
-      formState: { isSubmitting, isSubmitted, errors },
-      clearErrors,
-      setError
-    } = methods;
-
-    useEffect(() => {
-      if (Object.keys(errors).length !== 0 && errors.constructor === Object) {
-        if(dialogRef.current){
-          dialogRef.current.scrollIntoView({ behavior: 'smooth' });
-        }
+  useEffect(() => {
+    if (Object.keys(errors).length !== 0 && errors.constructor === Object) {
+      if(dialogRef.current){
+        dialogRef.current.scrollIntoView({ behavior: 'smooth' });
       }
-    }, [errors]);
+    }
+  }, [errors]);
 
-    const { jiraTicket, customer, start, end, date, primaryTechnician } = watch();
+  const { customer, machines, date, isCustomerEvent, files, priority, status, eventType } = watch();
 
-    useEffect(() => {
-      const { end_date  } = watch()
-      if (date && end_date) {
-        const startDate = new Date(date);
-        const endDate = new Date(end_date);
-        if (startDate > endDate) {
-          setValue('end_date', startDate);
-        }
+  useEffect(() => {
+    if ( Array.isArray(machines) && machines?.length > 0 && machines?.length < 2 ) {
+      setValue("site", machines[0]?.instalationSite)
+    } else if( machines?.length < 1 ){
+      setValue("site", null )
+    }
+  },[ machines, setValue ])
+
+  useEffect(() => {
+    const { end_date  } = watch()
+    if (date && end_date) {
+      const startDate = new Date(date);
+      const endDate = new Date(end_date);
+      if (startDate > endDate) {
+        setValue('end_date', startDate);
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[ date ])
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[ date ])
 
-    useEffect(()=>{
-      if(customer){
-        dispatch(getActiveCustomerMachines(customer?._id))
-        dispatch(getActiveSites(customer?._id))
-      } else {
-        dispatch(resetActiveCustomerMachines())
-        dispatch(resetActiveSites())
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[ dispatch, customer ])
+  useLayoutEffect(() => {
+    dispatch(getActiveCustomerMachines(selectedEvent?.extendedProps?.customer?._id));
+    reset(getInitialValues(selectedEvent?.extendedProps, range, contacts));
+  }, [ dispatch, reset, range, selectedEvent, contacts]);
 
-    useLayoutEffect(() => {
-      reset(getInitialValues(selectedEvent?.extendedProps, range));
-    }, [reset, range, selectedEvent]);
-    
-    const onSubmit = (data) => {
+  const priorityOptions = [
+    'High',
+    'Medium',
+    'Low',
+  ];
+  
+  const onSubmit = async ( data ) => {
+    try {
+      data.priority = priority || '';
+      data.status = status || '';
       const start_date = new Date(data?.date);
       const end_date = new Date(data?.end_date);
       const [start_hours, start_minutes] = data.start.value.split(':').map(Number);
       const [end_hours, end_minutes] = data.end.value.split(':').map(Number);
-      
       start_date.setHours(start_hours, start_minutes);
       data.start_date = new Date(start_date);
-      
       end_date.setHours(end_hours, end_minutes);
       data.end_date = new Date(end_date);
-
-      try {
-        onCreateUpdateEvent(data);
-        reset();
-      } catch (error) {
-        console.error(error);
+      if (data?._id) {
+        await dispatch(updateEvent(data?._id, data));
+        enqueueSnackbar('Event Updated Successfully!');
+      } else {
+        await dispatch(createEvent(data));
+        enqueueSnackbar('Event Created Successfully!');
       }
-    };
+      await setValue("isCustomerEvent", true );
+      await reset();
+      await dispatch(setEventModel(false));
+    } catch (e) {
+      if(typeof e === 'string'){
+        enqueueSnackbar(e, { variant: 'error'});
+      }
+    }
 
-    const handleCloseModel = async ()=> {
-      await dispatch(setEventModel(false)) 
-      await dispatch(resetActiveCustomerMachines())
-      await dispatch(resetActiveSites())
-      reset()
-    } 
+  };
+  
+  const handleCloseModel = ()=> {
+    dispatch(setEventModel(false)) 
+    dispatch(resetActiveCustomerMachines())
+    dispatch(resetActiveSites())
+    setValue("isCustomerEvent", true );
+    setValue("eventType", "customerVisit" );
+    reset()
+  };
 
-    const time_list = [
-      { _id:'1', value: '00:00', label: '12:00 AM' },
-      { _id:'2', value: '00:30', label: '12:30 AM' },
-      { _id:'3', value: '01:00', label: '1:00 AM' },
-      { _id:'4', value: '01:30', label: '1:30 AM' },
-      { _id:'5', value: '02:00', label: '2:00 AM' },
-      { _id:'6', value: '02:30', label: '2:30 AM' },
-      { _id:'7', value: '03:00', label: '3:00 AM' },
-      { _id:'8', value: '03:30', label: '3:30 AM' },
-      { _id:'9', value: '04:00', label: '4:00 AM' },
-      { _id:'10', value: '04:30', label: '4:30 AM' },
-      { _id:'11', value: '05:00', label: '5:00 AM' },
-      { _id:'12', value: '05:30', label: '5:30 AM' },
-      { _id:'13', value: '06:00', label: '6:00 AM' },
-      { _id:'14', value: '06:30', label: '6:30 AM' },
-      { _id:'15', value: '07:00', label: '7:00 AM' },
-      { _id:'16', value: '07:30', label: '7:30 AM' },
-      { _id:'17', value: '08:00', label: '8:00 AM' },
-      { _id:'18', value: '08:30', label: '8:30 AM' },
-      { _id:'19', value: '09:00', label: '9:00 AM' },
-      { _id:'20', value: '09:30', label: '9:30 AM' },
-      { _id:'21', value: '10:00', label: '10:00 AM' },
-      { _id:'22', value: '10:30', label: '10:30 AM' },
-      { _id:'23', value: '11:00', label: '11:00 AM' },
-      { _id:'24', value: '11:30', label: '11:30 AM' },
-      { _id:'25', value: '12:00', label: '12:00 PM' },
-      { _id:'26', value: '12:30', label: '12:30 PM' },
-      { _id:'27', value: '13:00', label: '1:00 PM' },
-      { _id:'28', value: '13:30', label: '1:30 PM' },
-      { _id:'29', value: '14:00', label: '2:00 PM' },
-      { _id:'30', value: '14:30', label: '2:30 PM' },
-      { _id:'31', value: '15:00', label: '3:00 PM' },
-      { _id:'32', value: '15:30', label: '3:30 PM' },
-      { _id:'33', value: '16:00', label: '4:00 PM' },
-      { _id:'34', value: '16:30', label: '4:30 PM' },
-      { _id:'35', value: '17:00', label: '5:00 PM' },
-      { _id:'36', value: '17:30', label: '5:30 PM' },
-      { _id:'37', value: '18:00', label: '6:00 PM' },
-      { _id:'38', value: '18:30', label: '6:30 PM' },
-      { _id:'39', value: '19:00', label: '7:00 PM' },
-      { _id:'40', value: '19:30', label: '7:30 PM' },
-      { _id:'41', value: '20:00', label: '8:00 PM' },
-      { _id:'42', value: '20:30', label: '8:30 PM' },
-      { _id:'43', value: '21:00', label: '9:00 PM' },
-      { _id:'44', value: '21:30', label: '9:30 PM' },
-      { _id:'45', value: '22:00', label: '10:00 PM' },
-      { _id:'46', value: '22:30', label: '10:30 PM' },
-      { _id:'47', value: '23:00', label: '11:00 PM' },
-      { _id:'48', value: '23:30', label: '11:30 PM' }
-    ]
+    const handleCustomerEvent = ( event, val ) => {
+      if( val && val !== eventType && !selectedEvent ){
+        setValue( "jiraTicket", "" );
+        setValue( "customer", null );
+        setValue( "priority", "" );
+        setValue( "status", "" );
+        setValue( "primaryTechnician", null );
+        setValue( "machines", [] );
+        setValue( "site", null );
+        setValue( "supportingTechnicians", [] );
+        setValue( "notifyContacts", [] );
+        setValue( "description", "" );
+        setValue( "files", [] );
+        setValue("eventType", val );
+        setValue("isCustomerEvent", val === "customerVisit" );
+      };
+    }
+  
+    useEffect( () => {
+      if( !isCustomerEvent ){
+        if( Array.isArray( activeCustomers ) && activeCustomers?.length > 0 ){
+          setValue( 'customer', activeCustomers.find(( cus ) => cus?._id === user?.customer ) );
+        }
+        if( !selectedEvent && Array.isArray( activeSpContacts ) && activeSpContacts?.length > 0 ){
+          setValue( 'primaryTechnician', activeSpContacts?.find(( con ) => con?._id === user?.contact ) );
+        }
+      }
+    }, [ isCustomerEvent, setValue, activeSpContacts, activeCustomers, user, selectedEvent ] );
     
+  const hashFilesMD5 = async (_files) => {
+    const hashPromises = _files.map((file) => new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const arrayBuffer = reader.result;
+        const wordArray = MD5(lib.WordArray.create(arrayBuffer));
+        const hashHex = wordArray.toString(enc.Hex);
+        resolve(hashHex);
+      };
+      reader.onerror = () => {
+        reject(new Error(`Error reading file: ${file?.name || '' }`));
+      };
+      reader.readAsArrayBuffer(file);
+    }));
+    try {
+      const hashes = await Promise.all(hashPromises);
+      return hashes;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
+
+  const handleDropMultiFile = useCallback(async (acceptedFiles) => {
+    const hashes = await hashFilesMD5(acceptedFiles);
+    const newFiles = ( Array.isArray(files) && files?.length > 0 ) ? [ ...files ] : [];
+    acceptedFiles.forEach((file, index) => {
+      const eTag = hashes[index];
+      if( !newFiles?.some(( el ) => el?.eTag === eTag ) ){
+        const newFile = Object.assign(file, {
+          preview: URL.createObjectURL(file),
+          src: URL.createObjectURL(file),
+          isLoaded: true,
+          eTag,
+        });
+        newFiles.push(newFile);
+      }
+    });
+    setValue('files', newFiles, { shouldValidate: true });
+  }, [setValue, files]);
+
+  const handleFileRemove = useCallback( async (inputFile) => {
+    try{
+      setValue('files', files?.filter((el) => ( inputFile?._id ? el?._id !== inputFile?._id : el !== inputFile )), { shouldValidate: true } )
+      if( inputFile?._id ){
+        dispatch(deleteEventFile( inputFile?.event, inputFile?._id))
+      }
+    } catch(e){
+      console.error(e)
+    }
+  }, [ dispatch, setValue, files ] );
+
+  const handleDeleteEvent =  async (inputFile) => {
+    try {
+      if (selectedEvent && selectedEvent?.extendedProps?._id) {
+        await dispatch(deleteEvent(selectedEvent?.extendedProps?._id));
+        await setOpenConfirm(false);
+        await dispatch(setEventModel(false));
+      }
+      enqueueSnackbar('Event Deleted Successfully!');
+    } catch (error) {
+      enqueueSnackbar('Event Delete Failed!', { variant: 'error'});
+    }
+  };
+
+  const handleChangeCustomer = ( option, newValue ) => {
+    if( newValue ){
+      if( newValue?._id !== customer?._id ){
+        setValue("site", null )
+        setValue("machines", [] )
+        dispatch(resetActiveCustomerMachines())
+      }
+      setValue("customer", newValue )
+      dispatch(getActiveCustomerMachines(newValue?._id))
+      dispatch(getActiveSites(newValue?._id))
+    } else {
+      setValue("customer", null )
+      setValue("site", null )
+      setValue("machines", [] )
+      dispatch(resetActiveCustomerMachines())
+      dispatch(resetActiveSites())
+    }
+  }
+
   return (
     <>
-    <Dialog
-      fullWidth
-      disableEnforceFocus
-      maxWidth="md"
-      open={eventModel} 
-      // onClose={ handleCloseModel }
-      keepMounted
-      aria-describedby="alert-dialog-slide-description"
-    >
-      <DialogTitle display='flex' justifyContent='space-between' variant='h3' sx={{pb:1, pt:2 }}>
-        {selectedEvent ? 'Update Event' : 'New Event'}
-      </DialogTitle>
-      <Divider orientation="horizontal" flexItem />
-      <DialogContent dividers sx={{px:3 }} >
-      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Grid container ref={dialogRef} >
-        <Stack spacing={2} sx={{ pt: 2 }}>
-          <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(4, 1fr)' }} >
-            <RHFDatePicker label="Event Date*" name="date" />
-            <RHFAutocomplete 
-              label="Start Time*"
-              name="start"
-              options={time_list}
-              isOptionEqualToValue={(option, value) => option?.value===value?.value}
-              getOptionLabel={(option) => `${option?.label || ''}`}
-              renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.label || ''}`}</li> )}
+      <Dialog
+        sx={{
+          '& .MuiDialog-container': {
+            alignItems: 'flex-start',
+          },
+          '& .MuiPaper-root': {
+            marginTop: 4,
+            marginBottom: 4,
+          },
+        }}
+        fullWidth
+        disableEnforceFocus
+        maxWidth="lg"
+        open={eventModel}
+        onClose={handleCloseModel}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          variant="h3"
+          sx={{ my: -1, mx: 3, position: 'relative' }}
+        >
+          <span style={{ position: 'absolute', left: 0 }}>
+            {selectedEvent ? 'Update Event' : 'New Event'}
+          </span>
+          <EventToggleButton value={eventType} handleChange={handleCustomerEvent} />
+        </DialogTitle>
+        <Divider orientation="horizontal" flexItem />
+        <DialogContent dividers>
+          <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+            <Grid container ref={dialogRef}>
+              <Stack spacing={2} sx={{ pt: 2 }}>
+                <Box
+                  rowGap={2}
+                  columnGap={2}
+                  display="grid"
+                  gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(4, 1fr)' }}
+                >
+                  <RHFDatePicker label="Event Date*" name="date" />
+                  <RHFAutocomplete
+                    label="Start Time*"
+                    name="start"
+                    options={time_list}
+                    isOptionEqualToValue={(option, value) => option?.value === value?.value}
+                    getOptionLabel={(option) => `${option?.label || ''}`}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option?._id}>{`${option?.label || ''}`}</li>
+                    )}
+                  />
+                  <RHFDatePicker label="End Date*" name="end_date" />
+                  <RHFAutocomplete
+                    // disabled={allDay}
+                    label="End Time*"
+                    name="end"
+                    options={time_list}
+                    isOptionEqualToValue={(option, value) => option?.value === value?.value}
+                    getOptionLabel={(option) => `${option?.label || ''}`}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option?._id}>{`${option?.label || ''}`}</li>
+                    )}
+                  />
+                  {/* <Button sx={{height:'58px'}} variant={allDay?'contained':'outlined'} onClick={()=> handleAllDayChange(!allDay)} 
+                  startIcon={<Iconify icon={allDay?'gravity-ui:circle-check':'gravity-ui:circle'}/>}>All Day</Button> */}
+                </Box>
+
+                <RHFTextField name="jiraTicket" label={isCustomerEvent ? 'Jira Ticket' : 'Title'} />
+
+                {isCustomerEvent && (
+                  <RHFAutocomplete
+                    label="Customer*"
+                    name="customer"
+                    options={activeCustomers}
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                    getOptionLabel={(option) => `${option.name || ''}`}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option?._id}>{`${option.name || ''}`}</li>
+                    )}
+                    onChange={handleChangeCustomer}
+                  />
+                )}
+
+                {isCustomerEvent && (
+                  <>
+                    <RHFAutocomplete
+                      multiple
+                      disableCloseOnSelect
+                      filterSelectedOptions
+                      label="Machines"
+                      name="machines"
+                      options={activeCustomerMachines}
+                      isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                      getOptionLabel={(option) =>
+                        `${option?.serialNo || ''} ${option?.name ? '-' : ''} ${option?.name || ''}`
+                      }
+                      renderOption={(props, option) => (
+                        <li {...props} key={option?._id}>{`${option?.serialNo || ''} ${
+                          option?.name ? '-' : ''
+                        } ${option?.name || ''}`}</li>
+                      )}
+                    />
+                    <RHFAutocomplete
+                      label="Site"
+                      name="site"
+                      options={activeSites}
+                      isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                      getOptionLabel={(option) => `${option.name || ''}`}
+                      renderOption={(props, option) => (
+                        <li {...props} key={option?._id}>{`${option.name || ''}`}</li>
+                      )}
+                    />
+                  </>
+                )}
+                <RHFAutocomplete
+                  label={isCustomerEvent ? 'Primary Technician*' : 'Assignee*'}
+                  name="primaryTechnician"
+                  options={activeSpContacts}
+                  isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                  getOptionLabel={(option) =>
+                    `${option?.firstName || ''} ${option?.lastName || ''}`
+                  }
+                  renderOption={(props, option) => (
+                    <li {...props} key={option?._id}>{`${option?.firstName || ''} ${
+                      option?.lastName || ''
+                    }`}</li>
+                  )}
+                />
+                {isCustomerEvent && (
+                  <>
+                    <RHFAutocomplete
+                      multiple
+                      disableCloseOnSelect
+                      filterSelectedOptions
+                      label="Supporting Technicians"
+                      name="supportingTechnicians"
+                      options={activeSpContacts}
+                      isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                      getOptionLabel={(option) =>
+                        `${option.firstName || ''} ${option.lastName || ''}`
+                      }
+                      renderOption={(props, option) => (
+                        <li {...props} key={option?._id}>{`${option?.firstName || ''} ${
+                          option?.lastName || ''
+                        }`}</li>
+                      )}
+                    />
+                    <RHFAutocomplete
+                      multiple
+                      disableCloseOnSelect
+                      filterSelectedOptions
+                      label="Notify Contacts"
+                      name="notifyContacts"
+                      options={activeSpContacts}
+                      isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                      getOptionLabel={(option) =>
+                        `${option.firstName || ''} ${option.lastName || ''}`
+                      }
+                      renderOption={(props, option) => (
+                        <li {...props} key={option?._id}>{`${option?.firstName || ''} ${
+                          option?.lastName || ''
+                        }`}</li>
+                      )}
+                    />
+                  </>
+                )}
+
+                <RHFTextField name="description" label="Description" multiline rows={3} />
+                <Box
+                  sx={{
+                    display: 'grid',
+                    gap: 2,
+                    gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)' },
+                    alignItems: 'center',
+                    width: '100%',
+                  }}
+                >
+                  <RHFAutocomplete
+                    label="Priority"
+                    name="priority"
+                    options={priorityOptions}
+                    isOptionEqualToValue={(option, value) => option === value}
+                    renderInput={(params) => <RenderCustomInput label="Priority" params={params} />}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option}>
+                        <PriorityIcon priority={option} />
+                        <span style={{ marginLeft: 8 }}>{option}</span>
+                      </li>
+                    )}
+                  />
+                  <RHFAutocomplete
+                    name="status"
+                    options={['To Do', 'In Progress', 'Done', 'Cancelled']}
+                    isOptionEqualToValue={(option, value) => option === value}
+                    renderInput={(params) => (
+                      <RenderCustomInput
+                       label="Status*"
+                       params={{ ...params, error: !!errors?.status, helperText: errors?.status?.message, 
+                        InputProps: {
+                        ...params.InputProps,
+                        style: { 
+                        ...params.InputProps.style, 
+                        color: StatusColor(params.InputProps.value) }},
+                        }}
+                      />
+                    )}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option} style={{ fontWeight: 'bold', color: StatusColor(option) }}>
+                        {option}
+                      </li>
+                    )}
+                    rules={{ required: 'Status is required' }}
+                  />
+                </Box>
+
+                <RHFUpload
+                  dropZone={false}
+                  multiple
+                  thumbnail
+                  name="files"
+                  imagesOnly
+                  onDrop={handleDropMultiFile}
+                  onRemove={handleFileRemove}
+                  // onRemoveAll={() => setValue('files', '', { shouldValidate: true })}
+                />
+
+                {selectedEvent && (
+                  <Box
+                    rowGap={2}
+                    columnGap={2}
+                    display="grid"
+                    gridTemplateColumns={{ xs: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
+                  >
+                    <Typography variant="body2" color="#919EAB">
+                      <b>created by:</b> {`${defaultValues?.createdByFullName || ''}`} <br />{' '}
+                      {`${fDateTime(defaultValues.createdAt)} / ${defaultValues.createdIP}`}
+                    </Typography>
+                    <Typography variant="body2" color="#919EAB">
+                      <b>updated by:</b> {`${defaultValues?.updatedByFullName || ''}`} <br />{' '}
+                      {`${fDateTime(defaultValues.updatedAt)} / ${defaultValues.updatedIP}`}
+                    </Typography>
+                  </Box>
+                )}
+              </Stack>
+            </Grid>
+          </FormProvider>
+        </DialogContent>
+        <DialogActions sx={{ py: -2 }}>
+          {selectedEvent && (
+            <IconTooltip
+              color="#FF0000"
+              title="Delete Event"
+              icon="eva:trash-2-outline"
+              onClick={() => setOpenConfirm(true)}
             />
-            <RHFDatePicker label="End Date*" name="end_date" />
-            <RHFAutocomplete 
-              // disabled={allDay} 
-              label="End Time*"
-              name="end"
-              options={time_list}
-              isOptionEqualToValue={(option, value) => option?.value===value?.value}
-              getOptionLabel={(option) => `${option?.label || ''}`}
-              renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.label || ''}`}</li> )}
-            />
-            {/* <Button sx={{height:'58px'}} variant={allDay?'contained':'outlined'} onClick={()=> handleAllDayChange(!allDay)} 
-            startIcon={<Iconify icon={allDay?'gravity-ui:circle-check':'gravity-ui:circle'}/>}>All Day</Button> */}
-          </Box>
-            <RHFTextField name="jiraTicket" label="Jira Ticket" />
-
-          <RHFAutocomplete 
-            label="Customer*"
-            name="customer"
-            options={activeCustomers}
-            isOptionEqualToValue={(option, value) => option?._id === value?._id}
-            getOptionLabel={(option) => `${option.name || ''}`}
-            renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.name || ''}`}</li> )}
-          />
-
-          {/* <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }} > */}
-          
-            <RHFAutocomplete 
-              multiple
-              disableCloseOnSelect
-              filterSelectedOptions
-              label="Machines"
-              name="machines"
-              options={activeCustomerMachines}
-              isOptionEqualToValue={(option, value) => option?._id === value?._id}
-              getOptionLabel={(option) => `${option?.serialNo || ''} ${option?.name ? '-' : ''} ${option?.name || ''}`}
-              renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.serialNo || ''} ${option?.name ? '-' : ''} ${option?.name || ''}`}</li> )}
-            />  
-
-            <RHFAutocomplete 
-              label="Site"
-              name="site"
-              options={activeSites}
-              isOptionEqualToValue={(option, value) => option?._id === value?._id}
-              getOptionLabel={(option) => `${option.name || ''}`}
-              renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.name || ''}`}</li> )}
-            />   
-
-          {/* </Box> */}
-            <RHFAutocomplete 
-              label="Primary Technician*"
-              name="primaryTechnician"
-              options={activeSpContacts}
-              isOptionEqualToValue={(option, value) => option?._id === value?._id}
-              getOptionLabel={(option) => `${option.firstName || ''} ${ option.lastName || ''}`}
-              renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
-            />   
-
-          <RHFAutocomplete 
-            multiple
-            disableCloseOnSelect
-            filterSelectedOptions
-            label="Supporting Technicians"
-            name="supportingTechnicians"
-            options={activeSpContacts}
-            isOptionEqualToValue={(option, value) => option?._id === value?._id}
-            getOptionLabel={(option) => `${option.firstName || ''} ${ option.lastName || ''}`}
-            renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
-          />   
-
-          <RHFAutocomplete 
-            multiple
-            disableCloseOnSelect
-            filterSelectedOptions
-            label="Notify Contacts"
-            name="notifyContacts"
-            options={activeSpContacts}
-            isOptionEqualToValue={(option, value) => option?._id === value?._id}
-            getOptionLabel={(option) => `${option.firstName || ''} ${ option.lastName || ''}`}
-            renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
-          />   
-          <RHFTextField name="description" label="Description" multiline rows={3} />
-          {selectedEvent && 
-            <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }} >
-              <Typography variant='body2' color='#919EAB' ><b>created by:</b> {`${defaultValues?.createdByFullName || ''}`} <br /> {`${fDateTime(defaultValues.createdAt)} / ${defaultValues.createdIP}`}</Typography>
-              <Typography variant='body2' color='#919EAB' ><b>updated by:</b> {`${defaultValues?.updatedByFullName || ''}`} <br /> {`${fDateTime(defaultValues.updatedAt)} / ${defaultValues.updatedIP}`}</Typography>
-            </Box>
-          }
-        </Stack>
-      </Grid>
-      </FormProvider>
-      </DialogContent>
-      <DialogActions >
-        {selectedEvent && (
-          <IconTooltip color='#FF0000' title='Delete Event' icon='eva:trash-2-outline' onClick={()=> setOpenConfirm(true)}/>
-        )}
-        
-        <Box sx={{ flexGrow: 1 }} />
-          <Button variant="outlined" color="inherit" onClick={handleCloseModel}>Cancel</Button>
-          <LoadingButton type="submit" variant="contained" onClick={handleSubmit(onSubmit)} loading={isSubmitting}>
+          )}
+          <Box sx={{ flexGrow: 1 }} />
+          <Button variant="outlined" color="inherit" onClick={handleCloseModel}>
+            Cancel
+          </Button>
+          <LoadingButton
+            type="submit"
+            variant="contained"
+            onClick={handleSubmit(onSubmit)}
+            loading={isSubmitting}
+          >
             {selectedEvent ? 'Update' : 'Add'}
           </LoadingButton>
-      </DialogActions>
-    </Dialog>
-
-    <ConfirmDialog
-      open={openConfirm}
-      onClose={() => setOpenConfirm(false)}
-      title="Delete"
-      content="Are you sure you want to Delete?"
-      action={
-        <LoadingButton
-          variant="contained"
-          color="error"
-          onClick={()=> {
-            onDeleteEvent()
-            setOpenConfirm(false);
-          } }
-        >
-          Delete
-        </LoadingButton>
-      }
+        </DialogActions>
+      </Dialog>
+      <ConfirmDialog
+        open={openConfirm}
+        onClose={() => setOpenConfirm(false)}
+        title="Delete"
+        content="Are you sure you want to Delete?"
+        action={
+          <LoadingButton
+            variant="contained"
+            color="error"
+            onClick={handleDeleteEvent}
+            loading={isLoading || isSubmitting}
+          >
+            Delete
+          </LoadingButton>
+        }
       />
     </>
-    
   );
 }
 
+export default memo( EventDialog );
 
-export default EventDialog;

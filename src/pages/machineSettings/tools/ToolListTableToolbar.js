@@ -33,7 +33,7 @@ export default function ToolListTableToolbar({
   onFilterStatus,
 }) {
   const navigate = useNavigate();
-  const toggleAdd = () => navigate(PATH_MACHINE.machines.machineSettings.tools.new);
+  const toggleAdd = () => navigate(PATH_MACHINE.machineSettings.tools.new);
 
   return (
     <Stack {...options}>

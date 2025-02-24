@@ -65,8 +65,10 @@ export default function ContactMoveForm( ) {
       await dispatch(moveCustomerContact(data));
       enqueueSnackbar('Contact moved successfully!');
       await dispatch(setIsExpanded(false));
-      await dispatch(getContacts(customerId));
-      await navigate(PATH_CRM.customers.contacts.root(customerId))
+      if( customerId && customerId !== "undefined" ){
+        await dispatch(getContacts(customerId));
+        await navigate(PATH_CRM.customers.contacts.root(customerId))
+      }
     } catch (error) {
       enqueueSnackbar(error, { variant: `error` });
       console.error(error);
@@ -81,10 +83,10 @@ export default function ContactMoveForm( ) {
               <Card sx={{ p: 3 }}>
                 <FormLabel content="Contact Detail" />
                 <Grid container sx={{pb:2}}>
-                  <ViewFormField sm={6} heading="Name" param={`${contact?.firstName} ${contact?.lastName}`} />
-                  <ViewFormField sm={6} heading="Title" param={contact?.title} />
-                  <ViewFormField sm={6} heading="Email" param={contact?.email} />
-                  <ViewPhoneComponent sm={6} heading="Phone" value={contact?.phoneNumbers} />
+                  <ViewFormField sm={6} heading="Name" param={`${contact?.firstName || ''} ${contact?.lastName || ''}`} />
+                  <ViewFormField sm={6} heading="Title" param={contact?.title || ''} />
+                  <ViewFormField sm={6} heading="Email" param={contact?.email || ''} />
+                  <ViewPhoneComponent sm={6} heading="Phone" value={contact?.phoneNumbers || ''} />
                 </Grid>
                 <Stack spacing={2}>
                   <FormLabel content="Move Contact" />

@@ -72,14 +72,14 @@ export default function CheckItemCategoryEditForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [serviceCategory]);
 
-  const toggleCancel = () =>  navigate(PATH_MACHINE.machines.machineSettings.checkItemCategories.view(id));
+  const toggleCancel = () =>  navigate(PATH_MACHINE.machineSettings.checkItemCategories.view(id));
 
   const onSubmit = async (data) => {
     try {
       await dispatch(updateServiceCategory(data, id));
       reset();
       enqueueSnackbar('Service Category Updated Successfully!');
-      navigate(PATH_MACHINE.machines.machineSettings.checkItemCategories.view(id));
+      navigate(PATH_MACHINE.machineSettings.checkItemCategories.view(id));
     } catch (err) {
       enqueueSnackbar('Saving failed!', { variant: `error` });
       console.error(err.message);

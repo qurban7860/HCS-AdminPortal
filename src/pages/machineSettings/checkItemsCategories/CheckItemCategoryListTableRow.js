@@ -29,7 +29,7 @@ export default function CheckItemListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { name, isActive, createdAt } = row;
+  const { name, isActive, updatedAt } = row;
   const [openConfirm, setOpenConfirm] = useState(false);
   const [openPopover, setOpenPopover] = useState(null);
 
@@ -54,7 +54,7 @@ export default function CheckItemListTableRow({
           <Switch checked={isActive} disabled sx={{ my: -1 }} />{' '}
         </TableCell>
 
-        <TableCell align="right">{fDate(createdAt)}</TableCell>
+        <TableCell align="right">{fDate(updatedAt)}</TableCell>
       </TableRow>
 
       <MenuPopover

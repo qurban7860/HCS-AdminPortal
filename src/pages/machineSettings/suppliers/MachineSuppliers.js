@@ -98,14 +98,14 @@ export default function MachineSuppliers() {
       await dispatch(saveSupplier(data));
       reset();
       enqueueSnackbar('Machine Supplier created successfully!');
-      navigate(PATH_MACHINE.machines.machineSettings.suppliers.root);
+      navigate(PATH_MACHINE.machineSettings.suppliers.root);
     } catch (error) {
       enqueueSnackbar(error?.message, { variant: `error` });
       console.error(error);
     }
   };
 
-  const toggleCancel = () => navigate(PATH_MACHINE.machines.machineSettings.suppliers.root);
+  const toggleCancel = () => navigate(PATH_MACHINE.machineSettings.suppliers.root);
 
   const { themeStretch } = useSettingsContext();
   return (

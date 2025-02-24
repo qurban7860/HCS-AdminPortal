@@ -1,6 +1,7 @@
 import React, { useEffect, useState, memo } from 'react';
 import PropTypes from 'prop-types';
-import { Typography, Grid, Chip, createTheme, IconButton } from '@mui/material';
+import { useSelector } from 'react-redux';
+import { Typography, Grid, Chip, createTheme, IconButton, Link } from '@mui/material';
 import { green } from '@mui/material/colors';
 import IconPopover from '../Icons/IconPopover';
 import ViewFormMenuPopover from './ViewFormMenuPopover';
@@ -8,10 +9,14 @@ import SkeletonViewFormField from '../skeleton/SkeletonViewFormField';
 import { StyledTooltip } from '../../theme/styles/default-styles';
 import Iconify from '../iconify';
 import { ICONS } from '../../constants/icons/default-icons';
+import { fDateTime } from '../../utils/formatTime';
 
 function ViewFormField({
   backLink,
   heading,
+  headingIcon,
+  headingIconTooltip,
+  headingIconHandler,
   param,
   objectString,
   node,
@@ -50,11 +55,11 @@ function ViewFormField({
   ViewAllVersions,
   handleAllVersion,
   isLoading,
-  variant
+  variant='body1',
 }) {
   const [verifiedAnchorEl, setVerifiedAnchorEl] = useState(null);
   const [verifiedBy, setVerifiedBy] = useState([]);
-
+  const { machineServiceReport } = useSelector((state) => state.machineServiceReport);
   const theme = createTheme({
     palette: {
       success: green,
@@ -79,17 +84,25 @@ function ViewFormField({
   return (
     <Grid item xs={12} sm={sm} sx={{ px: 0.5, py: 1, overflowWrap: 'break-word' }}>
       <Typography variant="overline" sx={{ color: 'text.disabled' }}>{heading || ''}</Typography>
+      {headingIcon && (
+        <StyledTooltip title={headingIconTooltip} placement="top" disableFocusListener tooltipcolor="#2065D1" color="#2065D1">
+          {headingIconHandler ? (
+            <Link onClick={headingIconHandler} color="inherit" sx={{ cursor: 'pointer', mx: 0.5 }}>
+              {(headingIcon)}
+            </Link>
+          ) : headingIcon}
+        </StyledTooltip>
+      )}
       {isLoading ? (
           <SkeletonViewFormField />
       ) : (
       <>
-        <Typography variant={variant}
+        <Grid 
           style={{
             display: 'flex',
             alignItems: 'center',
             whiteSpace: 'pre-line',
             wordBreak: 'break-word',
-            // color:heading?.toLowerCase()==="status" && param?.toLowerCase()==="transferred" && 'red'
           }}
         >
         <IconPopover isActive={isActive} />
@@ -109,24 +122,28 @@ function ViewFormField({
         {multiAuth !== undefined && <IconPopover multiAuth={multiAuth} />}
         {currentEmp !== undefined && <IconPopover currentEmp={currentEmp} />}
         {customerAccess !== undefined && <IconPopover customerAccess={customerAccess} />}
-        {param && typeof param === 'string' && param.trim().length > 0 && param}
-        {objectString && typeof objectString === 'string' && objectString.length > 0 && objectString}
-        {param &&
-          typeof param === 'string' &&
-          param.trim().length > 0 &&
-          secondParam &&
+        <Typography variant={variant} >
+          {param && typeof param === 'string' && param.trim().length > 0 && param}
+          {objectString && typeof objectString === 'string' && objectString.length > 0 && objectString}
+          {param &&
+            typeof param === 'string' &&
+            param.trim().length > 0 &&
+            secondParam &&
+            typeof secondParam === 'string' &&
+            secondParam.trim().length > 0 &&
+            '  '}
+              <Grid container >
+                 {param && typeof param !== 'string' && param}
+              </Grid>
+          {secondParam &&
           typeof secondParam === 'string' &&
           secondParam.trim().length > 0 &&
-          '  '}
-        {param && typeof param !== 'string' && param}
-        {secondParam &&
-        typeof secondParam === 'string' &&
-        secondParam.trim().length > 0 &&
-        secondParam}
+          secondParam}
+          {objectParam || ''}
+          {secondObjectParam || ''}
+          {numberParam || ''}
+        </Typography>
         {node || ''}
-        {objectParam || ''}
-        {secondObjectParam || ''}
-        {numberParam || ''}
         {ViewAllVersions && 
           <StyledTooltip title={ICONS.VIEW_VERSIONS.heading} placement="top" disableFocusListener tooltipcolor={theme.palette.primary.main} color={theme.palette.primary.main}>
             <IconButton onClick={handleAllVersion} >
@@ -149,7 +166,7 @@ function ViewFormField({
           </StyledTooltip>
         }
         &nbsp;
-      </Typography>
+      </Grid>
       {configArrayParam && typeof configArrayParam === 'object' && configArrayParam?.length > 0 && (
         <Grid container sx={{my:-3, mb:0,
               display: 'flex',
@@ -159,9 +176,9 @@ function ViewFormField({
               }} >
               {configArrayParam.map(
                 (data, index) =>
-                  data?.docTitle &&
-                  typeof data?.docTitle === 'string' &&
-                  data?.docTitle.trim().length > 0 && <Chip key={index} sx={{m:0.2}} label={<div style={{display:'flex',alignItems:'center'}}  ><Typography variant='body2'>{`${data?.docTitle || ''}`}</Typography> <Typography variant='subtitle2'>{` - v${data?.docVersionNo}`}</Typography></div>} />
+                  data?.reportTitle &&
+                  typeof data?.reportTitle === 'string' &&
+                  data?.reportTitle.trim().length > 0 && <Chip key={index} sx={{m:0.2}} label={<div style={{display:'flex',alignItems:'center'}}  ><Typography variant='body2'>{`${data?.reportTitle || ''}`}</Typography> <Typography variant='subtitle2'>{` - v${data?.docVersionNo}`}</Typography></div>} />
               )}
             </Grid>
       )}
@@ -315,6 +332,9 @@ function ViewFormField({
 export default memo(ViewFormField)
 ViewFormField.propTypes = {
   heading: PropTypes.string,
+  headingIcon: PropTypes.object,
+  headingIconTooltip: PropTypes.string,
+  headingIconHandler: PropTypes.func,
   node: PropTypes.node,
   param: PropTypes.string,
   objectString: PropTypes.string,
@@ -357,6 +377,3 @@ ViewFormField.propTypes = {
   variant: PropTypes.string,
 };
 
-ViewFormField.defaultProps = {
-  variant: 'body1',
-};

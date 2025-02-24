@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import _ from 'lodash';
 // utils
 import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
@@ -6,6 +7,7 @@ import { CONFIG } from '../../../config-global';
 
 const initialState = {
   isLoading: false,
+  isLoadingList: false,
   error: null,
   event: {},
   events: [],
@@ -22,15 +24,28 @@ const slice = createSlice({
     startLoading(state) {
       state.isLoading = true;
     },
+
+    // START LOADING
+    startLoadingList(state) {
+      state.isLoadingList = true;
+    },
+
+    // STOP LOADING
+    stopLoading(state) {
+      state.isLoading = true;
+    },
+
     // HAS ERROR
     hasError(state, action) {
       state.isLoading = false;
+      state.isLoadingList = false;
       state.error = action.payload;
     },
 
     // GET EVENTS
     getEventsSuccess(state, action) {
       state.isLoading = false;
+      state.isLoadingList = false;
       state.events = action.payload;
     },
 
@@ -47,11 +62,11 @@ const slice = createSlice({
         title: `${action.payload?.primaryTechnician?.firstName || ''} ${action.payload?.primaryTechnician?.lastName || ''}, ${action.payload?.customer?.name || ''}`,
         start: action.payload?.start,
         end: action.payload?.end,
-        textColor: "#1890FF",
+        textColor: action.payload?.isCustomerEvent ? "#1890FF" : "#003768",
         extendedProps: { ...action.payload }
       }
       state.isLoading = false;
-      state.events = [...state.events, newEvent];
+      state.events = [ ...state.events, newEvent ];
     },
 
     // UPDATE EVENT
@@ -64,7 +79,7 @@ const slice = createSlice({
             title: `${action.payload?.primaryTechnician?.firstName || ''} ${action.payload?.primaryTechnician?.lastName || ''}, ${action.payload?.customer?.name || ''}`,
             start: action.payload?.start,
             end: action.payload?.end,
-            textColor: "#1890FF",
+            textColor: action.payload?.isCustomerEvent ? "#1890FF" : "#003768",
             extendedProps: { ...action.payload }
           };
         }
@@ -73,6 +88,7 @@ const slice = createSlice({
     },
     // UPDATE EVENT
     updateEventDateLocal(state, action) {
+      state.isLoading = false;
       const { id, start, end } = action.payload;
       state.events = state.events.map((event) => {
         if (event.id === id) {
@@ -90,15 +106,44 @@ const slice = createSlice({
 
     // DELETE EVENTS
     deleteEventSuccess(state, action) {
+      state.isLoading = false;
       const eventId = action.payload._id;
       state.events = state.events.filter((event) => event.id !== eventId);
+    },
+
+    // DELETE EVENTS FILES
+    deleteEventsFileSuccess(state, action) {
+      state.isLoading = false;
+      const { eventId, _id } = action.payload;
+      state.events = state.events.map((event) => {
+        if (event.id === eventId) {
+          return {
+            ...event,
+            extendedProps: {
+              ...event.extendedProps,
+              files: event?.extendedProps?.files?.filter(file => file._id !== _id),
+            },
+          };
+        }
+        return event;
+      });
+    },
+
+    // // DELETE EVENT FILES
+    deleteEventFileSuccess(state, action) {
+      state.isLoading = false;
+      const selectedEventClone = _.cloneDeep(state.selectedEvent);
+      selectedEventClone.extendedProps.files = selectedEventClone.extendedProps.files?.filter(file => file._id !== action.payload?._id);
+      state.selectedEvent = selectedEventClone;
     },
 
     // SELECT RANGE
     selectRange(state, action) {
       const { start, end } = action.payload;
+      const endDate = new Date(end);
+      endDate.setDate(end.getDate() - 1);
       state.selectedEvent = null;
-      state.selectedRange = { start, end };
+      state.selectedRange = { start, end: endDate };
       state.eventModel = true;
     },
 
@@ -140,6 +185,7 @@ export function getEvents(date, customer, contact) {
   return async (dispatch) => {
     dispatch(resetEvents());
     dispatch(slice.actions.startLoading());
+    dispatch(slice.actions.startLoadingList());
     try {
       const params= {
         isArchived: false,
@@ -152,17 +198,18 @@ export function getEvents(date, customer, contact) {
         params.year = date?.getFullYear()
       }
       const response = await axios.get(`${CONFIG.SERVER_URL}calender/events`, { params } );
-      const formattedData = response?.data?.map((v) => ({
+      const formattedData = await response?.data?.map((v) => ({
         id: v?._id,
         title: `${v?.primaryTechnician?.firstName || ''} ${v?.primaryTechnician?.lastName || ''}, ${v?.customer?.name || ''}`,
         start: v?.start,
         end: v?.end,
-        textColor: "#1890FF",
+        textColor: v?.isCustomerEvent ? "#1890FF" : "#003768",
         extendedProps: {
           ...v
         }
       }));
       dispatch(slice.actions.getEventsSuccess(formattedData));
+      return response;
     } catch (error) {
       dispatch(slice.actions.hasError(error?.Message));
       throw error;
@@ -190,21 +237,42 @@ export function createEvent(params) {
     dispatch(slice.actions.startLoading());
     try {
       
-      const data = {
-        start: params?.start_date,
-        end: params?.end_date,
-        customer: params?.customer?._id || null,
-        machines: params?.machines?.map((machine)=> machine?._id) || [] ,
-        site: params?.site?._id || null,
-        jiraTicket: params?.jiraTicket || '',
-        primaryTechnician: params?.primaryTechnician?._id || '',
-        supportingTechnicians: params?.supportingTechnicians?.map((el)=> el?._id) || [] ,
-        notifyContacts: params?.notifyContacts?.map((el)=> el?._id) || [],
-        description: params?.description || '',
+      const formData = new FormData();
+
+      formData.append('isCustomerEvent', params?.isCustomerEvent);
+      formData.append('jiraTicket', params?.jiraTicket || '');
+      formData.append('start', params?.start_date);
+      formData.append('end', params?.end_date);
+      formData.append('priority', params?.priority);
+      formData.append('status', params?.status);
+      formData.append('customer', params?.customer?._id || null);
+      if( params?.site?._id ){ 
+        formData.append('site', params?.site?._id || null);
+      }
+      if( params?.primaryTechnician?._id ){ 
+        formData.append('primaryTechnician', params?.primaryTechnician?._id || '')
       };
+      formData.append('description', params?.description || '');
       
-      const response = await axios.post(`${CONFIG.SERVER_URL}calender/events`, data);
-      dispatch(slice.actions.createEventSuccess(response.data.Event));
+      (params?.machines || []).forEach((machine, index) => {
+          formData.append(`machines[]`, machine?._id);
+      });
+      
+      (params?.supportingTechnicians || []).forEach((tech, index) => {
+          formData.append(`supportingTechnicians[]`, tech?._id);
+      });
+      
+      (params?.notifyContacts || []).forEach((contact, index) => {
+          formData.append(`notifyContacts[]`, contact?._id);
+      });
+      
+      (params?.files || []).forEach((file, index) => {
+          formData.append(`images`, file);
+      });
+
+      const response = await axios.post(`${CONFIG.SERVER_URL}calender/events`, formData);
+      await dispatch(slice.actions.createEventSuccess(response.data.Event));
+      return response.data.Event;
     } catch (error) {
       dispatch(slice.actions.hasError(error?.Message));
       throw error;
@@ -219,7 +287,9 @@ export function updateEventDate(id, start, end) {
     try {
       const data = { start, end };
       dispatch(slice.actions.updateEventDateLocal({ id, start, end }));
-      await axios.patch(`${CONFIG.SERVER_URL}calender/events/${id}`, data);
+      const response = await axios.patch(`${CONFIG.SERVER_URL}calender/events/${id}`, data);
+      dispatch(slice.actions.stopLoading());
+      return response.data.Event;
     } catch (error) {
       dispatch(slice.actions.hasError(error?.Message));
       throw error;
@@ -231,21 +301,41 @@ export function updateEvent(id, params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const data = {
-        start: params?.start_date,
-        end: params?.end_date,
-        customer: params?.customer?._id || null,
-        machines: params?.machines?.map((machine)=> machine?._id) || [] ,
-        site: params?.site?._id || null,
-        jiraTicket: params?.jiraTicket || '',
-        primaryTechnician: params?.primaryTechnician?._id || '',
-        supportingTechnicians: params?.supportingTechnicians?.map((el)=> el?._id) || [] ,
-        notifyContacts: params?.notifyContacts?.map((el)=> el?._id) || [],
-        description: params?.description || '',
+      const formData = new FormData();
+      formData.append('isCustomerEvent', params?.isCustomerEvent);
+      formData.append('jiraTicket', params?.jiraTicket || '');
+      formData.append('start', params?.start_date);
+      formData.append('end', params?.end_date);
+      formData.append('priority', params?.priority );
+      formData.append('status', params?.status );
+      formData.append('customer', params?.customer?._id || null);
+      if( params?.site?._id ){ 
+        formData.append('site', params?.site?._id || null);
+      }
+      if( params?.primaryTechnician?._id ){ 
+        formData.append('primaryTechnician', params?.primaryTechnician?._id || '')
       };
+      formData.append('description', params?.description || '');
+      
+      (params?.machines || []).forEach((machine, index) => {
+          formData.append(`machines[]`, machine?._id);
+      });
+      
+      (params?.supportingTechnicians || []).forEach((tech, index) => {
+          formData.append(`supportingTechnicians[]`, tech?._id);
+      });
+      
+      (params?.notifyContacts || []).forEach((contact, index) => {
+          formData.append(`notifyContacts[]`, contact?._id);
+      });
+      
+      (params?.files || []).forEach((file, index) => {
+          formData.append(`images`, file);
+      });
 
-      const response = await axios.patch(`${CONFIG.SERVER_URL}calender/events/${id}`, data);
-      dispatch(slice.actions.updateEventSuccess(response.data.Event));
+      const response = await axios.patch(`${CONFIG.SERVER_URL}calender/events/${id}`, formData);
+      await dispatch(slice.actions.updateEventSuccess(response.data.Event));
+      return response.data.Event;
     } catch (error) {
       dispatch(slice.actions.hasError(error?.Message));
       throw error;
@@ -259,8 +349,40 @@ export function deleteEvent(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.patch(`${CONFIG.SERVER_URL}calender/events/${id}`, { isArchived: true, });
-      await dispatch(slice.actions.deleteEventSuccess(response.data.Event));
+      await axios.delete(`${CONFIG.SERVER_URL}calender/events/${id}`);
+      await dispatch(slice.actions.deleteEventSuccess({ _id : id}));
+      } catch (error) {
+      dispatch(slice.actions.hasError(error?.Message));
+      throw error;
+    }
+  };
+}
+
+
+// ----------------------------------------------------------------------
+
+export function deleteEventFile( eventId, id ) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      await axios.patch(`${CONFIG.SERVER_URL}calender/events/${eventId}/files/${id}`, { isActive: false, isArchived: true, });
+      // await dispatch(slice.actions.deleteEventFileSuccess({ _id: id }));
+      await dispatch(slice.actions.deleteEventsFileSuccess({ eventId, _id: id }));
+      } catch (error) {
+      dispatch(slice.actions.hasError(error?.Message));
+      throw error;
+    }
+  };
+}
+
+
+export function downloadEventFile( eventId, id ) {
+  return async (dispatch) => {
+    try {
+      dispatch(slice.actions.startLoading());
+      const response = await axios.get(`${CONFIG.SERVER_URL}calender/events/${eventId}/files/${id}`);
+      dispatch(slice.actions.stopLoading());
+      return response;
       } catch (error) {
       dispatch(slice.actions.hasError(error?.Message));
       throw error;

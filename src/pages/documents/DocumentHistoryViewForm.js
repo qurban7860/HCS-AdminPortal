@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import {  useMemo, useEffect, memo, useState } from 'react';
+import { useMemo, useEffect, memo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import download from 'downloadjs';
@@ -13,7 +13,6 @@ import {
   Container,
   Dialog,
   DialogTitle,
-  DialogContent,
   Typography,
   Divider
 } from '@mui/material';
@@ -33,13 +32,11 @@ import {
 import { deleteDrawing, getDrawings, getDrawing, resetDrawings } from '../../redux/slices/products/drawing';
 
 import { deleteDocumentFile, downloadFile, getDocumentDownload } from '../../redux/slices/document/documentFile';
-import { getCustomer, resetCustomer, setCustomerDialog} from '../../redux/slices/customer/customer';
-import { getMachineForDialog, resetMachine, setMachineDialog } from '../../redux/slices/products/machine';
+import { getCustomer, setCustomerDialog } from '../../redux/slices/customer/customer';
+import { getMachineForDialog, setMachineDialog } from '../../redux/slices/products/machine';
 import FormLabel from '../../components/DocumentForms/FormLabel';
 import DocumentCover from '../../components/DocumentForms/DocumentCover';
-import CustomerDialog from '../../components/Dialog/CustomerDialog';
-import MachineDialog from '../../components/Dialog/MachineDialog';
-import { PATH_DOCUMENT, PATH_CRM, PATH_MACHINE, PATH_MACHINE_DRAWING } from '../../routes/paths';
+import { PATH_CRM, PATH_MACHINE, PATH_MACHINE_DRAWING } from '../../routes/paths';
 import { useSnackbar } from '../../components/snackbar';
 import { Snacks } from '../../constants/document-constants';
 import UpdateDocumentVersionDialog from '../../components/Dialog/UpdateDocumentVersionDialog';
@@ -54,10 +51,11 @@ DocumentHistoryViewForm.propTypes = {
   machinePage: PropTypes.bool,
   machineDrawingPage: PropTypes.bool,
   machineDrawings: PropTypes.bool,
+  allowActions: PropTypes.bool,
 };
 
-function DocumentHistoryViewForm({ customerPage, machinePage, machineDrawingPage, machineDrawings }) {
-  
+function DocumentHistoryViewForm({ customerPage, machinePage, machineDrawingPage, machineDrawings, allowActions }) {
+
   const dispatch = useDispatch();
   const { customerId, machineId, id } = useParams();
   const { enqueueSnackbar } = useSnackbar();
@@ -68,7 +66,7 @@ function DocumentHistoryViewForm({ customerPage, machinePage, machineDrawingPage
   const { drawing } = useSelector((state) => state.drawing);
 
   useEffect(() => {
-    if( id ){
+    if (id) {
       dispatch(getDocumentHistory(id));
     }
     return () => {
@@ -77,14 +75,14 @@ function DocumentHistoryViewForm({ customerPage, machinePage, machineDrawingPage
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, id]);
 
-// get machine data for machine portal
+  // get machine data for machine portal
   useEffect(() => {
     if (documentHistory?.machine && !machinePage && !machineDrawingPage) {
       dispatch(setMachineDialog(false));
     }
   }, [documentHistory, machinePage, machineDrawingPage, dispatch]);
 
-// get customer data for customer portal
+  // get customer data for customer portal
   useEffect(() => {
     if (documentHistory?.customer && !customerPage) {
       dispatch(setCustomerDialog(false));
@@ -107,7 +105,7 @@ function DocumentHistoryViewForm({ customerPage, machinePage, machineDrawingPage
       customerAccess: documentHistory?.customerAccess,
       isActiveVersion: documentHistory?.isActiveVersion,
       documentVersion: documentHistory?.documentVersions?.length > 0
-                        ? documentHistory?.documentVersions[0]?.versionNo : '',
+        ? documentHistory?.documentVersions[0]?.versionNo : '',
       versionPrefix: documentHistory?.versionPrefix || '',
       description: documentHistory?.description,
       isArchived: documentHistory?.isArchived,
@@ -124,78 +122,78 @@ function DocumentHistoryViewForm({ customerPage, machinePage, machineDrawingPage
     [documentHistory]
   );
 
-  const linkedDrawingMachines = documentHistory?.productDrawings?.map((pdrawing, index) =>  
-    <Chip sx={{ml:index===0?0:1}} onClick={() => handleMachineDialog(pdrawing?.machine?._id)} label={`${pdrawing?.machine?.serialNo || '' } ${pdrawing?.machine?.name ? '-' : '' } ${pdrawing?.machine?.name || '' } `} />
+  const linkedDrawingMachines = documentHistory?.productDrawings?.map((pdrawing, index) =>
+    <Chip sx={{ m: 0.3 }} onClick={() => handleMachineDialog(pdrawing?.machine?._id)} label={`${pdrawing?.machine?.serialNo || ''} ${pdrawing?.machine?.name ? '-' : ''} ${pdrawing?.machine?.name || ''} `} />
   );
 
   const handleNewVersion = async () => {
-    if(customerPage){
-      navigate(PATH_CRM.customers.documents.history.newVersion( customerId, id ));
-    } else if( machineDrawingPage ){
-      navigate(PATH_MACHINE.machines.drawings.view.newVersion( machineId, id ));
-    } else if( machinePage ){
-      navigate(PATH_MACHINE.machines.documents.history.newVersion( machineId, id ));
-    }else if(!customerPage && !machineDrawingPage && !machinePage && !machineDrawings ){
-      navigate(PATH_DOCUMENT.document.view.newVersion( id ));
-    }else if(machineDrawings){
-      navigate(PATH_MACHINE_DRAWING.machineDrawings.view.newVersion( id ));
+    if (customerPage) {
+      navigate(PATH_CRM.customers.documents.history.newVersion(customerId, id));
+    } else if (machineDrawingPage) {
+      navigate(PATH_MACHINE.machines.drawings.view.newVersion(machineId, id));
+    } else if (machinePage) {
+      navigate(PATH_MACHINE.machines.documents.history.newVersion(machineId, id));
+    } else if (!customerPage && !machineDrawingPage && !machinePage && !machineDrawings) {
+      navigate(PATH_MACHINE.documents.document.view.newVersion(id));
+    } else if (machineDrawings) {
+      navigate(PATH_MACHINE_DRAWING.machineDrawings.view.newVersion(id));
     }
   }
 
-const handleUpdateVersion = async () => {
-  dispatch(setDocumentVersionEditDialogVisibility(true));
-}
-
-const handleNewFile = async () => {
-  if(customerPage){
-    navigate(PATH_CRM.customers.documents.history.addFile( customerId, id ));
-  } else if( machineDrawingPage ){
-    navigate(PATH_MACHINE.machines.drawings.view.addFile( machineId, id ));
-  } else if( machinePage ){
-    navigate(PATH_MACHINE.machines.documents.history.addFile( machineId, id ));
-  }else if(!customerPage && !machineDrawingPage && !machinePage && !machineDrawings){
-    navigate(PATH_DOCUMENT.document.view.addFile( id ));
-  }else if(machineDrawings){
-    navigate(PATH_MACHINE_DRAWING.machineDrawings.view.addFile( id ));
+  const handleUpdateVersion = async () => {
+    dispatch(setDocumentVersionEditDialogVisibility(true));
   }
-}
 
-  const handleCustomerDialog = () =>{
+  const handleNewFile = async () => {
+    if (customerPage) {
+      navigate(PATH_CRM.customers.documents.history.addFile(customerId, id));
+    } else if (machineDrawingPage) {
+      navigate(PATH_MACHINE.machines.drawings.view.addFile(machineId, id));
+    } else if (machinePage) {
+      navigate(PATH_MACHINE.machines.documents.history.addFile(machineId, id));
+    } else if (!customerPage && !machineDrawingPage && !machinePage && !machineDrawings) {
+      navigate(PATH_MACHINE.documents.document.view.addFile(id));
+    } else if (machineDrawings) {
+      navigate(PATH_MACHINE_DRAWING.machineDrawings.view.addFile(id));
+    }
+  }
+
+  const handleCustomerDialog = async () => {
     if (documentHistory?.customer && !customerPage) {
-      dispatch(setCustomerDialog(true));
-      dispatch(getCustomer(documentHistory.customer._id));
+      await dispatch(getCustomer(documentHistory.customer._id));
+      await dispatch(setCustomerDialog(true));
     }
   }
 
-  const handleMachineDialog = (Id) =>{
-      dispatch(setMachineDialog(true));
-      dispatch(getMachineForDialog(Id));
+  const handleMachineDialog = async (Id) => {
+    await dispatch(getMachineForDialog(Id));
+    await dispatch(setMachineDialog(true));
   }
 
-  const handleEditDrawing = async () =>{
-    if( machineDrawingPage ){
-      navigate(PATH_MACHINE.machines.drawings.edit( machineId, id));
-    } else if( machineDrawings ){
-      navigate(PATH_MACHINE_DRAWING.machineDrawings.edit( id));
+  const handleEditDrawing = async () => {
+    if (machineDrawingPage) {
+      navigate(PATH_MACHINE.machines.drawings.edit(machineId, id));
+    } else if (machineDrawings) {
+      navigate(PATH_MACHINE_DRAWING.machineDrawings.edit(id));
     }
-  } 
+  }
 
   const handleDelete = async () => {
     try {
-      await dispatch(deleteDocument( id));
-      if( customerPage ) {
-        navigate(PATH_CRM.customers.documents.root( customer?._id ));
-      }else if( machinePage ){
-        navigate(PATH_MACHINE.machines.documents.root( machineId ));;
-      }else if( machineDrawingPage ){
-        navigate(PATH_MACHINE.machines.drawings.root( machineId ));
-      }else if( !customerPage && !machineDrawingPage && !machinePage && !machineDrawings ){
-        navigate(PATH_DOCUMENT.root);
-      }else if( machineDrawings ){
+      await dispatch(deleteDocument(id));
+      if (customerPage) {
+        navigate(PATH_CRM.customers.documents.root(customer?._id));
+      } else if (machinePage) {
+        navigate(PATH_MACHINE.machines.documents.root(machineId));;
+      } else if (machineDrawingPage) {
+        navigate(PATH_MACHINE.machines.drawings.root(machineId));
+      } else if (!customerPage && !machineDrawingPage && !machinePage && !machineDrawings) {
+        navigate(PATH_MACHINE.documents.list);
+      } else if (machineDrawings) {
         navigate(PATH_MACHINE_DRAWING.root);
       }
       enqueueSnackbar("Document Archived Successfully!", { variant: `success` });
-    }catch(error) {
+    } catch (error) {
       enqueueSnackbar(error, { variant: `error` });
     }
   }
@@ -204,15 +202,15 @@ const handleNewFile = async () => {
     try {
       await dispatch(deleteDrawing(drawing?._id));
       enqueueSnackbar(Snacks.deletedDrawing, { variant: `success` });
-      if( customerPage ) {
-        navigate(PATH_CRM.customers.documents.root( customer?._id ));
-      }else if( machinePage ){
-        navigate(PATH_MACHINE.machines.documents.root( machineId ));;
-      }else if( machineDrawingPage ){
-        navigate(PATH_MACHINE.machines.drawings.root( machineId ));
-      }else if( !customerPage && !machineDrawingPage && !machinePage && !machineDrawings ){
-        navigate(PATH_DOCUMENT.root);
-      }else if( machineDrawings ){
+      if (customerPage) {
+        navigate(PATH_CRM.customers.documents.root(customer?._id));
+      } else if (machinePage) {
+        navigate(PATH_MACHINE.machines.documents.root(machineId));;
+      } else if (machineDrawingPage) {
+        navigate(PATH_MACHINE.machines.drawings.root(machineId));
+      } else if (!customerPage && !machineDrawingPage && !machinePage && !machineDrawings) {
+        navigate(PATH_MACHINE.documents.list);
+      } else if (machineDrawings) {
         navigate(PATH_MACHINE_DRAWING.root);
       }
     } catch (err) {
@@ -231,12 +229,12 @@ const handleNewFile = async () => {
       const newSlides = documentHistory?.documentVersions?.flatMap((files, index) =>
         files?.files?.map((file, _index) => {
           if (file?.fileType && file.fileType.startsWith("image")) {
-            return{
+            return {
               thumbnail: `data:image/png;base64, ${file.thumbnail}`,
               src: `data:image/png;base64, ${file.thumbnail}`,
               downloadFilename: `${file?.name}.${file?.extension}`,
               name: file?.name,
-              title:<Grid>
+              title: <Grid>
                 <Typography variant='h4'>{documentHistory?.machine?.serialNo} - {documentHistory?.machine?.name}</Typography>
                 <Typography variant='body2'>{documentHistory?.displayName}</Typography>
                 <Typography variant='body2'>{documentHistory?.docCategory?.name}</Typography>
@@ -246,7 +244,7 @@ const handleNewFile = async () => {
               fileType: file?.fileType,
               isLoaded: false,
               _id: file?._id,
-              version:files?.versionNo,
+              version: files?.versionNo,
               width: '100%',
               height: '100%',
             }
@@ -254,7 +252,7 @@ const handleNewFile = async () => {
           return null;
         }).filter(Boolean) // Remove null entries from the array
       );
-  
+
       setSlides(newSlides);
     }
   }, [documentHistory]);
@@ -263,7 +261,7 @@ const handleNewFile = async () => {
     setSelectedImage(index);
     const image = slides[index];
 
-    if(!image?.isLoaded && image?.fileType?.startsWith('image')){
+    if (!image?.isLoaded && image?.fileType?.startsWith('image')) {
       try {
         const response = await dispatch(downloadFile(image?._id));
         if (regEx.test(response.status)) {
@@ -335,7 +333,6 @@ const handleNewFile = async () => {
     try {
       const response = await dispatch(getDocumentDownload(documentId, versionId, fileId));
       if (regEx.test(response.status)) {
-        const pdfData = `data:application/pdf;base64,${encodeURI(response.data)}`;
         const blob = b64toBlob(encodeURI(response.data), 'application/pdf')
         const url = URL.createObjectURL(blob);
         setPDF(url);
@@ -356,48 +353,48 @@ const handleNewFile = async () => {
   //   setPages(numPages);
   // };
 
-  const handleBackLink = ()=>{
-    if(customerPage) {
-      navigate(PATH_CRM.customers.documents.view.root( customerId, documentHistory?._id ));
-    } else if( machinePage ){
-      navigate(PATH_MACHINE.machines.documents.view.root( machineId, documentHistory?._id )) 
-    } else if( machineDrawingPage ){
-      navigate(PATH_MACHINE.machines.drawings.root( machineId )) 
-    } else if(machineDrawings){
-      navigate(PATH_MACHINE_DRAWING.root) 
-    } else{
-      navigate(PATH_DOCUMENT.root)
+  const handleBackLink = () => {
+    if (customerPage) {
+      navigate(PATH_CRM.customers.documents.view.root(customerId, documentHistory?._id));
+    } else if (machinePage) {
+      navigate(PATH_MACHINE.machines.documents.view.root(machineId, documentHistory?._id))
+    } else if (machineDrawingPage) {
+      navigate(PATH_MACHINE.machines.drawings.root(machineId))
+    } else if (machineDrawings) {
+      navigate(PATH_MACHINE_DRAWING.root)
+    } else {
+      navigate(PATH_MACHINE.documents.list)
     }
   }
 
   return (
     <>
-    <Container maxWidth={false} sx={{padding:(machineDrawings || customerPage || machinePage || machineDrawingPage) ?'0 !important':''}}>
-      {!customerPage && !machinePage && !machineDrawingPage &&
-        <DocumentCover content={defaultValues?.displayName} generalSettings />
-      }
+      <Container maxWidth={false} sx={{ padding: (machineDrawings || customerPage || machinePage || machineDrawingPage) ? '0 !important' : '' }}>
+        {!customerPage && !machinePage && !machineDrawingPage &&
+          <DocumentCover content={defaultValues?.displayName} generalSettings />
+        }
 
         <Grid item md={12} mt={2}>
           <Card sx={{ p: 3 }}>
-          <ViewFormEditDeleteButtons
-          customerPage={customerPage} 
-          machinePage={machinePage} 
-          drawingPage={machineDrawingPage}
-          customerAccess={defaultValues?.customerAccess}
-          isActive={defaultValues.isActive}
-          handleEdit={( machineDrawingPage || ( machineDrawings && !documentHistory?.machine && documentHistory?.productDrawings?.length === 0 ) ) && handleEditDrawing }
-          onDelete={machineDrawingPage ? handleDeleteDrawing : !( ( !machinePage && documentHistory?.machine?._id ) || ( !customerPage && documentHistory?.customer?._id ) || ( machineDrawings && documentHistory?.productDrawings?.length > 0 ) ) && handleDelete || undefined }
-          disableDeleteButton={machineDrawingPage && machine?.status?.slug==="transferred"}
-          disableEditButton={machineDrawingPage && machine?.status?.slug==="transferred"}
-          backLink={handleBackLink}
-      />
-            <Grid container sx={{mt:2}}>
+            <ViewFormEditDeleteButtons
+              customerPage={customerPage}
+              machinePage={machinePage}
+              drawingPage={machineDrawingPage}
+              customerAccess={defaultValues?.customerAccess}
+              isActive={defaultValues.isActive}
+              handleEdit={(machineDrawingPage || (machineDrawings && !documentHistory?.machine && documentHistory?.productDrawings?.length === 0)) && !allowActions && handleEditDrawing}
+              onDelete={machineDrawingPage ? !allowActions && handleDeleteDrawing : !((!machinePage && documentHistory?.machine?._id) || (!customerPage && documentHistory?.customer?._id) || (machineDrawings && documentHistory?.productDrawings?.length > 0)) && !allowActions && handleDelete || undefined}
+              disableDeleteButton={machineDrawingPage && machine?.status?.slug === "transferred"}
+              disableEditButton={machineDrawingPage && machine?.status?.slug === "transferred"}
+              backLink={handleBackLink}
+            />
+            <Grid container sx={{ mt: 2 }}>
               <ViewFormField isLoading={isLoading} sm={6} heading="Name" param={defaultValues?.displayName} />
               <ViewFormField isLoading={isLoading}
                 sm={6}
                 NewVersion={!defaultValues.isArchived}
-                handleNewVersion={ !( ( !machinePage && documentHistory?.machine?._id ) || ( !customerPage && documentHistory?.customer?._id ) || ( machineDrawings && documentHistory?.productDrawings?.length > 0 ) ) && handleNewVersion || undefined } 
-                handleUpdateVersion={ !( ( !machinePage && documentHistory?.machine?._id ) || ( !customerPage && documentHistory?.customer?._id ) || ( machineDrawings && documentHistory?.productDrawings?.length > 0 ) ) && handleUpdateVersion || undefined }
+                handleNewVersion={!((!machinePage && documentHistory?.machine?._id) || (!customerPage && documentHistory?.customer?._id) || (machineDrawings && documentHistory?.productDrawings?.length > 0)) && !allowActions && handleNewVersion || undefined}
+                handleUpdateVersion={!((!machinePage && documentHistory?.machine?._id) || (!customerPage && documentHistory?.customer?._id) || (machineDrawings && documentHistory?.productDrawings?.length > 0)) && !allowActions && handleUpdateVersion || undefined}
                 heading="Active Version"
                 node={
                   defaultValues.documentVersion && (
@@ -432,14 +429,14 @@ const handleNewFile = async () => {
                 />
               )}
 
-              {!machinePage && !machineDrawings && !machineDrawingPage &&  defaultValues?.machine && (
+              {!machinePage && !machineDrawings && !machineDrawingPage && defaultValues?.machine && (
                 <ViewFormField isLoading={isLoading}
                   sm={6}
                   heading="Machine"
                   variant='h4'
                   node={
                     defaultValues.machine && (
-                      <Link onClick={()=> handleMachineDialog(documentHistory?.machine?._id)} href="#" underline="none">
+                      <Link onClick={() => handleMachineDialog(documentHistory?.machine?._id)} href="#" underline="none">
                         {defaultValues.machine}
                       </Link>
                     )
@@ -457,115 +454,116 @@ const handleNewFile = async () => {
               {documentHistory &&
                 documentHistory?.documentVersions?.map((version, index) => {
                   const fileValues = {
-                      createdAt: version?.createdAt || '',
-                      createdByFullName: version?.createdBy?.name || '',
-                      createdIP: version?.createdIP || '',
-                      updatedAt: version?.updatedAt || '',
-                      updatedByFullName: version?.updatedBy?.name || '',
-                      updatedIP: version?.updatedIP || '',
-                    }
+                    createdAt: version?.createdAt || '',
+                    createdByFullName: version?.createdBy?.name || '',
+                    createdIP: version?.createdIP || '',
+                    updatedAt: version?.updatedAt || '',
+                    updatedByFullName: version?.updatedBy?.name || '',
+                    updatedIP: version?.updatedIP || '',
+                  }
 
-                return (
-                  <Grid container key={index}>
-                    <Grid container sx={{ pt: '2rem' }} mb={1}>
-                      <FormLabel content={`Version No. ${version?.versionNo}`} />
-                      {defaultValues.description !== version?.description && (
-                        <ViewFormField sm={12} heading="Description" param={version?.description} />
-                      )}
+                  return (
+                    <Grid container key={index}>
+                      <Grid container sx={{ pt: '2rem' }} mb={1}>
+                        <FormLabel content={`Version No. ${version?.versionNo}`} />
+                        {defaultValues.description !== version?.description && (
+                          <ViewFormField sm={12} heading="Description" param={version?.description} />
+                        )}
+                      </Grid>
+                      <Box
+                        sx={{ mt: 2, width: '100%' }}
+                        gap={2}
+                        display="grid"
+                        gridTemplateColumns={{
+                          xs: 'repeat(1, 1fr)',
+                          sm: 'repeat(3, 1fr)',
+                          md: 'repeat(5, 1fr)',
+                          lg: 'repeat(6, 1fr)',
+                          xl: 'repeat(8, 1fr)',
+                        }}
+                      >
+                        {slides?.map((file, _index) => {
+                          if (file?.version === version?.versionNo) {
+                            return (
+                              <DocumentGalleryItem isLoading={isLoading} key={file?.id} image={file}
+                                onOpenLightbox={() => handleOpenLightbox(_index)}
+                                onDownloadFile={() => handleDownloadFile(documentHistory._id, version._id, file._id, file?.name, file?.extension)}
+                                onDeleteFile={!((!machinePage && documentHistory?.machine?._id) || (!customerPage && documentHistory?.customer?._id) || (machineDrawings && documentHistory?.productDrawings?.length > 0)) && (() => handleDeleteFile(documentHistory._id, version._id, file._id)) || undefined}
+                                isArchived={customer?.isArchived || machine?.isArchived}
+                                toolbar
+                              />
+                            )
+                          }
+
+                          return null;
+                        }
+                        )}
+
+                        {version?.files?.map((file, _index) => {
+                          if (!file.fileType.startsWith('image')) {
+                            return (
+                              <DocumentGalleryItem
+                                key={file?._id}
+                                image={{
+                                  thumbnail: `data:image/png;base64, ${file.thumbnail}`,
+                                  src: `data:image/png;base64, ${file.thumbnail}`,
+                                  downloadFilename: `${file?.name}.${file?.extension}`,
+                                  name: file?.name,
+                                  category: file?.docCategory?.name,
+                                  fileType: file?.fileType,
+                                  extension: file?.extension,
+                                  isLoaded: false,
+                                  id: file?._id,
+                                  width: '100%',
+                                  height: '100%',
+                                }}
+                                isLoading={isLoading}
+                                // onOpenLightbox={() => handleOpenLightbox(index)}
+                                onDownloadFile={() => handleDownloadFile(documentHistory._id, version._id, file._id, file?.name, file?.extension)}
+                                onDeleteFile={!((!machinePage && documentHistory?.machine?._id) || (!customerPage && documentHistory?.customer?._id) || (machineDrawings && documentHistory?.productDrawings?.length > 0)) && (() => handleDeleteFile(documentHistory._id, version._id, file._id)) || undefined}
+                                onOpenFile={() => handleOpenFile(documentHistory._id, version._id, file._id, file)}
+                                isArchived={customer?.isArchived || machine?.isArchived}
+                                toolbar
+                              />
+                            );
+                          }
+                          return null;
+                        })}
+
+                        {index === 0 && !defaultValues.isArchived && !((!machinePage && documentHistory?.machine?._id) || (!customerPage && documentHistory?.customer?._id) || (machineDrawings && documentHistory?.productDrawings?.length > 0)) && (<ThumbnailDocButton onClick={handleNewFile} />)}
+                      </Box>
+                      <ViewFormAudit key={`${index}-files`} defaultValues={fileValues} />
                     </Grid>
-                    <Box
-                      sx={{mt:2, width:'100%'}}
-                      gap={2}
-                      display="grid"
-                      gridTemplateColumns={{
-                        xs: 'repeat(1, 1fr)',
-                        sm: 'repeat(3, 1fr)',
-                        md: 'repeat(5, 1fr)',
-                        lg: 'repeat(6, 1fr)',
-                        xl: 'repeat(8, 1fr)',
-                      }}
-                    >
-                      {slides?.map((file, _index) =>{
-                        if(file?.version===version?.versionNo){
-                          return(
-                            <DocumentGalleryItem isLoading={isLoading} key={file?.id} image={file} 
-                              onOpenLightbox={()=> handleOpenLightbox(_index)}
-                              onDownloadFile={()=> handleDownloadFile(documentHistory._id, version._id, file._id, file?.name, file?.extension)}
-                              onDeleteFile={ !( ( !machinePage && documentHistory?.machine?._id ) || ( !customerPage && documentHistory?.customer?._id ) || ( machineDrawings && documentHistory?.productDrawings?.length > 0 ) ) && (()=> handleDeleteFile(documentHistory._id, version._id, file._id)) || undefined }
-                              toolbar
-                            />
-                          )
-                        }
+                  )
+                })}
 
-                        return null;
-                      } 
-                      )}
-
-                      {version?.files?.map((file, _index) =>{
-                        if (!file.fileType.startsWith('image')) {
-                          return (
-                            <DocumentGalleryItem
-                              key={file?._id}
-                              image={{
-                                thumbnail: `data:image/png;base64, ${file.thumbnail}`,
-                                src: `data:image/png;base64, ${file.thumbnail}`,
-                                downloadFilename: `${file?.name}.${file?.extension}`,
-                                name: file?.name,
-                                category: file?.docCategory?.name,
-                                fileType: file?.fileType,
-                                extension: file?.extension,
-                                isLoaded: false,
-                                id: file?._id,
-                                width: '100%',
-                                height: '100%',
-                              }}
-                              isLoading={isLoading} 
-                              // onOpenLightbox={() => handleOpenLightbox(index)}
-                              onDownloadFile={() => handleDownloadFile(documentHistory._id, version._id, file._id, file?.name, file?.extension)}
-                              onDeleteFile={ !( ( !machinePage && documentHistory?.machine?._id ) || ( !customerPage && documentHistory?.customer?._id ) || ( machineDrawings && documentHistory?.productDrawings?.length > 0 ) ) && (() => handleDeleteFile(documentHistory._id, version._id, file._id) ) || undefined }
-                              onOpenFile={() => handleOpenFile(documentHistory._id, version._id, file._id, file)}
-                              toolbar
-                            />
-                          );
-                        }
-                        return null;
-                      })}
-
-                      {index === 0 && !defaultValues.isArchived && !( ( !machinePage && documentHistory?.machine?._id ) || ( !customerPage && documentHistory?.customer?._id ) || ( machineDrawings && documentHistory?.productDrawings?.length > 0 ) ) && (<ThumbnailDocButton onClick={handleNewFile}/>)}
-                    </Box>
-                    <ViewFormAudit key={`${index}-files`} defaultValues={fileValues} />
-                  </Grid>
-                )})}
-
-                <Lightbox
-                  index={selectedImage}
-                  slides={slides}
-                  open={selectedImage >= 0}
-                  close={handleCloseLightbox}
-                  onGetCurrentIndex={(index) => handleOpenLightbox(index)}
-                  disabledSlideshow
-                />
+              <Lightbox
+                index={selectedImage}
+                slides={slides}
+                open={selectedImage >= 0}
+                close={handleCloseLightbox}
+                onGetCurrentIndex={(index) => handleOpenLightbox(index)}
+                disabledSlideshow
+              />
             </Grid>
           </Card>
         </Grid>
-      <CustomerDialog />
-      <MachineDialog />
-      {documentVersionEditDialogVisibility && <UpdateDocumentVersionDialog />}
-    </Container>
-    {PDFViewerDialog && (
-      <Dialog fullScreen open={PDFViewerDialog} onClose={()=> setPDFViewerDialog(false)}>
-        <DialogTitle variant='h3' sx={{pb:1, pt:2, display:'flex', justifyContent:'space-between'}}>
+        {documentVersionEditDialogVisibility && <UpdateDocumentVersionDialog />}
+      </Container>
+      {PDFViewerDialog && (
+        <Dialog fullScreen open={PDFViewerDialog} onClose={() => setPDFViewerDialog(false)}>
+          <DialogTitle variant='h3' sx={{ pb: 1, pt: 2, display: 'flex', justifyContent: 'space-between' }}>
             PDF View
-              <Button variant='outlined' onClick={()=> setPDFViewerDialog(false)}>Close</Button>
-        </DialogTitle>
-        <Divider variant='fullWidth' />
-          {pdf?(
-            <iframe title={PDFName} src={pdf} style={{paddingBottom:10}} width='100%' height='842px'/>
-          ):(
+            <Button variant='outlined' onClick={() => setPDFViewerDialog(false)}>Close</Button>
+          </DialogTitle>
+          <Divider variant='fullWidth' />
+          {pdf ? (
+            <iframe title={PDFName} src={pdf} style={{ paddingBottom: 10 }} width='100%' height='842px' />
+          ) : (
             <SkeletonPDF />
           )}
-      </Dialog>
-    )}
+        </Dialog>
+      )}
     </>
   );
 }

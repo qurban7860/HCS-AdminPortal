@@ -5,13 +5,16 @@ import debounce from 'lodash/debounce';
 // @mui
 import {
   Table,
-  Button,
   TableBody,
   Container,
   TableContainer,
   // Stack,
 } from '@mui/material';
 import axios from 'axios';
+// eslint-disable-next-line import/no-unresolved
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
 // routes
@@ -22,7 +25,6 @@ import {
   getComparator,
   TableNoData,
   TableSkeleton,
-  TableHeadCustom,
   TablePaginationCustom,
   TablePaginationFilter,
   TableHeadFilter,
@@ -30,6 +32,7 @@ import {
 import Scrollbar from '../../../../components/scrollbar';
 import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 import { FORMLABELS } from '../../../../constants/default-constants';
+
 
 // sections
 import CustomerListTableRow from './CustomerListTableRow';
@@ -44,24 +47,24 @@ import { getCustomers,
   setExcludeReporting, 
   setReportHiddenColumns, 
   getCustomer,
-  setCustomerDialog} from '../../../../redux/slices/customer/customer';
+  setCustomerDialog,
+  closeFullScreen} from '../../../../redux/slices/customer/customer';
 import { Cover } from '../../../../components/Defaults/Cover';
 import TableCard from '../../../../components/ListTableTools/TableCard';
 import { fDate } from '../../../../utils/formatTime';
 import { useSnackbar } from '../../../../components/snackbar';
 import { exportCSV } from '../../../../utils/exportCSV';
-import CustomerDialog from '../../../../components/Dialog/CustomerDialog';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Customer', align: 'left', hideable:false },
   { id: 'clientCode', label: 'Code', align: 'left' },
-  { id: 'tradingName', visibility: 's1', label: 'Trading Name', align: 'left' },
-  { id: 'groupCustomer.name', visibility: 's1', label: 'Group Customer', align: 'left' },
-  { id: 'address', visibility: 'xs2', label: 'Address', align: 'left' },
+  { id: 'tradingName',  label: 'Trading Name', align: 'left' },
+  { id: 'groupCustomer.name', label: 'Group Customer', align: 'left' },
+  { id: 'address', label: 'Address', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
-  { id: 'createdAt', label: 'Created At', align: 'left' },
+  { id: 'updatedAt', label: 'Updated At', align: 'left' },
 ];
 
 // ----------------------------------------------------------------------
@@ -78,7 +81,7 @@ export default function CustomerList({ isArchived }) {
     onSelectRow,
     onSort,
   } = useTable({
-    defaultOrderBy: 'createdAt', defaultOrder: 'desc',
+    defaultOrderBy: 'updatedAt', defaultOrder: 'desc',
   });
 
   const dispatch = useDispatch();
@@ -86,13 +89,12 @@ export default function CustomerList({ isArchived }) {
   const { enqueueSnackbar } = useSnackbar();
   const axiosToken = () => axios.CancelToken.source();
   const cancelTokenSource = axiosToken();
-
-  const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
   const { customers, reportHiddenColumns, filterBy, verified, excludeReporting, page, rowsPerPage, isLoading } = useSelector((state) => state.customer);
   const [filterVerify, setFilterVerify] = useState(verified);
   const [filterExcludeRepoting, setFilterExcludeRepoting] = useState(excludeReporting);
   const [filterName, setFilterName] = useState(filterBy);
+  const openFullScreen = useSelector((state) => state.customer.isFullScreen);
 
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));
@@ -101,6 +103,7 @@ export default function CustomerList({ isArchived }) {
   const onChangePage = (event, newPage) => { 
     dispatch(ChangePage(newPage)) 
   }
+  
 
   useEffect(() => {
     dispatch(getCustomers( null, null, isArchived, cancelTokenSource ));
@@ -108,12 +111,8 @@ export default function CustomerList({ isArchived }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, isArchived ]);
 
-  useEffect(() => {
-    setTableData(customers || []);
-  }, [customers]);
-
   const dataFiltered = applyFilter({
-    inputData: tableData,
+    inputData: customers,
     comparator: getComparator(order, orderBy),
     filterName,
     filterVerify,
@@ -196,89 +195,159 @@ export default function CustomerList({ isArchived }) {
     dispatch(setCustomerDialog(true))
   }
 
+  const handleFullScreenOpen = () => {
+    dispatch(openFullScreen());
+  };
+
+  const handleFullScreenClose = () => {
+    dispatch(closeFullScreen());
+  };
+
   return (
-    <Container maxWidth={false}>
+    <>
+      <Container maxWidth={false}>
         <StyledCardContainer>
-          <Cover name={ isArchived ? FORMLABELS.COVER.ARCHIVED_CUSTOMERS : FORMLABELS.COVER.CUSTOMERS  } customerSites customerContacts isArchivedCustomers={!isArchived} isArchived={isArchived} />
+          <Cover
+            name={isArchived ? FORMLABELS.COVER.ARCHIVED_CUSTOMERS : FORMLABELS.COVER.CUSTOMERS}
+            customerSites
+            customerContacts
+            isArchivedCustomers={!isArchived}
+            isArchived={isArchived}
+          />
         </StyledCardContainer>
-      <TableCard >
-        <CustomerListTableToolbar
-          filterName={filterName}
-          onFilterName={handleFilterName}
-          filterVerify={ isArchived ? undefined : filterVerify}
-          onFilterVerify={ isArchived ? undefined : handleFilterVerify}
-          filterStatus={ isArchived ? undefined : filterStatus}
-          onFilterStatus={ isArchived ? undefined : handleFilterStatus}
-          isFiltered={isFiltered}
-          onResetFilter={handleResetFilter}
-          customerDocList
-          machineDocList
-          onExportCSV={onExportCSV}
-          onExportLoading={exportingCSV}
-          filterExcludeRepoting={ isArchived ? undefined : filterExcludeRepoting}
-          handleExcludeRepoting={ isArchived ? undefined : handleExcludeRepoting}
-          isArchived={isArchived}
-        />
+        <TableCard>
+          <CustomerListTableToolbar
+            filterName={filterName}
+            onFilterName={handleFilterName}
+            filterVerify={isArchived ? undefined : filterVerify}
+            onFilterVerify={isArchived ? undefined : handleFilterVerify}
+            filterStatus={isArchived ? undefined : filterStatus}
+            onFilterStatus={isArchived ? undefined : handleFilterStatus}
+            isFiltered={isFiltered}
+            onResetFilter={handleResetFilter}
+            customerDocList
+            machineDocList
+            onExportCSV={onExportCSV}
+            onExportLoading={exportingCSV}
+            filterExcludeRepoting={isArchived ? undefined : filterExcludeRepoting}
+            handleExcludeRepoting={isArchived ? undefined : handleExcludeRepoting}
+            isArchived={isArchived}
+            handleFullScreen={handleFullScreenOpen}
+          />
 
-        {!isNotFound && <TablePaginationFilter
-          columns={TABLE_HEAD}
-          hiddenColumns={reportHiddenColumns}
-          handleHiddenColumns={handleHiddenColumns}
-          count={customers?customers.length : 0}
-          page={page}
-          rowsPerPage={rowsPerPage}
-          onPageChange={onChangePage}
-          onRowsPerPageChange={onChangeRowsPerPage}
-        />}
-        
-        <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-          <Scrollbar>
-            <Table size="small" sx={{ minWidth: 360 }}>
-              <TableHeadFilter
-                order={order}
-                orderBy={orderBy}
-                headLabel={TABLE_HEAD}
-                hiddenColumns={reportHiddenColumns}
-                onSort={onSort}
-              />
+          {!isNotFound && (
+            <TablePaginationFilter
+              columns={TABLE_HEAD}
+              hiddenColumns={reportHiddenColumns}
+              handleHiddenColumns={handleHiddenColumns}
+              count={customers ? customers.length : 0}
+              page={page}
+              rowsPerPage={rowsPerPage}
+              onPageChange={onChangePage}
+              onRowsPerPageChange={onChangeRowsPerPage}
+            />
+          )}
+          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+            <Scrollbar>
+              <Table stickyHeader size="small" sx={{ minWidth: 360 }}>
+                <TableHeadFilter
+                  order={order}
+                  orderBy={orderBy}
+                  headLabel={TABLE_HEAD}
+                  hiddenColumns={reportHiddenColumns}
+                  onSort={onSort}
+                />
 
-              <TableBody>
-                {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row, index) =>
-                    row ? (
-                      <CustomerListTableRow
-                        hiddenColumns={reportHiddenColumns}
-                        key={row._id}
-                        row={row}
-                        selected={selected.includes(row._id)}
-                        onSelectRow={() => onSelectRow(row._id)}
-                        onViewRow={() => handleViewRow(row._id)}
-                        onViewGroupCustomer={() => handleCustomerDialog(row?.groupCustomer?._id)}
-                        style={index % 2 ? { background: 'red' } : { background: 'green' }}
-                        isArchived={isArchived}
-                      />
-                    ) : (
-                      !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
-                    )
-                  )}
+                <TableBody>
+                  {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row, index) =>
+                      row ? (
+                        <CustomerListTableRow
+                          hiddenColumns={reportHiddenColumns}
+                          key={row._id}
+                          row={row}
+                          selected={selected.includes(row._id)}
+                          onSelectRow={() => onSelectRow(row._id)}
+                          onViewRow={() => handleViewRow(row._id)}
+                          onViewGroupCustomer={() => handleCustomerDialog(row?.groupCustomer?._id)}
+                          style={index % 2 ? { background: 'red' } : { background: 'green' }}
+                          isArchived={isArchived}
+                        />
+                      ) : (
+                        !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
+                      )
+                    )}
                   <TableNoData isNotFound={isNotFound} />
-              </TableBody>
-            </Table>
-          </Scrollbar>
-        </TableContainer>
+                </TableBody>
+              </Table>
+            </Scrollbar>
+          </TableContainer>
 
-        {!isNotFound && <TablePaginationCustom
-          count={customers?customers.length : 0}
-          page={page}
-          rowsPerPage={rowsPerPage}
-          onPageChange={onChangePage}
-          onRowsPerPageChange={onChangeRowsPerPage}
-        />}
+          {!isNotFound && (
+            <TablePaginationCustom
+              count={customers ? customers.length : 0}
+              page={page}
+              rowsPerPage={rowsPerPage}
+              onPageChange={onChangePage}
+              onRowsPerPageChange={onChangeRowsPerPage}
+            />
+          )}
+        </TableCard>
+      </Container>
 
-      </TableCard>
-      <CustomerDialog />
-    </Container>
+      <Dialog open={openFullScreen} onClose={handleFullScreenClose} fullWidth maxWidth="lg">
+        <DialogTitle onClose={handleFullScreenClose}>Full Screen View</DialogTitle>
+        <DialogContent>
+          <TablePaginationFilter
+            columns={TABLE_HEAD}
+            hiddenColumns={reportHiddenColumns}
+            handleHiddenColumns={handleHiddenColumns}
+            count={customers ? customers.length : 0}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
+          />
+          <TableContainer>
+            <Scrollbar>
+              <Table stickyHeader size="small" sx={{ minWidth: 360 }}>
+                <TableHeadFilter
+                  order={order}
+                  orderBy={orderBy}
+                  headLabel={TABLE_HEAD}
+                  hiddenColumns={reportHiddenColumns}
+                  onSort={onSort}
+                />
+
+                <TableBody>
+                  {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row, index) =>
+                      row ? (
+                        <CustomerListTableRow
+                          hiddenColumns={reportHiddenColumns}
+                          key={row._id}
+                          row={row}
+                          selected={selected.includes(row._id)}
+                          onSelectRow={() => onSelectRow(row._id)}
+                          onViewRow={() => handleViewRow(row._id)}
+                          onViewGroupCustomer={() => handleCustomerDialog(row?.groupCustomer?._id)}
+                          style={index % 2 ? { background: 'red' } : { background: 'green' }}
+                          isArchived={isArchived}
+                        />
+                      ) : (
+                        !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
+                      )
+                    )}
+                  <TableNoData isNotFound={isNotFound} />
+                </TableBody>
+              </Table>
+            </Scrollbar>
+          </TableContainer>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
 
@@ -317,8 +386,8 @@ function applyFilter({ inputData, comparator, filterName, filterVerify, filterEx
         `${customer?.mainSite?.address?.city}, ${customer?.mainSite?.address?.country}`.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         customer?.groupCustomer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         // customer?.mainSite?.address?.country?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        // (customer?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
-        fDate(customer?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+        // (customer?.isActive ? "Active" : "InActive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+        fDate(customer?.updatedAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }
 

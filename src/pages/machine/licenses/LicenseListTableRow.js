@@ -25,7 +25,7 @@ export default function LicenseListTableRow({
 }) {
   const {
     licenseKey,
-    createdAt,
+    updatedAt,
     licenseDetail: {
       version,
       type,
@@ -36,13 +36,11 @@ export default function LicenseListTableRow({
 
   return (
       <StyledTableRow hover selected={selected}>
-        
         <LinkTableCell align="left" param={licenseKey} onClick={onViewRow} />
         { smScreen && <TableCell align="left">{version}</TableCell>}
         { smScreen && <TableCell align="left">{type}</TableCell>}
         <TableCell align="right">{fDate(extensionTime)}</TableCell>
-        <TableCell align="right">{fDate(createdAt)}</TableCell>
-  
+        <TableCell align="right">{fDate(updatedAt)}</TableCell>
       </StyledTableRow>
 
   );

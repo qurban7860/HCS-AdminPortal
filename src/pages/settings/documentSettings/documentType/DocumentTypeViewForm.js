@@ -11,7 +11,7 @@ import {
   setMergeDialogVisibility
 } from '../../../../redux/slices/document/documentType';
 // paths
-import {  PATH_SETTING } from '../../../../routes/paths';
+import {  PATH_MACHINE, PATH_SETTING } from '../../../../routes/paths';
 // components
 import { useSnackbar } from '../../../../components/snackbar';
 import ViewFormAudit from '../../../../components/ViewForms/ViewFormAudit';
@@ -22,7 +22,7 @@ import MergeDocumentTypeDialog from '../../../../components/Dialog/MergeDocument
 // ----------------------------------------------------------------------
 
 export default function DocumentTypeViewForm() {
-  const { documentType } = useSelector((state) => state.documentType);
+  const { documentType, mergeDialogVisibility } = useSelector((state) => state.documentType);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
@@ -30,7 +30,7 @@ export default function DocumentTypeViewForm() {
   const onDelete = async () => {
     try {
       await dispatch(deleteDocumentType(documentType?._id));
-      navigate(PATH_SETTING.documentType.list);
+      navigate(PATH_MACHINE.documents.documentType.list);
       enqueueSnackbar('Document Type Archive Successfully!');
     } catch (error) {
       enqueueSnackbar('Document Type Archive failed!', { variant: `error` });
@@ -39,7 +39,7 @@ export default function DocumentTypeViewForm() {
   };
 
   const handleEdit = async () => {
-    navigate(PATH_SETTING.documentType.edit(documentType._id));
+    navigate(PATH_MACHINE.documents.documentType.edit(documentType._id));
   };
 
   const handleMergeDialog = async () => {
@@ -77,7 +77,7 @@ export default function DocumentTypeViewForm() {
             isActive={defaultValues.isActive} 
             handleEdit={handleEdit} 
             onDelete={onDelete} 
-            backLink={() => navigate(PATH_SETTING.documentType.list)}
+            backLink={() => navigate(PATH_MACHINE.documents.documentType.list)}
             settingPage
             onMergeDocumentType={handleMergeDialog}
           />
@@ -89,7 +89,7 @@ export default function DocumentTypeViewForm() {
           </Grid>
         </Grid>
       </Card>
-      <MergeDocumentTypeDialog  />
+      { mergeDialogVisibility && <MergeDocumentTypeDialog  />}
     </>
   );
 }

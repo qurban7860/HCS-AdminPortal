@@ -29,7 +29,7 @@ export default function ModelListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { name, category, isActive, isDefault, createdAt } = row;
+  const { name, category, isActive, isDefault, updatedAt } = row;
 
   const smScreen = useScreenSize('sm')
 
@@ -44,7 +44,7 @@ export default function ModelListTableRow({
           <Switch checked={isActive} disabled sx={{ my: -1 }} />{' '}
         </TableCell>
 
-        <TableCell align="right">{fDate(createdAt)}</TableCell>
+        <TableCell align="right">{fDate(updatedAt)}</TableCell>
       </TableRow>
 
   );

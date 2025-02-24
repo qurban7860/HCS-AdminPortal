@@ -38,13 +38,13 @@ export default function ToolInstalledList() {
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
-
+  const { machine } = useSelector((state) => state.machine);
   const { toolsInstalled, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.toolInstalled );
   const TABLE_HEAD = [
     { id: 'tool.name', label: 'Tool', align: 'left' },
     { id: 'toolType', visibility: 'xs1', label: 'Tool Type', align: 'left' },
     { id: 'isActive', label: 'Active', align: 'center' },
-    { id: 'createdAt', label: 'Created At', align: 'right' },
+    { id: 'updatedAt', label: 'Updated At', align: 'right' },
   ];
 
   const onChangeRowsPerPage = (event) => {
@@ -56,9 +56,9 @@ export default function ToolInstalledList() {
 
   useEffect(() => {
     if(machineId){
-      dispatch(getToolsInstalled(machineId));
+      dispatch(getToolsInstalled( machineId, machine?.isArchived ));
     }
-  }, [dispatch, machineId]);
+  }, [dispatch, machineId, machine ]);
 
   useEffect(() => {
     setTableData(toolsInstalled);

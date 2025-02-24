@@ -23,7 +23,6 @@ import { StyledCardContainer } from '../../theme/styles/default-styles';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
 import OpenInNewPage from '../../components/Icons/OpenInNewPage';
-import CustomerDialog from '../../components/Dialog/CustomerDialog';
 
 function MachineTransfer() {
 
@@ -37,7 +36,7 @@ function MachineTransfer() {
   const { activeSpContacts } = useSelector((state) => state.contact);
   const { machine, isLoading } = useSelector((state) => state.machine);
   const { activeMachineStatuses } = useSelector((state) => state.machinestatus);
-  const { activeCustomers, financialCompanies, customerDialog } = useSelector((state) => state.customer);
+  const { activeCustomers, financialCompanies } = useSelector((state) => state.customer);
   const { activeSites } = useSelector((state) => state.site);
   const { activeMachineDocuments } = useSelector((state) => state.machineDocument );
   const { activeSuppliers } = useSelector((state) => state.supplier);
@@ -188,7 +187,7 @@ useEffect(()=>{
           <Cover name="Machine Transfer" setting />
         </StyledCardContainer>
           <Grid container >
-          <Grid item xs={18} md={12} >
+          <Grid item xs={12} md={12} >
           <Card sx={{ p: 3 }} >
             <Stack spacing={2} >
               <FormLabel content='Machine Information'/>
@@ -306,10 +305,6 @@ useEffect(()=>{
                     renderInput={(params) => ( <TextField  {...params}  label="Connected Machines"   placeholder="Search"  /> )}
                   />
 
-                <Box rowGap={2} columnGap={2} display="grid"
-                  gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
-                >
-
                   <RHFAutocomplete
                     multiple
                     disableCloseOnSelect
@@ -351,8 +346,7 @@ useEffect(()=>{
                     ChipProps={{ size: 'small' }}
                     id="controllable-states-demo"
                   />
-
-                </Box>
+                  
                   <RHFTextField name="description" label="Description" minRows={3} multiline />
 
                   <Grid container direction="row" alignItems="center" spacing={2}  sx={{
@@ -389,7 +383,6 @@ useEffect(()=>{
           </Card>
           </Grid>
           </Grid>
-      { customerDialog  && <CustomerDialog />}
         </FormProvider>
       </Container>
   );

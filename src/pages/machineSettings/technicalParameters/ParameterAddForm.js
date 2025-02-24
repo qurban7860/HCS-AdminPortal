@@ -74,13 +74,13 @@ export default function ParameterAddForm() {
       await dispatch(addTechparam(data));
       reset();
       enqueueSnackbar('Parameter created successfully!');
-      navigate(PATH_MACHINE.machines.machineSettings.technicalParameters.root);
+      navigate(PATH_MACHINE.machineSettings.technicalParameters.root);
     } catch (error) {
       enqueueSnackbar(error, { variant: `error` });
       console.error(error);
     }
   };
-  const toggleCancel = () => navigate(PATH_MACHINE.machines.machineSettings.technicalParameters.root);
+  const toggleCancel = () => navigate(PATH_MACHINE.machineSettings.technicalParameters.root);
 
   return (
       <Container maxWidth={false}>

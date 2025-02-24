@@ -167,16 +167,21 @@ export function addLicense (machineId, params){
 // ----------------------------------------------------------------------
 
 
-export function getLicenses (machineId){
+export function getLicenses (machineId, isMachineArchived ){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/licenses`,
-      {
-        params: {
-          isArchived: false
+      const params = {
+        isArchived: false,
+        orderBy : {
+          createdAt: -1
         }
-      });
+      }
+    if( isMachineArchived ){
+      params.archivedByMachine = true;
+      params.isArchived = true;
+    } 
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/licenses`, { params });
 
       dispatch(slice.actions.getLicensesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Licenses loaded successfully'));

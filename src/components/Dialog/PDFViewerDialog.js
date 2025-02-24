@@ -1,15 +1,30 @@
 import { PDFViewer } from '@react-pdf/renderer';
+import React, { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { Dialog, Button, DialogTitle } from '@mui/material';
-import {  
+import SkeletonPDF from '../skeleton/SkeletonPDF';
+import { 
   setPDFViewerDialog,
-} from '../../redux/slices/products/machineServiceRecord';
-import { MachineServiceRecordPDF } from '../../pages/machine/serviceRecords/MachineServiceRecordPDF';
+    getMachineServiceReport, 
+    getMachineServiceReportCheckItems,
+    resetMachineServiceReport,
+    resetCheckItemValues } from '../../redux/slices/products/machineServiceReport';
+import { MachineServiceReportPDF } from '../../pages/machine/serviceReports/MachineServiceReportPDF';
 
 
 function PDFViewerDialog() {
   const dispatch = useDispatch();
-  const { machineServiceRecord, pdfViewerDialog } = useSelector((state) => state.machineServiceRecord);
+  const { machineId, id } = useParams();
+  const { machineServiceReport, machineServiceReportCheckItems, pdfViewerDialog, isLoadingCheckItems, isLoading  } = useSelector((state) => state.machineServiceReport);
+
+  useEffect(()=>{
+      if( machineId && id ){
+          dispatch(getMachineServiceReport(machineId, id, true ));
+          dispatch(getMachineServiceReportCheckItems( machineId, id, true ))
+      }
+  },[ dispatch, machineId, id ])
+
   const handleCloseDialog = ()=> dispatch(setPDFViewerDialog(false));
   
   return (
@@ -18,9 +33,11 @@ function PDFViewerDialog() {
           PDF View
           <Button variant='outlined' onClick={handleCloseDialog}>Close</Button>
       </DialogTitle>
+      { ( isLoading || isLoadingCheckItems ) ? <SkeletonPDF /> :
       <PDFViewer style={{height:'842px', width:'100%', paddingBottom:10}}>
-        <MachineServiceRecordPDF machineServiceRecord={machineServiceRecord} />
+        <MachineServiceReportPDF machineServiceReport={machineServiceReport} machineServiceReportCheckItems={machineServiceReportCheckItems} />
       </PDFViewer>
+      }
       {/* <DialogActions style={{paddingTop:10, paddingBottom:10}}>
         <Button size='small' variant='outlined' onClick={handleCloseDialog}>Close</Button>
       </DialogActions> */}

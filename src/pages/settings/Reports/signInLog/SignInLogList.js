@@ -2,7 +2,6 @@ import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import debounce from 'lodash/debounce';
 // @mui
 import {
-  Card,
   Table,
   TableBody,
   Container,
@@ -24,23 +23,26 @@ import Scrollbar from '../../../../components/scrollbar';
 // sections
 import RoleListTableToolbar from './SignInLogListTableToolbar';
 import RoleListTableRow from './SignInLogListTableRow';
-import { getSignInLogs,
+import {
+  getSignInLogs,
   ChangeRowsPerPage,
   ChangePage,
   setFilterBy,
- } from '../../../../redux/slices/securityUser/securityUser';
+} from '../../../../redux/slices/securityUser/securityUser';
 import { Cover } from '../../../../components/Defaults/Cover';
 import { fDateTime } from '../../../../utils/formatTime';
 import TableCard from '../../../../components/ListTableTools/TableCard';
-import { PATH_SECURITY } from '../../../../routes/paths';
+import { PATH_SETTING } from '../../../../routes/paths';
 import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'requestedLogin', visibility: 'md1', label: 'User Login', align: 'left' },
-  { id: 'user.name', label: 'User Name', align: 'left' },
-  { id: 'loginIP', visibility: 'md2', label: 'User IP', align: 'left' },
+  { id: 'requestedLogin', visibility: 'md1', label: 'Login', align: 'left' },
+  { id: 'user.name', label: 'User', align: 'left' },
+  { id: 'user.customer.name', label: 'Customer', align: 'left' },
+  // { id: 'user.contact.firstName', label: 'Contact', align: 'left' },
+  { id: 'loginIP', visibility: 'md2', label: 'IP', align: 'left' },
   { id: 'loginTime', label: 'Login Time', align: 'left' },
   { id: 'logoutTime', label: 'Logout Time', align: 'left' },
   { id: 'loggedOutBy', label: 'Logout By', align: 'left' },
@@ -62,10 +64,10 @@ export default function SignInLogList() {
 
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));
-    dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
+    dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10)));
   };
 
-  const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
+  const onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -75,7 +77,7 @@ export default function SignInLogList() {
   const [filterStatus, setFilterStatus] = useState([]);
   const userId = localStorage.getItem('userId');
 
-  const { signInLogs, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.user);
+  const { signInLogs, filterBy, page, rowsPerPage, isLoadingLogs, initial } = useSelector((state) => state.user);
 
   useLayoutEffect(() => {
     dispatch(getSignInLogs(userId));
@@ -85,7 +87,7 @@ export default function SignInLogList() {
     if (initial) {
       setTableData(signInLogs);
     }
-  }, [signInLogs, initial ]);
+  }, [signInLogs, initial]);
 
   const reloadList = () => {
     dispatch(getSignInLogs(userId));
@@ -101,13 +103,13 @@ export default function SignInLogList() {
 
   const denseHeight = 60;
   const isFiltered = filterName !== '' || !!filterStatus.length;
-  const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
+  const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoadingLogs && !dataFiltered.length);
 
   const debouncedSearch = useRef(debounce((value) => {
     dispatch(ChangePage(0))
     dispatch(setFilterBy(value))
   }, 500))
-  
+
 
   const handleFilterName = (event) => {
     debouncedSearch.current(event.target.value);
@@ -119,15 +121,15 @@ export default function SignInLogList() {
     dispatch(ChangePage(0))
     setFilterRequestStatus(event.target.value);
   };
-  
+
   useEffect(() => {
-      debouncedSearch.current.cancel();
+    debouncedSearch.current.cancel();
   }, [debouncedSearch]);
-  
-  useEffect(()=>{
-      setFilterName(filterBy)
+
+  useEffect(() => {
+    setFilterName(filterBy)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[])
+  }, [])
 
   const handleFilterStatus = (event) => {
     setPage(0);
@@ -140,80 +142,80 @@ export default function SignInLogList() {
   };
 
   const handleViewRow = (id) => {
-    navigate(PATH_SECURITY.users.view(id));
+    navigate(PATH_SETTING.security.users.view(id));
   };
 
   const configurations = JSON.parse(localStorage.getItem('configurations'));
   const AUTH = configurations?.filter((config) => config.type === 'AUTH');
-  
+
   return (
-      <Container maxWidth={false}>
-        <StyledCardContainer>
-          <Cover name="Sign In Logs" icon="ph:users-light" generalSettings />
-        </StyledCardContainer>
+    <Container maxWidth={false}>
+      <StyledCardContainer>
+        <Cover name="Sign In Logs" icon="ph:users-light" generalSettings />
+      </StyledCardContainer>
 
-        <TableCard>
-          <RoleListTableToolbar
-            filterName={filterName}
-            filterStatus={filterStatus}
-            onFilterName={handleFilterName}
-            onFilterStatus={handleFilterStatus}
-            isFiltered={isFiltered}
-            onResetFilter={handleResetFilter}
-            buttonAction={reloadList}
-            filterRequestStatus={filterRequestStatus}
-            onFilterRequestStatus={handleFilterRequestStatus}
-            onReload={reloadList}
-          />
-          {!isNotFound && <TablePaginationCustom
-            count={dataFiltered.length}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-          />}
-          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            <Scrollbar>
-              <Table size="small" sx={{ minWidth: 360 }}>
-                <TableHeadCustom
-                  order={order}
-                  orderBy={orderBy}
-                  headLabel={TABLE_HEAD}
-                  onSort={onSort}
-                />
+      <TableCard>
+        <RoleListTableToolbar
+          filterName={filterName}
+          filterStatus={filterStatus}
+          onFilterName={handleFilterName}
+          onFilterStatus={handleFilterStatus}
+          isFiltered={isFiltered}
+          onResetFilter={handleResetFilter}
+          buttonAction={reloadList}
+          filterRequestStatus={filterRequestStatus}
+          onFilterRequestStatus={handleFilterRequestStatus}
+          onReload={reloadList}
+        />
+        {!isNotFound && <TablePaginationCustom
+          count={dataFiltered.length}
+          page={page}
+          rowsPerPage={rowsPerPage}
+          onPageChange={onChangePage}
+          onRowsPerPageChange={onChangeRowsPerPage}
+        />}
+        <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+          <Scrollbar>
+            <Table size="small" sx={{ minWidth: 360 }}>
+              <TableHeadCustom
+                order={order}
+                orderBy={orderBy}
+                headLabel={TABLE_HEAD}
+                onSort={onSort}
+              />
 
-                <TableBody>
-                  {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row, index) =>
-                      row ? (
-                        <RoleListTableRow
-                          key={row._id}
-                          row={row}
-                          status={AUTH?.find((config) => (config.name === `${row?.statusCode}`))}
-                          // status={AUTH?.find((config) => (config.name === row?.statusCode))}
-                          onViewRow={()=> handleViewRow(row?.user?._id)}
-                          style={index % 2 ? { background: 'red' } : { background: 'green' }}
-                        />
-                      ) : (
-                        !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
-                      )
-                    )}
-                  <TableNoData isNotFound={isNotFound} />
-                </TableBody>
-              </Table>
-            </Scrollbar>
-          </TableContainer>
+              <TableBody>
+                {(isLoadingLogs ? [...Array(rowsPerPage)] : dataFiltered)
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row, index) =>
+                    row ? (
+                      <RoleListTableRow
+                        key={row._id}
+                        row={row}
+                        status={AUTH?.find((config) => (config.name === `${row?.statusCode}`))}
+                        // status={AUTH?.find((config) => (config.name === row?.statusCode))}
+                        onViewRow={() => handleViewRow(row?.user?._id)}
+                        style={index % 2 ? { background: 'red' } : { background: 'green' }}
+                      />
+                    ) : (
+                      !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
+                    )
+                  )}
+                <TableNoData isNotFound={isNotFound} />
+              </TableBody>
+            </Table>
+          </Scrollbar>
+        </TableContainer>
 
-          {!isNotFound && <TablePaginationCustom
-            count={dataFiltered.length}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-          />}
-        </TableCard>
-      </Container>
+        {!isNotFound && <TablePaginationCustom
+          count={dataFiltered.length}
+          page={page}
+          rowsPerPage={rowsPerPage}
+          onPageChange={onChangePage}
+          onRowsPerPageChange={onChangeRowsPerPage}
+        />}
+      </TableCard>
+    </Container>
   );
 }
 
@@ -229,10 +231,10 @@ function applyFilter({ inputData, comparator, filterName, filterStatus, filterRe
 
   inputData = stabilizedThis.map((el) => el[0]);
 
-  if(filterRequestStatus===200)
-    inputData = inputData.filter((log)=> log.statusCode===200);
-  else if(filterRequestStatus===401)
-    inputData = inputData.filter((log)=> log.statusCode!==200);
+  if (filterRequestStatus === 200)
+    inputData = inputData.filter((log) => log.statusCode === 200);
+  else if (filterRequestStatus === 401)
+    inputData = inputData.filter((log) => log.statusCode !== 200);
 
   if (filterName) {
     inputData = inputData.filter(

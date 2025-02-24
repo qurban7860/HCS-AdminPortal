@@ -1,6 +1,7 @@
+import { memo } from 'react';
 import PropTypes from 'prop-types';
 // @mui
-import { Stack, Tooltip, Typography, IconButton, ToggleButton, Autocomplete, TextField } from '@mui/material';
+import { Stack, Typography, IconButton, ToggleButton, Autocomplete, TextField, FormControlLabel, Switch } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 // utils
 import { fDate } from '../../utils/formatTime';
@@ -11,13 +12,20 @@ import Iconify from '../../components/iconify';
 import { setEventModel, setSelectedEvent } from '../../redux/slices/event/event';
 import { StyledTooltip } from '../../theme/styles/default-styles';
 import { useAuthContext } from '../../auth/useAuthContext';  
-import { getWeekRange } from './util';  
+import { getWeekRange } from './utils/util';  
 
 const VIEW_OPTIONS = [
   { value: 'dayGridMonth', label: 'Month', icon: 'ic:round-view-module' },
   { value: 'timeGridWeek', label: 'Week', icon: 'ic:round-view-week' },
   { value: 'timeGridDay', label: 'Day', icon: 'ic:round-view-day' },
   { value: 'listMonth', label: 'Agenda', icon: 'ic:round-view-agenda' },
+];
+
+const statusOptions = [
+  { label: 'To Do', value: 'To Do', color: '#FBC02D' },
+  { label: 'In Progress', value: 'In Progress', color: '#1E88E5' },
+  { label: 'Done', value: 'Done', color: '#388E3C' },
+  // { label: 'Cancelled', value: 'Cancelled', color: '#D32F2F' },
 ];
 
 // ----------------------------------------------------------------------
@@ -29,6 +37,10 @@ CalendarToolbar.propTypes = {
   setSelectedContact: PropTypes.func,
   selectedUser: PropTypes.object,
   setSelectedUser: PropTypes.func,
+  selectedStatus: PropTypes.object,
+  setSelectedStatus: PropTypes.func,
+  showCancelled: PropTypes.object,
+  setShowCancelled: PropTypes.func,
   onNextDate: PropTypes.func,
   onPrevDate: PropTypes.func,
   onOpenFilter: PropTypes.func,
@@ -37,13 +49,17 @@ CalendarToolbar.propTypes = {
   view: PropTypes.oneOf(['dayGridMonth', 'timeGridWeek', 'timeGridDay', 'listMonth']),
 };
 
-export default function CalendarToolbar({
+function CalendarToolbar({
   selectedCustomer,
   setSelectedCustomer,
   selectedContact,
   setSelectedContact,
   selectedUser,
   setSelectedUser,
+  selectedStatus,
+  setSelectedStatus,
+  showCancelled,
+  setShowCancelled,
   date,
   view,
   onNextDate,
@@ -52,20 +68,28 @@ export default function CalendarToolbar({
   onOpenFilter,
 }) {
   
-  const { userId, isAllAccessAllowed, isSettingReadOnly, user } = useAuthContext();
   const dispatch= useDispatch();
   const isDesktop = useResponsive('up', 'sm');
+  const { userId, isAllAccessAllowed, user } = useAuthContext();
   const { activeCustomers } = useSelector((state) => state.customer);
   const { activeSpContacts } = useSelector((state) => state.contact);
   const { activeSecurityUsers } = useSelector((state) => state.user);
   const { startOfWeek, endOfWeek } = getWeekRange(date);
+  
+  const handleShowCancelledChange = (event) => {
+    setShowCancelled(event.target.checked); 
+  };
 
   return (
     <Stack
       alignItems="center"
       justifyContent="space-between"
       direction={{ xs: 'column', sm: 'row' }}
-      sx={{ p: 2.5 }}
+      sx={{ p: 2.5,
+        flexWrap: 'wrap', 
+        rowGap: 2, 
+        columnGap: 2,
+       }}
     >
       {isDesktop && (
         <Stack direction="row" spacing={1}>
@@ -79,7 +103,7 @@ export default function CalendarToolbar({
         </Stack>
       )}
 
-      <Stack direction="row" alignItems="center" spacing={2}>
+      <Stack direction="row" alignItems="center" justifyContent="center" sx={{ flexGrow: 1, flexWrap: 'wrap', rowGap: 2, columnGap: 2, mr: 25}}>
         <IconButton onClick={onPrevDate}>
           <Iconify icon="eva:arrow-ios-back-fill" />
         </IconButton> 
@@ -91,7 +115,7 @@ export default function CalendarToolbar({
         </IconButton>
       </Stack>
 
-      <Stack direction="row" alignItems="center" spacing={2}>
+      <Stack direction="row" alignItems="center" sx={{ flexWrap: 'wrap', rowGap: 2, columnGap: 2, justifyContent: 'flex-start', width: '100%' }}>
           <Autocomplete 
             value={ selectedContact || null}
             options={isAllAccessAllowed ? activeSpContacts : activeSpContacts?.filter((spc)=> spc?.reportingTo === user?.contact || spc?._id === user?.contact )}
@@ -145,12 +169,42 @@ export default function CalendarToolbar({
           />
         }
         
+        <Autocomplete
+          value={selectedStatus || null}
+          options={statusOptions}
+          isOptionEqualToValue={(option, val) => option.value === val?.value}
+          getOptionLabel={(option) => option?.label || ''}
+          onChange={(event, newValue) => {
+            if (newValue) {
+              setSelectedStatus(newValue);
+            } else {
+              setSelectedStatus(null);
+            }
+          }}
+          sx={{ width: '225px' }}
+          renderOption={(props, option) => ( <li {...props} key={option.value} style={{ color: option.color }}>{option.label}</li>)}
+          renderInput={(params) => <TextField {...params} size="small" label="Status" 
+          InputProps={{...params.InputProps, style: { color: selectedStatus?.color || 'inherit' },
+          }} />}
+        />
+        
+        <FormControlLabel
+          control={
+         <Switch
+          checked={showCancelled}
+          onChange={handleShowCancelledChange}
+          name="showCancelled"
+          color="error"
+         />}
+          label="Show Cancelled"
+        />
+
         <StyledTooltip title="New Event" placement="top" disableFocusListener tooltipcolor="#103996" color="#fff">
           <IconButton color="#fff" onClick={()=> {
             dispatch(setEventModel(true))
             dispatch(setSelectedEvent(null))
           }} 
-            sx={{ background:"#2065D1", borderRadius:1, height:'1.7em', p:'8.5px 14px',
+            sx={{ background:"#2065D1", borderRadius:1, height:'1.7em', p:'8.5px 14px', marginLeft: 'auto',
                   '&:hover': { background:"#103996", color:"#fff" } }}>
             <Iconify color="#fff" sx={{ height: '24px', width: '24px'}} icon='eva:plus-fill' />
           </IconButton>
@@ -159,3 +213,5 @@ export default function CalendarToolbar({
     </Stack>
   );
 }
+
+export default memo( CalendarToolbar );

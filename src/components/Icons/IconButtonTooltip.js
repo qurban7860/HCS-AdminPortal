@@ -8,26 +8,27 @@ import Iconify from '../iconify';
 export default function IconButtonTooltip({
   onDelete,
   onClick,
-  color,
   title,
-  placement,
+  color='#1976d2',
+  placement='top',
   icon,
   disabled,
+  sx={},
 }) {
     return (
       <StyledTooltip title={title} placement={placement} disableFocusListener tooltipcolor={color} color={color}>
         {disabled ? (
           <IconButton
             variant="outlined"
-            sx={{ ml:1, cursor: 'default', color, borderColor: color, ':hover': { borderColor: alpha(color, 0.5),},}}
+            sx={{ ml:1, cursor: 'default', color, borderColor: color, ':hover': { borderColor: alpha(color, 0.5)}, ...sx}}
           >
-              <Iconify color={color} sx={{ height: '20px', width: '20px' }} icon={icon} />
+              <Iconify color={color} sx={{ height: '25px', width: '25px' }} icon={icon} />
           </IconButton>
         ) : (
           <IconButton onClick={onClick}
-            sx={{ ml:1, cursor: onClick ? 'pointer' : 'default', color, borderColor: color, ':hover': { borderColor: alpha(color, 0.5)}}}
+            sx={{ ml:1, cursor: onClick ? 'pointer' : 'default', color, borderColor: color, ':hover': { borderColor: alpha(color, 0.5)}, ...sx}}
           >
-            <Iconify color={color} sx={{ height: '20px', width: '20px' }} icon={icon} />
+            <Iconify color={color} sx={{ height: '25px', width: '25px' }} icon={icon} />
           </IconButton>
         )}
       </StyledTooltip>
@@ -43,9 +44,5 @@ IconButtonTooltip.propTypes = {
   title: PropTypes.string,
   placement: PropTypes.string,
   icon: PropTypes.string,
-};
-
-IconButtonTooltip.defaultProps = {
-  placement: 'top',
-  color:'#1976d2'
+  sx: PropTypes.object,
 };

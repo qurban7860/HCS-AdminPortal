@@ -48,7 +48,7 @@ const TABLE_HEAD = [
   { id: 'address.city', visibility: 'md1', label: 'City', align: 'left' },
   { id: 'address.country', visibility: 'xs2', label: 'Country', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
-  { id: 'createdAt', label: 'Created At', align: 'right' },
+  { id: 'updatedAt', label: 'Updated At', align: 'right' },
 ];
 
 
@@ -175,7 +175,7 @@ export default function SupplierList() {
     }
   };
 
-  const handleViewRow = (id) => navigate(PATH_MACHINE.machines.machineSettings.suppliers.view(id));
+  const handleViewRow = (id) => navigate(PATH_MACHINE.machineSettings.suppliers.view(id));
 
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
@@ -295,7 +295,7 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
         filterSupplier?.contactName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         filterSupplier?.address?.city?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         filterSupplier?.address?.country?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        // (product?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+        // (product?.isActive ? "Active" : "InActive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
         fDate(filterSupplier?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }

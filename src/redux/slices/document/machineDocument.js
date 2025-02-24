@@ -249,22 +249,24 @@ export function updateMachineDocument(machineDocumentId , machineId , params) {
 
 // -----------------------------------Get Machine Document-----------------------------------
 
-export function getMachineDocuments(machineId) {
+export function getMachineDocuments( machineId, isMachineArchived ) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/` , 
-      {
-        params: {
-          isArchived: false,
-          machine: machineId,
-          orderBy : {
-            createdAt:-1
-          }
-          // basic: true
+      const params = {
+        isArchived: false,
+        machine: machineId,
+        orderBy : {
+          createdAt:-1
         }
       }
-      );
+
+      if( isMachineArchived ){
+        params.archivedByMachine = true;
+        params.isArchived = true;
+      }
+      
+      const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/` , { params });
       dispatch(slice.actions.getMachineDocumentsSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Machine Document loaded successfully'));
     } catch (error) {

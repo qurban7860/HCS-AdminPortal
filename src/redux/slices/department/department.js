@@ -17,6 +17,13 @@ const initialState = {
   filterBy: '',
   page: 0,
   rowsPerPage: 100,
+  reportHiddenColumns: {
+    "departmentName": false,
+    "departmentType": false,
+    "isActive": false,
+    "forCustomer": false,
+    "createdAt": false,
+  },
 };
 
 const slice = createSlice({
@@ -104,6 +111,9 @@ const slice = createSlice({
     ChangePage(state, action) {
       state.page = action.payload;
     },
+    setReportHiddenColumns(state, action) {
+      state.reportHiddenColumns = action.payload;
+    },
   },
 });
 
@@ -119,6 +129,7 @@ export const {
   setFilterBy,
   ChangeRowsPerPage,
   ChangePage,
+  setReportHiddenColumns,
 } = slice.actions;
 
 // ----------------------------------------------------------------------
@@ -130,6 +141,7 @@ export function addDepartment(params) {
       /* eslint-disable */
       let data = {
         departmentName: params.departmentName,
+        departmentType: params.departmentType,
         isActive: params.isActive,
         isDefault: params.isDefault,
         forCustomer: params.forCustomer,
@@ -161,6 +173,7 @@ export function updateDepartment(params, Id) {
       /* eslint-disable */
       let data = {
         departmentName: params.departmentName,
+        departmentType: params.departmentType,
         isActive: params.isActive,
         isDefault: params.isDefault,
         forCustomer: params.forCustomer,

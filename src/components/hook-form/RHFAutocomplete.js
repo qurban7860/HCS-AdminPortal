@@ -1,7 +1,5 @@
 import PropTypes from 'prop-types';
-// form
 import { useFormContext, Controller } from 'react-hook-form';
-// @mui
 import { Autocomplete, TextField } from '@mui/material';
 
 // ----------------------------------------------------------------------
@@ -9,12 +7,20 @@ import { Autocomplete, TextField } from '@mui/material';
 RHFAutocomplete.propTypes = {
   name: PropTypes.string,
   label: PropTypes.string,
+  placeholder: PropTypes.string,
+  loading: PropTypes.bool,
   helperText: PropTypes.node,
   Error: PropTypes.bool,
+  nonEditable: PropTypes.bool,
 };
 
-export default function RHFAutocomplete({ name, label, helperText, Error, ...other }) {
+export default function RHFAutocomplete({ name, label, loading = false, helperText, Error, nonEditable, placeholder, ...other }) {
   const { control, setValue } = useFormContext();
+  
+  const nonEditableProperties = {
+    readOnly: true,
+    style: { cursor: 'pointer' }
+  };
 
   return (
     <Controller
@@ -23,12 +29,18 @@ export default function RHFAutocomplete({ name, label, helperText, Error, ...oth
       render={({ field, fieldState: { error } }) => (
         <Autocomplete
           {...field}
+          loading={loading}
           onChange={(event, newValue) => setValue(name, newValue, { shouldValidate: true })}
           renderInput={(params) => (
             <TextField
               label={label}
+              placeholder={placeholder || null}
               error={!!error || !!Error}
               helperText={error ? error?.message : helperText}
+              inputProps={{
+                ...params.inputProps,
+                ...(nonEditable && nonEditableProperties),
+              }}
               {...params}
             />
           )}

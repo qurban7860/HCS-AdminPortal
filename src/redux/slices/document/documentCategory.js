@@ -18,6 +18,13 @@ const initialState = {
   filterBy: '',
   page: 0,
   rowsPerPage: 100,
+  reportHiddenColumns: {
+    name: false,
+    customer: false,
+    customerAccess: false,
+    isActive: false,
+    createdAt: false,
+  },
 };
 
 const slice = createSlice({
@@ -111,6 +118,10 @@ const slice = createSlice({
     ChangePage(state, action) {
       state.page = action.payload;
     },
+    // Add new reducer for hidden columns
+    setReportHiddenColumns(state, action) {
+      state.reportHiddenColumns = action.payload;
+    },
   },
 });
 
@@ -128,6 +139,7 @@ export const {
   setFilterBy,
   ChangeRowsPerPage,
   ChangePage,
+  setReportHiddenColumns,
 } = slice.actions;
 
 // ----------------------------Add Document Category------------------------------------------
@@ -230,7 +242,7 @@ export function getDocumentCategory(Id) {
 
 // -----------------------------------Get Active Document Categories-----------------------------------
 
-export function getActiveDocumentCategories(categoryBy, cancelToken, drawing) {
+export function getActiveDocumentCategories( categoryBy, cancelToken, drawing ) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -238,14 +250,11 @@ export function getActiveDocumentCategories(categoryBy, cancelToken, drawing) {
         params: {
           isArchived: false,
           isActive: true,
+          drawing
         },
         cancelToken: cancelToken?.token,
       }
-
-      if(drawing) {
-        query.params.drawing = true;
-      }
-
+      
       Object.assign(query.params, categoryBy)
       const response = await axios.get(`${CONFIG.SERVER_URL}documents/categories/` , query );
       dispatch(slice.actions.getActiveDocumentCategoriesSuccess(response.data));

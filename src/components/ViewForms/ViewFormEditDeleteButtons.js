@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { LoadingButton } from '@mui/lab';
 import { Badge, Box, Divider, Grid, TextField } from '@mui/material';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { memo, useState, useLayoutEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -24,12 +24,15 @@ import { ICONS } from '../../constants/icons/default-icons';
 import { fDate, fDateTime, GetDifferenceInDays } from '../../utils/formatTime';
 import { useAuthContext } from '../../auth/useAuthContext';
 import { PATH_DASHBOARD } from '../../routes/paths';
+import ViewFormServiceReportApprovalHistoryPopover from './ViewFormServiceReportApprovalHistoryPopover';
 
 function ViewFormEditDeleteButtons({
   backLink,
   isActive,
+  shareWith,
   isReleased,
   isDefault,
+  isResolved,
   isIniRead,
   isManufacture,
   isDeleteDisabled,
@@ -46,6 +49,8 @@ function ViewFormEditDeleteButtons({
   // Handlers
   handleVerification,
   handleVerificationTitle,
+  onArchive,
+  onRestore,
   onDelete,
   handleEdit,
   handleJiraNaviagte,
@@ -91,7 +96,8 @@ function ViewFormEditDeleteButtons({
   machinePage, 
   drawingPage,
   history,
-  onMergeDocumentType
+  onMergeDocumentType,
+  serviceReportStatus
 }) {
   const { id } = useParams();
   const navigate = useNavigate()
@@ -107,23 +113,29 @@ function ViewFormEditDeleteButtons({
     isSecurityUserAccessAllowed, } = useAuthContext();
 
   const dispatch = useDispatch();
+  
   const [openConfirm, setOpenConfirm] = useState(false);
+  const [ openRestoreConfirm, setOpenRestoreConfirm ] = useState(false);
   const [openUserInviteConfirm, setOpenUserInviteConfirm] = useState(false);
   const [openVerificationConfirm, setOpenVerificationConfirm] = useState(false);
   const [openUserStatuConfirm, setOpenUserStatuConfirm] = useState(false);
   const [openConfigDraftStatuConfirm, setOpenConfigDraftStatuConfirm] = useState(false);
   const [openConfigSubmittedStatuConfirm, setOpenConfigSubmittedStatuConfirm] = useState(false);
   const [openConfigApproveStatuConfirm, setOpenConfigApproveStatuConfirm] = useState(false);
+  const { machine } = useSelector((state) => state.machine);
   const [lockUntil, setLockUntil] = useState(''); 
   const [lockUntilError, setLockUntilError] = useState(''); 
+
+  const isCustomerSelected = !!machine?.customer; 
+  const hasPurchaseDate = !!transferredHistory?.some((historyItem) => historyItem.purchaseDate);
+  const hasTransferDate = !!transferredHistory?.some((historyItem) => historyItem.transferredDate);
+  const showDetails = isCustomerSelected && (hasPurchaseDate || hasTransferDate);
 
   const theme = createTheme({
     palette: {
       success: green,
     },
   });
-  
-
 
   // Function to handle date change
   const handleLockUntilChange = newValue => {
@@ -179,7 +191,7 @@ function ViewFormEditDeleteButtons({
   ])
 
   const handleOpenConfirm = (dialogType) => {
-
+    
     if (dialogType === 'UserInvite') {
       setOpenUserInviteConfirm(true);
     }
@@ -188,8 +200,12 @@ function ViewFormEditDeleteButtons({
       setOpenVerificationConfirm(true);
     }
 
-    if (dialogType === 'delete' && ( !isDisableDelete || !disableDeleteButton ) ) {
+    if ( dialogType === 'delete' && ( !isDisableDelete || !disableDeleteButton ) ) {
       setOpenConfirm(true);
+    }
+    
+    if ( dialogType === 'restore' && !isDisableDelete ) {
+      setOpenRestoreConfirm(true);
     }
 
     if (dialogType === 'transfer') {
@@ -226,10 +242,16 @@ function ViewFormEditDeleteButtons({
       reset();
       setOpenVerificationConfirm(false);
     }
-    if (dialogType === 'delete') {
+    if (dialogType === 'delete' || dialogType === 'restore' ) {
       reset();
       setOpenConfirm(false);
     }
+
+    if ( dialogType === 'restore' ) {
+      reset();
+      setOpenRestoreConfirm(false);
+    }
+
     if (dialogType === 'transfer') {
       dispatch(setTransferDialogBoxVisibility(false));
     }
@@ -263,12 +285,25 @@ function ViewFormEditDeleteButtons({
     await handleCloseConfirm('delete');
   };
 
+  const handleArchive = async () => {
+    await onArchive();
+    await handleCloseConfirm('delete');
+  };
+
+  const handleRestore = async () => {
+    await onRestore();
+    await setOpenRestoreConfirm(false);
+  };
+  
+  
   const [verifiedAnchorEl, setVerifiedAnchorEl] = useState(null);
   const [verifiedBy, setVerifiedBy] = useState([]);
 
   const [ transferHistoryAnchorEl, setTransferHistoryAnchorEl ] = useState(null);
   const [ transferHistory, setTransferHistory ] = useState([]);
-
+  
+  const [ serviceReportApprovalHistoryAnchorEl, setServiceReportApprovalHistoryAnchorEl ] = useState(null);
+  
   const [ machineSettingHistoryAnchorEl, setMachineSettingHistoryAnchorEl ] = useState(null);
 
   const [approvedAnchorEl, setApprovedAnchorEl] = useState(null);
@@ -294,6 +329,16 @@ function ViewFormEditDeleteButtons({
   const handleTransferHistoryPopoverClose = () => {
     setTransferHistoryAnchorEl(null);
     setTransferHistory([])
+  };
+  
+  const handleServiceReportApprovalHistoryPopoverOpen = (event) => {
+    if(serviceReportStatus?.approvalLogs?.length > 0) {
+      setServiceReportApprovalHistoryAnchorEl(event.currentTarget);
+    }
+  };
+
+  const handleServiceReportApprovalHistoryPopoverClose = () => {
+    setServiceReportApprovalHistoryAnchorEl(null);
   };
 
   const handleMachineSettingHistoryPopoverOpen = (event) => {
@@ -322,7 +367,7 @@ function ViewFormEditDeleteButtons({
   const {
     reset,
     handleSubmit,
-    formState: { isSubmitting, isSubmitSuccessful },
+    formState: { isSubmitting },
   } = methods;
 
   const machineSupport = {
@@ -362,6 +407,14 @@ function ViewFormEditDeleteButtons({
               icon={isActive?ICONS.ACTIVE.icon:ICONS.INACTIVE.icon}
             />
           }
+
+          {shareWith!==undefined &&
+            <IconTooltip
+              title={shareWith?ICONS.SHARED.heading:ICONS.NONSHARED.heading}
+              color={shareWith?ICONS.SHARED.color:ICONS.NONSHARED.color}
+              icon={shareWith?ICONS.SHARED.icon:ICONS.NONSHARED.icon}
+            />
+          }
           {isIniRead!==undefined &&
             <IconTooltip
               title={isIniRead ? ICONS.READINI.heading:ICONS.NOTREADINI.heading}
@@ -385,7 +438,13 @@ function ViewFormEditDeleteButtons({
               icon=  { isDeleteDisabled ? ICONS.DELETE_ENABLED.icon:ICONS.DELETE_DISABLED.icon}
             />
           }
-          
+          {isResolved &&
+            <IconTooltip
+              title={isResolved?ICONS.RESOLVED.heading:ICONS.UNRESOLVED.heading}
+              color={isResolved?ICONS.RESOLVED.color:ICONS.UNRESOLVED.color}
+              icon= {isResolved?ICONS.RESOLVED.icon:ICONS.UNRESOLVED.icon}
+            />
+          }
           {isDefault &&
             <IconTooltip
               title={isDefault?ICONS.DEFAULT.heading:ICONS.CONTRAST.heading}
@@ -433,10 +492,10 @@ function ViewFormEditDeleteButtons({
             </Badge>
           }
 
-          {transferredHistory !== undefined &&
+          {showDetails && transferredHistory !== undefined && transferredHistory?.length > 0 &&
             <Badge badgeContent={transferredHistory?.length || '0' } color="info">
               <IconTooltip
-                title='Ownership Detail'
+                title='Ownership History'
                 color={ICONS.TRANSFERHISTORY.color}
                 icon={ICONS.TRANSFERHISTORY.icon}
                 onClick={handleTransferHistoryPopoverOpen}
@@ -530,8 +589,45 @@ function ViewFormEditDeleteButtons({
           />
           }
 
-
-
+          {serviceReportStatus && (
+            <Badge badgeContent={serviceReportStatus?.approvalLogs?.length || 0} color="info">
+              {serviceReportStatus?.approvingContacts?.length > 0 ? (
+                <>
+                {serviceReportStatus?.status === 'APPROVED' && (
+                    <IconTooltip
+                      title={ICONS.SR_APPROVED.heading}
+                      color={ICONS.SR_APPROVED.color}
+                      icon={ICONS.SR_APPROVED.icon}
+                      onClick={handleServiceReportApprovalHistoryPopoverOpen}
+                    />
+                  )}
+                {serviceReportStatus?.status === 'REJECTED' && (
+                    <IconTooltip
+                      title={ICONS.SR_REJECTED.heading}
+                      color={ICONS.SR_REJECTED.color}
+                      icon={ICONS.SR_REJECTED.icon}
+                      onClick={handleServiceReportApprovalHistoryPopoverOpen}
+                    />
+                  )}
+                {serviceReportStatus?.status === 'PENDING' && (
+                    <IconTooltip
+                      title={ICONS.SR_PENDING.heading}
+                      color={ICONS.SR_PENDING.color}
+                      icon={ICONS.SR_PENDING.icon}
+                      onClick={handleServiceReportApprovalHistoryPopoverOpen}
+                    />
+                  )}
+                </>
+              ) : (
+                <IconTooltip
+                  title={ICONS.SR_HISTORY.heading}
+                  color={ICONS.SR_HISTORY.color}
+                  icon={ICONS.SR_HISTORY.icon}
+                  onClick={handleServiceReportApprovalHistoryPopoverOpen}
+                />
+              )}
+            </Badge>
+          )}
         </StyledStack>
       </Grid>
 
@@ -608,7 +704,7 @@ function ViewFormEditDeleteButtons({
           />
         )}
 
-          {/* approve configuration */}
+          {/* approve template */}
           {approveHandler && !(approvers && approvers.length > 0 && approvers?.some((verified) => verified?.verifiedBy?._id === userId)) && <IconTooltip
           title="Approve"
           onClick={() => {
@@ -706,13 +802,22 @@ function ViewFormEditDeleteButtons({
         )}
 
         {/* delete button */}
-        {id !== userId  && !mainSite && onDelete && !archived && (
+        {id !== userId  && !mainSite && ( onArchive || onDelete ) && !archived && (
           <IconTooltip
-            title="Archive"
+            title={ onArchive ? "Archive" : "Delete" }
             disabled={ isDisableDelete || disableDeleteButton }
             onClick={() => {  handleOpenConfirm('delete') }}
             color={( isDisableDelete || disableDeleteButton ) ? "#c3c3c3":"#FF0000"}
-            icon="mdi:archive"
+            icon={ onArchive ? "mdi:archive" : "mdi:delete" } 
+          />
+        )}
+        { onRestore && isSecurityUserAccessAllowed && !isSecurityReadOnly && (
+          <IconTooltip
+            title="Restore"
+            disabled={ isDisableDelete }
+            onClick={() => {  handleOpenConfirm('restore') }}
+            color={ isDisableDelete ? "#c3c3c3":"#FF0000"}
+            icon="mdi:restore"
           />
         )}
       </StyledStack>
@@ -786,8 +891,8 @@ function ViewFormEditDeleteButtons({
       <ConfirmDialog
         open={openConfigDraftStatuConfirm}
         onClose={() => handleCloseConfirm('ChangeConfigStatusToDraft')}
-        title="Configuration Status"
-        content="Are you sure you want to change configuration status to DRAFT? "
+        title="Template Status"
+        content="Are you sure you want to change this template status to DRAFT? "
         action={
           <LoadingButton variant="contained"
             onClick={()=>{
@@ -803,8 +908,8 @@ function ViewFormEditDeleteButtons({
       <ConfirmDialog
         open={openConfigSubmittedStatuConfirm}
         onClose={() => handleCloseConfirm('ChangeConfigStatusToSubmitted')}
-        title="Configuration Status"
-        content="Do you want to submit it for Approval? "
+        title="Template Status"
+        content="Do you want to submit this template for Approval? "
         action={
           <LoadingButton variant="contained"
             onClick={()=>{
@@ -820,8 +925,8 @@ function ViewFormEditDeleteButtons({
   <ConfirmDialog
         open={openConfigApproveStatuConfirm}
         onClose={() => handleCloseConfirm('ChangeConfigStatusToApprove')}
-        title="Configuration Approval"
-        content="Are you sure you want to APPROVE configuration? "
+        title="Template Approval"
+        content="Are you sure you want to APPROVE this template? "
         action={
           <LoadingButton variant="contained"
             onClick={()=>{
@@ -839,17 +944,37 @@ function ViewFormEditDeleteButtons({
         onClose={() => {
           handleCloseConfirm('delete');
         }}
-        title="Archive"
-        content="Are you sure you want to Archive?"
+        title={ onArchive ? "Archive" : "Delete" }
+        content={`Are you sure you want to ${ onArchive ? "Archive" : "Delete" }?`}
         action={
           <LoadingButton
             variant="contained"
             color="error"
             loading={isSubmitted || isSubmitting || isLoading}
             disabled={isSubmitted || isSubmitting || isLoading}
-            onClick={handleSubmit(handleDelete)}
+            onClick={handleSubmit( onArchive ? handleArchive : handleDelete )}
           >
-            Archive
+            { onArchive ? "Archive" : "Delete" }
+          </LoadingButton>
+        }
+      />
+
+      <ConfirmDialog
+        open={ openRestoreConfirm }
+        onClose={() => {
+          handleCloseConfirm('restore');
+        }}
+        title="Restore"
+        content="Are you sure you want to Restore?"
+        action={
+          <LoadingButton
+            variant="contained"
+            color="error"
+            loading={isSubmitted || isSubmitting || isLoading}
+            disabled={isSubmitted || isSubmitting || isLoading}
+            onClick={ handleSubmit( handleRestore ) }
+          >
+            Restore
           </LoadingButton>
         }
       />
@@ -865,7 +990,7 @@ function ViewFormEditDeleteButtons({
         open={transferHistoryAnchorEl}
         onClose={handleTransferHistoryPopoverClose}
         ListArr={transferHistory}
-        ListTitle="Ownership Detail"
+        ListTitle="Ownership History"
       />
 
       <ViewFormMachineSettingHistoryMenuPopover
@@ -880,6 +1005,13 @@ function ViewFormEditDeleteButtons({
         onClose={handleApprovedPopoverClose}
         ListArr={approvedBy}
         ListTitle= "Approved By"
+      />
+
+      <ViewFormServiceReportApprovalHistoryPopover
+        open={serviceReportApprovalHistoryAnchorEl}
+        onClose={handleServiceReportApprovalHistoryPopoverClose}
+        evaluationHistory={serviceReportStatus?.approvalLogs}
+        ListTitle="Service Report Approval Details"
       />
     </Grid>
 
@@ -896,10 +1028,12 @@ ViewFormEditDeleteButtons.propTypes = {
   isVerifiedTitle: PropTypes.string,
   approveConfiglength: PropTypes.string,
   isActive: PropTypes.bool,
+  shareWith: PropTypes.bool,
   isReleased: PropTypes.bool,
   isIniRead: PropTypes.bool,
   isManufacture: PropTypes.bool,
   isDeleteDisabled: PropTypes.bool,
+  isResolved: PropTypes.bool,
   isDefault: PropTypes.bool,
   isSubmitted: PropTypes.func,
   returnToSubmitted: PropTypes.func,
@@ -917,6 +1051,8 @@ ViewFormEditDeleteButtons.propTypes = {
   isInviteLoading:PropTypes.bool,
   handleEdit: PropTypes.func,
   handleJiraNaviagte: PropTypes.func,
+  onArchive: PropTypes.func,
+  onRestore: PropTypes.func,
   onDelete: PropTypes.func,
   type: PropTypes.string,
   sites: PropTypes.bool,
@@ -948,5 +1084,6 @@ ViewFormEditDeleteButtons.propTypes = {
   machinePage: PropTypes.bool, 
   drawingPage: PropTypes.bool,
   history: PropTypes.array,
-  onMergeDocumentType: PropTypes.func
+  onMergeDocumentType: PropTypes.func,
+  serviceReportStatus: PropTypes.object
 };

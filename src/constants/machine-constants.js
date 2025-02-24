@@ -1,16 +1,19 @@
 export const Snacks = {
+  fileRequired: "Files required!",
   // @root - MachineViewForm
   machineUpdated: 'Machine Updated',
   failedUpdateMachine: 'Failed to Update Machine',
   machineVerifiedSuccess: 'Machine Verified',
   machineFailedVerification: 'Failed to Verify Machine',
   machineDeleted: 'Machine Deleted',
-  machineFailedDelete: 'Failed to Archive Machine',
+  machineFailedArchive: 'Failed to Archive Machine',
+  machineFailedRestore: 'Failed to Restore Machine',
+  machineFailedDelete: 'Failed to Delete Machine',
   machineTransferSuccess: 'Machine Transferred Successfully!',
   machineFailedTransfer: 'Failed to Transfer Machine',
   machineStatusSuccess: 'Machine Status Changed Successfully!',
   machineStatusFailed: 'Failed to Change Machine Status!',
-  
+
   // @root Machine Service Parameter
   checkItemAdd: 'Machine Check Item Added',
   checkItemAddFailed: 'Failed to add Machine Check Item',
@@ -34,7 +37,7 @@ export const Snacks = {
   // @root - LicenseViewForm
   licenseUpdated: 'License Updated Successfully',
   failedUpdateLicense: 'Failed to Update License',
-  
+
   licenseDeleted: 'License Archived Successfully',
   failedDeleteLicense: 'Failed to Archive License',
 
@@ -46,7 +49,13 @@ export const Snacks = {
   licenseKeyRequired: 'License KEY is Required',
   licenseExtensionTimeRequired: 'License Extension Time is Required',
   licenseRequestTimeRequired: 'License Request Time is Required',
-  
+
   // @root - machine - EditMachineSchema
   serialNoRequired: 'Serial Number is Required',
+
+  // @root - MachineLogsList and MachineLogsPage
+  machineLogArchived: 'Machine Log Archived Successfully',
+  machineLogRestored: 'Machine Log Restored Successfully',
+  machineLogDeleted: 'Machine Log Deleted Successfully',
+  machineLogUpdated: 'Machine Log Updated Successfully',
 };

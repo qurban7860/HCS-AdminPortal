@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useMemo } from 'react';
+import { useState, useEffect, useLayoutEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
@@ -7,11 +7,11 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Box, Card, Grid, Stack, Checkbox } from '@mui/material';
 // routes
-import { PATH_SECURITY } from '../../../routes/paths';
+import { PATH_SETTING } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFSwitch, RHFTextField, RHFAutocomplete, RHFPhoneInput } from '../../../components/hook-form';
-// slice
+import FormLabel from '../../../components/DocumentForms/FormLabel';
 import { updateSecurityUser } from '../../../redux/slices/securityUser/securityUser';
 import { getAllActiveCustomers, resetAllActiveCustomers } from '../../../redux/slices/customer/customer';
 import { getActiveContacts, resetActiveContacts } from '../../../redux/slices/customer/contact';
@@ -31,6 +31,7 @@ export default function SecurityUserEditForm() {
   const { allMachines } = useSelector((state) => state.machine)
   const { allActiveCustomers } = useSelector((state) => state.customer);
   const { activeContacts } = useSelector((state) => state.contact);
+  const [ isDisabled, setIsDisabled ] =useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -94,6 +95,13 @@ useEffect(() => {
   }
 }, [ dispatch,customer?._id ]);
 
+useEffect(() => {
+  if( customer && customer?.type?.toUpperCase() !== 'SP' ){
+    setIsDisabled(true);
+  } else {
+    setIsDisabled(false);
+  }
+},[ customer, setValue ])
 
 const onChangeContact = (contact) => {
   if(contact?._id){
@@ -112,16 +120,20 @@ const onChangeContact = (contact) => {
 
   const onSubmit = async (data) => {
     try {
+      const phoneRegex = /^\+\d+$/;
+      if (!data.phone || phoneRegex.test(data.phone.trim())) {
+        data.phone = ''; 
+      }
       await dispatch(updateSecurityUser(data, securityUser._id));
       await reset();
-      await navigate(PATH_SECURITY.users.view(securityUser._id));
+      await navigate(PATH_SETTING.security.users.view(securityUser._id));
     } catch (error) {
       enqueueSnackbar(error, { variant: `error` });
       console.log('Error:', error);
     }
   };
 
-  const toggleCancel = () => { navigate(PATH_SECURITY.users.view(securityUser._id)) };
+  const toggleCancel = () => { navigate(PATH_SETTING.security.users.view(securityUser._id)) };
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -129,6 +141,7 @@ const onChangeContact = (contact) => {
         <Grid item xs={12} md={12}>
           <Card sx={{ p: 3 }}>
           <Stack  spacing={2} >
+            <FormLabel content='Personal Information' />
             <Box rowGap={2} columnGap={2} display="grid"
               gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
             >
@@ -164,7 +177,7 @@ const onChangeContact = (contact) => {
               <RHFTextField name="email" label="Email Address*" inputProps={{ style: { textTransform: 'lowercase' } }} />
               <RHFTextField name="loginEmail" label="Login Email" disabled inputProps={{ style: { textTransform: 'lowercase' } }} />
             </Box>
-
+            <FormLabel content='Accessibility Information' />
             <Box
               rowGap={2} columnGap={2} display="grid"
               gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
@@ -176,7 +189,9 @@ const onChangeContact = (contact) => {
                 filterSelectedOptions
                 name="roles"
                 label="Roles*"
-                options={ activeRoles }
+                options={ activeRoles.filter(role => 
+                  ( customer?.type?.toLowerCase() === 'sp' ? role?.roleType?.toLowerCase() !== 'customer' : ( role?.roleType?.toLowerCase() === 'customer' ) ) 
+                ) }
                 getOptionLabel={(option) => `${option?.name || ''} `}
                 isOptionEqualToValue={(option, value) => option?._id === value?._id}
                 renderOption={(props, option, { selected }) => ( <li {...props}> <Checkbox checked={selected} />{option?.name || ''}</li> )}
@@ -184,6 +199,7 @@ const onChangeContact = (contact) => {
               
               <RHFAutocomplete
                 disableClearable
+                disabled={ isDisabled }
                 name="dataAccessibilityLevel"
                 label="Data Accessibility Level"
                 options={ [ 'RESTRICTED', 'GLOBAL' ] }
@@ -206,6 +222,7 @@ const onChangeContact = (contact) => {
                 multiple
                 disableCloseOnSelect
                 filterSelectedOptions
+                disabled={ isDisabled }
                 name="regions" 
                 label="Regions"
                 options={activeRegions}
@@ -219,6 +236,7 @@ const onChangeContact = (contact) => {
                 multiple
                 disableCloseOnSelect
                 filterSelectedOptions
+                disabled={ isDisabled }
                 name="customers" 
                 label="Customers"
                 options={allActiveCustomers}
@@ -232,6 +250,7 @@ const onChangeContact = (contact) => {
                 multiple
                 disableCloseOnSelect
                 filterSelectedOptions
+                disabled={ isDisabled }
                 name="machines" 
                 label="Machines"
                 options={allMachines}
@@ -245,7 +264,6 @@ const onChangeContact = (contact) => {
             <Grid item md={12} display="flex">
               <RHFSwitch name="isActive" label="Active" />
               <RHFSwitch name="multiFactorAuthentication" label="Multi-Factor Authentication" />
-              {/* <RHFSwitch name="currentEmployee" label="Current Employee" /> */}
             </Grid>
 
             <Stack sx={{ mt: 3 }}>

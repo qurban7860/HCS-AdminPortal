@@ -6,7 +6,7 @@ import { Stack } from '@mui/material';
 import { useDispatch } from '../../../redux/store';
 // components
 import SearchBarCombo from '../../../components/ListTableTools/SearchBarCombo';
-import { PATH_SECURITY } from '../../../routes/paths';
+import { PATH_SETTING } from '../../../routes/paths';
 import { setSecurityUserFormVisibility } from '../../../redux/slices/securityUser/securityUser';
 import { BUTTONS } from '../../../constants/default-constants';
 import { options } from '../../../theme/styles/default-styles';
@@ -51,12 +51,12 @@ export default function SecurityUserTableToolbar({
   const dispatch = useDispatch();
   const formNewVisibleToggle = () => {
     dispatch(setSecurityUserFormVisibility(true));
-    navigate(PATH_SECURITY.users.new);
+    navigate(PATH_SETTING.security.users.new);
   };
 
   const formInviteVisibleToggle = () => {
     dispatch(setSecurityUserFormVisibility(true));
-    navigate(PATH_SECURITY.users.invite);
+    navigate(PATH_SETTING.security.users.invite);
   };
 
   return (

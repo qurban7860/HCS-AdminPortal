@@ -15,8 +15,10 @@ import {
   TableNoData,
   TableSkeleton,
   TableHeadCustom,
+  TableHeadFilter,
   TableSelectedAction,
   TablePaginationCustom,
+  TablePaginationFilter,
 } from '../../components/table';
 // sections
 import JiraTableToolbar from './JiraTableToolbar';
@@ -25,7 +27,7 @@ import { fDate, fDateTime } from '../../utils/formatTime';
 // constants
 import TableCard from '../../components/ListTableTools/TableCard';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
-import { getJiraTickets, resetJiraTickets, setFilterStatus, ChangePage, ChangeRowsPerPage, setFilterBy, setFilterPeriod } from '../../redux/slices/jira/jira';
+import { getJiraTickets, resetJiraTickets, setFilterStatus, ChangePage, ChangeRowsPerPage, setFilterBy, setFilterPeriod, setReportHiddenColumns } from '../../redux/slices/jira/jira';
 import { getJiraStatusChipColor } from '../../utils/jira';
 import { CONFIG } from '../../config-global';
 
@@ -68,7 +70,8 @@ export default function JiraList() {
     page, 
     rowsPerPage, 
     totalRows,
-    isLoading
+    isLoading,
+    reportHiddenColumns
   } = useSelector((state) => state.jira);
 
   const onChangeRowsPerPage = (event) => {
@@ -193,10 +196,14 @@ export default function JiraList() {
   const handleViewRow = (key) => {
     window.open(`${CONFIG.JIRA_URL}${key}`, '_blank');
   }
+  
+  const handleHiddenColumns = async (arg) => {
+    dispatch(setReportHiddenColumns(arg));
+  };
 
   return (
       <Container maxWidth={false}>
-        <StyledCardContainer><Cover name="Support Tickets" /></StyledCardContainer>
+        <StyledCardContainer><Cover name="Jira Tickets" /></StyledCardContainer>
         <TableCard>
           <JiraTableToolbar
             filterName={filterName}
@@ -214,7 +221,7 @@ export default function JiraList() {
               <>
                 <Grid sx={{px:3, pb:2}} container rowGap={0.5} columnGap={0.5}>
                   {statusCounts && statusCounts.map(({name, count, color}) => (
-                    <Chip sx={color} label={<>{name} : <b>{count}</b></>}/>
+                    <Chip key={name} sx={color} label={<>{name} : <b>{count}</b></>}/>
                   ))}
                 </Grid>
                 <Grid container sx={{px:3, pb:2}}>
@@ -223,13 +230,16 @@ export default function JiraList() {
               </>
           }
 
-        {!isNotFound && <TablePaginationCustom
+        {!isNotFound && <TablePaginationFilter
+            columns={TABLE_HEAD}
+            hiddenColumns={reportHiddenColumns}
+            handleHiddenColumns={handleHiddenColumns}
             count={dataFiltered?.length}
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-            statusCounts={statusCounts}
+            // statusCounts={statusCounts}
           />}
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <TableSelectedAction
@@ -239,12 +249,13 @@ export default function JiraList() {
             />
 
             <Scrollbar>
-              <Table size="small" sx={{ minWidth: 360 }}>
-                <TableHeadCustom
+              <Table stickyHeader size="small" sx={{ minWidth: 360 }}>
+                <TableHeadFilter
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
                   onSort={onSort}
+                  hiddenColumns={reportHiddenColumns}
                 />
 
                 <TableBody>
@@ -253,9 +264,10 @@ export default function JiraList() {
                     .map((row, index) =>
                       row ? (
                         <JiraTableRow
-                          key={row._id}
+                          key={row.id}
                           row={row}
                           onViewRow={handleViewRow}
+                          hiddenColumns={reportHiddenColumns}
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />

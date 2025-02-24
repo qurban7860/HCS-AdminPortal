@@ -15,7 +15,7 @@ import FormProvider, { RHFTextField } from '../../../components/hook-form';
 import { Cover } from '../../../components/Defaults/Cover';
 import { SecurityUserPasswordUpdate } from '../../../redux/slices/securityUser/securityUser';
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
-import { PATH_DASHBOARD, PATH_SECURITY } from '../../../routes/paths';
+import { PATH_DASHBOARD, PATH_SETTING } from '../../../routes/paths';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
@@ -63,7 +63,7 @@ export default function SecurityUserChangePassword() {
         await dispatch(SecurityUserPasswordUpdate(data, userId));
         enqueueSnackbar('Password has been updated Successfully!');
         reset();
-        navigate(PATH_SECURITY.users.view(userId));
+        navigate(PATH_SETTING.security.users.view(userId));
       } catch (error) {
         if (error.Message) {
           enqueueSnackbar(error.Message, { variant: `error` });

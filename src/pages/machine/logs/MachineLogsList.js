@@ -1,263 +1,291 @@
-import debounce from 'lodash/debounce';
-import { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import PropTypes from 'prop-types';
+import { useState, useEffect, useCallback } from 'react';
 // @mui
-import { Container, Table, Checkbox, TableBody, TableContainer, TableRow, TableCell, TableHead, TableSortLabel } from '@mui/material';
+import { Container, Card, Stack, Box, Typography, IconButton, MenuItem, useTheme, Divider } from '@mui/material';
+import { FormProvider, useForm } from 'react-hook-form';
+import { LoadingButton } from '@mui/lab';
+import { yupResolver } from '@hookform/resolvers/yup';
+
 // routes
 import { useNavigate, useParams } from 'react-router-dom';
-import { PATH_MACHINE } from '../../../routes/paths';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // components
 import {
-  useTable,
-  getComparator,
-  TableNoData,
-  TableSkeleton,
-  TablePaginationCustom,
-} from '../../../components/table';
-import Scrollbar from '../../../components/scrollbar';
-// sections
-import MachineLogsListTableToolbar from './MachineLogsListTableToolbar';
-import MachineLogsTableRow from './MachineLogsTableRow';
-import {
-  getMachineErpLogRecords,
-  ChangeRowsPerPage,
-  ChangePage,
-  setFilterBy
+  getMachineLogRecords,
+  ChangePage
 } from '../../../redux/slices/products/machineErpLogs';
-import { fDateTime } from '../../../utils/formatTime';
-import TableCard from '../../../components/ListTableTools/TableCard';
 import MachineTabContainer from '../util/MachineTabContainer';
+import { machineLogTypeFormats } from '../../../constants/machineLogTypeFormats';
+import { RHFAutocomplete, RHFDatePicker, RHFSelect } from '../../../components/hook-form';
+import RHFFilteredSearchBar from '../../../components/hook-form/RHFFilteredSearchBar';
+import { fetchIndMachineLogSchema } from '../../schemas/machine';
+import { BUTTONS } from '../../../constants/default-constants';
+import Iconify from '../../../components/iconify';
+import { StyledTooltip } from '../../../theme/styles/default-styles';
+import { PATH_MACHINE } from '../../../routes/paths';
+import MachineLogsDataTable from './MachineLogsDataTable';
 
 // ----------------------------------------------------------------------
 
-const TABLE_HEAD = [
-  { id: 'date', label: 'Date', align: 'left' },
-  { id: 'waste', label: 'Waste', align: 'left' },
-  { id: 'componentLength', label: 'Length', align: 'left' },
-  { id: 'createdBy.name', label: 'Created By', align: 'left' },
-  { id: 'createdAt', label: 'Created At', align: 'right' },
-];
+MachineLogsList.propTypes = {
+  allMachineLogsType: PropTypes.object
+};
 
-// ----------------------------------------------------------------------
+export default function MachineLogsList({ allMachineLogsType }){
+  const [selectedSearchFilter, setSelectedSearchFilter] = useState('');
 
-export default function MachineLogsList(){
-  const { machineErpLogs, machineErpLogstotalCount, dateFrom, dateTo, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.machineErpLogs );
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const { machineId } = useParams();
-  const {
-    order,
-    orderBy,
-    setPage,
-    selected,
-    onSort,
-  } = useTable({ defaultOrderBy: 'date', defaultOrder: 'asc' });
+  const theme = useTheme();
 
-  const onChangeRowsPerPage = (event) => {
-    dispatch(ChangePage(0));
-    dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
-  };
-
-  const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
-  const dispatch = useDispatch();
-  const [filterName, setFilterName] = useState('');
-  const [tableData, setTableData] = useState([]);
-  const [filterStatus, setFilterStatus] = useState([]);
-  const [ isCreatedAt, setIsCreatedAt ] = useState(false);
-
-  useLayoutEffect(() => {
-    if (machineId) {
-      if (dateFrom && dateTo) {
-        dispatch(getMachineErpLogRecords(machineId, page, rowsPerPage, dateFrom, dateTo, isCreatedAt ));
-      } else if(!dateFrom && !dateTo) {
-        dispatch(getMachineErpLogRecords(machineId, page, rowsPerPage, null, null, isCreatedAt ));
-      } 
-    }
-  }, [dispatch, machineId, page, rowsPerPage, dateFrom, dateTo, isCreatedAt ]);
-
-  useEffect(() => {
-    if (initial) {
-      setTableData(machineErpLogs?.data || [] );
-    }
-  }, [machineErpLogs, initial]);
-
-  const dataFiltered = applyFilter({
-    inputData: tableData,
-    comparator: getComparator(order, orderBy),
-    filterName,
-    filterStatus,
+  const methods = useForm({
+    defaultValues: {
+      logType: machineLogTypeFormats.find(option => option.type === 'ERP') || null,
+      dateFrom: new Date(),
+      dateTo: new Date(),
+      filteredSearchKey: '',
+      activeStatus: 'active',
+    },
+    resolver: yupResolver(fetchIndMachineLogSchema),
   });
 
-  const isFiltered = filterName !== '' || !!filterStatus.length;
-  const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
-  const denseHeight = 60;
-  const debouncedSearch = useRef(debounce((value) => {
-    dispatch(ChangePage(0))
-    dispatch(setFilterBy(value))
-  }, 500))
+  const { watch, setValue, handleSubmit, trigger } = methods;
+  const { dateFrom, dateTo, logType, filteredSearchKey, activeStatus } = watch();
 
-  const handleFilterName = (event) => {
-    debouncedSearch.current(event.target.value);
-    setFilterName(event.target.value)
-    setPage(0);
-  };
-  
   useEffect(() => {
-      debouncedSearch.current.cancel();
-  }, [debouncedSearch]);
-  
-  useEffect(()=>{
-      setFilterName(filterBy)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[])
+    handleResetFilter();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
-  const handleFilterStatus = (event) => {
-    setPage(0);
-    setFilterStatus(event.target.value);
-  };
-
-  const handleViewRow = async (id) => navigate(PATH_MACHINE.machines.logs.view(machineId, id));
+  const { page, rowsPerPage } = useSelector((state) => state.machineErpLogs);
+  const { machine } = useSelector((state) => state.machine);
 
   const handleResetFilter = () => {
-    dispatch(setFilterBy(''))
-    setFilterName('');
+    setValue(filteredSearchKey, '')
+    setSelectedSearchFilter('')
   };
 
+  const dataForApi = {
+    customerId: machine?.customer?._id,
+    machineId,
+    page,
+    pageSize: rowsPerPage,
+    fromDate: dateFrom,
+    toDate: dateTo,
+    isArchived: activeStatus === 'archived',
+    isMachineArchived: false,
+    selectedLogType: logType?.type,
+    searchKey: filteredSearchKey,
+    searchColumn: selectedSearchFilter,
+  };
+
+  const onSubmit = (data) => {
+    dispatch(ChangePage(0));
+    dispatch(
+      getMachineLogRecords({
+        customerId: machine?.customer?._id,
+        machineId,
+        page: 0,
+        pageSize: rowsPerPage,
+        fromDate: dateFrom,
+        toDate: dateTo,
+        isArchived: activeStatus === "archived",
+        isMachineArchived: machine?.isArchived,
+        selectedLogType: logType.type,
+        searchKey: filteredSearchKey,
+        searchColumn: selectedSearchFilter,
+      })
+    );
+  };
+
+  const handleLogTypeChange = useCallback((newLogType) => {
+    setValue('logType', newLogType);
+    trigger('logType');
+  }, [setValue, trigger]);
+
+  const showAddbutton = () => {
+    if (machine?.status?.slug === 'transferred') return false;
+    if (machine?.isArchived) return false;
+    return BUTTONS.ADD_MACHINE_LOGS;
+  };
+
+  const returnSearchFilterColumnOptions = () =>
+    logType?.tableColumns.filter((item) => item?.searchable && item?.page !== "allMachineLogs")
+
   return (
-    <Container maxWidth={false} >
-          <MachineTabContainer currentTabValue='logs' />
-        <TableCard>
-          <MachineLogsListTableToolbar
-            filterName={filterName}
-            filterStatus={filterStatus}
-            onFilterName={handleFilterName}
-            onFilterStatus={handleFilterStatus}
-            isFiltered={isFiltered}
-            onResetFilter={handleResetFilter}
-            dateFrom={dateFrom}
-            dateTo={dateTo}
-          />
-
-          {!isNotFound && <TablePaginationCustom
-            count={ machineErpLogstotalCount || 0 }
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-          />}
-
-          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            <Scrollbar>
-              <Table size="small" sx={{ minWidth: 360 }}>
-<TableHead >
-      <TableRow>
-        {TABLE_HEAD.map((headCell, index ) => 
-          (
-          <TableCell
-            key={headCell.id}
-            align={headCell.align || 'left'}
-            sortDirection={orderBy === headCell.id ? order : false}
-            sx={{ width: headCell.width, 
-              minWidth: headCell.minWidth, }}
-            >
-            {onSort ? (
-              <TableSortLabel
-                hideSortIcon
-                active={orderBy === headCell.id}
-                direction={orderBy === headCell.id ? order : 'asc'}
-                onClick={() => onSort(headCell.id)}
-                sx={{ textTransform: 'capitalize' }}
-              >
-                {headCell.label}
-
-              
-              </TableSortLabel>
-            ) : (
-              headCell.label
-            )
-            }
-              {/* { index+1 === TABLE_HEAD?.length  &&
-                <Checkbox
-                  checked={isCreatedAt}
-                  onChange={(event) => setIsCreatedAt(!isCreatedAt)}
-                />
-              }    */}
-          </TableCell>
-        ))}
-      </TableRow>
-    </TableHead>
-                {/* <Grid  >
-                  <TableHeadCustom
-                    order={order}
-                    orderBy={orderBy}
-                    headLabel={TABLE_HEAD}
-                    onSort={onSort}
-                    numSelected={selected.length}
-                  />
-                  <Checkbox
-                    checked={isCreatedAt}
-                    onChange={(event) => setIsCreatedAt(!isCreatedAt)}
-                  />
-                </Grid> */}
-                <TableBody>
-                  {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
-                    .map((row, index) =>
-                      row ? (
-                        <MachineLogsTableRow
-                          key={row._id}
-                          row={row}
-                          onViewRow={() => handleViewRow(row._id)}
-                          selected={selected.includes(row._id)}
-                          selectedLength={selected.length}
-                          style={index % 2 ? { background: 'red' } : { background: 'green' }}
+    <Container maxWidth={false}>
+      <MachineTabContainer currentTabValue="logs" />
+      <FormProvider {...methods}>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Card sx={{ p: 3 }}>
+            <Stack spacing={2}>
+              <Stack direction="row" spacing={1} sx={{ justifyContent: 'space-between', mb: 3 }}>
+                <Stack
+                  direction="row"
+                  spacing={1}
+                  sx={{ alignSelf: 'flex-start', alignItems: 'center' }}
+                >
+                  <Box sx={{ pb: 1 }}>
+                    <Typography variant="h5" color="text.primary">
+                      Logs Filter
+                    </Typography>
+                  </Box>
+                </Stack>
+                <Stack direction="row" spacing={1} sx={{ alignSelf: 'flex-end' }}>
+                  {showAddbutton() && (
+                    <StyledTooltip
+                      title={showAddbutton()}
+                      placement="top"
+                      disableFocusListener
+                      tooltipcolor="#103996"
+                      color="#fff"
+                    >
+                      <IconButton
+                        color="#fff"
+                        onClick={() => navigate(PATH_MACHINE.machines.logs.new(machineId))}
+                        sx={{
+                          background: '#2065D1',
+                          borderRadius: 1,
+                          height: '1.7em',
+                          p: '8.5px 14px',
+                          '&:hover': {
+                            background: '#103996',
+                            color: '#fff',
+                          },
+                        }}
+                      >
+                        <Iconify
+                          color="#fff"
+                          sx={{ height: '24px', width: '24px' }}
+                          icon="eva:plus-fill"
                         />
-                      ) : (
-                        !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
-                      )
-                    )}
-                  <TableNoData isNotFound={isNotFound} />
-                </TableBody>
-              </Table>
-            </Scrollbar>
-          </TableContainer>
-          {!isNotFound && <TablePaginationCustom
-            count={ machineErpLogstotalCount || 0 }
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-          />}
-        </TableCard>
-      </Container>
+                      </IconButton>
+                    </StyledTooltip>
+                  )}
+                </Stack>
+              </Stack>
+              {/* <Divider variant="middle" /> */}
+              <Box
+                display="grid"
+                gap={2}
+                gridTemplateColumns={{ xs: '1fr', sm: 'repeat(3, 1fr)' }}
+                sx={{ flexGrow: 1 }}
+              >
+                <RHFDatePicker
+                  label="Start Date"
+                  name="dateFrom"
+                  size="small"
+                  value={dateFrom}
+                  onChange={(newValue) => {
+                    setValue('dateFrom', newValue);
+                    trigger(['dateFrom', 'dateTo']);
+                  }}
+                />
+                <RHFDatePicker
+                  label="End Date"
+                  name="dateTo"
+                  size="small"
+                  value={dateTo}
+                  onChange={(newValue) => {
+                    setValue('dateTo', newValue);
+                    trigger(['dateFrom', 'dateTo']);
+                  }}
+                />
+                <RHFAutocomplete
+                  name="logType"
+                  size="small"
+                  label="Log Type*"
+                  options={machineLogTypeFormats}
+                  getOptionLabel={(option) => option.type || ''}
+                  isOptionEqualToValue={(option, value) => option?.type === value?.type}
+                  onChange={(e, newValue) => handleLogTypeChange(newValue)}
+                  renderOption={(props, option) => (
+                    <li {...props} key={option?.type}>
+                      {option.type || ''}
+                    </li>
+                  )}
+                  disableClearable
+                  autoSelect
+                  openOnFocus
+                  getOptionDisabled={(option) => option?.disabled}
+                />
+              </Box>
+              <Stack
+                direction={{ xs: 'column', sm: 'row' }}
+                spacing={2}
+                sx={{
+                  justifyContent: 'space-between',
+                  alignItems: { xs: 'stretch', sm: 'flex-start' },
+                }}
+              >
+                <Box sx={{ flexGrow: 1, width: { xs: '100%', sm: 'auto' } }}>
+                  <RHFFilteredSearchBar
+                    name="filteredSearchKey"
+                    filterOptions={returnSearchFilterColumnOptions()}
+                    setSelectedFilter={setSelectedSearchFilter}
+                    selectedFilter={selectedSearchFilter}
+                    placeholder="Enter Search here..."
+                    helperText={
+                      selectedSearchFilter === '_id'
+                        ? 'To search by ID, you must enter the complete Log ID'
+                        : ''
+                    }
+                    fullWidth
+                  />
+                </Box>
+                <Box sx={{ width: { xs: '100%', sm: 'auto' } }}>
+                  <RHFSelect
+                    name="activeStatus"
+                    size="small"
+                    label="Status"
+                    sx={{ width: { xs: '100%', sm: 150 } }}
+                    onChange={(e) => setValue('activeStatus', e.target.value)}
+                  >
+                    <MenuItem value="active">Active</MenuItem>
+                    <MenuItem value="archived">Archived</MenuItem>
+                  </RHFSelect>
+                </Box>
+                <Box sx={{ width: { xs: '100%', sm: 'auto' } }}>
+                  <LoadingButton type="submit" variant="contained" size="large" fullWidth>
+                    Get Logs
+                  </LoadingButton>
+                </Box>
+              </Stack>
+            </Stack>
+          </Card>
+        </form>
+      </FormProvider>
+      <MachineLogsDataTable allMachineLogsPage={false} dataForApi={dataForApi} logType={logType} />
+    </Container>
   );
 }
-
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName, filterStatus }) {
-  const stabilizedThis =  inputData && inputData.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
+// function applyFilter({ inputData, comparator }) {
+//   const stabilizedThis =  inputData && inputData.map((el, index) => [el, index]);
+//   stabilizedThis.sort((a, b) => {
+//     const order = comparator(a[0], b[0]);
+//     if (order !== 0) return order;
+//     return a[1] - b[1];
+//   });
 
-  inputData = stabilizedThis.map((el) => el[0]);
-  // (customer) => customer.name.toLowerCase().indexOf(filterName.toLowerCase()) || customer.tradingName.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.city.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.country.toLowerCase().indexOf(filterName.toLowerCase()) || customer.createdAt.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+//   inputData = stabilizedThis.map((el) => el[0]);
+//   // if (filterName) {
+//   //   inputData = inputData.filter((log) => {
+//   //     const searchValue = filterName.toLowerCase();
+//   //     return Object.values(log).some((value) => {
+//   //       if (typeof value === 'string') {
+//   //         return value.toLowerCase().includes(searchValue);
+//   //       }
+//   //       if (value && typeof value === 'object') {
+//   //         return JSON.stringify(value).toLowerCase().includes(searchValue);
+//   //       }
+//   //       return false;
+//   //     });
+//   //   });
+//   // }
 
-  if (filterName) {
-    inputData = inputData.filter(
-      (log) =>
-      fDateTime(log?.date)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        log?.createdBy?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        // (log?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
-        fDateTime(log?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
-    );
-  }
-
-  if (filterStatus.length) {
-    inputData = inputData.filter((customer) => filterStatus.includes(customer.status));
-  }
-
-  return inputData;
-}
+//   return inputData;
+// }

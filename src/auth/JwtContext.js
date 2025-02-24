@@ -2,13 +2,10 @@ import PropTypes from 'prop-types';
 import storage from 'redux-persist/lib/storage';
 import { createContext, useEffect, useReducer, useCallback, useMemo } from 'react';
 import { CONFIG } from '../config-global';
-// utils
 import axios from '../utils/axios';
 import localStorageAvailable from '../utils/localStorageAvailable';
-//
 import { isValidToken, setSession, getUserAccess } from './utils';
 import { PATH_AUTH } from '../routes/paths';
-
 
 // ----------------------------------------------------------------------
 
@@ -232,22 +229,44 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     initialize();
-  }, [initialize]);  
+  }, [initialize]); 
+
+  useEffect(() => {
+
+    const handleStorageChange = (event) => {
+      if ( event.key === 'accessToken' ) {
+        if (event.newValue) {
+          initialize(); 
+        } else {
+          dispatch({ type: 'LOGOUT' }); 
+        }
+      }
+    };
+  
+    window.addEventListener('storage', handleStorageChange);
+  
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ ]);
+  
 
     // Clear All persisted data and remove Items from localStorage
     const clearAllPersistedStates = useCallback( async () => {
       try {
-          setSession(null);
-          localStorage.removeItem('name');
-          localStorage.removeItem('email');
-          localStorage.removeItem('userId');
-          localStorage.removeItem('customer')
-          localStorage.removeItem('contact')
-          localStorage.removeItem('userRoles');
-          localStorage.removeItem('accessToken');
-          localStorage.removeItem("configurations");
-          const keys = Object.keys(localStorage); 
-          const reduxPersistKeys = keys.filter(  key => !(key === 'remember' || key === 'hcp-login' || key === 'hcp-pass')  );
+        await setSession(null);
+        localStorage.removeItem('name');
+        localStorage.removeItem('email');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('customer')
+        localStorage.removeItem('contact')
+        localStorage.removeItem('userRoles');
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem("configurations");
+        await dispatch({ type: 'LOGOUT' });
+        const keys = Object.keys(localStorage); 
+        const reduxPersistKeys = keys.filter(  key => !(key === 'remember' || key === 'hcp-login' || key === 'hcp-pass')  );
         await Promise.all(reduxPersistKeys.map(key => storage.removeItem(key)));
       } catch (error) {
         console.error('Error clearing persisted states:', error);
@@ -257,6 +276,7 @@ export function AuthProvider({ children }) {
     const clearStorageAndNaviagteToLogin = useCallback( async () => {
         await clearAllPersistedStates();
         window.location.href = PATH_AUTH.login
+
     },[ clearAllPersistedStates ]);
 
   // CONFIGURATIONS
@@ -277,7 +297,6 @@ export function AuthProvider({ children }) {
       localStorage.setItem("MFA", true);
     } else{
       const { accessToken, user, userId} = response.data;
-      
       localStorage.setItem("customer", user?.customer);
 
       const {
@@ -292,7 +311,7 @@ export function AuthProvider({ children }) {
         isSecurityUserAccessAllowed,
         isEmailAccessAllowed,
         isDeveloper,
-    } = getUserAccess( user?.roles, user?.dataAccessibilityLevel )
+      } = getUserAccess( user?.roles, user?.dataAccessibilityLevel )
 
       const rolesArrayString = JSON.stringify(user.roles);
       localStorage.setItem('email', user.email);
@@ -302,7 +321,6 @@ export function AuthProvider({ children }) {
       localStorage.setItem('dataAccessibilityLevel', user?.dataAccessibilityLevel);
       localStorage.setItem('customer',user?.customer)
       localStorage.setItem('contact',user?.contact)
-
 
       setSession(accessToken);
       await getConfigs();
@@ -332,7 +350,7 @@ export function AuthProvider({ children }) {
   const muliFactorAuthentication = useCallback(async (code, userID) => {
     const response = await axios.post(`${CONFIG.SERVER_URL}security/multifactorverifyCode`, {code, userID})
       const { accessToken, user, userId } = response.data;
-
+      await setSession(accessToken);
       const {
         isAllAccessAllowed,
         isDisableDelete,
@@ -345,7 +363,7 @@ export function AuthProvider({ children }) {
         isSecurityUserAccessAllowed,
         isEmailAccessAllowed,
         isDeveloper,
-    } = getUserAccess( user?.roles , user?.dataAccessibilityLevel )
+      } = getUserAccess( user?.roles , user?.dataAccessibilityLevel )
 
       const rolesArrayString = JSON.stringify(user.roles);
       localStorage.setItem('email', user.email);
@@ -356,8 +374,6 @@ export function AuthProvider({ children }) {
       localStorage.setItem('contact',user?.contact)
       localStorage.setItem('dataAccessibilityLevel', user?.dataAccessibilityLevel);
 
-      setSession(accessToken);
-      await getConfigs();
       dispatch({
         type: 'LOGIN',
         payload: { 
@@ -376,6 +392,7 @@ export function AuthProvider({ children }) {
           isDeveloper,
         },
       });
+      await getConfigs();
   }, []);
 
 
@@ -401,11 +418,10 @@ export function AuthProvider({ children }) {
   // LOGOUT
   const logout = useCallback( async () => {
     const userId  = localStorage.getItem("userId")
-    const id = initialState.userId
-    console.log("id : ",id, userId,userId)
     try{
-      await dispatch(clearStorageAndNaviagteToLogin());
+      localStorage.removeItem('accessToken');
       await axios.post(`${CONFIG.SERVER_URL}security/logout/${userId}`)
+      await dispatch(clearStorageAndNaviagteToLogin());
     }catch (error) {
       console.error(error)
     }

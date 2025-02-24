@@ -21,7 +21,6 @@ export default function RHFDatePicker({ name, label, size, helperText, Error, ..
     <Controller
       name={name}
       control={control}
-      control={control}
       render={({ field, fieldState: { error } }) => (
         <DatePicker
           {...field}
@@ -33,12 +32,15 @@ export default function RHFDatePicker({ name, label, size, helperText, Error, ..
             <TextField
               {...params}
               size={size}
+              inputProps={{
+                ...params.inputProps,
+              }}
               error={!!error || !!Error}
               helperText={error ? error?.message : helperText}
+              {...other}
             />
           )}
           {...other}
-          // InputAdornmentProps={{ style: { display: 'none' } }}
         />
       )}
     />

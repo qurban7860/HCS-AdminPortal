@@ -19,7 +19,7 @@ HowickOperators.propTypes = {
 };
 
 export default function HowickOperators({ title, subheader, list }) {
-  const { spContacts } = useSelector((state) => state.contact);
+  const { activeSpContacts } = useSelector((state) => state.contact);
   return (
     <Card>
       <CardHeader 
@@ -32,7 +32,7 @@ export default function HowickOperators({ title, subheader, list }) {
       <Divider />
       <Box sx={{ overflowY: 'auto', maxHeight: '410px' }}>
         <Stack sx={{ p: 2 }}>
-          {spContacts.map((operator, index) => (
+          { activeSpContacts?.map((operator, index) => (
             <OperatorItem key={operator._id || index} operator={operator} index={index} />
           ))}
         </Stack>

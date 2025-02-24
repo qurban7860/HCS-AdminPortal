@@ -3,6 +3,7 @@ import { LoadingButton } from '@mui/lab';
 import { useState } from 'react';
 import { Button, Grid, Stack } from '@mui/material';
 import ConfirmDialog from '../confirm-dialog';
+import useResponsive from '../../hooks/useResponsive';
 
 UpdateFormButtons.propTypes = {
   saveButtonName: PropTypes.string,
@@ -21,6 +22,9 @@ export default function UpdateFormButtons({
   const handleOpenConfirm = () => {
     setOpenConfirm(true);
   };
+
+  const isMobile = useResponsive('down', 'sm');
+
   const handleCloseConfirm = () => {
     setOpenConfirm(false);
   };
@@ -37,7 +41,7 @@ export default function UpdateFormButtons({
               <LoadingButton
                 type="submit"
                 variant="contained"
-                size="large"
+                size={isMobile ? "medium" : "large"}
                 fullWidth
                 loading={isSubmitting}
               >
@@ -45,7 +49,7 @@ export default function UpdateFormButtons({
               </LoadingButton>
             </Grid>
             <Grid item sm={6}>
-              <Button onClick={handleOpenConfirm} fullWidth variant="outlined" size="large">
+              <Button onClick={handleOpenConfirm} fullWidth variant="outlined" size={isMobile ? "medium" : "large"}>
                 {cancelButtonName || 'Cancel'}
               </Button>
             </Grid>

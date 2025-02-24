@@ -48,14 +48,14 @@ export default function LicenseList() {
 
   const { machineId } = useParams();
   const navigate = useNavigate();
-
+  const { machine } = useSelector((state) => state.machine);
   const { licenses, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.license );
   const TABLE_HEAD = [
     { id: 'licenseKey', label: 'License Key', align: 'left' },
     { id: 'licenseDetail.version', visibility: 'xs1', label: 'Version', align: 'left' },
     { id: 'licenseDetail.type', visibility: 'xs2', label: 'Type', align: 'left' },
     { id: 'licenseDetail.extensionTime', label: 'Extension Time', align: 'right' },
-    { id: 'createdAt', label: 'Created At', align: 'right' },
+    { id: 'updatedAt', label: 'Updated At', align: 'right' },
   ];
 
   const onChangeRowsPerPage = (event) => {
@@ -67,9 +67,9 @@ export default function LicenseList() {
 
   useEffect(() => {
     if(machineId){
-      dispatch(getLicenses(machineId));
+      dispatch(getLicenses( machineId, machine?.isArchived ));
     }
-  }, [dispatch, machineId]);
+  }, [ dispatch, machineId, machine ]);
 
   useEffect(() => {
     setTableData(licenses);

@@ -26,7 +26,7 @@ export default function CheckItemViewForm() {
   const onDelete = async () => {
     try {
       await dispatch(deleteCheckItem(checkItem?._id));
-      navigate(PATH_MACHINE.machines.machineSettings.checkItems.root);
+      navigate(PATH_MACHINE.machineSettings.checkItems.root);
       enqueueSnackbar('Check item Archived Successfully!');
     } catch (error) {
       enqueueSnackbar(error, { variant: `error` });
@@ -34,7 +34,7 @@ export default function CheckItemViewForm() {
     }
   };
 
-  const handleEdit = async () => navigate(PATH_MACHINE.machines.machineSettings.checkItems.edit(checkItem?._id));
+  const handleEdit = async () => navigate(PATH_MACHINE.machineSettings.checkItems.edit(checkItem?._id));
 
   const defaultValues = useMemo(
     () => ({
@@ -48,7 +48,7 @@ export default function CheckItemViewForm() {
       minValidation:              checkItem?.minValidation,
       maxValidation:              checkItem?.maxValidation,
       description:                checkItem?.description,
-      utlizedInRecordConfigs:     checkItem?.serviceRecordConfigs,
+      utlizedInReportConfigs:     checkItem?.serviceReportTemplates,
       isRequired:                 checkItem?.isRequired || false, 
       isActive:                   checkItem?.isActive,
       createdAt:                  checkItem?.createdAt || '',
@@ -70,7 +70,7 @@ export default function CheckItemViewForm() {
           isRequired={defaultValues.isRequired} 
           handleEdit={handleEdit} 
           onDelete={onDelete} 
-          backLink={() => navigate(PATH_MACHINE.machines.machineSettings.checkItems.root)}  
+          backLink={() => navigate(PATH_MACHINE.machineSettings.checkItems.root)}  
           machineSettingPage
         />
         <Grid container sx={{mt:2}}>
@@ -84,7 +84,7 @@ export default function CheckItemViewForm() {
           <ViewFormField isLoading={isLoading} sm={6} heading="Minimum Validation" param={defaultValues.minValidation} />
           <ViewFormField isLoading={isLoading} sm={6} heading="Maximum Validation" param={defaultValues.maxValidation} />
           <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues.description} />
-          <ViewFormField isLoading={isLoading} sm={12} heading="Utlized In Configs" configArrayParam={defaultValues.utlizedInRecordConfigs} />
+          <ViewFormField isLoading={isLoading} sm={12} heading="Utlized In Configs" configArrayParam={defaultValues.utlizedInReportConfigs} />
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>
       </Grid>

@@ -1,68 +1,90 @@
-import React, { useState, useEffect } from 'react'; 
+import React, { useState } from 'react'; 
+import PropTypes from 'prop-types';
 import { Card, Grid } from '@mui/material';
-import { useNavigate, useParams } from 'react-router-dom';
 import ViewFormField from '../../../components/ViewForms/ViewFormField';
-import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
-import { Cover } from '../../../components/Defaults/Cover';
-import { CONFIG } from '../../../config-global';
-import axios from '../../../utils/axios';
-import { PATH_SETTING } from '../../../routes/paths';
-import { StyledCardContainer } from '../../../theme/styles/default-styles';
 
-export default function Emailviewform() {
+Emailviewform.propTypes = {
+  emailData: PropTypes.object,
+};
 
-  const [email, setEmail] = useState([]);
-  const {id} = useParams()
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        
-        const response = await axios.get(`${CONFIG.SERVER_URL}emails/${id}`);
-        response.data.customerName = response.data.customer.name;
-        response.data.toEmail = response.data.toEmails[0];
-        response.data.toUsers = response.data.toUsers[0];
-    
-        setEmail(response.data);
-    
-      } catch (error) {
-        console.error(error);
-      }
-    }
-    fetchData();
-  }, [id]);
+export default function Emailviewform({ emailData }) {
+  const [showFullBody, setShowFullBody] = useState(false);
 
   return (
-    <Grid sx={{ p: 3, mt: -3 }}>
-      <StyledCardContainer>
-        <Cover name="Email subject" icon="ph:users-light" generalSettings />
-      </StyledCardContainer>
+    <Grid>
       <Card sx={{ p: 3 }}>
-     
         <Grid container>
-          <ViewFormEditDeleteButtons backLink={()=> navigate(PATH_SETTING.email.list)} />
-          <ViewFormField sm={6} heading="name" param={email?.customerName} />
-          <ViewFormField sm={6} heading="subject" param={email?.subject} />
-          <ViewFormField sm={12} heading="body" param={email?.body} />
-          <ViewFormField sm={6} heading="toUsers" param={email?.toUsers} />
-          <ViewFormField
-            sm={6}
-            heading="fromEmail"
-            param={email?.fromEmail}
+          <ViewFormField 
+            sm={6} 
+            heading="Customer Name" 
+            param={emailData && emailData.customerName ? emailData.customerName : 'N/A'} 
+          />
+          <ViewFormField 
+            sm={6} 
+            heading="Subject" 
+            param={emailData && emailData.subject ? emailData.subject : 'N/A'} 
+          />
+          <ViewFormField 
+            sm={12} 
+            heading="Body"
+            style={{ width: '700px' }} 
+            param={
+              !emailData?.body ? (
+                'N/A'
+              ) : (
+                <div>
+                  <iframe 
+                    srcDoc={emailData.body}
+                    style={{ 
+                      width: '700px', 
+                      height: showFullBody ? '500px' : '100px',
+                      border: 'none',
+                      overflow: 'hidden',
+                      transition: 'height 0.3s ease'
+                    }}
+                    title="email-body"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowFullBody(prev => !prev)}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      color: '#2065D1',
+                      cursor: 'pointer',
+                      padding: '8px 0',
+                      width: '100%',
+                      textAlign: 'center'
+                    }}
+                  >
+                    {showFullBody ? 'Show Less' : 'Show More'}
+                  </button>
+                </div>
+              )
+            } 
+          />
+          <ViewFormField 
+            sm={6} 
+            heading="To Users" 
+            param={emailData && emailData.toUsers ? emailData.toUsers : 'N/A'} 
           />
           <ViewFormField
             sm={6}
-            heading="toEmails"
-            param={email?.toEmail}
+            heading="From Email"
+            param={emailData && emailData.fromEmail ? emailData.fromEmail : 'N/A'}
           />
           <ViewFormField
             sm={6}
-            heading="createdAt"
-            param={email?.createdAt}
+            heading="To Emails"
+            param={emailData && emailData.toEmail ? emailData.toEmail : 'N/A'}
+          />
+          <ViewFormField
+            sm={6}
+            heading="Updated At"
+            param={emailData && emailData.createdAt ? emailData.createdAt : 'N/A'}
           />
         </Grid>
       </Card>
     </Grid>
-  )
+  );
 }

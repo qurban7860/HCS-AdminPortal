@@ -4,21 +4,26 @@ import { Typography, Grid} from '@mui/material';
 import CopyIcon from '../Icons/CopyIcon';
 
 const ViewFormNoteField = ({ sm, heading, param }) => (
-    <Grid item xs={12} sm={sm} sx={{
-    px: 0.5, py: 1, 
-    alignItems: 'center',
-    // whiteSpace: 'pre-line',
-    whiteSpace: 'pre-wrap',
-    fontFamily: 'monospace',
-    wordBreak: 'break-word' }}>
+    <Grid item xs={12} sm={sm} sx={{ px: 0.5, pt: 1, overflowWrap: 'break-word' }}>
         <Typography variant="overline" sx={{ color: 'text.disabled' }}>
             {heading || ''}
         </Typography>
-        <Typography variant="body2" >
-            {param || ''}{param?.trim() && <CopyIcon value={param}/>}
-        </Typography>
+        <Grid 
+            style={{
+                alignItems: 'center',
+                // whiteSpace: 'pre-line',
+                whiteSpace: 'pre-wrap',
+                fontFamily: 'monospace',
+                wordBreak: 'break-word'
+            }}
+        >
+            <Typography variant="body2" >
+                { param || ''}{ param?.trim() && <CopyIcon value={param}/> }
+            </Typography>
+        </Grid>
+        &nbsp;
     </Grid>
-  )
+)
 
 ViewFormNoteField.propTypes = {
     sm: PropTypes.number,

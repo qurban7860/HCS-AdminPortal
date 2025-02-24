@@ -49,7 +49,7 @@ const TABLE_HEAD = [
   { id: 'slug', visibility: 'xs1', label: 'Slug', align: 'left' },
   { id: 'displayOrderNo', visibility: 'xs1', label: 'Order Number', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
-  { id: 'createdAt', label: 'Created At', align: 'right' },
+  { id: 'updatedAt', label: 'Updated At', align: 'right' },
 ];
 
 
@@ -172,7 +172,7 @@ export default function StatusList() {
     }
   };
 
-  const handleViewRow = (id) => navigate(PATH_MACHINE.machines.machineSettings.status.view(id));
+  const handleViewRow = (id) => navigate(PATH_MACHINE.machineSettings.status.view(id));
 
 
   const handleResetFilter = () => {
@@ -315,7 +315,7 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
     inputData = inputData.filter(
       (filterstatus) =>
         filterstatus?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        // (filterstatus?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+        // (filterstatus?.isActive ? "Active" : "InActive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
         fDate(filterstatus?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }

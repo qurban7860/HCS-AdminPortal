@@ -5,7 +5,7 @@ import { Link } from '@mui/material';
 // auth
 // import { useAuthContext } from '../../../auth/useAuthContext';
 // routes
-import { PATH_SECURITY } from '../../../routes/paths';
+import { PATH_SETTING } from '../../../routes/paths';
 // components
 // import { CustomAvatar } from '../../../components/custom-avatar';
 
@@ -25,7 +25,7 @@ export default function NavAccount() {
   // const { user } = useAuthContext();
 
   return (
-    <Link component={RouterLink} to={PATH_SECURITY.users.account} underline="none" color="inherit">
+    <Link component={RouterLink} to={PATH_SETTING.security.users.account} underline="none" color="inherit">
       {/* <StyledRoot>
         <CustomAvatar src={user?.photoURL} alt={user?.displayName} name={user?.displayName} />
 

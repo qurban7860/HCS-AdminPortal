@@ -33,6 +33,7 @@ const initialState = {
       "isActive": false,
       "createdAt": false
   },
+  isFullScreen: false,
 };
 
 const slice = createSlice({
@@ -196,6 +197,15 @@ const slice = createSlice({
       state.reportHiddenColumns = action.payload;  
     },
     
+    // Open Full Screen Dialog
+    openFullScreen(state) {
+      state.isFullScreen = true;
+    },
+    
+    // Close Full Screen Dialog
+    closeFullScreen(state) {
+      state.isFullScreen = false;
+    },
   },
 });
 
@@ -219,7 +229,9 @@ export const {
   ChangeRowsPerPage,
   ChangePage,
   setCustomerDialog,
-  setReportHiddenColumns
+  setReportHiddenColumns,
+  openFullScreen,
+  closeFullScreen,
 } = slice.actions;
 
 // ----------------------------------------------------------------------
@@ -246,7 +258,6 @@ export function getCustomers(page, pageSize, isArchived,cancelToken ) {
         cancelToken: cancelToken?.token
       });
       dispatch(slice.actions.getCustomersSuccess(response.data));
-      // dispatch(slice.actions.setResponseMessage('Customers loaded successfully'));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -403,12 +414,8 @@ export function deleteCustomer(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${id}`,
-      {
-        isArchived: true,
-      });
+      const response = await axios.delete(`${CONFIG.SERVER_URL}crm/customers/${id}`);
       dispatch(slice.actions.setResponseMessage(response.data));
-      // state.responseMessage = response.data;
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -529,23 +536,24 @@ export function updateCustomer(params) {
     dispatch(slice.actions.startLoading());
     try {
       const data = {
-        id: params.id,
-        name: params.name,
-        tradingName: params.tradingName || [],
-        ref: params.ref || '',
+        id: params?.id,
+        name: params?.name,
+        tradingName: params?.tradingName || [],
+        ref: params?.ref || '',
         groupCustomer: params?.groupCustomer?._id,
-        isActive: params.isActive,
-        clientCode: params.code,
-        primaryBillingContact: params.primaryBillingContact?._id || null,
-        primaryTechnicalContact: params.primaryTechnicalContact?._id || null,
-        mainSite: params.mainSite?._id || null,
-        accountManager: params.accountManager.map(am => am._id) || null,
-        projectManager: params.projectManager.map(pm => pm._id) || null,
-        supportManager: params.supportManager.map(sm => sm._id) || null,
+        clientCode: params?.code,
+        primaryBillingContact: params?.primaryBillingContact?._id || null,
+        primaryTechnicalContact: params?.primaryTechnicalContact?._id || null,
+        mainSite: params?.mainSite?._id || null,
+        accountManager: params?.accountManager.map(am => am._id) || null,
+        projectManager: params?.projectManager.map(pm => pm._id) || null,
+        supportManager: params?.supportManager.map(sm => sm._id) || null,
         supportSubscription: params?.supportSubscription,
         isFinancialCompany: params?.isFinancialCompany,
         excludeReports: params?.excludeReports,
         updateProductManagers: params?.updateProductManagers,
+        isActive: params?.isActive,
+        isArchived: params?.isArchived,
       };
       await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${params.id}`, data );
       dispatch(getCustomer(params.id));
@@ -554,7 +562,6 @@ export function updateCustomer(params) {
       dispatch(slice.actions.stopLoading());
       console.error(error);
       throw error;
-      // dispatch(slice.actions.hasError(error.Message));
     }
   };
 

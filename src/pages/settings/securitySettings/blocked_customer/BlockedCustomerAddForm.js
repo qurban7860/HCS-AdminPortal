@@ -13,7 +13,7 @@ import {
   Box,
 } from '@mui/material';
 // ROUTES
-import { PATH_SECURITY } from '../../../../routes/paths';
+import { PATH_SETTING } from '../../../../routes/paths';
 // slice
 import { getActiveCustomers, resetCustomers } from '../../../../redux/slices/customer/customer';
 import { addBlockedCustomers, getBlockedCustomers, resetBlockedCustomers } from '../../../../redux/slices/securityConfig/blockedCustomers';
@@ -75,7 +75,7 @@ export default function BlockedCustomerAddForm() {
       await dispatch(addBlockedCustomers(data));
       enqueueSnackbar('Customers blocked successfully!');
       reset();
-      navigate(PATH_SECURITY.config.blockedCustomer.list);
+      navigate(PATH_SETTING.restrictions.blockedCustomer.list);
     } catch (error) {
       enqueueSnackbar('Customers blocking failed!', { variant: `error` });
       console.error(error);
@@ -83,7 +83,7 @@ export default function BlockedCustomerAddForm() {
   };
 
   const toggleCancel = () => {
-    navigate(PATH_SECURITY.config.blockedCustomer.list);
+    navigate(PATH_SETTING.restrictions.blockedCustomer.list);
   };
 
  

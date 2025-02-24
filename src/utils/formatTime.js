@@ -1,6 +1,17 @@
-import { format, isValid, getTime, parseISO, formatDistanceToNow, differenceInDays } from 'date-fns';
+import { format, isValid, getTime, parseISO, formatDistanceToNow, differenceInDays, parse } from 'date-fns';
 
 // ----------------------------------------------------------------------
+
+export const stringToDate = (dateString, formatString = 'dd/MM/yyyy') => {
+  try {
+    const parsedDate = parse(dateString, formatString, new Date());
+    return isValid(parsedDate) ? parsedDate : null;
+  } catch (error) {
+    console.error('Invalid date format', error);
+    return null;
+  }
+};
+
 
 export function isValidDate(date) {
   if(isValid(new Date(date))){
@@ -16,6 +27,13 @@ export function fDate(date, newFormat) {
     return date ? format(new Date(date), fm) : '';
   }
     return date
+}
+
+export function fTime(date, newFormat = 'hh:mm a') {
+  if (isValid(new Date(date))) {
+    return format(new Date(date), newFormat);
+  }
+  return date;
 }
 
 export function GetDifferenceInDays( definedDay ) {
@@ -79,4 +97,16 @@ export function convertTimeToMilliseconds(timeString) {
     }
     return totalMilliseconds;
   }, 0);
+}
+
+export function getTimeObjectFromISOString(dateString) {
+  const date = new Date(dateString);
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+  const formattedValueTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  const formattedHours = hours % 12 || 12;
+  const formattedTime = `${formattedHours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+  const timeObject = {value: formattedValueTime, label: `${formattedTime} ${ampm}`};
+  return timeObject;
 }

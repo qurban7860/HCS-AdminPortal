@@ -49,7 +49,7 @@ const TABLE_HEAD = [
   { id: 'email', label: 'Email', align: 'left' },
   { id: 'website', label: 'Website', align: 'left' },
   { id: 'isverified', label: 'Disabled', align: 'left' },
-  { id: 'created_at', label: 'Created At', align: 'left' },
+  { id: 'created_at', label: 'Updated At', align: 'left' },
   { id: 'action', label: 'Actions', align: 'left' },
 
 ];

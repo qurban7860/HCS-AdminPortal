@@ -7,6 +7,19 @@ const validateMultipleDrawingsFileType = (value, options) => {
     
     const { path, createError } = options;
     if (value && Array.isArray(value)) {
+        const invalidFiles = value.filter((file) => {
+            const fileExtension = file?.path?.split('.').pop().toLowerCase();
+            return !allowedExtensions.includes(fileExtension);
+        });
+        if (invalidFiles.length > 0){
+            const invalidFileNames = invalidFiles?.map((file) => file?.path).join(', ');
+            return createError({
+                message: `Invalid file(s) detected: ${invalidFileNames}`,
+                path,
+                value,
+            });
+        }
+
         if (value?.length > ( Number(maxFiles?.value) || 20 ) ) {
             return createError({
                 message: Snacks.fileMaxCount,
@@ -14,6 +27,7 @@ const validateMultipleDrawingsFileType = (value, options) => {
                 value,
             });
         }
+
         const fieldsRequired = value.filter((file) => ( !file?.docType || !file?.displayName?.trim() ) );
         if ( Array.isArray(fieldsRequired) && fieldsRequired.length > 0 ) {
             return createError({
@@ -22,19 +36,8 @@ const validateMultipleDrawingsFileType = (value, options) => {
                 value,
             });
         }
-    const invalidFiles = value.filter((file) => {
-        const fileExtension = file?.name?.split('.').pop().toLowerCase();
-    return !allowedExtensions.includes(fileExtension);
-    });
-    if (invalidFiles.length > 0) {
-        const invalidFileNames = invalidFiles.map((file) => file.name).join(', ');
-        return createError({
-            message: `Invalid file(s) detected: ${invalidFileNames}`,
-            path,
-            value,
-        });
-    }
-    return true;
+
+        return true;
     }
     return createError({
         message: Snacks.fileRequired,

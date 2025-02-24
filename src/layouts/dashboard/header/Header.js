@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 // @mui
 import { useTheme } from '@mui/material/styles';
-import { Stack, AppBar, Toolbar, IconButton, } from '@mui/material';
+import { Stack, AppBar, Toolbar, IconButton, Box, Button, Link } from '@mui/material';
 // utils
 import { bgBlur } from '../../../utils/cssStyles';
 
@@ -18,14 +19,19 @@ import { useSettingsContext } from '../../../components/settings';
 import AccountPopover from './AccountPopover';
 import NotificationsPopover from './NotificationsPopover';
 import { useWebSocketContext } from '../../../auth/WebSocketContext';
+import { MAIN_CATEGORIES, OTHER_MAIN_CATEGORIES } from '../navigationConstants';
+import { useAuthContext } from '../../../auth/useAuthContext';
+import { StyledTooltip } from '../../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
 
 Header.propTypes = {
   onOpenNav: PropTypes.func,
+  selectedCategory: PropTypes.object,
+  setSelectedCategory: PropTypes.func,
 };
 
-export default function Header({ onOpenNav }) {
+export default function Header({ onOpenNav, selectedCategory, setSelectedCategory }) {
   const theme = useTheme();
   const { themeLayout } = useSettingsContext();
   const isNavHorizontal = themeLayout === 'horizontal';
@@ -33,10 +39,12 @@ export default function Header({ onOpenNav }) {
   const isDesktop = useResponsive('up', 'lg');
   const isOffset = useOffSetTop(HEADER.H_DASHBOARD_DESKTOP) && !isNavHorizontal;
   const { sendJsonMessage } = useWebSocketContext();
+  const { isSettingAccessAllowed } = useAuthContext();
   
   useEffect(()=>{
     sendJsonMessage({eventName:'getNotifications'});
   },[sendJsonMessage])
+
   
   const renderContent = (
     <>
@@ -46,13 +54,69 @@ export default function Header({ onOpenNav }) {
           <Iconify icon="eva:menu-2-fill" />
         </IconButton>
       )}
-      <Stack flexGrow={1} direction="row" alignItems="center" justifyContent="flex-end" spacing={{ xs: 0.5, sm: 1.5 }}>
+      {isDesktop && (
+        <>
+          <Box sx={{ flexGrow: 1, display: 'flex' }}>
+            {MAIN_CATEGORIES.map((item) => (
+              <Link
+                key={item.id}
+                component={RouterLink}
+                to={item.path}
+                sx={{ 
+                  my: 2, 
+                  mx: 0.5, 
+                  display: 'block',
+                  textDecoration: 'none',
+                  color: 'inherit'
+                }}
+                onClick={() => setSelectedCategory(item)}
+              >
+                <Button
+                  variant={item.id === selectedCategory.id ? "contained" : "text"}
+                  sx={{ width: '100%', height: '100%' }}
+                >
+                  {item.title}
+                </Button>
+              </Link>
+            ))}
+          </Box>
+          <Stack flexGrow={0} direction="row" alignItems="center" spacing={{ xs: 0.5, sm: 1.5 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', borderLeft: `2px solid ${theme.palette.divider}`, borderRight: `2px solid ${theme.palette.divider}`, px: 1 }}>
+              {OTHER_MAIN_CATEGORIES.map((item) => 
+                item?.id === "settings" && !isSettingAccessAllowed ? null : (
+                <StyledTooltip title={item.title} tooltipcolor='#1976d2' key={item.id}>
+                  <Link
+                    component={RouterLink}
+                    to={item.path}
+                    sx={{ textDecoration: 'none' }}
+                    onClick={() => setSelectedCategory(item)}
+                  >
+                    <Button
+                      variant={item.id === selectedCategory.id ? "contained" : "text"}
+                      sx={{ mx: 0.2 }}
+                    >
+                      <Iconify icon={item.icon} />
+                    </Button>
+                  </Link>
+                </StyledTooltip>
+                )
+              )}
+            </Box>
+          </Stack>
+        </>
+      )}
+      <Stack 
+        flexGrow={!isDesktop ? 1 : 0} 
+        direction="row" 
+        alignItems="center" 
+        spacing={{ xs: 0.5, sm: 1.5 }}
+        justifyContent={!isDesktop ? 'flex-end' : 'flex-start'}
+      >
         <NotificationsPopover />
         <AccountPopover />
       </Stack>
     </>
   );
-
   return (
     <AppBar
       sx={{
@@ -73,12 +137,12 @@ export default function Header({ onOpenNav }) {
           ...(isOffset && {
             height: HEADER.H_DASHBOARD_DESKTOP_OFFSET,
           }),
-          ...(isNavHorizontal && {
-            width: 1,
-            bgcolor: 'background.default',
-            height: HEADER.H_DASHBOARD_DESKTOP_OFFSET,
-            borderBottom: `solid 1px ${theme.palette.divider}`,
-          }),
+          // ...(isNavHorizontal && {
+          //   width: 1,
+          //   bgcolor: 'background.default',
+          //   height: HEADER.H_DASHBOARD_DESKTOP_OFFSET,
+          //   borderBottom: `solid 1px ${theme.palette.divider}`,
+          // }),
           ...(isNavMini && {
             width: `calc(100% - ${NAV.W_DASHBOARD_MINI + 1}px)`,
           }),

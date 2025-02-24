@@ -15,6 +15,8 @@ export function exportCSV(fileName, customerId) {
           api = 'crm/customers/undefined/contacts/export';
         }else if( fileName?.toLowerCase() === 'machines' ){
           api = 'products/machines/export';
+        }else if( fileName?.toLowerCase() === 'machinesettingsreport' ){
+          api = 'products/techparamReport/exportCSV';
         }else if( fileName?.toLowerCase() === 'customercontacts' ){
           api = `crm/customers/${customerId}/contacts/export`;
         }else if( fileName?.toLowerCase() === 'customers' ){
@@ -48,10 +50,13 @@ export function exportCSV(fileName, customerId) {
     const header = Object.keys(json[0]).join(',');
     const rows = json.map((row) => {
       const values = Object.values(row).map(value => {
-        if (value && value.toString().includes(',')) {
-          return `"${value}"`;
+        if (value == null) return '';
+        const stringValue = value.toString();
+        const escaped = stringValue.replace(/"/g, '""');
+        if (escaped.includes(',') || escaped.includes('\n') || escaped.includes('"')) {
+          return `"${escaped}"`;
         }
-        return value;
+        return escaped;
       });
       return values.join(',');
     });

@@ -70,14 +70,14 @@ export default function ModelAddForm() {
       await dispatch(addMachineModel(data));
       reset();
       enqueueSnackbar('Model created successfully!');
-      navigate(PATH_MACHINE.machines.machineSettings.models.root);
+      navigate(PATH_MACHINE.machineSettings.models.root);
     } catch (error) {
         enqueueSnackbar(error, { variant: `error` });
       console.log('Error:', error);
     }
   };
 
-  const toggleCancel = () => navigate(PATH_MACHINE.machines.machineSettings.models.root);
+  const toggleCancel = () => navigate(PATH_MACHINE.machineSettings.models.root);
 
   return (
     <Container maxWidth={false}>

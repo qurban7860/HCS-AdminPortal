@@ -4,14 +4,8 @@
     "browser": true,
     "es2021": true
   },
-  "plugins": [
-    "prettier"
-  ],
-  "extends": [
-    "airbnb",
-    "airbnb/hooks",
-    "prettier"
-  ],
+  "plugins": ["prettier"],
+  "extends": ["airbnb", "airbnb/hooks", "prettier"],
   "parser": "@babel/eslint-parser",
   "parserOptions": {
     "ecmaVersion": "latest",
@@ -22,9 +16,7 @@
       "impliedStrict": true
     },
     "babelOptions": {
-      "presets": [
-        "@babel/preset-react"
-      ]
+      "presets": ["@babel/preset-react"]
     }
   },
   "rules": {
@@ -49,6 +41,8 @@
     "import/prefer-default-export": 0,
     "react/function-component-definition": 0,
     "jsx-a11y/control-has-associated-label": 0,
+    "import/no-named-as-default": 0,
+    "import/no-named-as-default-member": 0,
     "react/jsx-no-useless-fragment": [
       1,
       {

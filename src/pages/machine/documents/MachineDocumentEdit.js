@@ -9,11 +9,9 @@ import MachineTabContainer from '../util/MachineTabContainer';
 
 export default function MachineDocumentEdit() {
     return (
-        <>
-            <Container maxWidth={false }>
+        <Container maxWidth={false }>
             <MachineTabContainer currentTabValue='documents' />
                 <DocumentEditForm machinePage />
             </Container>
-        </>
     );
 }

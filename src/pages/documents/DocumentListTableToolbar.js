@@ -3,14 +3,8 @@ import PropTypes from 'prop-types';
 import { Stack } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { useDispatch } from '../../redux/store';
 // components
-import { PATH_DOCUMENT, PATH_CRM, PATH_MACHINE, PATH_MACHINE_DRAWING } from '../../routes/paths';
-import { 
-  setDocumentFormVisibility, 
-  setDocumentHistoryNewVersionFormVisibility, 
-  setDocumentNewVersionFormVisibility 
-} from '../../redux/slices/document/document';
+import { PATH_CRM, PATH_MACHINE, PATH_MACHINE_DRAWING } from '../../routes/paths';
 import SearchBarCombo from '../../components/ListTableTools/SearchBarCombo';
 import { BUTTONS } from '../../constants/default-constants';
 
@@ -26,6 +20,7 @@ DocumentListTableToolbar.propTypes = {
   statusOptions: PropTypes.array,
   customerPage: PropTypes.bool,
   machinePage: PropTypes.bool,
+  machineDrawingPage: PropTypes.bool,
   machineDrawings: PropTypes.bool,
   categoryVal: PropTypes.object,
   setCategoryVal: PropTypes.func,
@@ -44,6 +39,7 @@ export default function DocumentListTableToolbar({
   onFilterStatus,
   customerPage,
   machinePage,
+  machineDrawingPage,
   machineDrawings,
   categoryVal,
   setCategoryVal,
@@ -52,7 +48,6 @@ export default function DocumentListTableToolbar({
   handleGalleryView
 }) {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const { customerId, machineId } = useParams();
   const { customer } = useSelector((state) => state.customer);
   const { machine } = useSelector((state) => state.machine);
@@ -78,27 +73,27 @@ export default function DocumentListTableToolbar({
     addButton = undefined;
   }
 
-  
   return (
     <Stack
       spacing={2}
       alignItems="center"
       direction={{ xs: 'column', md: 'row' }}
-      sx={{ px: 2.5, py: 3 }}
+      sx={{ px: 2.5, py: 1 }}
     >
       <SearchBarCombo
         isFiltered={isFiltered}
         value={filterName}
-        onChange={onFilterName}
+        onChange={(customerPage || machinePage) ? onFilterName : null}
         onClick={onResetFilter}
-        SubOnClick={toggleAdd}
-        SubOnClick2={ machineDrawings && toggleAddList || undefined }
-        addButton={ ( !machineDrawings && ( customer?.isArchived || machine?.isArchived ) ) ? undefined :addButton}
+        SubOnClick={!machineDrawings && toggleAdd || undefined }
+        // SubOnClick2={ machineDrawings && toggleAddList || undefined }
+        addButton={ ( !machineDrawings && ( customer?.isArchived || machine?.isArchived ) ) ? undefined : addButton }
         transferredMachine={machinePage && machine?.status?.slug === 'transferred'}
         categoryVal={categoryVal}
-        setCategoryVal={(machineDrawings || machinePage) ? setCategoryVal : null }
+        setCategoryVal={(machinePage || machineDrawingPage) ? setCategoryVal : null }
         typeVal={typeVal}
-        setTypeVal={(machineDrawings || machinePage) ? setTypeVal : null }
+        setTypeVal={(machinePage || machineDrawingPage) ? setTypeVal : null }
+        machineDrawings={machineDrawings}
         handleGalleryView={ ( customer?.isArchived || machine?.isArchived ) ? undefined : handleGalleryView}
       />
     </Stack>

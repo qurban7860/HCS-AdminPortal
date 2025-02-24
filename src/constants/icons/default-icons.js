@@ -24,6 +24,24 @@ export const ICONS = {
     color: '#FF0000',
     heading: 'Inactive',
   },
+  // shareWith
+  SHARED: {
+    icon: 'fa6-solid:users',
+    color: '#008000',
+    heading: 'Organization Share On',
+  },
+  NONSHARED: {
+    icon: 'fa6-solid:users-slash',
+    color: '#FF0000',
+    heading: 'Organization Share Off',
+  },
+
+  // Status
+  STATUS: {
+    icon: 'mdi:list-status',
+    color: '#008000',
+    heading: 'Status',
+  },
 
   //  Releases
   RELEASE: {
@@ -80,6 +98,16 @@ export const ICONS = {
     heading: 'Not Manufacture',
   },
   //
+  RESOLVED: {
+    icon: 'oui:security-signal-resolved',
+    color: '#008000',
+    heading: 'Resolved',
+  },
+  UNRESOLVED: {
+    icon: 'oui:security-signal-resolved',
+    color: '#FF0000',
+    heading: 'UnResolved',
+  },
   DEFAULT: {
     icon: 'carbon:settings-check',
     color: '#008000',
@@ -116,6 +144,28 @@ export const ICONS = {
     icon: 'mdi:alert-decagram',
     color: '#FF0000',
     heading: 'Not Approved',
+  },
+
+  // Service Report Approval
+  SR_APPROVED: {
+    icon: 'mdi:clipboard-check-outline',
+    color: '#008000',
+    heading: 'Approved',
+  },
+  SR_REJECTED: {
+    icon: 'mdi:clipboard-alert-outline',
+    color: '#FF0000',
+    heading: 'Rejected',
+  },
+  SR_PENDING: {
+    icon: 'mdi:clipboard-clock-outline',
+    color: '#FF7900',
+    heading: 'Pending',
+  },
+  SR_HISTORY: {
+    icon: 'mdi:clipboard-text-multiple-outline',
+    color: '#1976D2',
+    heading: 'Approval History',
   },
 
   REQUIRED: {
@@ -250,6 +300,13 @@ export const ICONS = {
     heading: 'Machine Setting History',
   },
 
+  MACHINESETTINGEDIT: {
+    icon: 'mdi:pencil-outline',
+    color: '#1976D2',
+    heading: 'Edit',
+  },
+  
+
   // Machine Support 
   SUPPORT_VALLID: {
     icon: 'bx:support',
@@ -315,6 +372,12 @@ export const ICONS = {
     heading: 'Open Map',
   },
   // ------------------------------------------------------------
+  // Machine Integration
+  APILOGS: {
+    icon: 'tabler:logs',
+    color: '#2065D1',
+    heading: 'Sync Connection History',
+  },
 
   // @root - Machine - settings
   // common settings
@@ -352,6 +415,11 @@ export const ICONS = {
     icon: 'mdi:tools',
     heading: 'Tools',
   },
+  // service report status
+  SERVICE_REPORT_STATUS: {
+    icon: 'carbon:report-data',
+    heading: 'Service Report Status',
+  },
   // configuration information
   Configuration: {
     icon: 'mdi:settings-outline',
@@ -378,9 +446,9 @@ export const ICONS = {
     icon: 'carbon:parameter',
     heading: 'Check Items',
   },
-  MACHINE_SERVICE_RECORD_CONFIG: {
+  MACHINE_SERVICE_REPORT_CONFIG: {
     icon: 'mdi:tools',
-    heading: 'Service Doc Configurations',
+    heading: 'Service Report Templates',
   },
 
   // @root - Settings - settings
@@ -462,10 +530,59 @@ export const ICONS = {
     icon: 'iconoir:database-backup',
     heading: 'DB Backup Logs',
   },
+  API_LOGS: {
+    icon: 'tabler:api-app',
+    heading: 'API Logs',
+  },
+  
+  // @root - ticketsettings
+  // ------------ Ticket Collection --------------
+  ISSUE_TYPES: {
+    icon: 'material-symbols-light:problem-rounded',
+    heading: 'Issue Types',
+  },
+  REQUEST_TYPES: {
+    icon: 'grommet-icons:status-warning',
+    heading: 'Request Types',
+  },
+  IMPACTS: {
+    icon: 'game-icons:bullet-impacts',
+    heading: 'Impacts',
+  },
+  PRIORITIES: {
+    icon: 'pajamas:issue-type-incident',
+    heading: 'Priorities',
+  },
+  STATUSES: {
+    icon: 'carbon:mobile-request',
+    heading: 'Statuses',
+  },
+  STATUS_TYPES: {
+    icon: 'grommet-icons:status-warning',
+    heading: 'Status Types',
+  },
+  CHANGE_TYPES: {
+    icon: 'material-symbols-light:change-circle-outline-rounded',
+    heading: 'Change Types',
+  },
+  CHANGE_REASONS: {
+    icon: 'mdi:file-exchange-outline',
+    heading: 'Change Reasons',
+  },
+  INVESTIGATION_REASONS: {
+    icon: 'hugeicons:investigation',
+    heading: 'Investigation Reasons',
+  },
 
   MOVE_MACHINE: {
     icon: 'ri:swap-box-line',
     heading: 'Move',
+  },
+  
+  SEE_MORE: {
+    icon: 'lsicon:more-outline',
+    color: '#909090',
+    heading: 'See More',
   },
 
   USER_LOCK: {
@@ -496,8 +613,10 @@ export const ICONS = {
   DRAWINGS:{ icon:'streamline:hand-held-tablet-drawing-solid' },
   LICENSES:{ icon:'mdi:book-cog-outline' },
   PROFILES:{ icon:'fluent:document-flowchart-24-filled' },
-  SERVICE_RECORDS:{ icon:'mdi:clipboard-text-clock' },
+  SERVICE_REPORTS:{ icon:'mdi:clipboard-text-clock' },
   INI:{ icon:'ph:file-ini-fill' },
   LOGS:{ icon:'lucide:list-end' },
+  GRAPHS:{ icon:'mdi:graph-bar' },
+  INTEGRATION:{ icon:'carbon:ibm-cloud-direct-link-2-connect' },
   JIRA:{ icon:'simple-icons:jirasoftware' },
 };

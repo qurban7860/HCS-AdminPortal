@@ -143,7 +143,7 @@ export function getCustomerJiras(ref) {
         startAt:0
       }
       
-      const response = await axios.get(`${CONFIG.SERVER_URL}/jira/tickets`, { params } );
+      const response = await axios.get(`${CONFIG.SERVER_URL}jira/tickets`, { params } );
       dispatch(slice.actions.getCustomerJiraRecordsSuccess(response.data));
     } catch (error) {
       console.log(error);

@@ -96,40 +96,53 @@ export default function CustomerEditForm() {
       enqueueSnackbar('Customer updated successfully!');
       navigate(PATH_CRM.customers.view(customerId));
     } catch (err) {
-      enqueueSnackbar(err, { variant: `error` });
+      enqueueSnackbar(typeof err === "string" ? err : "Customer Update failed!", { variant: `error` });
     }
   };
 
   // console.log('allActiveCustomers::',allActiveCustomers)
 
   return (
-      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-        <Grid container >
-          <Grid item xs={18} md={12}>
+    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+      <Grid container>
+        <Grid item xs={12} md={12}>
           <Stack spacing={2}>
             <Card sx={{ p: 3 }}>
               <Stack spacing={2}>
                 <FormLabel content={FORMLABELS.CUSTOMER.EDITCUSTOMER} />
-                <Box rowGap={2} columnGap={2} display="grid"
+                <Box
+                  rowGap={2}
+                  columnGap={2}
+                  display="grid"
                   gridTemplateColumns={{
-                    xs: 'repeat(1, 1fr)', sm: 'repeat(1, 5fr 1fr)', 
+                    xs: 'repeat(1, 1fr)',
+                    sm: 'repeat(1, 5fr 1fr)',
                   }}
                 >
                   <RHFTextField name="name" label={FORMLABELS.CUSTOMER.NAME.label} />
                   <RHFTextField name="code" label={FORMLABELS.CUSTOMER.CODE.label} />
                 </Box>
-                  <RHFChipsInput name={FORMLABELS.CUSTOMER.TRADING_NAME.name} label={FORMLABELS.CUSTOMER.TRADING_NAME.label} />
+                <RHFChipsInput
+                  name={FORMLABELS.CUSTOMER.TRADING_NAME.name}
+                  label={FORMLABELS.CUSTOMER.TRADING_NAME.label}
+                />
                 <Box
-                  rowGap={2} columnGap={2} display="grid"
+                  rowGap={2}
+                  columnGap={2}
+                  display="grid"
                   gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
                 >
                   <RHFAutocomplete
                     name="groupCustomer"
-                    label='Group Customer'
+                    label="Group Customer"
                     options={activeCustomers || []}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option?.name || ''}`}
-                    renderOption={(props, option) => ( <li {...props} key={option?._id}>{option?.name || ''} </li>)}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option?._id}>
+                        {option?.name || ''}{' '}
+                      </li>
+                    )}
                   />
                   <RHFAutocomplete
                     name="mainSite"
@@ -137,99 +150,158 @@ export default function CustomerEditForm() {
                     options={activeSites || []}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option?.name || ''}`}
-                    renderOption={(props, option) => ( <li {...props} key={option?._id}>{option?.name || ''} </li>)}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option?._id}>
+                        {option?.name || ''}{' '}
+                      </li>
+                    )}
                   />
                 </Box>
 
-                  {/* primary billing contact */}
-                  <Box rowGap={2} columnGap={2} display="grid"
-                    gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)', }}
-                  >
-                    <RHFAutocomplete
-                      name="primaryBillingContact"
-                      label={FORMLABELS.CUSTOMER.BILLING_CONTACT}
-                      options={activeContacts || []}
-                      isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                      getOptionLabel={(option) =>`${option?.firstName || ''} ${option?.lastName || ''}`}
-                      renderOption={(props, option) => (<li {...props} key={option?._id}>{option?.firstName || ''}{' '}{option?.lastName ||''}</li>)}
-                    />
+                {/* primary billing contact */}
+                <Box
+                  rowGap={2}
+                  columnGap={2}
+                  display="grid"
+                  gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
+                >
+                  <RHFAutocomplete
+                    name="primaryBillingContact"
+                    label={FORMLABELS.CUSTOMER.BILLING_CONTACT}
+                    options={activeContacts || []}
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                    getOptionLabel={(option) =>
+                      `${option?.firstName || ''} ${option?.lastName || ''}`
+                    }
+                    renderOption={(props, option) => (
+                      <li {...props} key={option?._id}>
+                        {option?.firstName || ''} {option?.lastName || ''}
+                      </li>
+                    )}
+                  />
 
-                    {/* primary technical contact */}
-                    <RHFAutocomplete
-                      name="primaryTechnicalContact"
-                      label={FORMLABELS.CUSTOMER.TECHNICAL_CONTACT}
-                      options={activeContacts || []}
-                      isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                      getOptionLabel={(option) =>`${option.firstName || ''} ${option.lastName || ''}`}
-                      renderOption={(props, option) => (<li {...props} key={option?._id}>{option?.firstName || ''}{' '}{option?.lastName || ''}</li>)}
-                    />
-                  </Box>
-                  
-                  <RHFTextField name="ref" label="Reference ID"  />
+                  {/* primary technical contact */}
+                  <RHFAutocomplete
+                    name="primaryTechnicalContact"
+                    label={FORMLABELS.CUSTOMER.TECHNICAL_CONTACT}
+                    options={activeContacts || []}
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                    getOptionLabel={(option) =>
+                      `${option.firstName || ''} ${option.lastName || ''}`
+                    }
+                    renderOption={(props, option) => (
+                      <li {...props} key={option?._id}>
+                        {option?.firstName || ''} {option?.lastName || ''}
+                      </li>
+                    )}
+                  />
+                </Box>
 
+                <RHFTextField name="ref" label="Reference ID" />
               </Stack>
-                </Card>
-                <Card sx={{ p: 3 }}>
-                <Stack spacing={2}>
+            </Card>
+            <Card sx={{ p: 3 }}>
+              <Stack spacing={2}>
                 <FormLabel content={FORMLABELS.CUSTOMER.HOWICKRESOURCESS} />
                 {/* account manager */}
                 <Box rowGap={2} columnGap={2} display="grid"
                   gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)'}}
                 >
-                  <RHFAutocomplete
-                    multiple
-                    disableCloseOnSelect
-                    filterSelectedOptions
-                    name="accountManager"
-                    label="Account Manager"
-                    options={activeSpContacts || []}
-                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                    getOptionLabel={(option) => `${option?.firstName || ''} ${ option?.lastName || ''}`}
-                    renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
-                    ChipProps={{ size: 'small' }}
-                  />
+                <RHFAutocomplete
+                  multiple
+                  disableCloseOnSelect
+                  filterSelectedOptions
+                  name="accountManager"
+                  label="Account Manager"
+                  options={activeSpContacts || []}
+                  isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                  getOptionLabel={(option) =>
+                    `${option?.firstName || ''} ${option?.lastName || ''}`
+                  }
+                  renderOption={(props, option) => (
+                    <li {...props} key={option?._id}>{`${option?.firstName || ''} ${
+                      option?.lastName || ''
+                    }`}</li>
+                  )}
+                  ChipProps={{ size: 'small' }}
+                />
 
-                  <RHFAutocomplete
-                    multiple
-                    disableCloseOnSelect
-                    filterSelectedOptions
-                    name="projectManager"
-                    label="Project Manager"
-                    options={activeSpContacts || []}
-                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                    getOptionLabel={(option) => `${option?.firstName || ''} ${ option?.lastName || ''}`}
-                    renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
-                    ChipProps={{ size: 'small' }}
-                  />
+                <RHFAutocomplete
+                  multiple
+                  disableCloseOnSelect
+                  filterSelectedOptions
+                  name="projectManager"
+                  label="Project Manager"
+                  options={activeSpContacts || []}
+                  isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                  getOptionLabel={(option) =>
+                    `${option?.firstName || ''} ${option?.lastName || ''}`
+                  }
+                  renderOption={(props, option) => (
+                    <li {...props} key={option?._id}>{`${option?.firstName || ''} ${
+                      option?.lastName || ''
+                    }`}</li>
+                  )}
+                  ChipProps={{ size: 'small' }}
+                />
 
-                  <RHFAutocomplete
-                    multiple
-                    disableCloseOnSelect
-                    filterSelectedOptions
-                    name="supportManager"
-                    label="Support Manager" 
-                    options={activeSpContacts || []}
-                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                    getOptionLabel={(option) => `${option?.firstName || ''} ${ option?.lastName || ''}`}
-                    renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
-                    ChipProps={{ size: 'small' }}
-                  />
+                <RHFAutocomplete
+                  multiple
+                  disableCloseOnSelect
+                  filterSelectedOptions
+                  name="supportManager"
+                  label="Support Manager"
+                  options={activeSpContacts || []}
+                  isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                  getOptionLabel={(option) =>
+                    `${option?.firstName || ''} ${option?.lastName || ''}`
+                  }
+                  renderOption={(props, option) => (
+                    <li {...props} key={option?._id}>{`${option?.firstName || ''} ${
+                      option?.lastName || ''
+                    }`}</li>
+                  )}
+                  ChipProps={{ size: 'small' }}
+                />
 
-                  <RHFSwitch name="updateProductManagers" label="Update Account, Project, and Support Manager in machine data" checked={defaultValues?.isActive} />
+                <Box sx={{ display: 'flex', flexDirection: 'column',  alignItems: 'flex-start',  '& .MuiFormControlLabel-root': { width: '100%',  }, }} >
+                  <RHFSwitch
+                    name="updateProductManagers"
+                    label={
+                      <Box component="span" sx={{ display: 'inline',  whiteSpace: 'normal',  overflowWrap: 'break-word',  wordWrap: 'break-word', }} >
+                        Update Account, Project, and Support Manager in machine data
+                      </Box>
+                    }
+                    checked={defaultValues?.isActive}
+                  />
                 </Box>
-                <Grid sx={{display:{md:'flex'}}}>
-                    <RHFSwitch name="isActive" label="Active" checked={defaultValues?.isActive} />
-                    <RHFSwitch name="supportSubscription" label='Support Subscription' checked={defaultValues?.supportSubscription} />
-                    <RHFSwitch name="isFinancialCompany" label="Financing Company" defaultChecked={defaultValues?.isFinancialCompany} />
-                    <RHFSwitch name="excludeReports" label="Exclude Reporting" defaultChecked={defaultValues?.excludeReports} />
+                </Box>
+                
+                <Grid sx={{ display: { md: 'flex' } }}>
+                  <RHFSwitch name="isActive" label="Active" checked={defaultValues?.isActive} />
+                  <RHFSwitch
+                    name="supportSubscription"
+                    label="Support Subscription"
+                    checked={defaultValues?.supportSubscription}
+                  />
+                  <RHFSwitch
+                    name="isFinancialCompany"
+                    label="Financing Company"
+                    defaultChecked={defaultValues?.isFinancialCompany}
+                  />
+                  <RHFSwitch
+                    name="excludeReports"
+                    label="Exclude Reporting"
+                    defaultChecked={defaultValues?.excludeReports}
+                  />
                 </Grid>
 
                 <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Stack>
-              </Card>
-            </Stack>
-          </Grid>
+            </Card>
+          </Stack>
         </Grid>
-      </FormProvider>
+      </Grid>
+    </FormProvider>
   );
 }

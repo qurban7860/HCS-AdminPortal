@@ -48,6 +48,7 @@ import ScrollToTop from './components/scroll-to-top';
 import { MotionLazyContainer } from './components/animate';
 import { ThemeSettings, SettingsProvider } from './components/settings';
 import IdleManager from './components/idleManager';
+import DialogManager from './components/Dialog/DialogManager';
 
 // Check our docs
 // https://docs.minimals.cc/authentication/js-version
@@ -75,9 +76,10 @@ export default function App() {
                             <ScrollToTop />
                             <ThemeLocalization>
                               <SnackbarProvider>
+                                <Router />
                                 <StyledChart />
                                 <IdleManager />
-                                <Router />
+                                <DialogManager />
                               </SnackbarProvider>
                             </ThemeLocalization>
                           </ErrorBoundary>

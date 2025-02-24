@@ -66,27 +66,34 @@ RHFUpload.propTypes = {
   name: PropTypes.string,
   multiple: PropTypes.bool,
   rows: PropTypes.bool,
+  hideFiles: PropTypes.bool,
   helperText: PropTypes.node,
   machine:PropTypes.string,
-  onChangeDocType: PropTypes.func,
-  onChangeDocCategory: PropTypes.func,
-  onChangeVersionNo: PropTypes.func,
-  onChangeDisplayName: PropTypes.func,
-  onChangeReferenceNumber: PropTypes.func,
-  onChangeStockNumber: PropTypes.func,
+  isDocumentList: PropTypes.bool,
   drawingPage:PropTypes.bool,
   imagesOnly:PropTypes.bool,
-            
+  dropZone:PropTypes.bool,
+  onLoadImage: PropTypes.func,
+  onLoadPDF: PropTypes.func,
+  onDownload: PropTypes.func,
 };
 
-export function RHFUpload({ name, multiple, rows, helperText, machine,
-  onChangeDocType,
-  onChangeDocCategory,
-  onChangeVersionNo,
-  onChangeDisplayName,
-  onChangeReferenceNumber,
-  onChangeStockNumber,
-  drawingPage, imagesOnly, ...other }) {
+export function RHFUpload({ 
+  name, 
+  multiple, 
+  rows, 
+  hideFiles,
+  helperText, 
+  machine,
+  isDocumentList,
+  onLoadImage,
+  onLoadPDF,
+  onDownload,
+  drawingPage, 
+  dropZone=true, 
+  imagesOnly, 
+  ...other 
+}) {
 
   const { control } = useFormContext();
 
@@ -97,21 +104,21 @@ export function RHFUpload({ name, multiple, rows, helperText, machine,
       render={({ field, fieldState: { error } }) =>
         multiple ? (
           <Upload
+            dropZone={dropZone}
             multiple
             imagesOnly={imagesOnly}
-            onChangeDocType={onChangeDocType}
-            onChangeDocCategory={onChangeDocCategory}
-            onChangeVersionNo={onChangeVersionNo}
-            onChangeDisplayName={onChangeDisplayName}
-            onChangeReferenceNumber={onChangeReferenceNumber}
-            onChangeStockNumber={onChangeStockNumber}
+            isDocumentList={isDocumentList}
+            onLoadImage={ onLoadImage }
+            onLoadPDF={onLoadPDF}
+            onDownload={ onDownload }
             rows={rows}
+            hideFiles={hideFiles}
             drawingPage
             machine={machine}
             files={field.value}
             error={!!error}
             helperText={
-              (!!error || helperText) && (
+              (!!error || helperText) && !hideFiles && (
                 <FormHelperText error={!!error} sx={{ px: 2 }}>
                   {error ? error?.message : helperText}
                 </FormHelperText>
@@ -121,6 +128,7 @@ export function RHFUpload({ name, multiple, rows, helperText, machine,
           />
         ) : (
           <Upload
+            dropZone={dropZone}
             imagesOnly={imagesOnly}
             machine={machine}
             file={field.value}

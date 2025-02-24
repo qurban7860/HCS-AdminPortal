@@ -6,7 +6,7 @@ import { Grid, Card, Box, Dialog, DialogTitle, Button, DialogContent, Divider, T
 import download from 'downloadjs';
 import b64toBlob from 'b64-to-blob';
 import { StyledVersionChip } from '../../theme/styles/default-styles';
-import { PATH_CRM, PATH_DOCUMENT, PATH_MACHINE } from '../../routes/paths';
+import { PATH_CRM, PATH_MACHINE } from '../../routes/paths';
 import {
   deleteDocument,
   resetDocumentHistory,
@@ -32,9 +32,10 @@ DocumentViewForm.propTypes = {
   machinePage: PropTypes.bool,
   drawingPage: PropTypes.bool,
   DocId: PropTypes.string,
+  allowActions: PropTypes.bool,
 };
 
-function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
+function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId, allowActions }) {
   const { document, isLoading } = useSelector((state) => state.document);
   const { customer } = useSelector((state) => state.customer);
   const { machine } = useSelector((state) => state.machine);
@@ -236,7 +237,6 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
   };
 
   const [pdf, setPDF] = useState(null);
-  // const [pages, setPages] = useState(null);
   const [PDFName, setPDFName] = useState('');
   const [PDFViewerDialog, setPDFViewerDialog] = useState(false);
 
@@ -275,16 +275,16 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
     <>
     <Card sx={{ p: 2 }}>
       <ViewFormEditDeleteButtons isActive={defaultValues.isActive} 
-      customerAccess={defaultValues?.customerAccess} 
-      handleEdit={handleEdit}
-      onDelete={onDelete}
-      isLoading={isLoading}
-      disableDeleteButton={machinePage && machine?.status?.slug==="transferred"}
-      backLink={ handleBackLink} 
-      disableEditButton={machine?.status?.slug==='transferred'}
-      // drawingPage={ !customerPage || !machinePage }
-      archived={customer?.isArchived}
-      customerPage={customerPage} machinePage={machinePage} drawingPage={drawingPage}
+        customerAccess={defaultValues?.customerAccess} 
+        handleEdit={ !allowActions && handleEdit}
+        onDelete={ !allowActions && onDelete}
+        isLoading={isLoading}
+        disableDeleteButton={machinePage && machine?.status?.slug==="transferred"}
+        backLink={ handleBackLink} 
+        disableEditButton={machine?.status?.slug==='transferred'}
+        // drawingPage={ !customerPage || !machinePage }
+        archived={customer?.isArchived}
+        customerPage={customerPage} machinePage={machinePage} drawingPage={drawingPage}
       />
       <Grid container>
         <ViewFormField isLoading={isLoading} sm={6} heading="Name" param={defaultValues?.displayName} />
@@ -292,8 +292,8 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
           sm={6}
           heading="Version"
           handleAllVersion={linkDocumentView}
-          handleNewVersion={handleNewVersion}
-          param={
+          handleNewVersion={ !allowActions && handleNewVersion}
+          node={
             <StyledVersionChip
               label={defaultValues.versionPrefix + defaultValues.documentVersion}
               size="small"
@@ -324,7 +324,7 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
         <FormLabel content='Documents' />
         <Box
           sx={{mt:2, width:'100%'}}
-          gap={2}
+          gap={1}
           display="grid"
           gridTemplateColumns={{
             xs: 'repeat(1, 1fr)',
@@ -336,12 +336,13 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
         >
 
           {slides?.map((file, _index) => (
-            <DocumentGalleryItem isLoading={isLoading} key={file?.id} image={file} 
+            <DocumentGalleryItem isLoading={isLoading} key={file?._id} image={file} 
               onOpenLightbox={()=> handleOpenLightbox(_index)}
               onDownloadFile={()=> handleDownloadFile(document._id, document?.documentVersions[0]._id, file._id, file?.name, file?.extension)}
               onDeleteFile={()=> handleDeleteFile(document._id, document?.documentVersions[0]._id, file._id)}
               toolbar
-              customerArchived={customer?.isArchived}
+              isArchived={customer?.isArchived || machine?.isArchived }
+              size={150}
             />
           ))}
 
@@ -366,7 +367,7 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
                   onDeleteFile={()=> customerPage && !customer?.isArchived && handleDeleteFile(document._id, document?.documentVersions[0]._id, file._id)}
                   onOpenFile={()=> handleOpenFile(document._id, document?.documentVersions[0]._id, file._id, file?.name, file?.extension)}
                   toolbar
-                  customerArchived={customer?.isArchived}
+                  isArchived={customer?.isArchived || machine?.isArchived }
                   />
                 }
                 return null;

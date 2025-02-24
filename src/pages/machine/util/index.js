@@ -1,5 +1,4 @@
 import { ICONS } from '../../../constants/icons/default-icons';
-import Iconify from '../../../components/iconify';
 
   export function checkValuesNotNull(obj) {
       return Object.values(obj).some(value => value !== null);
@@ -34,7 +33,7 @@ import Iconify from '../../../components/iconify';
 
   ]
 
-  export  const    recordTypes = [
+  export  const    reportTypes = [
     { _id:1 , name: 'SERVICE'},
     { _id:2 , name: 'REPAIR'},
     { _id:3 , name: 'TRAINING'},
@@ -110,9 +109,9 @@ const TABS = [
     icon: ICONS.PROFILES.icon,
   },
   {
-    value: 'serviceRecords',
-    label: 'Service Records',
-    icon: ICONS.SERVICE_RECORDS.icon,
+    value: 'serviceReports',
+    label: 'Service Reports',
+    icon: ICONS.SERVICE_REPORTS.icon,
   },
   {
     value: 'ini',
@@ -123,6 +122,16 @@ const TABS = [
     value: 'logs',
     label: 'Logs',
     icon: ICONS.LOGS.icon,
+  },  
+  {
+    value: 'graphs',
+    label: 'Graphs',
+    icon: ICONS.GRAPHS.icon,
+  },  
+  {
+    value: 'integration',
+    label: 'Machine Integration',
+    icon: ICONS.INTEGRATION.icon,
   },  
   {
     value: 'jira',

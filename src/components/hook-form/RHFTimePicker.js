@@ -1,9 +1,7 @@
 import PropTypes from 'prop-types';
 import { useFormContext, Controller } from 'react-hook-form';
 import { TimePicker } from '@mui/x-date-pickers';
-import {
-  TextField,
-} from '@mui/material';
+import { TextField } from '@mui/material';
 
 RHFTimePicker.propTypes = {
   name: PropTypes.string,
@@ -21,23 +19,23 @@ export default function RHFTimePicker({ name, label, size, helperText, Error, ..
     <Controller
       name={name}
       control={control}
-      control={control}
       render={({ field, fieldState: { error } }) => (
         <TimePicker
           {...field}
-          name={name}
-          label={label}
-          onChange={newValue => field.onChange(newValue)}
-          renderInput={params => (
+          onChange={(newValue) => field.onChange(newValue)}
+          renderInput={(params) => (
             <TextField
               {...params}
               size={size}
+              readOnly
+              inputProps={{
+                ...params.inputProps,
+              }}
               error={!!error || !!Error}
               helperText={error ? error?.message : helperText}
+              {...other}
             />
           )}
-          {...other}
-          // InputAdornmentProps={{ style: { display: 'none' } }}
         />
       )}
     />

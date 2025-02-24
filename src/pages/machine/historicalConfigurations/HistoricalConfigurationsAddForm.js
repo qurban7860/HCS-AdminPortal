@@ -159,9 +159,10 @@ const HandleChangeIniJson = async (e) => {
 const toggleCancel = () => navigate(PATH_MACHINE.machines.ini.root(machineId));
 
 return (
-  <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-        <Container maxWidth={false} >
+    <Container maxWidth={false} >
+      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
           <MachineTabContainer currentTabValue='ini' />
+        <Grid container >
           <Grid item xs={18} md={12} >
             <Card sx={{ p: 3 }}>
               <Stack spacing={2}>
@@ -184,7 +185,8 @@ return (
               </Stack>
             </Card>
           </Grid>
-        </Container>
+        </Grid>
       </FormProvider>
+    </Container>
   );
 }

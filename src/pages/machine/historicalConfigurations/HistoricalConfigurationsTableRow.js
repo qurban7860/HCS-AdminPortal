@@ -51,7 +51,7 @@ export default function HistoricalConfigurationsTableRow({
         <TableCell align="center">
           <Switch checked={isActive} disabled size="small" />{' '}
         </TableCell>
-        <TableCell align="left">{createdBy.name}</TableCell>
+        <TableCell align="left">{createdBy?.name || ''}</TableCell>
         <TableCell align="right">{fDateTime(createdAt)}</TableCell>
       </StyledTableRow>
   );

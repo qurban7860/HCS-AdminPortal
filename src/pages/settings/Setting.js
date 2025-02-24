@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 // @mui
 import { Box, Container, List } from '@mui/material';
 // routes
-import { PATH_SECURITY, PATH_SETTING } from '../../routes/paths';
+import { PATH_MACHINE, PATH_REPORTS, PATH_SETTING } from '../../routes/paths';
 // components
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
@@ -22,19 +22,19 @@ export default function Setting() {
 
   const navigate = useNavigate();
 
-  const linkDocumentType = () => navigate(PATH_SETTING.documentType.list);
-  const linkDocumentCategory = () => navigate(PATH_SETTING.documentCategory.list);
+  const linkDocumentType = () => navigate(PATH_MACHINE.documents.documentType.list);
+  const linkDocumentCategory = () => navigate(PATH_MACHINE.documents.documentCategory.list);
   const linkRole = () => navigate(PATH_SETTING.role.list);
-  const linkSignInLogs = () => navigate(PATH_SETTING.signInLogs.list);
+  const linkSignInLogs = () => navigate(PATH_REPORTS.signInLogs.list);
   const linkRegions = () => navigate(PATH_SETTING.regions.list);
   const linkConfigs = () => navigate(PATH_SETTING.configs.list);
-  const linkEmails = () => navigate(PATH_SETTING.email.list);
+  const linkEmails = () => navigate(PATH_REPORTS.email.list);
   const linkUserInvites = () => navigate(PATH_SETTING.invite.list);
   const releases = () => navigate(PATH_SETTING.releases.list);
-  const linkBlockedCustomer = () => navigate(PATH_SECURITY.config.blockedCustomer.list);
-  const linkBlockedUser = () => navigate(PATH_SECURITY.config.blockedUser.list);
-  const linkBlackListIP = () => navigate(PATH_SECURITY.config.blacklistIP.list);
-  const linkWhiteListIP = () => navigate(PATH_SECURITY.config.whitelistIP.list);
+  const linkBlockedCustomer = () => navigate(PATH_SETTING.config.blockedCustomer.list);
+  const linkBlockedUser = () => navigate(PATH_SETTING.restrictions.blockedUser.list);
+  const linkBlackListIP = () => navigate(PATH_SETTING.restrictions.blacklistIP.list);
+  const linkWhiteListIP = () => navigate(PATH_SETTING.restrictions.whitelistIP.list);
 
 return (
     <Container maxWidth={false}>
@@ -124,11 +124,11 @@ return (
                     icon={ICONS.SYSTEM_CONFIG.icon}
                     content={ICONS.SYSTEM_CONFIG.heading}
                   />}
-                  <ListItem
-                    onClick={()=> navigate(PATH_SETTING.departments.list)}
+                  {/* <ListItem
+                    onClick={()=> navigate(PATH_CRM.departments.list)}
                     icon={ICONS.DEPARTMENNTS.icon}
                     content={ICONS.DEPARTMENNTS.heading}
-                  />
+                  /> */}
                 </List>
                 { isEmailAccessAllowed && isSettingAccessAllowed && <List
                   component="nav"
@@ -191,14 +191,19 @@ return (
                   subheader={<ListItemsHeader header={FORMLABELS.SYSTEM_LOGS} />}
                 >
                   <ListItem
-                    onClick={()=> navigate(PATH_SETTING.pm2.logs.root)}
+                    onClick={()=> navigate(PATH_REPORTS.logs.pm2.root)}
                     icon={ICONS.PM2LOGS.icon}
                     content={ICONS.PM2LOGS.heading}
                   />
                   <ListItem
-                    onClick={()=> navigate(PATH_SETTING.dbBackup.logs.root)}
+                    onClick={()=> navigate(PATH_REPORTS.logs.dbBackup.root)}
                     icon={ICONS.DBBACKUPLOGS.icon}
                     content={ICONS.DBBACKUPLOGS.heading}
+                  />
+                   <ListItem
+                    onClick={()=> navigate(PATH_REPORTS.logs.api.root)}
+                    icon={ICONS.API_LOGS.icon}
+                    content={ICONS.API_LOGS.heading}
                   />
                 </List>}
             </StyledSettingsCardContainer>

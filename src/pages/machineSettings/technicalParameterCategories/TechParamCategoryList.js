@@ -36,7 +36,7 @@ import TableCard from '../../../components/ListTableTools/TableCard';
 const TABLE_HEAD = [
   { id: 'name', label: 'Technnical Parameter Category', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
-  { id: 'createdAt', label: 'Created At', align: 'right' },
+  { id: 'updatedAt', label: 'Updated At', align: 'right' },
 ];
 
 
@@ -134,7 +134,7 @@ export default function TechParamCategoryList() {
 
 
 
-  const handleViewRow = (id) => navigate(PATH_MACHINE.machines.machineSettings.technicalParameterCategories.view(id));
+  const handleViewRow = (id) => navigate(PATH_MACHINE.machineSettings.technicalParameterCategories.view(id));
 
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
@@ -229,7 +229,7 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
     inputData = inputData.filter(
       (produc) =>
         produc?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        // (produc?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+        // (produc?.isActive ? "Active" : "InActive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
         fDate(produc?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }

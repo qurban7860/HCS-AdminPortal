@@ -5,24 +5,17 @@ import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useSnackbar } from 'notistack';
-import { useEffect, useMemo, useState } from 'react';
-import { Grid, Dialog, DialogContent, DialogTitle, Divider, DialogActions, Button, TableContainer, TableBody, TableRow, TableCell, Table, IconButton } from '@mui/material';
-import { LoadingButton } from '@mui/lab';
+import { useEffect, useState } from 'react';
+import { Grid, Dialog, DialogContent, DialogTitle, Divider, DialogActions, Button, TableContainer, TableBody, TableRow, TableCell, Table } from '@mui/material';
 import { Box } from '@mui/system';
 import { setConnectedMachineAddDialog, setNewConnectedMachines } from '../../redux/slices/products/machine';
-import { PATH_CRM } from '../../routes/paths';
-import DialogLink from './DialogLink';
-import FormLabel from '../DocumentForms/FormLabel';
-import ViewFormField from '../ViewForms/ViewFormField';
-import ViewPhoneComponent from '../ViewForms/ViewPhoneComponent';
 import FormProvider from '../hook-form/FormProvider';
 import { RHFAutocomplete, RHFTextField } from '../hook-form';
-import TableCard from '../ListTableTools/TableCard';
-import { TableHeadCustom, TableNoData } from '../table';
-import IconTooltip from '../Icons/IconTooltip';
+import { TableHeadCustom } from '../table';
 import Iconify from '../iconify';
 import IconButtonTooltip from '../Icons/IconButtonTooltip';
 import uuidv4 from '../../utils/uuidv4';
+import { handleError } from '../../utils/errorHandler';
 
 function ConnectedMachineAddDialog({activeCategories, activeMachineModels}) {
 
@@ -117,9 +110,13 @@ function ConnectedMachineAddDialog({activeCategories, activeMachineModels}) {
   };
 
   const handleSave = async () => {
-    dispatch(setNewConnectedMachines(newMachines));
-    handleConnectedMachineAddDialog();
-    reset();
+    try{
+      dispatch(setNewConnectedMachines(newMachines));
+      handleConnectedMachineAddDialog();
+      reset();
+    } catch ( error ){
+      enqueueSnackbar( handleError( error ) || 'Connected Machine save failed!', { variant: `error` });
+    }
   }
 
   return (

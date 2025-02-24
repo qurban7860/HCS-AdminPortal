@@ -16,6 +16,7 @@ const initialState = {
   error: null,
   machineErpLog: {},
   machineErpLogs: [],
+  machineLogsGraphData: [],
   machineErpLogstotalCount: 0,
   dateFrom: new Date( Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
   dateTo: new Date(Date.now()).toISOString().split('T')[0],
@@ -49,7 +50,7 @@ const slice = createSlice({
       state.machineErpLogListViewForm = action.payload;
       state.machineErpLogViewForm = false;
       state.machineErpLogAddForm = false;
-      
+
     },
     // SET VIEW TOGGLE
     setAllVisibilityFalse(state, action){
@@ -64,6 +65,10 @@ const slice = createSlice({
     // SET ERP LOG TO DATE
     setDateTo(state, action){
       state.dateTo = action.payload;
+    },
+    // SET LOG TYPE
+    setSelectedLogType(state, action){
+      state.selectedLogType = action.payload;
     },
     // HAS ERROR
     hasError(state, action) {
@@ -93,6 +98,20 @@ const slice = createSlice({
       state.success = true;
       state.initial = true;
     },
+    // LOGS GRAPH DATA
+    setMachineLogsGraphData(state, action) {
+      state.machineLogsGraphData = action.payload;
+      state.isLoading = false;
+      state.success = true;
+      state.initial = true;
+    },
+    // RESET GRAPH DATA
+    resetMachineLogsGraphData(state){
+      state.machineLogsGraphData = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
     // RESET MACHINE TECH PARAM
     resetMachineErpLogRecord(state){
       state.machineErpLog = {};
@@ -107,6 +126,11 @@ const slice = createSlice({
       state.success = false;
       state.machineErpLogstotalCount = 0;
       // state.isLoading = false;
+    },
+    // RESET MACHINE LOG DATES
+    resetMachineErpLogDates(state){
+      state.dateFrom = new Date( Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+      state.dateTo = new Date(Date.now()).toISOString().split('T')[0];
     },
     // Set FilterBy
     setFilterBy(state, action) {
@@ -132,57 +156,93 @@ export const {
   setMachineErpLogViewFormVisibility,
   setMachineErpLogListViewFormVisibility,
   setDateFrom,
+  setSelectedLogType,
   setDateTo,
   setAllVisibilityFalse,
   resetMachineErpLogRecords,
   resetMachineErpLogRecord,
+  resetMachineLogsGraphData,
+  resetMachineErpLogDates,
   setResponseMessage,
+  setMachineLogsGraphData,
   setFilterBy,
   ChangeRowsPerPage,
-  ChangePage,
+  ChangePage
 } = slice.actions;
 
 // ------------------------- ADD RECORD ---------------------------------------------
 
-export function addMachineErpLogRecord( machine, customer, csvData, action) {
+export function addMachineLogRecord(machine, customer, logs, action, version, type = "ERP") {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      let response
-      let data = {}
-      if(Array.isArray(csvData)){
-        data.machine = machine
-        data.customer = customer
-        data.csvData = csvData
-        data.skipExistingRecords = action?.skipExistingRecords
-        data.updateExistingRecords = action?.updateExistingRecords
-        response = await axios.post(`${CONFIG.SERVER_URL}logs/erp/multi/`,data );
-      }else if(Object.keys(csvData).length !== 0){
-        data = csvData
-        data.skipExistingRecords = action?.skipExistingRecords
-        data.updateExistingRecords = action?.updateExistingRecords
-        data.machine = machine
-        data.customer = customer
-        response = await axios.post(`${CONFIG.SERVER_URL}logs/erp/`,data );
-      }
+      const data = {
+        type,
+        customer,
+        machine,
+        version,
+        skip: action?.skipExistingRecords,
+        update: action?.updateExistingRecords,
+        logs: [...logs],
+      };
+      const response = await axios.post(`${CONFIG.SERVER_URL}productLogs/`, data);
       dispatch(slice.actions.setResponseMessage(response?.data || ''));
+      return {
+        success: true,
+        message: 'Successfully added',
+      };
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
-      throw error;
+      return {
+        success: false,
+        message: error || "Something went wrong",
+      };
     }
   };
 }
 
-// --------------------------- GET RECORD -------------------------------------------
+// ------------------------- GET LOGS GRAPH DATA ---------------------------------------------
 
-export function getMachineErpLogRecord(machineId, id) {
+export function getMachineLogGraphData(customerId, machineId, type = "erp", periodType, logGraphType) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}logs/erp/${id}`,
+      const params = {
+        customer: customerId,
+        machine: machineId,
+        type,
+        periodType,
+        logGraphType
+      };
+      const response = await axios.get(`${CONFIG.SERVER_URL}productLogs/graph`, { params });
+      dispatch(slice.actions.setMachineLogsGraphData(response?.data || ''));
+      return {
+        success: true,
+        message: 'Graph Data Successfully fetched',
+      };
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.message || 'Something went wrong'));
+      return {
+        success: false,
+        message: error.message || 'Something went wrong',
+      };
+    }
+  };
+}
+
+
+// --------------------------- GET RECORD -------------------------------------------
+
+export function getMachineLogRecord(machineId, id, logType) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}productLogs/${id}`,
       {
         params: {
+          type: logType,
           machine: machineId,
         }
       });
@@ -195,33 +255,94 @@ export function getMachineErpLogRecord(machineId, id) {
   };
 }
 
-// -------------------------- GET RECORD'S ----------------------------------------------------------------------
+// --------------------------- UPDATE RECORD -------------------------------------------
 
-export function getMachineErpLogRecords(machineId, page, pageSize, fromDate, toDate, isCreatedAt ) {
-  return async (dispatch) =>{
+export function updateMachineLogRecord(id, logType, logData) {
+  return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-    try{
-      const params= {
-        isArchived: false,
-        machine: machineId,
-        fromDate,
-        toDate,
-      }
-      params.pagination = {
-        page,
-        pageSize  
-      }
-      if(isCreatedAt){
-        params.isCreatedAt = isCreatedAt
-      }
-      const response = await axios.get(`${CONFIG.SERVER_URL}logs/erp/`, { params } );
-      dispatch(slice.actions.getMachineErpLogRecordsSuccess(response.data));
+    try {
+      const data = {
+        type: logType,
+        ...logData
+      };
+      const response = await axios.patch(`${CONFIG.SERVER_URL}productLogs/${id}`, data);
+      dispatch(slice.actions.getMachineErpLogRecordSuccess(response.data));
+      return {
+        success: response.status === 202,
+        message: 'Successfully updated',
+      };
     } catch (error) {
-      console.log(error);
+      console.error(error);
       dispatch(slice.actions.hasError(error.Message));
       throw error;
     }
-  }
+  };
+}
+
+// --------------------------- DELETE RECORD -------------------------------------------
+
+export function deleteMachineLogRecord(id, logType) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.delete(`${CONFIG.SERVER_URL}productLogs/${id}`,
+      {
+        params: {
+          type: logType
+        }
+      });
+      dispatch(slice.actions.setResponseMessage(response.data));
+      return {
+        success: response.status === 200,
+        message: 'Deleted Successfully',
+      };
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+// -------------------------- GET RECORD'S ----------------------------------------------------------------------
+
+export function getMachineLogRecords({
+  customerId = undefined,
+  machineId,
+  page,
+  pageSize,
+  fromDate,
+  toDate,
+  isCreatedAt,
+  isMachineArchived,
+  selectedLogType,
+  isArchived,
+  searchKey,
+  searchColumn,
+}) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const params = {
+        customer: customerId,
+        type: selectedLogType,
+        machine: machineId,
+        fromDate,
+        toDate,
+        isArchived,
+        pagination: { page, pageSize },
+        ...(isMachineArchived && { archivedByMachine: true }),
+        ...(!!isCreatedAt && { isCreatedAt }),
+        ...(searchKey?.length > 0 && { searchKey, searchColumn })
+      };
+      const response = await axios.get(`${CONFIG.SERVER_URL}productLogs/`, { params });
+      dispatch(slice.actions.getMachineErpLogRecordsSuccess(response.data));
+    } catch (error) {
+      console.error('Error fetching machine log records:', error);
+      dispatch(slice.actions.hasError(error.message || 'An error occurred'));
+      throw error;
+    }
+  };
 }
 
 

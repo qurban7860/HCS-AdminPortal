@@ -103,7 +103,7 @@ export default function ReactHookForm({ debug }) {
   const values = watch();
 
   const onSubmit = async (data) => {
-    await new Promise((resolve) => setTimeout(resolve, 3000));
+    await new Promise((resolve) => setTimeout(resolve, 10000));
     reset();
   };
 
@@ -129,6 +129,8 @@ export default function ReactHookForm({ debug }) {
       const newFiles = acceptedFiles.map((file) =>
         Object.assign(file, {
           preview: URL.createObjectURL(file),
+          src: URL.createObjectURL(file),
+          isLoaded:true
         })
       );
 

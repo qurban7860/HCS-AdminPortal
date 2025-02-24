@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { fetchEventSource } from '@microsoft/fetch-event-source';
 // utils
 import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
@@ -15,6 +16,7 @@ const initialState = {
   responseMessage: null,
   success: false,
   isLoading: false,
+  isLoadingMachines: false,
   error: null,
   machine: {},
   machineForDialog: {},
@@ -57,6 +59,7 @@ const slice = createSlice({
     // START LOADING
     startLoading(state) {
       state.isLoading = true;
+      state.isLoadingMachines = true;
     },
 
     // STOP LOADING
@@ -106,6 +109,7 @@ const slice = createSlice({
     // HAS ERROR
     hasError(state, action) {
       state.isLoading = false;
+      state.isLoadingMachines = false;
       state.error = action.payload;
       state.initial = true;
     },
@@ -120,6 +124,7 @@ const slice = createSlice({
     // GET Active Machines
     getActiveMachinesSuccess(state, action) {
       state.isLoading = false;
+      state.isLoadingMachines = false;
       state.success = true;
       state.activeMachines = action.payload;
       state.initial = true;
@@ -143,6 +148,7 @@ const slice = createSlice({
     // GET Customer Machines
     getCustomerMachinesSuccess(state, action) {
       state.isLoading = false;
+      state.isLoadingMachines = false;
       state.success = true;
       state.customerMachines = action.payload;
       state.initial = true;
@@ -178,6 +184,47 @@ const slice = createSlice({
       state.success = true;
       state.machine = action.payload;
       state.initial = true;
+    },
+
+    // Update Machine Portal Key
+    updateMachinePortalKey(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.machine = {...state.machine, portalKey: action.payload.portalKey, machineIntegrationSyncStatus: action.payload.syncStatus};
+      state.initial = true;
+    },
+
+    // Update Machine Portal Details
+    updateMachinePortalDetails(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.machine = {...state.machine, computerGUID: action.payload.computerGUID, IPC_SerialNo: action.payload.IPC_SerialNo};
+      state.initial = true;
+    },
+
+    // Update Machine Portal Details
+    updateMachineIntegrationDetails(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.machine = {
+        ...state.machine, 
+        computerGUID: action.payload.computerGUID, 
+        IPC_SerialNo: action.payload.IPC_SerialNo,
+        portalKey: action.payload.portalKey,
+        machineIntegrationSyncStatus: action.payload.machineIntegrationSyncStatus
+      };
+      state.initial = true;
+    },
+
+    // Update Machine Integration Status over SSE
+    updateMachineIntegrationStatusFromSSE(state, action) {
+      state.machine = {
+        ...state.machine, 
+        computerGUID: action.payload.computerGUID,
+        IPC_SerialNo: action.payload.IPC_SerialNo,
+        portalKey: action.payload.portalKey,
+        machineIntegrationSyncStatus: action.payload.machineIntegrationSyncStatus
+      };
     },
 
     // GET Machine For Dialog
@@ -631,7 +678,7 @@ export function deleteMachine(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${id}`,
+      const response = await axios.delete(`${CONFIG.SERVER_URL}products/machines/${id}`,
       {
         isArchived: true, 
       });
@@ -715,24 +762,24 @@ export function updateMachine(machineId, params) {
         workOrderRef: params?.workOrderRef,
         instalationSite: params?.installationSite?._id || null,
         billingSite: params?.billingSite?._id || null,
-        installationDate: params?.installationDate,
-        shippingDate: params?.shippingDate,
+        installationDate: params?.installationDate || null,
+        shippingDate: params?.shippingDate || null,
         siteMilestone: params?.siteMilestone,
-        accountManager: params?.accountManager,
-        projectManager: params?.projectManager,
-        supportManager: params?.supportManager,
+        accountManager: params?.accountManager?.map( el => el?._id ) || [],
+        projectManager: params?.projectManager?.map( el => el?._id ) || [],
+        supportManager: params?.supportManager?.map( el => el?._id ) || [],
         description: params?.description,
         customerTags: params?.customerTags,
-        machineConnections: params?.machineConnectionVal.map(obj => obj._id),
-        isActive: params?.isActive,
-        supportExpireDate : params?.supportExpireDate,
-        decommissionedDate : params?.decommissionedDate,
+        machineConnections: params?.machineConnectionVal?.map(obj => obj?._id),
+        isUpdateConnectedMachines: params?.isUpdateConnectedMachines,
+        supportExpireDate : params?.supportExpireDate || null,
+        decommissionedDate : params?.decommissionedDate || null,
         financialCompany: params?.financialCompany?._id, 
+        isActive: params?.isActive,
+        isArchived: params?.isArchived,
       };
-     /* eslint-enable */
       await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}`, data );
       dispatch(slice.actions.setMachineEditFormVisibility(false));
-      // this.updateCustomerSuccess(response);
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -776,17 +823,14 @@ export function transferMachine( machineId, params ) {
         machineDocuments: params?.machineDocuments?.length > 0 && params?.machineDocuments || [],
       };
         
-     /* eslint-enable */
       const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/transferMachine`,
         data
       );
       return response; 
-
     } catch (error) {
       dispatch(slice.actions.stopLoading());
       console.error(error);
       throw error;
-      // dispatch(slice.actions.hasError(error.Message));
     }
   };
 
@@ -802,18 +846,16 @@ export function moveMachine(params) {
         billingSite: params?.billingSite?._id,
         installationSite: params?.installationSite?._id,
       };
-     /* eslint-enable */
       const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/moveMachine`,
         data
       );
       dispatch(slice.actions.setMachineMoveFormVisibility(false));
-      return response; // eslint-disable-line
+      return response; 
 
     } catch (error) {
       dispatch(slice.actions.stopLoading());
       console.error(error);
       throw error;
-      // dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
@@ -823,11 +865,90 @@ export function changeMachineStatus(machineId, params) {
     dispatch(slice.actions.startLoading());
     try {
       const data = {dated: params?.date, updateConnectedMachines:params?.updateConnectedMachines};
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/updateStatus/${params?.status?._id}`,data);
+      await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/updateStatus/${params?.status?._id}`,data);
     } catch (error) {
       dispatch(slice.actions.stopLoading());
       console.error(error);
       throw error;
     }
+  };
+}
+
+export function getMachineIntegrationDetails(machineId) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/integration/`);
+      dispatch(slice.actions.updateMachineIntegrationDetails(response.data));
+      
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+export function addPortalIntegrationKey(machineId, params) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const data = {
+        portalKey: params?.portalKey,
+      };
+
+      const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/integration/portalkey`, data);
+      dispatch(slice.actions.updateMachinePortalKey(response.data));
+      
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+export function addPortalIntegrationDetails(machineId, {computerGUID, IPC_SerialNo}) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const data = {
+        computerGUID,
+        IPC_SerialNo
+      };
+
+      const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/integration/details`, data);
+      dispatch(slice.actions.updateMachinePortalDetails(response.data));
+      
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+export function streamMachineIntegrationStatus(machineId) {
+  return async (dispatch) => {
+    const token = window.localStorage.getItem('accessToken');
+    
+    const ctrl = new AbortController();
+
+    fetchEventSource(`${CONFIG.SERVER_URL}products/machines/${machineId}/integration/streamIntegrationStatus`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+      signal: ctrl.signal,
+      onmessage(event) {
+        const integrationDetails = JSON.parse(event.data);
+        dispatch(slice.actions.updateMachineIntegrationStatusFromSSE(integrationDetails));
+      },
+      onerror(error) {
+        // console.error('SSE Error:', error);
+        ctrl.abort();
+      },
+    });
+
+    return ctrl;
   };
 }

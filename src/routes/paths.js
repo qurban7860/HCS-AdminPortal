@@ -6,15 +6,22 @@ function path(root, sublink) {
 
 const ROOTS_AUTH = '/auth';
 const ROOTS_DASHBOARD = '/dashboard';
-const ROOTS_CALENDAR = '/calendar';
-const ROOTS_CRM = '/crm';
-const ROOTS_MACHINE = '/products';
-const ROOTS_SECURITY = '/security';
-const ROOTS_SETTING = '/settings';
-const ROOTS_DOCUMENT = '/documents';
-const ROOTS_MACHINE_DRAWING = '/machineDrawings';
-const ROOTS_SITEMAP = '/site';
-const ROOTS_SUPPORT_TICKETS = '/supportTickets';
+const ROOTS_PORTAL_REGISTRATIONS = '/crm/portalRegistrations';
+export const ROOTS_CRM = '/crm';
+export const ROOTS_MACHINE = '/products';
+export const ROOTS_SUPPORT = '/support';
+export const ROOTS_REPORTS = '/reports';
+export const ROOTS_CALENDAR = '/calendar';
+export const ROOTS_SETTING = '/settings';
+// const ROOTS_MACHINE_SETTING_REPORT = '/machineSettingReports'
+// const ROOTS_SERVICE_REPORTS = '/serviceReports'
+// const ROOTS_SECURITY = '/security';
+// const ROOTS_DOCUMENT = '/products/documents';
+const ROOTS_MACHINE_DRAWING = '/products/machineDrawings';
+// const ROOTS_TICKET = '/tickets';
+// const ROOTS_SITEMAP = '/sites';
+// const ROOTS_MACHINE_LOGS = '/machineLogs';
+
 
 // ----------------------------------------------------------------------
 
@@ -54,14 +61,6 @@ export const PATH_DASHBOARD = {
     machineByModels: path(ROOTS_DASHBOARD, '/machineByModels'),
     machineByYears: path(ROOTS_DASHBOARD, '/machineByYears'),
   },
-};
-
-// --------------------- CALENDAR ----------------------
-export const PATH_CALENDAR = {
-  root: ROOTS_CALENDAR,
-  new: path(ROOTS_CALENDAR, `/new`),
-  edit: (id) => path(ROOTS_CALENDAR, `/{id}/edit`),
-  view: (id) => path(ROOTS_CALENDAR, `/{id}/view`),
 };
 
     // --------------------- Customer -----------------------
@@ -128,11 +127,29 @@ export const PATH_CRM = {
     },
     // ------------------------ ARCHIVED CUSTOMERS ----------------------------------------
     archived: {
-      root: path(ROOTS_CRM, '/customers/archived'),
-      view: (id) => path(ROOTS_CRM, `/customers/archived/${id}/view`),
+      root: path(ROOTS_CRM, '/archived-customers'),
+      view: (id) => path(ROOTS_CRM, `/archived-customers/${id}/view`),
     },
   },
-  
+  sitesMap: {
+    root: path(ROOTS_CRM, '/sitesMap'),
+  },
+  // ------------------------ DEPARTMENTS ----------------------------------------
+  departments: {
+    list: path(ROOTS_CRM, '/departments/list'),
+    new: path(ROOTS_CRM, '/departments/new'),
+    view: (id) => path(ROOTS_CRM, `/departments/${id}/view`),
+    edit: (id) => path(ROOTS_CRM, `/departments/${id}/edit`)
+  },
+};
+
+// --------------------- CUSTOMER REGISTRATIONS ----------------------
+export const PATH_PORTAL_REGISTRATION = {
+  root: ROOTS_PORTAL_REGISTRATIONS,
+  edit: ( customerId ) => path(ROOTS_PORTAL_REGISTRATIONS, `/${customerId}/edit`),
+  view: ( customerId ) => path(ROOTS_PORTAL_REGISTRATIONS, `/${customerId}/view`),
+  permissionDenied: path(ROOTS_PORTAL_REGISTRATIONS, '/permission-denied'),
+  blank: path(ROOTS_AUTH, '/login'),
 };
 
 // MACHINE
@@ -229,141 +246,347 @@ export const PATH_MACHINE = {
       edit: (machineId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/profiles/${id}/edit`),
     },    
     // --------------------- Machine Tool Installed -----------------------
-    serviceRecords: {
-      root: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/serviceRecords`),
-      new: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/serviceRecords/new`),
-      view: (machineId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/serviceRecords/${id}/view`),
-      edit: (machineId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/serviceRecords/${id}/edit`),
-      history: {
-        root: (machineId, serviceId) => path(ROOTS_MACHINE, `/machines/${machineId}/serviceRecords/${serviceId}/history`),
-        view: (machineId, serviceId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/serviceRecords/${serviceId}/history/${id}/view`),
-      },
+    serviceReports: {
+      root: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/serviceReports`),
+      new: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/serviceReports/new`),
+      view: (machineId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/serviceReports/${id}/view`),
+      edit: (machineId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/serviceReports/${id}/edit`),
     },    
     // --------------------- Machine Tool Installed -----------------------
     ini: {
       root: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/ini`),
       new: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/ini/new`),
       view: (machineId, id ) => path(ROOTS_MACHINE, `/machines/${machineId}/ini/${id}/view`),
-      compare: (machineId, id1, id2 ) => path(ROOTS_MACHINE, `/machines/${machineId}/ini/${id1}/${id2}/compare`),
+      compare: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/ini/compare`),
     },    
-    // --------------------- Machine Tool Installed -----------------------
+    // --------------------- Machine Logs -----------------------
     logs: {
       root: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/logs`),
       new: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/logs/new`),
       graph: (machineId ) => path(ROOTS_MACHINE, `/machines/${machineId}/logs/graph`),
-      view: (machineId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/logs/${id}/view`),
-    },    
+      // view: (machineId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/logs/${id}/view`),
+    },
+
+    // --------------------- Machine Integration -----------------------
+    integration: {
+      root: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/integration`),
+    },
     jira: {
       root: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/jira`),
       // new: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/logs/new`),
       // view: (machineId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/logs/${id}/view`),
     },   
-    // ------------------------ ARCHIVED MACHINES ----------------------------------------
-    archived: {
-      root: path(ROOTS_MACHINE, '/machines/archived'),
-      view: (id) => path(ROOTS_MACHINE, `/machines/archived/${id}/view`),
-    }, 
-    // --------------------- MACHINE SETTINGS -----------------------
-    machineSettings: {
-      root: path(ROOTS_MACHINE, '/machines/machineSettings'),
-      groups: {
-        root: path(ROOTS_MACHINE, '/machines/machineSettings/groups'),
-        new: path(ROOTS_MACHINE, '/machines/machineSettings/groups/new'),
-        view: (id) => path(ROOTS_MACHINE, `/machines/machineSettings/groups/${id}/view`),
-        edit: (id) => path(ROOTS_MACHINE, `/machines/machineSettings/groups/${id}/edit`),
+  },
+  reports: {
+    root: path(ROOTS_MACHINE, '/reports'),
+    serviceReports: {
+      root: path(ROOTS_MACHINE, '/reports/serviceReports'),
+      // view: ( id ) => path(ROOTS_MACHINE, `/serviceReports/${id}/view`),
+    },
+    machineSettingsReport: {
+      root: path(ROOTS_MACHINE, '/reports/machineSettingsReport'),
+      // view: ( id ) => path(ROOTS_MACHINE, `/machineSettingsReport/${id}/view`),
+    },
+    machineLogs: {
+      root: path(ROOTS_MACHINE, '/reports/machineLogs'),
+    },
+    machineGraphs: {
+      root: path(ROOTS_MACHINE, '/reports/machineGraphs'),
+    },
+  },
+  documents: {
+    root: path(ROOTS_MACHINE, '/documents'),
+    list: path(ROOTS_MACHINE, '/documents/list'),
+    document: {
+      new: path(ROOTS_MACHINE, '/documents/new'),
+      newList: path(ROOTS_MACHINE, '/documents/newList'),
+      gallery: (id) => path(ROOTS_MACHINE, `/documents/${id}/gallery`),
+      edit: (id) => path(ROOTS_MACHINE, `/documents/${id}/edit`),
+      view: {
+        root: ( id ) => path(ROOTS_MACHINE, `/documents/${id}/view`),
+        addFile: ( id ) => path(ROOTS_MACHINE, `/documents/${id}/view/addFile`),
+        newVersion: ( id ) => path(ROOTS_MACHINE, `/documents/${id}/view/newVersion`),
       },
-    // --------------------- MACHINE categories -----------------------
-      categories: {
-        root: path(ROOTS_MACHINE, '/machines/machineSettings/categories'),
-        new: path(ROOTS_MACHINE, '/machines/machineSettings/categories/new'),
-        view: (id) => path(ROOTS_MACHINE, `/machines/machineSettings/categories/${id}/view`),
-        edit: (id) => path(ROOTS_MACHINE, `/machines/machineSettings/categories/${id}/edit`),
-      },
-    // --------------------- MACHINE model -----------------------
-      models: {
-        root: path(ROOTS_MACHINE, '/machines/machineSettings/models'),
-        new: path(ROOTS_MACHINE, '/machines/machineSettings/models/new'),
-        view: (id) => path(ROOTS_MACHINE, `/machines/machineSettings/models/${id}/view`),
-        edit: (id) => path(ROOTS_MACHINE, `/machines/machineSettings/models/${id}/edit`),
-      },
-    // --------------------- MACHINE supplier -----------------------
-      suppliers: {
-        root: path(ROOTS_MACHINE, '/machines/machineSettings/suppliers'),
-        new: path(ROOTS_MACHINE, '/machines/machineSettings/suppliers/new'),
-        view: (id) => path(ROOTS_MACHINE, `/machines/machineSettings/suppliers/${id}/view`),
-        edit: (id) => path(ROOTS_MACHINE, `/machines/machineSettings/suppliers/${id}/edit`),
-      },
-      // --------------------- MACHINE tool -----------------------
-      tools: {
-        root: path(ROOTS_MACHINE, '/machines/machineSettings/tools'),
-        new: path(ROOTS_MACHINE, '/machines/machineSettings/tools/new'),
-        view: (id) => path(ROOTS_MACHINE, `/machines/machineSettings/tools/${id}/view`),
-        edit: (id) => path(ROOTS_MACHINE, `/machines/machineSettings/tools/${id}/edit`),
-      },
-      // --------------------- MACHINE Check Item Categories -----------------------
-      checkItemCategories: {
-        root: path(ROOTS_MACHINE, '/machines/machineSettings/checkItemCategories'),
-        new: path(ROOTS_MACHINE, '/machines/machineSettings/checkItemCategories/new'),
-        view: (id) => path(ROOTS_MACHINE, `/machines/machineSettings/checkItemCategories/${id}/view`),
-        edit: (id) => path(ROOTS_MACHINE, `/machines/machineSettings/checkItemCategories/${id}/edit`),
-      },
-      // --------------------- MACHINE check Items -----------------------
-      checkItems:{
-        root: path(ROOTS_MACHINE, '/machines/machineSettings/checkItems'),
-        new: path(ROOTS_MACHINE, '/machines/machineSettings/checkItems/new'),
-        view: (id) => path(ROOTS_MACHINE, `/machines/machineSettings/checkItems/${id}/view`),
-        edit: (id) => path(ROOTS_MACHINE, `/machines/machineSettings/checkItems/${id}/edit`),
-      },
-      // --------------------- MACHINE service Record Configs -----------------------
-      serviceRecordsConfig: {
-        root: path(ROOTS_MACHINE, '/machines/machineSettings/serviceRecordsConfig'),
-        new: path(ROOTS_MACHINE, '/machines/machineSettings/serviceRecordsConfig/new'),
-        copy: (id) => path(ROOTS_MACHINE, `/machines/machineSettings/serviceRecordsConfig/${id}/copy`),
-        view: (id) => path(ROOTS_MACHINE, `/machines/machineSettings/serviceRecordsConfig/${id}/view`),
-        edit: (id) => path(ROOTS_MACHINE, `/machines/machineSettings/serviceRecordsConfig/${id}/edit`),
-      },
-      // --------------------- MACHINE status -----------------------
-      status: {
-        root: path(ROOTS_MACHINE, '/machines/machineSettings/status'),
-        new: path(ROOTS_MACHINE, '/machines/machineSettings/status/new'),
-        view: (id) => path(ROOTS_MACHINE, `/machines/machineSettings/status/${id}/view`),
-        edit: (id) => path(ROOTS_MACHINE, `/machines/machineSettings/status/${id}/edit`),
-      },
-      // --------------------- MACHINE Technical Parameter Categories -----------------------
-      technicalParameterCategories: {
-        root: path(ROOTS_MACHINE, '/machines/machineSettings/technicalParameterCategories'),
-        new: path(ROOTS_MACHINE, '/machines/machineSettings/technicalParameterCategories/new'),
-        view: (id) => path(ROOTS_MACHINE, `/machines/machineSettings/technicalParameterCategories/${id}/view`),
-        edit: (id) => path(ROOTS_MACHINE, `/machines/machineSettings/technicalParameterCategories/${id}/edit`),
-      },
-      // --------------------- MACHINE Technical Parameters -----------------------
-      technicalParameters: {
-        root: path(ROOTS_MACHINE, '/machines/machineSettings/technicalParameters'),
-        new: path(ROOTS_MACHINE, '/machines/machineSettings/technicalParameters/new'),
-        view: (id) => path(ROOTS_MACHINE, `/machines/machineSettings/technicalParameters/${id}/view`),
-        edit: (id) => path(ROOTS_MACHINE, `/machines/machineSettings/technicalParameters/${id}/edit`),
-      },
+      customer: (id) => path(ROOTS_MACHINE, `/documents/${id}/customer`),
+      machine: (id) => path(ROOTS_MACHINE, `/documents/${id}/machine`),
+    },
+    // ------------------------ Document Type ----------------------------------------
+    documentType: {
+      list: path(ROOTS_MACHINE, '/documents/documentType/list'),
+      new: path(ROOTS_MACHINE, '/documents/documentType/new'),
+      view: (id) => path(ROOTS_MACHINE, `/documents/documentType/${id}/view`),
+      edit: (id) => path(ROOTS_MACHINE, `/documents/documentType/${id}/edit`),
+    },
+    // ------------------------ Document Category ----------------------------------------
+    documentCategory: {
+      list: path(ROOTS_MACHINE, '/documents/documentCategory/list'),
+      new: path(ROOTS_MACHINE, '/documents/documentCategory/new'),
+      view: (id) => path(ROOTS_MACHINE, `/documents/documentCategory/${id}/view`),
+      edit: (id) => path(ROOTS_MACHINE, `/documents/documentCategory/${id}/edit`),
+    },
+  },
+  // --------------------- MACHINE SETTINGS -----------------------
+  machineSettings: {
+    root: path(ROOTS_MACHINE, '/machineSettings'),
+    groups: {
+      root: path(ROOTS_MACHINE, '/machineSettings/groups'),
+      new: path(ROOTS_MACHINE, '/machineSettings/groups/new'),
+      view: (id) => path(ROOTS_MACHINE, `/machineSettings/groups/${id}/view`),
+      edit: (id) => path(ROOTS_MACHINE, `/machineSettings/groups/${id}/edit`),
+    },
+  // --------------------- MACHINE categories -----------------------
+    categories: {
+      root: path(ROOTS_MACHINE, '/machineSettings/categories'),
+      new: path(ROOTS_MACHINE, '/machineSettings/categories/new'),
+      view: (id) => path(ROOTS_MACHINE, `/machineSettings/categories/${id}/view`),
+      edit: (id) => path(ROOTS_MACHINE, `/machineSettings/categories/${id}/edit`),
+    },
+  // --------------------- MACHINE model -----------------------
+    models: {
+      root: path(ROOTS_MACHINE, '/machineSettings/models'),
+      new: path(ROOTS_MACHINE, '/machineSettings/models/new'),
+      view: (id) => path(ROOTS_MACHINE, `/machineSettings/models/${id}/view`),
+      edit: (id) => path(ROOTS_MACHINE, `/machineSettings/models/${id}/edit`),
+    },
+  // --------------------- MACHINE supplier -----------------------
+    suppliers: {
+      root: path(ROOTS_MACHINE, '/machineSettings/suppliers'),
+      new: path(ROOTS_MACHINE, '/machineSettings/suppliers/new'),
+      view: (id) => path(ROOTS_MACHINE, `/machineSettings/suppliers/${id}/view`),
+      edit: (id) => path(ROOTS_MACHINE, `/machineSettings/suppliers/${id}/edit`),
+    },
+    // --------------------- MACHINE tool -----------------------
+    tools: {
+      root: path(ROOTS_MACHINE, '/machineSettings/tools'),
+      new: path(ROOTS_MACHINE, '/machineSettings/tools/new'),
+      view: (id) => path(ROOTS_MACHINE, `/machineSettings/tools/${id}/view`),
+      edit: (id) => path(ROOTS_MACHINE, `/machineSettings/tools/${id}/edit`),
+    },
+    // --------------------- MACHINE Check Item Categories -----------------------
+    checkItemCategories: {
+      root: path(ROOTS_MACHINE, '/machineSettings/checkItemCategories'),
+      new: path(ROOTS_MACHINE, '/machineSettings/checkItemCategories/new'),
+      view: (id) => path(ROOTS_MACHINE, `/machineSettings/checkItemCategories/${id}/view`),
+      edit: (id) => path(ROOTS_MACHINE, `/machineSettings/checkItemCategories/${id}/edit`),
+    },
+    // --------------------- MACHINE check Items -----------------------
+    checkItems:{
+      root: path(ROOTS_MACHINE, '/machineSettings/checkItems'),
+      new: path(ROOTS_MACHINE, '/machineSettings/checkItems/new'),
+      view: (id) => path(ROOTS_MACHINE, `/machineSettings/checkItems/${id}/view`),
+      edit: (id) => path(ROOTS_MACHINE, `/machineSettings/checkItems/${id}/edit`),
+    },
+    // --------------------- MACHINE service Report Templates -----------------------
+    serviceReportsTemplate: {
+      root: path(ROOTS_MACHINE, '/machineSettings/serviceReportsTemplate'),
+      new: path(ROOTS_MACHINE, '/machineSettings/serviceReportsTemplate/new'),
+      copy: (id) => path(ROOTS_MACHINE, `/machineSettings/serviceReportsTemplate/${id}/copy`),
+      view: (id) => path(ROOTS_MACHINE, `/machineSettings/serviceReportsTemplate/${id}/view`),
+      edit: (id) => path(ROOTS_MACHINE, `/machineSettings/serviceReportsTemplate/${id}/edit`),
+    },
+    // --------------------- MACHINE status -----------------------
+    serviceReportsStatus: {
+      root: path(ROOTS_MACHINE, '/machineSettings/serviceReportsStatus'),
+      new: path(ROOTS_MACHINE, '/machineSettings/serviceReportsStatus/new'),
+      view: (id) => path(ROOTS_MACHINE, `/machineSettings/serviceReportsStatus/${id}/view`),
+      edit: (id) => path(ROOTS_MACHINE, `/machineSettings/serviceReportsStatus/${id}/edit`),
+    },
+    // --------------------- MACHINE status -----------------------
+    status: {
+      root: path(ROOTS_MACHINE, '/machineSettings/status'),
+      new: path(ROOTS_MACHINE, '/machineSettings/status/new'),
+      view: (id) => path(ROOTS_MACHINE, `/machineSettings/status/${id}/view`),
+      edit: (id) => path(ROOTS_MACHINE, `/machineSettings/status/${id}/edit`),
+    },
+    // --------------------- MACHINE Technical Parameter Categories -----------------------
+    technicalParameterCategories: {
+      root: path(ROOTS_MACHINE, '/machineSettings/technicalParameterCategories'),
+      new: path(ROOTS_MACHINE, '/machineSettings/technicalParameterCategories/new'),
+      view: (id) => path(ROOTS_MACHINE, `/machineSettings/technicalParameterCategories/${id}/view`),
+      edit: (id) => path(ROOTS_MACHINE, `/machineSettings/technicalParameterCategories/${id}/edit`),
+    },
+    // --------------------- MACHINE Technical Parameters -----------------------
+    technicalParameters: {
+      root: path(ROOTS_MACHINE, '/machineSettings/technicalParameters'),
+      new: path(ROOTS_MACHINE, '/machineSettings/technicalParameters/new'),
+      view: (id) => path(ROOTS_MACHINE, `/machineSettings/technicalParameters/${id}/view`),
+      edit: (id) => path(ROOTS_MACHINE, `/machineSettings/technicalParameters/${id}/edit`),
+    },
+  },
+  sitesMap: {
+    root: path(ROOTS_MACHINE, '/sitesMap'),
+  },
+  // ------------------------ ARCHIVED MACHINES ----------------------------------------
+  archived: {
+    root: path(ROOTS_MACHINE, '/archived-machines'),
+    view: (id) => path(ROOTS_MACHINE, `/archived-machines/${id}/view`),
+  }, 
+};
+
+// ----------------------- SUPPORT SERVICES -----------------------------------------
+export const PATH_SUPPORT = {
+  permissionDenied: path(ROOTS_SUPPORT, '/permission-denied'),
+  supportTickets: {
+    root: path(ROOTS_SUPPORT, '/supportTickets'),
+    new: path(ROOTS_SUPPORT, '/supportTickets/new'),
+    view: (id) => path(ROOTS_SUPPORT, `/supportTickets/${id}/view`),
+    edit: (id) => path(ROOTS_SUPPORT, `/supportTickets/${id}/edit`),
+  },
+  ticketSettings: {
+    root: path(ROOTS_SUPPORT, '/ticketSettings'),
+    // ----------------------- Ticket Collection -----------------------------------------
+    issueTypes: {
+      root: path(ROOTS_SUPPORT, '/ticketSettings/issueTypes'),
+      new: path(ROOTS_SUPPORT, '/ticketSettings/issueTypes/new'),
+      view: (id) => path(ROOTS_SUPPORT, `/ticketSettings/issueTypes/${id}/view`),
+      edit: (id) => path(ROOTS_SUPPORT, `/ticketSettings/issueTypes/${id}/edit`),
+    },
+    requestTypes: {
+      root: path(ROOTS_SUPPORT, '/ticketSettings/requestTypes'),
+      new: path(ROOTS_SUPPORT, '/ticketSettings/requestTypes/new'),
+      view: (id) => path(ROOTS_SUPPORT, `/ticketSettings/requestTypes/${id}/view`),
+      edit: (id) => path(ROOTS_SUPPORT, `/ticketSettings/requestTypes/${id}/edit`),
+    },
+    priorities: {
+      root: path(ROOTS_SUPPORT, '/ticketSettings/priorities'),
+      new: path(ROOTS_SUPPORT, '/ticketSettings/priorities/new'),
+      view: (id) => path(ROOTS_SUPPORT, `/ticketSettings/priorities/${id}/view`),
+      edit: (id) => path(ROOTS_SUPPORT, `/ticketSettings/priorities/${id}/edit`),
+    },
+    statuses: {
+      root: path(ROOTS_SUPPORT, '/ticketSettings/statuses'),
+      new: path(ROOTS_SUPPORT, '/ticketSettings/statuses/new'),
+      view: (id) => path(ROOTS_SUPPORT, `/ticketSettings/statuses/${id}/view`),
+      edit: (id) => path(ROOTS_SUPPORT, `/ticketSettings/statuses/${id}/edit`),
+    },
+    statusTypes: {
+      root: path(ROOTS_SUPPORT, '/ticketSettings/statusTypes'),
+      new: path(ROOTS_SUPPORT, '/ticketSettings/statusTypes/new'),
+      view: (id) => path(ROOTS_SUPPORT, `/ticketSettings/statusTypes/${id}/view`),
+      edit: (id) => path(ROOTS_SUPPORT, `/ticketSettings/statusTypes/${id}/edit`),
+    },
+    impacts: {
+      root: path(ROOTS_SUPPORT, '/ticketSettings/impacts'),
+      new: path(ROOTS_SUPPORT, '/ticketSettings/impacts/new'),
+      view: (id) => path(ROOTS_SUPPORT, `/ticketSettings/impacts/${id}/view`),
+      edit: (id) => path(ROOTS_SUPPORT, `/ticketSettings/impacts/${id}/edit`),
+    },
+    changeTypes: {
+      root: path(ROOTS_SUPPORT, '/ticketSettings/changeTypes'),
+      new: path(ROOTS_SUPPORT, '/ticketSettings/changeTypes/new'),
+      view: (id) => path(ROOTS_SUPPORT, `/ticketSettings/changeTypes/${id}/view`),
+      edit: (id) => path(ROOTS_SUPPORT, `/ticketSettings/changeTypes/${id}/edit`),
+    },
+    changeReasons: {
+      root: path(ROOTS_SUPPORT, '/ticketSettings/changeReasons'),
+      new: path(ROOTS_SUPPORT, '/ticketSettings/changeReasons/new'),
+      view: (id) => path(ROOTS_SUPPORT, `/ticketSettings/changeReasons/${id}/view`),
+      edit: (id) => path(ROOTS_SUPPORT, `/ticketSettings/changeReasons/${id}/edit`),
+    },
+    investigationReasons: {
+      root: path(ROOTS_SUPPORT, '/ticketSettings/investigationReasons'),
+      new: path(ROOTS_SUPPORT, '/ticketSettings/investigationReasons/new'),
+      view: (id) => path(ROOTS_SUPPORT, `/ticketSettings/investigationReasons/${id}/view`),
+      edit: (id) => path(ROOTS_SUPPORT, `/ticketSettings/investigationReasons/${id}/edit`),
+    },
+  },
+  jiraTickets: {
+    root: path(ROOTS_SUPPORT, '/jiraTickets')
+  },
+  knowledgeBase: {
+    root: path(ROOTS_SUPPORT, '/knowledgeBase'),
+  },
+  manuals: {
+    root: path(ROOTS_SUPPORT, '/manuals'),
+  },
+};
+
+// ----------------------- REPORTS -----------------------------------------
+export const PATH_REPORTS = {
+  root: ROOTS_REPORTS,
+  permissionDenied: path(ROOTS_REPORTS, '/permission-denied'),
+  machineLogs: {
+    root: path(ROOTS_REPORTS, '/machineLogs'),
+  },
+  machineGraphs: {
+    root: path(ROOTS_REPORTS, '/machineGraphs'),
+  },
+  email : {
+    list:path(ROOTS_REPORTS, '/email/list'),
+    new: path(ROOTS_REPORTS, '/email/new'), 
+    view: (id) => path(ROOTS_REPORTS, `/email/${id}/view`),
+  },
+  // ------------------------ SIGN IN LOGS ----------------------------------------
+  signInLogs: {
+    list: path(ROOTS_REPORTS, '/signInLogs/list'),
+  },
+  logs: {
+    root: path(ROOTS_REPORTS, '/logs'),
+    pm2: {
+      root: path(ROOTS_REPORTS, '/logs/pm2/'),
+      view: (id) => path(ROOTS_REPORTS, `/logs/pm2/${id}/view`),
+    },
+    dbBackup: {
+      root: path(ROOTS_REPORTS, '/logs/dbBackup/'),
+      view: (id) => path(ROOTS_REPORTS, `/logs/dbBackup/${id}/view`),
+    },
+    api: {
+      root: path(ROOTS_REPORTS, '/logs/api/'),
+      view: (id) => path(ROOTS_REPORTS, `/logs/api/${id}/view`),
     },
   },
 };
 
+// --------------------- CALENDAR ----------------------
+export const PATH_CALENDAR = {
+  root: ROOTS_CALENDAR,
+  new: path(ROOTS_CALENDAR, `/new`),
+  edit: (id) => path(ROOTS_CALENDAR, `/{id}/edit`),
+  view: (id) => path(ROOTS_CALENDAR, `/{id}/view`),
+};
 
 export const PATH_SETTING = {
   permissionDenied: path(ROOTS_SETTING, '/permission-denied'),
   root: ROOTS_SETTING,
-  // ------------------------ Document Type ----------------------------------------
-  documentType: {
-    list: path(ROOTS_SETTING, '/documentType/list'),
-    new: path(ROOTS_SETTING, '/documentType/new'),
-    view: (id) => path(ROOTS_SETTING, `/documentType/${id}/view`),
-    edit: (id) => path(ROOTS_SETTING, `/documentType/${id}/edit`),
+  security: {
+    root: path(ROOTS_SETTING, `/security`),
+    // ------------------------ SECURITY USERS ----------------------------------------
+    users: {
+      new: path(ROOTS_SETTING, `/security/users/new/`),
+      invite: path(ROOTS_SETTING, `/security/users/invite/`),
+      cards: path(ROOTS_SETTING, '/security/users/cards'),
+      profile: path(ROOTS_SETTING, '/security/users/profile'),
+      editProfile: path(ROOTS_SETTING, '/security/users/editProfile'),
+      password: path(ROOTS_SETTING, '/security/users/password'),
+      userPassword: path(ROOTS_SETTING, '/security/users/changePassword'),
+      account: path(ROOTS_SETTING, '/security/users/account'),
+      view: (id) => path(ROOTS_SETTING, `/security/users/${id}/view`),
+      edit: (id) => path(ROOTS_SETTING, `/security/users/${id}/edit`),
+      signInLogList: path(ROOTS_SETTING, '/security/users/signInLogList'),
+    },
   },
-  // ------------------------ Document Category ----------------------------------------
-  documentCategory: {
-    list: path(ROOTS_SETTING, '/documentCategory/list'),
-    new: path(ROOTS_SETTING, '/documentCategory/new'),
-    view: (id) => path(ROOTS_SETTING, `/documentCategory/${id}/view`),
-    edit: (id) => path(ROOTS_SETTING, `/documentCategory/${id}/edit`),
+  restrictions: {
+    root: path(ROOTS_SETTING, `/restrictions`),
+    // ------------------------ BLOCKED CUSTOMERS ----------------------------------------
+    blockedCustomer: {
+      list: path(ROOTS_SETTING, '/restrictions/blockedCustomer/list'),
+      new: path(ROOTS_SETTING, `/restrictions/blockedCustomer/new`)
+    },
+  // ------------------------ BLOCKED USERS ----------------------------------------
+    blockedUser: {
+      list: path(ROOTS_SETTING, '/restrictions/blockedUser/list'),
+      new: path(ROOTS_SETTING, `/restrictions/blockedUser/new`)
+    },
+  // ------------------------ BLACK LIST IP ----------------------------------------
+    blacklistIP: {
+      list: path(ROOTS_SETTING, '/restrictions/blacklistIP/list'),
+      new: path(ROOTS_SETTING, `/restrictions/blacklistIP/new`)
+    },
+  // ------------------------ WHITE LIST IP ----------------------------------------
+    whitelistIP: {
+      list: path(ROOTS_SETTING, '/restrictions/whitelistIP/list'),
+      new: path(ROOTS_SETTING, `/restrictions/whitelistIP/new`)
+    },
   },
   // ------------------------ SECURITY USER ROLE ----------------------------------------
   role: {
@@ -371,10 +594,6 @@ export const PATH_SETTING = {
     list: path(ROOTS_SETTING, '/role/list'),
     view: (id) => path(ROOTS_SETTING, `/role/${id}/view`),
     edit: (id) => path(ROOTS_SETTING, `/role/${id}/edit`),
-  },
-  // ------------------------ SIG IN LOGS ----------------------------------------
-  signInLogs: {
-    list: path(ROOTS_SETTING, '/signInLogs/list'),
   },
   // ------------------------ REGIONS ----------------------------------------
   regions: {
@@ -397,31 +616,6 @@ export const PATH_SETTING = {
     view: (id) => path(ROOTS_SETTING, `/configs/${id}/view`),
     edit: (id) => path(ROOTS_SETTING, `/configs/${id}/edit`)
   },
-  email : {
-    list:path(ROOTS_SETTING, '/email/list'),
-    new: path(ROOTS_SETTING, '/email/new'), 
-    view: (id) => path(ROOTS_SETTING, `/email/${id}/view`),
-  },
-  // ------------------------ DEPARTMENTS ----------------------------------------
-  departments: {
-    list: path(ROOTS_SETTING, '/departments/list'),
-    new: path(ROOTS_SETTING, '/departments/new'),
-    view: (id) => path(ROOTS_SETTING, `/departments/${id}/view`),
-    edit: (id) => path(ROOTS_SETTING, `/departments/${id}/edit`)
-  },
-  // ------------------------ PM2 LOGS ----------------------------------------
-  pm2: {
-      logs: {
-        root: path(ROOTS_SETTING, '/pm2/logs/'),
-        view: (id) => path(ROOTS_SETTING, `/pm2/logs/${id}/view`),
-      }
-  },  
-  dbBackup: {
-    logs: {
-      root: path(ROOTS_SETTING, '/dbBackup/logs/'),
-      view: (id) => path(ROOTS_SETTING, `/dbBackup/logs/${id}/view`),
-    }
-},
   // ------------------------ SECURITY USER INVITES ----------------------------------------
   invite: {
     list: path(ROOTS_SETTING, '/invite/list'),
@@ -431,78 +625,6 @@ export const PATH_SETTING = {
   releases: {
     list: path(ROOTS_SETTING, '/releases/list'),
     view: (id) => path(ROOTS_SETTING, `/releases/${id}/view`)
-  },
-};
-
-export const PATH_SECURITY = {
-  root: ROOTS_SECURITY,
-  permissionDenied: path(ROOTS_SECURITY, '/permission-denied'),
-  // ------------------------ SECURITY USERS ----------------------------------------
-  users: {
-    new: path(ROOTS_SECURITY, `/users/new/`),
-    invite: path(ROOTS_SECURITY, `/users/invite/`),
-    cards: path(ROOTS_SECURITY, '/users/cards'),
-    profile: path(ROOTS_SECURITY, '/users/profile'),
-    editProfile: path(ROOTS_SECURITY, '/users/editProfile'),
-    password: path(ROOTS_SECURITY, '/users/password'),
-    userPassword: path(ROOTS_SECURITY, '/users/changePassword'),
-    account: path(ROOTS_SECURITY, '/users/account'),
-    view: (id) => path(ROOTS_SECURITY, `/users/${id}/view`),
-    edit: (id) => path(ROOTS_SECURITY, `/users/${id}/edit`),
-    demoEdit: path(ROOTS_SECURITY, `/users/reece-chung/edit`),
-    signInLogList: path(ROOTS_SECURITY, '/users/signInLogList'),
-  },
-  // ------------------------ SECURITY USER SETTING ----------------------------------------
-  config:{
-    // ------------------------ BLOCKED CUSTOMERS ----------------------------------------
-    blockedCustomer: {
-      list: path(ROOTS_SECURITY, '/config/blockedCustomer/list'),
-      new: path(ROOTS_SECURITY, `/config/blockedCustomer/new`)
-    },
-  // ------------------------ BLOCKED USERS ----------------------------------------
-    blockedUser: {
-      list: path(ROOTS_SECURITY, '/config/blockedUser/list'),
-      new: path(ROOTS_SECURITY, `/config/blockedUser/new`)
-    },
-  // ------------------------ BLACK LIST IP ----------------------------------------
-    blacklistIP: {
-      list: path(ROOTS_SECURITY, '/config/blacklistIP/list'),
-      new: path(ROOTS_SECURITY, `/config/blacklistIP/new`)
-    },
-  // ------------------------ WHITE LIST IP ----------------------------------------
-    whitelistIP: {
-      list: path(ROOTS_SECURITY, '/config/whitelistIP/list'),
-      new: path(ROOTS_SECURITY, `/config/whitelistIP/new`)
-    },
-  }
-};
-
-export const PATH_SITEMAP = {
-  root: ROOTS_SITEMAP,
-  permissionDenied: path(ROOTS_SITEMAP, '/permission-denied'),
-  general: {
-    app: path(ROOTS_SITEMAP, '/app'),
-  },
-  app: path(ROOTS_SITEMAP, '/app'),
-};
-
-// ----------------------- Documents -----------------------------------------
-export const PATH_DOCUMENT = {
-  root: ROOTS_DOCUMENT,
-  permissionDenied: path(ROOTS_DOCUMENT, '/permission-denied'),
-  // ----------------------- Documents -----------------------------------------
-  document: {
-    new: path(ROOTS_DOCUMENT, '/new'),
-    newList: path(ROOTS_DOCUMENT, '/newList'),
-    gallery: (id) => path(ROOTS_DOCUMENT, `/${id}/gallery`),
-    edit: (id) => path(ROOTS_DOCUMENT, `/${id}/edit`),
-    view: {
-      root: ( id ) => path(ROOTS_DOCUMENT, `/${id}/view`),
-      addFile: ( id ) => path(ROOTS_DOCUMENT, `/${id}/view/addFile`),
-      newVersion: ( id ) => path(ROOTS_DOCUMENT, `/${id}/view/newVersion`),
-    },
-    customer: (id) => path(ROOTS_DOCUMENT, `/${id}/customer`),
-    machine: (id) => path(ROOTS_DOCUMENT, `/${id}/machine`),
   },
 };
 
@@ -521,11 +643,6 @@ export const PATH_MACHINE_DRAWING = {
       newVersion: ( id ) => path(ROOTS_MACHINE_DRAWING, `/${id}/view/newVersion`),
     },
   }
-};
-
-// ----------------------- JIRA REPORT -----------------------------------------
-export const PATH_SUPPORT_TICKETS = {
-  root: ROOTS_SUPPORT_TICKETS,
 };
 
 export const PATH_DOCS = {

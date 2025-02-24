@@ -18,8 +18,8 @@ export default function UserInviteViewForm() {
 
   const defaultValues = useMemo(
     () => ({
-      username:userInvite?.receiverInvitationUser?.name|| '', 
-      useremail:userInvite?.receiverInvitationEmail|| '', 
+      username:userInvite?.name|| '', 
+      useremail:userInvite?.receiverInvitationEmail || userInvite?.email || '', 
       sender:userInvite?.senderInvitationUser?.name || '', 
       code:userInvite?.inviteCode|| '', 
       expiry:userInvite?.inviteExpireTime|| '', 

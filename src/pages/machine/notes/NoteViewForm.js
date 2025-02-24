@@ -64,10 +64,11 @@ export default function NoteViewForm() {
     <Grid item md={12} mt={2}>
     <Card sx={{ p: 2 }}>
       <ViewFormEditDeleteButtons isActive={defaultValues.isActive} 
-      backLink={()=> navigate(PATH_MACHINE.machines.notes.root(machineId))} 
-      handleEdit={handleEdit} onDelete={onDelete}
-      disableEditButton={machine?.status?.slug==='transferred'}
-      disableDeleteButton={machine?.status?.slug==='transferred'}
+        backLink={()=> navigate(PATH_MACHINE.machines.notes.root(machineId))} 
+        handleEdit={ !machine?.isArchived && handleEdit} 
+        onDelete={ !machine?.isArchived && onDelete}
+        disableEditButton={machine?.status?.slug==='transferred' || machine?.isArchived }
+        disableDeleteButton={machine?.status?.slug==='transferred' || machine?.isArchived }
       />
       <Grid container>
         <ViewFormField isLoading={isLoading} sm={12} heading="Note" param={defaultValues.note} />

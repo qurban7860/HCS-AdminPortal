@@ -1,0 +1,386 @@
+import { useEffect, useMemo, useState, useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import PropTypes from 'prop-types';
+import b64toBlob from 'b64-to-blob';
+import download from 'downloadjs';
+// form
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Button, Dialog, DialogTitle, Divider, Stack, Box } from '@mui/material';
+// routes
+import { useNavigate, useParams } from 'react-router-dom';
+import { PATH_MACHINE } from '../../../routes/paths';
+import FormLabel from '../../../components/DocumentForms/FormLabel';
+// slice
+import { 
+  updateMachineServiceReport, 
+  resetMachineServiceReport, 
+  addMachineServiceReportFiles, 
+  deleteReportFile, 
+  downloadReportFile, 
+  setAddReportDocsDialog 
+} from '../../../redux/slices/products/machineServiceReport';
+import { getActiveContacts, resetActiveContacts } from '../../../redux/slices/customer/contact';
+// components
+import { handleError } from '../../../utils/errorHandler';
+import ServiceRecodStepButtons from '../../../components/DocumentForms/ServiceRecodStepButtons';
+import { useSnackbar } from '../../../components/snackbar';
+import FormProvider, { RHFUpload } from '../../../components/hook-form';
+import { MachineServiceReportPart3Schema } from '../../schemas/machine';
+import SkeletonPDF from '../../../components/skeleton/SkeletonPDF';
+import RHFNoteFields from './RHFNoteFields';
+import { ThumbnailDocButton } from '../../../components/Thumbnails';
+import { DocumentGalleryItem } from '../../../components/gallery/DocumentGalleryItem';
+
+
+MachineServiceReportsThirdStep.propTypes = {
+  handleDraftRequest: PropTypes.func,
+  handleDiscard: PropTypes.func,
+  handleBack: PropTypes.func
+};
+
+function MachineServiceReportsThirdStep({handleDraftRequest, handleDiscard, handleBack}) {
+  
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const { enqueueSnackbar } = useSnackbar();
+    const { machineId, id } = useParams();
+    const { machine } = useSelector((state) => state.machine);
+    const { machineServiceReport, isLoading } = useSelector((state) => state.machineServiceReport);
+    const [slides, setSlides] = useState([]);
+    const [selectedImage, setSelectedImage] = useState(-1);
+
+    useEffect(() => {
+      if (machine?.customer?._id) {
+        dispatch(getActiveContacts(machine?.customer?._id));
+      }
+      return () =>{
+          dispatch(resetActiveContacts());
+      }
+    }, [ dispatch, machine ]);
+
+    useEffect(() => {
+      if ( machineServiceReport?.files && Array.isArray( machineServiceReport?.files ) ) {
+        const updatedSildes = machineServiceReport?.files
+        ?.filter(file => file?.fileType && file.fileType.startsWith("image"))
+        ?.map((file) => ({
+          ...file,
+          src: `data:${file?.fileType};base64,${file?.thumbnail}`,
+          thumbnail: `data:${file?.fileType};base64,${file?.thumbnail}`,
+        }));
+        setSlides(updatedSildes);
+      }
+    }, [machineServiceReport]);
+
+    const defaultValues = useMemo(
+        () => {
+          const initialValues = {
+            serviceNote:                  '',
+            recommendationNote:           '',
+            internalComments:             '',
+            suggestedSpares:              '',
+            internalNote:                 '',
+            operatorNotes:                '',
+            files: machineServiceReport?.files?.map(file => ({
+              key: file?._id,
+              _id: file?._id,
+              name:`${file?.name}.${file?.extension}`,
+              type: file?.fileType,
+              fileType: file?.fileType,
+              preview: `data:${file?.fileType};base64, ${file?.thumbnail}`,
+              src: `data:${file?.fileType};base64, ${file?.thumbnail}`,
+              path:`${file?.name}.${file?.extension}`,
+              downloadFilename:`${file?.name}.${file?.extension}`,
+              machineId:machineServiceReport?.machineId,
+            })) || [],
+            isActive:                     true,
+        }
+        return initialValues;
+      },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [ machineServiceReport ]
+      );
+
+    const methods = useForm({
+        resolver: yupResolver(MachineServiceReportPart3Schema),
+        defaultValues,
+        mode: 'onChange',
+        reValidateMode: 'onChange',
+    });
+    
+    const {
+    watch,
+    setValue,
+    getValues,
+    reset,
+    handleSubmit,
+    formState: { isSubmitting },
+    } = methods;
+
+    const { isActive, files } = watch()
+    
+    useEffect(() => {
+      if (machineServiceReport) {
+        reset(defaultValues);
+      }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [ machineServiceReport ]);
+
+    const handleDropMultiFile = useCallback(
+      async (acceptedFiles) => {
+        const docFiles = files || [];
+        const newFiles = acceptedFiles.map((file, index) => 
+          Object.assign(file, {
+            preview: URL.createObjectURL(file),
+            src: URL.createObjectURL(file),
+            isLoaded:true
+          })
+        );
+        // await dispatch( addMachineServiceReportFiles( machineId, id, data ) )
+        setValue('files', [...docFiles, ...newFiles], { shouldValidate: true });
+      },
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      [ files ]
+    );
+
+    const onSubmit = async (data) => {
+      try {
+          data.isReportDocsOnly= false;
+          if(id){
+            if(Array.isArray(data?.files) && data?.files?.filter((f)=>!f?._id)?.length > 0){
+              await dispatch(addMachineServiceReportFiles(machineId, id, data))
+            }
+            
+            await dispatch(updateMachineServiceReport( machineId, id, data ));
+
+            await navigate(PATH_MACHINE.machines.serviceReports.view(machineId, id))  
+          }
+        } catch (err) {
+          console.error(err);
+          enqueueSnackbar( handleError( err ) ||'service report save failed!', { variant: `error` });
+        }
+      };
+
+      const handleRemoveFile = async (inputFile) => {
+        let images = getValues(`files`);
+        if(inputFile?._id){
+          await dispatch(deleteReportFile(machineId, id, inputFile?._id));
+          images = await images?.filter((file) => ( file?._id !== inputFile?._id ))
+        } else {
+          images = await images?.filter((file) => ( file !== inputFile ))
+        }
+        setValue(`files`, images, { shouldValidate: true } )
+      };
+
+      const regEx = /^[^2]*/;
+      const handleLoadImage = async (imageId) => {
+        try {
+          const response = await dispatch(downloadReportFile(machineId, id, imageId));
+          if (regEx.test(response.status)) {
+            const existingFiles = getValues('files');
+            const imageIndex = existingFiles.findIndex(image => image?._id === imageId);
+            if (imageIndex !== -1) {
+              const image = existingFiles[imageIndex];
+              existingFiles[imageIndex] = {
+                ...image,
+                src: `data:${image?.fileType};base64,${response.data}`,
+                preview: `data:${image?.fileType};base64,${response.data}`,
+                isLoaded: true,
+              };
+              setValue('files', existingFiles, { shouldValidate: true });
+            }
+          }
+        } catch (error) {
+          console.error('Error loading full file:', error);
+        }
+      };
+      
+      const [pdf, setPDF] = useState(null);
+      const [PDFName, setPDFName] = useState('');
+      const [PDFViewerDialog, setPDFViewerDialog] = useState(false);
+
+      const handleAddFileDialog = ()=>{
+        dispatch(setAddReportDocsDialog(true));
+      }
+
+      const handleOpenFile = async (file, fileName) => {
+        setPDFName(fileName);
+        setPDFViewerDialog(true);
+        setPDF(null);
+        try {
+          if(!file?.isLoaded){
+            const response = await dispatch(downloadReportFile(machineId, id, file._id));
+            if (regEx.test(response.status)) {
+              const blob = b64toBlob(encodeURI(response.data), 'application/pdf')
+              const url = URL.createObjectURL(blob);
+              setPDF(url);
+            } else {
+              enqueueSnackbar(response.statusText, { variant: 'error' });
+            }
+          }else{
+            setPDF(file?.src);
+          }
+        } catch (error) {
+          setPDFViewerDialog(false)
+          enqueueSnackbar( handleError( error ) || 'File open failed!', { variant: 'error' });
+        }
+      };
+
+      const handleOpenLightbox = async (index) => {
+        setSelectedImage(index);
+        const file = slides[index];
+        try {
+          const response = await dispatch(downloadReportFile(machineId, id, file?._id));
+          if (regEx.test(response.status)) {
+            const updatedItems = [
+              ...slides.slice(0, index),
+              {
+                ...slides[index],
+                src: `data:image/png;base64, ${response.data}`,
+                isLoaded: true,
+              },
+              ...slides.slice(index + 1),
+            ];
+            setSlides(updatedItems);
+          }
+        } catch (error) {
+          console.error('Error loading full file:', error);
+        }
+      };
+
+      const handleDeleteReportFile = async (fileId) => {
+        try {
+          await dispatch(deleteReportFile(machineId, machineServiceReport?._id, fileId));
+          enqueueSnackbar('File deleted successfully!');
+        } catch (err) {
+          console.log(err);
+          enqueueSnackbar( handleError( err ) || 'File Deletion failed!', { variant: `error` });
+        }
+      };
+
+      const handleDownloadReportFile = (fileId, name, extension) => {
+        dispatch(downloadReportFile(machineId, id, fileId))
+          .then((res) => {
+            if (regEx.test(res.status)) {
+              download(atob(res.data), `${name}.${extension}`, { type: extension });
+              enqueueSnackbar(res.statusText);
+            } else {
+              enqueueSnackbar(res.statusText, { variant: `error` });
+            }
+          })
+          .catch((err) => {
+            enqueueSnackbar( handleError( err ) || 'File download failed!' , { variant: `error` });
+          });
+      };
+  
+  return (
+    <>
+      <FormProvider methods={methods}  onSubmit={handleSubmit(onSubmit)}>
+        <Stack px={2} spacing={2}>    
+          { machineServiceReport?.serviceReportTemplate?.enableNote && 
+            <RHFNoteFields 
+              historicalData={ machineServiceReport?.serviceNote } 
+              name="serviceNote" 
+              label={`${machineServiceReport?.serviceReportTemplate?.reportType?.toLowerCase() === 'install' ? 'Install' : 'Service' } Note`}
+              setParentValue={ setValue }
+            />
+          }      
+          { machineServiceReport?.serviceReportTemplate?.enableMaintenanceRecommendations && 
+            <RHFNoteFields 
+              historicalData={ machineServiceReport?.recommendationNote } 
+              name="recommendationNote" 
+              label="Recommendation Note"
+              setParentValue={ setValue }
+            />
+          }
+          { machineServiceReport?.serviceReportTemplate?.enableSuggestedSpares && 
+            <RHFNoteFields 
+              name="suggestedSpares" 
+              label="Suggested Spares" 
+              historicalData={ machineServiceReport?.suggestedSpares } 
+              setParentValue={ setValue }
+            />
+          }
+          <RHFNoteFields 
+            name="internalNote" 
+            label="Internal Note"
+            historicalData={ machineServiceReport?.internalNote } 
+            setParentValue={ setValue }
+          />
+          
+          <RHFNoteFields 
+            isOperator
+            name="operatorNotes" 
+            label="Operator Notes" 
+            historicalData={ machineServiceReport?.operatorNotes } 
+            setParentValue={ setValue }
+          />
+
+          <FormLabel content='Documents / Images' />
+
+          {/* <RHFUpload multiple  thumbnail name="files" imagesOnly
+            onDrop={handleDropMultiFile}
+            dropZone={false}
+            onRemove={handleRemoveFile}
+            onLoadImage={handleLoadImage}
+            onLoadPDF={handleOpenFile}
+          /> */}
+          <Box
+            sx={{my:1, width:'100%'}}
+            gap={2}
+            display="grid"
+            gridTemplateColumns={{
+              xs: 'repeat(1, 1fr)',
+              sm: 'repeat(3, 1fr)',
+              md: 'repeat(5, 1fr)',
+              lg: 'repeat(6, 1fr)',
+              xl: 'repeat(8, 1fr)',
+            }}
+          >
+          { slides?.map((file, _index) => (
+            <DocumentGalleryItem isLoading={isLoading} key={file?._id} image={file} 
+              onOpenLightbox={()=> handleOpenLightbox(_index)}
+              onDownloadFile={()=> handleDownloadReportFile(file._id, file?.name, file?.extension)}
+              onDeleteFile={()=> handleDeleteReportFile(file._id)}
+              isArchived={ machine?.isArchived }
+              toolbar
+            />
+          ))}
+
+          { machineServiceReport?.files?.map((file, _index) => !file.fileType.startsWith("image") && (
+              <DocumentGalleryItem isLoading={isLoading} key={file?._id} image={file} 
+                onOpenFile={()=> handleOpenFile(file._id, file?.name, file?.extension)}
+                onDownloadFile={()=> handleDownloadReportFile(file._id, file?.name, file?.extension)}
+                onDeleteFile={()=> handleDeleteReportFile(file._id)}
+                isArchived={ machine?.isArchived }
+                toolbar
+              />
+            ))}
+
+          { machineServiceReport?.status?.name?.toUpperCase() === 'DRAFT' && 
+            <ThumbnailDocButton onClick={handleAddFileDialog} />
+          }
+          </Box>
+
+          {/* <Grid container display="flex"><RHFSwitch name="isActive" label="Active"/></Grid> */}
+      </Stack>
+      <ServiceRecodStepButtons isActive={isActive} isSubmitting={isSubmitting} />
+    </FormProvider>
+    {PDFViewerDialog && (
+      <Dialog fullScreen open={PDFViewerDialog} onClose={()=> setPDFViewerDialog(false)}>
+        <DialogTitle variant='h3' sx={{pb:1, pt:2, display:'flex', justifyContent:'space-between'}}>
+            PDF View
+              <Button variant='outlined' onClick={()=> setPDFViewerDialog(false)}>Close</Button>
+        </DialogTitle>
+        <Divider variant='fullWidth' />
+          {pdf?(
+              <iframe title={PDFName} src={pdf} style={{paddingBottom:10}} width='100%' height='842px'/>
+            ):(
+              <SkeletonPDF />
+            )}
+      </Dialog>
+    )}
+  </>
+)}
+
+export default MachineServiceReportsThirdStep

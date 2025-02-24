@@ -55,13 +55,13 @@ export const MachineByYearsView = Loadable(lazy(() => import('../pages/dashboard
 // ----------------------------------------------------------------
 
 // DASHBOARD
-export const Visits = Loadable(lazy(() => import('../pages/calendar/CalendarPage')));
-export const NewVisits = Loadable(lazy(() => import('../pages/calendar/CalendarPage')));
-export const EditVisits = Loadable(lazy(() => import('../pages/calendar/CalendarPage')));
-export const ViewVisits = Loadable(lazy(() => import('../pages/calendar/CalendarPage')));
+export const Visits = Loadable(lazy(() => import('../pages/calendar/CalendarView')));
+export const NewVisits = Loadable(lazy(() => import('../pages/calendar/CalendarView')));
+export const EditVisits = Loadable(lazy(() => import('../pages/calendar/CalendarView')));
+export const ViewVisits = Loadable(lazy(() => import('../pages/calendar/CalendarView')));
 
 // JIRA REPORT
-export const SupportTickets = Loadable(lazy(() => import('../pages/jira/JiraList')));
+export const JiraTickets = Loadable(lazy(() => import('../pages/jira/JiraList')));
 
 // CUSTOMER
 export const CustomerList = Loadable(lazy(() => import('../pages/crm/reports/customers/CustomerList')));
@@ -120,6 +120,11 @@ export const RegionList = Loadable(lazy(() => import('../pages/crm/configs/regio
 export const RegionAdd = Loadable(lazy(() => import('../pages/crm/configs/regions/RegionAdd')));
 export const RegionEdit = Loadable(lazy(() => import('../pages/crm/configs/regions/RegionEdit')));
 export const RegionView = Loadable(lazy(() => import('../pages/crm/configs/regions/RegionView')));
+
+// CUSTOMER REQUESTS
+export const PortalRegistrationList = Loadable(lazy(() => import('../pages/crm/portalRegistration/PortalRegistrationList')));
+export const PortalRegistrationEdit = Loadable(lazy(() => import('../pages/crm/portalRegistration/PortalRegistrationEdit')));
+export const PortalRegistrationView = Loadable(lazy(() => import('../pages/crm/portalRegistration/PortalRegistrationView')));
 
 //----------------------------------------------------------------
 
@@ -190,27 +195,29 @@ export const MachineProfileAdd = Loadable(lazy(() => import('../pages/machine/pr
 export const MachineProfileView = Loadable(lazy(() => import('../pages/machine/profiles/ProfileViewForm')));
 export const MachineProfileEdit = Loadable(lazy(() => import('../pages/machine/profiles/ProfileEditForm')));
 
-// --------------------------- MACHINE Service Records -------------------------------------
+// --------------------------- MACHINE Service Reports -------------------------------------
 
-export const MachineServiceRecordList = Loadable(lazy(() => import('../pages/machine/serviceRecords/MachineServiceRecordList')));
-export const MachineServiceRecordAdd = Loadable(lazy(() => import('../pages/machine/serviceRecords/MachineServiceRecordAddForm')));
-export const MachineServiceRecordView = Loadable(lazy(() => import('../pages/machine/serviceRecords/MachineServiceRecordViewForm')));
-export const MachineServiceRecordEdit = Loadable(lazy(() => import('../pages/machine/serviceRecords/MachineServiceRecordEditForm')));
-export const MachineServiceRecordHistoryList = Loadable(lazy(() => import('../pages/machine/serviceRecords/MachineServiceRecordHistoryList')));
+export const MachineServiceReportList = Loadable(lazy(() => import('../pages/machine/serviceReports/MachineServiceReportList')));
+export const MachineServiceReportAdd = Loadable(lazy(() => import('../pages/machine/serviceReports/MachineServiceReportAddForm')));
+export const MachineServiceReportView = Loadable(lazy(() => import('../pages/machine/serviceReports/MachineServiceReportViewForm')));
 
 // --------------------------- MACHINE INI -------------------------------------
 
 export const MachineINIList = Loadable(lazy(() => import('../pages/machine/historicalConfigurations/HistoricalConfigurationsList')));
 export const MachineINIAdd = Loadable(lazy(() => import('../pages/machine/historicalConfigurations/HistoricalConfigurationsAddForm')));
 export const MachineINIView = Loadable(lazy(() => import('../pages/machine/historicalConfigurations/HistoricalConfigurationsViewForm')));
-export const MachineINICompareView = Loadable(lazy(() => import('../pages/machine/historicalConfigurations/HistoricalConfigurationsCompareViewForm')));
+export const MachineINICompareView = Loadable(lazy(() => import('../pages/machine/historicalConfigurations/HistoricalConfigurationsCompareView')));
 
 // --------------------------- MACHINE LOGS -------------------------------------
 
 export const MachineLogsList = Loadable(lazy(() => import('../pages/machine/logs/MachineLogsList')));
 export const MachineLogsAdd = Loadable(lazy(() => import('../pages/machine/logs/MachineLogsAddForm')));
-export const MachineLogsView = Loadable(lazy(() => import('../pages/machine/logs/MachineLogsViewForm')));
+// export const MachineLogsView = Loadable(lazy(() => import('../pages/machine/logs/MachineLogsViewForm')));
 export const MachineLogsGraphView = Loadable(lazy(() => import('../pages/machine/logs/MachineLogsGraphViewForm')));
+
+// --------------------------- MACHINE INTEGRATION -------------------------------------
+
+export const MachineIntegrationViewForm = Loadable(lazy(() => import('../pages/machine/integration/IntegrationViewForm')));
 
 // --------------------------- MACHINE JIRA -------------------------------------
 
@@ -219,6 +226,24 @@ export const MachineJiraList = Loadable(lazy(() => import('../pages/machine/jira
 // ---------------------  SETTINGS -------------------------------------------
 
 export const MachineSetting = Loadable(lazy(() => import('../pages/machineSettings/Machine')));
+
+// ---------------------  REPORTS INTRODUCTION -------------------------------------------
+
+export const ReportsIntroduction = Loadable(lazy(() => import('../pages/Reports/ReportsIntroduction')));
+
+// ---------------------  MACHINE SETTING REPORT -------------------------------------------
+
+export const MachineSettingReportList = Loadable(lazy(() => import('../pages/machineSettingReports/MachineSettingReportList')));
+
+// ---------------------  MACHINE LOGS -------------------------------------------
+
+export const AllMachinesLogs = Loadable(lazy(() => import('../pages/Reports/AllMachineLogs')));
+// export const CoilLogs = Loadable(lazy(() => import('../pages/machineLogs/graph/CoilLogs')));
+// export const ErpLogs = Loadable(lazy(() => import('../pages/machineLogs/graph/ErpLogs')));
+// export const ProductionLogs = Loadable(lazy(() => import('../pages/machineLogs/graph/ProductionLogs')));
+
+// ---------------------  MACHINE Graphs -------------------------------------------
+export const AllMachinesGraphs = Loadable(lazy(() => import('../pages/Reports/AllMachineGraphs')));
 
 // --------------------- Categories & Models ----------------------
 
@@ -254,7 +279,7 @@ export const MachineToolAdd = Loadable(lazy(() => import('../pages/machineSettin
 export const MachineToolView = Loadable(lazy(() => import('../pages/machineSettings/tools/ToolView')));
 export const MachineToolEdit = Loadable(lazy(() => import('../pages/machineSettings/tools/ToolEdit')));
 
-// --------------- Service Record Configuration --------------------
+// --------------- Service Report Template --------------------
 
 // MACHINE SETTINGS CHECK Item Categories
 export const CheckItemCategoryList = Loadable(lazy(() => import('../pages/machineSettings/checkItemsCategories/CheckItemCategoryList')));
@@ -268,12 +293,17 @@ export const CheckItemAdd  = Loadable(lazy(() => import('../pages/machineSetting
 export const CheckItemView = Loadable(lazy(() => import('../pages/machineSettings/checkItem/CheckItemView')));
 export const CheckItemEdit = Loadable(lazy(() => import('../pages/machineSettings/checkItem/CheckItemEditForm')));
 
-// MACHINE SETTINGS Service Record Config / Document
-export const ServiceRecordConfigList = Loadable(lazy(() => import('../pages/machineSettings/serviceDocumentConfiguration/ServiceRecordConfigList')));
-export const ServiceRecordConfigAdd = Loadable(lazy(() => import('../pages/machineSettings/serviceDocumentConfiguration/ServiceRecordConfigAddForm')));
-export const ServiceRecordConfigView = Loadable(lazy(() => import('../pages/machineSettings/serviceDocumentConfiguration/ServiceRecordConfigView')));
-export const ServiceRecordConfigEdit = Loadable(lazy(() => import('../pages/machineSettings/serviceDocumentConfiguration/ServiceRecordConfigEdit')));
+// MACHINE SETTINGS Service Report Template / Document
+export const ServiceReportTemplateList = Loadable(lazy(() => import('../pages/machineSettings/serviceReportTemplate/ServiceReportTemplateList')));
+export const ServiceReportTemplateAdd = Loadable(lazy(() => import('../pages/machineSettings/serviceReportTemplate/ServiceReportTemplateAddForm')));
+export const ServiceReportTemplateView = Loadable(lazy(() => import('../pages/machineSettings/serviceReportTemplate/ServiceReportTemplateView')));
+export const ServiceReportTemplateEdit = Loadable(lazy(() => import('../pages/machineSettings/serviceReportTemplate/ServiceReportTemplateEdit')));
 
+
+export const ServiceReportStatusList = Loadable(lazy(() => import('../pages/machineSettings/serviceReportStatus/ServiceReportStatusList')));
+export const ServiceReportStatusAdd  = Loadable(lazy(() => import('../pages/machineSettings/serviceReportStatus/ServiceReportStatusAddForm')));
+export const ServiceReportStatusView = Loadable(lazy(() => import('../pages/machineSettings/serviceReportStatus/ServiceReportStatusView')));
+export const ServiceReportStatusEdit = Loadable(lazy(() => import('../pages/machineSettings/serviceReportStatus/ServiceReportStatusEdit')));
 // ------------------------ Others / Machine Status ------------------------
 
 // MACHINE SETTINGS: MACHINE Statuses
@@ -388,6 +418,9 @@ export const Pm2LogView = Loadable(lazy(() => import('../pages/settings/systemLo
 export const DbBackupLogsList = Loadable(lazy(() => import('../pages/settings/systemLogs/dbBackupLogs/DbBackupLogsList')));
 export const DbBackupLogsViewForm = Loadable(lazy(() => import('../pages/settings/systemLogs/dbBackupLogs/DbBackupLogsViewForm')));
 
+// LOGS: API LOGS
+export const ApiLogsList = Loadable(lazy(() => import('../pages/settings/systemLogs/ApiLogs/ApiLogsList')));
+
 // ----------------------------------------------------------------
 
 // SECURITY USERS
@@ -406,10 +439,68 @@ export const RoleView = Loadable(lazy(() => import('../pages/settings/securitySe
 // ----------------------------------------------------------------
 
 // SITE MAP / SITES REPORT
-export const SitesReport = Loadable(lazy(() => import('../pages/crm/reports/sites/Reports')));
+export const SitesReport = Loadable(lazy(() => import('../pages/sitesMap/Reports')));
 
 // ----------------------------------------------------------------
 
 // Email
 export const Email = Loadable(lazy(() => import('../pages/settings/email/EmailList')));
 export const Emailview = Loadable(lazy(() => import('../pages/settings/email/EmailViewform')));
+
+// --------------------------- Tickets -------------------------------------
+
+export const TicketFormList = Loadable(lazy(() => import('../pages/tickets/TicketFormList')));
+export const TicketForm = Loadable(lazy(() => import('../pages/tickets/TicketForm')));
+export const TicketView = Loadable(lazy(() => import('../pages/tickets/TicketView')));
+
+// Tickets / Ticket Settings
+export const TicketSetting = Loadable(lazy(() => import('../pages/tickets/ticketSettings/TicketSetting')));
+// Tickets / Ticket Settings / Collection
+// --------------------------- Issue Type -------------------------------------
+export const IssueTypeList = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/issueType/IssueTypeList')));
+export const IssueTypeForm = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/issueType/IssueTypeForm')));
+export const IssueTypeView = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/issueType/IssueTypeView')));
+
+// --------------------------- Request Type -------------------------------------
+export const RequestTypeList = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/requestType/RequestTypeList')));
+export const RequestTypeForm = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/requestType/RequestTypeForm')));
+export const RequestTypeView = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/requestType/RequestTypeView')));
+
+// --------------------------- Priority -------------------------------------
+export const PriorityList = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/priority/PriorityList')));
+export const PriorityForm = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/priority/PriorityForm')));
+export const PriorityView = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/priority/PriorityView')));
+
+// --------------------------- Status -------------------------------------
+export const StatusList = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/status/StatusList')));
+export const StatusForm = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/status/StatusForm')));
+export const StatusView = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/status/StatusView')));
+
+// --------------------------- Status Type -------------------------------------
+export const StatusTypeList = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/statusType/StatusTypeList')));
+export const StatusTypeForm = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/statusType/StatusTypeForm')));
+export const StatusTypeView = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/statusType/StatusTypeView')));
+
+// --------------------------- Impact -------------------------------------
+export const ImpactList = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/impact/ImpactList')));
+export const ImpactForm = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/impact/ImpactForm')));
+export const ImpactView = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/impact/ImpactView')));
+
+// --------------------------- Change Type -------------------------------------
+export const ChangeTypeList = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/changeType/ChangeTypeList')));
+export const ChangeTypeForm = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/changeType/ChangeTypeForm')));
+export const ChangeTypeView = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/changeType/ChangeTypeView')));
+
+// --------------------------- Change Reason -------------------------------------
+export const ChangeReasonList = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/changeReason/ChangeReasonList')));
+export const ChangeReasonForm = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/changeReason/ChangeReasonForm')));
+export const ChangeReasonView = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/changeReason/ChangeReasonView')));
+
+// --------------------------- Investigation Reason -------------------------------------
+export const InvestigationReasonList = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/investigationReason/InvestigationReasonList')));
+export const InvestigationReasonForm = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/investigationReason/InvestigationReasonForm')));
+export const InvestigationReasonView = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/investigationReason/InvestigationReasonView')));
+
+// --------------------------- Under Development -------------------------------------
+export const UnderDevelopment = Loadable(lazy(() => import('../pages/boundaries/UnderDevelopment')));
+export const SectionUnderConstruction = Loadable(lazy(() => import('../pages/boundaries/SectionUnderConstruction')));

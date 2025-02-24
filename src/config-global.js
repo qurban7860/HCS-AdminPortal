@@ -5,6 +5,7 @@ import { PATH_DASHBOARD } from './routes/paths';
 
 export const CONFIG = {
   APP_CODE: process.env.REACT_APP_CODE,
+  PORTAL_LOGIN_URL: process.env.PORTAL_LOGIN_URL,
   APP_TITLE: process.env.REACT_APP_TITLE,
   APP_NAME: process.env.REACT_APP_NAME,
   ENV: process.env.REACT_APP_ENV,
@@ -20,7 +21,7 @@ export const CONFIG = {
   COMPOSITE_TOOL_CONFIG_MAX_LENGTH: process.env.COMPOSITE_TOOL_CONFIG_MAX_LENGTH = 10,
 };
 
-export const HOST_API_KEY = process.env.REACT_APP_HOST_API_KEY || '';
+export const HOST_API_KEY = process.env.REACT_APP_SERVER_URL || '';
 
 
 export const FIREBASE_API = {

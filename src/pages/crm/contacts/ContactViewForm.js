@@ -11,7 +11,7 @@ import { useAuthContext } from '../../../auth/useAuthContext';
 import ViewPhoneComponent from '../../../components/ViewForms/ViewPhoneComponent';
 import { getContact, getContacts, resetContact, deleteContact, setIsExpanded, setCardActiveIndex } from '../../../redux/slices/customer/contact';
 import { setMachineTab } from '../../../redux/slices/products/machine';
-import { getMachineServiceRecord, setMachineServiceRecordViewFormVisibility, setResetFlags } from '../../../redux/slices/products/machineServiceRecord';
+import { getMachineServiceReport, setResetFlags } from '../../../redux/slices/products/machineServiceReport';
 import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../../components/ViewForms/ViewFormField';
 import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
@@ -20,11 +20,13 @@ import { PATH_MACHINE, PATH_CRM } from '../../../routes/paths';
 ContactViewForm.propTypes = {
   currentContact: PropTypes.object,
   setCurrentContactData: PropTypes.func,
+  isCustomerContactPage: PropTypes.bool,
 };
 
 export default function ContactViewForm({
   currentContact = null,
   setCurrentContactData,
+  isCustomerContactPage,
 }) {
   const { contact, isLoading } = useSelector((state) => state.contact);
   const { customer } = useSelector((state) => state.customer);
@@ -51,14 +53,17 @@ export default function ContactViewForm({
 
   const handleEdit = () => navigate(PATH_CRM.customers.contacts.edit(customerId, id));
   const handleMoveConatct = () => navigate(PATH_CRM.customers.contacts.move(customerId, id));
+  const backLink = () => navigate(PATH_CRM.customers.contacts.root(customerId, id));
 
-  const onDelete = async () => {
+  const onArchive = async () => {
     try {
       await dispatch(deleteContact(customerId, id));
       dispatch(setIsExpanded(false));
       enqueueSnackbar('Contact Archived Successfully!');
-      await dispatch(getContacts( customerId ))
-      navigate(PATH_CRM.customers.contacts.root(customerId))
+      if( customerId && customerId !== "undefined" ){
+        await dispatch(getContacts( customerId ))
+        navigate(PATH_CRM.customers.contacts.root(customerId))
+      }
     } catch (err) {
       enqueueSnackbar(err, { variant: `error` });
       console.log('Error:', err);
@@ -81,7 +86,7 @@ export default function ContactViewForm({
       postcode: contact?.address?.postcode || '',
       region: contact?.address?.region || '',
       country: contact?.address?.country || '',
-      serviceRecords: contact?.serviceRecords || [],
+      serviceReports: contact?.serviceReports || [],
       isActive: contact?.isActive,
       formerEmployee: contact?.formerEmployee,
       createdAt: contact?.createdAt || '',
@@ -95,17 +100,16 @@ export default function ContactViewForm({
     [contact]
   );
 
-  const handleSericeRecordView = async (machineId, Id) => {
-    await dispatch(setMachineTab('serviceRecords'));
-    await navigate(PATH_MACHINE.machines.view(machineId));
+  const handleSericeReportView = async (machineId, Id) => {
+    await dispatch(setMachineTab('serviceReports'));
+    await navigate(PATH_MACHINE.machines.serviceReports.view(machineId, Id));
+    await dispatch(getMachineServiceReport(machineId, Id));
     await dispatch(setResetFlags(false));
-    dispatch(getMachineServiceRecord(machineId, Id));
-    dispatch(setMachineServiceRecordViewFormVisibility(true));
   };
 
-  const operatorTraningsList = defaultValues?.serviceRecords?.map((item, index) => 
+  const operatorTraningsList = defaultValues?.serviceReports?.map((item, index) => 
   (
-    <Chip onClick={() => handleSericeRecordView(item?.machine, item?._id)} sx={{m:0.3}} label={`${item?.serviceRecordConfig?.docTitle || ''} | ${fDateTime(item?.serviceDate)}`} />
+    <Chip onClick={() => handleSericeReportView(item?.machine, item?._id)} sx={{m:0.3}} label={`${item?.serviceReportTemplate?.reportTitle || ''} | ${fDateTime(item?.serviceDate)}`} />
   ));
 
   return (
@@ -114,7 +118,8 @@ export default function ContactViewForm({
       <ViewFormEditDeleteButtons 
         moveCustomerContact={!customer?.isArchived && isAllAccessAllowed && handleMoveConatct } 
         handleEdit={customer?.isArchived ? undefined : handleEdit} 
-        onDelete={customer?.isArchived ? undefined : onDelete} 
+        onArchive={customer?.isArchived ? undefined : onArchive} 
+        backLink={isCustomerContactPage && !customer?.isArchived ? backLink : undefined}
         isActive={defaultValues.isActive} 
         formerEmployee={defaultValues.formerEmployee}
       />

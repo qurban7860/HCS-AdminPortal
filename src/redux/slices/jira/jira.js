@@ -20,6 +20,15 @@ const initialState = {
   totalRows: 0,
   filterStatus: 'Open',
   filterPeriod: 3,
+  reportHiddenColumns: {
+    "fields.created": false,
+    "key": false,
+    "fields.summary": false,
+    "fields.customfield_10078": false,
+    "fields.customfield_10069": false,
+    "fields.customfield_10070.value": false,
+    "fields.status.name": true,
+  },
 };
 
 const slice = createSlice({
@@ -102,6 +111,11 @@ const slice = createSlice({
     ChangePage(state, action) {
       state.page = action.payload;
     },
+    // Set HiddenColumns
+    setReportHiddenColumns(state, action){
+      state.reportHiddenColumns = action.payload;  
+    },
+
   },
 });
 
@@ -117,6 +131,7 @@ export const {
   setFilterPeriod,
   ChangeRowsPerPage,
   ChangePage,
+  setReportHiddenColumns
 } = slice.actions;
 
 // ----------------------------------------------------------------------

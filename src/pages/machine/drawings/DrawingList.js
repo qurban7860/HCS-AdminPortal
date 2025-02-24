@@ -25,21 +25,15 @@ import Scrollbar from '../../../components/scrollbar';
 // sections
 import DrawingListTableRow from './DrawingListTableRow';
 import DrawingListTableToolbar from './DrawingListTableToolbar';
-import {
-  getDocumentHistory,
-  resetDocumentHistory,
-} from '../../../redux/slices/document/document';
 import { getActiveDocumentCategories, resetActiveDocumentCategories } from '../../../redux/slices/document/documentCategory';
 import { getActiveDocumentTypes, resetActiveDocumentTypes } from '../../../redux/slices/document/documentType';
 import {
   getDrawings,
   ChangeRowsPerPage,
   ChangePage,
-  setFilterBy,
-  setDrawingViewFormVisibility, 
+  setFilterBy, 
   resetDrawings,
-  getDrawing,
-  resetDrawing} from '../../../redux/slices/products/drawing';
+  getDrawing, } from '../../../redux/slices/products/drawing';
 import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../../components/ListTableTools/TableCard';
 import MachineTabContainer from '../util/MachineTabContainer';
@@ -75,7 +69,7 @@ export default function DrawingList() {
     { id: 'documentType.name', visibility: 'xs2', label: 'Type', align: 'left' },
     { id: 'documentCategory.name', visibility: 'xs1', label: 'Category', align: 'left' },
     { id: 'isActive', label: 'Active', align: 'center' },
-    { id: 'createdAt', label: 'Created At', align: 'right' },
+    { id: 'updatedAt', label: 'Updated At', align: 'right' },
   ];
     
   const onChangeRowsPerPage = (event) => {
@@ -87,16 +81,16 @@ export default function DrawingList() {
 
   useEffect(() => {
     if( machineId ){
-      dispatch(getDrawings( machineId ));
-      dispatch(getActiveDocumentCategories());
-      dispatch(getActiveDocumentTypes());
+      dispatch(getDrawings( machineId, machine?.isArchived  ));
+      dispatch(getActiveDocumentCategories( null, null, true ));
+      dispatch(getActiveDocumentTypes( null, true ));
     } 
     return () => {
       dispatch(resetDrawings());
       dispatch(resetActiveDocumentCategories());
       dispatch(resetActiveDocumentTypes());
     }
-  }, [dispatch, machineId ]);
+  }, [dispatch, machineId, machine ]);
 
   useEffect(() => {
     setTableData(drawings);
@@ -112,7 +106,6 @@ export default function DrawingList() {
     typeVal,
   });
 
-  const denseHeight = 60;
   const isFiltered = filterName !== '' || !!filterStatus.length;
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
@@ -166,6 +159,7 @@ export default function DrawingList() {
           setCategoryVal={setCategoryVal}
           typeVal={typeVal}
           setTypeVal={setTypeVal}
+          drawing
         />
           {!isNotFound && <TablePaginationCustom
             count={dataFiltered.length}
@@ -196,7 +190,7 @@ export default function DrawingList() {
                         style={index % 2 ? { background: 'red' } : { background: 'green' }}
                       />
                     ) : (
-                      !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
+                      !isNotFound && <TableSkeleton key={index} sx={{ height: 60 }} />
                     )
                   )}
                   <TableNoData isNotFound={isNotFound} />

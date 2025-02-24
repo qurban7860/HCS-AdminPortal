@@ -1,14 +1,13 @@
-import { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 // @mui
-import { Card, Table, TableBody, Container, TableContainer } from '@mui/material';
+import { Table, TableBody, Container, TableContainer } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // routes
-import { PATH_SECURITY } from '../../../routes/paths';
+import { PATH_SETTING } from '../../../routes/paths';
 // components
-import { useSnackbar } from '../../../components/snackbar';
 import Scrollbar from '../../../components/scrollbar';
 import { Cover } from '../../../components/Defaults/Cover';
 import {
@@ -17,7 +16,9 @@ import {
   TableNoData,
   TableSkeleton,
   TableHeadCustom,
+  TableHeadFilter,
   TableSelectedAction,
+  TablePaginationFilter,
   TablePaginationCustom,
 } from '../../../components/table';
 // sections
@@ -32,7 +33,9 @@ import {
   setActiveFilterList,
   setEmployeeFilterList,
   setFilterRegion,
+  setReportHiddenColumns,
 } from '../../../redux/slices/securityUser/securityUser';
+import useResponsive from '../../../hooks/useResponsive';
 import { getActiveRegions, resetActiveRegions } from '../../../redux/slices/region/region';
 import { fDate } from '../../../utils/formatTime';
 // constants
@@ -41,8 +44,6 @@ import { StyledCardContainer } from '../../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
 
-// const STATUS_OPTIONS = ['all', 'active', 'banned'];
-
 const ROLE_OPTIONS = ['Administrator', 'Normal User', 'Guest User', 'Restriced User'];
 
 const TABLE_HEAD = [
@@ -50,12 +51,9 @@ const TABLE_HEAD = [
   { id: 'login', visibility: 'xs1', label: 'Login', align: 'left' },
   { id: 'phone', visibility: 'xs2', label: 'Phone Number', align: 'left' },
   { id: 'roles.name.[]', visibility: 'md1', label: 'Roles', align: 'left' },
-  // { id: 'regions.name.[]', visibility: 'md1', label: 'Regions', align: 'left' },
-  // { id: 'isOnline', label: 'Online', align: 'center' },
-  // { id: 'currentEmployee', label: 'Employed', align: 'center' },
-  { id: 'contact.firstName', label: 'Contact', align: 'left' },
-  { id: 'isActive', label: 'Active', align: 'center' },
-  { id: 'createdAt', label: 'Created At', align: 'right' },
+  { id: 'contact.firstName', visibility: 'xl', label: 'Contact', align: 'left' },
+  { id: 'isActive', label: "   ", align: 'left' },
+  { id: 'updatedAt', visibility: 'md', label: 'Updated At', align: 'right' },
 ];
 
 // ----------------------------------------------------------------------
@@ -76,55 +74,56 @@ export default function SecurityUserList() {
   const dispatch = useDispatch();
   const {
     securityUsers,
-    error,
-    responseMessage,
-    initial,
-    securityUserEditFormVisibility,
-    securityUserFormVisibility,
     filterBy, 
     employeeFilterList, 
     filterRegion,
     activeFilterList, 
     page, 
     rowsPerPage, 
-    isLoading
+    isLoading,
+    reportHiddenColumns
   } = useSelector((state) => state.user);
-
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));
     dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
   };
   const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
   
-  const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
-  const [ tableData, setTableData ] = useState([]);
   const [ filterName, setFilterName ] = useState('');
   const [ filterRole, setFilterRole ] = useState('all');
   const [ filterStatus, setFilterStatus ] = useState('all');
   const [ activeFilterListBy, setActiveFilterListBy ] = useState(activeFilterList);
   const [ employeeFilterListBy, setEmployeeFilterListBy ] = useState(employeeFilterList);
   const [ filterByRegion, setFilterByRegion ] = useState(filterRegion);
-
+  const isMobile = useResponsive('down', 'lg');
 
   useLayoutEffect(() => {
-    dispatch(getSecurityUsers());
     dispatch(getActiveRegions());
     return ()=>{
-      dispatch(resetSecurityUsers());
       dispatch(resetActiveRegions());
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, securityUserEditFormVisibility, securityUserFormVisibility]);
+  }, [ dispatch ]);
 
-  useEffect(() => {
-    if (initial) {
-      setTableData(securityUsers);
+  const onRefresh = useCallback(() => {
+    if(activeFilterListBy === "isArchived" ){
+      dispatch(getSecurityUsers( { isArchived: true } ));
+    }else if(activeFilterListBy === "invitationStatus" ){
+      dispatch(getSecurityUsers( { invitationStatus: true } ));
+    } else{
+      dispatch(getSecurityUsers());
     }
-  }, [securityUsers, error, enqueueSnackbar, responseMessage, initial]);
+  },[ dispatch, activeFilterListBy ] );
+
+  useLayoutEffect(() => {
+    onRefresh();
+    return ()=>{
+      dispatch(resetSecurityUsers());
+    }
+  }, [ dispatch, onRefresh ]);
 
   const dataFiltered = applyFilter({
-    inputData: tableData,
+    inputData: securityUsers,
     comparator: getComparator(order, orderBy),
     filterName,
     filterRole,
@@ -134,16 +133,10 @@ export default function SecurityUserList() {
     filterByRegion,
   });
   
-
-  
   const denseHeight = 60;
   const isFiltered = filterName !== '' || filterRole !== 'all' || filterStatus !== 'all';
-  const isNotFound =
-    (!dataFiltered.length && !!filterName) ||
-    (!dataFiltered.length && !!filterRole) ||
-    (!dataFiltered.length && !!filterStatus) || 
-    (!dataFiltered.length && !isLoading);
-
+  const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
+    
   const debouncedSearch = useRef(debounce((value) => {
     dispatch(ChangePage(0))
     dispatch(setFilterBy(value))
@@ -177,7 +170,6 @@ const handleEmployeeFilterListBy = (event) => {
   setPage(0);
 };
 
-
 const debouncedFilterRegion = useRef(debounce((value) => {
   dispatch(ChangePage(0))
   dispatch(setFilterRegion(value))
@@ -197,8 +189,7 @@ useEffect(() => {
 
 useEffect(()=>{
     setFilterName(filterBy)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-},[])
+},[ filterBy ] )
 
   const handleFilterRole = (event) => {
     setPage(0);
@@ -206,8 +197,7 @@ useEffect(()=>{
   };
 
   const handleViewRow = (id) => {
-    // dispatch(getSecurityUser(id))
-    navigate(PATH_SECURITY.users.view(id));
+    navigate(PATH_SETTING.security.users.view(id));
   };
 
   const handleResetFilter = () => {
@@ -217,8 +207,8 @@ useEffect(()=>{
     setFilterStatus('all');
   };
 
-  const onRefresh = () => {
-    dispatch(getSecurityUsers());
+  const handleHiddenColumns = async (arg) => {
+    dispatch(setReportHiddenColumns(arg))
   };
 
   return (
@@ -244,7 +234,17 @@ useEffect(()=>{
             onReload={onRefresh}
           />
 
-        {!isNotFound && <TablePaginationCustom
+        {!isNotFound && !isMobile && <TablePaginationFilter
+            columns={TABLE_HEAD}
+            hiddenColumns={reportHiddenColumns}
+            handleHiddenColumns={handleHiddenColumns}
+            count={dataFiltered.length}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
+          />}
+           {!isNotFound && isMobile && <TablePaginationCustom
             count={dataFiltered.length}
             page={page}
             rowsPerPage={rowsPerPage}
@@ -255,16 +255,17 @@ useEffect(()=>{
             <TableSelectedAction
               dense={dense}
               numSelected={selected.length}
-              rowCount={tableData.length}
+              rowCount={securityUsers?.length || 0 }
             />
 
             <Scrollbar>
-              <Table size="small" sx={{ minWidth: 360 }}>
-                <TableHeadCustom
+              <Table stickyHeader size="small" sx={{ minWidth: 360 }}>
+                <TableHeadFilter
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
                   onSort={onSort}
+                  hiddenColumns={reportHiddenColumns}
                 />
 
                 <TableBody>
@@ -278,6 +279,7 @@ useEffect(()=>{
                         selected={selected.includes(row._id)}
                         onSelectRow={() => onSelectRow(row._id)}
                         onViewRow={() => handleViewRow(row._id)}
+                        hiddenColumns={reportHiddenColumns}
                       />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
@@ -337,7 +339,7 @@ function applyFilter({ inputData, comparator, filterName, filterStatus, filterRo
         securityUser?.phone?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         `${securityUser?.contact?.firstName?.toLowerCase() || ''} ${securityUser?.contact?.lastName?.toLowerCase() || '' }`.indexOf(filterName.toLowerCase()) >= 0 ||
         securityUser?.roles?.map((obj) => obj.name).join(', ').toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        // (securityUser?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+        // (securityUser?.isActive ? "Active" : "InActive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
         fDate(securityUser?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }

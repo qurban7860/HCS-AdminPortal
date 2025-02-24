@@ -8,7 +8,7 @@ import { Card, Grid } from '@mui/material';
 // redux
 import { deleteDocumentCategory } from '../../../../redux/slices/document/documentCategory';
 // paths
-import { PATH_SETTING } from '../../../../routes/paths';
+import { PATH_MACHINE, PATH_SETTING } from '../../../../routes/paths';
 // components
 import { useSnackbar } from '../../../../components/snackbar';
 import ViewFormAudit from '../../../../components/ViewForms/ViewFormAudit';
@@ -28,7 +28,7 @@ export default function DocumentCategoryViewForm() {
   const onDelete = async () => {
     try {
       await dispatch(deleteDocumentCategory(documentCategory?._id));
-      navigate(PATH_SETTING.documentCategory.list);
+      navigate(PATH_MACHINE.documents.documentCategory.list);
       enqueueSnackbar('Document Category Archive Successfully!');
     } catch (error) {
       enqueueSnackbar('Document Category Archive failed!', { variant: `error` });
@@ -37,7 +37,7 @@ export default function DocumentCategoryViewForm() {
   };
 
   const handleEdit = async () => {
-    navigate(PATH_SETTING.documentCategory.edit(documentCategory._id));
+    navigate(PATH_MACHINE.documents.documentCategory.edit(documentCategory._id));
   };
 
   const defaultValues = useMemo(
@@ -67,7 +67,7 @@ export default function DocumentCategoryViewForm() {
           isActive={defaultValues.isActive} 
           handleEdit={handleEdit} 
           onDelete={onDelete} 
-          backLink={() => navigate(PATH_SETTING.documentCategory.list)}
+          backLink={() => navigate(PATH_MACHINE.documents.documentCategory.list)}
           settingPage
         />
         <Grid container sx={{mt:2}}>

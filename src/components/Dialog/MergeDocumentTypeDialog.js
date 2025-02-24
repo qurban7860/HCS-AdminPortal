@@ -68,7 +68,7 @@ function MergeDocumentTypeDialog() {
             filterSelectedOptions
             name="docTypes"
             label="Document Types*"
-            options={activeDocumentTypes.filter((type)=> type._id !==documentType._id && type?.docCategory?._id === documentType?.docCategory?._id)}
+            options={activeDocumentTypes?.filter((type)=> type._id !==documentType._id && type?.docCategory?._id === documentType?.docCategory?._id) || [] }
             isOptionEqualToValue={(option, value) => option?._id === value?._id}
             getOptionLabel={(option) => `${option.name || ''}`}
             renderOption={(props, option) => (

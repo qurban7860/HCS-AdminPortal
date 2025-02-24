@@ -6,21 +6,20 @@ import axios from 'axios';
 import debounce from 'lodash/debounce';
 // form
 // @mui
-import { Container, Table, TableBody, TableContainer , Tooltip, IconButton, Autocomplete, TextField, TableHead, TableRow, TableCell, Checkbox, Chip} from '@mui/material';
+import { Container, Table, TableBody, TableContainer } from '@mui/material';
 import {
   useTable,
   getComparator,
   TableNoData,
   TableSkeleton,
   TableHeadFilter,
-  TableSelectedAction,
   TablePaginationCustom,
   TablePaginationFilter
 } from '../../components/table';
 import Scrollbar from '../../components/scrollbar';
-import Iconify from '../../components/iconify';
 import MachineListTableRow from './MachineListTableRow';
 import MachineListTableToolbar from './MachineListTableToolbar';
+
 
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
@@ -57,7 +56,6 @@ import { useSnackbar } from '../../components/snackbar';
 // util
 import TableCard from '../../components/ListTableTools/TableCard';
 import { fDate } from '../../utils/formatTime';
-import CustomerDialog from '../../components/Dialog/CustomerDialog';
 import { exportCSV } from '../../utils/exportCSV';
 
 // ----------------------------------------------------------------------
@@ -68,14 +66,15 @@ MachineList.propTypes = {
 
 const TABLE_HEAD = [
   { id: 'serialNo', label: 'Serial Number', align: 'left', hideable:false },
-  { id: 'name', visibility: 'md1',label: 'Name', align: 'left' },
-  { id: 'machineModel.name', visibility: 'xs1', label: 'Model', align: 'left' },
-  { id: 'customer.name', visibility: 'md2', label: 'Customer', align: 'left' },
-  { id: 'installationDate', visibility: 'md3', label: 'Installation Date', align: 'left' },
-  { id: 'shippingDate', visibility: 'md3', label: 'Shipping Date', align: 'left' },
-  { id: 'manufactureDate', visibility: 'md3', label: 'Manufacture Date', align: 'left'},
-  { id: 'status', visibility: 'xs2',  label: 'Status', align: 'left' },
-  { id: 'profiles', visibility: 'md2',label: 'Profile', align: 'left' },
+  { id: 'name', label: 'Name', align: 'left' },
+  { id: 'machineModel.name', label: 'Model', align: 'left' },
+  { id: 'customer.name', label: 'Customer', align: 'left' },
+  { id: 'installationDate', label: 'Installation Date', align: 'left' },
+  { id: 'shippingDate', label: 'Shipping Date', align: 'left' },
+  { id: 'manufactureDate', label: 'Manufacture Date', align: 'left'},
+  { id: 'status', label: 'Status', align: 'left' },
+  { id: 'profiles', label: 'Profile', align: 'left' },
+
   { id: 'isActive', label: 'Active', align: 'center' },
 ];
 
@@ -85,7 +84,6 @@ export default function MachineList({ isArchived }) {
     orderBy,
     setPage,
     onSelectRow,
-    onSelectAllRows,
     onSort,
   } = useTable({ defaultOrderBy: 'serialNo', defaultOrder: 'desc' });
 
@@ -145,7 +143,6 @@ export default function MachineList({ isArchived }) {
   const [filterVerify, setFilterVerify] = useState(verified);
   const [filterName, setFilterName] = useState(filterBy);
   const [filterStatus, setFilterStatus] = useState([]);
-  const [setOpenConfirm] = useState(false);
   
   useEffect(() => {
     if (initial) {
@@ -168,10 +165,6 @@ export default function MachineList({ isArchived }) {
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
   const denseHeight = 60;
 
-  const handleOpenConfirm = () => {
-    setOpenConfirm(true);
-  };
-
   const debouncedSearch = useRef(debounce((value) => {
     dispatch(ChangePage(0))
     dispatch(setFilterBy(value))
@@ -193,8 +186,7 @@ export default function MachineList({ isArchived }) {
     setFilterVerify(event.target.value)
     setPage(0);
   };
-
-
+  
   const debouncedAccountManager = useRef(debounce((value) => {
     dispatch(ChangePage(0))
   }, 500))
@@ -260,42 +252,45 @@ export default function MachineList({ isArchived }) {
 
   return (
     <Container maxWidth={false}>
-        <StyledCardContainer>
-          <Cover name={ isArchived ? "Archived Machines" : "Machines" } icon="arcticons:materialistic" setting isArchivedMachines={!isArchived} isArchived={isArchived} />
-        </StyledCardContainer>
-        <TableCard>
-          <MachineListTableToolbar
-            filterName={filterName}
-            onFilterName={handleFilterName}
-            filterVerify={ isArchived ? undefined : filterVerify}
-            onFilterVerify={ isArchived ? undefined : handleFilterVerify}
-            filterStatus={ isArchived ? undefined : filterStatus}
-            onFilterStatus={ isArchived ? undefined : handleFilterStatus}
-            isFiltered={isFiltered}
-            onResetFilter={handleResetFilter}
-            onExportCSV={onExportCSV}
-            onExportLoading={exportingCSV}
-            accountManagerFilter={accountManager}
-            setAccountManagerFilter={ isArchived ? undefined : setAccountManagerFilter}
-            supportManagerFilter={supportManager}
-            setSupportManagerFilter={ isArchived ? undefined : setSupportManagerFilter}
-            isArchived={isArchived}
-          />
+      <StyledCardContainer>
+      <Cover name={ isArchived ? "Archived Machines" : "Machines" } icon="arcticons:materialistic" setting isArchivedMachines={!isArchived} isArchived={isArchived} />
+      </StyledCardContainer>
+      <TableCard>
+        <MachineListTableToolbar
+          filterName={filterName}
+          onFilterName={handleFilterName}
+          filterVerify={ isArchived ? undefined : filterVerify}
+          onFilterVerify={ isArchived ? undefined : handleFilterVerify}
+          filterStatus={ isArchived ? undefined : filterStatus}
+          onFilterStatus={ isArchived ? undefined : handleFilterStatus}
+          isFiltered={isFiltered}
+          onResetFilter={handleResetFilter}
+          onExportCSV={onExportCSV}
+          onExportLoading={exportingCSV}
+          accountManagerFilter={accountManager}
+          setAccountManagerFilter={ isArchived ? undefined : setAccountManagerFilter}
+          supportManagerFilter={supportManager}
+          setSupportManagerFilter={ isArchived ? undefined : setSupportManagerFilter}
+          isArchived={isArchived}
+        />
 
-          {!isNotFound && <TablePaginationFilter
+        {!isNotFound && (
+          <TablePaginationFilter
             columns={TABLE_HEAD}
             hiddenColumns={reportHiddenColumns}
             handleHiddenColumns={handleHiddenColumns}
             count={machines? machines.length : 0}
             page={page}
+
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-          />}
-          
-          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            <Scrollbar>
-              <Table stickyHeader size="small" sx={{ minWidth: 360 }}>
+          />
+        )}
+
+        <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+          <Scrollbar>
+            <Table stickyHeader size="small" sx={{ minWidth: 360 }}>
               <TableHeadFilter
                 order={order}
                 orderBy={orderBy}
@@ -324,22 +319,20 @@ export default function MachineList({ isArchived }) {
                       !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                     )
                   )}
-                  <TableNoData isNotFound={isNotFound} />
+                <TableNoData isNotFound={isNotFound} />
               </TableBody>
-              </Table>
-            </Scrollbar>
-          </TableContainer>
+            </Table>
+          </Scrollbar>
+        </TableContainer>
 
-          {!isNotFound && <TablePaginationCustom
+        {!isNotFound && <TablePaginationCustom
             count={machines? machines.length : 0}
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
           />}
-
-        </TableCard>
-        <CustomerDialog />
+      </TableCard>
     </Container>
   );
 }
@@ -375,7 +368,7 @@ function applyFilter({ inputData, comparator, filterName, filterVerify, filterSt
         // `${product?.accountManager?.firstName} ${product?.accountManager?.lastName}`.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         // `${product?.projectManager?.firstName} ${product?.projectManager?.lastName}`.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         // `${product?.supportManager?.firstName} ${product?.supportManager?.lastName}`.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        // (product?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+        // (product?.isActive ? "Active" : "InActive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
         fDate(product?.installationDate)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         fDate(product?.shippingDate)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         fDate(product?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0

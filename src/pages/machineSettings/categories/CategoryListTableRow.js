@@ -26,7 +26,7 @@ export default function CategoryListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { name, isActive, isDefault, connections, createdAt } = row;
+  const { name, isActive, isDefault, connections, updatedAt } = row;
 
   const smScreen = useScreenSize('sm')
 
@@ -41,7 +41,7 @@ export default function CategoryListTableRow({
           <Switch checked={isActive} disabled sx={{ my: -1 }} />{' '}
         </TableCell>
 
-        <TableCell align="right">{fDate(createdAt)}</TableCell>
+        <TableCell align="right">{fDate(updatedAt)}</TableCell>
       </TableRow>
 
   );

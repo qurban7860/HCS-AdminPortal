@@ -28,11 +28,11 @@ function CoverAvatar({ icon, avatar }) {
       backgroundColor: theme.palette[colr]?.main,
       fontWeight: theme.typography.fontWeightBold,
       border: '2px solid #fff',
-      fontSize: '4rem',
-      ml: { xs: 3, md: 3 },
+      fontSize: { xs: '2rem', md: '4rem' }, 
+      ml: { xs: 2, md: 3 }, 
       mt: { xs: 1, md: 1 },
-      width: { xs: 110, md: 110 },
-      height: { xs: 110, md: 110 },
+      width: { xs: 80, md: 100 }, 
+      height: { xs: 80, md: 100 },
     }}>
       {avatar ? charAtName :<Iconify icon={icon} width='60px' />}
     </Avatar>

@@ -47,7 +47,9 @@ export default function SiteEditForm() {
   }
 
   useEffect(() => {
-    if(customerId && id)dispatch(getSite(customerId, id))
+    if(customerId && customerId !== "undefined" && id && id !== "undefined"){
+      dispatch(getSite(customerId, id))
+    }
     setIsExpanded(true);
     setCardActiveIndex(id);
   }, [ dispatch, customerId, id ]);
@@ -133,7 +135,7 @@ export default function SiteEditForm() {
     try {
       await dispatch(updateSite(data, customerId, id));
       enqueueSnackbar('Site saved Successfully!');
-      if(customerId && id ){
+      if( customerId && customerId !== "undefined" && id && id !== "undefined" ){
         await dispatch(getSites(customerId))
         await navigate(PATH_CRM.customers.sites.view(customerId, id))
       } 
@@ -172,25 +174,43 @@ export default function SiteEditForm() {
                 </IconButton>
                 <Typography variant='body2' sx={{ color:'gray'}}>Update country code in phone/fax.</Typography>
               </Box>
-                  <Grid>
-                    {phoneNumbers?.map((pN, index) => (
-                      <Grid sx={{ py: 1 }} display="flex" alignItems="center" >
-                        <RHFCustomPhoneInput name={`phoneNumbers[${index}]`} value={pN} label={pN?.type || 'Contact Number'} index={index} />
-                        <IconButton disabled={phoneNumbers?.length === 1} onClick={ () => removeContactNumber(index) } size="small" variant="contained" color='error' sx={{ mx: 1 }} >
-                          <StyledTooltip title="Remove Contact Number" placement="top" disableFocusListener tooltipcolor={theme.palette.error.main}  color={ phoneNumbers?.length > 1 ? theme.palette.error.main : theme.palette.text.main }  >
-                            <Iconify icon="icons8:minus" sx={{width: 25, height: 25}}  />
-                          </StyledTooltip>
-                        </IconButton>
-                      </Grid>
-                    ))}
-                    <Grid >
-                      <IconButton disabled={ phoneNumbers?.length > 9 } onClick={ addContactNumber } size="small" variant="contained" color='success' sx={{ ml: 'auto', mr:1 }} >
+              <Box sx={{ width: '100%', overflowX: { xs: 'auto', sm: 'hidden', }, maxWidth: '100%', display: 'flex', flexDirection: 'column' }} >
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, flexWrap: { xs: 'nowrap', sm: 'wrap', }, }} >
+                  {phoneNumbers?.map((pN, index) => (
+                    <Box  key={`${pN}-${index}`} sx={{ display: 'flex', alignItems: 'center', flex: '1 1 auto', minWidth: 300, ml: { xs: 'auto',  sm: 0 }, mt: 1 }} >
+                      <RHFCustomPhoneInput
+                        name={`phoneNumbers[${index}]`}
+                        value={pN}
+                        label={pN?.type || 'Contact Number'}
+                        index={index}
+                        sx={{ flex: 1 }}
+                      />
+                      <IconButton disabled={phoneNumbers?.length === 1} onClick={ () => removeContactNumber(index) } size="small" variant="contained" color='error' sx={{ mx: 1 }} >
+                        <StyledTooltip
+                          title="Remove Contact Number"
+                          placement="top"
+                          disableFocusListener
+                          tooltipcolor={theme.palette.error.main}
+                          color={
+                            phoneNumbers?.length > 1
+                              ? theme.palette.error.main
+                              : theme.palette.text.main
+                          }
+                        >
+                          <Iconify icon="icons8:minus" sx={{ width: 25, height: 25 }} />
+                        </StyledTooltip>
+                      </IconButton>
+                    </Box>
+                  ))}
+                  <Box>
+                  <IconButton disabled={ phoneNumbers?.length > 9 } onClick={ addContactNumber } size="small" variant="contained" color='success' sx={{ ml: 'auto', mr:1 }} >
                         <StyledTooltip title="Add Contact Number" placement="top" disableFocusListener tooltipcolor={theme.palette.success.dark} color={ phoneNumbers?.length < 10 ? theme.palette.success.dark : theme.palette.text.main }  >
                           <Iconify icon="icons8:plus" sx={{width: 25, height: 25}}  />
                         </StyledTooltip>
                       </IconButton>
-                    </Grid>
-                  </Grid>
+                  </Box>
+                </Box>
+              </Box>
               <Box
                 rowGap={2} columnGap={2} display="grid"
                 gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}

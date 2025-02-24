@@ -35,7 +35,9 @@ export const FORMLABELS = {
     TOOLS: 'Tools',
     LOGS: 'Logs',
     SETTINGS: 'Settings',
+    MACHINE_SETTINGS: 'Machine Settings',
     CUSTOMERS: 'Customers',
+    REGISTERED_REQUESTS: "Portal Registrations",
     ARCHIVED_CUSTOMERS: 'Archived Customers',
     DOCUMENTS: 'Documents',
     ADD_DOCUMENTS: 'Add Documents',
@@ -51,13 +53,17 @@ export const FORMLABELS = {
     MACHINE_CHECK_ITEM_SERVICE_PARAMS_CONSTRCTUION: 'Check Items (Under Construction)',
     MACHINE_CHECK_ITEM_SERVICE_PARAM_ADD: 'New Check Item',
     MACHINE_CHECK_ITEM_SERVICE_PARAM_EDIT: 'Edit Check Item',
-    MACHINE_CHECK_ITEM_SERVICE_CONFIGS: 'Service Doc Config',
-    MACHINE_CHECK_ITEM_SERVICE_CONFIGS_ADD: 'New Service Doc Configuration',
-    MACHINE_CHECK_ITEM_SERVICE_CONFIGS_EDIT: 'Edit Service Doc Configuration',
-    MACHINE_CHECK_ITEM_SERVICE_RECORDS: 'Check Items Service Records',
-    MACHINE_CHECK_ITEM_SERVICE_RECORD_ADD: 'New Check Items Service Record',
-    MACHINE_CHECK_ITEM_SERVICE_CHECK_PARAM_RECORD_ADD: 'New Check Items Service Parameter',
-    MACHINE_CHECK_ITEM_SERVICE_RECORD_EDIT: 'Edit Check Items Service Record',
+    MACHINE_CHECK_ITEM_SERVICE_CONFIGS: 'Service Report Template',
+    MACHINE_CHECK_ITEM_SERVICE_CONFIGS_ADD: 'New Service Template',
+    MACHINE_CHECK_ITEM_SERVICE_CONFIGS_EDIT: 'Edit Service Template',
+    MACHINE_CHECK_ITEM_SERVICE_REPORTS: 'Check Items Service Reports',
+    MACHINE_CHECK_ITEM_SERVICE_REPORT_ADD: 'New Check Items Service Report',
+    MACHINE_CHECK_ITEM_SERVICE_CHECK_PARAM_REPORT_ADD: 'New Check Items Service Parameter',
+    MACHINE_CHECK_ITEM_SERVICE_REPORT_EDIT: 'Edit Check Items Service Report',
+    MACHINE_SERVICE_REPORT_NOTES: 'Notes / Comments',
+    TICKET_ATTACHMENTS: 'Attachments',
+    TICKET_COMMENTS: 'Notes / Comments',
+    TICKET_HISTORY: 'Ticket History',
     EDIT_DOCUMENT: 'Edit Document',
   },
 
@@ -77,7 +83,7 @@ export const FORMLABELS = {
   COMMON_SETTINGS: 'Categories & Models',
   TECHNICAL_SETTINGS: 'Machine Settings',
   TOOLS_INFO: 'Tools Information',
-  SERVICE: 'Service Record Configuration',
+  SERVICE: 'Service Report Template Settings',
   OTHERS: 'Others',
 
   // @root - Settings
@@ -88,6 +94,13 @@ export const FORMLABELS = {
   EMAILS: 'Emails',
   ARCHIVED_REPORTS: 'Archived Reports',
   LOGS_SETTINGS: 'Logs',
+
+  // @root - Ticket Settings
+  REQUEST_SETTINGS: 'Request Settings',
+  REQUEST_STATUS_SETTINGS: 'Request Status Settings',
+  CHANGE_SETTINGS: 'Change Settings',
+  PRIORITY_SETTINGS: 'Priority Settings',
+
   // @root DocumentAddForm in dashboard/documents
   SELECT_CUSTOMER: 'Select Customer',
   SELECT_SITE: 'Select Site',
@@ -165,6 +178,7 @@ export const BUTTONS = {
   },
   CLEAR: 'Clear',
   CANCEL: 'Cancel',
+  BACK: 'Back',
   DISCARD: 'Discard',
   TRANSFER: 'Transfer',
   CONTINUE: 'Continue',
@@ -195,6 +209,8 @@ export const BUTTONS = {
   ADDSUPPLIER: 'Add Supplier',
   ADDSTATUS: 'Add Status',
   ADDTECHPARAM: 'Add Technical Parameter',
+  // Ticket settings
+  ADDTICKET: 'Add New Ticket',
   // Service settings
   ADDSERVICESETTING: 'Add Service Setting',
   EDITSERVICESETTING: 'Edit Service Setting',
@@ -227,10 +243,12 @@ export const BUTTONS = {
   // MACHINE SETTINGS
   ADD_CHECK_ITEM_CATEGORY: 'Add Category',
   ADD_SERVICE_CHECK_ITEM: 'Add Check Item',
-  ADD_MACHINE_SERVICE_CONFIG: 'Add Configuration',
-  ADD_MACHINE_SERVICE_RECORD: 'Add Record',
+  ADD_MACHINE_SERVICE_CONFIG: 'Add New Template',
+  ADD_SERVICE_REPORT_STATUS: "Add Service Report Status",
+  ADD_MACHINE_SERVICE_REPORT: 'Add Service Report',
   ADD_MACHINE_INI: 'Add INI',
-  ADD_MACHINE_LOGS: 'Add Log',
+  ADD_MACHINE_LOGS: 'Add New Log',
+  SHOW_LOG_GRAPH: 'Show Logs Graph',
 
   // auth
   UPDATEPASSWORD: 'Update Password',
@@ -302,6 +320,8 @@ export const TITLES = {
     tooltip: 'Only available at large resolutions > 1600px (xl)',
   },
   PRESETS: 'Presets',
+  REPORTS_TITLE: 'Reports',
+  REPORTS_DESC: 'Access comprehensive reports and analytics to monitor your machine performance, track maintenance history, and analyze operational data. Our reporting system provides detailed insights across various categories to help you make informed decisions.',
 };
 
 export const TOGGLE = {
@@ -315,8 +335,8 @@ export const TOGGLE = {
 export const Snacks = {
   configuration_Verification_Success: 'Verification Success',
   configuration_Verification_Failed: 'Verification Failed!',
-  configuration_approve_Success: 'Document approved Successfully!',
-  configuration_approve_Failed: 'Document approve Failed!',
+  configuration_approve_Success: 'Template approved Successfully!',
+  configuration_approve_Failed: 'Template approve Failed!',
   // auth: reset
   password_changed: 'Password update Successful',
   password_change_failed: 'Password update Failed'

@@ -1,115 +1,96 @@
-import { useEffect, useState } from 'react';
-import { PATH_CRM, PATH_CALENDAR, PATH_DASHBOARD, PATH_MACHINE, PATH_DOCUMENT, PATH_SETTING, PATH_SITEMAP, PATH_SECURITY, PATH_MACHINE_DRAWING, PATH_SUPPORT_TICKETS } from '../../../routes/paths';
 // components
-import Iconify from '../../../components/iconify';
-import SvgColor from '../../../components/svg-color';
-import { useAuthContext } from '../../../auth/useAuthContext';   
-import { MachineIcon } from '../../../theme/overrides/CustomIcons';
+import { allSideBarOptions, generalSideBarOptions } from '../navigationConstants';
 
 // ----------------------------------------------------------------------
 
-function NavigationConfig() {
+// function NavigationConfig({selectedCategory}) {
 
-  const icon = (name) => (
-    <SvgColor src={`/assets/icons/navbar/${name}.svg`} sx={{ width: 1, height: 1 }} />
-  );
+//   const icon = (name) => (
+//     <SvgColor src={`/assets/icons/navbar/${name}.svg`} sx={{ width: 1, height: 1 }} />
+//   );
   
-  const ICONS = {
-    blog: icon('ic_blog'),
-    cart: icon('ic_cart'),
-    chat: icon('ic_chat'),
-    mail: icon('ic_mail'),
-    user: icon('ic_user'),
-    file: icon('ic_file'),
-    lock: icon('ic_lock'),
-    label: icon('ic_label'),
-    blank: icon('ic_blank'),
-    kanban: icon('ic_kanban'),
-    folder: icon('ic_folder'),
-    banking: icon('ic_banking'),
-    booking: icon('ic_booking'),
-    invoice: icon('ic_invoice'),
-    calendar: <Iconify icon="lets-icons:date-range-light" /> ,
-    disabled: icon('ic_disabled'),
-    external: icon('ic_external'),
-    menuItem: icon('ic_menu_item'),
-    ecommerce: icon('ic_ecommerce'),
-    asset: icon('ic_ecommerce'),
-    analytics: icon('ic_analytics'),
-    dashboard: <Iconify icon="mdi:view-dashboard" />,
-    setting: <Iconify icon="ant-design:setting-filled" />,
-    supportTickets: <Iconify icon="icomoon-free:ticket" />,
-    email: <Iconify icon ="eva:email-fill"/>,
-    document: <Iconify icon="lets-icons:file-dock-fill" />,
-    drawing: <Iconify icon="streamline:hand-held-tablet-drawing-solid" />,
-    reports: <Iconify icon="mdi:report-box-outline" />,
-    map: <Iconify icon="mdi:map-marker" />,
-    machines: <MachineIcon key="machine"/>,
-    users: <Iconify icon="mdi:account-group" />,
-    security: <Iconify icon="mdi:security-account" />,
-  };
+//   const ICONS = {
+//     blog: icon('ic_blog'),
+//     cart: icon('ic_cart'),
+//     chat: icon('ic_chat'),
+//     mail: icon('ic_mail'),
+//     user: icon('ic_user'),
+//     register: <Iconify icon="mdi:users-add" />,
+//     file: icon('ic_file'),
+//     lock: icon('ic_lock'),
+//     label: icon('ic_label'),
+//     blank: icon('ic_blank'),
+//     kanban: icon('ic_kanban'),
+//     folder: icon('ic_folder'),
+//     banking: icon('ic_banking'),
+//     booking: icon('ic_booking'),
+//     invoice: icon('ic_invoice'),
+//     calendar: <Iconify icon="lets-icons:date-range-light" /> ,
+//     disabled: icon('ic_disabled'),
+//     external: icon('ic_external'),
+//     menuItem: icon('ic_menu_item'),
+//     ecommerce: icon('ic_ecommerce'),
+//     asset: icon('ic_ecommerce'),
+//     analytics: icon('ic_analytics'),
+//     dashboard: <Iconify icon="mdi:view-dashboard" />,
+//     setting: <Iconify icon="ant-design:setting-filled" />,
+//     supportTickets: <Iconify icon="icomoon-free:ticket" />,
+//     email: <Iconify icon ="eva:email-fill"/>,
+//     document: <Iconify icon="lets-icons:file-dock-fill" />,
+//     drawing: <Iconify icon="streamline:hand-held-tablet-drawing-solid" />,
+//     reports: <Iconify icon="mdi:report-box-outline" />,
+//     machines: <MachineIcon key="machine"/>,
+//     serviceReports: <Iconify icon="mdi:clipboard-text-clock" />,
+//     users: <Iconify icon="mdi:account-group" />,
+//     security: <Iconify icon="mdi:security-account" />,
+//     machineLogs: <Iconify icon="lucide:list-end" />,
+//     map: <Iconify icon="mdi:map-marker" />,
+//     machineSettingReports: <Iconify icon="tdesign:task-setting-filled" />,
+//   };
 
-  const { 
-    isDocumentAccessAllowed, 
-    isDrawingAccessAllowed, 
-    isSettingAccessAllowed, 
-    isSecurityUserAccessAllowed, 
-    isEmailAccessAllowed,
-    isDeveloper,
-  } = useAuthContext();
-    
-  const [navConfig, setConfig] = useState([
-    {
-      subheader: 'general',
-      items: [
-        { title: 'Dashboard', path: PATH_DASHBOARD.root, icon: ICONS.dashboard },
-        { title: 'Customers', path: PATH_CRM.customers.list, icon: ICONS.users },
-        { title: 'Machines', path: PATH_MACHINE.machines.root, icon: ICONS.machines },
-      ],
-    },
-  ]);
+const NavigationConfig = ({
+  selectedCategory,
+  isDocumentAccessAllowed,
+  isDrawingAccessAllowed,
+  isSettingAccessAllowed,
+  isSecurityUserAccessAllowed,
+  requireDashboard = true
+}) => {
+  let navItems = allSideBarOptions[selectedCategory?.id] || allSideBarOptions.customers;
 
+  if (!isDocumentAccessAllowed) {
+    navItems = navItems.map((section) => ({
+      ...section,
+      items: section.items.filter((item) => !item.title.toLowerCase().includes('document')),
+    }));
+  }
 
-  useEffect(() => {
-    const updatedConfig = [...navConfig];
+  if (!isDrawingAccessAllowed) {
+    navItems = navItems.map((section) => ({
+      ...section,
+      items: section.items.filter((item) => !item.title.toLowerCase().includes('drawing')),
+    }));
+  }
 
-    if (isDocumentAccessAllowed && navConfig.some((config) => config.title?.toLowerCase() !== 'documents')) {
-      updatedConfig[0].items.push({ title: 'Documents', path: PATH_DOCUMENT.root, icon: ICONS.document });
-      // updatedConfig[0].items.splice(3, 0, { title: 'Documents', path: PATH_DOCUMENT.root, icon: ICONS.document });
-    }
+  if (!isSecurityUserAccessAllowed) {
+    navItems = navItems.map((section) => ({
+      ...section,
+      items: section.items.filter((item) => !item.title.toLowerCase().includes('user')),
+    }));
+  }
 
-    if (isDrawingAccessAllowed && navConfig.some((config) => config.title?.toLowerCase() !== 'machine drawings')) {
-      updatedConfig[0].items.push({ title: 'Machine Drawings', path: PATH_MACHINE_DRAWING.root, icon: ICONS.drawing });
-      // updatedConfig[0].items.splice(4, 0, { title: 'Machine Drawings', path: PATH_MACHINE_DRAWING.root, icon: ICONS.drawing });
-    }
+  if (!isSettingAccessAllowed && selectedCategory?.id === 'settings') {
+    navItems = [];
+  }
 
-    // Jira Report
-    updatedConfig[0].items.push({ title: 'Support Tickets', path: PATH_SUPPORT_TICKETS.root, icon: ICONS.supportTickets });
+  if (!isSettingAccessAllowed) {
+    navItems = navItems.filter((section) => section.subheader !== 'Config Reports');
+  }
+  
+  if (requireDashboard) {
+    navItems = [generalSideBarOptions, ...navItems];
+  }
 
-    if (isSettingAccessAllowed && navConfig.some((config) => config.title?.toLowerCase() !== 'settings')) {
-      updatedConfig[0].items.push({ title: 'Settings', path: PATH_SETTING.root, icon: ICONS.setting });
-      // updatedConfig[0].items.splice(5, 0, { title: 'Settings', path: PATH_SETTING.root, icon: ICONS.setting });
-    }
-
-    if (navConfig.some((config) => config.title?.toLowerCase() !== 'Calendar')) {
-      updatedConfig[0].items.push({ title: 'Calendar', path: PATH_CALENDAR.root, icon: ICONS.calendar });
-      // updatedConfig[0].items.splice(6, 0, { title: 'Calendar', path: PATH_CALENDAR.root, icon: ICONS.calendar });
-    }
-
-    if (isSecurityUserAccessAllowed && navConfig.some((config) => config?.title?.toLowerCase() !== 'security')) {
-      updatedConfig[0].items.push({ title: 'Security', path: PATH_SECURITY.root, icon: ICONS.security });
-      // updatedConfig[0].items.splice(7, 0, { title: 'Security', path: PATH_SECURITY.root, icon: ICONS.security });
-    }
-
-    if ( navConfig.some((config) => config?.title?.toLowerCase() !== 'sites map')) {
-      updatedConfig[0].items.push({ title: 'Sites Map', path: PATH_SITEMAP.app, icon: ICONS.map });
-      // updatedConfig[0].items.splice(8, 0, { title: 'Sites Map', path: PATH_SITEMAP.app, icon: ICONS.map });
-    }
-
-    setConfig(updatedConfig);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ isDocumentAccessAllowed, isDrawingAccessAllowed, isSettingAccessAllowed, isSecurityUserAccessAllowed, isEmailAccessAllowed, isDeveloper ]);
-
-  return navConfig;
+  return navItems;
 };
 export default NavigationConfig;

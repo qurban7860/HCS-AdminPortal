@@ -1,115 +1,133 @@
-import { useEffect, useLayoutEffect, useState } from 'react';
+import PropTypes from 'prop-types';
+import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { FormProvider, useForm } from 'react-hook-form';
 // @mui
-import { Card, Grid, CardHeader, Divider, IconButton } from '@mui/material';
+import { Card, Container, Stack, Typography, Box } from '@mui/material';
 // routes
-import { useNavigate, useParams } from 'react-router-dom';
-import { PATH_MACHINE } from '../../../routes/paths';
+import { useParams } from 'react-router-dom';
 // slices
-import { getERPLogs } from '../../../redux/slices/dashboard/count';
+import { getMachineLogGraphData } from '../../../redux/slices/products/machineErpLogs';
 // utils
-import { fQuarterYearDate } from '../../../utils/formatTime';
-import ChartStacked from '../../../components/Charts/ChartStacked';
-import { SkeletonGraph } from '../../../components/skeleton';
-import EmptyContent from '../../../components/empty-content';
-import Iconify from '../../../components/iconify/Iconify';
-import { StyledTooltip } from '../../../theme/styles/default-styles';
+import { machineLogGraphTypes } from '../../../constants/machineLogTypeFormats';
 import MachineTabContainer from '../util/MachineTabContainer';
+import ErpProducedLengthLogGraph from '../../Reports/Graphs/ErpProducedLengthLogGraph';
+import ErpProductionRateLogGraph from '../../Reports/Graphs/ErpProductionRateLogGraph';
+import { RHFAutocomplete } from '../../../components/hook-form';
 
 // ----------------------------------------------------------------------
 
+MachineLogsGraphViewForm.propTypes = {
+  machineId: PropTypes.bool,
+};
+
 export default function MachineLogsGraphViewForm() {
+  const [graphLabels, setGraphLabels] = useState({yaxis: "Cumulative Total Value", xaxis: "Months"});
 
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const { machineId } = useParams();
-    const { erpLogs, isLoading } = useSelector((state) => state.count);
-    const { machine } = useSelector((state) => state.machine);
-    const [ disable, setDisable ] = useState(false);
-    const erpLogsTime = [];
-    const erpLogsLength = [];
-    const erpLogsWaste = [];
+  const dispatch = useDispatch();  
+  const { machineId } = useParams();
+  const { machine } = useSelector((state) => state.machine);
 
-    useEffect(() => {
-        if(machineId){
-            dispatch(getERPLogs(machineId  ));
-        }
-    }, [dispatch, machineId ]);
-    
-    if (erpLogs.length !== 0) {
-        erpLogs.map((log) => {
-            erpLogsTime.push(fQuarterYearDate(log._id,'MMM yyyy'));
-            erpLogsLength.push(log.componentLength);
-            erpLogsWaste.push(log.waste);
-            return null;
-        });
+  const methods = useForm({
+    defaultValues: {
+      logPeriod: "Monthly",
+      logGraphType: machineLogGraphTypes[0]
+    },
+  });
+
+  const { watch, setValue } = methods;
+  const { logPeriod, logGraphType } = watch();
+
+  useEffect(() => {
+    if (logPeriod && logGraphType) {
+      const customerId = machine?.customer?._id;
+      const LogType = 'erp';
+      dispatch(getMachineLogGraphData(customerId, machineId, LogType, logPeriod, logGraphType?.key));
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [logPeriod, logGraphType]);
 
-    useLayoutEffect(() => {
-        if (machine?.status?.slug === 'transferred') {
-            setDisable(true);
-        } else {
-            setDisable(false);
-        }
-    }, [dispatch, machine]);
+  const handlePeriodChange = useCallback((newPeriod) => {
+    setValue('logPeriod', newPeriod);
+    switch (newPeriod) {
+      case 'Monthly':
+        setGraphLabels((prev) => ({...prev, xaxis: "Months"}))
+        break;
+      case 'Daily':
+        setGraphLabels((prev) => ({...prev, xaxis: "Days"}))
+        break;
+      case 'Quarterly':
+        setGraphLabels((prev) => ({...prev, xaxis: "Quarters"}))
+        break;
+      case 'Yearly':
+        setGraphLabels((prev) => ({...prev, xaxis: "Years"}))
+        break;
+      default:
+        break;
+    }
+  }, [setValue]);
 
-    const openRecordsList = () => navigate(PATH_MACHINE.machines.logs.root(machineId));
-    const addLogRecord = () => navigate(PATH_MACHINE.machines.logs.new(machineId))
+  const handleGraphTypeChange = useCallback((newGraphType) => {
+    setValue('logGraphType', newGraphType);
+  }, [setValue]);
 
-    return (
-        <Grid container >
-            <MachineTabContainer currentTabValue='logs' />
-        <Card sx={{ width: '100%'}}>
-            <Grid item sx={{display: {md: 'flex', xs:'block', justifyContent: 'space-between'}}}>
-                <Grid item sx={{display: 'flex'}}>
-                    <CardHeader titleTypographyProps={{variant:'h4'}} title="ERP Logs" sx={{mb:2}} />
-                </Grid>
-                <Grid item sx={{ display: 'flex', px:2.5, pt:4, pb:2 , ml: 'auto'}}>
-                    <StyledTooltip title="Log List" placement="top" disableFocusListener tooltipcolor="#103996" color="#103996">
-                        <IconButton disabled={disable} onClick={openRecordsList} color="#fff" sx={{background:"#2065D1", borderRadius:1, height:'1.7em', mx:2, p:'8.5px 14px',
-                            '&:hover': {
-                                background:"#103996", 
-                                color:"#fff"
-                            }
-                        }}>
-                            <Iconify color="#fff" sx={{ height: '24px', width: '24px'}} icon='material-symbols-light:lists-rounded' />
-                        </IconButton>
-                    </StyledTooltip>
-                    
-                    <StyledTooltip title="Add Log" placement="top" disableFocusListener tooltipcolor="#103996" color="#103996">
-                        <IconButton  disabled={disable} onClick={addLogRecord} color="#fff" sx={{background:"#2065D1", borderRadius:1, height:'1.7em', p:'8.5px 14px',
-                            '&:hover': {
-                                background:"#103996", 
-                                color:"#fff"
-                            }
-                        }}>
-                        <Iconify color="#fff" sx={{ height: '24px', width: '24px'}} icon='eva:plus-fill' />
-                        </IconButton>
-                    </StyledTooltip>
-                </Grid>
-            </Grid>
-            <Divider />
-            <Grid container display='flex' direction='row'>
-            <Grid item xs={12}>
-                {!isLoading ?(
-                    <>
-                    {erpLogsTime.length>0 && 
-                        <ChartStacked 
-                        chart={{
-                            categories: erpLogsTime,
-                            series: [ { name: 'Length', data: erpLogsLength }, { name: 'Waste', data: erpLogsWaste } ]
-                        }}
-                        />
-                    }
-                    </>
-                ):(
-                    <SkeletonGraph />
-                )}
-                {!isLoading && erpLogsTime.length===0 && <EmptyContent title="No Graph Data Found!" sx={{color: '#DFDFDF'}} />}
-                    
-            </Grid>
-            </Grid>
-        </Card>
-    </Grid>
-    );
+
+  return (
+    <Container maxWidth={false}>
+      <MachineTabContainer currentTabValue="graphs" />
+      <FormProvider {...methods}>
+        <form>
+          <Card sx={{ p: 3 }}>
+            <Stack spacing={2}>
+                <Stack
+                  direction="row"
+                  spacing={1}
+                  sx={{ alignSelf: 'flex-start', alignItems: 'center',  mb: 3 }}
+                >
+                  <Box sx={{ pb: 1 }}>
+                    <Typography variant="h5" color="text.primary">
+                      Log Graphs
+                    </Typography>
+                  </Box>
+                </Stack>
+                <Stack direction="row" spacing={2} sx={{ width: '100%' }}>
+                  <Box sx={{ width: '50%' }}>
+                    <RHFAutocomplete
+                      name="logPeriod"
+                      label="Period*"
+                      options={['Daily', 'Monthly', 'Quarterly', 'Yearly']}
+                      onChange={(e, newValue) => handlePeriodChange(newValue)}
+                      size="small"
+                      disableClearable
+                    />
+                  </Box>
+                  <Box sx={{ width: '50%' }}>
+                    <RHFAutocomplete
+                      name="logGraphType"
+                      label="Graph Type*"
+                      options={machineLogGraphTypes}
+                      onChange={(e, newValue) => handleGraphTypeChange(newValue)}
+                      getOptionLabel={(option) => option.name || ''}
+                      isOptionEqualToValue={(option, value) => option?.key === value?.key}
+                      renderOption={(props, option) => (
+                        <li {...props} key={option?.key}>
+                          {option.name || ''}
+                        </li>
+                      )}
+                      disableClearable
+                      size="small"
+                    />
+                  </Box>
+                </Stack>
+            </Stack>
+          </Card>
+        </form>
+      </FormProvider>
+        {logGraphType.key === 'length_and_waste' ? (
+          <ErpProducedLengthLogGraph timePeriod={logPeriod} customer={machine?.customer} graphLabels={graphLabels} />
+        ) : (
+          <ErpProductionRateLogGraph timePeriod={logPeriod} customer={machine?.customer} />
+        )}
+    </Container>
+  );
 }

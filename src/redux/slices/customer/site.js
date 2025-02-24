@@ -10,6 +10,7 @@ const initialState = {
   siteEditFormVisibility: false,
   responseMessage: null,
   activeCardIndex: '',
+  sitesListView: false,
   isExpanded: false,
   success: false,
   isLoading: false,
@@ -23,6 +24,17 @@ const initialState = {
   filterBy: '',
   page: 0,
   rowsPerPage: 100,
+  reportHiddenColumns: {
+    "customer.name": false,
+    "name": false,
+    "address.country": false,
+    "phoneNumbers": false,
+    "email": false,
+    "primaryTechnicalContact.firstName": false,
+    "primaryBillingContact.firstName": false,
+    "isActive": false,
+    "createdAt": false
+  },
 };
 
 const slice = createSlice({
@@ -90,6 +102,10 @@ const slice = createSlice({
       state.initial = true;
     },
     
+    setSitesView(state, action){
+      state.sitesListView = action.payload;
+    },
+
     // RESET SITE
     resetSite(state){
       state.site = null;
@@ -140,6 +156,9 @@ const slice = createSlice({
     ChangePage(state, action) {
       state.page = action.payload;
     },
+    setReportHiddenColumns(state, action) {
+      state.reportHiddenColumns = action.payload;
+    },
   },
 });
 
@@ -154,6 +173,7 @@ export const {
   setResponseMessage,
   setIsExpanded,
   setCardActiveIndex,
+  setSitesView,
   resetSite,
   resetSites,
   resetActiveSites,
@@ -162,6 +182,7 @@ export const {
   ChangeRowsPerPage,
   ChangePage,
   setSiteDialog,
+  setReportHiddenColumns,
 } = slice.actions;
 
 // ----------------------------------------------------------------------

@@ -21,9 +21,10 @@ import Scrollbar from '../../../components/scrollbar';
 import SettingListTableRow from './SettingListTableRow';
 import SettingListTableToolbar from './SettingListTableToolbar';
 import MachineTabContainer from '../util/MachineTabContainer';
-import { getSettings, ChangeRowsPerPage, ChangePage, setFilterBy } from '../../../redux/slices/products/machineSetting';
+import { getSettings, getSettingSuccess, setSettingValueDialog, ChangeRowsPerPage, ChangePage, setFilterBy } from '../../../redux/slices/products/machineSetting';
 import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../../components/ListTableTools/TableCard';
+import MachineSettingValueDialog from '../../../components/Dialog/MachineSettingValueDialog';
 
 export default function SettingList() {
   const {
@@ -40,13 +41,13 @@ export default function SettingList() {
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
-  
+  const { machine } = useSelector((state) => state.machine);
   const { settings, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.machineSetting );
   const TABLE_HEAD = [
-    { id: 'techParam.category.name', label: 'Category Name', align: 'left' },
     { id: 'techParam.name', label: 'Parameter Name', align: 'left' },
     { id: 'techParamValue', label: 'Parameter Value', align: 'left' },
-    { id: 'createdAt', visibility: 'xs1',  label: 'Created At', align: 'right' },
+    { id: 'techParam.category.name', label: 'Category', align: 'left' },
+    { id: 'updatedAt', visibility: 'xs1',  label: 'Updated At', align: 'right' },
   ];
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));
@@ -57,9 +58,9 @@ export default function SettingList() {
 
   useEffect(() => {
     if(machineId){
-      dispatch(getSettings( machineId ));
+      dispatch(getSettings( machineId, machine?.isArchived ));
     }
-  }, [dispatch, machineId]);
+  }, [dispatch, machineId, machine ]);
 
   useEffect(() => {
     setTableData(settings);
@@ -102,6 +103,10 @@ export default function SettingList() {
 
   const handleViewRow = (id) => navigate(PATH_MACHINE.machines.settings.view( machineId, id));
 
+  const handleMachineSettingValueDialog = async (row ) => {
+    await dispatch(setSettingValueDialog(true));
+    await dispatch(getSettingSuccess( row ));
+  };
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
     setFilterName('');
@@ -146,6 +151,7 @@ export default function SettingList() {
                         key={row._id}
                         row={row}
                         onViewRow={() => handleViewRow(row?._id)}
+                        handleDialog={ () => handleMachineSettingValueDialog( row ) }
                         style={index % 2 ? { background: 'red' } : { background: 'green' }}
                       />
                     ) : (
@@ -166,6 +172,7 @@ export default function SettingList() {
           onRowsPerPageChange={onChangeRowsPerPage}
         />
       </TableCard>
+      <MachineSettingValueDialog />
     </Container>
   );
 }

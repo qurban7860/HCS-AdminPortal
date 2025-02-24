@@ -1,0 +1,63 @@
+import { useState, memo } from 'react'
+import PropTypes from 'prop-types';
+import { v4 as uuidv4 } from 'uuid';
+import { Box, Table, TableBody, TableCell, TableRow,  IconButton, Collapse } from '@mui/material';
+import Iconify from '../../../components/iconify';
+import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons'
+
+const CollapsibleCheckedItemRow = ({value, index, toggleEdit, setOpenIndex, deleteIndex, handleListDragStart, handleListDrop }) => (
+    <>
+        <TableRow
+                key={index}
+                draggable
+                onDragStart={handleListDragStart && ((e) => handleListDragStart(e, index))}
+                onDragOver={(e) => e.preventDefault()}
+                onDrop={handleListDrop && ((e) => handleListDrop(e, index))}
+              >
+              <TableCell size='small' align='left' >
+                <b>{`${index+1}). `}</b>{typeof value?.ListTitle === 'string' && value?.ListTitle || ''}{' ( Items: '}<b>{`${value?.checkItems?.length}`}</b>{' ) '}
+                <IconButton
+                  aria-label="expand row"
+                  size="small"
+                  color={value?.isOpen  ? 'default' :  'primary'}
+                  onClick={() => setOpenIndex( index ) }
+                >
+                  <Iconify icon={ value?.isOpen ? "mingcute:up-line" : "mingcute:down-line" } />
+                </IconButton>
+              </TableCell>
+              <TableCell size='small' align='right' >
+                  {toggleEdit && <ViewFormEditDeleteButtons handleEdit={()=>toggleEdit(index)} onDelete={()=>deleteIndex(index)} /> }
+              </TableCell>
+        </TableRow>
+        <TableRow key={uuidv4()}>
+          <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+            <Collapse in={value?.isOpen } timeout="auto" unmountOnExit>
+              <Box sx={{ margin: 1 }}>
+                <Table size="small" aria-label="purchases">
+
+                  <TableBody>
+                    {value?.checkItems.map((childRow,childIndex) => (
+                      <TableRow hover key={childRow._id}>
+                        <TableCell component="th" scope="row"><b>{`${childIndex+1}). `}</b>{`${childRow.name} ${childRow?.category?.name ? '-' : ''} ${childRow?.category?.name ? childRow?.category?.name : ''} ${childRow?.inputType ? '-' : '' } ${childRow?.inputType ? childRow?.inputType : '' }`}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </Box>   
+            </Collapse>
+          </TableCell>
+        </TableRow>
+        </>
+  )
+
+CollapsibleCheckedItemRow.propTypes = {
+    index: PropTypes.number,
+    value: PropTypes.object,
+    toggleEdit: PropTypes.func,
+    setOpenIndex: PropTypes.func,
+    deleteIndex: PropTypes.func,
+    handleListDragStart: PropTypes.func,
+    handleListDrop: PropTypes.func,
+  };
+
+export default memo(CollapsibleCheckedItemRow)
