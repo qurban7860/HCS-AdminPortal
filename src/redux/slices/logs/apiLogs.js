@@ -25,7 +25,7 @@ const initialState = {
     "machine.serialNo": false,
     "customer.name": true,
     "additionalContextualInformation": true,
-},
+  },
 };
 const slice = createSlice({
   name: 'apiLogs',
@@ -72,7 +72,7 @@ const slice = createSlice({
     },
 
     // RESET LOGS
-    resetApiLog(state){
+    resetApiLog(state) {
       state.apiLog = {};
       state.responseMessage = null;
       state.success = false;
@@ -80,7 +80,7 @@ const slice = createSlice({
     },
 
     // RESET API LOGS
-    resetApiLogs(state){
+    resetApiLogs(state) {
       state.apiLogs = [];
       state.apiLogsCount = 0;
       state.responseMessage = null;
@@ -90,15 +90,16 @@ const slice = createSlice({
 
     // Set PageRowCount
     ChangeRowsPerPage(state, action) {
+      state.page = 0;
       state.rowsPerPage = action.payload;
     },
     // Set PageNo
     ChangePage(state, action) {
       state.page = action.payload;
     },
-    
-    setReportHiddenColumns(state, action){
-      state.reportHiddenColumns = action.payload;  
+
+    setReportHiddenColumns(state, action) {
+      state.reportHiddenColumns = action.payload;
     },
 
     // Set FilterBy
@@ -124,7 +125,7 @@ export const {
 
 // ---------------------------------- GET API LOGS ------------------------------------
 
-export function getApiLogs({machineId, fields = '', orderBy = '', query = {}, page, pageSize, searchKey, searchColumn}) {
+export function getApiLogs({ machineId, fields = '', orderBy = '', query = {}, page, pageSize, searchKey, searchColumn }) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
