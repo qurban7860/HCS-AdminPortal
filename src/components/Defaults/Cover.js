@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router';
-import { Button, Grid, Typography, Box } from '@mui/material';
-import { StyledRoot, StyledInfo } from '../../theme/styles/default-styles';
+import { Button, Grid, Typography, Box, IconButton } from '@mui/material';
+import { StyledRoot, StyledInfo, StyledTooltip } from '../../theme/styles/default-styles';
 // utils
 import { PATH_CRM, PATH_MACHINE, PATH_REPORTS, PATH_SETTING, PATH_SUPPORT} from '../../routes/paths';
 // auth
@@ -29,9 +29,10 @@ Cover.propTypes = {
   isArchivedMachines: PropTypes.bool,
   productionLogs: PropTypes.bool,
   coilLogs: PropTypes.bool,
-  currentGraphsPage: PropTypes.bool,
-  currentLogsPage: PropTypes.bool,
   supportTicketSettings: PropTypes.bool,
+  SubOnClick: PropTypes.func,
+  addButton: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
+  buttonIcon: PropTypes.string,
 };
 
 export function Cover({
@@ -48,9 +49,10 @@ export function Cover({
   isArchivedMachines,
   productionLogs,
   coilLogs,
-  currentGraphsPage,
-  currentLogsPage,
   supportTicketSettings,
+  SubOnClick,
+  addButton,
+  buttonIcon
 }) {
   const navigate = useNavigate();
   const handleSettingsNavigate = () => navigate(PATH_SETTING.root);
@@ -59,8 +61,6 @@ export function Cover({
   const linkCustomerContacts = () =>  navigate(PATH_CRM.contacts);
   const linkArchivedCustomers = () =>  navigate(PATH_CRM.customers.archived.root);
   const linkArchivedMachines = () =>  navigate(PATH_MACHINE.archived.root);
-  const linkAllMachineLogs = () =>  navigate(PATH_REPORTS.machineLogs.root);
-  const linkAllMachineGraphs = () =>  navigate(PATH_REPORTS.machineGraphs.root);
   const handleBackLink = () => window.history.back();
   const handleCoilLog = () => navigate(PATH_REPORTS.machineLogs.CoilLogs);
   const handleProductionLog = () => navigate(PATH_REPORTS.machineLogs.ProductionLogs);
@@ -133,6 +133,7 @@ export function Cover({
               justifyContent: isMobile ? 'center' : 'flex-start',
               textAlign: 'center',
               '& .MuiButton-startIcon': { marginRight: 0 },
+              marginBottom: addButton ? -0.6 : 0, 
             }}
           >
             {!isArchived && customerSites && (
@@ -196,44 +197,6 @@ export function Cover({
                 Archived Machines
               </Button>
             )}
-            {currentLogsPage && (
-              <Button
-                size="small"
-                startIcon={<Iconify icon="mdi:graph-bar" sx={{ mr: 0.3 }} />}
-                variant="outlined"
-                sx={{ mr: 1 }}
-                onClick={() => handleOnClick('erpGraph', linkAllMachineGraphs)}
-              >
-                {' '}
-                {(!isMobile || expandedButton === 'Machine Logs') && (
-                  <Typography
-                    variant="caption"
-                    sx={{ fontWeight: 'bold', fontSize: { xs: '0.65rem', sm: '0.75rem' } }}
-                  >
-                  ERP Graphs
-                  </Typography>
-                )}
-              </Button>
-            )}
-            {currentGraphsPage && (
-              <Button
-                size="small"
-                startIcon={<Iconify icon="lucide:list-end" sx={{ mr: 0.3 }} />}
-                variant="outlined"
-                sx={{ mr: 1 }}
-                onClick={() => handleOnClick('erpLog', linkAllMachineLogs)}
-              >
-                {' '}
-                {(!isMobile || expandedButton === 'Machine Logs') && (
-                  <Typography
-                    variant="caption"
-                    sx={{ fontWeight: 'bold', fontSize: { xs: '0.65rem', sm: '0.75rem' } }}
-                  >
-                  Machine Logs
-                  </Typography>
-                )}
-              </Button>
-            )}
             {coilLogs && (
               <Button
                 size="small"
@@ -270,6 +233,21 @@ export function Cover({
                   </Typography>
                 )}
               </Button>
+            )}
+            {addButton  && SubOnClick && (
+              <Grid item >
+                <StyledTooltip title={addButton} placement="bottom" disableFocusListener tooltipcolor="#103996" color="#fff">
+                  <IconButton color="#fff" onClick={SubOnClick} 
+                      sx={{background:"#2065D1", borderRadius:1, height:'1.7em', p:'8.5px 14px',
+                        '&:hover': {
+                          background:"#103996", 
+                          color:"#fff"
+                        }
+                      }}>
+                      <Iconify color="#fff" sx={{ height: '24px', width: '24px'}} icon={buttonIcon || 'eva:plus-fill'} />
+                  </IconButton>
+                </StyledTooltip>
+              </Grid>
             )}
           </Box>
         </Grid>

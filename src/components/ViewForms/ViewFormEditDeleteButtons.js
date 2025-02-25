@@ -32,6 +32,7 @@ function ViewFormEditDeleteButtons({
   shareWith,
   isReleased,
   isDefault,
+  isResolved,
   isIniRead,
   isManufacture,
   isDeleteDisabled,
@@ -437,7 +438,13 @@ function ViewFormEditDeleteButtons({
               icon=  { isDeleteDisabled ? ICONS.DELETE_ENABLED.icon:ICONS.DELETE_DISABLED.icon}
             />
           }
-          
+          {isResolved &&
+            <IconTooltip
+              title={isResolved?ICONS.RESOLVED.heading:ICONS.UNRESOLVED.heading}
+              color={isResolved?ICONS.RESOLVED.color:ICONS.UNRESOLVED.color}
+              icon= {isResolved?ICONS.RESOLVED.icon:ICONS.UNRESOLVED.icon}
+            />
+          }
           {isDefault &&
             <IconTooltip
               title={isDefault?ICONS.DEFAULT.heading:ICONS.CONTRAST.heading}
@@ -1026,6 +1033,7 @@ ViewFormEditDeleteButtons.propTypes = {
   isIniRead: PropTypes.bool,
   isManufacture: PropTypes.bool,
   isDeleteDisabled: PropTypes.bool,
+  isResolved: PropTypes.bool,
   isDefault: PropTypes.bool,
   isSubmitted: PropTypes.func,
   returnToSubmitted: PropTypes.func,

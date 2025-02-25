@@ -1,5 +1,5 @@
-import PropTypes from 'prop-types'; 
-import { useState, useEffect , useRef } from 'react';
+import PropTypes from 'prop-types';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 // @mui
@@ -21,6 +21,7 @@ import {
   TableNoData,
   TableSkeleton,
   TablePaginationFilter,
+  TablePaginationCustom,
   TableHeadFilter,
 } from '../../../../components/table';
 import Scrollbar from '../../../../components/scrollbar';
@@ -28,14 +29,12 @@ import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 // sections
 import CustomerContactListTableRow from './CustomerContactListTableRow';
 import CustomerContactListTableToolbar from './CustomerContactListTableToolbar';
-import { getCustomerContacts, resetCustomersContacts, ChangePage, ChangeRowsPerPage, setFilterBy, setCardActiveIndex, setIsExpanded, setReportHiddenColumns } from '../../../../redux/slices/customer/contact';
+import { getAllContacts, resetAllContacts, ChangePage, ChangeRowsPerPage, setFilterBy, setCardActiveIndex, setIsExpanded, setReportHiddenColumns } from '../../../../redux/slices/customer/contact';
 import { Cover } from '../../../../components/Defaults/Cover';
 import TableCard from '../../../../components/ListTableTools/TableCard';
 import { fDate } from '../../../../utils/formatTime';
 import { useSnackbar } from '../../../../components/snackbar';
 import { exportCSV } from '../../../../utils/exportCSV';
-import IconButtonTooltip from '../../../../components/Icons/IconButtonTooltip';
-import { ICONS } from '../../../../constants/icons/default-icons';
 
 // ----------------------------------------------------------------------
 
@@ -44,7 +43,7 @@ CustomerContactList.propTypes = {
   filterFormer: PropTypes.string,
 };
 
-export default function CustomerContactList({isCustomerContactPage = false, filterFormer}) {
+export default function CustomerContactList({ isCustomerContactPage = false, filterFormer }) {
   const {
     order,
     orderBy,
@@ -59,15 +58,15 @@ export default function CustomerContactList({isCustomerContactPage = false, filt
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const { customersContacts, contacts, filterBy, page, rowsPerPage, isLoading, reportHiddenColumns } = useSelector((state) => state.contact);
+  const { allContacts, contacts, filterBy, page, rowsPerPage, isLoading, reportHiddenColumns } = useSelector((state) => state.contact);
   const [filterName, setFilterName] = useState(filterBy);
   const [exportingCSV, setExportingCSV] = useState(false);
   // ----------------------------------------------------------------------
 
   const TABLE_HEAD = [
-    ...(isCustomerContactPage ? [{ id: 'isActive',  label: ( <IconButtonTooltip title={ ICONS.STATUS.heading } color={ ICONS.STATUS.color } icon={ ICONS.STATUS.icon } />), align: 'center' }] : []),
-    ...(isCustomerContactPage ? [{ id: 'formerEmployee',  label: ( <IconButtonTooltip title={ ICONS.CURR_EMP_ACTIVE.heading } color={ ICONS.CURR_EMP_ACTIVE.color } icon={ ICONS.CURR_EMP_ACTIVE.icon } />), align: 'center' }] : []),
-    ...(!isCustomerContactPage ? [{ id: 'customer.name', label: 'Customer', align: 'left'}] : []),
+    ...(isCustomerContactPage ? [{ id: 'isActive', label: <span style={{ marginRight: 3 }}>A</span>, align: 'right' }] : []),
+    ...(isCustomerContactPage ? [{ id: 'formerEmployee', label: <span style={{ marginRight: 3 }}>E</span>, align: 'right' }] : []),
+    ...(!isCustomerContactPage ? [{ id: 'customer.name', label: 'Customer', align: 'left' }] : []),
     { id: 'firstName', label: 'Contact Name', align: 'left' },
     ...(isCustomerContactPage ? [{ id: 'title', label: 'Title', align: 'left' }] : []),
     { id: 'phoneNumbers', label: 'Phone', align: 'left' },
@@ -83,22 +82,22 @@ export default function CustomerContactList({isCustomerContactPage = false, filt
     dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10)));
   };
 
-  const onChangePage = (event, newPage) => { 
-    dispatch(ChangePage(newPage)) 
+  const onChangePage = (event, newPage) => {
+    dispatch(ChangePage(newPage))
   }
 
   useEffect(() => {
-    if (!isCustomerContactPage) { 
-      dispatch(getCustomerContacts());
+    if (!isCustomerContactPage) {
+      dispatch(getAllContacts());
       return () => {
-        dispatch(resetCustomersContacts());
+        dispatch(resetAllContacts());
       };
     }
-    return undefined; 
-  }, [dispatch, isCustomerContactPage]);  
+    return undefined;
+  }, [dispatch, isCustomerContactPage]);
 
   const dataFiltered = applyFilter({
-    inputData: isCustomerContactPage ? contacts : customersContacts || [],
+    inputData: isCustomerContactPage ? contacts : allContacts || [],
     comparator: getComparator(order, orderBy),
     filterName,
     filterFormer,
@@ -127,36 +126,36 @@ export default function CustomerContactList({isCustomerContactPage = false, filt
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
     setFilterName('');
-  }; 
+  };
 
   const handleViewCustomer = (customerId) => navigate(PATH_CRM.customers.view(customerId));
   const handleViewCustomerInNewPage = (customerId) => window.open(PATH_CRM.customers.view(customerId), '_blank');
 
-  const handleViewContact = async (customerId, contactId ) => {
-    if( customerId && customerId !== "undefined" && contactId && contactId !== "undefined" ){
+  const handleViewContact = async (customerId, contactId) => {
+    if (customerId && customerId !== "undefined" && contactId && contactId !== "undefined") {
       await dispatch(setCardActiveIndex(contactId));
       await dispatch(setIsExpanded(true));
       await navigate(PATH_CRM.customers.contacts.view(customerId, contactId))
     }
   };
-  
-  const handleViewContactInNewPage = async (customerId, contactId ) => {
-    if( customerId && customerId !== "undefined" && contactId && contactId !== "undefined" ){
+
+  const handleViewContactInNewPage = async (customerId, contactId) => {
+    if (customerId && customerId !== "undefined" && contactId && contactId !== "undefined") {
       await dispatch(setCardActiveIndex(contactId));
       await dispatch(setIsExpanded(true));
       window.open(PATH_CRM.customers.contacts.view(customerId, contactId), '_blank');
     }
   };
 
-  const onExportCSV = async() => {
+  const onExportCSV = async () => {
     setExportingCSV(true);
     const response = dispatch(await exportCSV('allcontacts'));
     response.then((res) => {
       setExportingCSV(false);
-      if(!res.hasError){
+      if (!res.hasError) {
         enqueueSnackbar('Contacts CSV Generated Successfully');
-      }else{
-        enqueueSnackbar(res.message, {variant:`${res.hasError?"error":""}`});
+      } else {
+        enqueueSnackbar(res.message, { variant: `${res.hasError ? "error" : ""}` });
       }
     });
   };
@@ -169,9 +168,9 @@ export default function CustomerContactList({isCustomerContactPage = false, filt
     <Container maxWidth={false}>
       {!isCustomerContactPage ? (
         <StyledCardContainer>
-          <Cover name='Customer Contacts' backLink customerSites/>        
+          <Cover name='Customer Contacts' backLink customerSites />
         </StyledCardContainer>
-      ) : null} 
+      ) : null}
       <TableCard >
         <CustomerContactListTableToolbar
           filterName={filterName}
@@ -187,7 +186,7 @@ export default function CustomerContactList({isCustomerContactPage = false, filt
             columns={TABLE_HEAD}
             hiddenColumns={reportHiddenColumns}
             handleHiddenColumns={handleHiddenColumns}
-            count={(isCustomerContactPage ? contacts : customersContacts)?.length || 0}
+            count={(isCustomerContactPage ? contacts : allContacts)?.length || 0}
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
@@ -197,7 +196,7 @@ export default function CustomerContactList({isCustomerContactPage = false, filt
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
           <Scrollbar>
             <Table stickyHeader size="small" sx={{ minWidth: 360 }}>
-            <TableHeadFilter
+              <TableHeadFilter
                 order={order}
                 orderBy={orderBy}
                 headLabel={TABLE_HEAD}
@@ -218,20 +217,27 @@ export default function CustomerContactList({isCustomerContactPage = false, filt
                         onSelectRow={() => onSelectRow(row._id)}
                         onViewRow={() => handleViewCustomer(row?.customer?._id)}
                         openInNewPage={() => handleViewCustomerInNewPage(row?.customer?._id)}
-                        handleContactView= { handleViewContact }
-                        handleContactViewInNewPage= { handleViewContactInNewPage }
-                        isCustomerContactPage={ isCustomerContactPage } 
+                        handleContactView={handleViewContact}
+                        handleContactViewInNewPage={handleViewContactInNewPage}
+                        isCustomerContactPage={isCustomerContactPage}
                         style={index % 2 ? { background: 'red' } : { background: 'green' }}
                       />
                     ) : (
                       !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                     )
                   )}
-                  <TableNoData isNotFound={isNotFound} />
+                <TableNoData isNotFound={isNotFound} />
               </TableBody>
             </Table>
           </Scrollbar>
         </TableContainer>
+        {!isNotFound && <TablePaginationCustom
+          count={(isCustomerContactPage ? contacts : allContacts)?.length || 0}
+          page={page}
+          rowsPerPage={rowsPerPage}
+          onPageChange={onChangePage}
+          onRowsPerPageChange={onChangeRowsPerPage}
+        />}
       </TableCard>
     </Container>
   );
@@ -263,7 +269,7 @@ function applyFilter({ inputData, comparator, filterName, filterFormer, orderBy 
 
   if (filterName) {
     filteredData = filteredData.filter((contact) => {
-      const phoneNumbers = contact?.phoneNumbers 
+      const phoneNumbers = contact?.phoneNumbers
         ? contact.phoneNumbers
           .map(({ countryCode, contactNumber }) => {
             const fullNumber = countryCode ? `+${countryCode}-${contactNumber}` : contactNumber;
@@ -276,7 +282,7 @@ function applyFilter({ inputData, comparator, filterName, filterFormer, orderBy 
         contact?.customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         `${contact?.firstName} ${contact?.lastName}`.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         contact?.title?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        phoneNumbers.indexOf(filterName.replace(/[^\d]/g, '')) >= 0 || 
+        phoneNumbers.indexOf(filterName.replace(/[^\d]/g, '')) >= 0 ||
         contact?.email?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         contact?.address?.country?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         fDate(contact?.updatedAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0

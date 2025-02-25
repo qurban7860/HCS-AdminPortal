@@ -144,10 +144,10 @@ export default function ChangeReasonForm() {
               >
                 <RHFTextField name="displayOrderNo" label="Display Order No." />
                 <Grid display="flex" alignItems="center">
-                  <RHFSwitch name="isDefault" label="Default" />
                   {id && (
                    <RHFSwitch name="isActive" label="Active" />
                   )}
+                  <RHFSwitch name="isDefault" label="Default" />
                 </Grid>
               </Box>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />

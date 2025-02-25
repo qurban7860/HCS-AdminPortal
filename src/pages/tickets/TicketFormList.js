@@ -37,20 +37,21 @@ import TableCard from '../../components/ListTableTools/TableCard';
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
 import useResponsive from '../../hooks/useResponsive';
+import { BUTTONS } from '../../constants/default-constants';
 
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'issueType.name', label: 'Issue Type', align: 'left' },
+  { id: 'issueType.name', label: <span style={{ marginLeft: 4 }}>T</span>, align: 'left' },
   { id: 'ticketNo', label: 'Ticket No.', align: 'left' },
   { id: 'summary', label: 'Summary', align: 'left', allowColumn : true },
   { id: 'machine.serialNo', label: 'Machine', align: 'left', allowColumn : true },
   { id: 'machine.machineModel.name', label: 'Model', align: 'left', allowColumn : true },
   { id: 'customer.name', label: 'Customer', align: 'left', allowColumn : true },
-  { id: 'status.name', label: 'Status', align: 'left', allowColumn : true },
-  { id: 'priority.name', label: 'Priority', align: 'left', allowColumn : true },
-  { id: 'updatedAt', label: 'Updated At', align: 'right' },
+  { id: 'status.name', label: 'S', align: 'left', allowColumn : true },
+  { id: 'priority.name', label: 'P', align: 'left', allowColumn : true },
+  { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
 
 // ----------------------------------------------------------------------
@@ -81,8 +82,10 @@ export default function TicketFormList(){
   const dispatch = useDispatch();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
-  const [ selectedStatus, setSelectedStatus ] = useState(null);
-  const [selectedStatusType, setSelectedStatusType] = useState(null);
+  const [ selectedIssueType, setSelectedIssueType ] = useState(null);
+  const [ selectedStatus, setSelectedStatus ] = useState([]);
+  const [ selectedStatusType, setSelectedStatusType ] = useState(null);
+  const [ selectedResolvedStatus, setSelectedResolvedStatus ] = useState(null);
   const isMobile = useResponsive('down', 'sm');
 
   useLayoutEffect(() => {
@@ -90,18 +93,25 @@ export default function TicketFormList(){
     return () => {
       dispatch(resetTickets());
     }
-  }, [dispatch, machineId, page, rowsPerPage ]);
+  }, [dispatch, page, rowsPerPage ]);
+  
+  const onRefresh = () => {
+    dispatch(ChangePage(0));
+    dispatch(getTickets(0, rowsPerPage)); 
+  };
 
   useEffect(() => {
-      setTableData(tickets?.data || [] );
+    setTableData(tickets?.data || [] );
   }, [tickets?.data ]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(order, orderBy),
     filterName,
+    selectedIssueType,
     selectedStatus,
     selectedStatusType,
+    selectedResolvedStatus
   });
 
   const isFiltered = filterName !== '';
@@ -138,18 +148,26 @@ export default function TicketFormList(){
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
     setFilterName('');
-    setSelectedStatus(null);
+    setSelectedIssueType(null);
+    setSelectedStatus([]);
     setSelectedStatusType(null);
+    setSelectedResolvedStatus(null);
   };
   
   const handleHiddenColumns = async (arg) => {
     dispatch(setReportHiddenColumns(arg));
   };
+  
+  const toggleAdd = () => {
+    navigate(PATH_SUPPORT.supportTickets.new);
+  };
 
   return (
     <Container maxWidth={false} >
       <StyledCardContainer>
-        <Cover name="Support Tickets" icon="ph:users-light" />
+        <Cover name="Support Tickets" icon="ph:users-light" 
+        SubOnClick={toggleAdd} 
+        addButton={BUTTONS.ADDTICKET}/>
       </StyledCardContainer>
       <FormProvider {...methods}>
         <TableCard>
@@ -158,10 +176,15 @@ export default function TicketFormList(){
             onFilterName={handleFilterName}
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
+            filterIssueType={selectedIssueType}
+            onFilterIssueType={setSelectedIssueType}
             filterStatus={selectedStatus}
             onFilterStatus={setSelectedStatus}
             filterStatusType={selectedStatusType}
             onFilterStatusType={setSelectedStatusType}
+            filterResolvedStatus={selectedResolvedStatus} 
+            onFilterResolvedStatus={setSelectedResolvedStatus} 
+            onReload={onRefresh}
           />
 
           {!isNotFound && !isMobile && (
@@ -238,7 +261,7 @@ export default function TicketFormList(){
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName, selectedStatus, selectedStatusType }) {
+function applyFilter({ inputData, comparator, filterName, selectedIssueType, selectedStatus, selectedStatusType, selectedResolvedStatus }) {
 
   const stabilizedThis = inputData?.map((el, index) => [el, index]);
 
@@ -268,15 +291,25 @@ function applyFilter({ inputData, comparator, filterName, selectedStatus, select
     });
   }
   
+  if (selectedIssueType) {
+    inputData = inputData.filter((ticket) => ticket?.issueType?._id === selectedIssueType?._id);
+  }
+
   if (selectedStatus?.length) {
     inputData = inputData.filter((ticket) =>
-      selectedStatus.some((status) => status._id === ticket?.status?._id)
+      selectedStatus.some((status) => status?._id === ticket?.status?._id)
     );
   }  
-
+  
   if (selectedStatusType) {
     inputData = inputData.filter((ticket) => ticket?.status?.statusType?._id === selectedStatusType?._id);
   }
   
+  if (selectedResolvedStatus !== null) {  
+    const isResolved = selectedResolvedStatus === 'resolved'; 
+    inputData = inputData.filter((ticket) => ticket?.status?.statusType?.isResolved === isResolved);
+  } 
+  
   return inputData;
 }
+

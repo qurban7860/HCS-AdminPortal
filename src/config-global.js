@@ -21,7 +21,7 @@ export const CONFIG = {
   COMPOSITE_TOOL_CONFIG_MAX_LENGTH: process.env.COMPOSITE_TOOL_CONFIG_MAX_LENGTH = 10,
 };
 
-export const HOST_API_KEY = process.env.REACT_APP_HOST_API_KEY || '';
+export const HOST_API_KEY = process.env.REACT_APP_SERVER_URL || '';
 
 
 export const FIREBASE_API = {

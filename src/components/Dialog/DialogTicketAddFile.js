@@ -17,16 +17,16 @@ DialogTicketAddFile.propTypes = {
   handleClose: PropTypes.func
 };
 
-function DialogTicketAddFile( { open, handleClose } ) {
-  const { id } = useParams() 
-  
+function DialogTicketAddFile({ open, handleClose }) {
+  const { id } = useParams()
+
   const dispatch = useDispatch();
-  
+
   const { enqueueSnackbar } = useSnackbar();
 
   const defaultValues = useMemo(
     () => ({
-      files:[]
+      files: []
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -34,7 +34,9 @@ function DialogTicketAddFile( { open, handleClose } ) {
 
   const methods = useForm({
     resolver: yupResolver(MachineServiceReportPart3Schema),
-    defaultValues
+    defaultValues,
+    mode: 'onChange',
+    reValidateMode: 'onChange'
   });
 
   const {
@@ -42,32 +44,33 @@ function DialogTicketAddFile( { open, handleClose } ) {
     watch,
     setValue,
     handleSubmit,
-    formState: { isSubmitting },
+    formState: { isSubmitting, },
   } = methods;
+
   const { files } = watch();
 
   const handleDropMultiFile = useCallback(
     async (acceptedFiles) => {
       const docFiles = files || [];
-      
-      const newFiles = acceptedFiles.map((file, index) => 
-          Object.assign(file, {
-            preview: URL.createObjectURL(file),
-            src: URL.createObjectURL(file),
-            isLoaded:true
-          })
-        
+
+      const newFiles = acceptedFiles.map((file, index) =>
+        Object.assign(file, {
+          preview: URL.createObjectURL(file),
+          src: URL.createObjectURL(file),
+          isLoaded: true
+        })
+
       );
       setValue('files', [...docFiles, ...newFiles], { shouldValidate: true });
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [ files ]
+    [files]
   );
 
   const onSubmit = async (data) => {
     try {
-      if( id ){
-        await dispatch(addFiles( id, data ))
+      if (id) {
+        await dispatch(addFiles(id, data))
         await handleClose();
         await reset();
         await enqueueSnackbar('Files uploaded successfully!');
@@ -82,25 +85,25 @@ function DialogTicketAddFile( { open, handleClose } ) {
 
 
   return (
-    <Dialog fullWidth maxWidth="xl" open={ open } onClose={ handleClose }>
-      <DialogTitle variant='h3' sx={{pb:1, pt:2}}>Add Documents / Images</DialogTitle>
+    <Dialog fullWidth maxWidth="xl" open={open} onClose={handleClose}>
+      <DialogTitle variant='h3' sx={{ pb: 1, pt: 2 }}>Add Documents / Images</DialogTitle>
       <Divider orientation="horizontal" flexItem />
-      <DialogContent dividers sx={{pt:2}}>
-          <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-            <RHFUpload multiple  thumbnail name="files" imagesOnly
-              onDrop={handleDropMultiFile}
-              onRemove={(inputFile) =>
-                files.length > 1 ?
+      <DialogContent dividers sx={{ pt: 2 }}>
+        <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+          <RHFUpload multiple thumbnail name="files" imagesOnly
+            onDrop={handleDropMultiFile}
+            onRemove={(inputFile) =>
+              files.length > 1 ?
                 setValue(
                   'files',
                   files &&
-                    files?.filter((file) => file !== inputFile),
+                  files?.filter((file) => file !== inputFile),
                   { shouldValidate: true }
-                ): setValue('files', '', { shouldValidate: true })
-              }
-              onRemoveAll={() => setValue('files', '', { shouldValidate: true })}
-            />
-          </FormProvider>
+                ) : setValue('files', '', { shouldValidate: true })
+            }
+            onRemoveAll={() => setValue('files', '', { shouldValidate: true })}
+          />
+        </FormProvider>
       </DialogContent>
       <DialogActions>
         <Button variant='outlined' onClick={handleClose}>Cancel</Button>

@@ -6,7 +6,7 @@ export const machineLogTypeFormats = [
     formats: {
       "v1.1.66": ["date", "operator", "coilBatchName", "ccThickness", "coilLength", "frameSet", "componentLabel", "webWidth", "flangeHeight", "profileShape", "componentLength", "waste", "time"],
       "v1.4.X": ["date", "operator", "coilBatchName", "ccWidth", "coilThickness", "coilLength", "frameSet", "componentLabel", "webWidth", "flangeHeight", "profileShape", "componentLength", "waste", "time", "componentWeight"],
-      "v1.5.X": ["timestamp", "operator", "coilBatchName", "coilWidth", "coilThickness", "coilLength", "frameSet", "componentLabel", "flangeHeight", "webWidth", "profileShape", "componentLength", "waste", "time", "mode", "measurementUnit", "componentWeight", "lineSpeed"],
+      "v1.5.X": ["timestamp", "operator", "coilBatchName", "coilWidth", "coilThickness", "coilLength", "frameSet", "componentLabel", "flangeHeight", "webWidth", "profileShape", "componentLength", "waste", "time", "mode", "measurementUnit", "componentWeight", "lineSpeed", "ComponentGUID"],
     },
     tableColumns: [
       { id: 'date', label: 'Date', alwaysShow: true, defaultShow: true },
@@ -16,10 +16,10 @@ export const machineLogTypeFormats = [
       { id: 'frameSet', label: 'Frame Set', defaultShow: true, searchable: true },
       { id: 'componentLength', label: 'Component Length', alwaysShow: true, defaultShow: true, searchable: true, numerical: true },
       { id: 'waste', label: 'Waste', alwaysShow: true, defaultShow: true, searchable: true, numerical: true },
+      { id: 'coilLength', label: 'Coil Length', defaultShow: true, searchable: true, numerical: true },
       { id: 'flangeHeight', label: 'Flange Height', defaultShow: true, searchable: true, numerical: true },
       { id: 'webWidth', label: 'Web Width', defaultShow: true, searchable: true, numerical: true },
       { id: 'profileShape', label: 'Profile Shape', defaultShow: true, searchable: true },
-      { id: 'coilLength', label: 'Coil Length', defaultShow: true, searchable: true, numerical: true },
       { id: 'componentWeight', label: 'Component Weight', searchable: true, numerical: true },
       { id: 'coilBatchName', label: 'Coil Batch Name', searchable: true },
       { id: 'coilThickness', label: 'Coil Thickness', searchable: true, numerical: true },
@@ -28,6 +28,7 @@ export const machineLogTypeFormats = [
       { id: 'mode', label: 'Mode', searchable: true },
       { id: 'time', label: 'Time' },
       { id: 'operator', label: 'Operator', searchable: true },
+      { id: 'ComponentGUID', label: 'Component GUID', searchable: true },
     ],
     numericalLengthValues: ["coilLength", "coilWidth", "coilThickness", "flangeHeight", "webWidth", "componentLength", "waste" ]
   },

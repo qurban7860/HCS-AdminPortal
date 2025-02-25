@@ -9,27 +9,40 @@ class ErrorBoundary extends Component {
     };
   }
 
-  static getDerivedStateFromError(error) {
+  static getDerivedStateFromError() {
     // Update state so the next render will show the fallback UI.
     return { hasError: true };
   }
 
+  componentDidMount() {
+    // Add event listener for custom error events
+    window.addEventListener('app-error', this.handleGlobalError);
+  }
+
   componentDidCatch(error, errorInfo) {
-    console.error(error, errorInfo);
+    console.error('Error caught by boundary:', error, errorInfo);
     this.setState({ hasError: true });
   }
+
+  componentWillUnmount() {
+    // Clean up event listener
+    window.removeEventListener('app-error', this.handleGlobalError);
+  }
+
+  handleGlobalError = () => {
+    this.setState({
+      hasError: true
+    });
+  };
 
   render() {
     const { hasError } = this.state;
     const { children, fallback } = this.props;
 
     if (hasError) {
-        // window.location.href = '/500' ;
       return fallback;
-      // return <Redirect to='/500'  />
     }
 
-    // Render the children components if no error occurred
     return children;
   }
 }

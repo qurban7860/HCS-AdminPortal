@@ -4,6 +4,13 @@ import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Divider } fr
 import CodeMirror from '../CodeMirror/JsonEditor'; 
 
 function DialogViewApiLogDetails({ open, onClose, logDetails }) {
+  if (logDetails.response) {
+    try {
+      logDetails.response = JSON.parse(logDetails.response);
+    } catch (error) {
+      // Do nothing
+    }
+  }
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" aria-labelledby="api-log-dialog-title" aria-describedby="api-log-dialog-description" fullWidth>
       <DialogTitle variant="h3" sx={{ pb: 1, pt: 2 }}>API Log Details</DialogTitle>

@@ -183,6 +183,7 @@ const { contact, customer } = watch();
                 onChange={(event, newValue) =>{
                   if(newValue){
                     setValue('customer',newValue)
+                    dispatch(resetActiveContacts());
                     dispatch(getActiveContacts(newValue?._id));
                     if(newValue?._id !== contact?.customer?._id ){
                     setValue('contact',null )

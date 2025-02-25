@@ -7,6 +7,7 @@ import { CONFIG } from '../../../../config-global';
 const initialState = {
   ticketIssueType: null,
   ticketIssueTypes: [],
+  activeTicketIssueTypes: [],
   filterBy: '',
   page: 0,
   rowsPerPage: 100,
@@ -38,6 +39,14 @@ const slice = createSlice({
       state.isLoading = false;
       state.success = true;
       state.ticketIssueTypes = action.payload;
+      state.initial = true;
+    },
+    
+     // GET  Active Tickets Success
+     getActiveTicketIssueTypesSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.activeTicketIssueTypes = action.payload;
       state.initial = true;
     },
 
@@ -94,6 +103,14 @@ const slice = createSlice({
       state.success = false;
       state.isLoading = false;
     },
+    
+    // RESET Active Tickets
+    resetActiveTicketIssueTypes(state) {
+      state.activeTicketIssueTypes = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
 
     // SET FILTER BY
     setFilterBy(state, action) {
@@ -119,6 +136,7 @@ export default slice.reducer;
 export const {
   resetTicketIssueType,
   resetTicketIssueTypes,
+  resetActiveTicketIssueTypes,
   setFilterBy,
   ChangeRowsPerPage,
   ChangePage,
@@ -214,6 +232,28 @@ export function getTicketIssueType(id) {
       throw error;
     }
   };
+}
+
+export function getActiveTicketIssueTypes ( cancelToken ){
+  return async (dispatch) =>{
+    dispatch(slice.actions.startLoading());
+    try{
+      const response = await axios.get(`${CONFIG.SERVER_URL}tickets/settings/issueTypes`, 
+      {
+        params: {
+          isArchived: false,
+          isActive: true,
+        },
+        cancelToken: cancelToken?.token,
+      });
+      dispatch(slice.actions.getActiveTicketIssueTypesSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Issue loaded successfully'));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  }
 }
 
 // Archive Ticket

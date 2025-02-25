@@ -71,6 +71,7 @@ const MachineLogsDataTable = ({
   const [tableData, setTableData] = useState([]);
   const [tableColumns, dispatchTableColumns] = useReducer(tableColumnsReducer, machineLogTypeFormats[0]?.tableColumns);
 
+  const numericalLengthValues = machineLogTypeFormats[0]?.numericalLengthValues || [];
   const { machineErpLogs, machineErpLogstotalCount, page, rowsPerPage, isLoading } = useSelector(
     (state) => state.machineErpLogs
   );
@@ -113,7 +114,7 @@ const MachineLogsDataTable = ({
 
   const { order, orderBy, selected, onSort } = useTable({
     defaultOrderBy: 'date',
-    defaultOrder: 'asc',
+    defaultOrder: 'desc',
   });
 
   const dataFiltered = applySort({
@@ -140,6 +141,8 @@ const MachineLogsDataTable = ({
       machine: log.machine?.serialNo || '',
       createdBy: log.createdBy?.name || '',
       updatedBy: log.updatedBy?.name || '',
+      ...(log.createdByIdentifier && { createdBy: log.createdByIdentifier }),
+      ...(log.updatedByIdentifier && { updatedBy: log.updatedByIdentifier }),
     });
     setOpenLogDetailsDialog(true);
   };
@@ -188,7 +191,10 @@ const MachineLogsDataTable = ({
                           sortDirection={orderBy === headCell.id ? order : false}
                           sx={{ width: headCell.width, minWidth: headCell.minWidth }}
                         >
-                          {onSort ? (
+                          {!onSort && (
+                            numericalLengthValues.includes(headCell.id) ? `${headCell.label} (m)` : headCell.label
+                          )}
+                          {onSort && (
                             <TableSortLabel
                               hideSortIcon
                               active={orderBy === headCell.id}
@@ -196,10 +202,8 @@ const MachineLogsDataTable = ({
                               onClick={() => onSort(headCell.id)}
                               sx={{ textTransform: 'capitalize' }}
                             >
-                              {headCell.label}
+                              {numericalLengthValues.includes(headCell.id) ? `${headCell.label} (m)` : headCell.label}
                             </TableSortLabel>
-                          ) : (
-                            headCell.label
                           )}
                         </TableCell>
                       );
@@ -218,6 +222,7 @@ const MachineLogsDataTable = ({
                       selected={selected.includes(row._id)}
                       selectedLength={selected.length}
                       style={index % 2 ? { background: 'red' } : { background: 'green' }}
+                      numericalLengthValues={numericalLengthValues}
                     />
                   ) : (
                     !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />

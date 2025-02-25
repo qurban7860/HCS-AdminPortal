@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useEffect } from 'react';
+import { useCallback, useMemo, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { enc, MD5, lib } from 'crypto-js';
 // routes
@@ -33,7 +33,8 @@ export default function TicketForm() {
   const { activeCustomerMachines } = useSelector((state) => state.machine);
   const { activeCustomers } = useSelector((state) => state.customer);
   const { ticket, ticketSettings, softwareVersion, isLoadingSoftwareVersion } = useSelector((state) => state.tickets);
-
+  const [filteredRequestTypes, setFilteredRequestTypes] = useState([]);
+  
   useEffect(() => {
     if( id )
       dispatch(getTicket( id ));
@@ -52,6 +53,7 @@ export default function TicketForm() {
       customer: id && ticket?.customer ||  null,
       machine: id && ticket?.machine || null,
       issueType: id && ticket?.issueType || null,
+      requestType: id && ticket?.requestType || null,
       summary: id && ticket?.summary || '',
       description: id && ticket?.description || '',
       priority: id && ticket?.priority || null,
@@ -102,6 +104,18 @@ console.log(" errors  : ",errors)
     }
   }, [dispatch, machine]);
   
+  useEffect(() => {
+    if (ticketSettings?.requestTypes && issueType) {
+      const filtered = ticketSettings.requestTypes.filter(
+        (requestType) => requestType.issueType._id === issueType._id
+      );
+      setFilteredRequestTypes(filtered);
+    } else {
+      setFilteredRequestTypes([]); 
+      setValue('requestType', null);
+    }
+  }, [ticketSettings?.requestTypes, issueType, setValue]);
+
   useEffect(() => {
     if (ticketSettings) {
       setValue('priority', id && ticket?.priority || ( ticketSettings?.priorities?.find( p => p?.isDefault ) || null ));
@@ -297,6 +311,12 @@ console.log(" errors  : ",errors)
                     />
                     </Box>
                   )}
+                  <Box
+                  rowGap={2}
+                  columnGap={2}
+                  display="grid"
+                  gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
+                  >
                   <RHFAutocomplete
                     name="issueType"
                     label="Issue Type*"
@@ -305,6 +325,15 @@ console.log(" errors  : ",errors)
                     getOptionLabel={(option) => `${option.name || ''}`}
                     renderOption={(props, option) => (<li {...props} key={option?._id}> {option.name || ''} </li> )}
                   />
+                  <RHFAutocomplete
+                    name="requestType"
+                    label="Request Type*"
+                    options={filteredRequestTypes || []}
+                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    getOptionLabel={(option) => `${option.name || ''}`}
+                    renderOption={(props, option) => (<li {...props} key={option?._id}> {option.name || ''} </li> )}
+                  />
+                  </Box>
                 </Stack>
               </Card>
             </Grid>

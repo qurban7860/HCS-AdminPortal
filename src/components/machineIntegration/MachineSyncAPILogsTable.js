@@ -43,7 +43,7 @@ const TABLE_HEAD = [
   { id: 'requestURL', label: 'Endpoint', align: 'left', allowSearch: true },
   { id: 'responseStatusCode', label: 'Status', align: 'left' },
   { id: 'responseTime', label: 'Time(ms)', align: 'left', allowSearch: true },
-  { id: 'additionalContextualInformation', label: 'Response', align: 'left', allowSearch: true },
+  { id: 'responseMessage', label: 'Response', align: 'left', allowSearch: true },
   { id: 'customer.name', label: 'Customer', align: 'left' },
   { id: 'machine', label: 'Machine', align: 'left' },
 ];
@@ -70,8 +70,8 @@ const MachineSyncAPILogsTable = ({
   useEffect(() => {
     dispatch(getApiLogs({
       machineId,
-      orderBy: 'createdAt:desc',
-      query: { apiType: 'MACHINE-INTEGRATION' },
+      orderBy: 'createdAt:-1',
+      query: { apiType: 'MACHINE-SYNC' },
       page,
       pageSize: rowsPerPage,
       }));
@@ -119,8 +119,8 @@ const MachineSyncAPILogsTable = ({
     dispatch(
       getApiLogs({
         machineId,
-        orderBy: 'createdAt:desc',
-        query: { apiType: 'MACHINE-INTEGRATION' },
+        orderBy: 'createdAt:-1',
+        query: { apiType: 'MACHINE-SYNC' },
         page,
         pageSize: rowsPerPage,
       })

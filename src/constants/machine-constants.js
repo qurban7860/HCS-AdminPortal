@@ -1,4 +1,5 @@
 export const Snacks = {
+  fileRequired: "Files required!",
   // @root - MachineViewForm
   machineUpdated: 'Machine Updated',
   failedUpdateMachine: 'Failed to Update Machine',
@@ -12,7 +13,7 @@ export const Snacks = {
   machineFailedTransfer: 'Failed to Transfer Machine',
   machineStatusSuccess: 'Machine Status Changed Successfully!',
   machineStatusFailed: 'Failed to Change Machine Status!',
-  
+
   // @root Machine Service Parameter
   checkItemAdd: 'Machine Check Item Added',
   checkItemAddFailed: 'Failed to add Machine Check Item',
@@ -36,7 +37,7 @@ export const Snacks = {
   // @root - LicenseViewForm
   licenseUpdated: 'License Updated Successfully',
   failedUpdateLicense: 'Failed to Update License',
-  
+
   licenseDeleted: 'License Archived Successfully',
   failedDeleteLicense: 'Failed to Archive License',
 
@@ -48,7 +49,7 @@ export const Snacks = {
   licenseKeyRequired: 'License KEY is Required',
   licenseExtensionTimeRequired: 'License Extension Time is Required',
   licenseRequestTimeRequired: 'License Request Time is Required',
-  
+
   // @root - machine - EditMachineSchema
   serialNoRequired: 'Serial Number is Required',
 

@@ -212,13 +212,13 @@ export const AddMachineLogSchema = Yup.object().shape({
     .nullable()
     .test('dateFromTest', 'Start Date must be earlier than End Date', function (value) {
       const { dateTo } = this.parent;
-      return value && (!dateTo || value < dateTo);
+      return value && (!dateTo || value <= dateTo);
     }),
   dateTo: Yup.date()
     .nullable()
     .test('dateToTest', 'End Date must be later than Start Date', function (value) {
       const { dateFrom } = this.parent;
-      return value && (!dateFrom || value > dateFrom);
+      return value && (!dateFrom || value >= dateFrom);
     }),
 });
 
@@ -233,13 +233,13 @@ export const fetchIndMachineLogSchema = Yup.object().shape({
     .nullable()
     .test('dateFromTest', 'Start Date must be earlier than End Date', function (value) {
       const { dateTo } = this.parent;
-      return value && (!dateTo || value < dateTo);
+      return value && (!dateTo || value <= dateTo);
     }),
   dateTo: Yup.date()
     .nullable()
     .test('dateToTest', 'End Date must be later than Start Date', function (value) {
       const { dateFrom } = this.parent;
-      return value && (!dateFrom || value > dateFrom);
+      return value && (!dateFrom || value >= dateFrom);
     }),
 });
 
@@ -280,7 +280,7 @@ export const MachineServiceReportPart1Schema = Yup.object().shape({
     .label('Service Report Template')
     .nullable()
     .required(),
-    serviceDate: Yup.date()
+  serviceDate: Yup.date()
     .typeError('Date Should be Valid')
     .max(endOfToday(), 'Service Date must be earlier')
     .nullable()
@@ -288,13 +288,13 @@ export const MachineServiceReportPart1Schema = Yup.object().shape({
     .label('Service Date'),
   reportSubmition: Yup.boolean(),
   files: Yup.array()
-  .when('reportSubmition', {
-    is: false,
-    then: (schema) =>schema.min(1,'Files are required when report submission is Off-line'),
-    otherwise: (schema) => schema.notRequired(),
-  })
-  .test('fileType', fileTypesMessage, NotRequiredValidateFileType)
-  .nullable(true),
+    .when('reportSubmition', {
+      is: false,
+      then: (schema) => schema.min(1, 'Files are required when report submission is Off-line'),
+      otherwise: (schema) => schema.notRequired(),
+    })
+    .test('fileType', fileTypesMessage, NotRequiredValidateFileType)
+    .nullable(true),
 });
 
 export const MachineServiceReportPart2TBCISchema = Yup.object().shape({
@@ -305,9 +305,15 @@ export const MachineServiceReportPart2TACISchema = Yup.object().shape({
   textAfterCheckItems: Yup.string().trim().max(5000).label('Text After Check Items'),
 });
 
-export const MachineServiceReportPart3Schema = Yup.object().shape({
+export const filesValidations = Yup.object().shape({
   files: Yup.mixed()
-    .required(Snacks.fileRequired)
+    .required(Snacks.DOC_REQUIRED)
+    .test('fileType', fileTypesMessage, NotRequiredValidateFileType)
+    .nullable(true),
+});
+
+export const MachineServiceReportPart3Schema = Yup.object().shape({
+  files: Yup.mixed().required(Snacks.fileRequired)
     .test('fileType', fileTypesMessage, NotRequiredValidateFileType)
     .nullable(true),
   isActive: Yup.boolean(),
@@ -316,11 +322,11 @@ export const MachineServiceReportPart3Schema = Yup.object().shape({
 export const CheckItemSchema = Yup.object().shape({
   checkItemValue: Yup.mixed().required('Value is required!')
     .test('is-number', 'Value is required!', (value, context) => {
-    if(context.parent.inputType==='Number' && !value){
-      return false
-    }
-    return true;
-  }),
+      if (context.parent.inputType === 'Number' && !value) {
+        return false
+      }
+      return true;
+    }),
   comments: Yup.string().trim().max(5000, 'Comments cannot exceed 5000 characters'),
   images: Yup.mixed()
     .required(Snacks.fileRequired)
@@ -332,11 +338,11 @@ export const serviceReportStatusSchema = Yup.object().shape({
   name: Yup.string().label("Name").min(2).max(50).required(),
   type: Yup.string().nullable().label("Type").min(2).max(50).required(),
   displayOrderNo: Yup.number()
-  .typeError('Display Order No. must be a number')
-  .nullable()
-  .transform((_, val) => (val !== '' ? Number(val) : null)),
+    .typeError('Display Order No. must be a number')
+    .nullable()
+    .transform((_, val) => (val !== '' ? Number(val) : null)),
   description: Yup.string().label("Description").max(5000),
-  isActive: Yup.boolean(), 
+  isActive: Yup.boolean(),
 });
 
 export const MachineServiceReportSchema = Yup.object().shape({

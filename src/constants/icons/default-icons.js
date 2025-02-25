@@ -98,6 +98,16 @@ export const ICONS = {
     heading: 'Not Manufacture',
   },
   //
+  RESOLVED: {
+    icon: 'oui:security-signal-resolved',
+    color: '#008000',
+    heading: 'Resolved',
+  },
+  UNRESOLVED: {
+    icon: 'oui:security-signal-resolved',
+    color: '#FF0000',
+    heading: 'UnResolved',
+  },
   DEFAULT: {
     icon: 'carbon:settings-check',
     color: '#008000',
@@ -530,6 +540,10 @@ export const ICONS = {
   ISSUE_TYPES: {
     icon: 'material-symbols-light:problem-rounded',
     heading: 'Issue Types',
+  },
+  REQUEST_TYPES: {
+    icon: 'grommet-icons:status-warning',
+    heading: 'Request Types',
   },
   IMPACTS: {
     icon: 'game-icons:bullet-impacts',

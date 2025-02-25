@@ -287,6 +287,12 @@ export const PATH_MACHINE = {
       root: path(ROOTS_MACHINE, '/reports/machineSettingsReport'),
       // view: ( id ) => path(ROOTS_MACHINE, `/machineSettingsReport/${id}/view`),
     },
+    machineLogs: {
+      root: path(ROOTS_MACHINE, '/reports/machineLogs'),
+    },
+    machineGraphs: {
+      root: path(ROOTS_MACHINE, '/reports/machineGraphs'),
+    },
   },
   documents: {
     root: path(ROOTS_MACHINE, '/documents'),
@@ -434,6 +440,12 @@ export const PATH_SUPPORT = {
       new: path(ROOTS_SUPPORT, '/ticketSettings/issueTypes/new'),
       view: (id) => path(ROOTS_SUPPORT, `/ticketSettings/issueTypes/${id}/view`),
       edit: (id) => path(ROOTS_SUPPORT, `/ticketSettings/issueTypes/${id}/edit`),
+    },
+    requestTypes: {
+      root: path(ROOTS_SUPPORT, '/ticketSettings/requestTypes'),
+      new: path(ROOTS_SUPPORT, '/ticketSettings/requestTypes/new'),
+      view: (id) => path(ROOTS_SUPPORT, `/ticketSettings/requestTypes/${id}/view`),
+      edit: (id) => path(ROOTS_SUPPORT, `/ticketSettings/requestTypes/${id}/edit`),
     },
     priorities: {
       root: path(ROOTS_SUPPORT, '/ticketSettings/priorities'),

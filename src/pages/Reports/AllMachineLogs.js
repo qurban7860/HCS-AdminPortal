@@ -29,7 +29,7 @@ function AllMachineLogs() {
     customer: null,
     machine: null,
     logType: machineLogTypeFormats.find(option => option.type === 'ERP') || null,
-    dateFrom: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+    dateFrom: new Date(),
     dateTo: new Date(),
   };
 
@@ -115,7 +115,7 @@ function AllMachineLogs() {
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
-        <Cover name="Machine Logs" currentLogsPage />
+        <Cover name="Machine Logs" />
       </StyledCardContainer>
       <FormProvider methods={methods} onSubmit={handleSubmit(onGetLogs)}>
         <Grid container spacing={2}>

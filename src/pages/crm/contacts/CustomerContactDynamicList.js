@@ -212,8 +212,8 @@ useEffect(() => {
       />
     </BreadcrumbsProvider>
   </Grid>
-  <Grid item xs={12} md={6}>
-    <Stack direction="row" justifyContent="flex-end" alignItems="center" spacing={1} sx={{ width: '100%' }}>
+  <Grid item xs={12} sm={12} md={8} lg={8} xl={6}>
+    <Stack direction="row" justifyContent="flex-end" alignItems="center" spacing={1}>
       {contacts.length > 0 && contactsListView && (<Autocomplete
         freeSolo
         disableClearable
@@ -297,6 +297,7 @@ useEffect(() => {
                 />
               </Grid>
             )}
+            <Grid item xs={12} sm={12} md={12} lg={5} xl={12}>
             <Autocomplete
               freeSolo
               disableClearable
@@ -304,11 +305,12 @@ useEffect(() => {
               options={['All', 'Former Employee', 'Current Employee']}
               isOptionEqualToValue={(option, val) => option === val}
               onChange={handleFilterChange}
-              sx={{ flex: 1, maxWidth: '400px',  mb: 2 }}
+              sx={{ flex: 1, mb: 2 }}
               renderInput={(params) => (
              <TextField {...params} size="small" label="Filter Contacts" />
               )}
             />
+            </Grid>
             <ContactSiteScrollbar
               onClick={(e) => e.stopPropagation()}
               // snapAlign="start"

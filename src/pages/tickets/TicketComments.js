@@ -24,7 +24,6 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import { useSnackbar } from 'notistack';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
-import { useAuthContext } from '../../auth/useAuthContext';
 import TicketHistory from './TicketHistory';
 import FormLabel from '../../components/DocumentForms/FormLabel';
 import { FORMLABELS } from '../../constants/default-constants';
@@ -51,27 +50,25 @@ const TicketComments = ({ currentUser }) => {
   const { id } = useParams();
   const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
-  const { user, userId } = useAuthContext();
 
   const { error, comments, isLoading } = useSelector( (state) => state.ticketComments );
-  const [value, setValue] = useState('Comments');
+  const [activeTab, setActiveTab] = useState('Comments'); 
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
   };
 
   useEffect(() => {
-    let controller;
+    // let controller;
     if (id) {
       dispatch( getComments({ id }) );
     }
-
-    return () => {
-      if (controller) {
-        controller.abort();
-      }
-      dispatch(resetComments());
-    };
+    // return () => {
+    //   if (controller) {
+    //     controller.abort();
+    //   }
+    //   dispatch(resetComments());
+    // };
   }, [ dispatch, id ]);
 
   const methods = useForm({
@@ -140,8 +137,8 @@ const TicketComments = ({ currentUser }) => {
         <Box sx={{ml: 1, mb: 1.5}}>
           <LoadingButton
             value="Comments"
-            onClick={(e) => handleChange(e, 'Comments')}
-            variant={value === 'Comments' ? 'contained' : 'text'}
+            onClick={() => handleTabChange('Comments')}
+            variant={activeTab === 'Comments' ? 'contained' : 'text'}
             color="primary"
             size="small"
             sx={{ width: 'fit-content', mr: 2 }}
@@ -150,17 +147,16 @@ const TicketComments = ({ currentUser }) => {
           </LoadingButton>
           <LoadingButton
             value="History"
-            onClick={(e) => handleChange(e, 'History')}
+            onClick={() => handleTabChange('History')}
             color="primary"
-            variant={value === 'History' ? 'contained' : 'text'}
+            variant={activeTab === 'History' ? 'contained' : 'text'}
             size="small"
             sx={{ width: 'fit-content' }}
           >
             History
           </LoadingButton>
         </Box>
-    {value === 'History' && <TicketHistory currentUser={{ ...user, userId }}/>} 
-      {value === 'Comments' && (
+      {activeTab === 'Comments' && (
         <>
         <FormLabel content={FORMLABELS.COVER.TICKET_COMMENTS} />
         <Box sx={{ py: 2 }}>
@@ -330,6 +326,7 @@ const TicketComments = ({ currentUser }) => {
         </Box>
         </>
       )}
+      {activeTab === 'History' && <TicketHistory />} 
       </Paper>
       <ConfirmDialog
         open={openConfirmDelete}

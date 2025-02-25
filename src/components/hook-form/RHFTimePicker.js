@@ -30,7 +30,6 @@ export default function RHFTimePicker({ name, label, size, helperText, Error, ..
               readOnly
               inputProps={{
                 ...params.inputProps,
-                readOnly: true,
               }}
               error={!!error || !!Error}
               helperText={error ? error?.message : helperText}

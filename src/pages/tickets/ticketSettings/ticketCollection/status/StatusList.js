@@ -65,6 +65,8 @@ export default function StatusList() {
   const dispatch = useDispatch();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
+  const [ selectedStatusType, setSelectedStatusType ] = useState(null);
+  const [ selectedResolvedStatus, setSelectedResolvedStatus ] = useState('all');
 
   useLayoutEffect(() => {
     dispatch(getTicketStatuses(page, rowsPerPage));
@@ -83,6 +85,8 @@ export default function StatusList() {
     inputData: tableData,
     comparator: getComparator(order, orderBy),
     filterName,
+    selectedStatusType,
+    selectedResolvedStatus
   });
 
   const isFiltered = filterName !== '';
@@ -114,6 +118,8 @@ export default function StatusList() {
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
     setFilterName('');
+    setSelectedStatusType(null);
+    setSelectedResolvedStatus('all');
   };
   
   return (
@@ -127,6 +133,10 @@ export default function StatusList() {
             onFilterName={handleFilterName}
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
+            filterStatusType={selectedStatusType}
+            onFilterStatusType={setSelectedStatusType}
+            filterResolvedStatus={selectedResolvedStatus} 
+            onFilterResolvedStatus={setSelectedResolvedStatus} 
           />
 
           {!isNotFound && <TablePaginationCustom
@@ -181,7 +191,7 @@ export default function StatusList() {
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName }) {
+function applyFilter({ inputData, comparator, filterName, selectedStatusType, selectedResolvedStatus }) {
 
   const stabilizedThis = inputData?.map((el, index) => [el, index]);
 
@@ -202,5 +212,18 @@ function applyFilter({ inputData, comparator, filterName }) {
         fDate(status?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }
+
+  if (selectedStatusType) {
+    inputData = inputData.filter((status) => status?.statusType?._id === selectedStatusType?._id);
+  }
+
+ if (selectedResolvedStatus === 'resolved') {
+    inputData = inputData.filter((status) => status?.statusType?.isResolved === true);
+  }
+
+  if (selectedResolvedStatus === 'unresolved') {
+    inputData = inputData.filter((status) => status?.statusType?.isResolved === false);
+  }
+
   return inputData;
 }

@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 // @mui
-import { Container, Table, TableBody, TableContainer } from '@mui/material';
+import { Card, Container, Table, TableBody, TableContainer } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // routes
@@ -30,6 +30,8 @@ import {
 import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../../components/ListTableTools/TableCard';
 import { PATH_CRM } from '../../../routes/paths';
+import MachineNotes from '../../machine/notes/MachineNotes';
+import { useAuthContext } from '../../../auth/useAuthContext';
 
 export default function NoteList() {
   const {
@@ -41,6 +43,7 @@ export default function NoteList() {
     defaultOrderBy: '-createdAt',
   });
   useSettingsContext();
+  const { userId, user } = useAuthContext();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
@@ -169,11 +172,13 @@ export default function NoteList() {
           onPageChange={onChangePage}
           onRowsPerPageChange={onChangeRowsPerPage}
         />
+              <Card sx={{ mt: 2 }}>
+        <MachineNotes  currentUser={{ ...user, userId }} />
+      </Card>
       </TableCard>
     </Container>
   );
 }
-
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filterName, filterStatus }) {
