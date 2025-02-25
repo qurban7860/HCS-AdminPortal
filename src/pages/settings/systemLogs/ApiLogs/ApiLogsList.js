@@ -126,7 +126,7 @@ export default function ApiLogsList() {
       getApiLogs({
         machineId,
         query,
-        page: 0,
+        page,
         pageSize: rowsPerPage,
       })
     );
