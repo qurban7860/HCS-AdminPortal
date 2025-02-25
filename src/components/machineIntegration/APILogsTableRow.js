@@ -72,6 +72,14 @@ export default function APILogsTableRow({ row, style, selected, onViewRow, hidde
     return 'default';
   };
 
+  const parseResponse = (stringifiedResponse) => {
+    try {
+      return JSON.parse(stringifiedResponse);
+    } catch (error) {
+      return stringifiedResponse || '';
+    }
+  };
+
   return (
     <>
       <StyledTableRow hover selected={selected}>
@@ -106,7 +114,9 @@ export default function APILogsTableRow({ row, style, selected, onViewRow, hidde
           </TableCell>
         )}
         {!hiddenColumns?.responseMessage && (
-          <TableCell align="left">{responseMessage || JSON.parse(response) || ''}</TableCell>
+          <TableCell align="left">
+            {responseMessage || parseResponse(response) || ''}
+          </TableCell>
         )}
         {!hiddenColumns?.noOfRecordsUpdated && (
           <TableCell align="left">{noOfRecordsUpdated || ''}</TableCell>
