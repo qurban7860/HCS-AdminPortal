@@ -21,13 +21,12 @@ import Scrollbar from '../../../components/scrollbar';
 import NoteListTableRow from './NoteListTableRow';
 import NoteListTableToolbar from './NoteListTableToolbar';
 import CustomerTabContainer from '../customers/util/CustomerTabContainer'
-import {
+import { 
   getNotes,
   resetNotes,
   ChangeRowsPerPage,
   ChangePage,
-  setFilterBy
-} from '../../../redux/slices/customer/customerNote';
+  setFilterBy } from '../../../redux/slices/customer/customerNote';
 import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../../components/ListTableTools/TableCard';
 import { PATH_CRM } from '../../../routes/paths';
@@ -48,13 +47,13 @@ export default function NoteList() {
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
-  const { customerId } = useParams()
+  const { customerId } = useParams() 
   const { customer } = useSelector((state) => state.customer);
-
+  
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { notes, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.customerNote);
+  const { notes, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.customerNote );
   const TABLE_HEAD = [
     { id: 'note', label: 'Note', align: 'left' },
     { id: 'isActive', visibility: 'xs1', label: 'Active', align: 'left' },
@@ -63,26 +62,28 @@ export default function NoteList() {
 
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));
-    dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10)));
+    dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
   };
-
-  const onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
+  
+  const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
 
   useEffect(() => {
-    dispatch(getNotes(customerId, customer?.isArchived));
-    return () => { dispatch(resetNotes()) };
-  }, [dispatch, customerId, customer?.isArchived]);
+    if( customerId && customerId !== "undefined" ){
+      dispatch(getNotes(customerId, customer?.isArchived));
+    }
+    return ()=>{ dispatch(resetNotes()) };
+  }, [dispatch, customerId, customer?.isArchived ]);
 
   useEffect(() => {
     setTableData(notes);
   }, [notes]);
-
+  
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(order, orderBy),
     filterName,
     filterStatus,
-  });
+  });  
   const denseHeight = 60;
   const isFiltered = filterName !== '' || !!filterStatus.length;
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
@@ -97,22 +98,22 @@ export default function NoteList() {
     setFilterName(event.target.value)
     setPage(0);
   };
-
+  
   useEffect(() => {
-    debouncedSearch.current.cancel();
+      debouncedSearch.current.cancel();
   }, [debouncedSearch]);
-
-  useEffect(() => {
-    setFilterName(filterBy)
+  
+  useEffect(()=>{
+      setFilterName(filterBy)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  },[])
 
   const handleFilterStatus = (event) => {
     setPage(0);
     setFilterStatus(event.target.value);
   };
 
-  const handleViewRow = (noteid) => { if (customerId && noteid) navigate(PATH_CRM.customers.notes.view(customerId, noteid)) };
+  const handleViewRow = (noteid) =>{ if(customerId && noteid ) navigate(PATH_CRM.customers.notes.view(customerId, noteid))};
 
   return (
     <Container maxWidth={false} >
@@ -124,15 +125,15 @@ export default function NoteList() {
           onFilterName={handleFilterName}
           onFilterStatus={handleFilterStatus}
           isFiltered={isFiltered}
-        // onResetFilter={handleResetFilter}
+          // onResetFilter={handleResetFilter}
         />
-        {!isNotFound && <TablePaginationCustom
-          count={dataFiltered.length}
-          page={page}
-          rowsPerPage={rowsPerPage}
-          onPageChange={onChangePage}
-          onRowsPerPageChange={onChangeRowsPerPage}
-        />}
+          {!isNotFound && <TablePaginationCustom
+            count={dataFiltered.length}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
+          />}
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
           <Scrollbar>
             <Table size="small" sx={{ minWidth: 360 }}>
@@ -158,7 +159,7 @@ export default function NoteList() {
                       !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                     )
                   )}
-                <TableNoData isNotFound={isNotFound} />
+                  <TableNoData isNotFound={isNotFound} />
               </TableBody>
             </Table>
           </Scrollbar>
@@ -171,9 +172,6 @@ export default function NoteList() {
           onPageChange={onChangePage}
           onRowsPerPageChange={onChangeRowsPerPage}
         />
-        <Card sx={{ mt: 2 }}>
-          <MachineNotes currentUser={{ ...user, userId }} />
-        </Card>
       </TableCard>
     </Container>
   );

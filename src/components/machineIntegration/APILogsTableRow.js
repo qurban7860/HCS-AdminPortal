@@ -74,9 +74,10 @@ export default function APILogsTableRow({ row, style, selected, onViewRow, hidde
 
   const parseResponse = (stringifiedResponse) => {
     try {
-      return JSON.parse(stringifiedResponse);
+      const parsedResponse = JSON.parse(stringifiedResponse);
+      return typeof parsedResponse === 'object' ? parsedResponse.message : parsedResponse || '';
     } catch (error) {
-      return stringifiedResponse || '';
+      return '';
     }
   };
 
