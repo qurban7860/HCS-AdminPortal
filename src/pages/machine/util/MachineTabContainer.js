@@ -10,7 +10,7 @@ import { useSelector } from '../../../redux/store';
 // sections
 import { Cover } from '../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
-import  TABS from './index';
+import TABS from './index';
 import { PATH_MACHINE } from '../../../routes/paths';
 import { getMachine } from '../../../redux/slices/products/machine';
 import TabButtonTooltip from '../../../components/Tabs/TabButtonTooltip';
@@ -26,42 +26,40 @@ export default function MachineTabContainer({ currentTabValue }) {
   const dispatch = useDispatch();
 
   useLayoutEffect(() => {
-    if ( machine?._id !== machineId && machineId !== undefined ) {
-      dispatch(getMachine(machineId));
-    }
+    dispatch(getMachine(machineId));
   }, [dispatch, machine?._id, machineId]);
 
   const navigate = useNavigate();
 
-  const navigatePage = (tab)=>{
-    if(tab === 'machine' && machineId ){
-      navigate( PATH_MACHINE.machines.view(machineId) )
-    } else if(tab === 'settings' && machineId ){
-      navigate( PATH_MACHINE.machines.settings.root(machineId) )
-    } else if(tab === 'toolsinstalled' && machineId ){
-      navigate( PATH_MACHINE.machines.toolsInstalled.root(machineId) )
-    } else if(tab === 'notes'  && machineId  ){
-      navigate( PATH_MACHINE.machines.notes.root(machineId) )
-    } else if(tab === 'drawings' && machineId ){
-      navigate( PATH_MACHINE.machines.drawings.root(machineId) )
-    } else if(tab === 'documents' && machineId  ){
-      navigate( PATH_MACHINE.machines.documents.root(machineId) )
-    } else if(tab === 'license' && machineId  ){
-      navigate( PATH_MACHINE.machines.licenses.root(machineId) )
-    } else if(tab === 'profile' && machineId  ){
-      navigate( PATH_MACHINE.machines.profiles.root(machineId) )
-    } else if(tab === 'serviceReports' && machineId  ){
-      navigate( PATH_MACHINE.machines.serviceReports.root(machineId) )
-    } else if(tab === 'ini' && machineId  ){
-      navigate( PATH_MACHINE.machines.ini.root(machineId) )
-    } else if(tab === 'logs' && machineId  ){
-      navigate( PATH_MACHINE.machines.logs.root(machineId) )
-    } else if(tab === 'graphs' && machineId  ){
-      navigate( PATH_MACHINE.machines.logs.graph(machineId) )
-    } else if(tab === 'jira' && machineId  ){
-      navigate( PATH_MACHINE.machines.jira.root(machineId) )
-    } else if(tab === 'integration' && machineId  ){
-      navigate( PATH_MACHINE.machines.integration.root(machineId) )
+  const navigatePage = (tab) => {
+    if (tab === 'machine' && machineId) {
+      navigate(PATH_MACHINE.machines.view(machineId))
+    } else if (tab === 'settings' && machineId) {
+      navigate(PATH_MACHINE.machines.settings.root(machineId))
+    } else if (tab === 'toolsinstalled' && machineId) {
+      navigate(PATH_MACHINE.machines.toolsInstalled.root(machineId))
+    } else if (tab === 'notes' && machineId) {
+      navigate(PATH_MACHINE.machines.notes.root(machineId))
+    } else if (tab === 'drawings' && machineId) {
+      navigate(PATH_MACHINE.machines.drawings.root(machineId))
+    } else if (tab === 'documents' && machineId) {
+      navigate(PATH_MACHINE.machines.documents.root(machineId))
+    } else if (tab === 'license' && machineId) {
+      navigate(PATH_MACHINE.machines.licenses.root(machineId))
+    } else if (tab === 'profile' && machineId) {
+      navigate(PATH_MACHINE.machines.profiles.root(machineId))
+    } else if (tab === 'serviceReports' && machineId) {
+      navigate(PATH_MACHINE.machines.serviceReports.root(machineId))
+    } else if (tab === 'ini' && machineId) {
+      navigate(PATH_MACHINE.machines.ini.root(machineId))
+    } else if (tab === 'logs' && machineId) {
+      navigate(PATH_MACHINE.machines.logs.root(machineId))
+    } else if (tab === 'graphs' && machineId) {
+      navigate(PATH_MACHINE.machines.logs.graph(machineId))
+    } else if (tab === 'jira' && machineId) {
+      navigate(PATH_MACHINE.machines.jira.root(machineId))
+    } else if (tab === 'integration' && machineId) {
+      navigate(PATH_MACHINE.machines.integration.root(machineId))
     }
   }
 
@@ -71,9 +69,8 @@ export default function MachineTabContainer({ currentTabValue }) {
       <Cover
         name={
           machine
-            ? `${machine?.serialNo ? machine?.serialNo : ''} ${
-                machine?.machineModel?.name ? `- ${machine?.machineModel?.name}` : ''
-              }`
+            ? `${machine?.serialNo ? machine?.serialNo : ''} ${machine?.machineModel?.name ? `- ${machine?.machineModel?.name}` : ''
+            }`
             : 'New Machine'
         }
         setting
