@@ -59,30 +59,30 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
   const { customer } = useSelector((state) => state.customer);
   const { departments } = useSelector((state) => state.department);
   const { enqueueSnackbar } = useSnackbar();
-  const { customerId, id } = useParams() 
-  const [ contactTypes, setContactTypes ] = useState([]);
+  const { customerId, id } = useParams()
+  const [contactTypes, setContactTypes] = useState([]);
 
   const dispatch = useDispatch();
   const navigate = useNavigate()
 
-  
-  useEffect(()=>{
-    const systemConfig= JSON.parse( localStorage.getItem('configurations'))
-    if( customer?.type?.toLowerCase() === 'sp' && systemConfig ){
-      const configSPContactTypes = systemConfig?.find( ( c )=> c?.name?.trim() === 'SP_CONTACT_TYPES' )?.value?.split(',');
+
+  useEffect(() => {
+    const systemConfig = JSON.parse(localStorage.getItem('configurations'))
+    if (customer?.type?.toLowerCase() === 'sp' && systemConfig) {
+      const configSPContactTypes = systemConfig?.find((c) => c?.name?.trim() === 'SP_CONTACT_TYPES')?.value?.split(',');
       const sPContactTypes = configSPContactTypes?.map(item => item?.trim())?.sort();
-      if( Array.isArray(sPContactTypes) && sPContactTypes?.length > 0 ){
+      if (Array.isArray(sPContactTypes) && sPContactTypes?.length > 0) {
         setContactTypes(sPContactTypes)
       }
-    } else if( customer?.type?.toLowerCase() !== 'sp' && systemConfig ) {
-      const configCustomerContactTypes = systemConfig?.find( ( c )=> c?.name?.trim() === 'CUSTOMER_CONTACT_TYPES')?.value?.split(',');
+    } else if (customer?.type?.toLowerCase() !== 'sp' && systemConfig) {
+      const configCustomerContactTypes = systemConfig?.find((c) => c?.name?.trim() === 'CUSTOMER_CONTACT_TYPES')?.value?.split(',');
       const CustomerContactTypes = configCustomerContactTypes?.map(item => item?.trim())?.sort()
-      if( Array.isArray(CustomerContactTypes) && CustomerContactTypes?.length > 0 ){
+      if (Array.isArray(CustomerContactTypes) && CustomerContactTypes?.length > 0) {
         setContactTypes(CustomerContactTypes)
       }
     }
-  },[ customer?.type ])
-  
+  }, [customer?.type])
+
   // --------------------------------hooks----------------------------------
   const defaultValues = useMemo(
     () => ({
@@ -121,16 +121,16 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
   } = methods;
 
   const { country, phoneNumbers } = watch();
-  
+
   useEffect(() => {
     dispatch(getActiveContacts(customerId))
     dispatch(getActiveDepartments())
-    dispatch(getContact( customerId, id ));
+    dispatch(getContact(customerId, id));
     return () => {
       dispatch(resetActiveContacts())
       dispatch(resetDepartments())
     }
-  }, [dispatch, customerId, id ])
+  }, [dispatch, customerId, id])
 
   useEffect(() => {
     phoneNumbers?.forEach((pN, index) => {
@@ -139,7 +139,7 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
       }
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ country ]);
+  }, [country]);
 
 
   const updateCountryCode = () => {
@@ -156,14 +156,12 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
   }
 
   // -------------------------------functions---------------------------------
-  
+
   const onSubmit = async (data) => {
     try {
       await dispatch(updateContact(customerId, id, data));
-      if( customerId && customerId !== "undefined" ){
-        await dispatch(getContacts(customerId));
-        await navigate(PATH_CRM.customers.contacts.view( customerId, id ))
-      }
+      await dispatch(getContacts(customerId));
+      await navigate(PATH_CRM.customers.contacts.view(customerId, id))
       await reset();
       enqueueSnackbar('Contact updated successfully!');
     } catch (err) {
@@ -172,7 +170,7 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
     }
   };
 
-  const toggleCancel = () => navigate(PATH_CRM.customers.contacts.view( customerId, id ));
+  const toggleCancel = () => navigate(PATH_CRM.customers.contacts.view(customerId, id));
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -200,7 +198,7 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
                   filterSelectedOptions
                   name={FORMLABELS.CONTACT_TYPES.name}
                   label={FORMLABELS.CONTACT_TYPES.label}
-                  options={ contactTypes }
+                  options={contactTypes}
                   isOptionEqualToValue={(option, value) => option === value}
                 />
               </Box>
@@ -218,7 +216,7 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
                 <RHFAutocomplete
                   name={FORMLABELS.DEPARTMENT.name}
                   label={FORMLABELS.DEPARTMENT.label}
-                  options={departments?.filter( el => (customer?.type?.toLowerCase() !== 'sp' && el.forCustomer ) ? el.forCustomer : customer?.type?.toLowerCase() === 'sp' )}
+                  options={departments?.filter(el => (customer?.type?.toLowerCase() !== 'sp' && el.forCustomer) ? el.forCustomer : customer?.type?.toLowerCase() === 'sp')}
                   getOptionLabel={(option) => option?.departmentName || ''}
                   isOptionEqualToValue={(option, value) => option?._id === value?._id}
                   renderOption={(props, option) => (
@@ -237,7 +235,7 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
                   )}
                 />
               </Box>
-                <AddFormLabel content={formLABELS.ADDRESS} />
+              <AddFormLabel content={formLABELS.ADDRESS} />
               <Box
                 rowGap={2}
                 columnGap={2}
@@ -266,7 +264,7 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
               <Box sx={{ width: '100%', overflowX: { xs: 'auto', sm: 'hidden', }, maxWidth: '100%', display: 'flex', flexDirection: 'column' }} >
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, flexWrap: { xs: 'nowrap', sm: 'wrap', }, }} >
                   {phoneNumbers?.map((pN, index) => (
-                    <Box key={pN+index} sx={{ display: 'flex', alignItems: 'center', flex: '1 1 auto', minWidth: 300, ml: { xs: 'auto',  sm: 0 }, mt: 1 }} >
+                    <Box key={pN + index} sx={{ display: 'flex', alignItems: 'center', flex: '1 1 auto', minWidth: 300, ml: { xs: 'auto', sm: 0 }, mt: 1 }} >
                       <RHFCustomPhoneInput
                         name={`phoneNumbers[${index}]`}
                         value={pN}
@@ -274,7 +272,7 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
                         index={index}
                         sx={{ flex: 1 }}
                       />
-                      <IconButton disabled={phoneNumbers?.length === 1} onClick={ () => removeContactNumber(index) } size="small" variant="contained" color='error' sx={{ mx: 1 }} >
+                      <IconButton disabled={phoneNumbers?.length === 1} onClick={() => removeContactNumber(index)} size="small" variant="contained" color='error' sx={{ mx: 1 }} >
                         <StyledTooltip
                           title="Remove Contact Number"
                           placement="top"
@@ -292,17 +290,17 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
                     </Box>
                   ))}
                   <Box>
-                  <IconButton disabled={ phoneNumbers?.length > 9 } onClick={ addContactNumber } size="small" variant="contained" color='success' sx={{ ml: 'auto', mr:1 }} >
-                        <StyledTooltip title="Add Contact Number" placement="top" disableFocusListener tooltipcolor={theme.palette.success.dark} color={ phoneNumbers?.length < 10 ? theme.palette.success.dark : theme.palette.text.main }  >
-                          <Iconify icon="icons8:plus" sx={{width: 25, height: 25}}  />
-                        </StyledTooltip>
-                      </IconButton>
+                    <IconButton disabled={phoneNumbers?.length > 9} onClick={addContactNumber} size="small" variant="contained" color='success' sx={{ ml: 'auto', mr: 1 }} >
+                      <StyledTooltip title="Add Contact Number" placement="top" disableFocusListener tooltipcolor={theme.palette.success.dark} color={phoneNumbers?.length < 10 ? theme.palette.success.dark : theme.palette.text.main}  >
+                        <Iconify icon="icons8:plus" sx={{ width: 25, height: 25 }} />
+                      </StyledTooltip>
+                    </IconButton>
                   </Box>
                 </Box>
               </Box>
 
-                <RHFTextField name={FORMLABELS.EMAIL.name} label={FORMLABELS.EMAIL.label} />
-              <Grid sx={{ display: 'flex' }} >  
+              <RHFTextField name={FORMLABELS.EMAIL.name} label={FORMLABELS.EMAIL.label} />
+              <Grid sx={{ display: 'flex' }} >
                 <RHFSwitch name="isActive" label="Active" />
                 <RHFSwitch name="formerEmployee" label="Former Employee" />
               </Grid>

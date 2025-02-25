@@ -28,8 +28,8 @@ export default function SiteEditForm() {
   const { enqueueSnackbar } = useSnackbar();
   const { site } = useSelector((state) => state.site);
   const { activeContacts } = useSelector((state) => state.contact);
-  const { customerId, id } = useParams() 
-  
+  const { customerId, id } = useParams()
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -47,19 +47,17 @@ export default function SiteEditForm() {
   }
 
   useEffect(() => {
-    if(customerId && customerId !== "undefined" && id && id !== "undefined"){
-      dispatch(getSite(customerId, id))
-    }
+    dispatch(getSite(customerId, id))
     setIsExpanded(true);
     setCardActiveIndex(id);
-  }, [ dispatch, customerId, id ]);
+  }, [dispatch, customerId, id]);
 
   useEffect(() => {
-    dispatch( getActiveContacts(customerId))
-    return ()=>{
-      dispatch( resetActiveContacts())
+    dispatch(getActiveContacts(customerId))
+    return () => {
+      dispatch(resetActiveContacts())
     }
-  }, [ customerId, dispatch ] );
+  }, [customerId, dispatch]);
 
   const defaultValues = useMemo(
     () => ({
@@ -70,12 +68,12 @@ export default function SiteEditForm() {
       lat: site?.lat || '',
       long: site?.long || '',
       street: site?.address?.street || '',
-      phoneNumbers: site?.phoneNumbers?.length > 0 ? site?.phoneNumbers : [ { type: '', countryCode: '64' }, { type: '', countryCode: '64' } ],
+      phoneNumbers: site?.phoneNumbers?.length > 0 ? site?.phoneNumbers : [{ type: '', countryCode: '64' }, { type: '', countryCode: '64' }],
       suburb: site?.address?.suburb || '',
       city: site?.address?.city || '',
       region: site?.address?.region || '',
       postcode: site?.address?.postcode || '',
-      country: countries.find((contry)=> contry?.label?.toLocaleLowerCase() === site?.address?.country?.toLocaleLowerCase() ) || null ,
+      country: countries.find((contry) => contry?.label?.toLocaleLowerCase() === site?.address?.country?.toLocaleLowerCase()) || null,
       isActive: site?.isActive,
       primaryBillingContact: site?.primaryBillingContact || null,
       updateAddressPrimaryBillingContact: site?.updateAddressPrimaryBillingContact || false,
@@ -99,54 +97,52 @@ export default function SiteEditForm() {
     formState: { isSubmitting },
   } = methods;
 
-    const { country, phoneNumbers } = watch(); 
+  const { country, phoneNumbers } = watch();
 
-    useEffect(() => {
-      if (site?.address?.country) {
-        const siteCountry = filtter(countries, { label: site?.address?.country || '' });
-        setValue('country',siteCountry[0]);
+  useEffect(() => {
+    if (site?.address?.country) {
+      const siteCountry = filtter(countries, { label: site?.address?.country || '' });
+      setValue('country', siteCountry[0]);
+    }
+  }, [site, setValue]);
+
+  useEffect(() => {
+    phoneNumbers?.forEach((pN, index) => {
+      if (!phoneNumbers[index].contactNumber) {
+        setValue(`phoneNumbers[${index}].countryCode`, country?.phone?.replace(/[^0-9]/g, ''))
       }
-    }, [ site, setValue ]);
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [country]);
 
-    useEffect(() => {
-      phoneNumbers?.forEach((pN, index) => {
-        if(!phoneNumbers[index].contactNumber){
-          setValue( `phoneNumbers[${index}].countryCode`,  country?.phone?.replace(/[^0-9]/g, '') )
-        }
-      })
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[ country ]);
 
-  
-  const updateCountryCode = () =>{
-    phoneNumbers?.map((pN, index ) =>  setValue( `phoneNumbers[${index}].countryCode`,  country?.phone?.replace(/[^0-9]/g, '') ))
+  const updateCountryCode = () => {
+    phoneNumbers?.map((pN, index) => setValue(`phoneNumbers[${index}].countryCode`, country?.phone?.replace(/[^0-9]/g, '')))
   }
 
   const removeContactNumber = (indexToRemove) => {
-    setValue('phoneNumbers',  phoneNumbers?.filter((_, index) => index !== indexToRemove) || [] );
+    setValue('phoneNumbers', phoneNumbers?.filter((_, index) => index !== indexToRemove) || []);
   }
 
   const addContactNumber = () => {
-    const updatedPhoneNumbers = [...phoneNumbers, { type: '', countryCode: country?.phone?.replace(/[^0-9]/g, '') } ]; 
-    setValue( 'phoneNumbers', updatedPhoneNumbers )
+    const updatedPhoneNumbers = [...phoneNumbers, { type: '', countryCode: country?.phone?.replace(/[^0-9]/g, '') }];
+    setValue('phoneNumbers', updatedPhoneNumbers)
   }
-  
+
   const onSubmit = async (data) => {
     try {
       await dispatch(updateSite(data, customerId, id));
       enqueueSnackbar('Site saved Successfully!');
-      if( customerId && customerId !== "undefined" && id && id !== "undefined" ){
-        await dispatch(getSites(customerId))
-        await navigate(PATH_CRM.customers.sites.view(customerId, id))
-      } 
+      await dispatch(getSites(customerId))
+      await navigate(PATH_CRM.customers.sites.view(customerId, id))
       await reset();
     } catch (err) {
       enqueueSnackbar(err, { variant: 'error' });
       console.error(err.message);
     }
   };
-  
-  const toggleCancel = () => {if(customerId && id ){ navigate(PATH_CRM.customers.sites.view(customerId, id))}}
+
+  const toggleCancel = () => { if (customerId && id) { navigate(PATH_CRM.customers.sites.view(customerId, id)) } }
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -156,7 +152,7 @@ export default function SiteEditForm() {
             <Stack spacing={2}>
               <RHFTextField name="name" label="Name*" />
               <Box rowGap={2} columnGap={2} display="grid"
-                gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)'}}
+                gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
               >
                 <RHFTextField name="street" label="Street" />
                 <RHFTextField name="suburb" label="Suburb" />
@@ -169,15 +165,15 @@ export default function SiteEditForm() {
               </Box>
 
               <Box display="flex" alignItems="center" gridTemplateColumns={{ sm: 'repeat(1, 1fr)' }} >
-                <IconButton onClick={updateCountryCode} size="small" variant="contained" color='secondary' sx={{ mr: 0.5}} >
-                  <Iconify icon="icon-park-outline:update-rotation" sx={{width: 25, height: 25}}  />
+                <IconButton onClick={updateCountryCode} size="small" variant="contained" color='secondary' sx={{ mr: 0.5 }} >
+                  <Iconify icon="icon-park-outline:update-rotation" sx={{ width: 25, height: 25 }} />
                 </IconButton>
-                <Typography variant='body2' sx={{ color:'gray'}}>Update country code in phone/fax.</Typography>
+                <Typography variant='body2' sx={{ color: 'gray' }}>Update country code in phone/fax.</Typography>
               </Box>
               <Box sx={{ width: '100%', overflowX: { xs: 'auto', sm: 'hidden', }, maxWidth: '100%', display: 'flex', flexDirection: 'column' }} >
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, flexWrap: { xs: 'nowrap', sm: 'wrap', }, }} >
                   {phoneNumbers?.map((pN, index) => (
-                    <Box  key={`${pN}-${index}`} sx={{ display: 'flex', alignItems: 'center', flex: '1 1 auto', minWidth: 300, ml: { xs: 'auto',  sm: 0 }, mt: 1 }} >
+                    <Box key={`${pN}-${index}`} sx={{ display: 'flex', alignItems: 'center', flex: '1 1 auto', minWidth: 300, ml: { xs: 'auto', sm: 0 }, mt: 1 }} >
                       <RHFCustomPhoneInput
                         name={`phoneNumbers[${index}]`}
                         value={pN}
@@ -185,7 +181,7 @@ export default function SiteEditForm() {
                         index={index}
                         sx={{ flex: 1 }}
                       />
-                      <IconButton disabled={phoneNumbers?.length === 1} onClick={ () => removeContactNumber(index) } size="small" variant="contained" color='error' sx={{ mx: 1 }} >
+                      <IconButton disabled={phoneNumbers?.length === 1} onClick={() => removeContactNumber(index)} size="small" variant="contained" color='error' sx={{ mx: 1 }} >
                         <StyledTooltip
                           title="Remove Contact Number"
                           placement="top"
@@ -203,11 +199,11 @@ export default function SiteEditForm() {
                     </Box>
                   ))}
                   <Box>
-                  <IconButton disabled={ phoneNumbers?.length > 9 } onClick={ addContactNumber } size="small" variant="contained" color='success' sx={{ ml: 'auto', mr:1 }} >
-                        <StyledTooltip title="Add Contact Number" placement="top" disableFocusListener tooltipcolor={theme.palette.success.dark} color={ phoneNumbers?.length < 10 ? theme.palette.success.dark : theme.palette.text.main }  >
-                          <Iconify icon="icons8:plus" sx={{width: 25, height: 25}}  />
-                        </StyledTooltip>
-                      </IconButton>
+                    <IconButton disabled={phoneNumbers?.length > 9} onClick={addContactNumber} size="small" variant="contained" color='success' sx={{ ml: 'auto', mr: 1 }} >
+                      <StyledTooltip title="Add Contact Number" placement="top" disableFocusListener tooltipcolor={theme.palette.success.dark} color={phoneNumbers?.length < 10 ? theme.palette.success.dark : theme.palette.text.main}  >
+                        <Iconify icon="icons8:plus" sx={{ width: 25, height: 25 }} />
+                      </StyledTooltip>
+                    </IconButton>
                   </Box>
                 </Box>
               </Box>
@@ -226,33 +222,33 @@ export default function SiteEditForm() {
               <Box rowGap={2} columnGap={2} display="grid"
                 gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
               >
-              <Box display="grid" gridTemplateColumns={{ sm: 'repeat(1, 1fr)' }}  >
-                <RHFAutocomplete
-                  name="primaryBillingContact"
-                  label="Primary Billing Contact"
-                  options={activeContacts}
-                  isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                  getOptionLabel={(option) => `${option.firstName || ''} ${option.lastName || ''}`}
-                  renderOption={(props, option) => (<li {...props} key={option?._id}>{`${option.firstName || ''} ${option.lastName || ''}`}</li>)}
-                  id="controllable-states-demo"
-                  ChipProps={{ size: 'small' }}
-                />
-                <RHFCheckbox name="updateAddressPrimaryBillingContact" label="Update Primary Billing Contact Address" />
-              </Box>
+                <Box display="grid" gridTemplateColumns={{ sm: 'repeat(1, 1fr)' }}  >
+                  <RHFAutocomplete
+                    name="primaryBillingContact"
+                    label="Primary Billing Contact"
+                    options={activeContacts}
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                    getOptionLabel={(option) => `${option.firstName || ''} ${option.lastName || ''}`}
+                    renderOption={(props, option) => (<li {...props} key={option?._id}>{`${option.firstName || ''} ${option.lastName || ''}`}</li>)}
+                    id="controllable-states-demo"
+                    ChipProps={{ size: 'small' }}
+                  />
+                  <RHFCheckbox name="updateAddressPrimaryBillingContact" label="Update Primary Billing Contact Address" />
+                </Box>
 
-              <Box display="grid" gridTemplateColumns={{ sm: 'repeat(1, 1fr)' }}  >
-                <RHFAutocomplete
-                  name="primaryTechnicalContact"
-                  label="Primary Technical Contact"
-                  options={activeContacts}
-                  isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                  getOptionLabel={(option) => `${option.firstName || ''} ${option.lastName || ''}`}
-                  renderOption={(props, option) => (<li {...props} key={option?._id}>{`${option.firstName || ''} ${option.lastName || ''}`}</li>)}
-                  id="controllable-states-demo"
-                  ChipProps={{ size: 'small' }}
-                />
-                <RHFCheckbox name="updateAddressPrimaryTechnicalContact" label="Update Primary Technical Contact Address" />
-              </Box>
+                <Box display="grid" gridTemplateColumns={{ sm: 'repeat(1, 1fr)' }}  >
+                  <RHFAutocomplete
+                    name="primaryTechnicalContact"
+                    label="Primary Technical Contact"
+                    options={activeContacts}
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                    getOptionLabel={(option) => `${option.firstName || ''} ${option.lastName || ''}`}
+                    renderOption={(props, option) => (<li {...props} key={option?._id}>{`${option.firstName || ''} ${option.lastName || ''}`}</li>)}
+                    id="controllable-states-demo"
+                    ChipProps={{ size: 'small' }}
+                  />
+                  <RHFCheckbox name="updateAddressPrimaryTechnicalContact" label="Update Primary Technical Contact Address" />
+                </Box>
 
               </Box>
               <RHFSwitch name="isActive" label="Active" />

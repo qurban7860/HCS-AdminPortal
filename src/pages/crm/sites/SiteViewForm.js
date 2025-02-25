@@ -32,72 +32,67 @@ export default function SiteViewForm({ handleMap, isCustomerSitePage }) {
   const { site, isLoading } = useSelector((state) => state.site);
   const { customer } = useSelector((state) => state.customer);
   const { enqueueSnackbar } = useSnackbar();
-  const { customerId, id } = useParams() 
+  const { customerId, id } = useParams()
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  useEffect(()=>{
-    if( customerId && customerId !== "undefined" && id && id !== "undefined" ){
-      dispatch(getSite(customerId, id ))
-      dispatch(setIsExpanded(true))
-      dispatch(setCardActiveIndex(id))
+  useEffect(() => {
+    dispatch(getSite(customerId, id))
+    dispatch(setIsExpanded(true))
+    dispatch(setCardActiveIndex(id))
+    return () => {
+      dispatch(resetSite())
+      dispatch(setIsExpanded(false))
+      dispatch(setCardActiveIndex(null))
     }
-    return () => 
-              { 
-                dispatch(resetSite()) 
-                dispatch(setIsExpanded(false))
-                dispatch(setCardActiveIndex(null))
-              }
-  },[ dispatch, customerId, id ])
-  
+  }, [dispatch, customerId, id])
+
   const backLink = () => navigate(PATH_CRM.customers.sites.root(customerId, id));
 
   const onArchive = async () => {
     try {
-      if(customerId && customerId !== "undefined" && id && id !== "undefined"){
-        await dispatch(deleteSite(customerId, id));
-        enqueueSnackbar('Site Archived Successfully!');
-        await dispatch(setIsExpanded(false));
-        await dispatch(getSites( customerId ));
-        await navigate(PATH_CRM.customers.sites.root( customerId ))
-      }
+      await dispatch(deleteSite(customerId, id));
+      enqueueSnackbar('Site Archived Successfully!');
+      await dispatch(setIsExpanded(false));
+      await dispatch(getSites(customerId));
+      await navigate(PATH_CRM.customers.sites.root(customerId))
     } catch (err) {
       enqueueSnackbar(err, { variant: `error` });
       console.log(err);
     }
   };
 
-  const handleEdit = async () => { if(customerId && id ) navigate(PATH_CRM.customers.sites.edit(customerId, id))};
+  const handleEdit = async () => { if (customerId && id) navigate(PATH_CRM.customers.sites.edit(customerId, id)) };
 
   const defaultValues = useMemo(
     () => ({
-      name:                     site?.name || '',
-      customer:                 site?.tradingName || '',
-      billingSite:              site?.accountManager || '',
-      phoneNumbers:             site?.phoneNumbers || '',
-      email:                    site?.email || '',
-      website:                  site?.website || '',
-      lat:                      site?.lat || '',
-      long:                     site?.long || '',
-      street:                   site?.address?.street || '',
-      suburb:                   site?.address?.suburb || '',
-      city:                     site?.address?.city || '',
-      postcode:                 site?.address?.postcode || '',
-      region:                   site?.address?.region || '',
-      country:                  site?.address?.country || '',
-      primaryBillingContact:    site?.primaryBillingContact || null,
-      primaryTechnicalContact:  site?.primaryTechnicalContact || null,
-      isActive:                 site?.isActive,
-      createdAt:                site?.createdAt || '',
-      createdByFullName:        site?.createdBy?.name || '',
-      createdIP:                site?.createdIP || '',
-      updatedAt:                site?.updatedAt || '',
-      updatedByFullName:        site?.updatedBy?.name || '',
-      updatedIP:                site?.updatedIP || '',
+      name: site?.name || '',
+      customer: site?.tradingName || '',
+      billingSite: site?.accountManager || '',
+      phoneNumbers: site?.phoneNumbers || '',
+      email: site?.email || '',
+      website: site?.website || '',
+      lat: site?.lat || '',
+      long: site?.long || '',
+      street: site?.address?.street || '',
+      suburb: site?.address?.suburb || '',
+      city: site?.address?.city || '',
+      postcode: site?.address?.postcode || '',
+      region: site?.address?.region || '',
+      country: site?.address?.country || '',
+      primaryBillingContact: site?.primaryBillingContact || null,
+      primaryTechnicalContact: site?.primaryTechnicalContact || null,
+      isActive: site?.isActive,
+      createdAt: site?.createdAt || '',
+      createdByFullName: site?.createdBy?.name || '',
+      createdIP: site?.createdIP || '',
+      updatedAt: site?.updatedAt || '',
+      updatedByFullName: site?.updatedBy?.name || '',
+      updatedIP: site?.updatedIP || '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [ site]
+    [site]
   );
 
   return (

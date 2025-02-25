@@ -59,7 +59,7 @@ export default function CustomerSiteList({ isCustomerSitePage = false }) {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
-  const { allSites, filterBy, page, rowsPerPage, isLoading, reportHiddenColumns } = useSelector((state) => state.site);
+  const { sites, allSites, filterBy, page, rowsPerPage, isLoading, reportHiddenColumns } = useSelector((state) => state.site);
   const isMobile = useResponsive('down', 'sm');
 
   const [exportingCSV, setExportingCSV] = useState(false);
@@ -95,8 +95,8 @@ export default function CustomerSiteList({ isCustomerSitePage = false }) {
   }, [dispatch, isCustomerSitePage]);
 
   useEffect(() => {
-    setTableData(allSites || []);
-  }, [allSites]);
+    setTableData(isCustomerSitePage ? sites : allSites || []);
+  }, [allSites, isCustomerSitePage, sites]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -183,7 +183,7 @@ export default function CustomerSiteList({ isCustomerSitePage = false }) {
             columns={TABLE_HEAD}
             hiddenColumns={reportHiddenColumns}
             handleHiddenColumns={handleHiddenColumns}
-            count={allSites ? allSites.length : 0}
+            count={tableData ? tableData.length : 0}
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
