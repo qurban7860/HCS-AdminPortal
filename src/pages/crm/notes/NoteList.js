@@ -172,9 +172,6 @@ export default function NoteList() {
           onPageChange={onChangePage}
           onRowsPerPageChange={onChangeRowsPerPage}
         />
-              <Card sx={{ mt: 2 }}>
-        <MachineNotes  currentUser={{ ...user, userId }} />
-      </Card>
       </TableCard>
     </Container>
   );
