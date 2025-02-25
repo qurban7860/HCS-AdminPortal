@@ -16,6 +16,7 @@ const initialState = {
   isLoading: false,
   error: null,
   sites: [],
+  allSites: [],
   siteDialog: false,
   activeSites: [],
   site: null,
@@ -48,26 +49,26 @@ const slice = createSlice({
     },
 
     // SET TOGGLE
-    setSiteFormVisibility(state, action){
+    setSiteFormVisibility(state, action) {
       state.siteAddFormVisibility = action.payload;
     },
 
     // SET TOGGLE
-    setSiteEditFormVisibility(state, action){
+    setSiteEditFormVisibility(state, action) {
       state.siteEditFormVisibility = action.payload;
     },
     // SET TOGGLE
-    setSiteDialog(state, action){
+    setSiteDialog(state, action) {
       state.siteDialog = action.payload;
     },
 
     // ACTIVE CARD INDEX
-    setCardActiveIndex(state, action){
+    setCardActiveIndex(state, action) {
       state.activeCardIndex = action.payload;
     },
 
     // CARD IS EXPENDED
-    setIsExpanded(state, action){
+    setIsExpanded(state, action) {
       state.isExpanded = action.payload;
     },
 
@@ -86,6 +87,14 @@ const slice = createSlice({
       state.initial = true;
     },
 
+    // GET All Sites
+    getAllSitesSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.allSites = action.payload;
+      state.initial = true;
+    },
+
     // GET Active Sites
     getActiveSitesSuccess(state, action) {
       state.isLoading = false;
@@ -101,13 +110,13 @@ const slice = createSlice({
       state.site = action.payload;
       state.initial = true;
     },
-    
-    setSitesView(state, action){
+
+    setSitesView(state, action) {
       state.sitesListView = action.payload;
     },
 
     // RESET SITE
-    resetSite(state){
+    resetSite(state) {
       state.site = null;
       state.responseMessage = null;
       state.success = false;
@@ -115,7 +124,7 @@ const slice = createSlice({
     },
 
     // RESET SITES
-    resetSites(state){
+    resetSites(state) {
       state.sites = [];
       state.responseMessage = null;
       state.success = false;
@@ -123,15 +132,21 @@ const slice = createSlice({
     },
 
     // RESET Active SITES
-    resetActiveSites(state){
+    resetActiveSites(state) {
       state.activeSites = [];
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
     },
-    resetSiteFormsVisiblity(state){
-      state.siteAddFormVisibility= false;
-      state.siteEditFormVisibility= false;
+
+    // RESET ALL SITES
+    resetAllSites(state) {
+      state.allSites = [];
+    },
+
+    resetSiteFormsVisiblity(state) {
+      state.siteAddFormVisibility = false;
+      state.siteEditFormVisibility = false;
     },
     setResponseMessage(state, action) {
       state.responseMessage = action.payload;
@@ -176,6 +191,7 @@ export const {
   setSitesView,
   resetSite,
   resetSites,
+  resetAllSites,
   resetActiveSites,
   resetSiteFormsVisiblity,
   setFilterBy,
@@ -191,104 +207,104 @@ export function addSite(params) {
   return async (dispatch) => {
     dispatch(slice.actions.setSiteFormVisibility(false));
     dispatch(slice.actions.startLoading());
-      try {
-        /* eslint-disable */
-        let data = {
-          name: params.name,
-          customer: params.customer,
-          email: params.email,
-          website: params.website,
-          lat: params.lat,
-          long: params.long,
-          phoneNumbers: params?.phoneNumbers?.filter( pN => pN?.contactNumber !== '' ||  pN?.contactNumber !== undefined ) || [],
-          primaryBillingContact: params?.primaryBillingContact?._id || null,
-          updateAddressPrimaryBillingContact: params?.updateAddressPrimaryBillingContact,
-          primaryTechnicalContact: params?.primaryTechnicalContact?._id || null,
-          updateAddressPrimaryTechnicalContact: params?.updateAddressPrimaryTechnicalContact,
-          isActive: params.isActive,
-          address: {}
-        };
-        
-        /* eslint-enable */
-        if(params.street){
-          data.address.street = params.street;        
-        }
-        if(params.suburb){
-          data.address.suburb = params.suburb;        
-        }
-        if(params.city){
-          data.address.city = params.city;        
-        }
-        if(params.region){
-          data.address.region = params.region;        
-        }
-        if(params.postcode){
-          data.address.postcode = params.postcode;        
-        }
-        if(params.country ){
-          data.address.country = params?.country?.label;        
-        }
-        
-        const response = await axios.post(`${CONFIG.SERVER_URL}crm/customers/${params.customer}/sites`, data);
-        return response; 
-      } catch (error) {
-        console.error(error);
-        dispatch(slice.actions.hasError(error.Message));
-        throw error;
+    try {
+      /* eslint-disable */
+      let data = {
+        name: params.name,
+        customer: params.customer,
+        email: params.email,
+        website: params.website,
+        lat: params.lat,
+        long: params.long,
+        phoneNumbers: params?.phoneNumbers?.filter(pN => pN?.contactNumber !== '' || pN?.contactNumber !== undefined) || [],
+        primaryBillingContact: params?.primaryBillingContact?._id || null,
+        updateAddressPrimaryBillingContact: params?.updateAddressPrimaryBillingContact,
+        primaryTechnicalContact: params?.primaryTechnicalContact?._id || null,
+        updateAddressPrimaryTechnicalContact: params?.updateAddressPrimaryTechnicalContact,
+        isActive: params.isActive,
+        address: {}
+      };
+
+      /* eslint-enable */
+      if (params.street) {
+        data.address.street = params.street;
       }
+      if (params.suburb) {
+        data.address.suburb = params.suburb;
+      }
+      if (params.city) {
+        data.address.city = params.city;
+      }
+      if (params.region) {
+        data.address.region = params.region;
+      }
+      if (params.postcode) {
+        data.address.postcode = params.postcode;
+      }
+      if (params.country) {
+        data.address.country = params?.country?.label;
+      }
+
+      const response = await axios.post(`${CONFIG.SERVER_URL}crm/customers/${params.customer}/sites`, data);
+      return response;
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
   };
 }
 
 // ----------------------------------------------------------------------
 
-export function updateSite(params,customerId,Id) {
-  
+export function updateSite(params, customerId, Id) {
+
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-      try {
-        const data = {
-          name: params.name,
-          customer: params.customer,
-          email: params.email,
-          website: params.website,
-          lat: params.lat,
-          long: params.long,
-          isActive: params.isActive,
-          phoneNumbers: params?.phoneNumbers?.filter( pN => pN?.contactNumber !== '' ||  pN?.contactNumber !== undefined ) || [],
-          primaryBillingContact: params.primaryBillingContact?._id || null,
-          updateAddressPrimaryBillingContact: params?.updateAddressPrimaryBillingContact,
-          primaryTechnicalContact: params.primaryTechnicalContact?._id || null,
-          updateAddressPrimaryTechnicalContact: params?.updateAddressPrimaryTechnicalContact,
-          address: {}
-        };
+    try {
+      const data = {
+        name: params.name,
+        customer: params.customer,
+        email: params.email,
+        website: params.website,
+        lat: params.lat,
+        long: params.long,
+        isActive: params.isActive,
+        phoneNumbers: params?.phoneNumbers?.filter(pN => pN?.contactNumber !== '' || pN?.contactNumber !== undefined) || [],
+        primaryBillingContact: params.primaryBillingContact?._id || null,
+        updateAddressPrimaryBillingContact: params?.updateAddressPrimaryBillingContact,
+        primaryTechnicalContact: params.primaryTechnicalContact?._id || null,
+        updateAddressPrimaryTechnicalContact: params?.updateAddressPrimaryTechnicalContact,
+        address: {}
+      };
 
-        if(params.street){
-          data.address.street = params.street;        
-        }
-        if(params.suburb){
-          data.address.suburb = params.suburb;        
-        }
-        if(params.city){
-          data.address.city = params.city;        
-        }
-        if(params.region){
-          data.address.region = params.region;        
-        }
-        if(params.postcode){
-          data.address.postcode = params.postcode;        
-        }
-        if(params.country){
-          data.address.country = params.country.label;        
-        }
-
-        await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${customerId}/sites/${Id}`, data);
-        dispatch(slice.actions.setSiteEditFormVisibility(false));
-
-      } catch (error) {
-        console.error(error);
-        dispatch(slice.actions.hasError(error.Message));
-        throw error;
+      if (params.street) {
+        data.address.street = params.street;
       }
+      if (params.suburb) {
+        data.address.suburb = params.suburb;
+      }
+      if (params.city) {
+        data.address.city = params.city;
+      }
+      if (params.region) {
+        data.address.region = params.region;
+      }
+      if (params.postcode) {
+        data.address.postcode = params.postcode;
+      }
+      if (params.country) {
+        data.address.country = params.country.label;
+      }
+
+      await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${customerId}/sites/${Id}`, data);
+      dispatch(slice.actions.setSiteEditFormVisibility(false));
+
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
 
   };
 }
@@ -298,16 +314,16 @@ export function updateSite(params,customerId,Id) {
 export function createCustomerStiesCSV(customerID) {
   return async (dispatch) => {
     try {
-      if(customerID){
-        const response = axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/sites/export` , 
-        {
-          params: {
-            isArchived: false,
-            orderBy : {
-              createdAt:-1
+      if (customerID) {
+        const response = axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/sites/export`,
+          {
+            params: {
+              isArchived: false,
+              orderBy: {
+                createdAt: -1
+              }
             }
-          }
-        });
+          });
 
         response.then((res) => {
           const fileName = "CustomerSites.csv";
@@ -337,21 +353,21 @@ export function getSites(customerID, isCustomerArchived) {
     dispatch(slice.actions.startLoading());
     try {
       const params = {
-        orderBy : {
+        orderBy: {
           createdAt: -1
         }
       }
 
-      if(isCustomerArchived){
+      if (isCustomerArchived) {
         params.archivedByCustomer = true;
         params.isArchived = true;
-      }else{
+      } else {
         params.isArchived = false;
       }
 
-      const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/sites`, { params } );
-        dispatch(slice.actions.getSitesSuccess(response.data));
-        dispatch(slice.actions.setResponseMessage('Sites loaded successfully'));
+      const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/sites`, { params });
+      dispatch(slice.actions.getSitesSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Sites loaded successfully'));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -360,6 +376,25 @@ export function getSites(customerID, isCustomerArchived) {
   };
 }
 
+export function getAllSites() {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const params = {
+        orderBy: {
+          createdAt: -1
+        },
+        isArchived: false
+      }
+
+      const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/sites/all`, { params });
+      dispatch(slice.actions.getAllSitesSuccess(response.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
 // ----------------------------------------------------------------------
 
 export function getActiveSites(customerID, cancelToken) {
@@ -367,15 +402,15 @@ export function getActiveSites(customerID, cancelToken) {
     dispatch(slice.actions.startLoading());
     try {
       let response = null;
-      if(customerID){
-        response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/sites` , 
-        {
-          params: {
-            isActive: true,
-            isArchived: false
-          },
-        cancelToken: cancelToken?.token,
-        }
+      if (customerID) {
+        response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/sites`,
+          {
+            params: {
+              isActive: true,
+              isArchived: false
+            },
+            cancelToken: cancelToken?.token,
+          }
         );
         dispatch(slice.actions.getActiveSitesSuccess(response.data));
         dispatch(slice.actions.setResponseMessage('Sites loaded successfully'));
@@ -395,14 +430,14 @@ export function searchSites() {
     dispatch(slice.actions.startLoading());
     try {
       let response = null;
-      response = await axios.get(`${CONFIG.SERVER_URL}crm/sites/search` , 
-      {
-        params: {
-          isArchived: false,
-          lat: { $exists: true },
-          long: { $exists: true }
+      response = await axios.get(`${CONFIG.SERVER_URL}crm/sites/search`,
+        {
+          params: {
+            isArchived: false,
+            lat: { $exists: true },
+            long: { $exists: true }
+          }
         }
-      }
       );
       dispatch(slice.actions.getSitesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Sites loaded successfully'));
