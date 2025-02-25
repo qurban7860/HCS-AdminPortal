@@ -58,6 +58,7 @@ export default function ApiLogsList() {
     { id: 'responseStatusCode', label: 'Status', align: 'left' },
     { id: 'responseTime', label: 'Time(ms)', align: 'left', allowSearch: true },
     { id: 'responseMessage', label: 'Response', align: 'left', allowSearch: true },
+    { id: 'noOfRecordsUpdated', label: 'Records Updated', align: 'left' },
     { id: 'customer.name', label: 'Customer', align: 'left' },
     { id: 'machine', label: 'Machine', align: 'left' },
   ];
