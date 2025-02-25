@@ -273,7 +273,7 @@ const MachineNotes = () => {
                                   <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
                                     <Button
                                       size="small"
-                                      color="primary"  
+                                      color="primary"
                                       onClick={() => handleEditClick(item)}
                                       sx={{ minWidth: 'unset', px: 1 }}
                                     >
