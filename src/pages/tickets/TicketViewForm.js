@@ -2,13 +2,13 @@ import { useMemo, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 // @mui
-import { Card, Grid, Box, Dialog, Divider, Button, DialogTitle } from '@mui/material';
+import { Card, Grid, Box, Dialog, Divider, Button, DialogTitle, Link} from '@mui/material';
 import download from 'downloadjs';
 import b64toBlob from 'b64-to-blob';
 // redux
 import { deleteTicket, resetTicket, getFile, deleteFile, updateTicketField } from '../../redux/slices/ticket/tickets';
 // paths
-import { PATH_SUPPORT } from '../../routes/paths';
+import { PATH_SUPPORT, PATH_CRM, PATH_MACHINE } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import { ThumbnailDocButton } from '../../components/Thumbnails';
@@ -28,6 +28,9 @@ import FilledTextField from './utils/FilledTextField';
 import FilledDateField from './utils/FilledDateField';
 import FilledTimeField from './utils/FilledTimeField';
 import ViewFormSWitch from '../../components/ViewForms/ViewFormSwitch';
+import { getCustomer, setCustomerDialog } from '../../redux/slices/customer/customer';
+import { getMachineForDialog, setMachineDialog } from '../../redux/slices/products/machine';
+import OpenInNewPage from '../../components/Icons/OpenInNewPage';
 import DropDownMultipleSelection from './utils/DropDownMultipleSelection';
 import { getContact, getCustomerContacts, getActiveSPContacts, resetContact, resetCustomersContacts, resetActiveSPContacts } from '../../redux/slices/customer/contact';
 import {resetComments} from '../../redux/slices/ticket/ticketComments/ticketComment';
@@ -157,8 +160,8 @@ export default function TicketViewForm() {
   const defaultValues = useMemo(
     () => ({
       ticketNo: id && `${prefix || ''} - ${ticket?.ticketNo || ''}` || '',
-      customer: id && ticket?.customer?.name || '',
-      machine: id && `${ticket?.machine?.serialNo || ''} - ${ticket?.machine?.machineModel?.name || ''}` || '',
+      customer: id && ticket?.customer || '',
+      machine: id && ticket?.machine || '',
       // issueType: id && ticket?.issueType?.name || '',
       reporter: id && ticket?.reporter && { _id: ticket?.reporter?._id, name: `${ticket.reporter.firstName || ''} ${ticket.reporter.lastName || ''}` } || '',
       assignee: id && ticket?.assignee && { _id: ticket?.assignee?._id, name: `${ticket.assignee.firstName || ''} ${ticket.assignee.lastName || ''}` } || null,
@@ -316,6 +319,18 @@ export default function TicketViewForm() {
       }
     }
   };
+  
+   const handleCustomerDialog = async (event, customerId) => {
+      event.preventDefault(); 
+      await dispatch(getCustomer(customerId));
+      await dispatch(setCustomerDialog(true));
+    };
+  
+  const handleMachineDialog = async ( event, MachineID ) => {
+    event.preventDefault(); 
+    await dispatch(getMachineForDialog(MachineID));
+    await dispatch(setMachineDialog(true)); 
+  };
 
   return (
       <>
@@ -362,8 +377,33 @@ export default function TicketViewForm() {
             <ViewFormField isLoading={isLoading} sm={2} heading="Priority"
               node={<DropDownField name="priority" isNullable label='Priority' value={ticket?.priority} onSubmit={onSubmit} options={ticketSettings?.priorities} />}
             />
-            <ViewFormField isLoading={isLoading} sm={4} heading="Customer" param={defaultValues.customer} />
-            <ViewFormField isLoading={isLoading} sm={4} heading="Machine" param={defaultValues.machine} />
+            <ViewFormField sm={ 4 } variant='h4' heading="Customer" isLoading={ isLoading }
+              node={ defaultValues?.customer && (
+                <>
+                <Link variant='h4' onClick={(event)=> handleCustomerDialog(event, defaultValues.customer?._id)} underline="none" sx={{ cursor: 'pointer'}}>
+                  {defaultValues?.customer?.name}
+                </Link>
+                <OpenInNewPage onClick={()=> window.open( PATH_CRM.customers.view(defaultValues.customer?._id), '_blank' ) }/>
+                </>
+              )}
+            />
+            <ViewFormField isLoading={isLoading} sm={4} variant='h4' heading="Machine"
+              node={ defaultValues?.customer && (
+                <>
+                <Link 
+                  variant='h4' 
+                  onClick={(event)=> handleMachineDialog(event, defaultValues.machine?._id)} 
+                  underline="none" 
+                  sx={{ cursor: 'pointer'}}
+                  >
+                  {`${defaultValues?.machine?.serialNo || ''} - ${defaultValues?.machine?.machineModel?.name || ''}`}
+                </Link>
+                <OpenInNewPage onClick={()=> window.open( PATH_MACHINE.machines.view(defaultValues.machine?._id), '_blank' ) }/>
+                </>
+              )}
+            />
+            {/* <ViewFormField isLoading={isLoading} sm={4} heading="Customer" param={defaultValues.customer} /> */}
+            {/* <ViewFormField isLoading={isLoading} sm={4} heading="Machine" param={defaultValues.machine} /> */}
             <ViewFormField isLoading={isLoading} sm={2} heading="HLC" 
               node={<FilledTextField name="hlc" value={defaultValues.hlc} onSubmit={onSubmit} />}
             />
