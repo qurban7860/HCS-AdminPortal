@@ -22,6 +22,8 @@ const initialState = {
   filterBy: '',
   page: 0,
   rowsPerPage: 100,
+  sortBy: 'name',
+  sortOrder: 'asc',
 };
 
 const slice = createSlice({
@@ -116,6 +118,12 @@ const slice = createSlice({
     ChangePage(state, action) {
       state.page = action.payload;
     },
+    // Set Sort
+    setSort(state, action) {
+      const { sortBy, sortOrder } = action.payload;
+      state.sortBy = sortBy;
+      state.sortOrder = sortOrder;
+    },
   },
 });
 
@@ -133,6 +141,7 @@ export const {
   setFilterBy,
   ChangeRowsPerPage,
   ChangePage,
+  setSort,
 } = slice.actions;
 // ----------------------------------------------------------------------
 

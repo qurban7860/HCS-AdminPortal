@@ -24,7 +24,8 @@ const initialState = {
     "responseTime": false,
     "machine.serialNo": false,
     "customer.name": true,
-    "responseMessage": true,
+    "responseMessage": false,
+    "noOfRecordsUpdated": false
   },
 };
 const slice = createSlice({

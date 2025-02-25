@@ -29,9 +29,11 @@ export default function APILogsTableRow({ row, style, selected, onViewRow, hidde
     updatedAt,
     responseMessage,
     requestHeaders = {},
+    response,
     createdIP = '',
     createdBy = '',
     createdByIdentifier = '',
+    noOfRecordsUpdated = '',
   } = row;
 
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -104,7 +106,10 @@ export default function APILogsTableRow({ row, style, selected, onViewRow, hidde
           </TableCell>
         )}
         {!hiddenColumns?.responseMessage && (
-          <TableCell align="left">{responseMessage}</TableCell>
+          <TableCell align="left">{responseMessage || JSON.parse(response) || ''}</TableCell>
+        )}
+        {!hiddenColumns?.noOfRecordsUpdated && (
+          <TableCell align="left">{noOfRecordsUpdated || ''}</TableCell>
         )}
         {!hiddenColumns?.['customer.name'] && (
           <TableCell align="left">{customer?.name || ''}</TableCell>
@@ -127,17 +132,18 @@ export default function APILogsTableRow({ row, style, selected, onViewRow, hidde
           requestURL,
           responseStatusCode,
           responseTime,
-          responseMessage,
           customerName: customer?.name || '',
           serialNo: machine?.[0]?.serialNo || '',
           machineName: machine?.[0]?.name || '',
-          portalKeyCreatedBy: machine?.[0]?.portalKey?.[0]?.createdBy?.name || '',
-          requestHeaders: {
-            'content-type': requestHeaders['content-type'],
-            'content-length': requestHeaders['content-length'],
-            connection: requestHeaders.connection,
-            host: requestHeaders.host,
-          },
+          response,
+          // responseMessage,
+          // portalKeyCreatedBy: machine?.[0]?.portalKey?.[0]?.createdBy?.name || '',
+          // requestHeaders: {
+          //   'content-type': requestHeaders['content-type'],
+          //   'content-length': requestHeaders['content-length'],
+          //   connection: requestHeaders.connection,
+          //   host: requestHeaders.host,
+          // },
           createdIP,
           createdBy: createdBy?.name || createdByIdentifier|| '',
           createdAt: fDateTime(createdAt),
