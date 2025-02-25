@@ -23,12 +23,14 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import { useSnackbar } from 'notistack';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
+import { useAuthContext } from '../../../auth/useAuthContext';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
 import { FORMLABELS } from '../../../constants/document-constants';
 import FormProvider, { RHFTextField } from '../../../components/hook-form';
 import { CustomAvatar } from '../../../components/custom-avatar';
 import { getNotes, addNote, updateNote, deleteNote, resetNotes } from '../../../redux/slices/products/machineNote';
 import ConfirmDialog from '../../../components/confirm-dialog';
+import { getActiveSPContacts } from '../../../redux/slices/customer/contact';
 
 dayjs.extend(relativeTime);
 
@@ -39,7 +41,7 @@ const NoteSchema = Yup.object().shape({
   isInternal: Yup.boolean(),
 });
 
-const MachineNotes = ({ currentUser }) => {
+const MachineNotes = () => {
   const [editingNoteId, setEditingNoteId] = useState(null);
   const [editValue, setEditValue] = useState('');
   // const [editIsInternal, setEditIsInternal] = useState(false);
@@ -50,12 +52,16 @@ const MachineNotes = ({ currentUser }) => {
   const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
 
+  const { user:currentUser, userId } = useAuthContext();
+
   const { error, notes, isLoading } = useSelector((state) => state.machineNote);
+  const { activeSpContacts } = useSelector((state) => state.contact);
 
   useEffect(() => {
     if (machineId) {
 
-      dispatch(getNotes(machineId ));
+      dispatch(getNotes(machineId));
+      dispatch(getActiveSPContacts());
     }
     return () => {
       dispatch(resetNotes());
@@ -263,11 +269,11 @@ const MachineNotes = ({ currentUser }) => {
                                     </Typography>
                                   )}
                                 </Typography>
-                                {item?.createdBy?._id === currentUser?.userId && (
+                                {(activeSpContacts.some((contact) => contact._id === currentUser?.contact)) && (
                                   <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
                                     <Button
                                       size="small"
-                                      color="primary"
+                                      color="primary"  
                                       onClick={() => handleEditClick(item)}
                                       sx={{ minWidth: 'unset', px: 1 }}
                                     >
@@ -316,10 +322,6 @@ const MachineNotes = ({ currentUser }) => {
       />
     </>
   );
-};
-
-MachineNotes.propTypes = {
-  currentUser: PropTypes.object.isRequired,
 };
 
 export default MachineNotes;
