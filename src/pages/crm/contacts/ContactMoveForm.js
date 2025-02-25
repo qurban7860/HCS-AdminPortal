@@ -8,7 +8,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Card, Grid, Stack } from '@mui/material';
 // slice
-import { setIsExpanded, moveCustomerContact,getContacts, getContact } from '../../../redux/slices/customer/contact';
+import { setIsExpanded, moveCustomerContact, getContacts, getContact } from '../../../redux/slices/customer/contact';
 import { getActiveCustomers } from '../../../redux/slices/customer/customer';
 // components
 import { useSnackbar } from '../../../components/snackbar';
@@ -21,25 +21,25 @@ import { PATH_CRM } from '../../../routes/paths';
 
 // ----------------------------------------------------------------------
 
-export default function ContactMoveForm( ) {
+export default function ContactMoveForm() {
   const { contact } = useSelector((state) => state.contact);
   const { activeCustomers } = useSelector((state) => state.customer);
   const { enqueueSnackbar } = useSnackbar();
-  const { customerId, id } = useParams() 
-  
+  const { customerId, id } = useParams()
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const MoveMachineSchema = Yup.object().shape({
-    customer: Yup.object().shape({name: Yup.string()}).nullable().required('Customer is required!'),
+    customer: Yup.object().shape({ name: Yup.string() }).nullable().required('Customer is required!'),
   });
 
   const defaultValues = useMemo(
     () => ({
       customer: null,
-      contact: id ||  null,
+      contact: id || null,
     }),
-    [ id ]
+    [id]
   );
 
   const methods = useForm({
@@ -54,21 +54,19 @@ export default function ContactMoveForm( ) {
 
   useEffect(() => {
     dispatch(getActiveCustomers())
-  }, [ dispatch ]);
+  }, [dispatch]);
 
   useEffect(() => {
     dispatch(getContact(customerId, id))
-  }, [ dispatch, customerId, id ]);
-  
+  }, [dispatch, customerId, id]);
+
   const onSubmit = async (data) => {
     try {
       await dispatch(moveCustomerContact(data));
       enqueueSnackbar('Contact moved successfully!');
       await dispatch(setIsExpanded(false));
-      if( customerId && customerId !== "undefined" ){
-        await dispatch(getContacts(customerId));
-        await navigate(PATH_CRM.customers.contacts.root(customerId))
-      }
+      await dispatch(getContacts(customerId));
+      await navigate(PATH_CRM.customers.contacts.root(customerId))
     } catch (error) {
       enqueueSnackbar(error, { variant: `error` });
       console.error(error);
@@ -78,32 +76,32 @@ export default function ContactMoveForm( ) {
   const toggleCancel = () => navigate(PATH_CRM.customers.contacts.view(customerId, id));
 
   return (
-          <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-            <Grid item xs={12} md={12}>
-              <Card sx={{ p: 3 }}>
-                <FormLabel content="Contact Detail" />
-                <Grid container sx={{pb:2}}>
-                  <ViewFormField sm={6} heading="Name" param={`${contact?.firstName || ''} ${contact?.lastName || ''}`} />
-                  <ViewFormField sm={6} heading="Title" param={contact?.title || ''} />
-                  <ViewFormField sm={6} heading="Email" param={contact?.email || ''} />
-                  <ViewPhoneComponent sm={6} heading="Phone" value={contact?.phoneNumbers || ''} />
-                </Grid>
-                <Stack spacing={2}>
-                  <FormLabel content="Move Contact" />
-                  <RHFAutocomplete 
-                      name="customer"
-                      label="Customer*"
-                      options={activeCustomers.filter(activeCustomer => activeCustomer._id !== id)}
-                      isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                      getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                      renderOption={(props, option) => (
-                        <li {...props} key={option?._id}>{`${option.name ? option.name : ''}`}</li>
-                      )}
-                    />
-                  <AddFormButtons isSubmitting={isSubmitting} saveButtonName='Move' toggleCancel={toggleCancel} />
-                </Stack>
-            </Card>
-        </Grid>
-      </FormProvider>
+    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+      <Grid item xs={12} md={12}>
+        <Card sx={{ p: 3 }}>
+          <FormLabel content="Contact Detail" />
+          <Grid container sx={{ pb: 2 }}>
+            <ViewFormField sm={6} heading="Name" param={`${contact?.firstName || ''} ${contact?.lastName || ''}`} />
+            <ViewFormField sm={6} heading="Title" param={contact?.title || ''} />
+            <ViewFormField sm={6} heading="Email" param={contact?.email || ''} />
+            <ViewPhoneComponent sm={6} heading="Phone" value={contact?.phoneNumbers || ''} />
+          </Grid>
+          <Stack spacing={2}>
+            <FormLabel content="Move Contact" />
+            <RHFAutocomplete
+              name="customer"
+              label="Customer*"
+              options={activeCustomers.filter(activeCustomer => activeCustomer._id !== id)}
+              isOptionEqualToValue={(option, value) => option?._id === value?._id}
+              getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+              renderOption={(props, option) => (
+                <li {...props} key={option?._id}>{`${option.name ? option.name : ''}`}</li>
+              )}
+            />
+            <AddFormButtons isSubmitting={isSubmitting} saveButtonName='Move' toggleCancel={toggleCancel} />
+          </Stack>
+        </Card>
+      </Grid>
+    </FormProvider>
   );
 }
