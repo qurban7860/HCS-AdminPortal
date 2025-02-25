@@ -17,7 +17,7 @@ const initialState = {
   compareHistoricalConfiguration: {},
   historicalConfigurations: [],
   compareHistoricalConfigurations: [],
-  selectedINIs:[],
+  selectedINIs: [],
   isHistorical: false,
   isDetailPage: false,
   filterBy: '',
@@ -72,7 +72,7 @@ const slice = createSlice({
     },
 
     getCompareHistoricalConfigurationRecordsSuccess(state, action) {
-      state.isLoadingCompareINIs= false;
+      state.isLoadingCompareINIs = false;
       state.compareHistoricalConfigurations = action.payload;
     },
 
@@ -90,24 +90,24 @@ const slice = createSlice({
       state.isLoading = false;
     },
 
-    resetHistoricalConfigurationRecord(state){
+    resetHistoricalConfigurationRecord(state) {
       state.historicalConfiguration = null;
       state.success = false;
       state.isLoading = false;
     },
 
-    resetHistoricalConfigurationRecords(state){
+    resetHistoricalConfigurationRecords(state) {
       state.historicalConfigurations = [];
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
     },
 
-    resetCompareHistoricalConfigurationRecords(state){
+    resetCompareHistoricalConfigurationRecords(state) {
       state.compareHistoricalConfigurations = [];
     },
 
-    resetCompareHistoricalConfigurationRecord(state){
+    resetCompareHistoricalConfigurationRecord(state) {
       state.compareHistoricalConfiguration = null;
     },
 
@@ -143,29 +143,29 @@ export const {
 
 // ------------------------------------------------------------------------------------------------
 
-export function getHistoricalConfigurationRecords( machineId, isMachineArchived, compareINI ) { 
-  return async (dispatch) =>{
-    if( compareINI ){
+export function getHistoricalConfigurationRecords(machineId, isMachineArchived, compareINI) {
+  return async (dispatch) => {
+    if (compareINI) {
       dispatch(slice.actions.startLoadingCompareINIs());
     } else {
       dispatch(slice.actions.startLoading());
     }
-    try{
+    try {
       const params = {
         isArchived: false,
         machine: machineId,
-        orderBy : {
+        orderBy: {
           createdAt: -1
         }
       }
-    if( isMachineArchived ){
-      params.archivedByMachine = true;
-      params.isArchived = true;
-    } 
-      const response = await axios.get(`${CONFIG.SERVER_URL}apiclient/productConfigurations/`, { params } );
-    console.log("Records Called!  ",compareINI,response.data)
+      if (isMachineArchived) {
+        params.archivedByMachine = true;
+        params.isArchived = true;
+      }
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/ini`, { params });
+      console.log("Records Called!  ", compareINI, response.data)
 
-      if ( compareINI ) {
+      if (compareINI) {
         dispatch(slice.actions.getCompareHistoricalConfigurationRecordsSuccess(response.data));
       } else {
         dispatch(slice.actions.getHistoricalConfigurationRecordsSuccess(response.data));
@@ -180,23 +180,23 @@ export function getHistoricalConfigurationRecords( machineId, isMachineArchived,
 
 // ----------------------------------------------------------------------
 
-export function getHistoricalConfigurationRecord(machineId, id, isINI, isCompare ) {
+export function getHistoricalConfigurationRecord(machineId, id, isINI, isCompare) {
   return async (dispatch) => {
-    if( isINI ){
+    if (isINI) {
       dispatch(slice.actions.startLoadingINI());
-    } else if( isCompare ){
+    } else if (isCompare) {
       dispatch(slice.actions.startLoadingCompareINI());
-    } else{
+    } else {
       dispatch(slice.actions.startLoading());
     }
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}apiclient/productConfigurations/${id}`,
-      {
-        params: {
-          machine: machineId,
-        }
-      });
-      if( isCompare ){
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/ini/${id}`,
+        {
+          params: {
+            machine: machineId,
+          }
+        });
+      if (isCompare) {
         dispatch(slice.actions.getCompareHistoricalConfigurationRecordSuccess(response.data));
       } else {
         dispatch(slice.actions.getHistoricalConfigurationRecordSuccess(response.data));
@@ -212,20 +212,20 @@ export function getHistoricalConfigurationRecord(machineId, id, isINI, isCompare
 
 // ----------------------------------------------------------------------
 
-export function addHistoricalConfigurationRecord( params) {
+export function addHistoricalConfigurationRecord(machineId, params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-        const data = {
-          configuration: params?.configuration,
-          inputGUID: params?.inputGUID,
-          inputSerialNo: params?.inputSerialNo,
-          isManufacture: params?.isManufacture,
-        }
-        if(params?.backupDate){
-          data.backupDate= params.backupDate;
-        }
-      const response = await axios.post(`${CONFIG.SERVER_URL}apiclient/productConfigurations/`, data );
+      const data = {
+        configuration: params?.configuration,
+        inputGUID: params?.inputGUID,
+        inputSerialNo: params?.inputSerialNo,
+        isManufacture: params?.isManufacture,
+      }
+      if (params?.backupDate) {
+        data.backupDate = params.backupDate;
+      }
+      const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/ini/`, data);
       dispatch(slice.actions.setResponseMessage(response?.data || ''));
     } catch (error) {
       console.error(error);

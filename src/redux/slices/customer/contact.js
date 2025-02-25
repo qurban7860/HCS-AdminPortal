@@ -17,11 +17,12 @@ const initialState = {
   isLoading: false,
   error: null,
   contacts: [],
+  allContacts: [],
   customersContacts: [],
   activeContacts: [],
   spContacts: [],
   activeSpContacts: [],
-  contactDialog:false,
+  contactDialog: false,
   contact: null,
   filterBy: '',
   page: 0,
@@ -57,49 +58,49 @@ const slice = createSlice({
     },
 
     // SET TOGGLE
-    setContactFormVisibility(state, action){
+    setContactFormVisibility(state, action) {
       state.formVisibility = action.payload;
     },
 
     // SET TOGGLE
-    setContactEditFormVisibility(state, action){
+    setContactEditFormVisibility(state, action) {
       state.contactEditFormVisibility = action.payload;
     },
 
     // ACTIVE CARD INDEX
-    setCardActiveIndex(state, action){
+    setCardActiveIndex(state, action) {
       state.activeCardIndex = action.payload;
     },
-     
+
 
     // CARD IS EXPENDED
-    setIsExpanded(state, action){
+    setIsExpanded(state, action) {
       state.isExpanded = action.payload;
     },
 
     // SET TOGGLE
-    setContactMoveFormVisibility(state, action){
+    setContactMoveFormVisibility(state, action) {
       state.contactMoveFormVisibility = action.payload;
     },
 
     // SET TOGGLE
-    setContactDialog(state, action){
+    setContactDialog(state, action) {
       state.contactDialog = action.payload;
     },
 
     // RESET CONTACT
-    resetContact(state){
+    resetContact(state) {
       state.contact = null;
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
     },
 
-    setContactsView(state, action){
+    setContactsView(state, action) {
       state.contactsListView = action.payload;
     },
     // RESET CONTACTS
-    resetContacts(state){
+    resetContacts(state) {
       state.contacts = [];
       state.responseMessage = null;
       state.success = false;
@@ -107,19 +108,19 @@ const slice = createSlice({
     },
 
     // RESET ACTIVE CONTACTS
-    resetActiveContacts(state){
+    resetActiveContacts(state) {
       state.activeContacts = [];
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
     },
 
-    resetContactFormsVisiblity(state){
-      state.contactEditFormVisibility=false;
-      state.contactMoveFormVisibility=false;
-      state.formVisibility=false;
+    resetContactFormsVisiblity(state) {
+      state.contactEditFormVisibility = false;
+      state.contactMoveFormVisibility = false;
+      state.formVisibility = false;
     },
-    
+
     // GET Customers Contacts
     getCustomersContactsSuccess(state, action) {
       state.isLoading = false;
@@ -129,16 +130,27 @@ const slice = createSlice({
     },
 
     // RESET ACTIVE CONTACTS
-    resetCustomersContacts(state){
+    resetCustomersContacts(state) {
       state.customersContacts = [];
+    },
+    // RESET ALL CONTACTS
+    resetAllContacts(state) {
+      state.allContacts = [];
       state.isLoading = false;
     },
-
     // GET Contacts
     getContactsSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
       state.contacts = action.payload;
+      state.initial = true;
+    },
+
+    // GET All Contacts
+    getAllContactsSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.allContacts = action.payload;
       state.initial = true;
     },
 
@@ -223,6 +235,7 @@ export const {
   setContactsView,
   resetContact,
   resetContacts,
+  resetAllContacts,
   resetActiveContacts,
   resetActiveSPContacts,
   resetCustomersContacts,
@@ -249,7 +262,7 @@ export function addContact(params) {
         customer: params.customer,
         title: params.title,
         contactTypes: params.contactTypes,
-        phoneNumbers: params?.phoneNumbers?.filter( pN => pN?.contactNumber !== '' ||  pN?.contactNumber !== undefined ) || [],
+        phoneNumbers: params?.phoneNumbers?.filter(pN => pN?.contactNumber !== '' || pN?.contactNumber !== undefined) || [],
         email: params.email,
         reportingTo: params.reportingTo?._id || null,
         department: params.department?._id || null,
@@ -259,32 +272,32 @@ export function addContact(params) {
       };
 
       /* eslint-enable */
-      if(params.street){
-        data.address.street = params.street;        
+      if (params.street) {
+        data.address.street = params.street;
       }
-      if(params.suburb){
-        data.address.suburb = params.suburb;        
+      if (params.suburb) {
+        data.address.suburb = params.suburb;
       }
-      if(params.city){
-        data.address.city = params.city;        
+      if (params.city) {
+        data.address.city = params.city;
       }
-      if(params.region){
-        data.address.region = params.region;        
+      if (params.region) {
+        data.address.region = params.region;
       }
-      if(params.postcode){
-        data.address.postcode = params.postcode;        
+      if (params.postcode) {
+        data.address.postcode = params.postcode;
       }
-      if(params?.country?.label && params?.country !== null){
-        data.address.country = params.country.label;        
+      if (params?.country?.label && params?.country !== null) {
+        data.address.country = params.country.label;
       }
 
-      const response =  await axios.post(`${CONFIG.SERVER_URL}crm/customers/${params.customer}/contacts`,
+      const response = await axios.post(`${CONFIG.SERVER_URL}crm/customers/${params.customer}/contacts`,
         data,
       );
       dispatch(getContact(response?.data?.customerCategory?.customer, response?.data?.customerCategory?._id));
       dispatch(slice.actions.setContactFormVisibility(false));
       dispatch(slice.actions.setResponseMessage('Site saved successfully'));
-      return response; 
+      return response;
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -309,7 +322,7 @@ export function updateContact(customerId, contactId, params) {
         customer: params.customer,
         title: params.title,
         contactTypes: params.contactTypes,
-        phoneNumbers: params?.phoneNumbers?.filter( pN => pN?.contactNumber !== '' ||  pN?.contactNumber !== undefined ) || [],
+        phoneNumbers: params?.phoneNumbers?.filter(pN => pN?.contactNumber !== '' || pN?.contactNumber !== undefined) || [],
         email: params.email,
         reportingTo: params.reportingTo?._id || null,
         department: params.department?._id || null,
@@ -320,23 +333,23 @@ export function updateContact(customerId, contactId, params) {
 
       /* eslint-enable */
 
-      if(params.street){
-        data.address.street = params.street;        
+      if (params.street) {
+        data.address.street = params.street;
       }
-      if(params.suburb){
-        data.address.suburb = params.suburb;        
+      if (params.suburb) {
+        data.address.suburb = params.suburb;
       }
-      if(params.city){
-        data.address.city = params.city;        
+      if (params.city) {
+        data.address.city = params.city;
       }
-      if(params.region){
-        data.address.region = params.region;        
+      if (params.region) {
+        data.address.region = params.region;
       }
-      if(params.postcode){
-        data.address.postcode = params.postcode;        
+      if (params.postcode) {
+        data.address.postcode = params.postcode;
       }
-      if(params?.country?.label && params.country !== null){
-        data.address.country = params?.country?.label;        
+      if (params?.country?.label && params.country !== null) {
+        data.address.country = params?.country?.label;
       }
 
       await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${customerId}/contacts/${contactId}`,
@@ -354,18 +367,18 @@ export function updateContact(customerId, contactId, params) {
 
 // ----------------------------------------------------------------------
 
-export function getSPContacts( cancelToken ) {
+export function getSPContacts(cancelToken) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}crm/sp/contacts`,
-      {
-        params: {
-          isArchived: false,
-          isActive: true
-        },
-        cancelToken: cancelToken?.token,
-      }
+        {
+          params: {
+            isArchived: false,
+            isActive: true
+          },
+          cancelToken: cancelToken?.token,
+        }
       );
       dispatch(slice.actions.getSPContactsSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Contacts loaded successfully'));
@@ -386,21 +399,44 @@ export function getCustomerContacts(customerID, isCustomerArchived) {
     dispatch(slice.actions.startLoading());
     try {
       const params = {
-        orderBy : {
+        orderBy: {
           firstName: 1
         }
       }
 
-      if(isCustomerArchived){
+      if (isCustomerArchived) {
         params.archivedByCustomer = true;
         params.isArchived = true;
-      }else{
+      } else {
         params.isArchived = false;
       }
 
-      const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/contacts`,{ params } );
+      const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/contacts`, { params });
       dispatch(slice.actions.getCustomersContactsSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Contacts loaded successfully'));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+
+// ----------------------------------------------------------------------
+
+export function getAllContacts() {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const params = {
+        orderBy: {
+          firstName: 1
+        },
+        isArchived: false
+      }
+      const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/contacts/all`, { params });
+      dispatch(slice.actions.getAllContactsSuccess(response.data));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -416,20 +452,20 @@ export function getContacts(customerID, isCustomerArchived) {
     dispatch(slice.actions.startLoading());
     try {
       const params = {
-        orderBy : {
+        orderBy: {
           firstName: 1
         }
       }
 
-      if(isCustomerArchived){
+      if (isCustomerArchived) {
         params.archivedByCustomer = true;
         params.isArchived = true;
-      }else{
+      } else {
         params.isArchived = false;
       }
 
-      
-      const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/contacts`,{ params } );
+
+      const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/contacts`, { params });
       dispatch(slice.actions.getContactsSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Contacts loaded successfully'));
     } catch (error) {
@@ -450,10 +486,10 @@ export function getActiveSPContacts(reportingTo) {
         isActive: true,
         isArchived: false
       }
-      if(reportingTo){
+      if (reportingTo) {
         params.reportingTo = reportingTo;
       }
-      const response = await axios.get(`${CONFIG.SERVER_URL}crm/sp/contacts`, { params } );
+      const response = await axios.get(`${CONFIG.SERVER_URL}crm/sp/contacts`, { params });
       dispatch(slice.actions.getActiveSPContactsSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Contacts loaded successfully'));
     } catch (error) {
@@ -466,18 +502,18 @@ export function getActiveSPContacts(reportingTo) {
 
 // ------------------------------ get Active Contacts ----------------------------------------
 
-export function getActiveContacts(customerID ) {
+export function getActiveContacts(customerID) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-       const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/contacts` , 
+      const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/contacts`,
         {
           params: {
             isActive: true,
             isArchived: false
           }
         }
-        );
+      );
       dispatch(slice.actions.getActiveContactsSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Contacts loaded successfully'));
     } catch (error) {
@@ -495,7 +531,7 @@ export function getCustomerArrayActiveContacts(customerArr) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-       const response = await axios.get(`${CONFIG.SERVER_URL}crm/contacts/search` , 
+      const response = await axios.get(`${CONFIG.SERVER_URL}crm/contacts/search`,
         {
           params: {
             isActive: true,
@@ -503,7 +539,7 @@ export function getCustomerArrayActiveContacts(customerArr) {
             customerArr
           }
         }
-        );
+      );
       dispatch(slice.actions.getActiveContactsSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Contacts loaded successfully'));
     } catch (error) {
@@ -565,7 +601,7 @@ export function moveCustomerContact(params) {
         customer: params?.customer?._id,
       };
 
-      await axios.post(`${CONFIG.SERVER_URL}crm/customers/${params?.customer?._id}/contacts/moveContact`,data);
+      await axios.post(`${CONFIG.SERVER_URL}crm/customers/${params?.customer?._id}/contacts/moveContact`, data);
       dispatch(slice.actions.setContactMoveFormVisibility(false));
       dispatch(slice.actions.setResponseMessage('Contact updated successfully'));
 
