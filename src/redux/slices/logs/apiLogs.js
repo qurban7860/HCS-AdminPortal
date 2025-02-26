@@ -19,7 +19,7 @@ const initialState = {
     "createdAt": false,
     "apiType": false,
     "requestMethod": false,
-    "requestURL": false,
+    "requestURL": true,
     "responseStatusCode": false,
     "responseTime": false,
     "machine.serialNo": false,

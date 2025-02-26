@@ -29,8 +29,8 @@ function AllMachineLogs() {
     customer: null,
     machine: null,
     logType: machineLogTypeFormats.find(option => option.type === 'ERP') || null,
-    dateFrom: new Date(),
-    dateTo: new Date(),
+    dateFrom: new Date(new Date().setHours(0, 0, 0, 0)),
+    dateTo: new Date(new Date().setHours(23, 59, 59, 999)),
   };
 
   const methods = useForm({
@@ -57,7 +57,6 @@ function AllMachineLogs() {
   const onGetLogs = (data) => {
     const customerId = customer._id;
     const machineId = machine?._id || undefined;
-    // setShowErpLogs(false);
     dispatch(ChangePage(0));
     dispatch(
       getMachineLogRecords({
@@ -65,8 +64,8 @@ function AllMachineLogs() {
         machineId,
         page: 0,
         pageSize: rowsPerPage,
-        fromDate: dateFrom,
-        toDate: dateTo,
+        fromDate: new Date(new Date(dateFrom).setHours(0, 0, 0, 0)),
+        toDate: new Date(new Date(dateTo).setHours(23, 59, 59, 999)),
         isMachineArchived: machine?.isArchived,
         isArchived: false,
         selectedLogType: logType.type,

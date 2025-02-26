@@ -187,6 +187,7 @@ const MachineSyncAPILogsTable = ({
                           // onViewRow={() => handleViewRow(row._id)}
                           selected={selected.includes(row._id)}
                           style={index % 2 ? { background: 'red' } : { background: 'green' }}
+                          tableColumns={TABLE_HEAD}
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />

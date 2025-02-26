@@ -51,21 +51,21 @@ export default function ApiLogsList() {
   );
 
   const TABLE_HEAD = [
-    { id: 'updatedAt', label: 'Timestamp', align: 'left' },
+    { id: 'createdAt', label: 'Timestamp', align: 'left' },
     { id: 'apiType', label: 'API Type', align: 'left' },
     { id: 'requestMethod', label: 'Method', align: 'left' },
     { id: 'requestURL', label: 'Endpoint', align: 'left', allowSearch: true },
     { id: 'responseStatusCode', label: 'Status', align: 'left' },
     { id: 'responseTime', label: 'Time(ms)', align: 'left', allowSearch: true },
     { id: 'responseMessage', label: 'Response', align: 'left', allowSearch: true },
-    { id: 'noOfRecordsUpdated', label: 'Records Updated', align: 'left' },
+    { id: 'noOfRecordsUpdated', label: 'Records', align: 'left' },
     { id: 'customer.name', label: 'Customer', align: 'left' },
-    { id: 'machine', label: 'Machine', align: 'left' },
+    { id: 'machine', label: 'Machine', align: 'left', allowSearch: true },
   ];
 
   const defaultValues = {
-    dateFrom: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
-    dateTo: new Date().toISOString(),
+    dateFrom: new Date(new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).setHours(0, 0, 0, 0)).toISOString(),
+    dateTo: new Date(new Date().setHours(23, 59, 59, 999)).toISOString(),
     filteredSearchKey: '',
   };
 
@@ -96,8 +96,8 @@ export default function ApiLogsList() {
 
   const handleFetchLogs = () => {
     const query = {
-      fromDate: new Date(dateFrom).toISOString(),
-      toDate: new Date(dateTo).toISOString(),
+      fromDate: new Date(new Date(dateFrom).setHours(0, 0, 0, 0)).toISOString(),
+      toDate: new Date(new Date(dateTo).setHours(23, 59, 59, 999)).toISOString(),
     };
 
     if (filteredSearchKey && selectedSearchFilter) {
@@ -107,6 +107,8 @@ export default function ApiLogsList() {
         query.responseMessage = { $regex: filteredSearchKey, $options: 'i' };
       } else if (selectedSearchFilter === 'requestURL') {
         query.requestURL = { $regex: filteredSearchKey, $options: 'i' };
+      } else if (selectedSearchFilter === 'machine') {
+        query['machine.serialNo'] = { $regex: filteredSearchKey, $options: 'i' };
       }
     }
 
@@ -317,6 +319,7 @@ export default function ApiLogsList() {
                         hiddenColumns={reportHiddenColumns}
                         // onViewRow={() => handleViewRow(row?.id)}
                         style={index % 2 ? { background: 'red' } : { background: 'green' }}
+                        tableColumns={TABLE_HEAD}
                       />
                     ) : (
                       !isNotFound &&
