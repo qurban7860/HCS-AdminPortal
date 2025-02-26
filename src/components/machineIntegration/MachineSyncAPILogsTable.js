@@ -1,23 +1,31 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Box,
   Card,
+
   IconButton,
   Table,
   TableBody,
+
   TableContainer,
 } from '@mui/material';
 import PropTypes from 'prop-types';
 import TableCard from '../ListTableTools/TableCard';
 import {
   useTable,
+  getComparator,
   TableNoData,
   TableSkeleton,
+  TablePaginationCustom,
   TableHeadFilter,
 } from '../table';
 import {
   getApiLogs,
+  ChangeRowsPerPage,
+  ChangePage,
+  // resetApiLogs,
+  // getApiLog,
 } from '../../redux/slices/logs/apiLogs';
 import Scrollbar from '../scrollbar';
 import APILogsTableRow from './APILogsTableRow';
@@ -25,6 +33,8 @@ import Iconify from '../iconify';
 import FormLabel from '../DocumentForms/FormLabel';
 import { FORMLABELS } from '../../constants/document-constants';
 import { StyledTooltip } from '../../theme/styles/default-styles';
+
+
 
 const TABLE_HEAD = [
   { id: 'createdAt', label: 'Timestamp', align: 'left' },
@@ -43,33 +53,67 @@ const MachineSyncAPILogsTable = ({
   apiLogTableDialogState,
   setApiLogTableDialogState
 }) => {
+  // const [openLogDetailsDialog, setOpenLogDetailsDialog] = useState(false);
+  // const [selectedLog, setSelectedLog] = useState(null);
   const [tableData, setTableData] = useState([]);
 
-  const { apiLogs, isLoading } = useSelector(
+  const { apiLogs, apiLogsCount, page, rowsPerPage, isLoading } = useSelector(
     (state) => state.apiLogs
   );
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(ChangePage(0));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   useEffect(() => {
     dispatch(getApiLogs({
       machineId,
       orderBy: 'createdAt:-1',
       query: { apiType: 'MACHINE-SYNC' },
-    }));
+      page,
+      pageSize: rowsPerPage,
+      }));
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [page, rowsPerPage ]);
 
   useEffect(() => {
-    setTableData(apiLogs || []);
+    setTableData(apiLogs?.data || [] );
   }, [apiLogs]);
 
-  const { order, orderBy, onSort } = useTable({
+  const { order, orderBy, selected, onSort } = useTable({
     defaultOrderBy: 'createdAt',
     defaultOrder: 'desc',
   });
 
-  const isNotFound = !tableData.length || (!isLoading && !tableData.length);
+  const dataSorted = applySort({
+    inputData: tableData,
+    comparator: getComparator(order, orderBy),
+  });
+
+  const isNotFound = !dataSorted.length || (!isLoading && !dataSorted.length);
   const denseHeight = 60;
+
+  const onChangePage = (event, newPage) => {
+    dispatch(ChangePage(newPage));
+  };
+  const onChangeRowsPerPage = (event) => {
+    dispatch(ChangePage(0));
+    dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10)));
+  };
+
+  // const handleViewRow = (id) => {
+  //   const log = dataSorted.find((item) => item._id === id);
+  //   setSelectedLog({
+  //     ...log,
+  //     customer: log.customer?.name || '',
+  //     machine: log.machine?.serialNo || '',
+  //     createdBy: log.createdBy?.name || '',
+  //     updatedBy: log.updatedBy?.name || '',
+  //   });
+  //   setOpenLogDetailsDialog(true);
+  // };
 
   const refreshLogsList = () => {
     dispatch(
@@ -77,13 +121,16 @@ const MachineSyncAPILogsTable = ({
         machineId,
         orderBy: 'createdAt:-1',
         query: { apiType: 'MACHINE-SYNC' },
+        page,
+        pageSize: rowsPerPage,
       })
     );
   };
 
+
   return (
     <>
-      {tableData.length > 0 && (
+      {dataSorted.length > 0 && (
         <Card sx={{ width: '100%', p: '1rem', mb: 3 }}>
           <FormLabel content={FORMLABELS.INTEGRATION.SYNC_LOGS_HISTORY} />
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: '1rem' }}>
@@ -113,6 +160,16 @@ const MachineSyncAPILogsTable = ({
             </StyledTooltip>
           </Box>
           <TableCard>
+            {!isNotFound && (
+              <TablePaginationCustom
+                count={apiLogsCount || 0}
+                page={page}
+                rowsPerPage={rowsPerPage}
+                onPageChange={onChangePage}
+                onRowsPerPageChange={onChangeRowsPerPage}
+              />
+            )}
+
             <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
               <Scrollbar>
                 <Table stickyHeader size="small" sx={{ minWidth: 360 }}>
@@ -123,13 +180,13 @@ const MachineSyncAPILogsTable = ({
                     onSort={onSort}
                   />
                   <TableBody>
-                    {(isLoading ? [...Array(10)] : tableData).map((row, index) =>
+                    {(isLoading ? [...Array(rowsPerPage)] : dataSorted).map((row, index) =>
                       row ? (
                         <APILogsTableRow
-                          key={index}
                           row={row}
+                          // onViewRow={() => handleViewRow(row._id)}
+                          selected={selected.includes(row._id)}
                           style={index % 2 ? { background: 'red' } : { background: 'green' }}
-                          tableColumns={TABLE_HEAD}
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
@@ -140,9 +197,27 @@ const MachineSyncAPILogsTable = ({
                 </Table>
               </Scrollbar>
             </TableContainer>
+            {!isNotFound && (
+              <TablePaginationCustom
+                count={apiLogsCount || 0}
+                page={page}
+                rowsPerPage={rowsPerPage}
+                onPageChange={onChangePage}
+                onRowsPerPageChange={onChangeRowsPerPage}
+              />
+            )}
           </TableCard>
         </Card>
       )}
+      {/* {openLogDetailsDialog ? (
+        <DialogViewMachineLogDetails
+          logDetails={selectedLog}
+          allMachineLogsPage={allMachineLogsPage}
+          openLogDetailsDialog={openLogDetailsDialog}
+          setOpenLogDetailsDialog={setOpenLogDetailsDialog}
+          refreshLogsList={refreshLogsList}
+        />
+      ) : null} */}
     </>
   );
 };
@@ -152,5 +227,17 @@ MachineSyncAPILogsTable.propTypes = {
   apiLogTableDialogState: PropTypes.bool,
   setApiLogTableDialogState: PropTypes.func,
 };
+
+function applySort({ inputData, comparator }) {
+  const stabilizedThis =  inputData && inputData.map((el, index) => [el, index]);
+  stabilizedThis.sort((a, b) => {
+    const order = comparator(a[0], b[0]);
+    if (order !== 0) return order;
+    return a[1] - b[1];
+  });
+
+  inputData = stabilizedThis.map((el) => el[0]);
+  return inputData;
+}
 
 export default MachineSyncAPILogsTable;
