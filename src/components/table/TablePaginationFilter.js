@@ -104,7 +104,7 @@ function TablePaginationFilter({
             width: '!important 200px',
           },
         }}
-      />}
+      />} 
       {!pagination && count && <Typography variant="body2" sx={{ color: 'text.secondary' }}>
         {count} rows
       </Typography>}
