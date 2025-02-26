@@ -12,12 +12,14 @@ const initialState = {
   apiLogs: [],
   apiLogsCount: 0,
   apiLog: {},
+  page: 0,
+  rowsPerPage: 100,
   filterBy: '',
   reportHiddenColumns: {
     "createdAt": false,
     "apiType": false,
     "requestMethod": false,
-    "requestURL": true,
+    "requestURL": false,
     "responseStatusCode": false,
     "responseTime": false,
     "machine.serialNo": false,
@@ -87,6 +89,16 @@ const slice = createSlice({
       state.isLoading = false;
     },
 
+    // Set PageRowCount
+    ChangeRowsPerPage(state, action) {
+      state.page = 0;
+      state.rowsPerPage = action.payload;
+    },
+    // Set PageNo
+    ChangePage(state, action) {
+      state.page = action.payload;
+    },
+
     setReportHiddenColumns(state, action) {
       state.reportHiddenColumns = action.payload;
     },
@@ -106,21 +118,28 @@ export const {
   resetApiLogs,
   resetApiLog,
   setResponseMessage,
+  ChangeRowsPerPage,
+  ChangePage,
   setFilterBy,
   setReportHiddenColumns
 } = slice.actions;
 
 // ---------------------------------- GET API LOGS ------------------------------------
 
-export function getApiLogs({ machineId, fields = '', orderBy = { createdAt: -1 }, query = {} }) {
+export function getApiLogs({ machineId, fields = '', orderBy = '', query = {}, page, pageSize, searchKey, searchColumn }) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const params = {
-        orderBy,
+        ...(orderBy && { orderBy }),
         ...query,
         machine: machineId,
+        pagination: { page, pageSize },
       };
+      if (searchKey?.length > 0) {
+        params.searchKey = searchKey;
+        params.searchColumn = searchColumn;
+      }
       const response = await axios.get(`${CONFIG.SERVER_URL}apiclient/logs/`, { params });
       dispatch(slice.actions.getApiLogsSuccess(response.data));
     } catch (error) {

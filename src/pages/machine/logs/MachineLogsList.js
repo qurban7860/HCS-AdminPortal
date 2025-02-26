@@ -42,8 +42,8 @@ export default function MachineLogsList({ allMachineLogsType }){
   const methods = useForm({
     defaultValues: {
       logType: machineLogTypeFormats.find(option => option.type === 'ERP') || null,
-      dateFrom: new Date(new Date().setHours(0, 0, 0, 0)),
-      dateTo: new Date(new Date().setHours(23, 59, 59, 999)),
+      dateFrom: new Date(),
+      dateTo: new Date(),
       filteredSearchKey: '',
       activeStatus: 'active',
     },
@@ -71,8 +71,8 @@ export default function MachineLogsList({ allMachineLogsType }){
     machineId,
     page,
     pageSize: rowsPerPage,
-    fromDate: new Date(new Date(dateFrom).setHours(0, 0, 0, 0)),
-    toDate: new Date(new Date(dateTo).setHours(23, 59, 59, 999)),
+    fromDate: dateFrom,
+    toDate: dateTo,
     isArchived: activeStatus === 'archived',
     isMachineArchived: false,
     selectedLogType: logType?.type,
@@ -88,8 +88,8 @@ export default function MachineLogsList({ allMachineLogsType }){
         machineId,
         page: 0,
         pageSize: rowsPerPage,
-        fromDate: new Date(new Date(dateFrom).setHours(0, 0, 0, 0)),
-        toDate: new Date(new Date(dateTo).setHours(23, 59, 59, 999)),
+        fromDate: dateFrom,
+        toDate: dateTo,
         isArchived: activeStatus === "archived",
         isMachineArchived: machine?.isArchived,
         selectedLogType: logType.type,
@@ -128,7 +128,7 @@ export default function MachineLogsList({ allMachineLogsType }){
                 >
                   <Box sx={{ pb: 1 }}>
                     <Typography variant="h5" color="text.primary">
-                      ERP Logs
+                      Logs Filter
                     </Typography>
                   </Box>
                 </Stack>
