@@ -1,7 +1,7 @@
 import { memo, useState } from 'react'
 import PropTypes from 'prop-types';
 // @mui
-import { Box, TablePagination, Button, Grid, MenuItem, Checkbox, Menu, IconButton } from '@mui/material';
+import { Box, TablePagination, Button, Grid, MenuItem, Checkbox, Menu, IconButton, Typography } from '@mui/material';
 import { StyledTooltip } from '../../theme/styles/default-styles';
 import Iconify from '../iconify';
 
@@ -11,21 +11,25 @@ import Iconify from '../iconify';
 const ITEM_HEIGHT = 48;
 
 TablePaginationFilter.propTypes = {
+  pagination: PropTypes.bool,
   rowsPerPageOptions: PropTypes.arrayOf(PropTypes.number),
   columns: PropTypes.array,
   hiddenColumns: PropTypes.object,
   handleHiddenColumns: PropTypes.func,
   sx: PropTypes.object,
   handleFullScreen: PropTypes.func,
+  count: PropTypes.number,
 };
 
 function TablePaginationFilter({
+  pagination = true,
   rowsPerPageOptions = [10, 20, 50, 100],
   columns,
   hiddenColumns,
   handleHiddenColumns,
   sx,
   handleFullScreen,
+  count,
   ...other
 }) {
   
@@ -92,7 +96,7 @@ function TablePaginationFilter({
       </Menu>
       {/* full screen dialogue box toggle button */}
       <Box sx={{ flexGrow: 1 }} />
-      <TablePagination labelRowsPerPage="Rows:" colSpan={2} rowsPerPageOptions={rowsPerPageOptions} component="div" showLastButton showFirstButton {...other} 
+      {pagination && <TablePagination labelRowsPerPage="Rows:" colSpan={2} rowsPerPageOptions={rowsPerPageOptions} component="div" showLastButton showFirstButton {...other} 
         sx={{
           borderTop: 'none !important',
           '.MuiTablePagination-toolbar': {
@@ -100,7 +104,10 @@ function TablePaginationFilter({
             width: '!important 200px',
           },
         }}
-      />
+      />}
+      {!pagination && count && <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+        {count} rows
+      </Typography>}
       {/* <StyledTooltip
         title="Full Screen"
         placement="top"
