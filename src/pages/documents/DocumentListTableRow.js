@@ -72,14 +72,27 @@ export default function DocumentListTableRow({
       {!hiddenColumns?.['docType.name'] && <TableCell align="left">{docTypeNameString}</TableCell>}
       {/* {  lgScreen && <TableCell align="center">{documentVersions[0]?.versionNo}</TableCell>} */}
       {!hiddenColumns?.stockNumber && machineDrawings && <TableCell align="left">{stockNumber}</TableCell>}
-      {!hiddenColumns?.['machine.serialNo'] && machineDrawings && <TableCell align="left">{productDrawings?.map((m) =>
-        <LinkDialogTableCell onClick={() => handleMachineDialog(m?.machine?._id)} align='left' param={m?.machine?.serialNo} />
-      )}</TableCell>
+      {!hiddenColumns?.['machine.serialNo'] && machineDrawings && (
+        <TableCell align="left" sx={{ display: "flex", alignItems: "center", justifyContent: "flex-start" }}>
+          {productDrawings?.map((m, index) => (
+            <>
+              <LinkDialogTableCell
+                onClick={() => handleMachineDialog(m?.machine?._id)}
+                align='left'
+                width="30px"
+                param={m?.machine?.serialNo}
+              />
+              {index < productDrawings.length - 1 && ', '}
+            </>
+          ))}
+        </TableCell>
+      )
       }
-      {!hiddenColumns?.['machine.serialNo'] && !customerPage && !machinePage && !machineDrawings && !machineDrawingPage && lgScreen &&
+      {
+        !hiddenColumns?.['machine.serialNo'] && !customerPage && !machinePage && !machineDrawings && !machineDrawingPage && lgScreen &&
         <LinkDialogTableCell onClick={() => handleMachineDialog(machine?._id)} align='left' param={machine?.serialNo} />
       }
       {!hiddenColumns?.updatedAt && <TableCell align="right">{fDate(updatedAt)}</TableCell>}
-    </StyledTableRow>
+    </StyledTableRow >
   );
 }
