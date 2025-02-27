@@ -61,8 +61,8 @@ export default function CustomerViewForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [customer]
   );
-  
-  const handleEdit = async () =>  customerId && navigate(PATH_CRM.customers.edit(customerId));
+
+  const handleEdit = async () => customerId && navigate(PATH_CRM.customers.edit(customerId));
 
   const onDelete = async () => {
     try {
@@ -72,16 +72,16 @@ export default function CustomerViewForm() {
       enqueueSnackbar(err, { variant: `error` });
       console.log('Error:', err);
     }
-  };  
-  
-const onArchive = async () => {
+  };
+
+  const onArchive = async () => {
     try {
       const data = {
         ...defaultValues,
         isActive: false,
         isArchived: true,
       }
-      await dispatch(updateCustomer( data ));
+      await dispatch(updateCustomer(data));
       navigate(PATH_CRM.customers.list);
     } catch (err) {
       enqueueSnackbar(err, { variant: `error` });
@@ -96,7 +96,7 @@ const onArchive = async () => {
         isActive: true,
         isArchived: false,
       }
-      await dispatch(updateCustomer( data ));
+      await dispatch(updateCustomer(data));
       navigate(PATH_CRM.customers.list);
     } catch (err) {
       enqueueSnackbar(err, { variant: `error` });
@@ -114,55 +114,55 @@ const onArchive = async () => {
   };
 
   return (
-      <Grid container direction="row" mt={isMobile && 2}>
-          <Card sx={{ width: '100%', p: '1rem', mb:3 }}>
-            <ViewFormEditDeleteButtons
-              isActive={ customer?.isArchived ? undefined : defaultValues.isActive}
-              verifiers={customer?.isArchived ? undefined : customer?.verifications}
-              handleVerification={ customer?.isArchived ? undefined : handleVerification}
-              financingCompany={ customer?.isArchived ? undefined : defaultValues.isFinancialCompany}
-              handleEdit={ customer?.isArchived ? undefined : handleEdit }
-              onArchive={ customer?.isArchived ? undefined : onArchive }
-              onRestore={ customer?.isArchived ? onRestore : undefined }
-              onDelete={ customer?.isArchived ? onDelete : undefined }
-              supportSubscription={ customer?.isArchived ? undefined : defaultValues.supportSubscription}
-              backLink={() => customer?.isArchived ? navigate(PATH_CRM.customers.archived.root):navigate(PATH_CRM.customers.list)}
-              excludeReports={ customer?.isArchived ? undefined : defaultValues.excludeReports}
-            />
+    <Grid container direction="row" mt={isMobile && 2}>
+      <Card sx={{ width: '100%', p: '1rem', mb: 3 }}>
+        <ViewFormEditDeleteButtons
+          isActive={customer?.isArchived ? undefined : defaultValues.isActive}
+          verifiers={customer?.isArchived ? undefined : customer?.verifications}
+          handleVerification={customer?.isArchived ? undefined : handleVerification}
+          financingCompany={customer?.isArchived ? undefined : defaultValues.isFinancialCompany}
+          handleEdit={customer?.isArchived ? undefined : handleEdit}
+          onArchive={customer?.isArchived ? undefined : onArchive}
+          onRestore={customer?.isArchived ? onRestore : undefined}
+          onDelete={customer?.isArchived ? onDelete : undefined}
+          supportSubscription={customer?.isArchived ? undefined : defaultValues.supportSubscription}
+          backLink={() => customer?.isArchived ? navigate(PATH_CRM.customers.archived.root) : navigate(PATH_CRM.customers.list)}
+          excludeReports={customer?.isArchived ? undefined : defaultValues.excludeReports}
+        />
 
-              <Grid container>
-                <ViewFormField isLoading={isLoading} variant='h4' sm={6} md={6} heading={formLABELS.CUSTOMER.NAME.label} param={defaultValues?.name} />
-                <ViewFormField isLoading={isLoading} variant='h4' sm={6} md={6} heading={formLABELS.CUSTOMER.CODE.label} param={defaultValues?.code} />
-                <ViewFormField isLoading={isLoading} sm={6} md={6}  heading={formLABELS.CUSTOMER.TRADING_NAME.label} chips={defaultValues?.tradingName} />
-                <ViewFormField isLoading={isLoading} sm={6} md={6}  heading='Group Customer' param={defaultValues?.groupCustomer?.name} />
-                <ViewFormField isLoading={isLoading} md={6} heading='Reference ID' param={defaultValues?.ref} />
+        <Grid container>
+          <ViewFormField isLoading={isLoading} variant='h4' sm={6} md={6} heading={formLABELS.CUSTOMER.NAME.label} param={defaultValues?.name} />
+          <ViewFormField isLoading={isLoading} variant='h4' sm={6} md={6} heading={formLABELS.CUSTOMER.CODE.label} param={defaultValues?.code} />
+          <ViewFormField isLoading={isLoading} sm={6} md={6} heading={formLABELS.CUSTOMER.TRADING_NAME.label} chips={defaultValues?.tradingName} />
+          <ViewFormField isLoading={isLoading} sm={6} md={6} heading='Group Customer' param={defaultValues?.groupCustomer?.name} />
+          <ViewFormField isLoading={isLoading} md={6} heading='Reference ID' param={defaultValues?.ref} />
 
-                <ViewFormField isLoading={isLoading} sm={6}
-                  heading={formLABELS.CUSTOMER.BILLING_CONTACT}
-                  param={`${defaultValues?.primaryBillingContact?.firstName || ""} ${defaultValues?.primaryBillingContact?.lastName || ""}`}
-                />
-                <ViewFormField isLoading={isLoading}
-                  sm={6}
-                  heading={formLABELS.CUSTOMER.TECHNICAL_CONTACT}
-                  param={`${defaultValues?.primaryTechnicalContact?.firstName || ""} ${defaultValues?.primaryTechnicalContact?.lastName || ""}`}
-                />
-            </Grid>
-            
+          <ViewFormField isLoading={isLoading} sm={6}
+            heading={formLABELS.CUSTOMER.BILLING_CONTACT}
+            param={`${defaultValues?.primaryBillingContact?.firstName || ""} ${defaultValues?.primaryBillingContact?.lastName || ""}`}
+          />
+          <ViewFormField isLoading={isLoading}
+            sm={6}
+            heading={formLABELS.CUSTOMER.TECHNICAL_CONTACT}
+            param={`${defaultValues?.primaryTechnicalContact?.firstName || ""} ${defaultValues?.primaryTechnicalContact?.lastName || ""}`}
+          />
+        </Grid>
 
-            {defaultValues.mainSite && (
-              <Grid container>
-                <FormLabel content={FORMLABELS.SITEINFORMATION} />
-                <ViewFormField isLoading={isLoading} sm={6} heading="Site Name" param={defaultValues?.mainSite?.name} />
-                <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.STREET.label} param={defaultValues?.mainSite.address?.street} />
-                <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.SUBURB.label} param={defaultValues?.mainSite.address?.suburb} />
-                <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.CITY.label} param={defaultValues?.mainSite.address?.city} />
-                <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.POSTCODE.label} param={defaultValues?.mainSite.address?.postcode} />
-                <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.REGION.label} param={defaultValues?.mainSite.address?.region} />
-                <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.COUNTRY.label} param={defaultValues?.mainSite.address?.country} />
-                <ViewPhoneComponent isLoading={isLoading} sm={6} heading="Phone" value={defaultValues?.mainSite?.phoneNumbers || [] } />
-                <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.CUSTOMER.EMAIL} param={defaultValues?.mainSite?.email} />
-                <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.CUSTOMER.WEBSITE} param={defaultValues?.mainSite?.website} />
-                <ViewFormField 
+
+        {defaultValues.mainSite && (
+          <Grid container>
+            <FormLabel content={FORMLABELS.SITEINFORMATION} />
+            <ViewFormField isLoading={isLoading} sm={6} heading="Site Name" param={defaultValues?.mainSite?.name} />
+            <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.STREET.label} param={defaultValues?.mainSite.address?.street} />
+            <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.SUBURB.label} param={defaultValues?.mainSite.address?.suburb} />
+            <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.CITY.label} param={defaultValues?.mainSite.address?.city} />
+            <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.POSTCODE.label} param={defaultValues?.mainSite.address?.postcode} />
+            <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.REGION.label} param={defaultValues?.mainSite.address?.region} />
+            <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.COUNTRY.label} param={defaultValues?.mainSite.address?.country} />
+            <ViewPhoneComponent isLoading={isLoading} sm={6} heading="Phone" value={defaultValues?.mainSite?.phoneNumbers || []} />
+            <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.CUSTOMER.EMAIL} param={defaultValues?.mainSite?.email} />
+            <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.CUSTOMER.WEBSITE} param={defaultValues?.mainSite?.website} />
+            {/* <ViewFormField 
                   isLoading={isLoading} sm={6} 
                   heading='Primary Billing Contact' 
                   param={`${defaultValues?.primaryBillingContact?.firstName || ""} ${defaultValues?.primaryBillingContact?.lastName || ""}`}
@@ -171,18 +171,18 @@ const onArchive = async () => {
                   isLoading={isLoading} sm={6} 
                   heading='Primary Technical Contact'
                   param={`${defaultValues?.primaryTechnicalContact?.firstName || ""} ${defaultValues?.primaryTechnicalContact?.lastName || ""}`}
-                />
-              </Grid>
-            )}
-            <Grid container>
-              <FormLabel content={FORMLABELS.HOWICK} />
-              <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.CUSTOMER.ACCOUNT} customerContacts={defaultValues?.accountManager } />
-              <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.CUSTOMER.PROJECT} customerContacts={defaultValues?.projectManager } />
-              <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.CUSTOMER.SUPPORT} customerContacts={defaultValues?.supportManager } />
-              <ViewFormAudit defaultValues={defaultValues} />
-            </Grid>
-              
-          </Card>
-      </Grid>
+                /> */}
+          </Grid>
+        )}
+        <Grid container>
+          <FormLabel content={FORMLABELS.HOWICK} />
+          <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.CUSTOMER.ACCOUNT} customerContacts={defaultValues?.accountManager} />
+          <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.CUSTOMER.PROJECT} customerContacts={defaultValues?.projectManager} />
+          <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.CUSTOMER.SUPPORT} customerContacts={defaultValues?.supportManager} />
+          <ViewFormAudit defaultValues={defaultValues} />
+        </Grid>
+
+      </Card>
+    </Grid>
   );
 }
