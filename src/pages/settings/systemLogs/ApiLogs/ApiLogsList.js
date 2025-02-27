@@ -167,7 +167,7 @@ export default function ApiLogsList() {
       getApiLogs({
         machineId,
         query,
-        orderBy: `${orderBy}:${order === 'desc' ? -1 : 1}`,
+        orderBy: { [orderBy]: order === 'desc' ? -1 : 1 },
       })
     );
 
