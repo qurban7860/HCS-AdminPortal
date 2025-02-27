@@ -13,11 +13,12 @@ export default function IconTooltip({
   placement='top',
   icon,
   disabled,
+  iconSx={}
 }) {
   return (
       <StyledTooltip title={title} placement={placement} disableFocusListener tooltipcolor={color} color={color}>
         <IconButton onClick={onClick} disabled={disabled}
-          sx={{ color, border: `1px solid ${color}`, cursor:`${onClick?'position':'default'}`, p:0.5, borderRadius:1, ':hover': { borderColor: alpha(color, 0.5),},}}
+          sx={{ color, border: `1px solid ${color}`, cursor:`${onClick?'position':'default'}`, p:0.5, borderRadius:1, ':hover': { borderColor: alpha(color, 0.5),}, ...iconSx}}
           >
           <Iconify color={color} width="25px" icon={icon} />
         </IconButton>            
@@ -34,4 +35,5 @@ IconTooltip.propTypes = {
   title: PropTypes.string,
   placement: PropTypes.string,
   icon: PropTypes.string,
+  iconSx: PropTypes.object,
 };

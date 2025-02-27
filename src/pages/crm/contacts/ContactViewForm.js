@@ -33,23 +33,22 @@ export default function ContactViewForm({
 
   const { isAllAccessAllowed } = useAuthContext()
   const { enqueueSnackbar } = useSnackbar();
-  const { customerId, id } = useParams() 
+  const { customerId, id } = useParams()
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  useEffect(()=>{
-    if(customerId && id){
+  useEffect(() => {
+    if (customerId && id) {
       dispatch(getContact(customerId, id));
       dispatch(setIsExpanded(true));
       dispatch(setCardActiveIndex(id));
-    } 
-    return () => 
-            { 
-              dispatch(resetContact());
-              dispatch(setIsExpanded(false));
-              dispatch(setCardActiveIndex(null));
-            }
-  },[ dispatch, customerId, id ])
+    }
+    return () => {
+      dispatch(resetContact());
+      dispatch(setIsExpanded(false));
+      dispatch(setCardActiveIndex(null));
+    }
+  }, [dispatch, customerId, id])
 
   const handleEdit = () => navigate(PATH_CRM.customers.contacts.edit(customerId, id));
   const handleMoveConatct = () => navigate(PATH_CRM.customers.contacts.move(customerId, id));
@@ -60,10 +59,8 @@ export default function ContactViewForm({
       await dispatch(deleteContact(customerId, id));
       dispatch(setIsExpanded(false));
       enqueueSnackbar('Contact Archived Successfully!');
-      if( customerId && customerId !== "undefined" ){
-        await dispatch(getContacts( customerId ))
-        navigate(PATH_CRM.customers.contacts.root(customerId))
-      }
+      await dispatch(getContacts(customerId))
+      navigate(PATH_CRM.customers.contacts.root(customerId))
     } catch (err) {
       enqueueSnackbar(err, { variant: `error` });
       console.log('Error:', err);
@@ -107,20 +104,20 @@ export default function ContactViewForm({
     await dispatch(setResetFlags(false));
   };
 
-  const operatorTraningsList = defaultValues?.serviceReports?.map((item, index) => 
+  const operatorTraningsList = defaultValues?.serviceReports?.map((item, index) =>
   (
-    <Chip onClick={() => handleSericeReportView(item?.machine, item?._id)} sx={{m:0.3}} label={`${item?.serviceReportTemplate?.reportTitle || ''} | ${fDateTime(item?.serviceDate)}`} />
+    <Chip onClick={() => handleSericeReportView(item?.machine, item?._id)} sx={{ m: 0.3 }} label={`${item?.serviceReportTemplate?.reportTitle || ''} | ${fDateTime(item?.serviceDate)}`} />
   ));
 
   return (
-    <Grid sx={{mt:1}}>
+    <Grid sx={{ mt: 1 }}>
 
-      <ViewFormEditDeleteButtons 
-        moveCustomerContact={!customer?.isArchived && isAllAccessAllowed && handleMoveConatct } 
-        handleEdit={customer?.isArchived ? undefined : handleEdit} 
-        onArchive={customer?.isArchived ? undefined : onArchive} 
+      <ViewFormEditDeleteButtons
+        moveCustomerContact={!customer?.isArchived && isAllAccessAllowed && handleMoveConatct}
+        handleEdit={customer?.isArchived ? undefined : handleEdit}
+        onArchive={customer?.isArchived ? undefined : onArchive}
         backLink={isCustomerContactPage && !customer?.isArchived ? backLink : undefined}
-        isActive={defaultValues.isActive} 
+        isActive={defaultValues.isActive}
         formerEmployee={defaultValues.formerEmployee}
       />
 
@@ -130,7 +127,7 @@ export default function ContactViewForm({
         <ViewFormField isLoading={isLoading} sm={6} heading="Title" param={defaultValues?.title} />
         <ViewFormField isLoading={isLoading} sm={6} heading="Contact Types" chips={defaultValues?.contactTypes} />
         <ViewFormField isLoading={isLoading} sm={6} heading="Department" param={defaultValues?.department} />
-        <ViewFormField isLoading={isLoading} sm={6} heading="Report To" param={`${defaultValues?.reportingTo?.firstName || '' } ${defaultValues?.reportingTo?.lastName || '' }`} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Report To" param={`${defaultValues?.reportingTo?.firstName || ''} ${defaultValues?.reportingTo?.lastName || ''}`} />
         <ViewFormField isLoading={isLoading} sm={6} heading="Street" param={defaultValues?.street} />
         <ViewFormField isLoading={isLoading} sm={6} heading="Suburb" param={defaultValues?.suburb} />
         <ViewFormField isLoading={isLoading} sm={6} heading="City" param={defaultValues?.city} />

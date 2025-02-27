@@ -6,11 +6,12 @@ import {
   Typography,
   Box,
   useTheme,
-  useMediaQuery,
-  Divider,
 } from '@mui/material';
+import { useNavigate } from 'react-router';
+
 import { fDateTime } from '../../../../utils/formatTime';
-import { CustomAvatar } from '../../../../components/custom-avatar';
+import IconTooltip from '../../../../components/Icons/IconTooltip';
+import { PATH_SETTING } from '../../../../routes/paths';
 
 ConfigCard.propTypes = {
   config: PropTypes.object,
@@ -18,19 +19,19 @@ ConfigCard.propTypes = {
 };
 
 export default function ConfigCard({ config, onClick }) {
-  const { name, type, value, updatedBy, updatedAt, createdBy, createdAt, isActive } = config;
+  const { name, type, value, updatedBy, updatedAt, createdBy, createdAt, isActive, notes, _id } = config;
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const navigate = useNavigate();
 
-  const handleValueClick = (event) => {
-    event.stopPropagation();
-  };
+  const handleEdit = (id) => {
+    navigate(PATH_SETTING.configs.edit(id))
+  }
 
   return (
-    <Paper 
-      sx={{ 
+    <Paper
+      id={_id}
+      sx={{
         p: 2.5,
-        cursor: 'pointer',
         borderRadius: 2,
         boxShadow: theme.customShadows.card,
         transition: () =>
@@ -43,105 +44,120 @@ export default function ConfigCard({ config, onClick }) {
           bgcolor: 'background.paper',
           '& .value-container': {
             bgcolor: 'background.neutral',
-          }
+          },
         },
       }}
-      onClick={onClick}
     >
-        <Stack sx={{ width: '100%' }} spacing={2}>
-          <Box sx={{ 
-            display: 'flex', 
-            alignItems: 'flex-start', 
+      <Stack sx={{ width: '100%' }} spacing={2}>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'flex-start',
             flexDirection: { xs: 'column', sm: 'row' },
             gap: { xs: 1.5, sm: 0 },
-            justifyContent: 'space-between' 
-          }}>
-            <Stack direction="row" spacing={1} alignItems="center">
-              <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
-                Name:
-              </Typography>
-              <Typography variant="subtitle2" sx={{ wordBreak: 'break-word', color: 'text.primary', fontWeight: 600 }}>
-                {name}
-              </Typography>
-            </Stack>
-            <Stack 
-              direction={{ xs: 'column', sm: 'row' }} 
-              spacing={{ xs: 1, sm: 2 }} 
-              alignItems={{ xs: 'flex-start', sm: 'center' }}
-            >
-              <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                Type: {type}
-              </Typography>
-              <Stack direction="row" spacing={1} alignItems="center">
-                <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                  Status:
-                </Typography>
-                <Switch checked={isActive} disabled size="small" />
-              </Stack>
-            </Stack>
-          </Box>
-          
-          <Stack spacing={1}>
-            <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
-              Value:
-            </Typography>
-            <Typography 
-              variant="body2" 
-              onClick={handleValueClick}
-              className="value-container"
-              sx={{ 
-                bgcolor: theme.palette.background.neutral,
-                p: 2,
-                borderRadius: 1.5,
-                wordBreak: 'break-all',
-                fontFamily: 'monospace',
-                overflowX: 'auto',
-                cursor: 'text',
-                userSelect: 'text',
-                transition: () =>
-                  theme.transitions.create('background-color', {
-                    duration: theme.transitions.duration.shorter,
-                  }),
+            justifyContent: 'space-between',
+          }}
+        >
+          <Stack direction="row" spacing={1} alignItems="center">
+            <Typography
+              variant="h6"
+              sx={{
+                wordBreak: 'break-word',
+                color: 'text.primary',
+                pl: 1,
+                fontWeight: 600,
               }}
             >
-              {value}
+              {name}
             </Typography>
           </Stack>
-          <Stack spacing={1}>
-            <Box sx={{ 
-              display: 'flex', 
-              flexDirection: { xs: 'column', sm: 'row' },
+          <Stack
+            direction={{ xs: 'column', sm: 'row' }}
+            spacing={{ xs: 1, sm: 2 }}
+            alignItems={{ xs: 'flex-start', sm: 'center' }}
+          >
+            <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+              Type: {type}
+            </Typography>
+            <Stack direction="row" alignItems="center">
+              <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                Active:
+              </Typography>
+              <Switch checked={isActive} disabled size="small" />
+            </Stack>
+          </Stack>
+        </Box>
+
+        <Stack spacing={1}>
+          <Typography
+            variant="body2"
+            className="value-container"
+            sx={{
+              bgcolor: theme.palette.background.neutral,
+              p: 2,
+              borderRadius: 1.5,
+              wordBreak: 'break-all',
+              fontFamily: 'monospace',
+              overflowX: 'auto',
+              cursor: 'text',
+              userSelect: 'text',
+              transition: () =>
+                theme.transitions.create('background-color', {
+                  duration: theme.transitions.duration.shorter,
+                }),
+            }}
+          >
+            {value}
+          </Typography>
+          {notes && (
+            <Typography
+              variant="body2"
+              sx={{
+                color: 'text.secondary',
+                pl: 1,
+              }}
+            >
+              Note: {notes}
+            </Typography>
+          )}
+        </Stack>
+        <Stack spacing={1}>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: { sm: 'row' },
               gap: 1,
               alignItems: { xs: 'flex-start', sm: 'center' },
-              justifyContent: { sm: 'space-between' }
-            }}>
-              <Typography 
-                variant="caption" 
-                sx={{ 
-                  color: 'text.disabled',
-                  wordBreak: 'break-word',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 0.5
-                }}
-              >
-                Created by {createdBy?.name} • {fDateTime(createdAt)}
-              </Typography>
-              <Typography 
-                variant="caption" 
-                sx={{ 
-                  color: 'text.disabled',
-                  wordBreak: 'break-word',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 0.5
-                }}
-              >
-                Last updated by {updatedBy?.name} • {fDateTime(updatedAt)}
-              </Typography>
-            </Box>
-          </Stack>
+              justifyContent: { sm: 'space-between' },
+            }}
+          >
+            <Typography
+              variant="caption"
+              sx={{
+                color: 'text.disabled',
+                wordBreak: 'break-word',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 0.5,
+                pl: 1,
+                fontStyle: 'italic',
+              }}
+            >
+              Created by {createdBy?.name} • {fDateTime(createdAt)} &nbsp; | &nbsp; Last updated by{' '}
+              {updatedBy?.name} • {fDateTime(updatedAt)}
+            </Typography>
+            <IconTooltip
+              title="Edit"
+              onClick={() => handleEdit(_id)}
+              color={theme.palette.primary.main}
+              icon="mdi:square-edit-outline"
+              iconSx={{ 
+                border: 'none'
+              }}
+            />
+          </Box>
         </Stack>
+      </Stack>
     </Paper>
   );
 } 

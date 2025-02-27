@@ -88,6 +88,9 @@ function SearchBarCombo({
   onFilterPeriod,
   onCompareINI,
   logTypes,
+  typeOptions,
+  filterType,
+  onFilterType,
   ...other
 }) {
 
@@ -473,11 +476,9 @@ function SearchBarCombo({
           />
         </Grid>}
 
-      {!machineDrawings && setTypeVal && typeof setTypeVal === 'function' && <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
+      {!machineDrawings && setTypeVal && typeof setTypeVal === 'function' && <Grid item xs={12} sm={6} md={4} lg={3} xl={3}>
         <Autocomplete
           id="controllable-states-demo"
-          // value={typeVal || null}
-          // options={activeDocumentTypes}
           value={categoryVal ? typeVal : null}
           options={categoryVal ? activeDocumentTypes : []}
           isOptionEqualToValue={(option, val) => option?._id === val?._id}
@@ -497,7 +498,6 @@ function SearchBarCombo({
             <li {...props} key={option?._id}>{option.name}</li>
           )}
           renderInput={(params) => <TextField {...params} size='small' label="Type" />}
-
         />
       </Grid>}
 
@@ -533,7 +533,7 @@ function SearchBarCombo({
               <MenuItem value="ALL">All</MenuItem>
               <MenuItem value="MACHINE-SYNC">Machine Sync</MenuItem>
               <MenuItem value="MACHINE-LOGS">Machine Logs</MenuItem>
-              <MenuItem value="INI" >INI</MenuItem>
+              <MenuItem value="MACHINE-CONFIG" >Machine Config</MenuItem>
               <MenuItem value="OTHER">Others</MenuItem>
             </Select>
           </FormControl>
@@ -667,6 +667,29 @@ function SearchBarCombo({
         <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
           <FormControlLabel control={<Switch checked={radioStatus}
             onClick={(event) => { handleRadioStatus(event.target.checked) }} />} label={radioStatusLabel} />
+        </Grid>
+      }
+
+      {onFilterType && typeOptions && 
+        <Grid item xs={12} sm={6} md={4} lg={4} xl={4}>
+          <Stack alignItems="flex-start">
+            <FormControl fullWidth>
+              <InputLabel>Type</InputLabel>
+              <Select
+                size='small'
+                name="type"
+                value={filterType}
+                label="Type"
+                onChange={onFilterType}
+              >
+                {typeOptions.map((option) => (
+                  <MenuItem key={option} value={option}>
+                    {option}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Stack>
         </Grid>
       }
 
@@ -932,6 +955,9 @@ SearchBarCombo.propTypes = {
   onCompareINI: PropTypes.func,
   logTypes: PropTypes.array,
   drawing: PropTypes.bool,
+  typeOptions: PropTypes.array,
+  filterType: PropTypes.string,
+  onFilterType: PropTypes.func,
 };
 
 export default SearchBarCombo;

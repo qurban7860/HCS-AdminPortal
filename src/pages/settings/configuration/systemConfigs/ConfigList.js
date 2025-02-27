@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 // @mui
 import { Container, Box, Typography, Divider } from '@mui/material';
 import debounce from 'lodash/debounce';
@@ -17,7 +17,8 @@ import {
   getConfigs,
   ChangeRowsPerPage,
   ChangePage,
-  setFilterBy
+  setFilterBy,
+  setSort
 } from '../../../../redux/slices/config/config';
 import { fDate } from '../../../../utils/formatTime';
 // constants
@@ -32,41 +33,41 @@ const ROLE_OPTIONS = ['Administrator', 'Normal User', 'Guest User', 'Restriced U
 
 export default function ConfigList() {
   const dispatch = useDispatch();
+  const [searchParams] = useSearchParams();
 
-  const { configs, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.config);
+  const { configs, filterBy, page, rowsPerPage, isLoading, sortBy, sortOrder } = useSelector((state) => state.config);
 
   const navigate = useNavigate();
   const [filterName, setFilterName] = useState('');
   const [filterRole, setFilterRole] = useState('all');
   const [filterStatus, setFilterStatus] = useState('all');
+  const [filterType, setFilterType] = useState('All');
 
   useEffect(() => {
-    dispatch(getConfigs());
-  }, [dispatch]);
-
-  const dataFiltered = applyFilter({
-    inputData: configs || [],
-    filterName,
-    filterRole,
-    filterStatus,
-  });
-
-  const isFiltered = filterName !== '' || filterRole !== 'all' || filterStatus !== 'all';
-  const isNotFound = (!isLoading && !dataFiltered.length);
-
-  const debouncedSearch = useRef(debounce((value) => {
-    dispatch(ChangePage(0))
-    dispatch(setFilterBy(value))
-  }, 500))
+    dispatch(getConfigs()).then(() => {
+      const showConfig = searchParams.get('showConfig');
+      
+      if (showConfig) {
+        const configElement = document.getElementById(showConfig);
+        if (configElement) {
+          // Scroll to and briefly highlight the config card
+          configElement.scrollIntoView({ 
+            behavior: 'smooth',
+            block: 'center'
+          });
+          configElement.style.transition = 'background-color 0.5s';
+          configElement.style.backgroundColor = '#fff9c4';
+          setTimeout(() => {
+            configElement.style.backgroundColor = '';
+          }, 1000);
+        }
+      }
+    });
+  }, [dispatch, searchParams]);
 
   const handleFilterName = (event) => {
-    debouncedSearch.current(event.target.value);
     setFilterName(event.target.value)
   };
-  
-  useEffect(() => {
-    debouncedSearch.current.cancel();
-  }, [debouncedSearch]);
   
   useEffect(()=>{
     setFilterName(filterBy)
@@ -80,11 +81,17 @@ export default function ConfigList() {
     navigate(PATH_SETTING.configs.view(id));
   };
 
+  const handleFilterType = (event) => {
+    setFilterType(event.target.value);
+  };
+
   const handleResetFilter = () => {
-    dispatch(setFilterBy(''))
+    dispatch(setFilterBy(''));
+    dispatch(setSort({ sortBy: 'name', sortOrder: 'asc' }));
     setFilterName('');
     setFilterRole('all');
     setFilterStatus('all');
+    setFilterType('All');
   };
 
   const onChangeRowsPerPage = (event) => {
@@ -96,6 +103,40 @@ export default function ConfigList() {
     dispatch(ChangePage(newPage)) 
   };
 
+  const handleSort = (newSortBy) => {
+    if (sortBy === newSortBy) {
+      dispatch(setSort({ sortBy, sortOrder: sortOrder === 'asc' ? 'desc' : 'asc' }));
+    } else {
+      dispatch(setSort({ sortBy: newSortBy, sortOrder: 'asc' }));
+    }
+  };
+
+  const dataFiltered = applyFilter({
+    inputData: configs || [],
+    filterName,
+    filterRole,
+    filterStatus,
+    filterType,
+    sortBy,
+    sortOrder,
+  });
+
+  const isFiltered = filterName !== '' || filterRole !== 'all' || filterStatus !== 'all' || filterType !== 'All';
+  const isNotFound = (!isLoading && !dataFiltered.length);
+
+  const debouncedSearch = useRef(debounce((value) => {
+    dispatch(ChangePage(0))
+    dispatch(setFilterBy(value))
+  }, 500))
+
+  useEffect(() => {
+    debouncedSearch.current.cancel();
+  }, [debouncedSearch]);
+  
+  useEffect(()=>{
+    setFilterName(filterBy)
+  },[filterBy])
+
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
@@ -106,10 +147,15 @@ export default function ConfigList() {
           isFiltered={isFiltered}
           filterName={filterName}
           filterRole={filterRole}
+          filterType={filterType}
           optionsRole={ROLE_OPTIONS}
           onFilterName={handleFilterName}
           onFilterRole={handleFilterRole}
+          onFilterType={handleFilterType}
           onResetFilter={handleResetFilter}
+          sortBy={sortBy}
+          sortOrder={sortOrder}
+          onSort={handleSort}
         />
         
         {!isNotFound && (
@@ -178,7 +224,7 @@ export default function ConfigList() {
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, filterName, filterStatus }) {
+function applyFilter({ inputData, filterName, filterStatus, filterType, sortBy, sortOrder }) {
   let filteredData = [...inputData];
 
   if (filterName) {
@@ -188,6 +234,28 @@ function applyFilter({ inputData, filterName, filterStatus }) {
         config?.value?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         fDate(config?.updateAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
+  }
+
+  if (filterType && filterType !== 'All') {
+    filteredData = filteredData.filter(
+      (config) => config?.type === filterType
+    );
+  }
+
+  if (sortBy) {
+    filteredData.sort((a, b) => {
+      let compareA = a[sortBy];
+      let compareB = b[sortBy];
+
+      if (sortBy === 'name') {
+        compareA = (a.name || '').toLowerCase();
+        compareB = (b.name || '').toLowerCase();
+      }
+
+      if (compareA < compareB) return sortOrder === 'asc' ? -1 : 1;
+      if (compareA > compareB) return sortOrder === 'asc' ? 1 : -1;
+      return 0;
+    });
   }
 
   return filteredData;

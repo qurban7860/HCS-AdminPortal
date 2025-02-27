@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -20,7 +20,9 @@ import { configSchema } from "../../../schemas/setting"
 // ----------------------------------------------------------------------
 
 export default function ConfigEditForm() {
-  const { config } = useSelector((state) => state.config);
+  const { configs } = useSelector((state) => state.config);
+  const { id: configId } = useParams();
+  const config = configs.find((configItem) => configItem._id === configId);
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
@@ -52,7 +54,7 @@ export default function ConfigEditForm() {
   const {type} = watch();
 
   const toggleCancel = () => {
-    navigate(PATH_SETTING.configs.view(config._id));
+    navigate(`${PATH_SETTING.configs.list}?showConfig=${config._id}`);
   };
 
   const onSubmit = async (data) => {
@@ -61,7 +63,7 @@ export default function ConfigEditForm() {
       await dispatch(updateConfig(data, config._id));
       dispatch(getConfig(config._id));
       enqueueSnackbar('Config updated Successfully!');
-      navigate(PATH_SETTING.configs.view(config._id));
+      navigate(`${PATH_SETTING.configs.list}?showConfig=${config._id}`);
       reset();
     } catch (err) {
       enqueueSnackbar('Config Updating failed!', { variant: `error` });

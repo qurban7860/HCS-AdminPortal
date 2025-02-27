@@ -132,19 +132,15 @@ export default function CustomerContactList({ isCustomerContactPage = false, fil
   const handleViewCustomerInNewPage = (customerId) => window.open(PATH_CRM.customers.view(customerId), '_blank');
 
   const handleViewContact = async (customerId, contactId) => {
-    if (customerId && customerId !== "undefined" && contactId && contactId !== "undefined") {
-      await dispatch(setCardActiveIndex(contactId));
-      await dispatch(setIsExpanded(true));
-      await navigate(PATH_CRM.customers.contacts.view(customerId, contactId))
-    }
+    await dispatch(setCardActiveIndex(contactId));
+    await dispatch(setIsExpanded(true));
+    await navigate(PATH_CRM.customers.contacts.view(customerId, contactId))
   };
 
   const handleViewContactInNewPage = async (customerId, contactId) => {
-    if (customerId && customerId !== "undefined" && contactId && contactId !== "undefined") {
-      await dispatch(setCardActiveIndex(contactId));
-      await dispatch(setIsExpanded(true));
-      window.open(PATH_CRM.customers.contacts.view(customerId, contactId), '_blank');
-    }
+    await dispatch(setCardActiveIndex(contactId));
+    await dispatch(setIsExpanded(true));
+    window.open(PATH_CRM.customers.contacts.view(customerId, contactId), '_blank');
   };
 
   const onExportCSV = async () => {
