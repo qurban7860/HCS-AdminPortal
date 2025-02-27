@@ -533,7 +533,7 @@ function SearchBarCombo({
               <MenuItem value="ALL">All</MenuItem>
               <MenuItem value="MACHINE-SYNC">Machine Sync</MenuItem>
               <MenuItem value="MACHINE-LOGS">Machine Logs</MenuItem>
-              <MenuItem value="INI" >INI</MenuItem>
+              <MenuItem value="MACHINE-CONFIG" >Machine Config</MenuItem>
               <MenuItem value="OTHER">Others</MenuItem>
             </Select>
           </FormControl>

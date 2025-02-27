@@ -25,8 +25,6 @@ import APILogsTableRow from '../../../../components/machineIntegration/APILogsTa
 import {
   getApiLogs,
   setFilterBy,
-  ChangeRowsPerPage,
-  ChangePage,
   setReportHiddenColumns,
 } from '../../../../redux/slices/logs/apiLogs';
 import TableCard from '../../../../components/ListTableTools/TableCard';
@@ -34,7 +32,7 @@ import SearchBarCombo from '../../../../components/ListTableTools/SearchBarCombo
 import RHFFilteredSearchBar from '../../../../components/hook-form/RHFFilteredSearchBar';
 
 export default function ApiLogsList() {
-  const { order, orderBy, setPage, onSort, onChangePage, onChangeRowsPerPage } = useTable({
+  const { order, orderBy, onSort } = useTable({
     defaultOrderBy: 'createdAt',
     defaultOrder: 'desc',
   });
@@ -46,26 +44,26 @@ export default function ApiLogsList() {
   const [filterRequestMethod, setFilterRequestMethod] = useState('default');
   const [filterRequestType, setFilterRequestType] = useState('ALL');
   const [selectedSearchFilter, setSelectedSearchFilter] = useState('');
-  const { apiLogs, isLoading, page, rowsPerPage, initial, reportHiddenColumns } = useSelector(
+  const { apiLogs, isLoading, reportHiddenColumns } = useSelector(
     (state) => state.apiLogs
   );
 
   const TABLE_HEAD = [
-    { id: 'updatedAt', label: 'Timestamp', align: 'left' },
+    { id: 'createdAt', label: 'Timestamp', align: 'left' },
     { id: 'apiType', label: 'API Type', align: 'left' },
     { id: 'requestMethod', label: 'Method', align: 'left' },
     { id: 'requestURL', label: 'Endpoint', align: 'left', allowSearch: true },
     { id: 'responseStatusCode', label: 'Status', align: 'left' },
     { id: 'responseTime', label: 'Time(ms)', align: 'left', allowSearch: true },
     { id: 'responseMessage', label: 'Response', align: 'left', allowSearch: true },
-    { id: 'noOfRecordsUpdated', label: 'Records Updated', align: 'left' },
+    { id: 'noOfRecordsUpdated', label: 'Records', align: 'left' },
     { id: 'customer.name', label: 'Customer', align: 'left' },
-    { id: 'machine', label: 'Machine', align: 'left' },
+    { id: 'machine', label: 'Machine', align: 'left', allowSearch: true },
   ];
 
   const defaultValues = {
-    dateFrom: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
-    dateTo: new Date().toISOString(),
+    dateFrom: new Date(new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).setHours(0, 0, 0, 0)).toISOString(),
+    dateTo: new Date(new Date().setHours(23, 59, 59, 999)).toISOString(),
     filteredSearchKey: '',
   };
 
@@ -79,25 +77,20 @@ export default function ApiLogsList() {
   useEffect(() => {
     handleFetchLogs(defaultValues);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, rowsPerPage]);
+  }, [order, orderBy]);
 
   useEffect(() => {
-    if (initial) {
-      setTableData(apiLogs?.data || []);
-    }
-  }, [initial, apiLogs]);
+    setTableData(apiLogs || []);
+  }, [apiLogs]);
 
-  const dataFiltered = applyFilter({
-    inputData: tableData,
-    comparator: getComparator(order, orderBy),
-  });
+  const dataFiltered = tableData;
   const denseHeight = 60;
   const isNotFound = !dataFiltered.length || (!isLoading && !dataFiltered.length);
 
   const handleFetchLogs = () => {
     const query = {
-      fromDate: new Date(dateFrom).toISOString(),
-      toDate: new Date(dateTo).toISOString(),
+      fromDate: new Date(new Date(dateFrom).setHours(0, 0, 0, 0)).toISOString(),
+      toDate: new Date(new Date(dateTo).setHours(23, 59, 59, 999)).toISOString(),
     };
 
     if (filteredSearchKey && selectedSearchFilter) {
@@ -107,6 +100,8 @@ export default function ApiLogsList() {
         query.responseMessage = { $regex: filteredSearchKey, $options: 'i' };
       } else if (selectedSearchFilter === 'requestURL') {
         query.requestURL = { $regex: filteredSearchKey, $options: 'i' };
+      } else if (selectedSearchFilter === 'machine') {
+        query['machine.serialNo'] = { $regex: filteredSearchKey, $options: 'i' };
       }
     }
 
@@ -126,31 +121,26 @@ export default function ApiLogsList() {
       getApiLogs({
         machineId,
         query,
-        page,
-        pageSize: rowsPerPage,
+        orderBy: { [orderBy]: order === 'desc' ? -1 : 1 },
       })
     );
   };
 
   const debouncedSearch = useRef(
     debounce((value) => {
-      dispatch(ChangePage(0));
       dispatch(setFilterBy(value));
     }, 500)
   );
 
   const handleFilterRequestStatus = (event) => {
-    dispatch(ChangePage(0));
     setFilterRequestStatus(event.target.value);
   };
 
   const handleFilterRequestMethod = (event) => {
-    dispatch(ChangePage(0));
     setFilterRequestMethod(event.target.value);
   };
 
   const handleFilterRequestType = (event) => {
-    dispatch(ChangePage(0));
     setFilterRequestType(event.target.value);
   };
 
@@ -177,8 +167,7 @@ export default function ApiLogsList() {
       getApiLogs({
         machineId,
         query,
-        page: 0,
-        pageSize: rowsPerPage,
+        orderBy: { [orderBy]: order === 'desc' ? -1 : 1 },
       })
     );
 
@@ -191,7 +180,6 @@ export default function ApiLogsList() {
 
   const onHandleSubmit = (data) => {
     handleFetchLogs(data);
-    dispatch(ChangePage(0));
   };
 
   return (
@@ -286,14 +274,11 @@ export default function ApiLogsList() {
       <TableCard>
         {!isNotFound && (
           <TablePaginationFilter
+            pagination={false}
             columns={TABLE_HEAD}
             hiddenColumns={reportHiddenColumns}
             handleHiddenColumns={handleHiddenColumns}
-            count={apiLogs?.totalCount || 0}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={(e, p) => dispatch(ChangePage(p))}
-            onRowsPerPageChange={(e, r) => { dispatch(ChangeRowsPerPage(e.target.value,)) }}
+            count={tableData?.length || 0}
           />
         )}
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
@@ -307,16 +292,15 @@ export default function ApiLogsList() {
                 onSort={onSort}
               />
               <TableBody>
-                {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
-                  // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                {(isLoading ? [...Array(10)] : tableData)
                   .map((row, index) =>
                     row ? (
                       <APILogsTableRow
                         key={index}
                         row={row}
                         hiddenColumns={reportHiddenColumns}
-                        // onViewRow={() => handleViewRow(row?.id)}
                         style={index % 2 ? { background: 'red' } : { background: 'green' }}
+                        tableColumns={TABLE_HEAD}
                       />
                     ) : (
                       !isNotFound &&
@@ -328,35 +312,12 @@ export default function ApiLogsList() {
             </Table>
           </Scrollbar>
         </TableContainer>
-        {!isNotFound && (
-          <TablePaginationCustom
-            count={apiLogs?.totalCount || 0}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={(e, p) => dispatch(ChangePage(p))}
-            onRowsPerPageChange={(e, r) => { dispatch(ChangeRowsPerPage(e.target.value,)) }}
-          />
-        )}
       </TableCard>
     </Container>
   );
 }
 
 // ----------------------------------------------------------------------
-
-function applyFilter({ inputData, comparator, filterName }) {
-  const stabilizedThis = inputData?.map((el, index) => [el, index]);
-
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-
-  inputData = stabilizedThis.map((el) => el[0]);
-
-  return inputData;
-}
 
 function getStatusCodeFilter(status) {
   if (status === '200-299') return { $gte: 200, $lt: 300 };

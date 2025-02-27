@@ -31,7 +31,6 @@ function TablePaginationCustom({
     if (!column.alwaysShow) {
       columnButtonClickHandler(column.id, !column.checked);
     }
-    handleClose();
   };
 
   const handleClose = () => {
