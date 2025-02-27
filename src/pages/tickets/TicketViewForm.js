@@ -35,6 +35,7 @@ import DropDownMultipleSelection from './utils/DropDownMultipleSelection';
 import { getContact, getCustomerContacts, getActiveSPContacts, resetContact, resetCustomersContacts, resetActiveSPContacts } from '../../redux/slices/customer/contact';
 import {resetComments} from '../../redux/slices/ticket/ticketComments/ticketComment';
 import {resetHistories} from '../../redux/slices/ticket/ticketHistories/ticketHistory';
+import { resetWorkLogs } from '../../redux/slices/ticket/ticketWorkLogs/ticketWorkLog';
 
 export default function TicketViewForm() {
   const { ticket, ticketSettings, isLoading } = useSelector((state) => state.tickets);
@@ -85,6 +86,7 @@ export default function TicketViewForm() {
 
       dispatch(resetComments());
       dispatch(resetHistories());
+      dispatch(resetWorkLogs());
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ dispatch, ticket?.customer?._id ]);
