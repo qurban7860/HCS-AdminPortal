@@ -60,21 +60,24 @@ export default function DocumentListTableRow({
   } = row;
 
   const lgScreen = useScreenSize('lg')
-  const referenceNumberString = useLimitString( referenceNumber )
-  const docCategoryNameString = useLimitString( docCategory?.name )
-  const docTypeNameString = useLimitString( docType?.name )
+  const referenceNumberString = useLimitString(referenceNumber)
+  const docCategoryNameString = useLimitString(docCategory?.name)
+  const docTypeNameString = useLimitString(docType?.name)
 
   return (
     <StyledTableRow hover selected={selected}>
-      {  !hiddenColumns?.displayName && <LinkTableCell align="left" param={displayName} stringLength={45} onClick={onViewRow} />}
-      {  !hiddenColumns?.referenceNumber && <TableCell align="left">{ referenceNumberString }</TableCell>}
-      {  !hiddenColumns?.['docCategory.name'] && <TableCell align="left">{ docCategoryNameString }</TableCell>}
-      {  !hiddenColumns?.['docType.name'] && <TableCell align="left">{ docTypeNameString }</TableCell>}
+      {!hiddenColumns?.displayName && <LinkTableCell align="left" param={displayName} stringLength={45} onClick={onViewRow} />}
+      {!hiddenColumns?.referenceNumber && <TableCell align="left">{referenceNumberString}</TableCell>}
+      {!hiddenColumns?.['docCategory.name'] && <TableCell align="left">{docCategoryNameString}</TableCell>}
+      {!hiddenColumns?.['docType.name'] && <TableCell align="left">{docTypeNameString}</TableCell>}
       {/* {  lgScreen && <TableCell align="center">{documentVersions[0]?.versionNo}</TableCell>} */}
-      {  !hiddenColumns?.stockNumber && machineDrawings && <TableCell align="left">{stockNumber}</TableCell>}
-      {  !hiddenColumns?.productDrawings && machineDrawings && <TableCell align="left">{productDrawings?.map((m)=> m?.machine?.serialNo).join(', ')}</TableCell>}
-      {  !hiddenColumns?.['machine.serialNo'] && !customerPage && !machinePage && !machineDrawings && !machineDrawingPage && lgScreen && 
-          <LinkDialogTableCell onClick={handleMachineDialog} align='left' param={machine?.serialNo}/>  
+      {!hiddenColumns?.stockNumber && machineDrawings && <TableCell align="left">{stockNumber}</TableCell>}
+      {!hiddenColumns?.['machine.serialNo'] && machineDrawings && <TableCell align="left">{productDrawings?.map((m) =>
+        <LinkDialogTableCell onClick={() => handleMachineDialog(m?.machine?._id)} align='left' param={m?.machine?.serialNo} />
+      )}</TableCell>
+      }
+      {!hiddenColumns?.['machine.serialNo'] && !customerPage && !machinePage && !machineDrawings && !machineDrawingPage && lgScreen &&
+        <LinkDialogTableCell onClick={() => handleMachineDialog(machine?._id)} align='left' param={machine?.serialNo} />
       }
       {!hiddenColumns?.updatedAt && <TableCell align="right">{fDate(updatedAt)}</TableCell>}
     </StyledTableRow>
