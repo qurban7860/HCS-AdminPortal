@@ -175,8 +175,7 @@ function DocumentList({ customerPage, machinePage, machineDrawingPage, machineDr
       return [
         ...baseHeaders.slice(0, 4),
         { id: 'stockNumber', visibility: 'xs2', label: 'Stock No.', align: 'left', allowSearch: true },
-        { id: 'productDrawings', visibility: 'xs2', label: 'Machines', align: 'left', allowSearch: false },
-        { id: 'machine.serialNo', visibility: 'md4', label: 'Machine', align: 'left', allowSearch: true },
+        { id: 'machine.serialNo', visibility: 'md4', label: 'Machines', align: 'left', allowSearch: true },
         ...baseHeaders.slice(4),
       ];
     }
