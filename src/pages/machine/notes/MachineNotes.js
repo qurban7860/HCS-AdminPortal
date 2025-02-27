@@ -269,7 +269,7 @@ const MachineNotes = () => {
                                     </Typography>
                                   )}
                                 </Typography>
-                                {(activeSpContacts.some((contact) => contact._id === currentUser?.contact)) && (
+                                {(currentUser?.contact && activeSpContacts.some((contact) => contact._id === currentUser?.contact)) && (
                                   <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
                                     <Button
                                       size="small"
