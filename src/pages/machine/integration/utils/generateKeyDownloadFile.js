@@ -1,4 +1,4 @@
-const generatePortalKeyConfigFileContent = (portalKey, serialNo, ipcSerialNo = '', computerGuid = '') => {
+const generatePortalKeyConfigFileContent = (portalKey, serialNo) => {
   const configs = JSON.parse(localStorage.getItem('configurations'));
   // eslint-disable-next-line no-debugger
   debugger;
@@ -13,9 +13,9 @@ const generatePortalKeyConfigFileContent = (portalKey, serialNo, ipcSerialNo = '
   const configLines = [
     `howickportalkey = ${portalKey}\n`,
     `machineserialno = ${serialNo}\n`,
-    `ipcserialno = ${ipcSerialNo || ''}\n`, 
-    `computerguid = ${computerGuid || ''}\n`,
-    'contentType = application/json\n\n',
+    `ipcserialno = \n`, 
+    `computerguid = \n`,
+    'contenttype = application/json\n\n',
     ...Object.entries(extractedConfigs || {}).map(([key, value]) => `${key} = ${value}\n`)
   ];
 
