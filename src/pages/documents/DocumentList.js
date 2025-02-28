@@ -175,7 +175,7 @@ function DocumentList({ customerPage, machinePage, machineDrawingPage, machineDr
       return [
         ...baseHeaders.slice(0, 4),
         { id: 'stockNumber', visibility: 'xs2', label: 'Stock No.', align: 'left', allowSearch: true },
-        { id: 'productDrawings', visibility: 'xs2', label: 'Machines', align: 'left', allowSearch: false },
+        { id: 'machine.serialNo', visibility: 'md4', label: 'Machines', align: 'left', allowSearch: true },
         ...baseHeaders.slice(4),
       ];
     }
@@ -382,7 +382,7 @@ function DocumentList({ customerPage, machinePage, machineDrawingPage, machineDr
     dispatch(setCustomerDialog(true))
   }
 
-  const handleMachineDialog = async (e, Id) => {
+  const handleMachineDialog = async (Id) => {
     await dispatch(getMachineForDialog(Id))
     await dispatch(setMachineDialog(true))
   }
@@ -584,9 +584,7 @@ function DocumentList({ customerPage, machinePage, machineDrawingPage, machineDr
                           handleCustomerDialog={(e) =>
                             row?.customer && handleCustomerDialog(e, row?.customer?._id)
                           }
-                          handleMachineDialog={(e) =>
-                            row?.machine && handleMachineDialog(e, row?.machine?._id)
-                          }
+                          handleMachineDialog={(docMachineId) => handleMachineDialog(docMachineId)}
                           hiddenColumns={reportHiddenColumns}
                         />
                       ) : (

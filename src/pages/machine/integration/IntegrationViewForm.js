@@ -102,7 +102,7 @@ const IntegrationViewForm = () => {
   };
 
   const handleKeyDownload = () => {
-    const fileContent = generatePortalKeyConfigFileContent(currentPortalKey?.key, serialNo, IPC_SerialNo, computerGUID);
+    const fileContent = generatePortalKeyConfigFileContent(currentPortalKey?.key, serialNo);
     const blob = new Blob([fileContent], { type: 'text/plain' });
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement('a');

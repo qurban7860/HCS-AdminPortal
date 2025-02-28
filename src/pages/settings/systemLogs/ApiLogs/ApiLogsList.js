@@ -122,6 +122,7 @@ export default function ApiLogsList() {
         machineId,
         query,
         orderBy: { [orderBy]: order === 'desc' ? -1 : 1 },
+        limit: 1000,
       })
     );
   };
@@ -167,7 +168,8 @@ export default function ApiLogsList() {
       getApiLogs({
         machineId,
         query,
-        orderBy: `${orderBy}:${order === 'desc' ? -1 : 1}`,
+        orderBy: { [orderBy]: order === 'desc' ? -1 : 1 },
+        limit: 1000,
       })
     );
 
@@ -278,7 +280,8 @@ export default function ApiLogsList() {
             columns={TABLE_HEAD}
             hiddenColumns={reportHiddenColumns}
             handleHiddenColumns={handleHiddenColumns}
-            count={tableData?.length || 0}
+            recordCount={tableData?.length || 0}
+            disablePagination
           />
         )}
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
