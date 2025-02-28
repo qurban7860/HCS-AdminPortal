@@ -170,7 +170,6 @@ export function getNotes(machineId) {
     try {
       const data = { isArchived: false };
       const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/notes`, { params: data });
-      console.log("Notes Data", response.data)
       dispatch(slice.actions.getNotesSuccess(response.data)); // Ensure response structure is correct
     } catch (error) {
       dispatch(slice.actions.hasError(error.response?.data?.message || "Failed to fetch notes"));
