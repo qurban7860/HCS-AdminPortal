@@ -14,9 +14,10 @@ APILogsTableRow.propTypes = {
   selected: PropTypes.bool,
   onViewRow: PropTypes.func,
   hiddenColumns: PropTypes.object,
+  tableColumns: PropTypes.array,
 };
 
-export default function APILogsTableRow({ row, style, selected, onViewRow, hiddenColumns }) {
+export default function APILogsTableRow({ row, style, selected, onViewRow, hiddenColumns, tableColumns }) {
   const {
     createdAt,
     apiType,
@@ -84,54 +85,87 @@ export default function APILogsTableRow({ row, style, selected, onViewRow, hidde
   return (
     <>
       <StyledTableRow hover selected={selected}>
-        {!hiddenColumns?.createdAt && (
-          <LinkTableCell align="left" onClick={handleRowClick} param={fDateTime(createdAt)} />
-        )}
-        {!hiddenColumns?.apiType && (
-          <TableCell align="left">
-            <i>{apiType}</i>
-          </TableCell>
-        )}
-        {!hiddenColumns?.requestMethod && (
-          <TableCell align="left">
-            <Chip label={requestMethod} size="small" color={getChipColor(requestMethod)} />
-          </TableCell>
-        )}
-        {!hiddenColumns?.requestURL && (
-          <TableCell align="left">{requestURL?.replace('/api/1.0.0/', '') || requestURL}</TableCell>
-        )}
-        {!hiddenColumns?.responseStatusCode && (
-          <TableCell align="left">
-            <Chip
-              label={responseStatusCode}
-              size="small"
-              color={getResponseStatusColor(responseStatusCode)}
-            />
-          </TableCell>
-        )}
-        {!hiddenColumns?.responseTime && (
-          <TableCell align="left">
-            <i>{responseTime}</i>
-          </TableCell>
-        )}
-        {!hiddenColumns?.responseMessage && (
-          <TableCell align="left">
-            {responseMessage || parseResponse(response) || ''}
-          </TableCell>
-        )}
-        {!hiddenColumns?.noOfRecordsUpdated && (
-          <TableCell align="left">{noOfRecordsUpdated || ''}</TableCell>
-        )}
-        {!hiddenColumns?.['customer.name'] && (
-          <TableCell align="left">{customer?.name || ''}</TableCell>
-        )}
-        {!hiddenColumns?.machine && (
-          <LinkTableCell
-            align="left"
-            onClick={() => navigate(PATH_MACHINE.machines.view(machine?.[0]?._id))}
-            param={machine?.[0]?.serialNo || ''}
-          />
-        )}
+        {tableColumns.map((column) => {
+          if (hiddenColumns?.[column.id]) return null;
+
+          switch (column.id) {
+            case 'createdAt':
+              return (
+                <LinkTableCell 
+                  key={column.id}
+                  align="left" 
+                  onClick={handleRowClick} 
+                  param={fDateTime(createdAt)} 
+                />
+              );
+            case 'apiType':
+              return (
+                <TableCell key={column.id} align="left">
+                  <i>{apiType}</i>
+                </TableCell>
+              );
+            case 'requestMethod':
+              return (
+                <TableCell key={column.id} align="left">
+                  <Chip label={requestMethod} size="small" color={getChipColor(requestMethod)} />
+                </TableCell>
+              );
+            case 'requestURL':
+              return (
+                <LinkTableCell 
+                  key={column.id}
+                  align="left" 
+                  onClick={handleRowClick} 
+                  param={requestURL?.replace('/api/1.0.0/', '') || requestURL} 
+                />
+              );
+            case 'responseStatusCode':
+              return (
+                <TableCell key={column.id} align="left">
+                  <Chip
+                    label={responseStatusCode}
+                    size="small"
+                    color={getResponseStatusColor(responseStatusCode)}
+                  />
+                </TableCell>
+              );
+            case 'responseTime':
+              return (
+                <TableCell key={column.id} align="left">
+                  <i>{responseTime}</i>
+                </TableCell>
+              );
+            case 'responseMessage':
+              return (
+                <TableCell key={column.id} align="left">
+                  {responseMessage || parseResponse(response) || ''}
+                </TableCell>
+              );
+            case 'noOfRecordsUpdated':
+              return (
+                <TableCell key={column.id} align="left">
+                  {noOfRecordsUpdated || ''}
+                </TableCell>
+              );
+            case 'customer.name':
+              return (
+                <TableCell key={column.id} align="left">
+                  {customer?.name || ''}
+                </TableCell>
+              );
+            case 'machine':
+              return (
+                <LinkTableCell
+                  key={column.id}
+                  align="left"
+                  onClick={() => navigate(PATH_MACHINE.machines.view(machine?._id))}
+                  param={machine?.serialNo || ''}
+                />
+              );
+            default:
+              return null;
+          }
+        })}
       </StyledTableRow>
 
       <DialogViewApiLogDetails
@@ -144,11 +178,11 @@ export default function APILogsTableRow({ row, style, selected, onViewRow, hidde
           responseStatusCode,
           responseTime,
           customerName: customer?.name || '',
-          serialNo: machine?.[0]?.serialNo || '',
-          machineName: machine?.[0]?.name || '',
+          serialNo: machine?.serialNo || '',
+          machineName: machine?.name || '',
           response,
           // responseMessage,
-          // portalKeyCreatedBy: machine?.[0]?.portalKey?.[0]?.createdBy?.name || '',
+          // portalKeyCreatedBy: machine?.portalKey?.[0]?.createdBy?.name || '',
           // requestHeaders: {
           //   'content-type': requestHeaders['content-type'],
           //   'content-length': requestHeaders['content-length'],
