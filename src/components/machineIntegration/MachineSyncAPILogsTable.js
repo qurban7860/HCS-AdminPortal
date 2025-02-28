@@ -55,6 +55,7 @@ const MachineSyncAPILogsTable = ({
       machineId,
       orderBy: 'createdAt:-1',
       query: { apiType: 'MACHINE-SYNC' },
+      limit: 20,
     }));
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -77,6 +78,7 @@ const MachineSyncAPILogsTable = ({
         machineId,
         orderBy: 'createdAt:-1',
         query: { apiType: 'MACHINE-SYNC' },
+        limit: 20,
       })
     );
   };

@@ -1,7 +1,7 @@
 import { memo, useState } from 'react'
 import PropTypes from 'prop-types';
 // @mui
-import { Box, TablePagination, Button, Grid, MenuItem, Checkbox, Menu } from '@mui/material';
+import { Box, TablePagination, Button, Grid, MenuItem, Checkbox, Menu, Typography } from '@mui/material';
 import Iconify from '../iconify';
 
 // ----------------------------------------------------------------------
@@ -14,6 +14,8 @@ TablePaginationFilter.propTypes = {
   hiddenColumns: PropTypes.object,
   handleHiddenColumns: PropTypes.func,
   sx: PropTypes.object,
+  disablePagination: PropTypes.bool,
+  recordCount: PropTypes.number,
 };
 
 function TablePaginationFilter({
@@ -22,6 +24,8 @@ function TablePaginationFilter({
   hiddenColumns,
   handleHiddenColumns,
   sx,
+  disablePagination = false,
+  recordCount,
   ...other
 }) {
 
@@ -62,9 +66,15 @@ function TablePaginationFilter({
   };
 
   return (
-    <Box rowGap={2} columnGap={2} display="grid" sx={{ borderTop: '1px solid #919eab3d' }}
-      gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}>
-      <Grid item sx={{ py: 1, px: 2 }}>
+    <Box sx={{ 
+      borderTop: '1px solid #919eab3d',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      px: 2,
+      py: 1
+    }}>
+      <Box>
         <Button startIcon={<Iconify icon='flowbite:column-solid' />} variant={selectedColumns.length === 0 ? "" : "outlined"} onClick={handleClick}>Columns</Button>
         <Menu
           id="long-menu"
@@ -88,8 +98,8 @@ function TablePaginationFilter({
             </MenuItem>
           ))}
         </Menu>
-      </Grid>
-      <TablePagination labelRowsPerPage="Rows:" colSpan={2} rowsPerPageOptions={rowsPerPageOptions} component="div" showLastButton showFirstButton {...other}
+      </Box>
+      {!disablePagination && <TablePagination labelRowsPerPage="Rows:" colSpan={2} rowsPerPageOptions={rowsPerPageOptions} component="div" showLastButton showFirstButton {...other}
         sx={{
           borderTop: 'none !important',
           '.MuiTablePagination-toolbar': {
@@ -97,8 +107,10 @@ function TablePaginationFilter({
             width: '!important 200px',
           },
         }}
-      />
-
+      />}
+      {disablePagination && <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+        {recordCount} record{recordCount > 1 ? 's' : ''} found
+      </Typography>}
     </Box>
   );
 }

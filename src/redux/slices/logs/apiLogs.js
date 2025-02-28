@@ -112,12 +112,13 @@ export const {
 
 // ---------------------------------- GET API LOGS ------------------------------------
 
-export function getApiLogs({ machineId, fields = '', orderBy = { createdAt: -1 }, query = {} }) {
+export function getApiLogs({ machineId, fields = '', orderBy = { createdAt: -1 }, query = {}, limit = 1000 }) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const params = {
         orderBy,
+        limit,
         ...query,
         machine: machineId,
       };
