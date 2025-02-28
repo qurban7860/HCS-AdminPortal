@@ -24,7 +24,9 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import { useSnackbar } from 'notistack';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
+import { useAuthContext } from '../../auth/useAuthContext';
 import TicketHistory from './TicketHistory';
+import TicketWorkLogs from './TicketWorkLogs';
 import FormLabel from '../../components/DocumentForms/FormLabel';
 import { FORMLABELS } from '../../constants/default-constants';
 import FormProvider, { RHFTextField, RHFSwitch } from '../../components/hook-form';
@@ -47,6 +49,7 @@ const TicketComments = ({ currentUser }) => {
   const [editIsInternal, setEditIsInternal] = useState(false);
   const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
   const [commentToDelete, setCommentToDelete] = useState(null);
+  const { user, userId } = useAuthContext();
   const { id } = useParams();
   const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
@@ -151,9 +154,19 @@ const TicketComments = ({ currentUser }) => {
             color="primary"
             variant={activeTab === 'History' ? 'contained' : 'text'}
             size="small"
-            sx={{ width: 'fit-content' }}
+            sx={{ width: 'fit-content', mr: 2 }}
           >
             History
+          </LoadingButton>
+          <LoadingButton
+            value="Work Logs"
+            onClick={() => handleTabChange('Work Logs')}
+            variant={activeTab === 'Work Logs' ? 'contained' : 'text'}
+            color="primary"
+            size="small"
+            sx={{ width: 'fit-content' }}
+          >
+            Work Log
           </LoadingButton>
         </Box>
       {activeTab === 'Comments' && (
@@ -327,6 +340,7 @@ const TicketComments = ({ currentUser }) => {
         </>
       )}
       {activeTab === 'History' && <TicketHistory />} 
+      {activeTab === 'Work Logs' && ( <TicketWorkLogs currentUser={{ ...user, userId }} />)}
       </Paper>
       <ConfirmDialog
         open={openConfirmDelete}

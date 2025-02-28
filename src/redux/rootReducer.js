@@ -68,6 +68,7 @@ import ticketInvestigationReasonsReducer from './slices/ticket/ticketSettings/ti
 import ticketPrioritiesReducer from './slices/ticket/ticketSettings/ticketPriorities';
 import ticketStatusesReducer from './slices/ticket/ticketSettings/ticketStatuses';
 import ticketCommentsReducer from './slices/ticket/ticketComments/ticketComment';
+import ticketWorkLogsReducer from './slices/ticket/ticketWorkLogs/ticketWorkLog';
 import ticketHistoriesReducer from './slices/ticket/ticketHistories/ticketHistory';
 import customerJiraReducer from './slices/customer/customerJira';
 import jiraReducer from './slices/jira/jira';
@@ -522,6 +523,12 @@ export const ticketCommentsPersistConfig = {
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 }
+export const ticketWorkLogsPersistConfig = {
+  key: 'ticketWorkLogs',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
 export const ticketHistoriesPersistConfig = {
   key: 'ticketHistories',
   storage,
@@ -624,6 +631,7 @@ const rootReducer = combineReducers({
   ticketPriorities: persistReducer(ticketPrioritiesPersistConfig, ticketPrioritiesReducer),
   ticketStatuses: persistReducer(ticketStatusesPersistConfig, ticketStatusesReducer),
   ticketComments: persistReducer(ticketCommentsPersistConfig, ticketCommentsReducer),
+  ticketWorkLogs: persistReducer(ticketWorkLogsPersistConfig, ticketWorkLogsReducer),
   ticketHistories: persistReducer(ticketHistoriesPersistConfig, ticketHistoriesReducer),
   customerJira: persistReducer(customerJiraPersistConfig, customerJiraReducer),
   jira: persistReducer(jiraPersistConfig, jiraReducer),
