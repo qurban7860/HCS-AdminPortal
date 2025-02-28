@@ -126,14 +126,12 @@ export default function SiteViewForm({ handleMap, isCustomerSitePage }) {
           <ViewFormField isLoading={isLoading}
             sm={6}
             heading="Primary Billing Contact"
-            param={defaultValues?.primaryBillingContact?.firstName}
-            secondParam={defaultValues?.primaryBillingContact?.lastName}
+            param={`${defaultValues?.primaryBillingContact?.firstName || ""} ${defaultValues?.primaryBillingContact?.lastName || ""}`}
           />
           <ViewFormField isLoading={isLoading}
             sm={6}
             heading="Primary Technical Contact"
-            param={defaultValues?.primaryTechnicalContact?.firstName}
-            secondParam={defaultValues?.primaryTechnicalContact?.lastName}
+            param={`${defaultValues?.primaryTechnicalContact?.firstName || ""} ${defaultValues?.primaryTechnicalContact?.lastName || ""}`}
           />
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>
