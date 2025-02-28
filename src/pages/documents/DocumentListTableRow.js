@@ -1,8 +1,7 @@
 import PropTypes from 'prop-types';
 // @mui
-import {
-  TableCell,
-} from '@mui/material';
+import { TableCell, Button } from '@mui/material';
+import { alpha } from '@mui/material/styles';
 // utils
 import { fDate } from '../../utils/formatTime';
 // components
@@ -73,21 +72,30 @@ export default function DocumentListTableRow({
       {/* {  lgScreen && <TableCell align="center">{documentVersions[0]?.versionNo}</TableCell>} */}
       {!hiddenColumns?.stockNumber && machineDrawings && <TableCell align="left">{stockNumber}</TableCell>}
       {!hiddenColumns?.['machine.serialNo'] && machineDrawings && (
-        <TableCell align="left" sx={{ display: "flex", alignItems: "center", justifyContent: "flex-start" }}>
+        <TableCell align="left" sx={{ m: 0, p: 0 }} >
           {productDrawings?.map((m, index) => (
-            <>
-              <LinkDialogTableCell
-                onClick={() => handleMachineDialog(m?.machine?._id)}
-                align='left'
-                width="30px"
-                param={m?.machine?.serialNo}
-              />
-              {index < productDrawings.length - 1 && ', '}
-            </>
+            <Button disableTouchRipple sx={{
+              cursor: 'pointer',
+              textDecoration: 'underline',
+              textDecorationStyle: 'dotted',
+              fontWeight: 'bold',
+              background: 'none',
+              color: 'black',
+              justifyContent: 'flex-start',
+              '&:hover': {
+                color: (theme) => alpha(theme.palette.info.main, 0.98),
+                textDecoration: 'underline',
+                textDecorationStyle: 'dotted',
+                background: 'none',
+              }
+            }}
+              onClick={() => handleMachineDialog(m?.machine?._id)}
+            >
+              {m?.machine?.serialNo}{index < productDrawings.length - 1 && ', '}
+            </Button>
           ))}
         </TableCell>
-      )
-      }
+      )}
       {
         !hiddenColumns?.['machine.serialNo'] && !customerPage && !machinePage && !machineDrawings && !machineDrawingPage && lgScreen &&
         <LinkDialogTableCell onClick={() => handleMachineDialog(machine?._id)} align='left' param={machine?.serialNo} />
