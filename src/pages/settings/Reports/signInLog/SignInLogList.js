@@ -2,6 +2,7 @@ import { useState, useEffect, useLayoutEffect, useRef, useCallback } from 'react
 import debounce from 'lodash/debounce';
 // @mui
 import {
+  Grid, Card, Box, Stack,
   Table,
   TableBody,
   Container,
@@ -9,6 +10,8 @@ import {
 } from '@mui/material';
 // redux
 import { useNavigate } from 'react-router';
+import { FormProvider, useForm } from 'react-hook-form';
+import { LoadingButton } from '@mui/lab';
 import { useDispatch, useSelector } from '../../../../redux/store';
 // routes
 import {
@@ -21,10 +24,11 @@ import {
 } from '../../../../components/table';
 import Scrollbar from '../../../../components/scrollbar';
 // sections
-import RoleListTableToolbar from './SignInLogListTableToolbar';
-import RoleListTableRow from './SignInLogListTableRow';
+import SignInLogListTableToolbar from './SignInLogListTableToolbar';
+import SignInLogListTableRow from './SignInLogListTableRow';
 import {
   getSignInLogs,
+  resetSignInLogsSuccess,
   ChangeRowsPerPage,
   ChangePage,
   setFilterBy,
@@ -34,13 +38,14 @@ import { fDateTime } from '../../../../utils/formatTime';
 import TableCard from '../../../../components/ListTableTools/TableCard';
 import { PATH_SETTING } from '../../../../routes/paths';
 import { StyledCardContainer } from '../../../../theme/styles/default-styles';
+import RHFFilteredSearchBar from '../../../../components/hook-form/RHFFilteredSearchBar';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'requestedLogin', visibility: 'md1', label: 'Login', align: 'left' },
-  { id: 'user.name', label: 'User', align: 'left' },
-  { id: 'user.customer.name', label: 'Customer', align: 'left' },
+  { id: 'requestedLogin', visibility: 'md1', label: 'Login', align: 'left', allowSearch: true },
+  { id: 'user.name', label: 'User', align: 'left', allowSearch: true },
+  { id: 'user.customer.name', label: 'Customer', align: 'left', allowSearch: true },
   // { id: 'user.contact.firstName', label: 'Contact', align: 'left' },
   { id: 'loginIP', visibility: 'md2', label: 'IP', align: 'left' },
   { id: 'loginTime', label: 'Login Time', align: 'left' },
@@ -75,17 +80,30 @@ export default function SignInLogList() {
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
+  const [selectedSearchFilter, setSelectedSearchFilter] = useState('');
+
   const userId = localStorage.getItem('userId');
 
   const { signInLogs, filterBy, page, rowsPerPage, isLoadingLogs, initial } = useSelector((state) => state.user);
 
+  const methods = useForm({
+    defaultValues: {
+      filteredSearchKey: "",
+    },
+  });
+
+  const { watch, handleSubmit, setValue } = methods;
+  const filteredSearchKey = watch('filteredSearchKey');
   const getSignInLogsList = useCallback(async () => {
-    await dispatch(getSignInLogs(userId, page, rowsPerPage));
-  }, [dispatch, userId, page, rowsPerPage]);
+    await dispatch(getSignInLogs(userId, page, rowsPerPage, filteredSearchKey, selectedSearchFilter));
+  }, [dispatch, userId, page, rowsPerPage, filteredSearchKey, selectedSearchFilter]);
 
   useLayoutEffect(() => {
+    // setSelectedSearchFilter("");
+    // setValue("filteredSearchKey", "");
     getSignInLogsList()
-  }, [getSignInLogsList]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (initial) {
@@ -153,20 +171,48 @@ export default function SignInLogList() {
       <StyledCardContainer>
         <Cover name="Sign In Logs" icon="ph:users-light" generalSettings />
       </StyledCardContainer>
+      <FormProvider {...methods} onSubmit={handleSubmit(getSignInLogsList)}>
+        <Card sx={{ px: 3, pt: 3, pb: 1 }} >
+          <Stack
+            direction={{ xs: 'column', sm: 'row' }}
+            spacing={2}
+            sx={{
+              justifyContent: 'space-between',
+              alignItems: 'flex-start',
+            }}
+          >
+            <Box sx={{
+              flexGrow: 1,
+              width: { xs: '100%', sm: 'auto' }
+            }}
+            >
+              <RHFFilteredSearchBar
+                name="filteredSearchKey"
+                filterOptions={TABLE_HEAD.filter((item) => item?.allowSearch)}
+                setSelectedFilter={setSelectedSearchFilter}
+                selectedFilter={selectedSearchFilter}
+                placeholder="Enter Search here..."
+                afterClearHandler={() => dispatch(resetSignInLogsSuccess)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleSubmit(getSignInLogsList)();
+                  }
+                }}
+                fullWidth
+              />
+            </Box>
+            <LoadingButton
+              type="button"
+              onClick={handleSubmit(getSignInLogsList)}
+              variant="contained"
+            >
+              Search
+            </LoadingButton>
+          </Stack>
+        </Card>
+      </FormProvider>
 
       <TableCard>
-        <RoleListTableToolbar
-          filterName={filterName}
-          filterStatus={filterStatus}
-          onFilterName={handleFilterName}
-          onFilterStatus={handleFilterStatus}
-          isFiltered={isFiltered}
-          onResetFilter={handleResetFilter}
-          buttonAction={getSignInLogsList}
-          filterRequestStatus={filterRequestStatus}
-          onFilterRequestStatus={handleFilterRequestStatus}
-          onReload={getSignInLogsList}
-        />
         {!isNotFound && <TablePaginationCustom
           count={signInLogs.totalCount}
           page={page}
@@ -189,7 +235,7 @@ export default function SignInLogList() {
                   // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) =>
                     row ? (
-                      <RoleListTableRow
+                      <SignInLogListTableRow
                         key={row._id}
                         row={row}
                         status={AUTH?.find((config) => (config.name === `${row?.statusCode}`))}
