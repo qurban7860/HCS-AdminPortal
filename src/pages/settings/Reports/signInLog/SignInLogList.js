@@ -1,4 +1,4 @@
-import { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef, useCallback } from 'react';
 import debounce from 'lodash/debounce';
 // @mui
 import {
@@ -79,19 +79,19 @@ export default function SignInLogList() {
 
   const { signInLogs, filterBy, page, rowsPerPage, isLoadingLogs, initial } = useSelector((state) => state.user);
 
+  const getSignInLogsList = useCallback(async () => {
+    await dispatch(getSignInLogs(userId, page, rowsPerPage));
+  }, [dispatch, userId, page, rowsPerPage]);
+
   useLayoutEffect(() => {
-    dispatch(getSignInLogs(userId));
-  }, [dispatch, userId]);
+    getSignInLogsList()
+  }, [getSignInLogsList]);
 
   useEffect(() => {
     if (initial) {
-      setTableData(signInLogs);
+      setTableData(signInLogs?.data || []);
     }
   }, [signInLogs, initial]);
-
-  const reloadList = () => {
-    dispatch(getSignInLogs(userId));
-  };
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -162,13 +162,13 @@ export default function SignInLogList() {
           onFilterStatus={handleFilterStatus}
           isFiltered={isFiltered}
           onResetFilter={handleResetFilter}
-          buttonAction={reloadList}
+          buttonAction={getSignInLogsList}
           filterRequestStatus={filterRequestStatus}
           onFilterRequestStatus={handleFilterRequestStatus}
-          onReload={reloadList}
+          onReload={getSignInLogsList}
         />
         {!isNotFound && <TablePaginationCustom
-          count={dataFiltered.length}
+          count={signInLogs.totalCount}
           page={page}
           rowsPerPage={rowsPerPage}
           onPageChange={onChangePage}
@@ -186,7 +186,7 @@ export default function SignInLogList() {
 
               <TableBody>
                 {(isLoadingLogs ? [...Array(rowsPerPage)] : dataFiltered)
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) =>
                     row ? (
                       <RoleListTableRow
@@ -208,7 +208,7 @@ export default function SignInLogList() {
         </TableContainer>
 
         {!isNotFound && <TablePaginationCustom
-          count={dataFiltered.length}
+          count={signInLogs.totalCount}
           page={page}
           rowsPerPage={rowsPerPage}
           onPageChange={onChangePage}
