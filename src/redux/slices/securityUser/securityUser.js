@@ -214,6 +214,12 @@ const slice = createSlice({
       state.isLoading = false;
     },
 
+    // RESET SIGNIN LOGS
+    resetSignInLogsSuccess(state, action) {
+      state.isLoadingLogs = false;
+      state.signInLogs = [];
+    },
+
     // Get Verify Invite
     getVerifyInvite(state, action) {
       state.isLoading = false;
@@ -252,6 +258,7 @@ export const {
   resetSecurityUsers,
   resetSecurityUser,
   resetLoadingResetPasswordEmail,
+  resetSignInLogsSuccess,
   setFilterBy,
   setActiveFilterList,
   setEmployeeFilterList,
@@ -561,7 +568,7 @@ export function SecurityUserPasswordUpdate(data, Id, isAdmin) {
 
 // ----------------------------------------------------------------------
 
-export function getSignInLogs(id, page, pageSize) {
+export function getSignInLogs(id, page, pageSize, searchKey, searchColumn) {
   return async (dispatch) => {
     dispatch(slice.actions.setLoadingLogs(true));
     try {
@@ -569,6 +576,10 @@ export function getSignInLogs(id, page, pageSize) {
       params.pagination = {
         page,
         pageSize
+      }
+      if (searchKey?.length > 0) {
+        params.searchKey = searchKey;
+        params.searchColumn = searchColumn;
       }
       const response = await axios.get(`${CONFIG.SERVER_URL}security/users/${id}/signinlogs/`, { params });
       dispatch(slice.actions.getSignInLogsSuccess(response.data));
