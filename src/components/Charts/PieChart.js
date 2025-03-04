@@ -49,10 +49,10 @@ const PieChart = ({ chartData, totalIssues, title }) => {
   });
 
   return (
-    <Box sx={{ p: 2, pl: 0 }}>
-      <Typography variant="h6" sx={{ mb: 2, fontWeight: 'bold' }}>
-        Pie Chart: {title}
-      </Typography>
+    <Grid container>
+     <Typography variant="h5" sx={{ mb: 2, fontWeight: 'bold' }}>
+      {title}
+    </Typography>
       <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
           <Box sx={{ textAlign: 'center' }}>
@@ -107,7 +107,7 @@ const PieChart = ({ chartData, totalIssues, title }) => {
           </Box>
         </Grid>
       </Grid>
-    </Box>
+    </Grid>
   );
 };
 

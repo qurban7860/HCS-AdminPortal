@@ -293,9 +293,8 @@ export const TITLES = {
   // @root - GeneralAppPage - dashboard
   //  Welcome
   WELCOME: `CUSTOMER \n SERVICE & SUPPORT`,
-  WELCOME_DESC:
-    'Providing seamless and hassle-free experience that exceeds your expectations and helps you to achieve your business goals.',
-
+  WELCOME_DESC: 'Providing seamless and hassle-free experience that exceeds your expectations and helps you to achieve your business goals.',
+  SUPPORT_SERV: 'Support Services',
   // @root - LicenseAddForm
   NEWLICENSE: 'New License',
   // @root - ResetPasswordPage - forgot password

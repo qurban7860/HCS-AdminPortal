@@ -171,6 +171,10 @@ export const allSideBarOptions = {
     {
       subheader: 'Support Services',
       items: [
+        { title: 'Ticket Dashboard', 
+          path: PATH_SUPPORT.ticketDashboard.root, 
+          icon: <Iconify icon="mdi:view-dashboard" /> 
+        },
         {
           title: 'Support Tickets',
           path: PATH_SUPPORT.supportTickets.root,

@@ -426,6 +426,9 @@ export const PATH_MACHINE = {
 // ----------------------- SUPPORT SERVICES -----------------------------------------
 export const PATH_SUPPORT = {
   permissionDenied: path(ROOTS_SUPPORT, '/permission-denied'),
+  ticketDashboard: {
+    root: path(ROOTS_SUPPORT, '/ticketDashboard'),
+  },
   supportTickets: {
     root: path(ROOTS_SUPPORT, '/supportTickets'),
     new: path(ROOTS_SUPPORT, '/supportTickets/new'),
