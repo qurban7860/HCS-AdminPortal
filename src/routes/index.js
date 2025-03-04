@@ -322,6 +322,7 @@ import {
   // ----------------------------------------------------------------
   
   // TICKETS
+  TicketDashboard,
   TicketFormList,
   TicketForm,
   TicketView,
@@ -1062,6 +1063,12 @@ export default function Router() {
       ),
       children: [
         { element: <Navigate to="/support/supportTickets" replace />, index: true },
+        {
+          path: 'ticketDashboard',
+          children: [
+            { element: <TicketDashboard />, index: true },
+          ],
+        },
         {
           path: 'supportTickets',
           children: [
