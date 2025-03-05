@@ -9,21 +9,21 @@ const PieChart = ({ chartData, totalIssues, title }) => {
   const getTotalIssues = () => hoveredIndex !== null ? chartData.series[hoveredIndex] : totalIssues;
 
   const chartOptions = useChart({
-    chart: { type: 'donut', width: 400 },
+    chart: { type: 'donut' },
     labels: chartData.labels,
     colors: chartData.colors,
     legend: { show: false },
     plotOptions: {
       pie: {
         donut: {
-          size: '70%',
+          size: '40%',
           labels: {
-            show: true,
-            total: {
-              show: true,
-              label: 'Total Issues',
-              formatter: () => `${getTotalIssues()}`,
-            },
+            show: false,
+            // total: {
+            //   show: true,
+            //   label: 'Total Issues',
+            //   formatter: () => `${getTotalIssues()}`,
+            // },
           },
         },
       },
@@ -50,30 +50,28 @@ const PieChart = ({ chartData, totalIssues, title }) => {
 
   return (
     <Grid container>
-     <Typography variant="h5" sx={{ mb: 2, fontWeight: 'bold' }}>
-      {title}
-    </Typography>
+      <Typography variant="h4" sx={{ mb: 2, fontWeight: 'bold' }}>
+       Support Tickets
+      </Typography>
       <Grid container spacing={2}>
-        <Grid item xs={12} md={6}>
-          <Box sx={{ textAlign: 'center' }}>
+        <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
+          <Box sx={{ mt: -1, mb: 2, textAlign: 'center' }}>
             <ReactApexChart
               type="donut"
               series={chartData.series}
               options={chartOptions}
-              height={350}
+              height={250}
+              width={250}
             />
           </Box>
         </Grid>
-        <Grid item xs={12} md={6} sx={{ mt: 4 }}>
-          <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold' }}>
-            {title.includes('Statuses') ? 'Statuses' : 'Issue Types'}
-          </Typography>
-          <Typography variant="body1" sx={{ fontWeight: 'bold', mb: 2 }}>
-            Total Issues: <span style={{ color: '#000', fontWeight: 'bold' }}>{getTotalIssues()}</span>
+        <Grid item xs={12} sm={12} md={6} lg={6} xl={6} sx={{ml: -1, mt: -1}}>
+          <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold' }}>
+            {title}
           </Typography>
           <Divider />
-          <Box sx={{ mt: 2 }}>
-            {chartData.labels.map((label, index) => (
+          <Box sx={{ mt: 2, mb: 2, maxHeight: '150px', overflowY: chartData.labels.length > 4 ? 'auto' : 'visible' }}>
+            {chartData.labels.slice(0, 20).map((label, index) => (
               <Box
                 key={index}
                 sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}
@@ -105,6 +103,10 @@ const PieChart = ({ chartData, totalIssues, title }) => {
               </Box>
             ))}
           </Box>
+          <Divider />
+          <Typography variant="body1" sx={{ fontWeight: 'bold', mt: 2, mb: 2 }}>
+            Tickets: <span style={{ color: '#000', fontWeight: 'bold' }}>{getTotalIssues()}</span>
+          </Typography>
         </Grid>
       </Grid>
     </Grid>
