@@ -173,7 +173,7 @@ export const allSideBarOptions = {
       items: [
         { title: 'Ticket Dashboard', 
           path: PATH_SUPPORT.ticketDashboard.root, 
-          icon: <Iconify icon="mdi:view-dashboard" /> 
+          icon: <Iconify icon="fluent-mdl2:b-i-dashboard" /> 
         },
         {
           title: 'Support Tickets',
