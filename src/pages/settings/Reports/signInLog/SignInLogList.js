@@ -31,7 +31,7 @@ import TableCard from '../../../../components/ListTableTools/TableCard';
 import { PATH_SETTING } from '../../../../routes/paths';
 import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 import RHFFilteredSearchBar from '../../../../components/hook-form/RHFFilteredSearchBar';
-import { RHFSelect } from '../../../../components/hook-form';
+import { RHFDateTimePicker, RHFSelect } from '../../../../components/hook-form';
 
 // ----------------------------------------------------------------------
 
@@ -79,16 +79,17 @@ export default function SignInLogList() {
     () => ({
       filteredSearchKey: "",
       statusCode: -1,
+      loginTime: new Date(new Date().setHours(0, 0, 0, 0))
     }),
     []
   );
 
   const methods = useForm({ defaultValues });
   const { watch, handleSubmit } = methods;
-  const { filteredSearchKey, statusCode } = watch();
+  const { filteredSearchKey, statusCode, loginTime } = watch();
   const getSignInLogsList = useCallback(async () => {
-    await dispatch(getSignInLogs(userId, page, rowsPerPage, filteredSearchKey, selectedSearchFilter, statusCode));
-  }, [dispatch, userId, page, rowsPerPage, filteredSearchKey, selectedSearchFilter, statusCode]);
+    await dispatch(getSignInLogs(userId, page, rowsPerPage, filteredSearchKey, selectedSearchFilter, statusCode, loginTime));
+  }, [dispatch, userId, page, rowsPerPage, filteredSearchKey, selectedSearchFilter, statusCode, loginTime]);
 
   useLayoutEffect(() => {
     getSignInLogsList()
@@ -142,32 +143,16 @@ export default function SignInLogList() {
       </StyledCardContainer>
       <FormProvider {...methods} onSubmit={handleSubmit(handleSearch)}>
         <Card sx={{ px: 3, pt: 3, pb: 1 }} >
-          <Stack
-            direction={{ xs: 'column', sm: 'row' }}
-            spacing={2}
-            sx={{
-              justifyContent: 'space-between',
-              alignItems: 'flex-start',
-            }}
-          >
-            <Box rowGap={2} columnGap={2} display="grid" sx={{ flexGrow: 1 }}
-              gridTemplateColumns={{ sm: 'repeat(1, ifr)', md: 'repeat(1, 2fr 1fr)', lg: 'repeat(1, 3fr 1fr)' }}
+          <Stack spacing={2}>
+            <Box rowGap={2} columnGap={2} display="grid"
+              gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
             >
-              <RHFFilteredSearchBar
-                name="filteredSearchKey"
-                filterOptions={TABLE_HEAD.filter((item) => item?.allowSearch)}
-                setSelectedFilter={setSelectedSearchFilter}
-                selectedFilter={selectedSearchFilter}
-                placeholder="Enter Search here..."
-                afterClearHandler={() => dispatch(resetSignInLogsSuccess)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    handleSubmit(handleSearch)();
-                  }
-                }}
-                fullWidth
+              <RHFDateTimePicker
+                name="loginTime"
+                label="Login Time"
+                value={loginTime}
+                size="small"
               />
-
               <RHFSelect
                 name="statusCode"
                 size="small"
@@ -178,13 +163,40 @@ export default function SignInLogList() {
                 <MenuItem key="400" value={400} >Failed</MenuItem>
               </RHFSelect>
             </Box>
-            <LoadingButton
-              type="button"
-              onClick={handleSubmit(handleSearch)}
-              variant="contained"
+            <Stack
+              direction={{ xs: 'column', sm: 'row' }}
+              spacing={2}
+              sx={{
+                justifyContent: 'space-between',
+                alignItems: 'flex-start',
+              }}
             >
-              Search
-            </LoadingButton>
+              <Box rowGap={2} columnGap={2} display="grid" sx={{ flexGrow: 1, width: "100%" }}
+              >
+                <RHFFilteredSearchBar
+                  name="filteredSearchKey"
+                  filterOptions={TABLE_HEAD.filter((item) => item?.allowSearch)}
+                  setSelectedFilter={setSelectedSearchFilter}
+                  selectedFilter={selectedSearchFilter}
+                  placeholder="Enter Search here..."
+                  afterClearHandler={() => dispatch(resetSignInLogsSuccess)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      handleSubmit(handleSearch)();
+                    }
+                  }}
+                  fullWidth
+                />
+
+              </Box>
+              <LoadingButton
+                type="button"
+                onClick={handleSubmit(handleSearch)}
+                variant="contained"
+              >
+                Search
+              </LoadingButton>
+            </Stack>
           </Stack>
         </Card>
       </FormProvider>

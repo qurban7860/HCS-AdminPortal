@@ -568,7 +568,7 @@ export function SecurityUserPasswordUpdate(data, Id, isAdmin) {
 
 // ----------------------------------------------------------------------
 
-export function getSignInLogs(id, page, pageSize, searchKey, searchColumn, statusCode) {
+export function getSignInLogs(id, page, pageSize, searchKey, searchColumn, statusCode, loginTime) {
   return async (dispatch) => {
     dispatch(slice.actions.setLoadingLogs(true));
     try {
@@ -576,6 +576,9 @@ export function getSignInLogs(id, page, pageSize, searchKey, searchColumn, statu
       params.pagination = {
         page,
         pageSize
+      }
+      if (loginTime) {
+        params.loginTime = { $gte: loginTime };
       }
       if (searchKey?.length > 0) {
         params.searchKey = searchKey;
