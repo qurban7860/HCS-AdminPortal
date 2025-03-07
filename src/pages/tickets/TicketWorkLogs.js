@@ -1,6 +1,5 @@
 // TicketWorkLogs.js
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
 import {
   Button,
@@ -21,6 +20,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import { useSnackbar } from 'notistack';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
+import { useAuthContext } from '../../auth/useAuthContext';
 import FormLabel from '../../components/DocumentForms/FormLabel';
 import { FORMLABELS } from '../../constants/default-constants';
 import FormProvider, { RHFTextField, RHFDatePicker } from '../../components/hook-form';
@@ -33,29 +33,31 @@ import {
   updateWorkLog,
 } from '../../redux/slices/ticket/ticketWorkLogs/ticketWorkLog'; 
 import ConfirmDialog from '../../components/confirm-dialog';
+import { getActiveSPContacts } from '../../redux/slices/customer/contact';
+import { fDateTime } from '../../utils/formatTime';
 
 dayjs.extend(relativeTime);
 
 const WorkLogSchema = Yup.object().shape({
-  timeSpent: Yup.string()
-    .matches(
-      /^(?:(\d+w)\s*)?(?:(\d+d)\s*)?(?:(\d+h)\s*)?(?:(\d+m)\s*)?$/,
-      'Time Spent must be in the correct format: 2w 4d 6h 45m'
-    )
+    timeSpent: Yup.string()
+    .required('Time Spent is required')
     .test(
       'isValidFormat',
       'Invalid format. Use: 2w 4d 6h 45m',
       (value) => {
-        if (!value) return false; 
+        if (!value) return true; 
         return /^(\d+w)?\s*(\d+d)?\s*(\d+h)?\s*(\d+m)?$/.test(value.trim());
       }
     )
-    .required('Time Spent is required'),
+    .matches(
+      /^(?:(\d+w)\s*)?(?:(\d+d)\s*)?(?:(\d+h)\s*)?(?:(\d+m)\s*)?$/,
+      'Time Spent must be in the correct format: 2w 4d 6h 45m'
+    ),
     workDate: Yup.mixed().label("Work Date").nullable().notRequired(),
     notes: Yup.string().max(300, 'Notes must not exceed 300 characters'),
 });
 
-const TicketWorkLogs = ({ currentUser }) => {
+const TicketWorkLogs = () => {
   const [editingWorkLogId, setEditingWorkLogId] = useState(null);
   const [editTimeSpent, setEditTimeSpent] = useState('');
   const [editWorkDate, setEditWorkDate] = useState(null);
@@ -65,15 +67,17 @@ const TicketWorkLogs = ({ currentUser }) => {
   const { id } = useParams();
   const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
+  const { user: currentUser } = useAuthContext();
 
   const { error, workLogs, isLoading } = useSelector((state) => state.ticketWorkLogs); 
+   const { activeSpContacts } = useSelector((state) => state.contact);
 
   useEffect(() => {
     let controller;
     if (id) {
       dispatch(getWorkLogs({ id })); 
+       dispatch(getActiveSPContacts());
     }
-
     return () => {
       if (controller) {
         controller.abort();
@@ -209,7 +213,7 @@ const TicketWorkLogs = ({ currentUser }) => {
           </FormProvider>
           {/* ) : ( */}
           <List sx={{ width: '100%', bgcolor: 'background.paper', maxHeight: 300, overflow: 'auto'}}>
-            {workLogs.map((item, index) => ( 
+            {(Array.isArray(workLogs) ? workLogs : []).map((item, index) => ( 
               <React.Fragment key={index}>
                 {index > 0 && <Divider component="li" />}
                 <ListItem alignItems="flex-start" sx={{ padding: '8px 0' }}>
@@ -229,7 +233,7 @@ const TicketWorkLogs = ({ currentUser }) => {
                           sx={{ color: 'text.secondary', fontSize: '0.875rem' }}
                           title={dayjs(item.createdAt).format('MMMM D, YYYY [at] h:mm A')}
                         >
-                          {dayjs().diff(dayjs(item.createdAt), 'day') < 1
+                          {dayjs().diff(dayjs(item.updatedAt), 'day') < 1
                             ? dayjs(item.createdAt).fromNow()
                             : dayjs(item.createdAt).format('MMMM D, YYYY [at] h:mm A')}
                         </Typography>
@@ -309,17 +313,13 @@ const TicketWorkLogs = ({ currentUser }) => {
                         <Typography component="span" variant="body2" color="text.primary">
                           <br/>
                           <strong>Notes:</strong> {item.notes} 
-                          {item.updatedAt !== item.createdAt && (
-                            <Typography
-                              component="span"
-                              variant="caption"
-                              sx={{ color: 'text.secondary', ml: 1 }}
-                            >
-                              (edited)
+                          {item.updatedAt !== item.createdAt && item.createdBy?._id !== item.updatedBy?._id && (
+                            <Typography component="span" variant="caption" sx={{ color: 'text.secondary', ml: 2, fontStyle: 'italic' }}>
+                              (edited at {fDateTime(item.updatedAt)} by <b>{item?.updatedBy?.name || ""}</b>)
                             </Typography>
                           )}
                         </Typography>
-                        {item?.createdBy?._id === currentUser?.userId && (
+                        {(item?.updatedBy?._id === currentUser?.userId || activeSpContacts.some((contact) => contact._id === currentUser?.contact)) && (
                           <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
                             <Button
                               size="small"
@@ -362,10 +362,6 @@ const TicketWorkLogs = ({ currentUser }) => {
        />
     </>
   );
-};
-
-TicketWorkLogs.propTypes = {
-  currentUser: PropTypes.object.isRequired,
 };
 
 export default TicketWorkLogs;
