@@ -155,17 +155,17 @@ export default function TicketDashboard() {
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12} xl={6}>
             <StyledGlobalCard sx={{ pt: 2 }} variants={varFade().inDown}>
-              <PieChart chartData={requestTypeData} totalIssues={totalRequestTypes} title="Request Type" />
-            </StyledGlobalCard>
-          </Grid>
-          <Grid item xs={12} sm={12} md={12} lg={12} xl={6}>
-            <StyledGlobalCard sx={{ pt: 2 }} variants={varFade().inDown}>
               <PieChart chartData={statusData} totalIssues={totalStatuses} title="Status" />
             </StyledGlobalCard>
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12} xl={6}>
             <StyledGlobalCard sx={{ pt: 2 }} variants={varFade().inDown}>
               <PieChart chartData={statusTypeData} totalIssues={totalStatusTypes} title="Status Type" />
+            </StyledGlobalCard>
+          </Grid>
+          <Grid item xs={12} sm={12} md={12} lg={12} xl={6}>
+            <StyledGlobalCard sx={{ pt: 2 }} variants={varFade().inDown}>
+              <PieChart chartData={requestTypeData} totalIssues={totalRequestTypes} title="Request Type" />
             </StyledGlobalCard>
           </Grid>
           {/* <Grid item xs={12} sm={12} md={12} lg={12} xl={6}>
