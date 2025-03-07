@@ -70,7 +70,7 @@ const PieChart = ({ chartData, totalIssues, title }) => {
             {title}
           </Typography>
           <Divider />
-          <Box sx={{ mt: 2, mb: 2, maxHeight: '150px', overflowY: chartData.labels.length > 4 ? 'auto' : 'visible' }}>
+          <Box sx={{ mt: 2, mb: 2, maxHeight: '110px', overflowY: chartData.labels.length > 4 ? 'auto' : 'visible' }}>
             {chartData.labels.slice(0, 20).map((label, index) => (
               <Box
                 key={index}
