@@ -97,9 +97,11 @@ const PieChart = ({ chartData, totalIssues, title }) => {
                     {label}
                   </Typography>
                 </Box>
+                <Box sx={{mr: 1}}>
                 <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
                   {chartData.series[index]}
                 </Typography>
+                </Box>
               </Box>
             ))}
           </Box>
