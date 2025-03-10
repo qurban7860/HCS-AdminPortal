@@ -150,17 +150,17 @@ const TicketWorkLogs = () => {
 
   return (
     <>
-        <FormLabel content={FORMLABELS.COVER.TICKET_WORKLOG} /> 
-        <Box sx={{ py: 2 }}>
+      <FormLabel content={FORMLABELS.COVER.TICKET_WORKLOG} />
+      <Box sx={{ py: 2 }}>
         {/* {workLogs.length === 0 ? ( */}
-          <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-            <Stack direction="row" spacing={2}>
-              <CustomAvatar
-                src={currentUser?.photoURL}
-                alt={currentUser?.displayName}
-                name={currentUser?.displayName}
-              />
-              <Stack sx={{ width: '100%' }}>
+        <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+          <Stack direction="row" spacing={2}>
+            <CustomAvatar
+              src={currentUser?.photoURL}
+              alt={currentUser?.displayName}
+              name={currentUser?.displayName}
+            />
+            <Stack sx={{ width: '100%' }}>
               <Box
                 rowGap={2}
                 columnGap={2}
@@ -169,86 +169,87 @@ const TicketWorkLogs = () => {
               >
                 <RHFTextField
                   name="timeSpent"
-                  label="Time Spent" 
-                  error={!!errors.timeSpent} 
-                  helperText={errors.timeSpent?.message || "Use the format: 2w 4d 6h 45m (weeks, days, hours, minutes)"}
-                  sx={{ mb: 1 }} 
+                  label="Time Spent"
+                  error={!!errors.timeSpent}
+                  helperText={ errors.timeSpent?.message || 'Use the format: 2w 4d 6h 45m (weeks, days, hours, minutes)' }
+                  sx={{ mb: 1 }}
                 />
-                <RHFDatePicker label="Work Date" name="workDate" sx={{mb:1}} />
+                <RHFDatePicker label="Work Date" name="workDate" sx={{ mb: 1 }} />
               </Box>
-                <RHFTextField
-                  name="notes"
-                  label="Notes" 
-                  multiline
-                  rows={2}
-                  inputProps={{ maxLength: 300 }}
-                  helperText={`${noteValue?.length || 0}/300 characters`}
-                  FormHelperTextProps={{ sx: { textAlign: 'right' } }}
-                />
-                {(timeSpentValue || workDateValue || noteValue) && (
-                  <Stack spacing={1} direction="row" >
-                    <LoadingButton
-                      type="submit"
-                      disabled={isLoading}
-                      loading={isSubmitting}
-                      variant="contained"
-                      color="primary"
-                      size="small"
-                      sx={{ width: 'fit-content' }}
-                    >
-                      Save
-                    </LoadingButton>
-                    <Button
-                      type="button"
-                      variant="text"
-                      size="small"
-                      sx={{ width: 'fit-content' }}
-                      onClick={() => reset()}
-                    >
-                      Cancel
-                    </Button>
-                  </Stack> )}
-              </Stack>
+              <RHFTextField
+                name="notes"
+                label="Notes"
+                multiline
+                rows={2}
+                inputProps={{ maxLength: 300 }}
+                helperText={`${noteValue?.length || 0}/300 characters`}
+                FormHelperTextProps={{ sx: { textAlign: 'right' } }}
+              />
+              {(timeSpentValue || workDateValue || noteValue) && (
+                <Stack spacing={1} direction="row">
+                  <LoadingButton
+                    type="submit"
+                    disabled={isLoading}
+                    loading={isSubmitting}
+                    variant="contained"
+                    color="primary"
+                    size="small"
+                    sx={{ width: 'fit-content' }}
+                  >
+                    Save
+                  </LoadingButton>
+                  <Button
+                    type="button"
+                    variant="text"
+                    size="small"
+                    sx={{ width: 'fit-content' }}
+                    onClick={() => reset()}
+                  >
+                    Cancel
+                  </Button>
+                </Stack>
+              )}
             </Stack>
-          </FormProvider>
-          {/* ) : ( */}
-          <List sx={{ width: '100%', bgcolor: 'background.paper', maxHeight: 300, overflow: 'auto'}}>
-            {(Array.isArray(workLogs) ? workLogs : []).map((item, index) => ( 
-              <React.Fragment key={index}>
-                {index > 0 && <Divider component="li" />}
-                <ListItem alignItems="flex-start" sx={{ padding: '8px 0' }}>
-                  <ListItemAvatar>
-                    <CustomAvatar alt={item?.createdBy?.name} name={item?.createdBy?.name} sx={{ mt: -1 }}/>
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={
-                      <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                        <Typography variant="subtitle2" sx={{ mr: 1 }}>
-                          {item?.createdBy?.name}
-                        </Typography>
-                        <Typography variant="subtitle2" sx={{ mr: 1 }}>
-                          (logged {item?.timeSpent})
-                        </Typography>
-                        <Typography
-                          sx={{ color: 'text.secondary', fontSize: '0.875rem' }}
-                          title={dayjs(item.createdAt).format('MMMM D, YYYY [at] h:mm A')}
-                        >
-                          {dayjs().diff(dayjs(item.updatedAt), 'day') < 1
-                            ? dayjs(item.createdAt).fromNow()
-                            : dayjs(item.createdAt).format('MMMM D, YYYY [at] h:mm A')}
-                        </Typography>
-                      </Box>
-                    }
-                    secondary={
-                      <Box>
-                        {editingWorkLogId === item._id ? (
-                          <FormProvider methods={methods} key={item._id}>
-                            <Stack spacing={2}>
+          </Stack>
+        </FormProvider>
+        {/* ) : ( */}
+        <List sx={{ width: '100%', bgcolor: 'background.paper', maxHeight: 300, overflow: 'auto' }}>
+          {(Array.isArray(workLogs) ? workLogs : []).map((item, index) => (
+            <React.Fragment key={index}>
+              {index > 0 && <Divider component="li" />}
+              <ListItem alignItems="flex-start" sx={{ padding: '8px 0' }}>
+                <ListItemAvatar>
+                  <CustomAvatar alt={item?.createdBy?.name} name={item?.createdBy?.name} sx={{ mt: -1 }}/>
+                </ListItemAvatar>
+                <ListItemText
+                  primary={
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <Typography variant="subtitle2" sx={{ mr: 1 }}>
+                        {item?.createdBy?.name}
+                      </Typography>
+                      <Typography variant="subtitle2" sx={{ mr: 1 }}>
+                        (logged {item?.timeSpent})
+                      </Typography>
+                      <Typography
+                        sx={{ color: 'text.secondary', fontSize: '0.875rem' }}
+                        title={dayjs(item.createdAt).format('MMMM D, YYYY [at] h:mm A')}
+                      >
+                        {dayjs().diff(dayjs(item.updatedAt), 'day') < 1
+                          ? dayjs(item.createdAt).fromNow()
+                          : dayjs(item.createdAt).format('MMMM D, YYYY [at] h:mm A')}
+                      </Typography>
+                    </Box>
+                  }
+                  secondary={
+                    <Box>
+                      {editingWorkLogId === item._id ? (
+                        <FormProvider methods={methods} key={item._id}>
+                          <Stack spacing={2}>
                             <Box
-                             rowGap={2}
-                             columnGap={2}
-                             display="grid"
-                             gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
+                              rowGap={2}
+                              columnGap={2}
+                              display="grid"
+                              gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
                             >
                               <RHFTextField
                                 name="timeSpent"
@@ -259,107 +260,121 @@ const TicketWorkLogs = () => {
                                 helperText={!/^(?:(\d+w)\s*)?(?:(\d+d)\s*)?(?:(\d+h)\s*)?(?:(\d+m)\s*)?$/.test(editTimeSpent.trim()) ? "Invalid format. Use: 2w 4d 6h 45m" : "" || "Use the format: 2w 4d 6h 45m (weeks, days, hours, minutes)"}
                                 sx={{ mb: 1 }}
                               />
-                          <RHFDatePicker
-                            label="Work Date"
-                            name="workDate"
-                            value={editWorkDate}
-                            onChange={(newValue) => setEditWorkDate(newValue)}
-                            sx={{ mb: 1 }}
-                          />
-                          </Box>
-                          <RHFTextField
-                            name="notes"
-                            label="Notes"
-                            multiline
-                            rows={2}
-                            value={editNotes}
-                            onChange={(e) => setEditNotes(e.target.value)}
-                            inputProps={{ maxLength: 300 }}
-                            helperText={`${editNotes.length}/300 characters`}
-                            FormHelperTextProps={{ sx: { textAlign: 'right' } }}
-                          />
-                          <Stack direction="row" spacing={1}>
-                            <LoadingButton
-                              type="submit"
-                              onClick={() => handleSaveEdit(item._id)}
-                              // disabled={!editTimeSpent} 
-                              disabled={!editTimeSpent.trim().match(/^(?:(\d+w)\s*)?(?:(\d+d)\s*)?(?:(\d+h)\s*)?(?:(\d+m)\s*)?$/)}
-                              loading={isLoading}
-                              variant="contained"
-                              color="primary"
-                              size="small"
-                              sx={{ width: 'fit-content' }}
-                            >
-                              Update
-                            </LoadingButton>
-                            <Button
-                              variant="text"
-                              size="small"
-                              sx={{ width: 'fit-content' }}
-                              onClick={handleCancelEdit}
-                            >
-                              Cancel
-                            </Button>
+                              <RHFDatePicker
+                                label="Work Date"
+                                name="workDate"
+                                value={editWorkDate}
+                                onChange={(newValue) => setEditWorkDate(newValue)}
+                                sx={{ mb: 1 }}
+                              />
+                            </Box>
+                            <RHFTextField
+                              name="notes"
+                              label="Notes"
+                              multiline
+                              rows={2}
+                              value={editNotes}
+                              onChange={(e) => setEditNotes(e.target.value)}
+                              inputProps={{ maxLength: 300 }}
+                              helperText={`${editNotes.length}/300 characters`}
+                              FormHelperTextProps={{ sx: { textAlign: 'right' } }}
+                            />
+                            <Stack direction="row" spacing={1}>
+                              <LoadingButton
+                                type="submit"
+                                onClick={() => handleSaveEdit(item._id)}
+                                // disabled={!editTimeSpent}
+                                disabled={!editTimeSpent.trim().match(/^(?:(\d+w)\s*)?(?:(\d+d)\s*)?(?:(\d+h)\s*)?(?:(\d+m)\s*)?$/)}
+                                loading={isLoading}
+                                variant="contained"
+                                color="primary"
+                                size="small"
+                                sx={{ width: 'fit-content' }}
+                              >
+                                Update
+                              </LoadingButton>
+                              <Button
+                                variant="text"
+                                size="small"
+                                sx={{ width: 'fit-content' }}
+                                onClick={handleCancelEdit}
+                              >
+                                Cancel
+                              </Button>
+                            </Stack>
                           </Stack>
-                        </Stack>
-                      </FormProvider>
-                    ) : (
-                      <>
-                        {item.workDate && (
-                          <Typography component="span" variant="body2" color="text.primary">
-                            <strong>Work Date:</strong> {dayjs(item.workDate).format("DD/MM/YYYY")}
-                          </Typography>
-                        )}
-                        <Typography component="span" variant="body2" color="text.primary">
-                          <br/>
-                          <strong>Notes:</strong> {item.notes} 
-                          {item.updatedAt !== item.createdAt && item.createdBy?._id !== item.updatedBy?._id && (
-                            <Typography component="span" variant="caption" sx={{ color: 'text.secondary', ml: 2, fontStyle: 'italic' }}>
-                              (edited at {fDateTime(item.updatedAt)} by <b>{item?.updatedBy?.name || ""}</b>)
+                        </FormProvider>
+                      ) : (
+                        <>
+                          {(item.workDate || item.notes) && (
+                            <Typography component="span" variant="body2" color="text.primary">
+                              {item.workDate && (
+                                <>
+                                  {dayjs(item.workDate).format('DD/MM/YYYY')}
+                                  {item.notes && <br />}
+                                </>
+                              )}
+                              {item.notes && (
+                                <>
+                                  <span style={{ backgroundColor: '#f0f0f0', padding: '2px 5px', borderRadius: '3px' }}>
+                                    {item.notes}
+                                  </span>
+                                  {item.updatedAt !== item.createdAt &&
+                                    item.createdBy?._id !== item.updatedBy?._id && (
+                                      <Typography component="span" variant="caption" sx={{ color: 'text.secondary', ml: 2, fontStyle: 'italic' }}>
+                                        (edited at {fDateTime(item.updatedAt)} by{' '}
+                                        <b>{item?.updatedBy?.name || ''}</b>)
+                                      </Typography>
+                                    )}
+                                </>
+                              )}
                             </Typography>
                           )}
-                        </Typography>
-                        {(item?.updatedBy?._id === currentUser?.userId || activeSpContacts.some((contact) => contact._id === currentUser?.contact)) && (
-                          <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
-                            <Button
-                              size="small"
-                              color="primary"
-                              onClick={() => handleEditClick(item)}
-                              sx={{ minWidth: 'unset', px: 1 }}
-                            >
-                              Edit
-                            </Button>
-                            <Button
-                              size="small"
-                              color="error"
-                              onClick={() => handleDeleteClick(item)}
-                              sx={{ minWidth: 'unset', px: 1 }}
-                            >
-                              Delete
-                            </Button>
-                          </Stack>
-                        )}
-                      </>
-                    )}
-                  </Box>
-                }
-              />
-            </ListItem>
-          </React.Fragment>
-        ))}
-       </List>
-      {/* )} */}
+                          {(item?.updatedBy?._id === currentUser?.userId ||
+                            activeSpContacts.some(
+                              (contact) => contact._id === currentUser?.contact
+                            )) && (
+                            <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
+                              <Button
+                                size="small"
+                                color="primary"
+                                onClick={() => handleEditClick(item)}
+                                sx={{ minWidth: 'unset', px: 1 }}
+                              >
+                                Edit
+                              </Button>
+                              <Button
+                                size="small"
+                                color="error"
+                                onClick={() => handleDeleteClick(item)}
+                                sx={{ minWidth: 'unset', px: 1 }}
+                              >
+                                Delete
+                              </Button>
+                            </Stack>
+                          )}
+                        </>
+                      )}
+                    </Box>
+                  }
+                />
+              </ListItem>
+            </React.Fragment>
+          ))}
+        </List>
+        {/* )} */}
       </Box>
-        <ConfirmDialog
-         open={openConfirmDelete}
-         onClose={() => setOpenConfirmDelete(false)}
-         title="Delete WorkLog"
-         content="Are you sure you want to delete this workLog?"
-         action={
+      <ConfirmDialog
+        open={openConfirmDelete}
+        onClose={() => setOpenConfirmDelete(false)}
+        title="Delete WorkLog"
+        content="Are you sure you want to delete this workLog?"
+        action={
           <Button variant="contained" color="error" onClick={handleConfirmDelete}>
             Delete
-          </Button>}
-       />
+          </Button>
+        }
+      />
     </>
   );
 };
