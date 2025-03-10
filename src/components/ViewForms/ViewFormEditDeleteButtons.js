@@ -97,7 +97,9 @@ function ViewFormEditDeleteButtons({
   drawingPage,
   history,
   onMergeDocumentType,
-  serviceReportStatus
+  serviceReportStatus,
+  invitationStatus,
+  onCancelInvite
 }) {
   const { id } = useParams();
   const navigate = useNavigate()
@@ -388,7 +390,6 @@ function ViewFormEditDeleteButtons({
                 color={theme.palette.primary.main}
                 icon="mdi:arrow-left"
               />
-              {/* <Divider */}
               <Divider orientation="vertical" flexItem />
             </>
           }
@@ -407,6 +408,29 @@ function ViewFormEditDeleteButtons({
               icon={isActive?ICONS.ACTIVE.icon:ICONS.INACTIVE.icon}
             />
           }
+
+          {/* Status icons */}
+          {invitationStatus === 'PENDING' && (
+            <IconTooltip
+              title="Pending Invitation"
+              color={ICONS.SR_PENDING.color}
+              icon={ICONS.SR_PENDING.icon}
+            />
+          )}
+          {invitationStatus === 'REVOKED' && (
+            <IconTooltip
+              title="Revoked Invitation"
+              color={ICONS.SR_REJECTED.color}
+              icon="mdi:cancel-circle"
+            />
+          )}
+          {invitationStatus === 'ACCEPTED' && (
+            <IconTooltip
+              title="Accepted Invitation"
+              color={ICONS.SR_APPROVED.color}
+              icon={ICONS.SR_APPROVED.icon}
+            />
+          )}
 
           {shareWith!==undefined &&
             <IconTooltip
@@ -820,6 +844,15 @@ function ViewFormEditDeleteButtons({
             icon="mdi:restore"
           />
         )}
+
+        {invitationStatus === 'PENDING' && onCancelInvite && (
+          <IconTooltip
+            title="Revoke Invitation"
+            onClick={onCancelInvite}
+            color="#FF0000"
+            icon="mdi:file-cancel"
+          />
+        )}
       </StyledStack>
 
       <ConfirmDialog
@@ -1085,5 +1118,7 @@ ViewFormEditDeleteButtons.propTypes = {
   drawingPage: PropTypes.bool,
   history: PropTypes.array,
   onMergeDocumentType: PropTypes.func,
-  serviceReportStatus: PropTypes.object
+  serviceReportStatus: PropTypes.object,
+  invitationStatus: PropTypes.string,
+  onCancelInvite: PropTypes.func
 };
