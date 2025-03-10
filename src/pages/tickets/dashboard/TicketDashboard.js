@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from '../../../redux/store';
 import HowickWelcome from '../../../components/DashboardWidgets/HowickWelcome';
 import { getTickets } from '../../../redux/slices/ticket/tickets';
 import PieChart from '../../../components/Charts/PieChart';
+import BarChart from '../../../components/Charts/BarChart';
 // styles
 import { varFade } from '../../../components/animate';
 // constants
@@ -30,6 +31,7 @@ export default function TicketDashboard() {
   const [totalStatuses, setTotalStatuses] = useState(0);
   const [totalStatusTypes, setTotalStatusTypes] = useState(0);
   const [totalMachines, setTotalMachines] = useState(0);
+  const [ticketBarChartData, setTicketBarChartData] = useState({ series: [], labels: [] });
 
   useEffect(() => {
     if (tickets && tickets.data && tickets.data.length > 0) {
@@ -127,12 +129,41 @@ export default function TicketDashboard() {
 
       setMachineData(formatData(machineCounts, machineColors));
       setTotalMachines(Object.values(machineCounts).reduce((acc, val) => acc + val, 0));
+
+      const dateCounts = {};
+      tickets.data.forEach((ticket) => {
+        const createdDate = new Date(ticket?.createdAt).toISOString().split('T')[0];
+        const resolved = ticket?.status?.statusType?.isResolved;
+        const resolvedDate = resolved && ticket?.updatedAt ? new Date(ticket?.updatedAt).toISOString().split('T')[0] : null;
+
+        if (!dateCounts[createdDate]) {
+          dateCounts[createdDate] = { created: 0, resolved: 0 };
+        }
+        dateCounts[createdDate].created += 1; 
+        
+        if (resolved && resolvedDate) {
+          if (!dateCounts[resolvedDate]) {
+            dateCounts[resolvedDate] = { created: 0, resolved: 0 };
+          }
+          dateCounts[resolvedDate].resolved += 1; 
+        }
+      });
+
+      const sortedDates = Object.keys(dateCounts).sort();
+      const barChartSeries = [
+        { name: 'Created', data: sortedDates.map((date) => dateCounts[date].created) },
+        { name: 'Resolved', data: sortedDates.map((date) => dateCounts[date].resolved) },
+      ];
+      const barChartLabels = sortedDates;
+
+      setTicketBarChartData({ series: barChartSeries, labels: barChartLabels });
     } else {
       setIssueTypeData({ series: [], labels: [], colors: [] });
       setRequestTypeData({ series: [], labels: [], colors: [] });
       setStatusData({ series: [], labels: [], colors: [] });
       setStatusTypeData({ series: [], labels: [], colors: [] });
       setMachineData({ series: [], labels: [], colors: [] });
+      setTicketBarChartData({ series: [], labels: [] });
       setTotalIssueTypes(0);
       setTotalRequestTypes(0);
       setTotalStatuses(0);
@@ -166,6 +197,11 @@ export default function TicketDashboard() {
           <Grid item xs={12} sm={12} md={12} lg={12} xl={6}>
             <StyledGlobalCard sx={{ pt: 2 }} variants={varFade().inDown}>
               <PieChart chartData={requestTypeData} totalIssues={totalRequestTypes} title="Request Type" />
+            </StyledGlobalCard>
+          </Grid>
+          <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
+            <StyledGlobalCard sx={{ pt: 2 }} variants={varFade().inDown}>
+              <BarChart chartData={ticketBarChartData} title="Tickets Created vs Resolved" />
             </StyledGlobalCard>
           </Grid>
           {/* <Grid item xs={12} sm={12} md={12} lg={12} xl={6}>
