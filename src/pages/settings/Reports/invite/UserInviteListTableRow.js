@@ -25,12 +25,12 @@ export default function UserInviteListTableRow({
 }) {
   const smScreen = useScreenSize('sm')
   return (
-      <StyledTableRow hover selected={selected}>
-        <LinkTableCell align="left" param={`${row?.name} (${row?.receiverInvitationEmail || row?.email || ''})`} onClick={onViewRow} />
-        { smScreen && <TableCell>{row?.senderInvitationUser?.name}</TableCell>}
-        <TableCell>{row.invitationStatus}</TableCell>
-        <TableCell>{fDateTime(row.inviteExpireTime)}</TableCell>
-        { smScreen && <TableCell>{fDate(row.createdAt)}</TableCell>}
-      </StyledTableRow>
+    <StyledTableRow hover selected={selected}>
+      <LinkTableCell align="left" param={`${row?.name || ""} (${row?.receiverInvitationEmail || row?.email || ''})`} onClick={onViewRow} />
+      {smScreen && <TableCell>{row?.senderInvitationUser?.name || ""}</TableCell>}
+      <TableCell>{row?.invitationStatus || ""}</TableCell>
+      <TableCell>{fDateTime(row?.inviteExpireTime)}</TableCell>
+      {smScreen && <TableCell>{fDate(row?.createdAt)}</TableCell>}
+    </StyledTableRow>
   );
 }
