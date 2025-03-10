@@ -176,3 +176,20 @@ export function getUserInvite(Id) {
     }
   };
 }
+
+// ----------------------------------------------------------------------
+
+export function cancelUserInvite(Id) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.patch(`${CONFIG.SERVER_URL}security/invites/${Id}`, {status: 'CANCELLED'});
+      dispatch(slice.actions.stopLoading());
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
