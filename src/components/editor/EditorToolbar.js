@@ -12,14 +12,14 @@ export const formats = [
   'blockquote',
   'bold',
   'bullet',
-  'code',
-  'code-block',
+  // 'code',
+  // 'code-block',
   'color',
   'direction',
   'font',
   'formula',
   'header',
-  'image',
+  // 'image',
   'indent',
   'italic',
   'link',
@@ -29,7 +29,7 @@ export const formats = [
   'strike',
   'table',
   'underline',
-  'video',
+  // 'video',
 ];
 
 EditorToolbar.propTypes = {
@@ -44,7 +44,7 @@ export default function EditorToolbar({ id, isSimple, ...other }) {
         <div className="ql-formats">
           <select className="ql-header" defaultValue="">
             {HEADINGS.map((heading, index) => (
-              <option key={heading} value={index + 1}>
+              <option key={heading} value={index + 1} >
                 {heading}
               </option>
             ))}
@@ -82,7 +82,7 @@ export default function EditorToolbar({ id, isSimple, ...other }) {
 
         {!isSimple && (
           <div className="ql-formats">
-            <button type="button" className="ql-code-block" />
+            {/* <button type="button" className="ql-code-block" /> */}
             <button type="button" className="ql-blockquote" />
           </div>
         )}
@@ -94,14 +94,14 @@ export default function EditorToolbar({ id, isSimple, ...other }) {
 
         <div className="ql-formats">
           <button type="button" className="ql-link" />
-          <button type="button" className="ql-image" />
-          <button type="button" className="ql-video" />
+          {/* <button type="button" className="ql-image" />
+          <button type="button" className="ql-video" /> */}
         </div>
 
-        <div className="ql-formats">
+        {/* <div className="ql-formats">
           {!isSimple && <button type="button" className="ql-formula" />}
           <button type="button" className="ql-clean" />
-        </div>
+        </div> */}
       </div>
     </StyledEditorToolbar>
   );

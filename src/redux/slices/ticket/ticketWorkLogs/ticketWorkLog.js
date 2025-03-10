@@ -165,11 +165,11 @@ export function getWorkLogs({id}) {
   };
 }
 
-export function addWorkLog( id, timeSpent, notes ) {
+export function addWorkLog( id, timeSpent, workDate, notes ) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const data = { timeSpent, notes };  
+      const data = { timeSpent, workDate, notes };  
       const response = await axios.post(`${CONFIG.SERVER_URL}tickets/${id}/workLogs/`, data);
       dispatch(slice.actions.addWorkLogsSuccess([response.data.workLogsList]));
     } catch (error) {
@@ -186,6 +186,7 @@ export function updateWorkLog(id, workLogId, params) {
     try {
       const data = {
         timeSpent: params.timeSpent,
+        workDate: params.workDate,
         notes: params.notes,
       };
       const response = await axios.patch(

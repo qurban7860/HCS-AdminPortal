@@ -1,21 +1,7 @@
-/* eslint-disable import/no-extraneous-dependencies */
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
-import {
-  Paper,
-  Button,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  Divider,
-  Box,
-  Stack,
-  Typography,
-  TextField,
-} from '@mui/material';
 import * as Yup from 'yup';
+import { Paper, Button, List, ListItem, ListItemAvatar, ListItemText, Divider, Box, Stack, Typography, TextField } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import dayjs from 'dayjs';
@@ -31,6 +17,7 @@ import { CustomAvatar } from '../../../components/custom-avatar';
 import { getNotes, addNote, updateNote, deleteNote, resetNotes } from '../../../redux/slices/products/machineNote';
 import ConfirmDialog from '../../../components/confirm-dialog';
 import { getActiveSPContacts } from '../../../redux/slices/customer/contact';
+import { fDateTime } from '../../../utils/formatTime';
 
 dayjs.extend(relativeTime);
 
@@ -52,7 +39,7 @@ const MachineNotes = () => {
   const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
 
-  const { user:currentUser, userId } = useAuthContext();
+  const { user: currentUser } = useAuthContext();
 
   const { error, notes, isLoading } = useSelector((state) => state.machineNote);
   const { activeSpContacts } = useSelector((state) => state.contact);
@@ -139,168 +126,168 @@ const MachineNotes = () => {
   return (
     <>
       <Paper sx={{ width: '100%', p: 2 }}>
-          <>
-            <FormLabel content={FORMLABELS.NOTES.HEADER} />
-            <Box sx={{ py: 4 }}>
-              <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-                <Stack direction="row" spacing={2}>
-                  <CustomAvatar
-                    src={currentUser?.photoURL}
-                    alt={currentUser?.displayName}
-                    name={currentUser?.displayName}
+        <>
+          <FormLabel content={FORMLABELS.NOTES.HEADER} />
+          <Box sx={{ py: 4 }}>
+            <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+              <Stack direction="row" spacing={2}>
+                <CustomAvatar
+                  src={currentUser?.photoURL}
+                  alt={currentUser?.displayName}
+                  name={currentUser?.displayName}
+                />
+                <Stack sx={{ width: '100%' }}>
+                  <RHFTextField
+                    name="note"
+                    placeholder="Add a note..."
+                    multiline
+                    rows={2}
+                    inputProps={{ maxLength: 2000 }}
+                    helperText={`${noteValue?.length || 0}/2000 characters`}
+                    FormHelperTextProps={{ sx: { textAlign: 'right' } }}
                   />
-                  <Stack sx={{ width: '100%' }}>
-                    <RHFTextField
-                      name="note"
-                      placeholder="Add a note..."
-                      multiline
-                      rows={2}
-                      inputProps={{ maxLength: 2000 }}
-                      helperText={`${noteValue?.length || 0}/2000 characters`}
-                      FormHelperTextProps={{ sx: { textAlign: 'right' } }}
-                    />
-                    {!!noteValue?.trim() && (
-                      <Stack spacing={1} direction="row" sx={{mt: 2}}>
-                        <LoadingButton
-                          type="submit"
-                          disabled={isLoading}
-                          loading={isSubmitting}
-                          variant="contained"
-                          color="primary"
-                          size="small"
-                          sx={{ width: 'fit-content' }}
-                        >
-                          Save
-                        </LoadingButton>
-                        <Button
-                          type="button"
-                          variant="text"
-                          size="small"
-                          sx={{ width: 'fit-content' }}
-                          onClick={() => reset()}
-                        >
-                          Cancel
-                        </Button>
-                      </Stack>
-                    )}
-                  </Stack>
+                  {!!noteValue?.trim() && (
+                    <Stack spacing={1} direction="row" sx={{ mt: -2 }}>
+                      <LoadingButton
+                        type="submit"
+                        disabled={isLoading}
+                        loading={isSubmitting}
+                        variant="contained"
+                        color="primary"
+                        size="small"
+                        sx={{ width: 'fit-content' }}
+                      >
+                        Save
+                      </LoadingButton>
+                      <Button
+                        type="button"
+                        variant="text"
+                        size="small"
+                        sx={{ width: 'fit-content' }}
+                        onClick={() => reset()}
+                      >
+                        Cancel
+                      </Button>
+                    </Stack>
+                  )}
                 </Stack>
-              </FormProvider>
+              </Stack>
+            </FormProvider>
 
-              <List sx={{ width: '100%', bgcolor: 'background.paper', maxHeight: 500, overflow: 'auto', mt: 1.5 }}>
+            <List sx={{ width: '100%', bgcolor: 'background.paper', maxHeight: 500, overflow: 'auto', mt: 1.5 }}>
               {(Array.isArray(notes) ? notes : []).map((item, index) => (
-                  <React.Fragment key={item._id || index}>
-                    {index > 0 && <Divider component="li" />}
-                    <ListItem alignItems="flex-start" sx={{ padding: '8px 0' }}>
-                      <ListItemAvatar>
-                        <CustomAvatar alt={item?.createdBy?.name} name={item?.createdBy?.name} />
-                      </ListItemAvatar>
-                      <ListItemText
-                        primary={
-                          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                            <Typography variant="subtitle2" sx={{ mr: 1 }}>
-                              {item?.createdBy?.name}
-                            </Typography>
-                            <Typography
-                              sx={{ color: 'text.secondary', fontSize: '0.875rem' }}
-                              title={dayjs(item.createdAt).format('MMMM D, YYYY [at] h:mm A')}
-                            >
-                              {dayjs().diff(dayjs(item.createdAt), 'day') < 1
-                                ? dayjs(item.createdAt).fromNow()
-                                : dayjs(item.createdAt).format('MMMM D, YYYY [at] h:mm A')}
-                            </Typography>
-                          </Box>
-                        }
-                        secondary={
-                          <Box>
-                            {editingNoteId === item._id ? (
-                              <Stack spacing={2}>
-                                <TextField
-                                  fullWidth
-                                  multiline
-                                  rows={2}
-                                  value={editValue}
-                                  onChange={(e) => setEditValue(e.target.value)}
-                                  inputProps={{ maxLength: 2000 }}
-                                  helperText={`${editValue.length}/2000 characters`}
-                                  FormHelperTextProps={{ sx: { textAlign: 'right' } }}
-                                />
-                                {/* <Stack display="flex" alignItems="start" sx={{ position: 'absolute', transform: 'translateY(185%)' }}>
+                <React.Fragment key={item._id || index}>
+                  {index > 0 && <Divider component="li" />}
+                  <ListItem alignItems="flex-start" sx={{ padding: '8px 0' }}>
+                    <ListItemAvatar>
+                      <CustomAvatar alt={item?.createdBy?.name} name={item?.createdBy?.name} />
+                    </ListItemAvatar>
+                    <ListItemText
+                      primary={
+                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                          <Typography variant="subtitle2" sx={{ mr: 1 }}>
+                            {item?.createdBy?.name}
+                          </Typography>
+                          <Typography
+                            sx={{ color: 'text.secondary', fontSize: '0.875rem' }}
+                            title={dayjs(item.createdAt).format('MMMM D, YYYY [at] h:mm A')}
+                          >
+                            {dayjs().diff(dayjs(item.updatedAt), 'day') < 1
+                              ? dayjs(item.createdAt).fromNow()
+                              : dayjs(item.createdAt).format('MMMM D, YYYY [at] h:mm A')}
+                          </Typography>
+                        </Box>
+                      }
+                      secondary={
+                        <Box>
+                          {editingNoteId === item._id ? (
+                            <Stack >
+                              <TextField
+                                fullWidth
+                                multiline
+                                rows={2}
+                                value={editValue}
+                                onChange={(e) => setEditValue(e.target.value)}
+                                inputProps={{ maxLength: 2000 }}
+                                helperText={`${editValue.length}/2000 characters`}
+                                FormHelperTextProps={{ sx: { textAlign: 'right' } }}
+                              />
+                              {/* <Stack display="flex" alignItems="start" sx={{ position: 'absolute', transform: 'translateY(185%)' }}>
                                   <Switch
                                     label="Internal"
                                     checked={editIsInternal}
                                     onChange={() => setEditIsInternal(!editIsInternal)}
                                   />
                                 </Stack> */}
-                                <Stack direction="row" spacing={1}>
-                                  <LoadingButton
-                                    onClick={() => handleSaveEdit(item._id)}
-                                    disabled={!editValue.trim()}
-                                    loading={isLoading}
-                                    variant="contained"
-                                    color="primary"
-                                    size="small"
-                                    sx={{ width: 'fit-content' }}
-                                  >
-                                    Update
-                                  </LoadingButton>
+                              <Stack direction="row" spacing={1} sx={{ mt: -2 }} >
+                                <LoadingButton
+                                  onClick={() => handleSaveEdit(item._id)}
+                                  disabled={!editValue.trim()}
+                                  loading={isLoading}
+                                  variant="contained"
+                                  color="primary"
+                                  size="small"
+                                  sx={{ width: 'fit-content' }}
+                                >
+                                  Update
+                                </LoadingButton>
+                                <Button
+                                  variant="text"
+                                  size="small"
+                                  sx={{ width: 'fit-content' }}
+                                  onClick={handleCancelEdit}
+                                >
+                                  Cancel
+                                </Button>
+                              </Stack>
+                            </Stack>
+                          ) : (
+                            <>
+                              <Typography component="span" variant="body2" color="text.primary">
+                                {item.note}
+                                {item?.isInternal && (
+                                  <Typography component="span" variant="caption" sx={{ color: 'text.secondary', ml: 1 }}>
+                                    (Internal)
+                                  </Typography>
+                                )}
+                                {item.updatedAt !== item.createdAt && item.createdBy?._id !== item.updatedBy?._id && (
+                                  <Typography component="span" variant="caption" sx={{ color: 'text.secondary', ml: 2, fontStyle: 'italic' }}>
+                                    (edited at {fDateTime(item.updatedAt)} by <b>{item?.updatedBy?.name || ""}</b>)
+                                  </Typography>
+                                )}
+                              </Typography>
+                              {(item?.updatedBy?._id === currentUser?.userId || activeSpContacts.some((contact) => contact._id === currentUser?.contact)) && (
+                                <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
                                   <Button
-                                    variant="text"
                                     size="small"
-                                    sx={{ width: 'fit-content' }}
-                                    onClick={handleCancelEdit}
+                                    color="primary"
+                                    onClick={() => handleEditClick(item)}
+                                    sx={{ minWidth: 'unset', px: 1 }}
                                   >
-                                    Cancel
+                                    Edit
+                                  </Button>
+                                  <Button
+                                    size="small"
+                                    color="error"
+                                    onClick={() => handleDeleteClick(item)}
+                                    sx={{ minWidth: 'unset', px: 1 }}
+                                  >
+                                    Delete
                                   </Button>
                                 </Stack>
-                              </Stack>
-                            ) : (
-                              <>
-                                <Typography component="span" variant="body2" color="text.primary">
-                                  {item.note}
-                                  {item.isInternal && (
-                                    <Typography component="span" variant="caption" sx={{ color: 'text.secondary', ml: 1 }}>
-                                      (Internal)
-                                    </Typography>
-                                  )}
-                                  {item.updatedAt !== item.createdAt && (
-                                    <Typography component="span" variant="caption" sx={{ color: 'text.secondary', ml: 1 }}>
-                                      (edited)
-                                    </Typography>
-                                  )}
-                                </Typography>
-                                {(item?.createdBy?._id === currentUser?.userId || activeSpContacts.some((contact) => contact._id === currentUser?.contact)) && (
-                                  <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
-                                    <Button
-                                      size="small"
-                                      color="primary"
-                                      onClick={() => handleEditClick(item)}
-                                      sx={{ minWidth: 'unset', px: 1 }}
-                                    >
-                                      Edit
-                                    </Button>
-                                    <Button
-                                      size="small"
-                                      color="error"
-                                      onClick={() => handleDeleteClick(item)}
-                                      sx={{ minWidth: 'unset', px: 1 }}
-                                    >
-                                      Delete
-                                    </Button>
-                                  </Stack>
-                                )}
-                              </>
-                            )}
-                          </Box>
-                        }
-                      />
-                    </ListItem>
-                  </React.Fragment>
-                ))}
-              </List>
-            </Box>
-          </>
-      </Paper>
+                              )}
+                            </>
+                          )}
+                        </Box>
+                      }
+                    />
+                  </ListItem>
+                </React.Fragment>
+              ))}
+            </List>
+          </Box>
+        </>
+      </Paper >
       <ConfirmDialog
         open={openConfirmDelete}
         onClose={() => {

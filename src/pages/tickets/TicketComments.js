@@ -340,7 +340,7 @@ const TicketComments = ({ currentUser }) => {
         </>
       )}
       {activeTab === 'History' && <TicketHistory />} 
-      {activeTab === 'Work Logs' && ( <TicketWorkLogs currentUser={{ ...user, userId }} />)}
+      {activeTab === 'Work Logs' && ( <TicketWorkLogs />)}
       </Paper>
       <ConfirmDialog
         open={openConfirmDelete}

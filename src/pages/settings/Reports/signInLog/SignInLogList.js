@@ -1,14 +1,11 @@
-import { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import { useState, useEffect, useMemo, useLayoutEffect, useRef, useCallback } from 'react';
 import debounce from 'lodash/debounce';
 // @mui
-import {
-  Table,
-  TableBody,
-  Container,
-  TableContainer,
-} from '@mui/material';
+import { Card, Box, Stack, MenuItem, Table, TableBody, Container, TableContainer } from '@mui/material';
 // redux
 import { useNavigate } from 'react-router';
+import { FormProvider, useForm } from 'react-hook-form';
+import { LoadingButton } from '@mui/lab';
 import { useDispatch, useSelector } from '../../../../redux/store';
 // routes
 import {
@@ -21,27 +18,27 @@ import {
 } from '../../../../components/table';
 import Scrollbar from '../../../../components/scrollbar';
 // sections
-import RoleListTableToolbar from './SignInLogListTableToolbar';
-import RoleListTableRow from './SignInLogListTableRow';
+import SignInLogListTableRow from './SignInLogListTableRow';
 import {
   getSignInLogs,
+  resetSignInLogsSuccess,
   ChangeRowsPerPage,
   ChangePage,
   setFilterBy,
 } from '../../../../redux/slices/securityUser/securityUser';
 import { Cover } from '../../../../components/Defaults/Cover';
-import { fDateTime } from '../../../../utils/formatTime';
 import TableCard from '../../../../components/ListTableTools/TableCard';
 import { PATH_SETTING } from '../../../../routes/paths';
 import { StyledCardContainer } from '../../../../theme/styles/default-styles';
+import RHFFilteredSearchBar from '../../../../components/hook-form/RHFFilteredSearchBar';
+import { RHFDateTimePicker, RHFSelect } from '../../../../components/hook-form';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'requestedLogin', visibility: 'md1', label: 'Login', align: 'left' },
-  { id: 'user.name', label: 'User', align: 'left' },
-  { id: 'user.customer.name', label: 'Customer', align: 'left' },
-  // { id: 'user.contact.firstName', label: 'Contact', align: 'left' },
+  { id: 'requestedLogin', visibility: 'md1', label: 'Login', align: 'left', allowSearch: true },
+  { id: 'user.name', label: 'User', align: 'left', allowSearch: true },
+  { id: 'user.customer.name', label: 'Customer', align: 'left', allowSearch: true },
   { id: 'loginIP', visibility: 'md2', label: 'IP', align: 'left' },
   { id: 'loginTime', label: 'Login Time', align: 'left' },
   { id: 'logoutTime', label: 'Logout Time', align: 'left' },
@@ -55,7 +52,6 @@ export default function SignInLogList() {
   const {
     order,
     orderBy,
-    setPage,
     //
     onSort,
   } = useTable({
@@ -71,56 +67,53 @@ export default function SignInLogList() {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [filterRequestStatus, setFilterRequestStatus] = useState(-1);
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
-  const [filterStatus, setFilterStatus] = useState([]);
+  const [selectedSearchFilter, setSelectedSearchFilter] = useState('');
+
   const userId = localStorage.getItem('userId');
 
-  const { signInLogs, filterBy, page, rowsPerPage, isLoadingLogs, initial } = useSelector((state) => state.user);
+  const { signInLogs, filterBy, page, rowsPerPage, isLoadingLogs } = useSelector((state) => state.user);
+
+  const defaultValues = useMemo(
+    () => ({
+      filteredSearchKey: "",
+      statusCode: -1,
+      loginTime: new Date(new Date().setHours(0, 0, 0, 0))
+    }),
+    []
+  );
+
+  const methods = useForm({ defaultValues });
+  const { watch, handleSubmit } = methods;
+  const { filteredSearchKey, statusCode, loginTime } = watch();
+  const getSignInLogsList = useCallback(async () => {
+    await dispatch(getSignInLogs(userId, page, rowsPerPage, filteredSearchKey, selectedSearchFilter, statusCode, loginTime));
+  }, [dispatch, userId, page, rowsPerPage, filteredSearchKey, selectedSearchFilter, statusCode, loginTime]);
 
   useLayoutEffect(() => {
-    dispatch(getSignInLogs(userId));
-  }, [dispatch, userId]);
+    getSignInLogsList()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page, rowsPerPage]);
 
   useEffect(() => {
-    if (initial) {
-      setTableData(signInLogs);
+    if (signInLogs?.data) {
+      setTableData(signInLogs?.data || []);
     }
-  }, [signInLogs, initial]);
-
-  const reloadList = () => {
-    dispatch(getSignInLogs(userId));
-  };
+  }, [signInLogs]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(order, orderBy),
-    filterName,
-    filterStatus,
-    filterRequestStatus
   });
 
   const denseHeight = 60;
-  const isFiltered = filterName !== '' || !!filterStatus.length;
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoadingLogs && !dataFiltered.length);
 
   const debouncedSearch = useRef(debounce((value) => {
     dispatch(ChangePage(0))
     dispatch(setFilterBy(value))
   }, 500))
-
-
-  const handleFilterName = (event) => {
-    debouncedSearch.current(event.target.value);
-    setFilterName(event.target.value)
-    setPage(0);
-  };
-
-  const handleFilterRequestStatus = (event) => {
-    dispatch(ChangePage(0))
-    setFilterRequestStatus(event.target.value);
-  };
 
   useEffect(() => {
     debouncedSearch.current.cancel();
@@ -131,16 +124,6 @@ export default function SignInLogList() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const handleFilterStatus = (event) => {
-    setPage(0);
-    setFilterStatus(event.target.value);
-  };
-
-  const handleResetFilter = () => {
-    dispatch(setFilterBy(''))
-    setFilterName('');
-  };
-
   const handleViewRow = (id) => {
     navigate(PATH_SETTING.security.users.view(id));
   };
@@ -148,27 +131,79 @@ export default function SignInLogList() {
   const configurations = JSON.parse(localStorage.getItem('configurations'));
   const AUTH = configurations?.filter((config) => config.type === 'AUTH');
 
+  const handleSearch = async () => {
+    await dispatch(ChangePage(0))
+    await getSignInLogsList();
+  }
+
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
         <Cover name="Sign In Logs" icon="ph:users-light" generalSettings />
       </StyledCardContainer>
+      <FormProvider {...methods} onSubmit={handleSubmit(handleSearch)}>
+        <Card sx={{ px: 3, pt: 3, pb: 1 }} >
+          <Stack spacing={2}>
+            <Box rowGap={2} columnGap={2} display="grid"
+              gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
+            >
+              <RHFDateTimePicker
+                name="loginTime"
+                label="From Login Time"
+                value={loginTime}
+                size="small"
+              />
+              <RHFSelect
+                name="statusCode"
+                size="small"
+                label="Status"
+              >
+                <MenuItem key="-1" value={-1} >All</MenuItem>
+                <MenuItem key="200" value={200}>Success</MenuItem>
+                <MenuItem key="400" value={400} >Failed</MenuItem>
+              </RHFSelect>
+            </Box>
+            <Stack
+              direction={{ xs: 'column', sm: 'row' }}
+              spacing={2}
+              sx={{
+                justifyContent: 'space-between',
+                alignItems: 'flex-start',
+              }}
+            >
+              <Box rowGap={2} columnGap={2} display="grid" sx={{ flexGrow: 1, width: "100%" }}
+              >
+                <RHFFilteredSearchBar
+                  name="filteredSearchKey"
+                  filterOptions={TABLE_HEAD.filter((item) => item?.allowSearch)}
+                  setSelectedFilter={setSelectedSearchFilter}
+                  selectedFilter={selectedSearchFilter}
+                  placeholder="Enter Search here..."
+                  afterClearHandler={() => dispatch(resetSignInLogsSuccess)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      handleSubmit(handleSearch)();
+                    }
+                  }}
+                  fullWidth
+                />
+
+              </Box>
+              <LoadingButton
+                type="button"
+                onClick={handleSubmit(handleSearch)}
+                variant="contained"
+              >
+                Search
+              </LoadingButton>
+            </Stack>
+          </Stack>
+        </Card>
+      </FormProvider>
 
       <TableCard>
-        <RoleListTableToolbar
-          filterName={filterName}
-          filterStatus={filterStatus}
-          onFilterName={handleFilterName}
-          onFilterStatus={handleFilterStatus}
-          isFiltered={isFiltered}
-          onResetFilter={handleResetFilter}
-          buttonAction={reloadList}
-          filterRequestStatus={filterRequestStatus}
-          onFilterRequestStatus={handleFilterRequestStatus}
-          onReload={reloadList}
-        />
         {!isNotFound && <TablePaginationCustom
-          count={dataFiltered.length}
+          count={signInLogs.totalCount}
           page={page}
           rowsPerPage={rowsPerPage}
           onPageChange={onChangePage}
@@ -186,10 +221,10 @@ export default function SignInLogList() {
 
               <TableBody>
                 {(isLoadingLogs ? [...Array(rowsPerPage)] : dataFiltered)
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) =>
                     row ? (
-                      <RoleListTableRow
+                      <SignInLogListTableRow
                         key={row._id}
                         row={row}
                         status={AUTH?.find((config) => (config.name === `${row?.statusCode}`))}
@@ -208,7 +243,7 @@ export default function SignInLogList() {
         </TableContainer>
 
         {!isNotFound && <TablePaginationCustom
-          count={dataFiltered.length}
+          count={signInLogs.totalCount}
           page={page}
           rowsPerPage={rowsPerPage}
           onPageChange={onChangePage}
@@ -221,7 +256,7 @@ export default function SignInLogList() {
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName, filterStatus, filterRequestStatus }) {
+function applyFilter({ inputData, comparator }) {
   const stabilizedThis = inputData.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -230,26 +265,6 @@ function applyFilter({ inputData, comparator, filterName, filterStatus, filterRe
   });
 
   inputData = stabilizedThis.map((el) => el[0]);
-
-  if (filterRequestStatus === 200)
-    inputData = inputData.filter((log) => log.statusCode === 200);
-  else if (filterRequestStatus === 401)
-    inputData = inputData.filter((log) => log.statusCode !== 200);
-
-  if (filterName) {
-    inputData = inputData.filter(
-      (logs) =>
-        logs?.user?.name?.toLowerCase().indexOf(filterName.trim().toLowerCase()) >= 0 ||
-        logs?.user?.login?.toLowerCase().indexOf(filterName.trim().toLowerCase()) >= 0 ||
-        logs?.loginIP?.toLowerCase().indexOf(filterName.trim().toLowerCase()) >= 0 ||
-        fDateTime(logs?.loginTime)?.toLowerCase().indexOf(filterName.trim().toLowerCase()) >= 0 ||
-        fDateTime(logs?.logoutTime)?.toLowerCase().indexOf(filterName.trim().toLowerCase()) >= 0
-    );
-  }
-
-  if (filterStatus.length) {
-    inputData = inputData.filter((customer) => filterStatus.includes(customer.status));
-  }
 
   return inputData;
 }

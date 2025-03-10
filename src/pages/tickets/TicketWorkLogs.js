@@ -1,6 +1,5 @@
 // TicketWorkLogs.js
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
 import {
   Button,
@@ -21,9 +20,10 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import { useSnackbar } from 'notistack';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
+import { useAuthContext } from '../../auth/useAuthContext';
 import FormLabel from '../../components/DocumentForms/FormLabel';
 import { FORMLABELS } from '../../constants/default-constants';
-import FormProvider, { RHFTextField } from '../../components/hook-form';
+import FormProvider, { RHFTextField, RHFDatePicker } from '../../components/hook-form';
 import { CustomAvatar } from '../../components/custom-avatar';
 import {
   addWorkLog,
@@ -33,45 +33,51 @@ import {
   updateWorkLog,
 } from '../../redux/slices/ticket/ticketWorkLogs/ticketWorkLog'; 
 import ConfirmDialog from '../../components/confirm-dialog';
+import { getActiveSPContacts } from '../../redux/slices/customer/contact';
+import { fDateTime } from '../../utils/formatTime';
 
 dayjs.extend(relativeTime);
 
 const WorkLogSchema = Yup.object().shape({
-  timeSpent: Yup.string()
-    .matches(
-      /^(?:(\d+w)\s*)?(?:(\d+d)\s*)?(?:(\d+h)\s*)?(?:(\d+m)\s*)?$/,
-      'Time Spent must be in the correct format: 2w 4d 6h 45m'
-    )
+    timeSpent: Yup.string()
+    .required('Time Spent is required')
     .test(
       'isValidFormat',
       'Invalid format. Use: 2w 4d 6h 45m',
       (value) => {
-        if (!value) return false; 
+        if (!value) return true; 
         return /^(\d+w)?\s*(\d+d)?\s*(\d+h)?\s*(\d+m)?$/.test(value.trim());
       }
     )
-    .required('Time Spent is required'),
+    .matches(
+      /^(?:(\d+w)\s*)?(?:(\d+d)\s*)?(?:(\d+h)\s*)?(?:(\d+m)\s*)?$/,
+      'Time Spent must be in the correct format: 2w 4d 6h 45m'
+    ),
+    workDate: Yup.mixed().label("Work Date").nullable().notRequired(),
     notes: Yup.string().max(300, 'Notes must not exceed 300 characters'),
 });
 
-const TicketWorkLogs = ({ currentUser }) => {
+const TicketWorkLogs = () => {
   const [editingWorkLogId, setEditingWorkLogId] = useState(null);
   const [editTimeSpent, setEditTimeSpent] = useState('');
+  const [editWorkDate, setEditWorkDate] = useState(null);
   const [editNotes, setEditNotes] = useState('');
   const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
   const [workLogToDelete, setWorkLogToDelete] = useState(null);
   const { id } = useParams();
   const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
+  const { user: currentUser } = useAuthContext();
 
   const { error, workLogs, isLoading } = useSelector((state) => state.ticketWorkLogs); 
+   const { activeSpContacts } = useSelector((state) => state.contact);
 
   useEffect(() => {
     let controller;
     if (id) {
       dispatch(getWorkLogs({ id })); 
+       dispatch(getActiveSPContacts());
     }
-
     return () => {
       if (controller) {
         controller.abort();
@@ -84,16 +90,18 @@ const TicketWorkLogs = ({ currentUser }) => {
     resolver: yupResolver(WorkLogSchema),
     defaultValues: {
       timeSpent: '',
+      workDate: null,
       notes: '',
     },
   });
 
   const { reset, handleSubmit, watch, formState: { isSubmitting, errors } } = methods;
-  const timeSpentValue = watch('timeSpent')
+  const timeSpentValue = watch('timeSpent');
+  const workDateValue = watch('workDate');
   const noteValue = watch('notes'); 
   
   const onSubmit = async (data) => {
-    await dispatch(addWorkLog(id, data.timeSpent || "", data.notes || ""));
+    await dispatch(addWorkLog(id, data.timeSpent || "", data.workDate || null, data.notes || ""));
     reset();
     if (error) {
       enqueueSnackbar(error, { variant: 'error' });
@@ -104,9 +112,10 @@ const TicketWorkLogs = ({ currentUser }) => {
   };
   
   const handleSaveEdit = async (workLogId) => {
-    await dispatch(updateWorkLog(id, workLogId, { timeSpent: editTimeSpent, notes: editNotes }));
+    await dispatch(updateWorkLog(id, workLogId, { timeSpent: editTimeSpent, workDate: editWorkDate, notes: editNotes }));
     setEditingWorkLogId(null);
     setEditTimeSpent('');
+    setEditWorkDate(null);
     setEditNotes('');
     if (error) enqueueSnackbar(error, { variant: 'error' });
     else enqueueSnackbar('Work Log updated successfully', { variant: 'success' });
@@ -123,12 +132,14 @@ const TicketWorkLogs = ({ currentUser }) => {
   const handleEditClick = (workLog) => {
     setEditingWorkLogId(workLog._id);
     setEditTimeSpent(workLog.timeSpent);
+    setEditWorkDate(workLog.workDate);
     setEditNotes(workLog.notes);
   };
 
   const handleCancelEdit = () => {
     setEditingWorkLogId(null);
     setEditTimeSpent('');
+    setEditWorkDate(null);
     setEditNotes('');
   };
 
@@ -141,7 +152,7 @@ const TicketWorkLogs = ({ currentUser }) => {
     <>
         <FormLabel content={FORMLABELS.COVER.TICKET_WORKLOG} /> 
         <Box sx={{ py: 2 }}>
-        {workLogs.length === 0 ? (
+        {/* {workLogs.length === 0 ? ( */}
           <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
             <Stack direction="row" spacing={2}>
               <CustomAvatar
@@ -150,6 +161,12 @@ const TicketWorkLogs = ({ currentUser }) => {
                 name={currentUser?.displayName}
               />
               <Stack sx={{ width: '100%' }}>
+              <Box
+                rowGap={2}
+                columnGap={2}
+                display="grid"
+                gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
+              >
                 <RHFTextField
                   name="timeSpent"
                   label="Time Spent" 
@@ -157,6 +174,8 @@ const TicketWorkLogs = ({ currentUser }) => {
                   helperText={errors.timeSpent?.message || "Use the format: 2w 4d 6h 45m (weeks, days, hours, minutes)"}
                   sx={{ mb: 1 }} 
                 />
+                <RHFDatePicker label="Work Date" name="workDate" sx={{mb:1}} />
+              </Box>
                 <RHFTextField
                   name="notes"
                   label="Notes" 
@@ -166,7 +185,7 @@ const TicketWorkLogs = ({ currentUser }) => {
                   helperText={`${noteValue?.length || 0}/300 characters`}
                   FormHelperTextProps={{ sx: { textAlign: 'right' } }}
                 />
-                {(timeSpentValue || noteValue) && (
+                {(timeSpentValue || workDateValue || noteValue) && (
                   <Stack spacing={1} direction="row" >
                     <LoadingButton
                       type="submit"
@@ -192,9 +211,9 @@ const TicketWorkLogs = ({ currentUser }) => {
               </Stack>
             </Stack>
           </FormProvider>
-          ) : (
-          <List sx={{ width: '100%', bgcolor: 'background.paper', maxHeight: 300, overflow: 'auto', mt: -2 }}>
-            {workLogs.map((item, index) => ( 
+          {/* ) : ( */}
+          <List sx={{ width: '100%', bgcolor: 'background.paper', maxHeight: 300, overflow: 'auto'}}>
+            {(Array.isArray(workLogs) ? workLogs : []).map((item, index) => ( 
               <React.Fragment key={index}>
                 {index > 0 && <Divider component="li" />}
                 <ListItem alignItems="flex-start" sx={{ padding: '8px 0' }}>
@@ -214,7 +233,7 @@ const TicketWorkLogs = ({ currentUser }) => {
                           sx={{ color: 'text.secondary', fontSize: '0.875rem' }}
                           title={dayjs(item.createdAt).format('MMMM D, YYYY [at] h:mm A')}
                         >
-                          {dayjs().diff(dayjs(item.createdAt), 'day') < 1
+                          {dayjs().diff(dayjs(item.updatedAt), 'day') < 1
                             ? dayjs(item.createdAt).fromNow()
                             : dayjs(item.createdAt).format('MMMM D, YYYY [at] h:mm A')}
                         </Typography>
@@ -225,6 +244,12 @@ const TicketWorkLogs = ({ currentUser }) => {
                         {editingWorkLogId === item._id ? (
                           <FormProvider methods={methods} key={item._id}>
                             <Stack spacing={2}>
+                            <Box
+                             rowGap={2}
+                             columnGap={2}
+                             display="grid"
+                             gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
+                            >
                               <RHFTextField
                                 name="timeSpent"
                                 label="Time Spent"
@@ -234,6 +259,14 @@ const TicketWorkLogs = ({ currentUser }) => {
                                 helperText={!/^(?:(\d+w)\s*)?(?:(\d+d)\s*)?(?:(\d+h)\s*)?(?:(\d+m)\s*)?$/.test(editTimeSpent.trim()) ? "Invalid format. Use: 2w 4d 6h 45m" : "" || "Use the format: 2w 4d 6h 45m (weeks, days, hours, minutes)"}
                                 sx={{ mb: 1 }}
                               />
+                          <RHFDatePicker
+                            label="Work Date"
+                            name="workDate"
+                            value={editWorkDate}
+                            onChange={(newValue) => setEditWorkDate(newValue)}
+                            sx={{ mb: 1 }}
+                          />
+                          </Box>
                           <RHFTextField
                             name="notes"
                             label="Notes"
@@ -272,19 +305,21 @@ const TicketWorkLogs = ({ currentUser }) => {
                       </FormProvider>
                     ) : (
                       <>
+                        {item.workDate && (
+                          <Typography component="span" variant="body2" color="text.primary">
+                            <strong>Work Date:</strong> {dayjs(item.workDate).format("DD/MM/YYYY")}
+                          </Typography>
+                        )}
                         <Typography component="span" variant="body2" color="text.primary">
-                          {item.notes} 
-                          {item.updatedAt !== item.createdAt && (
-                            <Typography
-                              component="span"
-                              variant="caption"
-                              sx={{ color: 'text.secondary', ml: 1 }}
-                            >
-                              (edited)
+                          <br/>
+                          <strong>Notes:</strong> {item.notes} 
+                          {item.updatedAt !== item.createdAt && item.createdBy?._id !== item.updatedBy?._id && (
+                            <Typography component="span" variant="caption" sx={{ color: 'text.secondary', ml: 2, fontStyle: 'italic' }}>
+                              (edited at {fDateTime(item.updatedAt)} by <b>{item?.updatedBy?.name || ""}</b>)
                             </Typography>
                           )}
                         </Typography>
-                        {item?.createdBy?._id === currentUser?.userId && (
+                        {(item?.updatedBy?._id === currentUser?.userId || activeSpContacts.some((contact) => contact._id === currentUser?.contact)) && (
                           <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
                             <Button
                               size="small"
@@ -313,7 +348,7 @@ const TicketWorkLogs = ({ currentUser }) => {
           </React.Fragment>
         ))}
        </List>
-      )}
+      {/* )} */}
       </Box>
         <ConfirmDialog
          open={openConfirmDelete}
@@ -327,10 +362,6 @@ const TicketWorkLogs = ({ currentUser }) => {
        />
     </>
   );
-};
-
-TicketWorkLogs.propTypes = {
-  currentUser: PropTypes.object.isRequired,
 };
 
 export default TicketWorkLogs;
