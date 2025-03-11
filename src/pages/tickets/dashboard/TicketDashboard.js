@@ -25,12 +25,10 @@ export default function TicketDashboard() {
   const [requestTypeData, setRequestTypeData] = useState({ series: [], labels: [], colors: [] });
   const [statusData, setStatusData] = useState({ series: [], labels: [], colors: [] });
   const [statusTypeData, setStatusTypeData] = useState({ series: [], labels: [], colors: [] });
-  const [machineData, setMachineData] = useState({ series: [], labels: [], colors: [] });
   const [totalIssueTypes, setTotalIssueTypes] = useState(0);
   const [totalRequestTypes, setTotalRequestTypes] = useState(0);
   const [totalStatuses, setTotalStatuses] = useState(0);
   const [totalStatusTypes, setTotalStatusTypes] = useState(0);
-  const [totalMachines, setTotalMachines] = useState(0);
   const [ticketBarChartData, setTicketBarChartData] = useState({ series: [], labels: [] });
 
   useEffect(() => {
@@ -43,8 +41,6 @@ export default function TicketDashboard() {
       const statusColors = {};
       const statusTypeCounts = {}; 
       const statusTypeColors = {};
-      const machineCounts = {};
-      const machineColors = {};
       let emptyRequestTypeCount = 0;
       let emptyStatusCount = 0;
       let emptyStatusTypeCount = 0;
@@ -58,9 +54,7 @@ export default function TicketDashboard() {
         const statusColor = ticket.status?.color || 'gray';
         const statusTypeKey = ticket.status?.statusType?.name;
         const statusTypeColor = ticket.status?.statusType?.color || 'gray';
-        const machineKey = ticket.machine?.serialNo;
-        const machineColor = ticket.machine?.color || 'gray'; 
-
+  
         if (issueKey) {
           typeCounts[issueKey] = (typeCounts[issueKey] || 0) + 1;
           typeColors[issueKey] = issueColor;
@@ -82,10 +76,6 @@ export default function TicketDashboard() {
           statusTypeColors[statusTypeKey] = statusTypeColor;
         } else {
           emptyStatusTypeCount += 1;
-        }
-        if (machineKey) {
-          machineCounts[machineKey] = (machineCounts[machineKey] || 0) + 1;
-          machineColors[machineKey] = machineColor;
         }
       });
       
@@ -127,9 +117,6 @@ export default function TicketDashboard() {
       setStatusTypeData(formatData(statusTypeCounts, statusTypeColors));
       setTotalStatusTypes(Object.values(statusTypeCounts).reduce((acc, val) => acc + val, 0));
 
-      setMachineData(formatData(machineCounts, machineColors));
-      setTotalMachines(Object.values(machineCounts).reduce((acc, val) => acc + val, 0));
-
       const dateCounts = {};
       tickets.data.forEach((ticket) => {
         const createdDate = new Date(ticket?.createdAt).toISOString().split('T')[0];
@@ -154,21 +141,24 @@ export default function TicketDashboard() {
         { name: 'Created', data: sortedDates.map((date) => dateCounts[date].created) },
         { name: 'Resolved', data: sortedDates.map((date) => dateCounts[date].resolved) },
       ];
-      const barChartLabels = sortedDates;
 
+      const barChartLabels = sortedDates.map((dateString) => {
+        const date = new Date(dateString);
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0'); 
+        return `${day}-${month}`;
+      });
       setTicketBarChartData({ series: barChartSeries, labels: barChartLabels });
     } else {
       setIssueTypeData({ series: [], labels: [], colors: [] });
       setRequestTypeData({ series: [], labels: [], colors: [] });
       setStatusData({ series: [], labels: [], colors: [] });
       setStatusTypeData({ series: [], labels: [], colors: [] });
-      setMachineData({ series: [], labels: [], colors: [] });
       setTicketBarChartData({ series: [], labels: [] });
       setTotalIssueTypes(0);
       setTotalRequestTypes(0);
       setTotalStatuses(0);
       setTotalStatusTypes(0);
-      setTotalMachines(0);
     }
   }, [tickets]);
 
@@ -184,11 +174,21 @@ export default function TicketDashboard() {
               <PieChart chartData={issueTypeData} totalIssues={totalIssueTypes} title="Issue Type" />
             </StyledGlobalCard>
           </Grid>
+          {/* <Grid item xs={12} sm={12} md={12} lg={12} xl={6}>
+            <StyledGlobalCard sx={{ pt: 2 }} variants={varFade().inDown}>
+              <PieChart chartData={issueTypeData} totalIssues={totalIssueTypes} title="Issue Type" />
+            </StyledGlobalCard>
+          </Grid> */}
           <Grid item xs={12} sm={12} md={12} lg={12} xl={6}>
             <StyledGlobalCard sx={{ pt: 2 }} variants={varFade().inDown}>
-              <PieChart chartData={statusData} totalIssues={totalStatuses} title="Status" />
+              <PieChart chartData={requestTypeData} totalIssues={totalRequestTypes} title="Request Type" />
             </StyledGlobalCard>
           </Grid>
+          {/* <Grid item xs={12} sm={12} md={12} lg={12} xl={6}>
+            <StyledGlobalCard sx={{ pt: 2 }} variants={varFade().inDown}>
+              <PieChart chartData={requestTypeData} totalIssues={totalRequestTypes} title="Request Type" />
+            </StyledGlobalCard>
+          </Grid> */}
           <Grid item xs={12} sm={12} md={12} lg={12} xl={6}>
             <StyledGlobalCard sx={{ pt: 2 }} variants={varFade().inDown}>
               <PieChart chartData={statusTypeData} totalIssues={totalStatusTypes} title="Status Type" />
@@ -196,7 +196,7 @@ export default function TicketDashboard() {
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12} xl={6}>
             <StyledGlobalCard sx={{ pt: 2 }} variants={varFade().inDown}>
-              <PieChart chartData={requestTypeData} totalIssues={totalRequestTypes} title="Request Type" />
+              <PieChart chartData={statusData} totalIssues={totalStatuses} title="Status" />
             </StyledGlobalCard>
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
@@ -204,11 +204,6 @@ export default function TicketDashboard() {
               <BarChart chartData={ticketBarChartData} title="Tickets Created vs Resolved" />
             </StyledGlobalCard>
           </Grid>
-          {/* <Grid item xs={12} sm={12} md={12} lg={12} xl={6}>
-            <StyledGlobalCard sx={{ pt: 2 }} variants={varFade().inDown}>
-              <PieChart chartData={machineData} totalIssues={totalMachines} title="Machine" />
-            </StyledGlobalCard>
-          </Grid> */}
         </Grid>
       </Grid>
     </StyledContainer>

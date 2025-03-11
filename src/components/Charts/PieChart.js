@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import ReactApexChart from 'react-apexcharts';
-import { Box, Typography, Grid, Divider } from '@mui/material';
+import { Box, Typography, Grid, Divider, Select, MenuItem, FormControl, InputLabel} from '@mui/material';
 import { useChart } from '../chart';
 
-const PieChart = ({ chartData, totalIssues, title }) => {
+const PieChart = ({ chartData, totalIssues, title, onPeriodChange }) => {
+  const [period, setPeriod] = useState('All');
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const getTotalIssues = () => hoveredIndex !== null ? chartData.series[hoveredIndex] : totalIssues;
 
@@ -47,12 +48,37 @@ const PieChart = ({ chartData, totalIssues, title }) => {
       : chartData.colors, 
     },
   });
+  
+  const handlePeriodChange = (event) => {
+    const newPeriod = event.target.value;
+    setPeriod(newPeriod);
+    if (onPeriodChange) {
+      onPeriodChange(newPeriod);
+    }
+  };
 
   return (
     <Grid container>
       <Typography variant="h4" sx={{ mb: 2, fontWeight: 'bold' }}>
        Support Tickets
       </Typography>
+      {/* <Grid item xs={12} sx={{display: 'flex', justifyContent: 'flex-end'}}>
+            <FormControl sx={{ m: 1, mt: -4, minWidth: 120 }} size="small">
+              <InputLabel id="period-select-label">Period</InputLabel>
+              <Select
+                labelId="period-select-label"
+                id="period-select"
+                value={period}
+                label="Period"
+                onChange={handlePeriodChange}
+              >
+                <MenuItem value="All">All</MenuItem>
+                <MenuItem value="Daily">Daily</MenuItem>
+                <MenuItem value="Monthly">Monthly</MenuItem>
+                <MenuItem value="Yearly">Yearly</MenuItem>
+              </Select>
+            </FormControl>
+      </Grid> */}
       <Grid container spacing={2}>
         <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
           <Box sx={{ mt: -1, mb: 2, textAlign: 'center' }}>
@@ -97,9 +123,11 @@ const PieChart = ({ chartData, totalIssues, title }) => {
                     {label}
                   </Typography>
                 </Box>
+                <Box sx={{mr: 1}}>
                 <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
                   {chartData.series[index]}
                 </Typography>
+                </Box>
               </Box>
             ))}
           </Box>
@@ -121,6 +149,7 @@ PieChart.propTypes = {
   }).isRequired,
   totalIssues: PropTypes.number.isRequired,
   title: PropTypes.string.isRequired,
+  onPeriodChange: PropTypes.func,
 };
 
 export default PieChart;

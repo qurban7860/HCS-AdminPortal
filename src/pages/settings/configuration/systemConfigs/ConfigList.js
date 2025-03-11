@@ -140,7 +140,7 @@ export default function ConfigList() {
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
-        <Cover generalSettings name="Configs" icon="ph:users-light" />
+        <Cover name="Configs" icon="ph:users-light" />
       </StyledCardContainer>
       <TableCard>
         <ConfigListTableToolbar

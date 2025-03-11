@@ -122,7 +122,7 @@ export default function RegionList() {
   return (
       <Container maxWidth={false}>
         <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
-          <Cover name="Regions" icon="ph:users-light" generalSettings/>
+          <Cover name="Regions" icon="ph:users-light" />
         </Card>
         <TableCard>
           <RegionTableToolbar

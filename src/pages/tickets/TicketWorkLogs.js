@@ -258,14 +258,14 @@ const TicketWorkLogs = () => {
                                 onChange={(e) => setEditTimeSpent(e.target.value)}
                                 error={!/^(?:(\d+w)\s*)?(?:(\d+d)\s*)?(?:(\d+h)\s*)?(?:(\d+m)\s*)?$/.test(editTimeSpent.trim())}
                                 helperText={!/^(?:(\d+w)\s*)?(?:(\d+d)\s*)?(?:(\d+h)\s*)?(?:(\d+m)\s*)?$/.test(editTimeSpent.trim()) ? "Invalid format. Use: 2w 4d 6h 45m" : "" || "Use the format: 2w 4d 6h 45m (weeks, days, hours, minutes)"}
-                                sx={{ mb: 1 }}
+                                sx={{ mt: 1 }}
                               />
                               <RHFDatePicker
                                 label="Work Date"
                                 name="workDate"
                                 value={editWorkDate}
                                 onChange={(newValue) => setEditWorkDate(newValue)}
-                                sx={{ mb: 1 }}
+                                sx={{ mt: 1 }}
                               />
                             </Box>
                             <RHFTextField
