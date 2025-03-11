@@ -164,7 +164,7 @@ export default function BlockedUserList() {
     <>
       <Container maxWidth={false}>
         <StyledCardContainer>
-          <Cover name="Blocked User" icon="ph:users-light" generalSettings />
+          <Cover name="Blocked User" icon="ph:users-light" />
         </StyledCardContainer>
 
         <TableCard>
