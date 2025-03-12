@@ -4,6 +4,7 @@ import {
   TableCell,
   Stack,
 } from '@mui/material';
+import { PATH_SUPPORT } from '../../routes/paths';
 // utils
 import { fDate } from '../../utils/formatTime';
 import { getMachineForDialog, setMachineDialog } from '../../redux/slices/products/machine';
@@ -11,6 +12,7 @@ import { StyledTableRow, StyledTooltip } from '../../theme/styles/default-styles
 import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
 import Iconify from '../../components/iconify';
 import LinkDialogTableCell from '../../components/ListTableTools/LinkDialogTableCell';
+import LinkTableCellWithIconTargetBlank from '../../components/ListTableTools/LinkTableCellWithIconTargetBlank';
 // import { useScreenSize } from '../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
@@ -33,7 +35,7 @@ export default function TicketFormTableRow({
   hiddenColumns,
 }) {
   const dispatch = useDispatch();
-  const { ticketNo, customer, machine, issueType, summary, priority, status, createdAt } = row;
+  const { ticketNo, customer, machine, issueType, summary, priority, status, createdAt, _id } = row;
   const configurations = JSON.parse(localStorage.getItem('configurations'));
   const prefix = configurations?.find((config) => config?.name?.toLowerCase() === 'ticket_prefix')?.value || '';
   
@@ -55,8 +57,11 @@ export default function TicketFormTableRow({
           </Stack>
         </TableCell>
       )}
-      { !hiddenColumns?.ticketNo && (
-        <LinkTableCell align="left" onClick={() => onViewRow(`${prefix}${ticketNo}`)} param={`${prefix || ''} - ${ticketNo || ''}`} />
+      {!hiddenColumns?.ticketNo && (
+        <LinkTableCellWithIconTargetBlank 
+        onViewRow={() => onViewRow(`${prefix}${ticketNo}`)} 
+        onClick={() => window.open(PATH_SUPPORT.supportTickets.view(_id), '_blank')}
+        param={`${prefix || ''} - ${ticketNo || ''}`} />
       )}
       { !hiddenColumns?.summary && (
           <LinkTableCell align="left" onClick={onViewRow} param={summary || ''} /> 
