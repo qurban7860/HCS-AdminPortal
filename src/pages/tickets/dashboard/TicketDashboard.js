@@ -221,6 +221,10 @@ export default function TicketDashboard() {
       navigate(PATH_SUPPORT.ticketDashboard.ticketIssueType);
     } else if (graph === 'requestType') {
       navigate(PATH_SUPPORT.ticketDashboard.ticketRequestType);
+    } else if (graph === 'openIssueType') {
+      navigate(PATH_SUPPORT.ticketDashboard.ticketOpenIssueType);
+    } else if (graph === 'openRequestType') {
+      navigate(PATH_SUPPORT.ticketDashboard.ticketOpenRequestType);
     } else if (graph === 'statusType') {
       navigate(PATH_SUPPORT.ticketDashboard.ticketStatusType);
     } else if (graph === 'status') {
@@ -242,7 +246,7 @@ export default function TicketDashboard() {
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12} xl={6}>
             <StyledGlobalCard sx={{ pt: 2 }} variants={varFade().inDown}>
-              <PieChart chartData={openIssueTypeData} totalIssues={totalOpenIssueTypes} title="Open Issue Type" onExpand={() => handleExpandGraph('issueType')}/>
+              <PieChart chartData={openIssueTypeData} totalIssues={totalOpenIssueTypes} title="Open Issue Type" onExpand={() => handleExpandGraph('openIssueType')}/>
             </StyledGlobalCard>
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12} xl={6}>
@@ -252,7 +256,7 @@ export default function TicketDashboard() {
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12} xl={6}>
             <StyledGlobalCard sx={{ pt: 2 }} variants={varFade().inDown}>
-              <PieChart chartData={openRequestTypeData} totalIssues={totalOpenRequestTypes} title="Open Request Type" onExpand={() => handleExpandGraph('requestType')}/>
+              <PieChart chartData={openRequestTypeData} totalIssues={totalOpenRequestTypes} title="Open Request Type" onExpand={() => handleExpandGraph('openRequestType')}/>
             </StyledGlobalCard>
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12} xl={6}>

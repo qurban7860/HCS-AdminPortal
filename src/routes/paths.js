@@ -428,6 +428,12 @@ export const PATH_SUPPORT = {
   permissionDenied: path(ROOTS_SUPPORT, '/permission-denied'),
   ticketDashboard: {
     root: path(ROOTS_SUPPORT, '/ticketDashboard'),
+    ticketIssueType: path(ROOTS_SUPPORT, '/ticketDashboard/ticketIssueType'),
+    ticketRequestType: path(ROOTS_SUPPORT, '/ticketDashboard/ticketRequestType'),
+    ticketOpenIssueType: path(ROOTS_SUPPORT, '/ticketDashboard/ticketOpenIssueType'),
+    ticketOpenRequestType: path(ROOTS_SUPPORT, '/ticketDashboard/ticketOpenRequestType'),
+    ticketStatusType: path(ROOTS_SUPPORT, '/ticketDashboard/ticketStatusType'),
+    ticketStatus: path(ROOTS_SUPPORT, '/ticketDashboard/ticketStatus'),
   },
   supportTickets: {
     root: path(ROOTS_SUPPORT, '/supportTickets'),

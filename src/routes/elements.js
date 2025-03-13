@@ -447,8 +447,16 @@ export const SitesReport = Loadable(lazy(() => import('../pages/sitesMap/Reports
 export const Email = Loadable(lazy(() => import('../pages/settings/email/EmailList')));
 export const Emailview = Loadable(lazy(() => import('../pages/settings/email/EmailViewform')));
 
-// --------------------------- Tickets -------------------------------------
+// --------------------------- Ticket Dashboard -------------------------------------
 export const TicketDashboard = Loadable(lazy(() => import('../pages/tickets/dashboard/TicketDashboard')));
+export const TicketIssueTypeView = Loadable(lazy(() => import('../pages/tickets/dashboard/TicketIssueTypeViewForm')));
+export const TicketRequestTypeView = Loadable(lazy(() => import('../pages/tickets/dashboard/TicketRequestTypeViewForm')));
+export const TicketOpenIssueTypeView = Loadable(lazy(() => import('../pages/tickets/dashboard/TicketOpenIssueTypeViewForm')));
+export const TicketOpenRequestTypeView = Loadable(lazy(() => import('../pages/tickets/dashboard/TicketOpenRequestTypeViewForm')));
+export const TicketStatusTypeView = Loadable(lazy(() => import('../pages/tickets/dashboard/TicketStatusTypeViewForm')));
+export const TicketStatusView = Loadable(lazy(() => import('../pages/tickets/dashboard/TicketStatusViewForm')));
+
+// --------------------------- Tickets List -------------------------------------
 export const TicketFormList = Loadable(lazy(() => import('../pages/tickets/TicketFormList')));
 export const TicketForm = Loadable(lazy(() => import('../pages/tickets/TicketForm')));
 export const TicketView = Loadable(lazy(() => import('../pages/tickets/TicketView')));
