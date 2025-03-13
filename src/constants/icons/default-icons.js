@@ -617,6 +617,7 @@ export const ICONS = {
   INI:{ icon:'ph:file-ini-fill' },
   LOGS:{ icon:'lucide:list-end' },
   GRAPHS:{ icon:'mdi:graph-bar' },
+  DASHBOARD:{ icon:'mdi:counter' },
   INTEGRATION:{ icon:'carbon:ibm-cloud-direct-link-2-connect' },
   JIRA:{ icon:'simple-icons:jirasoftware' },
 };

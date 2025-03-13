@@ -119,16 +119,6 @@ const TABS = [
     icon: ICONS.INI.icon,
   },
   {
-    value: 'logs',
-    label: 'Logs',
-    icon: ICONS.LOGS.icon,
-  },  
-  {
-    value: 'graphs',
-    label: 'Graphs',
-    icon: ICONS.GRAPHS.icon,
-  },  
-  {
     value: 'integration',
     label: 'Machine Integration',
     icon: ICONS.INTEGRATION.icon,
@@ -138,6 +128,24 @@ const TABS = [
     label: 'Jira',
     icon: ICONS.JIRA.icon,
   },
+  {
+    value: 'dashboard',
+    label: 'Dashboard',
+    icon: ICONS.DASHBOARD.icon,
+    align: 'right',
+  },
+  {
+    value: 'logs',
+    label: 'Logs',
+    icon: ICONS.LOGS.icon,
+    align: 'right',
+  },  
+  {
+    value: 'graphs',
+    label: 'Graphs',
+    icon: ICONS.GRAPHS.icon,
+    align: 'right',
+  }, 
   
 ];
 
