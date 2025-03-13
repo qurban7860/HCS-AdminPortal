@@ -266,6 +266,10 @@ export const PATH_MACHINE = {
       graph: (machineId ) => path(ROOTS_MACHINE, `/machines/${machineId}/logs/graph`),
       // view: (machineId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/logs/${id}/view`),
     },
+    // --------------------- Machine Dashboard -----------------------
+    dashboard: {
+      root: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/dashboard`),
+    },
 
     // --------------------- Machine Integration -----------------------
     integration: {

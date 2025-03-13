@@ -181,6 +181,9 @@ import {
   // MachineLogsView,
   MachineLogsGraphView,
 
+  // --------------------------- MACHINE DASHBOARD -------------------------------------
+  MachineDashboard,
+
   // --------------------------- MACHINE INTEGRATION -------------------------------------
   MachineIntegrationViewForm,
 
@@ -826,6 +829,11 @@ export default function Router() {
                 {path: 'new', element: <MachineLogsAdd/>},
                 {path: 'graph', element: <MachineLogsGraphView/>}, 
                 // {path: ':id/view', element: <MachineLogsView/>},
+              ]
+            },
+            { path: ':machineId/dashboard',
+              children:[
+                {element: <MachineDashboard/>, index: true},
               ]
             },
             { path: ':machineId/integration',

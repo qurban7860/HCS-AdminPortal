@@ -215,6 +215,10 @@ export const MachineLogsAdd = Loadable(lazy(() => import('../pages/machine/logs/
 // export const MachineLogsView = Loadable(lazy(() => import('../pages/machine/logs/MachineLogsViewForm')));
 export const MachineLogsGraphView = Loadable(lazy(() => import('../pages/machine/logs/MachineLogsGraphViewForm')));
 
+// --------------------------- MACHINE DASHBOARD -------------------------------------
+
+export const MachineDashboard = Loadable(lazy(() => import('../pages/machine/dashboard/MachineDashboard')));
+
 // --------------------------- MACHINE INTEGRATION -------------------------------------
 
 export const MachineIntegrationViewForm = Loadable(lazy(() => import('../pages/machine/integration/IntegrationViewForm')));

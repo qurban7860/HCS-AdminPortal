@@ -75,7 +75,7 @@ import jiraReducer from './slices/jira/jira';
 import apilogsReducer from './slices/logs/apiLogs';
 import portalRegistrationReducer from './slices/customer/portalRegistration';
 import serviceReportNotesReducer from './slices/products/serviceReportNotes';
-
+import machineDashboardReducer from './slices/products/machineDashboard';
 
 // ----------------------------------------------------------------------
 
@@ -180,6 +180,13 @@ export const techparamcategoryPersistConfig = {
 
 export const machineNotePersistConfig = {
   key: 'machineNote',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+};
+
+export const machineDashboardPersistConfig = {
+  key: 'machineDashboard',
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
@@ -578,6 +585,7 @@ const rootReducer = combineReducers({
   tool: persistReducer(toolPersistConfig,toolReducer),
   techparamcategory: persistReducer(techparamcategoryPersistConfig,techparamcategoryReducer),
   machineNote: persistReducer(machineNotePersistConfig, machinenoteReducer),
+  machineDashboard: persistReducer(machineDashboardPersistConfig, machineDashboardReducer),
   serviceReportComments: persistReducer(serviceReportCommentsPersistConfig, serviceReportCommentsReducer),
   machinestatus: persistReducer(machinestatusPersistConfig, machinestatusReducer),
   machinemodel: persistReducer(machinemodelPersistConfig, machinemodelReducer),
