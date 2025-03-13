@@ -1,6 +1,5 @@
 // TicketWorkLogs.js
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import {
   Button,
   List,
@@ -31,7 +30,7 @@ import {
   getWorkLogs,
   resetWorkLogs,
   updateWorkLog,
-} from '../../redux/slices/ticket/ticketWorkLogs/ticketWorkLog'; 
+} from '../../redux/slices/ticket/ticketWorkLogs/ticketWorkLog';
 import ConfirmDialog from '../../components/confirm-dialog';
 import { getActiveSPContacts } from '../../redux/slices/customer/contact';
 import { fDateTime } from '../../utils/formatTime';
@@ -39,13 +38,13 @@ import { fDateTime } from '../../utils/formatTime';
 dayjs.extend(relativeTime);
 
 const WorkLogSchema = Yup.object().shape({
-    timeSpent: Yup.string()
+  timeSpent: Yup.string()
     .required('Time Spent is required')
     .test(
       'isValidFormat',
       'Invalid format. Use: 2w 4d 6h 45m',
       (value) => {
-        if (!value) return true; 
+        if (!value) return true;
         return /^(\d+w)?\s*(\d+d)?\s*(\d+h)?\s*(\d+m)?$/.test(value.trim());
       }
     )
@@ -53,8 +52,8 @@ const WorkLogSchema = Yup.object().shape({
       /^(?:(\d+w)\s*)?(?:(\d+d)\s*)?(?:(\d+h)\s*)?(?:(\d+m)\s*)?$/,
       'Time Spent must be in the correct format: 2w 4d 6h 45m'
     ),
-    workDate: Yup.mixed().label("Work Date").nullable().notRequired(),
-    notes: Yup.string().max(300, 'Notes must not exceed 300 characters'),
+  workDate: Yup.mixed().label("Work Date").nullable().notRequired(),
+  notes: Yup.string().max(300, 'Notes must not exceed 300 characters'),
 });
 
 const TicketWorkLogs = () => {
@@ -64,27 +63,26 @@ const TicketWorkLogs = () => {
   const [editNotes, setEditNotes] = useState('');
   const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
   const [workLogToDelete, setWorkLogToDelete] = useState(null);
-  const { id } = useParams();
   const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
   const { user: currentUser } = useAuthContext();
-
-  const { error, workLogs, isLoading } = useSelector((state) => state.ticketWorkLogs); 
-   const { activeSpContacts } = useSelector((state) => state.contact);
+  const { ticket } = useSelector((state) => state.tickets);
+  const { error, workLogs, isLoading } = useSelector((state) => state.ticketWorkLogs);
+  const { activeSpContacts } = useSelector((state) => state.contact);
 
   useEffect(() => {
     let controller;
-    if (id) {
-      dispatch(getWorkLogs({ id })); 
-       dispatch(getActiveSPContacts());
+    if (ticket?._id) {
+      dispatch(getWorkLogs({ id: ticket?._id }));
+      dispatch(getActiveSPContacts());
     }
     return () => {
       if (controller) {
         controller.abort();
       }
-      dispatch(resetWorkLogs()); 
+      dispatch(resetWorkLogs());
     };
-  }, [dispatch, id]);
+  }, [dispatch, ticket?._id]);
 
   const methods = useForm({
     resolver: yupResolver(WorkLogSchema),
@@ -98,21 +96,21 @@ const TicketWorkLogs = () => {
   const { reset, handleSubmit, watch, formState: { isSubmitting, errors } } = methods;
   const timeSpentValue = watch('timeSpent');
   const workDateValue = watch('workDate');
-  const noteValue = watch('notes'); 
-  
+  const noteValue = watch('notes');
+
   const onSubmit = async (data) => {
-    await dispatch(addWorkLog(id, data.timeSpent || "", data.workDate || null, data.notes || ""));
+    await dispatch(addWorkLog(ticket?._id, data.timeSpent || "", data.workDate || null, data.notes || ""));
     reset();
     if (error) {
       enqueueSnackbar(error, { variant: 'error' });
     } else {
       enqueueSnackbar('Work Log saved successfully', { variant: 'success' });
-      dispatch(getWorkLogs({ id })); 
+      dispatch(getWorkLogs({ id: ticket?._id }));
     }
   };
-  
+
   const handleSaveEdit = async (workLogId) => {
-    await dispatch(updateWorkLog(id, workLogId, { timeSpent: editTimeSpent, workDate: editWorkDate, notes: editNotes }));
+    await dispatch(updateWorkLog(ticket?._id, workLogId, { timeSpent: editTimeSpent, workDate: editWorkDate, notes: editNotes }));
     setEditingWorkLogId(null);
     setEditTimeSpent('');
     setEditWorkDate(null);
@@ -120,9 +118,9 @@ const TicketWorkLogs = () => {
     if (error) enqueueSnackbar(error, { variant: 'error' });
     else enqueueSnackbar('Work Log updated successfully', { variant: 'success' });
   };
-  
+
   const handleConfirmDelete = async () => {
-    await dispatch(deleteWorkLog(id, workLogToDelete?._id)); 
+    await dispatch(deleteWorkLog(ticket?._id, workLogToDelete?._id));
     setOpenConfirmDelete(false);
     setWorkLogToDelete(null);
     if (error) enqueueSnackbar(error, { variant: 'error' });
@@ -171,7 +169,7 @@ const TicketWorkLogs = () => {
                   name="timeSpent"
                   label="Time Spent"
                   error={!!errors.timeSpent}
-                  helperText={ errors.timeSpent?.message || 'Use the format: 2w 4d 6h 45m (weeks, days, hours, minutes)' }
+                  helperText={errors.timeSpent?.message || 'Use the format: 2w 4d 6h 45m (weeks, days, hours, minutes)'}
                   sx={{ mb: 1 }}
                 />
                 <RHFDatePicker label="Work Date" name="workDate" sx={{ mb: 1 }} />
@@ -219,7 +217,7 @@ const TicketWorkLogs = () => {
               {index > 0 && <Divider component="li" />}
               <ListItem alignItems="flex-start" sx={{ padding: '8px 0' }}>
                 <ListItemAvatar>
-                  <CustomAvatar alt={item?.createdBy?.name} name={item?.createdBy?.name} sx={{ mt: -1 }}/>
+                  <CustomAvatar alt={item?.createdBy?.name} name={item?.createdBy?.name} sx={{ mt: -1 }} />
                 </ListItemAvatar>
                 <ListItemText
                   primary={
@@ -334,25 +332,25 @@ const TicketWorkLogs = () => {
                             activeSpContacts.some(
                               (contact) => contact._id === currentUser?.contact
                             )) && (
-                            <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
-                              <Button
-                                size="small"
-                                color="primary"
-                                onClick={() => handleEditClick(item)}
-                                sx={{ minWidth: 'unset', px: 1 }}
-                              >
-                                Edit
-                              </Button>
-                              <Button
-                                size="small"
-                                color="error"
-                                onClick={() => handleDeleteClick(item)}
-                                sx={{ minWidth: 'unset', px: 1 }}
-                              >
-                                Delete
-                              </Button>
-                            </Stack>
-                          )}
+                              <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
+                                <Button
+                                  size="small"
+                                  color="primary"
+                                  onClick={() => handleEditClick(item)}
+                                  sx={{ minWidth: 'unset', px: 1 }}
+                                >
+                                  Edit
+                                </Button>
+                                <Button
+                                  size="small"
+                                  color="error"
+                                  onClick={() => handleDeleteClick(item)}
+                                  sx={{ minWidth: 'unset', px: 1 }}
+                                >
+                                  Delete
+                                </Button>
+                              </Stack>
+                            )}
                         </>
                       )}
                     </Box>
