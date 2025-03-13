@@ -38,6 +38,14 @@ export default function TicketDashboard() {
   const [totalStatusTypes, setTotalStatusTypes] = useState(0);
   const [ticketBarChartData, setTicketBarChartData] = useState({ series: [], labels: [] });
 
+  // Period filter states
+  const [issueTypePeriod, setIssueTypePeriod] = useState('All');
+  const [requestTypePeriod, setRequestTypePeriod] = useState('All');
+  const [openIssueTypePeriod, setOpenIssueTypePeriod] = useState('All');
+  const [openRequestTypePeriod, setOpenRequestTypePeriod] = useState('All');
+  const [statusPeriod, setStatusPeriod] = useState('All');
+  const [statusTypePeriod, setStatusTypePeriod] = useState('All');
+
   useEffect(() => {
     if (tickets && tickets.data && tickets.data.length > 0) {
       const typeCounts = {};
@@ -58,101 +66,160 @@ export default function TicketDashboard() {
       const openRequestTypeCounts = {};
       const openRequestTypeColors = {};
 
-      tickets.data.forEach((ticket) => {
+      const filteredTickets = tickets.data; 
+
+      const filterTicketsByPeriod = (ticketList, period) => { 
+        if (period === 'All') {
+          return ticketList;
+        }
+        const now = new Date();
+        let startDate;
+        if (period === 'Daily') {
+          startDate = new Date(now);
+          startDate.setDate(now.getDate() - 30);
+        } else if (period === 'Monthly') {
+          startDate = new Date(now);
+          startDate.setMonth(now.getMonth() - 12);
+        } else if (period === 'Yearly') {
+          startDate = new Date(now);
+          startDate.setFullYear(now.getFullYear() - 5);
+        }
+        return ticketList.filter(
+          (ticket) => new Date(ticket.createdAt) >= startDate
+        );
+      };
+      
+      const formatData = (counts, colors) => Object.entries(counts).sort(([, a], [, b]) => b - a).reduce(
+        (acc, [key, value]) => {
+          acc.labels.push(key);
+          acc.series.push(value);
+          acc.colors.push(colors[key]);
+            return acc;
+          },
+        { series: [], labels: [], colors: [] }
+      );
+          
+      // --- Issue Type Data ---
+      let issueTypeFilteredTickets = filteredTickets;
+      if (issueTypePeriod !== 'All') {
+        issueTypeFilteredTickets = filterTicketsByPeriod(filteredTickets, issueTypePeriod);
+      }
+      issueTypeFilteredTickets.forEach((ticket) => {
         const issueKey = ticket.issueType?.name;
         const issueColor = ticket.issueType?.color || 'gray';
-        const requestTypeKey = ticket.requestType?.name;
-        const requestTypeColor = ticket.requestType?.color || 'gray';
-        const statusKey = ticket.status?.name;
-        const statusColor = ticket.status?.color || 'gray';
-        const statusTypeKey = ticket.status?.statusType?.name;
-        const statusTypeColor = ticket.status?.statusType?.color || 'gray';
-  
         if (issueKey) {
           typeCounts[issueKey] = (typeCounts[issueKey] || 0) + 1;
           typeColors[issueKey] = issueColor;
         }
+      });
+      setIssueTypeData(formatData(typeCounts, typeColors));
+      setTotalIssueTypes(Object.values(typeCounts).reduce((acc, val) => acc + val, 0));
+
+      // --- Request Type Data ---
+      let requestTypeFilteredTickets = filteredTickets;
+      if (requestTypePeriod !== 'All') {
+        requestTypeFilteredTickets = filterTicketsByPeriod(filteredTickets, requestTypePeriod);
+      }
+      requestTypeFilteredTickets.forEach((ticket) => {
+        const requestTypeKey = ticket.requestType?.name;
+        const requestTypeColor = ticket.requestType?.color || 'gray';
         if (requestTypeKey) {
           requestTypeCounts[requestTypeKey] = (requestTypeCounts[requestTypeKey] || 0) + 1;
           requestTypeColors[requestTypeKey] = requestTypeColor;
         } else {
           emptyRequestTypeCount += 1;
         }
+      });
+      if (emptyRequestTypeCount > 0) {
+        requestTypeCounts.Other = (requestTypeCounts.Other || 0) + emptyRequestTypeCount;
+        requestTypeColors.Other = "gray";
+      }
+      setRequestTypeData(formatData(requestTypeCounts, requestTypeColors));
+      setTotalRequestTypes(Object.values(requestTypeCounts).reduce((acc, val) => acc + val, 0));
+
+      // --- Status Data ---
+      let statusFilteredTickets = filteredTickets;
+      if (statusPeriod !== 'All') {
+        statusFilteredTickets = filterTicketsByPeriod(filteredTickets, statusPeriod);
+      }
+      statusFilteredTickets.forEach((ticket) => {
+        const statusKey = ticket.status?.name;
+        const statusColor = ticket.status?.color || 'gray';
         if (statusKey) {
           statusCounts[statusKey] = (statusCounts[statusKey] || 0) + 1;
           statusColors[statusKey] = statusColor;
         } else {
           emptyStatusCount += 1;
         }
+      });
+      if (emptyStatusCount > 0) {
+        statusCounts.Other = (statusCounts.Other || 0) + emptyStatusCount;
+        statusColors.Other = "gray";
+      }
+      setStatusData(formatData(statusCounts, statusColors));
+      setTotalStatuses(Object.values(statusCounts).reduce((acc, val) => acc + val, 0));
+
+      // --- Status Type Data ---
+      let statusTypeFilteredTickets = filteredTickets;
+      if (statusTypePeriod !== 'All') {
+        statusTypeFilteredTickets = filterTicketsByPeriod(filteredTickets, statusTypePeriod);
+      }
+      statusTypeFilteredTickets.forEach((ticket) => {
+        const statusTypeKey = ticket.status?.statusType?.name;
+        const statusTypeColor = ticket.status?.statusType?.color || 'gray';
         if (statusTypeKey) {
           statusTypeCounts[statusTypeKey] = (statusTypeCounts[statusTypeKey] || 0) + 1;
           statusTypeColors[statusTypeKey] = statusTypeColor;
         } else {
           emptyStatusTypeCount += 1;
         }
-
-        if (ticket.isActive) {
-          if (issueKey) {
-            openTypeCounts[issueKey] = (openTypeCounts[issueKey] || 0) + 1;
-            openTypeColors[issueKey] = issueColor;
-          }
-          if (requestTypeKey) {
-            openRequestTypeCounts[requestTypeKey] = (openRequestTypeCounts[requestTypeKey] || 0) + 1;
-            openRequestTypeColors[requestTypeKey] = requestTypeColor;
-          } else {
-            emptyOpenRequestTypeCount += 1;
-          }
-        }
       });
-      
-      if (emptyRequestTypeCount > 0) {
-        requestTypeCounts.Other = (requestTypeCounts.Other || 0) + emptyRequestTypeCount;
-        requestTypeColors.Other = "gray";
-      }
-      if (emptyOpenRequestTypeCount > 0) {
-        openRequestTypeCounts.Other = (openRequestTypeCounts.Other || 0) + emptyOpenRequestTypeCount;
-        openRequestTypeColors.Other = "gray";
-      }
-      if (emptyStatusCount > 0) {
-        statusCounts.Other = (statusCounts.Other || 0) + emptyStatusCount;
-        statusColors.Other = "gray";
-      }
       if (emptyStatusTypeCount > 0) {
         statusTypeCounts.Other = (statusTypeCounts.Other || 0) + emptyStatusTypeCount;
         statusTypeColors.Other = 'gray';
       }
-
-      const formatData = (counts, colors) =>
-        Object.entries(counts)
-          .sort(([, a], [, b]) => b - a)
-          .reduce(
-            (acc, [key, value]) => {
-              acc.labels.push(key);
-              acc.series.push(value);
-              acc.colors.push(colors[key]);
-              return acc;
-            },
-            { series: [], labels: [], colors: [] }
-          );
-      
-      setIssueTypeData(formatData(typeCounts, typeColors));
-      setTotalIssueTypes(Object.values(typeCounts).reduce((acc, val) => acc + val, 0));
-      
-      setRequestTypeData(formatData(requestTypeCounts, requestTypeColors));
-      setTotalRequestTypes(Object.values(requestTypeCounts).reduce((acc, val) => acc + val, 0));
-
-      setStatusData(formatData(statusCounts, statusColors));
-      setTotalStatuses(Object.values(statusCounts).reduce((acc, val) => acc + val, 0));
-
       setStatusTypeData(formatData(statusTypeCounts, statusTypeColors));
       setTotalStatusTypes(Object.values(statusTypeCounts).reduce((acc, val) => acc + val, 0));
-      
+
+      // --- Open Issue Type Data ---
+      let openIssueTypeFilteredTickets = filteredTickets.filter(ticket => ticket.isActive); // Filter for isActive
+      if (openIssueTypePeriod !== 'All') {
+        openIssueTypeFilteredTickets = filterTicketsByPeriod(openIssueTypeFilteredTickets, openIssueTypePeriod);
+      }
+      openIssueTypeFilteredTickets.forEach((ticket) => {
+        const issueKey = ticket.issueType?.name;
+        const issueColor = ticket.issueType?.color || 'gray';
+        if (issueKey) {
+          openTypeCounts[issueKey] = (openTypeCounts[issueKey] || 0) + 1;
+          openTypeColors[issueKey] = issueColor;
+        }
+      });
       setOpenIssueTypeData(formatData(openTypeCounts, openTypeColors));
       setTotalOpenIssueTypes(Object.values(openTypeCounts).reduce((acc, val) => acc + val, 0));
 
+      // --- Open Request Type Data ---
+      let openRequestTypeFilteredTickets = filteredTickets.filter(ticket => ticket.isActive); // Filter for isActive
+      if (openRequestTypePeriod !== 'All') {
+        openRequestTypeFilteredTickets = filterTicketsByPeriod(openRequestTypeFilteredTickets, openRequestTypePeriod);
+      }
+      openRequestTypeFilteredTickets.forEach((ticket) => {
+        const requestTypeKey = ticket.requestType?.name;
+        const requestTypeColor = ticket.requestType?.color || 'gray';
+        if (requestTypeKey) {
+          openRequestTypeCounts[requestTypeKey] = (openRequestTypeCounts[requestTypeKey] || 0) + 1;
+          openRequestTypeColors[requestTypeKey] = requestTypeColor;
+        } else {
+          emptyOpenRequestTypeCount += 1;
+        }
+      });
+      if (emptyOpenRequestTypeCount > 0) {
+        openRequestTypeCounts.Other = (openRequestTypeCounts.Other || 0) + emptyOpenRequestTypeCount;
+        openRequestTypeColors.Other = "gray";
+      }
       setOpenRequestTypeData(formatData(openRequestTypeCounts, openRequestTypeColors));
       setTotalOpenRequestTypes(Object.values(openRequestTypeCounts).reduce((acc, val) => acc + val, 0));
       
+      // --- Bar Chart Ticket Created VS Resolved ---
       const dateCounts = {};
       tickets.data.forEach((ticket) => {
         const createdDate = new Date(ticket?.createdAt).toISOString().split('T')[0];
@@ -214,21 +281,56 @@ export default function TicketDashboard() {
       setTotalStatuses(0);
       setTotalStatusTypes(0);
     }
-  }, [tickets]);
+  }, [tickets, issueTypePeriod, requestTypePeriod, openIssueTypePeriod, openRequestTypePeriod, statusPeriod, statusTypePeriod]);
 
+  const handleIssueTypePeriodChange = (newPeriod) => {
+    setIssueTypePeriod(newPeriod);
+  };
+
+  const handleRequestTypePeriodChange = (newPeriod) => {
+    setRequestTypePeriod(newPeriod);
+  };
+
+  const handleOpenIssueTypePeriodChange = (newPeriod) => {
+    setOpenIssueTypePeriod(newPeriod);
+  };
+
+  const handleOpenRequestTypePeriodChange = (newPeriod) => {
+    setOpenRequestTypePeriod(newPeriod);
+  };
+
+  const handleStatusPeriodChange = (newPeriod) => {
+    setStatusPeriod(newPeriod);
+  };
+
+  const handleStatusTypePeriodChange = (newPeriod) => {
+    setStatusTypePeriod(newPeriod);
+  };
+  
+  const getChartTitle = (title, period) => {
+    if (period === 'Daily') {
+      return `${title} [30 days]`;
+    } if (period === 'Monthly') {
+      return `${title} [12 months]`;
+    } if (period === 'Yearly') {
+      return `${title} [5 years]`;
+    }
+    return title; 
+  };
+  
   const handleExpandGraph = async (graph) => {
     if (graph === 'issueType') {
-      navigate(PATH_SUPPORT.ticketDashboard.ticketIssueType);
+      navigate(PATH_SUPPORT.ticketDashboard.issueType);
     } else if (graph === 'requestType') {
-      navigate(PATH_SUPPORT.ticketDashboard.ticketRequestType);
+      navigate(PATH_SUPPORT.ticketDashboard.requestType);
     } else if (graph === 'openIssueType') {
-      navigate(PATH_SUPPORT.ticketDashboard.ticketOpenIssueType);
+      navigate(PATH_SUPPORT.ticketDashboard.openIssueType);
     } else if (graph === 'openRequestType') {
-      navigate(PATH_SUPPORT.ticketDashboard.ticketOpenRequestType);
+      navigate(PATH_SUPPORT.ticketDashboard.openRequestType);
     } else if (graph === 'statusType') {
-      navigate(PATH_SUPPORT.ticketDashboard.ticketStatusType);
+      navigate(PATH_SUPPORT.ticketDashboard.statusType);
     } else if (graph === 'status') {
-      navigate(PATH_SUPPORT.ticketDashboard.ticketStatus);
+      navigate(PATH_SUPPORT.ticketDashboard.status);
     } 
   };
 
@@ -241,32 +343,32 @@ export default function TicketDashboard() {
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12} xl={6}>
             <StyledGlobalCard sx={{ pt: 2 }} variants={varFade().inDown}>
-              <PieChart chartData={issueTypeData} totalIssues={totalIssueTypes} title="Issue Type" onExpand={() => handleExpandGraph('issueType')}/>
+              <PieChart chartData={issueTypeData} totalIssues={totalIssueTypes} title={getChartTitle('Issue Type', issueTypePeriod)} onExpand={() => handleExpandGraph('issueType')} onPeriodChange={handleIssueTypePeriodChange} />
             </StyledGlobalCard>
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12} xl={6}>
             <StyledGlobalCard sx={{ pt: 2 }} variants={varFade().inDown}>
-              <PieChart chartData={openIssueTypeData} totalIssues={totalOpenIssueTypes} title="Open Issue Type" onExpand={() => handleExpandGraph('openIssueType')}/>
+              <PieChart chartData={openIssueTypeData} totalIssues={totalOpenIssueTypes} title={getChartTitle('Open Issue Type', openIssueTypePeriod)} onExpand={() => handleExpandGraph('openIssueType')} onPeriodChange={handleOpenIssueTypePeriodChange} />
             </StyledGlobalCard>
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12} xl={6}>
             <StyledGlobalCard sx={{ pt: 2 }} variants={varFade().inDown}>
-              <PieChart chartData={requestTypeData} totalIssues={totalRequestTypes} title="Request Type" onExpand={() => handleExpandGraph('requestType')}/>
+              <PieChart chartData={requestTypeData} totalIssues={totalRequestTypes} title={getChartTitle('Request Type', requestTypePeriod)} onExpand={() => handleExpandGraph('requestType')} onPeriodChange={handleRequestTypePeriodChange} />
             </StyledGlobalCard>
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12} xl={6}>
             <StyledGlobalCard sx={{ pt: 2 }} variants={varFade().inDown}>
-              <PieChart chartData={openRequestTypeData} totalIssues={totalOpenRequestTypes} title="Open Request Type" onExpand={() => handleExpandGraph('openRequestType')}/>
+              <PieChart chartData={openRequestTypeData} totalIssues={totalOpenRequestTypes} title={getChartTitle('Open Request Type', openRequestTypePeriod)} onExpand={() => handleExpandGraph('openRequestType')} onPeriodChange={handleOpenRequestTypePeriodChange}/>
             </StyledGlobalCard>
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12} xl={6}>
             <StyledGlobalCard sx={{ pt: 2 }} variants={varFade().inDown}>
-              <PieChart chartData={statusTypeData} totalIssues={totalStatusTypes} title="Status Type" onExpand={() => handleExpandGraph('statusType')}/>
+              <PieChart chartData={statusTypeData} totalIssues={totalStatusTypes} title={getChartTitle('Status Type', statusTypePeriod)} onExpand={() => handleExpandGraph('statusType')} onPeriodChange={handleStatusTypePeriodChange}/>
             </StyledGlobalCard>
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12} xl={6}>
             <StyledGlobalCard sx={{ pt: 2 }} variants={varFade().inDown}>
-              <PieChart chartData={statusData} totalIssues={totalStatuses} title="Status" onExpand={() => handleExpandGraph('status')}/>
+              <PieChart chartData={statusData} totalIssues={totalStatuses} title={getChartTitle('Status', statusPeriod)} onExpand={() => handleExpandGraph('status')} onPeriodChange={handleStatusPeriodChange}/>
             </StyledGlobalCard>
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
