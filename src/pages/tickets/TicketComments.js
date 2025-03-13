@@ -30,7 +30,7 @@ import FormLabel from '../../components/DocumentForms/FormLabel';
 import { FORMLABELS } from '../../constants/default-constants';
 import FormProvider, { RHFTextField, RHFSwitch } from '../../components/hook-form';
 import { CustomAvatar } from '../../components/custom-avatar';
-import { addComment, deleteComment, getComments, updateComment } from '../../redux/slices/ticket/ticketComments/ticketComment';
+import { addComment, deleteComment, getComments, resetComments, updateComment } from '../../redux/slices/ticket/ticketComments/ticketComment';
 import ConfirmDialog from '../../components/confirm-dialog';
 
 dayjs.extend(relativeTime);
@@ -99,9 +99,7 @@ const TicketComments = ({ currentUser }) => {
   };
 
   const handleConfirmDelete = async () => {
-    await dispatch(
-      deleteComment(ticket?._id, commentToDelete?._id, { isArchived: true })
-    );
+    await dispatch(deleteComment(ticket?._id, commentToDelete?._id, { isArchived: true }));
     setOpenConfirmDelete(false);
     setCommentToDelete(null);
     if (error) enqueueSnackbar(error, { variant: 'error' });
@@ -331,7 +329,7 @@ const TicketComments = ({ currentUser }) => {
           </>
         )}
         {activeTab === 'History' && <TicketHistory />}
-        {activeTab === 'Work Logs' && (<TicketWorkLogs currentUser={{ ...user, userId }} />)}
+        {activeTab === 'Work Logs' && (<TicketWorkLogs />)}
       </Paper>
       <ConfirmDialog
         open={openConfirmDelete}
