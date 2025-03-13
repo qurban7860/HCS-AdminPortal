@@ -18,6 +18,7 @@ export default function TicketOpenRequestTypeViewForm() {
 
   const [openRequestTypeData, setOpenRequestTypeData] = useState({ series: [], labels: [], colors: [] });
   const [totalOpenRequestTypes, setTotalOpenRequestTypes] = useState(0);
+  const [period, setPeriod] = useState('All'); 
 
   useLayoutEffect(() => {
     dispatch(getTickets());
@@ -28,26 +29,44 @@ export default function TicketOpenRequestTypeViewForm() {
       const openRequestTypeCounts = {};
       const openRequestTypeColors = {};
       let emptyOpenRequestTypeCount = 0;
+      let filteredTickets = tickets.data;
 
-      tickets.data.forEach((ticket) => {
+      if (period !== 'All') {
+        const now = new Date();
+        if (period === 'Daily') {
+          const last30Days = new Date(now);
+          last30Days.setDate(now.getDate() - 30);
+          filteredTickets = tickets.data.filter((ticket) => new Date(ticket.createdAt) >= last30Days);
+        } else if (period === 'Monthly') {
+          const last12Months = new Date(now);
+          last12Months.setMonth(now.getMonth() - 12);
+          filteredTickets = tickets.data.filter((ticket) => new Date(ticket.createdAt) >= last12Months);
+        } else if (period === 'Yearly') {
+          const last5Years = new Date(now);
+          last5Years.setFullYear(now.getFullYear() - 5);
+          filteredTickets = tickets.data.filter((ticket) => new Date(ticket.createdAt) >= last5Years);
+        }
+      }
+
+      filteredTickets = filteredTickets.filter((ticket) => ticket.isActive);
+
+      filteredTickets.forEach((ticket) => {
         const requestTypeKey = ticket.requestType?.name;
         const requestTypeColor = ticket.requestType?.color || 'gray';
 
-        if (ticket.isActive) {
         if (requestTypeKey) {
           openRequestTypeCounts[requestTypeKey] = (openRequestTypeCounts[requestTypeKey] || 0) + 1;
           openRequestTypeColors[requestTypeKey] = requestTypeColor;
         } else {
           emptyOpenRequestTypeCount += 1;
         }
-      }
       });
-      
+
       if (emptyOpenRequestTypeCount > 0) {
         openRequestTypeCounts.Other = (openRequestTypeCounts.Other || 0) + emptyOpenRequestTypeCount;
         openRequestTypeColors.Other = 'gray';
       }
-      
+
       const formatData = (counts, colors) =>
         Object.entries(counts)
           .sort(([, a], [, b]) => b - a)
@@ -67,15 +86,28 @@ export default function TicketOpenRequestTypeViewForm() {
       setOpenRequestTypeData({ series: [], labels: [], colors: [] });
       setTotalOpenRequestTypes(0);
     }
-  }, [tickets]);
+  }, [tickets, period]);
+
+  const handlePeriodChange = (newPeriod) => {
+    setPeriod(newPeriod);
+  };
+  
+  let chartTitle = 'Open Request Type'; 
+  if (period === 'Daily') {
+    chartTitle = 'Open Request Type [30 days]';
+  } else if (period === 'Monthly') {
+    chartTitle = 'Open Request Type [12 months]';
+  } else if (period === 'Yearly') {
+    chartTitle = 'Open Request Type [5 years]';
+  }
 
   return (
     <Container maxWidth={false} sx={{ height: 'auto' }}>
       <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
-        <Cover name="Ticket Open Request Type" icon="material-symbols:list-alt-outline" />
+        <Cover name="Open Request Type" icon="material-symbols:list-alt-outline" />
       </Card>
       <Card sx={{ p: 2, pt: 0 }}>
-        <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} sx={{ mt: 1, display: 'flex', justifyContent: 'flex-start' }}>
+      <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} sx={{ mt: 1, display: 'flex', justifyContent: 'flex-start' }}>
           <Grid item xs={12} sm={6}>
             <ViewFormEditDeleteButtons backLink={() => navigate(PATH_SUPPORT.ticketDashboard.root)} />
           </Grid>
@@ -83,7 +115,7 @@ export default function TicketOpenRequestTypeViewForm() {
         <Divider sx={{ paddingTop: 1 }} />
         <Grid container>
           <Grid item xs={12}>
-            <PieChart chartData={openRequestTypeData} totalIssues={totalOpenRequestTypes} title="Open Request Type" />
+            <PieChart chartData={openRequestTypeData} totalIssues={totalOpenRequestTypes} title={chartTitle} onPeriodChange={handlePeriodChange} />
           </Grid>
         </Grid>
       </Card>

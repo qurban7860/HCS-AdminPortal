@@ -9,7 +9,7 @@ import { getTickets } from '../../../redux/slices/ticket/tickets';
 import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
 import { Cover } from '../../../components/Defaults/Cover';
 import { PATH_SUPPORT } from '../../../routes/paths';
-import PieChart from '../../../components/Charts/PieChart'; 
+import PieChart from '../../../components/Charts/PieChart';
 
 export default function TicketStatusViewForm() {
   const dispatch = useDispatch();
@@ -18,6 +18,7 @@ export default function TicketStatusViewForm() {
 
   const [statusData, setStatusData] = useState({ series: [], labels: [], colors: [] });
   const [totalStatuses, setTotalStatuses] = useState(0);
+  const [period, setPeriod] = useState('All'); 
 
   useLayoutEffect(() => {
     dispatch(getTickets());
@@ -28,8 +29,26 @@ export default function TicketStatusViewForm() {
       const statusCounts = {};
       const statusColors = {};
       let emptyStatusCount = 0;
+      let filteredTickets = tickets.data;
 
-      tickets.data.forEach((ticket) => {
+      if (period !== 'All') {
+        const now = new Date();
+        if (period === 'Daily') {
+          const last30Days = new Date(now);
+          last30Days.setDate(now.getDate() - 30);
+          filteredTickets = tickets.data.filter((ticket) => new Date(ticket.createdAt) >= last30Days);
+        } else if (period === 'Monthly') {
+          const last12Months = new Date(now);
+          last12Months.setMonth(now.getMonth() - 12);
+          filteredTickets = tickets.data.filter((ticket) => new Date(ticket.createdAt) >= last12Months);
+        } else if (period === 'Yearly') {
+          const last5Years = new Date(now);
+          last5Years.setFullYear(now.getFullYear() - 5);
+          filteredTickets = tickets.data.filter((ticket) => new Date(ticket.createdAt) >= last5Years);
+        }
+      }
+
+      filteredTickets.forEach((ticket) => {
         const statusKey = ticket.status?.name;
         const statusColor = ticket.status?.color || 'gray';
 
@@ -40,10 +59,10 @@ export default function TicketStatusViewForm() {
           emptyStatusCount += 1;
         }
       });
-      
+
       if (emptyStatusCount > 0) {
         statusCounts.Other = (statusCounts.Other || 0) + emptyStatusCount;
-        statusColors.Other = "gray";
+        statusColors.Other = 'gray';
       }
 
       const formatData = (counts, colors) =>
@@ -65,15 +84,28 @@ export default function TicketStatusViewForm() {
       setStatusData({ series: [], labels: [], colors: [] });
       setTotalStatuses(0);
     }
-  }, [tickets]);
+  }, [tickets, period]); 
+
+  const handlePeriodChange = (newPeriod) => {
+    setPeriod(newPeriod);
+  };
+  
+  let chartTitle = 'Status'; 
+  if (period === 'Daily') {
+    chartTitle = 'Status [30 days]';
+  } else if (period === 'Monthly') {
+    chartTitle = 'Status [12 months]';
+  } else if (period === 'Yearly') {
+    chartTitle = 'Status [5 years]';
+  }
 
   return (
     <Container maxWidth={false} sx={{ height: 'auto' }}>
       <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
-        <Cover name="Ticket Status" icon="material-symbols:list-alt-outline" />
+        <Cover name="Status" icon="material-symbols:list-alt-outline" />
       </Card>
       <Card sx={{ p: 2, pt: 0 }}>
-        <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} sx={{ mt: 1, display: 'flex', justifyContent: 'flex-start' }}>
+      <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} sx={{ mt: 1, display: 'flex', justifyContent: 'flex-start' }}>
           <Grid item xs={12} sm={6}>
             <ViewFormEditDeleteButtons backLink={() => navigate(PATH_SUPPORT.ticketDashboard.root)} />
           </Grid>
@@ -81,7 +113,8 @@ export default function TicketStatusViewForm() {
         <Divider sx={{ paddingTop: 1 }} />
         <Grid container>
           <Grid item xs={12}>
-            <PieChart chartData={statusData} totalIssues={totalStatuses} title="Status" />
+            <PieChart chartData={statusData} totalIssues={totalStatuses} title={chartTitle} onPeriodChange={handlePeriodChange} 
+            />
           </Grid>
         </Grid>
       </Card>

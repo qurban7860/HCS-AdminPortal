@@ -61,11 +61,11 @@ const PieChart = ({ chartData, totalIssues, title, onPeriodChange, onExpand }) =
 
   return (
     <Grid container>
-      <Typography variant="h4" sx={{ mb: 2, fontWeight: 'bold' }}>
+      <Typography variant="h4" sx={{ mb: 2, mt: onExpand ? 0 : 2, fontWeight: 'bold' }}>
        Support Tickets
       </Typography>
       <Grid item xs={12} sx={{display: 'flex', justifyContent: 'flex-end', m: 1, mt: -4,}}>
-        {/* <FormControl sx={{ minWidth: 120 }} size="small">
+        <FormControl sx={{ minWidth: onExpand ? 120 : 200 }} size="small">
           <InputLabel id="period-select-label">Period</InputLabel>
           <Select
             labelId="period-select-label"
@@ -79,7 +79,7 @@ const PieChart = ({ chartData, totalIssues, title, onPeriodChange, onExpand }) =
             <MenuItem value="Monthly">Monthly</MenuItem>
             <MenuItem value="Yearly">Yearly</MenuItem>
           </Select>
-        </FormControl> */}
+        </FormControl>
         {onExpand && (
           <IconButton size="large" color="primary" onClick={onExpand}>
             <Iconify icon="fluent:expand-up-right-20-filled" />

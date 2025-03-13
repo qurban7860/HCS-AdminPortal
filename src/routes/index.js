@@ -1075,12 +1075,12 @@ export default function Router() {
           path: 'ticketDashboard',
           children: [
             { element: <TicketDashboard />, index: true },
-            { path: 'ticketIssueType', element: <TicketIssueTypeView /> },
-            { path: 'ticketRequestType', element: <TicketRequestTypeView /> },
-            { path: 'ticketOpenIssueType', element: <TicketOpenIssueTypeView /> },
-            { path: 'ticketOpenRequestType', element: <TicketOpenRequestTypeView /> },
-            { path: 'ticketStatusType', element: <TicketStatusTypeView /> },
-            { path: 'ticketStatus', element: <TicketStatusView /> },
+            { path: 'issueType', element: <TicketIssueTypeView /> },
+            { path: 'requestType', element: <TicketRequestTypeView /> },
+            { path: 'openIssueType', element: <TicketOpenIssueTypeView /> },
+            { path: 'openRequestType', element: <TicketOpenRequestTypeView /> },
+            { path: 'statusType', element: <TicketStatusTypeView /> },
+            { path: 'status', element: <TicketStatusView /> },
           ],
         },
         {
