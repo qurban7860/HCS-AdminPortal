@@ -1,10 +1,12 @@
+/* eslint-disable no-nested-ternary */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import ReactApexChart from 'react-apexcharts';
-import { Box, Typography, Grid, Divider, Select, MenuItem, FormControl, InputLabel} from '@mui/material';
+import { Box, Typography, Grid, Divider, Select, MenuItem, FormControl, InputLabel, IconButton} from '@mui/material';
 import { useChart } from '../chart';
+import Iconify from '../iconify';
 
-const PieChart = ({ chartData, totalIssues, title, onPeriodChange }) => {
+const PieChart = ({ chartData, totalIssues, title, onPeriodChange, onExpand }) => {
   const [period, setPeriod] = useState('All');
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const getTotalIssues = () => hoveredIndex !== null ? chartData.series[hoveredIndex] : totalIssues;
@@ -62,23 +64,28 @@ const PieChart = ({ chartData, totalIssues, title, onPeriodChange }) => {
       <Typography variant="h4" sx={{ mb: 2, fontWeight: 'bold' }}>
        Support Tickets
       </Typography>
-      {/* <Grid item xs={12} sx={{display: 'flex', justifyContent: 'flex-end'}}>
-            <FormControl sx={{ m: 1, mt: -4, minWidth: 120 }} size="small">
-              <InputLabel id="period-select-label">Period</InputLabel>
-              <Select
-                labelId="period-select-label"
-                id="period-select"
-                value={period}
-                label="Period"
-                onChange={handlePeriodChange}
-              >
-                <MenuItem value="All">All</MenuItem>
-                <MenuItem value="Daily">Daily</MenuItem>
-                <MenuItem value="Monthly">Monthly</MenuItem>
-                <MenuItem value="Yearly">Yearly</MenuItem>
-              </Select>
-            </FormControl>
-      </Grid> */}
+      <Grid item xs={12} sx={{display: 'flex', justifyContent: 'flex-end', m: 1, mt: -4,}}>
+        {/* <FormControl sx={{ minWidth: 120 }} size="small">
+          <InputLabel id="period-select-label">Period</InputLabel>
+          <Select
+            labelId="period-select-label"
+            id="period-select"
+            value={period}
+            label="Period"
+            onChange={handlePeriodChange}
+            >
+            <MenuItem value="All">All</MenuItem>
+            <MenuItem value="Daily">Daily</MenuItem>
+            <MenuItem value="Monthly">Monthly</MenuItem>
+            <MenuItem value="Yearly">Yearly</MenuItem>
+          </Select>
+        </FormControl> */}
+        {onExpand && (
+          <IconButton size="large" color="primary" onClick={onExpand}>
+            <Iconify icon="fluent:expand-up-right-20-filled" />
+          </IconButton>
+        )}
+      </Grid>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
           <Box sx={{ mt: -1, mb: 2, textAlign: 'center' }}>
@@ -86,8 +93,8 @@ const PieChart = ({ chartData, totalIssues, title, onPeriodChange }) => {
               type="donut"
               series={chartData.series}
               options={chartOptions}
-              height={250}
-              width={250}
+              height={onExpand ? 250 : 300}
+              width={onExpand ? 250 : 300}
             />
           </Box>
         </Grid>
@@ -96,7 +103,7 @@ const PieChart = ({ chartData, totalIssues, title, onPeriodChange }) => {
             {title}
           </Typography>
           <Divider />
-          <Box sx={{ mt: 2, mb: 2, maxHeight: '110px', overflowY: chartData.labels.length > 4 ? 'auto' : 'visible' }}>
+          <Box sx={{ mt: 2, mb: 2, maxHeight: onExpand ? '110px' : '300px', overflowY: onExpand ? chartData.labels.length > 4 ? 'auto' : 'visible' : 'hidden' }}>
             {chartData.labels.slice(0, 20).map((label, index) => (
               <Box
                 key={index}
@@ -150,6 +157,7 @@ PieChart.propTypes = {
   totalIssues: PropTypes.number.isRequired,
   title: PropTypes.string.isRequired,
   onPeriodChange: PropTypes.func,
+  onExpand: PropTypes.func,
 };
 
 export default PieChart;

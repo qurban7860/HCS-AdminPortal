@@ -321,8 +321,16 @@ import {
 
   // ----------------------------------------------------------------
   
-  // TICKETS
+  // TICKET DASHBOARD
   TicketDashboard,
+  TicketIssueTypeView,
+  TicketRequestTypeView,
+  TicketOpenIssueTypeView,
+  TicketOpenRequestTypeView,
+  TicketStatusTypeView,
+  TicketStatusView,
+  
+  // TICKETS
   TicketFormList,
   TicketForm,
   TicketView,
@@ -1067,6 +1075,12 @@ export default function Router() {
           path: 'ticketDashboard',
           children: [
             { element: <TicketDashboard />, index: true },
+            { path: 'ticketIssueType', element: <TicketIssueTypeView /> },
+            { path: 'ticketRequestType', element: <TicketRequestTypeView /> },
+            { path: 'ticketOpenIssueType', element: <TicketOpenIssueTypeView /> },
+            { path: 'ticketOpenRequestType', element: <TicketOpenRequestTypeView /> },
+            { path: 'ticketStatusType', element: <TicketStatusTypeView /> },
+            { path: 'ticketStatus', element: <TicketStatusView /> },
           ],
         },
         {
