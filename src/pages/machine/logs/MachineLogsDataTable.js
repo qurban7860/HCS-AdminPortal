@@ -225,7 +225,7 @@ const MachineLogsDataTable = ({
                         numericalLengthValues={numericalLengthValues}
                       />
                     ) : (
-                      !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
+                      isLoading && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                     )
                   )}
                 {!isLoading && <TableNoData isNotFound={isNotFound} />}
