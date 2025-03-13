@@ -4,10 +4,9 @@ import { useSelector } from 'react-redux';
 import { Typography, Card, Grid, Skeleton } from '@mui/material';
 import LogChartStacked from '../../../components/machineLogs/LogStackedChart';
 
-const ErpProducedLengthLogGraph = ({timePeriod, customer, graphLabels}) => {
+const ErpProducedLengthLogGraph = ({ timePeriod, customer, graphLabels }) => {
   const [graphData, setGraphData] = useState([]);
   const { isLoading, machineLogsGraphData } = useSelector((state) => state.machineErpLogs);
-
   useEffect(() => {
     if (machineLogsGraphData) {
       const convertedDataToMeters = machineLogsGraphData.map(item => ({
@@ -114,7 +113,7 @@ const ErpProducedLengthLogGraph = ({timePeriod, customer, graphLabels}) => {
   }
 
   return (
-    <Grid item xs={12} sm={12} md={12} lg={10} xl={6} sx={{ mt: 3}}>
+    <Grid item xs={12} sm={12} md={12} lg={10} xl={6} sx={{ mt: 3 }}>
       <Card sx={{ p: 4, boxShadow: 3 }}>
         <Typography variant="h6" color="primary" gutterBottom>
           Produced Length & Waste Over Time (For the {getDataRangeText()})
