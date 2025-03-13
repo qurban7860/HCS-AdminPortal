@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import { Stack, Button, TextField, InputAdornment, Grid } from '@mui/material';
 // components
 import Iconify from '../../../../components/iconify';
-
+import SearchBarCombo from '../../../../components/ListTableTools/SearchBarCombo';
+import { options } from '../../../../theme/styles/default-styles';
 
 UserInviteListTableToolbar.propTypes = {
   isFiltered: PropTypes.bool,
@@ -32,13 +33,14 @@ export default function UserInviteListTableToolbar({
       direction={{ xs: 'column', md: 'row' }}
       sx={{ px: 2.5, py: 3 }}
     >
-      <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+      <Grid container >
         <Grid item xs={12} sm={12} sx={{ display: 'inline-flex' }}>
           <TextField
             fullWidth
             value={filterName}
             onChange={onFilterName}
             placeholder="Search..."
+            size='small'
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">

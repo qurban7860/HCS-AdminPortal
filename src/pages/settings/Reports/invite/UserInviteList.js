@@ -124,7 +124,7 @@ export default function UserInviteList() {
   return (
       <Container maxWidth={false}>
         <StyledCardContainer>
-          <Cover name="User Invites"  generalSettings />
+          <Cover name="User Invites" />
         </StyledCardContainer>
         <TableCard>
           <UserInviteListTableToolbar

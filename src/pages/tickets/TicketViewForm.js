@@ -162,7 +162,7 @@ export default function TicketViewForm() {
 
   const defaultValues = useMemo(
     () => ({
-      ticketNo: id && `${prefix || ''} - ${ticket?.ticketNo || ''}` || '',
+      ticketNo: id && ticket?.ticketNo && `${prefix || ''} - ${ticket?.ticketNo || ''}` || '',
       customer: id && ticket?.customer || '',
       machine: id && ticket?.machine || '',
       // issueType: id && ticket?.issueType?.name || '',
@@ -203,7 +203,7 @@ export default function TicketViewForm() {
 
   const onSubmit = async (fieldName, value) => {
     try {
-      await dispatch(updateTicketField(id, fieldName, value));
+      await dispatch(updateTicketField(ticket?._id, fieldName, value));
       enqueueSnackbar(`Ticket updated successfully!`, { variant: 'success' });
     } catch (error) {
       enqueueSnackbar(`Ticket update failed!`, { variant: 'error' });
@@ -213,7 +213,7 @@ export default function TicketViewForm() {
 
   const onArchive = async () => {
     try {
-      await dispatch(deleteTicket(id, true));
+      await dispatch(deleteTicket(ticket?._id, true));
       enqueueSnackbar('Ticket Archived Successfully!', { variant: 'success' });
       navigate(PATH_SUPPORT.supportTickets.root);
       dispatch(resetTicket());
@@ -251,7 +251,7 @@ export default function TicketViewForm() {
     const image = slides[index];
     if (!image?.isLoaded && image?.fileType?.startsWith('image')) {
       try {
-        const response = await dispatch(getFile(id, image?._id));
+        const response = await dispatch(getFile(ticket?._id, image?._id));
         if (regEx.test(response.status)) {
           const updatedSlides = [...slides.slice(0, index),
           {
@@ -274,7 +274,7 @@ export default function TicketViewForm() {
 
   const handleDeleteFile = async (fileId) => {
     try {
-      await dispatch(deleteFile(id, fileId));
+      await dispatch(deleteFile(ticket?._id, fileId));
       enqueueSnackbar('File archived successfully');
     } catch (err) {
       console.log(err);
@@ -283,7 +283,7 @@ export default function TicketViewForm() {
   };
 
   const handleDownloadFile = (fileId, fileName, fileExtension) => {
-    dispatch(getFile(id, fileId))
+    dispatch(getFile(ticket?._id, fileId))
       .then((res) => {
         if (regEx.test(res.status)) {
           download(atob(res.data), `${fileName}.${fileExtension}`, { type: fileExtension });
@@ -306,7 +306,7 @@ export default function TicketViewForm() {
     setPDFViewerDialog(true);
     setPDF(null);
     try {
-      const response = await dispatch(getFile(id, fileId));
+      const response = await dispatch(getFile(ticket?._id, fileId));
       if (regEx.test(response.status)) {
         const blob = b64toBlob(encodeURI(response.data), 'application/pdf')
         const url = URL.createObjectURL(blob);
