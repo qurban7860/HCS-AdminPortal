@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import { useCallback, useMemo } from 'react';
-import { useDispatch } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { Dialog, DialogContent, Button, DialogTitle, Divider, DialogActions } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useForm } from 'react-hook-form';
@@ -18,10 +17,9 @@ DialogTicketAddFile.propTypes = {
 };
 
 function DialogTicketAddFile({ open, handleClose }) {
-  const { id } = useParams()
 
   const dispatch = useDispatch();
-
+  const { ticket } = useSelector((state) => state.tickets);
   const { enqueueSnackbar } = useSnackbar();
 
   const defaultValues = useMemo(
@@ -69,8 +67,8 @@ function DialogTicketAddFile({ open, handleClose }) {
 
   const onSubmit = async (data) => {
     try {
-      if (id) {
-        await dispatch(addFiles(id, data))
+      if (ticket?._id) {
+        await dispatch(addFiles(ticket?._id, data))
         await handleClose();
         await reset();
         await enqueueSnackbar('Files uploaded successfully!');

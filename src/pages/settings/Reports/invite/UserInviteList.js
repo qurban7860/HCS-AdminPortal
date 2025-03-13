@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import debounce from 'lodash/debounce';
 // @mui
 import { Table, TableBody, TableContainer, Container, Card } from '@mui/material';
@@ -24,11 +24,12 @@ import UserInviteListTableRow from './UserInviteListTableRow';
 import UserInviteListTableToolbar from './UserInviteListTableToolbar';
 
 import {
-  getUserInvites, 
+  getUserInvites,
   getUserInvite,
   ChangeRowsPerPage,
   ChangePage,
-  setFilterBy } from '../../../../redux/slices/securityUser/invite';
+  setFilterBy
+} from '../../../../redux/slices/securityUser/invite';
 import { fDate } from '../../../../utils/formatTime';
 import TableCard from '../../../../components/ListTableTools/TableCard';
 import { StyledCardContainer } from '../../../../theme/styles/default-styles';
@@ -48,9 +49,9 @@ export default function UserInviteList() {
   useSettingsContext();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
-  const [filterStatus, setFilterStatus] = useState([]);
+  const [filterStatus, setFilterStatus] = useState("");
 
-  const { userInvites, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.userInvite );
+  const { userInvites, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.userInvite);
   const TABLE_HEAD = [
     { id: 'name', label: 'Invited User', align: 'left' },
     { id: 'senderInvitationUser.name', visibility: 'xs1', label: 'Invited By', align: 'left' },
@@ -61,27 +62,31 @@ export default function UserInviteList() {
 
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));
-    dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
+    dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10)));
   };
 
-  const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
+  const onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
+
+  const getSignInLogsList = useCallback(async () => {
+    await dispatch(getUserInvites(page, rowsPerPage, filterStatus));
+  }, [dispatch, page, rowsPerPage, filterStatus]);
 
   useEffect(() => {
-      dispatch(getUserInvites());
-  }, [dispatch]);
+    getSignInLogsList();
+  }, [getSignInLogsList]);
 
   useEffect(() => {
     if (initial) {
       setTableData(userInvites);
     }
-  }, [initial, userInvites ]);
+  }, [initial, userInvites]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(order, orderBy),
     filterName,
     filterStatus,
-  });  
+  });
   const denseHeight = 60;
   const isFiltered = filterName !== '' || !!filterStatus.length;
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
@@ -96,15 +101,15 @@ export default function UserInviteList() {
     setFilterName(event.target.value)
     setPage(0);
   };
-  
+
   useEffect(() => {
-      debouncedSearch.current.cancel();
+    debouncedSearch.current.cancel();
   }, [debouncedSearch]);
-  
-  useEffect(()=>{
-      setFilterName(filterBy)
+
+  useEffect(() => {
+    setFilterName(filterBy)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[])
+  }, [])
 
   const handleFilterStatus = (event) => {
     setPage(0);
@@ -122,66 +127,66 @@ export default function UserInviteList() {
   };
 
   return (
-      <Container maxWidth={false}>
-        <StyledCardContainer>
-          <Cover name="User Invites"  generalSettings />
-        </StyledCardContainer>
-        <TableCard>
-          <UserInviteListTableToolbar
-            filterName={filterName}
-            filterStatus={filterStatus}
-            onFilterName={handleFilterName}
-            onFilterStatus={handleFilterStatus}
-            isFiltered={isFiltered}
-            onResetFilter={handleResetFilter}
-          />
-            {!isNotFound && <TablePaginationCustom
-              count={dataFiltered.length}
-              page={page}
-              rowsPerPage={rowsPerPage}
-              onPageChange={onChangePage}
-              onRowsPerPageChange={onChangeRowsPerPage}
-            />}
-          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            <Scrollbar>
-              <Table size="small" sx={{ minWidth: 360 }}>
-                <TableHeadCustom
-                  order={order}
-                  orderBy={orderBy}
-                  headLabel={TABLE_HEAD}
-                  onSort={onSort}
-                />
+    <Container maxWidth={false}>
+      <StyledCardContainer>
+        <Cover name="User Invites" generalSettings />
+      </StyledCardContainer>
+      <TableCard>
+        <UserInviteListTableToolbar
+          filterName={filterName}
+          filterStatus={filterStatus}
+          onFilterName={handleFilterName}
+          onFilterStatus={handleFilterStatus}
+          isFiltered={isFiltered}
+          onResetFilter={handleResetFilter}
+        />
+        {!isNotFound && <TablePaginationCustom
+          count={dataFiltered.length}
+          page={page}
+          rowsPerPage={rowsPerPage}
+          onPageChange={onChangePage}
+          onRowsPerPageChange={onChangeRowsPerPage}
+        />}
+        <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+          <Scrollbar>
+            <Table size="small" sx={{ minWidth: 360 }}>
+              <TableHeadCustom
+                order={order}
+                orderBy={orderBy}
+                headLabel={TABLE_HEAD}
+                onSort={onSort}
+              />
 
-                <TableBody>
-                  {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row, index) =>
-                      row ? (
-                        <UserInviteListTableRow
-                          key={row._id}
-                          row={row}
-                          onViewRow={() => handleViewRow(row?._id)}
-                          style={index % 2 ? { background: 'red' } : { background: 'green' }}
-                        />
-                      ) : (
-                        !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
-                      )
-                    )}
-                  <TableNoData isNotFound={isNotFound} />
-                </TableBody>
-              </Table>
-            </Scrollbar>
-          </TableContainer>
+              <TableBody>
+                {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row, index) =>
+                    row ? (
+                      <UserInviteListTableRow
+                        key={row._id}
+                        row={row}
+                        onViewRow={() => handleViewRow(row?._id)}
+                        style={index % 2 ? { background: 'red' } : { background: 'green' }}
+                      />
+                    ) : (
+                      !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
+                    )
+                  )}
+                <TableNoData isNotFound={isNotFound} />
+              </TableBody>
+            </Table>
+          </Scrollbar>
+        </TableContainer>
 
-          <TablePaginationCustom
-            count={dataFiltered.length}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-          />
-        </TableCard>
-      </Container>
+        <TablePaginationCustom
+          count={dataFiltered.length}
+          page={page}
+          rowsPerPage={rowsPerPage}
+          onPageChange={onChangePage}
+          onRowsPerPageChange={onChangeRowsPerPage}
+        />
+      </TableCard>
+    </Container>
   );
 }
 
