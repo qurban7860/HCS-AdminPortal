@@ -171,8 +171,8 @@ export const allSideBarOptions = {
     {
       subheader: 'Support Services',
       items: [
-        { title: 'Ticket Dashboard', 
-          path: PATH_SUPPORT.ticketDashboard.root, 
+        { title: 'Support Dashboard', 
+          path: PATH_SUPPORT.supportDashboard.root, 
           icon: <Iconify icon="fluent-mdl2:b-i-dashboard" /> 
         },
         {

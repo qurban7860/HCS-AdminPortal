@@ -426,14 +426,14 @@ export const PATH_MACHINE = {
 // ----------------------- SUPPORT SERVICES -----------------------------------------
 export const PATH_SUPPORT = {
   permissionDenied: path(ROOTS_SUPPORT, '/permission-denied'),
-  ticketDashboard: {
-    root: path(ROOTS_SUPPORT, '/ticketDashboard'),
-    issueType: path(ROOTS_SUPPORT, '/ticketDashboard/issueType'),
-    requestType: path(ROOTS_SUPPORT, '/ticketDashboard/requestType'),
-    openIssueType: path(ROOTS_SUPPORT, '/ticketDashboard/openIssueType'),
-    openRequestType: path(ROOTS_SUPPORT, '/ticketDashboard/openRequestType'),
-    statusType: path(ROOTS_SUPPORT, '/ticketDashboard/statusType'),
-    status: path(ROOTS_SUPPORT, '/ticketDashboard/status'),
+  supportDashboard: {
+    root: path(ROOTS_SUPPORT, '/supportDashboard'),
+    issueType: path(ROOTS_SUPPORT, '/supportDashboard/issueType'),
+    requestType: path(ROOTS_SUPPORT, '/supportDashboard/requestType'),
+    openIssueType: path(ROOTS_SUPPORT, '/supportDashboard/openIssueType'),
+    openRequestType: path(ROOTS_SUPPORT, '/supportDashboard/openRequestType'),
+    statusType: path(ROOTS_SUPPORT, '/supportDashboard/statusType'),
+    status: path(ROOTS_SUPPORT, '/supportDashboard/status'),
   },
   supportTickets: {
     root: path(ROOTS_SUPPORT, '/supportTickets'),

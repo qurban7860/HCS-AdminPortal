@@ -448,7 +448,7 @@ export const Email = Loadable(lazy(() => import('../pages/settings/email/EmailLi
 export const Emailview = Loadable(lazy(() => import('../pages/settings/email/EmailViewform')));
 
 // --------------------------- Ticket Dashboard -------------------------------------
-export const TicketDashboard = Loadable(lazy(() => import('../pages/tickets/dashboard/TicketDashboard')));
+export const SupportDashboard = Loadable(lazy(() => import('../pages/tickets/dashboard/SupportDashboard')));
 export const TicketIssueTypeView = Loadable(lazy(() => import('../pages/tickets/dashboard/TicketIssueTypeViewForm')));
 export const TicketRequestTypeView = Loadable(lazy(() => import('../pages/tickets/dashboard/TicketRequestTypeViewForm')));
 export const TicketOpenIssueTypeView = Loadable(lazy(() => import('../pages/tickets/dashboard/TicketOpenIssueTypeViewForm')));
