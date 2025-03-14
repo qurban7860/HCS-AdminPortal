@@ -33,18 +33,14 @@ export default function TicketRequestTypeViewForm() {
 
       if (period !== 'All') {
         const now = new Date();
-        if (period === 'Daily') {
-          const last30Days = new Date(now);
-          last30Days.setDate(now.getDate() - 30);
-          filteredTickets = tickets.data.filter((ticket) => new Date(ticket.createdAt) >= last30Days);
-        } else if (period === 'Monthly') {
-          const last12Months = new Date(now);
-          last12Months.setMonth(now.getMonth() - 12);
-          filteredTickets = tickets.data.filter((ticket) => new Date(ticket.createdAt) >= last12Months);
-        } else if (period === 'Yearly') {
-          const last5Years = new Date(now);
-          last5Years.setFullYear(now.getFullYear() - 5);
-          filteredTickets = tickets.data.filter((ticket) => new Date(ticket.createdAt) >= last5Years);
+        if (period === '1 Month') {
+          const last1Month = new Date(now);
+          last1Month.setMonth(now.getMonth() - 1);
+          filteredTickets = tickets.data.filter((ticket) => new Date(ticket.createdAt) >= last1Month);
+        } else if (period === '1 Year') {
+          const last1Year = new Date(now);
+          last1Year.setFullYear(now.getFullYear() - 1);
+          filteredTickets = tickets.data.filter((ticket) => new Date(ticket.createdAt) >= last1Year);
         }
       }
 
@@ -90,15 +86,6 @@ export default function TicketRequestTypeViewForm() {
     setPeriod(newPeriod);
   };
   
-  let chartTitle = 'Request Type'; 
-  if (period === 'Daily') {
-    chartTitle = 'Request Type [30 days]';
-  } else if (period === 'Monthly') {
-    chartTitle = 'Request Type [12 months]';
-  } else if (period === 'Yearly') {
-    chartTitle = 'Request Type [5 years]';
-  }
-
   return (
     <Container maxWidth={false} sx={{ height: 'auto' }}>
       <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
@@ -107,13 +94,13 @@ export default function TicketRequestTypeViewForm() {
       <Card sx={{ p: 2, pt: 0 }}>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} sx={{ mt: 1, display: 'flex', justifyContent: 'flex-start' }}>
           <Grid item xs={12} sm={6}>
-            <ViewFormEditDeleteButtons backLink={() => navigate(PATH_SUPPORT.ticketDashboard.root)} />
+            <ViewFormEditDeleteButtons backLink={() => navigate(PATH_SUPPORT.supportDashboard.root)} />
           </Grid>
         </Grid>
         <Divider sx={{ paddingTop: 1 }} />
         <Grid container>
           <Grid item xs={12}>
-            <PieChart chartData={requestTypeData} totalIssues={totalRequestTypes} title={chartTitle} onPeriodChange={handlePeriodChange} />
+            <PieChart chartData={requestTypeData} totalIssues={totalRequestTypes} title="Request Type" onPeriodChange={handlePeriodChange} />
           </Grid>
         </Grid>
       </Card>

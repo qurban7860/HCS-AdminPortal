@@ -6,7 +6,7 @@ import { Box, Typography, Grid, Divider, Select, MenuItem, FormControl, InputLab
 import { useChart } from '../chart';
 import Iconify from '../iconify';
 
-const PieChart = ({ chartData, totalIssues, title, onPeriodChange, onExpand }) => {
+const PieChart = ({ chartData, totalIssues, isOpened, title, onPeriodChange, onExpand }) => {
   const [period, setPeriod] = useState('All');
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const getTotalIssues = () => hoveredIndex !== null ? chartData.series[hoveredIndex] : totalIssues;
@@ -62,7 +62,7 @@ const PieChart = ({ chartData, totalIssues, title, onPeriodChange, onExpand }) =
   return (
     <Grid container>
       <Typography variant="h4" sx={{ mb: 2, mt: onExpand ? 0 : 2, fontWeight: 'bold' }}>
-       Support Tickets
+      {isOpened ? "Open Support Tickets" : "All Support Tickets"}
       </Typography>
       <Grid item xs={12} sx={{display: 'flex', justifyContent: 'flex-end', m: 1, mt: -4,}}>
         <FormControl sx={{ minWidth: onExpand ? 120 : 200 }} size="small">
@@ -75,9 +75,12 @@ const PieChart = ({ chartData, totalIssues, title, onPeriodChange, onExpand }) =
             onChange={handlePeriodChange}
             >
             <MenuItem value="All">All</MenuItem>
-            <MenuItem value="Daily">Daily</MenuItem>
-            <MenuItem value="Monthly">Monthly</MenuItem>
-            <MenuItem value="Yearly">Yearly</MenuItem>
+            <MenuItem value="1 Month">1 Month</MenuItem>
+            {/* <MenuItem value="3 Month">3 Month</MenuItem>
+            <MenuItem value="6 Month">6 Month</MenuItem> */}
+            <MenuItem value="1 Year">1 Year</MenuItem>
+            {/* <MenuItem value="2 Year">2 Year</MenuItem>
+            <MenuItem value="5 Year">5 Year</MenuItem> */}
           </Select>
         </FormControl>
         {onExpand && (
@@ -155,6 +158,7 @@ PieChart.propTypes = {
     colors: PropTypes.arrayOf(PropTypes.string).isRequired,
   }).isRequired,
   totalIssues: PropTypes.number.isRequired,
+  isOpened: PropTypes.bool,
   title: PropTypes.string.isRequired,
   onPeriodChange: PropTypes.func,
   onExpand: PropTypes.func,
