@@ -37,6 +37,7 @@ const slice = createSlice({
       state.isLoading = false;
       state.error = action.payload;
       state.initial = true;
+      state.dashboardStatistics  = {};
     },
     // RESPONSE MESSAGE
     setResponseMessage(state, action) {
@@ -94,10 +95,11 @@ export function getMachineDashboardStatistics(machineId) {
       };
     } catch (error) {
       console.error(error);
-      dispatch(slice.actions.hasError(error.Message));
+      const errorMessage = error.response?.data?.message || error.message || "Something went wrong";
+      dispatch(slice.actions.hasError(errorMessage));
       return {
         success: false,
-        message: error || "Something went wrong",
+        message: errorMessage,
       };
     }
   };
