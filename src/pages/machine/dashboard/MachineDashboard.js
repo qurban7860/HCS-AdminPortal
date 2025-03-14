@@ -42,7 +42,7 @@ const LoadingState = () => (
 );
 
 export default function MachineDashboard() {
-  const { dashboardStatistics, isLoading } = useSelector((state) => state.machineDashboard);
+  const { dashboardStatistics, isLoading, error } = useSelector((state) => state.machineDashboard);
   const dispatch = useDispatch();
   const { machineId } = useParams();
 
@@ -53,9 +53,24 @@ export default function MachineDashboard() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [machineId]);
 
-  const renderContent = () => (
-    <MachineStatsCounters stats={dashboardStatistics} displayConfig={DISPLAY_CONFIG} />
-  );
+  const renderContent = () => {
+    if (error || !dashboardStatistics || Object.keys(dashboardStatistics).length === 0) {
+      return (
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', py: 5 }}>
+          <Typography variant="body1" color="text.secondary">
+            {error || 'No statistics available for this machine.'}
+          </Typography>
+        </Box>
+      );
+    }
+
+    return (
+      <MachineStatsCounters 
+        stats={dashboardStatistics} 
+        displayConfig={DISPLAY_CONFIG} 
+      />
+    );
+  };
 
   return (
     <Container maxWidth={false}>
