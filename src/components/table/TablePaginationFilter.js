@@ -1,8 +1,9 @@
 import { memo, useState } from 'react'
 import PropTypes from 'prop-types';
 // @mui
-import { Box, TablePagination, Button, Grid, MenuItem, Checkbox, Menu, Typography } from '@mui/material';
+import { Box, TablePagination, Grid, Button, MenuItem, Checkbox, Menu, Typography } from '@mui/material';
 import Iconify from '../iconify';
+import FullScreenIcon from '../Icons/FullScreenIcon';
 
 // ----------------------------------------------------------------------
 
@@ -66,7 +67,7 @@ function TablePaginationFilter({
   };
 
   return (
-    <Box sx={{ 
+    <Box sx={{
       borderTop: '1px solid #919eab3d',
       display: 'flex',
       justifyContent: 'space-between',
@@ -99,15 +100,24 @@ function TablePaginationFilter({
           ))}
         </Menu>
       </Box>
-      {!disablePagination && <TablePagination labelRowsPerPage="Rows:" colSpan={2} rowsPerPageOptions={rowsPerPageOptions} component="div" showLastButton showFirstButton {...other}
+      <Grid
         sx={{
-          borderTop: 'none !important',
-          '.MuiTablePagination-toolbar': {
-            height: '20px',
-            width: '!important 200px',
-          },
+          display: "flex",
+          alignItems: "center"
         }}
-      />}
+      >
+        {!disablePagination && <TablePagination labelRowsPerPage="Rows:" colSpan={2} rowsPerPageOptions={rowsPerPageOptions} component="div" showLastButton showFirstButton {...other}
+          sx={{
+            borderTop: 'none !important',
+            '.MuiTablePagination-toolbar': {
+              height: '20px',
+              width: '!important 200px',
+            },
+          }}
+        />}
+        |
+        <FullScreenIcon />
+      </Grid>
       {disablePagination && <Typography variant="body2" sx={{ color: 'text.secondary' }}>
         {recordCount} record{recordCount > 1 ? 's' : ''} found
       </Typography>}
