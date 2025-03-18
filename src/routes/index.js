@@ -325,7 +325,7 @@ import {
   // ----------------------------------------------------------------
   
   // TICKET DASHBOARD
-  TicketDashboard,
+  SupportDashboard,
   TicketIssueTypeView,
   TicketRequestTypeView,
   TicketOpenIssueTypeView,
@@ -1080,9 +1080,9 @@ export default function Router() {
       children: [
         { element: <Navigate to="/support/supportTickets" replace />, index: true },
         {
-          path: 'ticketDashboard',
+          path: 'supportDashboard',
           children: [
-            { element: <TicketDashboard />, index: true },
+            { element: <SupportDashboard />, index: true },
             { path: 'issueType', element: <TicketIssueTypeView /> },
             { path: 'requestType', element: <TicketRequestTypeView /> },
             { path: 'openIssueType', element: <TicketOpenIssueTypeView /> },

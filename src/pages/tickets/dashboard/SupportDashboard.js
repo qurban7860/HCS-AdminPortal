@@ -15,7 +15,7 @@ import { varFade } from '../../../components/animate';
 // constants
 import { TITLES } from '../../../constants/default-constants';
 
-export default function TicketDashboard() {
+export default function SupportDashboard() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { tickets } = useSelector((state) => state.tickets);
@@ -74,15 +74,12 @@ export default function TicketDashboard() {
         }
         const now = new Date();
         let startDate;
-        if (period === 'Daily') {
+        if (period === '1 Month') {
           startDate = new Date(now);
-          startDate.setDate(now.getDate() - 30);
-        } else if (period === 'Monthly') {
+          startDate.setMonth(now.getMonth() - 1);
+        } else if (period === '1 Year') {
           startDate = new Date(now);
-          startDate.setMonth(now.getMonth() - 12);
-        } else if (period === 'Yearly') {
-          startDate = new Date(now);
-          startDate.setFullYear(now.getFullYear() - 5);
+          startDate.setFullYear(now.getFullYear() - 1);
         }
         return ticketList.filter(
           (ticket) => new Date(ticket.createdAt) >= startDate
@@ -182,7 +179,7 @@ export default function TicketDashboard() {
       setTotalStatusTypes(Object.values(statusTypeCounts).reduce((acc, val) => acc + val, 0));
 
       // --- Open Issue Type Data ---
-      let openIssueTypeFilteredTickets = filteredTickets.filter(ticket => ticket.isActive); // Filter for isActive
+      let openIssueTypeFilteredTickets = filteredTickets.filter(ticket => ticket.status?.statusType?.isResolved === false); 
       if (openIssueTypePeriod !== 'All') {
         openIssueTypeFilteredTickets = filterTicketsByPeriod(openIssueTypeFilteredTickets, openIssueTypePeriod);
       }
@@ -196,9 +193,9 @@ export default function TicketDashboard() {
       });
       setOpenIssueTypeData(formatData(openTypeCounts, openTypeColors));
       setTotalOpenIssueTypes(Object.values(openTypeCounts).reduce((acc, val) => acc + val, 0));
-
+      
       // --- Open Request Type Data ---
-      let openRequestTypeFilteredTickets = filteredTickets.filter(ticket => ticket.isActive); // Filter for isActive
+      let openRequestTypeFilteredTickets = filteredTickets.filter(ticket => ticket.status?.statusType?.isResolved === false); 
       if (openRequestTypePeriod !== 'All') {
         openRequestTypeFilteredTickets = filterTicketsByPeriod(openRequestTypeFilteredTickets, openRequestTypePeriod);
       }
@@ -307,30 +304,19 @@ export default function TicketDashboard() {
     setStatusTypePeriod(newPeriod);
   };
   
-  const getChartTitle = (title, period) => {
-    if (period === 'Daily') {
-      return `${title} [30 days]`;
-    } if (period === 'Monthly') {
-      return `${title} [12 months]`;
-    } if (period === 'Yearly') {
-      return `${title} [5 years]`;
-    }
-    return title; 
-  };
-  
   const handleExpandGraph = async (graph) => {
     if (graph === 'issueType') {
-      navigate(PATH_SUPPORT.ticketDashboard.issueType);
+      navigate(PATH_SUPPORT.supportDashboard.issueType);
     } else if (graph === 'requestType') {
-      navigate(PATH_SUPPORT.ticketDashboard.requestType);
+      navigate(PATH_SUPPORT.supportDashboard.requestType);
     } else if (graph === 'openIssueType') {
-      navigate(PATH_SUPPORT.ticketDashboard.openIssueType);
+      navigate(PATH_SUPPORT.supportDashboard.openIssueType);
     } else if (graph === 'openRequestType') {
-      navigate(PATH_SUPPORT.ticketDashboard.openRequestType);
+      navigate(PATH_SUPPORT.supportDashboard.openRequestType);
     } else if (graph === 'statusType') {
-      navigate(PATH_SUPPORT.ticketDashboard.statusType);
+      navigate(PATH_SUPPORT.supportDashboard.statusType);
     } else if (graph === 'status') {
-      navigate(PATH_SUPPORT.ticketDashboard.status);
+      navigate(PATH_SUPPORT.supportDashboard.status);
     } 
   };
 
@@ -343,32 +329,32 @@ export default function TicketDashboard() {
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12} xl={6}>
             <StyledGlobalCard sx={{ pt: 2 }} variants={varFade().inDown}>
-              <PieChart chartData={issueTypeData} totalIssues={totalIssueTypes} title={getChartTitle('Issue Type', issueTypePeriod)} onExpand={() => handleExpandGraph('issueType')} onPeriodChange={handleIssueTypePeriodChange} />
+              <PieChart chartData={issueTypeData} totalIssues={totalIssueTypes} title='Issue Type' onExpand={() => handleExpandGraph('issueType')} onPeriodChange={handleIssueTypePeriodChange} />
             </StyledGlobalCard>
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12} xl={6}>
             <StyledGlobalCard sx={{ pt: 2 }} variants={varFade().inDown}>
-              <PieChart chartData={openIssueTypeData} totalIssues={totalOpenIssueTypes} title={getChartTitle('Open Issue Type', openIssueTypePeriod)} onExpand={() => handleExpandGraph('openIssueType')} onPeriodChange={handleOpenIssueTypePeriodChange} />
+              <PieChart chartData={openIssueTypeData} totalIssues={totalOpenIssueTypes} isOpened title='Issue Type' onExpand={() => handleExpandGraph('openIssueType')} onPeriodChange={handleOpenIssueTypePeriodChange} />
             </StyledGlobalCard>
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12} xl={6}>
             <StyledGlobalCard sx={{ pt: 2 }} variants={varFade().inDown}>
-              <PieChart chartData={requestTypeData} totalIssues={totalRequestTypes} title={getChartTitle('Request Type', requestTypePeriod)} onExpand={() => handleExpandGraph('requestType')} onPeriodChange={handleRequestTypePeriodChange} />
+              <PieChart chartData={requestTypeData} totalIssues={totalRequestTypes} title='Request Type' onExpand={() => handleExpandGraph('requestType')} onPeriodChange={handleRequestTypePeriodChange} />
             </StyledGlobalCard>
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12} xl={6}>
             <StyledGlobalCard sx={{ pt: 2 }} variants={varFade().inDown}>
-              <PieChart chartData={openRequestTypeData} totalIssues={totalOpenRequestTypes} title={getChartTitle('Open Request Type', openRequestTypePeriod)} onExpand={() => handleExpandGraph('openRequestType')} onPeriodChange={handleOpenRequestTypePeriodChange}/>
+              <PieChart chartData={openRequestTypeData} totalIssues={totalOpenRequestTypes} isOpened title='Request Type' onExpand={() => handleExpandGraph('openRequestType')} onPeriodChange={handleOpenRequestTypePeriodChange}/>
             </StyledGlobalCard>
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12} xl={6}>
             <StyledGlobalCard sx={{ pt: 2 }} variants={varFade().inDown}>
-              <PieChart chartData={statusTypeData} totalIssues={totalStatusTypes} title={getChartTitle('Status Type', statusTypePeriod)} onExpand={() => handleExpandGraph('statusType')} onPeriodChange={handleStatusTypePeriodChange}/>
+              <PieChart chartData={statusTypeData} totalIssues={totalStatusTypes} title='Status Type' onExpand={() => handleExpandGraph('statusType')} onPeriodChange={handleStatusTypePeriodChange}/>
             </StyledGlobalCard>
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12} xl={6}>
             <StyledGlobalCard sx={{ pt: 2 }} variants={varFade().inDown}>
-              <PieChart chartData={statusData} totalIssues={totalStatuses} title={getChartTitle('Status', statusPeriod)} onExpand={() => handleExpandGraph('status')} onPeriodChange={handleStatusPeriodChange}/>
+              <PieChart chartData={statusData} totalIssues={totalStatuses} title='Status' onExpand={() => handleExpandGraph('status')} onPeriodChange={handleStatusPeriodChange}/>
             </StyledGlobalCard>
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
