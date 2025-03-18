@@ -345,4 +345,31 @@ export function getMachineLogRecords({
   };
 }
 
+// -------------------------- GET LOGS BY IDs ----------------------------------------------------------------------
+
+export function getMachineLogsByIds(logIds, logType) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const params = {
+        ids: logIds,
+        type: logType
+      };
+      const response = await axios.get(`${CONFIG.SERVER_URL}productLogs/logsByIDs`, { params });
+      dispatch(slice.actions.getMachineErpLogRecordsSuccess(response.data));
+      return {
+        success: true,
+        message: 'Logs successfully fetched',
+      };
+    } catch (error) {
+      console.error('Error fetching logs by IDs:', error);
+      dispatch(slice.actions.hasError(error.message || 'An error occurred'));
+      return {
+        success: false,
+        message: error.message || 'Something went wrong',
+      };
+    }
+  };
+}
+
 
