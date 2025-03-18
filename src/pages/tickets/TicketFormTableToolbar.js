@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // @mui
-import { Stack, TextField, Autocomplete, Grid, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
+import { Stack, TextField, Autocomplete, Grid } from '@mui/material';
 // import { useNavigate } from 'react-router-dom';
 import SearchBarCombo from '../../components/ListTableTools/SearchBarCombo';
 // routes
@@ -10,6 +10,7 @@ import SearchBarCombo from '../../components/ListTableTools/SearchBarCombo';
 // constants
 import { getActiveTicketStatuses, resetActiveTicketStatuses } from '../../redux/slices/ticket/ticketSettings/ticketStatuses';
 import { getActiveTicketIssueTypes, resetActiveTicketIssueTypes } from '../../redux/slices/ticket/ticketSettings/ticketIssueTypes'; 
+import { getActiveTicketRequestTypes, resetActiveTicketRequestTypes } from '../../redux/slices/ticket/ticketSettings/ticketRequestTypes'; 
 // import { BUTTONS } from '../../constants/default-constants';
 import { options } from '../../theme/styles/default-styles';
 
@@ -26,6 +27,8 @@ TicketFormTableToolbar.propTypes = {
   onFilterStatusType: PropTypes.func,
   filterIssueType: PropTypes.object, 
   onFilterIssueType: PropTypes.func,
+  filterRequestType: PropTypes.object, 
+  onFilterRequestType: PropTypes.func,
   filterResolvedStatus: PropTypes.string, 
   onFilterResolvedStatus: PropTypes.func,
   onReload: PropTypes.func,
@@ -42,6 +45,8 @@ export default function TicketFormTableToolbar({
   onFilterStatusType,
   filterIssueType, 
   onFilterIssueType, 
+  filterRequestType, 
+  onFilterRequestType, 
   filterResolvedStatus, 
   onFilterResolvedStatus, 
   onReload
@@ -51,19 +56,40 @@ export default function TicketFormTableToolbar({
 
   const { activeTicketStatuses } = useSelector((state) => state.ticketStatuses);
   const { activeTicketIssueTypes } = useSelector((state) => state.ticketIssueTypes);
+  const { activeTicketRequestTypes } = useSelector((state) => state.ticketRequestTypes);
 
+  const [filteredRequestTypes, setFilteredRequestTypes] = useState([]);
   const [filteredStatusTypes, setFilteredStatusTypes] = useState([]);
   const [filteredStatuses, setFilteredStatuses] = useState([]);
+  const [resolvedOptions] = useState([
+    { value: 'resolved', label: 'Resolved' },
+    { value: 'unresolved', label: 'Unresolved' },
+  ]);
 
   useEffect(() => {
     dispatch(getActiveTicketStatuses());
     dispatch(getActiveTicketIssueTypes());
+    dispatch(getActiveTicketRequestTypes());
     return () => {
       dispatch(resetActiveTicketStatuses());
       dispatch(resetActiveTicketIssueTypes());
+      dispatch(resetActiveTicketRequestTypes());
     };
   }, [dispatch]);
-  
+
+  useEffect(() => {
+    if (filterIssueType && activeTicketRequestTypes) {
+      const newFilteredRequestTypes = activeTicketRequestTypes.filter(requestType => requestType.issueType?._id === filterIssueType?._id);
+      setFilteredRequestTypes(newFilteredRequestTypes);
+      if (filterRequestType && !newFilteredRequestTypes.some(rt => rt._id === filterRequestType._id)) {
+        onFilterRequestType(null);
+      }
+    } else {
+      setFilteredRequestTypes([]);
+      onFilterRequestType(null);
+    }
+  }, [filterIssueType, activeTicketRequestTypes, onFilterRequestType, filterRequestType]);
+
   useEffect(() => {
     if (activeTicketStatuses) {
       if (filterResolvedStatus !== null) {
@@ -98,7 +124,7 @@ export default function TicketFormTableToolbar({
       <SearchBarCombo
         nodes={
           <>
-              <Grid item xs={12} sm={6} md={6} lg={3} xl={3}> 
+              <Grid item xs={12} sm={6} md={6} lg={3} xl={4}> 
                 <Autocomplete
                   value={filterIssueType || null}
                   name="issueType"
@@ -112,26 +138,35 @@ export default function TicketFormTableToolbar({
                   }}
                 />
               </Grid> 
-              <Grid item xs={12} sm={6} md={6} lg={3} xl={3}>
-                <FormControl fullWidth>
-                  <InputLabel id="demo-simple-select-label" sx={{ mt:-0.7  }}>Resolved</InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    size='small'
-                    name="isResolved"
-                    value={filterResolvedStatus || null}
-                    label="Resolved"
-                    onChange={(event) => {
-                      onFilterResolvedStatus(event.target.value);
-                    }}
-                  >
-                    <MenuItem key="resolved" value="resolved">Resolved</MenuItem>
-                    <MenuItem key="unresolved" value="unresolved">Unresolved</MenuItem>
-                  </Select>
-                </FormControl>
+              <Grid item xs={12} sm={6} md={6} lg={3} xl={4}>
+              <Autocomplete
+                value={filterRequestType || null}
+                name="requestType"
+                options={[...filteredRequestTypes].sort((a, b) => a.displayOrderNo - b.displayOrderNo)}
+                isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                getOptionLabel={(option) => option?.name}
+                renderInput={(params) => <TextField {...params} size='small' label="Request Type" />}
+                renderOption={(props, option) => ( <li {...props} key={option?._id}> {`${option?.name || ''}`} </li> )}
+                onChange={(event, newValue) => {
+                  onFilterRequestType(newValue);
+                }}
+              />
               </Grid>
-              <Grid item xs={12} sm={6} md={6} lg={3} xl={3}>
+              <Grid item xs={12} sm={6} md={6} lg={3} xl={4}>
+              <Autocomplete
+                value={resolvedOptions.find(option => option.value === filterResolvedStatus) || null}
+                name="isResolved"
+                options={resolvedOptions}
+                isOptionEqualToValue={(option, value) => option.value === value.value}
+                getOptionLabel={(option) => option.label}
+                renderInput={(params) => <TextField {...params} size='small' label="Resolved" />}
+                onChange={(event, newValue) => {
+                  onFilterResolvedStatus(newValue ? newValue.value : null);
+                }}
+                renderOption={(props, option) => ( <li {...props} key={option.value}> {`${option.label}`} </li> )}
+              />
+            </Grid>
+              <Grid item xs={12} sm={6} md={6} lg={3} xl={4}>
               <Autocomplete
                 value={filterStatusType || null}
                 name="statusType"
@@ -145,7 +180,7 @@ export default function TicketFormTableToolbar({
                 }}
               />
               </Grid>
-              <Grid item xs={12} sm={6} md={6} lg={3} xl={3}>
+              <Grid item xs={12} sm={6} md={6} lg={3} xl={4}>
               <Autocomplete
                 value={filterStatus}
                 name="status"
@@ -164,6 +199,7 @@ export default function TicketFormTableToolbar({
               </Grid>
           </>         
         }
+        onReload={onReload}
         // SubOnClick={toggleAdd}
         // addButton={BUTTONS.ADDTICKET}
       />
@@ -174,8 +210,8 @@ export default function TicketFormTableToolbar({
      value={filterName}
      onChange={onFilterName}
      onClick={onResetFilter}
-     increaseFilterSize
-     onReload={onReload}
+    //  increaseFilterSize
+    //  onReload={onReload}
    />
    </Stack>
    </>

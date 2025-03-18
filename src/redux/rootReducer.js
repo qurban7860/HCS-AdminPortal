@@ -70,6 +70,7 @@ import ticketStatusesReducer from './slices/ticket/ticketSettings/ticketStatuses
 import ticketCommentsReducer from './slices/ticket/ticketComments/ticketComment';
 import ticketWorkLogsReducer from './slices/ticket/ticketWorkLogs/ticketWorkLog';
 import ticketHistoriesReducer from './slices/ticket/ticketHistories/ticketHistory';
+import ticketReportsReducer from './slices/ticket/ticketReports/ticketReports';
 import customerJiraReducer from './slices/customer/customerJira';
 import jiraReducer from './slices/jira/jira';
 import apilogsReducer from './slices/logs/apiLogs';
@@ -542,6 +543,12 @@ export const ticketHistoriesPersistConfig = {
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 }
+export const ticketReportsPersistConfig = {
+  key: 'ticketReports',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
 export const customerJiraPersistConfig = {
   key: 'customerJira',
   storage,
@@ -641,6 +648,7 @@ const rootReducer = combineReducers({
   ticketComments: persistReducer(ticketCommentsPersistConfig, ticketCommentsReducer),
   ticketWorkLogs: persistReducer(ticketWorkLogsPersistConfig, ticketWorkLogsReducer),
   ticketHistories: persistReducer(ticketHistoriesPersistConfig, ticketHistoriesReducer),
+  ticketReports: persistReducer(ticketReportsPersistConfig, ticketReportsReducer),
   customerJira: persistReducer(customerJiraPersistConfig, customerJiraReducer),
   jira: persistReducer(jiraPersistConfig, jiraReducer),
   portalRegistration: persistReducer( portalRegistrationPersistConfig, portalRegistrationReducer ),
