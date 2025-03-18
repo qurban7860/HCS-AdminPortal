@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 // @mui
 import { Box, TablePagination, Grid, Button, MenuItem, Checkbox, Menu, Typography } from '@mui/material';
 import Iconify from '../iconify';
-import FullScreenIcon from '../Icons/FullScreenIcon';
 
 // ----------------------------------------------------------------------
 
@@ -100,24 +99,15 @@ function TablePaginationFilter({
           ))}
         </Menu>
       </Box>
-      <Grid
+      {!disablePagination && <TablePagination labelRowsPerPage="Rows:" colSpan={2} rowsPerPageOptions={rowsPerPageOptions} component="div" showLastButton showFirstButton {...other}
         sx={{
-          display: "flex",
-          alignItems: "center"
+          borderTop: 'none !important',
+          '.MuiTablePagination-toolbar': {
+            height: '20px',
+            width: '!important 200px',
+          },
         }}
-      >
-        {!disablePagination && <TablePagination labelRowsPerPage="Rows:" colSpan={2} rowsPerPageOptions={rowsPerPageOptions} component="div" showLastButton showFirstButton {...other}
-          sx={{
-            borderTop: 'none !important',
-            '.MuiTablePagination-toolbar': {
-              height: '20px',
-              width: '!important 200px',
-            },
-          }}
-        />}
-        |
-        <FullScreenIcon />
-      </Grid>
+      />}
       {disablePagination && <Typography variant="body2" sx={{ color: 'text.secondary' }}>
         {recordCount} record{recordCount > 1 ? 's' : ''} found
       </Typography>}

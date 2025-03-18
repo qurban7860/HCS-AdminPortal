@@ -22,7 +22,7 @@ export default function FullScreenIcon({ sx }) {
   return (
     <StyledTooltip
       arrow
-      title="Full Screen"
+      title={fullscreen ? "Exit Full Screen" : "Full Screen"}
       placement='top'
       tooltipcolor={theme.palette.primary.main}
     >
