@@ -4,55 +4,40 @@ import { useNavigate } from 'react-router-dom';
 // @mui
 import { Container, Card, Grid, Divider } from '@mui/material';
 // slices
-import { getTickets } from '../../../redux/slices/ticket/tickets';
+import { getReportTicketRequestTypes } from '../../../redux/slices/ticket/ticketSettings/ticketRequestTypes';
 // hooks
 import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
 import { Cover } from '../../../components/Defaults/Cover';
 import { PATH_SUPPORT } from '../../../routes/paths';
-import PieChart from '../../../components/Charts/PieChart'; 
+import PieChart from '../../../components/Charts/PieChart';
 
 export default function TicketRequestTypeViewForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { tickets } = useSelector((state) => state.tickets);
-  const [period, setPeriod] = useState('All');
+  const { ticketRequestTypes } = useSelector((state) => state.ticketRequestTypes);
 
   const [requestTypeData, setRequestTypeData] = useState({ series: [], labels: [], colors: [] });
   const [totalRequestTypes, setTotalRequestTypes] = useState(0);
 
   useLayoutEffect(() => {
-    dispatch(getTickets());
+    dispatch(getReportTicketRequestTypes());
   }, [dispatch]);
 
   useEffect(() => {
-    if (tickets && tickets.data && tickets.data.length > 0) {
+    if (ticketRequestTypes && ticketRequestTypes.countsByField) {
       const typeCounts = {};
       const typeColors = {};
       let emptyRequestTypeCount = 0;
-      let filteredTickets = tickets.data;
 
-      if (period !== 'All') {
-        const now = new Date();
-        if (period === '1 Month') {
-          const last1Month = new Date(now);
-          last1Month.setMonth(now.getMonth() - 1);
-          filteredTickets = tickets.data.filter((ticket) => new Date(ticket.createdAt) >= last1Month);
-        } else if (period === '1 Year') {
-          const last1Year = new Date(now);
-          last1Year.setFullYear(now.getFullYear() - 1);
-          filteredTickets = tickets.data.filter((ticket) => new Date(ticket.createdAt) >= last1Year);
-        }
-      }
-
-      filteredTickets.forEach((ticket) => {
-        const requestTypeKey = ticket.requestType?.name;
-        const requestTypeColor = ticket.requestType?.color || 'gray';
+      ticketRequestTypes.countsByField.forEach((item) => {
+        const requestTypeKey = item.name;
+        const requestTypeColor = item.color || 'gray';
 
         if (requestTypeKey) {
-          typeCounts[requestTypeKey] = (typeCounts[requestTypeKey] || 0) + 1;
+          typeCounts[requestTypeKey] = (typeCounts[requestTypeKey] || 0) + item.count;
           typeColors[requestTypeKey] = requestTypeColor;
         } else {
-          emptyRequestTypeCount += 1;
+          emptyRequestTypeCount += item.count;
         }
       });
 
@@ -61,31 +46,25 @@ export default function TicketRequestTypeViewForm() {
         typeColors.Other = 'gray';
       }
 
-      const formatData = (counts, colors) =>
-        Object.entries(counts)
-          .sort(([, a], [, b]) => b - a)
-          .reduce(
-            (acc, [key, value]) => {
-              acc.labels.push(key);
-              acc.series.push(value);
-              acc.colors.push(colors[key]);
-              return acc;
-            },
-            { series: [], labels: [], colors: [] }
-          );
+      const formattedData = Object.entries(typeCounts)
+        .reduce(
+          (acc, [key, value]) => {
+            acc.labels.push(key);
+            acc.series.push(value);
+            acc.colors.push(typeColors[key]);
+            return acc;
+          },
+          { series: [], labels: [], colors: [] }
+        );
 
-      setRequestTypeData(formatData(typeCounts, typeColors));
+      setRequestTypeData(formattedData);
       setTotalRequestTypes(Object.values(typeCounts).reduce((acc, val) => acc + val, 0));
     } else {
       setRequestTypeData({ series: [], labels: [], colors: [] });
       setTotalRequestTypes(0);
     }
-  }, [tickets, period]);
+  }, [ticketRequestTypes]);
 
-  const handlePeriodChange = (newPeriod) => {
-    setPeriod(newPeriod);
-  };
-  
   return (
     <Container maxWidth={false} sx={{ height: 'auto' }}>
       <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
@@ -100,7 +79,7 @@ export default function TicketRequestTypeViewForm() {
         <Divider sx={{ paddingTop: 1 }} />
         <Grid container>
           <Grid item xs={12}>
-            <PieChart chartData={requestTypeData} totalIssues={totalRequestTypes} title="Request Type" onPeriodChange={handlePeriodChange} />
+            <PieChart chartData={requestTypeData} totalIssues={totalRequestTypes} title="Request Type" />
           </Grid>
         </Grid>
       </Card>

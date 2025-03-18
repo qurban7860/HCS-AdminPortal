@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 // @mui
 import { Container, Card, Grid, Divider } from '@mui/material';
 // slices
-import { getTickets } from '../../../redux/slices/ticket/tickets';
+import { getReportTicketIssueTypes } from '../../../redux/slices/ticket/ticketSettings/ticketIssueTypes';
 // hooks
 import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
 import { Cover } from '../../../components/Defaults/Cover';
@@ -14,69 +14,49 @@ import PieChart from '../../../components/Charts/PieChart';
 export default function TicketIssueTypeViewForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { tickets } = useSelector((state) => state.tickets);
+  const { ticketIssueTypes } = useSelector((state) => state.ticketIssueTypes);
 
   const [issueTypeData, setIssueTypeData] = useState({ series: [], labels: [], colors: [] });
   const [totalIssueTypes, setTotalIssueTypes] = useState(0);
-  const [period, setPeriod] = useState('All'); 
+  const [period, setPeriod] = useState('All');
 
   useLayoutEffect(() => {
-    dispatch(getTickets());
+    dispatch(getReportTicketIssueTypes());
   }, [dispatch]);
 
   useEffect(() => {
-    if (tickets && tickets.data && tickets.data.length > 0) {
+    if (ticketIssueTypes && ticketIssueTypes.countsByField) {
       const typeCounts = {};
       const typeColors = {};
-      let filteredTickets = tickets.data;
 
-      if (period !== 'All') {
-        const now = new Date();
-        if (period === '1 Month') {
-          const last1Month = new Date(now);
-          last1Month.setMonth(now.getMonth() - 1);
-          filteredTickets = tickets.data.filter((ticket) => new Date(ticket.createdAt) >= last1Month);
-        } else if (period === '1 Year') {
-          const last1Year = new Date(now);
-          last1Year.setFullYear(now.getFullYear() - 1);
-          filteredTickets = tickets.data.filter((ticket) => new Date(ticket.createdAt) >= last1Year);
-        }
-      }
-
-      filteredTickets.forEach((ticket) => {
-        const issueKey = ticket.issueType?.name;
-        const issueColor = ticket.issueType?.color || 'gray';
+      ticketIssueTypes.countsByField.forEach((item) => {
+        const issueKey = item.name;
+        const issueColor = item.color || 'gray';
 
         if (issueKey) {
-          typeCounts[issueKey] = (typeCounts[issueKey] || 0) + 1;
+          typeCounts[issueKey] = (typeCounts[issueKey] || 0) + item.count;
           typeColors[issueKey] = issueColor;
         }
       });
 
-      const formatData = (counts, colors) =>
-        Object.entries(counts)
-          .sort(([, a], [, b]) => b - a)
-          .reduce(
-            (acc, [key, value]) => {
-              acc.labels.push(key);
-              acc.series.push(value);
-              acc.colors.push(colors[key]);
-              return acc;
-            },
-            { series: [], labels: [], colors: [] }
-          );
+      const formattedData = Object.entries(typeCounts)
+        .reduce(
+          (acc, [key, value]) => {
+            acc.labels.push(key);
+            acc.series.push(value);
+            acc.colors.push(typeColors[key]);
+            return acc;
+          },
+          { series: [], labels: [], colors: [] }
+        );
 
-      setIssueTypeData(formatData(typeCounts, typeColors));
+      setIssueTypeData(formattedData);
       setTotalIssueTypes(Object.values(typeCounts).reduce((acc, val) => acc + val, 0));
     } else {
       setIssueTypeData({ series: [], labels: [], colors: [] });
       setTotalIssueTypes(0);
     }
-  }, [tickets, period]); 
-
-  const handlePeriodChange = (newPeriod) => {
-    setPeriod(newPeriod);
-  };
+  }, [ticketIssueTypes]);
 
   return (
     <Container maxWidth={false} sx={{ height: 'auto' }}>
@@ -84,7 +64,7 @@ export default function TicketIssueTypeViewForm() {
         <Cover name="Issue Type" icon="material-symbols:list-alt-outline" />
       </Card>
       <Card sx={{ p: 2, pt: 0 }}>
-      <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} sx={{ mt: 1, display: 'flex', justifyContent: 'flex-start' }}>
+        <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} sx={{ mt: 1, display: 'flex', justifyContent: 'flex-start' }}>
           <Grid item xs={12} sm={6}>
             <ViewFormEditDeleteButtons backLink={() => navigate(PATH_SUPPORT.supportDashboard.root)} />
           </Grid>
@@ -92,7 +72,7 @@ export default function TicketIssueTypeViewForm() {
         <Divider sx={{ paddingTop: 1 }} />
         <Grid container>
           <Grid item xs={12}>
-          <PieChart chartData={issueTypeData} totalIssues={totalIssueTypes} title="Issue Type" onPeriodChange={handlePeriodChange} />
+            <PieChart chartData={issueTypeData} totalIssues={totalIssueTypes} title="Issue Type" />
           </Grid>
         </Grid>
       </Card>
