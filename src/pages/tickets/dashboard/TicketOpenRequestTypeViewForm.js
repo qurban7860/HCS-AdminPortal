@@ -10,6 +10,7 @@ import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEdi
 import { Cover } from '../../../components/Defaults/Cover';
 import { PATH_SUPPORT } from '../../../routes/paths';
 import PieChart from '../../../components/Charts/PieChart';
+import { getPeriodValueAndUnit } from './utils/Constant';
 
 export default function TicketOpenRequestTypeViewForm() {
   const dispatch = useDispatch();
@@ -64,6 +65,11 @@ export default function TicketOpenRequestTypeViewForm() {
       setTotalOpenRequestTypes(0);
     }
   }, [openTicketRequestTypes]);
+  
+  const handlePeriodChange = (newPeriod) => {
+    const { value, unit } = getPeriodValueAndUnit(newPeriod);
+    dispatch(getOpenTicketRequestTypes(value, unit));
+  };
 
   return (
     <Container maxWidth={false} sx={{ height: 'auto' }}>
@@ -79,7 +85,7 @@ export default function TicketOpenRequestTypeViewForm() {
         <Divider sx={{ paddingTop: 1 }} />
         <Grid container>
           <Grid item xs={12}>
-            <PieChart chartData={openRequestTypeData} totalIssues={totalOpenRequestTypes} isOpened title="Request Type" />
+            <PieChart chartData={openRequestTypeData} totalIssues={totalOpenRequestTypes} isOpened title="Request Type" onPeriodChange={handlePeriodChange}/>
           </Grid>
         </Grid>
       </Card>

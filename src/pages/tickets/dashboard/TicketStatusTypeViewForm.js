@@ -10,6 +10,7 @@ import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEdi
 import { Cover } from '../../../components/Defaults/Cover';
 import { PATH_SUPPORT } from '../../../routes/paths';
 import PieChart from '../../../components/Charts/PieChart';
+import { getPeriodValueAndUnit } from './utils/Constant';
 
 export default function TicketStatusTypeViewForm() {
   const dispatch = useDispatch();
@@ -65,6 +66,11 @@ export default function TicketStatusTypeViewForm() {
     }
   }, [ticketStatusTypes]);
 
+  const handlePeriodChange = (newPeriod) => {
+    const { value, unit } = getPeriodValueAndUnit(newPeriod);
+    dispatch(getReportTicketStatusTypes(value, unit));
+  };
+
   return (
     <Container maxWidth={false} sx={{ height: 'auto' }}>
       <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
@@ -79,7 +85,7 @@ export default function TicketStatusTypeViewForm() {
         <Divider sx={{ paddingTop: 1 }} />
         <Grid container>
           <Grid item xs={12}>
-            <PieChart chartData={statusTypeData} totalIssues={totalStatusTypes} title="Status Type" />
+            <PieChart chartData={statusTypeData} totalIssues={totalStatusTypes} title="Status Type" onPeriodChange={handlePeriodChange} />
           </Grid>
         </Grid>
       </Card>

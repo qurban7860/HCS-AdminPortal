@@ -21,12 +21,12 @@ const PieChart = ({ chartData, totalIssues, isOpened, title, onPeriodChange, onE
         donut: {
           size: '40%',
           labels: {
-            show: false,
-            // total: {
-            //   show: true,
-            //   label: 'Total Issues',
-            //   formatter: () => `${getTotalIssues()}`,
-            // },
+            show: true,
+            total: {
+              show: true,
+              label: 'Total Issues',
+              formatter: () => `${getTotalIssues()}`,
+            },
           },
         },
       },
@@ -75,12 +75,12 @@ const PieChart = ({ chartData, totalIssues, isOpened, title, onPeriodChange, onE
             onChange={handlePeriodChange}
             >
             <MenuItem value="All">All</MenuItem>
-            <MenuItem value="1 Month">1 Month</MenuItem>
-            {/* <MenuItem value="3 Month">3 Month</MenuItem>
-            <MenuItem value="6 Month">6 Month</MenuItem> */}
-            <MenuItem value="1 Year">1 Year</MenuItem>
-            {/* <MenuItem value="2 Year">2 Year</MenuItem>
-            <MenuItem value="5 Year">5 Year</MenuItem> */}
+            <MenuItem value="1 month">1 Month</MenuItem>
+            <MenuItem value="3 month">3 Month</MenuItem>
+            <MenuItem value="6 month">6 Month</MenuItem>
+            <MenuItem value="1 year">1 Year</MenuItem>
+            <MenuItem value="2 year">2 Year</MenuItem>
+            <MenuItem value="5 year">5 Year</MenuItem>
           </Select>
         </FormControl>
         {onExpand && (

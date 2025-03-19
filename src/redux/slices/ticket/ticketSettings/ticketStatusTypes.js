@@ -228,7 +228,7 @@ export function getTicketStatusTypes(page, pageSize) {
   };
 }
 
-export function getReportTicketStatusTypes() {
+export function getReportTicketStatusTypes(value = null, unit = null) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -236,6 +236,10 @@ export function getReportTicketStatusTypes() {
         orderBy: { createdAt: -1 },
         isArchived: false,
       };
+      if (value !== null && unit !== null) {
+        params.value = value;
+        params.unit = unit;
+      }
 
       const response = await axios.get(`${CONFIG.SERVER_URL}tickets/settings/statusTypes/count`, { params });
       dispatch(slice.actions.getReportTicketStatusTypesSuccess(response.data));
