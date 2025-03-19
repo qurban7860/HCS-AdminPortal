@@ -1,10 +1,16 @@
 import PropTypes from 'prop-types';
 import { Grid, Box } from '@mui/material';
 import StatCounter, { formatLargeNumber } from '../../../components/StatCounters/StatCounter';
+import { STATS_CONFIG } from './constants';
 
-const formatNumber = (statObject, key) => {
+const formatNumber = (statObject, key, useRecordCount) => {
   if (!statObject || typeof statObject.value !== 'number') {
     return '0';
+  }
+
+  // If this stat should use recordCount instead of value
+  if (useRecordCount) {
+    return formatLargeNumber(statObject.recordCount || 0);
   }
 
   let convertedValue = statObject.value;
@@ -17,7 +23,31 @@ const formatNumber = (statObject, key) => {
   return formatLargeNumber(convertedValue);
 };
 
-export default function MachineStatsCounters({ stats, displayConfig, loadingStates }) {
+const deriveComponentStats = (stats) => {
+  const derivedStats = { ...stats };
+  
+  // Derive component stats from length stats
+  if (stats.producedLength) {
+    derivedStats.producedComponents = stats.producedLength;
+  }
+  if (stats.wasteLength) {
+    derivedStats.wasteComponents = stats.wasteLength;
+  }
+  
+  return derivedStats;
+};
+
+export default function MachineStatsCounters({ stats, loadingStates }) {
+  // Derive component stats from length stats
+  const enrichedStats = deriveComponentStats(stats);
+  
+  // Derive loading states for component stats
+  const enrichedLoadingStates = {
+    ...loadingStates,
+    producedComponents: loadingStates.producedLength,
+    wasteComponents: loadingStates.wasteLength
+  };
+
   return (
     <Box sx={{ width: '100%', maxWidth: 1200, mx: 'auto' }}>
       <Grid 
@@ -26,9 +56,9 @@ export default function MachineStatsCounters({ stats, displayConfig, loadingStat
         justifyContent="center" 
         alignItems="center"
       >
-        {displayConfig.map(({ key, label, showRecordCount }) => {
-          const isLoading = loadingStates[key];
-          const statObject = stats[key];
+        {STATS_CONFIG.map(({ key, label, useRecordCount }) => {
+          const isLoading = enrichedLoadingStates[key];
+          const statObject = enrichedStats[key];
 
           return (
             <Grid 
@@ -36,7 +66,7 @@ export default function MachineStatsCounters({ stats, displayConfig, loadingStat
               xs={12} 
               sm={6} 
               md={4} 
-              lg={3} 
+              lg={2} 
               key={key}
               sx={{ display: 'flex' }}
             >
@@ -44,9 +74,7 @@ export default function MachineStatsCounters({ stats, displayConfig, loadingStat
                 loading={isLoading}
                 label={label}
               >
-                {statObject && showRecordCount
-                  ? `${statObject.recordCount} / ${formatNumber(statObject, key)}`
-                  : formatNumber(statObject, key)}
+                {formatNumber(statObject, key, useRecordCount)}
               </StatCounter>
             </Grid>
           );
@@ -57,13 +85,6 @@ export default function MachineStatsCounters({ stats, displayConfig, loadingStat
 }
 
 MachineStatsCounters.propTypes = {
-  displayConfig: PropTypes.arrayOf(
-    PropTypes.shape({
-      key: PropTypes.string.isRequired,
-      label: PropTypes.string.isRequired,
-      showRecordCount: PropTypes.bool
-    })
-  ).isRequired,
   stats: PropTypes.object.isRequired,
   loadingStates: PropTypes.objectOf(PropTypes.bool).isRequired,
 }; 
