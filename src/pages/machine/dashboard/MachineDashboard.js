@@ -12,15 +12,9 @@ import MachineTabContainer from '../util/MachineTabContainer';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
 import MachineStatsCounters from './MachineStatsCounters';
 import { getMachineDashboardStatistics } from '../../../redux/slices/products/machineDashboard';
+import { STATS_CONFIG } from './constants';
 
 // ----------------------------------------------------------------------
-
-// Display configuration for machine statistics
-const DISPLAY_CONFIG = {
-  'producedLength': { label: 'Produced Components / Produced Length (m)', showRecordCount: true },
-  'wasteLength': { label: 'Waste Components / Waste Length (m)', showRecordCount: true },
-  'productionRate': { label: 'Production Rate (m/h)', showRecordCount: false },
-};
 
 export default function MachineDashboard() {
   const { dashboardStatistics, isLoading, error } = useSelector((state) => state.machineDashboard);
@@ -50,7 +44,7 @@ export default function MachineDashboard() {
     return (
       <MachineStatsCounters 
         stats={dashboardStatistics} 
-        displayConfig={DISPLAY_CONFIG}
+        displayConfig={STATS_CONFIG}
         loadingStates={isLoading}
       />
     );

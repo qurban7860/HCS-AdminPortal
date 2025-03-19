@@ -3,22 +3,15 @@ import { createSlice } from '@reduxjs/toolkit';
 // utils
 import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
+import { STATS_CONFIG } from '../../../pages/machine/dashboard/constants';
 
 // ----------------------------------------------------------------------
 const initialState = {
   intial: false,
   responseMessage: null,
   success: false,
-  isLoading: {
-    'producedLength': false,
-    'wasteLength': false,
-    'productionRate': false
-  },
-  error: {
-    'producedLength': null,
-    'wasteLength': null,
-    'productionRate': null
-  },
+  isLoading: STATS_CONFIG.reduce((acc, { key }) => ({ ...acc, [key]: false }), {}),
+  error: STATS_CONFIG.reduce((acc, { key }) => ({ ...acc, [key]: null }), {}),
   dashboardStatistics: {},
   filterBy: '',
   page: 0,
@@ -58,16 +51,8 @@ const slice = createSlice({
     resetMachineDashboard(state) {
       return {
         ...initialState,
-        isLoading: {
-          'producedLength': false,
-          'wasteLength': false,
-          'productionRate': false
-        },
-        error: {
-          'producedLength': null,
-          'wasteLength': null,
-          'productionRate': null
-        }
+        isLoading: STATS_CONFIG.reduce((acc, { key }) => ({ ...acc, [key]: false }), {}),
+        error: STATS_CONFIG.reduce((acc, { key }) => ({ ...acc, [key]: null }), {})
       };
     },
     // Set FilterBy
@@ -117,12 +102,10 @@ export function getMachineDashboardStatistics(machineId) {
       }
     };
 
-    // Fetch all statistics in parallel
-    await Promise.all([
-      fetchStatistic('producedLength'),
-      fetchStatistic('wasteLength'),
-      fetchStatistic('productionRate')
-    ]);
+    // Fetch all statistics in parallel using STATS_CONFIG
+    await Promise.all(
+      STATS_CONFIG.map(({ key }) => fetchStatistic(key))
+    );
 
     return {
       success: true,
