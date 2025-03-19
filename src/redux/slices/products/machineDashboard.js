@@ -9,8 +9,16 @@ const initialState = {
   intial: false,
   responseMessage: null,
   success: false,
-  isLoading: false,
-  error: null,
+  isLoading: {
+    'producedLength': false,
+    'wasteLength': false,
+    'productionRate': false
+  },
+  error: {
+    'producedLength': null,
+    'wasteLength': null,
+    'productionRate': null
+  },
   dashboardStatistics: {},
   filterBy: '',
   page: 0,
@@ -21,37 +29,46 @@ const slice = createSlice({
   name: 'machineDashboard',
   initialState,
   reducers: {
-    // START LOADING
-    startLoading(state) {
-      state.isLoading = true;
+    startLoading(state, action) {
+      state.isLoading[action.payload] = true;
     },
-    // SET DASHBOARD STATISTICS
-    setDashboardStatistics(state, action){
-      state.isLoading = false;
+    // SET INDIVIDUAL STATISTIC
+    setStatistic(state, action) {
+      const { type, value } = action.payload;
+      state.isLoading[type] = false;
       state.success = true;
       state.initial = true;
-      state.dashboardStatistics = action.payload;
+      state.dashboardStatistics[type] = value;
+      state.error[type] = null;
     },
     // HAS ERROR
     hasError(state, action) {
-      state.isLoading = false;
-      state.error = action.payload;
+      const { type, error } = action.payload;
+      state.isLoading[type] = false;
+      state.error[type] = error;
       state.initial = true;
-      state.dashboardStatistics  = {};
     },
     // RESPONSE MESSAGE
     setResponseMessage(state, action) {
       state.responseMessage = action.payload;
-      state.isLoading = false;
       state.success = true;
       state.initial = true;
     },
     // RESET MACHINE DASHBOARD
-    resetMachineDashboard(state){
-      state.dashboardStatistics = {};
-      state.responseMessage = null;
-      state.success = false;
-      state.isLoading = false;
+    resetMachineDashboard(state) {
+      return {
+        ...initialState,
+        isLoading: {
+          'producedLength': false,
+          'wasteLength': false,
+          'productionRate': false
+        },
+        error: {
+          'producedLength': null,
+          'wasteLength': null,
+          'productionRate': null
+        }
+      };
     },
     // Set FilterBy
     setFilterBy(state, action) {
@@ -73,7 +90,7 @@ export default slice.reducer;
 
 // Actions
 export const {
-  setDashboardStatistics,
+  setStatistic,
   resetMachineDashboard,
   setResponseMessage,
   setFilterBy,
@@ -85,23 +102,32 @@ export const {
 
 export function getMachineDashboardStatistics(machineId) {
   return async (dispatch) => {
-    dispatch(slice.actions.startLoading());
-    try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/dashboard`);
-      dispatch(slice.actions.setDashboardStatistics({...response?.data, machineId} || ''));
-      return {
-        success: true,
-        message: 'Successfully fetched',
-      };
-    } catch (error) {
-      console.error(error);
-      const errorMessage = error.response?.data?.message || error.message || "Something went wrong";
-      dispatch(slice.actions.hasError(errorMessage));
-      return {
-        success: false,
-        message: errorMessage,
-      };
-    }
+    const fetchStatistic = async (type) => {
+      dispatch(slice.actions.startLoading(type));
+      try {
+        const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/dashboard/${type}`);
+        dispatch(slice.actions.setStatistic({ 
+          type, 
+          value: response?.data || { value: 0, recordCount: 0 }
+        }));
+      } catch (error) {
+        console.error(error);
+        const errorMessage = error.response?.data?.message || error.message || "Something went wrong";
+        dispatch(slice.actions.hasError({ type, error: errorMessage }));
+      }
+    };
+
+    // Fetch all statistics in parallel
+    await Promise.all([
+      fetchStatistic('producedLength'),
+      fetchStatistic('wasteLength'),
+      fetchStatistic('productionRate')
+    ]);
+
+    return {
+      success: true,
+      message: 'Statistics fetch completed',
+    };
   };
 }
 

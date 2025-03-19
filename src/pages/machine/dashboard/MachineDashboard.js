@@ -1,7 +1,7 @@
 // react
 import { useEffect } from 'react';
 // @mui
-import { Card, Container, Box, CircularProgress, Typography } from '@mui/material';
+import { Card, Container, Box, Typography } from '@mui/material';
 
 // routes
 import { useParams } from 'react-router-dom';
@@ -17,29 +17,10 @@ import { getMachineDashboardStatistics } from '../../../redux/slices/products/ma
 
 // Display configuration for machine statistics
 const DISPLAY_CONFIG = {
-  producedLength: { label: 'Produced Length (m)' },
-  wasteLength: { label: 'Waste Length (m)' },
-  productionRate: { label: 'Production Rate (m/h)' },
+  'producedLength': { label: 'Produced Components / Produced Length (m)', showRecordCount: true },
+  'wasteLength': { label: 'Waste Components / Waste Length (m)', showRecordCount: true },
+  'productionRate': { label: 'Production Rate (m/h)', showRecordCount: false },
 };
-
-// Loading state component
-const LoadingState = () => (
-  <Box
-    sx={{
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      height: '100%',
-      py: 5,
-    }}
-  >
-    <CircularProgress size={60} thickness={4} />
-    <Typography variant="body1" sx={{ mt: 2, color: 'text.secondary' }}>
-      Loading machine statistics...
-    </Typography>
-  </Box>
-);
 
 export default function MachineDashboard() {
   const { dashboardStatistics, isLoading, error } = useSelector((state) => state.machineDashboard);
@@ -53,12 +34,14 @@ export default function MachineDashboard() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [machineId]);
 
+  const hasAnyError = Object.values(error).some(Boolean);
+
   const renderContent = () => {
-    if (error || !dashboardStatistics || Object.keys(dashboardStatistics).length === 0) {
+    if (hasAnyError) {
       return (
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', py: 5 }}>
           <Typography variant="body1" color="text.secondary">
-            {error || 'No statistics available for this machine.'}
+            {Object.values(error).find(Boolean) || 'No statistics available for this machine.'}
           </Typography>
         </Box>
       );
@@ -67,7 +50,8 @@ export default function MachineDashboard() {
     return (
       <MachineStatsCounters 
         stats={dashboardStatistics} 
-        displayConfig={DISPLAY_CONFIG} 
+        displayConfig={DISPLAY_CONFIG}
+        loadingStates={isLoading}
       />
     );
   };
@@ -99,7 +83,7 @@ export default function MachineDashboard() {
             justifyContent: 'center',
           }}
         >
-          {isLoading ? <LoadingState /> : renderContent()}
+          {renderContent()}
         </Box>
       </Card>
     </Container>
