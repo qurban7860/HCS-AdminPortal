@@ -246,7 +246,7 @@ export function getTicketRequestTypes(page, pageSize) {
   };
 }
 
-export function getReportTicketRequestTypes() {
+export function getReportTicketRequestTypes(value = null, unit = null) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -254,6 +254,10 @@ export function getReportTicketRequestTypes() {
         orderBy: { createdAt: -1 },
         isArchived: false,
       };
+      if (value !== null && unit !== null) {
+        params.value = value;
+        params.unit = unit;
+      }
 
       const response = await axios.get(`${CONFIG.SERVER_URL}tickets/settings/requestTypes/count`, { params });
       dispatch(slice.actions.getReportTicketRequestTypesSuccess(response.data));
@@ -266,7 +270,7 @@ export function getReportTicketRequestTypes() {
   };
 }
 
-export function getOpenTicketRequestTypes() {
+export function getOpenTicketRequestTypes(value = null, unit = null) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -275,6 +279,10 @@ export function getOpenTicketRequestTypes() {
         isArchived: false,
         isResolved: false,
       };
+      if (value !== null && unit !== null) {
+        params.value = value;
+        params.unit = unit;
+      }
 
       const response = await axios.get(`${CONFIG.SERVER_URL}tickets/settings/requestTypes/count`, { params });
       dispatch(slice.actions.getOpenTicketRequestTypesSuccess(response.data));

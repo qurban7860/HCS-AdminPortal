@@ -228,7 +228,7 @@ export function getTicketStatuses(page, pageSize) {
   };
 }
 
-export function getReportTicketStatuses() {
+export function getReportTicketStatuses(value = null, unit = null) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -236,6 +236,10 @@ export function getReportTicketStatuses() {
         orderBy: { createdAt: -1 },
         isArchived: false,
       };
+      if (value !== null && unit !== null) {
+        params.value = value;
+        params.unit = unit;
+      }
       const response = await axios.get(`${CONFIG.SERVER_URL}tickets/settings/statuses/count`, { params });
       dispatch(slice.actions.getReportTicketStatusesSuccess(response.data));
       return response;

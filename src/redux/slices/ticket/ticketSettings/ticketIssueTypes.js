@@ -243,7 +243,7 @@ export function getTicketIssueTypes(page, pageSize) {
   };
 }
 
-export function getReportTicketIssueTypes() {
+export function getReportTicketIssueTypes(value = null, unit = null) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -251,6 +251,11 @@ export function getReportTicketIssueTypes() {
         orderBy: { createdAt: -1 },
         isArchived: false,
       };
+      
+      if (value !== null && unit !== null) {
+        params.value = value;
+        params.unit = unit;
+      }
 
       const response = await axios.get(`${CONFIG.SERVER_URL}tickets/settings/issueTypes/count`, { params });
       dispatch(slice.actions.getReportTicketIssueTypesSuccess(response.data));
@@ -263,7 +268,7 @@ export function getReportTicketIssueTypes() {
   };
 }
 
-export function getOpenTicketIssueTypes() {
+export function getOpenTicketIssueTypes(value = null, unit = null) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -272,7 +277,10 @@ export function getOpenTicketIssueTypes() {
         isArchived: false,
         isResolved: false,
       };
-
+      if (value !== null && unit !== null) {
+        params.value = value;
+        params.unit = unit;
+      }
       const response = await axios.get(`${CONFIG.SERVER_URL}tickets/settings/issueTypes/count`, { params });
       dispatch(slice.actions.getOpenTicketIssueTypesSuccess(response.data));
       return response;

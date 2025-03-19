@@ -10,6 +10,7 @@ import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEdi
 import { Cover } from '../../../components/Defaults/Cover';
 import { PATH_SUPPORT } from '../../../routes/paths';
 import PieChart from '../../../components/Charts/PieChart';
+import { getPeriodValueAndUnit } from './utils/Constant';
 
 export default function TicketIssueTypeViewForm() {
   const dispatch = useDispatch();
@@ -18,7 +19,6 @@ export default function TicketIssueTypeViewForm() {
 
   const [issueTypeData, setIssueTypeData] = useState({ series: [], labels: [], colors: [] });
   const [totalIssueTypes, setTotalIssueTypes] = useState(0);
-  const [period, setPeriod] = useState('All');
 
   useLayoutEffect(() => {
     dispatch(getReportTicketIssueTypes());
@@ -57,6 +57,11 @@ export default function TicketIssueTypeViewForm() {
       setTotalIssueTypes(0);
     }
   }, [ticketIssueTypes]);
+  
+  const handlePeriodChange = (newPeriod) => {
+    const { value, unit } = getPeriodValueAndUnit(newPeriod);
+    dispatch(getReportTicketIssueTypes(value, unit));
+  };
 
   return (
     <Container maxWidth={false} sx={{ height: 'auto' }}>
@@ -72,7 +77,7 @@ export default function TicketIssueTypeViewForm() {
         <Divider sx={{ paddingTop: 1 }} />
         <Grid container>
           <Grid item xs={12}>
-            <PieChart chartData={issueTypeData} totalIssues={totalIssueTypes} title="Issue Type" />
+            <PieChart chartData={issueTypeData} totalIssues={totalIssueTypes} title="Issue Type" onPeriodChange={handlePeriodChange}/>
           </Grid>
         </Grid>
       </Card>
