@@ -18,11 +18,6 @@ const formatNumber = (statObject, key) => {
 };
 
 export default function MachineStatsCounters({ stats, displayConfig, loadingStates }) {
-  const allKeys = Array.from(new Set([
-    ...Object.keys(stats || {}),
-    ...Object.keys(loadingStates || {}),
-  ])).filter(key => key in displayConfig);
-
   return (
     <Box sx={{ width: '100%', maxWidth: 1200, mx: 'auto' }}>
       <Grid 
@@ -31,10 +26,9 @@ export default function MachineStatsCounters({ stats, displayConfig, loadingStat
         justifyContent="center" 
         alignItems="center"
       >
-        {allKeys.map((key) => {
+        {displayConfig.map(({ key, label, showRecordCount }) => {
           const isLoading = loadingStates[key];
           const statObject = stats[key];
-          const { label, showRecordCount } = displayConfig[key];
 
           return (
             <Grid 
@@ -50,7 +44,6 @@ export default function MachineStatsCounters({ stats, displayConfig, loadingStat
                 loading={isLoading}
                 label={label}
               >
-                {/* {formatNumber(statObject, key)} */}
                 {statObject && showRecordCount
                   ? `${statObject.recordCount} / ${formatNumber(statObject, key)}`
                   : formatNumber(statObject, key)}
@@ -64,8 +57,9 @@ export default function MachineStatsCounters({ stats, displayConfig, loadingStat
 }
 
 MachineStatsCounters.propTypes = {
-  displayConfig: PropTypes.objectOf(
+  displayConfig: PropTypes.arrayOf(
     PropTypes.shape({
+      key: PropTypes.string.isRequired,
       label: PropTypes.string.isRequired,
       showRecordCount: PropTypes.bool
     })

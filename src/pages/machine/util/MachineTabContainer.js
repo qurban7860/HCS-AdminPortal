@@ -78,7 +78,6 @@ export default function MachineTabContainer({ currentTabValue }) {
         setting
         isArchived={machine?.isArchived}
       />
-      {!isLoading && (
         <TabContainer
           tabsClasses={tabsClasses.scrollButtons}
           currentTab={currentTabValue}
@@ -125,7 +124,6 @@ export default function MachineTabContainer({ currentTabValue }) {
             />
           ))}
         </TabContainer>
-      )}
     </StyledCardContainer>
   );
 }

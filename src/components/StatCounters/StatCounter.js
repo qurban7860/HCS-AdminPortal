@@ -50,7 +50,7 @@ export const formatLargeNumber = (value) => {
   if (value >= 1000) {
     return `${(value / 1000).toFixed(0)}K`;
   }
-  return value.toFixed(value % 1 === 0 ? 0 : 3);
+  return value.toFixed(value % 1 === 0 ? 0 : 2);
 };
 
 // Main StatCounter component
