@@ -1,62 +1,27 @@
 import PropTypes from 'prop-types';
-import { Grid, Box, Card, Typography, styled } from '@mui/material';
+import { Grid, Box } from '@mui/material';
+import StatCounter, { formatLargeNumber } from '../../../components/StatCounters/StatCounter';
 
-// Styled components
-const CounterCard = styled(Card)(({ theme }) => ({
-  padding: theme.spacing(3),
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  height: '100%',
-  width: '100%',
-  minHeight: 140,
-  textAlign: 'center',
-  borderRadius: theme.shape.borderRadius,
-  transition: 'all 0.3s ease-in-out',
-  '&:hover': {
-    transform: 'translateY(-4px)',
-    boxShadow: theme.shadows[4],
-  },
-}));
+const formatNumber = (statObject, key) => {
+  if (!statObject || typeof statObject.value !== 'number') {
+    return '0';
+  }
 
-const CounterValue = styled(Typography)(({ theme }) => ({
-  fontWeight: 700,
-  fontSize: '2rem',
-  color: theme.palette.primary.main,
-  marginBottom: theme.spacing(1.5),
-  lineHeight: 1.2,
-}));
-
-const CounterLabel = styled(Typography)(({ theme }) => ({
-  fontSize: '0.875rem',
-  color: theme.palette.text.secondary,
-  letterSpacing: '0.5px',
-}));
-
-// Format number with suffix (K for thousands, M for millions) and handle unit conversions
-const formatNumber = (value, key) => {
-  let convertedValue = value;
+  let convertedValue = statObject.value;
   if (key === 'producedLength' || key === 'wasteLength') {
-    convertedValue = value / 1000;
+    convertedValue /= 1000; // Convert to meters
   } else if (key === 'productionRate') {
-    convertedValue = value * 3.6; // (3600/1000)
+    convertedValue *= 3.6; // (3600/1000) to convert to m/h
   }
 
-  if (convertedValue >= 1000000) {
-    return `${(convertedValue / 1000000).toFixed(2)}M`;
-  }
-  if (convertedValue >= 1000) {
-    return `${(convertedValue / 1000).toFixed(0)}K`;
-  }
-  return convertedValue.toFixed(convertedValue % 1 === 0 ? 0 : 2);
+  return formatLargeNumber(convertedValue);
 };
 
-export default function MachineStatsCounters({ stats, displayConfig }) {
-  const statsEntries = Object.entries(stats).filter(([key, value]) => 
-    value !== undefined && value !== null && 
-    (displayConfig === null || displayConfig === undefined || displayConfig[key])
-  );
+export default function MachineStatsCounters({ stats, displayConfig, loadingStates }) {
+  const allKeys = Array.from(new Set([
+    ...Object.keys(stats || {}),
+    ...Object.keys(loadingStates || {}),
+  ])).filter(key => key in displayConfig);
 
   return (
     <Box sx={{ width: '100%', maxWidth: 1200, mx: 'auto' }}>
@@ -66,14 +31,11 @@ export default function MachineStatsCounters({ stats, displayConfig }) {
         justifyContent="center" 
         alignItems="center"
       >
-        {statsEntries.map(([key, value]) => {
-          const config =
-            displayConfig && displayConfig[key]
-              ? displayConfig[key]
-              : {
-                  label: key.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase()),
-                };
-          
+        {allKeys.map((key) => {
+          const isLoading = loadingStates[key];
+          const statObject = stats[key];
+          const { label, showRecordCount } = displayConfig[key];
+
           return (
             <Grid 
               item 
@@ -84,10 +46,17 @@ export default function MachineStatsCounters({ stats, displayConfig }) {
               key={key}
               sx={{ display: 'flex' }}
             >
-              <CounterCard>
-                <CounterValue variant="h4">{formatNumber(value, key)}</CounterValue>
-                <CounterLabel variant="body2">{config.label}</CounterLabel>
-              </CounterCard>
+              <StatCounter
+                loading={isLoading}
+                label={label}
+                count={statObject.recordCount}
+                showRecordCount={showRecordCount}
+              >
+                {/* {formatNumber(statObject, key)} */}
+                {statObject && showRecordCount
+                  ? `${statObject.recordCount} / ${formatNumber(statObject, key)}`
+                  : formatNumber(statObject, key)}
+              </StatCounter>
             </Grid>
           );
         })}
@@ -97,10 +66,12 @@ export default function MachineStatsCounters({ stats, displayConfig }) {
 }
 
 MachineStatsCounters.propTypes = {
-  stats: PropTypes.object.isRequired,
   displayConfig: PropTypes.objectOf(
     PropTypes.shape({
       label: PropTypes.string.isRequired,
+      showRecordCount: PropTypes.bool
     })
-  )
+  ).isRequired,
+  stats: PropTypes.object.isRequired,
+  loadingStates: PropTypes.objectOf(PropTypes.bool).isRequired,
 }; 
