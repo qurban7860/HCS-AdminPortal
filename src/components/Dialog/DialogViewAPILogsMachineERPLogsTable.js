@@ -26,13 +26,7 @@ import { TableNoData, TableSkeleton } from '../table';
 import { StyledTableRow } from '../../theme/styles/default-styles';
 import CodeMirror from '../CodeMirror/JsonEditor';
 
-DialogViewAPILogsMachineERPLogsTable.propTypes = {
-  open: PropTypes.bool,
-  onClose: PropTypes.func,
-  logIds: PropTypes.array,
-  logType: PropTypes.string,
-};
-
+// Constants and configurations
 const TABLE_HEAD = [
   { id: 'date', label: 'Date', align: 'left' },
   { id: 'machineSerialNo', label: 'Machine', align: 'left' },
@@ -54,22 +48,16 @@ const NUMERICAL_VALUES = [
   'webWidth',
 ];
 
+// Helper functions
 const formatCellValue = (columnId, row) => {
-  if (columnId === 'date') {
-    return fDateTime(row?.date);
-  }
-  if (columnId === 'machineSerialNo') {
-    return row?.machine?.serialNo;
-  }
-  if (NUMERICAL_VALUES.includes(columnId)) {
-    return (row[columnId] / 1000).toFixed(3);
-  }
+  if (columnId === 'date') return fDateTime(row?.date);
+  if (columnId === 'machineSerialNo') return row?.machine?.serialNo;
+  if (NUMERICAL_VALUES.includes(columnId)) return (row[columnId] / 1000).toFixed(3);
   return row[columnId] || '';
 };
 
 const formatMachineLogToShow = (log) => {
   const {
-    // Main data
     _id,
     date,
     componentLabel,
@@ -84,9 +72,7 @@ const formatMachineLogToShow = (log) => {
     ccThickness,
     coilBatchName,
     operator,
-    // Machine info
     machine,
-    // Metadata
     customer,
     createdBy,
     createdAt,
@@ -94,14 +80,11 @@ const formatMachineLogToShow = (log) => {
     updatedAt,
     createdIP,
     updatedIP,
-    // Status
     isActive,
     isArchived,
     archivedByMachine,
-    // Other
     batchId,
     apiLogId,
-    // Remove unnecessary fields
     __v,
     type,
     version,
@@ -150,31 +133,112 @@ const formatMachineLogToShow = (log) => {
   };
 };
 
-const ExpandedRowDetails = ({ row }) => {
-  const logsToShow = formatMachineLogToShow(row);
+// Sub-components
+const TableHeader = () => (
+  <TableHead>
+    <TableRow>
+      {TABLE_HEAD.map((headCell) => (
+        <TableCell
+          key={headCell.id}
+          align={headCell.align}
+          sx={{ width: headCell.width, minWidth: headCell.minWidth }}
+        >
+          {NUMERICAL_VALUES.includes(headCell.id) ? `${headCell.label} (m)` : headCell.label}
+        </TableCell>
+      ))}
+    </TableRow>
+  </TableHead>
+);
 
-  return (
-    <Box sx={{ p: 3, backgroundColor: 'background.neutral' }}>
-      <CodeMirror
-        value={JSON.stringify(logsToShow, null, 2)}
-        HandleChangeIniJson={() => {}}
-        editable={false}
-        disableTopBar
-        autoHeight
-      />
-    </Box>
-  );
-};
+const ExpandedRowDetails = ({ row }) => (
+  <Box sx={{ p: 3, backgroundColor: 'background.neutral' }}>
+    <CodeMirror
+      value={JSON.stringify(formatMachineLogToShow(row), null, 2)}
+      HandleChangeIniJson={() => {}}
+      editable={false}
+      disableTopBar
+      autoHeight
+    />
+  </Box>
+);
 
 ExpandedRowDetails.propTypes = {
   row: PropTypes.object,
 };
 
+const DataRow = ({ row, index, expandedRow, onRowClick }) => (
+  <>
+    <StyledTableRow
+      hover
+      key={row._id || index}
+      onClick={() => onRowClick(row._id)}
+      sx={{
+        cursor: 'pointer',
+        '&:hover': {
+          backgroundColor: 'action.hover',
+        },
+      }}
+    >
+      {TABLE_HEAD.map((column) => (
+        <TableCell key={column.id} align={column.align}>
+          {formatCellValue(column.id, row)}
+        </TableCell>
+      ))}
+    </StyledTableRow>
+    <TableRow title="Click to show details">
+      <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={TABLE_HEAD.length}>
+        <Collapse in={expandedRow === row._id} timeout="auto" unmountOnExit>
+          <ExpandedRowDetails row={row} />
+        </Collapse>
+      </TableCell>
+    </TableRow>
+  </>
+);
+
+DataRow.propTypes = {
+  row: PropTypes.object,
+  index: PropTypes.number,
+  expandedRow: PropTypes.string,
+  onRowClick: PropTypes.func,
+};
+
+const TableContent = ({ isLoading, tableData, expandedRow, onRowClick, denseHeight }) => {
+  if (isLoading) {
+    return [...Array(10)].map((_, index) => (
+      <TableSkeleton key={index} sx={{ height: denseHeight }} />
+    ));
+  }
+
+  return tableData.map((row, index) => (
+    row ? (
+      <DataRow
+        key={row._id || index}
+        row={row}
+        index={index}
+        expandedRow={expandedRow}
+        onRowClick={onRowClick}
+      />
+    ) : (
+      <TableSkeleton key={index} sx={{ height: denseHeight }} />
+    )
+  ));
+};
+
+TableContent.propTypes = {
+  isLoading: PropTypes.bool,
+  tableData: PropTypes.array,
+  expandedRow: PropTypes.string,
+  onRowClick: PropTypes.func,
+  denseHeight: PropTypes.number,
+};
+
+// Main component
 export default function DialogViewAPILogsMachineERPLogsTable({ open, onClose, logIds, logType }) {
   const dispatch = useDispatch();
   const { machineErpLogs, isLoading } = useSelector((state) => state.machineErpLogs);
   const [tableData, setTableData] = useState([]);
   const [expandedRow, setExpandedRow] = useState(null);
+  const denseHeight = 60;
 
   useEffect(() => {
     if (open && logIds?.length) {
@@ -184,7 +248,7 @@ export default function DialogViewAPILogsMachineERPLogsTable({ open, onClose, lo
 
   useEffect(() => {
     if (machineErpLogs) {
-      setTableData(machineErpLogs);
+      setTableData(Array.isArray(machineErpLogs) ? machineErpLogs : []);
     }
   }, [machineErpLogs]);
 
@@ -193,7 +257,6 @@ export default function DialogViewAPILogsMachineERPLogsTable({ open, onClose, lo
   };
 
   const isNotFound = !tableData.length || (!isLoading && !tableData.length);
-  const denseHeight = 60;
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="xl" fullWidth>
@@ -209,53 +272,15 @@ export default function DialogViewAPILogsMachineERPLogsTable({ open, onClose, lo
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
           <Scrollbar>
             <Table stickyHeader size="small" sx={{ minWidth: 800 }}>
-              <TableHead>
-                <TableRow>
-                  {TABLE_HEAD?.map((headCell) => (
-                    <TableCell
-                      key={headCell.id}
-                      align={headCell.align}
-                      sx={{ width: headCell.width, minWidth: headCell.minWidth }}
-                      title="Click to show details"
-                    >
-                      {NUMERICAL_VALUES.includes(headCell.id) ? `${headCell.label} (m)` : headCell.label}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              </TableHead>
+              <TableHeader />
               <TableBody>
-                {(isLoading ? [...Array(10)] : tableData)?.map((row, index) =>
-                  row ? (
-                    <>
-                      <StyledTableRow 
-                        hover 
-                        key={row._id || index}
-                        onClick={() => handleRowClick(row._id)}
-                        sx={{ 
-                          cursor: 'pointer',
-                          '&:hover': {
-                            backgroundColor: 'action.hover',
-                          },
-                        }}
-                      >
-                        {TABLE_HEAD?.map((column) => (
-                          <TableCell key={column.id} align={column.align}>
-                            {formatCellValue(column.id, row)}
-                          </TableCell>
-                        ))}
-                      </StyledTableRow>
-                      <TableRow>
-                        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={TABLE_HEAD.length}>
-                          <Collapse in={expandedRow === row._id} timeout="auto" unmountOnExit>
-                            <ExpandedRowDetails row={row} />
-                          </Collapse>
-                        </TableCell>
-                      </TableRow>
-                    </>
-                  ) : (
-                    <TableSkeleton key={index} sx={{ height: denseHeight }} />
-                  )
-                )}
+                <TableContent
+                  isLoading={isLoading}
+                  tableData={tableData}
+                  expandedRow={expandedRow}
+                  onRowClick={handleRowClick}
+                  denseHeight={denseHeight}
+                />
                 {!isLoading && <TableNoData isNotFound={isNotFound} />}
               </TableBody>
             </Table>
@@ -269,4 +294,11 @@ export default function DialogViewAPILogsMachineERPLogsTable({ open, onClose, lo
       </DialogActions>
     </Dialog>
   );
-} 
+}
+
+DialogViewAPILogsMachineERPLogsTable.propTypes = {
+  open: PropTypes.bool,
+  onClose: PropTypes.func,
+  logIds: PropTypes.array,
+  logType: PropTypes.string,
+}; 
