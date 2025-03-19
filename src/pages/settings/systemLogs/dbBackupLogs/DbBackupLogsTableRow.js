@@ -26,7 +26,7 @@ export default function DbBackupLogsTableRow({
     <StyledTableRow hover selected={selected} >
       <TableCell align="left"> <Typography variant="body2" > {fDateTime(createdAt)} </Typography> </TableCell>
       <TableCell align="left"> <Typography variant="body2" > {backupLocation} </Typography> </TableCell>
-      <TableCell align="left"> <Typography variant="body2" > {backupSize || ""} </Typography> </TableCell>
+      <TableCell align="left"> <Typography variant="body2" > {`${backupSize?.toFixed(1) || 0} MB`} </Typography> </TableCell>
       <TableCell align="left"> <Typography variant="body2" > {databaseName} </Typography> </TableCell>
       <TableCell align="right"> <Typography variant="body2" > {backupStatus} </Typography> </TableCell>
     </StyledTableRow>
