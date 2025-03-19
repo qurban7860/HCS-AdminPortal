@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from '../../../redux/store';
 import { PATH_SUPPORT } from '../../../routes/paths';
 // sections
 import HowickWelcome from '../../../components/DashboardWidgets/HowickWelcome';
+import { getTickets } from '../../../redux/slices/ticket/tickets';
 import { getReportTicketIssueTypes, getOpenTicketIssueTypes } from '../../../redux/slices/ticket/ticketSettings/ticketIssueTypes';
 import { getReportTicketRequestTypes, getOpenTicketRequestTypes } from '../../../redux/slices/ticket/ticketSettings/ticketRequestTypes';
 import { getReportTicketStatusTypes } from '../../../redux/slices/ticket/ticketSettings/ticketStatusTypes';
@@ -22,12 +23,14 @@ import { TITLES } from '../../../constants/default-constants';
 export default function SupportDashboard() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { tickets } = useSelector((state) => state.tickets);
   const { openTicketIssueTypes, ticketIssueTypes } = useSelector((state) => state.ticketIssueTypes);
   const { openTicketRequestTypes, ticketRequestTypes } = useSelector((state) => state.ticketRequestTypes);
   const { ticketStatusTypes } = useSelector((state) => state.ticketStatusTypes);
   const { ticketStatuses } = useSelector((state) => state.ticketStatuses);
 
   useLayoutEffect(() => {
+    dispatch(getTickets());
     dispatch(getOpenTicketIssueTypes());
     dispatch(getOpenTicketRequestTypes());
     dispatch(getReportTicketIssueTypes());
@@ -164,7 +167,59 @@ export default function SupportDashboard() {
   
     setOpenRequestTypeData(openRequestTypeCounts);
     setTotalOpenRequestTypes(openTicketRequestTypes?.countsByField?.reduce((sum, item) => sum + item.count, 0) || 0);
-  }, [openTicketIssueTypes, openTicketRequestTypes, ticketIssueTypes, ticketRequestTypes, ticketStatusTypes, ticketStatuses]);
+
+    // --- Bar Chart Ticket Created VS Resolved ---
+    const dateCounts = {};
+    if (tickets && Array.isArray(tickets)) {
+      tickets.forEach((ticket) => {
+        const createdDate = new Date(ticket?.createdAt).toISOString().split('T')[0];
+        const resolved = ticket?.status?.statusType?.isResolved;
+        const resolvedDate = resolved && ticket?.updatedAt ? new Date(ticket?.updatedAt).toISOString().split('T')[0] : null;
+
+        if (!dateCounts[createdDate]) {
+          dateCounts[createdDate] = { created: 0, resolved: 0 };
+        }
+        dateCounts[createdDate].created += 1;
+
+        if (resolved && resolvedDate) {
+          if (!dateCounts[resolvedDate]) {
+            dateCounts[resolvedDate] = { created: 0, resolved: 0 };
+          }
+          dateCounts[resolvedDate].resolved += 1;
+        }
+      });
+
+      const sortedDates = Array.from(
+        new Set([
+          ...Object.keys(dateCounts),
+          ...Array.from({ length: 30 }, (_, i) => {
+            const d = new Date();
+            d.setDate(d.getDate() - i);
+            return d.toISOString().split('T')[0];
+          }),
+        ])
+      ).sort();
+
+      const last30Days = sortedDates.slice(-30);
+
+      const barChartSeries = [
+        { name: 'Created', data: last30Days.map((date) => dateCounts[date]?.created || 0) },
+        { name: 'Resolved', data: last30Days.map((date) => dateCounts[date]?.resolved || 0) },
+      ];
+
+      const barChartLabels = last30Days.map((dateString) => {
+        const date = new Date(dateString);
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        return `${day}-${month}`;
+      });
+
+      setTicketBarChartData({ series: barChartSeries, labels: barChartLabels });
+    } else {
+      setTicketBarChartData({ series: [], labels: [] });
+    }
+    
+  }, [openTicketIssueTypes, openTicketRequestTypes, ticketIssueTypes, ticketRequestTypes, ticketStatusTypes, ticketStatuses, tickets]);
 
   const handlePeriodChange = useCallback((newPeriod, chartType) => {
     const { value, unit } = getPeriodValueAndUnit(newPeriod);
