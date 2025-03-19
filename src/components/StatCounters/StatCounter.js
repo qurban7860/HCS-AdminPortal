@@ -65,11 +65,6 @@ export default function StatCounter({ value, label, loading, children }) {
         {children || value}
       </CounterValue>
       <CounterLabel variant="body2">{label}</CounterLabel>
-      {/* {showRecordCount && (
-        <CounterLabel variant="body2">
-          Components: {count}
-        </CounterLabel>
-      )} */}
     </CounterCard>
   );
 }

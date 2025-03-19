@@ -19,7 +19,7 @@ import {
   DialogActions,
   Button,
 } from '@mui/material';
-import { getMachineLogsByIds } from '../../redux/slices/products/machineErpLogs';
+import { getMachineLogsByApiId } from '../../redux/slices/products/machineErpLogs';
 import { fDateTime } from '../../utils/formatTime';
 import Scrollbar from '../scrollbar';
 import { TableNoData, TableSkeleton } from '../table';
@@ -35,9 +35,8 @@ const TABLE_HEAD = [
   { id: 'componentLength', label: 'Component Length', align: 'right' },
   { id: 'waste', label: 'Waste', align: 'right' },
   { id: 'coilLength', label: 'Coil Length', align: 'right' },
-  { id: 'flangeHeight', label: 'Flange Height', align: 'right' },
-  { id: 'webWidth', label: 'Web Width', align: 'right' },
-  { id: 'profileShape', label: 'Profile Shape', align: 'left' },
+  { id: 'time', label: 'Time', align: 'left' },
+  { id: 'ComponentGUID', label: 'Component GUID', align: 'left' },
 ];
 
 const NUMERICAL_VALUES = [
@@ -233,7 +232,7 @@ TableContent.propTypes = {
 };
 
 // Main component
-export default function DialogViewAPILogsMachineERPLogsTable({ open, onClose, logIds, logType }) {
+export default function DialogViewAPILogsMachineERPLogsTable({ open, onClose, apiId, logType }) {
   const dispatch = useDispatch();
   const { machineErpLogs, isLoading } = useSelector((state) => state.machineErpLogs);
   const [tableData, setTableData] = useState([]);
@@ -241,10 +240,10 @@ export default function DialogViewAPILogsMachineERPLogsTable({ open, onClose, lo
   const denseHeight = 60;
 
   useEffect(() => {
-    if (open && logIds?.length) {
-      dispatch(getMachineLogsByIds(logIds, logType));
+    if (open && apiId) {
+      dispatch(getMachineLogsByApiId(apiId, logType));
     }
-  }, [dispatch, logIds, logType, open]);
+  }, [dispatch, apiId, logType, open]);
 
   useEffect(() => {
     if (machineErpLogs) {
@@ -263,7 +262,7 @@ export default function DialogViewAPILogsMachineERPLogsTable({ open, onClose, lo
       <DialogTitle sx={{ pb: 1, pt: 2 }}>
         <Stack direction="row" spacing={1} alignItems="center" justifyContent="space-between">
           <Typography variant="h4" sx={{ flexGrow: 1 }}>
-            Machine Logs ({logIds?.length || 0} Records)
+            Machine Logs ({tableData?.length || 0} Records)
           </Typography>
         </Stack>
       </DialogTitle>
@@ -299,6 +298,6 @@ export default function DialogViewAPILogsMachineERPLogsTable({ open, onClose, lo
 DialogViewAPILogsMachineERPLogsTable.propTypes = {
   open: PropTypes.bool,
   onClose: PropTypes.func,
-  logIds: PropTypes.array,
+  apiId: PropTypes.string,
   logType: PropTypes.string,
 }; 

@@ -20,6 +20,7 @@ APILogsTableRow.propTypes = {
 
 export default function APILogsTableRow({ row, style, selected, onViewRow, hiddenColumns, tableColumns }) {
   const {
+    _id,
     createdAt,
     apiType,
     requestMethod,
@@ -40,35 +41,14 @@ export default function APILogsTableRow({ row, style, selected, onViewRow, hidde
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [machineLogsDialogOpen, setMachineLogsDialogOpen] = useState(false);
-  const [insertedLogIds, setInsertedLogIds] = useState([]);
   const navigate = useNavigate();
 
   const handleShowApiDetails = () => {
     setDialogOpen(true);
   };
 
-  const allowMachineLogsDetails = () => {
-    try {
-      const parsedResponse = JSON.parse(response);
-      if (apiType === 'MACHINE-LOGS' && parsedResponse?.insertedLogIds?.length) {
-        return true;
-      }
-      return false;
-    } catch (error) {
-      return false;
-    }
-  };
-
   const handleShowMachineLogs = () => {
-    try {
-      const parsedResponse = JSON.parse(response);
-      if (parsedResponse?.insertedLogIds?.length) {
-        setInsertedLogIds(parsedResponse.insertedLogIds);
-        setMachineLogsDialogOpen(true);
-      }
-    } catch (error) {
-      console.error('Error parsing response:', error);
-    }
+    setMachineLogsDialogOpen(true);
   };
 
   const handleCloseDialog = () => {
@@ -175,7 +155,7 @@ export default function APILogsTableRow({ row, style, selected, onViewRow, hidde
             case 'noOfRecordsUpdated':
               return (
                 <TableCell key={column.id} align="left">
-                  {allowMachineLogsDetails() ? (
+                  {apiType === 'MACHINE-LOGS' && Number(noOfRecordsUpdated) > 0 ? (
                     <LinkTableCell 
                       align="left" 
                       onClick={handleShowMachineLogs} 
@@ -230,7 +210,7 @@ export default function APILogsTableRow({ row, style, selected, onViewRow, hidde
       <DialogViewAPILogsMachineERPLogsTable
         open={machineLogsDialogOpen}
         onClose={handleCloseMachineLogsDialog}
-        logIds={insertedLogIds}
+        apiId={_id}
         logType="ERP"
       />
     </>
