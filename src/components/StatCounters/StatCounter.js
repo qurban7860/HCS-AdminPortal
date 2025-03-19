@@ -54,7 +54,7 @@ export const formatLargeNumber = (value) => {
 };
 
 // Main StatCounter component
-export default function StatCounter({ value, label, loading, children, count, showRecordCount }) {
+export default function StatCounter({ value, label, loading, children }) {
   if (loading) {
     return <CounterSkeleton />;
   }
@@ -78,7 +78,5 @@ StatCounter.propTypes = {
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   label: PropTypes.string.isRequired,
   loading: PropTypes.bool,
-  children: PropTypes.node, 
-  count: PropTypes.number,
-  showRecordCount: PropTypes.bool,
+  children: PropTypes.node,
 }; 

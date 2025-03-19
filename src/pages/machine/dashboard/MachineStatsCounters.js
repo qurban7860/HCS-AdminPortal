@@ -49,8 +49,6 @@ export default function MachineStatsCounters({ stats, displayConfig, loadingStat
               <StatCounter
                 loading={isLoading}
                 label={label}
-                count={statObject.recordCount}
-                showRecordCount={showRecordCount}
               >
                 {/* {formatNumber(statObject, key)} */}
                 {statObject && showRecordCount
