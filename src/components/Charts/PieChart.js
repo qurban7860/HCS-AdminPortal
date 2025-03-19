@@ -24,7 +24,8 @@ const PieChart = ({ chartData, totalIssues, isOpened, title, onPeriodChange, onE
             show: true,
             total: {
               show: true,
-              label: 'Total Issues',
+              label: hoveredIndex !== null ? chartData.labels[hoveredIndex] : 'Total Issues',
+              color: hoveredIndex !== null ? chartData.colors[hoveredIndex] : '#000',
               formatter: () => `${getTotalIssues()}`,
             },
           },
@@ -106,7 +107,7 @@ const PieChart = ({ chartData, totalIssues, isOpened, title, onPeriodChange, onE
             {title}
           </Typography>
           <Divider />
-          <Box sx={{ mt: 2, mb: 2, maxHeight: onExpand ? '110px' : '300px', overflowY: onExpand ? chartData.labels.length > 4 ? 'auto' : 'visible' : 'hidden' }}>
+          <Box sx={{ mt: 2, mb: 2, maxHeight: "auto", overflowY: "visible" }}>
             {chartData.labels.slice(0, 20).map((label, index) => (
               <Box
                 key={index}
@@ -143,7 +144,7 @@ const PieChart = ({ chartData, totalIssues, isOpened, title, onPeriodChange, onE
           </Box>
           <Divider />
           <Typography variant="body1" sx={{ fontWeight: 'bold', mt: 2, mb: 2 }}>
-            Tickets: <span style={{ color: '#000', fontWeight: 'bold' }}>{getTotalIssues()}</span>
+            Tickets: <span style={{ color: '#000', fontWeight: 'bold' }}>{totalIssues}</span>
           </Typography>
         </Grid>
       </Grid>
