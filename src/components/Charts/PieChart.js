@@ -1,4 +1,3 @@
-/* eslint-disable no-nested-ternary */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import ReactApexChart from 'react-apexcharts';
@@ -77,11 +76,11 @@ const PieChart = ({ chartData, totalIssues, isOpened, title, onPeriodChange, onE
             >
             <MenuItem value="All">All</MenuItem>
             <MenuItem value="1 month">1 Month</MenuItem>
-            <MenuItem value="3 month">3 Month</MenuItem>
-            <MenuItem value="6 month">6 Month</MenuItem>
+            <MenuItem value="3 month">3 Months</MenuItem>
+            <MenuItem value="6 month">6 Months</MenuItem>
             <MenuItem value="1 year">1 Year</MenuItem>
-            <MenuItem value="2 year">2 Year</MenuItem>
-            <MenuItem value="5 year">5 Year</MenuItem>
+            <MenuItem value="2 year">2 Years</MenuItem>
+            <MenuItem value="5 year">5 Years</MenuItem>
           </Select>
         </FormControl>
         {onExpand && (
