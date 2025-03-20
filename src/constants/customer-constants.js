@@ -1,12 +1,12 @@
 export const Snacks = {
-  SAVE_FAILED: 'Update FAILED',
-  SAVE_SUCCESS: 'Update SUCCESS',
+  SAVE_FAILED: 'Update failed',
+  SAVE_SUCCESS: 'Update success',
 
-  UPDATE_FAILED: 'Update FAILED',
-  UPDATE_SUCCESS: 'Update SUCCESS',
+  UPDATE_FAILED: 'Update failed',
+  UPDATE_SUCCESS: 'Update success',
 
-  CREATED_FAILED: 'Created FAILED',
-  CREATED_SUCCESS: 'Created SUCCESS',
+  CREATED_FAILED: 'Created failed',
+  CREATED_SUCCESS: 'Created success',
 
   // @root - CustomerViewForm
   FAILED_DELETE: 'Customer Archive failed!',
@@ -68,7 +68,7 @@ export const FORMLABELS = {
     label: 'Report to',
     name: 'reportingTo',
   },
-  DEPARTMENT:{
+  DEPARTMENT: {
     label: 'Department',
     name: 'department',
   },

@@ -1,6 +1,6 @@
 export const allowedImageExtensions = ['png', 'jpeg', 'jpg', 'gif', 'bmp', 'webp'];
 export const allowedDocumentExtension = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx'];
-const maxFiles = JSON.parse( localStorage.getItem('configurations'))?.find( ( c )=> c?.name === 'MAX_UPLOAD_FILES' )
+const maxFiles = JSON.parse(localStorage.getItem('configurations'))?.find((c) => c?.name === 'MAX_UPLOAD_FILES')
 
 export const document = {
   icon: {
@@ -220,45 +220,45 @@ export const DocRadioExistingDocument = {
 
 // Snackbars constants
 export const Snacks = {
-  docSaved: 'Document Upload Successfully!',
-  docUpdated: 'Document Update Successfully!',
-  docVersionUpdated: 'Document Version Update Successfully!',
-  failedSaveDoc: 'Failed to Save the Document',
+  docSaved: 'Document upload successfully!',
+  docUpdated: 'Document update successfully!',
+  docVersionUpdated: 'Document version update successfully!',
+  failedSaveDoc: 'Failed to save the document',
 
   // @root - DocumentCategoryAddForm - documents dashboard
-  addedDocCategory: 'Document Category ADD Successfully!', // Add Success message
-  updatedDocCategory: 'Document Category Update Successfully!', // Update Success message
-  deletedDocCategory: 'Document Category Archived Successfully!', // Archived Success message
-  failedSaveDocCategory: 'Failed to Save Document Category', // Add Failed message
+  addedDocCategory: 'Document category added successfully!', // Add Success message
+  updatedDocCategory: 'Document category updated successfully!', // Update Success message
+  deletedDocCategory: 'Document category archived successfully!', // Archived Success message
+  failedSaveDocCategory: 'Failed to save document category', // Add Failed message
 
   // @root - DocumentAddForm - machine documents
-  addedMachineDoc: 'Machine Document Upload Successfully!', // Upload Success message
-  updatedMachineDoc: 'Machine Document Update Successfully!', // Update Success message
-  updatedVersionMachineDoc: 'Machine Document Version Update Successfully!', // Update Success message
-  deletedMachineDoc: 'Machine Document Archived Successfully!', // Archived Success message
+  addedMachineDoc: 'Machine document upload successfully!', // Upload Success message
+  updatedMachineDoc: 'Machine document update successfully!', // Update Success message
+  updatedVersionMachineDoc: 'Machine document version update successfully!', // Update Success message
+  deletedMachineDoc: 'Machine document archived successfully!', // Archived Success message
 
-  addedDoc: 'Document Uploaded Successfully!', // Upload Success message
-  updatedDoc: 'Document Update Successfully!', // Update Success message
-  deletedDoc: 'Document archived Successfully!', // Archived Success message
+  addedDoc: 'Document uploaded successfully!', // Upload Success message
+  updatedDoc: 'Document update successfully!', // Update Success message
+  deletedDoc: 'Document archived successfully!', // Archived Success message
 
-  failedDoc: 'Failed to Upload Document', // Update Failed message
-  failedUpdateDoc: 'Failed to Update Document', // Update Failed message
-  failedDeleteDoc: 'Failed to Archived Document', // Archived Failed message
+  failedDoc: 'Failed to upload document', // Update Failed message
+  failedUpdateDoc: 'Failed to update document', // Update Failed message
+  failedDeleteDoc: 'Failed to archived document', // Archived Failed message
 
-  addedDrawing: 'Drawing Uploaded Successfully!', // Upload Success message
-  updatedDrawing: 'Drawing Update Successfully!', // Update Success message
-  deletedDrawing: 'Drawing archived Successfully!', // Archived Success message
+  addedDrawing: 'Drawing uploaded successfully!', // Upload Success message
+  updatedDrawing: 'Drawing update successfully!', // Update Success message
+  deletedDrawing: 'Drawing archived successfully!', // Archived Success message
 
-  failedDrawing: 'Failed to Upload Drawing', // Update Failed message
-  failedUpdateDrawing: 'Failed to Update Drawing', // Update Failed message
-  failedDeleteDrawing: 'Failed to Archived Drawing', // Archived Failed message
+  failedDrawing: 'Failed to upload drawing', // Update Failed message
+  failedUpdateDrawing: 'Failed to update drawing', // Update Failed message
+  failedDeleteDrawing: 'Failed to archived drawing', // Archived Failed message
 
   // documentAddForm -documents dashboard
   fileRequired: 'File is required',
   fileMaxSize: 'File size should be less than 10MB',
-  fileMaxCount: `Maximum ${ Number(maxFiles?.value) || 20 } files can be uploaded at a time.`,
-  fieldsRequired: 'Above Drawings fields required!',
-  docMaxSize: 'Document Name must not exceed 40 characters',
+  fileMaxCount: `Maximum ${Number(maxFiles?.value) || 20} files can be uploaded at a time.`,
+  fieldsRequired: 'Above drawings fields required!',
+  docMaxSize: 'Document name must not exceed 40 characters',
 
   // @root - DocumentViewForm - documents dashboard
   // preview
