@@ -6,7 +6,7 @@ import { fDateTime } from '../../../utils/formatTime';
 // components
 import LinkTableCell from '../../../components/ListTableTools/LinkTableCell';
 import { StyledTableRow } from '../../../theme/styles/default-styles';
-
+import { convertMmToM } from '../../../components/Utils/measurementHelpers';
 // ----------------------------------------------------------------------
 
 MachineLogsTableRow.propTypes = {
@@ -57,7 +57,7 @@ export default function MachineLogsTableRow({
             sx={{ cursor: 'pointer' }}
             align={column?.numerical ? 'right' : 'left'}
           >
-            {numericalLengthValues.includes(column.id) ? (cellValue / 1000).toFixed(3) : cellValue}
+            {numericalLengthValues.includes(column.id) ? convertMmToM(cellValue) : cellValue}
           </TableCell>
         );
       })}

@@ -20,5 +20,13 @@ const parseComplexInches = (value) => {
   return feet * 12 + inches + fraction;
 };
 
+const convertMmToM = (value) => {
+  if (!value) return '';
+  // Remove commas and convert to float
+  const numValue = parseFloat(value.toString().replace(/,/g, ''));
+  if (Number.isNaN(numValue)) return value;
+  return (numValue / 1000).toFixed(3);
+};
 
-export { parseComplexInches };
+
+export { parseComplexInches, convertMmToM };
