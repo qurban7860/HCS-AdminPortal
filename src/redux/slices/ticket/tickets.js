@@ -359,7 +359,7 @@ export function updateTicketField(id, name, value) {
 }
 
 // GET Tickets
-export function getTickets(page, pageSize, issueType, requestType, isResolved = null, statusType, status) {
+export function getTickets({ page, pageSize, issueType, requestType, isResolved = null, statusType, status, createdAt}) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -367,6 +367,7 @@ export function getTickets(page, pageSize, issueType, requestType, isResolved = 
         orderBy: { createdAt: -1 },
         pagination: { page, pageSize },
         isArchived: false,
+        ...(createdAt && { createdAt }),
         ...(issueType && { issueType }),
         ...(requestType && { requestType }),
         ...(isResolved && { isResolved: isResolved === 'resolved' }),

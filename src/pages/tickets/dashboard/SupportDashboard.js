@@ -30,7 +30,8 @@ export default function SupportDashboard() {
   const { ticketStatuses } = useSelector((state) => state.ticketStatuses);
 
   useLayoutEffect(() => {
-    dispatch(getTickets());
+    const date = new Date();
+    dispatch(getTickets({createdAt: { $gte: new Date(date.setMonth(date.getMonth() - 1)) }}));
     dispatch(getOpenTicketIssueTypes());
     dispatch(getOpenTicketRequestTypes());
     dispatch(getReportTicketIssueTypes());
@@ -189,7 +190,7 @@ export default function SupportDashboard() {
         }
       });
 
-      const sortedDates = Array.from(
+      const last30Days = Array.from(
         new Set([
           ...Object.keys(dateCounts),
           ...Array.from({ length: 30 }, (_, i) => {
@@ -200,7 +201,6 @@ export default function SupportDashboard() {
         ])
       ).sort();
 
-      const last30Days = sortedDates.slice(-30);
 
       const barChartSeries = [
         { name: 'Created', data: last30Days.map((date) => dateCounts[date]?.created || 0) },

@@ -87,11 +87,10 @@ export default function TicketFormList(){
   const [ selectedStatusType, setSelectedStatusType ] = useState(null);
   const [ selectedResolvedStatus, setSelectedResolvedStatus ] = useState(null);
   const isMobile = useResponsive('down', 'sm');
-  const configurations = JSON.parse(localStorage.getItem('configurations'));
-  const prefix = configurations?.find((config) => config?.name?.toLowerCase() === 'ticket_prefix')?.value || ''; 
+  const prefix = JSON.parse(localStorage.getItem('configurations'))?.find((config) => config?.name?.toLowerCase() === 'ticket_prefix')?.value?.trim() || ''; 
 
   useLayoutEffect(() => {
-    dispatch(getTickets(page, rowsPerPage ));
+    dispatch(getTickets({page, pageSize: rowsPerPage }));
     return () => {
       dispatch(resetTickets());
     }
@@ -99,7 +98,15 @@ export default function TicketFormList(){
   
   const onRefresh = () => {
     dispatch(ChangePage(0));
-    dispatch(getTickets(0, rowsPerPage, selectedIssueType?._id, selectedRequestType?._id, selectedResolvedStatus, selectedStatusType?._id, selectedStatus.map(s => s._id)));
+    dispatch(getTickets({
+      page: 0, 
+      pageSize: rowsPerPage, 
+      issueType: selectedIssueType?._id, 
+      requestType: selectedRequestType?._id, 
+      isResolved: selectedResolvedStatus, 
+      statusType: selectedStatusType?._id, 
+      status: selectedStatus.map(s => s._id)
+    }));
   };  
 
   useEffect(() => {
@@ -267,7 +274,6 @@ export default function TicketFormList(){
 function applyFilter({ inputData, comparator, filterName, prefix = '' }) {
 
   const stabilizedThis = inputData?.map((el, index) => [el, index]);
-  prefix = prefix.trim();
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
@@ -279,7 +285,7 @@ function applyFilter({ inputData, comparator, filterName, prefix = '' }) {
   if (filterName) {
     inputData = inputData.filter((ticket) => {
       const fieldsToFilter = [
-        `${prefix} ${ticket?.ticketNo}`.trim(),
+        `${prefix} - ${ticket?.ticketNo}`.trim(),
         ticket?.machine?.serialNo,
         ticket?.machine?.machineModel?.name,
         ticket?.customer?.name,

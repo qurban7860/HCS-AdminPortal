@@ -59,9 +59,9 @@ export default function TicketFormTableRow({
       )}
       {!hiddenColumns?.ticketNo && (
         <LinkTableCellWithIconTargetBlank 
-        onViewRow={() => onViewRow(`${prefix}${ticketNo}`)} 
-        onClick={() => window.open(PATH_SUPPORT.supportTickets.view(_id), '_blank')}
-        param={`${prefix} ${ticketNo}`.trim()} />
+        onViewRow={() => onViewRow(ticketNo)} 
+        onClick={() => window.open(PATH_SUPPORT.supportTickets.view(ticketNo), '_blank')}
+        param={`${prefix || ''} - ${ticketNo || ''}`} />
       )}
       { !hiddenColumns?.summary && (
           <LinkTableCell align="left" onClick={onViewRow} param={summary || ''} /> 
