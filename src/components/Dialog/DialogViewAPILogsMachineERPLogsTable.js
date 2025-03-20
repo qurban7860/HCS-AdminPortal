@@ -36,7 +36,7 @@ const TABLE_HEAD = [
   { id: 'waste', label: 'Waste', align: 'right' },
   { id: 'coilLength', label: 'Coil Length', align: 'right' },
   { id: 'time', label: 'Time', align: 'left' },
-  { id: 'ComponentGUID', label: 'Component GUID', align: 'left' },
+  { id: 'componentGUID', label: 'Component GUID', align: 'left' },
 ];
 
 const NUMERICAL_VALUES = [
