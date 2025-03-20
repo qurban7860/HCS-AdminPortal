@@ -25,7 +25,7 @@ import Scrollbar from '../scrollbar';
 import { TableNoData, TableSkeleton } from '../table';
 import { StyledTableRow } from '../../theme/styles/default-styles';
 import CodeMirror from '../CodeMirror/JsonEditor';
-
+import { convertMmToM } from '../Utils/measurementHelpers';
 // Constants and configurations
 const TABLE_HEAD = [
   { id: 'date', label: 'Date', align: 'left' },
@@ -51,7 +51,7 @@ const NUMERICAL_VALUES = [
 const formatCellValue = (columnId, row) => {
   if (columnId === 'date') return fDateTime(row?.date);
   if (columnId === 'machineSerialNo') return row?.machine?.serialNo;
-  if (NUMERICAL_VALUES.includes(columnId)) return (row[columnId] / 1000).toFixed(3);
+  if (NUMERICAL_VALUES.includes(columnId)) return convertMmToM(row[columnId]);
   return row[columnId] || '';
 };
 
@@ -107,6 +107,7 @@ const formatMachineLogToShow = (log) => {
       profileShape,
       coilBatchName: coilBatchName || null,
       operator: operator || null,
+      ...rest,
     },
     metadata: {
       customer,
@@ -128,7 +129,6 @@ const formatMachineLogToShow = (log) => {
       batchId,
       apiLogId,
     },
-    ...rest
   };
 };
 
