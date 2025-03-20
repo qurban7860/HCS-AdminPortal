@@ -24,6 +24,7 @@ TicketFormTableRow.propTypes = {
   onSelectRow: PropTypes.func,
   handleCustomerDialog:PropTypes.func,
   hiddenColumns: PropTypes.object,
+  prefix: PropTypes.string,
 };
 
 export default function TicketFormTableRow({
@@ -33,11 +34,10 @@ export default function TicketFormTableRow({
   onSelectRow,
   handleCustomerDialog,
   hiddenColumns,
+  prefix = '',
 }) {
   const dispatch = useDispatch();
   const { ticketNo, customer, machine, issueType, summary, priority, status, createdAt, _id } = row;
-  const configurations = JSON.parse(localStorage.getItem('configurations'));
-  const prefix = configurations?.find((config) => config?.name?.toLowerCase() === 'ticket_prefix')?.value || '';
   
   const handleMachineDialog = async ( event, MachineID ) => {
     event.preventDefault(); 
@@ -59,8 +59,8 @@ export default function TicketFormTableRow({
       )}
       {!hiddenColumns?.ticketNo && (
         <LinkTableCellWithIconTargetBlank 
-        onViewRow={() => onViewRow(`${prefix}${ticketNo}`)} 
-        onClick={() => window.open(PATH_SUPPORT.supportTickets.view(_id), '_blank')}
+        onViewRow={() => onViewRow(ticketNo)} 
+        onClick={() => window.open(PATH_SUPPORT.supportTickets.view(ticketNo), '_blank')}
         param={`${prefix || ''} - ${ticketNo || ''}`} />
       )}
       { !hiddenColumns?.summary && (

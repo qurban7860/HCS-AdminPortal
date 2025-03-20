@@ -87,9 +87,10 @@ export default function TicketFormList(){
   const [ selectedStatusType, setSelectedStatusType ] = useState(null);
   const [ selectedResolvedStatus, setSelectedResolvedStatus ] = useState(null);
   const isMobile = useResponsive('down', 'sm');
+  const prefix = JSON.parse(localStorage.getItem('configurations'))?.find((config) => config?.name?.toLowerCase() === 'ticket_prefix')?.value?.trim() || ''; 
 
   useLayoutEffect(() => {
-    dispatch(getTickets(page, rowsPerPage ));
+    dispatch(getTickets({page, pageSize: rowsPerPage }));
     return () => {
       dispatch(resetTickets());
     }
@@ -97,7 +98,15 @@ export default function TicketFormList(){
   
   const onRefresh = () => {
     dispatch(ChangePage(0));
-    dispatch(getTickets(0, rowsPerPage, selectedIssueType?._id, selectedRequestType?._id, selectedResolvedStatus, selectedStatusType?._id, selectedStatus.map(s => s._id)));
+    dispatch(getTickets({
+      page: 0, 
+      pageSize: rowsPerPage, 
+      issueType: selectedIssueType?._id, 
+      requestType: selectedRequestType?._id, 
+      isResolved: selectedResolvedStatus, 
+      statusType: selectedStatusType?._id, 
+      status: selectedStatus.map(s => s._id)
+    }));
   };  
 
   useEffect(() => {
@@ -108,6 +117,7 @@ export default function TicketFormList(){
     inputData: tableData,
     comparator: getComparator(order, orderBy),
     filterName,
+    prefix, 
   });
 
   const isFiltered = filterName !== '';
@@ -235,6 +245,7 @@ export default function TicketFormList(){
                             row?.customer && handleCustomerDialog(e, row?.customer?._id)
                           }
                           style={index % 2 ? { background: 'red' } : { background: 'green' }}
+                          prefix={prefix}
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
@@ -260,10 +271,9 @@ export default function TicketFormList(){
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName }) {
+function applyFilter({ inputData, comparator, filterName, prefix = '' }) {
 
   const stabilizedThis = inputData?.map((el, index) => [el, index]);
-
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
@@ -275,7 +285,7 @@ function applyFilter({ inputData, comparator, filterName }) {
   if (filterName) {
     inputData = inputData.filter((ticket) => {
       const fieldsToFilter = [
-        ticket?.ticketNo,
+        `${prefix} - ${ticket?.ticketNo}`.trim(),
         ticket?.machine?.serialNo,
         ticket?.machine?.machineModel?.name,
         ticket?.customer?.name,
