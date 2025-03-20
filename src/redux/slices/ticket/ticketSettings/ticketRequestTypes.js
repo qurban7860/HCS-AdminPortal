@@ -8,6 +8,7 @@ const initialState = {
   ticketRequestType: null,
   ticketRequestTypes: [],
   activeTicketRequestTypes: [],
+  openTicketRequestTypes: [],
   filterBy: '',
   page: 0,
   rowsPerPage: 100,
@@ -47,6 +48,22 @@ const slice = createSlice({
       state.isLoading = false;
       state.success = true;
       state.activeTicketRequestTypes = action.payload;
+      state.initial = true;
+    },
+    
+    // GET  Open Tickets Success
+    getReportTicketRequestTypesSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.ticketRequestTypes = action.payload;
+      state.initial = true;
+    },
+
+    // GET  Open Tickets Success
+    getOpenTicketRequestTypesSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.openTicketRequestTypes = action.payload;
       state.initial = true;
     },
 
@@ -112,6 +129,14 @@ const slice = createSlice({
       state.isLoading = false;
     },
 
+    // RESET Open Tickets
+    resetOpenTicketRequestTypes(state) {
+      state.openTicketRequestTypes = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+
     // SET FILTER BY
     setFilterBy(state, action) {
       state.filterBy = action.payload;
@@ -137,6 +162,7 @@ export const {
   resetTicketRequestType,
   resetTicketRequestTypes,
   resetActiveTicketRequestTypes,
+  resetOpenTicketRequestTypes,
   setFilterBy,
   ChangeRowsPerPage,
   ChangePage,
@@ -211,6 +237,55 @@ export function getTicketRequestTypes(page, pageSize) {
 
       const response = await axios.get(`${CONFIG.SERVER_URL}tickets/settings/RequestTypes`, { params });
       dispatch(slice.actions.getTicketRequestTypesSuccess(response.data));
+      return response;
+    } catch (error) {
+      dispatch(slice.actions.hasError(error.message));
+      console.error(error);
+      throw error;
+    }
+  };
+}
+
+export function getReportTicketRequestTypes(value = null, unit = null) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const params = {
+        orderBy: { createdAt: -1 },
+        isArchived: false,
+      };
+      if (value !== null && unit !== null) {
+        params.value = value;
+        params.unit = unit;
+      }
+
+      const response = await axios.get(`${CONFIG.SERVER_URL}tickets/settings/requestTypes/count`, { params });
+      dispatch(slice.actions.getReportTicketRequestTypesSuccess(response.data));
+      return response;
+    } catch (error) {
+      dispatch(slice.actions.hasError(error.message));
+      console.error(error);
+      throw error;
+    }
+  };
+}
+
+export function getOpenTicketRequestTypes(value = null, unit = null) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const params = {
+        orderBy: { createdAt: -1 },
+        isArchived: false,
+        isResolved: false,
+      };
+      if (value !== null && unit !== null) {
+        params.value = value;
+        params.unit = unit;
+      }
+
+      const response = await axios.get(`${CONFIG.SERVER_URL}tickets/settings/requestTypes/count`, { params });
+      dispatch(slice.actions.getOpenTicketRequestTypesSuccess(response.data));
       return response;
     } catch (error) {
       dispatch(slice.actions.hasError(error.message));

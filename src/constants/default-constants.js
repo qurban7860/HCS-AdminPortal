@@ -64,6 +64,7 @@ export const FORMLABELS = {
     TICKET_ATTACHMENTS: 'Attachments',
     TICKET_COMMENTS: 'Notes / Comments',
     TICKET_HISTORY: 'Ticket History',
+    TICKET_WORKLOG: 'Ticket WorkLog',
     EDIT_DOCUMENT: 'Edit Document',
   },
 
@@ -292,9 +293,8 @@ export const TITLES = {
   // @root - GeneralAppPage - dashboard
   //  Welcome
   WELCOME: `CUSTOMER \n SERVICE & SUPPORT`,
-  WELCOME_DESC:
-    'Providing seamless and hassle-free experience that exceeds your expectations and helps you to achieve your business goals.',
-
+  WELCOME_DESC: 'Providing seamless and hassle-free experience that exceeds your expectations and helps you to achieve your business goals.',
+  SUPPORT_SERV: 'Support Services',
   // @root - LicenseAddForm
   NEWLICENSE: 'New License',
   // @root - ResetPasswordPage - forgot password

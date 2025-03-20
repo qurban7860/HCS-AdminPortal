@@ -1,7 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useParams } from 'react-router-dom';
 import {
   Paper,
   Button,
@@ -24,7 +23,9 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import { useSnackbar } from 'notistack';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
+import { useAuthContext } from '../../auth/useAuthContext';
 import TicketHistory from './TicketHistory';
+import TicketWorkLogs from './TicketWorkLogs';
 import FormLabel from '../../components/DocumentForms/FormLabel';
 import { FORMLABELS } from '../../constants/default-constants';
 import FormProvider, { RHFTextField, RHFSwitch } from '../../components/hook-form';
@@ -38,7 +39,7 @@ const CommentSchema = Yup.object().shape({
   comment: Yup.string()
     .required('Comment is required')
     .max(300, 'Comment must not exceed 300 characters'),
-    isInternal: Yup.boolean(),
+  isInternal: Yup.boolean(),
 });
 
 const TicketComments = ({ currentUser }) => {
@@ -47,29 +48,22 @@ const TicketComments = ({ currentUser }) => {
   const [editIsInternal, setEditIsInternal] = useState(false);
   const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
   const [commentToDelete, setCommentToDelete] = useState(null);
-  const { id } = useParams();
+  const { user, userId } = useAuthContext();
   const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
-
-  const { error, comments, isLoading } = useSelector( (state) => state.ticketComments );
-  const [activeTab, setActiveTab] = useState('Comments'); 
+  const { ticket } = useSelector((state) => state.tickets);
+  const { error, comments, isLoading } = useSelector((state) => state.ticketComments);
+  const [activeTab, setActiveTab] = useState('Comments');
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
   };
 
   useEffect(() => {
-    // let controller;
-    if (id) {
-      dispatch( getComments({ id }) );
+    if (ticket?._id) {
+      dispatch(getComments({ id: ticket?._id }));
     }
-    // return () => {
-    //   if (controller) {
-    //     controller.abort();
-    //   }
-    //   dispatch(resetComments());
-    // };
-  }, [ dispatch, id ]);
+  }, [dispatch, ticket?._id]);
 
   const methods = useForm({
     resolver: yupResolver(CommentSchema),
@@ -84,7 +78,7 @@ const TicketComments = ({ currentUser }) => {
   const commentValue = watch('comment');
 
   const onSubmit = async (data) => {
-    await dispatch( addComment( id, data.comment || "", data.isInternal ));
+    await dispatch(addComment(ticket?._id, data.comment || "", data.isInternal));
     reset();
     if (error) enqueueSnackbar(error, { variant: 'error' });
     else enqueueSnackbar("Comment saved successfully", { variant: 'success' });
@@ -92,7 +86,7 @@ const TicketComments = ({ currentUser }) => {
 
   const handleSaveEdit = async (cID) => {
     await dispatch(
-      updateComment( id, cID, {
+      updateComment(ticket?._id, cID, {
         comment: editValue,
         isInternal: editIsInternal,
       })
@@ -105,9 +99,7 @@ const TicketComments = ({ currentUser }) => {
   };
 
   const handleConfirmDelete = async () => {
-    await dispatch(
-      deleteComment( id, commentToDelete?._id, { isArchived: true })
-    );
+    await dispatch(deleteComment(ticket?._id, commentToDelete?._id, { isArchived: true }));
     setOpenConfirmDelete(false);
     setCommentToDelete(null);
     if (error) enqueueSnackbar(error, { variant: 'error' });
@@ -134,7 +126,7 @@ const TicketComments = ({ currentUser }) => {
   return (
     <>
       <Paper sx={{ width: '100%', p: 2 }}>
-        <Box sx={{ml: 1, mb: 1.5}}>
+        <Box sx={{ ml: 1, mb: 1.5 }}>
           <LoadingButton
             value="Comments"
             onClick={() => handleTabChange('Comments')}
@@ -151,182 +143,193 @@ const TicketComments = ({ currentUser }) => {
             color="primary"
             variant={activeTab === 'History' ? 'contained' : 'text'}
             size="small"
-            sx={{ width: 'fit-content' }}
+            sx={{ width: 'fit-content', mr: 2 }}
           >
             History
           </LoadingButton>
+          <LoadingButton
+            value="Work Logs"
+            onClick={() => handleTabChange('Work Logs')}
+            variant={activeTab === 'Work Logs' ? 'contained' : 'text'}
+            color="primary"
+            size="small"
+            sx={{ width: 'fit-content' }}
+          >
+            Work Log
+          </LoadingButton>
         </Box>
-      {activeTab === 'Comments' && (
-        <>
-        <FormLabel content={FORMLABELS.COVER.TICKET_COMMENTS} />
-        <Box sx={{ py: 2 }}>
-          {/* Wrapping the form with FormProvider to ensure form context is available */}
-          <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-              <Stack direction="row" spacing={2}>
-                <CustomAvatar
-                  src={currentUser?.photoURL}
-                  alt={currentUser?.displayName}
-                  name={currentUser?.displayName}
-                />
-                <Stack sx={{ width: '100%' }}>
-                  <RHFTextField
-                    name="comment"
-                    placeholder="Add a comment..."
-                    multiline
-                    rows={2}
-                    inputProps={{ maxLength: 300 }}
-                    helperText={`${commentValue?.length || 0}/300 characters`}
-                    FormHelperTextProps={{ sx: { textAlign: 'right' } }}
+        {activeTab === 'Comments' && (
+          <>
+            <FormLabel content={FORMLABELS.COVER.TICKET_COMMENTS} />
+            <Box sx={{ py: 2 }}>
+              {/* Wrapping the form with FormProvider to ensure form context is available */}
+              <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+                <Stack direction="row" spacing={2}>
+                  <CustomAvatar
+                    src={currentUser?.photoURL}
+                    alt={currentUser?.displayName}
+                    name={currentUser?.displayName}
                   />
-                  <Stack display="flex" alignItems="start"  sx={{ position: 'absolute', transform: 'translateY(225%)' }}>
-                    <RHFSwitch name="isInternal" label="Internal" />
-                  </Stack>
-                  {!!commentValue?.trim() && (
-                    <Stack spacing={1} direction="row" sx={{mt: 2}}>
-                      <LoadingButton
-                        type="submit"
-                        disabled={isLoading}
-                        loading={isSubmitting}
-                        variant="contained"
-                        color="primary"
-                        size="small"
-                        sx={{ width: 'fit-content' }}
-                      >
-                        Save
-                      </LoadingButton>
-                      <Button
-                        type="button"
-                        variant="text"
-                        size="small"
-                        sx={{ width: 'fit-content' }}
-                        onClick={() => reset()}
-                      >
-                        Cancel
-                      </Button>
+                  <Stack sx={{ width: '100%' }}>
+                    <RHFTextField
+                      name="comment"
+                      placeholder="Add a comment..."
+                      multiline
+                      rows={2}
+                      inputProps={{ maxLength: 300 }}
+                      helperText={`${commentValue?.length || 0}/300 characters`}
+                      FormHelperTextProps={{ sx: { textAlign: 'right' } }}
+                    />
+                    <Stack display="flex" alignItems="start" sx={{ position: 'absolute', transform: 'translateY(225%)' }}>
+                      <RHFSwitch name="isInternal" label="Internal" />
                     </Stack>
-                  )}
-                </Stack>
-              </Stack>
-          </FormProvider>
-
-          <List sx={{ width: '100%', bgcolor: 'background.paper', maxHeight: 300, overflow: 'auto', mt: 1.5 }}>
-            {comments.map((item, index) => (
-              <React.Fragment key={index}>
-                {index > 0 && <Divider component="li" />}
-                <ListItem alignItems="flex-start" sx={{ padding: '8px 0' }}>
-                  <ListItemAvatar>
-                    <CustomAvatar alt={item?.createdBy?.name} name={item?.createdBy?.name} />
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={
-                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <Typography variant="subtitle2" sx={{ mr: 1 }}>
-                          {item?.createdBy?.name}
-                        </Typography>
-                        <Typography
-                          sx={{ color: 'text.secondary', fontSize: '0.875rem' }}
-                          title={dayjs(item.createdAt).format('MMMM D, YYYY [at] h:mm A')}
+                    {!!commentValue?.trim() && (
+                      <Stack spacing={1} direction="row" sx={{ mt: 2 }}>
+                        <LoadingButton
+                          type="submit"
+                          disabled={isLoading}
+                          loading={isSubmitting}
+                          variant="contained"
+                          color="primary"
+                          size="small"
+                          sx={{ width: 'fit-content' }}
                         >
-                          {dayjs().diff(dayjs(item.createdAt), 'day') < 1
-                            ? dayjs(item.createdAt).fromNow()
-                            : dayjs(item.createdAt).format('MMMM D, YYYY [at] h:mm A')}
-                        </Typography>
-                      </Box>
-                    }
-                    secondary={
-                      <Box>
-                        {editingCommentId === item._id ? (
-                          <FormProvider methods={methods} key={item._id}>
-                          <Stack spacing={2}>
-                            <TextField
-                              fullWidth
-                              multiline
-                              rows={2}
-                              value={editValue}
-                              onChange={(e) => setEditValue(e.target.value)}
-                              inputProps={{ maxLength: 300 }}
-                              helperText={`${editValue.length}/300 characters`}
-                              FormHelperTextProps={{ sx: { textAlign: 'right' } }}
-                            />
-                            <Stack display="flex" alignItems="start"  sx={{ position: 'absolute', transform: 'translateY(185%)' }}>
-                             <Switch
-                              label="Internal"
-                              checked={editIsInternal}
-                              onChange={() => setEditIsInternal(!editIsInternal)}
-                            />
-                            </Stack>
-                            <Stack direction="row" spacing={1}>
-                              <LoadingButton
-                                type="submit"
-                                onClick={() => handleSaveEdit(item._id)}
-                                disabled={!editValue.trim()}
-                                loading={isLoading}
-                                variant="contained"
-                                color="primary"
-                                size="small"
-                                sx={{ width: 'fit-content' }}
-                              >
-                                Update
-                              </LoadingButton>
-                              <Button
-                                variant="text"
-                                size="small"
-                                sx={{ width: 'fit-content' }}
-                                onClick={handleCancelEdit}
-                              >
-                                Cancel
-                              </Button>
-                            </Stack>
-                          </Stack>
-                          </FormProvider>
-                        ) : (
-                          <>
-                            <Typography component="span" variant="body2" color="text.primary">
-                              {item.comment}
-                              {item.isInternal && <Typography component="span" variant="caption" sx={{ color: 'text.secondary', ml: 1 }}>(Internal)</Typography>}
-                              {item.updatedAt !== item.createdAt && (
-                                <Typography
-                                  component="span"
-                                  variant="caption"
-                                  sx={{ color: 'text.secondary', ml: 1 }}
-                                >
-                                  (edited)
-                                </Typography>
-                              )}
+                          Save
+                        </LoadingButton>
+                        <Button
+                          type="button"
+                          variant="text"
+                          size="small"
+                          sx={{ width: 'fit-content' }}
+                          onClick={() => reset()}
+                        >
+                          Cancel
+                        </Button>
+                      </Stack>
+                    )}
+                  </Stack>
+                </Stack>
+              </FormProvider>
+
+              <List sx={{ width: '100%', bgcolor: 'background.paper', maxHeight: 300, overflow: 'auto', mt: 1.5 }}>
+                {comments.map((item, index) => (
+                  <React.Fragment key={index}>
+                    {index > 0 && <Divider component="li" />}
+                    <ListItem alignItems="flex-start" sx={{ padding: '8px 0' }}>
+                      <ListItemAvatar>
+                        <CustomAvatar alt={item?.createdBy?.name} name={item?.createdBy?.name} />
+                      </ListItemAvatar>
+                      <ListItemText
+                        primary={
+                          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                            <Typography variant="subtitle2" sx={{ mr: 1 }}>
+                              {item?.createdBy?.name}
                             </Typography>
-                            {item?.createdBy?._id === currentUser?.userId && (
-                              <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
-                                <Button
-                                  size="small"
-                                  color="primary"
-                                  onClick={() => handleEditClick(item)}
-                                  sx={{ minWidth: 'unset', px: 1 }}
-                                >
-                                  Edit
-                                </Button>
-                                <Button
-                                  size="small"
-                                  color="error"
-                                  onClick={() => handleDeleteClick(item)}
-                                  sx={{ minWidth: 'unset', px: 1 }}
-                                >
-                                  Delete
-                                </Button>
-                              </Stack>
+                            <Typography
+                              sx={{ color: 'text.secondary', fontSize: '0.875rem' }}
+                              title={dayjs(item.createdAt).format('MMMM D, YYYY [at] h:mm A')}
+                            >
+                              {dayjs().diff(dayjs(item.createdAt), 'day') < 1
+                                ? dayjs(item.createdAt).fromNow()
+                                : dayjs(item.createdAt).format('MMMM D, YYYY [at] h:mm A')}
+                            </Typography>
+                          </Box>
+                        }
+                        secondary={
+                          <Box>
+                            {editingCommentId === item._id ? (
+                              <FormProvider methods={methods} key={item._id}>
+                                <Stack spacing={2}>
+                                  <TextField
+                                    fullWidth
+                                    multiline
+                                    rows={2}
+                                    value={editValue}
+                                    onChange={(e) => setEditValue(e.target.value)}
+                                    inputProps={{ maxLength: 300 }}
+                                    helperText={`${editValue.length}/300 characters`}
+                                    FormHelperTextProps={{ sx: { textAlign: 'right' } }}
+                                  />
+                                  <Stack display="flex" alignItems="start" sx={{ position: 'absolute', transform: 'translateY(185%)' }}>
+                                    <Switch
+                                      label="Internal"
+                                      checked={editIsInternal}
+                                      onChange={() => setEditIsInternal(!editIsInternal)}
+                                    />
+                                  </Stack>
+                                  <Stack direction="row" spacing={1}>
+                                    <LoadingButton
+                                      type="submit"
+                                      onClick={() => handleSaveEdit(item._id)}
+                                      disabled={!editValue.trim()}
+                                      loading={isLoading}
+                                      variant="contained"
+                                      color="primary"
+                                      size="small"
+                                      sx={{ width: 'fit-content' }}
+                                    >
+                                      Update
+                                    </LoadingButton>
+                                    <Button
+                                      variant="text"
+                                      size="small"
+                                      sx={{ width: 'fit-content' }}
+                                      onClick={handleCancelEdit}
+                                    >
+                                      Cancel
+                                    </Button>
+                                  </Stack>
+                                </Stack>
+                              </FormProvider>
+                            ) : (
+                              <>
+                                <Typography component="span" variant="body2" color="text.primary">
+                                  {item.comment}
+                                  {item.isInternal && <Typography component="span" variant="caption" sx={{ color: 'text.secondary', ml: 1 }}>(Internal)</Typography>}
+                                  {item.updatedAt !== item.createdAt && (
+                                    <Typography
+                                      component="span"
+                                      variant="caption"
+                                      sx={{ color: 'text.secondary', ml: 1 }}
+                                    >
+                                      (edited)
+                                    </Typography>
+                                  )}
+                                </Typography>
+                                {item?.createdBy?._id === currentUser?.userId && (
+                                  <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
+                                    <Button
+                                      size="small"
+                                      color="primary"
+                                      onClick={() => handleEditClick(item)}
+                                      sx={{ minWidth: 'unset', px: 1 }}
+                                    >
+                                      Edit
+                                    </Button>
+                                    <Button
+                                      size="small"
+                                      color="error"
+                                      onClick={() => handleDeleteClick(item)}
+                                      sx={{ minWidth: 'unset', px: 1 }}
+                                    >
+                                      Delete
+                                    </Button>
+                                  </Stack>
+                                )}
+                              </>
                             )}
-                          </>
-                        )}
-                      </Box>
-                    }
-                  />
-                </ListItem>
-              </React.Fragment>
-            ))}
-          </List>
-        </Box>
-        </>
-      )}
-      {activeTab === 'History' && <TicketHistory />} 
+                          </Box>
+                        }
+                      />
+                    </ListItem>
+                  </React.Fragment>
+                ))}
+              </List>
+            </Box>
+          </>
+        )}
+        {activeTab === 'History' && <TicketHistory />}
+        {activeTab === 'Work Logs' && (<TicketWorkLogs />)}
       </Paper>
       <ConfirmDialog
         open={openConfirmDelete}

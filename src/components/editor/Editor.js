@@ -59,7 +59,7 @@ export default function Editor({
           onChange={onChange}
           modules={modules}
           formats={formats}
-          placeholder="Write something awesome..."
+          // placeholder="Write something here..."
           {...other}
         />
       </StyledEditor>

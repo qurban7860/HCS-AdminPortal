@@ -14,6 +14,7 @@ import useResponsive from '../../../hooks/useResponsive';
 import { HEADER, NAV } from '../../../config-global';
 // components
 import Logo from '../../../components/logo';
+import FullScreenIcon from '../../../components/Icons/FullScreenIcon';
 import Iconify from '../../../components/iconify';
 import { useSettingsContext } from '../../../components/settings';
 import AccountPopover from './AccountPopover';
@@ -40,12 +41,12 @@ export default function Header({ onOpenNav, selectedCategory, setSelectedCategor
   const isOffset = useOffSetTop(HEADER.H_DASHBOARD_DESKTOP) && !isNavHorizontal;
   const { sendJsonMessage } = useWebSocketContext();
   const { isSettingAccessAllowed } = useAuthContext();
-  
-  useEffect(()=>{
-    sendJsonMessage({eventName:'getNotifications'});
-  },[sendJsonMessage])
 
-  
+  useEffect(() => {
+    sendJsonMessage({ eventName: 'getNotifications' });
+  }, [sendJsonMessage])
+
+
   const renderContent = (
     <>
       {isDesktop && isNavHorizontal && <Logo sx={{ mr: 2.5 }} />}
@@ -62,9 +63,9 @@ export default function Header({ onOpenNav, selectedCategory, setSelectedCategor
                 key={item.id}
                 component={RouterLink}
                 to={item.path}
-                sx={{ 
-                  my: 2, 
-                  mx: 0.5, 
+                sx={{
+                  my: 2,
+                  mx: 0.5,
                   display: 'block',
                   textDecoration: 'none',
                   color: 'inherit'
@@ -80,35 +81,36 @@ export default function Header({ onOpenNav, selectedCategory, setSelectedCategor
               </Link>
             ))}
           </Box>
+          {isDesktop && <FullScreenIcon />}
           <Stack flexGrow={0} direction="row" alignItems="center" spacing={{ xs: 0.5, sm: 1.5 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', borderLeft: `2px solid ${theme.palette.divider}`, borderRight: `2px solid ${theme.palette.divider}`, px: 1 }}>
-              {OTHER_MAIN_CATEGORIES.map((item) => 
+              {OTHER_MAIN_CATEGORIES.map((item) =>
                 item?.id === "settings" && !isSettingAccessAllowed ? null : (
-                <StyledTooltip title={item.title} tooltipcolor='#1976d2' key={item.id}>
-                  <Link
-                    component={RouterLink}
-                    to={item.path}
-                    sx={{ textDecoration: 'none' }}
-                    onClick={() => setSelectedCategory(item)}
-                  >
-                    <Button
-                      variant={item.id === selectedCategory.id ? "contained" : "text"}
-                      sx={{ mx: 0.2 }}
+                  <StyledTooltip title={item.title} tooltipcolor='#1976d2' key={item.id}>
+                    <Link
+                      component={RouterLink}
+                      to={item.path}
+                      sx={{ textDecoration: 'none' }}
+                      onClick={() => setSelectedCategory(item)}
                     >
-                      <Iconify icon={item.icon} />
-                    </Button>
-                  </Link>
-                </StyledTooltip>
+                      <Button
+                        variant={item.id === selectedCategory.id ? "contained" : "text"}
+                        sx={{ mx: 0.2 }}
+                      >
+                        <Iconify icon={item.icon} />
+                      </Button>
+                    </Link>
+                  </StyledTooltip>
                 )
               )}
             </Box>
           </Stack>
         </>
       )}
-      <Stack 
-        flexGrow={!isDesktop ? 1 : 0} 
-        direction="row" 
-        alignItems="center" 
+      <Stack
+        flexGrow={!isDesktop ? 1 : 0}
+        direction="row"
+        alignItems="center"
         spacing={{ xs: 0.5, sm: 1.5 }}
         justifyContent={!isDesktop ? 'flex-end' : 'flex-start'}
       >
@@ -149,7 +151,7 @@ export default function Header({ onOpenNav, selectedCategory, setSelectedCategor
         }),
       }}
     >
-      <Toolbar sx={{ height: 1, px: { lg: 5 }, color: 'text.primary', position: 'sticky'}} >{renderContent}</Toolbar>
+      <Toolbar sx={{ height: 1, px: { lg: 5 }, color: 'text.primary', position: 'sticky' }} >{renderContent}</Toolbar>
     </AppBar>
   );
 }

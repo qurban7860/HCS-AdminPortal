@@ -32,7 +32,7 @@ MachineLogsList.propTypes = {
   allMachineLogsType: PropTypes.object
 };
 
-export default function MachineLogsList({ allMachineLogsType }){
+export default function MachineLogsList({ allMachineLogsType }) {
   const [selectedSearchFilter, setSelectedSearchFilter] = useState('');
 
   const dispatch = useDispatch();
@@ -55,7 +55,7 @@ export default function MachineLogsList({ allMachineLogsType }){
 
   useEffect(() => {
     handleResetFilter();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const { page, rowsPerPage } = useSelector((state) => state.machineErpLogs);
@@ -260,31 +260,4 @@ export default function MachineLogsList({ allMachineLogsType }){
     </Container>
   );
 }
-// ----------------------------------------------------------------------
 
-// function applyFilter({ inputData, comparator }) {
-//   const stabilizedThis =  inputData && inputData.map((el, index) => [el, index]);
-//   stabilizedThis.sort((a, b) => {
-//     const order = comparator(a[0], b[0]);
-//     if (order !== 0) return order;
-//     return a[1] - b[1];
-//   });
-
-//   inputData = stabilizedThis.map((el) => el[0]);
-//   // if (filterName) {
-//   //   inputData = inputData.filter((log) => {
-//   //     const searchValue = filterName.toLowerCase();
-//   //     return Object.values(log).some((value) => {
-//   //       if (typeof value === 'string') {
-//   //         return value.toLowerCase().includes(searchValue);
-//   //       }
-//   //       if (value && typeof value === 'object') {
-//   //         return JSON.stringify(value).toLowerCase().includes(searchValue);
-//   //       }
-//   //       return false;
-//   //     });
-//   //   });
-//   // }
-
-//   return inputData;
-// }

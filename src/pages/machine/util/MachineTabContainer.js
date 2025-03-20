@@ -52,14 +52,16 @@ export default function MachineTabContainer({ currentTabValue }) {
       navigate(PATH_MACHINE.machines.serviceReports.root(machineId))
     } else if (tab === 'ini' && machineId) {
       navigate(PATH_MACHINE.machines.ini.root(machineId))
-    } else if (tab === 'logs' && machineId) {
-      navigate(PATH_MACHINE.machines.logs.root(machineId))
-    } else if (tab === 'graphs' && machineId) {
-      navigate(PATH_MACHINE.machines.logs.graph(machineId))
     } else if (tab === 'jira' && machineId) {
       navigate(PATH_MACHINE.machines.jira.root(machineId))
     } else if (tab === 'integration' && machineId) {
       navigate(PATH_MACHINE.machines.integration.root(machineId))
+    } else if (tab === 'logs' && machineId) {
+      navigate(PATH_MACHINE.machines.logs.root(machineId))
+    } else if (tab === 'graphs' && machineId) {
+      navigate(PATH_MACHINE.machines.logs.graph(machineId))
+    } else if (tab === 'dashboard' && machineId) {
+      navigate(PATH_MACHINE.machines.dashboard.root(machineId))
     }
   }
 
@@ -76,13 +78,12 @@ export default function MachineTabContainer({ currentTabValue }) {
         setting
         isArchived={machine?.isArchived}
       />
-      {!isLoading && (
         <TabContainer
           tabsClasses={tabsClasses.scrollButtons}
           currentTab={currentTabValue}
           setCurrentTab={(tab) => navigatePage(tab)}
         >
-          {TABS.map((tab) => (
+          {TABS.filter(tab => tab.align !== 'right').map((tab) => (
             <Tab
               disabled={tab.disabled}
               key={tab.value}
@@ -98,8 +99,31 @@ export default function MachineTabContainer({ currentTabValue }) {
               }
             />
           ))}
+          
+          {TABS.filter(tab => tab.align === 'right').map((tab, index) => (
+            <Tab
+              disabled={tab.disabled}
+              key={tab.value}
+              value={tab.value}
+              label={tab?.value === currentTabValue ? tab.label : ''}
+              icon={
+                <TabButtonTooltip
+                  value={tab.value}
+                  selected={tab?.value === currentTabValue}
+                  title={tab.label}
+                  icon={tab.icon}
+                />
+              }
+              iconPosition="end"
+              sx={{ 
+                marginLeft: index === 0 ? 'auto' : 0,
+                paddingRight: '0 !important',
+                paddingLeft: '8px !important',
+                columnGap: '8px',
+              }}
+            />
+          ))}
         </TabContainer>
-      )}
     </StyledCardContainer>
   );
 }

@@ -97,7 +97,7 @@ export default function ReleasesList() {
   return (
       <Container maxWidth={false}>
         <StyledCardContainer>
-          <Cover name="Releases" icon="ph:users-light" generalSettings />
+          <Cover name="Releases" icon="ph:users-light" />
         </StyledCardContainer>
         <TableCard>
           <ReleasesListTableToolbar

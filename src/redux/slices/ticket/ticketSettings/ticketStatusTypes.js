@@ -41,6 +41,14 @@ const slice = createSlice({
       state.ticketStatusTypes = action.payload;
       state.initial = true;
     },
+    
+    // GET Tickets Success
+    getReportTicketStatusTypesSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.ticketStatusTypes = action.payload;
+      state.initial = true;
+    },
 
     // GET  Active Tickets Success
     getActiveTicketStatusTypesSuccess(state, action) {
@@ -211,6 +219,30 @@ export function getTicketStatusTypes(page, pageSize) {
 
       const response = await axios.get(`${CONFIG.SERVER_URL}tickets/settings/statusTypes`, { params });
       dispatch(slice.actions.getTicketStatusTypesSuccess(response.data));
+      return response;
+    } catch (error) {
+      dispatch(slice.actions.hasError(error.message));
+      console.error(error);
+      throw error;
+    }
+  };
+}
+
+export function getReportTicketStatusTypes(value = null, unit = null) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const params = {
+        orderBy: { createdAt: -1 },
+        isArchived: false,
+      };
+      if (value !== null && unit !== null) {
+        params.value = value;
+        params.unit = unit;
+      }
+
+      const response = await axios.get(`${CONFIG.SERVER_URL}tickets/settings/statusTypes/count`, { params });
+      dispatch(slice.actions.getReportTicketStatusTypesSuccess(response.data));
       return response;
     } catch (error) {
       dispatch(slice.actions.hasError(error.message));

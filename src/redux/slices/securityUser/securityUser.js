@@ -214,6 +214,12 @@ const slice = createSlice({
       state.isLoading = false;
     },
 
+    // RESET SIGNIN LOGS
+    resetSignInLogsSuccess(state, action) {
+      state.isLoadingLogs = false;
+      state.signInLogs = [];
+    },
+
     // Get Verify Invite
     getVerifyInvite(state, action) {
       state.isLoading = false;
@@ -252,6 +258,7 @@ export const {
   resetSecurityUsers,
   resetSecurityUser,
   resetLoadingResetPasswordEmail,
+  resetSignInLogsSuccess,
   setFilterBy,
   setActiveFilterList,
   setEmployeeFilterList,
@@ -561,11 +568,29 @@ export function SecurityUserPasswordUpdate(data, Id, isAdmin) {
 
 // ----------------------------------------------------------------------
 
-export function getSignInLogs(id) {
+export function getSignInLogs(id, page, pageSize, searchKey, searchColumn, statusCode, loginTime) {
   return async (dispatch) => {
     dispatch(slice.actions.setLoadingLogs(true));
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}security/users/${id}/signinlogs/`);
+      const params = {};
+      params.pagination = {
+        page,
+        pageSize
+      }
+      if (loginTime) {
+        params.loginTime = { $gte: loginTime };
+      }
+      if (searchKey?.length > 0) {
+        params.searchKey = searchKey;
+        params.searchColumn = searchColumn;
+      }
+      if (statusCode && statusCode !== -1 && statusCode !== "-1") {
+        params.statusCode = statusCode
+        if (statusCode !== 200 && statusCode !== "200") {
+          params.statusCode = { $ne: 200 }
+        }
+      }
+      const response = await axios.get(`${CONFIG.SERVER_URL}security/users/${id}/signinlogs/`, { params });
       dispatch(slice.actions.getSignInLogsSuccess(response.data));
     } catch (error) {
       console.error(error);

@@ -6,6 +6,7 @@ import { fDateTime } from '../../utils/formatTime';
 import { StyledTableRow } from '../../theme/styles/default-styles';
 import LinkTableCell from '../ListTableTools/LinkTableCell';
 import DialogViewApiLogDetails from '../Dialog/DialogViewApiLogDetails';
+import DialogViewAPILogsMachineERPLogsTable from '../Dialog/DialogViewAPILogsMachineERPLogsTable';
 import { PATH_MACHINE } from '../../routes/paths';
 
 APILogsTableRow.propTypes = {
@@ -19,6 +20,7 @@ APILogsTableRow.propTypes = {
 
 export default function APILogsTableRow({ row, style, selected, onViewRow, hiddenColumns, tableColumns }) {
   const {
+    _id,
     createdAt,
     apiType,
     requestMethod,
@@ -38,14 +40,23 @@ export default function APILogsTableRow({ row, style, selected, onViewRow, hidde
   } = row;
 
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [machineLogsDialogOpen, setMachineLogsDialogOpen] = useState(false);
   const navigate = useNavigate();
 
-  const handleRowClick = () => {
+  const handleShowApiDetails = () => {
     setDialogOpen(true);
+  };
+
+  const handleShowMachineLogs = () => {
+    setMachineLogsDialogOpen(true);
   };
 
   const handleCloseDialog = () => {
     setDialogOpen(false);
+  };
+
+  const handleCloseMachineLogsDialog = () => {
+    setMachineLogsDialogOpen(false);
   };
 
   const getChipColor = (method) => {
@@ -94,7 +105,7 @@ export default function APILogsTableRow({ row, style, selected, onViewRow, hidde
                 <LinkTableCell 
                   key={column.id}
                   align="left" 
-                  onClick={handleRowClick} 
+                  onClick={handleShowApiDetails} 
                   param={fDateTime(createdAt)} 
                 />
               );
@@ -115,7 +126,7 @@ export default function APILogsTableRow({ row, style, selected, onViewRow, hidde
                 <LinkTableCell 
                   key={column.id}
                   align="left" 
-                  onClick={handleRowClick} 
+                  onClick={handleShowApiDetails} 
                   param={requestURL?.replace('/api/1.0.0/', '') || requestURL} 
                 />
               );
@@ -144,7 +155,15 @@ export default function APILogsTableRow({ row, style, selected, onViewRow, hidde
             case 'noOfRecordsUpdated':
               return (
                 <TableCell key={column.id} align="left">
-                  {noOfRecordsUpdated || ''}
+                  {apiType === 'MACHINE-LOGS' && Number(noOfRecordsUpdated) > 0 ? (
+                    <LinkTableCell 
+                      align="left" 
+                      onClick={handleShowMachineLogs} 
+                      param={noOfRecordsUpdated || ''} 
+                    />
+                  ) : (
+                    noOfRecordsUpdated || ''
+                  )}
                 </TableCell>
               );
             case 'customer.name':
@@ -181,19 +200,18 @@ export default function APILogsTableRow({ row, style, selected, onViewRow, hidde
           serialNo: machine?.serialNo || '',
           machineName: machine?.name || '',
           response,
-          // responseMessage,
-          // portalKeyCreatedBy: machine?.portalKey?.[0]?.createdBy?.name || '',
-          // requestHeaders: {
-          //   'content-type': requestHeaders['content-type'],
-          //   'content-length': requestHeaders['content-length'],
-          //   connection: requestHeaders.connection,
-          //   host: requestHeaders.host,
-          // },
           createdIP,
           createdBy: createdBy?.name || createdByIdentifier|| '',
           createdAt: fDateTime(createdAt),
           updatedAt: fDateTime(updatedAt),
         }}
+      />
+
+      <DialogViewAPILogsMachineERPLogsTable
+        open={machineLogsDialogOpen}
+        onClose={handleCloseMachineLogsDialog}
+        apiId={_id}
+        logType="ERP"
       />
     </>
   );

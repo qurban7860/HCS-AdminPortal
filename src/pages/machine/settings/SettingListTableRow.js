@@ -53,11 +53,18 @@ export default function SettingListTableRow({
   return (
     <>
       <StyledTableRow hover selected={selected}>
+        <TableCell align="left">
+          {category?.name||""}
+        </TableCell>
         <LinkTableCell align="left" param={name||""} onClick={onViewRow} />
         <TableCell align="left"  >
-            {techParamValue || ""}
-            {history !== undefined && history?.length > 1 &&
-              <StyledBadge badgeContent={history?.length || '0' } color="info" sx={{top:-2, left:-2}} >
+          {techParamValue || ""}
+        </TableCell>
+
+          { smScreen && <TableCell align="left">{fDate(updatedAt)}</TableCell>}
+        <TableCell align="left" padding="checkbox" >
+          {history !== undefined && history?.length > 1 &&
+              <StyledBadge badgeContent={history?.length || '0' } color="info" sx={{top: 2, right: 12}} >
                 <IconButtonTooltip
                   title='History'
                   color={ICONS.MACHINESETTINGHISTORY.color}
@@ -65,18 +72,20 @@ export default function SettingListTableRow({
                   onClick={handleMachineSettingHistoryPopoverOpen}
                 />
               </StyledBadge>
-            }
-            <IconButtonTooltip
-              title={ ICONS.MACHINESETTINGEDIT.heading }
-              color={ ICONS.MACHINESETTINGEDIT.color }
-              icon={ ICONS.MACHINESETTINGEDIT.icon }
-              onClick={ handleDialog }
-            />
+          }
         </TableCell>
-        <TableCell align="left">
-          {category?.name||""}
+        
+        <TableCell align="left" padding="checkbox" >
+          <StyledBadge sx={{right: 12}}>
+          <IconButtonTooltip
+            title={ ICONS.MACHINESETTINGEDIT.heading }
+            color={ ICONS.MACHINESETTINGEDIT.color }
+            icon={ ICONS.MACHINESETTINGEDIT.icon }
+            onClick={ handleDialog }
+          />
+          </StyledBadge>
         </TableCell>
-        { smScreen && <TableCell align="right">{fDate(updatedAt)}</TableCell>}
+
       </StyledTableRow>
 
       <ViewFormMachineSettingHistoryMenuPopover

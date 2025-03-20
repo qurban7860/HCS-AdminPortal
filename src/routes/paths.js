@@ -266,6 +266,10 @@ export const PATH_MACHINE = {
       graph: (machineId ) => path(ROOTS_MACHINE, `/machines/${machineId}/logs/graph`),
       // view: (machineId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/logs/${id}/view`),
     },
+    // --------------------- Machine Dashboard -----------------------
+    dashboard: {
+      root: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/dashboard`),
+    },
 
     // --------------------- Machine Integration -----------------------
     integration: {
@@ -426,6 +430,15 @@ export const PATH_MACHINE = {
 // ----------------------- SUPPORT SERVICES -----------------------------------------
 export const PATH_SUPPORT = {
   permissionDenied: path(ROOTS_SUPPORT, '/permission-denied'),
+  supportDashboard: {
+    root: path(ROOTS_SUPPORT, '/supportDashboard'),
+    issueType: path(ROOTS_SUPPORT, '/supportDashboard/issueType'),
+    requestType: path(ROOTS_SUPPORT, '/supportDashboard/requestType'),
+    openIssueType: path(ROOTS_SUPPORT, '/supportDashboard/openIssueType'),
+    openRequestType: path(ROOTS_SUPPORT, '/supportDashboard/openRequestType'),
+    statusType: path(ROOTS_SUPPORT, '/supportDashboard/statusType'),
+    status: path(ROOTS_SUPPORT, '/supportDashboard/status'),
+  },
   supportTickets: {
     root: path(ROOTS_SUPPORT, '/supportTickets'),
     new: path(ROOTS_SUPPORT, '/supportTickets/new'),

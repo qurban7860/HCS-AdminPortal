@@ -10,6 +10,10 @@ const initialState = {
   ticketSettings:[],
   softwareVersion: null,
   filterBy: '',
+  filterIssueType: null,
+  filterStatus: [],
+  filterStatusType: null,
+  filterResolvedStatus: null,
   page: 0,
   rowsPerPage: 100,
   initial: false,
@@ -181,6 +185,22 @@ const slice = createSlice({
     setFilterBy(state, action) {
       state.filterBy = action.payload;
     },
+    
+    setFilterIssueType(state, action) {
+      state.filterIssueType = action.payload;
+    },
+
+    setFilterStatus(state, action) {
+      state.filterStatus = action.payload;
+    },
+
+    setFilterStatusType(state, action) {
+      state.filterStatusType = action.payload;
+    },
+
+    setFilterResolvedStatus(state, action) {
+      state.filterResolvedStatus = action.payload;
+    },
 
     // SET PAGE ROW COUNT
     ChangeRowsPerPage(state, action) {
@@ -211,6 +231,10 @@ export const {
   ChangeRowsPerPage,
   ChangePage,
   setReportHiddenColumns,
+  setFilterIssueType,
+  setFilterStatus,
+  setFilterStatusType,
+  setFilterResolvedStatus
 } = slice.actions;
 
 // ----------------------------------------------------------------------
@@ -335,7 +359,7 @@ export function updateTicketField(id, name, value) {
 }
 
 // GET Tickets
-export function getTickets(page, pageSize) {
+export function getTickets({ page, pageSize, issueType, requestType, isResolved = null, statusType, status, createdAt}) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -343,7 +367,17 @@ export function getTickets(page, pageSize) {
         orderBy: { createdAt: -1 },
         pagination: { page, pageSize },
         isArchived: false,
+        ...(createdAt && { createdAt }),
+        ...(issueType && { issueType }),
+        ...(requestType && { requestType }),
+        ...(isResolved && { isResolved: isResolved === 'resolved' }),
+        ...(statusType && { statusType }),
+        ...(status && { status }),
       };
+      
+      if (isResolved === 'unresolved') {
+        params.isResolved = false; 
+      }
 
       const response = await axios.get(`${CONFIG.SERVER_URL}tickets`, { params });
       dispatch(slice.actions.getTicketsSuccess(response.data));

@@ -68,13 +68,15 @@ import ticketInvestigationReasonsReducer from './slices/ticket/ticketSettings/ti
 import ticketPrioritiesReducer from './slices/ticket/ticketSettings/ticketPriorities';
 import ticketStatusesReducer from './slices/ticket/ticketSettings/ticketStatuses';
 import ticketCommentsReducer from './slices/ticket/ticketComments/ticketComment';
+import ticketWorkLogsReducer from './slices/ticket/ticketWorkLogs/ticketWorkLog';
 import ticketHistoriesReducer from './slices/ticket/ticketHistories/ticketHistory';
+import ticketReportsReducer from './slices/ticket/ticketReports/ticketReports';
 import customerJiraReducer from './slices/customer/customerJira';
 import jiraReducer from './slices/jira/jira';
 import apilogsReducer from './slices/logs/apiLogs';
 import portalRegistrationReducer from './slices/customer/portalRegistration';
 import serviceReportNotesReducer from './slices/products/serviceReportNotes';
-
+import machineDashboardReducer from './slices/products/machineDashboard';
 
 // ----------------------------------------------------------------------
 
@@ -179,6 +181,13 @@ export const techparamcategoryPersistConfig = {
 
 export const machineNotePersistConfig = {
   key: 'machineNote',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+};
+
+export const machineDashboardPersistConfig = {
+  key: 'machineDashboard',
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
@@ -522,8 +531,20 @@ export const ticketCommentsPersistConfig = {
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 }
+export const ticketWorkLogsPersistConfig = {
+  key: 'ticketWorkLogs',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
 export const ticketHistoriesPersistConfig = {
   key: 'ticketHistories',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
+export const ticketReportsPersistConfig = {
+  key: 'ticketReports',
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
@@ -571,6 +592,7 @@ const rootReducer = combineReducers({
   tool: persistReducer(toolPersistConfig,toolReducer),
   techparamcategory: persistReducer(techparamcategoryPersistConfig,techparamcategoryReducer),
   machineNote: persistReducer(machineNotePersistConfig, machinenoteReducer),
+  machineDashboard: persistReducer(machineDashboardPersistConfig, machineDashboardReducer),
   serviceReportComments: persistReducer(serviceReportCommentsPersistConfig, serviceReportCommentsReducer),
   machinestatus: persistReducer(machinestatusPersistConfig, machinestatusReducer),
   machinemodel: persistReducer(machinemodelPersistConfig, machinemodelReducer),
@@ -624,7 +646,9 @@ const rootReducer = combineReducers({
   ticketPriorities: persistReducer(ticketPrioritiesPersistConfig, ticketPrioritiesReducer),
   ticketStatuses: persistReducer(ticketStatusesPersistConfig, ticketStatusesReducer),
   ticketComments: persistReducer(ticketCommentsPersistConfig, ticketCommentsReducer),
+  ticketWorkLogs: persistReducer(ticketWorkLogsPersistConfig, ticketWorkLogsReducer),
   ticketHistories: persistReducer(ticketHistoriesPersistConfig, ticketHistoriesReducer),
+  ticketReports: persistReducer(ticketReportsPersistConfig, ticketReportsReducer),
   customerJira: persistReducer(customerJiraPersistConfig, customerJiraReducer),
   jira: persistReducer(jiraPersistConfig, jiraReducer),
   portalRegistration: persistReducer( portalRegistrationPersistConfig, portalRegistrationReducer ),

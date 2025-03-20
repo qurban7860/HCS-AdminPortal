@@ -1,61 +1,62 @@
 export const Snacks = {
   fileRequired: "Files required!",
   // @root - MachineViewForm
-  machineUpdated: 'Machine Updated',
-  failedUpdateMachine: 'Failed to Update Machine',
-  machineVerifiedSuccess: 'Machine Verified',
-  machineFailedVerification: 'Failed to Verify Machine',
-  machineDeleted: 'Machine Deleted',
-  machineFailedArchive: 'Failed to Archive Machine',
-  machineFailedRestore: 'Failed to Restore Machine',
-  machineFailedDelete: 'Failed to Delete Machine',
-  machineTransferSuccess: 'Machine Transferred Successfully!',
-  machineFailedTransfer: 'Failed to Transfer Machine',
-  machineStatusSuccess: 'Machine Status Changed Successfully!',
-  machineStatusFailed: 'Failed to Change Machine Status!',
+  machineUpdated: 'Machine updated',
+  failedUpdateMachine: 'Failed to update machine',
+  machineVerifiedSuccess: 'Machine verified',
+  machineFailedVerification: 'Failed to verify machine',
+  machineDeleted: 'Machine deleted',
+  machineFailedArchive: 'Failed to archive machine',
+  machineFailedRestore: 'Failed to restore machine',
+  machineFailedDelete: 'Failed to delete machine',
+  machineTransferSuccess: 'Machine transferred successfully!',
+  machineFailedTransfer: 'Failed to transfer machine',
+  machineStatusSuccess: 'Machine status changed successfully!',
+  machineStatusFailed: 'Failed to change machine status!',
 
   // @root Machine Service Parameter
-  checkItemAdd: 'Machine Check Item Added',
-  checkItemAddFailed: 'Failed to add Machine Check Item',
-  checkItemUpdate: 'Check Item is Updated',
-  checkItemUpdateFailed: 'Failed to Update Machine Check Item',
-  checkItemDeleteFailed: 'Failed to Archive Machine Check Item',
-  checkItemDelete: 'Machine Check Item Deleted',
+  checkItemAdd: 'Machine check item added',
+  checkItemAddFailed: 'Failed to add machine check item',
+  checkItemUpdate: 'Check item is updated',
+  checkItemUpdateFailed: 'Failed to update machine check item',
+  checkItemDeleteFailed: 'Failed to archive machine check item',
+  checkItemDelete: 'Machine check item deleted',
 
   // @root noteDeleted
-  noteDeleted: 'Note Archived Successfully!',
+  noteDeleted: 'Note archived successfully!',
   // @root - ModelEditForm
-  modelUpdated: 'Model Updated Successfully',
-  failedUpdateModel: 'Failed to Update Model',
+  modelUpdated: 'Model updated successfully',
+  failedUpdateModel: 'Failed to update model',
   nameRequired: 'Name is required',
 
   // @root - SettingAddForm
-  settingAdded: 'Setting Added Successfully',
-  failedAddSetting: 'Failed to Add Setting',
-  settingUpdated: 'Setting Updated Successfully',
+  settingAdded: 'Setting added successfully',
+  failedAddSetting: 'Failed to add setting',
+  settingUpdated: 'Setting updated successfully',
+  failedDeleteSetting: 'Setting delete failed',
 
   // @root - LicenseViewForm
-  licenseUpdated: 'License Updated Successfully',
-  failedUpdateLicense: 'Failed to Update License',
+  licenseUpdated: 'License updated successfully',
+  failedUpdateLicense: 'Failed to update license',
 
-  licenseDeleted: 'License Archived Successfully',
-  failedDeleteLicense: 'Failed to Archive License',
+  licenseDeleted: 'License archived successfully',
+  failedDeleteLicense: 'Failed to archive license',
 
   // @root - LicenseAddForm - submit
-  licenseAdded: 'License Added Successfully',
-  failedAddLicense: 'Failed to Add License',
+  licenseAdded: 'License added successfully',
+  failedAddLicense: 'Failed to add license',
 
   // @root - AddLicenseSchema
-  licenseKeyRequired: 'License KEY is Required',
-  licenseExtensionTimeRequired: 'License Extension Time is Required',
-  licenseRequestTimeRequired: 'License Request Time is Required',
+  licenseKeyRequired: 'License kEY is required',
+  licenseExtensionTimeRequired: 'License extension time is required',
+  licenseRequestTimeRequired: 'License request time is required',
 
   // @root - machine - EditMachineSchema
-  serialNoRequired: 'Serial Number is Required',
+  serialNoRequired: 'Serial number is required',
 
   // @root - MachineLogsList and MachineLogsPage
-  machineLogArchived: 'Machine Log Archived Successfully',
-  machineLogRestored: 'Machine Log Restored Successfully',
-  machineLogDeleted: 'Machine Log Deleted Successfully',
-  machineLogUpdated: 'Machine Log Updated Successfully',
+  machineLogArchived: 'Machine log archived successfully',
+  machineLogRestored: 'Machine log restored successfully',
+  machineLogDeleted: 'Machine log deleted successfully',
+  machineLogUpdated: 'Machine log updated successfully',
 };

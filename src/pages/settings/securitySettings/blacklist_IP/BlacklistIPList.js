@@ -147,7 +147,7 @@ export default function BlacklistIPList() {
     <>
       <Container maxWidth={false}>
         <StyledCardContainer>
-          <Cover name="Blacklist IPs" icon="ph:users-light" generalSettings />
+          <Cover name="Blacklist IPs" icon="ph:users-light" />
         </StyledCardContainer>
 
         <TableCard>

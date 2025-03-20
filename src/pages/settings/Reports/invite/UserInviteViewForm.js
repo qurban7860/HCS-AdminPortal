@@ -3,16 +3,19 @@ import { useMemo } from 'react';
 import { Card, Grid, Container } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 // hooks
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { useSnackbar } from 'notistack';
 import { PATH_SETTING } from '../../../../routes/paths';
 import { Cover } from '../../../../components/Defaults/Cover';
 import { fDate } from '../../../../utils/formatTime';
 import ViewFormField from '../../../../components/ViewForms/ViewFormField';
 import ViewFormEditDeleteButtons from '../../../../components/ViewForms/ViewFormEditDeleteButtons';
 import { StyledCardContainer } from '../../../../theme/styles/default-styles';
+import { cancelUserInvite } from '../../../../redux/slices/securityUser/invite';
 
 export default function UserInviteViewForm() {
-  
+  const dispatch = useDispatch();
+  const { enqueueSnackbar } = useSnackbar();
   const { userInvite, isLoading } = useSelector((state) => state.userInvite);
   const navigate = useNavigate();
 
@@ -28,9 +31,18 @@ export default function UserInviteViewForm() {
       createdAt:userInvite?.createdAt || '',
       updatedAt:userInvite?.updatedAt || ''
     }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [userInvite]
   );
+
+  const handleCancelInvite = async () => {
+    try {
+      await dispatch(cancelUserInvite(userInvite?._id));
+      enqueueSnackbar('Invitation cancelled successfully');
+      navigate(PATH_SETTING.invite.list);
+    } catch (error) {
+      enqueueSnackbar(error.message || 'Failed to cancel invitation', { variant: 'error' });
+    }
+  };
   
   return (
     <Container maxWidth={false}>
@@ -43,6 +55,8 @@ export default function UserInviteViewForm() {
           isActive={defaultValues.isActive} 
           backLink={() => navigate(PATH_SETTING.invite.list)}
           settingPage
+          invitationStatus={defaultValues.status}
+          onCancelInvite={handleCancelInvite}
         />
           <Grid container sx={{mt:2}}>
             <ViewFormField isLoading={isLoading} sm={6} heading="Inveted User" param={defaultValues.username} />

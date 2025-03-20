@@ -13,7 +13,7 @@ const formatNumber = (num) => {
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
-const ErpProductionRateLogGraph = ({timePeriod, customer}) => {
+const ErpProductionRateLogGraph = ({ timePeriod, customer }) => {
   const [graphData, setGraphData] = useState([]);
   const { isLoading, machineLogsGraphData } = useSelector((state) => state.machineErpLogs);
 
@@ -90,8 +90,6 @@ const ErpProductionRateLogGraph = ({timePeriod, customer}) => {
       return dataPoint ? dataPoint.productionRate : 0;
     });
 
-    console.log("productionRate: ", productionRate);
-
     return {
       labels,
       datasets: [
@@ -123,7 +121,7 @@ const ErpProductionRateLogGraph = ({timePeriod, customer}) => {
   }
 
   return (
-    <Grid item xs={12} sm={12} md={12} lg={10} xl={6} sx={{ mt: 3}}>
+    <Grid item xs={12} sm={12} md={12} lg={10} xl={6} sx={{ mt: 3 }}>
       <Card sx={{ p: 4, boxShadow: 3 }}>
         <Typography variant="h6" color="primary" gutterBottom>
           Production Rate Over Time (For the {getDataRangeText()})

@@ -1,7 +1,7 @@
 import { memo, useState } from 'react'
 import PropTypes from 'prop-types';
 // @mui
-import { Box, TablePagination, Button, Grid, MenuItem, Checkbox, Menu, Typography } from '@mui/material';
+import { Box, TablePagination, Grid, Button, MenuItem, Checkbox, Menu, Typography } from '@mui/material';
 import Iconify from '../iconify';
 
 // ----------------------------------------------------------------------
@@ -66,7 +66,7 @@ function TablePaginationFilter({
   };
 
   return (
-    <Box sx={{ 
+    <Box sx={{
       borderTop: '1px solid #919eab3d',
       display: 'flex',
       justifyContent: 'space-between',

@@ -215,6 +215,10 @@ export const MachineLogsAdd = Loadable(lazy(() => import('../pages/machine/logs/
 // export const MachineLogsView = Loadable(lazy(() => import('../pages/machine/logs/MachineLogsViewForm')));
 export const MachineLogsGraphView = Loadable(lazy(() => import('../pages/machine/logs/MachineLogsGraphViewForm')));
 
+// --------------------------- MACHINE DASHBOARD -------------------------------------
+
+export const MachineDashboard = Loadable(lazy(() => import('../pages/machine/dashboard/MachineDashboard')));
+
 // --------------------------- MACHINE INTEGRATION -------------------------------------
 
 export const MachineIntegrationViewForm = Loadable(lazy(() => import('../pages/machine/integration/IntegrationViewForm')));
@@ -447,8 +451,16 @@ export const SitesReport = Loadable(lazy(() => import('../pages/sitesMap/Reports
 export const Email = Loadable(lazy(() => import('../pages/settings/email/EmailList')));
 export const Emailview = Loadable(lazy(() => import('../pages/settings/email/EmailViewform')));
 
-// --------------------------- Tickets -------------------------------------
+// --------------------------- Ticket Dashboard -------------------------------------
+export const SupportDashboard = Loadable(lazy(() => import('../pages/tickets/dashboard/SupportDashboard')));
+export const TicketIssueTypeView = Loadable(lazy(() => import('../pages/tickets/dashboard/TicketIssueTypeViewForm')));
+export const TicketRequestTypeView = Loadable(lazy(() => import('../pages/tickets/dashboard/TicketRequestTypeViewForm')));
+export const TicketOpenIssueTypeView = Loadable(lazy(() => import('../pages/tickets/dashboard/TicketOpenIssueTypeViewForm')));
+export const TicketOpenRequestTypeView = Loadable(lazy(() => import('../pages/tickets/dashboard/TicketOpenRequestTypeViewForm')));
+export const TicketStatusTypeView = Loadable(lazy(() => import('../pages/tickets/dashboard/TicketStatusTypeViewForm')));
+export const TicketStatusView = Loadable(lazy(() => import('../pages/tickets/dashboard/TicketStatusViewForm')));
 
+// --------------------------- Tickets List -------------------------------------
 export const TicketFormList = Loadable(lazy(() => import('../pages/tickets/TicketFormList')));
 export const TicketForm = Loadable(lazy(() => import('../pages/tickets/TicketForm')));
 export const TicketView = Loadable(lazy(() => import('../pages/tickets/TicketView')));

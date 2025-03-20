@@ -198,7 +198,7 @@ export default function RoleList() {
     <>
       <Container maxWidth={false}>
         <StyledCardContainer>
-          <Cover name="Roles" icon="ph:users-light" generalSettings />
+          <Cover name="Roles" icon="ph:users-light" />
         </StyledCardContainer>
 
         <TableCard>

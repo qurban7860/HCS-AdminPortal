@@ -36,7 +36,7 @@ function tableColumnsReducer(state, action) {
       if (!action.allMachineLogsPage) {
         columns = columns.filter((column) => column.page !== 'allMachineLogs');
       }
-      columns = columns.map((column) => ({...column, checked: column?.defaultShow || false}));
+      columns = columns.map((column) => ({ ...column, checked: column?.defaultShow || false }));
       return [...columns];
     }
     case 'updateColumnCheck': {
@@ -52,7 +52,7 @@ function tableColumnsReducer(state, action) {
       if (!action.allMachineLogsPage) {
         columns = columns?.filter((column) => column.page !== 'allMachineLogs');
       }
-      columns = columns.map((column) => ({...column, checked: column?.defaultShow || false}));
+      columns = columns.map((column) => ({ ...column, checked: column?.defaultShow || false }));
       return [...columns];
     }
     default: {
@@ -76,12 +76,11 @@ const MachineLogsDataTable = ({
     (state) => state.machineErpLogs
   );
   const dispatch = useDispatch();
-
   useEffect(() => {
     dispatch(ChangePage(0));
     dispatch(resetMachineErpLogRecords());
     dispatchTableColumns({ type: 'setUpInitialColumns', allMachineLogsPage });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
@@ -94,11 +93,11 @@ const MachineLogsDataTable = ({
         })
       );
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, rowsPerPage ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page, rowsPerPage]);
 
   useEffect(() => {
-    setTableData(machineErpLogs?.data || [] );
+    setTableData(machineErpLogs?.data || []);
   }, [machineErpLogs]);
 
   useEffect(() => {
@@ -122,7 +121,7 @@ const MachineLogsDataTable = ({
     comparator: getComparator(order, orderBy),
   });
 
-  const isNotFound = !dataFiltered.length || (!isLoading && !dataFiltered.length);
+  const isNotFound = (!dataFiltered.length) || (!isLoading && !dataFiltered.length);
   const denseHeight = 60;
 
   const onChangePage = (event, newPage) => {
@@ -211,24 +210,25 @@ const MachineLogsDataTable = ({
                 </TableRow>
               </TableHead>
               <TableBody>
-                {(isLoading ? [...Array(rowsPerPage)] : dataFiltered).map((row, index) =>
-                  row ? (
-                    <MachineLogsTableRow
-                      key={row._id}
-                      columnsToShow={tableColumns}
-                      allMachineLogsPage={allMachineLogsPage}
-                      row={row}
-                      onViewRow={() => handleViewRow(row._id)}
-                      selected={selected.includes(row._id)}
-                      selectedLength={selected.length}
-                      style={index % 2 ? { background: 'red' } : { background: 'green' }}
-                      numericalLengthValues={numericalLengthValues}
-                    />
-                  ) : (
-                    !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
-                  )
-                )}
-                <TableNoData isNotFound={isNotFound} />
+                {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
+                  .map((row, index) =>
+                    row ? (
+                      <MachineLogsTableRow
+                        key={row._id}
+                        columnsToShow={tableColumns}
+                        allMachineLogsPage={allMachineLogsPage}
+                        row={row}
+                        onViewRow={() => handleViewRow(row._id)}
+                        selected={selected.includes(row._id)}
+                        selectedLength={selected.length}
+                        style={index % 2 ? { background: 'red' } : { background: 'green' }}
+                        numericalLengthValues={numericalLengthValues}
+                      />
+                    ) : (
+                      isLoading && <TableSkeleton key={index} sx={{ height: denseHeight }} />
+                    )
+                  )}
+                {!isLoading && <TableNoData isNotFound={isNotFound} />}
               </TableBody>
             </Table>
           </Scrollbar>
@@ -264,7 +264,7 @@ MachineLogsDataTable.propTypes = {
 };
 
 function applySort({ inputData, comparator }) {
-  const stabilizedThis =  inputData && inputData.map((el, index) => [el, index]);
+  const stabilizedThis = inputData && inputData.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;

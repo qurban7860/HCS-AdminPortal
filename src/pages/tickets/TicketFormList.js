@@ -3,7 +3,7 @@ import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 // @mui
 import { Container, Table, TableBody, TableContainer } from '@mui/material';
 // routes
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { PATH_SUPPORT } from '../../routes/paths';
 // redux
@@ -61,7 +61,6 @@ export default function TicketFormList(){
   const { tickets, filterBy, page, rowsPerPage, isLoading, reportHiddenColumns } = useSelector((state) => state.tickets);
 
   const navigate = useNavigate();
-  const { machineId } = useParams();
   const methods = useForm();
 
   const {
@@ -83,13 +82,15 @@ export default function TicketFormList(){
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [ selectedIssueType, setSelectedIssueType ] = useState(null);
+  const [ selectedRequestType, setSelectedRequestType ] = useState(null);
   const [ selectedStatus, setSelectedStatus ] = useState([]);
   const [ selectedStatusType, setSelectedStatusType ] = useState(null);
   const [ selectedResolvedStatus, setSelectedResolvedStatus ] = useState(null);
   const isMobile = useResponsive('down', 'sm');
+  const prefix = JSON.parse(localStorage.getItem('configurations'))?.find((config) => config?.name?.toLowerCase() === 'ticket_prefix')?.value?.trim() || ''; 
 
   useLayoutEffect(() => {
-    dispatch(getTickets(page, rowsPerPage ));
+    dispatch(getTickets({page, pageSize: rowsPerPage }));
     return () => {
       dispatch(resetTickets());
     }
@@ -97,8 +98,16 @@ export default function TicketFormList(){
   
   const onRefresh = () => {
     dispatch(ChangePage(0));
-    dispatch(getTickets(0, rowsPerPage)); 
-  };
+    dispatch(getTickets({
+      page: 0, 
+      pageSize: rowsPerPage, 
+      issueType: selectedIssueType?._id, 
+      requestType: selectedRequestType?._id, 
+      isResolved: selectedResolvedStatus, 
+      statusType: selectedStatusType?._id, 
+      status: selectedStatus.map(s => s._id)
+    }));
+  };  
 
   useEffect(() => {
     setTableData(tickets?.data || [] );
@@ -108,10 +117,7 @@ export default function TicketFormList(){
     inputData: tableData,
     comparator: getComparator(order, orderBy),
     filterName,
-    selectedIssueType,
-    selectedStatus,
-    selectedStatusType,
-    selectedResolvedStatus
+    prefix, 
   });
 
   const isFiltered = filterName !== '';
@@ -149,6 +155,7 @@ export default function TicketFormList(){
     dispatch(setFilterBy(''))
     setFilterName('');
     setSelectedIssueType(null);
+    setSelectedRequestType(null);
     setSelectedStatus([]);
     setSelectedStatusType(null);
     setSelectedResolvedStatus(null);
@@ -178,6 +185,8 @@ export default function TicketFormList(){
             onResetFilter={handleResetFilter}
             filterIssueType={selectedIssueType}
             onFilterIssueType={setSelectedIssueType}
+            filterRequestType={selectedRequestType}
+            onFilterRequestType={setSelectedRequestType}
             filterStatus={selectedStatus}
             onFilterStatus={setSelectedStatus}
             filterStatusType={selectedStatusType}
@@ -236,6 +245,7 @@ export default function TicketFormList(){
                             row?.customer && handleCustomerDialog(e, row?.customer?._id)
                           }
                           style={index % 2 ? { background: 'red' } : { background: 'green' }}
+                          prefix={prefix}
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
@@ -261,10 +271,9 @@ export default function TicketFormList(){
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName, selectedIssueType, selectedStatus, selectedStatusType, selectedResolvedStatus }) {
+function applyFilter({ inputData, comparator, filterName, prefix = '' }) {
 
   const stabilizedThis = inputData?.map((el, index) => [el, index]);
-
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
@@ -276,7 +285,7 @@ function applyFilter({ inputData, comparator, filterName, selectedIssueType, sel
   if (filterName) {
     inputData = inputData.filter((ticket) => {
       const fieldsToFilter = [
-        ticket?.ticketNo,
+        `${prefix} - ${ticket?.ticketNo}`.trim(),
         ticket?.machine?.serialNo,
         ticket?.machine?.machineModel?.name,
         ticket?.customer?.name,
@@ -290,25 +299,6 @@ function applyFilter({ inputData, comparator, filterName, selectedIssueType, sel
       );
     });
   }
-  
-  if (selectedIssueType) {
-    inputData = inputData.filter((ticket) => ticket?.issueType?._id === selectedIssueType?._id);
-  }
-
-  if (selectedStatus?.length) {
-    inputData = inputData.filter((ticket) =>
-      selectedStatus.some((status) => status?._id === ticket?.status?._id)
-    );
-  }  
-  
-  if (selectedStatusType) {
-    inputData = inputData.filter((ticket) => ticket?.status?.statusType?._id === selectedStatusType?._id);
-  }
-  
-  if (selectedResolvedStatus !== null) {  
-    const isResolved = selectedResolvedStatus === 'resolved'; 
-    inputData = inputData.filter((ticket) => ticket?.status?.statusType?.isResolved === isResolved);
-  } 
   
   return inputData;
 }

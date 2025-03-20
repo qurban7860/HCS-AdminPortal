@@ -115,30 +115,10 @@ export default function MachineLogsAddForm() {
         setError("JSON size should not be greater than 5000 objects.");
         return;
       }
-      // Convert inches data to mm
-      let logData = csvData;
-      if (csvData.some((item) => item?.measurementUnit === "in")) {
-        logData = convertAllInchesBitsToMM(csvData);
-        if (!logData) {
-          throw new Error("Error converting inches to mm. Inches data format is Invalid!");
-        }
-      }
 
-      if (logData.some((item) => item?.timestamp && !item?.date)) {
-        logData = logData.map((item) => {
-          if (item?.timestamp && !item?.date) {
-            const { timestamp, srcInfo, ...rest } = item;
-            return {
-              date: timestamp,
-              ...rest,
-              srcInfo: { timestamp, ...srcInfo },
-            };
-          }
-          return item;
-        });
-      }
-
+      const logData = csvData;
       setError(null);
+      
       const action = {};
       if (selectedCheckbox === 0) {
         action.skipExistingRecords = true;
@@ -155,34 +135,6 @@ export default function MachineLogsAddForm() {
     } catch (err) {
       enqueueSnackbar(err.message || 'JSON validation failed!', { variant: 'error' });
     }
-  };
-
-  const convertAllInchesBitsToMM = (csvData) => {
-    let inchesError = false;
-    const convertedData = csvData.map((row) => {
-      const dataInInches = {};
-      if (row?.measurementUnit === 'in') {
-        Object.entries(row).forEach(([key, value]) => {
-          if (logType?.numericalLengthValues?.includes(key)) {
-            const numValue = Number(value);
-            if (Number.isNaN(numValue)) {
-              inchesError = true
-            }
-            dataInInches[key] = numValue;
-            const mmValue = (numValue * 25.4).toFixed(2);
-            row[key] = Number(mmValue).toLocaleString('en-US', { maximumFractionDigits: 2 });
-          }
-        });
-        row = {
-          ...row,
-          srcInfo: { measurementUnit: 'in', ...dataInInches },
-          measurementUnit: 'mm',
-        };
-      }
-      return row;
-    });
-    if (inchesError) return null
-    return convertedData;
   };
 
   const formatTxtToJson = async (data = logTextValue) => {
@@ -357,13 +309,6 @@ export default function MachineLogsAddForm() {
                           value={logVersion}
                           size="small"
                           nonEditable
-                          // defaultValue={watch('logType')?.versions?.[0] || null}
-                          // isOptionEqualToValue={(option, value) => option?.type === value?.type}
-                          // renderOption={(props, option) => (
-                          //   <li {...props} key={option?.type}>
-                          //     {option.type || ''}
-                          //   </li>
-                          // )}
                         />
                       )}
                     </Grid>

@@ -41,6 +41,14 @@ const slice = createSlice({
       state.ticketStatuses = action.payload;
       state.initial = true;
     },
+    
+    // GET Tickets Success
+    getReportTicketStatusesSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.ticketStatuses = action.payload;
+      state.initial = true;
+    },
 
     // GET Active Tickets Success
     getActiveTicketStatusesSuccess(state, action) {
@@ -211,6 +219,29 @@ export function getTicketStatuses(page, pageSize) {
 
       const response = await axios.get(`${CONFIG.SERVER_URL}tickets/settings/statuses`, { params });
       dispatch(slice.actions.getTicketStatusesSuccess(response.data));
+      return response;
+    } catch (error) {
+      dispatch(slice.actions.hasError(error.message));
+      console.error(error);
+      throw error;
+    }
+  };
+}
+
+export function getReportTicketStatuses(value = null, unit = null) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const params = {
+        orderBy: { createdAt: -1 },
+        isArchived: false,
+      };
+      if (value !== null && unit !== null) {
+        params.value = value;
+        params.unit = unit;
+      }
+      const response = await axios.get(`${CONFIG.SERVER_URL}tickets/settings/statuses/count`, { params });
+      dispatch(slice.actions.getReportTicketStatusesSuccess(response.data));
       return response;
     } catch (error) {
       dispatch(slice.actions.hasError(error.message));

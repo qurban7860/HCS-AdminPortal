@@ -139,7 +139,7 @@ function SearchBarCombo({
 
   return (
     <Grid container rowSpacing={logTypes?.length > 0 ? 2 : 1} columnSpacing={1} sx={{ display: 'flex', }}>
-      {onChange && <Grid item xs={12} sm={12} md={12} lg={increaseFilterSize ? 10 : (logTypes?.length > 0 || reduceFilterSize || (setAccountManagerFilter && setSupportManagerFilter) ? 4 : 6)} xl={increaseFilterSize ? 10 : (logTypes?.length > 0 || reduceFilterSize || (setAccountManagerFilter && setSupportManagerFilter) ? 4 : 6)}>
+      {onChange && <Grid item xs={12} sm={12} md={12} lg={increaseFilterSize ? 12 : (logTypes?.length > 0 || reduceFilterSize || (setAccountManagerFilter && setSupportManagerFilter) ? 4 : 6)} xl={increaseFilterSize ? 12 : (logTypes?.length > 0 || reduceFilterSize || (setAccountManagerFilter && setSupportManagerFilter) ? 4 : 6)}>
         <TextField
           fullWidth
           value={value}

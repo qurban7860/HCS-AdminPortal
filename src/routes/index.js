@@ -181,6 +181,9 @@ import {
   // MachineLogsView,
   MachineLogsGraphView,
 
+  // --------------------------- MACHINE DASHBOARD -------------------------------------
+  MachineDashboard,
+
   // --------------------------- MACHINE INTEGRATION -------------------------------------
   MachineIntegrationViewForm,
 
@@ -320,6 +323,15 @@ import {
   MachineDrawingsEdit,
 
   // ----------------------------------------------------------------
+  
+  // TICKET DASHBOARD
+  SupportDashboard,
+  TicketIssueTypeView,
+  TicketRequestTypeView,
+  TicketOpenIssueTypeView,
+  TicketOpenRequestTypeView,
+  TicketStatusTypeView,
+  TicketStatusView,
   
   // TICKETS
   TicketFormList,
@@ -819,6 +831,11 @@ export default function Router() {
                 // {path: ':id/view', element: <MachineLogsView/>},
               ]
             },
+            { path: ':machineId/dashboard',
+              children:[
+                {element: <MachineDashboard/>, index: true},
+              ]
+            },
             { path: ':machineId/integration',
               children:[
                 {element: <MachineIntegrationViewForm/>, index: true},
@@ -1062,6 +1079,18 @@ export default function Router() {
       ),
       children: [
         { element: <Navigate to="/support/supportTickets" replace />, index: true },
+        {
+          path: 'supportDashboard',
+          children: [
+            { element: <SupportDashboard />, index: true },
+            { path: 'issueType', element: <TicketIssueTypeView /> },
+            { path: 'requestType', element: <TicketRequestTypeView /> },
+            { path: 'openIssueType', element: <TicketOpenIssueTypeView /> },
+            { path: 'openRequestType', element: <TicketOpenRequestTypeView /> },
+            { path: 'statusType', element: <TicketStatusTypeView /> },
+            { path: 'status', element: <TicketStatusView /> },
+          ],
+        },
         {
           path: 'supportTickets',
           children: [

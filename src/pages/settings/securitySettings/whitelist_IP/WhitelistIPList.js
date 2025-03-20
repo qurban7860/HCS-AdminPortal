@@ -169,7 +169,7 @@ export default function WhitelistIPList() {
     <>
       <Container maxWidth={false}>
         <StyledCardContainer>
-          <Cover name="Whitelist IPs" icon="ph:users-light" generalSettings />
+          <Cover name="Whitelist IPs" icon="ph:users-light" />
         </StyledCardContainer>
 
         <TableCard>

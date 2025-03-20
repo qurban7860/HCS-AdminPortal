@@ -1,6 +1,5 @@
 /* eslint-disable no-nested-ternary */
 import React, { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
 import {
   Box,
   Typography,
@@ -20,20 +19,18 @@ import { CustomAvatar } from '../../components/custom-avatar';
 
 const TicketHistory = () => {
   const dispatch = useDispatch();
-  const { id } = useParams();
   const { histories, isLoading } = useSelector((state) => state.ticketHistories);
 
+  const { ticket } = useSelector((state) => state.tickets);
+
   useEffect(() => {
-    if (id) {
-      dispatch(getHistories(id));
+    if (ticket?._id) {
+      dispatch(getHistories(ticket?._id));
     }
-    // return () => { 
-    //   dispatch(resetHistories());
-    // }
-  }, [id, dispatch]);
+  }, [ticket?._id, dispatch]);
 
   const getLightBackgroundColor = (color) => {
-    if (!color) return 'rgba(0, 0, 0, 0.1)'; 
+    if (!color) return 'rgba(0, 0, 0, 0.1)';
     const div = document.createElement('div');
     div.style.color = color;
     document.body.appendChild(div);
@@ -53,7 +50,7 @@ const TicketHistory = () => {
       <Box>
         {isLoading ? (
           <Box display="flex" justifyContent="center" alignItems="center" sx={{ mt: 2 }}>
-           <CircularProgress />
+            <CircularProgress />
           </Box>
         ) : histories.length > 0 ? (
           <List
@@ -65,9 +62,9 @@ const TicketHistory = () => {
                 <ListItem alignItems="flex-start" sx={{ padding: '8px 0' }}>
                   <ListItemAvatar>
                     <CustomAvatar
-                      src={ history?.updatedBy?.photoURL }
-                      alt={ history?.updatedBy?.name }
-                      name={ history?.updatedBy?.name }
+                      src={history?.updatedBy?.photoURL}
+                      alt={history?.updatedBy?.name}
+                      name={history?.updatedBy?.name}
                       sx={{ mt: -1 }}
                     />
                   </ListItemAvatar>
@@ -75,7 +72,7 @@ const TicketHistory = () => {
                     primary={
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         <Typography variant="subtitle2" sx={{ mr: 1 }}>
-                          { history?.updatedBy?.name }
+                          {history?.updatedBy?.name}
                         </Typography>
                         <Typography
                           sx={{ color: 'text.secondary', fontSize: '0.875rem' }}
@@ -89,10 +86,11 @@ const TicketHistory = () => {
                     }
                     secondary={
                       <>
-                        { ( history?.previousStatus?._id || history?.newStatus?._id ) && <Typography variant="body1">
+                        {(history?.previousStatus?._id || history?.newStatus?._id) && <Typography variant="body1">
                           Status:
                           <span
-                            style={{ backgroundColor: getLightBackgroundColor( history.previousStatus?.color ),
+                            style={{
+                              backgroundColor: getLightBackgroundColor(history.previousStatus?.color),
                               color: history.previousStatus?.color || 'black',
                               padding: '2px 6px',
                               borderRadius: '4px',
@@ -112,10 +110,11 @@ const TicketHistory = () => {
                             {history.newStatus?.name || 'None'}
                           </span>
                         </Typography>}
-                        { ( history?.previousPriority?._id || history?.newPriority?._id ) && <Typography variant="body1">
+                        {(history?.previousPriority?._id || history?.newPriority?._id) && <Typography variant="body1">
                           Priority:
                           <span
-                            style={{ backgroundColor: getLightBackgroundColor( history.previousPriority?.color ),
+                            style={{
+                              backgroundColor: getLightBackgroundColor(history.previousPriority?.color),
                               color: history.previousPriority?.color || 'black',
                               padding: '2px 6px',
                               borderRadius: '4px',
@@ -135,11 +134,11 @@ const TicketHistory = () => {
                             {history.newPriority?.name || 'None'}
                           </span>
                         </Typography>}
-                        { ( history?.previousReporter?._id || history?.newReporter?._id ) && <Typography variant="body1" color="textSecondary">
+                        {(history?.previousReporter?._id || history?.newReporter?._id) && <Typography variant="body1" color="textSecondary">
                           Reporter: {history.previousReporter?.firstName} {history.previousReporter?.lastName || 'None'} →{' '}
                           {history.newReporter?.firstName} {history.newReporter?.lastName || 'None'}
                         </Typography>}
-                        { ( history?.previousAssignee?._id || history?.newAssignee?._id ) && <Typography variant="body1" color="textSecondary">
+                        {(history?.previousAssignee?._id || history?.newAssignee?._id) && <Typography variant="body1" color="textSecondary">
                           Assignee: {history.previousAssignee?.firstName} {history.previousAssignee?.lastName || 'None'} →{' '}
                           {history.newAssignee?.firstName} {history.newAssignee?.lastName || 'None'}
                         </Typography>}
@@ -151,9 +150,9 @@ const TicketHistory = () => {
             ))}
           </List>
         ) : (
-        <Typography variant="h6" color="text.secondary" align="center" sx={{mt: 2}}> 
-          No ticket histories available.
-        </Typography>
+          <Typography variant="h6" color="text.secondary" align="center" sx={{ mt: 2 }}>
+            No ticket histories available.
+          </Typography>
         )}
       </Box>
     </>
