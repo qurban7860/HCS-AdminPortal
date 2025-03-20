@@ -367,7 +367,6 @@ export function getTickets(page, pageSize, issueType, requestType, isResolved = 
         orderBy: { createdAt: -1 },
         pagination: { page, pageSize },
         isArchived: false,
-        isActive: true,
         ...(issueType && { issueType }),
         ...(requestType && { requestType }),
         ...(isResolved && { isResolved: isResolved === 'resolved' }),
