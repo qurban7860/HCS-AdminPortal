@@ -87,6 +87,8 @@ export default function TicketFormList(){
   const [ selectedStatusType, setSelectedStatusType ] = useState(null);
   const [ selectedResolvedStatus, setSelectedResolvedStatus ] = useState(null);
   const isMobile = useResponsive('down', 'sm');
+  const configurations = JSON.parse(localStorage.getItem('configurations'));
+  const prefix = configurations?.find((config) => config?.name?.toLowerCase() === 'ticket_prefix')?.value || ''; 
 
   useLayoutEffect(() => {
     dispatch(getTickets(page, rowsPerPage ));
@@ -108,7 +110,7 @@ export default function TicketFormList(){
     inputData: tableData,
     comparator: getComparator(order, orderBy),
     filterName,
-    prefix: JSON.parse(localStorage.getItem('configurations'))?.find((config) => config?.name?.toLowerCase() === 'ticket_prefix')?.value || '',
+    prefix, 
   });
 
   const isFiltered = filterName !== '';
@@ -236,7 +238,7 @@ export default function TicketFormList(){
                             row?.customer && handleCustomerDialog(e, row?.customer?._id)
                           }
                           style={index % 2 ? { background: 'red' } : { background: 'green' }}
-                          prefix={JSON.parse(localStorage.getItem('configurations'))?.find((config) => config?.name?.toLowerCase() === 'ticket_prefix')?.value || ''} 
+                          prefix={prefix}
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
