@@ -81,7 +81,7 @@ export default function Header({ onOpenNav, selectedCategory, setSelectedCategor
               </Link>
             ))}
           </Box>
-          <FullScreenIcon />
+          {isDesktop && <FullScreenIcon />}
           <Stack flexGrow={0} direction="row" alignItems="center" spacing={{ xs: 0.5, sm: 1.5 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', borderLeft: `2px solid ${theme.palette.divider}`, borderRight: `2px solid ${theme.palette.divider}`, px: 1 }}>
               {OTHER_MAIN_CATEGORIES.map((item) =>
