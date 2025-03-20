@@ -108,6 +108,7 @@ export default function TicketFormList(){
     inputData: tableData,
     comparator: getComparator(order, orderBy),
     filterName,
+    prefix: JSON.parse(localStorage.getItem('configurations'))?.find((config) => config?.name?.toLowerCase() === 'ticket_prefix')?.value || '',
   });
 
   const isFiltered = filterName !== '';
@@ -235,6 +236,7 @@ export default function TicketFormList(){
                             row?.customer && handleCustomerDialog(e, row?.customer?._id)
                           }
                           style={index % 2 ? { background: 'red' } : { background: 'green' }}
+                          prefix={JSON.parse(localStorage.getItem('configurations'))?.find((config) => config?.name?.toLowerCase() === 'ticket_prefix')?.value || ''} 
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
@@ -260,10 +262,10 @@ export default function TicketFormList(){
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName }) {
+function applyFilter({ inputData, comparator, filterName, prefix = '' }) {
 
   const stabilizedThis = inputData?.map((el, index) => [el, index]);
-
+  prefix = prefix.trim();
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
@@ -275,7 +277,7 @@ function applyFilter({ inputData, comparator, filterName }) {
   if (filterName) {
     inputData = inputData.filter((ticket) => {
       const fieldsToFilter = [
-        ticket?.ticketNo,
+        `${prefix} ${ticket?.ticketNo}`.trim(),
         ticket?.machine?.serialNo,
         ticket?.machine?.machineModel?.name,
         ticket?.customer?.name,
