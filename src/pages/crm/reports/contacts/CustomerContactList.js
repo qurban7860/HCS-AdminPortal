@@ -59,6 +59,7 @@ export default function CustomerContactList({ isCustomerContactPage = false, fil
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const { allContacts, contacts, filterBy, page, rowsPerPage, isLoading, reportHiddenColumns } = useSelector((state) => state.contact);
+  const [tableData, setTableData] = useState([]);
   const [filterName, setFilterName] = useState(filterBy);
   const [exportingCSV, setExportingCSV] = useState(false);
   // ----------------------------------------------------------------------
@@ -66,13 +67,13 @@ export default function CustomerContactList({ isCustomerContactPage = false, fil
   const TABLE_HEAD = [
     ...(isCustomerContactPage ? [{ id: 'isActive', label: <span style={{ marginRight: 3 }}>A</span>, align: 'right' }] : []),
     ...(isCustomerContactPage ? [{ id: 'formerEmployee', label: <span style={{ marginRight: 3 }}>E</span>, align: 'right' }] : []),
-    ...(!isCustomerContactPage ? [{ id: 'customer.name', label: 'Customer', align: 'left' }] : []),
+    ...(!isCustomerContactPage ? [{ id: 'isActive', label: 'Active', align: 'center' }] : []),
     { id: 'firstName', label: 'Contact Name', align: 'left' },
     ...(isCustomerContactPage ? [{ id: 'title', label: 'Title', align: 'left' }] : []),
     { id: 'phoneNumbers', label: 'Phone', align: 'left' },
     { id: 'email', label: 'Email', align: 'left' },
     { id: 'address.country', label: 'Country', align: 'left' },
-    ...(!isCustomerContactPage ? [{ id: 'isActive', label: 'Active', align: 'center' }] : []),
+    ...(!isCustomerContactPage ? [{ id: 'customer.name', label: 'Customer', align: 'left' }] : []),
     { id: 'updatedAt', label: 'Updated At', align: 'right' },
   ];
 
@@ -95,9 +96,13 @@ export default function CustomerContactList({ isCustomerContactPage = false, fil
     }
     return undefined;
   }, [dispatch, isCustomerContactPage]);
+  
+  useEffect(() => {
+    setTableData(isCustomerContactPage ? contacts : allContacts || []);
+  }, [allContacts, isCustomerContactPage, contacts]);
 
   const dataFiltered = applyFilter({
-    inputData: isCustomerContactPage ? contacts : allContacts || [],
+    inputData: tableData,
     comparator: getComparator(order, orderBy),
     filterName,
     filterFormer,
@@ -164,7 +169,7 @@ export default function CustomerContactList({ isCustomerContactPage = false, fil
     <Container maxWidth={false}>
       {!isCustomerContactPage ? (
         <StyledCardContainer>
-          <Cover name='Customer Contacts' backLink customerSites />
+          <Cover name='Contacts' backLink customerSites />
         </StyledCardContainer>
       ) : null}
       <TableCard >
@@ -182,7 +187,7 @@ export default function CustomerContactList({ isCustomerContactPage = false, fil
             columns={TABLE_HEAD}
             hiddenColumns={reportHiddenColumns}
             handleHiddenColumns={handleHiddenColumns}
-            count={(isCustomerContactPage ? contacts : allContacts)?.length || 0}
+            count={tableData ? tableData.length : 0}
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
@@ -228,7 +233,7 @@ export default function CustomerContactList({ isCustomerContactPage = false, fil
           </Scrollbar>
         </TableContainer>
         {!isNotFound && <TablePaginationCustom
-          count={(isCustomerContactPage ? contacts : allContacts)?.length || 0}
+          count={tableData ? tableData.length : 0}
           page={page}
           rowsPerPage={rowsPerPage}
           onPageChange={onChangePage}
@@ -241,7 +246,7 @@ export default function CustomerContactList({ isCustomerContactPage = false, fil
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName, filterFormer, orderBy }) {
+function applyFilter({ inputData, comparator, filterName, filterFormer }) {
   let filteredData = inputData;
 
   if (filterFormer?.toLowerCase() === 'former employee') {
@@ -249,41 +254,27 @@ function applyFilter({ inputData, comparator, filterName, filterFormer, orderBy 
   } else if (filterFormer?.toLowerCase() === 'current employee') {
     filteredData = filteredData.filter((contact) => !contact?.formerEmployee);
   }
-  const stabilizedThis = filteredData.map((el, index) => [el, index]);
 
+  const stabilizedThis = filteredData.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
-    if (orderBy === 'phoneNumbers') {
-      const phoneA = a[0].phoneNumbers ? a[0].phoneNumbers.map(p => `${p.countryCode || ''}${p.contactNumber}`).join(', ') : '';
-      const phoneB = b[0].phoneNumbers ? b[0].phoneNumbers.map(p => `${p.countryCode || ''}${p.contactNumber}`).join(', ') : '';
-      return comparator({ phoneNumbers: phoneA }, { phoneNumbers: phoneB });
-    }
-    const order = comparator(a[0], b[0], orderBy);
+    const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
     return a[1] - b[1];
   });
+
   filteredData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    filteredData = filteredData.filter((contact) => {
-      const phoneNumbers = contact?.phoneNumbers
-        ? contact.phoneNumbers
-          .map(({ countryCode, contactNumber }) => {
-            const fullNumber = countryCode ? `+${countryCode}-${contactNumber}` : contactNumber;
-            return fullNumber.replace(/[^\d]/g, '');
-          })
-          .join(', ')
-        : '';
-
-      return (
-        contact?.customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+    filteredData = filteredData.filter(
+      (contact) =>
         `${contact?.firstName} ${contact?.lastName}`.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         contact?.title?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        phoneNumbers.indexOf(filterName.replace(/[^\d]/g, '')) >= 0 ||
+        contact?.phoneNumbers?.map(phone => `+${phone.countryCode}-${phone.contactNumber}`).join(" ").toLowerCase().includes(filterName.toLowerCase()) ||
         contact?.email?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         contact?.address?.country?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        fDate(contact?.updatedAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
-      );
-    });
+        contact?.customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        fDate(contact?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+    );
   }
 
   return filteredData;

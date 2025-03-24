@@ -20,6 +20,7 @@ import {
   getComparator,
   TableNoData,
   TableSkeleton,
+  TablePaginationCustom,
   TablePaginationFilter,
   TableHeadFilter,
 } from '../../../../components/table';
@@ -35,7 +36,6 @@ import TableCard from '../../../../components/ListTableTools/TableCard';
 import { fDate } from '../../../../utils/formatTime';
 import { useSnackbar } from '../../../../components/snackbar';
 import { exportCSV } from '../../../../utils/exportCSV';
-import useResponsive from '../../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -60,21 +60,20 @@ export default function CustomerSiteList({ isCustomerSitePage = false }) {
   const { enqueueSnackbar } = useSnackbar();
 
   const { sites, allSites, filterBy, page, rowsPerPage, isLoading, reportHiddenColumns } = useSelector((state) => state.site);
-  const isMobile = useResponsive('down', 'sm');
 
   const [exportingCSV, setExportingCSV] = useState(false);
   const [tableData, setTableData] = useState([]);
   const [filterName, setFilterName] = useState(filterBy);
 
   const TABLE_HEAD = [
-    { id: 'customer.name', label: 'Customer', align: 'left' },
+    { id: 'isActive', label: 'Active', align: 'center' },
     { id: 'name', label: 'Site', align: 'left' },
     { id: 'address.country', label: 'Address', align: 'left' },
     { id: 'phoneNumbers', label: 'Phone', align: 'left' },
     { id: 'email', label: 'Email', align: 'left' },
     { id: 'primaryTechnicalContact.firstName', label: 'Technical Contact', align: 'left' },
     { id: 'primaryBillingContact.firstName', label: 'Billing Contact', align: 'left' },
-    { id: 'isActive', label: 'Active', align: 'center' },
+    ...(isCustomerSitePage ? [] : [{ id: 'customer.name', label: 'Customer', align: 'left' }]),
     { id: 'updatedAt', label: 'Updated At', align: 'right' },
   ];
 
@@ -165,7 +164,7 @@ export default function CustomerSiteList({ isCustomerSitePage = false }) {
     <Container maxWidth={false}>
       {!isCustomerSitePage ? (
         <StyledCardContainer>
-          <Cover name='Customer Sites' backLink customerContacts />
+          <Cover name='Sites' backLink customerContacts />
         </StyledCardContainer>
       ) : null}
       <TableCard >
@@ -229,6 +228,13 @@ export default function CustomerSiteList({ isCustomerSitePage = false }) {
             </Table>
           </Scrollbar>
         </TableContainer>
+        {!isNotFound && <TablePaginationCustom
+          count={tableData ? tableData.length : 0}
+          page={page}
+          rowsPerPage={rowsPerPage}
+          onPageChange={onChangePage}
+          onRowsPerPageChange={onChangeRowsPerPage}
+        />}
       </TableCard>
     </Container>
   );
