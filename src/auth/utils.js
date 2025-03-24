@@ -119,19 +119,19 @@ export const getUserAccess = ( roles, accessLevel ) => {
         isEmailAccessAllowed = false
         isDeveloper = false 
 
-    // } else if(userRoles?.some((role) => role?.roleType?.toLowerCase() === 'globalmanager' || dataAccessibilityLevel?.toUpperCase() === 'GLOBAL')){
+    } else if (dataAccessibilityLevel?.toUpperCase() === 'GLOBAL'){
 
-    //     isAllAccessAllowed = true
-    //     isDisableDelete = userRoles?.some((role) => role?.disableDelete || true )
-    //     isDashboardAccessLimited = false
-    //     isDocumentAccessAllowed = true
-    //     isDrawingAccessAllowed = true
-    //     isSettingReadOnly = true
-    //     isSecurityReadOnly = true
-    //     isSettingAccessAllowed = true
-    //     isSecurityUserAccessAllowed = true
-    //     isEmailAccessAllowed = false
-    //     isDeveloper = false
+        isAllAccessAllowed = true
+        isDisableDelete = userRoles?.some((role) => role?.disableDelete || true )
+        isDashboardAccessLimited = false
+        isDocumentAccessAllowed = true
+        isDrawingAccessAllowed = true
+        isSettingReadOnly = true
+        isSecurityReadOnly = true
+        isSettingAccessAllowed = true
+        isSecurityUserAccessAllowed = true
+        isEmailAccessAllowed = false
+        isDeveloper = false
 
     } else if(userRoles?.some((role) => role?.roleType?.toLowerCase() === 'regionalmanager' || dataAccessibilityLevel?.toUpperCase() === 'RESTRICTED')){
 
