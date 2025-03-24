@@ -262,7 +262,7 @@ function applyFilter({ inputData, comparator, filterName, filterFormer, orderBy 
       const phoneB = b[0].phoneNumbers ? b[0].phoneNumbers.map(p => `${p.countryCode || ''}${p.contactNumber}`).join(', ') : '';
       return comparator({ phoneNumbers: phoneA }, { phoneNumbers: phoneB });
     }
-    const order = comparator(a[0], b[0]);
+    const order = comparator(a[0], b[0], orderBy);
     if (order !== 0) return order;
     return a[1] - b[1];
   });
