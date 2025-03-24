@@ -108,9 +108,10 @@ export default function CustomerContactListTableRow({
               sx={{width: 22, height: 22}}
             />
           </TableCell>}
-          {!isCustomerContactPage && !hiddenColumns?.["customer.name"] && (
-            <TableCell>{customer?.name}</TableCell>
-          )}
+          
+          {!isCustomerContactPage && !hiddenColumns?.isActive && (<TableCell align="center">
+            <Switch checked={isActive} disabled size="small" />
+          </TableCell>)}
           {!hiddenColumns?.firstName && !hiddenColumns?.lastName && (
             <LinkTableCellWithIconTargetBlank style={{ width: '100%', display: 'inline-block' }}
               onViewRow={() => handleContactView(customer?._id, _id)}
@@ -147,9 +148,9 @@ export default function CustomerContactListTableRow({
           { !hiddenColumns?.["address.country"] && (
             <TableCell>{address?.country}</TableCell>
           )}
-          {!isCustomerContactPage && !hiddenColumns?.isActive && (<TableCell align="center">
-            <Switch checked={isActive} disabled size="small" />
-          </TableCell>)}
+           {!isCustomerContactPage && !hiddenColumns?.["customer.name"] && (
+            <TableCell>{customer?.name}</TableCell>
+          )}
           { !hiddenColumns?.updatedAt && (
             <TableCell align="right">{fDate(updatedAt)}</TableCell>
           )}

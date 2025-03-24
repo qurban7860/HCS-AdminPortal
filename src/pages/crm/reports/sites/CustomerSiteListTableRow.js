@@ -52,9 +52,9 @@ export default function CustomerSiteListTableRow({
   return (
     <>
       <StyledTableRow hover selected={selected}>
-        {!isCustomerSitePage && !hiddenColumns?.["customer.name"] && (
-          <TableCell>{limitedName || ''}</TableCell>
-        )}
+        {!hiddenColumns?.isActive && (<TableCell align="center">
+          <Switch checked={isActive} disabled size="small" />
+        </TableCell>)}
         {!hiddenColumns?.name && (
           <LinkTableCellWithIconTargetBlank
             onViewRow={() => handleSiteView(customer?._id, _id)}
@@ -77,8 +77,8 @@ export default function CustomerSiteListTableRow({
         {!hiddenColumns?.["primaryBillingContact.firstName"] && (
           <TableCell>{primaryBillingContact?.firstName || ''} {primaryBillingContact?.lastName || ''}</TableCell>
         )}
-        {!hiddenColumns?.isActive && (
-          <TableCell align='center'><Switch checked={isActive} /></TableCell>
+        {!isCustomerSitePage && !hiddenColumns?.["customer.name"] && (
+          <TableCell>{limitedName || ''}</TableCell>
         )}
         {!hiddenColumns?.createdAt && (
           <TableCell align='right'>{fDate(updatedAt)}</TableCell>
