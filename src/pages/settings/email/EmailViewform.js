@@ -17,12 +17,12 @@ export default function Emailviewform({ emailData }) {
           <ViewFormField 
             sm={6} 
             heading="Customer Name" 
-            param={emailData && emailData.customerName ? emailData.customerName : 'N/A'} 
+            param={emailData?.customer?.name || 'N/A'} 
           />
           <ViewFormField 
             sm={6} 
             heading="Subject" 
-            param={emailData && emailData.subject ? emailData.subject : 'N/A'} 
+            param={emailData?.subject || 'N/A'} 
           />
           <ViewFormField 
             sm={12} 
@@ -66,22 +66,22 @@ export default function Emailviewform({ emailData }) {
           <ViewFormField 
             sm={6} 
             heading="To Users" 
-            param={emailData && emailData.toUsers ? emailData.toUsers : 'N/A'} 
+            param={emailData?.toUsers?.join(', ') || 'N/A'} 
           />
           <ViewFormField
             sm={6}
             heading="From Email"
-            param={emailData && emailData.fromEmail ? emailData.fromEmail : 'N/A'}
+            param={emailData?.fromEmail || 'N/A'}
           />
           <ViewFormField
             sm={6}
             heading="To Emails"
-            param={emailData && emailData.toEmail ? emailData.toEmail : 'N/A'}
+            param={emailData?.toEmails?.join(', ') || 'N/A'}
           />
           <ViewFormField
             sm={6}
-            heading="Updated At"
-            param={emailData && emailData.createdAt ? emailData.createdAt : 'N/A'}
+            heading="Created At"
+            param={emailData?.createdAt || 'N/A'}
           />
         </Grid>
       </Card>
