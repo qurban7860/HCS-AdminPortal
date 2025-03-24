@@ -33,7 +33,7 @@ import { fDateTime } from '../../../utils/formatTime';
 import TableCard from '../../../components/ListTableTools/TableCard';
 import { Cover } from '../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
-
+import DialogEmailViewDetails from '../../../components/Dialog/DialogEmailViewDetails';
 
 // ----------------------------------------------------------------------
 
@@ -69,6 +69,8 @@ export default function EmailList() {
   const dispatch = useDispatch();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [currentEmailId, setCurrentEmailId] = useState(null);
 
   useLayoutEffect(() => {
     dispatch(getEmails(page, rowsPerPage));
@@ -124,6 +126,16 @@ export default function EmailList() {
     dispatch(setReportHiddenColumns(arg))
    };
 
+  const handleOpenDialog = async (rowId) => {
+    setOpenDialog(true);
+    setCurrentEmailId(rowId);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+    setCurrentEmailId(null);
+  };
+
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
@@ -174,6 +186,7 @@ export default function EmailList() {
                         selected={selected.includes(row._id)}
                         selectedLength={selected.length}
                         style={index % 2 ? { background: 'red' } : { background: 'green' }}
+                        handleOpenDialog={handleOpenDialog}
                       />
                     ) : (
                       !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
@@ -194,6 +207,13 @@ export default function EmailList() {
           />
         )}
       </TableCard>
+      {openDialog && (
+        <DialogEmailViewDetails
+          open={openDialog}
+          setOpenDialog={handleCloseDialog}
+          emailId={currentEmailId}
+        />
+      )}
     </Container>
   );
 }
