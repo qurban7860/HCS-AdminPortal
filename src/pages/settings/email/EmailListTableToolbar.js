@@ -1,11 +1,7 @@
 import PropTypes from 'prop-types';
 // @mui
 import {
-  Stack,
-  Button,
-  TextField,
-  InputAdornment,
-  Grid,
+  Stack
 } from '@mui/material';
 import SearchBarCombo from '../../../components/ListTableTools/SearchBarCombo';
 import { options } from '../../../theme/styles/default-styles';
@@ -16,6 +12,7 @@ EmailListTableToolbar.propTypes = {
   filterName: PropTypes.string,
   onFilterName: PropTypes.func,
   onResetFilter: PropTypes.func,
+  onReload: PropTypes.func
 };
 
 export default function EmailListTableToolbar({
@@ -23,6 +20,7 @@ export default function EmailListTableToolbar({
   filterName,
   onFilterName,
   onResetFilter,
+  onReload
 }) {
   return (
     <Stack {...options} >
@@ -31,6 +29,7 @@ export default function EmailListTableToolbar({
         value={filterName}
         onChange={onFilterName}
         onClick={onResetFilter}
+        onReload={onReload}
       />
     </Stack>
   );

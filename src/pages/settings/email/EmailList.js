@@ -1,9 +1,9 @@
 import debounce from 'lodash/debounce';
-import { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import { useState, useCallback, useEffect, useLayoutEffect, useRef } from 'react';
 // @mui
 import { Container, Table, TableBody, TableContainer } from '@mui/material';
 // routes
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { ROOTS_REPORTS } from '../../../routes/paths';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
@@ -51,7 +51,6 @@ export default function EmailList() {
   const { initial, emails, filterBy, page, rowsPerPage, isLoading, reportHiddenColumns } = useSelector((state) => state.emails);
 
   const navigate = useNavigate();
-  const { machineId } = useParams();
   const {
     order,
     orderBy,
@@ -62,7 +61,7 @@ export default function EmailList() {
 
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));
-    dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
+    dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10)));
   };
 
   const onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) };
@@ -72,12 +71,17 @@ export default function EmailList() {
   const [openDialog, setOpenDialog] = useState(false);
   const [currentEmailId, setCurrentEmailId] = useState(null);
 
+  const getSignInLogsList = useCallback(async () => {
+    await dispatch(getEmails(page, rowsPerPage));
+  }, [dispatch, page, rowsPerPage]);
+
   useLayoutEffect(() => {
-    dispatch(getEmails(page, rowsPerPage));
+    getSignInLogsList();
     return () => {
       dispatch(resetEmails());
     };
-  }, [dispatch, machineId, page, rowsPerPage]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, page, rowsPerPage]);
 
   useEffect(() => {
     if (initial) {
@@ -124,7 +128,7 @@ export default function EmailList() {
 
   const handleHiddenColumns = async (arg) => {
     dispatch(setReportHiddenColumns(arg))
-   };
+  };
 
   const handleOpenDialog = async (rowId) => {
     setOpenDialog(true);
@@ -147,6 +151,7 @@ export default function EmailList() {
           onFilterName={handleFilterName}
           isFiltered={isFiltered}
           onResetFilter={handleResetFilter}
+          onReload={getSignInLogsList}
         />
 
         {!isNotFound && (
@@ -165,7 +170,7 @@ export default function EmailList() {
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
           <Scrollbar>
             <Table stickyHeader size="small" sx={{ minWidth: 360 }}>
-            <TableHeadFilter
+              <TableHeadFilter
                 order={order}
                 orderBy={orderBy}
                 headLabel={TABLE_HEAD}
@@ -174,7 +179,7 @@ export default function EmailList() {
               />
 
               <TableBody>
-              {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
+                {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) =>
                     row ? (
