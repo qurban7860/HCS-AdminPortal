@@ -278,7 +278,7 @@ function applyFilter({ inputData, comparator, filterName, filterFormer, orderBy 
         contact?.email?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         contact?.address?.country?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         contact?.customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        fDate(contact?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+        fDate(contact?.updatedAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }
 
