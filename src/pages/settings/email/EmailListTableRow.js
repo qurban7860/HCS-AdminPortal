@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import { TableCell } from '@mui/material';
 // utils
-import { useState } from 'react';
 import { fDateTime } from '../../../utils/formatTime';
 import { StyledTableRow, StyledTooltip } from '../../../theme/styles/default-styles';
 
@@ -22,18 +21,18 @@ export default function EmailListTableRow({
   hiddenColumns,
   handleOpenDialog,
 }) {
-  const { subject, customer, toEmails, createdAt, fromEmail } = row;
+  const { subject, status, customer, toEmails, createdAt, fromEmail } = row;
 
   return (
     <StyledTableRow
       hover
       selected={selected}
     >
-      {!hiddenColumns?.toEmails && 
+      {!hiddenColumns?.toEmails &&
         <TableCell align='left'>
           {Array.isArray(toEmails) && toEmails.length > 1 ? (
             <StyledTooltip
-              title={toEmails.slice(1).join(', ')}
+              title={toEmails.join(', ')}
               placement="top"
               tooltipcolor="#2065D1"
             >
@@ -51,16 +50,19 @@ export default function EmailListTableRow({
       }
 
       {!hiddenColumns?.subject &&
-          <TableCell 
-            align='left' 
-            sx={{ 
-              fontWeight: 'bold',
-              cursor: 'pointer',
-            }}
-            onClick={() => handleOpenDialog(row?._id)}
-          >
-            {subject || ''}
-          </TableCell>
+        <TableCell
+          align='left'
+          sx={{
+            fontWeight: 'bold',
+            cursor: 'pointer',
+          }}
+          onClick={() => handleOpenDialog(row?._id)}
+        >
+          {subject || ''}
+          {status && status?.toLowerCase() === "failed" && (
+            <span style={{ color: "red" }}> ({status})</span>
+          )}
+        </TableCell>
       }
       {!hiddenColumns?.["customer.name"] &&
         <TableCell align='left' >
