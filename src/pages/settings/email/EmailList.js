@@ -143,7 +143,7 @@ export default function EmailList() {
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
-        <Cover name="Email" icon="ph:users-light" generalSettings />
+        <Cover name="Email" icon="ph:users-light" />
       </StyledCardContainer>
       <TableCard>
         <EmailListTableToolbar
