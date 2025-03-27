@@ -109,7 +109,7 @@ export default function DbBackupLogsList() {
   return (
       <Container maxWidth={false}>
         <Card sx={{mb: 3, height: 160, position: 'relative'}}>
-          <Cover name="DB Backup Logs" generalSettings />
+          <Cover name="DB Backup Logs" />
         </Card>
         <TableCard>
           <ReleasesListTableToolbar

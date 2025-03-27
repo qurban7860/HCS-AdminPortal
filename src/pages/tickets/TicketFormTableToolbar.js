@@ -51,7 +51,6 @@ export default function TicketFormTableToolbar({
   onFilterResolvedStatus,
   onReload
 }) {
-  // const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const { activeTicketStatuses } = useSelector((state) => state.ticketStatuses);
@@ -119,9 +118,12 @@ export default function TicketFormTableToolbar({
   }, [filterStatusType, activeTicketStatuses, onFilterStatus, filterStatus]);
 
   return (
-    <>
       <Stack {...options}>
         <SearchBarCombo
+         isFiltered={isFiltered}
+         value={filterName}
+         onChange={onFilterName}
+         onClick={onResetFilter}
           nodes={
             <>
               <Grid item xs={12} sm={6} md={6} lg={3}>
@@ -201,21 +203,8 @@ export default function TicketFormTableToolbar({
             </>
           }
           onReload={onReload}
-        // SubOnClick={toggleAdd}
-        // addButton={BUTTONS.ADDTICKET}
         />
       </Stack>
-      <Stack {...options} sx={{ mt: -1.5, mb: 2, ml: 2.5, mr: 2 }}>
-        <SearchBarCombo
-          isFiltered={isFiltered}
-          value={filterName}
-          onChange={onFilterName}
-          onClick={onResetFilter}
-        //  increaseFilterSize
-        //  onReload={onReload}
-        />
-      </Stack>
-    </>
   );
 }
 

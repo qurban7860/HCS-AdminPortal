@@ -265,7 +265,7 @@ function applyFilter({ inputData, comparator, filterName }) {
         `${site?.primaryBillingContact?.firstName} ${site?.primaryBillingContact?.lastName}`.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         `${site?.address?.street}, ${site?.address?.suburb}, ${site?.address?.city}, ${site?.address?.country}`.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         `+${site?.phoneNumbers[0]?.countryCode} ${site?.phoneNumbers[0]?.contactNumber}`.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        fDate(site?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+        fDate(site?.updatedAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }
 
