@@ -50,10 +50,10 @@ export default function TicketFormTableRow({
       { !hiddenColumns?.['issueType.name'] && (
         <TableCell align="left" padding="checkbox">
           <Stack direction="row" alignItems="center" >
-            <StyledTooltip placement="top" title={issueType?.name || ''} 
-              tooltipcolor={issueType?.color} >
+            {/* <StyledTooltip placement="top" title={issueType?.name || ''} 
+              tooltipcolor={issueType?.color} > */}
               <Iconify icon={issueType?.icon} color={issueType?.color} />
-            </StyledTooltip>
+            {/* </StyledTooltip> */}
           </Stack>
         </TableCell>
       )}
