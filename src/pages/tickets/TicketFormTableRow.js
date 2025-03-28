@@ -52,7 +52,12 @@ export default function TicketFormTableRow({
           <Stack direction="row" alignItems="center" >
             {/* <StyledTooltip placement="top" title={issueType?.name || ''} 
               tooltipcolor={issueType?.color} > */}
-              <Iconify icon={issueType?.icon} color={issueType?.color} />
+              <Iconify
+               icon={issueType?.icon}
+               color={issueType?.color}
+               onClick={() => onViewRow(ticketNo)}
+               style={{ cursor: 'pointer' }}
+              />
             {/* </StyledTooltip> */}
           </Stack>
         </TableCell>

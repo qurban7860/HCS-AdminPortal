@@ -137,6 +137,12 @@ function MachineTransfer() {
       }
   };
   
+  useEffect(() => {
+    if (activeMachineDocuments?.length > 0) {
+      setValue('machineDocuments', activeMachineDocuments.map((d) => d?._id) || []);
+    }
+  }, [activeMachineDocuments, setValue]);
+  
   const handleSelectAll = (inputString) => {
     if(activeMachineDocuments?.length > 0) {
       if(activeMachineDocuments?.length === machineDocuments?.length ){
