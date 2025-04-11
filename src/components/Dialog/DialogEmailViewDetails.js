@@ -45,8 +45,8 @@ function DialogEmailViewDetails({ open, setOpenDialog, emailId }) {
             <Grid container>
               <ViewFormField sm={6} heading="From" param={email?.fromEmail || 'N/A'} isLoading={isLoading} />
               <ViewFormField sm={6} heading="Date" param={fDateTime(email?.createdAt) || 'N/A'} isLoading={isLoading} />
-              <ViewFormField sm={6} heading="To" param={email?.toEmails?.join(', ') || 'N/A'} isLoading={isLoading} />
-              <ViewFormField sm={6} heading="Subject" param={email?.subject || 'N/A'} isLoading={isLoading} />
+              <ViewFormField sm={12} heading="To" param={email?.toEmails?.join(', ') || 'N/A'} isLoading={isLoading} />
+              <ViewFormField sm={12} heading="Subject" param={email?.subject || 'N/A'} isLoading={isLoading} />
 
               {email?.body ? (
                 <ViewFormField
