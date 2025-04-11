@@ -64,11 +64,11 @@ export default function EmailListTableRow({
           )}
         </TableCell>
       }
-      {!hiddenColumns?.["customer.name"] &&
-        <TableCell align='left' >
-          {customer?.name || ''}
+      {!hiddenColumns?.["customer.name"] && (
+        <TableCell align="left">
+          {customer?.name || row?.ticket?.customer?.name || row?.user?.customer?.name || ''}
         </TableCell>
-      }
+      )}
 
       {!hiddenColumns?.createdAt &&
         <TableCell align='right'>
