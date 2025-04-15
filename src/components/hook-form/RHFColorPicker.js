@@ -37,7 +37,7 @@ export default function RHFColorPicker({ name, helperText, Error, ...other }) {
             helperText={error ? error?.message : helperText}
             InputProps={{
               startAdornment: (
-                field?.value && <Iconify icon="mdi:square" sx={{ width: '35px', height: '35px' }} color={field?.value || ""} />
+                field?.value && !error && <Iconify icon="mdi:square" sx={{ width: '35px', height: '35px' }} color={field?.value || ""} />
               ),
               endAdornment: (
                 <InputAdornment position="end">

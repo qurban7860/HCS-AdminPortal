@@ -19,6 +19,7 @@ import { postTicketRequestType, patchTicketRequestType, getTicketRequestType, re
 import { getActiveTicketIssueTypes, resetActiveTicketIssueTypes } from '../../../../../redux/slices/ticket/ticketSettings/ticketIssueTypes';
 import Iconify from '../../../../../components/iconify';
 import { handleError } from '../../../../../utils/errorHandler';
+import { TicketCollectionSchema } from '../utils/constant';
 
 export default function RequestTypeForm() {
   const navigate = useNavigate();
@@ -28,19 +29,6 @@ export default function RequestTypeForm() {
   const { ticketRequestType } = useSelector((state) => state.ticketRequestTypes);
   const { activeTicketIssueTypes } = useSelector((state) => state.ticketIssueTypes);
 
-  const RequestTypeSchema = Yup.object().shape({
-    name: Yup.string().min(2).max(50).required('Name is required!'),
-    issueType: Yup.object().nullable().required('Issue Type is required!'),
-    icon: Yup.string().max(50).required('Icon is required!'),
-    description: Yup.string().max(5000),
-    isActive: Yup.boolean(),
-    isDefault: Yup.boolean(),
-    displayOrderNo: Yup.number()
-      .typeError('Display Order No. must be a number')
-      .nullable()
-      .transform((_, val) => (val !== '' ? Number(val) : null)),
-    slug: Yup.string().min(0).max(50).matches(/^(?!.*\s)[\S\s]{0,50}$/, 'Slug field cannot contain blankspaces'),
-  });
 
   useEffect(() => {
     dispatch(getActiveTicketIssueTypes());
@@ -66,17 +54,19 @@ export default function RequestTypeForm() {
   );
 
   const methods = useForm({
-    resolver: yupResolver(RequestTypeSchema),
+    resolver: yupResolver(TicketCollectionSchema),
     defaultValues,
+    mode: 'onChange',
+    reValidateMode: 'onChange'
   });
 
   const {
     reset,
     handleSubmit,
     watch,
-    formState: { isSubmitting }
+    formState: { isSubmitting, errors }
   } = methods;
-
+  console.log(" errors : ", errors)
   const { icon, color } = watch();
 
   useEffect(() => {

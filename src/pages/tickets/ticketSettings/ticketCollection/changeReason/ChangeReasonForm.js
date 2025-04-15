@@ -44,6 +44,9 @@ export default function ChangeReasonForm() {
   const methods = useForm({
     resolver: yupResolver(TicketCollectionSchema),
     defaultValues,
+    mode: 'onChange',
+    reValidateMode: 'onChange'
+
   });
 
   const {

@@ -19,6 +19,7 @@ import { postTicketStatus, patchTicketStatus, resetTicketStatus, getTicketStatus
 import { getActiveTicketStatusTypes, resetActiveTicketStatusTypes } from '../../../../../redux/slices/ticket/ticketSettings/ticketStatusTypes';
 import Iconify from '../../../../../components/iconify';
 import { handleError } from '../../../../../utils/errorHandler';
+import { TicketCollectionSchema } from '../utils/constant';
 
 export default function StatusForm() {
   const navigate = useNavigate();
@@ -27,20 +28,6 @@ export default function StatusForm() {
   const { enqueueSnackbar } = useSnackbar();
   const { ticketStatus } = useSelector((state) => state.ticketStatuses);
   const { activeTicketStatusTypes } = useSelector((state) => state.ticketStatusTypes);
-
-  const AddStatusSchema = Yup.object().shape({
-    name: Yup.string().min(2).max(50).required('Name is required!'),
-    statusType: Yup.object().nullable().required('Status Type is required!'),
-    icon: Yup.string().max(50).required('Icon is required!'),
-    description: Yup.string().max(5000),
-    isActive: Yup.boolean(),
-    isDefault: Yup.boolean(),
-    displayOrderNo: Yup.number()
-      .typeError('Display Order No. must be a number')
-      .nullable()
-      .transform((_, val) => (val !== '' ? Number(val) : null)),
-    slug: Yup.string().min(0).max(50).matches(/^(?!.*\s)[\S\s]{0,50}$/, 'Slug field cannot contain blankspaces'),
-  });
 
   useEffect(() => {
     dispatch(getActiveTicketStatusTypes());
@@ -66,8 +53,10 @@ export default function StatusForm() {
   );
 
   const methods = useForm({
-    resolver: yupResolver(AddStatusSchema),
+    resolver: yupResolver(TicketCollectionSchema),
     defaultValues,
+    mode: 'onChange',
+    reValidateMode: 'onChange'
   });
 
   const {

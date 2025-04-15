@@ -45,6 +45,8 @@ export default function StatusTypeForm() {
   const methods = useForm({
     resolver: yupResolver(TicketCollectionSchema),
     defaultValues,
+    mode: 'onChange',
+    reValidateMode: 'onChange'
   });
 
   const {
