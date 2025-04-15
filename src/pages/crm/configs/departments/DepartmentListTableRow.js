@@ -43,19 +43,19 @@ export default function DepartmentListTableRow({
 
       {!hiddenColumns?.isActive && (
         <TableCell align="center">
-          <Switch checked={isActive} disabled sx={{ my: -1 }} />
+          <Switch checked={isActive} disabled size = "small" />
         </TableCell>
       )}
 
       
       {!hiddenColumns?.forCustomer && (
         <TableCell align="center">
-          <Switch checked={forCustomer} disabled sx={{ my: -1 }} />
+          <Switch checked={forCustomer} disabled size = "small" />
         </TableCell>
       )}
 
       
-      {!hiddenColumns?.createdAt && (
+      {!hiddenColumns?.updatedAt && (
         <TableCell align="right">{fDate(updatedAt)}</TableCell>
       )}
     </TableRow>
