@@ -104,11 +104,11 @@ function MachineTransfer() {
       supportManager: machine?.supportManager || [],
       supportExpireDate: machine?.supportExpireDate || null,
       description: machine?.description || '',
-      isAllSettings: false,
-      isAllTools: false,
-      isAllDrawings: false,
-      isAllProfiles: false,
-      isAllINIs: false,
+      isAllSettings: true,
+      isAllTools: true,
+      isAllDrawings: true,
+      isAllProfiles: true,
+      isAllINIs: true,
       machineDocuments: [],
       isSelectAllDocs: false,
     },
@@ -136,6 +136,12 @@ function MachineTransfer() {
         console.error(error);
       }
   };
+  
+  useEffect(() => {
+    if (activeMachineDocuments?.length > 0) {
+      setValue('machineDocuments', activeMachineDocuments.map((d) => d?._id) || []);
+    }
+  }, [activeMachineDocuments, setValue]);
   
   const handleSelectAll = (inputString) => {
     if(activeMachineDocuments?.length > 0) {

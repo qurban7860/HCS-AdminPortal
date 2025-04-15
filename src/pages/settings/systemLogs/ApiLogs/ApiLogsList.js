@@ -11,11 +11,9 @@ import { useDispatch, useSelector } from '../../../../redux/store';
 // components
 import {
   useTable,
-  getComparator,
   TableNoData,
   TableSkeleton,
   TablePaginationFilter,
-  TablePaginationCustom,
   TableHeadFilter,
 } from '../../../../components/table';
 import FormProvider, { RHFDatePicker } from '../../../../components/hook-form';
@@ -187,7 +185,7 @@ export default function ApiLogsList() {
   return (
     <Container maxWidth={false}>
       <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
-        <Cover name="API Logs" generalSettings />
+        <Cover name="API Logs" />
       </Card>
       <FormProvider methods={methods} onSubmit={handleSubmit(onHandleSubmit)}>
         <Grid container spacing={2}>

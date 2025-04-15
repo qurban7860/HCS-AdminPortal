@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, } from 'react';
 // @mui
-import { Table, Container, Card, } from '@mui/material';
+import { Table, Container } from '@mui/material';
 import { Cover } from '../../../../components/Defaults/Cover';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
@@ -41,12 +41,12 @@ export default function Pm2LogsList() {
     dispatch(setPM2FullScreenDialog(true));
   }
 
-  useEffect(() => {
-    fetchPm2Logs();
-    return () => {
-      dispatch(resetPm2Logs());
-    }
-  }, [dispatch, fetchPm2Logs]);
+  // useEffect(() => {
+  //   fetchPm2Logs();
+  //   return () => {
+  //     dispatch(resetPm2Logs());
+  //   }
+  // }, [dispatch, fetchPm2Logs]);
 
   useEffect(() => {
     if (initial) {
@@ -60,7 +60,7 @@ export default function Pm2LogsList() {
     <>
       <Container maxWidth={false}>
         <StyledCardContainer>
-          <Cover name="PM2 Logs" icon="simple-icons:pm2" generalSettings />
+          <Cover name="PM2 Logs" icon="simple-icons:pm2" />
         </StyledCardContainer>
         <TableCard>
           <Pm2LogsListTableToolbar isPm2Environments handleRefresh={ fetchPm2Logs } handleFullScreen={handleFullScreen} />

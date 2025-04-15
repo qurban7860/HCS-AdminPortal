@@ -60,12 +60,12 @@ function CalendarView() {
         }
     }, [ activeSpContacts ]);
 
-    useLayoutEffect(()=>{
-        if(!isAllAccessAllowed){
-            setSelectedUser(securityUser);
-            setSelectedContact(securityUser?.contact)
-        }
-    },[ securityUser, isAllAccessAllowed ])
+    // useLayoutEffect(()=>{
+    //     if(!isAllAccessAllowed){
+    //         setSelectedUser(securityUser);
+    //         setSelectedContact(securityUser?.contact)
+    //     }
+    // },[ securityUser, isAllAccessAllowed ])
     
     
     useLayoutEffect(() => {

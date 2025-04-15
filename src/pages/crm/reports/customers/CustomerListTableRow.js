@@ -76,11 +76,9 @@ export default function CustomerListTableRow({
           .filter((value) => value !== '')
           .join(', ')}
       </TableCell>}
-      {!hiddenColumns?.isActive && (
-        <TableCell align="center">
-          <Switch checked={isActive} />
-        </TableCell>
-      )}
+      {!hiddenColumns?.isActive && (<TableCell align="center">
+          <Switch checked={isActive} disabled size="small" />
+        </TableCell>)}
       {!hiddenColumns?.updatedAt && (
         <TableCell>
           {fDate(updatedAt)}
