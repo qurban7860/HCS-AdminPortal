@@ -14,7 +14,7 @@ import { PATH_SUPPORT } from '../../../../../routes/paths';
 import { useSnackbar } from '../../../../../components/snackbar';
 import { TicketCollectionSchema } from '../utils/constant';
 import AddFormButtons from '../../../../../components/DocumentForms/AddFormButtons';
-import FormProvider, { RHFTextField, RHFSwitch } from '../../../../../components/hook-form';
+import FormProvider, { RHFTextField, RHFSwitch, RHFColorPicker } from '../../../../../components/hook-form';
 import { postTicketIssueType, patchTicketIssueType, getTicketIssueType, resetTicketIssueType } from '../../../../../redux/slices/ticket/ticketSettings/ticketIssueTypes';
 import Iconify from '../../../../../components/iconify';
 import { handleError } from '../../../../../utils/errorHandler';
@@ -25,7 +25,7 @@ export default function IssueTypeForm() {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const { ticketIssueType } = useSelector((state) => state.ticketIssueTypes);
-  
+
   const defaultValues = useMemo(
     () => ({
       name: id && ticketIssueType?.name || '',
@@ -38,7 +38,7 @@ export default function IssueTypeForm() {
       isActive: id ? ticketIssueType?.isActive : true,
       createdAt: id && ticketIssueType?.createdAt || '',
     }),
-    [ id, ticketIssueType ] 
+    [id, ticketIssueType]
   );
 
   const methods = useForm({
@@ -46,24 +46,24 @@ export default function IssueTypeForm() {
     defaultValues,
   });
 
-  const { 
-    reset, 
-    handleSubmit, 
+  const {
+    reset,
+    handleSubmit,
     watch,
     formState: { isSubmitting }
   } = methods;
-  
+
   const { icon, color } = watch();
-  
-  useEffect(()=>{
-    if(id){
+
+  useEffect(() => {
+    if (id) {
       dispatch(getTicketIssueType(id));
     }
-    return () => { 
+    return () => {
       dispatch(resetTicketIssueType());
     }
-  },[dispatch, id ])
-  
+  }, [dispatch, id])
+
   useEffect(() => {
     if (id && ticketIssueType) {
       reset(defaultValues);
@@ -75,8 +75,8 @@ export default function IssueTypeForm() {
 
   const onSubmit = async (data) => {
     try {
-      if (id) { 
-        await dispatch(patchTicketIssueType(id, data)); 
+      if (id) {
+        await dispatch(patchTicketIssueType(id, data));
         enqueueSnackbar('Issue Type Updated Successfully!');
         navigate(PATH_SUPPORT.ticketSettings.issueTypes.view(id));
       } else {
@@ -86,11 +86,11 @@ export default function IssueTypeForm() {
       }
       reset();
     } catch (error) {
-      enqueueSnackbar( handleError( error ) || 'IssueType save failed!', { variant: 'error' });
+      enqueueSnackbar(handleError(error) || 'IssueType save failed!', { variant: 'error' });
       console.error(error);
     }
-  };  
-  
+  };
+
   const toggleCancel = async () => {
     dispatch(resetTicketIssueType())
     await navigate(PATH_SUPPORT.ticketSettings.issueTypes.root);
@@ -112,9 +112,9 @@ export default function IssueTypeForm() {
                   display="grid"
                   gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
                 >
-                  <RHFTextField name="name" label="Name*"/>
+                  <RHFTextField name="name" label="Name*" />
                   <RHFTextField name="slug" label="Slug" />
-                  <RHFTextField 
+                  <RHFTextField
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="start" >
@@ -122,24 +122,11 @@ export default function IssueTypeForm() {
                         </InputAdornment>
                       )
                     }}
-                    name="icon" 
+                    name="icon"
                     label="Icon*"
                   />
-                  <RHFTextField 
-                    // InputProps={{
-                    //   endAdornment: (
-                    //     <InputAdornment position="start" >
-                    //       <TextField
-                    //         value={color}
-                    //         onChange={(e) => methods.setValue('color', e.target.value)}
-                    //         label="Color"
-                    //         type="color"
-                    //         sx={{ width: 40 }}
-                    //       />
-                    //     </InputAdornment>
-                    //   )
-                    // }}
-                    name="color" 
+                  <RHFColorPicker
+                    name="color"
                     label="Color"
                   />
                 </Box>
@@ -153,7 +140,7 @@ export default function IssueTypeForm() {
                   <RHFTextField name="displayOrderNo" label="Display Order No." />
                   <Grid display="flex" alignItems="center">
                     {id && (
-                     <RHFSwitch name="isActive" label="Active" />
+                      <RHFSwitch name="isActive" label="Active" />
                     )}
                     <RHFSwitch name="isDefault" label="Default" />
                   </Grid>

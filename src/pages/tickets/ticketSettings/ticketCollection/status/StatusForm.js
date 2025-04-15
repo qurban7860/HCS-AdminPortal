@@ -14,7 +14,7 @@ import { StyledCardContainer } from '../../../../../theme/styles/default-styles'
 import { PATH_SUPPORT } from '../../../../../routes/paths';
 import { useSnackbar } from '../../../../../components/snackbar';
 import AddFormButtons from '../../../../../components/DocumentForms/AddFormButtons';
-import FormProvider, { RHFTextField, RHFSwitch, RHFAutocomplete } from '../../../../../components/hook-form';
+import FormProvider, { RHFTextField, RHFSwitch, RHFAutocomplete, RHFColorPicker } from '../../../../../components/hook-form';
 import { postTicketStatus, patchTicketStatus, resetTicketStatus, getTicketStatus } from '../../../../../redux/slices/ticket/ticketSettings/ticketStatuses';
 import { getActiveTicketStatusTypes, resetActiveTicketStatusTypes } from '../../../../../redux/slices/ticket/ticketSettings/ticketStatusTypes';
 import Iconify from '../../../../../components/iconify';
@@ -25,9 +25,9 @@ export default function StatusForm() {
   const { id } = useParams();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
-  const {  ticketStatus } = useSelector((state) => state.ticketStatuses);
+  const { ticketStatus } = useSelector((state) => state.ticketStatuses);
   const { activeTicketStatusTypes } = useSelector((state) => state.ticketStatusTypes);
-  
+
   const AddStatusSchema = Yup.object().shape({
     name: Yup.string().min(2).max(50).required('Name is required!'),
     statusType: Yup.object().nullable().required('Status Type is required!'),
@@ -41,13 +41,13 @@ export default function StatusForm() {
       .transform((_, val) => (val !== '' ? Number(val) : null)),
     slug: Yup.string().min(0).max(50).matches(/^(?!.*\s)[\S\s]{0,50}$/, 'Slug field cannot contain blankspaces'),
   });
-  
+
   useEffect(() => {
     dispatch(getActiveTicketStatusTypes());
-    return ()=> { 
+    return () => {
       dispatch(resetActiveTicketStatusTypes());
     }
-  }, [dispatch]);  
+  }, [dispatch]);
 
   const defaultValues = useMemo(
     () => ({
@@ -62,7 +62,7 @@ export default function StatusForm() {
       isActive: id ? ticketStatus?.isActive : true,
       createdAt: id && ticketStatus?.createdAt || '',
     }),
-    [ id, ticketStatus ] 
+    [id, ticketStatus]
   );
 
   const methods = useForm({
@@ -70,37 +70,37 @@ export default function StatusForm() {
     defaultValues,
   });
 
-  const { 
-    reset, 
-    handleSubmit, 
+  const {
+    reset,
+    handleSubmit,
     watch,
-     formState: { isSubmitting }
-    } = methods;
-  
-    const { icon, color } = watch()
-    
-    useEffect(()=>{
-      if(id){
-        dispatch(getTicketStatus(id));
-      }
-      return () => { 
-        dispatch(resetTicketStatus());
-      }
-    },[dispatch, id ])
-      
-    useEffect(() => {
-      if (id && ticketStatus) {
-        reset(defaultValues);
-      }
-    }, [id, ticketStatus, defaultValues, reset]);
-    
-    useEffect(() => {
-    }, [color]);
+    formState: { isSubmitting }
+  } = methods;
+
+  const { icon, color } = watch()
+
+  useEffect(() => {
+    if (id) {
+      dispatch(getTicketStatus(id));
+    }
+    return () => {
+      dispatch(resetTicketStatus());
+    }
+  }, [dispatch, id])
+
+  useEffect(() => {
+    if (id && ticketStatus) {
+      reset(defaultValues);
+    }
+  }, [id, ticketStatus, defaultValues, reset]);
+
+  useEffect(() => {
+  }, [color]);
 
   const onSubmit = async (data) => {
     try {
-      if (id) { 
-        await dispatch(patchTicketStatus(id, data)); 
+      if (id) {
+        await dispatch(patchTicketStatus(id, data));
         enqueueSnackbar('Status Updated Successfully!');
         navigate(PATH_SUPPORT.ticketSettings.statuses.view(id));
       } else {
@@ -110,11 +110,11 @@ export default function StatusForm() {
       }
       reset();
     } catch (error) {
-      enqueueSnackbar( handleError( error ) || 'Status save failed!', { variant: 'error' });
+      enqueueSnackbar(handleError(error) || 'Status save failed!', { variant: 'error' });
       console.error(error);
     }
-  };  
- 
+  };
+
   const toggleCancel = async () => {
     dispatch(resetTicketStatus())
     await navigate(PATH_SUPPORT.ticketSettings.statuses.root);
@@ -126,61 +126,56 @@ export default function StatusForm() {
         <Cover name={ticketStatus?.name || 'New Status'} />
       </StyledCardContainer>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Grid container spacing={3}>
-        <Grid item xs={12} md={12}>
-          <Card sx={{ p: 3 }}>
-            <Stack spacing={3}>
-              <Box
-                rowGap={2}
-                columnGap={2}
-                display="grid"
-                gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
-              >
-                <RHFTextField name="name" label="Name*"/>
-                <RHFAutocomplete
-                  name="statusType"
-                  label="Status Type*"
-                  options={activeTicketStatusTypes || []}
-                  isOptionEqualToValue={(option, value) => option._id === value._id}
-                  getOptionLabel={(option) => `${option.name || ''}`}
-                  renderOption={(props, option) => (<li {...props} key={option?._id}> {option.name && option.name} </li> )}
-                />
-                <RHFTextField 
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="start" >
-                        <Iconify icon={icon} sx={{ width: 25, height: 25, color: color || 'black' }} />
-                      </InputAdornment>
-                    )
-                  }}
-                  name="icon" 
-                  label="Icon*"
-                />
-                <RHFTextField 
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="start" />
-                    )
-                  }}
-                  name="color" 
-                  label="Color"
-                />
-                <RHFTextField name="slug" label="Slug" />
-                <RHFTextField name="displayOrderNo" label="Display Order No." />
-              </Box>
-              <RHFTextField name="description" label="Description" minRows={3} multiline />
+        <Grid container spacing={3}>
+          <Grid item xs={12} md={12}>
+            <Card sx={{ p: 3 }}>
+              <Stack spacing={3}>
+                <Box
+                  rowGap={2}
+                  columnGap={2}
+                  display="grid"
+                  gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
+                >
+                  <RHFTextField name="name" label="Name*" />
+                  <RHFAutocomplete
+                    name="statusType"
+                    label="Status Type*"
+                    options={activeTicketStatusTypes || []}
+                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    getOptionLabel={(option) => `${option.name || ''}`}
+                    renderOption={(props, option) => (<li {...props} key={option?._id}> {option.name && option.name} </li>)}
+                  />
+                  <RHFTextField
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="start" >
+                          <Iconify icon={icon} sx={{ width: 25, height: 25, color: color || 'black' }} />
+                        </InputAdornment>
+                      )
+                    }}
+                    name="icon"
+                    label="Icon*"
+                  />
+                  <RHFColorPicker
+                    name="color"
+                    label="Color"
+                  />
+                  <RHFTextField name="slug" label="Slug" />
+                  <RHFTextField name="displayOrderNo" label="Display Order No." />
+                </Box>
+                <RHFTextField name="description" label="Description" minRows={3} multiline />
                 <Grid display="flex" alignItems="center">
                   {id && (
-                  <RHFSwitch name="isActive" label="Active" />
+                    <RHFSwitch name="isActive" label="Active" />
                   )}
                   <RHFSwitch name="isDefault" label="Default" />
                 </Grid>
-              <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
-            </Stack>
-          </Card>
+                <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+              </Stack>
+            </Card>
+          </Grid>
         </Grid>
-      </Grid>
-     </FormProvider>
+      </FormProvider>
     </Container>
   );
 }

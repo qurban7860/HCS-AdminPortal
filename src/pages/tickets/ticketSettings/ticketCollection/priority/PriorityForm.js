@@ -14,7 +14,7 @@ import { PATH_SUPPORT } from '../../../../../routes/paths';
 import { useSnackbar } from '../../../../../components/snackbar';
 import { TicketCollectionSchema } from '../utils/constant';
 import AddFormButtons from '../../../../../components/DocumentForms/AddFormButtons';
-import FormProvider, { RHFTextField, RHFSwitch } from '../../../../../components/hook-form';
+import FormProvider, { RHFTextField, RHFSwitch, RHFColorPicker } from '../../../../../components/hook-form';
 import { postTicketPriority, patchTicketPriority, getTicketPriority, resetTicketPriority } from '../../../../../redux/slices/ticket/ticketSettings/ticketPriorities';
 import Iconify from '../../../../../components/iconify';
 import { handleError } from '../../../../../utils/errorHandler';
@@ -24,8 +24,8 @@ export default function PriorityForm() {
   const { id } = useParams();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
-  const {  ticketPriority } = useSelector((state) => state.ticketPriorities);
-  
+  const { ticketPriority } = useSelector((state) => state.ticketPriorities);
+
   const defaultValues = useMemo(
     () => ({
       name: id && ticketPriority?.name || '',
@@ -38,7 +38,7 @@ export default function PriorityForm() {
       isActive: id ? ticketPriority?.isActive : true,
       createdAt: id && ticketPriority?.createdAt || '',
     }),
-    [ id, ticketPriority ] 
+    [id, ticketPriority]
   );
 
   const methods = useForm({
@@ -46,37 +46,37 @@ export default function PriorityForm() {
     defaultValues,
   });
 
-  const { 
-    reset, 
-    handleSubmit, 
+  const {
+    reset,
+    handleSubmit,
     watch,
-     formState: { isSubmitting }
-    } = methods;
-  
-    const { icon, color } = watch()
-    
-    useEffect(()=>{
-      if(id){
-        dispatch(getTicketPriority(id));
-      }
-      return () => { 
-        dispatch(resetTicketPriority());
-      }
-    },[dispatch, id ])
-    
-    useEffect(() => {
-      if (id && ticketPriority) {
-        reset(defaultValues);
-      }
-    }, [id, ticketPriority, defaultValues, reset]);
+    formState: { isSubmitting }
+  } = methods;
 
-    useEffect(() => {
-    }, [color]);
+  const { icon, color } = watch()
+
+  useEffect(() => {
+    if (id) {
+      dispatch(getTicketPriority(id));
+    }
+    return () => {
+      dispatch(resetTicketPriority());
+    }
+  }, [dispatch, id])
+
+  useEffect(() => {
+    if (id && ticketPriority) {
+      reset(defaultValues);
+    }
+  }, [id, ticketPriority, defaultValues, reset]);
+
+  useEffect(() => {
+  }, [color]);
 
   const onSubmit = async (data) => {
     try {
-      if (id) { 
-        await dispatch(patchTicketPriority(id, data)); 
+      if (id) {
+        await dispatch(patchTicketPriority(id, data));
         enqueueSnackbar('Priority Updated Successfully!');
         navigate(PATH_SUPPORT.ticketSettings.priorities.view(id));
       } else {
@@ -86,11 +86,11 @@ export default function PriorityForm() {
       }
       reset();
     } catch (error) {
-      enqueueSnackbar( handleError( error ) || 'Priority save failed!', { variant: 'error' });
+      enqueueSnackbar(handleError(error) || 'Priority save failed!', { variant: 'error' });
       console.error(error);
     }
-  };  
-  
+  };
+
   const toggleCancel = async () => {
     dispatch(resetTicketPriority())
     await navigate(PATH_SUPPORT.ticketSettings.priorities.root);
@@ -102,60 +102,55 @@ export default function PriorityForm() {
         <Cover name={ticketPriority?.name || 'New priority'} />
       </StyledCardContainer>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Grid container spacing={3}>
-        <Grid item xs={12} md={12}>
-          <Card sx={{ p: 3 }}>
-            <Stack spacing={3}>
-              <Box
-                rowGap={2}
-                columnGap={2}
-                display="grid"
-                gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
-              >
-                <RHFTextField name="name" label="Name*"/>
-                <RHFTextField name="slug" label="Slug" />
-                <RHFTextField 
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="start" >
-                        <Iconify icon={icon} sx={{ width: 25, height: 25, color: color || 'black' }} />
-                      </InputAdornment>
-                    )
-                  }}
-                  name="icon" 
-                  label="Icon*"
-                />
-                <RHFTextField 
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="start" />
-                    )
-                  }}
-                  name="color" 
-                  label="Color"
-                />
-              </Box>
-              <RHFTextField name="description" label="Description" minRows={3} multiline />
-              <Box
-                rowGap={2}
-                columnGap={2}
-                display="grid"
-                gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
-              >
-                <RHFTextField name="displayOrderNo" label="Display Order No." />
-                <Grid display="flex" alignItems="center">
-                  {id && (
-                   <RHFSwitch name="isActive" label="Active" />
-                  )}
-                  <RHFSwitch name="isDefault" label="Default" />
-                </Grid>
-              </Box>
-              <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
-            </Stack>
-          </Card>
+        <Grid container spacing={3}>
+          <Grid item xs={12} md={12}>
+            <Card sx={{ p: 3 }}>
+              <Stack spacing={3}>
+                <Box
+                  rowGap={2}
+                  columnGap={2}
+                  display="grid"
+                  gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
+                >
+                  <RHFTextField name="name" label="Name*" />
+                  <RHFTextField name="slug" label="Slug" />
+                  <RHFTextField
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="start" >
+                          <Iconify icon={icon} sx={{ width: 25, height: 25, color: color || 'black' }} />
+                        </InputAdornment>
+                      )
+                    }}
+                    name="icon"
+                    label="Icon*"
+                  />
+                  <RHFColorPicker
+                    name="color"
+                    label="Color"
+                  />
+                </Box>
+                <RHFTextField name="description" label="Description" minRows={3} multiline />
+                <Box
+                  rowGap={2}
+                  columnGap={2}
+                  display="grid"
+                  gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
+                >
+                  <RHFTextField name="displayOrderNo" label="Display Order No." />
+                  <Grid display="flex" alignItems="center">
+                    {id && (
+                      <RHFSwitch name="isActive" label="Active" />
+                    )}
+                    <RHFSwitch name="isDefault" label="Default" />
+                  </Grid>
+                </Box>
+                <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+              </Stack>
+            </Card>
+          </Grid>
         </Grid>
-      </Grid>
-     </FormProvider>
+      </FormProvider>
     </Container>
   );
 }

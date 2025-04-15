@@ -15,7 +15,7 @@ import { useSnackbar } from '../../../../../components/snackbar';
 import AddFormButtons from '../../../../../components/DocumentForms/AddFormButtons';
 import { TicketCollectionSchema } from '../utils/constant';
 import { handleError } from '../../../../../utils/errorHandler';
-import FormProvider, { RHFTextField, RHFSwitch } from '../../../../../components/hook-form';
+import FormProvider, { RHFTextField, RHFSwitch, RHFColorPicker } from '../../../../../components/hook-form';
 import { postTicketChangeReason, patchTicketChangeReason, getTicketChangeReason, resetTicketChangeReason } from '../../../../../redux/slices/ticket/ticketSettings/ticketChangeReasons';
 import Iconify from '../../../../../components/iconify';
 
@@ -25,7 +25,7 @@ export default function ChangeReasonForm() {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const { ticketChangeReason } = useSelector((state) => state.ticketChangeReasons);
-  
+
   const defaultValues = useMemo(
     () => ({
       name: id && ticketChangeReason?.name || '',
@@ -38,32 +38,32 @@ export default function ChangeReasonForm() {
       isActive: id ? ticketChangeReason?.isActive : true,
       createdAt: id && ticketChangeReason?.createdAt || '',
     }),
-    [ id, ticketChangeReason ] 
+    [id, ticketChangeReason]
   );
-  
+
   const methods = useForm({
     resolver: yupResolver(TicketCollectionSchema),
     defaultValues,
   });
 
-  const { 
-    reset, 
-    handleSubmit, 
+  const {
+    reset,
+    handleSubmit,
     watch,
-     formState: { isSubmitting }
+    formState: { isSubmitting }
   } = methods;
-  
+
   const { icon, color } = watch()
-  
-  useEffect(()=>{
-    if(id){
+
+  useEffect(() => {
+    if (id) {
       dispatch(getTicketChangeReason(id));
     }
-    return () => { 
+    return () => {
       dispatch(resetTicketChangeReason());
     }
-  },[dispatch, id ])
-  
+  }, [dispatch, id])
+
   useEffect(() => {
     if (id && ticketChangeReason) {
       reset(defaultValues);
@@ -75,8 +75,8 @@ export default function ChangeReasonForm() {
 
   const onSubmit = async (data) => {
     try {
-      if (id) { 
-        await dispatch(patchTicketChangeReason(id, data)); 
+      if (id) {
+        await dispatch(patchTicketChangeReason(id, data));
         enqueueSnackbar('Change Reason Updated Successfully!');
         navigate(PATH_SUPPORT.ticketSettings.changeReasons.view(id));
       } else {
@@ -86,11 +86,11 @@ export default function ChangeReasonForm() {
       }
       reset();
     } catch (error) {
-      enqueueSnackbar( handleError( error ) || 'ChangeReason save failed!', { variant: 'error' });
+      enqueueSnackbar(handleError(error) || 'ChangeReason save failed!', { variant: 'error' });
       console.error(error);
     }
-  };  
-  
+  };
+
   const toggleCancel = async () => {
     dispatch(resetTicketChangeReason())
     await navigate(PATH_SUPPORT.ticketSettings.changeReasons.root);
@@ -102,60 +102,55 @@ export default function ChangeReasonForm() {
         <Cover name={ticketChangeReason?.name || 'New Change Reason'} />
       </StyledCardContainer>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Grid container spacing={3}>
-        <Grid item xs={12} md={12}>
-          <Card sx={{ p: 3 }}>
-            <Stack spacing={3}>
-              <Box
-                rowGap={2}
-                columnGap={2}
-                display="grid"
-                gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
-              >
-                <RHFTextField name="name" label="Name*"/>
-                <RHFTextField name="slug" label="Slug" />
-                <RHFTextField 
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="start" >
-                        <Iconify icon={icon} sx={{ width: 25, height: 25, color: color || 'black' }} />
-                      </InputAdornment>
-                    )
-                  }}
-                  name="icon" 
-                  label="Icon*"
-                />
-                <RHFTextField 
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="start" />
-                    )
-                  }}
-                  name="color" 
-                  label="Color"
-                />
-              </Box>
-              <RHFTextField name="description" label="Description" minRows={3} multiline />
-              <Box
-                rowGap={2}
-                columnGap={2}
-                display="grid"
-                gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
-              >
-                <RHFTextField name="displayOrderNo" label="Display Order No." />
-                <Grid display="flex" alignItems="center">
-                  {id && (
-                   <RHFSwitch name="isActive" label="Active" />
-                  )}
-                  <RHFSwitch name="isDefault" label="Default" />
-                </Grid>
-              </Box>
-              <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
-            </Stack>
-          </Card>
+        <Grid container spacing={3}>
+          <Grid item xs={12} md={12}>
+            <Card sx={{ p: 3 }}>
+              <Stack spacing={3}>
+                <Box
+                  rowGap={2}
+                  columnGap={2}
+                  display="grid"
+                  gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
+                >
+                  <RHFTextField name="name" label="Name*" />
+                  <RHFTextField name="slug" label="Slug" />
+                  <RHFTextField
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="start" >
+                          <Iconify icon={icon} sx={{ width: 25, height: 25, color: color || 'black' }} />
+                        </InputAdornment>
+                      )
+                    }}
+                    name="icon"
+                    label="Icon*"
+                  />
+                  <RHFColorPicker
+                    name="color"
+                    label="Color"
+                  />
+                </Box>
+                <RHFTextField name="description" label="Description" minRows={3} multiline />
+                <Box
+                  rowGap={2}
+                  columnGap={2}
+                  display="grid"
+                  gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
+                >
+                  <RHFTextField name="displayOrderNo" label="Display Order No." />
+                  <Grid display="flex" alignItems="center">
+                    {id && (
+                      <RHFSwitch name="isActive" label="Active" />
+                    )}
+                    <RHFSwitch name="isDefault" label="Default" />
+                  </Grid>
+                </Box>
+                <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+              </Stack>
+            </Card>
+          </Grid>
         </Grid>
-      </Grid>
-    </FormProvider>
+      </FormProvider>
     </Container>
   );
 }
