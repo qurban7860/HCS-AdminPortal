@@ -85,7 +85,7 @@ function DialogEmailViewDetails({ open, setOpenDialog, emailId }) {
                   )}
                 />
               ) : null}
-              <ViewFormField sm={6} heading="Customer Name" param={email?.customer?.name || email?.ticket?.customer?.name || email?.user?.customer?.name || 'N/A'} isLoading={isLoading} />
+              <ViewFormField sm={6} heading="Customer Name" param={email?.customer?.name || email?.ticket?.customer?.name || email?.user?.customer?.name || email?.serviceReport?.customer?.name || 'N/A'} isLoading={isLoading} />
 
               {email?.ticket?.ticketNo && (
                 <ViewFormField sm={6} heading="Ticket No" isLoading={isLoading}
