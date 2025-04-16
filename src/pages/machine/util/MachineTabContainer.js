@@ -38,6 +38,8 @@ export default function MachineTabContainer({ currentTabValue }) {
       navigate(PATH_MACHINE.machines.settings.root(machineId))
     } else if (tab === 'toolsinstalled' && machineId) {
       navigate(PATH_MACHINE.machines.toolsInstalled.root(machineId))
+    } else if (tab === 'jobs' && machineId) {
+      navigate(PATH_MACHINE.machines.jobs.root(machineId))
     } else if (tab === 'notes' && machineId) {
       navigate(PATH_MACHINE.machines.notes.root(machineId))
     } else if (tab === 'drawings' && machineId) {

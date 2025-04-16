@@ -229,6 +229,9 @@ import {
   
   // MACHINE SETTING REPORT
   MachineSettingReportList,
+
+  // ----------------------- Machine Jobs ---------------------------
+  MachineJobsList,
   
   // --------------- Service Report Template --------------------
 
@@ -305,7 +308,7 @@ import {
   DocumentTypeAdd, 
   DocumentTypeView,
   DocumentTypeEdit,
-
+  
   // DOCUMENT SETTING Document Category
   DocumentCategoryList,
   DocumentCategoryAdd, 
@@ -323,6 +326,10 @@ import {
   MachineDrawingsEdit,
 
   // ----------------------------------------------------------------
+  // Jobs
+  JobsList,
+  JobsAdd,
+  JobsView,
   
   // TICKET DASHBOARD
   SupportDashboard,
@@ -743,6 +750,11 @@ export default function Router() {
                 {path: ':id/edit', element: <MachineToolInstalledEdit/>}, 
               ]
             },
+            { path: ':machineId/jobs',
+              children:[
+                {element: <MachineJobsList />, index: true},
+              ]
+            },
             { path: ':machineId/notes',
               children:[
                 {element: <MachineNoteList/>, index: true},
@@ -1067,6 +1079,25 @@ export default function Router() {
         { path: 'permission-denied', element: <PermissionDeniedPage /> },
         { path: 'blank', element: <BlankPage /> },
       ],
+    },
+
+    { path: 'jobs',
+      element: (
+        <AuthGuard>
+          <DashboardLayout />
+        </AuthGuard>
+      ),
+      children: [
+        { element: <Navigate to="/jobs/machineJobs" replace />, index: true },
+        {
+          path: 'machineJobs',
+          children: [
+            { element: <JobsList />, index: true },
+            { path: 'new', element: <JobsView /> },
+            { path: ':id/view', element: <JobsAdd />},
+          ],
+        },
+      ]
     },
 
     // --------------------- SUPPORT  ----------------------
