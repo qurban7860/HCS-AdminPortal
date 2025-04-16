@@ -84,6 +84,11 @@ const TABS = [
     icon: ICONS.TOOLS_INSTALLED.icon,
   },
   {
+    value: 'jobs',
+    label: 'Machine Jobs',
+    icon: ICONS.JOBS.icon,
+  },
+  {
     value: 'notes',
     label: 'Notes',
     icon: ICONS.NOTES.icon,
