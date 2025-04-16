@@ -127,7 +127,6 @@ export default function DocumentCategoryAddForm({ currentDocument }) {
       <StyledCardContainer>
         <Cover
           name={FORMLABELS.COVER.NEW_DOCUMENT_CATEGORY} // New Document Category
-          generalSettings
           backLink={PATH_MACHINE.documents.documentCategory.list}
         />
       </StyledCardContainer>

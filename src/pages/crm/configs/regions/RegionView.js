@@ -24,7 +24,7 @@ export default function RegionView() {
   return (
       <Container maxWidth={false}>
         <StyledCardContainer>
-          <Cover name={region?.name} generalSettings />
+          <Cover name={region?.name} />
         </StyledCardContainer>
         <RegionViewForm />
       </Container>
