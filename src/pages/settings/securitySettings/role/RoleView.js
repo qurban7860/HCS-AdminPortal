@@ -26,7 +26,7 @@ export default function RoleView() {
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
-        <Cover name={role?.name} generalSettings />
+        <Cover name={role?.name} />
       </StyledCardContainer>
       <RoleViewForm />
     </Container>
