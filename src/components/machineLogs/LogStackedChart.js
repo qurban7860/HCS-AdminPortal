@@ -26,7 +26,8 @@ export default function LogChartStacked({ chart, graphLabels }) {
       bar: {
         horizontal: false,
         dataLabels: {
-          position: 'top',      
+          position: 'top',
+          hideOverflowingLabels: false,
         }
       },
       colors: {
@@ -56,6 +57,8 @@ export default function LogChartStacked({ chart, graphLabels }) {
       position: "bottom",
       labels: {
         offsetY: 0,
+        rotate: -45,
+        rotateAlways: graphLabels?.xaxis === "Days",
       },
       axisBorder: {
         show: false,
