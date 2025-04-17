@@ -7,8 +7,6 @@ import { CONFIG } from '../../../config-global';
 const initialState = {
   job: null,
   jobs: [],
-  activeJobs: [],
-  openJobs: [],
   filterBy: '',
   page: 0,
   rowsPerPage: 100,
@@ -35,39 +33,15 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // GET Tickets Success
+    // GET Jobs Success
     getJobsSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
       state.jobs = action.payload;
       state.initial = true;
     },
-    
-    // GET Tickets Success
-    getReportJobsSuccess(state, action) {
-      state.isLoading = false;
-      state.success = true;
-      state.jobs = action.payload;
-      state.initial = true;
-    },
 
-    // GET  Active Tickets Success
-    getOpenJobsSuccess(state, action) {
-      state.isLoading = false;
-      state.success = true;
-      state.openJobs = action.payload;
-      state.initial = true;
-    },
-    
-     // GET  Active Tickets Success
-     getActiveJobsSuccess(state, action) {
-      state.isLoading = false;
-      state.success = true;
-      state.activeJobs = action.payload;
-      state.initial = true;
-    },
-
-    // GET Ticket Success
+    // GET Job Success
     getJobSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
@@ -75,26 +49,26 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // POST Ticket Success
+    // POST Job Success
     postJobSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
       state.job = action.payload;
-      state.responseMessage = 'created successfully';
+      state.responseMessage = 'Job created successfully';
     },
     
     patchJobSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.job= action.payload;
-      state.responseMessage = ' updated successfully.';
+      state.job = action.payload;
+      state.responseMessage = 'Job updated successfully.';
     },
 
-    deleteJobsuccess(state, action) {
+    deleteJobSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
       state.jobs = state.jobs.filter((job) => job._id !== action.payload);
-      state.responseMessage = 'deleted successfully.';
+      state.responseMessage = 'Job Archived successfully.';
     },
 
     // SET RESPONSE MESSAGE
@@ -105,7 +79,7 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // RESET Ticket
+    // RESET Job
     resetJob(state) {
       state.job = null;
       state.responseMessage = null;
@@ -113,24 +87,9 @@ const slice = createSlice({
       state.isLoading = false;
     },
 
-    // RESET Tickets
+    // RESET Jobs
     resetJobs(state) {
       state.jobs = [];
-      state.responseMessage = null;
-      state.success = false;
-      state.isLoading = false;
-    },
-    
-    // RESET Active Tickets
-    resetActiveJobs(state) {
-      state.activeJobs = [];
-      state.responseMessage = null;
-      state.success = false;
-      state.isLoading = false;
-    },
-    
-    resetOpenJobs(state) {
-      state.openJobs = [];
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
@@ -160,8 +119,6 @@ export default slice.reducer;
 export const {
   resetJob,
   resetJobs,
-  resetActiveJob,
-  resetOpenJobs,
   setFilterBy,
   ChangeRowsPerPage,
   ChangePage,
@@ -169,22 +126,19 @@ export const {
 
 // ----------------------------------------------------------------------
 
-// POST Ticket
+// POST Job
 export function postJob(params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
         const data = {
-            name: params.name,
-            icon: params.icon,
-            color: params.color,
-            slug: params.slug,
-            displayOrderNo: params.displayOrderNo,
-            description: params.description,
-            isDefault: params.isDefault,
-            isActive: params.isActive,
+          measurementUnit: params.measurementUnit,
+          profile: params.profile,
+          frameset: params.frameset,
+          version: params.version,
+          components: params.components,
         };
-      const response = await axios.post(`${CONFIG.SERVER_URL}tickets/settings/issueTypes/`, data);
+      const response = await axios.post(`${CONFIG.SERVER_URL}jobs/`, data);
       dispatch(slice.actions.postJobSuccess(response.data));
       return response;
     } catch (error) {
@@ -195,22 +149,19 @@ export function postJob(params) {
   };
 }
 
-// PATCH Ticket
+// PATCH Job
 export function patchJob(id, params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
         const data = {
-          name: params.name,
-          icon: params.icon,
-          color: params.color,
-          slug: params.slug,
-          displayOrderNo: params.displayOrderNo,
-          description: params.description,
-          isDefault: params.isDefault,
-          isActive: params.isActive,
+          measurementUnit: params.measurementUnit,
+          profile: params.profile,
+          frameset: params.frameset,
+          version: params.version,
+          components: params.components,
         };
-      const response = await axios.patch(`${CONFIG.SERVER_URL}tickets/settings/issueTypes/${id}`, data);
+      const response = await axios.patch(`${CONFIG.SERVER_URL}jobs/${id}`, data);
       dispatch(slice.actions.patchJobSuccess(response.data)); 
       return response;
     } catch (error) {
@@ -221,7 +172,7 @@ export function patchJob(id, params) {
   };
 }
 
-// GET Tickets
+// GET Jobs
 export function getJobs(page, pageSize) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
@@ -232,7 +183,7 @@ export function getJobs(page, pageSize) {
         isArchived: false,
       };
 
-      const response = await axios.get(`${CONFIG.SERVER_URL}tickets/settings/issueTypes`, { params });
+      const response = await axios.get(`${CONFIG.SERVER_URL}jobs/`, { params });
       dispatch(slice.actions.getJobsSuccess(response.data));
       return response;
     } catch (error) {
@@ -243,61 +194,12 @@ export function getJobs(page, pageSize) {
   };
 }
 
-export function getReportJobs(value = null, unit = null) {
-  return async (dispatch) => {
-    dispatch(slice.actions.startLoading());
-    try {
-      const params = {
-        orderBy: { createdAt: -1 },
-        isArchived: false,
-      };
-      
-      if (value !== null && unit !== null) {
-        params.value = value;
-        params.unit = unit;
-      }
-
-      const response = await axios.get(`${CONFIG.SERVER_URL}tickets/settings/issueTypes/count`, { params });
-      dispatch(slice.actions.getReportJobsSuccess(response.data));
-      return response;
-    } catch (error) {
-      dispatch(slice.actions.hasError(error.message));
-      console.error(error);
-      throw error;
-    }
-  };
-}
-
-export function getOpenJobs(value = null, unit = null) {
-  return async (dispatch) => {
-    dispatch(slice.actions.startLoading());
-    try {
-      const params = {
-        orderBy: { createdAt: -1 },
-        isArchived: false,
-        isResolved: false,
-      };
-      if (value !== null && unit !== null) {
-        params.value = value;
-        params.unit = unit;
-      }
-      const response = await axios.get(`${CONFIG.SERVER_URL}tickets/settings/issueTypes/count`, { params });
-      dispatch(slice.actions.getOpenJobsSuccess(response.data));
-      return response;
-    } catch (error) {
-      dispatch(slice.actions.hasError(error.message));
-      console.error(error);
-      throw error;
-    }
-  };
-}
-
-// GET Ticket
+// GET Job
 export function getJob(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}tickets/settings/issueTypes/${id}`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}jobs/${id}`);
       dispatch(slice.actions.getJobSuccess(response.data));
       return response;
     } catch (error) {
@@ -308,35 +210,13 @@ export function getJob(id) {
   };
 }
 
-export function getActiveJobs ( cancelToken ){
-  return async (dispatch) =>{
-    dispatch(slice.actions.startLoading());
-    try{
-      const response = await axios.get(`${CONFIG.SERVER_URL}tickets/settings/issueTypes`, 
-      {
-        params: {
-          isArchived: false,
-          isActive: true,
-        },
-        cancelToken: cancelToken?.token,
-      });
-      dispatch(slice.actions.getActiveJobsSuccess(response.data));
-      dispatch(slice.actions.setResponseMessage('Issue loaded successfully'));
-    } catch (error) {
-      console.log(error);
-      dispatch(slice.actions.hasError(error.Message));
-      throw error;
-    }
-  }
-}
-
-// Archive Ticket
+// Archive Job
 export function deleteJob(id, isArchived) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const data = { isArchived }; 
-      const response = await axios.patch(`${CONFIG.SERVER_URL}tickets/settings/issueTypes/${id}`, data);
+      const response = await axios.patch(`${CONFIG.SERVER_URL}jobs/${id}`, data);
       dispatch(slice.actions.deleteJobSuccess(response.data));
       return response;
     } catch (error) {

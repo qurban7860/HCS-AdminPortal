@@ -458,7 +458,7 @@ export const Emailview = Loadable(lazy(() => import('../pages/settings/email/Ema
 // --------------------------- Jobs -------------------------------------
 export const JobsList = Loadable(lazy(() => import('../pages/jobs/JobsListView')));
 export const JobsAdd = Loadable(lazy(() => import('../pages/jobs/JobsAddForm')));
-export const JobsView = Loadable(lazy(() => import('../pages/jobs/JobsViewForm')));
+export const JobsView = Loadable(lazy(() => import('../pages/jobs/JobsView')));
 
 // --------------------------- Ticket Dashboard -------------------------------------
 export const SupportDashboard = Loadable(lazy(() => import('../pages/tickets/dashboard/SupportDashboard')));
