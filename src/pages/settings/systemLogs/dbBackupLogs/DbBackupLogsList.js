@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import debounce from 'lodash/debounce';
 // @mui
 import { Table, TableBody, TableContainer, Container, Card } from '@mui/material';
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { PATH_SETTING } from '../../../../routes/paths';
 import { Cover } from '../../../../components/Defaults/Cover';
 // redux
@@ -28,7 +28,7 @@ export default function DbBackupLogsList() {
   const {
     order,
     orderBy,
-    page, 
+    page,
     rowsPerPage,
     setPage,
     onSort,
@@ -38,12 +38,13 @@ export default function DbBackupLogsList() {
     defaultOrderBy: 'createdAt', defaultOrder: 'desc',
   });
 
+  const { search } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
-
-  const { dbBackupLogs, filterBy, isLoading, initial } = useSelector((state) => state.dbBackupLogs );
+  console.log('search : ', search)
+  const { dbBackupLogs, filterBy, isLoading, initial } = useSelector((state) => state.dbBackupLogs);
 
   const TABLE_HEAD = [
     { id: 'updatedAt', label: 'Date', align: 'left' },
@@ -54,20 +55,29 @@ export default function DbBackupLogsList() {
   ];
 
   useEffect(() => {
-      dispatch(getDbBackupLogs( page, rowsPerPage ));
-  }, [dispatch, page, rowsPerPage ]);
+    dispatch(getDbBackupLogs(page, rowsPerPage));
+  }, [dispatch, page, rowsPerPage]);
 
   useEffect(() => {
     if (initial) {
-      setTableData(dbBackupLogs?.data || [] ); 
+      setTableData(dbBackupLogs?.data || []);
     }
-  }, [ initial, dbBackupLogs ]);
+  }, [initial, dbBackupLogs]);
+
+  useEffect(() => {
+    if (search) {
+      setPage(0)
+      dispatch(setFilterBy(search))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, search]);
+
 
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(order, orderBy),
     filterName,
-  });  
+  });
   const denseHeight = 60;
   const isFiltered = filterName !== '';
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
@@ -82,15 +92,15 @@ export default function DbBackupLogsList() {
     setFilterName(event.target.value)
     setPage(0);
   };
-  
+
   useEffect(() => {
-      debouncedSearch.current.cancel();
+    debouncedSearch.current.cancel();
   }, [debouncedSearch]);
-  
-  useEffect(()=>{
-      setFilterName(filterBy)
+
+  useEffect(() => {
+    setFilterName(filterBy)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[ filterBy ])
+  }, [filterBy])
 
   const handleFilterStatus = (event) => {
     setPage(0);
@@ -107,67 +117,67 @@ export default function DbBackupLogsList() {
   };
 
   return (
-      <Container maxWidth={false}>
-        <Card sx={{mb: 3, height: 160, position: 'relative'}}>
-          <Cover name="DB Backup Logs" />
-        </Card>
-        <TableCard>
-          <ReleasesListTableToolbar
-            filterName={filterName}
-            onFilterName={handleFilterName}
-            onFilterStatus={handleFilterStatus}
-            isFiltered={isFiltered}
-            onResetFilter={handleResetFilter}
-          />
-            <TablePaginationCustom
-              count={dbBackupLogs?.totalCount || 0 }
-              page={page}
-              rowsPerPage={rowsPerPage}
-              onPageChange={onChangePage}
-              onRowsPerPageChange={onChangeRowsPerPage}
-            />
-          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            <Scrollbar>
-              <Table size="small" sx={{ minWidth: 360 }}>
-                <TableHeadCustom
-                  order={order}
-                  orderBy={orderBy}
-                  headLabel={TABLE_HEAD}
-                  onSort={onSort}
-                />
-                <TableBody>
+    <Container maxWidth={false}>
+      <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
+        <Cover name="DB Backup Logs" />
+      </Card>
+      <TableCard>
+        <ReleasesListTableToolbar
+          filterName={filterName}
+          onFilterName={handleFilterName}
+          onFilterStatus={handleFilterStatus}
+          isFiltered={isFiltered}
+          onResetFilter={handleResetFilter}
+        />
+        <TablePaginationCustom
+          count={dbBackupLogs?.totalCount || 0}
+          page={page}
+          rowsPerPage={rowsPerPage}
+          onPageChange={onChangePage}
+          onRowsPerPageChange={onChangeRowsPerPage}
+        />
+        <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+          <Scrollbar>
+            <Table size="small" sx={{ minWidth: 360 }}>
+              <TableHeadCustom
+                order={order}
+                orderBy={orderBy}
+                headLabel={TABLE_HEAD}
+                onSort={onSort}
+              />
+              <TableBody>
                 {(
                   isLoading
                     ? [...Array(rowsPerPage)]
                     : dataFiltered
-                  )
+                )
                   // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) =>
                     row ? (
-                        <ReleasesListTableRow
-                          key={index}
-                          row={row}
-                          // onViewRow={() => handleViewRow(row?.id)}
-                          style={index % 2 ? { background: 'red' } : { background: 'green' }}
-                        />
-                      
+                      <ReleasesListTableRow
+                        key={index}
+                        row={row}
+                        // onViewRow={() => handleViewRow(row?.id)}
+                        style={index % 2 ? { background: 'red' } : { background: 'green' }}
+                      />
+
                     ) : !isNotFound && isLoading && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                   )}
-                  <TableNoData isNotFound={isNotFound} />
-                </TableBody>
-              </Table>
-            </Scrollbar>
-          </TableContainer>
+                <TableNoData isNotFound={isNotFound} />
+              </TableBody>
+            </Table>
+          </Scrollbar>
+        </TableContainer>
 
-          <TablePaginationCustom
-            count={ dbBackupLogs?.totalCount || 0 }
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-          />
-        </TableCard>
-      </Container>
+        <TablePaginationCustom
+          count={dbBackupLogs?.totalCount || 0}
+          page={page}
+          rowsPerPage={rowsPerPage}
+          onPageChange={onChangePage}
+          onRowsPerPageChange={onChangeRowsPerPage}
+        />
+      </TableCard>
+    </Container>
   );
 }
 
@@ -186,14 +196,14 @@ function applyFilter({ inputData, comparator, filterName }) {
   inputData = stabilizedThis.map((el) => el[0]);
   if (filterName) {
     return inputData.filter(
-      (dbBackup) => 
-        dbBackup?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 || 
-        dbBackup?.backupSize?.toString()?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 || 
-        dbBackup?.databaseName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 || 
-        dbBackup?.databaseVersion?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 || 
-        dbBackup?.backupStatus?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 || 
-        dbBackup?.backupLocation?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 || 
-        fDate(dbBackup?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 
+      (dbBackup) =>
+        dbBackup?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        dbBackup?.backupSize?.toString()?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        dbBackup?.databaseName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        dbBackup?.databaseVersion?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        dbBackup?.backupStatus?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        dbBackup?.backupLocation?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        fDate(dbBackup?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }
 
