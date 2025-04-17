@@ -172,6 +172,27 @@ export function patchJob(id, params) {
   };
 }
 
+export function updateJobField(id, name, value) {
+  return async (dispatch) => {
+    try {
+      const data = {}
+      if(Array.isArray(value)) {
+        data[name]= value?.map(item => item._id) || [];
+      } else {
+        data[name]= value?._id || value
+      }
+      const response = await axios.patch(`${CONFIG.SERVER_URL}jobs/${id}`, data);
+
+      dispatch(slice.actions.updateTicketFieldSuccess({ name, value }));
+      return response;
+    } catch (error) {
+      dispatch(slice.actions.hasError(error.message));
+      console.error(error);
+      throw error;
+    }
+  };
+}
+
 // GET Jobs
 export function getJobs(page, pageSize) {
   return async (dispatch) => {

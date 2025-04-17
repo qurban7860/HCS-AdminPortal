@@ -11,24 +11,24 @@ import { getJob, resetJob } from '../../redux/slices/jobs/jobs';
 
 // ----------------------------------------------------------------------
 
-export default function IssueTypeView() {
+export default function JobsView() {
   const { id } = useParams()
   const dispatch = useDispatch()
   const { job } = useSelector((state) => state.jobs);
 
-//   useLayoutEffect(()=>{
-//     if(id){
-//       dispatch(getJob(id));
-//     }
-//     return () => { 
-//       dispatch(resetJob());
-//     }
-//   },[dispatch, id ])
+  useLayoutEffect(()=>{
+    if(id){
+      dispatch(getJob(id));
+    }
+    return () => { 
+      dispatch(resetJob());
+    }
+  },[dispatch, id ])
 
   return (
     <Container maxWidth={false}>
     <StyledCardContainer>
-      <Cover name={job?.name} />
+      <Cover name={job?.profile} />
     </StyledCardContainer>
     <JobsViewForm />
     </Container>

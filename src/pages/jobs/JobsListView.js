@@ -39,6 +39,7 @@ const TABLE_HEAD = [
   { id: 'profile', label: 'Profile', align: 'left' },
   { id: 'frameset', label: 'Frame Set', align: 'left' },
   { id: 'version', label: 'Version ', align: 'left' },
+  { id: 'status', label: 'Status ', align: 'left' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
 
@@ -65,12 +66,12 @@ export default function JobsListView() {
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
 
-  // useLayoutEffect(() => {
-  //   dispatch(getJobs(page, rowsPerPage));
-  //   return () => {
-  //     dispatch(resetJobs());
-  //   }
-  // }, [dispatch, page, rowsPerPage]);
+  useLayoutEffect(() => {
+    dispatch(getJobs(page, rowsPerPage));
+    return () => {
+      dispatch(resetJobs());
+    }
+  }, [dispatch, page, rowsPerPage]);
   
   useEffect(() => {
     if (initial) {
@@ -199,6 +200,7 @@ function applyFilter({ inputData, comparator, filterName }) {
         Jobs?.profile?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         Jobs?.frameset?.toString().toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         Jobs?.version?.toString().toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        Jobs?.status?.toString().toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         fDate(Jobs?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }
