@@ -9,7 +9,7 @@ import contactReducer from './slices/customer/contact';
 import customerNoteReducer from './slices/customer/customerNote';
 import machineReducer from './slices/products/machine';
 import supplierReducer from './slices/products/supplier';
-import licenseReducer from './slices/products/license';
+import licenseReducer from './slices/products/license'; 
 import profileReducer from './slices/products/profile';
 import groupReducer from './slices/products/group';
 import categoryReducer from './slices/products/category';
@@ -77,6 +77,7 @@ import apilogsReducer from './slices/logs/apiLogs';
 import portalRegistrationReducer from './slices/customer/portalRegistration';
 import serviceReportNotesReducer from './slices/products/serviceReportNotes';
 import machineDashboardReducer from './slices/products/machineDashboard';
+import jobsReducer from "./slices/jobs/jobs"
 
 // ----------------------------------------------------------------------
 
@@ -477,6 +478,12 @@ export const ticketIssueTypesPersistConfig = {
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 }
+export const jobsPersistConfig = {
+  key: 'jobs',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
 export const ticketStatusTypesPersistConfig = {
   key: 'ticketStatusTypes',
   storage,
@@ -637,6 +644,7 @@ const rootReducer = combineReducers({
   event: persistReducer(eventPersistConfig, eventReducer),
   tickets: persistReducer(ticketsPersistConfig, ticketsReducer),
   ticketIssueTypes: persistReducer(ticketIssueTypesPersistConfig, ticketIssueTypesReducer),
+  jobs: persistReducer(jobsPersistConfig, jobsReducer),
   ticketRequestTypes: persistReducer(ticketRequestTypesPersistConfig, ticketRequestTypesReducer),
   ticketStatusTypes: persistReducer(ticketStatusTypesPersistConfig, ticketStatusTypesReducer),
   ticketChangeReasons: persistReducer(ticketChangeReasonsPersistConfig, ticketChangeReasonsReducer),
