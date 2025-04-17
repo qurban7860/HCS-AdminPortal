@@ -47,7 +47,7 @@ export default function UserInviteViewForm() {
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
-        <Cover name="User Invite Detail" generalSettings />
+        <Cover name="User Invite Detail" />
       </StyledCardContainer>
       <Grid item md={12} mt={2}>
         <Card sx={{ p: 2 }}>

@@ -20,6 +20,7 @@ import {
   TableNoData,
   TableSkeleton,
   TablePaginationFilter,
+  TablePaginationCustom,
   TableHeadFilter,
 
 } from '../../../../components/table';
@@ -155,7 +156,7 @@ export default function DepartmentList() {
   return (
       <Container maxWidth={false}>
         <StyledCardContainer>
-          <Cover name={FORMLABELS.COVER.DEPARTMENTS} icon="material-symbols:list-alt-outline" generalSettings />
+          <Cover name={FORMLABELS.COVER.DEPARTMENTS} icon="material-symbols:list-alt-outline"/>
         </StyledCardContainer>
 
         <TableCard>
@@ -214,7 +215,17 @@ export default function DepartmentList() {
               </Table>
             </Scrollbar>
           </TableContainer>
-        </TableCard>
+           {!isNotFound && (
+                    <TablePaginationCustom
+                      count={dataFiltered.length}
+                      page={page}
+                      rowsPerPage={rowsPerPage}
+                      onPageChange={onChangePage}
+                      onRowsPerPageChange={onChangeRowsPerPage}
+                    />
+                  )}
+                </TableCard>
+      
       </Container>
   );
 }
@@ -238,7 +249,7 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
       (category) =>
         category?.departmentName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         category.departmentType?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
-        fDate(category?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+        fDate(category?.updatedAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }
 

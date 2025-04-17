@@ -13,6 +13,7 @@ export const ROOTS_SUPPORT = '/support';
 export const ROOTS_REPORTS = '/reports';
 export const ROOTS_CALENDAR = '/calendar';
 export const ROOTS_SETTING = '/settings';
+export const ROOTS_JOB = '/jobs';
 // const ROOTS_MACHINE_SETTING_REPORT = '/machineSettingReports'
 // const ROOTS_SERVICE_REPORTS = '/serviceReports'
 // const ROOTS_SECURITY = '/security';
@@ -193,6 +194,10 @@ export const PATH_MACHINE = {
       new: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/toolsinstalled/new`),
       view: (machineId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/toolsinstalled/${id}/view`),
       edit: (machineId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/toolsinstalled/${id}/edit`),
+    },
+    // --------------------- Machine Jobs ---------------------------------
+    jobs: {
+      root: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/jobs`),
     },
     // --------------------- Machine Tool Installed -----------------------
     notes: {
@@ -426,6 +431,16 @@ export const PATH_MACHINE = {
     view: (id) => path(ROOTS_MACHINE, `/archived-machines/${id}/view`),
   },
 };
+
+// JOBS
+export const PATH_JOBS = {
+  permissionDenied: path(ROOTS_JOB, '/permission-denied'),
+  machineJobs: {
+    root: path(ROOTS_JOB, '/machineJobs'),
+    new: path(ROOTS_JOB, '/machineJobs/new'),
+    view: (id) => path(ROOTS_JOB, `/machineJobs/${id}/view`),
+  }
+}
 
 // ----------------------- SUPPORT SERVICES -----------------------------------------
 export const PATH_SUPPORT = {

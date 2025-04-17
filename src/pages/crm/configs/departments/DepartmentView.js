@@ -26,7 +26,6 @@ export default function DepartmentView() {
       <StyledCardContainer>
         <Cover
           name={department?.departmentName || ''}
-          generalSettings
         />
       </StyledCardContainer>
       <DepartmentViewForm />

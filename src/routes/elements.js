@@ -150,6 +150,10 @@ export const MachineToolInstalledAdd  = Loadable(lazy(() => import('../pages/mac
 export const MachineToolInstalledView = Loadable(lazy(() => import('../pages/machine/toolsInstalled/ToolInstalledViewForm')));
 export const MachineToolInstalledEdit = Loadable(lazy(() => import('../pages/machine/toolsInstalled/ToolInstalledEditForm')));
 
+// --------------------------- Tool Installed -------------------------------------
+
+export const MachineJobsList = Loadable(lazy(() => import('../pages/machine/jobs/MachineJobsList')));
+
 // --------------------------- Machine Notes -------------------------------------
 
 export const MachineNoteList = Loadable(lazy(() => import('../pages/machine/notes/NoteList')));
@@ -450,6 +454,11 @@ export const SitesReport = Loadable(lazy(() => import('../pages/sitesMap/Reports
 // Email
 export const Email = Loadable(lazy(() => import('../pages/settings/email/EmailList')));
 export const Emailview = Loadable(lazy(() => import('../pages/settings/email/EmailViewform')));
+
+// --------------------------- Jobs -------------------------------------
+export const JobsList = Loadable(lazy(() => import('../pages/jobs/JobsListView')));
+export const JobsAdd = Loadable(lazy(() => import('../pages/jobs/JobsAddForm')));
+export const JobsView = Loadable(lazy(() => import('../pages/jobs/JobsView')));
 
 // --------------------------- Ticket Dashboard -------------------------------------
 export const SupportDashboard = Loadable(lazy(() => import('../pages/tickets/dashboard/SupportDashboard')));

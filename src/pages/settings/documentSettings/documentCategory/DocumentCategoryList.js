@@ -206,7 +206,7 @@ export default function DocumentCategoryList() {
     <>
       <Container maxWidth={false}>
         <StyledCardContainer>
-          <Cover name="Document Categories" icon="ph:users-light" generalSettings />
+          <Cover name="Document Categories" icon="ph:users-light"  />
         </StyledCardContainer>
         <TableCard>
           <DocumentCategoryListTableToolbar
@@ -296,6 +296,15 @@ export default function DocumentCategoryList() {
               </Table>
             </Scrollbar>
           </TableContainer>
+          {!isNotFound &&  (
+            <TablePaginationCustom
+              count={dataFiltered.length}
+              page={page}
+              rowsPerPage={rowsPerPage}
+              onPageChange={onChangePage}
+              onRowsPerPageChange={onChangeRowsPerPage}
+            />
+          )}
         </TableCard>
       </Container>
 
