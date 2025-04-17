@@ -4,70 +4,86 @@ import { useNavigate, useParams } from 'react-router-dom';
 // @mui
 import { Card, Grid } from '@mui/material';
 // paths
-import { PATH_SUPPORT } from '../../routes/paths';
+import { PATH_JOBS } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
-import { deleteJob, resetJob } from '../../redux/slices/jobs/jobs';
+import { updateJobField, deleteJob, resetJob } from '../../redux/slices/jobs/jobs';
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
 import { handleError } from '../../utils/errorHandler';
+import FilledTextField from '../tickets/utils/FilledTextField';
 
 // ----------------------------------------------------------------------
 
 export default function JobsViewForm() {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const { Job, isLoading } = useSelector((state) => state.Jobs);
+  const { job, isLoading } = useSelector((state) => state.jobs);
   const { id } = useParams();
   const dispatch = useDispatch();
 
   const defaultValues = useMemo(
     () => ({
-      measurementUnit: Job?.measurementUnit || '',
-      profile: Job?.profile || '',
-      frameset: Job?.frameset || '',
-      version: Job?.version || '',
-      components: Job?.components || [],
-      createdByFullName: Job?.createdBy?.name || '',
-      createdAt: Job?.createdAt || '',
-      createdIP: Job?.createdIP || '',
-      updatedByFullName: Job?.updatedBy?.name || '',
-      updatedAt: Job?.updatedAt || '',
-      updatedIP: Job?.updatedIP || '',
+      measurementUnit: job?.measurementUnit || '',
+      profile: job?.profile || '',
+      frameset: job?.frameset || '',
+      version: job?.version || '',
+      components: job?.components || [],
+      createdByFullName: job?.createdBy?.name || '',
+      createdAt: job?.createdAt || '',
+      createdIP: job?.createdIP || '',
+      updatedByFullName: job?.updatedBy?.name || '',
+      updatedAt: job?.updatedAt || '',
+      updatedIP: job?.updatedIP || '',
     }),
-    [Job]
+    [job]
   );
-
+  
+  const onSubmit = async (fieldName, value) => {
+    try {
+      await dispatch(updateJobField(job?._id, fieldName, value));
+      enqueueSnackbar(`Job updated successfully!`, { variant: 'success' });
+      } catch (error) {
+      enqueueSnackbar(`Job update failed!`, { variant: 'error' });
+      throw error
+    }
+  };
+    
   const onArchive = async () => {
     try {
       await dispatch(deleteJob(id, true));
       enqueueSnackbar('Job Archived Successfully!', { variant: 'success' });
-      navigate(PATH_SUPPORT.Settings.Jobs.root);
+      navigate(PATH_JOBS.machineJobs.root);
     } catch (err) {
       enqueueSnackbar(handleError(err) || 'Job Archive failed!', { variant: 'error' });
       console.log('Error:', err);
     }
   };
 
-  const toggleEdit = () => navigate(PATH_SUPPORT.Settings.issueTypes.edit(id));
-
   return (
     <Grid>
       <Card sx={{ p: 2 }}>
         <ViewFormEditDeleteButtons
-          handleEdit={toggleEdit}
           onArchive={onArchive}
           backLink={() => {
             dispatch(resetJob());
-            navigate(PATH_SUPPORT.Settings.issueTypes.root);
+            navigate(PATH_JOBS.machineJobs.root);
           }}
         />
         <Grid container sx={{ mt: 2 }}>
-          <ViewFormField isLoading={isLoading} sm={6} heading="Measurement Unit" param={defaultValues.measurementUnit} />
-          <ViewFormField isLoading={isLoading} sm={6} heading="Profile" param={defaultValues.profile} />
-          <ViewFormField isLoading={isLoading} sm={6} heading="Frameset" param={defaultValues.frameset} />
-          <ViewFormField isLoading={isLoading} sm={6} heading="Version" param={defaultValues.version} />
+          <ViewFormField isLoading={isLoading} sm={6} heading="Measurement Unit"
+            node={<FilledTextField name="measurementUnit" value={defaultValues.measurementUnit} onSubmit={onSubmit} />}
+          />
+           <ViewFormField isLoading={isLoading} sm={6} heading="Profile"
+            node={<FilledTextField name="profile" value={defaultValues.profile} onSubmit={onSubmit} />}
+          />
+           <ViewFormField isLoading={isLoading} sm={6} heading="Frameset"
+            node={<FilledTextField name="frameset" value={defaultValues.frameset} onSubmit={onSubmit} />}
+          />
+           <ViewFormField isLoading={isLoading} sm={6} heading="Version"
+            node={<FilledTextField name="version" value={defaultValues.version} onSubmit={onSubmit} />}
+          />
           <ViewFormField
             isLoading={isLoading}
             sm={12}

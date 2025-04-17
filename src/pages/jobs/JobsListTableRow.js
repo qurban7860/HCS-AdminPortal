@@ -23,13 +23,14 @@ export default function JobsListTableRow({
   onViewRow,
 }) {
 
-  const { measurementUnit, profile, frameset, version, createdAt } = row;
+  const { measurementUnit, profile, frameset, version, status, createdAt } = row;
   return (
     <StyledTableRow hover selected={selected}>
       <LinkTableCell align="left" onClick={onViewRow} param={measurementUnit} />
       <TableCell align='left' > {profile} </TableCell> 
-      <TableCell align='left' > { frameset} </TableCell>
-      <TableCell align='left' > { version} </TableCell>
+      <TableCell align='left' > {frameset} </TableCell>
+      <TableCell align='left' > {version} </TableCell>
+      <TableCell align='left' > {status} </TableCell>
       <TableCell align='right' > { fDate(createdAt) } </TableCell>
     </StyledTableRow>
   );
