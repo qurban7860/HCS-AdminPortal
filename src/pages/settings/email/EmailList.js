@@ -57,7 +57,7 @@ export default function EmailList() {
     setPage,
     selected,
     onSort,
-  } = useTable({ defaultOrderBy: 'createdAt', defaultOrder: 'desc' });
+  } = useTable({ defaultOrderBy: 'updatedAt', defaultOrder: 'desc' });
 
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));
@@ -143,7 +143,7 @@ export default function EmailList() {
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
-        <Cover name="Email" icon="ph:users-light" generalSettings />
+        <Cover name="Email" icon="ph:users-light" />
       </StyledCardContainer>
       <TableCard>
         <EmailListTableToolbar
@@ -179,24 +179,24 @@ export default function EmailList() {
               />
 
               <TableBody>
-                {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row, index) =>
-                    row ? (
-                      <EmailListTableRow
-                        key={row._id}
-                        row={row}
-                        hiddenColumns={reportHiddenColumns}
-                        onViewRow={() => handleViewRow(row._id)}
-                        selected={selected.includes(row._id)}
-                        selectedLength={selected.length}
-                        style={index % 2 ? { background: 'red' } : { background: 'green' }}
-                        handleOpenDialog={handleOpenDialog}
-                      />
-                    ) : (
-                      !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
-                    )
-                  )}
+              {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
+              .map((row, index) => (
+               row ? (
+            <EmailListTableRow
+               key={row._id}
+               row={row}
+               hiddenColumns={reportHiddenColumns}
+               onViewRow={() => handleViewRow(row._id)}
+               selected={selected.includes(row._id)}
+               selectedLength={selected.length}
+               style={index % 2 ? { background: 'red' } : { background: 'green' }}
+               handleOpenDialog={handleOpenDialog}
+               />
+              ) : (
+                 !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
+                )
+            ))}
+
                 <TableNoData isNotFound={isNotFound} />
               </TableBody>
             </Table>
@@ -242,7 +242,7 @@ function applyFilter({ inputData, comparator, filterName }) {
         email?.toEmails?.some((toEmail) => toEmail.toLowerCase().includes(filterName.toLowerCase())) ||
         email?.subject?.toLowerCase().includes(filterName.toLowerCase()) ||
         email?.customer?.name?.toLowerCase().includes(filterName.toLowerCase()) ||
-        fDateTime(email?.createdAt)?.toLowerCase().includes(filterName.toLowerCase())
+        fDateTime(email?.updatedAt)?.toLowerCase().includes(filterName.toLowerCase())
     );
   }
 

@@ -138,7 +138,6 @@ export default function DocumentCategoryeEditForm() {
       <StyledCardContainer>
         <Cover
           name={documentCategory?.name}
-          generalSettings
           backLink={PATH_MACHINE.documents.documentCategory.view(documentCategory?._id)}
         />
       </StyledCardContainer>

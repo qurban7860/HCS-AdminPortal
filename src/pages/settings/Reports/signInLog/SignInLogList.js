@@ -139,7 +139,7 @@ export default function SignInLogList() {
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
-        <Cover name="Sign In Logs" icon="ph:users-light" generalSettings />
+        <Cover name="Sign In Logs" icon="ph:users-light" />
       </StyledCardContainer>
       <FormProvider {...methods} onSubmit={handleSubmit(handleSearch)}>
         <Card sx={{ px: 3, pt: 3, pb: 1 }} >

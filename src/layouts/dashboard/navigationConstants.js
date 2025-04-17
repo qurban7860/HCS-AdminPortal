@@ -1,9 +1,8 @@
-import { useState } from 'react';
-import { useAuthContext } from '../../auth/useAuthContext';
 import {
   PATH_CALENDAR,
   PATH_CRM,
   PATH_DASHBOARD,
+  PATH_JOBS,
   PATH_MACHINE,
   PATH_MACHINE_DRAWING,
   PATH_PORTAL_REGISTRATION,
@@ -12,6 +11,7 @@ import {
   PATH_SUPPORT,
   ROOTS_CALENDAR,
   ROOTS_CRM,
+  ROOTS_JOB,
   ROOTS_MACHINE,
   ROOTS_REPORTS,
   ROOTS_SETTING,
@@ -24,6 +24,7 @@ import SvgColor from '../../components/svg-color';
 export const MAIN_CATEGORIES = [
   { title: 'Customers', id: 'customers', path: ROOTS_CRM },
   { title: 'Machines', id: 'machines', path: ROOTS_MACHINE },
+  // { title: 'Jobs', id: 'jobs', path: ROOTS_JOB },
   { title: 'Support Services', id: 'support', path: ROOTS_SUPPORT },
   { title: 'Reports', id: 'reports', path: ROOTS_REPORTS },
 ];
@@ -167,13 +168,26 @@ export const allSideBarOptions = {
       ],
     },
   ],
+  jobs: [
+    {
+      subheader: 'Machine Jobs',
+      items: [
+        {
+          title: 'Jobs',
+          path: PATH_JOBS.machineJobs.root,
+          icon: <Iconify icon="mdi:printer" />,
+        },
+      ]
+    }
+  ],
   support: [
     {
       subheader: 'Support Services',
       items: [
-        { title: 'Support Dashboard', 
-          path: PATH_SUPPORT.supportDashboard.root, 
-          icon: <Iconify icon="fluent-mdl2:b-i-dashboard" /> 
+        {
+          title: 'Support Dashboard',
+          path: PATH_SUPPORT.supportDashboard.root,
+          icon: <Iconify icon="fluent-mdl2:b-i-dashboard" />
         },
         {
           title: 'Support Tickets',

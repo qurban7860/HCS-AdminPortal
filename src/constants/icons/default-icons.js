@@ -609,6 +609,7 @@ export const ICONS = {
   MACHINE: { icon:'mdi:gate-open' },
   SETTINGS:{ icon:'mdi:cog' },
   TOOLS_INSTALLED:{ icon:'fa-solid:tools' },
+  JOBS:{ icon:'mdi:printer' },
   NOTES:{ icon:'fluent:note-20-filled' },
   DRAWINGS:{ icon:'streamline:hand-held-tablet-drawing-solid' },
   LICENSES:{ icon:'mdi:book-cog-outline' },

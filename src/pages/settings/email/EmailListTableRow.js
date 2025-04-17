@@ -21,7 +21,7 @@ export default function EmailListTableRow({
   hiddenColumns,
   handleOpenDialog,
 }) {
-  const { subject, status, customer, toEmails, createdAt, fromEmail } = row;
+  const { subject, status, customer, toEmails, updatedAt, fromEmail } = row;
 
   return (
     <StyledTableRow
@@ -64,15 +64,15 @@ export default function EmailListTableRow({
           )}
         </TableCell>
       }
-      {!hiddenColumns?.["customer.name"] &&
-        <TableCell align='left' >
-          {customer?.name || ''}
+      {!hiddenColumns?.["customer.name"] && (
+        <TableCell align="left">
+          {customer?.name || row?.ticket?.customer?.name || row?.user?.customer?.name || row?.serviceReport?.customer?.name || ''}
         </TableCell>
-      }
+      )}
 
-      {!hiddenColumns?.createdAt &&
+      {!hiddenColumns?.updatedAt &&
         <TableCell align='right'>
-          {fDateTime(createdAt)}
+          {fDateTime(updatedAt)}
         </TableCell>
       }
 

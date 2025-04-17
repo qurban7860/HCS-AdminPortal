@@ -201,7 +201,7 @@ export default function DocumentTypeList() {
     <>
       <Container maxWidth={false}>
         <StyledCardContainer>
-          <Cover name="Document Types" icon="ph:users-light" generalSettings />
+          <Cover name="Document Types" icon="ph:users-light"/>
         </StyledCardContainer>
 
         <TableCard>
