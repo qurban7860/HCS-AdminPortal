@@ -1,11 +1,10 @@
-
 import debounce from 'lodash/debounce';
 import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 // @mui
 import { Container, Table, TableBody, TableContainer } from '@mui/material';
 // routes
 import { useNavigate } from 'react-router-dom';
-import { PATH_SUPPORT } from '../../routes/paths';
+import { PATH_JOBS } from '../../routes/paths';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 // components
@@ -36,17 +35,16 @@ import { StyledCardContainer } from '../../theme/styles/default-styles';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'isActive', label: '', align: 'left' },
-  { id: 'name', label: 'Name', align: 'left' },
-  { id: 'slug', label: 'Slug', align: 'left' },
-  { id: 'displayOrderNo', label: 'Order Number', align: 'left' },
-  { id: 'icon', label: 'Icon ', align: 'left' },
-  { id: 'updatedAt', label: 'Updated At', align: 'right' },
+  { id: 'measurementUnit', label: 'Unit', align: 'left' },
+  { id: 'profile', label: 'Profile', align: 'left' },
+  { id: 'frameset', label: 'Frame Set', align: 'left' },
+  { id: 'version', label: 'Version ', align: 'left' },
+  { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
 
 // ----------------------------------------------------------------------
 
-export default function JobListView() {
+export default function JobsListView() {
   const { jobs, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.jobs);
   const navigate = useNavigate();
   const {
@@ -55,7 +53,7 @@ export default function JobListView() {
     setPage,
     selected,
     onSort,
-  } = useTable({ defaultOrderBy: 'displayOrderNo' , defaultOrder: 'asc' });
+  } = useTable({ defaultOrderBy: 'createdAt' , defaultOrder: 'asc' });
 
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));
@@ -110,7 +108,7 @@ export default function JobListView() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 
-  const handleViewRow = (id) => navigate(PATH_SUPPORT.Settings.jobs.view(id));
+  const handleViewRow = (id) => navigate(PATH_JOBS.machineJobs.view(id));
   
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
@@ -120,7 +118,7 @@ export default function JobListView() {
   return (
     <Container maxWidth={false} >
       <StyledCardContainer>
-       <Cover name="Jobs" supportSettings/>
+       <Cover name="Jobs" />
       </StyledCardContainer>
         <TableCard>
           <JobsListTableToolbar
@@ -131,7 +129,7 @@ export default function JobListView() {
           />
 
           {!isNotFound && <TablePaginationCustom
-            count={jobs?.totalCount || 0 }
+            count={ jobs?.totalCount || 0 }
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
@@ -196,11 +194,12 @@ function applyFilter({ inputData, comparator, filterName }) {
 
   if (filterName) {
     inputData = inputData.filter(
-      (Job) =>
-        Job?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        Job?.slug?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        Job?.displayOrderNo?.toString().toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        fDate(Job?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+      (Jobs) =>
+        Jobs?.measurementUnit?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        Jobs?.profile?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        Jobs?.frameset?.toString().toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        Jobs?.version?.toString().toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        fDate(Jobs?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }
   return inputData;

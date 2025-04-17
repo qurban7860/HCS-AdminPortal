@@ -1,15 +1,12 @@
-import {  useMemo } from 'react';
+import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { useNavigate, useParams } from 'react-router-dom';
 // @mui
 import { Card, Grid } from '@mui/material';
 // paths
 import { PATH_SUPPORT } from '../../routes/paths';
 // components
-import Iconify from '../../components/iconify';
 import { useSnackbar } from '../../components/snackbar';
-import { StyledTooltip } from '../../theme/styles/default-styles'
 import { deleteJob, resetJob } from '../../redux/slices/jobs/jobs';
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
@@ -18,7 +15,7 @@ import { handleError } from '../../utils/errorHandler';
 
 // ----------------------------------------------------------------------
 
-export default function IssueTypeViewForm() {
+export default function JobsViewForm() {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const { Job, isLoading } = useSelector((state) => state.Jobs);
@@ -27,14 +24,11 @@ export default function IssueTypeViewForm() {
 
   const defaultValues = useMemo(
     () => ({
-      name: Job?.name || '',
-      slug: Job?.slug || '',
-      icon: Job?.icon || '',
-      color: Job?.color || '',
-      displayOrderNo: Job?.displayOrderNo || '',
-      description: Job?.description || '',
-      isDefault: Job?.isDefault || false,
-      isActive: Job?.isActive || false,
+      measurementUnit: Job?.measurementUnit || '',
+      profile: Job?.profile || '',
+      frameset: Job?.frameset || '',
+      version: Job?.version || '',
+      components: Job?.components || [],
       createdByFullName: Job?.createdBy?.name || '',
       createdAt: Job?.createdAt || '',
       createdIP: Job?.createdIP || '',
@@ -42,17 +36,16 @@ export default function IssueTypeViewForm() {
       updatedAt: Job?.updatedAt || '',
       updatedIP: Job?.updatedIP || '',
     }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [ Job]
+    [Job]
   );
 
   const onArchive = async () => {
     try {
       await dispatch(deleteJob(id, true));
-      enqueueSnackbar('Issue Type Archived Successfully!', { variant: 'success' });
+      enqueueSnackbar('Job Archived Successfully!', { variant: 'success' });
       navigate(PATH_SUPPORT.Settings.Jobs.root);
     } catch (err) {
-      enqueueSnackbar( handleError( err ) || 'Issue Type Archive failed!', { variant: `error` });
+      enqueueSnackbar(handleError(err) || 'Job Archive failed!', { variant: 'error' });
       console.log('Error:', err);
     }
   };
@@ -60,42 +53,32 @@ export default function IssueTypeViewForm() {
   const toggleEdit = () => navigate(PATH_SUPPORT.Settings.issueTypes.edit(id));
 
   return (
-  <Grid>
-    <Card sx={{ p: 2 }}>
-      <ViewFormEditDeleteButtons  
-        isDefault={defaultValues.isDefault} 
-        isActive={defaultValues.isActive}
-        handleEdit={toggleEdit} 
-        onArchive={onArchive} 
-        backLink={() => {
-          dispatch(resetJob());
-          navigate(PATH_SUPPORT.Settings.issueTypes.root);
-        }}
-      />
-      <Grid container sx={{mt:2}}>
-        <ViewFormField isLoading={isLoading} sm={6} heading="Name" param={defaultValues.name} />
-        <ViewFormField isLoading={isLoading} sm={6} heading="Icon" param={
-          <StyledTooltip 
-           placement="top" 
-           title={defaultValues?.name || ''} 
-          //  tooltipcolor={theme.palette.primary.main} 
-          tooltipcolor={defaultValues.color} >
-           <Iconify icon={defaultValues?.icon} style={{ width: 25, height: 25, color: defaultValues.color }} />
-          </StyledTooltip> } 
+    <Grid>
+      <Card sx={{ p: 2 }}>
+        <ViewFormEditDeleteButtons
+          handleEdit={toggleEdit}
+          onArchive={onArchive}
+          backLink={() => {
+            dispatch(resetJob());
+            navigate(PATH_SUPPORT.Settings.issueTypes.root);
+          }}
         />
-        <ViewFormField isLoading={isLoading} sm={6} heading="Slug" param={defaultValues?.slug} />
-        <ViewFormField isLoading={isLoading}
-          sm={6}
-          heading="Display Order No."
-          param={defaultValues?.displayOrderNo?.toString()}
-        />
-        <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues?.description} />
-        <Grid container>
-          <ViewFormAudit defaultValues={defaultValues} />
+        <Grid container sx={{ mt: 2 }}>
+          <ViewFormField isLoading={isLoading} sm={6} heading="Measurement Unit" param={defaultValues.measurementUnit} />
+          <ViewFormField isLoading={isLoading} sm={6} heading="Profile" param={defaultValues.profile} />
+          <ViewFormField isLoading={isLoading} sm={6} heading="Frameset" param={defaultValues.frameset} />
+          <ViewFormField isLoading={isLoading} sm={6} heading="Version" param={defaultValues.version} />
+          <ViewFormField
+            isLoading={isLoading}
+            sm={12}
+            heading="Components"
+            param={defaultValues.components.map((c) => c.name || c).join(', ') || '-'}
+          />
+          <Grid container>
+            <ViewFormAudit defaultValues={defaultValues} />
+          </Grid>
         </Grid>
-      </Grid>
-    </Card>
-  </Grid>
+      </Card>
+    </Grid>
   );
 }
-

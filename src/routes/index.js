@@ -1093,8 +1093,8 @@ export default function Router() {
           path: 'machineJobs',
           children: [
             { element: <JobsList />, index: true },
-            { path: 'new', element: <JobsView /> },
-            { path: ':id/view', element: <JobsAdd />},
+            { path: 'new', element: <JobsAdd /> },
+            { path: ':id/view', element: <JobsView />},
           ],
         },
       ]

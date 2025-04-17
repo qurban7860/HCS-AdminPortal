@@ -4,7 +4,7 @@ import { Stack } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import SearchBarCombo from '../../components/ListTableTools/SearchBarCombo';
 // routes
-import { PATH_SUPPORT } from '../../routes/paths';
+import { PATH_JOBS } from '../../routes/paths';
 // constants
 import { options } from '../../theme/styles/default-styles';
 // ----------------------------------------------------------------------
@@ -23,7 +23,7 @@ export default function JobsListTableToolbar({
   onResetFilter,
 }) {
   const navigate = useNavigate();
-  const toggleAdd = () => navigate(PATH_SUPPORT.ticketSettings.Jobs.new);
+  const toggleAdd = () => navigate(PATH_JOBS.machineJobs.new);
   
   return (
     <Stack {...options}>
@@ -33,7 +33,7 @@ export default function JobsListTableToolbar({
         onChange={onFilterName}
         onClick={onResetFilter}
         SubOnClick={toggleAdd}
-        addButton='New Issue Type'
+        addButton='New Job'
       />
     </Stack>
   );
