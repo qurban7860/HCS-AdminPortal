@@ -177,6 +177,11 @@ export const allSideBarOptions = {
           path: PATH_JOBS.machineJobs.root,
           icon: <Iconify icon="mdi:printer" />,
         },
+        {
+          title: 'Add New Job',
+          path: PATH_JOBS.machineJobs.new,
+          icon: <Iconify icon="mdi:printer-pos-plus" />,
+        },
       ]
     }
   ],

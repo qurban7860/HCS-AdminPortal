@@ -1133,11 +1133,11 @@ export default function Router() {
         </AuthGuard>
       ),
       children: [
-        { element: <Navigate to="/jobs/machineJobs" replace />, index: true },
+        { element: <Navigate to="/jobs/machineJobs/list" replace />, index: true },
         {
           path: 'machineJobs',
           children: [
-            { element: <JobsList />, index: true },
+            { path: 'list', element: <JobsList />, index: true },
             { path: 'new', element: <JobsAdd /> },
             { path: ':id/view', element: <JobsView /> },
           ],
