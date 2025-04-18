@@ -436,7 +436,7 @@ export const PATH_MACHINE = {
 export const PATH_JOBS = {
   permissionDenied: path(ROOTS_JOB, '/permission-denied'),
   machineJobs: {
-    root: path(ROOTS_JOB, '/machineJobs/list'),
+    root: path(ROOTS_JOB, '/machineJobs'),
     new: path(ROOTS_JOB, '/machineJobs/new'),
     view: (id) => path(ROOTS_JOB, `/machineJobs/${id}/view`),
   }

@@ -24,7 +24,7 @@ import SvgColor from '../../components/svg-color';
 export const MAIN_CATEGORIES = [
   { title: 'Customers', id: 'customers', path: ROOTS_CRM },
   { title: 'Machines', id: 'machines', path: ROOTS_MACHINE },
-  // { title: 'Jobs', id: 'jobs', path: ROOTS_JOB },
+  { title: 'Jobs', id: 'jobs', path: ROOTS_JOB },
   { title: 'Support Services', id: 'support', path: ROOTS_SUPPORT },
   { title: 'Reports', id: 'reports', path: ROOTS_REPORTS },
 ];
@@ -176,11 +176,6 @@ export const allSideBarOptions = {
           title: 'Jobs',
           path: PATH_JOBS.machineJobs.root,
           icon: <Iconify icon="mdi:printer" />,
-        },
-        {
-          title: 'Add New Job',
-          path: PATH_JOBS.machineJobs.new,
-          icon: <Iconify icon="mdi:printer-pos-plus" />,
         },
       ]
     }
