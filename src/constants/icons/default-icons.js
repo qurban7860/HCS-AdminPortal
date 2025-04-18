@@ -14,6 +14,10 @@ export const ICONS = {
     icon: 'mingcute:file-upload-fill',
     heading: 'Uplaod File',
   },
+  UPLOAD_FILE_CSV: {
+    icon: 'tabler:file-type-csv',
+    heading: 'Upload CSV',
+  },
   ACTIVE: {
     icon: 'mdi:check-circle-outline',
     color: '#008000',
