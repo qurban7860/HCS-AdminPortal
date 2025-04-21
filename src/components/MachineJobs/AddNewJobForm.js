@@ -6,13 +6,44 @@ import { FormProvider, useForm } from 'react-hook-form';
 import Iconify from '../iconify';
 import { ICONS } from '../../constants/icons/default-icons';
 import { RHFSelect, RHFTextField } from '../hook-form';
+import FormLabel from '../DocumentForms/FormLabel';
+import { FORM_LABELS } from '../../constants/job-constants';
+import JobComponentsSection from './JobComponentsSection';
 
-const UPLOAD_METHODS = ['Manual', 'Upload CSV'];
+// const UPLOAD_METHODS = ['Manual', 'Upload CSV'];
+
+const jobFormDefaultValues = () => ({
+  csvVersion: '1.0',
+  unitOfLength: 'MILLIMETRE',
+  frameset: '',
+  profileName: 'DEFAULT_PROFILE',
+  profileDescription: '',
+  components: [
+    {
+      id: 'component-1',
+      label: 'Component 1',
+      labelDirection: 'LABEL_NRM',
+      quantity: 1,
+      length: 10,
+      profileShape: 'C',
+      webWidth: 0,
+      flangeHeight: 0,
+      materialThickness: 0,
+      materialGrade: '',
+      positions: {
+        startX: 0.0,
+        startY: 0.0,
+        endX: 0.0,
+        endY: 0.0,
+      },
+      operations: [],
+    },
+  ],
+});
 
 const AddNewJobForm = ({ machine }) => {
-  const [currentTab, setCurrentTab] = useState(UPLOAD_METHODS[0]);
   const methods = useForm({
-    // defaultValues,
+    defaultValues: jobFormDefaultValues(),
     mode: 'onChange',
     reValidateMode: 'onChange',
   });
@@ -27,6 +58,8 @@ const AddNewJobForm = ({ machine }) => {
     formState: { isSubmitting, errors },
   } = methods;
 
+  const { csvVersion, unitOfLength, frameset, profileName, profileDescription } = watch();
+
   const onSubmit = async (data) => {
     // Handle form submission here
     console.log(data);
@@ -34,7 +67,7 @@ const AddNewJobForm = ({ machine }) => {
 
   const handleUploadMethodChange = (e, newTab) => {
     if (newTab !== null) {
-      setCurrentTab(newTab);
+      // setCurrentTab(newTab);
     }
   };
 
@@ -42,11 +75,12 @@ const AddNewJobForm = ({ machine }) => {
     <Grid container spacing={3}>
       <Grid item xs={12} md={12}>
         <Card sx={{ p: 3, pt: 2 }}>
+          <FormLabel content={FORM_LABELS.ADD_JOB.MAIN_ELEMENTS} />
           <FormProvider {...methods} onSubmit={handleSubmit(onSubmit)}>
-            <Grid container spacing={2} sx={{ mb: 2 }}>
+            <Grid container spacing={2} sx={{ my: 2 }}>
               <Grid item md={6}>
                 <RHFSelect
-                  name="CSV_VERSION"
+                  name="csvVersion"
                   size="small"
                   label="CSV Version"
                   sx={{ width: '100%' }}
@@ -79,9 +113,10 @@ const AddNewJobForm = ({ machine }) => {
             <Grid container spacing={2} sx={{ mb: 2 }}>
               <Grid item md={6}>
                 <RHFSelect
-                  name="UNIT"
-                  size="small"
+                  name="unitOfLength"
+                  // size="small"
                   label="Unit of Length"
+                  helperText={errors.unitOfLength?.message || 'Measurement unit for all dimensions'}
                   sx={{ width: '100%' }}
                   required
                 >
@@ -91,35 +126,44 @@ const AddNewJobForm = ({ machine }) => {
               </Grid>
               <Grid item md={6}>
                 <RHFTextField
-                  name="FRAMESET"
+                  name="frameset"
                   label="Frameset"
-                  size="small"
+                  // size="small"
+                  helperText={
+                    errors.frameset?.message ||
+                    'Comma-separated identifiers for job labeling (e.g., IN1,Floor_2,Offices)'
+                  }
                   required
-                  placeholder="component label,text1,text2,…"
+                  placeholder="component_label,text_string_1,text_string_2,…"
                 />
               </Grid>
             </Grid>
             <Grid container spacing={2} sx={{ mb: 2 }}>
               <Grid item md={6}>
                 <RHFTextField
-                  name="PROFILE_NAME"
+                  name="profileName"
                   label="Profile Name"
-                  size="small"
+                  // size="small"
+                  helperText={
+                    errors.profileName?.message ||
+                    'Unique identifier for the machine profile setup (e.g., 89.00X41.30)'
+                  }
                   placeholder="DEFAULT_PROFILE"
                   required
                 />
               </Grid>
               <Grid item md={6}>
-                <RHFTextField name="PROFILE_DESC" label="Profile Description" size="small" />
+                <RHFTextField
+                  name="profileDescription"
+                  label="Profile Description"
+                  helperText={
+                    errors.profileDescription?.message ||
+                    'Optional description of the profile cross-section.'
+                  }
+                />
               </Grid>
             </Grid>
-            <Grid container spacing={2} sx={{ mb: 2 }}>
-              <Grid item md={12}>
-                <Typography variant="h4" sx={{ mb: 1 }}>
-                  Components
-                </Typography>
-              </Grid>
-            </Grid>
+            <JobComponentsSection csvVersion={csvVersion} unitOfLength={unitOfLength} />
           </FormProvider>
         </Card>
       </Grid>
