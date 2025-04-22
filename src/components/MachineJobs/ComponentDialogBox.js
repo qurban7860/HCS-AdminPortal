@@ -1,49 +1,47 @@
 import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
   Box,
+  Dialog,
+  DialogContent,
+  DialogTitle,
   Divider,
   Grid,
-  IconButton,
   InputAdornment,
   MenuItem,
+  Slide,
   Typography,
 } from '@mui/material';
 import PropTypes from 'prop-types';
-import { useWatch, useFormContext, useFieldArray } from 'react-hook-form';
+import React from 'react';
+import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 
-import Iconify from '../iconify';
-import { RHFNumericField, RHFSelect, RHFTextField } from '../hook-form';
 import ToolOperationsSection from './ToolOperationsSection';
+import { RHFNumericField, RHFSelect, RHFTextField } from '../hook-form';
 
-const ComponentAccordian = ({
-  component,
-  index,
-  handleAccordionChange,
-  expanded,
-  handleDuplicateComponent,
-  handleDeleteConfirm,
-}) => {
+const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
+
+const ComponentDialogBox = ({ open, handleClose, componentId, componentIndex }) => {
   const {
     control,
     watch,
     formState: { errors },
   } = useFormContext();
 
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: 'components',
-  });
+    const { fields, append, remove } = useFieldArray({
+      control,
+      name: 'components',
+    });
 
-  const currentComponentLabel = useWatch({ control, name: `components.${index}.label` });
-  const currentComponentOperations = useWatch({ control, name: `components.${index}.operations` });
+  const currentComponentLabel = useWatch({ control, name: `components.${componentIndex}.label` });
+  const currentComponentOperations = useWatch({
+    control,
+    name: `components.${componentIndex}.operations`,
+  });
 
   const csvVersion = watch('csvVersion');
   const unitOfLength = watch('unitOfLength');
   const showOptionalFields = csvVersion === '2.0';
 
-  const componentErrors = errors.components?.[index];
+  const componentErrors = errors.components?.[componentIndex];
   const hasErrors = !!componentErrors;
 
   const getUnitLabel = () => {
@@ -58,91 +56,16 @@ const ComponentAccordian = ({
   };
 
   return (
-    <Accordion
-      key={component.id}
-      expanded={expanded === component.id}
-      onChange={handleAccordionChange(component.id)}
-      sx={{
-        mb: 2,
-        '&:before': {
-          display: 'none',
-        },
-        boxShadow: 'none',
-        border: '1px solid #e0e0e0',
-        borderRadius: '4px !important',
-        overflow: 'hidden',
-      }}
-    >
-      <AccordionSummary
-        expandIcon={<Iconify icon="mdi:chevron-down" width={25} />}
-        sx={{
-          bgcolor: '#f5f5f5',
-          '&.Mui-expanded': {
-            minHeight: 48,
-            borderBottom: '1px solid #e0e0e0',
-          },
-        }}
-      >
-        <Grid container spacing={2} alignItems="center">
-          <Grid item xs>
-            <Typography variant="subtitle1">
-              {currentComponentLabel}
-              {/* {hasErrors && (
-              <Typography
-                component="span"
-                color="error"
-                sx={{
-                  ml: 1,
-                }}
-              >
-                (Has Errors)
-              </Typography>
-            )} */}
-            </Typography>
-          </Grid>
-          <Grid item>
-            <IconButton
-              size="small"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleDuplicateComponent(index);
-              }}
-              sx={{
-                mr: 1,
-              }}
-            >
-              <Iconify icon="mdi:content-copy" width={15} />
-            </IconButton>
-            <IconButton
-              size="small"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleDeleteConfirm(index);
-              }}
-            >
-              <Iconify icon="mdi:delete" width={15} />
-            </IconButton>
-          </Grid>
-        </Grid>
-      </AccordionSummary>
-      <AccordionDetails sx={{ p: 3 }}>
-        {/* {hasErrors && (
-        <Alert
-          severity="error"
-          sx={{
-            mb: 2,
-          }}
-        >
-          Please correct the errors below before saving
-        </Alert>
-      )} */}
-        <Grid container spacing={3}>
+    <Dialog open={open} TransitionComponent={Transition} fullWidth maxWidth='lg' onClose={handleClose}>
+      <DialogTitle sx={{pb: 0}}>{`Component: ${currentComponentLabel || fields?.[componentIndex]?.label}`}</DialogTitle>
+      <DialogContent sx={{ p: 3 }}>
+        <Grid container spacing={3} sx={{ mt: 2 }}>
           <Grid item xs={12} sm={6} md={4}>
             <RHFTextField
               fullWidth
               required
               label="Label"
-              name={`components.${index}.label`}
+              name={`components.${componentIndex}.label`}
               // error={!!componentErrors?.label}
               // helperText={componentErrors?.label}
             />
@@ -153,7 +76,7 @@ const ComponentAccordian = ({
               fullWidth
               required
               label="Label Direction"
-              name={`components.${index}.labelDirection`}
+              name={`components.${componentIndex}.labelDirection`}
               // error={!!componentErrors.labelDirection}
               // helperText={componentErrors.labelDirection}
             >
@@ -166,7 +89,7 @@ const ComponentAccordian = ({
               fullWidth
               required
               label="Length"
-              name={`components.${index}.length`}
+              name={`components.${componentIndex}.length`}
               // error={!!componentErrors.length}
               // helperText={componentErrors.length}
               InputProps={{
@@ -180,7 +103,7 @@ const ComponentAccordian = ({
               required
               allowDecimals={false}
               label="Quantity"
-              name={`components.${index}.quantity`}
+              name={`components.${componentIndex}.quantity`}
               // error={!!componentErrors.quantity}
               // helperText={componentErrors.quantity}
             />
@@ -193,7 +116,7 @@ const ComponentAccordian = ({
                   fullWidth
                   label="Profile Shape"
                   required
-                  name={`components.${index}.profileShape`}
+                  name={`components.${componentIndex}.profileShape`}
                 >
                   <MenuItem value="C">Lipped (C)</MenuItem>
                   <MenuItem value="U">Unlipped (U)</MenuItem>
@@ -205,7 +128,7 @@ const ComponentAccordian = ({
                   fullWidth
                   label="Web Width"
                   required
-                  name={`components.${index}.webWidth`}
+                  name={`components.${componentIndex}.webWidth`}
                   InputProps={{
                     endAdornment: <InputAdornment position="end">{getUnitLabel()}</InputAdornment>,
                   }}
@@ -216,7 +139,7 @@ const ComponentAccordian = ({
                   fullWidth
                   label="Flange Height"
                   required
-                  name={`components.${index}.flangeHeight`}
+                  name={`components.${componentIndex}.flangeHeight`}
                   InputProps={{
                     endAdornment: <InputAdornment position="end">{getUnitLabel()}</InputAdornment>,
                   }}
@@ -227,7 +150,7 @@ const ComponentAccordian = ({
                   fullWidth
                   label="Material Thickness"
                   required
-                  name={`components.${index}.materialThickness`}
+                  name={`components.${componentIndex}.materialThickness`}
                   InputProps={{
                     endAdornment: <InputAdornment position="end">{getUnitLabel()}</InputAdornment>,
                   }}
@@ -238,7 +161,7 @@ const ComponentAccordian = ({
                   fullWidth
                   required
                   label="Material Grade"
-                  name={`components.${index}.materialGrade`}
+                  name={`components.${componentIndex}.materialGrade`}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -251,7 +174,7 @@ const ComponentAccordian = ({
                       fullWidth
                       required
                       label="Start X"
-                      name={`components.${index}.dimensions.startX`}
+                      name={`components.${componentIndex}.dimensions.startX`}
                       // error={!!componentErrors['dimensions.startX']}
                       // helperText={componentErrors['dimensions.startX']}
                       InputProps={{
@@ -266,7 +189,7 @@ const ComponentAccordian = ({
                       fullWidth
                       required
                       label="Start Y"
-                      name={`components.${index}.dimensions.startY`}
+                      name={`components.${componentIndex}.dimensions.startY`}
                       // error={!!componentErrors['dimensions.startY']}
                       // helperText={componentErrors['dimensions.startY']}
                       InputProps={{
@@ -281,7 +204,7 @@ const ComponentAccordian = ({
                       fullWidth
                       required
                       label="End X"
-                      name={`components.${index}.dimensions.endX`}
+                      name={`components.${componentIndex}.dimensions.endX`}
                       // error={!!componentErrors['dimensions.endX']}
                       // helperText={componentErrors['dimensions.endX']}
                       InputProps={{
@@ -296,7 +219,7 @@ const ComponentAccordian = ({
                       fullWidth
                       required
                       label="End Y"
-                      name={`components.${index}.dimensions.endY`}
+                      name={`components.${componentIndex}.dimensions.endY`}
                       // error={!!componentErrors['dimensions.endY']}
                       // helperText={componentErrors['dimensions.endY']}
                       InputProps={{
@@ -314,26 +237,24 @@ const ComponentAccordian = ({
         <Box sx={{ mt: 4 }}>
           <Divider sx={{ my: 2 }} />
           <ToolOperationsSection
-            componentId={component.id}
+            componentId={componentId}
             operations={currentComponentOperations}
-            componentIndex={index}
+            componentIndex={componentIndex}
             // onOperationsChange={(operations) =>
             //   handleComponentChange(component.id, 'operations', operations)
             // }
           />
         </Box>
-      </AccordionDetails>
-    </Accordion>
+      </DialogContent>
+    </Dialog>
   );
 };
 
-ComponentAccordian.propTypes = {
-  component: PropTypes.object.isRequired,
-  index: PropTypes.number.isRequired,
-  handleAccordionChange: PropTypes.func.isRequired,
-  expanded: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
-  handleDeleteConfirm: PropTypes.func,
-  handleDuplicateComponent: PropTypes.func,
+ComponentDialogBox.propTypes = {
+  open: PropTypes.bool,
+  handleClose: PropTypes.func,
+  componentId: PropTypes.string,
+  componentIndex: PropTypes.number,
 };
 
-export default ComponentAccordian;
+export default ComponentDialogBox;
