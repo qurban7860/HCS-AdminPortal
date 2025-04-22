@@ -1,8 +1,8 @@
 import { useEffect, useLayoutEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router';
 // @mui
-import { Grid } from '@mui/material';
-import { StyledContainer, StyledGlobalCard } from '../../../theme/styles/default-styles';
+import { Grid, Card } from '@mui/material';
+import { StyledContainer } from '../../../theme/styles/default-styles';
 import { useDispatch, useSelector } from '../../../redux/store';
 import { PATH_SUPPORT } from '../../../routes/paths';
 // sections
@@ -271,39 +271,39 @@ export default function SupportDashboard() {
             <HowickWelcome title={TITLES.SUPPORT_SERV} description={TITLES.WELCOME_DESC} />
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12} xl={6}>
-            <StyledGlobalCard sx={{ pt: 2 }} variants={varFade().inDown}>
+            <Card sx={{ pt: 2 }} variants={varFade().inDown}>
               <PieChart chartData={issueTypeData} totalIssues={totalIssueTypes} title='Issue Type' onExpand={() => handleExpandGraph('issueType')} onPeriodChange={(newPeriod) => handlePeriodChange(newPeriod, 'issueType')} />
-            </StyledGlobalCard>
+            </Card>
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12} xl={6}>
-            <StyledGlobalCard sx={{ pt: 2 }} variants={varFade().inDown}>
+            <Card sx={{ pt: 2 }} variants={varFade().inDown}>
               <PieChart chartData={openIssueTypeData} totalIssues={totalOpenIssueTypes} isOpened title='Issue Type' onExpand={() => handleExpandGraph('openIssueType')} onPeriodChange={(newPeriod) => handlePeriodChange(newPeriod, 'openIssueType')} />
-            </StyledGlobalCard>
+            </Card>
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12} xl={6}>
-            <StyledGlobalCard sx={{ pt: 2 }} variants={varFade().inDown}>
+            <Card sx={{ pt: 2 }} variants={varFade().inDown}>
               <PieChart chartData={requestTypeData} totalIssues={totalRequestTypes} title='Request Type' onExpand={() => handleExpandGraph('requestType')} onPeriodChange={(newPeriod) => handlePeriodChange(newPeriod, 'requestType')} />
-            </StyledGlobalCard>
+            </Card>
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12} xl={6}>
-            <StyledGlobalCard sx={{ pt: 2 }} variants={varFade().inDown}>
+            <Card sx={{ pt: 2 }} variants={varFade().inDown}>
               <PieChart chartData={openRequestTypeData} totalIssues={totalOpenRequestTypes} isOpened title='Request Type' onExpand={() => handleExpandGraph('openRequestType')} onPeriodChange={(newPeriod) => handlePeriodChange(newPeriod, 'openRequestType')}/>
-            </StyledGlobalCard>
+            </Card>
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12} xl={6}>
-            <StyledGlobalCard sx={{ pt: 2 }} variants={varFade().inDown}>
+            <Card sx={{ pt: 2 }} variants={varFade().inDown}>
               <PieChart chartData={statusTypeData} totalIssues={totalStatusTypes} title='Status Type' onExpand={() => handleExpandGraph('statusType')} onPeriodChange={(newPeriod) => handlePeriodChange(newPeriod, 'statusType')}/>
-            </StyledGlobalCard>
+            </Card>
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12} xl={6}>
-            <StyledGlobalCard sx={{ pt: 2 }} variants={varFade().inDown}>
+            <Card sx={{ pt: 2 }} variants={varFade().inDown}>
               <PieChart chartData={statusData} totalIssues={totalStatuses} title='Status' onExpand={() => handleExpandGraph('status')} onPeriodChange={(newPeriod) => handlePeriodChange(newPeriod, 'status')}/>
-            </StyledGlobalCard>
+            </Card>
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
-            <StyledGlobalCard sx={{ pt: 2 }} variants={varFade().inDown}>
+            <Card sx={{ p: 2 }} variants={varFade().inDown}>
               <BarChart chartData={ticketBarChartData} title="Tickets Created vs Resolved" />
-            </StyledGlobalCard>
+            </Card>
           </Grid>
         </Grid>
       </Grid>
