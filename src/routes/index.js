@@ -276,6 +276,9 @@ import {
   AllMachinesGraphs,
 
   // --------------------- Machine Settings --------------------------
+  
+  // ----------------------Machine Lifecycle----------------------
+  MachineLifecycle,
 
   // MACHINE SETTINGS: MACHINE Technical Parameters 
   TechnicalParameterCategoryList,
@@ -756,6 +759,15 @@ export default function Router() {
                 { path: ':id/edit', element: <SettingEdit /> },
               ]
             },
+            {
+              path: ':machineId/machineLifecycle',
+              children: [
+                {
+                  element: <MachineLifecycle />, index: true
+                }
+              ]
+            },
+            
             {
               path: ':machineId/toolsInstalled',
               children: [
