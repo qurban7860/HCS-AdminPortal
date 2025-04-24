@@ -77,10 +77,12 @@ export default function TicketFormTableToolbar({
     dispatch(getActiveTicketStatuses());
     dispatch(getActiveTicketIssueTypes());
     dispatch(getActiveTicketRequestTypes());
+    dispatch(getTicketPriorities());
     return () => {
       dispatch(resetActiveTicketStatuses());
       dispatch(resetActiveTicketIssueTypes());
       dispatch(resetActiveTicketRequestTypes());
+      dispatch(resetTicketPriorities());
     };
   }, [dispatch]);
 
@@ -220,7 +222,7 @@ export default function TicketFormTableToolbar({
                     renderInput={(params) => <TextField {...params} size='small' label="Priority" />}
                     renderOption={(props, option) => (<li {...props} key={option?._id}> {`${option?.name || ''}`} </li>)}
                     onChange={(event, newValue) => {
-                      onFilterPriority(newValue);
+                    onFilterPriority(newValue);
                     }}
                   />
                 </Grid>
