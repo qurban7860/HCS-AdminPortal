@@ -188,6 +188,10 @@ export const PATH_MACHINE = {
       view: (machineId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/settings/${id}/view`),
       edit: (machineId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/settings/${id}/edit`),
     },
+    machineLifecycle: {
+      root: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/machineLifecycle`),
+    },
+    
     // --------------------- Tool Installed -----------------------
     toolsInstalled: {
       root: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/toolsinstalled`),

@@ -77,6 +77,7 @@ export const FORMLABELS = {
   SITE: 'Site Information',
   SITELOC: 'Site Location',
   KEYDETAILS: 'Key Details',
+  MACHINELIFECYCLE: 'Machine Lifecycle',
   BILLING_CONTACT: 'Billing Contact Information',
   TECHNICAL_CONTACT: 'Technical Contact Information',
 

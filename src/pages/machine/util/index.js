@@ -1,3 +1,4 @@
+import { label } from 'yet-another-react-lightbox';
 import { ICONS } from '../../../constants/icons/default-icons';
 
 export function checkValuesNotNull(obj) {
@@ -72,6 +73,11 @@ const TABS = [
     value: 'machine',
     label: 'Machine Info',
     icon: ICONS.MACHINE.icon,
+  },
+  {
+    value: 'machineLifecycle',
+    label: 'Machine Lifecycle',
+    icon: ICONS.MACHINE_LIFECYCLE.icon,
   },
   {
     value: 'settings',

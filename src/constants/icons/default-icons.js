@@ -611,6 +611,7 @@ export const ICONS = {
   MACHINES:{ icon:'mdi:gate-open'},
   DOCUMENTS: { icon:'ph:files-fill' },
   MACHINE: { icon:'mdi:gate-open' },
+  MACHINE_LIFECYCLE: {icon: 'carbon:ai-governance-lifecycle'},
   SETTINGS:{ icon:'mdi:cog' },
   TOOLS_INSTALLED:{ icon:'fa-solid:tools' },
   JOBS:{ icon:'mdi:printer' },

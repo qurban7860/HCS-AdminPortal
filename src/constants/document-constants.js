@@ -278,6 +278,7 @@ export const FORMLABELS = {
   ACCOUNT: 'Account Manager',
   PROJECT: 'Project Manager',
   SUPPORT: 'Support Manager',
+  MACHINE_LIFECYCLE : 'Machine Life Cycle',
 
   // @root - DocumentCategoryAddForm - documents dashboard
   CATEGORY: {

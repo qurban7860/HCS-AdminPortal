@@ -143,6 +143,11 @@ export const SettingAdd  = Loadable(lazy(() => import('../pages/machine/settings
 export const SettingView = Loadable(lazy(() => import('../pages/machine/settings/SettingView')));
 export const SettingEdit = Loadable(lazy(() => import('../pages/machine/settings/SettingEdit')));
 
+// -----------------------------MACHINE LIFECYCLE---------------------------------------
+
+export const MachineLifecycle = Loadable(lazy(() => import('../pages/machine/machineLifecycle/MachineLifecycle')));
+
+
 // --------------------------- Tool Installed -------------------------------------
 
 export const MachineToolInstalledList = Loadable(lazy(() => import('../pages/machine/toolsInstalled/ToolInstalledList')));
