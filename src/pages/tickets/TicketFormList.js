@@ -86,6 +86,7 @@ export default function TicketFormList(){
   const [ selectedStatus, setSelectedStatus ] = useState([]);
   const [ selectedStatusType, setSelectedStatusType ] = useState(null);
   const [ selectedResolvedStatus, setSelectedResolvedStatus ] = useState(null);
+  const [ selectedPriority, setSelectedPriority] = useState(null);
   const isMobile = useResponsive('down', 'sm');
   const prefix = JSON.parse(localStorage.getItem('configurations'))?.find((config) => config?.name?.toLowerCase() === 'ticket_prefix')?.value?.trim() || ''; 
 
@@ -105,7 +106,8 @@ export default function TicketFormList(){
       requestType: selectedRequestType?._id, 
       isResolved: selectedResolvedStatus, 
       statusType: selectedStatusType?._id, 
-      status: selectedStatus.map(s => s._id)
+      status: selectedStatus.map(s => s._id),
+      priority: selectedPriority?._id,
     }));
   };  
 
@@ -155,6 +157,7 @@ export default function TicketFormList(){
     dispatch(setFilterBy(''))
     setFilterName('');
     setSelectedIssueType(null);
+    setSelectedPriority(null);
     setSelectedRequestType(null);
     setSelectedStatus([]);
     setSelectedStatusType(null);
@@ -193,6 +196,8 @@ export default function TicketFormList(){
             onFilterStatusType={setSelectedStatusType}
             filterResolvedStatus={selectedResolvedStatus} 
             onFilterResolvedStatus={setSelectedResolvedStatus} 
+            filterPriority={selectedPriority}
+            onFilterPriority={setSelectedPriority}
             onReload={onRefresh}
           />
 
