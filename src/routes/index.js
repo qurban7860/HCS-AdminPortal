@@ -1152,6 +1152,7 @@ export default function Router() {
             { element: <JobsList />, index: true },
             { path: 'new', element: <JobsAdd /> },
             { path: ':id/view', element: <JobsView /> },
+            { path: ':id/edit', element: <JobsAdd /> },
           ],
         },
       ]

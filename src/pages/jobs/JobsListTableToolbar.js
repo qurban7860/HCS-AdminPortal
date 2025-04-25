@@ -24,6 +24,7 @@ export default function JobsListTableToolbar({
 }) {
   const navigate = useNavigate();
   const toggleAdd = () => navigate(PATH_JOBS.machineJobs.new);
+  const handleViewRow = (id) => navigate(PATH_JOBS.machineJobs.view(id));
   
   return (
     <Stack {...options}>

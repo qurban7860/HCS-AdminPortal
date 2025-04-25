@@ -443,6 +443,7 @@ export const PATH_JOBS = {
     root: path(ROOTS_JOB, '/machineJobs'),
     new: path(ROOTS_JOB, '/machineJobs/new'),
     view: (id) => path(ROOTS_JOB, `/machineJobs/${id}/view`),
+    edit: (id) => path(ROOTS_JOB, `/machineJobs/${id}/edit`),
   }
 }
 
