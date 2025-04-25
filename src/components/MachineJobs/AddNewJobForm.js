@@ -1,7 +1,9 @@
 import { Box, Button, Card, Grid, MenuItem, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
-import { useState } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { useEffect, useState } from 'react';
+import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useDispatch } from 'react-redux';
 
 import Iconify from '../iconify';
 import { ICONS } from '../../constants/icons/default-icons';
@@ -9,6 +11,8 @@ import { RHFSelect, RHFTextField } from '../hook-form';
 import FormLabel from '../DocumentForms/FormLabel';
 import { FORM_LABELS } from '../../constants/job-constants';
 import JobComponentsSection from './JobComponentsSection';
+import { jobSchema } from '../../pages/schemas/jobSchema';
+import { getActiveTools } from '../../redux/slices/products/tools';
 
 // const UPLOAD_METHODS = ['Manual', 'Upload CSV'];
 
@@ -22,27 +26,51 @@ const jobFormDefaultValues = () => ({
 });
 
 const AddNewJobForm = ({ machine }) => {
+  const dispatch = useDispatch();
+  const [csvVersionState, setCsvVersionState] = useState('1.0');
+
   const methods = useForm({
+    resolver: yupResolver(jobSchema),
+    context: {
+      csvVersionState,
+    },
     defaultValues: jobFormDefaultValues(),
   });
 
   const {
     handleSubmit,
     watch,
+    control,
     formState: { isSubmitting, errors },
   } = methods;
 
-  const { csvVersion, unitOfLength } = watch();
+  const { append, update, remove } = useFieldArray({
+    control,
+    name: 'components',
+  });
+
+  const { csvVersion, unitOfLength, components } = watch();
+
+  useEffect(() => {
+    dispatch(getActiveTools());
+  }, [dispatch]);
+
+  useEffect(() => {
+    setCsvVersionState(csvVersion);
+  }, [csvVersion]);
+
+  const handleAddComponent = (data, index) => {
+    if (index >= 0) update(index, data);
+    else append(data);
+  };
+
+  const handleRemoveComponent = (index) => {
+    remove(index);
+  };
 
   const onSubmit = async (data) => {
     // Handle form submission here
     console.log(data);
-  };
-
-  const handleUploadMethodChange = (e, newTab) => {
-    if (newTab !== null) {
-      // setCurrentTab(newTab);
-    }
   };
 
   return (
@@ -148,9 +176,15 @@ const AddNewJobForm = ({ machine }) => {
                   />
                 </Grid>
               </Grid>
-              <JobComponentsSection csvVersion={csvVersion} unitOfLength={unitOfLength} />
             </Box>
           </FormProvider>
+          <JobComponentsSection
+            csvVersion={csvVersion}
+            unitOfLength={unitOfLength}
+            components={components}
+            addComponent={handleAddComponent}
+            removeComponent={handleRemoveComponent}
+          />
         </Card>
       </Grid>
     </Grid>

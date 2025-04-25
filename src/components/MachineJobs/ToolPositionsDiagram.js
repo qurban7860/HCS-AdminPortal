@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import { Box, Typography, useTheme } from '@mui/material';
 import { useFormContext, useWatch } from 'react-hook-form';
 
@@ -18,19 +18,18 @@ const generateRandomColor = (seed) => {
   return `hsl(${h}, ${s}%, ${l}%)`;
 };
 
-const ToolPositionsDiagram = ({ componentIndex, tools }) => {
+const ToolPositionsDiagram = ({ tools, unitOfLength }) => {
   const theme = useTheme();
   const { control, watch } = useFormContext();
 
   const toolColorMap = useMemo(() => {
+    if (!tools?.length) return {};
+
     const colorMap = {};
     const themeColors = [
       theme.palette.primary.main,
       theme.palette.secondary.main,
       theme.palette.error.main,
-      theme.palette.warning.main,
-      theme.palette.info.main,
-      theme.palette.success.main,
     ];
 
     tools.forEach((tool, index) => {
@@ -44,7 +43,6 @@ const ToolPositionsDiagram = ({ componentIndex, tools }) => {
     return colorMap;
   }, [tools, theme]);
 
-  const unitOfLength = watch('unitOfLength');
   const getUnitLabel = () => {
     switch (unitOfLength) {
       case 'MILLIMETRE':
@@ -58,28 +56,49 @@ const ToolPositionsDiagram = ({ componentIndex, tools }) => {
 
   const currentComponentTotalLength = useWatch({
     control,
-    name: `components.${componentIndex}.length`,
+    name: 'length',
   });
 
   const currentComponentOperations = useWatch({
     control,
-    name: `components.${componentIndex}.operations`,
+    name: 'operations',
   });
 
+  const allToolOperationOffsets = useMemo(() => {
+    if (!currentComponentOperations?.length) return [];
+
+    return currentComponentOperations
+      .filter((op) => op?.offset && op?.operationType)
+      .flatMap((op) => {
+        const offsets = op.offset
+          .split(',')
+          .map((offset) => offset.trim())
+          .map((offset) => parseFloat(offset))
+          .filter(
+            (numericOffset) =>
+              !Number.isNaN(numericOffset) && numericOffset <= currentComponentTotalLength
+          );
+
+        return offsets.map((numericOffset) => ({
+          operationType: op.operationType,
+          offset: numericOffset,
+        }));
+      });
+  }, [currentComponentOperations, currentComponentTotalLength]);
+
   const usedTools = useMemo(() => {
-    if (!currentComponentOperations || !tools) return [];
+    if (!currentComponentOperations?.length || !tools?.length) return [];
 
     const usedToolIds = new Set(
-      currentComponentOperations.filter((op) => op.tool).map((op) => op.tool)
+      currentComponentOperations.filter((op) => op.operationType).map((op) => op.operationType)
     );
-
-    return tools.filter((tool) => usedToolIds.has(tool.value));
+    return tools.filter((tool) => usedToolIds.has(tool.label));
   }, [currentComponentOperations, tools]);
 
   return (
     <>
       {currentComponentOperations?.length > 0 && (
-        <Box sx={{ mt: 3 }}>
+        <Box sx={{ mt: 1 }}>
           <Typography variant="subtitle2" gutterBottom>
             Operation Positions
           </Typography>
@@ -91,7 +110,7 @@ const ToolPositionsDiagram = ({ componentIndex, tools }) => {
               borderRadius: 1,
               p: 2,
               px: 4,
-              select: 'none',
+              userSelect: 'none',
             }}
           >
             <Box sx={{ position: 'relative', height: '100%' }}>
@@ -107,13 +126,14 @@ const ToolPositionsDiagram = ({ componentIndex, tools }) => {
                   px: 2,
                 }}
               />
-              {currentComponentOperations.map((operation, index) => {
+              {allToolOperationOffsets.map((operation, index) => {
                 if (operation.offset === undefined || operation.offset === 0) {
                   return null;
                 }
                 const position = (operation.offset / currentComponentTotalLength) * 100;
-                const tool = tools.find((t) => t.value === operation.tool);
-                const toolColor = toolColorMap[operation.tool] || theme.palette.primary.main;
+                const tool = tools.find((t) => t.label === operation.operationType);
+                const toolColor =
+                  toolColorMap[tool.value] || theme.palette.primary.main;
 
                 return (
                   <StyledTooltip
@@ -147,7 +167,7 @@ const ToolPositionsDiagram = ({ componentIndex, tools }) => {
                           left: '50%',
                           top: '100%',
                           width: 0,
-                          height: 40,
+                          height: 45,
                           borderLeft: '2px dotted',
                           borderColor: toolColor,
                           transform: 'translateX(-50%)',
@@ -227,8 +247,8 @@ const ToolPositionsDiagram = ({ componentIndex, tools }) => {
 };
 
 ToolPositionsDiagram.propTypes = {
-  componentIndex: PropTypes.number,
   tools: PropTypes.array,
+  unitOfLength: PropTypes.string,
 };
 
 export default ToolPositionsDiagram;
