@@ -134,7 +134,7 @@ export default function TicketFormList() {
     const fetchData = () => {
       dispatch(getTickets({
         page,
-        rowsPerPage,
+        pageSize: rowsPerPage,
         issueType: selectedIssueType?._id,
         requestType: selectedRequestType?._id,
         isResolved: selectedResolvedStatus,
@@ -163,7 +163,7 @@ export default function TicketFormList() {
     dispatch(ChangePage(0));
     dispatch(getTickets({
       page: 0,
-      rowsPerPage,
+      pageSize: rowsPerPage,
       issueType: selectedIssueType?._id,
       requestType: selectedRequestType?._id,
       isResolved: selectedResolvedStatus,
