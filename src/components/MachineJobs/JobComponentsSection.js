@@ -11,29 +11,55 @@ import {
   TableCell,
   TableBody,
   Box,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
 } from '@mui/material';
 import { useState } from 'react';
-import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 
 import FormLabel from '../DocumentForms/FormLabel';
 import { FORM_LABELS } from '../../constants/job-constants';
 import Iconify from '../iconify';
-import IconTooltip from '../Icons/IconTooltip';
-import ComponentAccordian from './ComponentAccordian';
 import ComponentTableRow from './ComponentTableRow';
 import ComponentDialogBox from './ComponentDialogBox';
+import ConfirmDialog from '../confirm-dialog';
 
-const JobComponentsSection = () => {
-  const [expanded, setExpanded] = useState(false);
+const defaultComponent = (index = 0) => ({
+  id: `${Date.now()}`,
+  label: `Component ${index + 1}`,
+  labelDirection: 'LABEL_NRM',
+  quantity: 1,
+  length: 1,
+  position: {
+    startX: 0,
+    startY: 0,
+    endX: 0,
+    endY: 0,
+  },
+  operations: [
+    {
+      id: `${Date.now()}`,
+      operationType: '',
+      offset: 0,
+    },
+  ],
+  profileShape: '',
+  webWidth: null,
+  flangeHeight: null,
+  materialThickness: null,
+  materialGrade: '',
+});
+
+const JobComponentsSection = ({
+  csvVersion = '1.0',
+  unitOfLength = 'MILLIMETRE',
+  components = [],
+  addComponent = () => {},
+  removeComponent = () => {},
+}) => {
+  const [componentInDialog, setComponentInDialog] = useState(defaultComponent());
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [componentToDelete, setComponentToDelete] = useState(null);
 
   const [openComponentDialog, setOpenComponentDialog] = useState(false);
-  const [currentComponentInfo, setCurrentComponentInfo] = useState({ index: null, id: null });
+  const [currentComponentIndex, setCurrentComponentIndex] = useState(-1);
   const handleClickOpen = () => {
     setOpenComponentDialog(true);
   };
@@ -42,46 +68,24 @@ const JobComponentsSection = () => {
     setOpenComponentDialog(false);
   };
 
-  const { control } = useFormContext();
-
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: 'components',
-  });
-
   const handleAddComponent = () => {
-    const newComponentId = `${Date.now()}`;
-    append({
-      id: newComponentId,
-      label: `Component ${fields.length + 1}`,
-      labelDirection: 'LABEL_NRM',
-      quantity: 1,
-      length: 100,
-      dimensions: {
-        startX: 0,
-        startY: 0,
-        endX: 0,
-        endY: 0,
-      },
-      operations: [],
-      profileShape: '',
-      webWidth: null,
-      flangeHeight: null,
-      materialThickness: null,
-      materialGrade: '',
-    });
-    setCurrentComponentInfo({ index: fields.length, id: newComponentId });
+    setComponentInDialog({ ...defaultComponent(components.length) });
+    setCurrentComponentIndex(-1)
     handleClickOpen();
   };
 
   const handleDuplicateComponent = (index) => {
-    const component = fields[index];
-    append({
+    const component = components[index];
+    addComponent({
       ...component,
       id: `${Date.now()}`,
       label: `${component.label} (Copy)`,
-      operations: component.operations || [],
+      operations: [...component.operations] || [],
     });
+  };
+
+  const handleComponentSave = (data, index) => {
+    addComponent(data, index);
   };
 
   const handleDeleteConfirm = (index) => {
@@ -91,9 +95,10 @@ const JobComponentsSection = () => {
 
   const handleDeleteConfirmed = () => {
     if (componentToDelete !== null) {
-      remove(parseInt(componentToDelete, 10));
+      removeComponent(parseInt(componentToDelete, 10));
       setDeleteDialogOpen(false);
       setComponentToDelete(null);
+      handleComponentDialogClose();
     }
   };
 
@@ -102,15 +107,11 @@ const JobComponentsSection = () => {
     setDeleteDialogOpen(false);
   };
 
-  const handleAccordionChange = (panel) => (event, isExpanded) => {
-    setExpanded(isExpanded ? panel : false);
-  };
-
   return (
     // <>
     <Box spacing={2} sx={{ my: 2 }}>
       <FormLabel content={FORM_LABELS.ADD_JOB.COMPONENTS} />
-      {fields.length > 0 ? (
+      {components.length > 0 ? (
         <Box sx={{ mb: 2 }}>
           {/* <Typography variant="subtitle2" sx={{ mb: 1, mt: 2 }}>
           Components
@@ -127,14 +128,15 @@ const JobComponentsSection = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {fields.map((component, index) => (
+                {components.map((component, index) => (
                   <ComponentTableRow
                     key={component.id}
                     component={component}
                     index={index}
-                    setExpanded={setExpanded}
+                    unitOfLength={unitOfLength}
                     handleClickOpen={handleClickOpen}
-                    setCurrentComponentInfo={setCurrentComponentInfo}
+                    setCurrentComponentIndex={setCurrentComponentIndex}
+                    setComponentInDialog={setComponentInDialog}
                     handleDeleteConfirm={handleDeleteConfirm}
                     handleDuplicateComponent={handleDuplicateComponent}
                   />
@@ -144,7 +146,15 @@ const JobComponentsSection = () => {
           </TableContainer>
         </Box>
       ) : (
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', my: 2 }}>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100%',
+            my: 2,
+          }}
+        >
           <Typography variant="body2" color="text.secondary">
             No components added yet.
           </Typography>
@@ -160,46 +170,38 @@ const JobComponentsSection = () => {
           Add New Component
         </Button>
       </Box>
-      {/* <Box sx={{ pt: 2, mb: 10 }}>
-        <Typography variant="subtitle2" sx={{ mb: 1, mt: 2 }}>
-          Components Details
-        </Typography>
-        {fields.map((component, index) => (
-          <ComponentAccordian
-            key={component.id}
-            component={component}
-            index={index}
-            handleAccordionChange={handleAccordionChange}
-            expanded={expanded}
-            handleDuplicateComponent={handleDuplicateComponent}
-            handleDeleteConfirm={handleDeleteConfirm}
-          />
-        ))}
-      </Box> */}
       <ComponentDialogBox
         open={openComponentDialog}
         handleClose={handleComponentDialogClose}
-        componentId={currentComponentInfo.id}
-        componentIndex={currentComponentInfo.index}
+        componentIndex={currentComponentIndex}
+        handleDeleteConfirm={handleDeleteConfirm}
+        handleSaveComponent={handleComponentSave}
+        csvVersion={csvVersion}
+        unitOfLength={unitOfLength}
+        componentValues={componentInDialog}
       />
-      <Dialog open={deleteDialogOpen} onClose={handleDeleteCancel}>
-        <DialogTitle>Confirm Delete</DialogTitle>
-        <DialogContent>
-          Are you sure you want to delete this component? This action cannot be undone.
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleDeleteCancel}>Cancel</Button>
-          <Button onClick={handleDeleteConfirmed} color="error" variant="contained">
+      <ConfirmDialog
+        open={deleteDialogOpen}
+        onClose={handleDeleteCancel}
+        title="Delete"
+        content="Are you sure you want to Delete the component?"
+        action={
+          <Button variant="contained" color="error" onClick={handleDeleteConfirmed}>
             Delete
           </Button>
-        </DialogActions>
-      </Dialog>
+        }
+      />
     </Box>
     // </>
   );
 };
 
 JobComponentsSection.propTypes = {
+  csvVersion: PropTypes.string,
+  unitOfLength: PropTypes.string,
+  components: PropTypes.array,
+  addComponent: PropTypes.func,
+  removeComponent: PropTypes.func,
   // onChange: PropTypes.func,
   // onDeleteComponent: PropTypes.func,
   // onAddComponent: PropTypes.func,

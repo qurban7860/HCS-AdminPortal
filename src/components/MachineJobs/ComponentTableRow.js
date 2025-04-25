@@ -1,32 +1,24 @@
 import PropTypes from 'prop-types';
 import { Box, TableCell, TableRow, useTheme } from '@mui/material';
 
-import { useFormContext, useWatch } from 'react-hook-form';
 import IconTooltip from '../Icons/IconTooltip';
 import LinkTableCell from '../ListTableTools/LinkTableCell';
 
 const ComponentTableRow = ({
   component,
   index,
-  setExpanded,
+  unitOfLength,
   handleClickOpen,
-  setCurrentComponentInfo,
+  setCurrentComponentIndex,
+  setComponentInDialog,
   handleDeleteConfirm,
   handleDuplicateComponent,
 }) => {
-  const { control, watch } = useFormContext();
   const theme = useTheme();
 
-  const currentLabel = useWatch({ control, name: `components.${index}.label` });
-  const currentLabelDir = useWatch({ control, name: `components.${index}.labelDirection` });
-  const currentLength = useWatch({ control, name: `components.${index}.length` });
-  const currentQuantity = useWatch({ control, name: `components.${index}.quantity` });
-  const currentOperations = useWatch({ control, name: `components.${index}.operations` });
-
-  const unitOfLength = watch('unitOfLength');
-
   const openComponentsDialog = () => {
-    setCurrentComponentInfo({ index, id: component.id });
+    setCurrentComponentIndex(index);
+    setComponentInDialog(component)
     handleClickOpen();
   };
 
@@ -41,28 +33,17 @@ const ComponentTableRow = ({
     }
   };
   return (
-    <TableRow
-      key={component.id}
-      // hover
-      // onClick={() => setExpanded(component.id)}
-      // sx={{ cursor: 'pointer' }}
-    >
-      <LinkTableCell align="left" onClick={openComponentsDialog} param={currentLabel} />
-      {/* <TableCell component="th" scope="row">
-        {currentLabel}
-      </TableCell> */}
-      <TableCell>{currentLabelDir}</TableCell>
-      <TableCell>{`${currentLength} ${getUnitLabel()} / ${currentQuantity}`}</TableCell>
-      <TableCell>{currentOperations?.length}</TableCell>
+    <TableRow key={component.id}>
+      <LinkTableCell align="left" onClick={openComponentsDialog} param={component?.label} />
+      <TableCell>{component?.labelDirection}</TableCell>
+      <TableCell>{`${component?.length} ${getUnitLabel()} / ${component?.quantity}`}</TableCell>
+      <TableCell>{component?.operations?.length}</TableCell>
       <TableCell align="right">
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
           <IconTooltip
             icon="mdi:square-edit-outline"
             title="Edit"
-            onClick={() => {
-              setCurrentComponentInfo({ index, id: component.id });
-              handleClickOpen();
-            }}
+            onClick={openComponentsDialog}
             iconSx={{
               border: 'none',
             }}
@@ -87,8 +68,6 @@ const ComponentTableRow = ({
             }}
           />
         </Box>
-        {/* <IconButton size="small" onClick={() => setExpanded(component.id)}>
-                    </IconButton> */}
       </TableCell>
     </TableRow>
   );
@@ -97,9 +76,10 @@ const ComponentTableRow = ({
 ComponentTableRow.propTypes = {
   component: PropTypes.object.isRequired,
   index: PropTypes.number.isRequired,
-  setExpanded: PropTypes.func.isRequired,
+  unitOfLength: PropTypes.string.isRequired,
   handleClickOpen: PropTypes.func,
-  setCurrentComponentInfo: PropTypes.func,
+  setCurrentComponentIndex: PropTypes.func,
+  setComponentInDialog: PropTypes.func,
   handleDeleteConfirm: PropTypes.func,
   handleDuplicateComponent: PropTypes.func,
 };

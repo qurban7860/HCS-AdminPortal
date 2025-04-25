@@ -12,14 +12,25 @@ RHFAutocomplete.propTypes = {
   helperText: PropTypes.node,
   Error: PropTypes.bool,
   nonEditable: PropTypes.bool,
+  valueField: PropTypes.string,
 };
 
-export default function RHFAutocomplete({ name, label, loading = false, helperText, Error, nonEditable, placeholder, ...other }) {
+export default function RHFAutocomplete({
+  name,
+  label,
+  loading = false,
+  helperText,
+  Error,
+  nonEditable,
+  placeholder,
+  valueField = null,
+  ...other
+}) {
   const { control, setValue } = useFormContext();
-  
+
   const nonEditableProperties = {
     readOnly: true,
-    style: { cursor: 'pointer' }
+    style: { cursor: 'pointer' },
   };
 
   return (
@@ -30,7 +41,14 @@ export default function RHFAutocomplete({ name, label, loading = false, helperTe
         <Autocomplete
           {...field}
           loading={loading}
-          onChange={(event, newValue) => setValue(name, newValue, { shouldValidate: true })}
+          onChange={(event, newValue) => {
+            // If valueField is specified, only save that field
+            if (valueField && newValue) {
+              setValue(name, newValue?.[valueField], { shouldValidate: true });
+            } else {
+              setValue(name, newValue, { shouldValidate: true });
+            }
+          }}
           renderInput={(params) => (
             <TextField
               label={label}
