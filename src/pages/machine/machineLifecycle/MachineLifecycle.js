@@ -5,7 +5,6 @@ import {
   Divider,
   Avatar,
   Paper,
-  Stack,
   Slide,
   Container,
   Card,
@@ -13,13 +12,11 @@ import {
 import EventIcon from '@mui/icons-material/Event';
 import { useSelector } from 'react-redux';
 
-import ViewFormField from '../../../components/ViewForms/ViewFormField';
-import { fDate } from '../../../utils/formatTime';
+import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
 import MachineTabContainer from '../util/MachineTabContainer';
-import TableCard from '../../../components/ListTableTools/TableCard';
 import { FORMLABELS } from '../../../constants/document-constants';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
-import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
+import { fDate } from '../../../utils/formatTime';
 
 const MachineLifecycle = () => {
   const { machine } = useSelector((state) => state.machine);
@@ -50,24 +47,23 @@ const MachineLifecycle = () => {
     const actions = [];
 
     if (machine?.createdAt) {
-      actions.push({ date: fDate(machine?.createdAt), action: 'Purchase Date'});
+      actions.push({ date: fDate(machine?.createdAt), action: 'Purchase Date' });
     }
     if (machine?.manufactureDate) {
-      actions.push({ date: fDate(machine?.manufactureDate) ,action: 'Manufacturing Date' });
+      actions.push({ date: fDate(machine?.manufactureDate), action: 'Manufacturing Date' });
     }
     if (machine?.shippingDate) {
-      actions.push({ date: fDate(machine?.shippingDate),action: 'Shipping Date' });
+      actions.push({ date: fDate(machine?.shippingDate), action: 'Shipping Date' });
     }
     if (machine?.installationDate) {
       actions.push({ date: fDate(machine?.installationDate), action: 'Installation Date' });
     }
-    if (machine?.transferredDate){
-        actions.push({ date: fDate(machine?.transferredDate),action:'Transferred Date'});
-      }
+    if (machine?.transferredDate) {
+      actions.push({ date: fDate(machine?.transferredDate), action: 'Transferred Date' });
+    }
     if (machine?.supportExpireDate) {
       actions.push({ date: fDate(machine?.supportExpireDate), action: 'Support Expiry Date' });
     }
-    
 
     return actions;
   }, [machine]);
@@ -76,7 +72,7 @@ const MachineLifecycle = () => {
     <Container maxWidth={false}>
       <MachineTabContainer currentTabValue="machineLifecycle" />
 
-      <Card sx={{ p: 3}}>
+      <Card sx={{ p: 3 }}>
         <Box>
           {/* Title */}
           <Box
@@ -89,55 +85,72 @@ const MachineLifecycle = () => {
             }}
           >
             <FormLabel content={FORMLABELS.MACHINE_LIFECYCLE} />
+
           </Box>
+          
 
-          {/* Timeline Section */}
-          <Box sx={{ position: 'relative', pl: 6, borderLeft: '3px solid #1976d2', mb: 6 }}>
+          {/* Timeline */}
+          <Box sx={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 6,mr: 45 }}>
+              
+          <Box
+              sx={{
+                position: 'absolute',
+                top: 20,
+                bottom: 20,
+                width: 4,
+                bgcolor: 'primary.main',
+                ml: -35.5,
+                zIndex: 0,
+              }}
+            />
+
+           
             {machineActions.map((item, index) => (
-              <Slide
-                direction="up"
-                in
-                style={{ transitionDelay: `${index * 100}ms` }}
-                key={index}
-              >
-                <Box sx={{ mb: 6, position: 'relative' }}>
-                  <Avatar
-                    sx={{
-                      position: 'absolute',
-                      left: '-30px',
-                      top: 8,
-                      width: 40,
-                      height: 40,
-                      bgcolor: 'primary.main',
-                    }}
-                  >
-                    <EventIcon sx={{ fontSize: 24 }} />
-                  </Avatar>
+              <Slide direction="up" in key={index} style={{ transitionDelay: `${index * 100}ms` }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', mb: 3, position: 'relative', zIndex: 1 }}>
+                  
+               
+                  <Box sx={{ flex: 1, textAlign: 'right', pr: 2 }}>
+                    <Typography variant="body2" color="text.secondary">
+                      {item.date}
+                    </Typography>
+                  </Box>
 
-                  <Paper
-                    elevation={4}
-                    sx={{
-                      p: 3,
-                      backgroundColor: '#fff',
-                      borderRadius: 2,
-                      boxShadow: '0 6px 20px rgba(0,0,0,0.1)',
-                    }}
-                  >
-                    <Stack spacing={0.5}>
-                      <Typography variant="body2" color="text.secondary">
-                        {item.date}
-                      </Typography>
+                  <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <Avatar
+                      sx={{
+                        bgcolor: 'primary.main',
+                        width: 40,
+                        height: 40,
+                      }}
+                    >
+                      <EventIcon sx={{ fontSize: 24 }} />
+                    </Avatar>
+                  </Box>
+
+                  {/* Right: Label */}
+                  <Box sx={{ flex: 2, pl: 2 }}>
+                    <Paper
+                      elevation={4}
+                      sx={{
+                        p: 2,
+                        backgroundColor: '#fff',
+                        borderRadius: 2,
+                        boxShadow: '0 6px 20px rgba(0,0,0,0.1)',
+                      }}
+                    >
                       <Typography variant="h6" fontWeight={600}>
                         {item.action}
                       </Typography>
-                    </Stack>
-                  </Paper>
+                    </Paper>
+                  </Box>
+
                 </Box>
               </Slide>
             ))}
           </Box>
 
-          <Divider sx={{ mb: 4 }} />
+          <Divider sx={{ mb: 1, mt: -2}} />
         </Box>
 
         <ViewFormAudit defaultValues={defaultValues} />

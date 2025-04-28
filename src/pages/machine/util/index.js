@@ -75,11 +75,6 @@ const TABS = [
     icon: ICONS.MACHINE.icon,
   },
   {
-    value: 'machineLifecycle',
-    label: 'Machine Lifecycle',
-    icon: ICONS.MACHINE_LIFECYCLE.icon,
-  },
-  {
     value: 'settings',
     label: 'Settings',
     icon: ICONS.SETTINGS.icon,
@@ -138,6 +133,11 @@ const TABS = [
     value: 'jira',
     label: 'Jira',
     icon: ICONS.JIRA.icon,
+  },
+  {
+    value: 'machineLifecycle',
+    label: 'Machine Lifecycle',
+    icon: ICONS.MACHINE_LIFECYCLE.icon,
   },
   {
     value: 'dashboard',
