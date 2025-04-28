@@ -23,7 +23,7 @@ const initialState = {
     { name: 'Email Access', value: 'EmailAccess'},
     // { name: 'Global Manager', value: 'GlobalManager'},
     // { name: 'Regional Manager', value: 'RegionalManager'},
-    { name: 'Support Manager', value: 'SupportManager'},
+    { name: 'Support', value: 'Support'},
     { name: 'Sales Engineer', value: 'SalesEngineer'},
     { name: 'Sales Manager', value: 'SalesManager'},
     { name: 'Super Admin', value: 'SuperAdmin'},
