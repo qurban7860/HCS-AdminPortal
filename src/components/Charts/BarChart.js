@@ -38,8 +38,8 @@ function BarChart({ chartData, title }) {
     },
     dataLabels: {
       enabled: true,
-      // formatter: (val) => (val === 0 ? '' : `${val}`),
-      formatter: (val) => `${val}`,
+      formatter: (val) => (val === 0 ? '' : `${val}`),
+      // formatter: (val) => `${val}`,
       offsetY: -25,
       style: {
         fontSize: '12px',

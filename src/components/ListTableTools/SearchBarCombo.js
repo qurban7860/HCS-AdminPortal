@@ -175,7 +175,7 @@ function SearchBarCombo({
         <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
           <Stack alignItems="flex-start">
             <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">Status</InputLabel>
+              <InputLabel id="demo-simple-select-label">Machines</InputLabel>
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
@@ -186,6 +186,7 @@ function SearchBarCombo({
                 onChange={onFilterVerify}
               >
                 <MenuItem key="all" value="all">All</MenuItem>
+                <MenuItem key="transferredDate" value="transferredDate">Transferred</MenuItem>
                 <MenuItem key="verified" value="verified">Verified</MenuItem>
                 <MenuItem key="unverified" value="unverified">Not Verified</MenuItem>
               </Select>
