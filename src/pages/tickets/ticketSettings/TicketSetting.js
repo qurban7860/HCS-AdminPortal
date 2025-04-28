@@ -27,6 +27,7 @@ export default function TicketSetting() {
   const linkChangeType = () => navigate(PATH_SUPPORT.ticketSettings.changeTypes.root);
   const linkChangeReason = () => navigate(PATH_SUPPORT.ticketSettings.changeReasons.root);
   const linkInvestigationReason = () => navigate(PATH_SUPPORT.ticketSettings.investigationReasons.root);
+  const linkFault = () => navigate(PATH_SUPPORT.ticketSettings.faults.root);
 
 return (
     <Container maxWidth={false}>
@@ -129,6 +130,11 @@ return (
                     onClick={linkInvestigationReason}
                     icon={ICONS.INVESTIGATION_REASONS.icon}
                     content={ICONS.INVESTIGATION_REASONS.heading}
+                  />
+                   <ListItem
+                    onClick={linkFault}
+                    icon={ICONS.FAULTS.icon}
+                    content={ICONS.FAULTS.heading}
                   />
                 </List>
               </StyledSettingsCardContainer>

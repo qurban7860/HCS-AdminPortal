@@ -522,6 +522,12 @@ export const PATH_SUPPORT = {
       view: (id) => path(ROOTS_SUPPORT, `/ticketSettings/investigationReasons/${id}/view`),
       edit: (id) => path(ROOTS_SUPPORT, `/ticketSettings/investigationReasons/${id}/edit`),
     },
+    faults: {
+      root: path(ROOTS_SUPPORT, '/ticketSettings/faults'),
+      new: path(ROOTS_SUPPORT, '/ticketSettings/faults/new'),
+      view: (id) => path(ROOTS_SUPPORT, `/ticketSettings/faults/${id}/view`),
+      edit: (id) => path(ROOTS_SUPPORT, `/ticketSettings/faults/${id}/edit`),
+    },
   },
   jiraTickets: {
     root: path(ROOTS_SUPPORT, '/jiraTickets')

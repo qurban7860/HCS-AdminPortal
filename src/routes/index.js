@@ -386,7 +386,10 @@ import {
   InvestigationReasonList,
   InvestigationReasonForm,
   InvestigationReasonView,
-
+// --------------------------- Fault --------------------------
+  FaultList,
+  FaultForm,
+  FaultView,
   // REPORTS / SETTINGS
   Setting,
 
@@ -1273,6 +1276,15 @@ export default function Router() {
                 { path: 'new', element: <InvestigationReasonForm /> },
                 { path: ':id/edit', element: <InvestigationReasonForm /> },
                 { path: ':id/view', element: <InvestigationReasonView /> },
+              ]
+            },
+            {
+              path: 'faults',
+              children: [
+                { element: <FaultList />, index: true },
+                { path: 'new', element: <FaultForm /> },
+                { path: ':id/edit', element: <FaultForm /> },
+                { path: ':id/view', element: <FaultView /> },
               ]
             },
           ],
