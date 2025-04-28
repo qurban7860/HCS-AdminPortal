@@ -355,6 +355,12 @@ function applyFilter({ inputData, comparator, filterName, filterVerify, filterSt
   
   if(filterVerify==='unverified')
     inputData = inputData.filter((machine)=> machine?.verifications?.length===0);
+
+  if (filterVerify === 'transferredDate')
+    inputData = inputData.filter((machine) => machine?.transferredDate);
+
+  if (filterVerify === 'all')
+    inputData = inputData.filter((machine) => !machine?.transferredDate);
     
   if (filterName) {
     inputData = inputData.filter(

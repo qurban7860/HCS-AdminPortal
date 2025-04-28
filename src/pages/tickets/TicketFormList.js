@@ -84,7 +84,7 @@ export default function TicketFormList() {
   const [selectedRequestType, setSelectedRequestType] = useState(null);
   const [selectedStatus, setSelectedStatus] = useState([]);
   const [selectedStatusType, setSelectedStatusType] = useState(null);
-  const [selectedResolvedStatus, setSelectedResolvedStatus] = useState(null);
+  const [selectedResolvedStatus, setSelectedResolvedStatus] = useState('unresolved');
   const [selectedPriority, setSelectedPriority] = useState(null);
   const isMobile = useResponsive('down', 'sm');
   const prefix = JSON.parse(localStorage.getItem('configurations'))?.find((config) => config?.name?.toLowerCase() === 'ticket_prefix')?.value?.trim() || ''; 

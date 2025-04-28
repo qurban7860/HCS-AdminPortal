@@ -70,8 +70,6 @@ export default function TicketFormTableToolbar({
     { value: 'resolved', label: 'Resolved' },
     { value: 'unresolved', label: 'Unresolved' },
   ]);
-  
-  
 
   useEffect(() => {
     dispatch(getActiveTicketStatuses());

@@ -69,7 +69,7 @@ const TicketComments = ({ currentUser }) => {
     resolver: yupResolver(CommentSchema),
     defaultValues: {
       comment: '',
-      isInternal: false,
+      isInternal: true,
     },
   });
 
