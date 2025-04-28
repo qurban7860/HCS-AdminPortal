@@ -67,8 +67,8 @@ export default function TicketFormTableToolbar({
   const [filteredStatuses, setFilteredStatuses] = useState([]);
   const { ticketPriorities }= useSelector((state)=> state.ticketPriorities);
   const [resolvedOptions] = useState([
-    { value: 'resolved', label: 'Resolved' },
-    { value: 'unresolved', label: 'Unresolved' },
+    { value: 'resolved', label: 'Resolved / Closed' },
+    { value: 'unresolved', label: 'Unresolved / Open' },
   ]);
 
   useEffect(() => {
