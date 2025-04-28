@@ -577,6 +577,10 @@ export const ICONS = {
     icon: 'hugeicons:investigation',
     heading: 'Investigation Reasons',
   },
+  FAULTS: {
+    icon: 'mdi:file-exchange-outline',
+    heading: 'Faults',
+  },
 
   MOVE_MACHINE: {
     icon: 'ri:swap-box-line',

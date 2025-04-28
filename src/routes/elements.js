@@ -527,6 +527,10 @@ export const InvestigationReasonList = Loadable(lazy(() => import('../pages/tick
 export const InvestigationReasonForm = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/investigationReason/InvestigationReasonForm')));
 export const InvestigationReasonView = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/investigationReason/InvestigationReasonView')));
 
+// --------------------------- Faults -------------------------------------
+export const FaultList = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/fault/FaultList')));
+export const FaultForm = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/fault/FaultForm')));
+export const FaultView = Loadable(lazy(() => import('../pages/tickets/ticketSettings/ticketCollection/fault/FaultView')));
 // --------------------------- Under Development -------------------------------------
 export const UnderDevelopment = Loadable(lazy(() => import('../pages/boundaries/UnderDevelopment')));
 export const SectionUnderConstruction = Loadable(lazy(() => import('../pages/boundaries/SectionUnderConstruction')));
