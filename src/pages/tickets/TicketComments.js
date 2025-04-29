@@ -186,7 +186,7 @@ const TicketComments = ({ currentUser }) => {
                       const isInternalSelected = e.target.value === 'internal';
                       methods.setValue('isInternal', isInternalSelected); }}
                       sx={{ mt: -1.5 }}>
-                      <FormControlLabel value="internal" control={<Radio />} label="Internal" />
+                      <FormControlLabel value="internal" control={<Radio />} label="Internal Note" />
                       <FormControlLabel value="customer" control={<Radio />} label="Note to Customer" />
                     </RadioGroup>
 
@@ -264,7 +264,7 @@ const TicketComments = ({ currentUser }) => {
                                     const isInternalSelected = e.target.value === 'internal';
                                     setEditIsInternal(isInternalSelected);
                                     }}>
-                                    <FormControlLabel value="internal" control={<Radio />} label="Internal" />
+                                    <FormControlLabel value="internal" control={<Radio />} label="Internal Note" />
                                     <FormControlLabel value="customer" control={<Radio />} label="Note to Customer" />
                                   </RadioGroup>
                                   </Stack>
@@ -298,7 +298,7 @@ const TicketComments = ({ currentUser }) => {
                                 <Typography component="span" variant="body2" color="text.primary">
                                 {item.comment}
                                 <Typography component="span" variant="caption" sx={{ color: 'text.secondary', ml: 1 }}>
-                                  {item.isInternal ? '(Internal)' : '(CustomerNote)'}
+                                  {item.isInternal ? '(InternalNote)' : '(CustomerNote)'}
                                 </Typography>
 
                                   {item.updatedAt !== item.createdAt && (
