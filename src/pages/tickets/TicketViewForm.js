@@ -493,6 +493,9 @@ export default function TicketViewForm() {
               onGetCurrentIndex={(index) => handleOpenLightbox(index)}
               disabledSlideshow
             />
+            <ViewFormField isLoading={isLoading} sm={4} heading="Fault"
+              node={<DropDownMultipleSelection name="faults" label='Fault' value={ticket?.faults} options={ticketSettings?.faults} onSubmit={onSubmit}  isStatus/>}
+            />
             <ViewFormField isLoading={isLoading} sm={4} heading="Impact"
               node={<DropDownField name="impact" isNullable label='Impact' value={ticket?.impact} options={ticketSettings?.impacts} onSubmit={onSubmit} />}
             />
