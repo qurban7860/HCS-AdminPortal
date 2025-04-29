@@ -91,11 +91,12 @@ const ToolOperationsSection = ({ unitOfLength }) => {
               return (
                 <Grid item xs={12} key={operation.id}>
                   <Grid container spacing={2} alignItems="flex-start">
-                    <Grid item xs={12} sm={6}>
+                    <Grid item xs={12} sm={3.5}>
                       <RHFAutocomplete
                         name={`operations.${opIndex}.operationType`}
                         label="Tool"
-                        helperText={fieldErrors?.operationType?.message || ''}
+                        helperText={fieldErrors?.operationType?.message || 'Type of machine operation'}
+                        placeholder="Select Tool"
                         required
                         options={formattedActiveToolsList}
                         valueField="label"
@@ -107,7 +108,7 @@ const ToolOperationsSection = ({ unitOfLength }) => {
                         )}
                       />
                     </Grid>
-                    <Grid item xs={12} sm={5.5}>
+                    <Grid item xs={12} sm={8}>
                       <RHFTextField
                         fullWidth
                         required
@@ -146,7 +147,6 @@ const ToolOperationsSection = ({ unitOfLength }) => {
           </Grid>
         </>
       )}
-      <ToolPositionsDiagram tools={formattedActiveToolsList} unitOfLength={unitOfLength} />
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 2 }}>
         <Button
           variant="outlined"
@@ -157,6 +157,7 @@ const ToolOperationsSection = ({ unitOfLength }) => {
           Add Tool Operation
         </Button>
       </Box>
+      <ToolPositionsDiagram tools={formattedActiveToolsList} unitOfLength={unitOfLength} />
     </Box>
   );
 };
