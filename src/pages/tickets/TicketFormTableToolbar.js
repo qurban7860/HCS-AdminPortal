@@ -210,7 +210,7 @@ export default function TicketFormTableToolbar({
                   />
                 </Grid>
 
-                <Grid item xs={1} sm={1} md={1} lg={2}>
+                <Grid item xs={1} sm={6} md={6} lg={2}>
                   <Autocomplete
                     value={filterPriority || null}
                     name="priorities"
