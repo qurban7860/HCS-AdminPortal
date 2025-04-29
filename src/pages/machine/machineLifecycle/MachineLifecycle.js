@@ -89,20 +89,32 @@ const MachineLifecycle = () => {
           </Box>
           
 
-          {/* Timeline */}
-          <Box sx={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 6,mr: 45 }}>
-              
+        
           <Box
-              sx={{
-                position: 'absolute',
-                top: 20,
-                bottom: 20,
-                width: 4,
-                bgcolor: 'primary.main',
-                ml: -35.5,
-                zIndex: 0,
-              }}
-            />
+  sx={{
+    position: 'relative',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    mb: 6,
+    width: { xs: '100%', md: '50%' },            
+    mr: { xs: 0, md: '30%' },                     
+    ml: { xs: 0, md: 'auto' },                   
+  }}
+>
+  <Box
+    sx={{
+      position: 'absolute',
+      top: 20,
+      bottom: 20,
+      left: '35%',
+      transform: 'translateX(-30%)',
+      width: { xs: 2, md: 4 },
+      bgcolor: 'primary.main',
+      zIndex: 0,
+    }}
+  />
+
 
            
             {machineActions.map((item, index) => (
@@ -120,7 +132,7 @@ const MachineLifecycle = () => {
                     <Avatar
                       sx={{
                         bgcolor: 'primary.main',
-                        width: 40,
+                        width: 42,
                         height: 40,
                       }}
                     >
