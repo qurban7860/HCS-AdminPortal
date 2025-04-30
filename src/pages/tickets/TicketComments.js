@@ -297,7 +297,7 @@ const TicketComments = ({ currentUser }) => {
                               <>
                                 <Typography component="span" variant="body2" color="text.primary">
                                 {item.comment}
-                                <Typography component="span" variant="caption" sx={{ color: 'text.secondary', ml: 1 }}>
+                                <Typography component="span" variant="caption" sx={{ color: 'text.secondary', ml: 2 }}>
                                   {item.isInternal ? '(InternalNote)' : '(CustomerNote)'}
                                 </Typography>
 
@@ -307,7 +307,7 @@ const TicketComments = ({ currentUser }) => {
                                       variant="caption"
                                       sx={{ color: 'text.secondary', ml: 1 }}
                                     >
-                                      (edited)
+                                      (Edited)
                                     </Typography>
                                   )}
                                 </Typography>

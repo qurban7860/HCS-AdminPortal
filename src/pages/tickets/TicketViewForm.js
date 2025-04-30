@@ -493,18 +493,18 @@ export default function TicketViewForm() {
               onGetCurrentIndex={(index) => handleOpenLightbox(index)}
               disabledSlideshow
             />
-            <ViewFormField isLoading={isLoading} sm={4} heading="Fault"
+            <ViewFormField isLoading={isLoading} sm={3} heading="Fault"
               node={<DropDownMultipleSelection name="faults" label='Fault' value={ticket?.faults} options={ticketSettings?.faults} onSubmit={onSubmit}  isStatus/>}
             />
-            <ViewFormField isLoading={isLoading} sm={4} heading="Impact"
+            <ViewFormField isLoading={isLoading} sm={3} heading="Impact"
               node={<DropDownField name="impact" isNullable label='Impact' value={ticket?.impact} options={ticketSettings?.impacts} onSubmit={onSubmit} />}
             />
             {ticket?.issueType?.name === 'Change Request' && (
               <>
-                <ViewFormField isLoading={isLoading} sm={4} heading="Change Type"
+                <ViewFormField isLoading={isLoading} sm={3} heading="Change Type"
                   node={<DropDownField name="changeType" isNullable label='Change Type' value={ticket?.changeType} options={ticketSettings?.changeTypes} onSubmit={onSubmit} />}
                 />
-                <ViewFormField isLoading={isLoading} sm={4} heading="Change Reason"
+                <ViewFormField isLoading={isLoading} sm={3} heading="Change Reason"
                   node={<DropDownField name="changeReason" isNullable label='Change Reason' value={ticket?.changeReason} options={ticketSettings?.changeReasons} onSubmit={onSubmit} />}
                 />
                 <ViewFormField isLoading={isLoading} sm={12} heading="Implementation Plan"
@@ -547,13 +547,13 @@ export default function TicketViewForm() {
                 />
               </Grid>
             )}
-            <ViewFormSWitch isLoading={isLoading} sm={4}
+            <ViewFormSWitch isLoading={isLoading} sm={3}
               shareWithHeading="Shared With Organization"
               shareWith={shareWith}
               onChange={handleShareWithChange}
               isEditable
             />
-            <ViewFormSWitch isLoading={isLoading} sm={4}
+            <ViewFormSWitch isLoading={isLoading} sm={3}
               isActiveHeading="Active"
               isActive={isActive}
               onChange={handleIsActiveChange}

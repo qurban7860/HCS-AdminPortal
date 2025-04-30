@@ -33,7 +33,7 @@ export default function FaultViewForm() {
       color: ticketFault?.color || '',
       displayOrderNo: ticketFault?.displayOrderNo || '',
       description: ticketFault?.description || '',
-      isDefault: ticketFault?.isDefault || false,
+      // isDefault: ticketFault?.isDefault || false,
       isActive: ticketFault?.isActive || false,
       createdByFullName: ticketFault?.createdBy?.name || '',
       createdAt: ticketFault?.createdAt || '',
@@ -63,7 +63,7 @@ export default function FaultViewForm() {
   <Grid>
     <Card sx={{ p: 2 }}>
       <ViewFormEditDeleteButtons  
-        isDefault={defaultValues.isDefault} 
+        // isDefault={defaultValues.isDefault} 
         isActive={defaultValues.isActive}
         handleEdit={toggleEdit} 
         onArchive={onArchive} 
