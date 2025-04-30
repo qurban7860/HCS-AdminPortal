@@ -5,7 +5,7 @@ import {
   Divider,
   Avatar,
   Paper,
-  Slide,
+  Fade,
   Container,
   Card,
 } from '@mui/material';
@@ -85,43 +85,36 @@ const MachineLifecycle = () => {
             }}
           >
             <FormLabel content={FORMLABELS.MACHINE_LIFECYCLE} />
-
           </Box>
-          
 
-        
           <Box
-  sx={{
-    position: 'relative',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    mb: 6,
-    width: { xs: '100%', md: '50%' },            
-    mr: { xs: 0, md: '30%' },                     
-    ml: { xs: 0, md: 'auto' },                   
-  }}
->
-  <Box
-    sx={{
-      position: 'absolute',
-      top: 20,
-      bottom: 20,
-      left: '35%',
-      transform: 'translateX(-30%)',
-      width: { xs: 2, md: 4 },
-      bgcolor: 'primary.main',
-      zIndex: 0,
-    }}
-  />
+            sx={{
+              position: 'relative',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              mb: 6,
+              width: { xs: '100%', md: '50%' },
+              mr: { xs: 0, md: '30%' },
+              ml: { xs: 0, md: 'auto' },
+            }}
+          >
+            <Box
+              sx={{
+                position: 'absolute',
+                top: 20,
+                bottom: 20,
+                left: '35%',
+                transform: 'translateX(-30%)',
+                width: { xs: 2, md: 4 },
+                bgcolor: 'primary.main',
+                zIndex: 0,
+              }}
+            />
 
-
-           
             {machineActions.map((item, index) => (
-              <Slide direction="up" in key={index} style={{ transitionDelay: `${index * 100}ms` }}>
+              <Fade in timeout={500} key={index}>
                 <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', mb: 3, position: 'relative', zIndex: 1 }}>
-                  
-               
                   <Box sx={{ flex: 1, textAlign: 'right', pr: 2 }}>
                     <Typography variant="body2" color="text.secondary">
                       {item.date}
@@ -140,7 +133,6 @@ const MachineLifecycle = () => {
                     </Avatar>
                   </Box>
 
-                  {/* Right: Label */}
                   <Box sx={{ flex: 2, pl: 2 }}>
                     <Paper
                       elevation={4}
@@ -156,13 +148,12 @@ const MachineLifecycle = () => {
                       </Typography>
                     </Paper>
                   </Box>
-
                 </Box>
-              </Slide>
+              </Fade>
             ))}
           </Box>
 
-          <Divider sx={{ mb: 1, mt: -2}} />
+          <Divider sx={{ mb: 1, mt: -2 }} />
         </Box>
 
         <ViewFormAudit defaultValues={defaultValues} />
