@@ -368,6 +368,7 @@ function SearchBarCombo({
              <Grid item xs={12} sm={6} md={4} lg={2} xl={4}>
                 <Autocomplete
                    multiple
+                   disableCloseOnSelect
                    options={[
                   { label: 'All', value: 'all' },
                   { label: 'Transferred', value: 'transferredDate' }, 
@@ -380,7 +381,7 @@ function SearchBarCombo({
                   onMachineVerify(newValue);
                    }}
                   renderInput={(params) => (
-                <TextField {...params} label="Status" placeholder="Select status" size="small" />
+                <TextField {...params} label="Status"  size="small" />
                           )}
                   />
                </Grid>
