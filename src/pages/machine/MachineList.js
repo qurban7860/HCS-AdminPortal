@@ -141,6 +141,7 @@ export default function MachineList({ isArchived }) {
   },[dispatch, page, rowsPerPage, isArchived])
 
   const [filterVerify, setFilterVerify] = useState(verified);
+  const[ machineVerify, setMachineVerify] = useState(verified);
   const [filterName, setFilterName] = useState(filterBy);
   const [filterStatus, setFilterStatus] = useState([]);
   
@@ -156,6 +157,7 @@ export default function MachineList({ isArchived }) {
     comparator: getComparator(order, orderBy),
     filterName,
     filterVerify,
+    machineVerify,
     filterStatus,
     accountManager, 
     supportManager,
@@ -165,6 +167,13 @@ export default function MachineList({ isArchived }) {
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
   const denseHeight = 60;
 
+  // const debouncedMachineVerify = useRef(debounce((value) => {
+  //   dispatch(ChangePage(0));  // Resets the page to 0 when filters change
+  //   dispatch(setVerified(value));  // Update the `verified` state in Redux (if needed)
+  // }, 500));
+  
+  
+  
   const debouncedSearch = useRef(debounce((value) => {
     dispatch(ChangePage(0))
     dispatch(setFilterBy(value))
@@ -186,6 +195,11 @@ export default function MachineList({ isArchived }) {
     setFilterVerify(event.target.value)
     setPage(0);
   };
+  const handlemachineVerify = (Value) => {
+    setMachineVerify(Value);
+  };
+  
+  
   
   const debouncedAccountManager = useRef(debounce((value) => {
     dispatch(ChangePage(0))
@@ -261,6 +275,9 @@ export default function MachineList({ isArchived }) {
           onFilterName={handleFilterName}
           filterVerify={ isArchived ? undefined : filterVerify}
           onFilterVerify={ isArchived ? undefined : handleFilterVerify}
+          machineVerify={ isArchived ? undefined : machineVerify}
+          onMachineVerify={ isArchived ? undefined : handlemachineVerify}
+          
           filterStatus={ isArchived ? undefined : filterStatus}
           onFilterStatus={ isArchived ? undefined : handleFilterStatus}
           isFiltered={isFiltered}
@@ -336,7 +353,7 @@ export default function MachineList({ isArchived }) {
     </Container>
   );
 }
-function applyFilter({ inputData, comparator, filterName, filterVerify, filterStatus, accountManager, supportManager }) {
+function applyFilter({ inputData=[], comparator, filterName, filterVerify, filterStatus, accountManager, supportManager, machineVerify }) {
   const stabilizedThis = inputData.map((el, index) => [el, index]);
 
   stabilizedThis.sort((a, b) => {
@@ -358,10 +375,24 @@ function applyFilter({ inputData, comparator, filterName, filterVerify, filterSt
 
   if (filterVerify === 'transferredDate')
     inputData = inputData.filter((machine) => machine?.transferredDate);
-
-  if (filterVerify === 'all')
-    inputData = inputData.filter((machine) => !machine?.transferredDate);
-    
+  
+  
+  if (Array.isArray(machineVerify) && machineVerify.length > 0) {
+    const selectedValues = machineVerify.map(opt => typeof opt === 'string' ? opt : opt.value); 
+    inputData = inputData.filter((machine) => {
+      const isTransferred = machine?.transferredDate != null;
+      const isVerified = machine?.verifications?.length > 0;
+      const isPending = machine?.verifications?.length === 0;
+      const isAll = !machine?.transferredDate;
+      return (
+        (selectedValues.includes('transferredDate') && isTransferred) ||
+        (selectedValues.includes('verified') && isVerified) ||
+        (selectedValues.includes('pendingVerification') && isPending) ||
+        (selectedValues.includes('all') && isAll)
+      );
+    });
+  }
+  
   if (filterName) {
     inputData = inputData.filter(
       (product) =>

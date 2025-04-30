@@ -28,6 +28,8 @@ function SearchBarCombo({
   value,
   onFilterVerify,
   filterVerify,
+  onMachineVerify,
+  machineVerify,
   setAccountManagerFilter,
   accountManagerFilter,
   setSupportManagerFilter,
@@ -108,7 +110,9 @@ function SearchBarCombo({
   const dispatch = useDispatch()
 
   const { isAllAccessAllowed, isSettingReadOnly, isSecurityReadOnly } = useAuthContext();
+  const [ismachineVerify, setisMachineVerify] = useState([]);
 
+  
   useEffect(() => {
     if (dateTo !== isDateTo) setIsDateTo(dateTo);
     if (dateFrom !== isDateFrom) setIsDateFrom(dateFrom);
@@ -172,7 +176,7 @@ function SearchBarCombo({
       {nodes && nodes}
 
       {onFilterVerify &&
-        <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
+        <Grid item xs={12} sm={6} md={4} lg={4} xl={3}>
           <Stack alignItems="flex-start">
             <FormControl fullWidth>
               <InputLabel id="demo-simple-select-label">Machines</InputLabel>
@@ -361,6 +365,29 @@ function SearchBarCombo({
           />
 
         </Grid>}
+       
+          {onMachineVerify && (
+             <Grid item xs={12} sm={6} md={4} lg={2} xl={4}>
+                <Autocomplete
+                   multiple
+                   options={[
+                  { label: 'All', value: 'all' },
+                  { label: 'Transferred', value: 'transferredDate' }, 
+                  { label: 'Verified', value: 'verified' }, 
+                  { label: 'Pending Verification', value: 'pendingVerification' },
+                   ]}
+  
+                  value={Array.isArray(machineVerify) ? machineVerify : []} 
+                  onChange={(event, newValue) => {
+                  onMachineVerify(newValue);
+                   }}
+                  renderInput={(params) => (
+                <TextField {...params} label="Status" placeholder="Select status" size="small" />
+                          )}
+                  />
+               </Grid>
+              )}
+
 
       {onEmployeeFilterListBy &&
         <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
@@ -904,6 +931,8 @@ SearchBarCombo.propTypes = {
   buttonIcon: PropTypes.string,
   onFilterVerify: PropTypes.func,
   filterVerify: PropTypes.string,
+  onMachineVerify: PropTypes.func,
+  machineVerify: PropTypes.string,
   setAccountManagerFilter: PropTypes.func,
   accountManagerFilter: PropTypes.object,
   setSupportManagerFilter: PropTypes.func,
