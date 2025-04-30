@@ -110,8 +110,6 @@ function SearchBarCombo({
   const dispatch = useDispatch()
 
   const { isAllAccessAllowed, isSettingReadOnly, isSecurityReadOnly } = useAuthContext();
-  const [ismachineVerify, setisMachineVerify] = useState([]);
-
   
   useEffect(() => {
     if (dateTo !== isDateTo) setIsDateTo(dateTo);
