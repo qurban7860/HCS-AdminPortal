@@ -249,6 +249,7 @@ export function postTicket(params) {
       formData.append('customer', params?.customer?._id );
       formData.append('machine', params?.machine?._id );
       formData.append('issueType', params?.issueType?._id );
+      params.faults.forEach(fault => formData.append('faults[]', fault._id));      
       formData.append('requestType', params?.requestType?._id );
       formData.append('summary', params?.summary || '');
       formData.append('description', params?.description || '');
@@ -298,6 +299,7 @@ export function patchTicket(id, params) {
       formData.append('customer', params?.customer?._id );
       formData.append('machine', params?.machine?._id );
       formData.append('requestType', params?.requestType?._id );
+      params.faults.forEach(fault => formData.append('faults[]', fault._id));   
       formData.append('summary', params?.summary || '');
       formData.append('description', params?.description || '');
       formData.append('changeType', params?.changeType?._id || null);
