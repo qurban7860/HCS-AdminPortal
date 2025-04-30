@@ -132,7 +132,19 @@ export default function DropDownMultipleSelection( { value, name, label, options
                   padding: "0",
                   marginBottom: "5px", 
                   ...(multiple? {} : {padding: "8px 0"}),
-                }
+                },
+                "& .MuiChip-root": {
+                  height: 28,
+                  fontSize: '0.8125rem',
+                  padding: '0 8px',
+                  borderRadius: '6px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  marginBottom: 1,
+                },
+                "& .MuiChip-label": {
+                  padding: '0 8px',
+                },
               }}
             />
           )}           

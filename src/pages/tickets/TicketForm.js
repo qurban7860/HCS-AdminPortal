@@ -337,6 +337,7 @@ export default function TicketForm() {
                   />
                   <RHFAutocomplete
                     multiple
+                    disableCloseOnSelect
                     name="faults"
                     label="Fault"
                     options={ticketSettings?.faults || []}

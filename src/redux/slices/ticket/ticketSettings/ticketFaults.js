@@ -138,7 +138,7 @@ export function postTicketFault(params) {
           slug: params.slug,
           displayOrderNo: params.displayOrderNo,
           description: params.description,
-          isDefault: params.isDefault,
+          // isDefault: params.isDefault,
           isActive: params.isActive,
         };
       const response = await axios.post(`${CONFIG.SERVER_URL}tickets/settings/faults/`, data);
@@ -164,7 +164,7 @@ export function patchTicketFault(id, params) {
           slug: params.slug,
           displayOrderNo: params.displayOrderNo,
           description: params.description,
-          isDefault: params.isDefault,
+          // isDefault: params.isDefault,
           isActive: params.isActive,
         };
       const response = await axios.patch(`${CONFIG.SERVER_URL}tickets/settings/faults/${id}`, data);

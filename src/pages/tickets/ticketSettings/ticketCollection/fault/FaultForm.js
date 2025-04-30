@@ -34,7 +34,7 @@ export default function FaultForm() {
       slug: id && ticketFault?.slug || '',
       description: id && ticketFault?.description || '',
       displayOrderNo: id && ticketFault?.displayOrderNo || '',
-      isDefault: id && ticketFault?.isDefault || false,
+      // isDefault: id && ticketFault?.isDefault || false,
       isActive: id ? ticketFault?.isActive : true,
       createdAt: id && ticketFault?.createdAt || '',
     }),
@@ -51,7 +51,7 @@ export default function FaultForm() {
       }),
     description: Yup.string().max(5000),
     isActive: Yup.boolean(),
-    isDefault: Yup.boolean(),
+    // isDefault: Yup.boolean(),
     displayOrderNo: Yup.number()
       .typeError('Display Order No. must be a number')
       .nullable()
@@ -163,7 +163,7 @@ export default function FaultForm() {
                     {id && (
                       <RHFSwitch name="isActive" label="Active" />
                     )}
-                    <RHFSwitch name="isDefault" label="Default" />
+                    {/* <RHFSwitch name="isDefault" label="Default" /> */}
                   </Grid>
                 </Box>
                 <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
