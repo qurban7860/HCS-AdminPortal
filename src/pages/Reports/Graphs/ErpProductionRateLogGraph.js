@@ -49,9 +49,9 @@ const ErpProductionRateLogGraph = ({ timePeriod, customer }) => {
         labels = Array.from({ length: 30 }, (_, i) => {
           const date = new Date();
           date.setDate(date.getDate() - i);
-          const month = String(date.getMonth() + 1).padStart(2, '0');
           const day = String(date.getDate()).padStart(2, '0');
-          return `${month}/${day}`;
+          const month = String(date.getMonth() + 1).padStart(2, '0');
+          return `${day}/${month}`;
         }).reverse();
         break;
       case 'Monthly':
