@@ -27,6 +27,15 @@ const ErpProducedLengthLogGraph = ({ timePeriod, customer, graphLabels }) => {
     let labels = sortedData.map(item => item._id);
 
     switch (timePeriod) {
+      case 'Hourly':
+        sortedData.sort((a, b) => new Date(a._id) - new Date(b._id));
+        labels = Array.from({ length: 24 }, (_, i) => {
+          const date = new Date();
+          date.setHours(date.getHours() - i);
+          const hour = String(date.getHours()).padStart(2, '0');
+          return `${hour}:00`;
+        }).reverse();                   
+        break;
       case 'Daily':
         sortedData.sort((a, b) => new Date(a._id) - new Date(b._id));
         labels = Array.from({ length: 30 }, (_, i) => {
@@ -99,6 +108,8 @@ const ErpProducedLengthLogGraph = ({ timePeriod, customer, graphLabels }) => {
 
   const getDataRangeText = () => {
     switch (timePeriod) {
+      case 'Hourly':
+        return 'last 24 Hours';
       case 'Daily':
         return 'last 30 Days';
       case 'Monthly':
@@ -141,7 +152,7 @@ const ErpProducedLengthLogGraph = ({ timePeriod, customer, graphLabels }) => {
 
 export default ErpProducedLengthLogGraph;
 ErpProducedLengthLogGraph.propTypes = {
-  timePeriod: PropTypes.string,
+  timePeriod: PropTypes.oneOf(['Hourly', 'Daily', 'Monthly', 'Quarterly', 'Yearly']).isRequired,
   customer: PropTypes.object,
   graphLabels: PropTypes.object,
 };
