@@ -22,7 +22,7 @@ MachineLogsGraphViewForm.propTypes = {
 };
 
 export default function MachineLogsGraphViewForm() {
-  const [graphLabels, setGraphLabels] = useState({yaxis: "Cumulative Total Value", xaxis: "Months"});
+  const [graphLabels, setGraphLabels] = useState({yaxis: "Produced Length & Waste (m)", xaxis: "Months"});
 
   const dispatch = useDispatch();  
   const { machineId } = useParams();

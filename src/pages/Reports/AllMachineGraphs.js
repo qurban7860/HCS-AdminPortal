@@ -19,7 +19,7 @@ const AllMachineGraphs = () => {
   const dispatch = useDispatch();
   const { activeCustomerMachines } = useSelector((state) => state.machine);
   const { activeCustomers } = useSelector((state) => state.customer);
-  const [graphLabels, setGraphLabels] = useState({yaxis: "Cumulative Total Value", xaxis: "Months"});
+  const [graphLabels, setGraphLabels] = useState({yaxis: "Produced Length & Waste (m)", xaxis: "Months"});
 
   const defaultValues = {
     customer: null,
