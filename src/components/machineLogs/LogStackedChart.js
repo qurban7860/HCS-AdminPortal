@@ -59,7 +59,7 @@ export default function LogChartStacked({ chart, graphLabels }) {
       labels: {
         offsetY: 0,
         rotate: -45,
-        rotateAlways: graphLabels?.xaxis === 'Days',
+        rotateAlways: true,
       },
       axisBorder: {
         show: false,

@@ -50,6 +50,9 @@ export default function MachineLogsGraphViewForm() {
   const handlePeriodChange = useCallback((newPeriod) => {
     setValue('logPeriod', newPeriod);
     switch (newPeriod) {
+      case 'Hourly':
+        setGraphLabels((prev) => ({...prev, xaxis: "Hours"}));
+        break;
       case 'Monthly':
         setGraphLabels((prev) => ({...prev, xaxis: "Months"}))
         break;
@@ -95,7 +98,7 @@ export default function MachineLogsGraphViewForm() {
                     <RHFAutocomplete
                       name="logPeriod"
                       label="Period*"
-                      options={['Daily', 'Monthly', 'Quarterly', 'Yearly']}
+                      options={['Hourly', 'Daily', 'Monthly', 'Quarterly', 'Yearly']}
                       onChange={(e, newValue) => handlePeriodChange(newValue)}
                       size="small"
                       disableClearable

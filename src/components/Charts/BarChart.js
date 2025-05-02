@@ -51,6 +51,8 @@ function BarChart({ chartData, title }) {
       position: 'bottom',
       labels: {
         offsetY: 0,
+        rotate: -45,
+        rotateAlways: true,
       },
       axisBorder: {
         show: false,
