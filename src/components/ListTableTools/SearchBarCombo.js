@@ -28,8 +28,6 @@ function SearchBarCombo({
   value,
   onFilterVerify,
   filterVerify,
-  onMachineVerify,
-  machineVerify,
   setAccountManagerFilter,
   accountManagerFilter,
   setSupportManagerFilter,
@@ -174,24 +172,23 @@ function SearchBarCombo({
       {nodes && nodes}
 
       {onFilterVerify &&
-        <Grid item xs={12} sm={6} md={4} lg={4} xl={3}>
+        <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
           <Stack alignItems="flex-start">
             <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">Machines</InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                size='small'
+              <TextField
+                size="small"
                 name="isVerified"
                 value={filterVerify}
-                label="Verified"
+                label="Machines"
                 onChange={onFilterVerify}
+                select
+                fullWidth
               >
                 <MenuItem key="all" value="all">All</MenuItem>
                 <MenuItem key="transferredDate" value="transferredDate">Transferred</MenuItem>
                 <MenuItem key="verified" value="verified">Verified</MenuItem>
-                <MenuItem key="unverified" value="unverified">Not Verified</MenuItem>
-              </Select>
+                <MenuItem key="unverified" value="unverified">Pending Verification</MenuItem>
+              </TextField>
             </FormControl>
           </Stack>
         </Grid>}
@@ -218,21 +215,22 @@ function SearchBarCombo({
       {setAccountManagerFilter && isAllAccessAllowed &&
         <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
           <Autocomplete
-            id="controllable-states-demo"
-            value={accountManagerFilter || null}
+            multiple
+            value={accountManagerFilter || []}
             options={spContacts}
             isOptionEqualToValue={(option, val) => option?._id === val?._id}
             getOptionLabel={(option) =>
               `${option.firstName ? option.firstName : ''} ${option.lastName ? option.lastName : ''
               }`
             }
-            onChange={(event, newValue) => {
-              if (newValue) {
-                setAccountManagerFilter(newValue);
-              } else {
-                setAccountManagerFilter(null);
-              }
-            }}
+            onChange={(event, newValue) => setAccountManagerFilter(newValue)}
+            // onChange={(event, newValue) => {
+            //   if (newValue) {
+            //     setAccountManagerFilter(newValue);
+            //   } else {
+            //     setAccountManagerFilter([]);
+            //   }
+            // }}
             renderOption={(props, option) => (
               <li {...props} key={option?._id}>{`${option.firstName ? option.firstName : ''
                 } ${option.lastName ? option.lastName : ''}`}</li>
@@ -363,31 +361,6 @@ function SearchBarCombo({
           />
 
         </Grid>}
-       
-          {onMachineVerify && (
-             <Grid item xs={12} sm={6} md={4} lg={2} xl={4}>
-                <Autocomplete
-                   multiple
-                   disableCloseOnSelect
-                   options={[
-                  { label: 'All', value: 'all' },
-                  { label: 'Transferred', value: 'transferredDate' }, 
-                  { label: 'Verified', value: 'verified' }, 
-                  { label: 'Pending Verification', value: 'pendingVerification' },
-                   ]}
-  
-                  value={Array.isArray(machineVerify) ? machineVerify : []} 
-                  onChange={(event, newValue) => {
-                  onMachineVerify(newValue);
-                   }}
-                  renderInput={(params) => (
-                <TextField {...params} label="Status"  size="small" />
-                          )}
-                  />
-               </Grid>
-              )}
-
-
       {onEmployeeFilterListBy &&
         <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
           <Stack alignItems="flex-start">
@@ -930,10 +903,8 @@ SearchBarCombo.propTypes = {
   buttonIcon: PropTypes.string,
   onFilterVerify: PropTypes.func,
   filterVerify: PropTypes.string,
-  onMachineVerify: PropTypes.func,
-  machineVerify: PropTypes.string,
   setAccountManagerFilter: PropTypes.func,
-  accountManagerFilter: PropTypes.object,
+  accountManagerFilter: PropTypes.array,
   setSupportManagerFilter: PropTypes.func,
   supportManagerFilter: PropTypes.object,
   filterListBy: PropTypes.string,
