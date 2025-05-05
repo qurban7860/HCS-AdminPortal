@@ -50,7 +50,7 @@ function BarChart({ chartData, title }) {
       categories: labels,
       position: 'bottom',
       labels: {
-        offsetY: 0,
+        offsetY: 8,
         rotate: -45,
         rotateAlways: true,
       },
@@ -63,7 +63,7 @@ function BarChart({ chartData, title }) {
       title: {
         text: 'Dates',
         offsetX: 0,
-        offsetY: 0,
+        offsetY: -12,
         style: {
           fontSize: '12px',
           fontWeight: 600,

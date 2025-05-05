@@ -54,19 +54,16 @@ const ErpProductionRateLogGraph = ({ timePeriod, customer }) => {
           return `${day}/${month}`;
         }).reverse();
         break;
-      case 'Monthly':
-        sortedData.sort((a, b) => {
-          const [yearA, monthA] = a._id.split('-');
-          const [yearB, monthB] = b._id.split('-');
-          return new Date(yearA, monthA - 1) - new Date(yearB, monthB - 1);
-        });
-        labels = Array.from({ length: 12 }, (_, i) => {
-          const date = new Date();
-          date.setMonth(date.getMonth() - i);
-          const year = date.getFullYear();
-          const month = String(date.getMonth() + 1).padStart(2, '0');
-          return `${year}-${month}`;
-        }).reverse();
+        case 'Monthly':
+          sortedData.sort((a, b) => new Date(a._id) - new Date(b._id));        
+          labels = Array.from({ length: 12 }, (_, i) => {
+            const date = new Date();
+            date.setMonth(date.getMonth() - i);
+            return date.toLocaleDateString('en-US', {
+              month: 'short',
+              year: '2-digit'
+            });
+          }).reverse();          
         break;
       case 'Quarterly':
         sortedData.sort((a, b) => {
@@ -168,6 +165,11 @@ const ErpProductionRateLogGraph = ({ timePeriod, customer }) => {
                       text: 'Time Period',
                       font: { size: 14, weight: 'bold' },
                       color: '#616161',
+                    },
+                    ticks: {
+                      maxRotation: 45,
+                      minRotation: 45,
+                      color: '#424242',
                     },
                   },
                 },
