@@ -57,7 +57,7 @@ export default function LogChartStacked({ chart, graphLabels }) {
       categories,
       position: 'bottom',
       labels: {
-        offsetY: 0,
+        offsetY: 8,
         rotate: -45,
         rotateAlways: true,
       },
@@ -70,7 +70,7 @@ export default function LogChartStacked({ chart, graphLabels }) {
       title: {
         text: graphLabels?.xaxis,
         offsetX: 0,
-        offsetY: 0,
+        offsetY: -12,
         style: {
           fontSize: '12px',
           fontWeight: 600,
