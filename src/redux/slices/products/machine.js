@@ -20,6 +20,7 @@ const initialState = {
   error: null,
   machine: {},
   machineForDialog: {},
+  machineLifeCycle: {},
   machineDialog: false,
   machines: [],
   connectedMachine: {},
@@ -234,7 +235,14 @@ const slice = createSlice({
       state.machineForDialog = action.payload;
       state.initial = true;
     },
-
+    
+    getMachineLifeCycleSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.machineLifeCycle = action.payload;
+      state.initial = true;
+    },
+    
     setConnectedMachineAddDialog(state, action){
       state.connectedMachineAddDialog = action.payload;
     },
@@ -310,6 +318,13 @@ const slice = createSlice({
       state.initial = true;
     },
 
+    resetMachineLifeCycle(state) {
+      state.isLoading = false;
+      state.success = true;
+      state.machineLifeCycle = {};
+      state.initial = true;
+    },
+
     // Set FilterBy
     setFilterBy(state, action) {
       state.filterBy = action.payload;
@@ -350,6 +365,7 @@ export const {
   setMachineEditFormVisibility,
   setMachineMoveFormVisibility,
   resetMachineForDialog,
+  resetMachineLifeCycle,
   stopLoading,
   setTransferMachineFlag,
   setMachineTransferDialog,
@@ -656,6 +672,18 @@ export function getMachineForDialog(id) {
   };
 }
 
+export function getMachineLifeCycle(id) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${id}/machineLifeCycle`);
+      dispatch(slice.actions.getMachineLifeCycleSuccess(response.data));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+    }
+  };
+}
 
 // ----------------------------get Active Model Machines------------------------------------------
 
