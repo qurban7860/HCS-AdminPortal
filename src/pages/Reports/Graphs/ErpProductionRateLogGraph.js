@@ -2,8 +2,9 @@ import PropTypes from 'prop-types';
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Typography, Card, Grid, Skeleton } from '@mui/material';
-import { Line } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
+// import { Line } from 'react-chartjs-2';
+// import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
+import LogLineChart from '../../../components/machineLogs/LogLineChart';
 
 const formatNumber = (num) => {
   if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`;
@@ -11,17 +12,17 @@ const formatNumber = (num) => {
   return num.toFixed(1);
 };
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+// ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
-const ErpProductionRateLogGraph = ({ timePeriod, customer }) => {
+const ErpProductionRateLogGraph = ({ timePeriod, customer, graphLabels }) => {
   const [graphData, setGraphData] = useState([]);
   const { isLoading, machineLogsGraphData } = useSelector((state) => state.machineErpLogs);
 
   useEffect(() => {
     if (machineLogsGraphData) {
-      const convertedData = machineLogsGraphData.map(item => ({
+      const convertedData = machineLogsGraphData.map((item) => ({
         ...item,
-        productionRate: (item.componentLength / 1000) / (item.time / 3600000)
+        productionRate: (item.componentLength / 1000 + item.waste / 1000) / (item.time / 3600000),
       }));
       setGraphData(convertedData);
     }
@@ -97,16 +98,23 @@ const ErpProductionRateLogGraph = ({ timePeriod, customer }) => {
     });
 
     return {
-      labels,
-      datasets: [
+      categories: labels,
+      series: [
         {
           label: 'Production Rate (m/hr)',
           data: productionRate,
-          borderColor: '#4CAF50',
-          backgroundColor: 'rgba(76, 175, 80, 0.1)',
           tension: 0.1
-        },
-      ],
+        }
+      ]
+      // datasets: [
+      //   {
+      //     label: 'Production Rate (m/hr)',
+      //     data: productionRate,
+      //     borderColor: '#4CAF50',
+      //     backgroundColor: 'rgba(76, 175, 80, 0.1)',
+      //     tension: 0.1
+      //   },
+      // ],
     };
   };
   const chartData = processGraphData();
@@ -138,7 +146,8 @@ const ErpProductionRateLogGraph = ({ timePeriod, customer }) => {
         {isLoading && <Skeleton variant="rectangular" width="100%" height={120} />}
         {!isLoading && chartData ? (
           <div style={{ maxWidth: '100vh', margin: '0 auto' }}>
-            <Line
+          <LogLineChart chart={chartData} graphLabels={graphLabels} />
+            {/* <Line
               data={chartData}
               options={{
                 responsive: true,
@@ -195,7 +204,7 @@ const ErpProductionRateLogGraph = ({ timePeriod, customer }) => {
                   },
                 },
               }}
-            />
+            /> */}
           </div>
         ) : (
           <Typography variant="body1" color="textSecondary">
@@ -211,4 +220,5 @@ export default ErpProductionRateLogGraph;
 ErpProductionRateLogGraph.propTypes = {
   timePeriod: PropTypes.oneOf(['Hourly', 'Daily', 'Monthly', 'Quarterly', 'Yearly']).isRequired,
   customer: PropTypes.object,
+  graphLabels: PropTypes.object,
 };
