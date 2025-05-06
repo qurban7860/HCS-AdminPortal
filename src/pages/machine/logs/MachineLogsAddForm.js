@@ -116,8 +116,14 @@ export default function MachineLogsAddForm() {
         return;
       }
 
-      const logData = csvData;
+      const logData = csvData.map(({ date, timestamp, ...rest }) => ({
+        ...rest,
+        ...(date && { date: new Date(date).toISOString() }),
+        ...(timestamp && { timestamp: new Date(timestamp).toISOString() })
+      }));
       setError(null);
+      // eslint-disable-next-line no-debugger
+      debugger
       
       const action = {};
       if (selectedCheckbox === 0) {

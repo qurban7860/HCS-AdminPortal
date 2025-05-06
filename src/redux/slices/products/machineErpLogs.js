@@ -213,7 +213,8 @@ export function getMachineLogGraphData(customerId, machineId, type = "erp", peri
         machine: machineId,
         type,
         periodType,
-        logGraphType
+        logGraphType,
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       };
       const response = await axios.get(`${CONFIG.SERVER_URL}productLogs/graph`, { params });
       dispatch(slice.actions.setMachineLogsGraphData(response?.data || ''));
