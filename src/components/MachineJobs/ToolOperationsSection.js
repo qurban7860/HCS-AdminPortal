@@ -24,6 +24,7 @@ const ToolOperationsSection = ({ unitOfLength }) => {
     control,
     trigger,
     watch,
+    setValue,
     formState: { errors },
   } = useFormContext();
 
@@ -41,7 +42,7 @@ const ToolOperationsSection = ({ unitOfLength }) => {
         trigger(`operations.${index}.offset`);
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [length, trigger]);
 
   const getUnitLabel = () => {
@@ -119,6 +120,10 @@ const ToolOperationsSection = ({ unitOfLength }) => {
                           fieldErrors?.offset?.message ||
                           'Comma-separated offset values for same tool operation'
                         }
+                        onChange={(e) => {
+                          setValue(`operations.${opIndex}.offset`, e.target.value);
+                          trigger(`operations.${opIndex}.offset`);
+                        }}
                         sx={{ height: '100%' }}
                         InputProps={{
                           endAdornment: (
