@@ -6,7 +6,7 @@ export const machineLogTypeFormats = [
     formats: {
       "v1.1.66": ["date", "operator", "coilBatchName", "ccThickness", "coilLength", "frameSet", "componentLabel", "webWidth", "flangeHeight", "profileShape", "componentLength", "waste", "time"],
       "v1.4.X": ["date", "operator", "coilBatchName", "ccWidth", "coilThickness", "coilLength", "frameSet", "componentLabel", "webWidth", "flangeHeight", "profileShape", "componentLength", "waste", "time", "componentWeight"],
-      "v1.5.X": ["timestamp", "operator", "coilBatchName", "coilWidth", "coilThickness", "coilLength", "frameSet", "componentLabel", "flangeHeight", "webWidth", "profileShape", "componentLength", "waste", "time", "mode", "measurementUnit", "componentWeight", "lineSpeed", "componentGUID"],
+      "v1.5.X": ["timestamp", "operator", "coilBatchName", "coilWidth", "coilThickness", "coilLength", "frameSet", "componentLabel", "flangeHeight", "webWidth", "profileShape", "componentLength", "waste", "time", "mode", "measurementUnit", "componentWeight", "lineSpeed", "componentGUID", "componentType"],
     },
     tableColumns: [
       { id: 'date', label: 'Date', alwaysShow: true, defaultShow: true },
@@ -29,6 +29,7 @@ export const machineLogTypeFormats = [
       { id: 'time', label: 'Time' },
       { id: 'operator', label: 'Operator', searchable: true },
       { id: 'componentGUID', label: 'Component GUID', searchable: true },
+      { id: 'componentType', label: 'Component Type', searchable: true, defaultShow: true },
     ],
     numericalLengthValues: ["coilLength", "coilWidth", "coilThickness", "flangeHeight", "webWidth", "componentLength", "waste" ]
   },

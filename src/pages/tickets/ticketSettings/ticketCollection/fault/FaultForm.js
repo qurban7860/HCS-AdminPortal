@@ -1,4 +1,5 @@
 import { useMemo, useEffect } from 'react';
+import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
 // routes
 import { useNavigate, useParams } from 'react-router-dom';
@@ -13,7 +14,6 @@ import { StyledCardContainer } from '../../../../../theme/styles/default-styles'
 import { PATH_SUPPORT } from '../../../../../routes/paths';
 import { useSnackbar } from '../../../../../components/snackbar';
 import AddFormButtons from '../../../../../components/DocumentForms/AddFormButtons';
-import { TicketCollectionSchema } from '../utils/constant';
 import { handleError } from '../../../../../utils/errorHandler';
 import FormProvider, { RHFTextField, RHFSwitch, RHFColorPicker } from '../../../../../components/hook-form';
 import { postTicketFault, patchTicketFault, getTicketFault, resetTicketFault } from '../../../../../redux/slices/ticket/ticketSettings/ticketFaults';
@@ -34,15 +34,33 @@ export default function FaultForm() {
       slug: id && ticketFault?.slug || '',
       description: id && ticketFault?.description || '',
       displayOrderNo: id && ticketFault?.displayOrderNo || '',
-      isDefault: id && ticketFault?.isDefault || false,
+      // isDefault: id && ticketFault?.isDefault || false,
       isActive: id ? ticketFault?.isActive : true,
       createdAt: id && ticketFault?.createdAt || '',
     }),
     [id, ticketFault]
   );
+  
+  const FaultSchema = Yup.object().shape({
+    name: Yup.string().min(2).max(50).required('Name is required!'),
+    icon: Yup.string().max(50),
+    color: Yup.string().nullable().notRequired().matches(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/,
+      {
+        message: 'Invalid color!',
+        excludeEmptyString: true,
+      }),
+    description: Yup.string().max(5000),
+    isActive: Yup.boolean(),
+    // isDefault: Yup.boolean(),
+    displayOrderNo: Yup.number()
+      .typeError('Display Order No. must be a number')
+      .nullable()
+      .transform((_, val) => (val !== '' ? Number(val) : null)),
+    slug: Yup.string().min(0).max(50).matches(/^(?!.*\s)[\S\s]{0,50}$/, 'Slug field cannot contain blankspaces'),
+  });
 
   const methods = useForm({
-    resolver: yupResolver(TicketCollectionSchema),
+    resolver: yupResolver(FaultSchema),
     defaultValues,
     mode: 'onChange',
     reValidateMode: 'onChange'
@@ -126,7 +144,7 @@ export default function FaultForm() {
                       )
                     }}
                     name="icon"
-                    label="Icon*"
+                    label="Icon"
                   />
                   <RHFColorPicker
                     name="color"
@@ -145,7 +163,7 @@ export default function FaultForm() {
                     {id && (
                       <RHFSwitch name="isActive" label="Active" />
                     )}
-                    <RHFSwitch name="isDefault" label="Default" />
+                    {/* <RHFSwitch name="isDefault" label="Default" /> */}
                   </Grid>
                 </Box>
                 <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />

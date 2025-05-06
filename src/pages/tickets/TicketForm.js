@@ -53,6 +53,7 @@ export default function TicketForm() {
       customer: id && ticket?.customer || null,
       machine: id && ticket?.machine || null,
       issueType: id && ticket?.issueType || null,
+      faults: (id && Array.isArray(ticket?.faults) ? ticket?.faults : []) || [],
       requestType: id && ticket?.requestType || null,
       summary: id && ticket?.summary || '',
       description: id && ticket?.description || '',
@@ -316,7 +317,7 @@ export default function TicketForm() {
                   rowGap={2}
                   columnGap={2}
                   display="grid"
-                  gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
+                  gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(3, 1fr)' }}
                 >
                   <RHFAutocomplete
                     name="issueType"
@@ -330,6 +331,16 @@ export default function TicketForm() {
                     name="requestType"
                     label="Request Type*"
                     options={filteredRequestTypes || []}
+                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    getOptionLabel={(option) => `${option.name || ''}`}
+                    renderOption={(props, option) => (<li {...props} key={option?._id}> {option.name || ''} </li>)}
+                  />
+                  <RHFAutocomplete
+                    multiple
+                    disableCloseOnSelect
+                    name="faults"
+                    label="Fault"
+                    options={ticketSettings?.faults || []}
                     isOptionEqualToValue={(option, value) => option._id === value._id}
                     getOptionLabel={(option) => `${option.name || ''}`}
                     renderOption={(props, option) => (<li {...props} key={option?._id}> {option.name || ''} </li>)}

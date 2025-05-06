@@ -35,29 +35,35 @@ const ErpProductionRateLogGraph = ({ timePeriod, customer }) => {
     let labels = sortedData.map(item => item._id);
 
     switch (timePeriod) {
+      case 'Hourly':
+        sortedData.sort((a, b) => new Date(a._id) - new Date(b._id));
+        labels = Array.from({ length: 24 }, (_, i) => {
+          const date = new Date();
+          date.setHours(date.getHours() - i);
+          const hour = String(date.getHours()).padStart(2, '0');
+          return `${hour}:00`;
+        }).reverse();                    
+        break;
       case 'Daily':
         sortedData.sort((a, b) => new Date(a._id) - new Date(b._id));
         labels = Array.from({ length: 30 }, (_, i) => {
           const date = new Date();
           date.setDate(date.getDate() - i);
-          const month = String(date.getMonth() + 1).padStart(2, '0');
           const day = String(date.getDate()).padStart(2, '0');
-          return `${month}/${day}`;
+          const month = String(date.getMonth() + 1).padStart(2, '0');
+          return `${day}/${month}`;
         }).reverse();
         break;
-      case 'Monthly':
-        sortedData.sort((a, b) => {
-          const [yearA, monthA] = a._id.split('-');
-          const [yearB, monthB] = b._id.split('-');
-          return new Date(yearA, monthA - 1) - new Date(yearB, monthB - 1);
-        });
-        labels = Array.from({ length: 12 }, (_, i) => {
-          const date = new Date();
-          date.setMonth(date.getMonth() - i);
-          const year = date.getFullYear();
-          const month = String(date.getMonth() + 1).padStart(2, '0');
-          return `${year}-${month}`;
-        }).reverse();
+        case 'Monthly':
+          sortedData.sort((a, b) => new Date(a._id) - new Date(b._id));        
+          labels = Array.from({ length: 12 }, (_, i) => {
+            const date = new Date();
+            date.setMonth(date.getMonth() - i);
+            return date.toLocaleDateString('en-US', {
+              month: 'short',
+              year: '2-digit'
+            });
+          }).reverse();          
         break;
       case 'Quarterly':
         sortedData.sort((a, b) => {
@@ -107,6 +113,8 @@ const ErpProductionRateLogGraph = ({ timePeriod, customer }) => {
 
   const getDataRangeText = () => {
     switch (timePeriod) {
+      case 'Hourly':
+        return 'last 24 Hours';
       case 'Daily':
         return 'last 30 Days';
       case 'Monthly':
@@ -158,6 +166,11 @@ const ErpProductionRateLogGraph = ({ timePeriod, customer }) => {
                       font: { size: 14, weight: 'bold' },
                       color: '#616161',
                     },
+                    ticks: {
+                      maxRotation: 45,
+                      minRotation: 45,
+                      color: '#424242',
+                    },
                   },
                 },
                 plugins: {
@@ -196,6 +209,6 @@ const ErpProductionRateLogGraph = ({ timePeriod, customer }) => {
 
 export default ErpProductionRateLogGraph;
 ErpProductionRateLogGraph.propTypes = {
-  timePeriod: PropTypes.string,
+  timePeriod: PropTypes.oneOf(['Hourly', 'Daily', 'Monthly', 'Quarterly', 'Yearly']).isRequired,
   customer: PropTypes.object,
 };

@@ -19,7 +19,7 @@ const AllMachineGraphs = () => {
   const dispatch = useDispatch();
   const { activeCustomerMachines } = useSelector((state) => state.machine);
   const { activeCustomers } = useSelector((state) => state.customer);
-  const [graphLabels, setGraphLabels] = useState({yaxis: "Cumulative Total Value", xaxis: "Months"});
+  const [graphLabels, setGraphLabels] = useState({yaxis: "Produced Length & Waste (m)", xaxis: "Months"});
 
   const defaultValues = {
     customer: null,
@@ -75,6 +75,9 @@ const AllMachineGraphs = () => {
   const handlePeriodChange = useCallback((newPeriod) => {
     setValue('logPeriod', newPeriod);
     switch (newPeriod) {
+      case 'Hourly':
+        setGraphLabels((prev) => ({...prev, xaxis: "Hours"}));
+        break;
       case 'Monthly':
         setGraphLabels((prev) => ({...prev, xaxis: "Months"}))
         break;
@@ -149,7 +152,7 @@ const AllMachineGraphs = () => {
                     <RHFAutocomplete
                       name="logPeriod"
                       label="Period*"
-                      options={['Daily', 'Monthly', 'Quarterly', 'Yearly']}
+                      options={['Hourly', 'Daily', 'Monthly', 'Quarterly', 'Yearly']}
                       onChange={(e, newValue) => handlePeriodChange(newValue)}
                       size="small"
                       disableClearable

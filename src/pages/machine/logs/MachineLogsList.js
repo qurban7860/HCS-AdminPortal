@@ -128,7 +128,7 @@ export default function MachineLogsList({ allMachineLogsType }) {
                 >
                   <Box sx={{ pb: 1 }}>
                     <Typography variant="h5" color="text.primary">
-                      ERP Logs
+                      Machine Logs
                     </Typography>
                   </Box>
                 </Stack>

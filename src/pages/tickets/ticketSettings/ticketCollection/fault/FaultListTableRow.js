@@ -22,7 +22,7 @@ export default function FaultListTableRow({
   selected,
   onViewRow,
 }) {
-  const { name, icon, color, slug, displayOrderNo, isActive, isDefault, updatedAt } = row;
+  const { name, icon, color, slug, displayOrderNo, isActive, updatedAt } = row;
 
   return (
     <StyledTableRow hover selected={selected}>
@@ -36,7 +36,7 @@ export default function FaultListTableRow({
           <Iconify icon={ isActive ? ICONS.ACTIVE.icon : ICONS.INACTIVE.icon } sx={{mt: 1}} />
         </StyledTooltip>
       </TableCell>
-      <LinkTableCell align="left" onClick={onViewRow} param={name} isDefault={isDefault}/>
+      <LinkTableCell align="left" onClick={onViewRow} param={name} />
       <TableCell align="left">{slug}</TableCell>
       <TableCell align="left">{displayOrderNo}</TableCell>
       <TableCell align="left" padding="checkbox">
