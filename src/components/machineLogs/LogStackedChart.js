@@ -91,7 +91,7 @@ export default function LogChartStacked({ chart, graphLabels }) {
       },
       title: {
         text: graphLabels?.yaxis,
-        offsetX: 0,
+        offsetX: -5,
         offsetY: 0,
         style: {
           fontSize: '12px',
