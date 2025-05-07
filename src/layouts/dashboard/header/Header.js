@@ -13,6 +13,7 @@ import useResponsive from '../../../hooks/useResponsive';
 // config
 import { HEADER, NAV } from '../../../config-global';
 // components
+import TimeDisplay from '../../../components/timeZone/TimeZone';
 import Logo from '../../../components/logo';
 import FullScreenIcon from '../../../components/Icons/FullScreenIcon';
 import Iconify from '../../../components/iconify';
@@ -80,7 +81,19 @@ export default function Header({ onOpenNav, selectedCategory, setSelectedCategor
                 </Button>
               </Link>
             ))}
+             
+           
           </Box>
+          <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            flexShrink: 0, 
+            ml: 2,
+          }}
+        >
+          <TimeDisplay/>
+        </Box>
           {isDesktop && <FullScreenIcon />}
           <Stack flexGrow={0} direction="row" alignItems="center" spacing={{ xs: 0.5, sm: 1.5 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', borderLeft: `2px solid ${theme.palette.divider}`, borderRight: `2px solid ${theme.palette.divider}`, px: 1 }}>
@@ -104,7 +117,9 @@ export default function Header({ onOpenNav, selectedCategory, setSelectedCategor
                 )
               )}
             </Box>
+            
           </Stack>
+         
         </>
       )}
       <Stack
@@ -113,9 +128,12 @@ export default function Header({ onOpenNav, selectedCategory, setSelectedCategor
         alignItems="center"
         spacing={{ xs: 0.5, sm: 1.5 }}
         justifyContent={!isDesktop ? 'flex-end' : 'flex-start'}
-      >
+      > 
+      {!isDesktop && <TimeDisplay/>}
         <NotificationsPopover />
         <AccountPopover />
+        
+        
       </Stack>
     </>
   );
