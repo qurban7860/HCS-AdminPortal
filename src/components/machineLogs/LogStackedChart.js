@@ -1,13 +1,43 @@
 import PropTypes from 'prop-types';
 // import { useTheme } from '@mui/material';
+import { useState, useMemo } from 'react';
+import { Box, FormControlLabel, Checkbox } from '@mui/material';
 import Chart from '../chart';
 import { fShortenNumber } from '../../utils/formatNumber';
-// ----------------------------------------------------------------------
-LogChartStacked.propTypes = { chart: PropTypes.object, graphLabels: PropTypes.object };
+
+LogChartStacked.propTypes = {
+  chart: PropTypes.object,
+  graphLabels: PropTypes.object,
+};
+
 export default function LogChartStacked({ chart, graphLabels }) {
   // const theme = useTheme();
+  const [skipZero, setSkipZero] = useState(true); 
+
   const { categories, series } = chart;
+
+  const { filteredCategories, filteredSeries } = useMemo(() => {
+    if (!skipZero) {
+      return { filteredCategories: categories, filteredSeries: series };
+    }
+
+    const filteredIndexes = categories.reduce((acc, _, idx) => {
+      const val1 = series[0]?.data[idx] ?? 0;
+      const val2 = series[1]?.data[idx] ?? 0;
+      if (val1 !== 0 || val2 !== 0) acc.push(idx);
+      return acc;
+    }, []);
+
+    return {
+      filteredCategories: filteredIndexes.map((i) => categories[i]),
+      filteredSeries: series.map((s) => ({...s,
+        data: filteredIndexes.map((i) => s.data[i]),
+      })),
+    };
+  }, [skipZero, categories, series]);
+
   const colors = ['#A9E0FC', '#FCB49F'];
+
   const chartOptions = {
     chart: {
       type: 'bar',
@@ -54,8 +84,7 @@ export default function LogChartStacked({ chart, graphLabels }) {
       },
     },
     xaxis: {
-      categories,
-      position: 'bottom',
+      categories: filteredCategories,
       labels: {
         offsetY: 8,
         rotate: -45,
@@ -101,12 +130,10 @@ export default function LogChartStacked({ chart, graphLabels }) {
       },
     },
     legend: {
-      onItemClick: {
-        toggleDataSeries: false,
-      },
+      onItemClick: { toggleDataSeries: false },
     },
     tooltip: {
-      custom: ({ series: tooltipSeries, seriesIndex, dataPointIndex, w }) => {
+      custom: ({ series: tooltipSeries, dataPointIndex, w }) => {
         let tooltipContent = `<div class="apexcharts-theme-light">`;
         tooltipSeries.forEach((s, index) => {
           const legend = w.globals.seriesNames[index];
@@ -130,8 +157,23 @@ export default function LogChartStacked({ chart, graphLabels }) {
       },
     },
   };
+
   return (
-    <Chart type="bar" series={series} options={chartOptions} height={chartOptions.chart.height} />
+    <Box>
+      <Box sx={{ display: 'flex' }}>
+        <FormControlLabel
+          control={<Checkbox checked={skipZero} onChange={() => setSkipZero((prev) => !prev)} />}
+          label="Empty or zero values skipped"
+        />
+      </Box>
+      <Chart
+        type="bar"
+        series={filteredSeries}
+        options={chartOptions}
+        height={chartOptions.chart.height}
+      />
+    </Box>
   );
   // return (<Chart type="bar" series={filteredSeries} options={chartOptions} height={chartOptions.chart.height} />);
+
 }
