@@ -47,67 +47,55 @@ const MachineLifecycle = () => {
     if (Array.isArray(machineLifeCycle?.transferredHistory)) {
       machineLifeCycle.transferredHistory.forEach((history) => {
         if (history.manufactureDate) {
-          actions.push({
-            rawDate: history.manufactureDate,
-            date: fDate(history.manufactureDate),
-            action: `Manufactured for ${history?.customer?.name || 'N/A'}`
-          });
+          actions.push({ sortDate: history.manufactureDate, action: `Manufacture for ${history?.customer?.name || 'N/A'}` });
         }
   
         if (history.installationDate) {
-          actions.push({
-            rawDate: history.installationDate,
-            date: fDate(history.installationDate),
-            action: `Installed at ${history?.customer?.name || 'N/A'}`
-          });
+          actions.push({ sortDate: history.installationDate, action: `Installation at ${history?.customer?.name || 'N/A'}` });
         }
   
         if (history.purchaseDate) {
-          actions.push({
-            rawDate: history.purchaseDate,
-            date: fDate(history.purchaseDate),
-            action: `Purchased by ${history?.customer?.name || 'N/A'}`
-          });
+          actions.push({ sortDate: history.purchaseDate, action: `Purchase by ${history?.customer?.name || 'N/A'}` });
         }
   
         if (history.shippingDate) {
-          actions.push({
-            rawDate: history.shippingDate,
-            date: fDate(history.shippingDate),
-            action: `Shipped to ${history?.customer?.name || 'N/A'}`
-          });
+          actions.push({ sortDate: history.shippingDate, action: `Shipping to ${history?.customer?.name || 'N/A'}` });
         }
   
         if (history.transferredDate) {
-          actions.push({
-            rawDate: history.transferredDate,
-            date: fDate(history.transferredDate),
-            action: `Transferred to ${history?.customer?.name || 'N/A'}`
-          });
+          actions.push({ sortDate: history.transferredDate, action: `Machine Transfer` });
         }
   
         if (history.supportExpireDate) {
-          actions.push({
-            rawDate: history.supportExpireDate,
-            date: fDate(history.supportExpireDate),
-            action: `Support expired for ${history?.customer?.name || 'N/A'}`
-          });
+          actions.push({ sortDate: history.supportExpireDate, action: `Support expire for ${history?.customer?.name || 'N/A'}` });
         }
   
         if (history.decommissionedDate) {
-          actions.push({
-            rawDate: history.decommissionedDate,
-            date: fDate(history.decommissionedDate),
-            action: `Decommissioned at ${history?.customer?.name || 'N/A'}`
-          });
+          actions.push({ sortDate: history.decommissionedDate, action: `Decommissioned at ${history?.customer?.name || 'N/A'}` });
+        }
+
+      });
+    }
+    
+    if (Array.isArray(machineLifeCycle?.portalKey)) {
+      machineLifeCycle.portalKey.forEach((key) => {
+        if (key.createdAt) {
+          actions.push({ sortDate: key.createdAt, action: `Portal Connection by ${key?.createdBy?.name || 'N/A'}` });
+        }
+      });
+    }
+
+    if (Array.isArray(machineLifeCycle?.serviceReports)) {
+      machineLifeCycle.serviceReports.forEach((report) => {
+        if (report.serviceDate) {
+          actions.push({ sortDate: report.serviceDate, action: `Service Report` });
         }
       });
     }
   
     return actions
-      .filter(action => action.rawDate)
-      .sort((a, b) => new Date(b.rawDate) - new Date(a.rawDate));
-  }, [machineLifeCycle]);  
+    .sort((a, b) => new Date(b.sortDate) - new Date(a.sortDate));
+  }, [machineLifeCycle]);
 
   return (
     <Container maxWidth={false}>
@@ -156,8 +144,8 @@ const MachineLifecycle = () => {
                 <Fade in timeout={500} key={index}>
                   <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', mb: 3, position: 'relative', zIndex: 1 }}>
                     <Box sx={{ flex: 1, textAlign: 'right', pr: 2 }}>
-                      <Typography variant="body2" color="text.secondary">
-                        {item.date}
+                      <Typography variant="body2" fontWeight="bold" color="text.secondary">
+                        {item.sortDate ? fDate(item.sortDate) : 'N/A'}
                       </Typography>
                     </Box>
 
