@@ -320,9 +320,10 @@ export function getMachineLogRecords({
   isArchived,
   searchKey,
   searchColumn,
+  returnResponse = false
 }) {
   return async (dispatch) => {
-    dispatch(slice.actions.startLoading());
+    if (!returnResponse) dispatch(slice.actions.startLoading());
     try {
       const params = {
         customer: customerId,
@@ -331,13 +332,19 @@ export function getMachineLogRecords({
         fromDate,
         toDate,
         isArchived,
-        pagination: { page, pageSize },
+        ...(!returnResponse && { pagination: { page, pageSize } }),
         ...(isMachineArchived && { archivedByMachine: true }),
         ...(!!isCreatedAt && { isCreatedAt }),
         ...(searchKey?.length > 0 && { searchKey, searchColumn })
       };
       const response = await axios.get(`${CONFIG.SERVER_URL}productLogs/`, { params });
-      dispatch(slice.actions.getMachineErpLogRecordsSuccess(response.data));
+      
+      if (!returnResponse) {
+        dispatch(slice.actions.getMachineErpLogRecordsSuccess(response.data));
+        return null;
+      }
+      return response.data;
+
     } catch (error) {
       console.error('Error fetching machine log records:', error);
       dispatch(slice.actions.hasError(error.message || 'An error occurred'));

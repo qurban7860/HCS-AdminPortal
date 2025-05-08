@@ -94,7 +94,7 @@ function AllMachineLogs() {
   }, [setValue, trigger]);
 
   const dataForApi = {
-    customerId: machine?.customer?._id,
+    customerId: customer?._id || machine?.customer?._id,
     machineId: machine?._id || undefined,
     page,
     pageSize: rowsPerPage,
