@@ -37,8 +37,16 @@ export default function MachineLogsGraphViewForm() {
     },
   });
 
-  const { watch, setValue, trigger } = methods;
-  const { logPeriod, logGraphType, dateFrom, dateTo } = watch();
+  const { watch, setValue } = methods;
+  const { logPeriod, logGraphType } = watch();
+
+  useEffect(() => {
+    if (logGraphType?.key === 'productionRate') {
+      setGraphLabels(prev => ({ ...prev, yaxis: 'Production Rate (m/hr)' }))
+    } else {
+      setGraphLabels(prev => ({ ...prev, yaxis: 'Produced Length and Waste (m)' }))
+    }
+  }, [logGraphType])
 
   useEffect(() => {
     if (logPeriod && logGraphType) {
@@ -163,15 +171,11 @@ export default function MachineLogsGraphViewForm() {
           </Card>
         </form>
       </FormProvider>
-      {logGraphType.key === 'length_and_waste' ? (
-        <ErpProducedLengthLogGraph
-          timePeriod={logPeriod}
-          customer={machine?.customer}
-          graphLabels={graphLabels}
-        />
-      ) : (
-        <ErpProductionRateLogGraph timePeriod={logPeriod} customer={machine?.customer} />
-      )}
+        {logGraphType.key === 'length_and_waste' ? (
+          <ErpProducedLengthLogGraph timePeriod={logPeriod} customer={machine?.customer} graphLabels={graphLabels} />
+        ) : (
+          <ErpProductionRateLogGraph timePeriod={logPeriod} customer={machine?.customer} graphLabels={graphLabels} />
+        )}
     </Container>
   );
 }

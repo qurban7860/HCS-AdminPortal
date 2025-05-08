@@ -1,6 +1,14 @@
 import React, { useEffect, useReducer, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Divider,
+  Slide,
   Table,
   TableBody,
   TableCell,
@@ -8,6 +16,7 @@ import {
   TableHead,
   TableRow,
   TableSortLabel,
+  Typography,
 } from '@mui/material';
 import PropTypes from 'prop-types';
 import TableCard from '../../../components/ListTableTools/TableCard';
@@ -28,11 +37,13 @@ import Scrollbar from '../../../components/scrollbar';
 import MachineLogsTableRow from './MachineLogsTableRow';
 import DialogViewMachineLogDetails from '../../../components/Dialog/DialogViewMachineLogDetails';
 import { machineLogTypeFormats } from '../../../constants/machineLogTypeFormats';
+import Iconify from '../../../components/iconify';
+import DownloadMachineLogsDialog from '../../../components/machineLogs/DownloadMachineLogsDialog';
 
 function tableColumnsReducer(state, action) {
   switch (action.type) {
     case 'setUpInitialColumns': {
-      let columns = [...state]
+      let columns = [...state];
       if (!action.allMachineLogsPage) {
         columns = columns.filter((column) => column.page !== 'allMachineLogs');
       }
@@ -40,7 +51,7 @@ function tableColumnsReducer(state, action) {
       return [...columns];
     }
     case 'updateColumnCheck': {
-      const columns = [...state]
+      const columns = [...state];
       const columnIndex = state.findIndex((columnItem) => columnItem.id === action.columnId);
       if (columnIndex !== -1) {
         columns[columnIndex].checked = action.newCheckState;
@@ -48,7 +59,7 @@ function tableColumnsReducer(state, action) {
       return [...columns];
     }
     case 'handleLogTypeChange': {
-      let columns = action.newColumns
+      let columns = action.newColumns;
       if (!action.allMachineLogsPage) {
         columns = columns?.filter((column) => column.page !== 'allMachineLogs');
       }
@@ -61,15 +72,15 @@ function tableColumnsReducer(state, action) {
   }
 }
 
-const MachineLogsDataTable = ({
-  logType,
-  allMachineLogsPage,
-  dataForApi
-}) => {
+const MachineLogsDataTable = ({ logType, allMachineLogsPage, dataForApi }) => {
   const [openLogDetailsDialog, setOpenLogDetailsDialog] = useState(false);
+  const [openLogsDownloadDialog, setOpenLogsDownloadDialog] = useState(false);
   const [selectedLog, setSelectedLog] = useState(null);
   const [tableData, setTableData] = useState([]);
-  const [tableColumns, dispatchTableColumns] = useReducer(tableColumnsReducer, machineLogTypeFormats[0]?.tableColumns);
+  const [tableColumns, dispatchTableColumns] = useReducer(
+    tableColumnsReducer,
+    machineLogTypeFormats[0]?.tableColumns
+  );
 
   const numericalLengthValues = machineLogTypeFormats[0]?.numericalLengthValues || [];
   const { machineErpLogs, machineErpLogstotalCount, page, rowsPerPage, isLoading } = useSelector(
@@ -81,7 +92,7 @@ const MachineLogsDataTable = ({
     dispatch(resetMachineErpLogRecords());
     dispatchTableColumns({ type: 'setUpInitialColumns', allMachineLogsPage });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, []);
 
   useEffect(() => {
     if (dataForApi?.machineId && logType) {
@@ -101,12 +112,12 @@ const MachineLogsDataTable = ({
   }, [machineErpLogs]);
 
   useEffect(() => {
-    const newColumns = logType?.tableColumns
+    const newColumns = logType?.tableColumns;
     if (newColumns) {
       dispatchTableColumns({
         type: 'handleLogTypeChange',
         newColumns,
-        allMachineLogsPage
+        allMachineLogsPage,
       });
     }
   }, [allMachineLogsPage, logType]);
@@ -121,7 +132,7 @@ const MachineLogsDataTable = ({
     comparator: getComparator(order, orderBy),
   });
 
-  const isNotFound = (!dataFiltered.length) || (!isLoading && !dataFiltered.length);
+  const isNotFound = !dataFiltered.length || (!isLoading && !dataFiltered.length);
   const denseHeight = 60;
 
   const onChangePage = (event, newPage) => {
@@ -172,6 +183,21 @@ const MachineLogsDataTable = ({
             onRowsPerPageChange={onChangeRowsPerPage}
             columnFilterButtonData={tableColumns}
             columnButtonClickHandler={handleColumnButtonClick}
+            customeButton={
+              dataFiltered.length > 0 ? (
+                <Button
+                  variant="outlined"
+                  size="small"
+                  color="primary"
+                  // onClick={handleDownloadCSV}
+                  onClick={() => setOpenLogsDownloadDialog(true)}
+                  tabIndex={-1}
+                  startIcon={<Iconify icon="mdi:table-download" />}
+                >
+                  Download
+                </Button>
+              ) : undefined
+            }
           />
         )}
 
@@ -186,13 +212,14 @@ const MachineLogsDataTable = ({
                       return (
                         <TableCell
                           key={headCell.id}
-                          align={headCell?.numerical ? "right" : "left"}
+                          align={headCell?.numerical ? 'right' : 'left'}
                           sortDirection={orderBy === headCell.id ? order : false}
                           sx={{ width: headCell.width, minWidth: headCell.minWidth }}
                         >
-                          {!onSort && (
-                            numericalLengthValues.includes(headCell.id) ? `${headCell.label} (m)` : headCell.label
-                          )}
+                          {!onSort &&
+                            (numericalLengthValues.includes(headCell.id)
+                              ? `${headCell.label} (m)`
+                              : headCell.label)}
                           {onSort && (
                             <TableSortLabel
                               hideSortIcon
@@ -201,7 +228,9 @@ const MachineLogsDataTable = ({
                               onClick={() => onSort(headCell.id)}
                               sx={{ textTransform: 'capitalize' }}
                             >
-                              {numericalLengthValues.includes(headCell.id) ? `${headCell.label} (m)` : headCell.label}
+                              {numericalLengthValues.includes(headCell.id)
+                                ? `${headCell.label} (m)`
+                                : headCell.label}
                             </TableSortLabel>
                           )}
                         </TableCell>
@@ -210,24 +239,23 @@ const MachineLogsDataTable = ({
                 </TableRow>
               </TableHead>
               <TableBody>
-                {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
-                  .map((row, index) =>
-                    row ? (
-                      <MachineLogsTableRow
-                        key={row._id}
-                        columnsToShow={tableColumns}
-                        allMachineLogsPage={allMachineLogsPage}
-                        row={row}
-                        onViewRow={() => handleViewRow(row._id)}
-                        selected={selected.includes(row._id)}
-                        selectedLength={selected.length}
-                        style={index % 2 ? { background: 'red' } : { background: 'green' }}
-                        numericalLengthValues={numericalLengthValues}
-                      />
-                    ) : (
-                      isLoading && <TableSkeleton key={index} sx={{ height: denseHeight }} />
-                    )
-                  )}
+                {(isLoading ? [...Array(rowsPerPage)] : dataFiltered).map((row, index) =>
+                  row ? (
+                    <MachineLogsTableRow
+                      key={row._id}
+                      columnsToShow={tableColumns}
+                      allMachineLogsPage={allMachineLogsPage}
+                      row={row}
+                      onViewRow={() => handleViewRow(row._id)}
+                      selected={selected.includes(row._id)}
+                      selectedLength={selected.length}
+                      style={index % 2 ? { background: 'red' } : { background: 'green' }}
+                      numericalLengthValues={numericalLengthValues}
+                    />
+                  ) : (
+                    isLoading && <TableSkeleton key={index} sx={{ height: denseHeight }} />
+                  )
+                )}
                 {!isLoading && <TableNoData isNotFound={isNotFound} />}
               </TableBody>
             </Table>
@@ -253,10 +281,14 @@ const MachineLogsDataTable = ({
           refreshLogsList={refreshLogsList}
         />
       ) : null}
+      <DownloadMachineLogsDialog
+        openLogsDownloadDialog={openLogsDownloadDialog}
+        setOpenLogsDownloadDialog={setOpenLogsDownloadDialog}
+        dataForApi={dataForApi}
+      />
     </>
   );
 };
-
 MachineLogsDataTable.propTypes = {
   allMachineLogsPage: PropTypes.bool,
   logType: PropTypes.object,
