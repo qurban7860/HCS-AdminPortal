@@ -183,21 +183,22 @@ const MachineLogsDataTable = ({ logType, allMachineLogsPage, dataForApi }) => {
             onRowsPerPageChange={onChangeRowsPerPage}
             columnFilterButtonData={tableColumns}
             columnButtonClickHandler={handleColumnButtonClick}
-            customeButton={
-              dataFiltered.length > 0 ? (
-                <Button
-                  variant="outlined"
-                  size="small"
-                  color="primary"
-                  // onClick={handleDownloadCSV}
-                  onClick={() => setOpenLogsDownloadDialog(true)}
-                  tabIndex={-1}
-                  startIcon={<Iconify icon="mdi:table-download" />}
-                >
-                  Download
-                </Button>
-              ) : undefined
-            }
+            handleDownloadBtn={() => setOpenLogsDownloadDialog(true)}
+            // customeButton={
+            //   dataFiltered.length > 0 ? (
+            //     <Button
+            //       variant="outlined"
+            //       size="small"
+            //       color="primary"
+            //       // onClick={handleDownloadCSV}
+            //       onClick={() => setOpenLogsDownloadDialog(true)}
+            //       tabIndex={-1}
+            //       startIcon={<Iconify icon="mdi:table-download" />}
+            //     >
+            //       Download
+            //     </Button>
+            //   ) : undefined
+            // }
           />
         )}
 
