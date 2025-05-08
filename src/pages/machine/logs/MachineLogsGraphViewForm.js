@@ -37,8 +37,8 @@ export default function MachineLogsGraphViewForm() {
     },
   });
 
-  const { watch, setValue } = methods;
-  const { logPeriod, logGraphType } = watch();
+  const { watch, setValue, trigger } = methods;
+  const { logPeriod, logGraphType, dateFrom, dateTo } = watch();
 
   useEffect(() => {
     if (logGraphType?.key === 'productionRate') {

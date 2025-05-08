@@ -214,6 +214,8 @@ export function getMachineLogGraphData(customerId, machineId, type = "erp", peri
         type,
         periodType,
         logGraphType,
+        startDate,
+        endDate,
         timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       };
       const response = await axios.get(`${CONFIG.SERVER_URL}productLogs/graph`, { params });
