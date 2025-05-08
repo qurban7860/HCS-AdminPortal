@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { FormProvider, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 // @mui
 import { Card, Container, Stack, Typography, Box } from '@mui/material';
 // routes
@@ -9,11 +9,11 @@ import { useParams } from 'react-router-dom';
 // slices
 import { getMachineLogGraphData } from '../../../redux/slices/products/machineErpLogs';
 // utils
+import FormProvider, { RHFAutocomplete, RHFDatePicker } from '../../../components/hook-form';
 import { machineLogGraphTypes } from '../../../constants/machineLogTypeFormats';
 import MachineTabContainer from '../util/MachineTabContainer';
 import ErpProducedLengthLogGraph from '../../Reports/Graphs/ErpProducedLengthLogGraph';
 import ErpProductionRateLogGraph from '../../Reports/Graphs/ErpProductionRateLogGraph';
-import { RHFAutocomplete } from '../../../components/hook-form';
 
 // ----------------------------------------------------------------------
 
@@ -31,18 +31,28 @@ export default function MachineLogsGraphViewForm() {
   const methods = useForm({
     defaultValues: {
       logPeriod: "Monthly",
-      logGraphType: machineLogGraphTypes[0]
+      logGraphType: machineLogGraphTypes[0],
+      dateFrom: new Date(new Date().setHours(0, 0, 0, 0)),
+      dateTo: new Date(new Date().setHours(23, 59, 59, 999)),
     },
   });
 
-  const { watch, setValue } = methods;
-  const { logPeriod, logGraphType } = watch();
+  const { watch, setValue, trigger } = methods;
+  const { logPeriod, logGraphType, dateFrom, dateTo } = watch();
 
   useEffect(() => {
     if (logPeriod && logGraphType) {
       const customerId = machine?.customer?._id;
       const LogType = 'erp';
-      dispatch(getMachineLogGraphData(customerId, machineId, LogType, logPeriod, logGraphType?.key));
+      dispatch(getMachineLogGraphData(
+        customerId, 
+        machineId, 
+        LogType, 
+        logPeriod, 
+        logGraphType?.key,
+        new Date(new Date(dateFrom).setHours(0, 0, 0, 0)),
+        new Date(new Date(dateTo).setHours(23, 59, 59, 999))
+      ));
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [logPeriod, logGraphType]);
@@ -82,55 +92,86 @@ export default function MachineLogsGraphViewForm() {
         <form>
           <Card sx={{ p: 3 }}>
             <Stack spacing={2}>
-                <Stack
-                  direction="row"
-                  spacing={1}
-                  sx={{ alignSelf: 'flex-start', alignItems: 'center',  mb: 3 }}
-                >
-                  <Box sx={{ pb: 1 }}>
-                    <Typography variant="h5" color="text.primary">
-                      Log Graphs
-                    </Typography>
-                  </Box>
-                </Stack>
-                <Stack direction="row" spacing={2} sx={{ width: '100%' }}>
-                  <Box sx={{ width: '50%' }}>
-                    <RHFAutocomplete
-                      name="logPeriod"
-                      label="Period*"
-                      options={['Hourly', 'Daily', 'Monthly', 'Quarterly', 'Yearly']}
-                      onChange={(e, newValue) => handlePeriodChange(newValue)}
-                      size="small"
-                      disableClearable
-                    />
-                  </Box>
-                  <Box sx={{ width: '50%' }}>
-                    <RHFAutocomplete
-                      name="logGraphType"
-                      label="Graph Type*"
-                      options={machineLogGraphTypes}
-                      onChange={(e, newValue) => handleGraphTypeChange(newValue)}
-                      getOptionLabel={(option) => option.name || ''}
-                      isOptionEqualToValue={(option, value) => option?.key === value?.key}
-                      renderOption={(props, option) => (
-                        <li {...props} key={option?.key}>
-                          {option.name || ''}
-                        </li>
-                      )}
-                      disableClearable
-                      size="small"
-                    />
-                  </Box>
-                </Stack>
+              <Stack
+                direction="row"
+                spacing={1}
+                sx={{ alignSelf: 'flex-start', alignItems: 'center', mb: 3 }}
+              >
+                <Box sx={{ pb: 1 }}>
+                  <Typography variant="h5" color="text.primary">
+                    Log Graphs
+                  </Typography>
+                </Box>
+              </Stack>
+              <Stack direction="row" spacing={2} sx={{ width: '100%' }}>
+                <Box sx={{ width: '50%' }}>
+                  <RHFAutocomplete
+                    name="logPeriod"
+                    label="Period*"
+                    options={['Hourly', 'Daily', 'Monthly', 'Quarterly', 'Yearly']}
+                    onChange={(e, newValue) => handlePeriodChange(newValue)}
+                    size="small"
+                    disableClearable
+                  />
+                </Box>
+                <Box sx={{ width: '50%' }}>
+                  <RHFAutocomplete
+                    name="logGraphType"
+                    label="Graph Type*"
+                    options={machineLogGraphTypes}
+                    onChange={(e, newValue) => handleGraphTypeChange(newValue)}
+                    getOptionLabel={(option) => option.name || ''}
+                    isOptionEqualToValue={(option, value) => option?.key === value?.key}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option?.key}>
+                        {option.name || ''}
+                      </li>
+                    )}
+                    disableClearable
+                    size="small"
+                  />
+                </Box>
+              </Stack>
+              <Box
+                display="grid"
+                gap={2}
+                gridTemplateColumns={{ xs: '1fr', sm: 'repeat(2, 1fr)' }}
+                sx={{ flexGrow: 1 }}
+              >
+                <RHFDatePicker
+                  label="Start Date"
+                  name="dateFrom"
+                  size="small"
+                  value={dateFrom}
+                  onChange={(newValue) => {
+                    setValue('dateFrom', newValue);
+                    trigger(['dateFrom', 'dateTo']);
+                  }}
+                />
+                <RHFDatePicker
+                  label="End Date"
+                  name="dateTo"
+                  size="small"
+                  value={dateTo}
+                  onChange={(newValue) => {
+                    setValue('dateTo', newValue);
+                    trigger(['dateFrom', 'dateTo']);
+                  }}
+                />
+              </Box>
             </Stack>
           </Card>
         </form>
       </FormProvider>
-        {logGraphType.key === 'length_and_waste' ? (
-          <ErpProducedLengthLogGraph timePeriod={logPeriod} customer={machine?.customer} graphLabels={graphLabels} />
-        ) : (
-          <ErpProductionRateLogGraph timePeriod={logPeriod} customer={machine?.customer} />
-        )}
+      {logGraphType.key === 'length_and_waste' ? (
+        <ErpProducedLengthLogGraph
+          timePeriod={logPeriod}
+          customer={machine?.customer}
+          graphLabels={graphLabels}
+        />
+      ) : (
+        <ErpProductionRateLogGraph timePeriod={logPeriod} customer={machine?.customer} />
+      )}
     </Container>
   );
 }

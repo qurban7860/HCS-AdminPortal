@@ -204,7 +204,7 @@ export function addMachineLogRecord(machine, customer, logs, action, version, ty
 
 // ------------------------- GET LOGS GRAPH DATA ---------------------------------------------
 
-export function getMachineLogGraphData(customerId, machineId, type = "erp", periodType, logGraphType) {
+export function getMachineLogGraphData(customerId, machineId, type = "erp", periodType, logGraphType, startDate, endDate) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -213,7 +213,9 @@ export function getMachineLogGraphData(customerId, machineId, type = "erp", peri
         machine: machineId,
         type,
         periodType,
-        logGraphType
+        logGraphType,
+        startDate, 
+        endDate,  
       };
       const response = await axios.get(`${CONFIG.SERVER_URL}productLogs/graph`, { params });
       dispatch(slice.actions.setMachineLogsGraphData(response?.data || ''));

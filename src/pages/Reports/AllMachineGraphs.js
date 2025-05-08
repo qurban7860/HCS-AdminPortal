@@ -11,7 +11,7 @@ import { getActiveCustomerMachines, resetActiveCustomerMachines } from "../../re
 import { getMachineLogGraphData, resetMachineErpLogRecords, resetMachineLogsGraphData } from "../../redux/slices/products/machineErpLogs";
 import { Cover } from "../../components/Defaults/Cover";
 import { StyledCardContainer } from "../../theme/styles/default-styles";
-import { RHFAutocomplete } from "../../components/hook-form";
+import { RHFAutocomplete, RHFDatePicker } from "../../components/hook-form";
 import ErpProducedLengthLogGraph from "./Graphs/ErpProducedLengthLogGraph";
 import ErpProductionRateLogGraph from "./Graphs/ErpProductionRateLogGraph";
 
@@ -25,7 +25,9 @@ const AllMachineGraphs = () => {
     customer: null,
     machine: null,
     logPeriod: "Monthly",
-    logGraphType: machineLogGraphTypes[0]
+    logGraphType: machineLogGraphTypes[0],
+    dateFrom: new Date(new Date().setHours(0, 0, 0, 0)),
+    dateTo: new Date(new Date().setHours(23, 59, 59, 999)),
   };
 
   const methods = useForm({
@@ -33,7 +35,7 @@ const AllMachineGraphs = () => {
   });
 
   const { watch, setValue, trigger } = methods;
-  const { customer, machine, logPeriod, logGraphType } = watch();
+  const { customer, machine, logPeriod, logGraphType, dateFrom, dateTo } = watch();
 
   useEffect(() => {
     dispatch(getActiveCustomers());
@@ -47,18 +49,29 @@ const AllMachineGraphs = () => {
       dispatch(resetActiveCustomerMachines());
     }
   }, [dispatch, customer]);
-
+  
   useEffect(() => {
-    if (customer && logPeriod && logGraphType) {
+    if (customer && logPeriod && logGraphType?.key && dateFrom && dateTo) {
       const customerId = customer._id;
       const machineId = machine?._id || undefined;
       const LogType = 'erp';
-      dispatch(getMachineLogGraphData(customerId, machineId, LogType, logPeriod, logGraphType?.key));
+  
+      dispatch(getMachineLogGraphData(
+        customerId,
+        machineId,
+        LogType,
+        logPeriod,
+        logGraphType.key,
+        new Date(new Date(dateFrom).setHours(0, 0, 0, 0)),
+        new Date(new Date(dateTo).setHours(23, 59, 59, 999))
+      ));
     }
-    if (!customer) dispatch(resetMachineLogsGraphData());
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [customer, machine, logPeriod, logGraphType]);
-
+  
+    if (!customer) {
+      dispatch(resetMachineLogsGraphData());
+    }
+  }, [customer, machine?._id, logPeriod, logGraphType?.key, dateFrom, dateTo, dispatch]);
+  
   const handleCustomerChange = useCallback((newCustomer) => {
     setValue('customer', newCustomer);
     setValue('machine', null);
@@ -176,6 +189,33 @@ const AllMachineGraphs = () => {
                     />
                   </Box>
                 </Stack>
+                <Box
+                  display="grid"
+                  gap={2}
+                  gridTemplateColumns={{ xs: '1fr', sm: 'repeat(2, 1fr)' }}
+                  sx={{ flexGrow: 1 }}
+                >
+                  <RHFDatePicker
+                    label="Start Date"
+                    name="dateFrom"
+                    size="small"
+                    value={dateFrom}
+                    onChange={(newValue) => {
+                      setValue('dateFrom', newValue);
+                      trigger(['dateFrom', 'dateTo']);
+                    }}
+                  />
+                  <RHFDatePicker
+                    label="End Date"
+                    name="dateTo"
+                    size="small"
+                    value={dateTo}
+                    onChange={(newValue) => {
+                      setValue('dateTo', newValue);
+                      trigger(['dateFrom', 'dateTo']);
+                    }}
+                  />
+                  </Box>
               </Stack>
             </Card>
           </Grid>
