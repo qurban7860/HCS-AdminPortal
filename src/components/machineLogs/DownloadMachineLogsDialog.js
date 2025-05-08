@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -9,9 +11,8 @@ import {
   Slide,
   Typography,
 } from '@mui/material';
-import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
-import React, { useEffect, useState } from 'react';
+import { LoadingButton } from '@mui/lab';
 
 import { getMachineLogRecords } from '../../redux/slices/products/machineErpLogs';
 import Iconify from '../iconify';
@@ -25,20 +26,28 @@ const DownloadMachineLogsDialog = ({
   dataForApi,
 }) => {
   const [dataForDownload, setDataForDownload] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (openLogsDownloadDialog) {
       const fetchData = async () => {
-        const logsData = await dispatch(
-          getMachineLogRecords({
-            ...dataForApi,
-            page: undefined,
-            pageSize: undefined,
-            returnResponse: true,
-          })
-        );
-        setDataForDownload(logsData);
+        setIsLoading(true);
+        try {
+          const logsData = await dispatch(
+            getMachineLogRecords({
+              ...dataForApi,
+              page: undefined,
+              pageSize: undefined,
+              returnResponse: true,
+            })
+          );
+          setDataForDownload(logsData);
+        } catch (error) {
+          console.error('Error fetching log data:', error);
+        } finally {
+          setIsLoading(false);
+        }
       };
       
       fetchData();
@@ -46,64 +55,6 @@ const DownloadMachineLogsDialog = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [openLogsDownloadDialog]);
 
-  // const handleDownloadCSV = () => {
-  //   if (!Array.isArray(dataForDownload) || dataForDownload.length === 0) return;
-  //   const headersForCsv = machineLogTypeFormats[0]?.formats?.['v1.5.X'];
-  //   const csvRows = [headersForCsv.join(',')];
-
-  //   dataForDownload.forEach((row) => {
-  //     const values = headersForCsv.map((header) => {
-  //       let value = row[header] !== undefined ? row[header] : '';
-  //       if (header === 'timestamp') value = row.timestamp || row.date;
-  //       if (header === 'measurementUnit') value = 'mm';
-  //       const escaped = String(value).replace(/"/g, '""');
-  //       return escaped;
-  //     });
-  //     csvRows.push(values.join(','));
-  //   });
-  //   const csvString = csvRows.join('\n');
-  //   const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
-  //   const link = document.createElement('a');
-
-  //   const url = URL.createObjectURL(blob);
-
-  //   link.setAttribute('href', url);
-  //   link.setAttribute('download', 'csv_logs');
-  //   link.style.visibility = 'hidden';
-
-  //   document.body.appendChild(link);
-  //   link.click();
-  //   document.body.removeChild(link);
-  // };
-  // const handleDownloadJSON = () => {
-  //   if (!Array.isArray(dataForDownload) || dataForDownload.length === 0) return;
-  //   const headersForJSON = machineLogTypeFormats[0]?.formats?.['v1.5.X'];
-  //   const jsonArray = []
-  //   dataForDownload.forEach((row) => {
-  //     const jsonObj = {}
-  //     headersForJSON.forEach((header) => {
-  //       let value = row[header] !== undefined ? row[header] : '';
-  //       if (header === 'timestamp') value = row.timestamp || row.date;
-  //       if (header === 'measurementUnit') value = 'mm';
-  //       jsonObj[header] = value;
-  //     });
-  //     jsonArray.push(jsonObj);
-  //   });
-
-  //   const jsonString = JSON.stringify(jsonArray, null, 2);
-  //   const blob = new Blob([jsonString], { type: 'application/json' });
-  //   const link = document.createElement('a');
-  //   const url = URL.createObjectURL(blob);
-
-  //   link.setAttribute('href', url);
-  //   link.setAttribute('download', 'json_logs.json');
-  //   link.style.visibility = 'hidden';
-
-  //   document.body.appendChild(link);
-  //   link.click();
-  //   document.body.removeChild(link);
-  //   URL.revokeObjectURL(url);
-  // }
   const handleDownload = (format) => {
     if (!Array.isArray(dataForDownload) || dataForDownload.length === 0) return;
 
@@ -157,7 +108,7 @@ const DownloadMachineLogsDialog = ({
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
 
-    setOpenLogsDownloadDialog(false)
+    setOpenLogsDownloadDialog(false);
   };
 
   const handleDownloadCSV = () => handleDownload('csv');
@@ -177,10 +128,11 @@ const DownloadMachineLogsDialog = ({
       <Divider orientation="horizontal" flexItem />
       <DialogContent sx={{ p: 3, pt: 2 }}>
         <Box sx={{ display: 'flex', gap: 2 }}>
-          <Button
+          <LoadingButton
             variant="outlined"
             size="large"
             onClick={handleDownloadCSV}
+            loading={isLoading}
             sx={{
               width: '150px',
               height: '150px',
@@ -191,11 +143,12 @@ const DownloadMachineLogsDialog = ({
           >
             <Iconify icon="mdi:file-delimited" width={40} height={40} />
             CSV Format
-          </Button>
-          <Button
+          </LoadingButton>
+          <LoadingButton
             variant="outlined"
             size="large"
             onClick={handleDownloadJSON}
+            loading={isLoading}
             sx={{
               width: '150px',
               height: '150px',
@@ -206,7 +159,7 @@ const DownloadMachineLogsDialog = ({
           >
             <Iconify icon="mdi:code-json" width={40} height={40} />
             JSON Format
-          </Button>
+          </LoadingButton>
         </Box>
       </DialogContent>
       <Divider orientation="horizontal" flexItem />
