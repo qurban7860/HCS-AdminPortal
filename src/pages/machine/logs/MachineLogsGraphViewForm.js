@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useForm } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 // @mui
 import { Card, Container, Stack, Typography, Box } from '@mui/material';
 // routes
@@ -9,7 +9,7 @@ import { useParams } from 'react-router-dom';
 // slices
 import { getMachineLogGraphData } from '../../../redux/slices/products/machineErpLogs';
 // utils
-import FormProvider, { RHFAutocomplete, RHFDatePicker } from '../../../components/hook-form';
+import { RHFAutocomplete, RHFDatePicker } from '../../../components/hook-form';
 import { machineLogGraphTypes } from '../../../constants/machineLogTypeFormats';
 import MachineTabContainer from '../util/MachineTabContainer';
 import ErpProducedLengthLogGraph from '../../Reports/Graphs/ErpProducedLengthLogGraph';
@@ -49,21 +49,22 @@ export default function MachineLogsGraphViewForm() {
   }, [logGraphType])
 
   useEffect(() => {
-    if (logPeriod && logGraphType) {
+    if (logPeriod && logGraphType && dateFrom && dateTo) {
       const customerId = machine?.customer?._id;
       const LogType = 'erp';
       dispatch(getMachineLogGraphData(
-        customerId, 
-        machineId, 
-        LogType, 
-        logPeriod, 
+        customerId,
+        machineId,
+        LogType,
+        logPeriod,
         logGraphType?.key,
         new Date(new Date(dateFrom).setHours(0, 0, 0, 0)),
         new Date(new Date(dateTo).setHours(23, 59, 59, 999))
       ));
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [logPeriod, logGraphType]);
+  }, [logPeriod, logGraphType, dateFrom, dateTo, dispatch]);
+
 
   const handlePeriodChange = useCallback((newPeriod) => {
     setValue('logPeriod', newPeriod);
@@ -97,7 +98,6 @@ export default function MachineLogsGraphViewForm() {
     <Container maxWidth={false}>
       <MachineTabContainer currentTabValue="graphs" />
       <FormProvider {...methods}>
-        <form>
           <Card sx={{ p: 3 }}>
             <Stack spacing={2}>
               <Stack
@@ -169,7 +169,6 @@ export default function MachineLogsGraphViewForm() {
               </Box>
             </Stack>
           </Card>
-        </form>
       </FormProvider>
         {logGraphType.key === 'length_and_waste' ? (
           <ErpProducedLengthLogGraph timePeriod={logPeriod} customer={machine?.customer} graphLabels={graphLabels} />
