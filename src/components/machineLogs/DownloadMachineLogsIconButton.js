@@ -60,7 +60,7 @@ const DownloadMachineLogsIconButton = ({ dataForApi }) => {
   const handleDownload = (format) => {
     if (!Array.isArray(dataForDownload) || dataForDownload.length === 0) return;
 
-    const headers = machineLogTypeFormats[0]?.formats?.['v1.5.X'];
+    const headers = ["logId", ...machineLogTypeFormats[0].formats['v1.5.X']];
     let blob;
     let filename;
 
@@ -72,6 +72,7 @@ const DownloadMachineLogsIconButton = ({ dataForApi }) => {
           let value = row[header] !== undefined ? row[header] : '';
           if (header === 'timestamp') value = row.timestamp || row.date;
           if (header === 'measurementUnit') value = 'mm';
+          if (header === 'logId') value = row._id;
           const escaped = String(value).replace(/"/g, '""');
           return escaped;
         });
@@ -88,6 +89,7 @@ const DownloadMachineLogsIconButton = ({ dataForApi }) => {
           let value = row[header] !== undefined ? row[header] : '';
           if (header === 'timestamp') value = row.timestamp || row.date;
           if (header === 'measurementUnit') value = 'mm';
+          if (header === 'logId') value = row._id;
           jsonObj[header] = value;
         });
         return jsonObj;

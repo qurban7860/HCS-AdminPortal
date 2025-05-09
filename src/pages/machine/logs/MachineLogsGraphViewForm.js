@@ -31,7 +31,7 @@ export default function MachineLogsGraphViewForm() {
 
   const methods = useForm({
     defaultValues: {
-      logPeriod: "Monthly",
+      logPeriod: "Daily",
       logGraphType: machineLogGraphTypes[0],
       dateFrom: new Date(new Date().setHours(0, 0, 0, 0)),
       dateTo: new Date(new Date().setHours(23, 59, 59, 999)),

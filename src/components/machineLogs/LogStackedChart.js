@@ -135,10 +135,12 @@ export default function LogChartStacked({ chart, graphLabels }) {
     tooltip: {
       custom: ({ series: tooltipSeries, dataPointIndex, w }) => {
         let tooltipContent = `<div class="apexcharts-theme-light">`;
+        let total = 0;
         tooltipSeries.forEach((s, index) => {
           const legend = w.globals.seriesNames[index];
           const color = w.globals.colors[index];
           const value = s[dataPointIndex];
+          total += value;
           const valueText =
             value === 0
               ? ''
@@ -152,6 +154,14 @@ export default function LogChartStacked({ chart, graphLabels }) {
           tooltipContent += `<span class="apexcharts-tooltip-text-y-label">${legend}:</span>`;
           tooltipContent += `<span class="apexcharts-tooltip-text-y-value">${valueText}</span></div></div></div>`;
         });
+        const totalText = total.toLocaleString(undefined, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        });
+        tooltipContent += `<div class="apexcharts-tooltip-series-group apexcharts-active" style="order: 1; display: flex;">`;
+        tooltipContent += `<div class="apexcharts-tooltip-text"><div class="apexcharts-tooltip-y-group">`;
+        tooltipContent += `<span class="apexcharts-tooltip-text-y-label">Total:</span>`;
+        tooltipContent += `<span class="apexcharts-tooltip-text-y-value">${totalText}</span></div></div></div>`;
         tooltipContent += `</div>`;
         return tooltipContent;
       },
