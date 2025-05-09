@@ -1,14 +1,6 @@
 import React, { useEffect, useReducer, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Divider,
-  Slide,
   Table,
   TableBody,
   TableCell,
@@ -16,7 +8,6 @@ import {
   TableHead,
   TableRow,
   TableSortLabel,
-  Typography,
 } from '@mui/material';
 import PropTypes from 'prop-types';
 import TableCard from '../../../components/ListTableTools/TableCard';
@@ -37,8 +28,6 @@ import Scrollbar from '../../../components/scrollbar';
 import MachineLogsTableRow from './MachineLogsTableRow';
 import DialogViewMachineLogDetails from '../../../components/Dialog/DialogViewMachineLogDetails';
 import { machineLogTypeFormats } from '../../../constants/machineLogTypeFormats';
-import Iconify from '../../../components/iconify';
-import DownloadMachineLogsDialog from '../../../components/machineLogs/DownloadMachineLogsDialog';
 
 function tableColumnsReducer(state, action) {
   switch (action.type) {
@@ -74,7 +63,6 @@ function tableColumnsReducer(state, action) {
 
 const MachineLogsDataTable = ({ logType, allMachineLogsPage, dataForApi }) => {
   const [openLogDetailsDialog, setOpenLogDetailsDialog] = useState(false);
-  const [openLogsDownloadDialog, setOpenLogsDownloadDialog] = useState(false);
   const [selectedLog, setSelectedLog] = useState(null);
   const [tableData, setTableData] = useState([]);
   const [tableColumns, dispatchTableColumns] = useReducer(
@@ -183,22 +171,6 @@ const MachineLogsDataTable = ({ logType, allMachineLogsPage, dataForApi }) => {
             onRowsPerPageChange={onChangeRowsPerPage}
             columnFilterButtonData={tableColumns}
             columnButtonClickHandler={handleColumnButtonClick}
-            handleDownloadBtn={() => setOpenLogsDownloadDialog(true)}
-            // customeButton={
-            //   dataFiltered.length > 0 ? (
-            //     <Button
-            //       variant="outlined"
-            //       size="small"
-            //       color="primary"
-            //       // onClick={handleDownloadCSV}
-            //       onClick={() => setOpenLogsDownloadDialog(true)}
-            //       tabIndex={-1}
-            //       startIcon={<Iconify icon="mdi:table-download" />}
-            //     >
-            //       Download
-            //     </Button>
-            //   ) : undefined
-            // }
           />
         )}
 
@@ -282,11 +254,6 @@ const MachineLogsDataTable = ({ logType, allMachineLogsPage, dataForApi }) => {
           refreshLogsList={refreshLogsList}
         />
       ) : null}
-      <DownloadMachineLogsDialog
-        openLogsDownloadDialog={openLogsDownloadDialog}
-        setOpenLogsDownloadDialog={setOpenLogsDownloadDialog}
-        dataForApi={dataForApi}
-      />
     </>
   );
 };

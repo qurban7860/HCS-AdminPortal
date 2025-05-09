@@ -103,7 +103,7 @@ export default function TicketFormTableToolbar({
         const isResolved = filterResolvedStatus === 'resolved';
         setFilteredStatusTypes(
           activeTicketStatuses
-            ?.filter(status => status.statusType.isResolved === isResolved)
+            ?.filter(status => status?.statusType?.isResolved === isResolved)
             ?.map(status => status.statusType)?.filter((v, i, a) => a?.findIndex(t => t._id === v._id) === i)
         );
       }

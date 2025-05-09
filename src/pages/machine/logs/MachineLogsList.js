@@ -8,6 +8,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 
 // routes
 import { useNavigate, useParams } from 'react-router-dom';
+import { styled, useTheme } from '@mui/material/styles';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // components
@@ -22,9 +23,10 @@ import RHFFilteredSearchBar from '../../../components/hook-form/RHFFilteredSearc
 import { fetchIndMachineLogSchema } from '../../schemas/machine';
 import { BUTTONS } from '../../../constants/default-constants';
 import Iconify from '../../../components/iconify';
-import { StyledTooltip } from '../../../theme/styles/default-styles';
+import { StyledTooltip, StyledContainedIconButton } from '../../../theme/styles/default-styles';
 import { PATH_MACHINE } from '../../../routes/paths';
 import MachineLogsDataTable from './MachineLogsDataTable';
+import DownloadMachineLogsIconButton from '../../../components/machineLogs/DownloadMachineLogsIconButton';
 
 // ----------------------------------------------------------------------
 
@@ -37,6 +39,7 @@ export default function MachineLogsList({ allMachineLogsType }) {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const theme = useTheme();
   const { machineId } = useParams();
 
   const methods = useForm({
@@ -138,29 +141,14 @@ export default function MachineLogsList({ allMachineLogsType }) {
                       title={showAddbutton()}
                       placement="top"
                       disableFocusListener
-                      tooltipcolor="#103996"
-                      color="#fff"
+                      tooltipcolor={theme.palette.primary.main}
                     >
-                      <IconButton
-                        color="#fff"
+                      <StyledContainedIconButton
                         onClick={() => navigate(PATH_MACHINE.machines.logs.new(machineId))}
-                        sx={{
-                          background: '#2065D1',
-                          borderRadius: 1,
-                          height: '1.7em',
-                          p: '8.5px 14px',
-                          '&:hover': {
-                            background: '#103996',
-                            color: '#fff',
-                          },
-                        }}
+                        sx={{ px: 2 }}
                       >
-                        <Iconify
-                          color="#fff"
-                          sx={{ height: '24px', width: '24px' }}
-                          icon="eva:plus-fill"
-                        />
-                      </IconButton>
+                        <Iconify sx={{ height: '24px', width: '24px' }} icon="eva:plus-fill" />
+                      </StyledContainedIconButton>
                     </StyledTooltip>
                   )}
                 </Stack>
@@ -247,9 +235,19 @@ export default function MachineLogsList({ allMachineLogsType }) {
                   </RHFSelect>
                 </Box>
                 <Box sx={{ width: { xs: '100%', sm: 'auto' } }}>
-                  <LoadingButton type="submit" variant="contained" size="large" fullWidth>
-                    Get Logs
-                  </LoadingButton>
+                  <StyledTooltip
+                    title="Fetch Logs"
+                    placement="top"
+                    disableFocusListener
+                    tooltipcolor={theme.palette.primary.main}
+                  >
+                    <StyledContainedIconButton type="submit">
+                      <Iconify sx={{ height: '24px', width: '24px' }} icon="mdi:text-search" />
+                    </StyledContainedIconButton>
+                  </StyledTooltip>
+                </Box>
+                <Box sx={{ width: { xs: '100%', sm: 'auto' } }}>
+                  <DownloadMachineLogsIconButton dataForApi={dataForApi} />
                 </Box>
               </Stack>
             </Stack>
@@ -260,4 +258,3 @@ export default function MachineLogsList({ allMachineLogsType }) {
     </Container>
   );
 }
-
