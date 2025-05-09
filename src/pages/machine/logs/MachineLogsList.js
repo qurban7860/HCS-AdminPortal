@@ -241,7 +241,7 @@ export default function MachineLogsList({ allMachineLogsType }) {
                     disableFocusListener
                     tooltipcolor={theme.palette.primary.main}
                   >
-                    <StyledContainedIconButton type="submit">
+                    <StyledContainedIconButton type="submit" sx={{px: 2}}>
                       <Iconify sx={{ height: '24px', width: '24px' }} icon="mdi:text-search" />
                     </StyledContainedIconButton>
                   </StyledTooltip>
