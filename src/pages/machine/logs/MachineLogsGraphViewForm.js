@@ -6,6 +6,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { Card, Container, Stack, Typography, Box } from '@mui/material';
 // routes
 import { useParams } from 'react-router-dom';
+import debounce from 'lodash/debounce';
 // slices
 import { getMachineLogGraphData } from '../../../redux/slices/products/machineErpLogs';
 // utils
@@ -49,6 +50,7 @@ export default function MachineLogsGraphViewForm() {
   }, [logGraphType])
 
   useEffect(() => {
+    const fetchGraphData = debounce(() => {
     if (logPeriod && logGraphType && dateFrom && dateTo) {
       const customerId = machine?.customer?._id;
       const LogType = 'erp';
@@ -62,9 +64,14 @@ export default function MachineLogsGraphViewForm() {
         new Date(new Date(dateTo).setHours(23, 59, 59, 999))
       ));
     }
+    }, 500);
+    fetchGraphData();
+    return () => {
+      fetchGraphData.cancel(); 
+    };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [logPeriod, logGraphType, dateFrom, dateTo, dispatch]);
-
+ 
 
   const handlePeriodChange = useCallback((newPeriod) => {
     setValue('logPeriod', newPeriod);
