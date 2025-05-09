@@ -14,7 +14,6 @@ TablePaginationCustom.propTypes = {
   sx: PropTypes.object,
   columnFilterButtonData: PropTypes.array,
   columnButtonClickHandler: PropTypes.func,
-  handleDownloadBtn: PropTypes.func,
 };
 
 function TablePaginationCustom({
@@ -24,7 +23,6 @@ function TablePaginationCustom({
   columnFilterButtonData = [],
   columnButtonClickHandler = () => {},
   sx,
-  handleDownloadBtn,
   ...other
 }) {
 
@@ -51,37 +49,6 @@ function TablePaginationCustom({
         ...sx,
       }}
     >
-      {handleDownloadBtn && (
-        <StyledTooltip
-          title="Download Data"
-          placement="top"
-          disableFocusListener
-          tooltipcolor="#103996"
-          color="#fff"
-        >
-          <IconButton
-            color="#fff"
-            onClick={handleDownloadBtn}
-            size="small"
-            sx={{
-              background: '#2065D1',
-              borderRadius: 1,
-              px: 1,
-              '&:hover': {
-                background: '#103996',
-                color: '#fff',
-              },
-              ml: 2
-            }}
-          >
-            <Iconify
-              color="#fff"
-              sx={{ height: '24px', width: '24px' }}
-              icon="mdi:table-download"
-            />
-          </IconButton>
-        </StyledTooltip>
-      )}
       {columnFilterButtonData?.length > 0 && (
         <Box sx={{ flexGrow: 1, pl: 2 }}>
           <Button

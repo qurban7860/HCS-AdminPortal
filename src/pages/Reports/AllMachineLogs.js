@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Box, Grid, Stack, Card, Container } from '@mui/material';
+import { Box, Grid, Stack, Card, Container, useTheme } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
@@ -11,13 +11,16 @@ import { getMachineLogRecords, ChangePage, resetMachineErpLogRecords } from '../
 import { AddMachineLogSchema } from '../schemas/machine';
 // import useResponsive from '../../hooks/useResponsive';
 import { Cover } from '../../components/Defaults/Cover';
-import { StyledCardContainer } from '../../theme/styles/default-styles';
+import { StyledCardContainer, StyledContainedIconButton, StyledTooltip } from '../../theme/styles/default-styles';
 import { machineLogTypeFormats } from '../../constants/machineLogTypeFormats';
 import RHFFilteredSearchBar from '../../components/hook-form/RHFFilteredSearchBar';
 import MachineLogsDataTable from '../machine/logs/MachineLogsDataTable';
+import DownloadMachineLogsIconButton from '../../components/machineLogs/DownloadMachineLogsIconButton';
+import Iconify from '../../components/iconify';
 
 function AllMachineLogs() {
   const dispatch = useDispatch();
+  const theme = useTheme();
   const { activeCustomerMachines } = useSelector((state) => state.machine);
   const { activeCustomers } = useSelector((state) => state.customer);
   const { page, rowsPerPage } = useSelector((state) => state.machineErpLogs);
@@ -222,18 +225,20 @@ function AllMachineLogs() {
                       fullWidth
                     />
                   </Box>
+                    <Box sx={{ width: { xs: '100%', sm: 'auto' } }}>
+                      <StyledTooltip
+                        title="Fetch Logs"
+                        placement="top"
+                        disableFocusListener
+                        tooltipcolor={theme.palette.primary.main}
+                      >
+                        <StyledContainedIconButton type="submit">
+                          <Iconify sx={{ height: '24px', width: '24px' }} icon="mdi:text-search" />
+                        </StyledContainedIconButton>
+                      </StyledTooltip>
+                    </Box>
                   <Box sx={{ justifyContent: 'flex-end', display: 'flex' }}>
-                    <LoadingButton
-                      type="button"
-                      onClick={handleSubmit(onGetLogs)}
-                      variant="contained"
-                      size="large"
-                    >
-                      Get Logs
-                    </LoadingButton>
-                    {/* <LoadingButton type="button" onClick={handleSubmit(onGetReport)} variant="contained" size="large">
-                        Get Graph
-                      </LoadingButton> */}
+                    <DownloadMachineLogsIconButton dataForApi={dataForApi} />
                   </Box>
                 </Stack>
               </Stack>
