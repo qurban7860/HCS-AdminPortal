@@ -3,7 +3,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useDispatch, useSelector } from "react-redux";
 import { Box, Card, Container, Grid, Stack } from "@mui/material";
-
+import debounce from 'lodash/debounce';
 import { machineLogGraphTypes, machineLogTypeFormats } from "../../constants/machineLogTypeFormats";
 import { AddMachineLogSchema } from "../schemas/machine";
 import { getActiveCustomers } from "../../redux/slices/customer/customer";
@@ -51,25 +51,29 @@ const AllMachineGraphs = () => {
   }, [dispatch, customer]);
   
   useEffect(() => {
-    if (customer && logPeriod && logGraphType?.key && dateFrom && dateTo) {
-      const customerId = customer._id;
-      const machineId = machine?._id || undefined;
-      const LogType = 'erp';
-  
-      dispatch(getMachineLogGraphData(
-        customerId,
-        machineId,
-        LogType,
-        logPeriod,
-        logGraphType.key,
-        new Date(new Date(dateFrom).setHours(0, 0, 0, 0)),
-        new Date(new Date(dateTo).setHours(23, 59, 59, 999))
-      ));
-    }
-  
-    if (!customer) {
-      dispatch(resetMachineLogsGraphData());
-    }
+    const fetchGraphData = debounce(() => {
+      if (customer && logPeriod && logGraphType?.key && dateFrom && dateTo) {
+        const customerId = customer._id;
+        const machineId = machine?._id || undefined;
+        const LogType = 'erp';
+        dispatch(getMachineLogGraphData(
+          customerId,
+          machineId,
+          LogType,
+          logPeriod,
+          logGraphType.key,
+          new Date(new Date(dateFrom).setHours(0, 0, 0, 0)),
+          new Date(new Date(dateTo).setHours(23, 59, 59, 999))
+        ));
+      }
+      if (!customer) {
+        dispatch(resetMachineLogsGraphData());
+      }
+    }, 500); 
+    fetchGraphData();
+    return () => {
+      fetchGraphData.cancel(); 
+    };
   }, [customer, machine?._id, logPeriod, logGraphType?.key, dateFrom, dateTo, dispatch]);
   
   const handleCustomerChange = useCallback((newCustomer) => {
