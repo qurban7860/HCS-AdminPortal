@@ -122,9 +122,7 @@ export default function MachineLogsAddForm() {
         ...(timestamp && { timestamp: new Date(timestamp).toISOString() })
       }));
       setError(null);
-      // eslint-disable-next-line no-debugger
-      debugger
-      
+
       const action = {};
       if (selectedCheckbox === 0) {
         action.skipExistingRecords = true;
