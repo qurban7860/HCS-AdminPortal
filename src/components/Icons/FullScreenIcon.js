@@ -34,7 +34,7 @@ export default function FullScreenIcon({ sx }) {
       placement='top'
       tooltipcolor={theme.palette.primary.main}
     >
-      <Iconify icon={fullscreen ? "mdi:fullscreen-exit" : "mdi:fullscreen"} sx={{ cursor: 'pointer', ml: "auto", m: 1, width: "30px", height: "30px", ...sx }} onClick={onToggleFullScreen} />
+      <Iconify icon={fullscreen ? "mdi:fullscreen-exit" : "mdi:fullscreen"} sx={{ cursor: 'pointer', ml: "auto", m: 1, width: "30px", height: "30px",color: 'grey', ...sx }} onClick={onToggleFullScreen} />
     </StyledTooltip>
   );
 }
