@@ -71,7 +71,7 @@ const TimeDisplay = () => {
     nzTime.datePart !== localTime.datePart || nzTime.timePart !== localTime.timePart;
 
   const boxStyle = {
-    borderRadius: 4,
+    borderRadius: 2,
     minWidth: 200,
     padding: '4px 16px',
   };
@@ -80,21 +80,39 @@ const TimeDisplay = () => {
     color: '#333',
   };
 
-  const renderTimeBox = (label, { datePart, timePart }) => (
-    <Box sx={boxStyle}>
-      <Typography variant="caption" sx={textStyle}>
-        <Box component="span" sx={{ fontWeight: 'bold' }}>
-          {label} - 
-        </Box>
-        <Box component="span" sx={{ display: 'inline' }}>
-          {`  ${datePart}`}
-        </Box>
-        <Box component="span" sx={{ display: 'block' }}>
-          {timePart}
-        </Box>
-      </Typography>
-    </Box>
+  const renderTimeBox = (label, { datePart, timePart }) => {
+  const isNZ = label === 'Pacific/Auckland';
+  return (
+    <StyledTooltip
+      arrow
+      title={isNZ ? 'NZ Time' : 'System User Time'}
+      placement="left"
+      tooltipcolor={theme.palette.primary.main}
+    >
+      <Box
+        sx={{
+          ...boxStyle,
+          '&:hover': {
+            backgroundColor: '#f5f5f5',
+            cursor: 'pointer',
+          },
+        }}
+      >
+        <Typography variant="caption" sx={textStyle}>
+          <Box component="span" sx={{ fontWeight: 'bold' }}>
+            {label} - 
+          </Box>
+          <Box component="span" sx={{ display: 'inline' }}>
+            {`  ${datePart}`}
+          </Box>
+          <Box component="span" sx={{ display: 'block' }}>
+            {timePart}
+          </Box>
+        </Typography>
+      </Box>
+    </StyledTooltip>
   );
+};
 
   return (
     <Box display="flex" alignItems="center" gap={3} >
