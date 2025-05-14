@@ -20,11 +20,18 @@ export default function LogChartStacked({ chart, graphLabels }) {
     if (!skipZero) {
       return { filteredCategories: categories, filteredSeries: series };
     }
+    
+    const hasNonZeroValues = series.some(s => s.data.some(val => val !== 0 && val !== null && val !== undefined));
+
+    if (!hasNonZeroValues) {
+      return { filteredCategories: categories, filteredSeries: series };
+    }
 
     const filteredIndexes = categories.reduce((acc, _, idx) => {
-      const val1 = series[0]?.data[idx] ?? 0;
-      const val2 = series[1]?.data[idx] ?? 0;
-      if (val1 !== 0 || val2 !== 0) acc.push(idx);
+      const hasNonZeroBar = series.some(s => (s.data[idx] ?? 0) !== 0 && (s.data[idx] !== null && s.data[idx] !== undefined));
+      if (hasNonZeroBar) {
+        acc.push(idx);
+      }
       return acc;
     }, []);
 

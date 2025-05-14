@@ -169,7 +169,7 @@ function AllMachineLogs() {
                   sx={{ flexGrow: 1 }}
                 >
                   <RHFDatePicker
-                    label="Start Date"
+                    label="Date From"
                     name="dateFrom"
                     size="small"
                     value={dateFrom}
@@ -179,7 +179,7 @@ function AllMachineLogs() {
                     }}
                   />
                   <RHFDatePicker
-                    label="End Date"
+                    label="Date To"
                     name="dateTo"
                     size="small"
                     value={dateTo}

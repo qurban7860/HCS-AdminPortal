@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 import PropTypes from 'prop-types';
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
@@ -14,7 +15,7 @@ const formatNumber = (num) => {
 
 // ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
-const ErpProductionRateLogGraph = ({ timePeriod, customer, graphLabels }) => {
+const ErpProductionRateLogGraph = ({ timePeriod, customer, graphLabels, dateFrom, dateTo }) => {
   const [graphData, setGraphData] = useState([]);
   const { isLoading, machineLogsGraphData } = useSelector((state) => state.machineErpLogs);
 
@@ -27,76 +28,81 @@ const ErpProductionRateLogGraph = ({ timePeriod, customer, graphLabels }) => {
       setGraphData(convertedData);
     }
   }, [machineLogsGraphData]);
+
   const processGraphData = () => {
     if (!graphData || graphData.length === 0) {
+      return null
+    }
+
+    const dataMap = new Map();
+    graphData.forEach(item => dataMap.set(item._id, item));
+
+    const labels = [];
+    const startDate = new Date(dateFrom);
+    const endDate = new Date(dateTo);
+
+    if (timePeriod === 'Hourly') {
+      const currentDate = new Date(startDate);
+      let hourCount = 0;
+      while (currentDate <= endDate && hourCount < 24) {
+        const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+        const day = String(currentDate.getDate()).padStart(2, '0');
+        const hour = String(currentDate.getHours()).padStart(2, '0');
+        labels.push(`${month}/${day} ${hour}`);
+        currentDate.setHours(currentDate.getHours() + 1);
+        hourCount += 1;
+      }
+    } else if (timePeriod === 'Daily') {
+      const currentDate = new Date(startDate);
+      let dayCount = 0;
+      while (currentDate <= endDate && dayCount < 30) {
+        const day = String(currentDate.getDate()).padStart(2, '0');
+        const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+        labels.push(`${day}/${month}`);
+        currentDate.setDate(currentDate.getDate() + 1);
+        dayCount += 1;
+      }
+    } else if (timePeriod === 'Monthly') {
+      const currentDate = new Date(startDate);
+      let monthCount = 0;
+      while (currentDate <= endDate && monthCount < 12) {
+        const shortMonth = currentDate.toLocaleString('default', { month: 'short' });
+        const yearShort = String(currentDate.getFullYear()).slice(-2);
+        labels.push(`${shortMonth} ${yearShort}`);
+        currentDate.setMonth(currentDate.getMonth() + 1);
+        monthCount += 1;
+      }
+    } else if (timePeriod === 'Quarterly') {
+      const currentDate = new Date(startDate);
+      let quarterCount = 0;
+      while (currentDate <= endDate && quarterCount < 4) {
+        const year = currentDate.getFullYear();
+        const quarter = Math.floor(currentDate.getMonth() / 3) + 1;
+        labels.push(`${year}-Q${quarter}`);
+        currentDate.setMonth(currentDate.getMonth() + 3);
+        quarterCount += 1;
+      }
+    } else if (timePeriod === 'Yearly') {
+      const currentDate = new Date(startDate);
+      let yearCount = 0;
+      while (currentDate <= endDate && yearCount < 5) {
+        labels.push(String(currentDate.getFullYear()));
+        currentDate.setFullYear(currentDate.getFullYear() + 1);
+        yearCount += 1;
+      }
+    } else {
       return null;
     }
 
-    const sortedData = [...graphData];
-    let labels = sortedData.map(item => item._id);
-
-    switch (timePeriod) {
-      case 'Hourly':
-        sortedData.sort((a, b) => new Date(a._id) - new Date(b._id));
-        labels = Array.from({ length: 24 }, (_, i) => {
-          const date = new Date();
-          date.setHours(date.getHours() - i);
-          const month = String(date.getMonth() + 1).padStart(2, '0');
-          const day = String(date.getDate()).padStart(2, '0');
-          const hour = String(date.getHours()).padStart(2, '0');
-           return `${month}/${day} ${hour}`;
-        }).reverse();                    
-        break;
-      case 'Daily':
-        sortedData.sort((a, b) => new Date(a._id) - new Date(b._id));
-        labels = Array.from({ length: 30 }, (_, i) => {
-          const date = new Date();
-          date.setDate(date.getDate() - i);
-          const day = String(date.getDate()).padStart(2, '0');
-          const month = String(date.getMonth() + 1).padStart(2, '0');
-          return `${day}/${month}`;
-        }).reverse();
-        break;
-        case 'Monthly':
-          sortedData.sort((a, b) => new Date(a._id) - new Date(b._id));        
-          labels = Array.from({ length: 12 }, (_, i) => {
-            const date = new Date();
-            date.setMonth(date.getMonth() - i);
-            return date.toLocaleDateString('en-US', {
-              month: 'short',
-              year: '2-digit'
-            });
-          }).reverse();          
-        break;
-      case 'Quarterly':
-        sortedData.sort((a, b) => {
-          const [yearA, qtrA] = a._id.split('-');
-          const [yearB, qtrB] = b._id.split('-');
-          return yearA === yearB ? qtrA.localeCompare(qtrB) : yearA.localeCompare(yearB);
-        });
-        labels = Array.from({ length: 4 }, (_, i) => {
-          const date = new Date();
-          date.setMonth(date.getMonth() - i * 3);
-          const year = date.getFullYear();
-          const quarter = Math.floor(date.getMonth() / 3) + 1;
-          return `${year}-Q${quarter}`;
-        }).reverse();
-        break;
-      case 'Yearly':
-        sortedData.sort((a, b) => a._id.localeCompare(b._id));
-        labels = Array.from({ length: 5 }, (_, i) => {
-          const date = new Date();
-          date.setFullYear(date.getFullYear() - i);
-          return date.getFullYear().toString();
-        }).reverse();
-        break;
-      default:
-        labels = sortedData.map((item) => item._id);
-    }
-
     const productionRate = labels.map(label => {
-      const dataPoint = sortedData.find(item => item._id.includes(label));
-      return dataPoint ? dataPoint.productionRate : 0;
+      let foundRate = 0;
+      for (const value of dataMap.values()) {
+        if (value._id.includes(label)) {
+          foundRate = value.productionRate;
+          break; 
+        }
+      }
+      return foundRate;
     });
 
     return {
@@ -142,7 +148,7 @@ const ErpProductionRateLogGraph = ({ timePeriod, customer, graphLabels }) => {
     <Grid item xs={12} sm={12} md={12} lg={10} xl={6} sx={{ mt: 3 }}>
       <Card sx={{ p: 4, boxShadow: 3 }}>
         <Typography variant="h6" color="primary" gutterBottom>
-          Production Rate Over Time (For the {getDataRangeText()})
+          Production Rate Over Time 
         </Typography>
 
         {isLoading && <Skeleton variant="rectangular" width="100%" height={120} />}
@@ -210,7 +216,7 @@ const ErpProductionRateLogGraph = ({ timePeriod, customer, graphLabels }) => {
           </div>
         ) : (
           <Typography variant="body1" color="textSecondary">
-            {customer?._id ? `No data available for the ${getDataRangeText()}.` : "Please Select a customer to view the graph."}
+            {customer?._id ? 'No data available' : "Please Select a customer to view the graph."}
           </Typography>
         )}
       </Card>
@@ -223,4 +229,6 @@ ErpProductionRateLogGraph.propTypes = {
   timePeriod: PropTypes.oneOf(['Hourly', 'Daily', 'Monthly', 'Quarterly', 'Yearly']).isRequired,
   customer: PropTypes.object,
   graphLabels: PropTypes.object,
+  dateFrom: PropTypes.instanceOf(Date),
+  dateTo: PropTypes.instanceOf(Date),
 };
