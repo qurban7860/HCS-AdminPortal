@@ -208,15 +208,16 @@ export default function SecurityUserEditForm() {
                 />
 
               </Box>
-              {customer?.type?.toLowerCase() !== 'sp' &&
-                <RHFAutocomplete
-                  multiple
-                  disableCloseOnSelect
-                  filterSelectedOptions
-                  name="modules"
-                  label="Modules Access*"
-                  options={allowedModules}
-                />}
+              {/* {customer?.type?.toLowerCase() !== 'sp' && */}
+              <RHFAutocomplete
+                multiple
+                disableCloseOnSelect
+                filterSelectedOptions
+                name="modules"
+                label="Customer Portal Modules Access"
+                options={allowedModules}
+              />
+              {/* } */}
               <Box
                 rowGap={2}
                 columnGap={2}

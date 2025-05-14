@@ -294,7 +294,7 @@ export default function SecurityUserViewForm() {
 
                 <ViewFormField isLoading={isLoading}
                   sm={12}
-                  heading="Modules"
+                  heading="Customer Portal Modules Access"
                   chips={defaultValues?.modules}
                 />
 

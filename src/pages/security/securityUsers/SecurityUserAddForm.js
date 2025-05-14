@@ -258,15 +258,16 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
                 />
 
               </Box>
-              {customer?.type?.toLowerCase() !== 'sp' &&
-                <RHFAutocomplete
-                  multiple
-                  disableCloseOnSelect
-                  filterSelectedOptions
-                  name="modules"
-                  label="Modules Access*"
-                  options={allowedModules}
-                />}
+              {/* {customer?.type?.toLowerCase() !== 'sp' && */}
+              <RHFAutocomplete
+                multiple
+                disableCloseOnSelect
+                filterSelectedOptions
+                name="modules"
+                label="Customer Portal Modules Access"
+                options={allowedModules}
+              />
+              {/* } */}
               <Box rowGap={2} columnGap={2} display="grid"
                 gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
               >
