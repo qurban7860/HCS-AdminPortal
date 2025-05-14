@@ -32,7 +32,7 @@ SecurityUserAddForm.propTypes = {
 };
 
 export default function SecurityUserAddForm({ isEdit = false, currentUser, isInvite }) {
-
+  const { allowedModules } = useSelector((state) => state.user);
   const { allActiveCustomers } = useSelector((state) => state.customer);
   const { activeRoles } = useSelector((state) => state.role);
   const { activeRegions } = useSelector((state) => state.region);
@@ -69,6 +69,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
       password: '',
       confirmPassword: '',
       roles: [],
+      modules: [],
       regions: [],
       customers: [],
       machines: [],
@@ -257,6 +258,15 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
                 />
 
               </Box>
+              {customer?.type?.toLowerCase() !== 'sp' &&
+                <RHFAutocomplete
+                  multiple
+                  disableCloseOnSelect
+                  filterSelectedOptions
+                  name="modules"
+                  label="Modules Access*"
+                  options={allowedModules}
+                />}
               <Box rowGap={2} columnGap={2} display="grid"
                 gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
               >
