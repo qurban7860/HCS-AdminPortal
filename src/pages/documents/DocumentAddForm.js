@@ -159,8 +159,8 @@ function DocumentAddForm({
       dispatch(resetActiveDocuments());
       dispatch(resetActiveCustomers());
       dispatch(resetCustomerMachines());
-      dispatch(resetActiveDocumentTypes());
-      dispatch(resetActiveDocumentCategories())
+      // dispatch(resetActiveDocumentTypes());
+      // dispatch(resetActiveDocumentCategories())
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, customer, machine]);
