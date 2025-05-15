@@ -1,6 +1,6 @@
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 // @mui
 import { Box, Card, Grid, Stack } from '@mui/material';
 // hooks
@@ -21,9 +21,7 @@ import FormLabel from '../../../components/DocumentForms/FormLabel';
 
 export default function ModulesAccessEdit() {
     const { customer, allowedModules } = useSelector((state) => state.customer);
-
     const dispatch = useDispatch();
-    const navigate = useNavigate();
     const { enqueueSnackbar } = useSnackbar();
     const { customerId } = useParams();
 
