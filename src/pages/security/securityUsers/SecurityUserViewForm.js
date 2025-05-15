@@ -151,7 +151,6 @@ export default function SecurityUserViewForm() {
       email: securityUser?.email || '',
       login: securityUser?.login || '',
       roles: securityUser?.roles,
-      modules: securityUser?.modules || [],
       dataAccessibilityLevel: securityUser?.dataAccessibilityLevel || '',
       regions: securityUser?.regions || [],
       countries: securityUser?.regions ? securityUser.regions.flatMap(region => region.countries) : [],
@@ -290,12 +289,6 @@ export default function SecurityUserViewForm() {
                   sm={12}
                   heading="Data Accessibility Level"
                   param={defaultValues?.dataAccessibilityLevel}
-                />
-
-                <ViewFormField isLoading={isLoading}
-                  sm={12}
-                  heading="Customer Portal Modules Access"
-                  chips={defaultValues?.modules}
                 />
 
                 <ViewFormField isLoading={isLoading}

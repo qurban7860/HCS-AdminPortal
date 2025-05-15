@@ -25,14 +25,26 @@ const initialState = {
   page: 0,
   rowsPerPage: 100,
   reportHiddenColumns: {
-      "name": false,
-      "clientCode": false,
-      "tradingName": false,
-      "groupCustomer.name": true,
-      "mainSite.address.country": false,
-      "isActive": false,
-      "createdAt": false
+    "name": false,
+    "clientCode": false,
+    "tradingName": false,
+    "groupCustomer.name": true,
+    "mainSite.address.country": false,
+    "isActive": false,
+    "createdAt": false
   },
+  allowedModules: [
+    'machineSettings',
+    'machineProfiles',
+    'machineConfig',
+    'machineNotes',
+    'assemblyDrawings',
+    'machineDocuments',
+    'machineLogs',
+    'supportService',
+    'machineGraphs',
+    'machineServiceReports'
+  ],
   isFullScreen: false,
 };
 
@@ -50,22 +62,22 @@ const slice = createSlice({
     },
 
     // SET NEW MACHINE CUSTOMER
-    setNewMachineCustomer(state, action){
+    setNewMachineCustomer(state, action) {
       state.newMachineCustomer = action.payload;
     },
 
     // SET CUSTOMER TAB
-    setCustomerTab(state, action){
+    setCustomerTab(state, action) {
       state.customerTab = action.payload;
     },
 
     // SET TOGGLE
-    setCustomerEditFormVisibility(state, action){
+    setCustomerEditFormVisibility(state, action) {
       state.customerEditFormFlag = action.payload;
     },
 
     // SET TOGGLE
-    setCustomerDialog(state, action){
+    setCustomerDialog(state, action) {
       state.customerDialog = action.payload;
     },
     // HAS ERROR
@@ -131,7 +143,7 @@ const slice = createSlice({
     },
 
     // RESET CUSTOMER
-    resetCustomer(state){
+    resetCustomer(state) {
       state.customer = {};
       state.responseMessage = null;
       state.success = false;
@@ -139,14 +151,14 @@ const slice = createSlice({
     },
 
     // RESET CUSTOMERS
-    resetCustomers(state){
+    resetCustomers(state) {
       state.customers = [];
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
     },
     // RESET Active CUSTOMERS
-    resetActiveCustomers(state){
+    resetActiveCustomers(state) {
       state.activeCustomers = [];
       state.responseMessage = null;
       state.success = false;
@@ -154,7 +166,7 @@ const slice = createSlice({
     },
 
     // RESET ALL CUSTOMERS
-    resetAllActiveCustomers(state){
+    resetAllActiveCustomers(state) {
       state.allActiveCustomers = [];
       state.responseMessage = null;
       state.success = false;
@@ -162,7 +174,7 @@ const slice = createSlice({
     },
 
     // RESET FINANCING COMPANIES
-    resetFinancingCompanies(state){
+    resetFinancingCompanies(state) {
       state.financialCompanies = [];
       state.responseMessage = null;
       state.success = false;
@@ -193,15 +205,15 @@ const slice = createSlice({
       state.page = action.payload;
     },
 
-    setReportHiddenColumns(state, action){
-      state.reportHiddenColumns = action.payload;  
+    setReportHiddenColumns(state, action) {
+      state.reportHiddenColumns = action.payload;
     },
-    
+
     // Open Full Screen Dialog
     openFullScreen(state) {
       state.isFullScreen = true;
     },
-    
+
     // Close Full Screen Dialog
     closeFullScreen(state) {
       state.isFullScreen = false;
@@ -236,27 +248,27 @@ export const {
 
 // ----------------------------------------------------------------------
 
-export function getCustomers(page, pageSize, isArchived,cancelToken ) {
+export function getCustomers(page, pageSize, isArchived, cancelToken) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const params = {
         isArchived: isArchived || false,
-        pagination:{
+        pagination: {
           page,
-          pageSize  
+          pageSize
         }
       }
-      if(isArchived){
+      if (isArchived) {
         params.orderBy = { updatedBy: -1 }
       } else {
         params.orderBy = { createdAt: -1 }
       }
       const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers`,
-      {
-        params,
-        cancelToken: cancelToken?.token
-      });
+        {
+          params,
+          cancelToken: cancelToken?.token
+        });
       dispatch(slice.actions.getCustomersSuccess(response.data));
     } catch (error) {
       console.log(error);
@@ -273,13 +285,13 @@ export function getActiveCustomers(cancelToken) {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers`,
-      {
-        params: {
-          isActive: true,
-          isArchived: false,
-        },
-        cancelToken: cancelToken?.token,
-      });
+        {
+          params: {
+            isActive: true,
+            isArchived: false,
+          },
+          cancelToken: cancelToken?.token,
+        });
       dispatch(slice.actions.getActiveCustomersSuccess(response.data));
       // dispatch(slice.actions.setResponseMessage('Customers loaded successfully'));
     } catch (error) {
@@ -290,19 +302,19 @@ export function getActiveCustomers(cancelToken) {
   };
 }
 
-export function getFinancialCompanies( cancelToken ) {
+export function getFinancialCompanies(cancelToken) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers`,
-      {
-        params: {
-          isActive: true,
-          isArchived: false,
-          isFinancialCompany: true
-        },
-        cancelToken: cancelToken?.token,
-      });
+        {
+          params: {
+            isActive: true,
+            isArchived: false,
+            isFinancialCompany: true
+          },
+          cancelToken: cancelToken?.token,
+        });
       dispatch(slice.actions.getFinancialCompaniesSuccess(response.data));
     } catch (error) {
       console.log(error);
@@ -320,13 +332,13 @@ export function getAllActiveCustomers() {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers`,
-      {
-        params: {
-          unfiltered: true,
-          isActive: true,
-          isArchived: false
-        }
-      });
+        {
+          params: {
+            unfiltered: true,
+            isActive: true,
+            isArchived: false
+          }
+        });
       dispatch(slice.actions.getAllActiveCustomersSuccess(response.data));
       // dispatch(slice.actions.setResponseMessage('Customers loaded successfully'));
     } catch (error) {
@@ -344,14 +356,14 @@ export function getCustomersAgainstCountries(countries) {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}crm/getCustomersAgainstCountries`,
-      {
-        params: {
-          isActive: true,
-          isArchived:false,
-          type: 'SP',
-          countries
-        }
-      });
+        {
+          params: {
+            isActive: true,
+            isArchived: false,
+            type: 'SP',
+            countries
+          }
+        });
       return response.data;
     } catch (error) {
       console.log(error);
@@ -369,13 +381,13 @@ export function getActiveSPCustomers() {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers`,
-      {
-        params: {
-          isActive: true,
-          isArchived: false,
-          type: 'SP'
-        }
-      });
+        {
+          params: {
+            isActive: true,
+            isArchived: false,
+            type: 'SP'
+          }
+        });
       dispatch(slice.actions.getActiveSPCustomersSuccess(response.data));
       // dispatch(slice.actions.setResponseMessage('Customers loaded successfully'));
     } catch (error) {
@@ -392,12 +404,12 @@ export function getCustomer(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${id}` ,
-      {
-        params: {
-          flag: 'basic',
+      const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${id}`,
+        {
+          params: {
+            flag: 'basic',
+          }
         }
-      }
       );
       dispatch(slice.actions.getCustomerSuccess(response.data));
     } catch (error) {
@@ -427,87 +439,88 @@ export function deleteCustomer(id) {
 // --------------------------------------------------------------------------
 
 export function addCustomer(params) {
-    return async (dispatch) => {
-      dispatch(slice.actions.resetCustomer());
-      dispatch(slice.actions.startLoading());
-      try {
-        const data = {
+  return async (dispatch) => {
+    dispatch(slice.actions.resetCustomer());
+    dispatch(slice.actions.startLoading());
+    try {
+      const data = {
+        name: params?.name,
+        clientCode: params?.code,
+        tradingName: params?.tradingName,
+        ref: params?.ref,
+        groupCustomer: params?.groupCustomer?._id,
+        accountManager: params?.accountManager?.map((account) => account?._id),
+        projectManager: params?.projectManager?.map((project) => project?._id),
+        supportManager: params?.supportManager?.map((support) => support?._id),
+        mainSite: {
           name: params?.name,
-          clientCode: params?.code,
-          tradingName: params?.tradingName,
-          ref: params?.ref,
-          groupCustomer: params?.groupCustomer?._id,
-          accountManager: params?.accountManager?.map((account) => account?._id),
-          projectManager: params?.projectManager?.map((project) => project?._id),
-          supportManager: params?.supportManager?.map((support) => support?._id),
-          mainSite: {
-            name: params?.name,
-            phoneNumbers: params?.phoneNumbers?.filter( pN => pN?.contactNumber ) || [],
-            email: params?.email,
-            website: params?.website,
-            address: {
-              street: params?.street,
-              suburb: params?.suburb,
-              city: params?.city,
-              postcode: params?.postcode,
-              country: params?.country?.label,
-              region: params?.region,
-            },
+          phoneNumbers: params?.phoneNumbers?.filter(pN => pN?.contactNumber) || [],
+          email: params?.email,
+          website: params?.website,
+          address: {
+            street: params?.street,
+            suburb: params?.suburb,
+            city: params?.city,
+            postcode: params?.postcode,
+            country: params?.country?.label,
+            region: params?.region,
           },
-          isTechnicalContactSameAsBillingContact: params.isTechnicalContactSameAsBillingContact,
-          type: params.type,
-          isActive: params.isActive,
-          supportSubscription: params?.supportSubscription,
-          isFinancialCompany: params?.isFinancialCompany,
-          excludeReports: params?.excludeReports,
-        };
+        },
+        isTechnicalContactSameAsBillingContact: params.isTechnicalContactSameAsBillingContact,
+        type: params.type,
+        modules: params.modules,
+        isActive: params.isActive,
+        supportSubscription: params?.supportSubscription,
+        isFinancialCompany: params?.isFinancialCompany,
+        excludeReports: params?.excludeReports,
+      };
 
-        const billingContact = {}
-        const technicalContact = {}
+      const billingContact = {}
+      const technicalContact = {}
 
-        if(params?.billingContactLastName){
-          billingContact.lastName = params?.billingContactLastName
-        }
-        if(params?.billingContactTitle){
-          billingContact.title = params?.billingContactTitle
-        }
-        if(params?.billingContactPhone?.contactNumber && params?.billingContactFirstName){
-          billingContact.phoneNumbers = [ params?.billingContactPhone ]
-        }
-        if(params?.billingContactEmail){
-          billingContact.email = params?.billingContactEmail
-        }
-        if(params?.billingContactFirstName){
-          billingContact.firstName = params?.billingContactFirstName
-          data.billingContact = billingContact
-        }
-
-        if(params?.technicalContactTitle){
-          technicalContact.title = params?.technicalContactTitle
-        }
-        if(params?.technicalContactPhone?.contactNumber ){
-          technicalContact.phoneNumbers = [ params?.technicalContactPhone ]
-        }
-        if(params?.technicalContactEmail){
-          technicalContact.email = params?.technicalContactEmail
-        }
-        if(params?.technicalContactLastName){
-          technicalContact.lastName = params?.technicalContactLastName
-        }
-        if(params?.technicalContactFirstName){
-          technicalContact.firstName = params?.technicalContactFirstName
-          data.technicalContact = technicalContact
-        }
-        
-        const response = await axios.post(`${CONFIG.SERVER_URL}crm/customers`, data);
-        return response
-        // dispatch(slice.actions.getCustomerSuccess(response.data.Customer));
-      } catch (error) {
-        console.error(error);
-        dispatch(slice.actions.hasError(error.Message));
-        throw error;
+      if (params?.billingContactLastName) {
+        billingContact.lastName = params?.billingContactLastName
       }
-    };
+      if (params?.billingContactTitle) {
+        billingContact.title = params?.billingContactTitle
+      }
+      if (params?.billingContactPhone?.contactNumber && params?.billingContactFirstName) {
+        billingContact.phoneNumbers = [params?.billingContactPhone]
+      }
+      if (params?.billingContactEmail) {
+        billingContact.email = params?.billingContactEmail
+      }
+      if (params?.billingContactFirstName) {
+        billingContact.firstName = params?.billingContactFirstName
+        data.billingContact = billingContact
+      }
+
+      if (params?.technicalContactTitle) {
+        technicalContact.title = params?.technicalContactTitle
+      }
+      if (params?.technicalContactPhone?.contactNumber) {
+        technicalContact.phoneNumbers = [params?.technicalContactPhone]
+      }
+      if (params?.technicalContactEmail) {
+        technicalContact.email = params?.technicalContactEmail
+      }
+      if (params?.technicalContactLastName) {
+        technicalContact.lastName = params?.technicalContactLastName
+      }
+      if (params?.technicalContactFirstName) {
+        technicalContact.firstName = params?.technicalContactFirstName
+        data.technicalContact = technicalContact
+      }
+
+      const response = await axios.post(`${CONFIG.SERVER_URL}crm/customers`, data);
+      return response
+      // dispatch(slice.actions.getCustomerSuccess(response.data.Customer));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
 
 }
 // ------------------------ Customer Verification ----------------------------------------
@@ -516,7 +529,7 @@ export function setCustomerVerification(customerId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${customerId}`,{
+      await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${customerId}`, {
         isVerified: true,
       });
       dispatch(getCustomer(customerId));
@@ -552,10 +565,11 @@ export function updateCustomer(params) {
         isFinancialCompany: params?.isFinancialCompany,
         excludeReports: params?.excludeReports,
         updateProductManagers: params?.updateProductManagers,
+        modules: params.modules,
         isActive: params?.isActive,
         isArchived: params?.isArchived,
       };
-      await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${params.id}`, data );
+      await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${params.id}`, data);
       dispatch(getCustomer(params.id));
       dispatch(slice.actions.setCustomerEditFormVisibility(false));
     } catch (error) {
