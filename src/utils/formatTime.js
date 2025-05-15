@@ -14,19 +14,19 @@ export const stringToDate = (dateString, formatString = 'dd/MM/yyyy') => {
 
 
 export function isValidDate(date) {
-  if(isValid(new Date(date))){
+  if (isValid(new Date(date))) {
     return true;
   }
-    return false;
+  return false;
 }
 
 export function fDate(date, newFormat) {
 
   const fm = newFormat || 'dd MMM yyyy';
-  if(isValid(new Date(date))){
+  if (isValid(new Date(date))) {
     return date ? format(new Date(date), fm) : '';
   }
-    return date
+  return date
 }
 
 export function fTime(date, newFormat = 'hh:mm a') {
@@ -36,40 +36,35 @@ export function fTime(date, newFormat = 'hh:mm a') {
   return date;
 }
 
-export function GetDifferenceInDays( definedDay ) {
+export function GetDifferenceInDays(definedDay) {
   const today = new Date();
-    
   const definedDate = parseISO(definedDay);
-  
   const difference = differenceInDays(definedDate, today);
-  
   return difference;
 }
-export function fQuarterYearDate(startDate, newFormat) {
 
+export function fQuarterYearDate(startDate, newFormat) {
   if (startDate) {
     const start = new Date(startDate);
     const end = new Date(start);
-    end.setMonth(start.getMonth() + 2); // Add 2 months to get the end of the quarter
-
-    const formattedStartDate = format(start, 'MMM');
-    const formattedEndDate = format(end, 'MMM yyyy')
+    end.setMonth(start.getMonth() + 2);
+    const formattedStartDate = format(start, newFormat || 'MMM yyyy');
+    const formattedEndDate = format(end, newFormat || 'MMM yyyy')
     return `${formattedStartDate}-${formattedEndDate}`;
   }
-
   return '';
 }
 
 export function fDateTime(date, newFormat) {
   const fm = newFormat || 'dd MMM yyyy p';
-  if(isValid(new Date(date))){
+  if (isValid(new Date(date))) {
     return date ? format(new Date(date), fm) : '';
   }
   return date
 }
 
 export function fTimestamp(date) {
-  if(isValid(date)){
+  if (isValid(date)) {
     return date ? getTime(new Date(date)) : '';
   }
   return date
@@ -107,6 +102,6 @@ export function getTimeObjectFromISOString(dateString) {
   const ampm = hours >= 12 ? 'PM' : 'AM';
   const formattedHours = hours % 12 || 12;
   const formattedTime = `${formattedHours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
-  const timeObject = {value: formattedValueTime, label: `${formattedTime} ${ampm}`};
+  const timeObject = { value: formattedValueTime, label: `${formattedTime} ${ampm}` };
   return timeObject;
 }
