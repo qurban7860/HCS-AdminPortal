@@ -39,7 +39,7 @@ const TABS = [
     },
     {
         value: 'modulesAccess',
-        label: 'customer Modules Access',
+        label: 'Customer Portal Access',
         icon: ICONS.CUSTOMER_PORTAL_ACCESS.icon,
     }
 ];

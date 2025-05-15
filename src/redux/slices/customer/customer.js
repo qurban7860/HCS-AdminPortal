@@ -467,8 +467,8 @@ export function addCustomer(params) {
           },
         },
         isTechnicalContactSameAsBillingContact: params.isTechnicalContactSameAsBillingContact,
-        type: params.type,
-        modules: params.modules,
+        type: params?.type,
+        modules: params?.modules,
         isActive: params.isActive,
         supportSubscription: params?.supportSubscription,
         isFinancialCompany: params?.isFinancialCompany,
@@ -539,7 +539,21 @@ export function setCustomerVerification(customerId) {
       throw error;
     }
   };
+}
 
+export function updateCustomerModules(params) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${params.id}`, {
+        modules: params?.modules,
+      });
+      dispatch(getCustomer(params.id));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
 }
 
 // --------------------------------------------------------------------------
@@ -558,14 +572,14 @@ export function updateCustomer(params) {
         primaryBillingContact: params?.primaryBillingContact?._id || null,
         primaryTechnicalContact: params?.primaryTechnicalContact?._id || null,
         mainSite: params?.mainSite?._id || null,
-        accountManager: params?.accountManager.map(am => am._id) || null,
-        projectManager: params?.projectManager.map(pm => pm._id) || null,
-        supportManager: params?.supportManager.map(sm => sm._id) || null,
+        accountManager: params?.accountManager?.map(am => am._id) || null,
+        projectManager: params?.projectManager?.map(pm => pm._id) || null,
+        supportManager: params?.supportManager?.map(sm => sm._id) || null,
         supportSubscription: params?.supportSubscription,
         isFinancialCompany: params?.isFinancialCompany,
         excludeReports: params?.excludeReports,
         updateProductManagers: params?.updateProductManagers,
-        modules: params.modules,
+        modules: params?.modules,
         isActive: params?.isActive,
         isArchived: params?.isArchived,
       };

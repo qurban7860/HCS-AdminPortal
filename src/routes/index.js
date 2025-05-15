@@ -83,8 +83,8 @@ import {
   // Customer Jira
   CustomerJiraList,
 
-  // Customer Modules Access
-  CustomerModulesAccess,
+  // Modules Access
+  ModulesAccess,
 
   // ----------------------------------------------------------------
 
@@ -279,7 +279,7 @@ import {
   AllMachinesGraphs,
 
   // --------------------- Machine Settings --------------------------
-  
+
   // ----------------------Machine Lifecycle----------------------
   MachineLifecycle,
 
@@ -389,7 +389,7 @@ import {
   InvestigationReasonList,
   InvestigationReasonForm,
   InvestigationReasonView,
-// --------------------------- Fault --------------------------
+  // --------------------------- Fault --------------------------
   FaultList,
   FaultForm,
   FaultView,
@@ -689,13 +689,13 @@ export default function Router() {
                 { element: <CustomerJiraList />, index: true },
               ],
             },
-              {
+            {
               path: ':customerId/modulesAccess',
               children: [
-                { element: < CustomerModulesAccess/>, index: true },
+                { element: <ModulesAccess />, index: true },
               ],
             },
-            
+
             { path: 'permission-denied', element: <PermissionDeniedPage /> },
             { path: 'blank', element: <BlankPage /> },
           ]
@@ -780,7 +780,7 @@ export default function Router() {
                 }
               ]
             },
-            
+
             {
               path: ':machineId/toolsInstalled',
               children: [
