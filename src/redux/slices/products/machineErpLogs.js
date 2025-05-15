@@ -204,18 +204,27 @@ export function addMachineLogRecord(machine, customer, logs, action, version, ty
 
 // ------------------------- GET LOGS GRAPH DATA ---------------------------------------------
 
-export function getMachineLogGraphData(customerId, machineId, type = "erp", periodType, logGraphType, startDate, endDate) {
+export function getMachineLogGraphData(customerId, machineId, type = "erp", periodType, logGraphType, utcStartDate, utcEndDate) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
+      const startDate = new Date(utcStartDate);
+      const endDate = new Date(utcEndDate);
+
+      const isSameDay = startDate.toDateString() === endDate.toDateString();
+
+      if (isSameDay) {
+        startDate.setHours(0, 0, 0, 0);
+        endDate.setHours(23, 59, 59, 999);
+      }
       const params = {
         customer: customerId,
         machine: machineId,
         type,
         periodType,
         logGraphType,
-        startDate,
-        endDate,
+        startDate: startDate.toISOString(),
+        endDate: endDate.toISOString(),
         timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       };
       const response = await axios.get(`${CONFIG.SERVER_URL}productLogs/graph`, { params });
