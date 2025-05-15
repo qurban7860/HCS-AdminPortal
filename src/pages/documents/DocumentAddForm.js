@@ -147,7 +147,7 @@ function DocumentAddForm({
 
   useLayoutEffect(() => {
     if (!newVersion && !addFiles && !historyNewVersion && !historyAddFiles) {
-      reset();
+      // reset();
       setSelectedValue('new');
       setReadOnlyDocument(false);
     }
