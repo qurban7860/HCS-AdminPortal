@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 // @mui
@@ -16,11 +16,11 @@ import FormProvider, { RHFAutocomplete } from '../../../components/hook-form';
 import { FORMLABELS } from '../../../constants/customer-constants';
 // schema
 import FormLabel from '../../../components/DocumentForms/FormLabel';
-
+// import ViewFormField from '../../../components/ViewForms/ViewFormField';
 // ----------------------------------------------------------------------
 
 export default function ModulesAccessEdit() {
-    const { customer, allowedModules } = useSelector((state) => state.customer);
+    const { customer, allowedModules, isLoading } = useSelector((state) => state.customer);
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
     const { customerId } = useParams();
@@ -42,6 +42,11 @@ export default function ModulesAccessEdit() {
         handleSubmit,
         formState: { isSubmitting },
     } = methods;
+
+
+    useEffect(() => {
+        reset(defaultValues)
+    }, [customer, defaultValues, reset])
 
     const onSubmit = async (data) => {
         try {
@@ -73,6 +78,10 @@ export default function ModulesAccessEdit() {
                                 />
 
                                 <AddFormButtons isSubmitting={isSubmitting} />
+
+
+                                {/* <ViewFormField isLoading={isLoading} sm={12} heading="Allowed Modules" chips={defaultValues?.modules} /> */}
+
                             </Stack>
                         </Card>
                     </Stack>
