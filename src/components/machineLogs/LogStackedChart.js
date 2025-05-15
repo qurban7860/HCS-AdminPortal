@@ -140,6 +140,7 @@ export default function LogChartStacked({ chart, graphLabels }) {
       onItemClick: { toggleDataSeries: false },
     },
     tooltip: {
+      followCursor: true,
       custom: ({ series: tooltipSeries, dataPointIndex, w }) => {
         let tooltipContent = `<div class="apexcharts-theme-light">`;
         let total = 0;

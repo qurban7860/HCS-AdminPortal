@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 import PropTypes from 'prop-types';
 // @mui
 import { TableCell } from '@mui/material';
@@ -34,9 +35,9 @@ export default function MachineLogsTableRow({
   onViewRow,
   columnsToShow,
   allMachineLogsPage,
-  numericalLengthValues
+  numericalLengthValues,
 }) {
-  row = {...row, machineSerialNo: row?.machine?.serialNo}
+  row = { ...row, machineSerialNo: row?.machine?.serialNo };
   const { date } = row;
   const lowercaseRow = {};
   Object.entries(row).forEach(([key, value]) => {
@@ -49,7 +50,27 @@ export default function MachineLogsTableRow({
       {columnsToShow?.map((column, index) => {
         if (['date', 'createdBy.name', 'createdAt'].includes(column.id) || !column?.checked)
           return null;
-        const cellValue = lowercaseRow?.[column.id.toLocaleLowerCase()] || '';
+        const columnValue = lowercaseRow?.[column.id.toLocaleLowerCase()] || '';
+        const convertToM = column?.convertToM;
+        const isNumerical = column?.numerical;
+        let cellValue = columnValue || '';
+        if (convertToM) {
+          cellValue =
+            columnValue !== null && columnValue !== '' && !isNaN(columnValue)
+              ? convertMmToM(columnValue).toLocaleString(undefined, {
+                  minimumFractionDigits: 3,
+                  maximumFractionDigits: 3,
+                })
+              : columnValue || '';
+        } else if (isNumerical) {
+          cellValue =
+            columnValue !== null && columnValue !== '' && !isNaN(columnValue)
+              ? Number(columnValue).toLocaleString(undefined, {
+                  minimumFractionDigits: 3,
+                  maximumFractionDigits: 3,
+                })
+              : columnValue || '';
+        }
         return (
           <TableCell
             key={index}
@@ -57,7 +78,8 @@ export default function MachineLogsTableRow({
             sx={{ cursor: 'pointer' }}
             align={column?.numerical ? 'right' : 'left'}
           >
-            {numericalLengthValues.includes(column.id) ? convertMmToM(cellValue) : cellValue}
+            {cellValue}
+            {/* {numericalLengthValues.includes(column.id) ? convertMmToM(cellValue) : cellValue} */}
           </TableCell>
         );
       })}
