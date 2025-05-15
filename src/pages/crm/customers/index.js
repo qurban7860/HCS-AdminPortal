@@ -37,6 +37,11 @@ const TABS = [
         label: 'Jira',
         icon: ICONS.JIRA.icon,
     },
+    {
+        value: 'modulesAccess',
+        label: 'Customer Portal Access',
+        icon: ICONS.CUSTOMER_PORTAL_ACCESS.icon,
+    }
 ];
 
 export default TABS

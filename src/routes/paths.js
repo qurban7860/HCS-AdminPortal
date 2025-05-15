@@ -126,6 +126,13 @@ export const PATH_CRM = {
     jira: {
       root: (customerId) => path(ROOTS_CRM, `/customers/${customerId}/jira`),
     },
+   
+    // --------------- Customer Portal ACCESS---------------------------------------
+    modulesAccess: {
+      root: (customerId) => path(ROOTS_CRM, `/customers/${customerId}/modulesAccess`),
+    },
+
+    
     // ------------------------ ARCHIVED CUSTOMERS ----------------------------------------
     archived: {
       root: path(ROOTS_CRM, '/archived-customers'),

@@ -25,7 +25,7 @@ import { editUserSchema } from '../../schemas/securityUser';
 
 export default function SecurityUserEditForm() {
 
-  const { securityUser, allowedModules } = useSelector((state) => state.user);
+  const { securityUser } = useSelector((state) => state.user);
   const { activeRoles } = useSelector((state) => state.role);
   const { activeRegions } = useSelector((state) => state.region);
   const { allMachines } = useSelector((state) => state.machine)
@@ -59,7 +59,6 @@ export default function SecurityUserEditForm() {
       email: securityUser?.email || '',
       loginEmail: securityUser?.login || '',
       roles: securityUser?.roles || [],
-      modules: securityUser?.modules || [],
       dataAccessibilityLevel: securityUser?.dataAccessibilityLevel || 'RESTRICTED',
       regions: securityUser?.regions || [],
       customers: securityUser?.customers || [],
@@ -208,16 +207,6 @@ export default function SecurityUserEditForm() {
                 />
 
               </Box>
-              {/* {customer?.type?.toLowerCase() !== 'sp' && */}
-              <RHFAutocomplete
-                multiple
-                disableCloseOnSelect
-                filterSelectedOptions
-                name="modules"
-                label="Customer Portal Modules Access"
-                options={allowedModules}
-              />
-              {/* } */}
               <Box
                 rowGap={2}
                 columnGap={2}
