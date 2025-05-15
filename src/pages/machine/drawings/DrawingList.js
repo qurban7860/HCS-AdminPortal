@@ -33,7 +33,8 @@ import {
   ChangePage,
   setFilterBy, 
   resetDrawings,
-  getDrawing, } from '../../../redux/slices/products/drawing';
+  getDrawing,
+} from '../../../redux/slices/products/drawing';
 import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../../components/ListTableTools/TableCard';
 import MachineTabContainer from '../util/MachineTabContainer';
@@ -77,25 +78,30 @@ export default function DrawingList() {
     dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
   };
 
-  const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
+  const onChangePage = (event, newPage) => {
+    dispatch(ChangePage(newPage));
+  };
 
+  // Fetch data once on mount or when machineId or isArchived changes
   useEffect(() => {
-    if( machineId ){
-      dispatch(getDrawings( machineId, machine?.isArchived  ));
-      dispatch(getActiveDocumentCategories( null, null, true ));
-      dispatch(getActiveDocumentTypes( null, true ));
-    } 
+    if (machineId) {
+      dispatch(getDrawings(machineId, machine?.isArchived));
+      dispatch(getActiveDocumentCategories(null, null, true));
+      dispatch(getActiveDocumentTypes(null, true));
+    }
     return () => {
       dispatch(resetDrawings());
       dispatch(resetActiveDocumentCategories());
       dispatch(resetActiveDocumentTypes());
-    }
-  }, [dispatch, machineId, machine ]);
+    };
+  }, [dispatch, machineId, machine?.isArchived]);
 
+  // Update local table data when drawings change
   useEffect(() => {
     setTableData(drawings);
   }, [drawings]);
 
+  
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(order, orderBy),
@@ -109,25 +115,33 @@ export default function DrawingList() {
   const isFiltered = filterName !== '' || !!filterStatus.length;
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
-  const debouncedSearch = useRef(debounce((value) => {
-    dispatch(ChangePage(0))
-    dispatch(setFilterBy(value))
-  }, 500))
+  
+  const debouncedSearch = useRef(
+    debounce((value) => {
+      dispatch(ChangePage(0));
+      dispatch(setFilterBy(value));
+    }, 500)
+  );
 
+
+  useEffect(() => {
+    const debounced = debouncedSearch.current;
+    return () => {
+      debounced.cancel();
+    };
+  }, []);
+
+  
   const handleFilterName = (event) => {
     debouncedSearch.current(event.target.value);
-    setFilterName(event.target.value)
+    setFilterName(event.target.value);
     setPage(0);
   };
   
+  // Initialize filterName from redux filterBy on mount
   useEffect(() => {
-      debouncedSearch.current.cancel();
-  }, [debouncedSearch]);
-  
-  useEffect(()=>{
-      setFilterName(filterBy)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[])
+    setFilterName(filterBy);
+  }, [filterBy]);
 
   const handleFilterStatus = (event) => {
     setPage(0);
@@ -135,12 +149,12 @@ export default function DrawingList() {
   };
 
   const handleViewRow = async (drawingId, documentId) => {
-    await dispatch(getDrawing(drawingId))
-    await navigate(PATH_MACHINE.machines.drawings.view.root(machineId, documentId ))
-  } 
+    await dispatch(getDrawing(drawingId));
+    await navigate(PATH_MACHINE.machines.drawings.view.root(machineId, documentId));
+  };
 
   const handleResetFilter = () => {
-    dispatch(setFilterBy(''))
+    dispatch(setFilterBy(''));
     setFilterName('');
   };
 
@@ -161,13 +175,15 @@ export default function DrawingList() {
           setTypeVal={setTypeVal}
           drawing
         />
-          {!isNotFound && <TablePaginationCustom
+        {!isNotFound && (
+          <TablePaginationCustom
             count={dataFiltered.length}
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-          />}
+          />
+        )}
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
           <Scrollbar>
             <Table size="small" sx={{ minWidth: 360 }}>
@@ -177,23 +193,23 @@ export default function DrawingList() {
                 headLabel={TABLE_HEAD}
                 onSort={onSort}
               />
-
               <TableBody>
                 {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row, index) =>
-                    row ? (
-                      <DrawingListTableRow
-                        key={row._id}
-                        row={row}
-                        onViewRow={() => handleViewRow(row._id, row?.document?._id)}
-                        style={index % 2 ? { background: 'red' } : { background: 'green' }}
-                      />
-                    ) : (
-                      !isNotFound && <TableSkeleton key={index} sx={{ height: 60 }} />
-                    )
-                  )}
-                  <TableNoData isNotFound={isNotFound} />
+                  .map((row, index) => {
+                    if (row) {
+                      return (
+                        <DrawingListTableRow
+                          key={row._id}
+                          row={row}
+                          onViewRow={() => handleViewRow(row._id, row?.document?._id)}
+                          style={index % 2 ? { background: 'red' } : { background: 'green' }}
+                        />
+                      );
+                    }
+                    return !isNotFound ? <TableSkeleton key={index} sx={{ height: 60 }} /> : null;
+                  })}
+                <TableNoData isNotFound={isNotFound} />
               </TableBody>
             </Table>
           </Scrollbar>
@@ -207,15 +223,18 @@ export default function DrawingList() {
           onRowsPerPageChange={onChangeRowsPerPage}
         />
       </TableCard>
-  </Container>
+    </Container>
   );
 }
 
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, orderBy, filterName, filterStatus, categoryVal, typeVal }) {
-  const stabilizedThis = inputData && inputData.map((el, index) => [el, index]);
-  if( orderBy !== 'doNotOrder' ){
+  if (!inputData) return [];
+
+  const stabilizedThis = inputData.map((el, index) => [el, index]);
+
+  if (orderBy !== 'doNotOrder') {
     stabilizedThis.sort((a, b) => {
       const order = comparator(a[0], b[0]);
       if (order !== 0) return order;
@@ -223,29 +242,32 @@ function applyFilter({ inputData, comparator, orderBy, filterName, filterStatus,
     });
   }
 
-  inputData = stabilizedThis.map((el) => el[0]);
-  if(categoryVal)
-    inputData = inputData.filter((drawing)=> drawing.documentCategory?._id  === categoryVal?._id );
+  let filteredData = stabilizedThis.map((el) => el[0]);
 
-  if(typeVal)
-    inputData = inputData.filter((drawing)=> drawing.documentType?._id === typeVal?._id );
+  if (categoryVal) {
+    filteredData = filteredData.filter((drawing) => drawing.documentCategory?._id === categoryVal?._id);
+  }
 
+  if (typeVal) {
+    filteredData = filteredData.filter((drawing) => drawing.documentType?._id === typeVal?._id);
+  }
 
   if (filterName) {
-    inputData = inputData.filter(
-      (drawingg) =>
-        drawingg?.document?.displayName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        drawingg?.documentType?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        drawingg?.documentCategory?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        drawingg?.document.stockNumber?.toString()?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        drawingg?.document.referenceNumber?.toString()?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        fDate(drawingg?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+    const lowerFilter = filterName.toLowerCase();
+    filteredData = filteredData.filter(
+      (drawing) =>
+        drawing?.document?.displayName?.toLowerCase().includes(lowerFilter) ||
+        drawing?.documentType?.name?.toLowerCase().includes(lowerFilter) ||
+        drawing?.documentCategory?.name?.toLowerCase().includes(lowerFilter) ||
+        drawing?.document.stockNumber?.toString()?.toLowerCase().includes(lowerFilter) ||
+        drawing?.document.referenceNumber?.toString()?.toLowerCase().includes(lowerFilter) ||
+        fDate(drawing?.createdAt)?.toLowerCase().includes(lowerFilter)
     );
   }
 
   if (filterStatus.length) {
-    inputData = inputData.filter((drawingg) => filterStatus.includes(drawingg.status));
+    filteredData = filteredData.filter((drawing) => filterStatus.includes(drawing.isActive));
   }
 
-  return inputData;
+  return filteredData;
 }
