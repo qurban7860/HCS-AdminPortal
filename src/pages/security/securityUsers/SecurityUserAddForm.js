@@ -32,7 +32,6 @@ SecurityUserAddForm.propTypes = {
 };
 
 export default function SecurityUserAddForm({ isEdit = false, currentUser, isInvite }) {
-
   const { allActiveCustomers } = useSelector((state) => state.customer);
   const { activeRoles } = useSelector((state) => state.role);
   const { activeRegions } = useSelector((state) => state.region);

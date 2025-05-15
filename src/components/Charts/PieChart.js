@@ -61,7 +61,7 @@ const PieChart = ({ chartData, totalIssues, isOpened, title, onPeriodChange, onE
 
   return (
     <Grid container>
-      <Typography variant="h4" sx={{ mb: 2, mt: onExpand ? 0 : 2, fontWeight: 'bold' }}>
+      <Typography variant="h4" sx={{ ml: 4, mb: 2, mt: onExpand ? 0 : 2,  fontWeight: 'bold' }}>
       {isOpened ? "Open Support Tickets" : "All Support Tickets"}
       </Typography>
       <Grid item xs={12} sx={{display: 'flex', justifyContent: 'flex-end', m: 1, mt: -4,}}>
@@ -91,7 +91,7 @@ const PieChart = ({ chartData, totalIssues, isOpened, title, onPeriodChange, onE
       </Grid>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
-          <Box sx={{ mt: -1, mb: 2, textAlign: 'center' }}>
+          <Box sx={{ mt: -2.5, mb: 2, ml: 2, textAlign: 'center' }}>
             <ReactApexChart
               type="donut"
               series={chartData.series}

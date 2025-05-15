@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router';
 import { Button, Grid, Typography, Box, IconButton } from '@mui/material';
 import { StyledRoot, StyledInfo, StyledTooltip } from '../../theme/styles/default-styles';
 // utils
-import { PATH_CRM, PATH_MACHINE, PATH_REPORTS, PATH_SETTING, PATH_SUPPORT} from '../../routes/paths';
+import { PATH_CRM, PATH_MACHINE, PATH_REPORTS, PATH_SETTING, PATH_SUPPORT } from '../../routes/paths';
 // auth
 import CoverSettingsIcons from './CoverSettingsIcons';
 import CoverTitles from './CoverTitles';
@@ -21,8 +21,6 @@ Cover.propTypes = {
   avatar: PropTypes.bool,
   setting: PropTypes.bool,
   generalSettings: PropTypes.bool,
-  customerSites: PropTypes.bool,
-  customerContacts: PropTypes.bool,
   backLink: PropTypes.bool,
   isArchived: PropTypes.bool,
   isArchivedCustomers: PropTypes.bool,
@@ -41,8 +39,6 @@ export function Cover({
   avatar,
   setting,
   generalSettings,
-  customerSites,
-  customerContacts,
   backLink,
   isArchived,
   isArchivedCustomers,
@@ -57,10 +53,8 @@ export function Cover({
   const navigate = useNavigate();
   const handleSettingsNavigate = () => navigate(PATH_SETTING.root);
   const handleSupportTicketSettingsNavigate = () => navigate(PATH_SUPPORT.ticketSettings.root);
-  const linkCustomerSites = () => navigate(PATH_CRM.sites);
-  const linkCustomerContacts = () =>  navigate(PATH_CRM.contacts);
-  const linkArchivedCustomers = () =>  navigate(PATH_CRM.customers.archived.root);
-  const linkArchivedMachines = () =>  navigate(PATH_MACHINE.archived.root);
+  const linkArchivedCustomers = () => navigate(PATH_CRM.customers.archived.root);
+  const linkArchivedMachines = () => navigate(PATH_MACHINE.archived.root);
   const handleBackLink = () => window.history.back();
   const handleCoilLog = () => navigate(PATH_REPORTS.machineLogs.CoilLogs);
   const handleProductionLog = () => navigate(PATH_REPORTS.machineLogs.ProductionLogs);
@@ -71,7 +65,7 @@ export function Cover({
   const handleClick = (buttonId) => {
     setExpandedButton(prev => (prev === buttonId ? null : buttonId));
   };
-  
+
   const handleOnClick = async (buttonId, action) => {
     if (isMobile) {
       handleClick(buttonId);
@@ -81,7 +75,7 @@ export function Cover({
       action();
     }
   };
-  
+
   return (
     <StyledRoot style={{ p: { xs: 0, md: 0 } }} isArchived={isArchived}>
       <StyledInfo
@@ -133,41 +127,9 @@ export function Cover({
               justifyContent: isMobile ? 'center' : 'flex-start',
               textAlign: 'center',
               '& .MuiButton-startIcon': { marginRight: 0 },
-              marginBottom: addButton ? -0.6 : 0, 
+              marginBottom: addButton ? -0.6 : 0,
             }}
           >
-            {!isArchived && customerSites && (
-              <Button
-                size="small"
-                startIcon={<Iconify icon="mdi:map-legend" sx={{ mr: 0.3 }} />}
-                variant="outlined"
-                sx={{ mr: 1 }}
-                onClick={() => handleOnClick('sites', linkCustomerSites)}
-              >
-                {' '}
-                {(!isMobile || expandedButton === 'sites') && (
-                  <Typography variant="caption" sx={{ fontWeight: 'bold' }}>
-                    Sites
-                  </Typography>
-                )}
-              </Button>
-            )}
-            {!isArchived && customerContacts && (
-              <Button
-                size="small"
-                startIcon={<Iconify icon="mdi:account-multiple" sx={{ mr: 0.3 }} />}
-                variant="outlined"
-                sx={{ mr: 1 }}
-                onClick={() => handleOnClick('contacts', linkCustomerContacts)}
-              >
-                {' '}
-                {(!isMobile || expandedButton === 'contacts') && (
-                  <Typography variant="caption" sx={{ fontWeight: 'bold' }}>
-                    Contacts
-                  </Typography>
-                )}
-              </Button>
-            )}
             {isAllAccessAllowed && !isSettingReadOnly && isArchivedCustomers && (
               <Button
                 size="small"
@@ -234,17 +196,18 @@ export function Cover({
                 )}
               </Button>
             )}
-            {addButton  && SubOnClick && (
+            {addButton && SubOnClick && (
               <Grid item >
                 <StyledTooltip title={addButton} placement="bottom" disableFocusListener tooltipcolor="#103996" color="#fff">
-                  <IconButton color="#fff" onClick={SubOnClick} 
-                      sx={{background:"#2065D1", borderRadius:1, height:'1.7em', p:'8.5px 14px',
-                        '&:hover': {
-                          background:"#103996", 
-                          color:"#fff"
-                        }
-                      }}>
-                      <Iconify color="#fff" sx={{ height: '24px', width: '24px'}} icon={buttonIcon || 'eva:plus-fill'} />
+                  <IconButton color="#fff" onClick={SubOnClick}
+                    sx={{
+                      background: "#2065D1", borderRadius: 1, height: '1.7em', p: '8.5px 14px',
+                      '&:hover': {
+                        background: "#103996",
+                        color: "#fff"
+                      }
+                    }}>
+                    <Iconify color="#fff" sx={{ height: '24px', width: '24px' }} icon={buttonIcon || 'eva:plus-fill'} />
                   </IconButton>
                 </StyledTooltip>
               </Grid>

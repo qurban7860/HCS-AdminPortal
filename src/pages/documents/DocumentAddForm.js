@@ -147,7 +147,7 @@ function DocumentAddForm({
 
   useLayoutEffect(() => {
     if (!newVersion && !addFiles && !historyNewVersion && !historyAddFiles) {
-      reset();
+      // reset();
       setSelectedValue('new');
       setReadOnlyDocument(false);
     }
@@ -159,8 +159,8 @@ function DocumentAddForm({
       dispatch(resetActiveDocuments());
       dispatch(resetActiveCustomers());
       dispatch(resetCustomerMachines());
-      dispatch(resetActiveDocumentTypes());
-      dispatch(resetActiveDocumentCategories())
+      // dispatch(resetActiveDocumentTypes());
+      // dispatch(resetActiveDocumentCategories())
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, customer, machine]);
@@ -315,7 +315,7 @@ function DocumentAddForm({
     setSelectedValue(event.target.value);
     if (event.target.value === 'new') {
       setReadOnlyVal(false);
-      reset();
+      // reset();
     }
   };
   const handleVersionRadioChange = (event) => setSelectedVersionValue(event.target.value);

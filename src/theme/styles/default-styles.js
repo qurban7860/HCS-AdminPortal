@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { styled, alpha } from '@mui/material/styles';
-import { Popover, Stack, Card, Chip, Container, TableRow, Badge, StepConnector, stepConnectorClasses } from '@mui/material';
+import { Popover, Stack, Card, Chip, Container, TableRow, Badge, StepConnector, stepConnectorClasses, IconButton } from '@mui/material';
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import { bgBlur } from '../../utils/cssStyles';
 
@@ -88,6 +88,14 @@ export const StyledTooltipSliding = styled(({ className, ...props }) => (
     fontSize: '1rem',
     color: tooltipcolor,
     backgroundColor: 'transparent',
+  },
+}));
+export const StyledContainedIconButton = styled(IconButton)(({ theme }) => ({
+  backgroundColor: theme.palette.primary.main,
+  borderRadius: '8px',
+  color: '#fff',
+  '&:hover': {
+    backgroundColor: theme.palette.primary.dark,
   },
 }));
 export const StyledVersionChip = styled(Chip)(({ theme, pointer }) => ({

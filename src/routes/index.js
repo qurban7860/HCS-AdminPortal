@@ -83,6 +83,9 @@ import {
   // Customer Jira
   CustomerJiraList,
 
+  // Modules Access
+  ModulesAccess,
+
   // ----------------------------------------------------------------
 
   // CUSTOMER SETTING DEPARTMENTS
@@ -277,6 +280,9 @@ import {
 
   // --------------------- Machine Settings --------------------------
 
+  // ----------------------Machine Lifecycle----------------------
+  MachineLifecycle,
+
   // MACHINE SETTINGS: MACHINE Technical Parameters 
   TechnicalParameterCategoryList,
   TechnicalParameterCategoryAdd,
@@ -383,7 +389,10 @@ import {
   InvestigationReasonList,
   InvestigationReasonForm,
   InvestigationReasonView,
-
+  // --------------------------- Fault --------------------------
+  FaultList,
+  FaultForm,
+  FaultView,
   // REPORTS / SETTINGS
   Setting,
 
@@ -680,6 +689,13 @@ export default function Router() {
                 { element: <CustomerJiraList />, index: true },
               ],
             },
+            {
+              path: ':customerId/modulesAccess',
+              children: [
+                { element: <ModulesAccess />, index: true },
+              ],
+            },
+
             { path: 'permission-denied', element: <PermissionDeniedPage /> },
             { path: 'blank', element: <BlankPage /> },
           ]
@@ -756,6 +772,15 @@ export default function Router() {
                 { path: ':id/edit', element: <SettingEdit /> },
               ]
             },
+            {
+              path: ':machineId/machineLifecycle',
+              children: [
+                {
+                  element: <MachineLifecycle />, index: true
+                }
+              ]
+            },
+
             {
               path: ':machineId/toolsInstalled',
               children: [
@@ -1140,6 +1165,7 @@ export default function Router() {
             { element: <JobsList />, index: true },
             { path: 'new', element: <JobsAdd /> },
             { path: ':id/view', element: <JobsView /> },
+            { path: ':id/edit', element: <JobsAdd /> },
           ],
         },
       ]
@@ -1260,6 +1286,15 @@ export default function Router() {
                 { path: 'new', element: <InvestigationReasonForm /> },
                 { path: ':id/edit', element: <InvestigationReasonForm /> },
                 { path: ':id/view', element: <InvestigationReasonView /> },
+              ]
+            },
+            {
+              path: 'faults',
+              children: [
+                { element: <FaultList />, index: true },
+                { path: 'new', element: <FaultForm /> },
+                { path: ':id/edit', element: <FaultForm /> },
+                { path: ':id/view', element: <FaultView /> },
               ]
             },
           ],

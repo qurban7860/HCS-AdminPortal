@@ -1,8 +1,9 @@
 import { memo, useState } from 'react'
 import PropTypes from 'prop-types';
 // @mui
-import { Box, Switch, TablePagination, FormControlLabel, Button, MenuItem, Checkbox, Menu } from '@mui/material';
+import { Box, Switch, TablePagination, FormControlLabel, Button, MenuItem, Checkbox, Menu, IconButton } from '@mui/material';
 import Iconify from '../iconify';
+import { StyledTooltip } from '../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
 

@@ -61,6 +61,7 @@ export const FORMLABELS = {
     BILLINGCONTACTINFORMATION: 'Billing Contact Information',
     TECHNICALCONTACTINFORMATION: 'Technical Contact Information',
     HOWICKRESOURCESS: 'Howick Recourses',
+    MODULESACCESS: 'Customer Portal Access',
   },
 
   // @root - ContactAddForm

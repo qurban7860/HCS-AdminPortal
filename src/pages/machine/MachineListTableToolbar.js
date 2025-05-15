@@ -29,12 +29,12 @@ MachineListTableToolbar.propTypes = {
   statusOptions: PropTypes.array,
   onFilterVerify: PropTypes.func,
   filterVerify: PropTypes.string,
-  onExportCSV:PropTypes.func,
-  onExportLoading:PropTypes.bool,
-  setAccountManagerFilter:PropTypes.func,
-  accountManagerFilter:PropTypes.object,
-  setSupportManagerFilter:PropTypes.func,
-  supportManagerFilter:PropTypes.object,
+  onExportCSV: PropTypes.func,
+  onExportLoading: PropTypes.bool,
+  setAccountManagerFilter: PropTypes.func,
+  accountManagerFilter: PropTypes.object,
+  setSupportManagerFilter: PropTypes.func,
+  supportManagerFilter: PropTypes.object,
   isArchived: PropTypes.bool,
 };
 
@@ -58,12 +58,15 @@ export default function MachineListTableToolbar({
 }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  
+
+  // Function to handle adding a new machine
   const toggleAdd = () => {
     navigate(PATH_MACHINE.machines.new);
-    dispatch( resetActiveCategories() );
-    dispatch( resetActiveMachineModels() );
-    dispatch( resetActiveMachineStatuses() );
-    dispatch( resetActiveSuppliers() );
+    dispatch(resetActiveCategories());
+    dispatch(resetActiveMachineModels());
+    dispatch(resetActiveMachineStatuses());
+    dispatch(resetActiveSuppliers());
   };
 
   return (
@@ -76,9 +79,9 @@ export default function MachineListTableToolbar({
         onFilterVerify={onFilterVerify}
         filterVerify={filterVerify}
         SubOnClick={toggleAdd}
-        addButton={ !isArchived ? BUTTONS.ADDMACHINE : undefined }
-        onExportCSV={ !isArchived ? onExportCSV : undefined }
-        onExportLoading={ onExportLoading  }
+        addButton={!isArchived ? BUTTONS.ADDMACHINE : undefined}
+        onExportCSV={!isArchived ? onExportCSV : undefined}
+        onExportLoading={onExportLoading}
         setAccountManagerFilter={setAccountManagerFilter}
         accountManagerFilter={accountManagerFilter}
         setSupportManagerFilter={setSupportManagerFilter}

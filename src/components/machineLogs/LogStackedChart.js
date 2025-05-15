@@ -1,16 +1,49 @@
 import PropTypes from 'prop-types';
 // import { useTheme } from '@mui/material';
+import { useState, useMemo } from 'react';
+import { Box, FormControlLabel, Checkbox } from '@mui/material';
 import Chart from '../chart';
 import { fShortenNumber } from '../../utils/formatNumber';
 
-// ----------------------------------------------------------------------
-
-LogChartStacked.propTypes = {chart : PropTypes.object, graphLabels : PropTypes.object};
+LogChartStacked.propTypes = {
+  chart: PropTypes.object,
+  graphLabels: PropTypes.object,
+};
 
 export default function LogChartStacked({ chart, graphLabels }) {
   // const theme = useTheme();
+  const [skipZero, setSkipZero] = useState(true); 
+
   const { categories, series } = chart;
-  const colors = ["#A9E0FC", "#FCB49F"]
+
+  const { filteredCategories, filteredSeries } = useMemo(() => {
+    if (!skipZero) {
+      return { filteredCategories: categories, filteredSeries: series };
+    }
+    
+    const hasNonZeroValues = series.some(s => s.data.some(val => val !== 0 && val !== null && val !== undefined));
+
+    if (!hasNonZeroValues) {
+      return { filteredCategories: categories, filteredSeries: series };
+    }
+
+    const filteredIndexes = categories.reduce((acc, _, idx) => {
+      const hasNonZeroBar = series.some(s => (s.data[idx] ?? 0) !== 0 && (s.data[idx] !== null && s.data[idx] !== undefined));
+      if (hasNonZeroBar) {
+        acc.push(idx);
+      }
+      return acc;
+    }, []);
+
+    return {
+      filteredCategories: filteredIndexes.map((i) => categories[i]),
+      filteredSeries: series.map((s) => ({...s,
+        data: filteredIndexes.map((i) => s.data[i]),
+      })),
+    };
+  }, [skipZero, categories, series]);
+
+  const colors = ['#A9E0FC', '#FCB49F'];
 
   const chartOptions = {
     chart: {
@@ -28,37 +61,41 @@ export default function LogChartStacked({ chart, graphLabels }) {
         dataLabels: {
           position: 'top',
           hideOverflowingLabels: false,
-        }
+        },
       },
       colors: {
-        ranges: [{
-          from: 0,
-          to: Infinity,
-          color: colors
-        }],
+        ranges: [
+          {
+            from: 0,
+            to: Infinity,
+            color: colors,
+          },
+        ],
         backgroundBarColors: colors,
         backgroundBarOpacity: 1,
-      }
+      },
     },
     dataLabels: {
       enabled: true,
-      formatter (val, { seriesIndex, dataPointIndex, w }) {
-        if (seriesIndex === 1) return ''
-        return `${(Number(val) + Number(w.config.series[1].data[dataPointIndex])).toFixed(2)}`;
-      },
+      orientation: "vertical",
+      formatter(val, { seriesIndex, dataPointIndex, w }) {
+        if (seriesIndex === 1) return '';
+        const total = Number(val) + Number(w.config.series[1].data[dataPointIndex]);
+        return total === 0
+          ? ''
+          : fShortenNumber(total)},
       offsetY: -25,
       style: {
-        fontSize: "12px",
-        colors: ["#304758"],
+        fontSize: '12px',
+        colors: ['#304758']
       },
     },
     xaxis: {
-      categories,
-      position: "bottom",
+      categories: filteredCategories,
       labels: {
-        offsetY: 0,
+        offsetY: 8,
         rotate: -45,
-        rotateAlways: graphLabels?.xaxis === "Days",
+        rotateAlways: true,
       },
       axisBorder: {
         show: false,
@@ -67,14 +104,14 @@ export default function LogChartStacked({ chart, graphLabels }) {
         show: false,
       },
       title: {
-          text: graphLabels?.xaxis,
-          offsetX: 0,
-          offsetY: 0,
-          style: {
-              fontSize: '12px',
-              fontWeight: 600,
-              cssClass: 'apexcharts-xaxis-title',
-          },
+        text: graphLabels?.xaxis,
+        offsetX: 0,
+        offsetY: -12,
+        style: {
+          fontSize: '12px',
+          fontWeight: 600,
+          cssClass: 'apexcharts-xaxis-title',
+        },
       },
     },
     yaxis: {
@@ -85,46 +122,76 @@ export default function LogChartStacked({ chart, graphLabels }) {
         show: false,
       },
       labels: {
-        formatter: (value) => fShortenNumber(value),
+        formatter: (value) =>
+          value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
       },
       title: {
         text: graphLabels?.yaxis,
-        offsetX: 0,
+        offsetX: -5,
         offsetY: 0,
         style: {
-            fontSize: '12px',
-            fontWeight: 600,
-            cssClass: 'apexcharts-yaxis-title',
+          fontSize: '12px',
+          fontWeight: 600,
+          cssClass: 'apexcharts-yaxis-title',
         },
       },
     },
     legend: {
-      onItemClick: {
-        toggleDataSeries: false
-      }
+      onItemClick: { toggleDataSeries: false },
     },
     tooltip: {
-      custom: ({ series: tooltipSeries, seriesIndex, dataPointIndex, w }) => {
+      followCursor: true,
+      custom: ({ series: tooltipSeries, dataPointIndex, w }) => {
         let tooltipContent = `<div class="apexcharts-theme-light">`;
+        let total = 0;
         tooltipSeries.forEach((s, index) => {
           const legend = w.globals.seriesNames[index];
           const color = w.globals.colors[index];
-          // const value = fShortenNumber(s[dataPointIndex]);
-          const value = s[dataPointIndex].toFixed(2);
+          const value = s[dataPointIndex];
+          total += value;
+          const valueText =
+            value === 0
+              ? ''
+              : value.toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                });
           tooltipContent += `<div class="apexcharts-tooltip-series-group apexcharts-active" style="order: 1; display: flex;">`;
           tooltipContent += `<span class="apexcharts-tooltip-marker" style="background-color: ${color};"></span>`;
           tooltipContent += `<div class="apexcharts-tooltip-text"><div class="apexcharts-tooltip-y-group">`;
           tooltipContent += `<span class="apexcharts-tooltip-text-y-label">${legend}:</span>`;
-          tooltipContent += `<span class="apexcharts-tooltip-text-y-value">${value}</span></div></div></div>`;
-
+          tooltipContent += `<span class="apexcharts-tooltip-text-y-value">${valueText}</span></div></div></div>`;
         });
-
-        tooltipContent+=`</div>`;
+        const totalText = total.toLocaleString(undefined, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        });
+        tooltipContent += `<div class="apexcharts-tooltip-series-group apexcharts-active" style="order: 1; display: flex;">`;
+        tooltipContent += `<div class="apexcharts-tooltip-text"><div class="apexcharts-tooltip-y-group">`;
+        tooltipContent += `<span class="apexcharts-tooltip-text-y-label">Total:</span>`;
+        tooltipContent += `<span class="apexcharts-tooltip-text-y-value">${totalText}</span></div></div></div>`;
+        tooltipContent += `</div>`;
         return tooltipContent;
       },
-    }
+    },
   };
 
-  return (<Chart type="bar" series={series} options={chartOptions} height={chartOptions.chart.height} />);
+  return (
+    <Box>
+      <Box sx={{ display: 'flex' }}>
+        <FormControlLabel
+          control={<Checkbox checked={skipZero} onChange={() => setSkipZero((prev) => !prev)} />}
+          label="Empty or zero values skipped"
+        />
+      </Box>
+      <Chart
+        type="bar"
+        series={filteredSeries}
+        options={chartOptions}
+        height={chartOptions.chart.height}
+      />
+    </Box>
+  );
   // return (<Chart type="bar" series={filteredSeries} options={chartOptions} height={chartOptions.chart.height} />);
+
 }

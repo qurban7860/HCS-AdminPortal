@@ -95,14 +95,14 @@ export default function MachineList({ isArchived }) {
   const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
 
   const [tableData, setTableData] = useState([]);
+  const [accountManagers, setAccountManagers] = useState([]);
   
   const dispatch = useDispatch();
   const axiosToken = () => axios.CancelToken.source();
   const cancelTokenSource = axiosToken();
 
   const { machines, 
-    verified, 
-    accountManager, 
+    verified,
     supportManager, 
     filterBy, 
     page, 
@@ -157,7 +157,7 @@ export default function MachineList({ isArchived }) {
     filterName,
     filterVerify,
     filterStatus,
-    accountManager, 
+    accountManagers, 
     supportManager,
   });
 
@@ -165,6 +165,13 @@ export default function MachineList({ isArchived }) {
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
   const denseHeight = 60;
 
+  // const debouncedMachineVerify = useRef(debounce((value) => {
+  //   dispatch(ChangePage(0));  // Resets the page to 0 when filters change
+  //   dispatch(setVerified(value));  // Update the `verified` state in Redux (if needed)
+  // }, 500));
+  
+  
+  
   const debouncedSearch = useRef(debounce((value) => {
     dispatch(ChangePage(0))
     dispatch(setFilterBy(value))
@@ -187,13 +194,16 @@ export default function MachineList({ isArchived }) {
     setPage(0);
   };
   
+  
+  
   const debouncedAccountManager = useRef(debounce((value) => {
     dispatch(ChangePage(0))
   }, 500))
 
-  const setAccountManagerFilter = (event) => {
-    debouncedAccountManager.current(event?._id)
-    dispatch(setAccountManager(event))
+  const setAccountManagerFilter = (newValues) => {
+    debouncedAccountManager.current(newValues?.[0]?._id)
+    // dispatch(setAccountManager(event))
+    setAccountManagers([...newValues])
   };
 
   const debouncedSupportManager = useRef(debounce((value) => {
@@ -261,13 +271,14 @@ export default function MachineList({ isArchived }) {
           onFilterName={handleFilterName}
           filterVerify={ isArchived ? undefined : filterVerify}
           onFilterVerify={ isArchived ? undefined : handleFilterVerify}
+          
           filterStatus={ isArchived ? undefined : filterStatus}
           onFilterStatus={ isArchived ? undefined : handleFilterStatus}
           isFiltered={isFiltered}
           onResetFilter={handleResetFilter}
           onExportCSV={onExportCSV}
           onExportLoading={exportingCSV}
-          accountManagerFilter={accountManager}
+          accountManagerFilter={accountManagers}
           setAccountManagerFilter={ isArchived ? undefined : setAccountManagerFilter}
           supportManagerFilter={supportManager}
           setSupportManagerFilter={ isArchived ? undefined : setSupportManagerFilter}
@@ -336,7 +347,7 @@ export default function MachineList({ isArchived }) {
     </Container>
   );
 }
-function applyFilter({ inputData, comparator, filterName, filterVerify, filterStatus, accountManager, supportManager }) {
+function applyFilter({ inputData=[], comparator, filterName, filterVerify, filterStatus, accountManagers, supportManager }) {
   const stabilizedThis = inputData.map((el, index) => [el, index]);
 
   stabilizedThis.sort((a, b) => {
@@ -346,16 +357,23 @@ function applyFilter({ inputData, comparator, filterName, filterVerify, filterSt
   });
 
   inputData = stabilizedThis.map((el) => el[0]);
-  if(accountManager)
-    inputData = inputData.filter((machine) => machine?.accountManager?.some(manager => manager === accountManager?._id ));
+  if(accountManagers?.length > 0)
+    inputData = inputData.filter((machine) => machine?.accountManager?.some(machineManagerId => accountManagers?.some(accountManager => accountManager._id === machineManagerId)));
+    // inputData = inputData.filter((machine) => machine?.accountManager?.some(manager => manager === accountManager?._id ));
   if(supportManager)
     inputData = inputData.filter((machine) => machine?.supportManager?.some(manager => manager === supportManager?._id ));
   if(filterVerify==='verified')
-    inputData = inputData.filter((machine)=> machine?.verifications?.length>0);
+    inputData = inputData.filter((machine)=> machine?.verifications?.length > 0);
   
   if(filterVerify==='unverified')
-    inputData = inputData.filter((machine)=> machine?.verifications?.length===0);
-    
+    inputData = inputData.filter((machine)=> machine?.verifications?.length === 0);
+
+  if (filterVerify === 'transferredDate')
+    inputData = inputData.filter((machine) => machine?.transferredDate);
+
+  // if (filterVerify === 'all')
+  //   inputData = inputData.filter((machine) => !machine?.transferredDate);
+  
   if (filterName) {
     inputData = inputData.filter(
       (product) =>

@@ -46,6 +46,9 @@ export default function CustomerTabContainer({ currentTabValue }) {
     } else if (tab === 'jira' && customerId) {
       navigate(PATH_CRM.customers.jira.root(customerId))
     }
+     else if (tab === 'modulesAccess' && customerId) {
+      navigate(PATH_CRM.customers.modulesAccess.root(customerId))
+    }
   }
 
 

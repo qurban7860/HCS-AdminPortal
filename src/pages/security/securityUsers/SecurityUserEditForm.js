@@ -31,7 +31,7 @@ export default function SecurityUserEditForm() {
   const { allMachines } = useSelector((state) => state.machine)
   const { allActiveCustomers } = useSelector((state) => state.customer);
   const { activeContacts } = useSelector((state) => state.contact);
-  const [ isDisabled, setIsDisabled ] =useState(false);
+  const [isDisabled, setIsDisabled] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -42,11 +42,11 @@ export default function SecurityUserEditForm() {
     dispatch(getAllMachines());
     dispatch(getActiveRegions());
     dispatch(getActiveRoles());
-    return ()=>{ 
+    return () => {
       dispatch(resetAllActiveCustomers());
       dispatch(resetAllMachines());
-      dispatch(resetActiveRegions()); 
-      dispatch(resetActiveRoles()); 
+      dispatch(resetActiveRegions());
+      dispatch(resetActiveRoles());
     }
   }, [dispatch]);
 
@@ -59,7 +59,7 @@ export default function SecurityUserEditForm() {
       email: securityUser?.email || '',
       loginEmail: securityUser?.login || '',
       roles: securityUser?.roles || [],
-      dataAccessibilityLevel: securityUser?.dataAccessibilityLevel || 'RESTRICTED' ,
+      dataAccessibilityLevel: securityUser?.dataAccessibilityLevel || 'RESTRICTED',
       regions: securityUser?.regions || [],
       customers: securityUser?.customers || [],
       machines: securityUser?.machines || [],
@@ -68,11 +68,11 @@ export default function SecurityUserEditForm() {
       // currentEmployee: securityUser?.currentEmployee
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [ securityUser ]
+    [securityUser]
   );
-  
+
   const methods = useForm({
-    resolver: yupResolver( editUserSchema ),
+    resolver: yupResolver(editUserSchema),
     defaultValues,
   });
 
@@ -84,45 +84,45 @@ export default function SecurityUserEditForm() {
     formState: { isSubmitting },
   } = methods;
 
-const { customer } = watch();
+  const { customer } = watch();
 
 
-useEffect(() => {
-  if(customer?._id){
-    dispatch(getActiveContacts(customer?._id));
-  } else {
-    dispatch(resetActiveContacts());
+  useEffect(() => {
+    if (customer?._id) {
+      dispatch(getActiveContacts(customer?._id));
+    } else {
+      dispatch(resetActiveContacts());
+    }
+  }, [dispatch, customer?._id]);
+
+  useEffect(() => {
+    if (customer && customer?.type?.toUpperCase() !== 'SP') {
+      setIsDisabled(true);
+    } else {
+      setIsDisabled(false);
+    }
+  }, [customer, setValue])
+
+  const onChangeContact = (contact) => {
+    if (contact?._id) {
+      setValue('name', `${contact?.firstName || ''} ${contact?.lastName || ''}`);
+      setValue('phone', contact?.phone);
+      setValue('email', contact?.email);
+      setValue('contact', contact);
+    } else {
+      setValue('name', '');
+      setValue('phone', '');
+      setValue('email', '');
+      setValue('contact', null);
+    }
   }
-}, [ dispatch,customer?._id ]);
-
-useEffect(() => {
-  if( customer && customer?.type?.toUpperCase() !== 'SP' ){
-    setIsDisabled(true);
-  } else {
-    setIsDisabled(false);
-  }
-},[ customer, setValue ])
-
-const onChangeContact = (contact) => {
-  if(contact?._id){
-    setValue( 'name', `${contact?.firstName || ''} ${contact?.lastName || ''}` );
-    setValue( 'phone', contact?.phone );
-    setValue( 'email', contact?.email );
-    setValue( 'contact', contact );
-  } else {
-    setValue( 'name', '' );
-    setValue( 'phone', '' );
-    setValue( 'email', '' );
-    setValue( 'contact', null );
-  }
-}
 
 
   const onSubmit = async (data) => {
     try {
       const phoneRegex = /^\+\d+$/;
       if (!data.phone || phoneRegex.test(data.phone.trim())) {
-        data.phone = ''; 
+        data.phone = '';
       }
       await dispatch(updateSecurityUser(data, securityUser._id));
       await reset();
@@ -140,136 +140,135 @@ const onChangeContact = (contact) => {
       <Grid container >
         <Grid item xs={12} md={12}>
           <Card sx={{ p: 3 }}>
-          <Stack  spacing={2} >
-            <FormLabel content='Personal Information' />
-            <Box rowGap={2} columnGap={2} display="grid"
-              gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
-            >
-              
-              <RHFAutocomplete
-                disabled
-                name='customer'
-                label="Customer*"
-                options={ allActiveCustomers }
-                getOptionLabel={(option) => option?.name || ''}
-                isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                renderOption={(props, option) => (<li  {...props} key={option?._id}>{option?.name || ''}</li>)}
-              />
+            <Stack spacing={2} >
+              <FormLabel content='Personal Information' />
+              <Box rowGap={2} columnGap={2} display="grid"
+                gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
+              >
 
-              <RHFAutocomplete
-                name='contact'
-                label="Contact*"
-                options={activeContacts}
-                onChange={(event, newValue) => onChangeContact(newValue) }
-                getOptionLabel={(option) => `${option?.firstName || ''} ${option?.lastName || ''}`}
-                isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                renderOption={(props, option) => (<li  {...props} key={option?._id}>{option?.firstName || ''}{' '}{option?.lastName || ''}</li>)}
-              />
+                <RHFAutocomplete
+                  disabled
+                  name='customer'
+                  label="Customer*"
+                  options={allActiveCustomers}
+                  getOptionLabel={(option) => option?.name || ''}
+                  isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                  renderOption={(props, option) => (<li  {...props} key={option?._id}>{option?.name || ''}</li>)}
+                />
 
-              <RHFTextField name="name" label="Full Name*" />
+                <RHFAutocomplete
+                  name='contact'
+                  label="Contact*"
+                  options={activeContacts}
+                  onChange={(event, newValue) => onChangeContact(newValue)}
+                  getOptionLabel={(option) => `${option?.firstName || ''} ${option?.lastName || ''}`}
+                  isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                  renderOption={(props, option) => (<li  {...props} key={option?._id}>{option?.firstName || ''}{' '}{option?.lastName || ''}</li>)}
+                />
 
-              <RHFPhoneInput name="phone" label="Phone Number" inputProps={{maxLength:13}} />
+                <RHFTextField name="name" label="Full Name*" />
 
-            </Box>
-            <Box rowGap={2} columnGap={2} display="grid"
-              gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
-            >
-              <RHFTextField name="email" label="Email Address*" inputProps={{ style: { textTransform: 'lowercase' } }} />
-              <RHFTextField name="loginEmail" label="Login Email" disabled inputProps={{ style: { textTransform: 'lowercase' } }} />
-            </Box>
-            <FormLabel content='Accessibility Information' />
-            <Box
-              rowGap={2} columnGap={2} display="grid"
-              gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
-            >
+                <RHFPhoneInput name="phone" label="Phone Number" inputProps={{ maxLength: 13 }} />
 
-              <RHFAutocomplete
-                multiple
-                disableCloseOnSelect
-                filterSelectedOptions
-                name="roles"
-                label="Roles*"
-                options={ activeRoles.filter(role => 
-                  ( customer?.type?.toLowerCase() === 'sp' ? role?.roleType?.toLowerCase() !== 'customer' : ( role?.roleType?.toLowerCase() === 'customer' ) ) 
-                ) }
-                getOptionLabel={(option) => `${option?.name || ''} `}
-                isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                renderOption={(props, option, { selected }) => ( <li {...props}> <Checkbox checked={selected} />{option?.name || ''}</li> )}
-              />
-              
-              <RHFAutocomplete
-                disableClearable
-                disabled={ isDisabled }
-                name="dataAccessibilityLevel"
-                label="Data Accessibility Level"
-                options={ [ 'RESTRICTED', 'GLOBAL' ] }
-                isOptionEqualToValue={(option, value) => option === value}
-                renderOption={(props, option, { selected }) => ( <li {...props}> <Checkbox checked={selected} />{option|| ''}</li> )}
-              />
+              </Box>
+              <Box rowGap={2} columnGap={2} display="grid"
+                gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
+              >
+                <RHFTextField name="email" label="Email Address*" inputProps={{ style: { textTransform: 'lowercase' } }} />
+                <RHFTextField name="loginEmail" label="Login Email" disabled inputProps={{ style: { textTransform: 'lowercase' } }} />
+              </Box>
+              <FormLabel content='Accessibility Information' />
+              <Box
+                rowGap={2} columnGap={2} display="grid"
+                gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
+              >
 
-            </Box>
-            <Box
-              rowGap={2}
-              columnGap={2}
-              display="grid"
-              gridTemplateColumns={{
-                xs: 'repeat(1, 1fr)',
-                sm: 'repeat(1, 1fr)',
-              }}
-            >
+                <RHFAutocomplete
+                  multiple
+                  disableCloseOnSelect
+                  filterSelectedOptions
+                  name="roles"
+                  label="Roles*"
+                  options={activeRoles.filter(role =>
+                    (customer?.type?.toLowerCase() === 'sp' ? role?.roleType?.toLowerCase() !== 'customer' : (role?.roleType?.toLowerCase() === 'customer'))
+                  )}
+                  getOptionLabel={(option) => `${option?.name || ''} `}
+                  isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                  renderOption={(props, option, { selected }) => (<li {...props}> <Checkbox checked={selected} />{option?.name || ''}</li>)}
+                />
+                <RHFAutocomplete
+                  disableClearable
+                  disabled={isDisabled}
+                  name="dataAccessibilityLevel"
+                  label="Data Accessibility Level"
+                  options={['RESTRICTED', 'GLOBAL']}
+                  isOptionEqualToValue={(option, value) => option === value}
+                  renderOption={(props, option, { selected }) => (<li {...props}> <Checkbox checked={selected} />{option || ''}</li>)}
+                />
 
-              <RHFAutocomplete
-                multiple
-                disableCloseOnSelect
-                filterSelectedOptions
-                disabled={ isDisabled }
-                name="regions" 
-                label="Regions"
-                options={activeRegions}
-                getOptionLabel={(option) => option.name}
-                isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                renderOption={(props, option) => ( <li {...props} key={option?._id}> {option?.name || ''} </li>)}
-                ChipProps={{ size: 'small' }}
-              />
+              </Box>
+              <Box
+                rowGap={2}
+                columnGap={2}
+                display="grid"
+                gridTemplateColumns={{
+                  xs: 'repeat(1, 1fr)',
+                  sm: 'repeat(1, 1fr)',
+                }}
+              >
 
-              <RHFAutocomplete
-                multiple
-                disableCloseOnSelect
-                filterSelectedOptions
-                disabled={ isDisabled }
-                name="customers" 
-                label="Customers"
-                options={allActiveCustomers}
-                getOptionLabel={(option) => option.name}
-                isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                renderOption={(props, option) => ( <li {...props} key={option?._id}> {option?.name || ''} </li> )}
-                ChipProps={{ size: 'small' }}
-              />
+                <RHFAutocomplete
+                  multiple
+                  disableCloseOnSelect
+                  filterSelectedOptions
+                  disabled={isDisabled}
+                  name="regions"
+                  label="Regions"
+                  options={activeRegions}
+                  getOptionLabel={(option) => option.name}
+                  isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                  renderOption={(props, option) => (<li {...props} key={option?._id}> {option?.name || ''} </li>)}
+                  ChipProps={{ size: 'small' }}
+                />
 
-              <RHFAutocomplete
-                multiple
-                disableCloseOnSelect
-                filterSelectedOptions
-                disabled={ isDisabled }
-                name="machines" 
-                label="Machines"
-                options={allMachines}
-                getOptionLabel={(option) => `${option.serialNo} ${option.name ? '-' : ''} ${option?.name || ''}`}
-                isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.serialNo || ''} ${option.name ? '-' : ''} ${option.name || ''}`}</li>)}
-                ChipProps={{ size: 'small' }}
-              />
+                <RHFAutocomplete
+                  multiple
+                  disableCloseOnSelect
+                  filterSelectedOptions
+                  disabled={isDisabled}
+                  name="customers"
+                  label="Customers"
+                  options={allActiveCustomers}
+                  getOptionLabel={(option) => option.name}
+                  isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                  renderOption={(props, option) => (<li {...props} key={option?._id}> {option?.name || ''} </li>)}
+                  ChipProps={{ size: 'small' }}
+                />
 
-            </Box>
-            <Grid item md={12} display="flex">
-              <RHFSwitch name="isActive" label="Active" />
-              <RHFSwitch name="multiFactorAuthentication" label="Multi-Factor Authentication" />
-            </Grid>
+                <RHFAutocomplete
+                  multiple
+                  disableCloseOnSelect
+                  filterSelectedOptions
+                  disabled={isDisabled}
+                  name="machines"
+                  label="Machines"
+                  options={allMachines}
+                  getOptionLabel={(option) => `${option.serialNo} ${option.name ? '-' : ''} ${option?.name || ''}`}
+                  isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                  renderOption={(props, option) => (<li {...props} key={option?._id}>{`${option.serialNo || ''} ${option.name ? '-' : ''} ${option.name || ''}`}</li>)}
+                  ChipProps={{ size: 'small' }}
+                />
 
-            <Stack sx={{ mt: 3 }}>
-              <AddFormButtons securityUserPage isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+              </Box>
+              <Grid item md={12} display="flex">
+                <RHFSwitch name="isActive" label="Active" />
+                <RHFSwitch name="multiFactorAuthentication" label="Multi-Factor Authentication" />
+              </Grid>
+
+              <Stack sx={{ mt: 3 }}>
+                <AddFormButtons securityUserPage isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+              </Stack>
             </Stack>
-          </Stack>
           </Card>
         </Grid>
       </Grid>

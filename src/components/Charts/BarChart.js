@@ -38,8 +38,8 @@ function BarChart({ chartData, title }) {
     },
     dataLabels: {
       enabled: true,
-      // formatter: (val) => (val === 0 ? '' : `${val}`),
-      formatter: (val) => `${val}`,
+      formatter: (val) => (val === 0 ? '' : `${val}`),
+      // formatter: (val) => `${val}`,
       offsetY: -25,
       style: {
         fontSize: '12px',
@@ -50,7 +50,9 @@ function BarChart({ chartData, title }) {
       categories: labels,
       position: 'bottom',
       labels: {
-        offsetY: 0,
+        offsetY: 8,
+        rotate: -45,
+        rotateAlways: true,
       },
       axisBorder: {
         show: false,
@@ -61,7 +63,7 @@ function BarChart({ chartData, title }) {
       title: {
         text: 'Dates',
         offsetX: 0,
-        offsetY: 0,
+        offsetY: -12,
         style: {
           fontSize: '12px',
           fontWeight: 600,

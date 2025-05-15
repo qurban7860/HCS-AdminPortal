@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import debounce from 'lodash/debounce';
 import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 // @mui
@@ -38,28 +39,24 @@ import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
 import useResponsive from '../../hooks/useResponsive';
 import { BUTTONS } from '../../constants/default-constants';
-
-
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: 'issueType.name', label: <span style={{ marginLeft: 4 }}>T</span>, align: 'left' },
   { id: 'ticketNo', label: 'Ticket No.', align: 'left' },
-  { id: 'summary', label: 'Summary', align: 'left', allowColumn : true },
-  { id: 'machine.serialNo', label: 'Machine', align: 'left', allowColumn : true },
-  { id: 'machine.machineModel.name', label: 'Model', align: 'left', allowColumn : true },
-  { id: 'customer.name', label: 'Customer', align: 'left', allowColumn : true },
-  { id: 'status.name', label: 'S', align: 'left', allowColumn : true },
-  { id: 'priority.name', label: 'P', align: 'left', allowColumn : true },
+  { id: 'summary', label: 'Summary', align: 'left', allowColumn: true },
+  { id: 'machine.serialNo', label: 'Machine', align: 'left', allowColumn: true },
+  { id: 'machine.machineModel.name', label: 'Model', align: 'left', allowColumn: true },
+  { id: 'customer.name', label: 'Customer', align: 'left', allowColumn: true },
+  { id: 'status.name', label: 'S', align: 'left', allowColumn: true },
+  { id: 'priority.name', label: 'P', align: 'left', allowColumn: true },
   { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
 
 // ----------------------------------------------------------------------
 
-export default function TicketFormList(){
-
+export default function TicketFormList() {
   const { tickets, filterBy, page, rowsPerPage, isLoading, reportHiddenColumns } = useSelector((state) => state.tickets);
-
   const navigate = useNavigate();
   const methods = useForm();
 
@@ -74,50 +71,117 @@ export default function TicketFormList(){
 
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));
-    dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
+    dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10)));
+  };
+  
+  const onChangePage = (event, newPage) => { 
+    dispatch(ChangePage(newPage)); 
   };
 
-  const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
   const dispatch = useDispatch();
   const [filterName, setFilterName] = useState('');
-  const [tableData, setTableData] = useState([]);
-  const [ selectedIssueType, setSelectedIssueType ] = useState(null);
-  const [ selectedRequestType, setSelectedRequestType ] = useState(null);
-  const [ selectedStatus, setSelectedStatus ] = useState([]);
-  const [ selectedStatusType, setSelectedStatusType ] = useState(null);
-  const [ selectedResolvedStatus, setSelectedResolvedStatus ] = useState(null);
+  const [selectedIssueType, setSelectedIssueType] = useState(null);
+  const [selectedRequestType, setSelectedRequestType] = useState(null);
+  const [selectedStatus, setSelectedStatus] = useState([]);
+  const [selectedStatusType, setSelectedStatusType] = useState(null);
+  const [selectedResolvedStatus, setSelectedResolvedStatus] = useState('unresolved');
+  const [selectedPriority, setSelectedPriority] = useState(null);
   const isMobile = useResponsive('down', 'sm');
   const prefix = JSON.parse(localStorage.getItem('configurations'))?.find((config) => config?.name?.toLowerCase() === 'ticket_prefix')?.value?.trim() || ''; 
 
-  useLayoutEffect(() => {
-    dispatch(getTickets({page, pageSize: rowsPerPage }));
+  // Effect to fetch tickets when page or rowsPerPage changes
+  // useLayoutEffect(() => {
+  //   dispatch(getTickets({ page, rowsPerPage }));
+  //   return () => {
+  //     dispatch(resetTickets());
+  //   };
+  // }, [dispatch, page, rowsPerPage]);
+
+  // // Trigger data fetch when any of the filters change
+
+  // useEffect(() => {
+  //   // Only reset page to 0 if filters actually changed (not on every page/row change)
+  //   if (
+  //     selectedIssueType || selectedRequestType || selectedStatus.length || 
+  //     selectedStatusType || selectedResolvedStatus || selectedPriority
+  //   ) {
+  //     dispatch(ChangePage(0));
+  //   }
+  
+  //   dispatch(getTickets({
+  //     page,
+  //     rowsPerPage,
+  //     issueType: selectedIssueType?._id,
+  //     requestType: selectedRequestType?._id,
+  //     isResolved: selectedResolvedStatus,
+  //     statusType: selectedStatusType?._id,
+  //     status: selectedStatus.map(s => s._id),
+  //     priority: selectedPriority?._id,
+  //   }));
+  // }, [
+  //   dispatch,
+  //   page,
+  //   rowsPerPage,
+  //   selectedIssueType,
+  //   selectedRequestType,
+  //   selectedStatus,
+  //   selectedStatusType,
+  //   selectedResolvedStatus,
+  //   selectedPriority
+  // ]);
+
+  useEffect(() => {
+    const fetchData = () => {
+      dispatch(getTickets({
+        page,
+        pageSize: rowsPerPage,
+        issueType: selectedIssueType?._id,
+        requestType: selectedRequestType?._id,
+        isResolved: selectedResolvedStatus,
+        statusType: selectedStatusType?._id,
+        status: selectedStatus.map(s => s._id),
+        priority: selectedPriority?._id,
+      }));
+    };
+    fetchData();
     return () => {
       dispatch(resetTickets());
-    }
-  }, [dispatch, page, rowsPerPage ]);
-  
+    };
+  }, [
+    dispatch,
+    page,
+    rowsPerPage,
+    selectedIssueType?._id,
+    selectedRequestType?._id,
+    selectedResolvedStatus,
+    selectedStatusType?._id,
+    selectedStatus.map(s => s._id).join(','), 
+    selectedPriority?._id,
+  ]);
+
   const onRefresh = () => {
     dispatch(ChangePage(0));
     dispatch(getTickets({
-      page: 0, 
-      pageSize: rowsPerPage, 
-      issueType: selectedIssueType?._id, 
-      requestType: selectedRequestType?._id, 
-      isResolved: selectedResolvedStatus, 
-      statusType: selectedStatusType?._id, 
-      status: selectedStatus.map(s => s._id)
+      page: 0,
+      pageSize: rowsPerPage,
+      issueType: selectedIssueType?._id,
+      requestType: selectedRequestType?._id,
+      isResolved: selectedResolvedStatus,
+      statusType: selectedStatusType?._id,
+      status: selectedStatus.map(s => s._id),
+      priority: selectedPriority?._id,
     }));
-  };  
+  };
 
   useEffect(() => {
-    setTableData(tickets?.data || [] );
-  }, [tickets?.data ]);
+    setFilterName(filterBy);
+  }, [filterBy]);
 
   const dataFiltered = applyFilter({
-    inputData: tableData,
     comparator: getComparator(order, orderBy),
+    inputData: tickets?.data || [],
     filterName,
-    prefix, 
+    prefix,
   });
 
   const isFiltered = filterName !== '';
@@ -125,52 +189,43 @@ export default function TicketFormList(){
   const denseHeight = 60;
 
   const debouncedSearch = useRef(debounce((value) => {
-    dispatch(ChangePage(0))
-    dispatch(setFilterBy(value))
-  }, 500))
+    dispatch(ChangePage(0));
+    dispatch(setFilterBy(value)); 
+  }, 500));
 
   const handleFilterName = (event) => {
     debouncedSearch.current(event.target.value);
-    setFilterName(event.target.value)
-    setPage(0);
+    setFilterName(event.target.value);
+    setPage(0); 
   };
-  
-  const handleCustomerDialog = (e, id) => {
-    dispatch(getCustomer(id))
-    dispatch(setCustomerDialog(true))
-  }
-  
-  useEffect(() => {
-    debouncedSearch.current.cancel();
-  }, [debouncedSearch]);
-  
-  useEffect(()=>{
-    setFilterName(filterBy)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[])
 
-  const handleViewRow = (id) => navigate(PATH_SUPPORT.supportTickets.view(id));
-  
+  const handleCustomerDialog = (e, id) => {
+    dispatch(getCustomer(id));
+    dispatch(setCustomerDialog(true));
+
+  };
+
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
     setFilterName('');
     setSelectedIssueType(null);
+    setSelectedPriority(null);
     setSelectedRequestType(null);
     setSelectedStatus([]);
     setSelectedStatusType(null);
     setSelectedResolvedStatus(null);
   };
-  
+
   const handleHiddenColumns = async (arg) => {
     dispatch(setReportHiddenColumns(arg));
   };
-  
+
   const toggleAdd = () => {
     navigate(PATH_SUPPORT.supportTickets.new);
   };
 
   return (
-    <Container maxWidth={false} >
+    <Container maxWidth={false}>
       <StyledCardContainer>
         <Cover name="Support Tickets" icon="ph:users-light" 
         SubOnClick={toggleAdd} 
@@ -193,10 +248,11 @@ export default function TicketFormList(){
             onFilterStatusType={setSelectedStatusType}
             filterResolvedStatus={selectedResolvedStatus} 
             onFilterResolvedStatus={setSelectedResolvedStatus} 
+            filterPriority={selectedPriority}
+            onFilterPriority={setSelectedPriority}
             onReload={onRefresh}
           />
-
-          {!isNotFound && !isMobile && (
+            {!isNotFound && !isMobile && (
             <TablePaginationFilter
               columns={TABLE_HEAD.filter((item) => item?.allowColumn)} 
               hiddenColumns={reportHiddenColumns}
@@ -218,7 +274,6 @@ export default function TicketFormList(){
               onRowsPerPageChange={onChangeRowsPerPage}
             />
           )}
-
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <Scrollbar>
               <Table stickyHeader size="small" sx={{ minWidth: 360 }}>
@@ -238,12 +293,13 @@ export default function TicketFormList(){
                           row={row}
                           hiddenColumns={reportHiddenColumns}
                           onSelectRow={() => onSelectRow(row._id)}
-                          onViewRow={() => handleViewRow(row._id)}
+                          onViewRow={() => navigate(PATH_SUPPORT.supportTickets.view(row._id))}
                           selected={selected.includes(row._id)}
                           selectedLength={selected.length}
                           handleCustomerDialog={(e) =>
                             row?.customer && handleCustomerDialog(e, row?.customer?._id)
                           }
+
                           style={index % 2 ? { background: 'red' } : { background: 'green' }}
                           prefix={prefix}
                         />
@@ -256,6 +312,7 @@ export default function TicketFormList(){
               </Table>
             </Scrollbar>
           </TableContainer>
+
           {!isNotFound && <TablePaginationCustom
             count={ tickets?.totalCount || 0 }
             page={page}
@@ -264,15 +321,14 @@ export default function TicketFormList(){
             onRowsPerPageChange={onChangeRowsPerPage}
           />}
         </TableCard>
-        </FormProvider>
-      </Container>
+      </FormProvider>
+    </Container>
   );
 }
 
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filterName, prefix = '' }) {
-
   const stabilizedThis = inputData?.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -299,7 +355,6 @@ function applyFilter({ inputData, comparator, filterName, prefix = '' }) {
       );
     });
   }
-  
+
   return inputData;
 }
-

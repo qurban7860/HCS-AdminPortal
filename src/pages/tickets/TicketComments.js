@@ -13,7 +13,7 @@ import {
   Stack,
   Typography,
   TextField,
-  Switch
+  Radio, RadioGroup, FormControlLabel
 } from '@mui/material';
 import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
@@ -28,7 +28,7 @@ import TicketHistory from './TicketHistory';
 import TicketWorkLogs from './TicketWorkLogs';
 import FormLabel from '../../components/DocumentForms/FormLabel';
 import { FORMLABELS } from '../../constants/default-constants';
-import FormProvider, { RHFTextField, RHFSwitch } from '../../components/hook-form';
+import FormProvider, { RHFTextField } from '../../components/hook-form';
 import { CustomAvatar } from '../../components/custom-avatar';
 import { addComment, deleteComment, getComments, resetComments, updateComment } from '../../redux/slices/ticket/ticketComments/ticketComment';
 import ConfirmDialog from '../../components/confirm-dialog';
@@ -69,7 +69,7 @@ const TicketComments = ({ currentUser }) => {
     resolver: yupResolver(CommentSchema),
     defaultValues: {
       comment: '',
-      isInternal: false,
+      isInternal: true,
     },
   });
 
@@ -164,7 +164,7 @@ const TicketComments = ({ currentUser }) => {
             <Box sx={{ py: 2 }}>
               {/* Wrapping the form with FormProvider to ensure form context is available */}
               <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-                <Stack direction="row" spacing={2}>
+              <Stack direction="row" spacing={2}>
                   <CustomAvatar
                     src={currentUser?.photoURL}
                     alt={currentUser?.displayName}
@@ -180,11 +180,18 @@ const TicketComments = ({ currentUser }) => {
                       helperText={`${commentValue?.length || 0}/300 characters`}
                       FormHelperTextProps={{ sx: { textAlign: 'right' } }}
                     />
-                    <Stack display="flex" alignItems="start" sx={{ position: 'absolute', transform: 'translateY(225%)' }}>
-                      <RHFSwitch name="isInternal" label="Internal" />
-                    </Stack>
+                    <RadioGroup row name="isInternal"
+                      value={watch('isInternal') ? 'internal' : 'customer'}
+                      onChange={(e) => {
+                      const isInternalSelected = e.target.value === 'internal';
+                      methods.setValue('isInternal', isInternalSelected); }}
+                      sx={{ mt: -1.5 }}>
+                      <FormControlLabel value="internal" control={<Radio />} label="Internal Note" />
+                      <FormControlLabel value="customer" control={<Radio />} label="Note to Customer" />
+                    </RadioGroup>
+
                     {!!commentValue?.trim() && (
-                      <Stack spacing={1} direction="row" sx={{ mt: 2 }}>
+                      <Stack spacing={1} direction="row" sx={{ mt: 1.5 }}>
                         <LoadingButton
                           type="submit"
                           disabled={isLoading}
@@ -251,12 +258,17 @@ const TicketComments = ({ currentUser }) => {
                                     FormHelperTextProps={{ sx: { textAlign: 'right' } }}
                                   />
                                   <Stack display="flex" alignItems="start" sx={{ position: 'absolute', transform: 'translateY(185%)' }}>
-                                    <Switch
-                                      label="Internal"
-                                      checked={editIsInternal}
-                                      onChange={() => setEditIsInternal(!editIsInternal)}
-                                    />
+                                  <RadioGroup row name="editIsInternal"
+                                    value={editIsInternal ? 'internal' : 'customer'}
+                                    onChange={(e) => {
+                                    const isInternalSelected = e.target.value === 'internal';
+                                    setEditIsInternal(isInternalSelected);
+                                    }}>
+                                    <FormControlLabel value="internal" control={<Radio />} label="Internal Note" />
+                                    <FormControlLabel value="customer" control={<Radio />} label="Note to Customer" />
+                                  </RadioGroup>
                                   </Stack>
+
                                   <Stack direction="row" spacing={1}>
                                     <LoadingButton
                                       type="submit"
@@ -284,15 +296,18 @@ const TicketComments = ({ currentUser }) => {
                             ) : (
                               <>
                                 <Typography component="span" variant="body2" color="text.primary">
-                                  {item.comment}
-                                  {item.isInternal && <Typography component="span" variant="caption" sx={{ color: 'text.secondary', ml: 1 }}>(Internal)</Typography>}
+                                {item.comment}
+                                <Typography component="span" variant="caption" sx={{ color: 'text.secondary', ml: 2 }}>
+                                  {item.isInternal ? '(InternalNote)' : '(CustomerNote)'}
+                                </Typography>
+
                                   {item.updatedAt !== item.createdAt && (
                                     <Typography
                                       component="span"
                                       variant="caption"
                                       sx={{ color: 'text.secondary', ml: 1 }}
                                     >
-                                      (edited)
+                                      (Edited)
                                     </Typography>
                                   )}
                                 </Typography>

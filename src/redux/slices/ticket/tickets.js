@@ -249,6 +249,7 @@ export function postTicket(params) {
       formData.append('customer', params?.customer?._id );
       formData.append('machine', params?.machine?._id );
       formData.append('issueType', params?.issueType?._id );
+      params.faults.forEach(fault => formData.append('faults[]', fault._id));      
       formData.append('requestType', params?.requestType?._id );
       formData.append('summary', params?.summary || '');
       formData.append('description', params?.description || '');
@@ -298,6 +299,7 @@ export function patchTicket(id, params) {
       formData.append('customer', params?.customer?._id );
       formData.append('machine', params?.machine?._id );
       formData.append('requestType', params?.requestType?._id );
+      params.faults.forEach(fault => formData.append('faults[]', fault._id));   
       formData.append('summary', params?.summary || '');
       formData.append('description', params?.description || '');
       formData.append('changeType', params?.changeType?._id || null);
@@ -359,7 +361,7 @@ export function updateTicketField(id, name, value) {
 }
 
 // GET Tickets
-export function getTickets({ page, pageSize, issueType, requestType, isResolved = null, statusType, status, createdAt}) {
+export function getTickets({ page, pageSize, issueType, requestType, isResolved = null, statusType, status,priority, createdAt}) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -373,6 +375,7 @@ export function getTickets({ page, pageSize, issueType, requestType, isResolved 
         ...(isResolved && { isResolved: isResolved === 'resolved' }),
         ...(statusType && { statusType }),
         ...(status && { status }),
+        ...(priority && {priority}),
       };
       
       if (isResolved === 'unresolved') {

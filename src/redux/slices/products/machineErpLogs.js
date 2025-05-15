@@ -204,16 +204,28 @@ export function addMachineLogRecord(machine, customer, logs, action, version, ty
 
 // ------------------------- GET LOGS GRAPH DATA ---------------------------------------------
 
-export function getMachineLogGraphData(customerId, machineId, type = "erp", periodType, logGraphType) {
+export function getMachineLogGraphData(customerId, machineId, type = "erp", periodType, logGraphType, utcStartDate, utcEndDate) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
+      const startDate = new Date(utcStartDate);
+      const endDate = new Date(utcEndDate);
+
+      const isSameDay = startDate.toDateString() === endDate.toDateString();
+
+      if (isSameDay) {
+        startDate.setHours(0, 0, 0, 0);
+        endDate.setHours(23, 59, 59, 999);
+      }
       const params = {
         customer: customerId,
         machine: machineId,
         type,
         periodType,
-        logGraphType
+        logGraphType,
+        startDate: startDate.toISOString(),
+        endDate: endDate.toISOString(),
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       };
       const response = await axios.get(`${CONFIG.SERVER_URL}productLogs/graph`, { params });
       dispatch(slice.actions.setMachineLogsGraphData(response?.data || ''));
@@ -319,9 +331,10 @@ export function getMachineLogRecords({
   isArchived,
   searchKey,
   searchColumn,
+  returnResponse = false
 }) {
   return async (dispatch) => {
-    dispatch(slice.actions.startLoading());
+    if (!returnResponse) dispatch(slice.actions.startLoading());
     try {
       const params = {
         customer: customerId,
@@ -330,13 +343,19 @@ export function getMachineLogRecords({
         fromDate,
         toDate,
         isArchived,
-        pagination: { page, pageSize },
+        ...(!returnResponse && { pagination: { page, pageSize } }),
         ...(isMachineArchived && { archivedByMachine: true }),
         ...(!!isCreatedAt && { isCreatedAt }),
         ...(searchKey?.length > 0 && { searchKey, searchColumn })
       };
       const response = await axios.get(`${CONFIG.SERVER_URL}productLogs/`, { params });
-      dispatch(slice.actions.getMachineErpLogRecordsSuccess(response.data));
+      
+      if (!returnResponse) {
+        dispatch(slice.actions.getMachineErpLogRecordsSuccess(response.data));
+        return null;
+      }
+      return response.data;
+
     } catch (error) {
       console.error('Error fetching machine log records:', error);
       dispatch(slice.actions.hasError(error.message || 'An error occurred'));

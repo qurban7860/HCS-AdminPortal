@@ -14,6 +14,10 @@ export const ICONS = {
     icon: 'mingcute:file-upload-fill',
     heading: 'Uplaod File',
   },
+  UPLOAD_FILE_CSV: {
+    icon: 'tabler:file-type-csv',
+    heading: 'Upload CSV',
+  },
   ACTIVE: {
     icon: 'mdi:check-circle-outline',
     color: '#008000',
@@ -573,6 +577,10 @@ export const ICONS = {
     icon: 'hugeicons:investigation',
     heading: 'Investigation Reasons',
   },
+  FAULTS: {
+    icon: 'mdi:file-exchange-outline',
+    heading: 'Faults',
+  },
 
   MOVE_MACHINE: {
     icon: 'ri:swap-box-line',
@@ -607,6 +615,7 @@ export const ICONS = {
   MACHINES:{ icon:'mdi:gate-open'},
   DOCUMENTS: { icon:'ph:files-fill' },
   MACHINE: { icon:'mdi:gate-open' },
+  MACHINE_LIFECYCLE: {icon: 'carbon:ai-governance-lifecycle'},
   SETTINGS:{ icon:'mdi:cog' },
   TOOLS_INSTALLED:{ icon:'fa-solid:tools' },
   JOBS:{ icon:'mdi:printer' },
@@ -621,4 +630,5 @@ export const ICONS = {
   DASHBOARD:{ icon:'mdi:counter' },
   INTEGRATION:{ icon:'carbon:ibm-cloud-direct-link-2-connect' },
   JIRA:{ icon:'simple-icons:jirasoftware' },
+  CUSTOMER_PORTAL_ACCESS:{ icon:'clarity:no-access-solid' }
 };

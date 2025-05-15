@@ -126,6 +126,13 @@ export const PATH_CRM = {
     jira: {
       root: (customerId) => path(ROOTS_CRM, `/customers/${customerId}/jira`),
     },
+   
+    // --------------- Customer Portal ACCESS---------------------------------------
+    modulesAccess: {
+      root: (customerId) => path(ROOTS_CRM, `/customers/${customerId}/modulesAccess`),
+    },
+
+    
     // ------------------------ ARCHIVED CUSTOMERS ----------------------------------------
     archived: {
       root: path(ROOTS_CRM, '/archived-customers'),
@@ -188,6 +195,10 @@ export const PATH_MACHINE = {
       view: (machineId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/settings/${id}/view`),
       edit: (machineId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/settings/${id}/edit`),
     },
+    machineLifecycle: {
+      root: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/machineLifecycle`),
+    },
+    
     // --------------------- Tool Installed -----------------------
     toolsInstalled: {
       root: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/toolsinstalled`),
@@ -439,6 +450,7 @@ export const PATH_JOBS = {
     root: path(ROOTS_JOB, '/machineJobs'),
     new: path(ROOTS_JOB, '/machineJobs/new'),
     view: (id) => path(ROOTS_JOB, `/machineJobs/${id}/view`),
+    edit: (id) => path(ROOTS_JOB, `/machineJobs/${id}/edit`),
   }
 }
 
@@ -516,6 +528,12 @@ export const PATH_SUPPORT = {
       new: path(ROOTS_SUPPORT, '/ticketSettings/investigationReasons/new'),
       view: (id) => path(ROOTS_SUPPORT, `/ticketSettings/investigationReasons/${id}/view`),
       edit: (id) => path(ROOTS_SUPPORT, `/ticketSettings/investigationReasons/${id}/edit`),
+    },
+    faults: {
+      root: path(ROOTS_SUPPORT, '/ticketSettings/faults'),
+      new: path(ROOTS_SUPPORT, '/ticketSettings/faults/new'),
+      view: (id) => path(ROOTS_SUPPORT, `/ticketSettings/faults/${id}/view`),
+      edit: (id) => path(ROOTS_SUPPORT, `/ticketSettings/faults/${id}/edit`),
     },
   },
   jiraTickets: {

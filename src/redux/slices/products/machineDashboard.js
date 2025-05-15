@@ -11,8 +11,8 @@ const initialState = {
   intial: false,
   responseMessage: null,
   success: false,
-  isLoading: DASHBOARD_STATS.reduce((acc, key) => ({ ...acc, [key]: false }), {}),
-  error: DASHBOARD_STATS.reduce((acc, key) => ({ ...acc, [key]: null }), {}),
+  isLoading: false,
+  error: false,
   dashboardStatistics: {},
   filterBy: '',
   page: 0,
@@ -24,7 +24,7 @@ const slice = createSlice({
   initialState,
   reducers: {
     startLoading(state, action) {
-      state.isLoading[action.payload] = true;
+      state.isLoading = true;
     },
     // SET INDIVIDUAL STATISTIC
     setStatistic(state, action) {
@@ -35,11 +35,18 @@ const slice = createSlice({
       state.dashboardStatistics[type] = value;
       state.error[type] = null;
     },
+    // SET ALL STATISTICS
+    setAllStatistic(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.initial = true;
+      state.dashboardStatistics = action.payload;
+      state.error = null;
+    },
     // HAS ERROR
     hasError(state, action) {
-      const { type, error } = action.payload;
-      state.isLoading[type] = false;
-      state.error[type] = error;
+      state.isLoading = false;
+      state.error = action.payload;
       state.initial = true;
     },
     // RESPONSE MESSAGE
@@ -52,8 +59,8 @@ const slice = createSlice({
     resetMachineDashboard(state) {
       return {
         ...initialState,
-        isLoading: DASHBOARD_STATS.reduce((acc, key) => ({ ...acc, [key]: false }), {}),
-        error: DASHBOARD_STATS.reduce((acc, key) => ({ ...acc, [key]: null }), {})
+        isLoading: false,
+        error: false
       };
     },
     // Set FilterBy
@@ -113,4 +120,20 @@ export function getMachineDashboardStatistics(machineId) {
   };
 }
 
-
+export function getCompleteMachineDashboardStatistics(machineId) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/dashboard/`);
+      dispatch(slice.actions.setAllStatistic(response?.data[0]));
+    } catch (error) {
+      console.error(error);
+      const errorMessage = error.response?.data?.message || error.message || "Something went wrong";
+      dispatch(slice.actions.hasError(errorMessage));
+    }
+    return {
+      success: true,
+      message: 'Statistics fetch completed',
+    };
+  };
+}

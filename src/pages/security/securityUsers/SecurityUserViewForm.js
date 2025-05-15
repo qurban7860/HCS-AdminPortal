@@ -17,8 +17,8 @@ import {
 } from '../../../redux/slices/securityUser/securityUser';
 import { getBlockedCustomer } from '../../../redux/slices/securityConfig/blockedCustomers';
 import { getBlockedUser } from '../../../redux/slices/securityConfig/blockedUsers';
-import { getCustomer , setCustomerDialog } from '../../../redux/slices/customer/customer';
-import { getContact , setContactDialog } from '../../../redux/slices/customer/contact';
+import { getCustomer, setCustomerDialog } from '../../../redux/slices/customer/customer';
+import { getContact, setContactDialog } from '../../../redux/slices/customer/contact';
 import ViewFormField from '../../../components/ViewForms/ViewFormField';
 import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
@@ -34,10 +34,10 @@ import ChangePasswordByAdminDialog from '../../../components/Dialog/ChangePasswo
 
 export default function SecurityUserViewForm() {
 
-  const { securityUser, isLoading} = useSelector((state) => state.user);
+  const { securityUser, isLoading } = useSelector((state) => state.user);
   const { blockedCustomer } = useSelector((state) => state.blockedCustomer);
   const { blockedUser } = useSelector((state) => state.blockedUser);
-  
+
   const [openConfirm, setOpenConfirm] = useState(false);
   const handleCloseConfirm = () => setOpenConfirm(false);
 
@@ -51,7 +51,7 @@ export default function SecurityUserViewForm() {
     dispatch(setContactDialog(false))
     dispatch(getBlockedCustomer(securityUser?.customer?._id))
     dispatch(getBlockedUser(securityUser?._id))
-  },[dispatch, securityUser]);
+  }, [dispatch, securityUser]);
 
   useEffect(() => {
     batch(() => {
@@ -68,13 +68,13 @@ export default function SecurityUserViewForm() {
     navigate(PATH_SETTING.security.users.edit(securityUser._id));
   };
 
-  const handleCustomerDialog = (event) =>{
-    event.preventDefault();  
+  const handleCustomerDialog = (event) => {
+    event.preventDefault();
     dispatch(setCustomerDialog(true))
   }
-  
-  const handleContactDialog = (event) =>{
-    event.preventDefault();  
+
+  const handleContactDialog = (event) => {
+    event.preventDefault();
     dispatch(setContactDialog(true))
   }
 
@@ -83,9 +83,9 @@ export default function SecurityUserViewForm() {
   };
 
   const userStatus = {
-    locked:new Date(securityUser?.lockUntil).getTime() > new Date().getTime(),
-    lockedBy:securityUser?.lockedBy,
-    lockedUntil:securityUser?.lockUntil
+    locked: new Date(securityUser?.lockUntil).getTime() > new Date().getTime(),
+    lockedBy: securityUser?.lockedBy,
+    lockedUntil: securityUser?.lockUntil
   }
 
   const handleChangeUserStatus = async (lockUntil) => {
@@ -93,7 +93,7 @@ export default function SecurityUserViewForm() {
       try {
         await dispatch(changeUserStatus(securityUser._id, !userStatus?.locked, lockUntil));
         await dispatch(getSecurityUser(securityUser._id));
-        enqueueSnackbar(`User ${userStatus?.locked?"Unlocked":"Locked"} Successfully`);
+        enqueueSnackbar(`User ${userStatus?.locked ? "Unlocked" : "Locked"} Successfully`);
       } catch (error) {
         enqueueSnackbar("Something went wrong!", { variant: `error` });
         console.log('Error:', error);
@@ -115,7 +115,7 @@ export default function SecurityUserViewForm() {
 
   const onDelete = async () => {
     try {
-      await dispatch(deleteSecurityUser( id, { isArchived: true } ));
+      await dispatch(deleteSecurityUser(id, { isArchived: true }));
       await navigate(PATH_SETTING.security.root);
       // await dispatch(getSecurityUsers());
     } catch (error) {
@@ -126,7 +126,7 @@ export default function SecurityUserViewForm() {
 
   const onArchive = async () => {
     try {
-      await dispatch(archiveSecurityUser( id, { isArchived: true } ));
+      await dispatch(archiveSecurityUser(id, { isArchived: true }));
     } catch (error) {
       enqueueSnackbar('User Archive failed!', { variant: `error` });
       console.log('Error:', error);
@@ -135,7 +135,7 @@ export default function SecurityUserViewForm() {
 
   const onRestore = async () => {
     try {
-      await dispatch(archiveSecurityUser( id, { isArchived: false } ));
+      await dispatch(archiveSecurityUser(id, { isArchived: false }));
     } catch (error) {
       enqueueSnackbar('User Restore failed!', { variant: `error` });
       console.log('Error:', error);
@@ -177,17 +177,17 @@ export default function SecurityUserViewForm() {
         </StyledCardContainer>
         <Card sx={{ p: 3 }}>
           <ViewFormEditDeleteButtons
-            handleEdit={ securityUser?.isArchived ? undefined : handleEdit}
-            handleUserInvite={ ( securityUser?.invitationStatus && !securityUser?.isArchived ) ? handleUserInvite : undefined }
+            handleEdit={securityUser?.isArchived ? undefined : handleEdit}
+            handleUserInvite={(securityUser?.invitationStatus && !securityUser?.isArchived) ? handleUserInvite : undefined}
             handleUpdatePassword={securityUser?.isArchived ? undefined : handleUpdatePassword}
             isLoading={isLoading}
-            onArchive={ securityUser?.isArchived ? undefined : onArchive}
-            onRestore={ securityUser?.isArchived ? onRestore : undefined }
+            onArchive={securityUser?.isArchived ? undefined : onArchive}
+            onRestore={securityUser?.isArchived ? onRestore : undefined}
             // onDelete={ securityUser?.isArchived ? onDelete : undefined }
             isInviteLoading={isLoading}
             backLink={() => navigate(PATH_SETTING.security.root)}
             isActive={defaultValues.isActive}
-            multiAuth={defaultValues?.multiFactorAuthentication} 
+            multiAuth={defaultValues?.multiFactorAuthentication}
             formerEmployee={defaultValues?.formerEmployee}
             userStatus={userStatus}
             onUserStatusChange={securityUser?.isArchived ? undefined : handleChangeUserStatus}
@@ -204,11 +204,11 @@ export default function SecurityUserViewForm() {
               </Button>
             }
           />
-          <Grid container sx={{display:{ md:'flex', sm: 'block' }, justifyContent:{md: 'space-between'}}} >
-          <Grid  item md={6} sm={12} xs={12} sx={{p:.5}}>
-            <Grid  sx={{border: '1px solid lightgrey', borderRadius:2, px:1.5, pt:1.5, height: {md: '100%'}}}>
-            <FormLabel content='Personal Information' />
-              <ViewFormField isLoading={isLoading}
+          <Grid container sx={{ display: { md: 'flex', sm: 'block' }, justifyContent: { md: 'space-between' } }} >
+            <Grid item md={6} sm={12} xs={12} sx={{ p: .5 }}>
+              <Grid sx={{ border: '1px solid lightgrey', borderRadius: 2, px: 1.5, pt: 1.5, height: { md: '100%' } }}>
+                <FormLabel content='Personal Information' />
+                <ViewFormField isLoading={isLoading}
                   sm={12}
                   heading="Full Name"
                   node={
@@ -217,99 +217,99 @@ export default function SecurityUserViewForm() {
                         {defaultValues?.name}
                         {blockedUser.length > 0 &&
                           <StyledTooltip title="User is Blocked" placement='top' disableFocusListener tooltipcolor="#FF0000" color="#FF0000">
-                            <Iconify color="#FF0000" sx={{height: '24px', width: '24px', verticalAlign:"middle", ml:1 }} icon="mdi:ban" />
+                            <Iconify color="#FF0000" sx={{ height: '24px', width: '24px', verticalAlign: "middle", ml: 1 }} icon="mdi:ban" />
                           </StyledTooltip>
                         }
                       </>
                     )
                   }
-              />
-              <ViewFormField isLoading={isLoading} sm={12} heading="Phone" param={defaultValues?.phone} />
-              <ViewFormField isLoading={isLoading} sm={12} heading="email" param={defaultValues?.email} />
-              <ViewFormField isLoading={isLoading} sm={12} heading="Login" param={defaultValues?.login} />
-              <ViewFormField isLoading={isLoading}
-                sm={12}
-                heading="Customer"
-                node={
-                  defaultValues?.customer && (
-                    <Link onClick={handleCustomerDialog} href="#" underline="none">
-                      {defaultValues?.customer}
-                      {blockedCustomer.length > 0 &&
-                        <StyledTooltip title="Customer is Blocked" placement='top' disableFocusListener tooltipcolor="#FF0000" color="#FF0000">
-                          <Iconify color="#FF0000" sx={{height: '24px', width: '24px', verticalAlign:"middle", ml:1 }} icon="ooui:block" />
-                        </StyledTooltip>
-                      }
-                      {!securityUser?.customer?.isActive &&
-                        <StyledTooltip title="Customer is Inactive" placement='top' disableFocusListener tooltipcolor="#FF0000" color="#FF0000">
-                          <Iconify color="#FF0000" sx={{height: '24px', width: '24px', verticalAlign:"middle", ml:1 }} icon="mdi:ban" />
-                        </StyledTooltip>
-                      }
-                    </Link>)}
-              />
-              <ViewFormField isLoading={isLoading}
-                sm={12}
-                heading="Contact"
-                node={
-                  <>
-                    { defaultValues?.contact?.firstName && <StyledTooltip
-                      placement="top" 
-                      title={defaultValues?.contact?.formerEmployee ? ICONS.FORMEREMPLOYEE.heading:ICONS.NOTFORMEREMPLOYEE.heading} 
-                      disableFocusListener tooltipcolor={defaultValues?.contact?.formerEmployee ? ICONS.FORMEREMPLOYEE.color:ICONS.NOTFORMEREMPLOYEE.color} 
-                      color={defaultValues?.contact?.formerEmployee ? ICONS.FORMEREMPLOYEE.color:ICONS.NOTFORMEREMPLOYEE.color}
-                    >
-                      <Iconify icon={ICONS.FORMEREMPLOYEE.icon} sx={{mr:1, height: 20, width: 20 }}/>
-                    </StyledTooltip>}
-                    {defaultValues?.contact && (
-                      <Link onClick={handleContactDialog} href="#" underline="none">
-                        {defaultValues?.contact?.firstName || ''} {defaultValues?.contact?.lastName || ''}
-                        {!defaultValues?.contact?.isActive &&
-                          <StyledTooltip title="Contact is Inactive" placement='top' disableFocusListener tooltipcolor="#FF0000" color="#FF0000">
-                            <Iconify color="#FF0000" sx={{height: '24px', width: '24px', verticalAlign:"middle", ml:1 }} icon="mdi:ban" />
+                />
+                <ViewFormField isLoading={isLoading} sm={12} heading="Phone" param={defaultValues?.phone} />
+                <ViewFormField isLoading={isLoading} sm={12} heading="email" param={defaultValues?.email} />
+                <ViewFormField isLoading={isLoading} sm={12} heading="Login" param={defaultValues?.login} />
+                <ViewFormField isLoading={isLoading}
+                  sm={12}
+                  heading="Customer"
+                  node={
+                    defaultValues?.customer && (
+                      <Link onClick={handleCustomerDialog} href="#" underline="none">
+                        {defaultValues?.customer}
+                        {blockedCustomer.length > 0 &&
+                          <StyledTooltip title="Customer is Blocked" placement='top' disableFocusListener tooltipcolor="#FF0000" color="#FF0000">
+                            <Iconify color="#FF0000" sx={{ height: '24px', width: '24px', verticalAlign: "middle", ml: 1 }} icon="ooui:block" />
                           </StyledTooltip>
                         }
-                      </Link>)
-                    }
-                  </>
-                    }
-              />
+                        {!securityUser?.customer?.isActive &&
+                          <StyledTooltip title="Customer is Inactive" placement='top' disableFocusListener tooltipcolor="#FF0000" color="#FF0000">
+                            <Iconify color="#FF0000" sx={{ height: '24px', width: '24px', verticalAlign: "middle", ml: 1 }} icon="mdi:ban" />
+                          </StyledTooltip>
+                        }
+                      </Link>)}
+                />
+                <ViewFormField isLoading={isLoading}
+                  sm={12}
+                  heading="Contact"
+                  node={
+                    <>
+                      {defaultValues?.contact?.firstName && <StyledTooltip
+                        placement="top"
+                        title={defaultValues?.contact?.formerEmployee ? ICONS.FORMEREMPLOYEE.heading : ICONS.NOTFORMEREMPLOYEE.heading}
+                        disableFocusListener tooltipcolor={defaultValues?.contact?.formerEmployee ? ICONS.FORMEREMPLOYEE.color : ICONS.NOTFORMEREMPLOYEE.color}
+                        color={defaultValues?.contact?.formerEmployee ? ICONS.FORMEREMPLOYEE.color : ICONS.NOTFORMEREMPLOYEE.color}
+                      >
+                        <Iconify icon={ICONS.FORMEREMPLOYEE.icon} sx={{ mr: 1, height: 20, width: 20 }} />
+                      </StyledTooltip>}
+                      {defaultValues?.contact && (
+                        <Link onClick={handleContactDialog} href="#" underline="none">
+                          {defaultValues?.contact?.firstName || ''} {defaultValues?.contact?.lastName || ''}
+                          {!defaultValues?.contact?.isActive &&
+                            <StyledTooltip title="Contact is Inactive" placement='top' disableFocusListener tooltipcolor="#FF0000" color="#FF0000">
+                              <Iconify color="#FF0000" sx={{ height: '24px', width: '24px', verticalAlign: "middle", ml: 1 }} icon="mdi:ban" />
+                            </StyledTooltip>
+                          }
+                        </Link>)
+                      }
+                    </>
+                  }
+                />
+              </Grid>
             </Grid>
-            </Grid>
 
-            <Grid item md={6} sm={12} xs={12} sx={{p:.5}}>
-              <Grid  sx={{border: '1px solid lightgrey', borderRadius:2, px:1.5, pt:1.5, height: {md: '100%'} }}>
-              <FormLabel content='Accessibility Information' />
+            <Grid item md={6} sm={12} xs={12} sx={{ p: .5 }}>
+              <Grid sx={{ border: '1px solid lightgrey', borderRadius: 2, px: 1.5, pt: 1.5, height: { md: '100%' } }}>
+                <FormLabel content='Accessibility Information' />
 
-              <ViewFormField isLoading={isLoading}
-                sm={12}
-                heading="Roles"
-                userRolesChips={defaultValues?.roles}
-              />
+                <ViewFormField isLoading={isLoading}
+                  sm={12}
+                  heading="Roles"
+                  userRolesChips={defaultValues?.roles}
+                />
 
-              <ViewFormField isLoading={isLoading}
-                sm={12}
-                heading="Data Accessibility Level"
-                param={defaultValues?.dataAccessibilityLevel}
-              />
+                <ViewFormField isLoading={isLoading}
+                  sm={12}
+                  heading="Data Accessibility Level"
+                  param={defaultValues?.dataAccessibilityLevel}
+                />
 
-              <ViewFormField isLoading={isLoading}
-                sm={12}
-                heading="Regions"
-                arrayParam={defaultValues?.regions}
-              />
+                <ViewFormField isLoading={isLoading}
+                  sm={12}
+                  heading="Regions"
+                  arrayParam={defaultValues?.regions}
+                />
 
-              <ViewFormField isLoading={isLoading}
-                sm={12}
-                heading="Customers"
-                arrayParam={defaultValues?.customers}
-              />
+                <ViewFormField isLoading={isLoading}
+                  sm={12}
+                  heading="Customers"
+                  arrayParam={defaultValues?.customers}
+                />
 
-              <ViewFormField isLoading={isLoading}
-                sm={12}
-                heading="Machines"
-                machineConnectionArrayChip={defaultValues?.machines}
-              />
-              
-            </Grid>
+                <ViewFormField isLoading={isLoading}
+                  sm={12}
+                  heading="Machines"
+                  machineConnectionArrayChip={defaultValues?.machines}
+                />
+
+              </Grid>
             </Grid>
           </Grid>
           {/* <ViewFormField /> */}
@@ -319,7 +319,7 @@ export default function SecurityUserViewForm() {
         </Card>
       </Grid>
       <ChangePasswordByAdminDialog />
-      
+
     </>
   );
 }

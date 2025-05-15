@@ -1,133 +1,187 @@
 import PropTypes from 'prop-types';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { FormProvider, useForm } from 'react-hook-form';
 // @mui
-import { Card, Container, Stack, Typography, Box } from '@mui/material';
-// routes
+import { Card, Container, Stack, Typography, Box, useTheme } from '@mui/material';
 import { useParams } from 'react-router-dom';
-// slices
-import { getMachineLogGraphData } from '../../../redux/slices/products/machineErpLogs';
-// utils
+import { RHFAutocomplete, RHFDatePicker } from '../../../components/hook-form';
 import { machineLogGraphTypes } from '../../../constants/machineLogTypeFormats';
 import MachineTabContainer from '../util/MachineTabContainer';
+import Iconify from '../../../components/iconify';
+import { StyledTooltip, StyledContainedIconButton } from '../../../theme/styles/default-styles';
 import ErpProducedLengthLogGraph from '../../Reports/Graphs/ErpProducedLengthLogGraph';
 import ErpProductionRateLogGraph from '../../Reports/Graphs/ErpProductionRateLogGraph';
-import { RHFAutocomplete } from '../../../components/hook-form';
-
-// ----------------------------------------------------------------------
+import { getMachineLogGraphData } from '../../../redux/slices/products/machineErpLogs';
 
 MachineLogsGraphViewForm.propTypes = {
   machineId: PropTypes.bool,
 };
 
 export default function MachineLogsGraphViewForm() {
-  const [graphLabels, setGraphLabels] = useState({yaxis: "Cumulative Total Value", xaxis: "Months"});
+  const [graphLabels, setGraphLabels] = useState({ yaxis: 'Produced Length & Waste (m)', xaxis: 'Daily' });
+  const [triggerFetch, setTriggerFetch] = useState(null);
 
-  const dispatch = useDispatch();  
+  const dispatch = useDispatch();
   const { machineId } = useParams();
   const { machine } = useSelector((state) => state.machine);
+  const theme = useTheme();
+  
+   const defaultValues = useMemo(
+    () => ({
+      logPeriod: 'Daily',
+      logGraphType: machineLogGraphTypes[0],
+      dateFrom: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+      dateTo: new Date()
+    }),
+    []
+  )
 
   const methods = useForm({
-    defaultValues: {
-      logPeriod: "Monthly",
-      logGraphType: machineLogGraphTypes[0]
-    },
+    defaultValues,
   });
 
-  const { watch, setValue } = methods;
-  const { logPeriod, logGraphType } = watch();
+  const { setValue, getValues, handleSubmit } = methods;
+
+  const handleFormSubmit = useCallback(() => {
+    const { logPeriod, logGraphType, dateFrom, dateTo } = getValues()
+    const customerId = machine?.customer?._id
+    if (!customerId || !logGraphType?.key) return
+
+    const payload = { logPeriod, logGraphType, dateFrom, dateTo }
+    setTriggerFetch(payload)
+
+    dispatch(getMachineLogGraphData( customerId, machineId, 'erp', logPeriod, logGraphType.key, dateFrom, dateTo ))
+
+    setGraphLabels({
+      yaxis: logGraphType.key === 'productionRate'
+        ? 'Production Rate (m/hr)'
+        : 'Produced Length and Waste (m)',
+      xaxis: logPeriod
+    })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [getValues, machine?.customer?._id, machineId])
 
   useEffect(() => {
-    if (logPeriod && logGraphType) {
-      const customerId = machine?.customer?._id;
-      const LogType = 'erp';
-      dispatch(getMachineLogGraphData(customerId, machineId, LogType, logPeriod, logGraphType?.key));
+    if ( defaultValues?.logGraphType && defaultValues?.logPeriod && defaultValues?.dateFrom && defaultValues?.dateTo && machine?.customer?._id)
+    {
+      const { logPeriod, logGraphType, dateFrom, dateTo } = defaultValues
+      const customerId = machine?.customer?._id
+
+      const payload = { logPeriod, logGraphType, dateFrom, dateTo}
+      setTriggerFetch(payload)
+
+      dispatch(getMachineLogGraphData( customerId, machineId, 'erp', logPeriod, logGraphType.key, dateFrom, dateTo ))
+
+      setGraphLabels({
+        yaxis: logGraphType.key === 'productionRate'
+          ? 'Production Rate (m/hr)'
+          : 'Produced Length and Waste (m)',
+        xaxis: logPeriod
+      })
     }
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [logPeriod, logGraphType]);
+  }, [defaultValues, machine?.customer?._id, machineId])
 
   const handlePeriodChange = useCallback((newPeriod) => {
-    setValue('logPeriod', newPeriod);
-    switch (newPeriod) {
-      case 'Monthly':
-        setGraphLabels((prev) => ({...prev, xaxis: "Months"}))
-        break;
-      case 'Daily':
-        setGraphLabels((prev) => ({...prev, xaxis: "Days"}))
-        break;
-      case 'Quarterly':
-        setGraphLabels((prev) => ({...prev, xaxis: "Quarters"}))
-        break;
-      case 'Yearly':
-        setGraphLabels((prev) => ({...prev, xaxis: "Years"}))
-        break;
-      default:
-        break;
-    }
-  }, [setValue]);
+    setValue('logPeriod', newPeriod)
+  }, [setValue])
 
   const handleGraphTypeChange = useCallback((newGraphType) => {
-    setValue('logGraphType', newGraphType);
-  }, [setValue]);
-
+    setValue('logGraphType', newGraphType)
+  }, [setValue])
 
   return (
     <Container maxWidth={false}>
       <MachineTabContainer currentTabValue="graphs" />
-      <FormProvider {...methods}>
-        <form>
-          <Card sx={{ p: 3 }}>
-            <Stack spacing={2}>
-                <Stack
-                  direction="row"
-                  spacing={1}
-                  sx={{ alignSelf: 'flex-start', alignItems: 'center',  mb: 3 }}
-                >
-                  <Box sx={{ pb: 1 }}>
-                    <Typography variant="h5" color="text.primary">
-                      Log Graphs
-                    </Typography>
-                  </Box>
-                </Stack>
-                <Stack direction="row" spacing={2} sx={{ width: '100%' }}>
-                  <Box sx={{ width: '50%' }}>
-                    <RHFAutocomplete
-                      name="logPeriod"
-                      label="Period*"
-                      options={['Daily', 'Monthly', 'Quarterly', 'Yearly']}
-                      onChange={(e, newValue) => handlePeriodChange(newValue)}
-                      size="small"
-                      disableClearable
-                    />
-                  </Box>
-                  <Box sx={{ width: '50%' }}>
-                    <RHFAutocomplete
-                      name="logGraphType"
-                      label="Graph Type*"
-                      options={machineLogGraphTypes}
-                      onChange={(e, newValue) => handleGraphTypeChange(newValue)}
-                      getOptionLabel={(option) => option.name || ''}
-                      isOptionEqualToValue={(option, value) => option?.key === value?.key}
-                      renderOption={(props, option) => (
-                        <li {...props} key={option?.key}>
-                          {option.name || ''}
-                        </li>
-                      )}
-                      disableClearable
-                      size="small"
-                    />
-                  </Box>
-                </Stack>
+       <FormProvider {...methods}>
+         <form onSubmit={handleSubmit(handleFormSubmit)}>
+        <Card sx={{ p: 3 }}>
+          <Stack spacing={2}>
+            <Typography variant="h5" sx={{ pb: 1 }}>
+              Log Graphs
+            </Typography>
+
+            <Stack direction="row" spacing={2}>
+              <Box sx={{ flex: 1 }}>
+                <RHFAutocomplete
+                  name="logPeriod"
+                  label="Period*"
+                  options={['Hourly', 'Daily', 'Monthly', 'Quarterly', 'Yearly']}
+                  onChange={(e, newValue) => handlePeriodChange(newValue)}
+                  size="small"
+                  disableClearable
+                />
+              </Box>
+              <Box sx={{ flex: 1 }}>
+                <RHFAutocomplete
+                  name="logGraphType"
+                  label="Graph Type*"
+                  options={machineLogGraphTypes}
+                  onChange={(e, newValue) => handleGraphTypeChange(newValue)}
+                  getOptionLabel={(option) => option.name || ''}
+                  isOptionEqualToValue={(option, value) => option?.key === value?.key}
+                  renderOption={(props, option) => (
+                    <li {...props} key={option?.key}>
+                      {option.name || ''}
+                    </li>
+                  )}
+                  disableClearable
+                  size="small"
+                />
+              </Box>
             </Stack>
-          </Card>
+
+            <Stack
+              direction={{ xs: 'column', sm: 'row' }}
+              spacing={2}
+              sx={{
+                justifyContent: 'space-between',
+                alignItems: 'flex-start',
+              }}
+            >
+              <Box sx={{ flexGrow: 1, width: { xs: '100%', sm: 'auto' } }}>
+                <RHFDatePicker
+                  label="Date From"
+                  name="dateFrom"
+                  size="small"
+                  onChange={(newValue) => setValue('dateFrom', newValue)}
+                  fullWidth
+                />
+              </Box>
+              <Box sx={{ flexGrow: 1, width: { xs: '100%', sm: 'auto' } }}>
+                <RHFDatePicker
+                  label="Date To"
+                  name="dateTo"
+                  size="small"
+                  onChange={(newValue) => setValue('dateTo', newValue)}
+                  fullWidth
+                />
+              </Box>
+              <Box sx={{ justifyContent: 'flex-end', display: 'flex' }}>
+                <StyledTooltip
+                  title="Fetch Graph"
+                  placement="top"
+                  disableFocusListener
+                  tooltipcolor={theme.palette.primary.main}
+                >
+                  <StyledContainedIconButton type="submit" sx={{ px: 2 }}>
+                    <Iconify sx={{ height: '24px', width: '24px' }} icon="mdi:text-search" />
+                  </StyledContainedIconButton>
+                </StyledTooltip>
+              </Box>
+            </Stack>
+          </Stack>
+        </Card>
         </form>
       </FormProvider>
-        {logGraphType.key === 'length_and_waste' ? (
-          <ErpProducedLengthLogGraph timePeriod={logPeriod} customer={machine?.customer} graphLabels={graphLabels} />
-        ) : (
-          <ErpProductionRateLogGraph timePeriod={logPeriod} customer={machine?.customer} />
-        )}
+
+      {triggerFetch?.logGraphType?.key === 'length_and_waste' ? (
+        <ErpProducedLengthLogGraph timePeriod={graphLabels?.xaxis} customer={machine?.customer} graphLabels={graphLabels} dateFrom={triggerFetch?.dateFrom} dateTo={triggerFetch?.dateTo} />
+      ) : (
+        <ErpProductionRateLogGraph timePeriod={graphLabels?.xaxis} customer={machine?.customer} graphLabels={graphLabels} dateFrom={triggerFetch?.dateFrom} dateTo={triggerFetch?.dateTo} />
+      )}
     </Container>
   );
 }

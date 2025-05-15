@@ -14,7 +14,7 @@ export default function Page500() {
 
   const defaultValues = useMemo(
     () => ({
-      title: content?.value || "Ooppps.. an error has occured",
+      title: content?.value || "Oops... an error has occured",
       message: content?.notes || "We're committed to delivering a seamless and delightful user experience. We apologies for the inconvenience, Thank you for your understanding, and stay tuned for updates. We'll be back before you know it.",
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
