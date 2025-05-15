@@ -630,4 +630,5 @@ export const ICONS = {
   DASHBOARD:{ icon:'mdi:counter' },
   INTEGRATION:{ icon:'carbon:ibm-cloud-direct-link-2-connect' },
   JIRA:{ icon:'simple-icons:jirasoftware' },
+  CUSTOMER_PORTAL_ACCESS:{ icon:'clarity:no-access-solid' }
 };

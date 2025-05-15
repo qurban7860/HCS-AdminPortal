@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { Typography, Card, Grid, Skeleton } from '@mui/material';
 import LogChartStacked from '../../../components/machineLogs/LogStackedChart';
 
-const ErpProducedLengthLogGraph = ({ timePeriod, customer, graphLabels }) => {
+const ErpProducedLengthLogGraph = ({ timePeriod, customer, graphLabels, dateFrom, dateTo }) => {
   const [graphData, setGraphData] = useState([]);
   const { isLoading, machineLogsGraphData } = useSelector((state) => state.machineErpLogs);
   useEffect(() => {
@@ -19,86 +19,80 @@ const ErpProducedLengthLogGraph = ({ timePeriod, customer, graphLabels }) => {
   }, [machineLogsGraphData]);
 
   const processGraphData = () => {
-    if (!graphData || graphData.length === 0) {
+    if (!graphData || graphData.length === 0) return null;
+
+    const dataMap = new Map();
+    graphData.forEach(item => dataMap.set(item._id, item));
+
+    const labels = [];
+    const startDate = new Date(dateFrom);
+    const endDate = new Date(dateTo);
+
+    if (timePeriod === 'Hourly') {
+      // const startHour = startDate.getHours();
+      // const endHour = endDate.getHours();
+      const currentDate = new Date(startDate);
+      let hourCount = 0;
+
+      while (currentDate <= endDate && hourCount < 24) {
+        const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+        const day = String(currentDate.getDate()).padStart(2, '0');
+        const hour = String(currentDate.getHours()).padStart(2, '0');
+        labels.push(`${month}/${day} ${hour}`);
+        currentDate.setHours(currentDate.getHours() + 1);
+        hourCount += 1;
+      }
+    } else if (timePeriod === 'Daily') {
+      const currentDate = new Date(startDate);
+      let dayCount = 0;
+      while (currentDate <= endDate && dayCount < 30) {
+        const day = String(currentDate.getDate()).padStart(2, '0');
+        const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+        labels.push(`${day}/${month}`);
+        currentDate.setDate(currentDate.getDate() + 1);
+        dayCount += 1;
+      }
+    }
+    else if (timePeriod === 'Monthly') {
+      const currentMonth = new Date(startDate);
+      let monthCount = 0;
+      while (currentMonth <= endDate && monthCount < 12) {
+        const shortMonth = currentMonth.toLocaleString('default', { month: 'short' });
+        const yearShort = String(currentMonth.getFullYear()).slice(-2);
+        labels.push(`${shortMonth} ${yearShort}`);
+        currentMonth.setMonth(currentMonth.getMonth() + 1);
+        monthCount += 1;
+      }
+    } else if (timePeriod === 'Quarterly') {
+      const currentQDate = new Date(startDate);
+      let quarterCount = 0;
+      while (currentQDate <= endDate && quarterCount < 4) {
+        const year = currentQDate.getFullYear();
+        const quarter = Math.floor(currentQDate.getMonth() / 3) + 1;
+        labels.push(`${year}-Q${quarter}`);
+        currentQDate.setMonth(currentQDate.getMonth() + 3);
+        quarterCount += 1;
+      }
+    } else if (timePeriod === 'Yearly') {
+      const currentYDate = new Date(startDate);
+      let yearCount = 0;
+      while (currentYDate <= endDate && yearCount < 5) {
+        labels.push(String(currentYDate.getFullYear()));
+        currentYDate.setFullYear(currentYDate.getFullYear() + 1);
+        yearCount += 1;
+      }
+    } else {
       return null;
     }
 
-    const sortedData = [...graphData].sort((a, b) => a._id.localeCompare(b._id));
-    let labels = sortedData.map(item => item._id);
-
-    switch (timePeriod) {
-      case 'Hourly':
-        sortedData.sort((a, b) => new Date(a._id) - new Date(b._id));
-        labels = Array.from({ length: 24 }, (_, i) => {
-          const date = new Date();
-          date.setHours(date.getHours() - i);
-          const month = String(date.getMonth() + 1).padStart(2, '0');
-          const day = String(date.getDate()).padStart(2, '0');
-          const hour = String(date.getHours()).padStart(2, '0');
-           return `${month}/${day} ${hour}`;
-        }).reverse();                   
-        break;
-      case 'Daily':
-        sortedData.sort((a, b) => new Date(a._id) - new Date(b._id));
-        labels = Array.from({ length: 30 }, (_, i) => {
-          const date = new Date();
-          date.setDate(date.getDate() - i);
-          const day = String(date.getDate()).padStart(2, '0');
-          const month = String(date.getMonth() + 1).padStart(2, '0');
-          return `${day}/${month}`;
-        }).reverse();
-        break;
-        case 'Monthly':
-          sortedData.sort((a, b) => new Date(a._id) - new Date(b._id));        
-          labels = Array.from({ length: 12 }, (_, i) => {
-            const date = new Date();
-            date.setMonth(date.getMonth() - i);
-            return date.toLocaleDateString('en-US', {
-              month: 'short',
-              year: '2-digit'
-            });
-          }).reverse();          
-        break;
-      case 'Quarterly':
-        sortedData.sort((a, b) => {
-          const [yearA, qtrA] = a._id.split('-');
-          const [yearB, qtrB] = b._id.split('-');
-          return yearA === yearB ? qtrA.localeCompare(qtrB) : yearA.localeCompare(yearB);
-        });
-        labels = Array.from({ length: 4 }, (_, i) => {
-          const date = new Date();
-          date.setMonth(date.getMonth() - i * 3);
-          const year = date.getFullYear();
-          const quarter = Math.floor(date.getMonth() / 3) + 1;
-          return `${year}-Q${quarter}`;
-        }).reverse();
-        break;
-      case 'Yearly':
-        sortedData.sort((a, b) => a._id.localeCompare(b._id));
-        labels = Array.from({ length: 5 }, (_, i) => {
-          const date = new Date();
-          date.setFullYear(date.getFullYear() - i);
-          return date.getFullYear().toString();
-        }).reverse();
-        break;
-      default:
-        labels = sortedData.map((item) => item._id);
-    }
-
-    const producedLength = labels.map(label => {
-      const dataPoint = sortedData.find(item => item._id.includes(label));
-      return dataPoint ? dataPoint.componentLength : 0;
-    });
-    const wasteLength = labels.map(label => {
-      const dataPoint = sortedData.find(item => item._id.includes(label));
-      return dataPoint ? dataPoint.waste : 0;
-    });
+    const producedLength = labels.map(label => dataMap.get(label)?.componentLength || 0);
+    const wasteLength = labels.map(label => dataMap.get(label)?.waste || 0);
 
     return {
       categories: labels,
       series: [
         { name: 'Produced Length (m)', data: producedLength },
-        { name: 'Waste Length (m)', data: wasteLength },
+        { name: 'Waste Length (m)', data: wasteLength }
       ],
     };
   };
@@ -126,7 +120,7 @@ const ErpProducedLengthLogGraph = ({ timePeriod, customer, graphLabels }) => {
     <Grid item xs={12} sm={12} md={12} lg={10} xl={6} sx={{ mt: 3 }}>
       <Card sx={{ p: 4, boxShadow: 3 }}>
         <Typography variant="h6" color="primary" gutterBottom>
-          Produced Length & Waste Over Time (For the {getDataRangeText()})
+          Produced Length & Waste Over Time 
         </Typography>
 
         {isLoading && <Skeleton variant="rectangular" width="100%" height={120} />}
@@ -139,7 +133,7 @@ const ErpProducedLengthLogGraph = ({ timePeriod, customer, graphLabels }) => {
             )}
             {graphData?.length === 0 && (
               <Typography variant="body1" color="textSecondary">
-                {customer?._id ? `No data available for the ${getDataRangeText()}.` : "Please Select a customer to view the graph."}
+                {customer?._id ? 'No data available' : "Please Select a customer to view the graph."}
               </Typography>
             )}
           </>
@@ -154,6 +148,8 @@ ErpProducedLengthLogGraph.propTypes = {
   timePeriod: PropTypes.oneOf(['Hourly', 'Daily', 'Monthly', 'Quarterly', 'Yearly']).isRequired,
   customer: PropTypes.object,
   graphLabels: PropTypes.object,
+  dateFrom: PropTypes.instanceOf(Date),
+  dateTo: PropTypes.instanceOf(Date),
 };
 
 // import PropTypes from 'prop-types';

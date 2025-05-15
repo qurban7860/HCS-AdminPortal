@@ -83,6 +83,9 @@ import {
   // Customer Jira
   CustomerJiraList,
 
+  // Customer Modules Access
+  CustomerModulesAccess,
+
   // ----------------------------------------------------------------
 
   // CUSTOMER SETTING DEPARTMENTS
@@ -686,6 +689,13 @@ export default function Router() {
                 { element: <CustomerJiraList />, index: true },
               ],
             },
+              {
+              path: ':customerId/modulesAccess',
+              children: [
+                { element: < CustomerModulesAccess/>, index: true },
+              ],
+            },
+            
             { path: 'permission-denied', element: <PermissionDeniedPage /> },
             { path: 'blank', element: <BlankPage /> },
           ]

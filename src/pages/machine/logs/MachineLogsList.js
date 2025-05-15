@@ -161,7 +161,7 @@ export default function MachineLogsList({ allMachineLogsType }) {
                 sx={{ flexGrow: 1 }}
               >
                 <RHFDatePicker
-                  label="Start Date"
+                  label="Date From"
                   name="dateFrom"
                   size="small"
                   value={dateFrom}
@@ -171,7 +171,7 @@ export default function MachineLogsList({ allMachineLogsType }) {
                   }}
                 />
                 <RHFDatePicker
-                  label="End Date"
+                  label="Date To"
                   name="dateTo"
                   size="small"
                   value={dateTo}

@@ -106,6 +106,9 @@ export const CustomerMachineMove = Loadable(lazy(() => import('../pages/crm/mach
 
 // CUSTOMER Jira
 export const CustomerJiraList = Loadable(lazy(() => import('../pages/crm/jira/CustomerJiraList')));
+// CUSTOMER PORTAL ACESS
+
+export const CustomerModulesAccess = Loadable(lazy(() => import('../pages/crm/customers/CustomerModulesAccess')));
 
 // ----------------------------------------------------------------
 
