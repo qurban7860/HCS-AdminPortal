@@ -12,11 +12,11 @@ LogChartStacked.propTypes = {
 
 export default function LogChartStacked({ chart, graphLabels }) {
   // const theme = useTheme();
-  const [skipZero, setSkipZero] = useState(true); 
+  const [skipZero, setSkipZero] = useState(true);
 
   const { categories, series } = chart;
 
-  const { filteredCategories, filteredSeries } = useMemo(() => {
+   const { filteredCategories, filteredSeries } = useMemo(() => {
     if (!skipZero) {
       return { filteredCategories: categories, filteredSeries: series };
     }
@@ -140,14 +140,17 @@ export default function LogChartStacked({ chart, graphLabels }) {
       onItemClick: { toggleDataSeries: false },
     },
     tooltip: {
+      followCursor: true,
       custom: ({ series: tooltipSeries, dataPointIndex, w }) => {
-        let tooltipContent = `<div class="apexcharts-theme-light">`;
+        let tooltipContent = `<div class="apexcharts-theme-light" style="padding: 8px;">`;
         let total = 0;
+
         tooltipSeries.forEach((s, index) => {
           const legend = w.globals.seriesNames[index];
           const color = w.globals.colors[index];
           const value = s[dataPointIndex];
           total += value;
+
           const valueText =
             value === 0
               ? ''
@@ -155,20 +158,30 @@ export default function LogChartStacked({ chart, graphLabels }) {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 });
-          tooltipContent += `<div class="apexcharts-tooltip-series-group apexcharts-active" style="order: 1; display: flex;">`;
-          tooltipContent += `<span class="apexcharts-tooltip-marker" style="background-color: ${color};"></span>`;
-          tooltipContent += `<div class="apexcharts-tooltip-text"><div class="apexcharts-tooltip-y-group">`;
-          tooltipContent += `<span class="apexcharts-tooltip-text-y-label">${legend}:</span>`;
-          tooltipContent += `<span class="apexcharts-tooltip-text-y-value">${valueText}</span></div></div></div>`;
+
+          tooltipContent += `
+        <div class="apexcharts-tooltip-series-group apexcharts-active" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
+          <span class="apexcharts-tooltip-marker" style="background-color: ${color}; margin-right: 8px;"></span>
+          <div style="display: flex; justify-content: space-between; width: 100%;">
+            <span class="apexcharts-tooltip-text-y-label" style="margin-right: 8px;">${legend}:</span>
+            <span class="apexcharts-tooltip-text-y-value">${valueText}</span>
+          </div>
+        </div>`;
         });
+
         const totalText = total.toLocaleString(undefined, {
           minimumFractionDigits: 2,
           maximumFractionDigits: 2,
         });
-        tooltipContent += `<div class="apexcharts-tooltip-series-group apexcharts-active" style="order: 1; display: flex;">`;
-        tooltipContent += `<div class="apexcharts-tooltip-text"><div class="apexcharts-tooltip-y-group">`;
-        tooltipContent += `<span class="apexcharts-tooltip-text-y-label">Total:</span>`;
-        tooltipContent += `<span class="apexcharts-tooltip-text-y-value">${totalText}</span></div></div></div>`;
+
+        tooltipContent += `
+      <div class="apexcharts-tooltip-series-group apexcharts-active" style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid #e0e0e0; padding-top: 4px; margin-top: 4px;">
+        <div style="width: 100%; display: flex; justify-content: space-between;">
+          <span class="apexcharts-tooltip-text-y-label" style="font-weight: bold;">Total:</span>
+          <span class="apexcharts-tooltip-text-y-value" style="font-weight: bold;">${totalText}</span>
+        </div>
+      </div>`;
+
         tooltipContent += `</div>`;
         return tooltipContent;
       },
@@ -192,5 +205,4 @@ export default function LogChartStacked({ chart, graphLabels }) {
     </Box>
   );
   // return (<Chart type="bar" series={filteredSeries} options={chartOptions} height={chartOptions.chart.height} />);
-
 }
