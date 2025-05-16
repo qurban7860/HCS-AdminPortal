@@ -276,21 +276,21 @@ export function addSecurityUser(param) {
     dispatch(slice.actions.startLoading());
     try {
       const data = {
-        customer: param.customer?._id,
-        contact: param.contact?._id,
+        customer: param?.customer?._id,
+        contact: param?.contact?._id,
         name: param.name,
-        phone: param.phone,
-        email: param.email,
-        login: param.email,
-        password: param.password,
-        roles: param.roles.map(role => role?._id),
+        phone: param?.phone,
+        email: param?.email,
+        login: param?.email,
+        password: param?.password,
+        roles: param?.roles?.map(role => role?._id),
         dataAccessibilityLevel: param?.dataAccessibilityLevel?.toUpperCase(),
         regions: param.regions?.map(region => region?._id),
-        customers: param.customers?.map(customer => customer?._id),
-        machines: param.machines?.map(machines => machines?._id),
-        isActive: param.isActive,
-        currentEmployee: param.currentEmployee,
-        multiFactorAuthentication: param.multiFactorAuthentication,
+        customers: param?.customers?.map(customer => customer?._id),
+        machines: param?.machines?.map(machines => machines?._id),
+        isActive: param?.isActive,
+        currentEmployee: param?.currentEmployee,
+        multiFactorAuthentication: param?.multiFactorAuthentication,
       }
       const response = await axios.post(`${CONFIG.SERVER_URL}security/users`, data);
       // if(regEx.test(response.status) && isInvite){
@@ -314,23 +314,23 @@ export function updateSecurityUser(param, id) {
     dispatch(slice.actions.startLoading());
     try {
       const data = {
-        customer: param.customer,
-        contact: param.contact?._id || null,
-        name: param.name,
-        phone: param.phone,
-        email: param.email,
-        login: param.loginEmail,
+        customer: param?.customer,
+        contact: param?.contact?._id || null,
+        name: param?.name,
+        phone: param?.phone,
+        email: param?.email,
+        login: param?.loginEmail,
         roles: param?.roles?.map(role => role?._id),
-        dataAccessibilityLevel: param.dataAccessibilityLevel.toUpperCase(),
-        regions: param.regions?.map(region => region?._id),
-        customers: param.customers?.map(customer => customer?._id),
-        machines: param.machines?.map(machine => machine?._id),
-        isActive: param.isActive,
-        multiFactorAuthentication: param.multiFactorAuthentication,
-        currentEmployee: param.currentEmployee,
+        dataAccessibilityLevel: param?.dataAccessibilityLevel.toUpperCase(),
+        regions: param?.regions?.map(region => region?._id),
+        customers: param?.customers?.map(customer => customer?._id),
+        machines: param?.machines?.map(machine => machine?._id),
+        isActive: param?.isActive,
+        multiFactorAuthentication: param?.multiFactorAuthentication,
+        currentEmployee: param?.currentEmployee,
       }
-      if (param.password !== "") {
-        data.password = param.password
+      if (param?.password !== "") {
+        data.password = param?.password
       }
       const response = await axios.patch(`${CONFIG.SERVER_URL}security/users/${id}`, data);
       dispatch(slice.actions.stopLoading());
