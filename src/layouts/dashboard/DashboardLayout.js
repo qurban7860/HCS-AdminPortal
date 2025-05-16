@@ -33,11 +33,11 @@ export default function DashboardLayout() {
     const pathMap = {
       '/crm': 0,
       '/products': 1,
-      '/jobs': 2,
-      '/support': 3,
-      '/reports': 4,
-      '/calendar': 5,
-      '/settings': 6
+      // '/jobs': 2,
+      '/support': 2,
+      '/reports': 3,
+      '/calendar': 4,
+      '/settings': 5
     };
 
     const path = location.pathname;

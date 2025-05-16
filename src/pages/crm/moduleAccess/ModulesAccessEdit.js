@@ -1,11 +1,10 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 // @mui
-import { Box, Card, Grid, Stack } from '@mui/material';
+import { Card, Grid, Stack } from '@mui/material';
 // hooks
 import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
 import { useSnackbar } from '../../../components/snackbar';
 // slice
 import { updateCustomerModules } from '../../../redux/slices/customer/customer';
@@ -24,6 +23,7 @@ export default function ModulesAccessEdit() {
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
     const { customerId } = useParams();
+    const [modulesAccess, setModulesAccess] = useState([])
 
     const defaultValues = useMemo(
         () => ({
@@ -33,6 +33,7 @@ export default function ModulesAccessEdit() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [customer, customerId]
     );
+
     const methods = useForm({
         defaultValues,
     });
@@ -43,6 +44,11 @@ export default function ModulesAccessEdit() {
         formState: { isSubmitting },
     } = methods;
 
+    useEffect(() => {
+        const modules = [...allowedModules]
+        setModulesAccess(modules?.sort())
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [allowedModules])
 
     useEffect(() => {
         reset(defaultValues)
@@ -73,7 +79,7 @@ export default function ModulesAccessEdit() {
                                     filterSelectedOptions
                                     name="modules"
                                     label="Select Modules"
-                                    options={allowedModules || []}
+                                    options={modulesAccess || []}
                                     ChipProps={{ size: 'small' }}
                                 />
 

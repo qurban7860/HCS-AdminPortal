@@ -34,16 +34,16 @@ const initialState = {
     "createdAt": false
   },
   allowedModules: [
-    'machineSettings',
-    'machineProfiles',
-    'machineConfig',
-    'machineNotes',
     'assemblyDrawings',
+    'machineConfig',
     'machineDocuments',
-    'machineLogs',
-    'supportService',
     'machineGraphs',
-    'machineServiceReports'
+    'machineLogs',
+    'machineNotes',
+    'machineProfiles',
+    'machineServiceReports',
+    'machineSettings',
+    'supportService',
   ],
   isFullScreen: false,
 };
