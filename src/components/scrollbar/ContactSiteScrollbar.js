@@ -26,7 +26,7 @@ function ContactSiteScrollbar({ children, sx, ...other }) {
   }
 
   return (
-    <StyledRootScrollbar sx={{padding:0.5, background:'#e8e8e9', border:'1px solid #d9d9d9', borderRadius:1, height: 'calc(100vh - 385px) !important',}}>
+    <StyledRootScrollbar sx={{padding:0.5, background:'#e8e8e9', border:'1px solid #d9d9d9', borderRadius:1, maxheight: '100%', height: 'calc(100dvh - 130px)'}}>
       <StyledScrollbar timeout={500} clickOnTrack={false} {...other}>
         {children}
       </StyledScrollbar>
