@@ -42,7 +42,9 @@ import validateFileType from '../documents/util/validateFileType';
         .test(
           'fileType',
           'Only the following formats are accepted: .jpeg, .jpg, gif, .bmp, .webp, .pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx',
-          validateFileType
+          function (value) {
+            return validateFileType({ _this:this, files:value, doc:true, image:true, video:true, required:true });
+          }
         ).nullable(),
         hlc: Yup.string().label('HLC').trim().max(500).nullable(),
         plc: Yup.string().label('PLC').trim().max(500).nullable(),

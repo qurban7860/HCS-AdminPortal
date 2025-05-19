@@ -280,7 +280,7 @@ export default function Upload({
                 onRemove={onRemove} 
               />
             }
-            {!dropZone && <Button {...getRootProps()} variant='outlined' sx={{display:'block', height:'150px'}} >
+            {!dropZone && <Button {...getRootProps()} variant='outlined' sx={{display:'block', height:'150px', ...(error && {borderColor:'error.main'})}} >
               <input {...getInputProps()} />
               <Iconify icon="mdi:plus" width={50} />
               <Typography variant="subtitle2">Add / Upload File</Typography>
