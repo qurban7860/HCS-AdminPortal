@@ -496,7 +496,7 @@ export default function TicketViewForm() {
             <ViewFormField isLoading={isLoading} sm={6} heading="Fault"
               node={<DropDownMultipleSelection name="faults" label='Fault' value={ticket?.faults} options={ticketSettings?.faults} onSubmit={onSubmit}  isStatus/>}
             />
-            <ViewFormField isLoading={isLoading} sm={2} heading="Impact"
+            <ViewFormField isLoading={isLoading} sm={2} heading="Impact" sx={{ alignSelf: 'flex-end' }}
               node={<DropDownField name="impact" isNullable label='Impact' value={ticket?.impact} options={ticketSettings?.impacts} onSubmit={onSubmit} />}
             />
             {ticket?.issueType?.name === 'Change Request' && (
@@ -552,12 +552,14 @@ export default function TicketViewForm() {
               shareWith={shareWith}
               onChange={handleShareWithChange}
               isEditable
+              sx={{ alignSelf: 'flex-end' }}
             />
             <ViewFormSWitch isLoading={isLoading} sm={2}
               isActiveHeading="Active"
               isActive={isActive}
               onChange={handleIsActiveChange}
               isEditable
+              sx={{ alignSelf: 'flex-end' }}
             />
           </Grid>
           <ViewFormAudit defaultValues={defaultValues} />
