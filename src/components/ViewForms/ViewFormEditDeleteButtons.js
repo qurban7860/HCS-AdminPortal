@@ -25,6 +25,7 @@ import { fDate, fDateTime, GetDifferenceInDays } from '../../utils/formatTime';
 import { useAuthContext } from '../../auth/useAuthContext';
 import { PATH_DASHBOARD } from '../../routes/paths';
 import ViewFormServiceReportApprovalHistoryPopover from './ViewFormServiceReportApprovalHistoryPopover';
+import ContactUsersPopover from './ContactUsersPopover';
 
 function ViewFormEditDeleteButtons({
   backLink,
@@ -99,7 +100,8 @@ function ViewFormEditDeleteButtons({
   onMergeDocumentType,
   serviceReportStatus,
   invitationStatus,
-  onCancelInvite
+  onCancelInvite,
+  handleViewUser
 }) {
   const { id } = useParams();
   const navigate = useNavigate()
@@ -125,6 +127,7 @@ function ViewFormEditDeleteButtons({
   const [openConfigSubmittedStatuConfirm, setOpenConfigSubmittedStatuConfirm] = useState(false);
   const [openConfigApproveStatuConfirm, setOpenConfigApproveStatuConfirm] = useState(false);
   const { machine } = useSelector((state) => state.machine);
+  const { contactUsers } = useSelector((state) => state.user);
   const [lockUntil, setLockUntil] = useState(''); 
   const [lockUntilError, setLockUntilError] = useState(''); 
 
@@ -311,6 +314,16 @@ function ViewFormEditDeleteButtons({
   const [approvedAnchorEl, setApprovedAnchorEl] = useState(null);
   const [approvedBy, setApprovedBy] = useState([]);
 
+  const [contactUsersAnchorEl, setContactUsersAnchorEl] = useState(null);
+
+  const handleContactUsersPopoverOpen = (event) => {
+    setContactUsersAnchorEl(event.currentTarget);
+  };
+
+  const handleContactUsersPopoverClose = () => {
+    setContactUsersAnchorEl(null);
+  };
+
   const handleVerifiedPopoverOpen = (event) => {
     setVerifiedAnchorEl(event.currentTarget);
     setVerifiedBy(verifiers)
@@ -376,7 +389,7 @@ function ViewFormEditDeleteButtons({
     status: GetDifferenceInDays( machineSupportDate ),
     date: new Date(machineSupportDate)
   }
-  
+
   return (
     <Grid container justifyContent="space-between" sx={{pb:1, px:0.5}}>
       <Grid item sx={{display:'flex', mt:0.5,mr:1}}>
@@ -690,6 +703,23 @@ function ViewFormEditDeleteButtons({
             />
           )}
 
+          {Array.isArray(contactUsers) && contactUsers?.length>0 &&
+            <Badge badgeContent={contactUsers.length} color="info">
+              <IconTooltip
+                title="Contact Users"
+                color={theme.palette.primary.main}
+                icon={ICONS.USER_VIEW.icon}
+                onClick={handleContactUsersPopoverOpen}
+                />
+            </Badge>
+          }
+
+          <ContactUsersPopover
+            open={contactUsersAnchorEl}
+            onClose={handleContactUsersPopoverClose}
+            onViewUser={handleViewUser}
+          />
+          
         {/* map toggle button on mobile */}
         {sites && !isMobile && <IconPopover onMapClick={() => handleMap()} sites={sites} />}
 
@@ -1120,5 +1150,6 @@ ViewFormEditDeleteButtons.propTypes = {
   onMergeDocumentType: PropTypes.func,
   serviceReportStatus: PropTypes.object,
   invitationStatus: PropTypes.string,
-  onCancelInvite: PropTypes.func
+  onCancelInvite: PropTypes.func,
+  handleViewUser: PropTypes.func
 };

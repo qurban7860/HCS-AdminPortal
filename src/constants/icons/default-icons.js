@@ -592,7 +592,11 @@ export const ICONS = {
     color: '#909090',
     heading: 'See More',
   },
-
+  USER_VIEW: {
+    icon: 'mingcute:user-2-fill',
+    color: '#008000',
+    heading: 'View User',
+  },
   USER_LOCK: {
     icon: 'mingcute:lock-fill',
     color: '#FF0000',
