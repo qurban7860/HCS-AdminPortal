@@ -177,7 +177,7 @@ export default function LogChartStacked({ chart, graphLabels }) {
         tooltipContent += `
       <div class="apexcharts-tooltip-series-group apexcharts-active" style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid #e0e0e0; padding-top: 4px; margin-top: 4px;">
         <div style="width: 100%; display: flex; justify-content: space-between;">
-          <span class="apexcharts-tooltip-text-y-label" style="font-weight: bold;">Total:</span>
+          <span class="apexcharts-tooltip-text-y-label" style="font-weight: bold;">Total Length (m):</span>
           <span class="apexcharts-tooltip-text-y-value" style="font-weight: bold;">${totalText}</span>
         </div>
       </div>`;
