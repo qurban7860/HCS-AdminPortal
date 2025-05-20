@@ -156,12 +156,7 @@ export function getApiLogSummary(query) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const params = {
-       fromDate: query.fromDate,
-       toDate: query.toDate,
-      //  apiType: "MACHINE-CONFIG"
-      }
-      const response = await axios.get(`${CONFIG.SERVER_URL}apiclient/logs/summary`, { params });
+      const response = await axios.get(`${CONFIG.SERVER_URL}apiclient/logs/summary`, { params: query });
       dispatch(slice.actions.getApiLogSummarySuccess(response.data));
     } catch (error) {
       console.error(error);
