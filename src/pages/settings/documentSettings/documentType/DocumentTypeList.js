@@ -41,6 +41,7 @@ import {
   setFilterBy,
   setReportHiddenColumns,
 } from '../../../../redux/slices/document/documentType';
+import { getActiveDocumentCategories } from '../../../../redux/slices/document/documentCategory';
 import { Cover } from '../../../../components/Defaults/Cover';
 import { fDate } from '../../../../utils/formatTime';
 import TableCard from '../../../../components/ListTableTools/TableCard';
@@ -90,7 +91,7 @@ export default function DocumentTypeList() {
   const navigate = useNavigate();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
-  const [filterStatus, setFilterStatus] = useState([]);
+  const [filterCategory, setFilterCategory] = useState('');
   const [openConfirm, setOpenConfirm] = useState(false);
   const isMobile = useResponsive('down', 'sm');
   const { documentTypes, filterBy, page, rowsPerPage, isLoading, initial, reportHiddenColumns } = useSelector(
@@ -99,6 +100,7 @@ export default function DocumentTypeList() {
 
   useLayoutEffect(() => {
     dispatch(getDocumentTypes());
+    dispatch(getActiveDocumentCategories());
   }, [dispatch]);
 
   useEffect(() => {
@@ -111,11 +113,11 @@ export default function DocumentTypeList() {
     inputData: tableData,
     comparator: getComparator(order, orderBy),
     filterName,
-    filterStatus,
+    filterCategory,
   });
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
   const denseHeight = 60;
-  const isFiltered = filterName !== '' || !!filterStatus.length;
+  const isFiltered = filterName !== '';
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
   const handleOpenConfirm = () => {
@@ -146,9 +148,9 @@ export default function DocumentTypeList() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 
-  const handleFilterStatus = (event) => {
+  const handleFilterCategory = (value) => {
     setPage(0);
-    setFilterStatus(event.target.value);
+    setFilterCategory(value);
   };
 
   const handleDeleteRow = async (id) => {
@@ -191,6 +193,7 @@ export default function DocumentTypeList() {
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
     setFilterName('');
+    setFilterCategory(null);
   };
 
   const handleHiddenColumns = async (arg) => {
@@ -207,9 +210,9 @@ export default function DocumentTypeList() {
         <TableCard>
           <DocumentTypeListTableToolbar
             filterName={filterName}
-            filterStatus={filterStatus}
+            filterCategory={filterCategory}
             onFilterName={handleFilterName}
-            onFilterStatus={handleFilterStatus}
+            onFilterCategory={handleFilterCategory}
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
           />
@@ -322,7 +325,7 @@ export default function DocumentTypeList() {
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName, filterStatus }) {
+function applyFilter({ inputData, comparator, filterName, filterCategory }) {
   const stabilizedThis = inputData.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -343,8 +346,8 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
     );
   }
 
-  if (filterStatus.length) {
-    inputData = inputData.filter((customer) => filterStatus.includes(customer.status));
+  if (filterCategory) {
+    inputData = inputData.filter((docType) => filterCategory?._id === docType?.docCategory?._id);
   }
 
   return inputData;
