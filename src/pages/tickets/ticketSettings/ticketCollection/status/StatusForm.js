@@ -14,7 +14,7 @@ import { StyledCardContainer } from '../../../../../theme/styles/default-styles'
 import { PATH_SUPPORT } from '../../../../../routes/paths';
 import { useSnackbar } from '../../../../../components/snackbar';
 import AddFormButtons from '../../../../../components/DocumentForms/AddFormButtons';
-import FormProvider, { RHFTextField, RHFSwitch, RHFAutocomplete, RHFColorPicker } from '../../../../../components/hook-form';
+import FormProvider, { RHFTextField, RHFSwitch, RHFAutocomplete, RHFColorPicker, RHFEditor } from '../../../../../components/hook-form';
 import { postTicketStatus, patchTicketStatus, resetTicketStatus, getTicketStatus } from '../../../../../redux/slices/ticket/ticketSettings/ticketStatuses';
 import { getActiveTicketStatusTypes, resetActiveTicketStatusTypes } from '../../../../../redux/slices/ticket/ticketSettings/ticketStatusTypes';
 import Iconify from '../../../../../components/iconify';
@@ -152,7 +152,7 @@ export default function StatusForm() {
                   <RHFTextField name="slug" label="Slug" />
                   <RHFTextField name="displayOrderNo" label="Display Order No." />
                 </Box>
-                <RHFTextField name="description" label="Description" minRows={3} multiline />
+                <RHFEditor name="description" label="Description" minRows={3} multiline />
                 <Grid display="flex" alignItems="center">
                   {id && (
                     <RHFSwitch name="isActive" label="Active" />

@@ -112,6 +112,11 @@ return (
                     icon={ICONS.PRIORITIES.icon}
                     content={ICONS.PRIORITIES.heading}
                   />
+                  <ListItem
+                    onClick={linkImpact}
+                    icon={ICONS.IMPACTS.icon}
+                    content={ICONS.IMPACTS.heading}
+                  />
                 </List>
               </StyledSettingsCardContainer>
 
@@ -119,19 +124,14 @@ return (
                 <List
                   component="nav"
                   aria-labelledby="nested-list-subheader"
-                  subheader={<ListItemsHeader header={FORMLABELS.OTHERS} />}
+                  subheader={<ListItemsHeader header={FORMLABELS.INVESTIGATION_FAULT_SETTINGS} />}
                 >
-                  <ListItem
-                    onClick={linkImpact}
-                    icon={ICONS.IMPACTS.icon}
-                    content={ICONS.IMPACTS.heading}
-                  />
                   <ListItem
                     onClick={linkInvestigationReason}
                     icon={ICONS.INVESTIGATION_REASONS.icon}
                     content={ICONS.INVESTIGATION_REASONS.heading}
                   />
-                   <ListItem
+                  <ListItem
                     onClick={linkFault}
                     icon={ICONS.FAULTS.icon}
                     content={ICONS.FAULTS.heading}

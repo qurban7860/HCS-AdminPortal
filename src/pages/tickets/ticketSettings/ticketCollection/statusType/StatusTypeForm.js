@@ -14,7 +14,7 @@ import { PATH_SUPPORT } from '../../../../../routes/paths';
 import { useSnackbar } from '../../../../../components/snackbar';
 import { TicketCollectionSchema } from '../utils/constant';
 import AddFormButtons from '../../../../../components/DocumentForms/AddFormButtons';
-import FormProvider, { RHFTextField, RHFSwitch, RHFColorPicker } from '../../../../../components/hook-form';
+import FormProvider, { RHFTextField, RHFSwitch, RHFColorPicker, RHFEditor } from '../../../../../components/hook-form';
 import { postTicketStatusType, patchTicketStatusType, getTicketStatusType, resetTicketStatusType } from '../../../../../redux/slices/ticket/ticketSettings/ticketStatusTypes';
 import Iconify from '../../../../../components/iconify';
 import { handleError } from '../../../../../utils/errorHandler';
@@ -133,7 +133,7 @@ export default function StatusTypeForm() {
                     label="Color"
                   />
                 </Box>
-                <RHFTextField name="description" label="Description" minRows={3} multiline />
+                <RHFEditor name="description" label="Description" minRows={3} multiline />
                 <Box
                   rowGap={2}
                   columnGap={2}
