@@ -460,14 +460,18 @@ function SearchBarCombo({
             onChange={(event, newValue) => {
               if (newValue) {
                 setCategoryVal(newValue);
-                dispatch(getActiveDocumentTypesWithCategory(newValue?._id, null, drawing))
-                if (newValue?._id !== typeVal?.docCategory?._id) {
-                  setTypeVal(null);
+                if(setTypeVal){
+                  dispatch(getActiveDocumentTypesWithCategory(newValue?._id, null, drawing))
+                  if (newValue?._id !== typeVal?.docCategory?._id) {
+                    setTypeVal(null);
+                  }
                 }
               } else {
                 setCategoryVal(null);
-                setTypeVal(null);
-                dispatch(getActiveDocumentTypesWithCategory(null, null, drawing))
+                if(setTypeVal){
+                  setTypeVal(null);
+                  dispatch(getActiveDocumentTypesWithCategory(null, null, drawing))
+                }
               }
             }}
             renderOption={(props, option) => (

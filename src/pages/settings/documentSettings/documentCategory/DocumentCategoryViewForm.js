@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 // @mui
-import { Card, Grid } from '@mui/material';
+import { Card, Chip, Grid } from '@mui/material';
 // redux
 import { deleteDocumentCategory } from '../../../../redux/slices/document/documentCategory';
 // paths
@@ -15,6 +15,7 @@ import ViewFormAudit from '../../../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../../../components/ViewForms/ViewFormField';
 import ViewFormSWitch from '../../../../components/ViewForms/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../../../../components/ViewForms/ViewFormEditDeleteButtons';
+import Iconify from '../../../../components/iconify';
 
 // ----------------------------------------------------------------------
 
@@ -58,6 +59,25 @@ export default function DocumentCategoryViewForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [documentCategory]
   );
+
+  const handleViewDocumentType = (documentTypeId, newTab = false) => {
+    if(newTab){
+      window.open(PATH_MACHINE.documents.documentType.view(documentTypeId), '_blank');
+    }else{
+      navigate(PATH_MACHINE.documents.documentType.view(documentTypeId));
+    }
+  };
+
+  const linkedDocumentTypes = documentCategory?.documentTypes?.map((documentType, index) => (
+      <Chip 
+        sx={{ml:index===0?0:1, my:0.2}} 
+        onClick={() => handleViewDocumentType(documentType._id)} 
+        deleteIcon={<Iconify icon="fluent:open-12-regular"/>}
+        onDelete={()=> handleViewDocumentType(documentType._id, true)}
+        label={`${documentType?.name || ''} `} 
+      />
+  ));
+
   return (
     <Card sx={{ p: 2 }}>
       <Grid>
@@ -76,7 +96,8 @@ export default function DocumentCategoryViewForm() {
           <ViewFormField isLoading={isLoading}
             sm={12}
             heading="Document Types"
-            arrayParam={defaultValues.documentTypes}
+            // arrayParam={defaultValues.documentTypes}
+            chipDialogArrayParam={linkedDocumentTypes}
           />
           <ViewFormSWitch isLoading={isLoading}
               customerHeading='Customer' 
