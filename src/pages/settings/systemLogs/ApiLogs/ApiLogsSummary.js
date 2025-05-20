@@ -60,17 +60,9 @@ export default function ApiLogsSummary() {
 
   const { handleSubmit } = methods;
 
-  // useEffect(() => {
-  //   const values = methods.getValues();
-  //   handleFetchLogSummary(values);
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [order, orderBy]);
-
   useEffect(() => {
     setTableData(apiLogSummary || []);
   }, [apiLogSummary]);
-
-  // const dataFiltered = tableData;
 
   const dataFiltered = [...tableData].sort(getComparator(order, orderBy));
 
