@@ -3,15 +3,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 // @mui
-import {  Card, Grid } from '@mui/material';
+import { Card, Grid } from '@mui/material';
 // redux
-import { 
+import {
   deleteDocumentType,
   getActiveDocumentTypes,
   setMergeDialogVisibility
 } from '../../../../redux/slices/document/documentType';
 // paths
-import {  PATH_MACHINE, PATH_SETTING } from '../../../../routes/paths';
+import { PATH_MACHINE, PATH_SETTING } from '../../../../routes/paths';
 // components
 import { useSnackbar } from '../../../../components/snackbar';
 import ViewFormAudit from '../../../../components/ViewForms/ViewFormAudit';
@@ -51,6 +51,7 @@ export default function DocumentTypeViewForm() {
     () => ({
       isActive: documentType?.isActive,
       isDefault: documentType?.isDefault,
+      isPrimaryDrawing: documentType?.isPrimaryDrawing,
       customerAccess: documentType?.customerAccess,
       name: documentType?.name,
       category: documentType?.docCategory?.name,
@@ -70,18 +71,19 @@ export default function DocumentTypeViewForm() {
     <>
       <Card sx={{ p: 2 }}>
         <Grid>
-            
-          <ViewFormEditDeleteButtons 
-            customerAccess={defaultValues?.customerAccess} 
-            isDefault={defaultValues.isDefault} 
-            isActive={defaultValues.isActive} 
-            handleEdit={handleEdit} 
-            onDelete={onDelete} 
+
+          <ViewFormEditDeleteButtons
+            customerAccess={defaultValues?.customerAccess}
+            isDefault={defaultValues.isDefault}
+            isActive={defaultValues.isActive}
+            isPrimary={defaultValues.isPrimaryDrawing}
+            handleEdit={handleEdit}
+            onDelete={onDelete}
             backLink={() => navigate(PATH_MACHINE.documents.documentType.list)}
             settingPage
             onMergeDocumentType={handleMergeDialog}
           />
-          <Grid container sx={{mt:2}}>
+          <Grid container sx={{ mt: 2 }}>
             <ViewFormField sm={12} heading="Category" param={defaultValues.category} />
             <ViewFormField sm={6} heading="Type Name" param={defaultValues.name} />
             <ViewFormField sm={12} heading="Description" param={defaultValues.description} />
@@ -89,7 +91,7 @@ export default function DocumentTypeViewForm() {
           </Grid>
         </Grid>
       </Card>
-      { mergeDialogVisibility && <MergeDocumentTypeDialog  />}
+      {mergeDialogVisibility && <MergeDocumentTypeDialog />}
     </>
   );
 }
