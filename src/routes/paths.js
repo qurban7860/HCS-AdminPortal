@@ -581,6 +581,7 @@ export const PATH_REPORTS = {
       root: path(ROOTS_REPORTS, '/logs/api/'),
       view: (id) => path(ROOTS_REPORTS, `/logs/api/${id}/view`),
     },
+    apiLogSummary: path(ROOTS_REPORTS, '/logs/apiLogSummary'),
   },
 };
 

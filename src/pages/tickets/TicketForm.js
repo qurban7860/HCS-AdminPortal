@@ -90,8 +90,7 @@ export default function TicketForm() {
 
   const { reset, setError, handleSubmit, watch, setValue, trigger, formState: { isSubmitting, errors } } = methods;
   const { issueType, customer, machine, files, plannedStartDate, plannedEndDate, description } = watch();
-  console.log(" description  : ", description)
-
+  
   useEffect(() => {
     trigger(["plannedStartDate", "plannedEndDate"]);
   }, [trigger, plannedStartDate, plannedEndDate])
@@ -159,6 +158,7 @@ export default function TicketForm() {
   };
 
   const handleDropMultiFile = useCallback(async (acceptedFiles) => {
+    console.log("acceptedFiles:::",acceptedFiles)
     const hashes = await hashFilesMD5(acceptedFiles);
     const newFiles = (Array.isArray(files) && files?.length > 0) ? [...files] : [];
     acceptedFiles.forEach((file, index) => {
@@ -343,7 +343,7 @@ export default function TicketForm() {
                     options={ticketSettings?.faults || []}
                     isOptionEqualToValue={(option, value) => option._id === value._id}
                     getOptionLabel={(option) => `${option.name || ''}`}
-                    renderOption={(props, option) => (<li {...props} key={option?._id}> {option.name || ''} </li>)}
+                    renderOption={(props, option) => (<li {...props} key={option?._id || option?.name}> {option.name || ''} </li>)}
                   />
                 </Box>
               </Stack>
@@ -373,7 +373,6 @@ export default function TicketForm() {
                         multiple
                         thumbnail
                         name="files"
-                        imagesOnly
                         onDrop={handleDropMultiFile}
                         onRemove={handleFileRemove}
                         onRemoveAll={() => setValue('files', '', { shouldValidate: true })}

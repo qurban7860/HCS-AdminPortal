@@ -315,7 +315,7 @@ function DocumentAddForm({
     setSelectedValue(event.target.value);
     if (event.target.value === 'new') {
       setReadOnlyVal(false);
-      reset();
+      // reset();
     }
   };
   const handleVersionRadioChange = (event) => setSelectedVersionValue(event.target.value);

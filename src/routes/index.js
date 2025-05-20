@@ -452,6 +452,7 @@ import {
 
   // LOGS: API LOGS
   ApiLogsList,
+  ApiLogsSummary,
 
   // ----------------------------------------------------------------
 
@@ -1355,7 +1356,8 @@ export default function Router() {
               children: [
                 { element: <ApiLogsList />, index: true },
               ]
-            }
+            },
+            { path: 'apiLogSummary', element: <ApiLogsSummary /> },
           ],
         },
       ],

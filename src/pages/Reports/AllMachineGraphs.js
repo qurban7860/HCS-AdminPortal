@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useCallback, useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
@@ -35,9 +36,11 @@ const AllMachineGraphs = () => {
   };
 
   const methods = useForm({
-     defaultValues
-     });
-  const { setValue, trigger, handleSubmit, getValues } = methods;
+    defaultValues
+  });
+
+  const { setValue, trigger, handleSubmit, getValues, watch } = methods;
+  const { customer, machine, logPeriod, logGraphType, dateFrom, dateTo } = watch();
 
   useEffect(() => {
     dispatch(getActiveCustomers());
@@ -49,7 +52,6 @@ const AllMachineGraphs = () => {
       dispatch(getActiveCustomerMachines(selectedCustomer._id));
     } else {
       dispatch(resetActiveCustomerMachines());
-      dispatch(resetMachineLogsGraphData());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, getValues('customer')]);

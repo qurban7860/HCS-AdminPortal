@@ -24,10 +24,11 @@ const ErpProductionRateLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
       const convertedData = machineLogsGraphData.map((item) => ({
         ...item,
         productionRate: (item.componentLength / 1000 + item.waste / 1000) / (item.time / 3600000),
+        _id: timePeriod === 'Monthly' ? item._id.replace(/^Sep /, 'Sept ') : item._id,
       }));
       setGraphData(convertedData);
     }
-  }, [machineLogsGraphData]);
+  }, [machineLogsGraphData, timePeriod]);
 
   const processGraphData = () => {
     if (!graphData || graphData.length === 0) {
@@ -42,20 +43,33 @@ const ErpProductionRateLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
     const endDate = new Date(dateTo);
 
     if (timePeriod === 'Hourly') {
-      const currentDate = new Date(startDate);
-      let hourCount = 0;
-      while (currentDate <= endDate && hourCount < 24) {
-        const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-        const day = String(currentDate.getDate()).padStart(2, '0');
-        const hour = String(currentDate.getHours()).padStart(2, '0');
-        labels.push(`${month}/${day} ${hour}`);
-        currentDate.setHours(currentDate.getHours() + 1);
-        hourCount += 1;
+      const currentDate = new Date(startDate)
+      currentDate.setHours(0, 0, 0, 0)
+      
+      const finalDate = new Date(endDate)
+      finalDate.setHours(23, 59, 59, 999)
+      
+      const labelsSet = new Set()
+      let hourCount = 0
+
+      while (currentDate <= finalDate && hourCount <= 24) {
+        const month = String(currentDate.getMonth() + 1).padStart(2, '0')
+        const day = String(currentDate.getDate()).padStart(2, '0')
+        const hour = String(currentDate.getHours()).padStart(2, '0')
+
+        const label = `${month}/${day} ${hour}`
+        if (!labelsSet.has(label)) {
+          labels.push(label)
+          labelsSet.add(label)
+        }
+
+        currentDate.setHours(currentDate.getHours() + 1)
+        hourCount += 1
       }
     } else if (timePeriod === 'Daily') {
       const currentDate = new Date(startDate);
       let dayCount = 0;
-      while (currentDate <= endDate && dayCount < 30) {
+      while (currentDate <= endDate && dayCount <= 30) {
         const day = String(currentDate.getDate()).padStart(2, '0');
         const month = String(currentDate.getMonth() + 1).padStart(2, '0');
         labels.push(`${day}/${month}`);
@@ -65,7 +79,7 @@ const ErpProductionRateLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
     } else if (timePeriod === 'Monthly') {
       const currentDate = new Date(startDate);
       let monthCount = 0;
-      while (currentDate <= endDate && monthCount < 12) {
+      while (currentDate <= endDate && monthCount <= 12) {
         const shortMonth = currentDate.toLocaleString('default', { month: 'short' });
         const yearShort = String(currentDate.getFullYear()).slice(-2);
         labels.push(`${shortMonth} ${yearShort}`);
@@ -75,7 +89,7 @@ const ErpProductionRateLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
     } else if (timePeriod === 'Quarterly') {
       const currentDate = new Date(startDate);
       let quarterCount = 0;
-      while (currentDate <= endDate && quarterCount < 4) {
+      while (currentDate <= endDate && quarterCount <= 4) {
         const year = currentDate.getFullYear();
         const quarter = Math.floor(currentDate.getMonth() / 3) + 1;
         labels.push(`${year}-Q${quarter}`);
@@ -85,7 +99,7 @@ const ErpProductionRateLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
     } else if (timePeriod === 'Yearly') {
       const currentDate = new Date(startDate);
       let yearCount = 0;
-      while (currentDate <= endDate && yearCount < 5) {
+      while (currentDate <= endDate && yearCount <= 5) {
         labels.push(String(currentDate.getFullYear()));
         currentDate.setFullYear(currentDate.getFullYear() + 1);
         yearCount += 1;

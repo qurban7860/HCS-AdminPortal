@@ -12,10 +12,13 @@ import ViewPhoneComponent from '../../../components/ViewForms/ViewPhoneComponent
 import { getContact, getContacts, resetContact, deleteContact, setIsExpanded, setCardActiveIndex } from '../../../redux/slices/customer/contact';
 import { setMachineTab } from '../../../redux/slices/products/machine';
 import { getMachineServiceReport, setResetFlags } from '../../../redux/slices/products/machineServiceReport';
+import { getContactUsers, resetContactUsers, getSecurityUser, setSecurityUserDialog } from '../../../redux/slices/securityUser/securityUser';
 import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../../components/ViewForms/ViewFormField';
 import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
 import { PATH_MACHINE, PATH_CRM } from '../../../routes/paths';
+import SecurityUserDialog from '../../../components/Dialog/SecurityUserDialog';
+import { useBoolean } from '../../../hooks/useBoolean';
 
 ContactViewForm.propTypes = {
   currentContact: PropTypes.object,
@@ -30,7 +33,7 @@ export default function ContactViewForm({
 }) {
   const { contact, isLoading } = useSelector((state) => state.contact);
   const { customer } = useSelector((state) => state.customer);
-
+  
   const { isAllAccessAllowed } = useAuthContext()
   const { enqueueSnackbar } = useSnackbar();
   const { customerId, id } = useParams()
@@ -42,11 +45,13 @@ export default function ContactViewForm({
       dispatch(getContact(customerId, id));
       dispatch(setIsExpanded(true));
       dispatch(setCardActiveIndex(id));
+      dispatch(getContactUsers(id));
     }
     return () => {
       dispatch(resetContact());
       dispatch(setIsExpanded(false));
       dispatch(setCardActiveIndex(null));
+      // dispatch(resetContactUsers());
     }
   }, [dispatch, customerId, id])
 
@@ -109,6 +114,11 @@ export default function ContactViewForm({
     <Chip onClick={() => handleSericeReportView(item?.machine, item?._id)} sx={{ m: 0.3 }} label={`${item?.serviceReportTemplate?.reportTitle || ''} | ${fDateTime(item?.serviceDate)}`} />
   ));
 
+  const handleViewUser = (_user) => {
+    dispatch(getSecurityUser(_user?._id));
+    dispatch(setSecurityUserDialog(true));
+  };
+
   return (
     <Grid sx={{ mt: 1 }}>
 
@@ -119,7 +129,10 @@ export default function ContactViewForm({
         backLink={isCustomerContactPage && !customer?.isArchived ? backLink : undefined}
         isActive={defaultValues.isActive}
         formerEmployee={defaultValues.formerEmployee}
+        handleViewUser={handleViewUser}
       />
+
+      <SecurityUserDialog />
 
       <Grid container>
         <ViewFormField isLoading={isLoading} sm={6} heading="First Name" param={defaultValues?.firstName} />

@@ -12,11 +12,12 @@ const ErpProducedLengthLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
       const convertedDataToMeters = machineLogsGraphData.map(item => ({
         ...item,
         componentLength: item.componentLength / 1000,
-        waste: item.waste / 1000
+        waste: item.waste / 1000,
+        _id: timePeriod === 'Monthly' ? item._id.replace(/^Sep /, 'Sept ') : item._id,
       }));
       setGraphData(convertedDataToMeters);
     }
-  }, [machineLogsGraphData]);
+  }, [machineLogsGraphData, timePeriod]);
 
   const processGraphData = () => {
     if (!graphData || graphData.length === 0) return null;
@@ -29,23 +30,33 @@ const ErpProducedLengthLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
     const endDate = new Date(dateTo);
 
     if (timePeriod === 'Hourly') {
-      // const startHour = startDate.getHours();
-      // const endHour = endDate.getHours();
-      const currentDate = new Date(startDate);
-      let hourCount = 0;
+      const currentDate = new Date(startDate)
+      currentDate.setHours(0, 0, 0, 0)
 
-      while (currentDate <= endDate && hourCount < 24) {
-        const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-        const day = String(currentDate.getDate()).padStart(2, '0');
-        const hour = String(currentDate.getHours()).padStart(2, '0');
-        labels.push(`${month}/${day} ${hour}`);
-        currentDate.setHours(currentDate.getHours() + 1);
+      const finalDate = new Date(endDate)
+      finalDate.setHours(23, 59, 59, 999)
+
+      const labelsSet = new Set()
+      let hourCount = 0
+
+      while (currentDate <= finalDate && hourCount <= 24) {
+        const month = String(currentDate.getMonth() + 1).padStart(2, '0')
+        const day = String(currentDate.getDate()).padStart(2, '0')
+        const hour = String(currentDate.getHours()).padStart(2, '0')
+
+        const label = `${month}/${day} ${hour}`
+        if (!labelsSet.has(label)) {
+          labels.push(label)
+          labelsSet.add(label)
+        }
+
+        currentDate.setHours(currentDate.getHours() + 1)
         hourCount += 1;
       }
     } else if (timePeriod === 'Daily') {
       const currentDate = new Date(startDate);
       let dayCount = 0;
-      while (currentDate <= endDate && dayCount < 30) {
+      while (currentDate <= endDate && dayCount <= 30) {
         const day = String(currentDate.getDate()).padStart(2, '0');
         const month = String(currentDate.getMonth() + 1).padStart(2, '0');
         labels.push(`${day}/${month}`);
@@ -56,7 +67,7 @@ const ErpProducedLengthLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
     else if (timePeriod === 'Monthly') {
       const currentMonth = new Date(startDate);
       let monthCount = 0;
-      while (currentMonth <= endDate && monthCount < 12) {
+      while (currentMonth <= endDate && monthCount <= 12) {
         const shortMonth = currentMonth.toLocaleString('default', { month: 'short' });
         const yearShort = String(currentMonth.getFullYear()).slice(-2);
         labels.push(`${shortMonth} ${yearShort}`);
@@ -66,7 +77,7 @@ const ErpProducedLengthLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
     } else if (timePeriod === 'Quarterly') {
       const currentQDate = new Date(startDate);
       let quarterCount = 0;
-      while (currentQDate <= endDate && quarterCount < 4) {
+      while (currentQDate <= endDate && quarterCount <= 4) {
         const year = currentQDate.getFullYear();
         const quarter = Math.floor(currentQDate.getMonth() / 3) + 1;
         labels.push(`${year}-Q${quarter}`);
@@ -76,7 +87,7 @@ const ErpProducedLengthLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
     } else if (timePeriod === 'Yearly') {
       const currentYDate = new Date(startDate);
       let yearCount = 0;
-      while (currentYDate <= endDate && yearCount < 5) {
+      while (currentYDate <= endDate && yearCount <= 5) {
         labels.push(String(currentYDate.getFullYear()));
         currentYDate.setFullYear(currentYDate.getFullYear() + 1);
         yearCount += 1;

@@ -1,7 +1,21 @@
 // react
 import { useEffect } from 'react';
 // @mui
-import { Card, Container, Box, Typography, Grid, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Skeleton } from '@mui/material';
+import {
+  Card,
+  Container,
+  Box,
+  Typography,
+  Grid,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Skeleton,
+} from '@mui/material';
 import PropTypes from 'prop-types';
 // routes
 import { useParams } from 'react-router-dom';
@@ -31,18 +45,47 @@ export default function MachineDashboard() {
   const generalColumns = [
     { id: 'label', label: 'Description' },
     { id: 'count', label: 'Count', align: 'right' },
-    { id: 'length', label: 'Length (m)', align: 'right', format: (value) => value?.toFixed(2) || '0.00' }
+    {
+      id: 'length',
+      label: 'Length (m)',
+      align: 'right',
+      format: (value) =>
+        Number(value)?.toLocaleString(undefined, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }) || '0.00',
+    },
   ];
 
   const wasteColumns = [
     { id: 'label', label: 'Waste Type' },
     { id: 'count', label: 'Count', align: 'right' },
-    { id: 'length', label: 'Length (m)', align: 'right', format: (value) => value?.toFixed(2) || '0.00' }
+    {
+      id: 'length',
+      label: 'Length (m)',
+      align: 'right',
+      format: (value) =>
+        Number(value)?.toLocaleString(undefined, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }) || '0.00',
+    },
   ];
 
   const totalColumns = [
     { id: 'label', label: 'Metric' },
-    { id: 'value', label: 'Value', align: 'right', format: (value) => typeof value === 'number' ? value.toFixed(2) : value }
+    {
+      id: 'value',
+      label: 'Value',
+      align: 'right',
+      format: (value) =>
+        typeof value === 'number'
+          ? Number(value).toLocaleString(undefined, {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })
+          : value,
+    },
   ];
 
   const renderTableSkeleton = (columns, rowCount = 5) => (
@@ -75,24 +118,30 @@ export default function MachineDashboard() {
   const renderContent = () => {
     if (isLoading) {
       return (
-        <Grid container spacing={3} sx={{mt: 0.5}}>
+        <Grid container spacing={3} sx={{ mt: 0.5 }}>
           <Grid item xs={12} md={6}>
             <Box sx={{ mb: 3 }}>
-              <Typography variant="subtitle2" sx={{ mb: 1 }}>Production Totals</Typography>
-              {renderTableSkeleton(totalColumns, 4)}
-            </Box>
-          </Grid>
-          
-          <Grid item xs={12} md={6}>
-            <Box sx={{ mb: 3 }}>
-              <Typography variant="subtitle2" sx={{ mb: 1 }}>General Production Data</Typography>
+              <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                General Production Data
+              </Typography>
               {renderTableSkeleton(generalColumns)}
             </Box>
           </Grid>
 
           <Grid item xs={12} md={6}>
             <Box sx={{ mb: 3 }}>
-              <Typography variant="subtitle2" sx={{ mb: 1 }}>Waste Analysis</Typography>
+              <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                Production Totals
+              </Typography>
+              {renderTableSkeleton(totalColumns, 4)}
+            </Box>
+          </Grid>
+
+          <Grid item xs={12} md={6}>
+            <Box sx={{ mb: 3 }}>
+              <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                Waste Analysis
+              </Typography>
               {renderTableSkeleton(wasteColumns)}
             </Box>
           </Grid>
@@ -102,7 +151,9 @@ export default function MachineDashboard() {
 
     if (error) {
       return (
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '400px' }}>
+        <Box
+          sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '400px' }}
+        >
           <Typography color="error">Error loading dashboard data</Typography>
         </Box>
       );
@@ -110,34 +161,33 @@ export default function MachineDashboard() {
 
     if (dashboardStatistics) {
       return (
-        <Grid container spacing={3} sx={{mt: 0.5}}>
-          
+        <Grid container spacing={3} sx={{ mt: 0.5 }}>
           <Grid item xs={12} md={6}>
-            {dashboardStatistics.totalData && (
-              <DataTable 
-                title="Production Totals" 
-                data={dashboardStatistics.totalData} 
-                columns={totalColumns} 
+            {dashboardStatistics.generalData && (
+              <DataTable
+                title="General Production Data"
+                data={dashboardStatistics.generalData}
+                columns={generalColumns}
               />
             )}
           </Grid>
-          
+
           <Grid item xs={12} md={6}>
-            {dashboardStatistics.generalData && (
-              <DataTable 
-                title="General Production Data" 
-                data={dashboardStatistics.generalData} 
-                columns={generalColumns} 
+            {dashboardStatistics.totalData && (
+              <DataTable
+                title="Production Totals"
+                data={dashboardStatistics.totalData}
+                columns={totalColumns}
               />
             )}
           </Grid>
 
           <Grid item xs={12} md={6}>
             {dashboardStatistics.wasteData && (
-              <DataTable 
-                title="Waste Analysis" 
-                data={dashboardStatistics.wasteData} 
-                columns={wasteColumns} 
+              <DataTable
+                title="Waste Analysis"
+                data={dashboardStatistics.wasteData}
+                columns={wasteColumns}
               />
             )}
           </Grid>
@@ -146,7 +196,9 @@ export default function MachineDashboard() {
     }
 
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '400px' }}>
+      <Box
+        sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '400px' }}
+      >
         <Typography>No dashboard data available</Typography>
       </Box>
     );
@@ -175,7 +227,9 @@ export default function MachineDashboard() {
 
 const DataTable = ({ title, data, columns }) => (
   <Box sx={{ mb: 3 }}>
-    <Typography variant="subtitle2" sx={{ mb: 1 }}>{title}</Typography>
+    <Typography variant="subtitle2" sx={{ mb: 1 }}>
+      {title}
+    </Typography>
     <TableContainer component={Paper} sx={{ boxShadow: 1 }}>
       <Table size="small">
         <TableHead>
@@ -192,7 +246,14 @@ const DataTable = ({ title, data, columns }) => (
             <TableRow key={index} hover>
               {columns.map((column) => (
                 <TableCell key={column.id} align={column.align || 'left'}>
-                  {column.format ? column.format(row[column.id]) : row[column.id]}
+                  {
+                    // eslint-disable-next-line no-nested-ternary
+                    row[column.id] === null
+                      ? ''
+                      : column.format
+                      ? column.format(row[column.id])
+                      : row[column.id]
+                  }
                 </TableCell>
               ))}
             </TableRow>
@@ -206,4 +267,4 @@ DataTable.propTypes = {
   title: PropTypes.string,
   data: PropTypes.array,
   columns: PropTypes.array,
-}
+};

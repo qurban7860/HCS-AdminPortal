@@ -1,5 +1,8 @@
 export const allowedImageExtensions = ['png', 'jpeg', 'jpg', 'gif', 'bmp', 'webp'];
-export const allowedDocumentExtension = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx'];
+export const allowedVideoExtensions = ['mp4', 'avi', 'mov', 'wmv', 'flv', 'mkv'];
+export const allowedDocumentExtension = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'csv', 'txt'];
+export const allowedOtherExtension = ['zip', 'rar', '7z', 'log', 'config', 'conf', 'ini', 'json', 'xml'];
+
 const maxFiles = JSON.parse(localStorage.getItem('configurations'))?.find((c) => c?.name === 'MAX_UPLOAD_FILES')
 
 export const document = {
