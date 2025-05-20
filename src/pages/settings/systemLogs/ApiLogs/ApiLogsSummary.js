@@ -21,7 +21,7 @@ import {
 import FormProvider, { RHFDatePicker, RHFSelect } from '../../../../components/hook-form';
 import Scrollbar from '../../../../components/scrollbar';
 // sections
-import { getApiLogSummary } from '../../../../redux/slices/logs/apiLogs';
+import { getApiLogSummary, resetApiLogSummary } from '../../../../redux/slices/logs/apiLogs';
 import { getMachineForDialog, setMachineDialog } from '../../../../redux/slices/products/machine';
 import TableCard from '../../../../components/ListTableTools/TableCard';
 import SearchBarCombo from '../../../../components/ListTableTools/SearchBarCombo';
@@ -64,7 +64,24 @@ export default function ApiLogsSummary() {
     setTableData(apiLogSummary || []);
   }, [apiLogSummary]);
 
-  const dataFiltered = [...tableData].sort(getComparator(order, orderBy));
+  useEffect(() => {
+
+    const values = methods.getValues();
+    const query = {
+      fromDate: new Date(new Date(values.dateFrom).setHours(0, 0, 0, 0)).toISOString(),
+      toDate: new Date(new Date(values.dateTo).setHours(23, 59, 59, 999)).toISOString(),
+    };
+    if (values.filterRequestType !== 'ALL') {
+      query.apiType = values.filterRequestType;
+    }
+    dispatch(getApiLogSummary(query));
+    
+    return () => {
+      dispatch(resetApiLogSummary());
+    };
+  }, [dispatch, methods]);
+
+  const dataFiltered = Array.isArray(tableData)? [...tableData].sort(getComparator(order, orderBy)) : [];
 
   const denseHeight = 60;
   const isNotFound = !dataFiltered.length || (!isLoading && !dataFiltered.length);
