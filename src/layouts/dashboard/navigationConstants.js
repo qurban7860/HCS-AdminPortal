@@ -274,6 +274,12 @@ export const allSideBarOptions = {
               path: PATH_REPORTS.logs.api.root,
               icon: <Iconify icon="mdi:api" />,
             },
+            {
+              title: 'API Log summary',
+              description: 'Review API request and response logs summary.',
+              path: PATH_REPORTS.logs.apiLogSummary,
+              icon: <Iconify icon="mdi:api" />,
+            },
           ],
         },
       ],

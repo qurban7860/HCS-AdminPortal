@@ -10,7 +10,7 @@ function ContactUsersPopover({ open, onClose, onViewUser }) {
   const { contactUsers } = useSelector((state) => state.user);
 
   return (
-    <MenuPopover open={open} onClose={onClose} sx={{ p: 0 }}>
+    <MenuPopover arrow="top-right" open={open} onClose={onClose} sx={{ p: 0, mt: 1 }}>
       <Box sx={{ display: 'flex', alignItems: 'center', py: 2, px: 2.5 }}>
         <Box sx={{ flexGrow: 1 }}>
           <Typography variant="subtitle1">Contact Users</Typography>
