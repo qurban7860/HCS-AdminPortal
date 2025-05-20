@@ -12,6 +12,7 @@ const initialState = {
   apiLogs: [],
   apiLogsCount: 0,
   apiLog: {},
+  apiLogSummary: {},
   filterBy: '',
   reportHiddenColumns: {
     "createdAt": false,
@@ -63,6 +64,14 @@ const slice = createSlice({
       state.initial = true;
     },
 
+    // GET API LOG SUMMARY
+    getApiLogSummarySuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.apiLogSummary = action.payload;
+      state.initial = true;
+    },
+
     setResponseMessage(state, action) {
       state.responseMessage = action.payload;
       state.isLoading = false;
@@ -87,6 +96,14 @@ const slice = createSlice({
       state.isLoading = false;
     },
 
+    // RESET API LOG SUMMARY
+    resetApiLogSummary(state) {
+      state.apiLogSummary = {};
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+
     setReportHiddenColumns(state, action) {
       state.reportHiddenColumns = action.payload;
     },
@@ -105,6 +122,7 @@ export default slice.reducer;
 export const {
   resetApiLogs,
   resetApiLog,
+  resetApiLogSummary,
   setResponseMessage,
   setFilterBy,
   setReportHiddenColumns
@@ -126,6 +144,27 @@ export function getApiLogs({ machineId, fields = '', orderBy = { createdAt: -1 }
       dispatch(slice.actions.getApiLogsSuccess(response.data));
     } catch (error) {
       console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+// ------------------------------ GET API LOG SUMMARY ----------------------------------------
+
+export function getApiLogSummary(query) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const params = {
+       fromDate: query.fromDate,
+       toDate: query.toDate,
+      //  apiType: "MACHINE-CONFIG"
+      }
+      const response = await axios.get(`${CONFIG.SERVER_URL}apiclient/logs/summary`, { params });
+      dispatch(slice.actions.getApiLogSummarySuccess(response.data));
+    } catch (error) {
+      console.error(error);
       dispatch(slice.actions.hasError(error.Message));
       throw error;
     }
