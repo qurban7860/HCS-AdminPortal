@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 // import * as Yup from 'yup';
-import { useEffect,  useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
@@ -23,9 +23,8 @@ import { setCustomerDocumentFormVisibility } from '../../../../redux/slices/docu
 import { getActiveDocumentCategories, resetActiveDocumentCategories } from '../../../../redux/slices/document/documentCategory';
 // components
 import { useSnackbar } from '../../../../components/snackbar';
-import FormProvider, { RHFTextField, RHFAutocomplete } from '../../../../components/hook-form';
+import FormProvider, { RHFTextField, RHFAutocomplete, RHFSwitch } from '../../../../components/hook-form';
 import AddFormButtons from '../../../../components/DocumentForms/AddFormButtons';
-import ToggleButtons from '../../../../components/DocumentForms/ToggleButtons';
 import { Cover } from '../../../../components/Defaults/Cover';
 // constants
 import { FORMLABELS } from '../../../../constants/default-constants';
@@ -45,10 +44,11 @@ export default function DocumentTypeAddForm({ currentDocument }) {
 
   const defaultValues = useMemo(
     () => ({
-      category: activeDocumentCategories.find((element)=> element.isDefault === true) || null,
+      category: activeDocumentCategories.find((element) => element.isDefault === true) || null,
       name: '',
       description: '',
       isActive: true,
+      isPrimaryDrawing: false,
       isDefault: false,
       customerAccess: false,
     }),
@@ -70,14 +70,14 @@ export default function DocumentTypeAddForm({ currentDocument }) {
   useEffect(() => {
     dispatch(getActiveDocumentCategories());
     reset(defaultValues);
-    return () => { dispatch( resetActiveDocumentCategories() )}
+    return () => { dispatch(resetActiveDocumentCategories()) }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
   const onSubmit = async (data) => {
     try {
 
-  await dispatch(addDocumentType(data));
+      await dispatch(addDocumentType(data));
       reset();
       enqueueSnackbar(Snacks.docSaved);
       navigate(PATH_MACHINE.documents.documentType.list);
@@ -104,7 +104,7 @@ export default function DocumentTypeAddForm({ currentDocument }) {
             <Card sx={{ p: 3 }}>
               <Stack spacing={2}>
                 {/* <Grid item lg={6}> */}
-                
+
                 <RHFAutocomplete
                   name="category"
                   label={formLABELS.DOCUMENT_CATEGORY}
@@ -123,20 +123,33 @@ export default function DocumentTypeAddForm({ currentDocument }) {
                   minRows={8}
                   multiline
                 />
-                <ToggleButtons
-                  isMachine
-                  isRHF
-                  name={FORMLABELS.isACTIVE.name}
-                  RHFName={FORMLABELS.isCUSTOMER_ACCESS.name}
-                  isDefault
-                  defaultName='isDefault'
-                />
+                <Grid display='flex' alignItems="center" mt={1} >
+                  <RHFSwitch
+                    name='isActive'
+                    label='Active'
+                  />
+
+                  <RHFSwitch
+                    name='isPrimaryDrawing'
+                    label='Primary'
+                  />
+
+                  <RHFSwitch
+                    name='customerAccess'
+                    label='Customer Access'
+                  />
+
+                  <RHFSwitch
+                    name='isDefault'
+                    label='Default'
+                  />
+                </Grid>
               </Stack>
               <AddFormButtons settingPage isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
             </Card>
           </Grid>
         </Grid>
       </FormProvider>
-    </Container>
+    </Container >
   );
 }

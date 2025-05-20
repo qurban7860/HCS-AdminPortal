@@ -22,13 +22,12 @@ import { DocumentTypeSchema } from '../../../schemas/document';
 import { PATH_MACHINE, PATH_SETTING } from '../../../../routes/paths';
 // components
 import { useSnackbar } from '../../../../components/snackbar';
-import FormProvider, { RHFTextField, RHFAutocomplete } from '../../../../components/hook-form';
+import FormProvider, { RHFTextField, RHFAutocomplete, RHFSwitch } from '../../../../components/hook-form';
 import { getDocumentTypes, updateDocumentType } from '../../../../redux/slices/document/documentType';
 import { getActiveDocumentCategories } from '../../../../redux/slices/document/documentCategory';
 import AddFormButtons from '../../../../components/DocumentForms/AddFormButtons';
 import FormHeading from '../../../../components/DocumentForms/FormHeading';
 import { Cover } from '../../../../components/Defaults/Cover';
-import ToggleButtons from '../../../../components/DocumentForms/ToggleButtons';
 import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 import { FORMLABELS } from '../../../../constants/default-constants';
 import { FORMLABELS as formLABELS } from '../../../../constants/document-constants';
@@ -55,6 +54,7 @@ export default function DocumentTypeEditForm() {
       name: documentType?.name || '',
       description: documentType?.description || '',
       isActive: documentType?.isActive,
+      isPrimaryDrawing: documentType?.isPrimaryDrawing,
       isDefault: documentType?.isDefault || false,
       customerAccess: documentType?.customerAccess,
     }),
@@ -118,14 +118,27 @@ export default function DocumentTypeEditForm() {
                   minRows={8}
                   multiline
                 />
-                <ToggleButtons
-                  isMachine
-                  isRHF
-                  name={FORMLABELS.isACTIVE.name}
-                  RHFName={FORMLABELS.isCUSTOMER_ACCESS.name}
-                  isDefault
-                  defaultName='isDefault'
-                />
+                <Grid display='flex' alignItems="center" mt={1} >
+                  <RHFSwitch
+                    name='isActive'
+                    label='Active'
+                  />
+
+                  <RHFSwitch
+                    name='isPrimaryDrawing'
+                    label='Primary'
+                  />
+
+                  <RHFSwitch
+                    name='customerAccess'
+                    label='Customer Access'
+                  />
+
+                  <RHFSwitch
+                    name='isDefault'
+                    label='Default'
+                  />
+                </Grid>
               </Stack>
               <AddFormButtons settingPage isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
             </Card>
