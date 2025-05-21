@@ -31,7 +31,7 @@ export default function DocumentCategoryView() {
     <>
       <Container maxWidth={false}>
         <StyledCardContainer>
-          <Cover name={documentCategory?.name} />
+          <Cover name={documentCategory?.name} isArchived={documentCategory?.isArchived} />
         </StyledCardContainer>
         <DocumentCategoryViewForm />
       </Container>

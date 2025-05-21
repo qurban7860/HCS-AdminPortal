@@ -28,6 +28,16 @@ export const ICONS = {
     color: '#FF0000',
     heading: 'Inactive',
   },
+  PRIMARY: {
+    icon: 'mdi:star',
+    color: '#008000',
+    heading: 'Primary',
+  },
+  NOTPRIMARY: {
+    icon: 'mdi:star-remove',
+    color: '#FF0000',
+    heading: 'Not Primary',
+  },
   // shareWith
   SHARED: {
     icon: 'fa6-solid:users',
@@ -59,7 +69,7 @@ export const ICONS = {
     icon: 'tabler:speedboat',
     heading: 'Releases',
   },
-  
+
   RELEASED: {
     icon: 'mdi:source-branch-check',
     color: '#008000',
@@ -132,7 +142,7 @@ export const ICONS = {
     icon: 'mdi:circle',
     color: '#bdbdbd',
     heading: 'Offline',
-  },  
+  },
   EMAIL: {
     icon: 'mdi:email',
     color: '#103996',
@@ -211,9 +221,9 @@ export const ICONS = {
     heading: 'Not Verified',
   },
   SEARCHBTN: {
-      color: 'green',
-      heading: (btnName) => btnName
-    },
+    color: 'green',
+    heading: (btnName) => btnName
+  },
   // ------------------------------------------------------------
   // isActive -Documents
   DOCUMENT_ACTIVE: {
@@ -263,9 +273,9 @@ export const ICONS = {
     icon: 'mingcute:user-x-line',
     color: '#878787',
     heading: 'Customer Not Allowed',
-  }, 
+  },
   // ------------------------------------------------------------
-  
+
   // FOR CUSTOMERS
   FORCUSTOMER: {
     icon: 'fa-solid:users',
@@ -309,7 +319,7 @@ export const ICONS = {
     color: '#1976D2',
     heading: 'Edit',
   },
-  
+
 
   // Machine Support 
   SUPPORT_VALLID: {
@@ -435,11 +445,11 @@ export const ICONS = {
     heading: 'Service Categories',
   },
 
-  AUDIT_LOGS:{
+  AUDIT_LOGS: {
     heading: 'Audit Logs',
     icon: "entypo:bar-graph",
   },
-  
+
   // service information
   MACHINE_SERVICE_CATEGORY: {
     icon: 'mdi:cog',
@@ -509,7 +519,7 @@ export const ICONS = {
   SYSTEM_CONFIG: {
     icon: 'icon-park-outline:setting-config',
     heading: 'System Config',
-  },  
+  },
   SYSTEM_EMAIL: {
     icon: 'eva:email-fill',
     heading: 'Emails',
@@ -517,19 +527,19 @@ export const ICONS = {
   DEPARTMENNTS: {
     icon: 'mingcute:department-line',
     heading: 'Departments',
-  },  
+  },
   ARCHIVEDCUSTOMERS: {
     icon: 'fa6-solid:users-slash',
     heading: 'Archived Customers',
-  }, 
+  },
   ARCHIVEDMACHINES: {
     icon: 'fluent:table-delete-column-16-filled',
     heading: 'Archived Machines',
-  }, 
+  },
   PM2LOGS: {
     icon: 'simple-icons:pm2',
     heading: 'PM2 Logs',
-  },  
+  },
   DBBACKUPLOGS: {
     icon: 'iconoir:database-backup',
     heading: 'DB Backup Logs',
@@ -538,7 +548,7 @@ export const ICONS = {
     icon: 'tabler:api-app',
     heading: 'API Logs',
   },
-  
+
   // @root - ticketsettings
   // ------------ Ticket Collection --------------
   ISSUE_TYPES: {
@@ -586,7 +596,7 @@ export const ICONS = {
     icon: 'ri:swap-box-line',
     heading: 'Move',
   },
-  
+
   SEE_MORE: {
     icon: 'lsicon:more-outline',
     color: '#909090',
@@ -613,26 +623,26 @@ export const ICONS = {
   },
 
   // Tabs Icons
-  CUSTOMER:{ icon: 'mdi:account' },
-  SITES:{ icon:'mdi:map-legend'},
-  CONTACTS:{ icon:'mdi:account-multiple'},
-  MACHINES:{ icon:'mdi:gate-open'},
-  DOCUMENTS: { icon:'ph:files-fill' },
-  MACHINE: { icon:'mdi:gate-open' },
-  MACHINE_LIFECYCLE: {icon: 'carbon:ai-governance-lifecycle'},
-  SETTINGS:{ icon:'mdi:cog' },
-  TOOLS_INSTALLED:{ icon:'fa-solid:tools' },
-  JOBS:{ icon:'mdi:printer' },
-  NOTES:{ icon:'fluent:note-20-filled' },
-  DRAWINGS:{ icon:'streamline:hand-held-tablet-drawing-solid' },
-  LICENSES:{ icon:'mdi:book-cog-outline' },
-  PROFILES:{ icon:'fluent:document-flowchart-24-filled' },
-  SERVICE_REPORTS:{ icon:'mdi:clipboard-text-clock' },
-  INI:{ icon:'ph:file-ini-fill' },
-  LOGS:{ icon:'lucide:list-end' },
-  GRAPHS:{ icon:'mdi:graph-bar' },
-  DASHBOARD:{ icon:'mdi:counter' },
-  INTEGRATION:{ icon:'carbon:ibm-cloud-direct-link-2-connect' },
-  JIRA:{ icon:'simple-icons:jirasoftware' },
-  CUSTOMER_PORTAL_ACCESS:{ icon:'clarity:no-access-solid' }
+  CUSTOMER: { icon: 'mdi:account' },
+  SITES: { icon: 'mdi:map-legend' },
+  CONTACTS: { icon: 'mdi:account-multiple' },
+  MACHINES: { icon: 'mdi:gate-open' },
+  DOCUMENTS: { icon: 'ph:files-fill' },
+  MACHINE: { icon: 'mdi:gate-open' },
+  MACHINE_LIFECYCLE: { icon: 'carbon:ai-governance-lifecycle' },
+  SETTINGS: { icon: 'mdi:cog' },
+  TOOLS_INSTALLED: { icon: 'fa-solid:tools' },
+  JOBS: { icon: 'mdi:printer' },
+  NOTES: { icon: 'fluent:note-20-filled' },
+  DRAWINGS: { icon: 'streamline:hand-held-tablet-drawing-solid' },
+  LICENSES: { icon: 'mdi:book-cog-outline' },
+  PROFILES: { icon: 'fluent:document-flowchart-24-filled' },
+  SERVICE_REPORTS: { icon: 'mdi:clipboard-text-clock' },
+  INI: { icon: 'ph:file-ini-fill' },
+  LOGS: { icon: 'lucide:list-end' },
+  GRAPHS: { icon: 'mdi:graph-bar' },
+  DASHBOARD: { icon: 'mdi:counter' },
+  INTEGRATION: { icon: 'carbon:ibm-cloud-direct-link-2-connect' },
+  JIRA: { icon: 'simple-icons:jirasoftware' },
+  CUSTOMER_PORTAL_ACCESS: { icon: 'clarity:no-access-solid' }
 };

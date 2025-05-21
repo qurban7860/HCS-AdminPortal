@@ -38,18 +38,18 @@ const slice = createSlice({
       state.error = null;
     },
     // SET TOGGLE
-    setDocumentTypeFormVisibility(state, action){
+    setDocumentTypeFormVisibility(state, action) {
       state.documentTypeFormVisibility = action.payload;
     },
 
     // SET TOGGLE
-    setDocumentTypeEditFormVisibility(state, action){
+    setDocumentTypeEditFormVisibility(state, action) {
       state.documentTypeEditFormVisibility = action.payload;
     },
 
     // SET MERGE DIALOG VISIBILITY
-    setMergeDialogVisibility(state, action){
-      state.mergeDialogVisibility= action.payload;
+    setMergeDialogVisibility(state, action) {
+      state.mergeDialogVisibility = action.payload;
     },
 
     // HAS ERROR
@@ -91,7 +91,7 @@ const slice = createSlice({
     },
 
     // RESET DOCUMENT NAME
-    resetDocumentType(state){
+    resetDocumentType(state) {
       state.documentType = {};
       state.responseMessage = null;
       state.success = false;
@@ -99,7 +99,7 @@ const slice = createSlice({
     },
 
     // RESET DOCUMENT NAME
-    resetDocumentTypes(state){
+    resetDocumentTypes(state) {
       state.documentTypes = [];
       state.responseMessage = null;
       state.success = false;
@@ -107,7 +107,7 @@ const slice = createSlice({
     },
 
     // RESET Active DOCUMENT NAME
-    resetActiveDocumentTypes(state){
+    resetActiveDocumentTypes(state) {
       state.activeDocumentTypes = [];
       state.responseMessage = null;
       state.success = false;
@@ -152,17 +152,18 @@ export const {
 // ----------------------------Add Document Type------------------------------------------
 
 export function addDocumentType(params) {
-    return async (dispatch) => {
-        dispatch(slice.actions.startLoading());
-        try {
-            const data = {
-                docCategory: params.category?._id,
-                name: params.name,
-                description: params.description,
-                customerAccess:params.customerAccess,
-                isActive: params.isActive,
-                isDefault: params.isDefault,
-            }
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const data = {
+        docCategory: params.category?._id,
+        name: params.name,
+        description: params.description,
+        customerAccess: params.customerAccess,
+        isActive: params.isActive,
+        isDefault: params.isDefault,
+        isPrimaryDrawing: params?.isPrimaryDrawing
+      }
       await axios.post(`${CONFIG.SERVER_URL}documents/documentType/`, data);
       dispatch(slice.actions.setResponseMessage('Document Type saved successfully'));
       dispatch(getDocumentTypes());
@@ -176,7 +177,7 @@ export function addDocumentType(params) {
 
 // ---------------------------------Update Document Type-------------------------------------
 
-export function updateDocumentType(Id,params) {
+export function updateDocumentType(Id, params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -184,13 +185,14 @@ export function updateDocumentType(Id,params) {
         docCategory: params.category?._id,
         name: params.name,
         description: params.description,
-        customerAccess:params.customerAccess,
+        customerAccess: params.customerAccess,
         isActive: params.isActive,
         isDefault: params.isDefault,
+        isPrimaryDrawing: params?.isPrimaryDrawing
       }
-      await axios.patch(`${CONFIG.SERVER_URL}documents/documentType/${Id}`, data, );
+      await axios.patch(`${CONFIG.SERVER_URL}documents/documentType/${Id}`, data,);
       dispatch(slice.actions.setResponseMessage('Document Type updated successfully'));
-      dispatch(setDocumentTypeEditFormVisibility (false));
+      dispatch(setDocumentTypeEditFormVisibility(false));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -201,16 +203,14 @@ export function updateDocumentType(Id,params) {
 
 // -----------------------------------Get Document Types-----------------------------------
 
-export function getDocumentTypes() {
+export function getDocumentTypes(isArchived) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}documents/documentType/` , 
-      {
-        params: {
-          isArchived: false
+      const response = await axios.get(`${CONFIG.SERVER_URL}documents/documentType/`,
+        {
+          params: {isArchived:isArchived || false}
         }
-      }
       );
       dispatch(slice.actions.getDocumentTypesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Document Types loaded successfully'));
@@ -225,7 +225,7 @@ export function getDocumentTypes() {
 
 // -----------------------------------Get Active Document Types-----------------------------------
 
-export function getActiveDocumentTypes(cancelToken, drawing ) {
+export function getActiveDocumentTypes(cancelToken, drawing) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -257,15 +257,15 @@ export function getActiveDrawingTypes(cancelToken) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}documents/documentType/` , 
-      {
-        params: {
-          isArchived: false,
-          isActive: true,
-          drawing: true
-        },
-        cancelToken: cancelToken?.token,
-      }
+      const response = await axios.get(`${CONFIG.SERVER_URL}documents/documentType/`,
+        {
+          params: {
+            isArchived: false,
+            isActive: true,
+            drawing: true
+          },
+          cancelToken: cancelToken?.token,
+        }
       );
       dispatch(slice.actions.getActiveDocumentTypesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Document Types loaded successfully'));
@@ -279,7 +279,7 @@ export function getActiveDrawingTypes(cancelToken) {
 
 // -----------------------------------Get Active Document Types of Categories-----------------------------------
 
-export function getActiveDocumentTypesWithCategory(typeCategory, categoryBy, drawing ) {
+export function getActiveDocumentTypesWithCategory(typeCategory, categoryBy, drawing) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -291,10 +291,10 @@ export function getActiveDocumentTypesWithCategory(typeCategory, categoryBy, dra
           drawing,
         }
       }
-      if( categoryBy ){
+      if (categoryBy) {
         Object.assign(query.params, categoryBy)
       }
-      const response = await axios.get(`${CONFIG.SERVER_URL}documents/documentType/`, query );
+      const response = await axios.get(`${CONFIG.SERVER_URL}documents/documentType/`, query);
       dispatch(slice.actions.getActiveDocumentTypesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Document Types loaded successfully'));
     } catch (error) {
@@ -324,14 +324,45 @@ export function getDocumentType(Id) {
 
 // ---------------------------------archive Document Type-------------------------------------
 
+export function archiveDocumentType(Id) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.patch(`${CONFIG.SERVER_URL}documents/documentType/${Id}`,
+        {
+          isArchived: true,
+        });
+      dispatch(slice.actions.setResponseMessage(response.data));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+export function restoreDocumentType(Id) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.patch(`${CONFIG.SERVER_URL}documents/documentType/${Id}`,
+        {
+          isArchived: false,
+        });
+      dispatch(slice.actions.setResponseMessage(response.data));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
 export function deleteDocumentType(Id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.patch(`${CONFIG.SERVER_URL}documents/documentType/${Id}` , 
-      {
-          isArchived: true, 
-      });
+      const response = await axios.delete(`${CONFIG.SERVER_URL}documents/documentType/${Id}`);
       dispatch(slice.actions.setResponseMessage(response.data));
     } catch (error) {
       console.error(error);
@@ -348,7 +379,7 @@ export function mergeDocumentTypes(Id, docTypes) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.post(`${CONFIG.SERVER_URL}documents/documentType/${Id}/merge`, {docTypes});
+      const response = await axios.post(`${CONFIG.SERVER_URL}documents/documentType/${Id}/merge`, { docTypes });
       dispatch(slice.actions.setResponseMessage('Document Types merged successfuly'));
     } catch (error) {
       console.error(error);

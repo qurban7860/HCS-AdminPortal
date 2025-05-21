@@ -31,6 +31,7 @@ Cover.propTypes = {
   SubOnClick: PropTypes.func,
   addButton: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   buttonIcon: PropTypes.string,
+  archivedLink: PropTypes.object,
 };
 
 export function Cover({
@@ -48,7 +49,8 @@ export function Cover({
   supportTicketSettings,
   SubOnClick,
   addButton,
-  buttonIcon
+  buttonIcon,
+  archivedLink
 }) {
   const navigate = useNavigate();
   const handleSettingsNavigate = () => navigate(PATH_SETTING.root);
@@ -130,6 +132,24 @@ export function Cover({
               marginBottom: addButton ? -0.6 : 0,
             }}
           >
+            {archivedLink && (
+              <Button
+                size="small"
+                startIcon={archivedLink?.icon ? <Iconify icon={archivedLink.icon} sx={{ mr: 0.5 }} /> : null}
+                variant="outlined"
+                onClick={() => handleOnClick('archivedCustomers', archivedLink.link)}
+              >
+                {' '}
+                {(!isMobile || expandedButton === 'archivedCustomers') && (
+                  <Typography
+                    variant="caption"
+                    sx={{ fontWeight: 'bold', fontSize: { xs: '0.65rem', sm: '0.75rem' } }}
+                  >
+                    {archivedLink.label}
+                  </Typography>
+                )}
+              </Button>
+            )}
             {isAllAccessAllowed && !isSettingReadOnly && isArchivedCustomers && (
               <Button
                 size="small"

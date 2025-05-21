@@ -452,6 +452,7 @@ import {
 
   // LOGS: API LOGS
   ApiLogsList,
+  ApiLogsSummary,
 
   // ----------------------------------------------------------------
 
@@ -968,7 +969,9 @@ export default function Router() {
                 { path: 'list', element: <DocumentCategoryList /> },
                 { path: 'new', element: <DocumentCategoryAdd /> },
                 { path: ':id/edit', element: <DocumentCategoryEdit /> },
-                { path: ':id/view', element: <DocumentCategoryView /> }
+                { path: ':id/view', element: <DocumentCategoryView /> },
+                { path: 'archived', element: <DocumentCategoryList isArchived /> },
+                { path: 'archived/:id/view', element: <DocumentCategoryView /> },
               ],
             },
             // ------------------------------ document Type ----------------------------------
@@ -978,7 +981,9 @@ export default function Router() {
                 { path: 'list', element: <DocumentTypeList /> },
                 { path: 'new', element: <DocumentTypeAdd /> },
                 { path: ':id/edit', element: <DocumentTypeEdit /> },
-                { path: ':id/view', element: <DocumentTypeView /> }
+                { path: ':id/view', element: <DocumentTypeView /> },
+                { path: 'archived', element: <DocumentTypeList isArchived /> },
+                { path: 'archived/:id/view', element: <DocumentTypeView /> },
               ],
             },
           ],
@@ -1355,7 +1360,8 @@ export default function Router() {
               children: [
                 { element: <ApiLogsList />, index: true },
               ]
-            }
+            },
+            { path: 'apiLogSummary', element: <ApiLogsSummary /> },
           ],
         },
       ],

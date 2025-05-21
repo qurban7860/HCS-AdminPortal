@@ -22,6 +22,7 @@ DocumentCategoryListTableToolbar.propTypes = {
   filterStatus: PropTypes.array,
   onFilterStatus: PropTypes.func,
   statusOptions: PropTypes.array,
+  isArchived: PropTypes.bool
 };
 
 export default function DocumentCategoryListTableToolbar({
@@ -32,6 +33,7 @@ export default function DocumentCategoryListTableToolbar({
   statusOptions,
   onResetFilter,
   onFilterStatus,
+  isArchived
 }) {
   const navigate = useNavigate();
   const toggleAdd = () => {
@@ -44,8 +46,8 @@ export default function DocumentCategoryListTableToolbar({
         value={filterName}
         onChange={onFilterName}
         onClick={onResetFilter}
-        SubOnClick={toggleAdd}
-        addButton={BUTTONS.ADDDOCUMENT_CATEGORY}
+        {...(!isArchived && {SubOnClick: toggleAdd})}
+        {...(!isArchived && {addButton: BUTTONS.ADDDOCUMENT_CATEGORY})}
         settingPage
       />
     </Stack>
