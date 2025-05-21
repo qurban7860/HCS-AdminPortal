@@ -33,7 +33,7 @@ export default function DocumentTypeViewForm() {
   const onDelete = async () => {
     try {
       await dispatch(deleteDocumentType(documentType?._id));
-      enqueueSnackbar('Document Type deleted Successfully!');
+      enqueueSnackbar('Document Type deleted successfully!');
       navigate(PATH_MACHINE.documents.documentType.archived);
     } catch (error) {
       console.error(error);
@@ -44,7 +44,7 @@ export default function DocumentTypeViewForm() {
   const onArchive = async () => {
     try {
       await dispatch(archiveDocumentType(documentType?._id));
-      enqueueSnackbar('Document Type archived Successfully!');
+      enqueueSnackbar('Document Type archived successfully!');
       navigate(PATH_MACHINE.documents.documentType.list);
     } catch (error) {
       console.error(error);
@@ -56,7 +56,7 @@ export default function DocumentTypeViewForm() {
     try {
       await dispatch(restoreDocumentType(documentType?._id));
       navigate(PATH_MACHINE.documents.documentType.list);
-      enqueueSnackbar('Document Type restored Successfully!');
+      enqueueSnackbar('Document Type restored successfully!');
     } catch (error) {
       enqueueSnackbar('Document Type restored failed!', { variant: `error` });
       console.error(error);
@@ -93,6 +93,14 @@ export default function DocumentTypeViewForm() {
     [documentType]
   );
 
+  const handlebackLink = () => {
+    if(defaultValues.isArchived){
+      navigate(PATH_MACHINE.documents.documentType.archived);
+    }else{
+      navigate(PATH_MACHINE.documents.documentType.list);
+    }
+  };
+
   return (
     <>
       <Card sx={{ p: 2 }}>
@@ -103,12 +111,12 @@ export default function DocumentTypeViewForm() {
             isDefault={defaultValues.isDefault}
             isActive={defaultValues.isActive}
             isPrimary={defaultValues.isPrimaryDrawing}
-            handleEdit={handleEdit}
+            {...(!defaultValues?.isArchived && { handleEdit })}
             {...(defaultValues?.isArchived ? { onDelete } : { onArchive })}
             {...(defaultValues?.isArchived && { onRestore })}
-            backLink={() => navigate(PATH_MACHINE.documents.documentType.list)}
+            backLink={handlebackLink}
             settingPage
-            onMergeDocumentType={handleMergeDialog}
+            {...(!defaultValues?.isArchived && { onMergeDocumentType: handleMergeDialog })}
           />
           <Grid container sx={{ mt: 2 }}>
             <ViewFormField sm={12} heading="Category" param={defaultValues.category} />

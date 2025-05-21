@@ -101,6 +101,13 @@ export default function DocumentCategoryViewForm() {
         label={`${documentType?.name || ''} `} 
       />
   ));
+  const handlebackLink = () => {
+    if(defaultValues.isArchived){
+      navigate(PATH_MACHINE.documents.documentCategory.archived);
+    }else{
+      navigate(PATH_MACHINE.documents.documentCategory.list);
+    }
+  };
 
   return (
     <Card sx={{ p: 2 }}>
@@ -109,10 +116,10 @@ export default function DocumentCategoryViewForm() {
           customerAccess={defaultValues?.customerAccess} 
           isDefault={defaultValues.isDefault} 
           isActive={defaultValues.isActive} 
-          handleEdit={handleEdit}
+          {...(!defaultValues.isArchived && { handleEdit })}
           {...(defaultValues?.isArchived && { onRestore })}
           {...(defaultValues?.isArchived ? { onDelete } : { onArchive })}
-          backLink={() => navigate(PATH_MACHINE.documents.documentCategory.list)}
+          backLink={handlebackLink}
           settingPage
         />
         <Grid container sx={{mt:2}}>

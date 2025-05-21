@@ -34,7 +34,7 @@ export default function DocumentTypeView() {
   return (
       <Container maxWidth={false}>
         <StyledCardContainer>
-          <Cover name={documentType?.name} generalSettings />
+          <Cover name={documentType?.name} generalSettings isArchived={documentType?.isArchived} />
         </StyledCardContainer>
 
         <DocumentTypeViewForm />
