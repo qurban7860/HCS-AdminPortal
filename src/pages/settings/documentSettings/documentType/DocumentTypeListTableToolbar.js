@@ -20,7 +20,8 @@ DocumentTypeListTableToolbar.propTypes = {
   onFilterName: PropTypes.func,
   onResetFilter: PropTypes.func,
   filterCategory: PropTypes.string,
-  onFilterCategory: PropTypes.func
+  onFilterCategory: PropTypes.func,
+  isArchived: PropTypes.bool
 };
 
 export default function DocumentTypeListTableToolbar({
@@ -29,7 +30,8 @@ export default function DocumentTypeListTableToolbar({
   onResetFilter,
   onFilterName,
   filterCategory,
-  onFilterCategory
+  onFilterCategory,
+  isArchived
 }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -44,8 +46,8 @@ export default function DocumentTypeListTableToolbar({
         value={filterName}
         onChange={onFilterName}
         onClick={onResetFilter}
-        SubOnClick={toggleAdd}
-        addButton={BUTTONS.ADDDOCUMENT_TYPE}
+        {...(!isArchived && {SubOnClick: toggleAdd})}
+        {...(!isArchived && {addButton: BUTTONS.ADDDOCUMENT_TYPE})}
         settingPage
         categoryVal={filterCategory}
         setCategoryVal={onFilterCategory}

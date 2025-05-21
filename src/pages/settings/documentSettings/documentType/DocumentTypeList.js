@@ -210,6 +210,9 @@ export default function DocumentTypeList({ isArchived = false }) {
   };
 
   const handleArchive = () => {
+    setFilterName('');
+    setFilterCategory(null);
+    setPage(0);
     if(isArchived){
       navigate(PATH_MACHINE.documents.documentType.list);    
     }else{
@@ -238,6 +241,7 @@ export default function DocumentTypeList({ isArchived = false }) {
             onFilterCategory={handleFilterCategory}
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
+            isArchived={isArchived}
           />
 
           {!isNotFound && !isMobile && (
