@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {  PATH_SETTING } from '../../../../routes/paths';
 // redux
 
-import { getDocumentType } from '../../../../redux/slices/document/documentType';
+import { getDocumentType, resetDocumentType } from '../../../../redux/slices/document/documentType';
 // sections
 import { Cover } from '../../../../components/Defaults/Cover';
 import DocumentTypeViewForm from './DocumentTypeViewForm';
@@ -22,6 +22,11 @@ export default function DocumentTypeView() {
   const { id } = useParams();
   useLayoutEffect(() => {
     dispatch(getDocumentType(id));
+
+    return () => {
+      dispatch(resetDocumentType());
+    };
+
   }, [id, dispatch]);
 
   const { documentType } = useSelector((state) => state.documentType);
