@@ -102,6 +102,7 @@ export const FORMLABELS = {
   REQUEST_STATUS_SETTINGS: 'Request Status Settings',
   CHANGE_SETTINGS: 'Change Settings',
   PRIORITY_SETTINGS: 'Priority Settings',
+  INVESTIGATION_FAULT_SETTINGS: 'Investigation & Fault Settings',
 
   // @root DocumentAddForm in dashboard/documents
   SELECT_CUSTOMER: 'Select Customer',

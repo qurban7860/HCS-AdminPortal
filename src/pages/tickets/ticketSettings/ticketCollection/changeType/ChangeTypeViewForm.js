@@ -15,6 +15,7 @@ import ViewFormAudit from '../../../../../components/ViewForms/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../../../../../components/ViewForms/ViewFormEditDeleteButtons';
 import ViewFormField from '../../../../../components/ViewForms/ViewFormField';
 import { handleError } from '../../../../../utils/errorHandler';
+import FilledEditorField from '../../../utils/FilledEditorField';
 
 // ----------------------------------------------------------------------
 
@@ -89,7 +90,9 @@ export default function ChangeTypeViewForm() {
           heading="Display Order No."
           param={defaultValues?.displayOrderNo?.toString()}
         />
-        <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues?.description} />
+        <ViewFormField isLoading={isLoading} sm={12} heading="Description"
+          node={<FilledEditorField name="description" value={defaultValues.description} minRows={3} isEditor={false} />}
+        />
         <Grid container>
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>
