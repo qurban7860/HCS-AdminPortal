@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 // @mui
 import { Card, Chip, Grid } from '@mui/material';
 // redux
-import { deleteDocumentCategory } from '../../../../redux/slices/document/documentCategory';
+import { deleteDocumentCategory, archiveDocumentCategory, restoreDocumentCategory } from '../../../../redux/slices/document/documentCategory';
 // paths
 import { PATH_MACHINE, PATH_SETTING } from '../../../../routes/paths';
 // components
@@ -16,6 +16,7 @@ import ViewFormField from '../../../../components/ViewForms/ViewFormField';
 import ViewFormSWitch from '../../../../components/ViewForms/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../../../../components/ViewForms/ViewFormEditDeleteButtons';
 import Iconify from '../../../../components/iconify';
+import { handleError } from '../../../../utils/errorHandler';
 
 // ----------------------------------------------------------------------
 
@@ -29,10 +30,32 @@ export default function DocumentCategoryViewForm() {
   const onDelete = async () => {
     try {
       await dispatch(deleteDocumentCategory(documentCategory?._id));
-      navigate(PATH_MACHINE.documents.documentCategory.list);
-      enqueueSnackbar('Document Category Archive Successfully!');
+      enqueueSnackbar('Document Category deleted Successfully!');
+      navigate(PATH_MACHINE.documents.documentCategory.archived);
     } catch (error) {
-      enqueueSnackbar('Document Category Archive failed!', { variant: `error` });
+      console.error(error);
+      enqueueSnackbar(handleError(error), { variant: `error` });
+    }
+  };
+
+  const onArchive = async () => {
+    try {
+      await dispatch(archiveDocumentCategory(documentCategory?._id));
+      enqueueSnackbar('Document Category archived Successfully!');
+      navigate(PATH_MACHINE.documents.documentCategory.list);
+    } catch (error) {
+      console.error(error);
+      enqueueSnackbar(handleError(error), { variant: `error` });
+    }
+  };
+
+  const onRestore = async () => {
+    try {
+      await dispatch(restoreDocumentCategory(documentCategory?._id));
+      enqueueSnackbar('Document Category restored Successfully!');
+      navigate(PATH_MACHINE.documents.documentCategory.list);
+    } catch (error) {
+      enqueueSnackbar('Failed!', { variant: `error` });
       console.error(error);
     }
   };
@@ -55,6 +78,7 @@ export default function DocumentCategoryViewForm() {
       updatedAt: documentCategory?.updatedAt || '',
       updatedByFullName: documentCategory?.updatedBy?.name || '',
       updatedIP: documentCategory?.updatedIP || '',
+      isArchived: documentCategory?.isArchived,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [documentCategory]
@@ -85,20 +109,16 @@ export default function DocumentCategoryViewForm() {
           customerAccess={defaultValues?.customerAccess} 
           isDefault={defaultValues.isDefault} 
           isActive={defaultValues.isActive} 
-          handleEdit={handleEdit} 
-          onDelete={onDelete} 
+          handleEdit={handleEdit}
+          {...(defaultValues?.isArchived && { onRestore })}
+          {...(defaultValues?.isArchived ? { onDelete } : { onArchive })}
           backLink={() => navigate(PATH_MACHINE.documents.documentCategory.list)}
           settingPage
         />
         <Grid container sx={{mt:2}}>
           <ViewFormField isLoading={isLoading} sm={12} heading="Category Name" param={defaultValues.name} />
           <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues.description} />
-          <ViewFormField isLoading={isLoading}
-            sm={12}
-            heading="Document Types"
-            // arrayParam={defaultValues.documentTypes}
-            chipDialogArrayParam={linkedDocumentTypes}
-          />
+          <ViewFormField isLoading={isLoading} sm={12} heading="Document Types" chipDialogArrayParam={linkedDocumentTypes} />
           <ViewFormSWitch isLoading={isLoading}
               customerHeading='Customer' 
               customer={documentCategory?.customer} 

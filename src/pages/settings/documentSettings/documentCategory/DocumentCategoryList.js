@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import debounce from 'lodash/debounce';
 import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -58,7 +59,11 @@ const TABLE_HEAD = [
 
 // ----------------------------------------------------------------------
 
-export default function DocumentCategoryList() {
+DocumentCategoryList.propTypes = {
+  isArchived: PropTypes.bool,
+};
+
+export default function DocumentCategoryList({ isArchived = false }) {
   const {
     order,
     orderBy,
@@ -99,8 +104,8 @@ export default function DocumentCategoryList() {
   const isMobile = useResponsive('down', 'sm');
 
   useLayoutEffect(() => {
-    dispatch(getDocumentCategories());
-  }, [dispatch]);
+    dispatch(getDocumentCategories(isArchived));
+  }, [dispatch, isArchived]);
 
   useEffect(() => {
     if (initial) {
@@ -159,7 +164,7 @@ export default function DocumentCategoryList() {
   const handleDeleteRow = async (id) => {
     try {
       await dispatch(deleteDocumentCategory(id));
-      dispatch(getDocumentCategories());
+      dispatch(getDocumentCategories(isArchived));
       setSelected([]);
 
       if (page > 0) {
@@ -190,7 +195,11 @@ export default function DocumentCategoryList() {
   };
 
   const handleViewRow = (id) => {
-    navigate(PATH_MACHINE.documents.documentCategory.view(id));
+    if(isArchived){
+      navigate(PATH_MACHINE.documents.documentCategory.archivedView(id));
+    }else{
+      navigate(PATH_MACHINE.documents.documentCategory.view(id));
+    }
   };
 
   const handleResetFilter = () => {
@@ -202,11 +211,28 @@ export default function DocumentCategoryList() {
     dispatch(setReportHiddenColumns(arg));
   };
 
+  const handleArchive = () => {
+    if(isArchived){
+      navigate(PATH_MACHINE.documents.documentCategory.list);    
+    }else{
+      navigate(PATH_MACHINE.documents.documentCategory.archived);    
+    }
+  }
+
   return (
     <>
       <Container maxWidth={false}>
         <StyledCardContainer>
-          <Cover name="Document Categories" icon="ph:users-light"  />
+          <Cover name={isArchived ? "Archived Doc Categories" : "Document Categories"}
+            archivedLink={
+              {
+                label:isArchived?'Document Categories':'Archived Categories', 
+                link: handleArchive, 
+                icon: 'mdi:folders'
+              }
+            }
+            isArchived={isArchived}
+          />
         </StyledCardContainer>
         <TableCard>
           <DocumentCategoryListTableToolbar

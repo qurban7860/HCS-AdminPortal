@@ -863,6 +863,11 @@ function ViewFormEditDeleteButtons({
             <IconTooltip title="Merge Document" onClick={onMergeDocumentType} icon="mdi:merge" />
           )}
 
+          {/* restore button */}
+          {onRestore && isSecurityUserAccessAllowed && !isSecurityReadOnly && (
+            <IconTooltip title="Restore" onClick={() => { handleOpenConfirm('restore') }} icon="mdi:restore" />
+          )}
+          
           {/* delete button */}
           {id !== userId && !mainSite && (onArchive || onDelete) && !archived && (
             <IconTooltip
@@ -871,15 +876,6 @@ function ViewFormEditDeleteButtons({
               onClick={() => { handleOpenConfirm('delete') }}
               color={(isDisableDelete || disableDeleteButton) ? "#c3c3c3" : "#FF0000"}
               icon={onArchive ? "mdi:archive" : "mdi:delete"}
-            />
-          )}
-          {onRestore && isSecurityUserAccessAllowed && !isSecurityReadOnly && (
-            <IconTooltip
-              title="Restore"
-              disabled={isDisableDelete}
-              onClick={() => { handleOpenConfirm('restore') }}
-              color={isDisableDelete ? "#c3c3c3" : "#FF0000"}
-              icon="mdi:restore"
             />
           )}
 
