@@ -213,6 +213,7 @@ export default function DocumentTypeList({ isArchived = false }) {
     setFilterName('');
     setFilterCategory(null);
     setPage(0);
+    dispatch(setFilterBy(''));
     if(isArchived){
       navigate(PATH_MACHINE.documents.documentType.list);    
     }else{

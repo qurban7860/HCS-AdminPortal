@@ -214,6 +214,7 @@ export default function DocumentCategoryList({ isArchived = false }) {
   const handleArchive = () => {
     setFilterName('');
     setPage(0);
+    dispatch(setFilterBy(''));
     if(isArchived){
       navigate(PATH_MACHINE.documents.documentCategory.list);    
     }else{
