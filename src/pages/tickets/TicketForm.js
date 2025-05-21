@@ -326,6 +326,10 @@ export default function TicketForm() {
                     isOptionEqualToValue={(option, value) => option._id === value._id}
                     getOptionLabel={(option) => `${option.name || ''}`}
                     renderOption={(props, option) => (<li {...props} key={option?._id}> {option.name || ''} </li>)}
+                    onChange={(event, newValue) => {
+                      setValue('issueType', newValue);
+                      setValue('requestType', null); 
+                    }}
                   />
                   <RHFAutocomplete
                     name="requestType"

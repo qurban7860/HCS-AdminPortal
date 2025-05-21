@@ -208,12 +208,8 @@ export function getMachineLogGraphData(customerId, machineId, type = "erp", peri
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const startDateUtc = new Date(
-        Date.UTC(dateFrom.getFullYear(), dateFrom.getMonth(), dateFrom.getDate(), 0, 0, 0, 0)
-      );
-      const endDateUtc = new Date(
-        Date.UTC(dateTo.getFullYear(), dateTo.getMonth(), dateTo.getDate(), 23, 59, 59, 999)
-      );
+      const startDateUtc = new Date( dateFrom.getFullYear(), dateFrom.getMonth(), dateFrom.getDate(), 0, 0, 0, 0 );
+      const endDateUtc = new Date( dateTo.getFullYear(), dateTo.getMonth(), dateTo.getDate(), 23, 59, 59, 999 );
       const params = {
         customer: customerId,
         machine: machineId,
