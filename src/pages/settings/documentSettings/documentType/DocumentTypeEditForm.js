@@ -3,7 +3,7 @@
 import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -23,7 +23,7 @@ import { PATH_MACHINE, PATH_SETTING } from '../../../../routes/paths';
 // components
 import { useSnackbar } from '../../../../components/snackbar';
 import FormProvider, { RHFTextField, RHFAutocomplete, RHFSwitch } from '../../../../components/hook-form';
-import { getDocumentTypes, updateDocumentType } from '../../../../redux/slices/document/documentType';
+import { getDocumentType, getDocumentTypes, updateDocumentType } from '../../../../redux/slices/document/documentType';
 import { getActiveDocumentCategories } from '../../../../redux/slices/document/documentCategory';
 import AddFormButtons from '../../../../components/DocumentForms/AddFormButtons';
 import FormHeading from '../../../../components/DocumentForms/FormHeading';
@@ -35,18 +35,22 @@ import { FORMLABELS as formLABELS } from '../../../../constants/document-constan
 // ----------------------------------------------------------------------
 
 export default function DocumentTypeEditForm() {
+
+  
   const { documentType } = useSelector((state) => state.documentType);
   const { activeDocumentCategories } = useSelector((state) => state.documentCategory);
-
+  
   const dispatch = useDispatch();
-
+  
   const { enqueueSnackbar } = useSnackbar();
-
+  const { id } = useParams();
+  
   const navigate = useNavigate();
   useEffect(() => {
+    dispatch(getDocumentType(id));
     dispatch(getActiveDocumentCategories());
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch]);
+  }, [id, dispatch]);
 
   const defaultValues = useMemo(
     () => ({
@@ -94,7 +98,10 @@ export default function DocumentTypeEditForm() {
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
-        <Cover name={documentType?.name} />
+        <Cover
+          name={documentType?.name}
+          backLink={PATH_MACHINE.documents.documentType.view(documentType?._id)}
+        />
       </StyledCardContainer>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={4}>
