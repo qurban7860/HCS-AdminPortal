@@ -425,6 +425,9 @@ export default function TicketViewForm() {
             <ViewFormField isLoading={isLoading} sm={12} heading="Summary"
               node={<FilledTextField name="summary" value={defaultValues.summary} onSubmit={onSubmit} />}
             />
+            <ViewFormField isLoading={isLoading} sm={12} heading="Fault"
+              node={<DropDownMultipleSelection name="faults" label='Fault' value={ticket?.faults} options={ticketSettings?.faults} onSubmit={onSubmit}  isStatus/>}
+            />
             <ViewFormField isLoading={isLoading} sm={12} heading="Description"
               node={<FilledEditorField name="description" value={defaultValues.description} onSubmit={onSubmit} minRows={4} />}
             />
@@ -493,12 +496,10 @@ export default function TicketViewForm() {
               onGetCurrentIndex={(index) => handleOpenLightbox(index)}
               disabledSlideshow
             />
-            <ViewFormField isLoading={isLoading} sm={6} heading="Fault"
-              node={<DropDownMultipleSelection name="faults" label='Fault' value={ticket?.faults} options={ticketSettings?.faults} onSubmit={onSubmit}  isStatus/>}
-            />
             <ViewFormField isLoading={isLoading} sm={2} heading="Impact" sx={{ alignSelf: 'flex-end' }}
               node={<DropDownField name="impact" isNullable label='Impact' value={ticket?.impact} options={ticketSettings?.impacts} onSubmit={onSubmit} />}
             />
+            
             {ticket?.issueType?.name === 'Change Request' && (
               <>
                 <ViewFormField isLoading={isLoading} sm={2} heading="Change Type"
@@ -547,20 +548,27 @@ export default function TicketViewForm() {
                 />
               </Grid>
             )}
-            <ViewFormSWitch isLoading={isLoading} sm={2}
-              shareWithHeading="Shared With Organization"
-              shareWith={shareWith}
-              onChange={handleShareWithChange}
-              isEditable
-              sx={{ alignSelf: 'flex-end' }}
-            />
+
+          <Grid sx={{ pt: 5, alignSelf: 'flex-end', xs: 4 }}>
+                <ViewFormSWitch 
+                 isLoading={isLoading}     
+                 shareWithHeading="Shared With Organization"
+                 shareWith={shareWith}
+                 onChange={handleShareWithChange}
+                 isEditable
+                //  sx={{ alignSelf: 'flex-end' }}
+                   />
+             </Grid>
+
+             <Grid sx={{ pt: 4, alignSelf: 'flex-end' }}>
             <ViewFormSWitch isLoading={isLoading} sm={2}
               isActiveHeading="Active"
               isActive={isActive}
               onChange={handleIsActiveChange}
               isEditable
-              sx={{ alignSelf: 'flex-end' }}
+              // sx={{ alignSelf: 'flex-end' }}
             />
+            </Grid>
           </Grid>
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>
