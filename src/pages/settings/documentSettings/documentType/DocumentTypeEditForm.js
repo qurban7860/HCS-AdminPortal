@@ -23,7 +23,7 @@ import { PATH_MACHINE, PATH_SETTING } from '../../../../routes/paths';
 // components
 import { useSnackbar } from '../../../../components/snackbar';
 import FormProvider, { RHFTextField, RHFAutocomplete, RHFSwitch } from '../../../../components/hook-form';
-import { getDocumentType, getDocumentTypes, updateDocumentType } from '../../../../redux/slices/document/documentType';
+import { getDocumentType, getDocumentTypes, resetDocumentType, updateDocumentType } from '../../../../redux/slices/document/documentType';
 import { getActiveDocumentCategories } from '../../../../redux/slices/document/documentCategory';
 import AddFormButtons from '../../../../components/DocumentForms/AddFormButtons';
 import FormHeading from '../../../../components/DocumentForms/FormHeading';
@@ -49,7 +49,9 @@ export default function DocumentTypeEditForm() {
   useEffect(() => {
     dispatch(getDocumentType(id));
     dispatch(getActiveDocumentCategories());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    return () => {
+      dispatch(resetDocumentType());
+    };
   }, [id, dispatch]);
 
   const defaultValues = useMemo(
@@ -63,8 +65,7 @@ export default function DocumentTypeEditForm() {
       customerAccess: documentType?.customerAccess,
       isArchived: documentType?.isArchived,
     }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []);
+    [documentType]);
 
   const methods = useForm({
     resolver: yupResolver(DocumentTypeSchema),
@@ -77,6 +78,12 @@ export default function DocumentTypeEditForm() {
     formState: { isSubmitting },
   } = methods;
 
+  useEffect(() => {
+    if (documentType) {
+      reset(defaultValues);
+    }
+  }, [documentType, reset, defaultValues]);
+
 
   const toggleCancel = () => {
     navigate(PATH_MACHINE.documents.documentType.view(documentType._id));
@@ -85,7 +92,6 @@ export default function DocumentTypeEditForm() {
   const onSubmit = async (data) => {
     try {
       await dispatch(updateDocumentType(documentType._id, data));
-      dispatch(getDocumentTypes(documentType._id));
       navigate(PATH_MACHINE.documents.documentType.view(documentType._id));
       enqueueSnackbar('Document Type updated Successfully!');
       reset();
@@ -100,7 +106,7 @@ export default function DocumentTypeEditForm() {
       <StyledCardContainer>
         <Cover
           name={documentType?.name}
-          backLink={PATH_MACHINE.documents.documentType.view(documentType?._id)}
+          backLink={() => navigate(PATH_MACHINE.documents.documentType.view(documentType._id))}
         />
       </StyledCardContainer>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
