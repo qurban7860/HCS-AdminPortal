@@ -96,23 +96,23 @@ export default function DocumentTypeList({ isArchived = false }) {
   const navigate = useNavigate();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
-  const [filterCategory, setFilterCategory] = useState('');
+  const [filterCategory, setFilterCategory] = useState(null);
   const [openConfirm, setOpenConfirm] = useState(false);
   const isMobile = useResponsive('down', 'sm');
   const { documentTypes, filterBy, page, rowsPerPage, isLoading, initial, reportHiddenColumns } = useSelector(
     (state) => state.documentType
   );
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     dispatch(getDocumentTypes(isArchived));
     dispatch(getActiveDocumentCategories());
   }, [dispatch, isArchived]);
 
   useEffect(() => {
     if (initial) {
-      setTableData(documentTypes);
+      setTableData(documentTypes || []);
     }
-  }, [documentTypes, initial]);
+  }, [documentTypes, initial, isArchived]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -350,7 +350,7 @@ export default function DocumentTypeList({ isArchived = false }) {
 
 function applyFilter({ inputData, comparator, filterName, filterCategory }) {
 
-  const stabilizedThis = inputData?.map((el, index) => [el, index]);
+  const stabilizedThis = Array.isArray(inputData) ? inputData?.map((el, index) => [el, index]) : [];
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
@@ -358,7 +358,6 @@ function applyFilter({ inputData, comparator, filterName, filterCategory }) {
   });
 
   inputData = stabilizedThis.map((el) => el[0]);
-  // (customer) => customer.name.toLowerCase().indexOf(filterName.toLowerCase()) || customer.tradingName.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.city.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.country.toLowerCase().indexOf(filterName.toLowerCase()) || customer.createdAt.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
 
   if (filterName) {
     inputData = inputData.filter(
