@@ -202,14 +202,14 @@ export function updateDocumentCategory(Id,params) {
 
 // -----------------------------------Get File Categories-----------------------------------
 
-export function getDocumentCategories() {
+export function getDocumentCategories(isArchived) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}documents/categories/` , 
       {
         params: {
-          isArchived: false
+          isArchived: isArchived || false
         }
       }
       );
@@ -267,13 +267,9 @@ export function getActiveDocumentCategories( categoryBy, cancelToken, drawing ) 
   };
 }
 
-
-
-
-
 // ---------------------------------archive document Category-------------------------------------
 
-export function deleteDocumentCategory(id) {
+export function archiveDocumentCategory(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -289,5 +285,42 @@ export function deleteDocumentCategory(id) {
     }
   };
 }
+
+// ---------------------------------restore document Category-------------------------------------
+
+export function restoreDocumentCategory(id) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.patch(`${CONFIG.SERVER_URL}documents/categories/${id}` , 
+      {
+          isArchived: false, 
+      });
+      dispatch(slice.actions.setResponseMessage(response.data));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+// ---------------------------------delete document Category-------------------------------------
+
+export function deleteDocumentCategory(id) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.delete(`${CONFIG.SERVER_URL}documents/categories/${id}`);
+      dispatch(slice.actions.setResponseMessage(response.data));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+
 
 

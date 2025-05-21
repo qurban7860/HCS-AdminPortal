@@ -45,7 +45,7 @@ export default function ApiLogsSummary() {
   const TABLE_HEAD = [
     { id: 'serialNo', label: 'Serial No', align: 'left' },
     { id: 'count', label: 'API Calls', align: 'left' },
-    { id: 'lastCallTime', label: 'Last Call', align: 'left' },
+    { id: 'lastCallTime', label: 'Last Call Date/Time', align: 'left' },
   ];
 
   const defaultValues = {

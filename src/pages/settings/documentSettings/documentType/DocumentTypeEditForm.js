@@ -57,6 +57,7 @@ export default function DocumentTypeEditForm() {
       isPrimaryDrawing: documentType?.isPrimaryDrawing,
       isDefault: documentType?.isDefault || false,
       customerAccess: documentType?.customerAccess,
+      isArchived: documentType?.isArchived,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []);
@@ -119,28 +120,14 @@ export default function DocumentTypeEditForm() {
                   multiline
                 />
                 <Grid display='flex' alignItems="center" mt={1} >
-                  <RHFSwitch
-                    name='isActive'
-                    label='Active'
-                  />
-
-                  <RHFSwitch
-                    name='isPrimaryDrawing'
-                    label='Primary'
-                  />
-
-                  <RHFSwitch
-                    name='customerAccess'
-                    label='Customer Access'
-                  />
-
-                  <RHFSwitch
-                    name='isDefault'
-                    label='Default'
-                  />
+                  <RHFSwitch name='isArchived' label='Archived' />
+                  <RHFSwitch name='isActive' label='Active' />
+                  <RHFSwitch name='isPrimaryDrawing' label='Primary' />
+                  <RHFSwitch name='customerAccess' label='Customer Access' />
+                  <RHFSwitch name='isDefault' label='Default' />
                 </Grid>
               </Stack>
-              <AddFormButtons settingPage isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+              <AddFormButtons archived={documentType?.isArchived} settingPage isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
             </Card>
           </Grid>
         </Grid>

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import debounce from 'lodash/debounce';
 import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -60,7 +61,11 @@ const TABLE_HEAD = [
 
 // ----------------------------------------------------------------------
 
-export default function DocumentTypeList() {
+DocumentTypeList.propTypes = {
+  isArchived: PropTypes.object,
+};
+
+export default function DocumentTypeList({ isArchived = false }) {
   const {
     // page,
     order,
@@ -99,9 +104,9 @@ export default function DocumentTypeList() {
   );
 
   useLayoutEffect(() => {
-    dispatch(getDocumentTypes());
+    dispatch(getDocumentTypes(isArchived));
     dispatch(getActiveDocumentCategories());
-  }, [dispatch]);
+  }, [dispatch, isArchived]);
 
   useEffect(() => {
     if (initial) {
@@ -156,7 +161,7 @@ export default function DocumentTypeList() {
   const handleDeleteRow = async (id) => {
     try {
       await dispatch(deleteDocumentType(id));
-      dispatch(getDocumentTypes());
+      dispatch(getDocumentTypes(isArchived));
       setSelected([]);
 
       if (page > 0) {
@@ -187,7 +192,11 @@ export default function DocumentTypeList() {
   };
 
   const handleViewRow = (id) => {
-    navigate(PATH_MACHINE.documents.documentType.view(id));
+    if(isArchived){
+      navigate(PATH_MACHINE.documents.documentType.archivedView(id));
+    }else{
+      navigate(PATH_MACHINE.documents.documentType.view(id));
+    }
   };
 
   const handleResetFilter = () => {
@@ -200,11 +209,25 @@ export default function DocumentTypeList() {
     dispatch(setReportHiddenColumns(arg));
   };
 
+  const handleArchive = () => {
+    if(isArchived){
+      navigate(PATH_MACHINE.documents.documentType.list);    
+    }else{
+      navigate(PATH_MACHINE.documents.documentType.archived);    
+    }
+  }
+
   return (
     <>
       <Container maxWidth={false}>
         <StyledCardContainer>
-          <Cover name="Document Types" icon="ph:users-light"/>
+          <Cover name={isArchived ? "Archived Document Types" : "Document Types"} 
+                archivedLink={{
+                  label:isArchived?'Document Types':'Archived Types', 
+                  link: handleArchive, 
+                  icon: 'mdi:file-tree'}}
+                isArchived={isArchived}
+          />
         </StyledCardContainer>
 
         <TableCard>
@@ -326,7 +349,8 @@ export default function DocumentTypeList() {
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filterName, filterCategory }) {
-  const stabilizedThis = inputData.map((el, index) => [el, index]);
+
+  const stabilizedThis = inputData?.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
