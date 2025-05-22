@@ -95,7 +95,7 @@ export default function ArticleList({isArchived}) {
   const [tableData, setTableData] = useState([]);
   const { articles, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.article);
 
-  const prefix = JSON.parse(localStorage.getItem('configurations'))?.find((config) => config?.name?.toLowerCase() === 'knowledge_base_prefix')?.value?.trim() || ''; 
+  const prefix = JSON.parse(localStorage.getItem('configurations'))?.find((config) => config?.name?.toLowerCase() === 'article_prefix')?.value?.trim() || ''; 
 
   useEffect(() => {
     dispatch(getArticles(isArchived));
