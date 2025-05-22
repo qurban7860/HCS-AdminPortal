@@ -591,6 +591,10 @@ export const ICONS = {
     icon: 'mdi:file-exchange-outline',
     heading: 'Faults',
   },
+  ARTICLE_CATEGORY: {
+    icon: 'mdi:book-cog',
+    heading: 'Article Categories',
+  },
 
   MOVE_MACHINE: {
     icon: 'ri:swap-box-line',

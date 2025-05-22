@@ -496,6 +496,14 @@ import {
   JiraTickets,
   UnderDevelopment,
   SectionUnderConstruction,
+  ArticleList,
+  ArticleAdd,
+  ArticleEdit,
+  ArticleView,
+  ArticleCategoryList,
+  ArticleCategoryAdd,
+  ArticleCategoryEdit,
+  ArticleCategoryView,
 } from './elements';
 
 // ----------------------------------------------------------------------
@@ -1304,8 +1312,38 @@ export default function Router() {
             },
           ],
         },
+        { element: <Navigate to="/support/supportTickets" replace />, index: true },
         { path: 'jiraTickets', element: <JiraTickets /> },
-        { path: 'knowledgeBase', element: <SectionUnderConstruction /> },
+        {
+          path: 'knowledgeBase',
+          children: [
+            { path: 'article', 
+              children: [
+                { element: <ArticleList />, index: true },
+                { path: 'new', element: <ArticleAdd /> },
+                { path: ':id/edit', element: <ArticleEdit /> },
+                { path: ':id/view', element: <ArticleView /> },
+                { path: 'archived', element: <ArticleList isArchived /> },
+                { path: ':id/archived/view', element: <ArticleView /> },
+              ]
+            }
+          ]
+         },
+         {
+          path:'supportSettings',
+          children:[
+            { path: 'articleCategories', 
+              children: [
+                { element: <ArticleCategoryList />, index: true },
+                { path: 'new', element: <ArticleCategoryAdd /> },
+                { path: ':id/edit', element: <ArticleCategoryEdit /> },
+                { path: ':id/view', element: <ArticleCategoryView /> },
+                { path: 'archived', element: <ArticleCategoryList isArchived /> },
+                { path: ':id/archived/view', element: <ArticleCategoryView /> },
+              ]
+            },
+          ]
+         },
         { path: 'manuals', element: <SectionUnderConstruction /> },
       ],
     },

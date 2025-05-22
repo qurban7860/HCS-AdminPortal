@@ -538,3 +538,16 @@ export const FaultView = Loadable(lazy(() => import('../pages/tickets/ticketSett
 // --------------------------- Under Development -------------------------------------
 export const UnderDevelopment = Loadable(lazy(() => import('../pages/boundaries/UnderDevelopment')));
 export const SectionUnderConstruction = Loadable(lazy(() => import('../pages/boundaries/SectionUnderConstruction')));
+
+
+// --------------------------- Knowledge Base -> Articles -------------------------------------
+export const ArticleList = Loadable(lazy(() => import('../pages/support/knowledgeBase/article/ArticleList')));
+export const ArticleAdd = Loadable(lazy(() => import('../pages/support/knowledgeBase/article/ArticleAddForm')));
+export const ArticleEdit = Loadable(lazy(() => import('../pages/support/knowledgeBase/article/ArticleEditForm')));
+export const ArticleView = Loadable(lazy(() => import('../pages/support/knowledgeBase/article/ArticleViewForm')));
+
+// --------------------------- Knowledge Base -> Categories -------------------------------------
+export const ArticleCategoryList = Loadable(lazy(() => import('../pages/support/supportSettings/articleCategory/ArticleCategoryList')));
+export const ArticleCategoryAdd = Loadable(lazy(() => import('../pages/support/supportSettings/articleCategory/ArticleCategoryAddForm')));
+export const ArticleCategoryEdit = Loadable(lazy(() => import('../pages/support/supportSettings/articleCategory/ArticleCategoryEditForm')));
+export const ArticleCategoryView = Loadable(lazy(() => import('../pages/support/supportSettings/articleCategory/ArticleCategoryViewForm')));

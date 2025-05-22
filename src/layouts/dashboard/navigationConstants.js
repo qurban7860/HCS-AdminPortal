@@ -205,8 +205,8 @@ export const allSideBarOptions = {
           icon: <Iconify icon="mdi:jira" />,
         },
         {
-          title: 'Knowledge base',
-          path: PATH_SUPPORT.knowledgeBase.root,
+          title: 'Knowledge Base',
+          path: PATH_SUPPORT.knowledgeBase.article.root,
           icon: <Iconify icon="mdi:book-open-variant" />,
         },
         {
