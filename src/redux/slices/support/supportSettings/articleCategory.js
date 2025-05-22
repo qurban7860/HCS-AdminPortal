@@ -75,16 +75,16 @@ const slice = createSlice({
     },
 
     // RESET DOCUMENT NAME
-    resetArticles(state) {
-      state.articles = [];
+    resetArticleCategories(state) {
+      state.articleCategories = [];
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
     },
 
     // RESET Active DOCUMENT NAME
-    resetActiveArticles(state) {
-      state.activeArticles = [];
+    resetActiveArticleCategories(state) {
+      state.activeArticleCategories = [];
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
