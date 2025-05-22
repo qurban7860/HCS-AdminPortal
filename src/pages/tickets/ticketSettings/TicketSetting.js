@@ -29,6 +29,9 @@ export default function TicketSetting() {
   const linkInvestigationReason = () => navigate(PATH_SUPPORT.ticketSettings.investigationReasons.root);
   const linkFault = () => navigate(PATH_SUPPORT.ticketSettings.faults.root);
 
+  const linkArticleCategory = () => navigate(PATH_SUPPORT.supportSettings.articleCategories.root);
+
+
 return (
     <Container maxWidth={false}>
       <StyledCardContainer>
@@ -135,6 +138,19 @@ return (
                     onClick={linkFault}
                     icon={ICONS.FAULTS.icon}
                     content={ICONS.FAULTS.heading}
+                  />
+                </List>
+              </StyledSettingsCardContainer>
+              <StyledSettingsCardContainer>
+                <List
+                  component="nav"
+                  aria-labelledby="nested-list-subheader"
+                  subheader={<ListItemsHeader header='Knowledge Base' />}
+                >
+                  <ListItem
+                    onClick={linkArticleCategory}
+                    icon={ICONS.ARTICLE_CATEGORY.icon}
+                    content={ICONS.ARTICLE_CATEGORY.heading}
                   />
                 </List>
               </StyledSettingsCardContainer>
