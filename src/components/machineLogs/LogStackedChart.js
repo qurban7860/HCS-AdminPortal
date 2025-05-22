@@ -1,47 +1,28 @@
 import PropTypes from 'prop-types';
-// import { useTheme } from '@mui/material';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Box, FormControlLabel, Checkbox } from '@mui/material';
 import Chart from '../chart';
 import { fShortenNumber } from '../../utils/formatNumber';
 
 LogChartStacked.propTypes = {
-  chart: PropTypes.object,
+  processGraphData: PropTypes.func.isRequired, 
   graphLabels: PropTypes.object,
 };
 
-export default function LogChartStacked({ chart, graphLabels }) {
-  // const theme = useTheme();
+export default function LogChartStacked({ processGraphData, graphLabels }) {
   const [skipZero, setSkipZero] = useState(true);
+  const [chart, setChart] = useState({ categories: [], series: [] });
+
+  useEffect(() => {
+    const processedChartData = processGraphData(skipZero);
+    if (processedChartData) {
+      setChart(processedChartData);
+    } else {
+      setChart({ categories: [], series: [] }); 
+    }
+  }, [skipZero, processGraphData]);
 
   const { categories, series } = chart;
-
-   const { filteredCategories, filteredSeries } = useMemo(() => {
-    if (!skipZero) {
-      return { filteredCategories: categories, filteredSeries: series };
-    }
-    
-    const hasNonZeroValues = series.some(s => s.data.some(val => val !== 0 && val !== null && val !== undefined));
-
-    if (!hasNonZeroValues) {
-      return { filteredCategories: categories, filteredSeries: series };
-    }
-
-    const filteredIndexes = categories.reduce((acc, _, idx) => {
-      const hasNonZeroBar = series.some(s => (s.data[idx] ?? 0) !== 0 && (s.data[idx] !== null && s.data[idx] !== undefined));
-      if (hasNonZeroBar) {
-        acc.push(idx);
-      }
-      return acc;
-    }, []);
-
-    return {
-      filteredCategories: filteredIndexes.map((i) => categories[i]),
-      filteredSeries: series.map((s) => ({...s,
-        data: filteredIndexes.map((i) => s.data[i]),
-      })),
-    };
-  }, [skipZero, categories, series]);
 
   const colors = ['#A9E0FC', '#FCB49F'];
 
@@ -83,7 +64,8 @@ export default function LogChartStacked({ chart, graphLabels }) {
         const total = Number(val) + Number(w.config.series[1].data[dataPointIndex]);
         return total === 0
           ? ''
-          : fShortenNumber(total)},
+          : fShortenNumber(total);
+      },
       offsetY: -25,
       style: {
         fontSize: '12px',
@@ -91,7 +73,7 @@ export default function LogChartStacked({ chart, graphLabels }) {
       },
     },
     xaxis: {
-      categories: filteredCategories,
+      categories,
       labels: {
         offsetY: 8,
         rotate: -45,
@@ -198,11 +180,11 @@ export default function LogChartStacked({ chart, graphLabels }) {
       </Box>
       <Chart
         type="bar"
-        series={filteredSeries}
+        series={series}
         options={chartOptions}
         height={chartOptions.chart.height}
       />
     </Box>
   );
-  // return (<Chart type="bar" series={filteredSeries} options={chartOptions} height={chartOptions.chart.height} />);
+    // return (<Chart type="bar" series={filteredSeries} options={chartOptions} height={chartOptions.chart.height} />);
 }
