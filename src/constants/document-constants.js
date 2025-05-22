@@ -139,8 +139,6 @@ export const imagesExtensions = [
   'bmp',
   'webp',
   'djvu',
-  'heic',
-  'heif',
   'ico',
   'jfif',
   'jp2',
