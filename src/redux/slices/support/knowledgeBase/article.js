@@ -129,10 +129,12 @@ export function addArticle(params) {
     dispatch(slice.actions.startLoading());
     try {
       const data = {
-        serialNumber: params.serialNumber,
+        articleNo: params.articleNo,
         title: params.title,
         description: params.description,
         category: params.category?._id,
+        status: params.status,
+        customerAccess: params.customerAccess,
         isActive: params.isActive,
       }
       await axios.post(`${CONFIG.SERVER_URL}support/knowledgeBase/article/`, data);
@@ -153,10 +155,12 @@ export function updateArticle(Id, params) {
     dispatch(slice.actions.startLoading());
     try {
       const data = {
-        serialNumber: params.serialNumber,
+        articleNo: params.articleNo,
         title: params.title,
         description: params.description,
         category: params.category?._id,
+        status: params.status,
+        customerAccess: params.customerAccess,
         isActive: params.isActive,
       }
       await axios.patch(`${CONFIG.SERVER_URL}support/knowledgeBase/article/${Id}`, data,);

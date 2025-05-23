@@ -50,12 +50,12 @@ import useResponsive from '../../../../hooks/useResponsive';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'serialNumber', label: 'Serial Number', width: 150 },
+  { id: 'articleNo', label: 'Article No', width: 150 },
   { id: 'title', label: 'Title', },
-  { id: 'description', label: 'Description', },
   { id: 'category', label: 'Category', },
+  { id: 'status', label: 'Status', },
   { id: 'isActive', label: 'Active', width: 100 },
-  { id: 'updatedAt', label: 'Updated At', width: 150 },
+  { id: 'updatedAt', label: 'Updated At', width: 150, align:'right' },
 ];
 
 // ----------------------------------------------------------------------
@@ -79,7 +79,7 @@ export default function ArticleList({isArchived}) {
     // onChangePage,
     // onChangeRowsPerPage,
   } = useTable({
-    defaultOrderBy: 'serialNumber',
+    defaultOrderBy: 'updatedAt',
   });
 
   const onChangeRowsPerPage = (event) => {
@@ -179,6 +179,16 @@ export default function ArticleList({isArchived}) {
             isArchived={isArchived}
           />
 
+          {!isNotFound && (
+            <TablePaginationCustom
+              count={articles?.length || 0}
+              page={page}
+              rowsPerPage={rowsPerPage}
+              onPageChange={onChangePage}
+              onRowsPerPageChange={onChangeRowsPerPage}
+            />
+          )}
+
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <Scrollbar>
               <Table stickyHeader size="small" sx={{ minWidth: 360 }}>
@@ -204,6 +214,13 @@ export default function ArticleList({isArchived}) {
               </Table>
             </Scrollbar>
           </TableContainer>
+          {!isNotFound && <TablePaginationCustom
+            count={ articles?.length || 0 }
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
+          />}
         </TableCard>
       </Container>
     );
