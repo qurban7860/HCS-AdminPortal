@@ -33,7 +33,7 @@ export default function ArticleListTableRow({
   onViewRow,
   prefix,
 }) {
-  const { articleNo, title, status, category, isActive, updatedAt } = row;
+  const { articleNo, title, status, category, customerAccess, isActive, updatedAt } = row;
 
   const renderPrimary = (
     <StyledTableRow hover selected={selected}>
@@ -41,9 +41,8 @@ export default function ArticleListTableRow({
       <TableCell>{title}</TableCell>
       <TableCell>{category?.name}</TableCell>
       <TableCell>{status}</TableCell>
-      <TableCell>
-        <Switch checked={isActive} disabled size="small" />
-      </TableCell>
+      <TableCell><Switch checked={customerAccess} disabled size="small" /></TableCell>
+      <TableCell><Switch checked={isActive} disabled size="small" /></TableCell>
       <TableCell align="right">{fDate(updatedAt)}</TableCell>
     </StyledTableRow>
   );

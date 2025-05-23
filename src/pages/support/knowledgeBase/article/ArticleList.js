@@ -54,7 +54,8 @@ const TABLE_HEAD = [
   { id: 'title', label: 'Title', },
   { id: 'category', label: 'Category', },
   { id: 'status', label: 'Status', },
-  { id: 'isActive', label: 'Active', width: 100 },
+  { id: 'customerAccess', label: 'Customer Access', width: 150 },
+  { id: 'isActive', label: 'Active', width: 150 },
   { id: 'updatedAt', label: 'Updated At', width: 150, align:'right' },
 ];
 
@@ -80,6 +81,7 @@ export default function ArticleList({isArchived}) {
     // onChangeRowsPerPage,
   } = useTable({
     defaultOrderBy: 'updatedAt',
+    defaultOrder: 'desc',
   });
 
   const onChangeRowsPerPage = (event) => {
