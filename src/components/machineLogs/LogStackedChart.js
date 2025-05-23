@@ -29,7 +29,7 @@ export default function LogChartStacked({ processGraphData, graphLabels }) {
   const chartOptions = {
     chart: {
       type: 'bar',
-      height: 320,
+      height: 350,
       stacked: true,
       animations: {
         enabled: false,
