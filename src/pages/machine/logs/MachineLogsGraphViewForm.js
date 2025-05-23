@@ -1,11 +1,14 @@
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { FormProvider, useForm } from 'react-hook-form';
+import { FormProvider, useForm,Controller } from 'react-hook-form';
 // @mui
+
+
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { Card, Container, Stack, Typography, Box, useTheme, Grid } from '@mui/material';
 import { useParams } from 'react-router-dom';
-import { RHFAutocomplete, RHFDatePicker } from '../../../components/hook-form';
+import { RHFAutocomplete, RHFDatePicker,RHFDateTimePicker } from '../../../components/hook-form';
 import { machineLogGraphTypes } from '../../../constants/machineLogTypeFormats';
 import MachineTabContainer from '../util/MachineTabContainer';
 import Iconify from '../../../components/iconify';
@@ -14,6 +17,7 @@ import ErpProducedLengthLogGraph from '../../Reports/Graphs/ErpProducedLengthLog
 import ErpProductionRateLogGraph from '../../Reports/Graphs/ErpProductionRateLogGraph';
 import { getMachineLogGraphData } from '../../../redux/slices/products/machineErpLogs';
 import TimeDisplay from '../../../components/timeZone/TimeZone';
+
 
 MachineLogsGraphViewForm.propTypes = {
   machineId: PropTypes.bool,
@@ -35,8 +39,10 @@ export default function MachineLogsGraphViewForm() {
     () => ({
       logPeriod: 'Daily',
       logGraphType: machineLogGraphTypes[0],
-      dateFrom: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
-      dateTo: new Date(),
+    dateFrom: new Date(new Date().setHours(0, 0, 0, 0)),
+    dateTo: new Date(new Date().setHours(23, 59, 59, 0)),
+      // dateFrom: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+      // dateTo: new Date(),
     }),
     []
   )
@@ -175,7 +181,7 @@ export default function MachineLogsGraphViewForm() {
                 </Grid>
 
                 <Grid item xs={12} sm={6} md={2} xl={2.5}>
-                  <RHFDatePicker
+                <RHFDateTimePicker
                     label="Date From"
                     name="dateFrom"
                     size="small"
@@ -185,7 +191,7 @@ export default function MachineLogsGraphViewForm() {
                 </Grid>
 
                 <Grid item xs={12} sm={6} md={2} xl={2.5}>
-                  <RHFDatePicker
+                  <RHFDateTimePicker
                     label="Date To"
                     name="dateTo"
                     size="small"
