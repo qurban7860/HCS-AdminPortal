@@ -22,13 +22,14 @@ import { PATH_SUPPORT } from '../../../../routes/paths';
 // components
 import { useSnackbar } from '../../../../components/snackbar';
 import FormProvider, { RHFTextField, RHFSwitch, RHFEditor } from '../../../../components/hook-form';
-import { getArticleCategory, resetArticleCategory, updateArticleCategory } from '../../../../redux/slices/support/supportSettings/articleCategory';
+import { updateArticleCategory } from '../../../../redux/slices/support/supportSettings/articleCategory';
 import AddFormButtons from '../../../../components/DocumentForms/AddFormButtons';
 import FormHeading from '../../../../components/DocumentForms/FormHeading';
 import { Cover } from '../../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 import { FORMLABELS } from '../../../../constants/default-constants';
 import { FORMLABELS as formLABELS } from '../../../../constants/document-constants';
+import { handleError } from '../../../../utils/errorHandler';
 
 // ----------------------------------------------------------------------
 
@@ -41,20 +42,12 @@ export const EditArticleCategorySchema = Yup.object().shape({
 
 export default function ArticleCategoryEditForm() {
   
-  const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
   const { articleCategory } = useSelector((state) => state.articleCategory);  
   
-  useEffect(() => {
-    dispatch(getArticleCategory(id));
-    return () => {
-      dispatch(resetArticleCategory());
-    };
-  }, [id, dispatch]);
-
   const defaultValues = useMemo(
     () => ({
       name: articleCategory?.name || '',
@@ -74,37 +67,27 @@ export default function ArticleCategoryEditForm() {
     formState: { isSubmitting },
   } = methods;
 
-  useEffect(() => {
-    if (articleCategory) {
-      reset(defaultValues);
-    }
-  }, [articleCategory, reset, defaultValues]);
+  // useEffect(() => {
+  //   reset(defaultValues);
+  // }, [reset, defaultValues]);
 
 
   const toggleCancel = () => {
-    navigate(PATH_SUPPORT.supportSettings.articleCategories.root);
+    navigate(PATH_SUPPORT.supportSettings.articleCategories.view(articleCategory._id));
   };
 
   const onSubmit = async (data) => {
     try {
       await dispatch(updateArticleCategory(articleCategory._id, data));
-      navigate(PATH_SUPPORT.supportSettings.articleCategories.root);
-      enqueueSnackbar('Article Category updated Successfully!');
-      reset();
+      navigate(PATH_SUPPORT.supportSettings.articleCategories.view(articleCategory._id));
+      enqueueSnackbar('Article Category updated successfully!');
     } catch (error) {
-      enqueueSnackbar(error, { variant: `error` });
-      console.error(error);
+      console.log(handleError(error));
+      enqueueSnackbar(handleError(error), { variant: `error` });
     }
   };
 
   return (
-    <Container maxWidth={false}>
-      <StyledCardContainer>
-        <Cover
-          name={defaultValues.name}
-          backLink={() => navigate(PATH_SUPPORT.supportSettings.articleCategories.root)}
-        />
-      </StyledCardContainer>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={4}>
           <Grid item xs={18} md={12}>
@@ -121,6 +104,5 @@ export default function ArticleCategoryEditForm() {
           </Grid>
         </Grid>
       </FormProvider>
-    </Container>
   );
 }

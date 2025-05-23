@@ -22,6 +22,7 @@ import ViewFormEditDeleteButtons from '../../../../components/ViewForms/ViewForm
 import { handleError } from '../../../../utils/errorHandler';
 import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 import { Cover } from '../../../../components/Defaults/Cover';
+import LoadingScreen from '../../../../components/loading-screen';
 
 // ----------------------------------------------------------------------
 
@@ -31,16 +32,11 @@ export default function ArticleViewForm() {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
 
-  const { article } = useSelector((state) => state.article);
+  const { article, isLoading } = useSelector((state) => state.article);
   const prefix = JSON.parse(localStorage.getItem('configurations'))?.find((config) => config?.name?.toLowerCase() === 'article_prefix')?.value?.trim() || ''; 
 
   useLayoutEffect(() => {
     dispatch(getArticle(id));
-
-    return () => {
-      dispatch(resetArticle());
-    };
-  
   }, [id, dispatch]);
 
   const onDelete = async () => {
@@ -126,12 +122,11 @@ export default function ArticleViewForm() {
               settingPage
             />
             <Grid container sx={{ mt: 2 }}>
-              <ViewFormField sm={4} heading="Category" param={defaultValues.category?.name || ''} />
-              <ViewFormField sm={4} heading="Article No" param={defaultValues.articleNo || ''} />
-              <ViewFormField sm={4} heading="Status" param={defaultValues.status || ''} />
-              <ViewFormField sm={6} heading="Title" param={defaultValues.title || ''} />
-              <ViewFormField 
-                sm={12} 
+              <ViewFormField isLoading={isLoading} sm={4} heading="Category" param={defaultValues.category?.name || ''} />
+              <ViewFormField isLoading={isLoading} sm={4} heading="Article No" param={defaultValues.articleNo || ''} />
+              <ViewFormField isLoading={isLoading} sm={4} heading="Status" param={defaultValues.status || ''} />
+              <ViewFormField isLoading={isLoading} sm={6} heading="Title" param={defaultValues.title || ''} />
+              <ViewFormField isLoading={isLoading} sm={12} 
                 heading="Description" 
                 node={
                   <div dangerouslySetInnerHTML={{ __html: 
