@@ -8,6 +8,7 @@ import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
 import FormProvider, { RHFAutocomplete } from '../../../components/hook-form';
 import CustomAvatar from '../../../components/custom-avatar/CustomAvatar';
 import Iconify from '../../../components/iconify';
+import ChipDialog from '../../../components/Dialog/ChipDialog';
 
   DropDownMultipleSelection.propTypes = {
   value: PropTypes.array, 
@@ -61,48 +62,62 @@ export default function DropDownMultipleSelection( { value, name, label, options
   };
 
   return (
-    <Box sx={{ position: "relative", width: "100%" }} >
-      <FormProvider methods={methods} onSubmit={ handleSubmit( handleOnSubmit )} sx={{ width: "100%" }} >
-      <RHFAutocomplete
-        multiple={multiple}
-        id="size-small-standard"
-        name={name}
-        disableCloseOnSelect={multiple}
-        limitTags={3}
-        size="small"
-        options={options}
-        isOptionEqualToValue={(option, v ) => option?._id === v?._id }
-        // getOptionLabel={(option) => `${option?.firstName || "" } ${option?.lastName || ""}`}
-        getOptionLabel={(option) =>
-          isStatus ? option?.name || `${option?.firstName || ""} ${option?.lastName || ""}`
-          : `${option?.firstName || ""} ${option?.lastName || ""}`
-        }
-        onChange={handleOnChange}
-        renderOption={(props, option) => (
-          <li {...props} key={option?._id}>
+    <Box sx={{ position: 'relative', width: '100%' }}>
+      <FormProvider
+        methods={methods}
+        onSubmit={handleSubmit(handleOnSubmit)}
+        sx={{ width: '100%' }}
+      >
+        <RHFAutocomplete
+          multiple={multiple}
+          id="size-small-standard"
+          name={name}
+          disableCloseOnSelect={multiple}
+          limitTags={3}
+          size="small"
+          options={options}
+          isOptionEqualToValue={(option, v) => option?._id === v?._id}
+          // getOptionLabel={(option) => `${option?.firstName || "" } ${option?.lastName || ""}`}
+          getOptionLabel={(option) =>
+            isStatus
+              ? option?.name || `${option?.firstName || ''} ${option?.lastName || ''}`
+              : `${option?.firstName || ''} ${option?.lastName || ''}`
+          }
+          onChange={handleOnChange}
+          renderOption={(props, option) => (
+            <li {...props} key={option?._id}>
               <Box display="flex" alignItems="center">
                 {isStatus ? (
                   <>
-                    <Iconify icon={option.icon} color={option?.color || "inherit"} size="20px" sx={{ mr: 1 }} />
-                    { option?.name ? option?.name : `${option?.firstName || "" } ${option?.lastName || ""}` || ""}
+                    <Iconify
+                      icon={option.icon}
+                      color={option?.color || 'inherit'}
+                      size="20px"
+                      sx={{ mr: 1 }}
+                    />
+                    {option?.name
+                      ? option?.name
+                      : `${option?.firstName || ''} ${option?.lastName || ''}` || ''}
                   </>
                 ) : (
                   <>
                     <CustomAvatar
-                      name={`${option?.firstName || "" } ${option?.lastName || ""}`}
-                      alt={ option?.firstName || "" }
+                      name={`${option?.firstName || ''} ${option?.lastName || ''}`}
+                      alt={option?.firstName || ''}
                       sx={{ m: 0.3, mr: 1, width: '30px', height: '30px' }}
                     />
-                    {`${option?.firstName || ""} ${option?.lastName || ""} (${option?.email || "No Email"})`}
+                    {`${option?.firstName || ''} ${option?.lastName || ''} (${
+                      option?.email || 'No Email'
+                    })`}
                   </>
                 )}
               </Box>
-          </li>
-        )}
-        renderInput={(params) => (
-            <TextField  
+            </li>
+          )}
+          renderInput={(params) => (
+            <TextField
               {...params}
-              variant='filled'
+              variant="filled"
               // InputProps={{
               //   ...params.InputProps,
               //   startAdornment: !multiple && val && isStatus ? (
@@ -112,28 +127,29 @@ export default function DropDownMultipleSelection( { value, name, label, options
               //   ) : null,
               // }}
               sx={{
-                "& .MuiInputBase-root": {
-                  padding: "8px",
-                  display: "flex",
-                  alignItems: "center",
-                  flexWrap: "wrap",
-                  ...(multiple ? {} : {minHeight: "40px"}),
+                '& .MuiInputBase-root': {
+                  padding: '8px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  flexWrap: 'wrap',
+                  ...(multiple ? {} : { minHeight: '40px' }),
                 },
-                "& .MuiInput-underline:before, & .MuiInput-underline:hover:not(.Mui-disabled):before, & .MuiInput-underline.Mui-focused:before": {
-                  borderBottom: "none",
+                '& .MuiInput-underline:before, & .MuiInput-underline:hover:not(.Mui-disabled):before, & .MuiInput-underline.Mui-focused:before':
+                  {
+                    borderBottom: 'none',
+                  },
+                '&:hover .MuiInputBase-root, & .Mui-focused .MuiInputBase-root': {
+                  backgroundColor: 'transparent !important',
+                  borderRadius: '8px',
+                  transition: 'border 0.3s ease-in-out',
+                  outline: '1px solid',
                 },
-                "&:hover .MuiInputBase-root, & .Mui-focused .MuiInputBase-root": {
-                  backgroundColor: "transparent !important",
-                  borderRadius: "8px",
-                  transition: "border 0.3s ease-in-out",
-                  outline: "1px solid",
+                '& .MuiInputBase-input': {
+                  padding: '0',
+                  marginBottom: '5px',
+                  ...(multiple ? {} : { padding: '8px 0' }),
                 },
-                "& .MuiInputBase-input": {
-                  padding: "0",
-                  marginBottom: "5px", 
-                  ...(multiple? {} : {padding: "8px 0"}),
-                },
-                "& .MuiChip-root": {
+                '& .MuiChip-root': {
                   height: 28,
                   fontSize: '0.8125rem',
                   padding: '0 8px',
@@ -142,46 +158,78 @@ export default function DropDownMultipleSelection( { value, name, label, options
                   alignItems: 'center',
                   marginBottom: 1,
                 },
-                "& .MuiChip-label": {
+                '& .MuiAutocomplete-tag': {
+                  margin: '2px 0 2px 6px',
+                },
+                '& .MuiChip-label': {
                   padding: '0 8px',
+                },
+                '& .MuiChip-deleteIcon': {
+                  fontSize: '18px', 
                 },
               }}
             />
-          )}           
-      />
-          { Array.isArray( val ) &&
-            Array.isArray( value ) && 
-            ( ( val?.length !== value?.length ) || !val?.every(v => value?.some(vc => vc?._id === v?._id)) ) && 
-            <Stack 
-              direction="row" 
-              spacing={1} 
+          )}
+          renderTags={
+            name === 'faults'
+              ? (tagValue, getTagProps) => (
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                    {tagValue.map((option, index) => {
+                      const tagProps = getTagProps({ index });
+                      const selectedOption = options.find((opt) => opt._id === option._id);
+                      const description = selectedOption?.description || 'No description available';
+
+                      return (
+                        <ChipDialog
+                          key={option._id}
+                          label={option.name}
+                          title={`${option.name} Description`}
+                          onDelete={tagProps.onDelete}
+                        >
+                          {description}
+                        </ChipDialog>
+                      );
+                    })}
+                  </Box>
+                )
+              : undefined
+          }
+        />
+        {Array.isArray(val) &&
+          Array.isArray(value) &&
+          (val?.length !== value?.length ||
+            !val?.every((v) => value?.some((vc) => vc?._id === v?._id))) && (
+            <Stack
+              direction="row"
+              spacing={1}
               sx={{
                 position: 'absolute',
-                bottom: -53, 
-                right: 0,   
+                bottom: -53,
+                right: 0,
                 transform: 'translateY(-50%)',
               }}
             >
-            <LoadingButton
+              <LoadingButton
                 variant="contained"
                 color="primary"
                 size="small"
                 type="submit"
-                disabled={ isSubmitting }
+                disabled={isSubmitting}
                 loading={isSubmitting}
-                sx={{minWidth: 32, padding: '2px', height: 32}}
-            >
-                <CheckRoundedIcon/>
-            </LoadingButton>
-            <Button
+                sx={{ minWidth: 32, padding: '2px', height: 32 }}
+              >
+                <CheckRoundedIcon />
+              </LoadingButton>
+              <Button
                 variant="outlined"
                 size="small"
                 onClick={() => reset()}
-                sx={{minWidth: 32, padding: '2px', height: 32}}
-            >
-                <ClearRoundedIcon/>
-            </Button>
-        </Stack>}
+                sx={{ minWidth: 32, padding: '2px', height: 32 }}
+              >
+                <ClearRoundedIcon />
+              </Button>
+            </Stack>
+          )}
       </FormProvider>
     </Box>
   );
