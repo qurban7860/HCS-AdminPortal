@@ -29,9 +29,9 @@ export default function ArticleCategoryListTableRow({
 
   return (
     <StyledTableRow hover selected={selected}>
-      <LinkTableCell align="left" onClick={onViewRow} param={name} />
-      <TableCell align="left">{description}</TableCell>
-      <TableCell align="center">
+      <LinkTableCell onClick={onViewRow} param={name} />
+      <TableCell>{description}</TableCell>
+      <TableCell>
         <Switch checked={isActive} disabled size="small" />
       </TableCell>
       <TableCell align="right">{fDate(updatedAt)}</TableCell>

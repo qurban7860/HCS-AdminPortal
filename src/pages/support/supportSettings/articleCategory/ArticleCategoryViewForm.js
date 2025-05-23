@@ -21,26 +21,15 @@ import ViewFormField from '../../../../components/ViewForms/ViewFormField';
 import ViewFormEditDeleteButtons from '../../../../components/ViewForms/ViewFormEditDeleteButtons';
 import { handleError } from '../../../../utils/errorHandler';
 import { StyledCardContainer } from '../../../../theme/styles/default-styles';
-import { Cover } from '../../../../components/Defaults/Cover';
 
 // ----------------------------------------------------------------------
 
 export default function ArticleCategoryViewForm() {
-  const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
 
-  const { articleCategory } = useSelector((state) => state.articleCategory);
-
-  useLayoutEffect(() => {
-    dispatch(getArticleCategory(id));
-
-    return () => {
-      dispatch(resetArticleCategory());
-    };
-  
-  }, [id, dispatch]);
+  const { articleCategory, isLoading } = useSelector((state) => state.articleCategory);
 
   const onDelete = async () => {
     try {
@@ -105,10 +94,6 @@ export default function ArticleCategoryViewForm() {
   };
 
   return (
-    <Container maxWidth={false}>
-      <StyledCardContainer>
-        <Cover name={defaultValues.name} isArchived={defaultValues.isArchived} />
-      </StyledCardContainer>
       <Card sx={{ p: 2 }}>
         <Grid>
           <ViewFormEditDeleteButtons
@@ -123,12 +108,11 @@ export default function ArticleCategoryViewForm() {
               settingPage
             />
             <Grid container sx={{ mt: 2 }}>
-              <ViewFormField sm={12} heading="Name" param={defaultValues.name} />
-              <ViewFormField sm={12} heading="Description" param={defaultValues.description} />
+              <ViewFormField isLoading={isLoading} sm={12} heading="Name" param={defaultValues.name} />
+              <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues.description} />
               <ViewFormAudit defaultValues={defaultValues} />
             </Grid>
           </Grid>
         </Card>
-      </Container>
   );
 }

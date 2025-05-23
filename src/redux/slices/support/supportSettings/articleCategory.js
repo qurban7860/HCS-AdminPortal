@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 // utils
 import axios from '../../../../utils/axios';
 import { CONFIG } from '../../../../config-global';
+import { handleError } from '../../../../utils/errorHandler';
 
 // ----------------------------------------------------------------------
 const initialState = {
@@ -131,8 +132,8 @@ export function addArticleCategory(data) {
       await axios.post(`${CONFIG.SERVER_URL}support/settings/articleCategory/`, data);
       dispatch(slice.actions.setResponseMessage('Article Category saved successfully'));
     } catch (error) {
-      console.log(error);
-      dispatch(slice.actions.hasError(error.Message));
+      console.log(handleError(error));
+      dispatch(slice.actions.hasError(handleError(error)));
       throw error;
     }
   };
@@ -147,8 +148,8 @@ export function updateArticleCategory(Id, data) {
       await axios.patch(`${CONFIG.SERVER_URL}support/settings/articleCategory/${Id}`, data);
       dispatch(slice.actions.setResponseMessage('Article Category updated successfully'));
     } catch (error) {
-      console.log(error);
-      dispatch(slice.actions.hasError(error.Message));
+      console.log(handleError(error));
+      dispatch(slice.actions.hasError(handleError(error)));
       throw error;
     }
   };
@@ -170,8 +171,8 @@ export function getArticleCategories(isArchived) {
       dispatch(slice.actions.getArticleCategoriesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Article Categories loaded successfully'));
     } catch (error) {
-      console.log(error);
-      dispatch(slice.actions.hasError(error.Message));
+      console.log(handleError(error));
+      dispatch(slice.actions.hasError(handleError(error)));
       throw error;
     }
   };
@@ -196,8 +197,8 @@ export function getActiveArticleCategories() {
       dispatch(slice.actions.getActiveArticleCategoriesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Article Categories loaded successfully'));
     } catch (error) {
-      console.log(error);
-      dispatch(slice.actions.hasError(error.Message));
+      console.log(handleError(error));
+      dispatch(slice.actions.hasError(handleError(error)));
       // throw error;
     }
   };
@@ -213,8 +214,8 @@ export function getArticleCategory(Id) {
       dispatch(slice.actions.getArticleCategorySuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Article Category Loaded Successfuly'));
     } catch (error) {
-      console.error(error);
-      dispatch(slice.actions.hasError(error.Message));
+      console.log(handleError(error));
+      dispatch(slice.actions.hasError(handleError(error)));
       throw error;
     }
   };
@@ -232,8 +233,8 @@ export function archiveArticleCategory(Id) {
         });
       dispatch(slice.actions.setResponseMessage(response.data));
     } catch (error) {
-      console.error(error);
-      dispatch(slice.actions.hasError(error.Message));
+      console.log(handleError(error));
+      dispatch(slice.actions.hasError(handleError(error)));
       throw error;
     }
   };
@@ -249,8 +250,8 @@ export function restoreArticleCategory(Id) {
         });
       dispatch(slice.actions.setResponseMessage(response.data));
     } catch (error) {
-      console.error(error);
-      dispatch(slice.actions.hasError(error.Message));
+      console.log(handleError(error));
+      dispatch(slice.actions.hasError(handleError(error)));
       throw error;
     }
   };
@@ -263,8 +264,8 @@ export function deleteArticleCategory(Id) {
       const response = await axios.delete(`${CONFIG.SERVER_URL}support/settings/articleCategory/${Id}`);
       dispatch(slice.actions.setResponseMessage(response.data));
     } catch (error) {
-      console.error(error);
-      dispatch(slice.actions.hasError(error.Message));
+      console.log(handleError(error));
+      dispatch(slice.actions.hasError(handleError(error)));
       throw error;
     }
   };

@@ -549,5 +549,5 @@ export const ArticleView = Loadable(lazy(() => import('../pages/support/knowledg
 // --------------------------- Knowledge Base -> Categories -------------------------------------
 export const ArticleCategoryList = Loadable(lazy(() => import('../pages/support/supportSettings/articleCategory/ArticleCategoryList')));
 export const ArticleCategoryAdd = Loadable(lazy(() => import('../pages/support/supportSettings/articleCategory/ArticleCategoryAddForm')));
-export const ArticleCategoryEdit = Loadable(lazy(() => import('../pages/support/supportSettings/articleCategory/ArticleCategoryEditForm')));
-export const ArticleCategoryView = Loadable(lazy(() => import('../pages/support/supportSettings/articleCategory/ArticleCategoryViewForm')));
+export const ArticleCategoryEdit = Loadable(lazy(() => import('../pages/support/supportSettings/articleCategory/ArticleCategoryEdit')));
+export const ArticleCategoryView = Loadable(lazy(() => import('../pages/support/supportSettings/articleCategory/ArticleCategoryView')));

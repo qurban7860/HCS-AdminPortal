@@ -53,7 +53,7 @@ const TABLE_HEAD = [
   { id: 'name', label: 'Name', width: 150 },
   { id: 'description', label: 'Description', },
   { id: 'isActive', label: 'Active', width: 100 },
-  { id: 'updatedAt', label: 'Updated At', width: 150 },
+  { id: 'updatedAt', align: 'right', label: 'Updated At', width: 150 },
 ];
 
 // ----------------------------------------------------------------------
