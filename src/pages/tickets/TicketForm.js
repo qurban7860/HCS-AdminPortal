@@ -359,7 +359,7 @@ export default function TicketForm() {
             <Grid item xs={12} md={12}>
               <Card sx={{ p: 3 }}>
                 <Stack spacing={3}>
-                  <RHFTextField name="summary" label="Summary" minRows={1} />
+                  <RHFTextField name="summary" label="Summary*" minRows={1} />
                   <RHFEditor name="description" label="Description" minRows={3} multiline />
                   <Box
                     sx={{

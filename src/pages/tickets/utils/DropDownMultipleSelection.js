@@ -166,6 +166,8 @@ export default function DropDownMultipleSelection( { value, name, label, options
                 },
                 '& .MuiChip-deleteIcon': {
                   fontSize: '18px', 
+                  width: 18,
+                  height: 18,
                 },
               }}
             />

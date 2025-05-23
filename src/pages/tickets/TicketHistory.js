@@ -86,7 +86,7 @@ const TicketHistory = () => {
                     }
                     secondary={
                       <>
-                        {(history?.previousStatus?._id || history?.newStatus?._id) && <Typography variant="body1">
+                        {(history?.previousStatus?._id || history?.newStatus?._id) && <Typography variant="subtitle2">
                           Status:
                           <span
                             style={{
@@ -110,7 +110,7 @@ const TicketHistory = () => {
                             {history.newStatus?.name || 'None'}
                           </span>
                         </Typography>}
-                        {(history?.previousPriority?._id || history?.newPriority?._id) && <Typography variant="body1">
+                        {(history?.previousPriority?._id || history?.newPriority?._id) && <Typography variant="subtitle2">
                           Priority:
                           <span
                             style={{
@@ -134,11 +134,11 @@ const TicketHistory = () => {
                             {history.newPriority?.name || 'None'}
                           </span>
                         </Typography>}
-                        {(history?.previousReporter?._id || history?.newReporter?._id) && <Typography variant="body1" color="textSecondary">
+                        {(history?.previousReporter?._id || history?.newReporter?._id) && <Typography variant="subtitle2" color="textSecondary">
                           Reporter: {history.previousReporter?.firstName} {history.previousReporter?.lastName || 'None'} →{' '}
                           {history.newReporter?.firstName} {history.newReporter?.lastName || 'None'}
                         </Typography>}
-                        {(history?.previousAssignee?._id || history?.newAssignee?._id) && <Typography variant="body1" color="textSecondary">
+                        {(history?.previousAssignee?._id || history?.newAssignee?._id) && <Typography variant="subtitle2" color="textSecondary">
                           Assignee: {history.previousAssignee?.firstName} {history.previousAssignee?.lastName || 'None'} →{' '}
                           {history.newAssignee?.firstName} {history.newAssignee?.lastName || 'None'}
                         </Typography>}
