@@ -42,8 +42,12 @@ export default function ArticleViewForm() {
   const onDelete = async () => {
     try {
       await dispatch(deleteArticle(article?._id));
-      enqueueSnackbar('Knowledge Base deleted successfully!');
-      navigate(PATH_SUPPORT.knowledgeBase.article.root);
+      if(article?.isArchived){
+        navigate(PATH_SUPPORT.knowledgeBase.article.archived);
+      }else{
+        navigate(PATH_SUPPORT.knowledgeBase.article.root);
+      }
+      enqueueSnackbar('Article deleted successfully!', { variant: `success` });
     } catch (error) {
       console.error(error);
       enqueueSnackbar(handleError(error), { variant: `error` });
@@ -53,8 +57,8 @@ export default function ArticleViewForm() {
   const onArchive = async () => {
     try {
       await dispatch(archiveArticle(article?._id));
-      enqueueSnackbar('Knowledge Base archived successfully!');
-      navigate(PATH_SUPPORT.knowledgeBase.article.view(article._id));
+      navigate(PATH_SUPPORT.knowledgeBase.article.archived);
+      enqueueSnackbar('Article archived successfully!', { variant: `success` });
     } catch (error) {
       console.error(error);
       enqueueSnackbar(handleError(error), { variant: `error` });
@@ -64,10 +68,10 @@ export default function ArticleViewForm() {
   const onRestore = async () => {
     try {
       await dispatch(restoreArticle(article?._id));
-      navigate(PATH_SUPPORT.knowledgeBase.article.view(article._id));
-      enqueueSnackbar('Knowledge Base restored successfully!');
+      navigate(PATH_SUPPORT.knowledgeBase.article.root);
+      enqueueSnackbar('Article restored successfully!', { variant: `success` });
     } catch (error) {
-      enqueueSnackbar('Knowledge Base restored failed!', { variant: `error` });
+      enqueueSnackbar('Article restored failed!', { variant: `error` });
       console.error(error);
     }
   };
