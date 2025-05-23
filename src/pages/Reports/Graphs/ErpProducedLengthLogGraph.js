@@ -195,7 +195,7 @@ const ErpProducedLengthLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
             {graphData?.length > 0 ? (
               <LogChartStacked processGraphData={processGraphData} graphLabels={graphLabels} isLoading={isLoading} />
             ) : (
-              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 200 }} >
+              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 320 }} >
                 <TableNoData isNotFound={isNotFound} />
               </Box>
             )}
