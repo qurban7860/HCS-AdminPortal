@@ -305,28 +305,26 @@ const TicketWorkLogs = () => {
                       ) : (
                         <>
                           {(item.workDate || item.notes) && (
-                            <Typography component="span" variant="body2" color="text.primary">
-                              {item.workDate && (
-                                <>
-                                  {dayjs(item.workDate).format('DD/MM/YYYY')}
-                                  {item.notes && <br />}
-                                </>
+                             <Typography component="span" variant="body2" color="text.primary">
+                            {item.workDate && (
+                              <Typography component="span" variant="body2" fontWeight="bold">
+                                {dayjs(item.workDate).format('DD/MM/YYYY')}
+                              </Typography>
+                            )}
+                            {item.workDate && item.notes && ' - '}
+                            {item.notes && (
+                              <span style={{ backgroundColor: '#f0f0f0', padding: '2px 5px', borderRadius: '3px' }}>
+                                {item.notes}
+                              </span>
+                            )}
+                            {item.updatedAt !== item.createdAt &&
+                              item.createdBy?._id !== item.updatedBy?._id && (
+                                <Typography component="span" variant="caption" sx={{ color: 'text.secondary', ml: 2, fontStyle: 'italic' }}>
+                                  (edited at {fDateTime(item.updatedAt)} by{' '}
+                                  <b>{item?.updatedBy?.name || ''}</b>)
+                                </Typography>
                               )}
-                              {item.notes && (
-                                <>
-                                  <span style={{ backgroundColor: '#f0f0f0', padding: '2px 5px', borderRadius: '3px' }}>
-                                    {item.notes}
-                                  </span>
-                                  {item.updatedAt !== item.createdAt &&
-                                    item.createdBy?._id !== item.updatedBy?._id && (
-                                      <Typography component="span" variant="caption" sx={{ color: 'text.secondary', ml: 2, fontStyle: 'italic' }}>
-                                        (edited at {fDateTime(item.updatedAt)} by{' '}
-                                        <b>{item?.updatedBy?.name || ''}</b>)
-                                      </Typography>
-                                    )}
-                                </>
-                              )}
-                            </Typography>
+                          </Typography>
                           )}
                           {(item?.updatedBy?._id === currentUser?.userId ||
                             activeSpContacts.some(

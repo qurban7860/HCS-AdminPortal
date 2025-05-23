@@ -17,7 +17,7 @@ Editor.propTypes = {
   onChange: PropTypes.func,
   helperText: PropTypes.object,
   label: PropTypes.string,
-  readOnly: PropTypes.bool,      
+  readOnly: PropTypes.bool,
   hideToolbar: PropTypes.bool,
 };
 
@@ -50,11 +50,11 @@ export default function Editor({
   return (
     <>
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-      {label && (
-        <Typography variant="subtitle2" sx={{ ml: 1, mb: -2, mt: -1 }}>
-          {label}
-        </Typography>
-      )}
+        {label && (
+          <Typography variant="subtitle2" sx={{ ml: 1, mb: -2, mt: -1 }}>
+            {label}
+          </Typography>
+        )}
       </Box>
       <StyledEditor
         sx={{
@@ -63,8 +63,10 @@ export default function Editor({
           }),
           ...sx,
         }}
+        readOnly={readOnly}
+        hideToolbar={hideToolbar}
       >
-         {!hideToolbar && <EditorToolbar id={id} isSimple={simple} />}
+        {!hideToolbar && <EditorToolbar id={id} isSimple={simple} />}
 
         <ReactQuill
           value={value}
