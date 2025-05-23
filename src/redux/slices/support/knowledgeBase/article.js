@@ -243,7 +243,7 @@ export function getArticle(Id) {
 
 export function archiveArticle(Id) {
   return async (dispatch) => {
-    dispatch(slice.actions.startLoading());
+    // dispatch(slice.actions.startLoading());
     try {
       const response = await axios.patch(`${CONFIG.SERVER_URL}support/knowledgeBase/article/${Id}`,
         {
@@ -260,7 +260,7 @@ export function archiveArticle(Id) {
 
 export function restoreArticle(Id) {
   return async (dispatch) => {
-    dispatch(slice.actions.startLoading());
+    // dispatch(slice.actions.startLoading());
     try {
       const response = await axios.patch(`${CONFIG.SERVER_URL}support/knowledgeBase/article/${Id}`,
         {
@@ -277,7 +277,7 @@ export function restoreArticle(Id) {
 
 export function deleteArticle(Id) {
   return async (dispatch) => {
-    dispatch(slice.actions.startLoading());
+    // dispatch(slice.actions.startLoading());
     try {
       const response = await axios.delete(`${CONFIG.SERVER_URL}support/knowledgeBase/article/${Id}`);
       dispatch(slice.actions.setResponseMessage(response.data));
