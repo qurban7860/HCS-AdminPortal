@@ -1,6 +1,10 @@
 import PropTypes from 'prop-types';
 // @mui
 import {
+  Collapse,
+  Divider,
+  IconButton,
+  Paper,
   Switch,
   TableCell,
 } from '@mui/material';
@@ -8,6 +12,8 @@ import {
 import { fDate } from '../../../../utils/formatTime';
 import LinkTableCell from '../../../../components/ListTableTools/LinkTableCell';
 import { StyledTableRow } from '../../../../theme/styles/default-styles'
+import { useBoolean } from '../../../../hooks/useBoolean';
+import Iconify from '../../../../components/iconify';
 
 // ----------------------------------------------------------------------
 
@@ -27,19 +33,19 @@ export default function ArticleListTableRow({
   onViewRow,
   prefix,
 }) {
-  const { serialNumber, title, description, category, isActive, updatedAt } = row;
+  const { articleNo, title, status, category, customerAccess, isActive, updatedAt } = row;
 
-  return (
+  const renderPrimary = (
     <StyledTableRow hover selected={selected}>
-      {/* <TableCell align="left">{serialNumber}</TableCell> */}
-      <LinkTableCell align="left" onClick={onViewRow} param={`${prefix}-${serialNumber}`} />
-      <TableCell align="left">{title}</TableCell>
-      <TableCell align="left" dangerouslySetInnerHTML={{ __html: description }} />
-      <TableCell align="left">{category?.name}</TableCell>
-      <TableCell align="center">
-        <Switch checked={isActive} disabled size="small" />
-      </TableCell>
+      <LinkTableCell onClick={onViewRow} param={`${prefix}-${articleNo}`} />
+      <TableCell>{title}</TableCell>
+      <TableCell>{category?.name}</TableCell>
+      <TableCell>{status}</TableCell>
+      <TableCell><Switch checked={customerAccess} disabled size="small" /></TableCell>
+      <TableCell><Switch checked={isActive} disabled size="small" /></TableCell>
       <TableCell align="right">{fDate(updatedAt)}</TableCell>
     </StyledTableRow>
   );
+
+  return (renderPrimary);
 }

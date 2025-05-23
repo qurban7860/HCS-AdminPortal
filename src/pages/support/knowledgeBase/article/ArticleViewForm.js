@@ -32,6 +32,7 @@ export default function ArticleViewForm() {
   const { enqueueSnackbar } = useSnackbar();
 
   const { article } = useSelector((state) => state.article);
+  const prefix = JSON.parse(localStorage.getItem('configurations'))?.find((config) => config?.name?.toLowerCase() === 'article_prefix')?.value?.trim() || ''; 
 
   useLayoutEffect(() => {
     dispatch(getArticle(id));
@@ -81,17 +82,20 @@ export default function ArticleViewForm() {
 
   const defaultValues = useMemo(
     () => ({
-      isActive: article?.isActive,
-      serialNumber: article?.serialNumber,
+      articleNo: `${prefix}-${article?.articleNo}`,
       title: article?.title,
       description: article?.description || '',
+      category: article?.category,
+      status: article?.status,
+      customerAccess: article?.customerAccess,
+      isActive: article?.isActive,
+      isArchived: article?.isArchived,
       createdAt: article?.createdAt || '',
       createdByFullName: article?.createdBy?.name || '',
       createdIP: article?.createdIP || '',
       updatedAt: article?.updatedAt || '',
       updatedByFullName: article?.updatedBy?.name || '',
       updatedIP: article?.updatedIP || '',
-      isArchived: article?.isArchived,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [article]
@@ -114,9 +118,7 @@ export default function ArticleViewForm() {
         <Grid>
           <ViewFormEditDeleteButtons
               customerAccess={defaultValues?.customerAccess}
-              isDefault={defaultValues.isDefault}
               isActive={defaultValues.isActive}
-              isPrimary={defaultValues.isPrimaryDrawing}
               {...(!defaultValues?.isArchived && { handleEdit })}
               {...(defaultValues?.isArchived ? { onDelete } : { onArchive })}
               {...(defaultValues?.isArchived && { onRestore })}
@@ -124,9 +126,19 @@ export default function ArticleViewForm() {
               settingPage
             />
             <Grid container sx={{ mt: 2 }}>
-              <ViewFormField sm={6} heading="Title" param={defaultValues.title} />
-              <ViewFormField sm={6} heading="Serial Number" param={defaultValues.serialNumber} />
-              <ViewFormField sm={12} heading="Description" node={<div dangerouslySetInnerHTML={{ __html: defaultValues.description }} />} />
+              <ViewFormField sm={4} heading="Category" param={defaultValues.category?.name || ''} />
+              <ViewFormField sm={4} heading="Article No" param={defaultValues.articleNo || ''} />
+              <ViewFormField sm={4} heading="Status" param={defaultValues.status || ''} />
+              <ViewFormField sm={6} heading="Title" param={defaultValues.title || ''} />
+              <ViewFormField 
+                sm={12} 
+                heading="Description" 
+                node={
+                  <div dangerouslySetInnerHTML={{ __html: 
+                    `<style>ul { padding-left: 40px;}</style>${defaultValues.description || ''}` 
+                  }} />
+                } 
+              />
               <ViewFormAudit defaultValues={defaultValues} />
             </Grid>
           </Grid>

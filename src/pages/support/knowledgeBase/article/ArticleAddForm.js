@@ -7,14 +7,14 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 // import { LoadingButton } from '@mui/lab';
-import { Card, Grid, Stack, Container, Box } from '@mui/material';
+import { Card, Grid, Stack, Container, Box, MenuItem } from '@mui/material';
 // routes
 import { PATH_SUPPORT } from '../../../../routes/paths';
 // slice
 import { addArticle } from '../../../../redux/slices/support/knowledgeBase/article';
 // components
 import { useSnackbar } from '../../../../components/snackbar';
-import FormProvider, { RHFTextField, RHFSwitch, RHFEditor, RHFAutocomplete } from '../../../../components/hook-form';
+import FormProvider, { RHFTextField, RHFSwitch, RHFEditor, RHFAutocomplete, RHFSelect } from '../../../../components/hook-form';
 import AddFormButtons from '../../../../components/DocumentForms/AddFormButtons';
 import { Cover } from '../../../../components/Defaults/Cover';
 // constants
@@ -27,9 +27,11 @@ import { getActiveArticleCategories, resetActiveArticleCategories } from '../../
 // ----------------------------------------------------------------------
 
 export const AddArticleSchema = Yup.object().shape({
-  title: Yup.string().min(2).max(40).required('Name is required!'),
-  category: Yup.object().required().label('Article Category').nullable(),
+  title: Yup.string().min(2, 'Title must be at least 2 characters long').max(200, 'Title must be at most 200 characters long').required('Title is required!'),
   description: Yup.string().max(10000),
+  category: Yup.object().required().label('Category').nullable(),
+  status:Yup.string().required().label('Status').nullable(),
+  customerAccess: Yup.boolean(),
   isActive: Yup.boolean(),
 });
 
@@ -50,8 +52,10 @@ export default function ArticleAddForm() {
   const defaultValues = useMemo(
     () => ({
       title: '',
-      category: null,
       description: '',
+      category: null,
+      status:'',
+      customerAccess: false,
       isActive: true,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -79,7 +83,7 @@ export default function ArticleAddForm() {
 
       await dispatch(addArticle(data));
       reset();
-      enqueueSnackbar('Article added Successfully!', { variant: `success` });
+      enqueueSnackbar('Article added successfully!', { variant: `success` });
       navigate(PATH_SUPPORT.knowledgeBase.article.root);
     } catch (error) {
       enqueueSnackbar(handleError(error), { variant: `error` });
@@ -102,18 +106,24 @@ export default function ArticleAddForm() {
             <Card sx={{ p: 3 }}>
               <Stack spacing={2}>
                 <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(1, 1fr 1fr)' }}>
-                  <RHFTextField name="title" label="Title" />
                   <RHFAutocomplete 
                     name="category" 
-                    label="Article Category" 
+                    label="Category" 
                     options={activeArticleCategories} 
                     getOptionLabel={(option) => option.name}
                     isOptionEqualToValue={(option, value) => option._id === value._id}
                   />
+                  <RHFSelect name="status" label="Status">
+                    <MenuItem value="DRAFT">DRAFT</MenuItem>
+                    <MenuItem value="APPROVED">APPROVED</MenuItem>
+                    <MenuItem value="PUBLISHED">PUBLISHED</MenuItem>
+                  </RHFSelect>
                 </Box>
+                <RHFTextField name="title" label="Title" inputProps={{ maxLength: 200 }} />
                 <RHFEditor name="description" label="Description" minRows={3} multiline />
                 <Grid display="flex" alignItems="center" mt={1}>
                   <RHFSwitch name='isActive' label='Active' />
+                  <RHFSwitch name='customerAccess' label='Customer Access' />
                 </Grid>
               </Stack>
               <AddFormButtons settingPage isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
