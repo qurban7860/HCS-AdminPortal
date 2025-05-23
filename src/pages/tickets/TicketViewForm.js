@@ -355,6 +355,16 @@ export default function TicketViewForm() {
             <ViewFormField isLoading={isLoading} sm={4} heading="Request Type"
               node={<DropDownField name="requestType" label='Request Type' value={ticket?.requestType} onSubmit={onSubmit} options={filteredRequestTypes} />}
             />
+             <ViewFormField isLoading={isLoading} sm={1.3} heading="Status"
+              node={<DropDownField name="status" isNullable label='Status' value={ticket?.status} onSubmit={onSubmit} options={ticketSettings?.statuses} />}
+            />
+            <ViewFormField isLoading={isLoading} sm={1.3} heading="Priority"
+              node={<DropDownField name="priority" isNullable label='Priority' value={ticket?.priority} onSubmit={onSubmit} options={ticketSettings?.priorities} />}
+            />
+            <ViewFormField isLoading={isLoading} sm={1.3} heading="Impact"
+              node={<DropDownField name="impact" isNullable label='Impact' value={ticket?.impact} options={ticketSettings?.impacts} onSubmit={onSubmit} />}
+            />
+            
             {/* <ViewFormField isLoading={isLoading} sm={4} heading=""
               param={
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -374,12 +384,7 @@ export default function TicketViewForm() {
             {/* <ViewFormField isLoading={isLoading} sm={4} heading="Status"
               node={<DropDownMultipleSelection name="status" label='Status' value={ticket?.status} onSubmit={onSubmit} options={ticketSettings?.statuses} multiple={false} isStatus/>}
             /> */}
-            <ViewFormField isLoading={isLoading} sm={2} heading="Status"
-              node={<DropDownField name="status" isNullable label='Status' value={ticket?.status} onSubmit={onSubmit} options={ticketSettings?.statuses} />}
-            />
-            <ViewFormField isLoading={isLoading} sm={2} heading="Priority"
-              node={<DropDownField name="priority" isNullable label='Priority' value={ticket?.priority} onSubmit={onSubmit} options={ticketSettings?.priorities} />}
-            />
+      
             <ViewFormField sm={4} variant='h4' heading="Customer" isLoading={isLoading}
               node={defaultValues?.customer && (
                 <>
@@ -425,6 +430,7 @@ export default function TicketViewForm() {
             <ViewFormField isLoading={isLoading} sm={12} heading="Summary"
               node={<FilledTextField name="summary" value={defaultValues.summary} onSubmit={onSubmit} />}
             />
+            
             <ViewFormField isLoading={isLoading} sm={12} heading="Fault"
               node={<DropDownMultipleSelection name="faults" label='Fault' value={ticket?.faults} options={ticketSettings?.faults} onSubmit={onSubmit}  isStatus/>}
             />
@@ -496,9 +502,6 @@ export default function TicketViewForm() {
               onGetCurrentIndex={(index) => handleOpenLightbox(index)}
               disabledSlideshow
             />
-            <ViewFormField isLoading={isLoading} sm={2} heading="Impact" sx={{ alignSelf: 'flex-end' }}
-              node={<DropDownField name="impact" isNullable label='Impact' value={ticket?.impact} options={ticketSettings?.impacts} onSubmit={onSubmit} />}
-            />
             
             {ticket?.issueType?.name === 'Change Request' && (
               <>
@@ -549,24 +552,22 @@ export default function TicketViewForm() {
               </Grid>
             )}
 
-          <Grid sx={{ pt: 5, alignSelf: 'flex-end', xs: 4 }}>
+          <Grid sx={{ pt: 2, alignSelf: 'flex-end', xs: 4 }}>
                 <ViewFormSWitch 
                  isLoading={isLoading}     
                  shareWithHeading="Shared With Organization"
                  shareWith={shareWith}
                  onChange={handleShareWithChange}
                  isEditable
-                //  sx={{ alignSelf: 'flex-end' }}
-                   />
+                />
              </Grid>
 
-             <Grid sx={{ pt: 4, alignSelf: 'flex-end' }}>
-            <ViewFormSWitch isLoading={isLoading} sm={2}
+             <Grid sx={{ pt: 2, alignSelf: 'flex-end' }}>
+            <ViewFormSWitch isLoading={isLoading} 
               isActiveHeading="Active"
               isActive={isActive}
               onChange={handleIsActiveChange}
               isEditable
-              // sx={{ alignSelf: 'flex-end' }}
             />
             </Grid>
           </Grid>
