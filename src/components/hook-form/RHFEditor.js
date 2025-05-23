@@ -38,7 +38,10 @@ export default function RHFEditor({ name, helperText, ...other }) {
       control={control}
       render={({ field, fieldState: { error } }) => (
         <Editor
-          sx={{ '& .ql-flip': { transform: 'translateX(135px) !important' } }}
+          sx={{ 
+            '& .ql-flip': { transform: 'translateX(135px) !important' }, 
+            '& .ql-editor': { maxHeight: '200px', overflowY: 'auto' } 
+          }}
           id={name}
           value={field.value}
           onChange={field.onChange}

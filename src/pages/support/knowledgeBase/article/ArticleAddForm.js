@@ -120,7 +120,7 @@ export default function ArticleAddForm() {
                   </RHFSelect>
                 </Box>
                 <RHFTextField name="title" label="Title" inputProps={{ maxLength: 200 }} />
-                <RHFEditor name="description" label="Description" minRows={3} multiline />
+                <RHFEditor name="description" label="Description" />
                 <Grid display="flex" alignItems="center" mt={1}>
                   <RHFSwitch name='isActive' label='Active' />
                   <RHFSwitch name='customerAccess' label='Customer Access' />
