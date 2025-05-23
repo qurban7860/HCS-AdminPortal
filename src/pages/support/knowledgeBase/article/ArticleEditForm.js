@@ -31,7 +31,6 @@ import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 import { FORMLABELS } from '../../../../constants/default-constants';
 import { FORMLABELS as formLABELS } from '../../../../constants/document-constants';
 import { handleError } from '../../../../utils/errorHandler';
-import LoadingScreen from '../../../../components/loading-screen';
 
 // ----------------------------------------------------------------------
 
@@ -85,7 +84,7 @@ export default function ArticleEditForm() {
 
   useEffect(() => {
     reset(defaultValues);
-  }, [article, reset, defaultValues]);
+  }, [reset, defaultValues]);
 
 
   const toggleCancel = () => {
@@ -109,7 +108,6 @@ export default function ArticleEditForm() {
       <StyledCardContainer>
         <Cover name="Edit Article" />
       </StyledCardContainer>
-      {isLoading ? <LoadingScreen /> : 
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={4}>
           <Grid item xs={18} md={12}>
@@ -141,7 +139,6 @@ export default function ArticleEditForm() {
           </Grid>
         </Grid>
       </FormProvider>
-      }
     </Container>
   );
 }
