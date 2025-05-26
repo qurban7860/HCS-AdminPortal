@@ -1,4 +1,4 @@
-export const allowedImageExtensions = ['png', 'jpeg', 'jpg', 'gif', 'bmp', 'webp'];
+export const allowedImageExtensions = ['png', 'jpeg', 'jpg', 'gif', 'bmp', 'webp', 'heic', 'heif'];
 export const allowedVideoExtensions = ['mp4', 'avi', 'mov', 'wmv', 'flv', 'mkv'];
 export const allowedDocumentExtension = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'csv', 'txt'];
 export const allowedOtherExtension = ['zip', 'rar', '7z', 'log', 'config', 'conf', 'ini', 'json', 'xml'];
@@ -68,6 +68,8 @@ export const allowedExtensions = [
   'gif',
   'bmp',
   'webp',
+  'heic',
+  'heif',
   'djvu',
   'heic',
   'heif',
