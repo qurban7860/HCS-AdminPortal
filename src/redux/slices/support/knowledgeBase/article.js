@@ -122,7 +122,7 @@ export const {
   setReportHiddenColumns,
 } = slice.actions;
 
-// ----------------------------Add Document Type------------------------------------------
+// ----------------------------Add Article------------------------------------------
 
 export function addArticle(params) {
   return async (dispatch) => {
@@ -133,13 +133,13 @@ export function addArticle(params) {
         title: params.title,
         description: params.description,
         category: params.category?._id,
-        status: params.status,
         customerAccess: params.customerAccess,
         isActive: params.isActive,
       }
-      await axios.post(`${CONFIG.SERVER_URL}support/knowledgeBase/article/`, data);
-      dispatch(slice.actions.setResponseMessage('Knowledge Base saved successfully'));
+      const response = await axios.post(`${CONFIG.SERVER_URL}support/knowledgeBase/article/`, data);
+      dispatch(slice.actions.setResponseMessage('Article saved successfully'));
       dispatch(getArticles());
+      return response?.data;
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -148,7 +148,7 @@ export function addArticle(params) {
   };
 }
 
-// ---------------------------------Update Document Type-------------------------------------
+// ---------------------------------Update Article-------------------------------------
 
 export function updateArticle(Id, params) {
   return async (dispatch) => {
@@ -159,12 +159,11 @@ export function updateArticle(Id, params) {
         title: params.title,
         description: params.description,
         category: params.category?._id,
-        status: params.status,
         customerAccess: params.customerAccess,
         isActive: params.isActive,
       }
       await axios.patch(`${CONFIG.SERVER_URL}support/knowledgeBase/article/${Id}`, data,);
-      dispatch(slice.actions.setResponseMessage('Knowledge Base updated successfully'));
+      dispatch(slice.actions.setResponseMessage('Article updated successfully'));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -173,7 +172,24 @@ export function updateArticle(Id, params) {
   };
 }
 
-// -----------------------------------Get Knowledge Base-----------------------------------
+// ---------------------------------Update Article Status-------------------------------------
+export function updateArticleStatus(Id, params) {
+  return async (dispatch) => {
+    try {
+      const data = {
+        status: params.status
+      }
+      await axios.patch(`${CONFIG.SERVER_URL}support/knowledgeBase/article/${Id}`, data,);
+      dispatch(slice.actions.setResponseMessage('Article status updated successfully'));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+// -----------------------------------Get Article-----------------------------------
 
 export function getArticles(isArchived) {
   return async (dispatch) => {
@@ -187,7 +203,7 @@ export function getArticles(isArchived) {
         }
       );
       dispatch(slice.actions.getArticlesSuccess(response.data));
-      dispatch(slice.actions.setResponseMessage('Knowledge Bases loaded successfully'));
+      dispatch(slice.actions.setResponseMessage('Articles loaded successfully'));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -197,7 +213,7 @@ export function getArticles(isArchived) {
 }
 
 
-// -----------------------------------Get Active Knowledge Base-----------------------------------
+// -----------------------------------Get Active Article-----------------------------------
 
 export function getActiveArticles() {
   return async (dispatch) => {
@@ -213,7 +229,7 @@ export function getActiveArticles() {
 
       const response = await axios.get(`${CONFIG.SERVER_URL}support/knowledgeBase/article/list`, query);
       dispatch(slice.actions.getActiveArticlesSuccess(response.data));
-      dispatch(slice.actions.setResponseMessage('Knowledge Bases loaded successfully'));
+      dispatch(slice.actions.setResponseMessage('Articles loaded successfully'));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -222,7 +238,7 @@ export function getActiveArticles() {
   };
 }
 
-// -------------------------------get Knowledge Base---------------------------------------
+// -------------------------------get Article---------------------------------------
 
 export function getArticle(Id) {
   return async (dispatch) => {
@@ -230,7 +246,7 @@ export function getArticle(Id) {
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}support/knowledgeBase/article/${Id}`);
       dispatch(slice.actions.getArticleSuccess(response.data));
-      dispatch(slice.actions.setResponseMessage('Knowledge Base Loaded Successfuly'));
+      dispatch(slice.actions.setResponseMessage('Article Loaded Successfuly'));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -239,7 +255,7 @@ export function getArticle(Id) {
   };
 }
 
-// ---------------------------------archive Knowledge Base-------------------------------------
+// ---------------------------------archive Article-------------------------------------
 
 export function archiveArticle(Id) {
   return async (dispatch) => {

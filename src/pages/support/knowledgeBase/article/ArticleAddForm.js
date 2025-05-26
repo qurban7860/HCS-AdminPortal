@@ -23,6 +23,7 @@ import { FORMLABELS } from '../../../../constants/default-constants';
 import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 import { handleError } from '../../../../utils/errorHandler';
 import { getActiveArticleCategories, resetActiveArticleCategories } from '../../../../redux/slices/support/supportSettings/articleCategory';
+import { articleStatusOptions } from '../../../../utils/constants';
 
 // ----------------------------------------------------------------------
 
@@ -30,7 +31,6 @@ export const AddArticleSchema = Yup.object().shape({
   title: Yup.string().min(2, 'Title must be at least 2 characters long').max(200, 'Title must be at most 200 characters long').required('Title is required!'),
   description: Yup.string().max(10000),
   category: Yup.object().required().label('Category').nullable(),
-  status:Yup.string().required().label('Status').nullable(),
   customerAccess: Yup.boolean(),
   isActive: Yup.boolean(),
 });
@@ -54,7 +54,7 @@ export default function ArticleAddForm() {
       title: '',
       description: '',
       category: null,
-      status:'',
+      status:'DRAFT',
       customerAccess: false,
       isActive: true,
     }),
@@ -81,10 +81,10 @@ export default function ArticleAddForm() {
   const onSubmit = async (data) => {
     try {
 
-      await dispatch(addArticle(data));
+      const response = await dispatch(addArticle(data));
       reset();
       enqueueSnackbar('Article added successfully!', { variant: `success` });
-      navigate(PATH_SUPPORT.knowledgeBase.article.root);
+      navigate(PATH_SUPPORT.knowledgeBase.article.view(response?._id));
     } catch (error) {
       enqueueSnackbar(handleError(error), { variant: `error` });
       console.error(error);
@@ -105,20 +105,13 @@ export default function ArticleAddForm() {
           <Grid item xs={18} md={12}>
             <Card sx={{ p: 3 }}>
               <Stack spacing={2}>
-                <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(1, 1fr 1fr)' }}>
-                  <RHFAutocomplete 
-                    name="category" 
-                    label="Category" 
-                    options={activeArticleCategories} 
-                    getOptionLabel={(option) => option.name}
-                    isOptionEqualToValue={(option, value) => option._id === value._id}
-                  />
-                  <RHFSelect name="status" label="Status">
-                    <MenuItem value="DRAFT">DRAFT</MenuItem>
-                    <MenuItem value="APPROVED">APPROVED</MenuItem>
-                    <MenuItem value="PUBLISHED">PUBLISHED</MenuItem>
-                  </RHFSelect>
-                </Box>
+                <RHFAutocomplete 
+                  name="category" 
+                  label="Category" 
+                  options={activeArticleCategories} 
+                  getOptionLabel={(option) => option.name}
+                  isOptionEqualToValue={(option, value) => option._id === value._id}
+                />
                 <RHFTextField name="title" label="Title" inputProps={{ maxLength: 200 }} />
                 <RHFEditor name="description" label="Description" />
                 <Grid display="flex" alignItems="center" mt={1}>
