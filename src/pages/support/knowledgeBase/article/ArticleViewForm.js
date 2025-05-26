@@ -1,4 +1,4 @@
-import { useLayoutEffect, useMemo } from 'react';
+import { useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 
@@ -10,7 +10,8 @@ import {
   deleteArticle,
   getArticle,
   restoreArticle,
-  resetArticle
+  resetArticle,
+  updateArticleStatus
 } from '../../../../redux/slices/support/knowledgeBase/article';
 // paths
 import { PATH_SUPPORT } from '../../../../routes/paths';
@@ -19,10 +20,12 @@ import { useSnackbar } from '../../../../components/snackbar';
 import ViewFormAudit from '../../../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../../../components/ViewForms/ViewFormField';
 import ViewFormEditDeleteButtons from '../../../../components/ViewForms/ViewFormEditDeleteButtons';
+import ViewFormSelect from '../../../../components/ViewForms/ViewFormSelect';
 import { handleError } from '../../../../utils/errorHandler';
 import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 import { Cover } from '../../../../components/Defaults/Cover';
 import LoadingScreen from '../../../../components/loading-screen';
+import { articleStatusOptions } from '../../../../utils/constants';
 
 // ----------------------------------------------------------------------
 
@@ -109,6 +112,17 @@ export default function ArticleViewForm() {
     }
   };
 
+  const handleStatusChange = async (e) => {
+    try {
+      await dispatch(updateArticleStatus(article._id, {status: e.target.value}));
+      enqueueSnackbar('Article status updated successfully!', { variant: `success` });
+    } catch (error) {
+      enqueueSnackbar(handleError(error), { variant: `error` });
+      console.error(error);
+    }
+
+  };
+
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
@@ -128,8 +142,11 @@ export default function ArticleViewForm() {
             <Grid container sx={{ mt: 2 }}>
               <ViewFormField isLoading={isLoading} sm={4} heading="Category" param={defaultValues.category?.name || ''} />
               <ViewFormField isLoading={isLoading} sm={4} heading="Article No" param={defaultValues.articleNo || ''} />
-              <ViewFormField isLoading={isLoading} sm={4} heading="Status" param={defaultValues.status || ''} />
-              <ViewFormField isLoading={isLoading} sm={6} heading="Title" param={defaultValues.title || ''} />
+              <ViewFormField isLoading={isLoading} sm={4} heading="Status"
+                node={<ViewFormSelect sx={{ width: '150px' }} options={articleStatusOptions} value={defaultValues.status} onChange={handleStatusChange} /> }
+              />
+              {/* <ViewFormSelect options={articleStatusOptions} value={defaultValues.status} onChange={(e) => console.log(e.target.value)} /> */}
+              <ViewFormField isLoading={isLoading} sm={12} heading="Title" param={defaultValues.title || ''} />
               <ViewFormField isLoading={isLoading} sm={12} 
                 heading="Description" 
                 node={

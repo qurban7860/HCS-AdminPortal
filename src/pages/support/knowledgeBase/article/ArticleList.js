@@ -41,6 +41,7 @@ import {
   setFilterBy,
   deleteArticle,
 } from '../../../../redux/slices/support/knowledgeBase/article';
+import { getActiveArticleCategories } from '../../../../redux/slices/support/supportSettings/articleCategory';
 import { Cover } from '../../../../components/Defaults/Cover';
 import { fDate } from '../../../../utils/formatTime';
 import TableCard from '../../../../components/ListTableTools/TableCard';
@@ -50,13 +51,13 @@ import useResponsive from '../../../../hooks/useResponsive';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'articleNo', label: 'Article No', width: 150 },
-  { id: 'title', label: 'Title', },
-  { id: 'category', label: 'Category', },
-  { id: 'status', label: 'Status', },
-  { id: 'customerAccess', label: 'Customer Access', width: 150 },
-  { id: 'isActive', label: 'Active', width: 150 },
-  { id: 'updatedAt', label: 'Updated At', width: 150, align:'right' },
+  { id: 'articles', label: 'Articles'},
+  // { id: 'title', label: 'Title', },
+  // { id: 'category', label: 'Category', },
+  // { id: 'status', label: 'Status', },
+  // { id: 'customerAccess', label: 'Customer Access', width: 150 },
+  // { id: 'isActive', label: 'Active', width: 150 },
+  // { id: 'updatedAt', label: 'Updated At', width: 150, align:'right' },
 ];
 
 // ----------------------------------------------------------------------
@@ -94,13 +95,17 @@ export default function ArticleList({isArchived}) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [filterName, setFilterName] = useState('');
+  const [categoryVal, setCategoryVal] = useState(null);
+  const [statusVal, setStatusVal] = useState(null);
+
   const [tableData, setTableData] = useState([]);
   const { articles, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.article);
-
+  
   const prefix = JSON.parse(localStorage.getItem('configurations'))?.find((config) => config?.name?.toLowerCase() === 'article_prefix')?.value?.trim() || ''; 
 
   useEffect(() => {
     dispatch(getArticles(isArchived));
+    dispatch(getActiveArticleCategories());
   }, [dispatch,isArchived]);
 
   useEffect(() => {
@@ -113,6 +118,8 @@ export default function ArticleList({isArchived}) {
     inputData: tableData,
     comparator: getComparator(order, orderBy),
     filterName,
+    categoryVal,
+    statusVal,
     prefix
   });
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
@@ -147,12 +154,26 @@ export default function ArticleList({isArchived}) {
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
     setFilterName('');
+    setCategoryVal(null);
+    setStatusVal(null);
+  };
+
+  const handleCategoryChange = (v) => {
+    setCategoryVal(v);
+    setPage(0);
+  };
+
+  const handleStatusChange = (v) => {
+    setStatusVal(v);
+    setPage(0);
   };
 
   const handleArchive = () => {
     setFilterName('');
     setPage(0);
     dispatch(setFilterBy(''));
+    setCategoryVal(null);
+    setStatusVal(null);
     if(isArchived){
       navigate(PATH_SUPPORT.knowledgeBase.article.root);    
     }else{
@@ -179,6 +200,10 @@ export default function ArticleList({isArchived}) {
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
             isArchived={isArchived}
+            categoryVal={categoryVal}
+            setCategoryVal={handleCategoryChange}
+            statusVal={statusVal}
+            setStatusVal={handleStatusChange}
           />
 
           {!isNotFound && (
@@ -230,7 +255,7 @@ export default function ArticleList({isArchived}) {
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName, prefix }) {
+function applyFilter({ inputData, comparator, filterName, categoryVal, statusVal, prefix }) {
 
   const stabilizedThis = Array.isArray(inputData) ? inputData?.map((el, index) => [el, index]) : [];
   stabilizedThis.sort((a, b) => {
@@ -251,6 +276,14 @@ function applyFilter({ inputData, comparator, filterName, prefix }) {
         // (article?.isActive ? "Active" : "InActive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
         String(fDate(article?.updatedAt))?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
+  }
+
+  if(categoryVal){
+    inputData = inputData.filter((article) => article?.category?._id === categoryVal?._id);
+  }
+
+  if(statusVal){
+    inputData = inputData.filter((article) => article?.status === statusVal?.value);
   }
 
   return inputData;

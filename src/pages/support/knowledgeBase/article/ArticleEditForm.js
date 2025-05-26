@@ -31,6 +31,7 @@ import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 import { FORMLABELS } from '../../../../constants/default-constants';
 import { FORMLABELS as formLABELS } from '../../../../constants/document-constants';
 import { handleError } from '../../../../utils/errorHandler';
+import { articleStatusOptions } from '../../../../utils/constants';
 
 // ----------------------------------------------------------------------
 
@@ -38,7 +39,6 @@ export const EditArticleSchema = Yup.object().shape({
   title: Yup.string().min(2, 'Title must be at least 2 characters long').max(200, 'Title must be at most 200 characters long').required('Title is required!'),
   description: Yup.string().max(10000),
   category: Yup.object().required().label('Category').nullable(),
-  status:Yup.string().required().label('Status').nullable(),
   customerAccess: Yup.boolean(),
   isActive: Yup.boolean(),
 });
@@ -65,7 +65,6 @@ export default function ArticleEditForm() {
       title: article?.title || '',
       description: article?.description || '',
       category: article?.category || null,
-      status: article?.status || '',
       customerAccess: article?.customerAccess,
       isActive: article?.isActive,
     }),
@@ -94,7 +93,7 @@ export default function ArticleEditForm() {
   const onSubmit = async (data) => {
     try {
       await dispatch(updateArticle(article._id, data));
-      navigate(PATH_SUPPORT.knowledgeBase.article.root);
+      navigate(PATH_SUPPORT.knowledgeBase.article.view(article._id));
       enqueueSnackbar('Article updated successfully!', { variant: `success` });
       reset();
     } catch (error) {
@@ -113,20 +112,13 @@ export default function ArticleEditForm() {
           <Grid item xs={18} md={12}>
             <Card sx={{ p: 3 }}>
               <Stack spacing={3}>
-                <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(1, 1fr 1fr)' }}>
-                  <RHFAutocomplete 
-                    name="category" 
-                    label="Category" 
-                    options={activeArticleCategories} 
-                    getOptionLabel={(option) => option.name}
-                    isOptionEqualToValue={(option, value) => option._id === value._id}
-                  />
-                  <RHFSelect name="status" label="Status">
-                    <MenuItem value="DRAFT">DRAFT</MenuItem>
-                    <MenuItem value="APPROVED">APPROVED</MenuItem>
-                    <MenuItem value="PUBLISHED">PUBLISHED</MenuItem>
-                  </RHFSelect>
-                </Box>
+                <RHFAutocomplete 
+                  name="category" 
+                  label="Category" 
+                  options={activeArticleCategories} 
+                  getOptionLabel={(option) => option.name}
+                  isOptionEqualToValue={(option, value) => option._id === value._id}
+                />
                 <RHFTextField name="title" label="Title" inputProps={{ maxLength: 200 }} />
                 <RHFEditor name="description" label="Description" />
                 <Grid display='flex' alignItems="center" mt={1} >
