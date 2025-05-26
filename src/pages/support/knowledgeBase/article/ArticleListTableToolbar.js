@@ -83,7 +83,7 @@ export default function ArticleListTableToolbar({
         value={filterName}
         onChange={onFilterName}
         onClick={onResetFilter}
-        {...(!isArchived && {addButton: ' Add Knowledge Base'})}
+        {...(!isArchived && {addButton: ' Add Article'})}
         {...(!isArchived && {SubOnClick: toggleAdd})}
         settingPage
         nodes={nodes}
