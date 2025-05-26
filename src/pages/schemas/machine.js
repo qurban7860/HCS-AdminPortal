@@ -3,6 +3,7 @@ import { endOfToday } from 'date-fns';
 import { Snacks } from '../../constants/machine-constants';
 import { allowedExtensions, fileTypesMessage } from '../../constants/document-constants';
 import { NotRequiredValidateFileType } from '../documents/util/Util';
+import validateFileType from '../documents/util/validateFileType';
 import { future5yearDate, tomorrow, pastDate } from '../machine/util/index';
 import { fDate } from '../../utils/formatTime';
 
@@ -314,7 +315,11 @@ export const filesValidations = Yup.object().shape({
 
 export const MachineServiceReportPart3Schema = Yup.object().shape({
   files: Yup.mixed().required(Snacks.fileRequired)
-    .test('fileType', fileTypesMessage, NotRequiredValidateFileType)
+    .test('fileType', fileTypesMessage,
+      function (value) {
+        return validateFileType({ _this: this, files: value, doc: true, image: true, video: true, required: true });
+      }
+    )
     .nullable(true),
   isActive: Yup.boolean(),
 });
