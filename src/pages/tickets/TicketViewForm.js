@@ -355,14 +355,11 @@ export default function TicketViewForm() {
             <ViewFormField isLoading={isLoading} sm={4} heading="Request Type"
               node={<DropDownField name="requestType" label='Request Type' value={ticket?.requestType} onSubmit={onSubmit} options={filteredRequestTypes} />}
             />
-             <ViewFormField isLoading={isLoading} sm={1.3} heading="Status"
+            <ViewFormField isLoading={isLoading} sm={2} heading="Status"
               node={<DropDownField name="status" isNullable label='Status' value={ticket?.status} onSubmit={onSubmit} options={ticketSettings?.statuses} />}
             />
-            <ViewFormField isLoading={isLoading} sm={1.3} heading="Priority"
+            <ViewFormField isLoading={isLoading} sm={2} heading="Priority"
               node={<DropDownField name="priority" isNullable label='Priority' value={ticket?.priority} onSubmit={onSubmit} options={ticketSettings?.priorities} />}
-            />
-            <ViewFormField isLoading={isLoading} sm={1.3} heading="Impact"
-              node={<DropDownField name="impact" isNullable label='Impact' value={ticket?.impact} options={ticketSettings?.impacts} onSubmit={onSubmit} />}
             />
             
             {/* <ViewFormField isLoading={isLoading} sm={4} heading=""
@@ -430,12 +427,14 @@ export default function TicketViewForm() {
             <ViewFormField isLoading={isLoading} sm={12} heading="Summary"
               node={<FilledTextField name="summary" value={defaultValues.summary} onSubmit={onSubmit} />}
             />
-            
-            <ViewFormField isLoading={isLoading} sm={12} heading="Fault"
-              node={<DropDownMultipleSelection name="faults" label='Fault' value={ticket?.faults} options={ticketSettings?.faults} onSubmit={onSubmit}  isStatus/>}
-            />
             <ViewFormField isLoading={isLoading} sm={12} heading="Description"
               node={<FilledEditorField name="description" value={defaultValues.description} onSubmit={onSubmit} minRows={4} />}
+            />
+            <ViewFormField isLoading={isLoading} sm={10} heading="Fault"
+              node={<DropDownMultipleSelection name="faults" label='Fault' value={ticket?.faults} options={ticketSettings?.faults} onSubmit={onSubmit}  isStatus/>}
+            />
+            <ViewFormField isLoading={isLoading} sm={2} heading="Impact"
+              node={<DropDownField name="impact" isNullable label='Impact' value={ticket?.impact} options={ticketSettings?.impacts} onSubmit={onSubmit} />}
             />
             <Grid container sx={{ mt: 4 }}>
               <FormLabel content='Documents' />

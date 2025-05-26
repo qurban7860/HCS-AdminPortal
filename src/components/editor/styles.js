@@ -17,6 +17,7 @@ export const StyledEditor = styled(Box)(({ theme, readOnly, hideToolbar }) => ({
   },
   '& .ql-editor': {
     minHeight: hideToolbar ? 'auto' : 200, 
+    paddingLeft: hideToolbar ? 0 : undefined,
     // maxHeight: 640,
     '&.ql-blank::before': {
       fontStyle: 'normal',
