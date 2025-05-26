@@ -203,24 +203,35 @@ export function addMachineLogRecord(machine, customer, logs, action, version, ty
 }
 
 // ------------------------- GET LOGS GRAPH DATA ---------------------------------------------
-
-export function getMachineLogGraphData(customerId, machineId, type = "erp", periodType, logGraphType, dateFrom, dateTo) {
+export function getMachineLogGraphData(
+  customerId,
+  machineId,
+  type = "erp",
+  periodType,
+  logGraphType,
+  dateFrom,
+  dateTo
+) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const startDateUtc = new Date( dateFrom.getFullYear(), dateFrom.getMonth(), dateFrom.getDate(), 0, 0, 0, 0 );
-      const endDateUtc = new Date( dateTo.getFullYear(), dateTo.getMonth(), dateTo.getDate(), 23, 59, 59, 999 );
+      // const startDateUtc = new Date( dateFrom.getFullYear(), dateFrom.getMonth(), dateFrom.getDate(), 0, 0, 0, 0 );
+      // const endDateUtc = new Date( dateTo.getFullYear(), dateTo.getMonth(), dateTo.getDate(), 23, 59, 59, 999 );
+      const startDateUtc =  new Date(dateFrom).toISOString();
+      const endDateUtc =  new Date(dateTo).toISOString();
       const params = {
         customer: customerId,
         machine: machineId,
         type,
         periodType,
         logGraphType,
-        startDate : startDateUtc.toISOString(),   
-        endDate   : endDateUtc.toISOString(),
+        startDate: startDateUtc,
+        endDate: endDateUtc,
         timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       };
+
       const response = await axios.get(`${CONFIG.SERVER_URL}productLogs/graph`, { params });
+
       dispatch(slice.actions.setMachineLogsGraphData(response?.data || ''));
       return {
         success: true,
@@ -236,6 +247,7 @@ export function getMachineLogGraphData(customerId, machineId, type = "erp", peri
     }
   };
 }
+
 
 
 // --------------------------- GET RECORD -------------------------------------------
