@@ -31,7 +31,6 @@ function ViewFormEditDeleteButtons({
   backLink,
   isActive,
   isPrimary,
-  isPrimary,
   shareWith,
   isReleased,
   isDefault,
