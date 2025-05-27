@@ -75,8 +75,8 @@ export default function ArticleListTableRow({
             <Stack direction="row" spacing={1}>
               <ArticleInfo label={`${prefix}-${articleNo} (${category?.name})`} />
               <ArticleInfo label={status} />
-              <ArticleInfo icon={customerAccess ? ICONS.ALLOWED.icon : ICONS.DISALLOWED.icon} tooltip={customerAccess ? 'Customer Access Allowed' : 'Customer Access Disallowed'} />
-              <ArticleInfo icon={isActive ? ICONS.ACTIVE.icon : ICONS.INACTIVE.icon} tooltip={isActive ? 'Active' : 'Inactive'} />
+              <ArticleInfo color={customerAccess ? ICONS.ALLOWED.color : ICONS.DISALLOWED.color} icon={customerAccess ? ICONS.ALLOWED.icon : ICONS.DISALLOWED.icon} tooltip={customerAccess ? ICONS.ALLOWED.heading : ICONS.DISALLOWED.heading} />
+              <ArticleInfo color={isActive ? ICONS.ACTIVE.color : ICONS.INACTIVE.color} icon={isActive ? ICONS.ACTIVE.icon : ICONS.INACTIVE.icon} tooltip={isActive ? ICONS.ACTIVE.heading : ICONS.INACTIVE.heading} />
             </Stack>
             <Stack direction="row" spacing={2}>
               <ArticleInfo icon='mdi:clock-outline' label={fDate(updatedAt)} tooltip='Updated At' />

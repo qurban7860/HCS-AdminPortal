@@ -40,7 +40,7 @@ export default function RHFEditor({ name, helperText, ...other }) {
         <Editor
           sx={{ 
             '& .ql-flip': { transform: 'translateX(135px) !important' }, 
-            '& .ql-editor': { maxHeight: '200px', overflowY: 'auto' } 
+            '& .ql-editor': { maxHeight: '60vh', overflowY: 'auto' } 
           }}
           id={name}
           value={field.value}
