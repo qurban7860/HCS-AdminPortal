@@ -200,7 +200,7 @@ export default function MachineLogsGraphViewForm() {
                   />
                 </Grid>
 
-                <Grid item xs={12} sm={6} md={2} xl={1} >
+                <Grid item xs={12} sm={6} md={2} xl={1}  sx={{ display: 'flex', justifyContent: 'flex-end' }} >
                   <StyledTooltip
                     title="Fetch Graph"
                     placement="top"

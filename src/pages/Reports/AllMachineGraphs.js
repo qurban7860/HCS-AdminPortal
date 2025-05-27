@@ -211,7 +211,7 @@ const AllMachineGraphs = () => {
     />
   </Grid>
 
-  <Grid item xs={12} sm={12} md={1} >
+  <Grid item xs={12} sm={12} md={1} sx={{ display: 'flex', justifyContent: 'flex-end' }} >
     <StyledTooltip
       title="Fetch Graph"
       placement="top"

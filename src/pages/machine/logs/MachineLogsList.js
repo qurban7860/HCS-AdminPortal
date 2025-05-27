@@ -18,7 +18,7 @@ import {
 } from '../../../redux/slices/products/machineErpLogs';
 import MachineTabContainer from '../util/MachineTabContainer';
 import { machineLogTypeFormats } from '../../../constants/machineLogTypeFormats';
-import { RHFAutocomplete, RHFDatePicker, RHFSelect } from '../../../components/hook-form';
+import { RHFAutocomplete, RHFDatePicker, RHFDateTimePicker, RHFSelect } from '../../../components/hook-form';
 import RHFFilteredSearchBar from '../../../components/hook-form/RHFFilteredSearchBar';
 import { fetchIndMachineLogSchema } from '../../schemas/machine';
 import { BUTTONS } from '../../../constants/default-constants';
@@ -160,7 +160,7 @@ export default function MachineLogsList({ allMachineLogsType }) {
                 gridTemplateColumns={{ xs: '1fr', sm: 'repeat(3, 1fr)' }}
                 sx={{ flexGrow: 1 }}
               >
-                <RHFDatePicker
+                <RHFDateTimePicker
                   label="Date From"
                   name="dateFrom"
                   size="small"
@@ -170,7 +170,7 @@ export default function MachineLogsList({ allMachineLogsType }) {
                     trigger(['dateFrom', 'dateTo']);
                   }}
                 />
-                <RHFDatePicker
+                <RHFDateTimePicker
                   label="Date To"
                   name="dateTo"
                   size="small"
