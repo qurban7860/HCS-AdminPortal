@@ -16,15 +16,15 @@ const StyledButtonRoot = styled(Button)({
   }
 });
 
-export default function ArticleInfo({ icon, label, onClick, tooltip, ...other }) {
+export default function ArticleInfo({ icon, label, onClick, tooltip, color, ...other }) {
 
   const isReadOnly = !onClick;
   
   return (
     isReadOnly ? (
-      <StyledTooltip title={tooltip} placement="top" disableFocusListener>
+      <StyledTooltip title={tooltip} placement="top" tooltipcolor={color} disableFocusListener>
         <IconButton disableRipple sx={{ p: 0, gap: 0.5 }}>
-          <Iconify icon={icon} width="15px" />
+          <Iconify color={color} icon={icon} width="15px" />
           {label && <Typography variant="caption" sx={{ p: 0, fontStyle: 'italic' }}>{label}</Typography>}
         </IconButton>
       </StyledTooltip>
@@ -45,6 +45,7 @@ ArticleInfo.propTypes = {
   icon: PropTypes.string,
   label: PropTypes.string,
   tooltip: PropTypes.string,
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
+  color: PropTypes.string
 };
 
