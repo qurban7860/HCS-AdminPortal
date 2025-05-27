@@ -352,6 +352,19 @@ function MachineServiceReportViewForm(  ) {
     }
   };
 
+  const Decoilers = defaultValues?.decoilers?.map(( dM ) => (
+    <Chip 
+      key={dM?._id}
+      sx={{ m:0.2 }} 
+      onClick={ ( event ) => handleMachineDialog( event, dM?._id ) }
+      deleteIcon={<Iconify icon="fluent:open-12-regular"/>}
+      onDelete={()=> {
+        window.open(PATH_MACHINE.machines.view(dM?._id), '_blank');
+      }}
+      label={`${dM?.serialNo || ''} ${dM?.name  ? '-' : '' } ${dM?.name || ''} `} 
+    />
+  ));
+
   return (
     <Container maxWidth={false}>
       <MachineTabContainer currentTabValue='serviceReports' />
@@ -540,18 +553,7 @@ function MachineServiceReportViewForm(  ) {
             isLoading={isLoading}
             sm={4}
             heading="Decoilers"
-            chipDialogArrayParam={defaultValues?.decoilers?.map(( dM ) => (
-              <Chip 
-                key={dM?._id}
-                sx={{ m:0.2 }} 
-                onClick={ ( event ) => handleMachineDialog( event, dM?._id ) }
-                deleteIcon={<Iconify icon="fluent:open-12-regular"/>}
-                onDelete={()=> {
-                  window.open(PATH_MACHINE.machines.view(dM?._id), '_blank');
-                }}
-                label={`${dM?.serialNo || ''} ${dM?.name  ? '-' : '' } ${dM?.name || ''} `} 
-              />
-            ))} 
+            node={<Grid container>{Decoilers}</Grid>} 
           />
           <ViewNoteHistory label="Technician Notes" historicalData={machineServiceReport.technicianNotes} />
 
@@ -638,7 +640,6 @@ function MachineServiceReportViewForm(  ) {
           {machineServiceReport?.serviceReportTemplate?.enableMaintenanceRecommendations && <ViewNoteHistory label="Recommendation Note" historicalData={defaultValues.recommendationNote} />}
           {machineServiceReport?.serviceReportTemplate?.enableSuggestedSpares && <ViewNoteHistory label="Suggested Spares" historicalData={defaultValues.suggestedSpares} />}
           <ViewNoteHistory label="Internal Note" historicalData={defaultValues.internalNote} />
-          {/* <ViewFormField isLoading={isLoading} sm={12} heading="Operators" chipDialogArrayParam={operators} /> */}
           <ViewNoteHistory label="Operator Notes" historicalData={defaultValues.operatorNotes} />
           { machineServiceReport?.reportSubmition &&
             <FormLabel content='Documents / Images' />

@@ -419,7 +419,7 @@ function DocumentHistoryViewForm({ customerPage, machinePage, machineDrawingPage
                   sm={6}
                   variant='h4'
                   heading="Customer"
-                  objectParam={
+                  node={
                     defaultValues.customer && (
                       <Link onClick={handleCustomerDialog} href="#" underline="none">
                         {defaultValues.customer}
@@ -446,7 +446,7 @@ function DocumentHistoryViewForm({ customerPage, machinePage, machineDrawingPage
 
               <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues?.description} />
               {((machineDrawingPage && documentHistory?.productDrawings?.length > 1) || machineDrawings) &&
-                <ViewFormField isLoading={isLoading} sm={12} heading="Attached with Machines" chipDialogArrayParam={linkedDrawingMachines} />
+                <ViewFormField isLoading={isLoading} sm={12} heading="Attached with Machines" node={<Grid container>{linkedDrawingMachines}</Grid>} />
               }
               <Grid container sx={{ mt: '1rem', mb: '-1rem' }}>
                 <ViewFormAudit defaultValues={defaultValues} />

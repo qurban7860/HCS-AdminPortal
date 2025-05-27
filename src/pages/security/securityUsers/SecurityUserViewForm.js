@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector, batch } from 'react-redux';
 // @mui
-import { Card, Grid, Link, Button } from '@mui/material';
+import { Card, Grid, Link, Button, Chip } from '@mui/material';
 import ConfirmDialog from '../../../components/confirm-dialog';
 // routes
 import { PATH_SETTING } from '../../../routes/paths';
@@ -169,6 +169,8 @@ export default function SecurityUserViewForm() {
     [securityUser]
   );
 
+  const userRoleChips = defaultValues?.roles.map((role,index) => <Chip key={index} title={role.name} label={role.name} color={role.name === 'SuperAdmin' ? 'secondary' : 'default'} sx={{m:0.2}}/>);
+
   return (
     <>
       <Grid sx={{ p: 3, mt: -3 }}>
@@ -282,7 +284,7 @@ export default function SecurityUserViewForm() {
                 <ViewFormField isLoading={isLoading}
                   sm={12}
                   heading="Roles"
-                  userRolesChips={defaultValues?.roles}
+                  node={<Grid container>{userRoleChips}</Grid>}
                 />
 
                 <ViewFormField isLoading={isLoading}
@@ -294,19 +296,19 @@ export default function SecurityUserViewForm() {
                 <ViewFormField isLoading={isLoading}
                   sm={12}
                   heading="Regions"
-                  arrayParam={defaultValues?.regions}
+                  chips={defaultValues?.regions.map(region => region.name)}
                 />
 
                 <ViewFormField isLoading={isLoading}
                   sm={12}
                   heading="Customers"
-                  arrayParam={defaultValues?.customers}
+                  chips={defaultValues?.customers.map(customer => customer.name)}
                 />
 
                 <ViewFormField isLoading={isLoading}
                   sm={12}
                   heading="Machines"
-                  machineConnectionArrayChip={defaultValues?.machines}
+                  chips={defaultValues?.machines.map(machine => machine.name)}
                 />
 
               </Grid>

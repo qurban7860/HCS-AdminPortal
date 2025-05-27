@@ -109,7 +109,7 @@ export default function FaultList() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 
-  const handleViewRow = (id) => navigate(PATH_SUPPORT.ticketSettings.faults.view(id));
+  const handleViewRow = (id) => navigate(PATH_SUPPORT.settings.faults.view(id));
   
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))

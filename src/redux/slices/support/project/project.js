@@ -10,16 +10,16 @@ const initialState = {
   success: false,
   isLoading: false,
   error: null,
-  articles: [],
-  activeArticles: [],
-  article: null,
+  projects: [],
+  activeProjects: [],
+  project: null,
   filterBy: '',
   page: 0,
   rowsPerPage: 100
 };
 
 const slice = createSlice({
-  name: 'article',
+  name: 'project',
   initialState,
   reducers: {
     // START LOADING
@@ -36,26 +36,26 @@ const slice = createSlice({
     },
 
     // GET Setting
-    getArticlesSuccess(state, action) {
+    getProjectsSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.articles = action.payload;
+      state.projects = action.payload;
       state.initial = true;
     },
 
     // GET Active Setting
-    getActiveArticlesSuccess(state, action) {
+    getActiveProjectsSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.activeArticles = action.payload;
+      state.activeProjects = action.payload;
       state.initial = true;
     },
 
     // GET Setting
-    getArticleSuccess(state, action) {
+    getProjectSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.article = action.payload;
+      state.project = action.payload;
       state.initial = true;
     },
 
@@ -67,24 +67,24 @@ const slice = createSlice({
     },
 
     // RESET DOCUMENT NAME
-    resetArticle(state) {
-      state.article = {};
+    resetProject(state) {
+      state.project = {};
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
     },
 
     // RESET DOCUMENT NAME
-    resetArticles(state) {
-      state.articles = [];
+    resetProjects(state) {
+      state.projects = [];
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
     },
 
     // RESET Active DOCUMENT NAME
-    resetActiveArticles(state) {
-      state.activeArticles = [];
+    resetActiveProjects(state) {
+      state.activeProjects = [];
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
@@ -112,9 +112,9 @@ export default slice.reducer;
 
 // Actions
 export const {
-  resetArticle,
-  resetArticles,
-  resetActiveArticles,
+  resetProject,
+  resetProjects,
+  resetActiveProjects,
   setResponseMessage,
   setFilterBy,
   ChangeRowsPerPage,
@@ -122,22 +122,22 @@ export const {
   setReportHiddenColumns,
 } = slice.actions;
 
-// ----------------------------Add Article------------------------------------------
+// ----------------------------Add Project------------------------------------------
 
-export function addArticle(params) {
+export function addProject(params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const data = {
-        articleNo: params.articleNo,
+        projectNo: params.projectNo,
         title: params.title,
         description: params.description,
         category: params.category?._id,
         customerAccess: params.customerAccess,
         isActive: params.isActive,
       }
-      const response = await axios.post(`${CONFIG.SERVER_URL}support/knowledgeBase/article/`, data);
-      dispatch(slice.actions.setResponseMessage('Article saved successfully'));
+      const response = await axios.post(`${CONFIG.SERVER_URL}support/project/`, data);
+      dispatch(slice.actions.setResponseMessage('Project saved successfully'));
       return response?.data;
     } catch (error) {
       console.log(error);
@@ -147,22 +147,22 @@ export function addArticle(params) {
   };
 }
 
-// ---------------------------------Update Article-------------------------------------
+// ---------------------------------Update Project-------------------------------------
 
-export function updateArticle(Id, params) {
+export function updateProject(Id, params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const data = {
-        articleNo: params.articleNo,
+        projectNo: params.projectNo,
         title: params.title,
         description: params.description,
         category: params.category?._id,
         customerAccess: params.customerAccess,
         isActive: params.isActive,
       }
-      await axios.patch(`${CONFIG.SERVER_URL}support/knowledgeBase/article/${Id}`, data,);
-      dispatch(slice.actions.setResponseMessage('Article updated successfully'));
+      await axios.patch(`${CONFIG.SERVER_URL}support/project/${Id}`, data,);
+      dispatch(slice.actions.setResponseMessage('Project updated successfully'));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -171,15 +171,15 @@ export function updateArticle(Id, params) {
   };
 }
 
-// ---------------------------------Update Article Status-------------------------------------
-export function updateArticleStatus(Id, params) {
+// ---------------------------------Update Project Status-------------------------------------
+export function updateProjectStatus(Id, params) {
   return async (dispatch) => {
     try {
       const data = {
         status: params.status
       }
-      await axios.patch(`${CONFIG.SERVER_URL}support/knowledgeBase/article/${Id}`, data,);
-      dispatch(slice.actions.setResponseMessage('Article status updated successfully'));
+      await axios.patch(`${CONFIG.SERVER_URL}support/project/${Id}`, data,);
+      dispatch(slice.actions.setResponseMessage('Project status updated successfully'));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -188,21 +188,21 @@ export function updateArticleStatus(Id, params) {
   };
 }
 
-// -----------------------------------Get Article-----------------------------------
+// -----------------------------------Get Project-----------------------------------
 
-export function getArticles(isArchived) {
+export function getProjects(isArchived) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}support/knowledgeBase/article/list`,
+      const response = await axios.get(`${CONFIG.SERVER_URL}support/project/list`,
         {
           params: {
             isArchived: isArchived || false
           }
         }
       );
-      dispatch(slice.actions.getArticlesSuccess(response.data));
-      dispatch(slice.actions.setResponseMessage('Articles loaded successfully'));
+      dispatch(slice.actions.getProjectsSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Projects loaded successfully'));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -212,9 +212,9 @@ export function getArticles(isArchived) {
 }
 
 
-// -----------------------------------Get Active Article-----------------------------------
+// -----------------------------------Get Active Project-----------------------------------
 
-export function getActiveArticles() {
+export function getActiveProjects() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -226,9 +226,9 @@ export function getActiveArticles() {
         }
       }
 
-      const response = await axios.get(`${CONFIG.SERVER_URL}support/knowledgeBase/article/list`, query);
-      dispatch(slice.actions.getActiveArticlesSuccess(response.data));
-      dispatch(slice.actions.setResponseMessage('Articles loaded successfully'));
+      const response = await axios.get(`${CONFIG.SERVER_URL}support/project/list`, query);
+      dispatch(slice.actions.getActiveProjectsSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Projects loaded successfully'));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -237,15 +237,15 @@ export function getActiveArticles() {
   };
 }
 
-// -------------------------------get Article---------------------------------------
+// -------------------------------get Project---------------------------------------
 
-export function getArticle(Id) {
+export function getProject(Id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}support/knowledgeBase/article/${Id}`);
-      dispatch(slice.actions.getArticleSuccess(response.data));
-      dispatch(slice.actions.setResponseMessage('Article Loaded Successfuly'));
+      const response = await axios.get(`${CONFIG.SERVER_URL}support/project/${Id}`);
+      dispatch(slice.actions.getProjectSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Project Loaded Successfuly'));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -254,13 +254,13 @@ export function getArticle(Id) {
   };
 }
 
-// ---------------------------------archive Article-------------------------------------
+// ---------------------------------archive Project-------------------------------------
 
-export function archiveArticle(Id) {
+export function archiveProject(Id) {
   return async (dispatch) => {
     // dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.patch(`${CONFIG.SERVER_URL}support/knowledgeBase/article/${Id}`,
+      const response = await axios.patch(`${CONFIG.SERVER_URL}support/project/${Id}`,
         {
           isArchived: true,
         });
@@ -273,11 +273,11 @@ export function archiveArticle(Id) {
   };
 }
 
-export function restoreArticle(Id) {
+export function restoreProject(Id) {
   return async (dispatch) => {
     // dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.patch(`${CONFIG.SERVER_URL}support/knowledgeBase/article/${Id}`,
+      const response = await axios.patch(`${CONFIG.SERVER_URL}support/project/${Id}`,
         {
           isArchived: false,
         });
@@ -290,11 +290,11 @@ export function restoreArticle(Id) {
   };
 }
 
-export function deleteArticle(Id) {
+export function deleteProject(Id) {
   return async (dispatch) => {
     // dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.delete(`${CONFIG.SERVER_URL}support/knowledgeBase/article/${Id}`);
+      const response = await axios.delete(`${CONFIG.SERVER_URL}support/project/${Id}`);
       dispatch(slice.actions.setResponseMessage(response.data));
     } catch (error) {
       console.error(error);

@@ -58,15 +58,15 @@ function CustomerDialog() {
           <FormLabel content="Howick Resources" />
           
           <ViewFormField isLoading={isLoading} sm={6} heading="Account Manager"
-            customerContacts={customer?.accountManager}
+            chips={customer?.accountManager?.map(el=>`${el?.firstName} ${el?.lastName}`)}
           />
 
           <ViewFormField isLoading={isLoading} sm={6} heading="Project Manager"
-            customerContacts={customer?.projectManager}
+            chips={customer?.projectManager?.map(el=>`${el?.firstName} ${el?.lastName}`)}
           />
 
           <ViewFormField isLoading={isLoading} sm={6} heading="Suppport Manager"
-            customerContacts={customer?.supportManager}
+            chips={customer?.supportManager?.map(el=>`${el?.firstName} ${el?.lastName}`)}
           />
 
         </Grid>

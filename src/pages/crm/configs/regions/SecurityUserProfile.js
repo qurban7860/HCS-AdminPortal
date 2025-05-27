@@ -157,7 +157,7 @@ export default function SecurityUserProfile() {
             <ViewFormField isLoading={isLoading}
               sm={6}
               heading="Contact"
-              objectParam={
+              node={
                 defaultValues?.contact && (
                   <Link onClick={handleOpenContact} href="#" underline="none">
                     {defaultValues?.contact}
@@ -172,6 +172,7 @@ export default function SecurityUserProfile() {
             <ViewFormField isLoading={isLoading}
               sm={6}
               heading="Roles"
+              chips={defaultValues?.roles}
               userRolesChips={defaultValues?.roles}
             />
           </Grid>
@@ -224,20 +225,17 @@ export default function SecurityUserProfile() {
           <ViewFormField isLoading={isLoading}
             sm={6}
             heading="Account Manager"
-            param={customer?.accountManager?.firstName}
-            secondParam={customer?.accountManager?.lastName}
-          />
+            param={`${customer?.accountManager?.firstName} ${customer?.accountManager?.lastName}`}
+          />  
           <ViewFormField isLoading={isLoading}
             sm={6}
             heading="Project Manager"
-            param={customer?.projectManager?.firstName}
-            secondParam={customer?.projectManager?.lastName}
+            param={`${customer?.projectManager?.firstName} ${customer?.projectManager?.lastName}`}
           />
           <ViewFormField isLoading={isLoading}
             sm={6}
             heading="Suppport Manager"
-            param={customer?.supportManager?.firstName}
-            secondParam={customer?.supportManager?.lastName}
+            param={`${customer?.supportManager?.firstName} ${customer?.supportManager?.lastName}`}
           />
         </Grid>
         <DialogLink content="Go to customer" onClick={() => handleViewCustomer(customer._id)} />

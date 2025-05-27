@@ -80,11 +80,11 @@ export default function ChangeTypeForm() {
       if (id) {
         await dispatch(patchTicketChangeType(id, data));
         enqueueSnackbar('Change Type Updated Successfully!');
-        navigate(PATH_SUPPORT.ticketSettings.changeTypes.view(id));
+        navigate(PATH_SUPPORT.settings.changeTypes.view(id));
       } else {
         await dispatch(postTicketChangeType(data));
         enqueueSnackbar('Change Type Added Successfully!');
-        navigate(PATH_SUPPORT.ticketSettings.changeTypes.root);
+        navigate(PATH_SUPPORT.settings.changeTypes.root);
       }
       reset();
     } catch (error) {
@@ -95,7 +95,7 @@ export default function ChangeTypeForm() {
 
   const toggleCancel = async () => {
     dispatch(resetTicketChangeType())
-    await navigate(PATH_SUPPORT.ticketSettings.changeTypes.root);
+    await navigate(PATH_SUPPORT.settings.changeTypes.root);
   };
 
   return (

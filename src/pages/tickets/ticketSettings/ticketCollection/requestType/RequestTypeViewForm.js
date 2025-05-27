@@ -52,14 +52,14 @@ export default function RequestTypeViewForm() {
     try {
       await dispatch(deleteTicketRequestType(id, true));
       enqueueSnackbar('Request Type Archived Successfully!', { variant: 'success' });
-      navigate(PATH_SUPPORT.ticketSettings.requestTypes.root);
+      navigate(PATH_SUPPORT.settings.requestTypes.root);
     } catch (err) {
       enqueueSnackbar( handleError( err ) || 'Request Type Archive failed!', { variant: `error` } );
       console.log('Error:', err);
     }
   };
 
-  const toggleEdit = () => navigate(PATH_SUPPORT.ticketSettings.requestTypes.edit(id));
+  const toggleEdit = () => navigate(PATH_SUPPORT.settings.requestTypes.edit(id));
 
   return (
   <Grid>
@@ -71,7 +71,7 @@ export default function RequestTypeViewForm() {
         onArchive={onArchive} 
         backLink={() => {
           dispatch(resetTicketRequestType());
-          navigate(PATH_SUPPORT.ticketSettings.requestTypes.root);
+          navigate(PATH_SUPPORT.settings.requestTypes.root);
         }}
       />
       <Grid container sx={{mt:2}}>

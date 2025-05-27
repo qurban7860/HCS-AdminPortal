@@ -3,17 +3,17 @@ import PropTypes from 'prop-types';
 import { Stack } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { PATH_SUPPORT } from '../../../../routes/paths';
+import { PATH_SUPPORT } from '../../../routes/paths';
 // components
-import SearchBarCombo from '../../../../components/ListTableTools/SearchBarCombo';
+import SearchBarCombo from '../../../components/ListTableTools/SearchBarCombo';
 // constants
-import { BUTTONS } from '../../../../constants/default-constants';
+import { BUTTONS } from '../../../constants/default-constants';
 // styles
-import { options } from '../../../../theme/styles/default-styles';
+import { options } from '../../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
 
-ArticleCategoryListTableToolbar.propTypes = {
+ProjectListTableToolbar.propTypes = {
   isFiltered: PropTypes.bool,
   filterName: PropTypes.string,
   onFilterName: PropTypes.func,
@@ -21,7 +21,7 @@ ArticleCategoryListTableToolbar.propTypes = {
   isArchived: PropTypes.bool,
 };
 
-export default function ArticleCategoryListTableToolbar({
+export default function ProjectListTableToolbar({
   isFiltered,
   filterName,
   onResetFilter,
@@ -31,7 +31,7 @@ export default function ArticleCategoryListTableToolbar({
 
   const navigate = useNavigate();
   const toggleAdd = () => {
-    navigate(PATH_SUPPORT.settings.articleCategories.new);
+    navigate(PATH_SUPPORT.projects.new);
   };
 
   return (
@@ -41,7 +41,7 @@ export default function ArticleCategoryListTableToolbar({
         value={filterName}
         onChange={onFilterName}
         onClick={onResetFilter}
-        {...(!isArchived && {addButton: ' Add Article Category'})}
+        {...(!isArchived && {addButton: ' Add Project'})}
         {...(!isArchived && {SubOnClick: toggleAdd})}
         settingPage
         />

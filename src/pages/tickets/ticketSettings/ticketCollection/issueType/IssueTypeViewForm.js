@@ -51,14 +51,14 @@ export default function IssueTypeViewForm() {
     try {
       await dispatch(deleteTicketIssueType(id, true));
       enqueueSnackbar('Issue Type Archived Successfully!', { variant: 'success' });
-      navigate(PATH_SUPPORT.ticketSettings.issueTypes.root);
+      navigate(PATH_SUPPORT.settings.issueTypes.root);
     } catch (err) {
       enqueueSnackbar( handleError( err ) || 'Issue Type Archive failed!', { variant: `error` });
       console.log('Error:', err);
     }
   };
 
-  const toggleEdit = () => navigate(PATH_SUPPORT.ticketSettings.issueTypes.edit(id));
+  const toggleEdit = () => navigate(PATH_SUPPORT.settings.issueTypes.edit(id));
 
   return (
   <Grid>
@@ -70,7 +70,7 @@ export default function IssueTypeViewForm() {
         onArchive={onArchive} 
         backLink={() => {
           dispatch(resetTicketIssueType());
-          navigate(PATH_SUPPORT.ticketSettings.issueTypes.root);
+          navigate(PATH_SUPPORT.settings.issueTypes.root);
         }}
       />
       <Grid container sx={{mt:2}}>

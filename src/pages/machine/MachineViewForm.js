@@ -391,18 +391,18 @@ export default function MachineViewForm() {
                        {/* 10 FULL ROW */}
             { defaultValues?.parentSerialNo ? <ViewFormField isLoading={isLoading} sm={6} heading="Previous Machine" param={defaultValues?.parentSerialNo} /> : " "}
                        {/* 11 FULL ROW */}
-            <ViewFormField isLoading={isLoading} sm={12} heading="Connected Machines" chipDialogArrayParam={linkedMachines} />
+            <ViewFormField isLoading={isLoading} sm={12} heading="Connected Machines" node={<Grid container>{linkedMachines}</Grid>} />
                        {/* 12 FULL ROW */}
-            <ViewFormField isLoading={isLoading} sm={12} heading="Parent Machines" chipDialogArrayParam={paranetMachines} />
+            <ViewFormField isLoading={isLoading} sm={12} heading="Parent Machines" node={<Grid container>{paranetMachines}</Grid>} />
                        {/* 13 FULL ROW */}
             <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues?.description} />
           </Grid>
                        {/* HOWICK RESOURCES */}
           <Grid container>
             <FormLabel content={FORMLABELS.HOWICK} />
-            <ViewFormField isLoading={isLoading} sm={6} heading="Account Manager" customerContacts={defaultValues?.accountManager} />
-            <ViewFormField isLoading={isLoading} sm={6} heading="Project Manager" customerContacts={defaultValues?.projectManager} />
-            <ViewFormField isLoading={isLoading} sm={6} heading="Suppport Manager" customerContacts={defaultValues?.supportManager} />
+            <ViewFormField isLoading={isLoading} sm={6} heading="Account Manager" chips={defaultValues?.accountManager?.map(el=>`${el?.firstName} ${el?.lastName}`)} />
+            <ViewFormField isLoading={isLoading} sm={6} heading="Project Manager" chips={defaultValues?.projectManager?.map(el=>`${el?.firstName} ${el?.lastName}`)} />
+            <ViewFormField isLoading={isLoading} sm={6} heading="Suppport Manager" chips={defaultValues?.supportManager?.map(el=>`${el?.firstName} ${el?.lastName}`)} />
             <ViewFormField isLoading={isLoading} sm={6} heading="Support Expiry Date" param={fDate(defaultValues?.supportExpireDate)} />
           </Grid>
 

@@ -35,7 +35,7 @@ export default function StatusListTableToolbar({
 }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const toggleAdd = () => navigate(PATH_SUPPORT.ticketSettings.statuses.new);
+  const toggleAdd = () => navigate(PATH_SUPPORT.settings.statuses.new);
   const { activeTicketStatusTypes } = useSelector((state) => state.ticketStatusTypes);
 
   useEffect(() => {

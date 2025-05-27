@@ -504,6 +504,12 @@ import {
   ArticleCategoryAdd,
   ArticleCategoryEdit,
   ArticleCategoryView,
+
+  // SUPPORT Projects
+  ProjectList,
+  ProjectAdd,
+  ProjectEdit,
+  ProjectView,
 } from './elements';
 
 // ----------------------------------------------------------------------
@@ -1193,6 +1199,15 @@ export default function Router() {
         </AuthGuard>
       ),
       children: [
+        {
+          path: 'projects',
+          children: [
+            { element: <ProjectList />, index: true },
+            { path: 'new', element: <ProjectAdd /> },
+            { path: ':id/view', element: <ProjectView /> },
+            { path: ':id/edit', element: <ProjectEdit /> },
+          ],
+        },
         { element: <Navigate to="/support/supportTickets" replace />, index: true },
         {
           path: 'supportDashboard',
@@ -1216,7 +1231,7 @@ export default function Router() {
           ],
         },
         {
-          path: 'ticketSettings',
+          path: 'settings',
           children: [
             { element: <TicketSetting />, index: true },
             // --------------------- Ticket Collection --------------------------------
@@ -1310,6 +1325,16 @@ export default function Router() {
                 { path: ':id/view', element: <FaultView /> },
               ]
             },
+            { path: 'articleCategories', 
+              children: [
+                { element: <ArticleCategoryList />, index: true },
+                { path: 'new', element: <ArticleCategoryAdd /> },
+                { path: ':id/edit', element: <ArticleCategoryEdit /> },
+                { path: ':id/view', element: <ArticleCategoryView /> },
+                { path: 'archived', element: <ArticleCategoryList isArchived /> },
+                { path: ':id/archived/view', element: <ArticleCategoryView /> },
+              ]
+            },
           ],
         },
         { element: <Navigate to="/support/supportTickets" replace />, index: true },
@@ -1327,21 +1352,6 @@ export default function Router() {
                 { path: ':id/archived/view', element: <ArticleView /> },
               ]
             }
-          ]
-         },
-         {
-          path:'supportSettings',
-          children:[
-            { path: 'articleCategories', 
-              children: [
-                { element: <ArticleCategoryList />, index: true },
-                { path: 'new', element: <ArticleCategoryAdd /> },
-                { path: ':id/edit', element: <ArticleCategoryEdit /> },
-                { path: ':id/view', element: <ArticleCategoryView /> },
-                { path: 'archived', element: <ArticleCategoryList isArchived /> },
-                { path: ':id/archived/view', element: <ArticleCategoryView /> },
-              ]
-            },
           ]
          },
         { path: 'manuals', element: <SectionUnderConstruction /> },

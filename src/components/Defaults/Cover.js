@@ -54,7 +54,7 @@ export function Cover({
 }) {
   const navigate = useNavigate();
   const handleSettingsNavigate = () => navigate(PATH_SETTING.root);
-  const handleSupportTicketSettingsNavigate = () => navigate(PATH_SUPPORT.ticketSettings.root);
+  const handleSupportTicketSettingsNavigate = () => navigate(PATH_SUPPORT.settings.root);
   const linkArchivedCustomers = () => navigate(PATH_CRM.customers.archived.root);
   const linkArchivedMachines = () => navigate(PATH_MACHINE.archived.root);
   const handleBackLink = () => window.history.back();

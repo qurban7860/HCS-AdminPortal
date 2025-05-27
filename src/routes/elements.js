@@ -551,3 +551,9 @@ export const ArticleCategoryList = Loadable(lazy(() => import('../pages/support/
 export const ArticleCategoryAdd = Loadable(lazy(() => import('../pages/support/supportSettings/articleCategory/ArticleCategoryAddForm')));
 export const ArticleCategoryEdit = Loadable(lazy(() => import('../pages/support/supportSettings/articleCategory/ArticleCategoryEdit')));
 export const ArticleCategoryView = Loadable(lazy(() => import('../pages/support/supportSettings/articleCategory/ArticleCategoryView')));
+
+// --------------------------- Support -> Projects -------------------------------------
+export const ProjectList = Loadable(lazy(() => import('../pages/support/project/ProjectList')));
+export const ProjectAdd = Loadable(lazy(() => import('../pages/support/project/ProjectAddForm')));
+export const ProjectEdit = Loadable(lazy(() => import('../pages/support/project/ProjectEditForm')));
+export const ProjectView = Loadable(lazy(() => import('../pages/support/project/ProjectViewForm')));

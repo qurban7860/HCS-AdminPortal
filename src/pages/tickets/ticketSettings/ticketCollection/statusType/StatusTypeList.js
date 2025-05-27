@@ -110,7 +110,7 @@ export default function StatusTypeList() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 
-  const handleViewRow = (id) => navigate(PATH_SUPPORT.ticketSettings.statusTypes.view(id));
+  const handleViewRow = (id) => navigate(PATH_SUPPORT.settings.statusTypes.view(id));
   
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))

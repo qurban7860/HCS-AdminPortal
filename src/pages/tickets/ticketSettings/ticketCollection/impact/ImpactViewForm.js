@@ -50,14 +50,14 @@ export default function ImpactViewForm() {
     try {
       await dispatch(deleteTicketImpact(id, true));
       enqueueSnackbar('Impacts Archived Successfully!', { variant: 'success' });
-      navigate(PATH_SUPPORT.ticketSettings.impacts.root);
+      navigate(PATH_SUPPORT.settings.impacts.root);
     } catch (err) {
       enqueueSnackbar( handleError( err ) || 'Impacts Archive failed!', { variant: `error` });
       console.log('Error:', err);
     }
   };
 
-  const toggleEdit = () => navigate(PATH_SUPPORT.ticketSettings.impacts.edit(id));
+  const toggleEdit = () => navigate(PATH_SUPPORT.settings.impacts.edit(id));
 
   return (
   <Grid>
@@ -69,7 +69,7 @@ export default function ImpactViewForm() {
         onArchive={onArchive} 
         backLink={() => {
           dispatch(resetTicketImpact());
-          navigate(PATH_SUPPORT.ticketSettings.impacts.root);
+          navigate(PATH_SUPPORT.settings.impacts.root);
         }}
       />
       <Grid container sx={{mt:2}}>

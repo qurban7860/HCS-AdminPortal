@@ -52,14 +52,14 @@ export default function ChangeTypeViewForm() {
     try {
       await dispatch(deleteTicketChangeType(id, true));
       enqueueSnackbar('Change Type Archived Successfully!', { variant: 'success' });
-      navigate(PATH_SUPPORT.ticketSettings.changeTypes.root);
+      navigate(PATH_SUPPORT.settings.changeTypes.root);
     } catch (err) {
       enqueueSnackbar( handleError( err ) || 'Change Type Archive failed!', { variant: `error` });
       console.log('Error:', err);
     }
   };
 
-  const toggleEdit = () => navigate(PATH_SUPPORT.ticketSettings.changeTypes.edit(id));
+  const toggleEdit = () => navigate(PATH_SUPPORT.settings.changeTypes.edit(id));
 
   return (
   <Grid>
@@ -71,7 +71,7 @@ export default function ChangeTypeViewForm() {
         onArchive={onArchive} 
         backLink={() => {
           dispatch(resetTicketChangeType());
-          navigate(PATH_SUPPORT.ticketSettings.changeTypes.root);
+          navigate(PATH_SUPPORT.settings.changeTypes.root);
         }}
       />
       <Grid container sx={{mt:2}}>

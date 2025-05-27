@@ -125,7 +125,7 @@ export default function DocumentCategoryViewForm() {
         <Grid container sx={{mt:2}}>
           <ViewFormField isLoading={isLoading} sm={12} heading="Category Name" param={defaultValues.name} />
           <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues.description} />
-          <ViewFormField isLoading={isLoading} sm={12} heading="Document Types" chipDialogArrayParam={linkedDocumentTypes} />
+          <ViewFormField isLoading={isLoading} sm={12} heading="Document Types" node={<Grid container>{linkedDocumentTypes}</Grid>} />
           <ViewFormSWitch isLoading={isLoading}
               customerHeading='Customer' 
               customer={documentCategory?.customer} 

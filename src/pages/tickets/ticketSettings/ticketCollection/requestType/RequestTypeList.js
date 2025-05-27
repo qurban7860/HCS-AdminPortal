@@ -111,7 +111,7 @@ export default function RequestTypeList() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 
-  const handleViewRow = (id) => navigate(PATH_SUPPORT.ticketSettings.requestTypes.view(id));
+  const handleViewRow = (id) => navigate(PATH_SUPPORT.settings.requestTypes.view(id));
   
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))

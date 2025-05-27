@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // @mui
-import {  Card, Grid } from '@mui/material';
+import {  Card, Grid, Typography } from '@mui/material';
 // redux
 import { deleteCheckItem } from '../../../redux/slices/products/machineCheckItems';
 // paths
@@ -62,6 +62,8 @@ export default function CheckItemViewForm() {
     [ checkItem ]
   );
 
+  const configArrayChips = defaultValues.utlizedInReportConfigs.map((item) => <div style={{display:'flex',alignItems:'center'}}  ><Typography variant='body2'>{`${item?.reportTitle || ''}`}</Typography> <Typography variant='subtitle2'>{` - v${item?.docVersionNo}`}</Typography></div>);
+
   return (
     <Card sx={{ p: 2 }}>
       <Grid>
@@ -84,7 +86,7 @@ export default function CheckItemViewForm() {
           <ViewFormField isLoading={isLoading} sm={6} heading="Minimum Validation" param={defaultValues.minValidation} />
           <ViewFormField isLoading={isLoading} sm={6} heading="Maximum Validation" param={defaultValues.maxValidation} />
           <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues.description} />
-          <ViewFormField isLoading={isLoading} sm={12} heading="Utlized In Configs" configArrayParam={defaultValues.utlizedInReportConfigs} />
+          <ViewFormField isLoading={isLoading} sm={12} heading="Utlized In Configs" chips={configArrayChips} />
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>
       </Grid>

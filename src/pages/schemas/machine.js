@@ -308,7 +308,7 @@ export const MachineServiceReportPart2TACISchema = Yup.object().shape({
 
 export const filesValidations = Yup.object().shape({
   files: Yup.mixed()
-    .required(Snacks.DOC_REQUIRED)
+    // .required(Snacks.DOC_REQUIRED)
     .test('fileType', fileTypesMessage, NotRequiredValidateFileType)
     .nullable(true),
 });

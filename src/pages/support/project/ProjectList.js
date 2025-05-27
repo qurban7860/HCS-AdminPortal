@@ -14,9 +14,9 @@ import {
   // Stack,
 } from '@mui/material';
 // redux
-import { useDispatch, useSelector } from '../../../../redux/store';
+import { useDispatch, useSelector } from '../../../redux/store';
 // routes
-import { PATH_SUPPORT } from '../../../../routes/paths';
+import { PATH_SUPPORT } from '../../../routes/paths';
 // components
 import {
   useTable,
@@ -27,25 +27,25 @@ import {
   TablePaginationCustom,
   TablePaginationFilter,
   TableHeadFilter,
-} from '../../../../components/table';
-import Iconify from '../../../../components/iconify';
-import Scrollbar from '../../../../components/scrollbar';
-import ConfirmDialog from '../../../../components/confirm-dialog';
+} from '../../../components/table';
+import Iconify from '../../../components/iconify';
+import Scrollbar from '../../../components/scrollbar';
+import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
-import ArticleCategoryListTableRow from './ArticleCategoryListTableRow';
-import ArticleCategoryListTableToolbar from './ArticleCategoryListTableToolbar';
+import ProjectListTableRow from './ProjectListTableRow';
+import ProjectListTableToolbar from './ProjectListTableToolbar';
 import {
-  getArticleCategories,
+  getProjects,
   ChangeRowsPerPage,
   ChangePage,
   setFilterBy,
-  deleteArticleCategory,
-} from '../../../../redux/slices/support/supportSettings/articleCategory';
-import { Cover } from '../../../../components/Defaults/Cover';
-import { fDate } from '../../../../utils/formatTime';
-import TableCard from '../../../../components/ListTableTools/TableCard';
-import { StyledCardContainer } from '../../../../theme/styles/default-styles';
-import useResponsive from '../../../../hooks/useResponsive';
+  deleteProject,
+} from '../../../redux/slices/support/project/project';
+import { Cover } from '../../../components/Defaults/Cover';
+import { fDate } from '../../../utils/formatTime';
+import TableCard from '../../../components/ListTableTools/TableCard';
+import { StyledCardContainer } from '../../../theme/styles/default-styles';
+import useResponsive from '../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -58,11 +58,11 @@ const TABLE_HEAD = [
 
 // ----------------------------------------------------------------------
 
-ArticleCategoryList.propTypes = {
+ProjectList.propTypes = {
   isArchived: PropTypes.bool,
 };
 
-export default function ArticleCategoryList({isArchived}) {
+export default function ProjectList({isArchived}) {
   const {
     order,
     orderBy,
@@ -91,17 +91,17 @@ export default function ArticleCategoryList({isArchived}) {
   const navigate = useNavigate();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
-  const { articleCategories, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.articleCategory);
+  const { projects, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.project);
 
   useEffect(() => {
-    dispatch(getArticleCategories(isArchived));
+    dispatch(getProjects(isArchived));
   }, [dispatch,isArchived]);
 
   useEffect(() => {
     if (initial) {
-      setTableData(articleCategories || []);
+      setTableData(projects || []);
     }
-  }, [articleCategories, initial]);
+  }, [projects, initial]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -134,7 +134,7 @@ export default function ArticleCategoryList({isArchived}) {
   },[])
 
   const handleViewRow = (id) => {
-    navigate(PATH_SUPPORT.settings.articleCategories.view(id));
+    navigate(PATH_SUPPORT.projects.view(id));
   };
 
   const handleResetFilter = () => {
@@ -147,26 +147,26 @@ export default function ArticleCategoryList({isArchived}) {
     setPage(0);
     dispatch(setFilterBy(''));
     if(isArchived){
-      navigate(PATH_SUPPORT.settings.articleCategories.root);    
+      navigate(PATH_SUPPORT.projects.root);    
     }else{
-      navigate(PATH_SUPPORT.settings.articleCategories.archived);    
+      navigate(PATH_SUPPORT.projects.archived);    
     }
   }
 
   return (
       <Container maxWidth={false}>
         <StyledCardContainer>
-          <Cover name={isArchived?'Archived Article Categories':'Article Categories'} supportTicketSettings 
+          <Cover name={isArchived?'Archived Projects':'Projects'} supportTicketSettings 
             archivedLink={{
-              label:isArchived?'Article Categories':'Archived Categories', 
+              label:isArchived?'Projects':'Archived Projects', 
               link: handleArchive, 
-              icon: 'mdi:book-cog'}}
+              icon: 'solar:list-bold-duotone'}}
             isArchived={isArchived}
           />
         </StyledCardContainer>
 
         <TableCard>
-          <ArticleCategoryListTableToolbar
+          <ProjectListTableToolbar
             filterName={filterName}
             onFilterName={handleFilterName}
             isFiltered={isFiltered}
@@ -183,7 +183,7 @@ export default function ArticleCategoryList({isArchived}) {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) =>
                       row ? (
-                        <ArticleCategoryListTableRow
+                        <ProjectListTableRow
                           key={row._id}
                           row={row}
                           onViewRow={() => handleViewRow(row._id)}
@@ -218,11 +218,11 @@ function applyFilter({ inputData, comparator, filterName }) {
 
   if (filterName) {
     inputData = inputData.filter(
-      (articleCategory) =>
-        String(articleCategory?.name)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        String(articleCategory?.description)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        // (articleCategoryCategory?.isActive ? "Active" : "InActive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
-        String(fDate(articleCategory?.updatedAt))?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+      (Project) =>
+        String(Project?.name)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        String(Project?.description)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        // (ProjectCategory?.isActive ? "Active" : "InActive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+        String(fDate(Project?.updatedAt))?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }
 

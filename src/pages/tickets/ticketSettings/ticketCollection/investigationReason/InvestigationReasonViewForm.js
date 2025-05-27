@@ -49,7 +49,7 @@ export default function InvestigationReasonViewForm() {
   const onArchive = async () => {
     try {
       await dispatch(deleteTicketInvestigationReason(id, true));
-      navigate(PATH_SUPPORT.ticketSettings.investigationReasons.root);
+      navigate(PATH_SUPPORT.settings.investigationReasons.root);
       enqueueSnackbar('Investigation Reason Archived Successfully!', { variant: 'success' });
     } catch (err) {
       enqueueSnackbar( handleError( err ) || 'Investigation Reason Archive failed!', { variant: `error` });
@@ -57,7 +57,7 @@ export default function InvestigationReasonViewForm() {
     }
   };
 
-  const toggleEdit = () => navigate(PATH_SUPPORT.ticketSettings.investigationReasons.edit(id));
+  const toggleEdit = () => navigate(PATH_SUPPORT.settings.investigationReasons.edit(id));
 
   return (
   <Grid>
@@ -69,7 +69,7 @@ export default function InvestigationReasonViewForm() {
         onArchive={onArchive} 
         backLink={() => {
           dispatch(resetTicketInvestigationReason());
-          navigate(PATH_SUPPORT.ticketSettings.investigationReasons.root);
+          navigate(PATH_SUPPORT.settings.investigationReasons.root);
         }}
       />
       <Grid container sx={{mt:2}}>

@@ -9,37 +9,41 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // import { LoadingButton } from '@mui/lab';
 import { Card, Grid, Stack, Container, Box } from '@mui/material';
 // routes
-import { PATH_SUPPORT } from '../../../../routes/paths';
+import { PATH_SUPPORT } from '../../../routes/paths';
 // slice
-import { addArticleCategory } from '../../../../redux/slices/support/supportSettings/articleCategory';
+import { addProject } from '../../../redux/slices/support/project/project';
 // components
-import { useSnackbar } from '../../../../components/snackbar';
-import FormProvider, { RHFTextField, RHFSwitch, RHFEditor } from '../../../../components/hook-form';
-import AddFormButtons from '../../../../components/DocumentForms/AddFormButtons';
-import { Cover } from '../../../../components/Defaults/Cover';
+import { useSnackbar } from '../../../components/snackbar';
+import FormProvider, { RHFTextField, RHFSwitch, RHFEditor } from '../../../components/hook-form';
+import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
+import { Cover } from '../../../components/Defaults/Cover';
 // constants
-import { FORMLABELS } from '../../../../constants/default-constants';
+import { FORMLABELS } from '../../../constants/default-constants';
 // styles
-import { StyledCardContainer } from '../../../../theme/styles/default-styles';
-import { handleError } from '../../../../utils/errorHandler';
+import { StyledCardContainer } from '../../../theme/styles/default-styles';
+import { handleError } from '../../../utils/errorHandler';
 
 // ----------------------------------------------------------------------
 
-export const AddArticleCategorySchema = Yup.object().shape({
-  name: Yup.string().min(2).max(40).required('Name is required!'),
+export const AddProjectSchema = Yup.object().shape({
+  key: Yup.string().min(2).max(5).required('Key is required!'),
+  title: Yup.string().min(2).max(40).required('Title is required!'),
   description: Yup.string().max(10000),
+  customerAccess: Yup.boolean(),
   isActive: Yup.boolean(),
 });
 
-export default function ArticleCategoryAddForm() {
+export default function ProjectAddForm() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
 
   const defaultValues = useMemo(
     () => ({
-      name: '',
+      key: '',
+      title: '',
       description: '',
+      customerAccess: false,
       isActive: true,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -47,7 +51,7 @@ export default function ArticleCategoryAddForm() {
   );
 
   const methods = useForm({
-    resolver: yupResolver(AddArticleCategorySchema),
+    resolver: yupResolver(AddProjectSchema),
     defaultValues,
   });
 
@@ -65,10 +69,10 @@ export default function ArticleCategoryAddForm() {
   const onSubmit = async (data) => {
     try {
 
-      await dispatch(addArticleCategory(data));
+      await dispatch(addProject(data));
       reset();
-      enqueueSnackbar('Article Category added Successfully!', { variant: `success` });
-      navigate(PATH_SUPPORT.settings.articleCategories.root);
+      enqueueSnackbar('Project added Successfully!', { variant: `success` });
+      navigate(PATH_SUPPORT.projects.root);
     } catch (error) {
       enqueueSnackbar(handleError(error), { variant: `error` });
       console.error(error);
@@ -76,26 +80,32 @@ export default function ArticleCategoryAddForm() {
   };
 
   const toggleCancel = () => {
-    navigate(PATH_SUPPORT.settings.articleCategories.root);
+    navigate(PATH_SUPPORT.projects.root);
   };
 
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
-        <Cover name='New Article Category' />
+        <Cover name='New Project' />
       </StyledCardContainer>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={3}>
           <Grid item xs={18} md={12}>
             <Card sx={{ p: 3 }}>
               <Stack spacing={2}>
-                <RHFTextField name="name" label="Name" />
-                <RHFTextField name="description" label="Description" minRows={3} multiline />
+                <Box rowGap={2} columnGap={2} display="grid"
+                  gridTemplateColumns={{ xs: 'repeat(1, 1fr)', md: 'repeat(1, 3fr 10fr)' }}
+                >
+                  <RHFTextField name="key" label="Key" />
+                  <RHFTextField name="title" label="Title" />
+                </Box>
+                <RHFEditor name="description" label="Description" minRows={3} multiline />
                 <Grid display="flex" alignItems="center" mt={1}>
+                  <RHFSwitch name='customerAccess' label='Customer Access' />
                   <RHFSwitch name='isActive' label='Active' />
                 </Grid>
               </Stack>
-              <AddFormButtons settingPage isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+              <AddFormButtons customerAccess isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
             </Card>
           </Grid>
         </Grid>

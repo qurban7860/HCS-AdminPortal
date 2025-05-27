@@ -51,14 +51,14 @@ export default function FaultViewForm() {
     try {
       await dispatch(deleteTicketFault(id, true));
       enqueueSnackbar('Change Reason Archived Successfully!', { variant: 'success' });
-      navigate(PATH_SUPPORT.ticketSettings.faults.root);
+      navigate(PATH_SUPPORT.settings.faults.root);
     } catch (err) {
       enqueueSnackbar( handleError( err ) || 'Change Reason Archive failed!', { variant: `error` });
       console.log('Error:', err);
     }
   };
 
-  const toggleEdit = () => navigate(PATH_SUPPORT.ticketSettings.faults.edit(id));
+  const toggleEdit = () => navigate(PATH_SUPPORT.settings.faults.edit(id));
 
   return (
   <Grid>
@@ -70,7 +70,7 @@ export default function FaultViewForm() {
         onArchive={onArchive} 
         backLink={() => {
           dispatch(resetTicketFault());
-          navigate(PATH_SUPPORT.ticketSettings.faults.root);
+          navigate(PATH_SUPPORT.settings.faults.root);
         }}
       />
       <Grid container sx={{mt:2}}>

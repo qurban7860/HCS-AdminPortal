@@ -23,7 +23,7 @@ export default function IssueTypeListTableToolbar({
   onResetFilter,
 }) {
   const navigate = useNavigate();
-  const toggleAdd = () => navigate(PATH_SUPPORT.ticketSettings.issueTypes.new);
+  const toggleAdd = () => navigate(PATH_SUPPORT.settings.issueTypes.new);
   
   return (
     <Stack {...options}>

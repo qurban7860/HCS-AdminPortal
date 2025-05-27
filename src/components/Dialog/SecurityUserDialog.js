@@ -53,19 +53,19 @@ function SecurityUserDialog() {
               <ViewFormField isLoading={isLoading}
                 sm={12}
                 heading="Regions"
-                arrayParam={securityUser?.regions || []}
+                chips={securityUser?.regions?.map(region => region?.name) || []}
               />
 
               <ViewFormField isLoading={isLoading}
                 sm={12}
                 heading="Customers"
-                arrayParam={securityUser?.customers || []}
+                chips={securityUser?.customers?.map(customer => customer?.name) || []}
               />
 
               <ViewFormField isLoading={isLoading}
                 sm={12}
                 heading="Machines"
-                machineConnectionArrayChip={securityUser?.machines || []}
+                chips={securityUser?.machines?.map(machine => machine?.name) || []}
               />
 
         </Grid>
