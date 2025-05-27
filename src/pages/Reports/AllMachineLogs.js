@@ -4,7 +4,7 @@ import { Box, Grid, Stack, Card, Container, useTheme } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
-import FormProvider, { RHFAutocomplete, RHFDatePicker } from '../../components/hook-form';
+import FormProvider, { RHFAutocomplete, RHFDatePicker, RHFDateTimePicker } from '../../components/hook-form';
 import { getActiveCustomerMachines, resetActiveCustomerMachines } from '../../redux/slices/products/machine';
 import { getActiveCustomers } from '../../redux/slices/customer/customer';
 import { getMachineLogRecords, ChangePage, resetMachineErpLogRecords } from '../../redux/slices/products/machineErpLogs';
@@ -168,7 +168,7 @@ function AllMachineLogs() {
                   gridTemplateColumns={{ xs: '1fr', sm: 'repeat(3, 1fr)' }}
                   sx={{ flexGrow: 1 }}
                 >
-                  <RHFDatePicker
+                <RHFDateTimePicker
                     label="Date From"
                     name="dateFrom"
                     size="small"
@@ -178,7 +178,7 @@ function AllMachineLogs() {
                       trigger(['dateFrom', 'dateTo']);
                     }}
                   />
-                  <RHFDatePicker
+                  <RHFDateTimePicker
                     label="Date To"
                     name="dateTo"
                     size="small"

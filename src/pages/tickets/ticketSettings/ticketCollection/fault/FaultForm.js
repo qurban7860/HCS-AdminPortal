@@ -15,7 +15,7 @@ import { PATH_SUPPORT } from '../../../../../routes/paths';
 import { useSnackbar } from '../../../../../components/snackbar';
 import AddFormButtons from '../../../../../components/DocumentForms/AddFormButtons';
 import { handleError } from '../../../../../utils/errorHandler';
-import FormProvider, { RHFTextField, RHFSwitch, RHFColorPicker } from '../../../../../components/hook-form';
+import FormProvider, { RHFTextField, RHFSwitch, RHFColorPicker, RHFEditor } from '../../../../../components/hook-form';
 import { postTicketFault, patchTicketFault, getTicketFault, resetTicketFault } from '../../../../../redux/slices/ticket/ticketSettings/ticketFaults';
 import Iconify from '../../../../../components/iconify';
 
@@ -151,7 +151,7 @@ export default function FaultForm() {
                     label="Color"
                   />
                 </Box>
-                <RHFTextField name="description" label="Description" minRows={3} multiline />
+                <RHFEditor name="description" label="Description" minRows={3} multiline />
                 <Box
                   rowGap={2}
                   columnGap={2}

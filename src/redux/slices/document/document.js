@@ -455,11 +455,14 @@ export function getDocuments(customerId, machineId, drawing, page, pageSize, isC
     try {
       const params = {
         basic: true,
-      }
-      if(!drawing) {
-        params.orderBy = {
-          createdAt:-1
-        }
+        isArchived: false,
+        pagination: {page, pageSize},
+        ...(!drawing && {orderBy: {createdAt: -1}}),
+        ...(isCustomerArchived && {archivedByCustomer: true, isArchived: true}),
+        ...(isMachineArchived && {archivedByMachine: true, isArchived: true }),
+        ...(searchColumn && searchKey?.length > 0 && {searchKey, searchColumn}),
+        ...(docCategory && {docCategory}),
+        ...(docType && {docType})
       }
       if(drawing) {
         params.forDrawing = true;
@@ -473,34 +476,6 @@ export function getDocuments(customerId, machineId, drawing, page, pageSize, isC
         params.forCustomer = true;
         params.forMachine = true;
       }
-  
-      params.pagination = {
-        page,
-        pageSize  
-      }
-      
-      if(isCustomerArchived){
-        params.archivedByCustomer = true;
-        params.isArchived = true;
-      } else if( isMachineArchived ){
-        params.archivedByMachine = true;
-        params.isArchived = true;
-      } else {
-        params.isArchived = false;
-      }
-      
-      if (searchKey?.length > 0) {
-        params.searchKey = searchKey;
-        params.searchColumn = searchColumn;
-      }
-      
-      if (docCategory) {
-        params.docCategory = docCategory; 
-      }
-      if (docType) {
-        params.docType = docType; 
-      }      
-      
       const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/` ,
       {
         params,

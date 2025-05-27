@@ -336,6 +336,8 @@ export const PATH_MACHINE = {
       new: path(ROOTS_MACHINE, '/documents/documentType/new'),
       view: (id) => path(ROOTS_MACHINE, `/documents/documentType/${id}/view`),
       edit: (id) => path(ROOTS_MACHINE, `/documents/documentType/${id}/edit`),
+      archived: path(ROOTS_MACHINE, '/documents/documentType/archived'),
+      archivedView: (id) => path(ROOTS_MACHINE, `/documents/documentType/archived/${id}/view`),
     },
     // ------------------------ Document Category ----------------------------------------
     documentCategory: {
@@ -343,6 +345,8 @@ export const PATH_MACHINE = {
       new: path(ROOTS_MACHINE, '/documents/documentCategory/new'),
       view: (id) => path(ROOTS_MACHINE, `/documents/documentCategory/${id}/view`),
       edit: (id) => path(ROOTS_MACHINE, `/documents/documentCategory/${id}/edit`),
+      archived: path(ROOTS_MACHINE, '/documents/documentCategory/archived'),
+      archivedView: (id) => path(ROOTS_MACHINE, `/documents/documentCategory/archived/${id}/view`),
     },
   },
   // --------------------- MACHINE SETTINGS -----------------------
@@ -541,6 +545,24 @@ export const PATH_SUPPORT = {
   },
   knowledgeBase: {
     root: path(ROOTS_SUPPORT, '/knowledgeBase'),
+    article: {
+      root: path(ROOTS_SUPPORT, '/knowledgeBase/article'),
+      new: path(ROOTS_SUPPORT, '/knowledgeBase/article/new'),
+      view: (id) => path(ROOTS_SUPPORT, `/knowledgeBase/article/${id}/view`),
+      edit: (id) => path(ROOTS_SUPPORT, `/knowledgeBase/article/${id}/edit`),
+      archived: path(ROOTS_SUPPORT, '/knowledgeBase/article/archived'),
+      archivedView: (id) => path(ROOTS_SUPPORT, `/knowledgeBase/article/archived/${id}/view`),
+    }    
+  },
+  supportSettings: {
+    articleCategories: {
+      root: path(ROOTS_SUPPORT, '/supportSettings/articleCategories'),
+      new: path(ROOTS_SUPPORT, '/supportSettings/articleCategories/new'),
+      view: (id) => path(ROOTS_SUPPORT, `/supportSettings/articleCategories/${id}/view`),
+      edit: (id) => path(ROOTS_SUPPORT, `/supportSettings/articleCategories/${id}/edit`),
+      archived: path(ROOTS_SUPPORT, '/supportSettings/articleCategories/archived'),
+      archivedView: (id) => path(ROOTS_SUPPORT, `/supportSettings/articleCategories/archived/${id}/view`),
+    },
   },
   manuals: {
     root: path(ROOTS_SUPPORT, '/manuals'),
@@ -581,6 +603,7 @@ export const PATH_REPORTS = {
       root: path(ROOTS_REPORTS, '/logs/api/'),
       view: (id) => path(ROOTS_REPORTS, `/logs/api/${id}/view`),
     },
+    apiLogSummary: path(ROOTS_REPORTS, '/logs/apiLogSummary'),
   },
 };
 

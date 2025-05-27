@@ -18,6 +18,7 @@ import { fDate } from '../../utils/formatTime';
 import { setDateFrom, setDateTo, setSelectedLogType } from '../../redux/slices/products/machineErpLogs';
 import { useAuthContext } from '../../auth/useAuthContext';
 import { useDebouncedEffect } from '../../hooks/useDebouncedEffect';
+import { apiTypeOptions } from '../../utils/constants';
 
 function SearchBarCombo({
   node,
@@ -459,14 +460,18 @@ function SearchBarCombo({
             onChange={(event, newValue) => {
               if (newValue) {
                 setCategoryVal(newValue);
-                dispatch(getActiveDocumentTypesWithCategory(newValue?._id, null, drawing))
-                if (newValue?._id !== typeVal?.docCategory?._id) {
-                  setTypeVal(null);
+                if(setTypeVal){
+                  dispatch(getActiveDocumentTypesWithCategory(newValue?._id, null, drawing))
+                  if (newValue?._id !== typeVal?.docCategory?._id) {
+                    setTypeVal(null);
+                  }
                 }
               } else {
                 setCategoryVal(null);
-                setTypeVal(null);
-                dispatch(getActiveDocumentTypesWithCategory(null, null, drawing))
+                if(setTypeVal){
+                  setTypeVal(null);
+                  dispatch(getActiveDocumentTypesWithCategory(null, null, drawing))
+                }
               }
             }}
             renderOption={(props, option) => (
@@ -518,7 +523,10 @@ function SearchBarCombo({
           />
         </Grid>}
 
-      {onApiLogsTypeFilter && onApiLogsMethodFilter && onApiLogsStatusFilter && <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: '1fr', sm: 'repeat(3, 1fr)' }} sx={{ flexGrow: 1, width: { xs: '100%', sm: '100%' }, pl: 1, pt: 1 }}>
+        
+        
+      {onApiLogsTypeFilter && onApiLogsMethodFilter && onApiLogsStatusFilter && 
+      <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: '1fr', sm: 'repeat(3, 1fr)' }} sx={{ flexGrow: 1, width: { xs: '100%', sm: '100%' }, pl: 1, pt: 1 }}>
         {onApiLogsTypeFilter && (
           <FormControl fullWidth>
             <InputLabel id="api-logs-type-label">API Type</InputLabel>
@@ -530,11 +538,11 @@ function SearchBarCombo({
               label="API Type"
               onChange={onApiLogsTypeFilter}
             >
-              <MenuItem value="ALL">All</MenuItem>
-              <MenuItem value="MACHINE-SYNC">Machine Sync</MenuItem>
-              <MenuItem value="MACHINE-LOGS">Machine Logs</MenuItem>
-              <MenuItem value="MACHINE-CONFIG" >Machine Config</MenuItem>
-              <MenuItem value="OTHER">Others</MenuItem>
+              {apiTypeOptions.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
         )}

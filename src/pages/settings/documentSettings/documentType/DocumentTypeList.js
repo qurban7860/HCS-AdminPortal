@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import debounce from 'lodash/debounce';
 import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -41,6 +42,7 @@ import {
   setFilterBy,
   setReportHiddenColumns,
 } from '../../../../redux/slices/document/documentType';
+import { getActiveDocumentCategories } from '../../../../redux/slices/document/documentCategory';
 import { Cover } from '../../../../components/Defaults/Cover';
 import { fDate } from '../../../../utils/formatTime';
 import TableCard from '../../../../components/ListTableTools/TableCard';
@@ -59,7 +61,11 @@ const TABLE_HEAD = [
 
 // ----------------------------------------------------------------------
 
-export default function DocumentTypeList() {
+DocumentTypeList.propTypes = {
+  isArchived: PropTypes.object,
+};
+
+export default function DocumentTypeList({ isArchived = false }) {
   const {
     // page,
     order,
@@ -90,32 +96,33 @@ export default function DocumentTypeList() {
   const navigate = useNavigate();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
-  const [filterStatus, setFilterStatus] = useState([]);
+  const [filterCategory, setFilterCategory] = useState(null);
   const [openConfirm, setOpenConfirm] = useState(false);
   const isMobile = useResponsive('down', 'sm');
   const { documentTypes, filterBy, page, rowsPerPage, isLoading, initial, reportHiddenColumns } = useSelector(
     (state) => state.documentType
   );
 
-  useLayoutEffect(() => {
-    dispatch(getDocumentTypes());
-  }, [dispatch]);
+  useEffect(() => {
+    dispatch(getDocumentTypes(isArchived));
+    dispatch(getActiveDocumentCategories());
+  }, [dispatch, isArchived]);
 
   useEffect(() => {
     if (initial) {
-      setTableData(documentTypes);
+      setTableData(documentTypes || []);
     }
-  }, [documentTypes, initial]);
+  }, [documentTypes, initial, isArchived]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(order, orderBy),
     filterName,
-    filterStatus,
+    filterCategory,
   });
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
   const denseHeight = 60;
-  const isFiltered = filterName !== '' || !!filterStatus.length;
+  const isFiltered = filterName !== '';
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
   const handleOpenConfirm = () => {
@@ -146,15 +153,15 @@ export default function DocumentTypeList() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 
-  const handleFilterStatus = (event) => {
+  const handleFilterCategory = (value) => {
     setPage(0);
-    setFilterStatus(event.target.value);
+    setFilterCategory(value);
   };
 
   const handleDeleteRow = async (id) => {
     try {
       await dispatch(deleteDocumentType(id));
-      dispatch(getDocumentTypes());
+      dispatch(getDocumentTypes(isArchived));
       setSelected([]);
 
       if (page > 0) {
@@ -185,33 +192,57 @@ export default function DocumentTypeList() {
   };
 
   const handleViewRow = (id) => {
-    navigate(PATH_MACHINE.documents.documentType.view(id));
+    if(isArchived){
+      navigate(PATH_MACHINE.documents.documentType.archivedView(id));
+    }else{
+      navigate(PATH_MACHINE.documents.documentType.view(id));
+    }
   };
 
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
     setFilterName('');
+    setFilterCategory(null);
   };
 
   const handleHiddenColumns = async (arg) => {
     dispatch(setReportHiddenColumns(arg));
   };
 
+  const handleArchive = () => {
+    setFilterName('');
+    setFilterCategory(null);
+    setPage(0);
+    dispatch(setFilterBy(''));
+    if(isArchived){
+      navigate(PATH_MACHINE.documents.documentType.list);    
+    }else{
+      navigate(PATH_MACHINE.documents.documentType.archived);    
+    }
+  }
+
   return (
     <>
       <Container maxWidth={false}>
         <StyledCardContainer>
-          <Cover name="Document Types" icon="ph:users-light"/>
+          <Cover name={isArchived ? "Archived Document Types" : "Document Types"} 
+                archivedLink={{
+                  label:isArchived?'Document Types':'Archived Types', 
+                  link: handleArchive, 
+                  icon: 'mdi:file-tree'}}
+                isArchived={isArchived}
+          />
         </StyledCardContainer>
 
         <TableCard>
           <DocumentTypeListTableToolbar
             filterName={filterName}
-            filterStatus={filterStatus}
+            filterCategory={filterCategory}
             onFilterName={handleFilterName}
-            onFilterStatus={handleFilterStatus}
+            onFilterCategory={handleFilterCategory}
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
+            isArchived={isArchived}
           />
 
           {!isNotFound && !isMobile && (
@@ -322,8 +353,9 @@ export default function DocumentTypeList() {
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName, filterStatus }) {
-  const stabilizedThis = inputData.map((el, index) => [el, index]);
+function applyFilter({ inputData, comparator, filterName, filterCategory }) {
+
+  const stabilizedThis = Array.isArray(inputData) ? inputData?.map((el, index) => [el, index]) : [];
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
@@ -331,7 +363,6 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   });
 
   inputData = stabilizedThis.map((el) => el[0]);
-  // (customer) => customer.name.toLowerCase().indexOf(filterName.toLowerCase()) || customer.tradingName.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.city.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.country.toLowerCase().indexOf(filterName.toLowerCase()) || customer.createdAt.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
 
   if (filterName) {
     inputData = inputData.filter(
@@ -343,8 +374,8 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
     );
   }
 
-  if (filterStatus.length) {
-    inputData = inputData.filter((customer) => filterStatus.includes(customer.status));
+  if (filterCategory) {
+    inputData = inputData.filter((docType) => filterCategory?._id === docType?.docCategory?._id);
   }
 
   return inputData;

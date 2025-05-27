@@ -1,54 +1,35 @@
 import PropTypes from 'prop-types';
-// import { useTheme } from '@mui/material';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Box, FormControlLabel, Checkbox } from '@mui/material';
 import Chart from '../chart';
 import { fShortenNumber } from '../../utils/formatNumber';
 
 LogChartStacked.propTypes = {
-  chart: PropTypes.object,
+  processGraphData: PropTypes.func.isRequired, 
   graphLabels: PropTypes.object,
 };
 
-export default function LogChartStacked({ chart, graphLabels }) {
-  // const theme = useTheme();
-  const [skipZero, setSkipZero] = useState(true); 
+export default function LogChartStacked({ processGraphData, graphLabels }) {
+  const [skipZero, setSkipZero] = useState(true);
+  const [chart, setChart] = useState({ categories: [], series: [] });
+
+  useEffect(() => {
+    const processedChartData = processGraphData(skipZero);
+    if (processedChartData) {
+      setChart(processedChartData);
+    } else {
+      setChart({ categories: [], series: [] }); 
+    }
+  }, [skipZero, processGraphData]);
 
   const { categories, series } = chart;
-
-  const { filteredCategories, filteredSeries } = useMemo(() => {
-    if (!skipZero) {
-      return { filteredCategories: categories, filteredSeries: series };
-    }
-    
-    const hasNonZeroValues = series.some(s => s.data.some(val => val !== 0 && val !== null && val !== undefined));
-
-    if (!hasNonZeroValues) {
-      return { filteredCategories: categories, filteredSeries: series };
-    }
-
-    const filteredIndexes = categories.reduce((acc, _, idx) => {
-      const hasNonZeroBar = series.some(s => (s.data[idx] ?? 0) !== 0 && (s.data[idx] !== null && s.data[idx] !== undefined));
-      if (hasNonZeroBar) {
-        acc.push(idx);
-      }
-      return acc;
-    }, []);
-
-    return {
-      filteredCategories: filteredIndexes.map((i) => categories[i]),
-      filteredSeries: series.map((s) => ({...s,
-        data: filteredIndexes.map((i) => s.data[i]),
-      })),
-    };
-  }, [skipZero, categories, series]);
 
   const colors = ['#A9E0FC', '#FCB49F'];
 
   const chartOptions = {
     chart: {
       type: 'bar',
-      height: 320,
+      height: 350,
       stacked: true,
       animations: {
         enabled: false,
@@ -83,7 +64,8 @@ export default function LogChartStacked({ chart, graphLabels }) {
         const total = Number(val) + Number(w.config.series[1].data[dataPointIndex]);
         return total === 0
           ? ''
-          : fShortenNumber(total)},
+          : fShortenNumber(total);
+      },
       offsetY: -25,
       style: {
         fontSize: '12px',
@@ -91,7 +73,7 @@ export default function LogChartStacked({ chart, graphLabels }) {
       },
     },
     xaxis: {
-      categories: filteredCategories,
+      categories,
       labels: {
         offsetY: 8,
         rotate: -45,
@@ -142,13 +124,15 @@ export default function LogChartStacked({ chart, graphLabels }) {
     tooltip: {
       followCursor: true,
       custom: ({ series: tooltipSeries, dataPointIndex, w }) => {
-        let tooltipContent = `<div class="apexcharts-theme-light">`;
+        let tooltipContent = `<div class="apexcharts-theme-light" style="padding: 8px;">`;
         let total = 0;
+
         tooltipSeries.forEach((s, index) => {
           const legend = w.globals.seriesNames[index];
           const color = w.globals.colors[index];
           const value = s[dataPointIndex];
           total += value;
+
           const valueText =
             value === 0
               ? ''
@@ -156,20 +140,30 @@ export default function LogChartStacked({ chart, graphLabels }) {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 });
-          tooltipContent += `<div class="apexcharts-tooltip-series-group apexcharts-active" style="order: 1; display: flex;">`;
-          tooltipContent += `<span class="apexcharts-tooltip-marker" style="background-color: ${color};"></span>`;
-          tooltipContent += `<div class="apexcharts-tooltip-text"><div class="apexcharts-tooltip-y-group">`;
-          tooltipContent += `<span class="apexcharts-tooltip-text-y-label">${legend}:</span>`;
-          tooltipContent += `<span class="apexcharts-tooltip-text-y-value">${valueText}</span></div></div></div>`;
+
+          tooltipContent += `
+        <div class="apexcharts-tooltip-series-group apexcharts-active" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
+          <span class="apexcharts-tooltip-marker" style="background-color: ${color}; margin-right: 8px;"></span>
+          <div style="display: flex; justify-content: space-between; width: 100%;">
+            <span class="apexcharts-tooltip-text-y-label" style="margin-right: 8px;">${legend}:</span>
+            <span class="apexcharts-tooltip-text-y-value">${valueText}</span>
+          </div>
+        </div>`;
         });
+
         const totalText = total.toLocaleString(undefined, {
           minimumFractionDigits: 2,
           maximumFractionDigits: 2,
         });
-        tooltipContent += `<div class="apexcharts-tooltip-series-group apexcharts-active" style="order: 1; display: flex;">`;
-        tooltipContent += `<div class="apexcharts-tooltip-text"><div class="apexcharts-tooltip-y-group">`;
-        tooltipContent += `<span class="apexcharts-tooltip-text-y-label">Total:</span>`;
-        tooltipContent += `<span class="apexcharts-tooltip-text-y-value">${totalText}</span></div></div></div>`;
+
+        tooltipContent += `
+      <div class="apexcharts-tooltip-series-group apexcharts-active" style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid #e0e0e0; padding-top: 4px; margin-top: 4px;">
+        <div style="width: 100%; display: flex; justify-content: space-between;">
+          <span class="apexcharts-tooltip-text-y-label" style="font-weight: bold;">Total Length (m):</span>
+          <span class="apexcharts-tooltip-text-y-value" style="font-weight: bold;">${totalText}</span>
+        </div>
+      </div>`;
+
         tooltipContent += `</div>`;
         return tooltipContent;
       },
@@ -186,12 +180,11 @@ export default function LogChartStacked({ chart, graphLabels }) {
       </Box>
       <Chart
         type="bar"
-        series={filteredSeries}
+        series={series}
         options={chartOptions}
         height={chartOptions.chart.height}
       />
     </Box>
   );
-  // return (<Chart type="bar" series={filteredSeries} options={chartOptions} height={chartOptions.chart.height} />);
-
+    // return (<Chart type="bar" series={filteredSeries} options={chartOptions} height={chartOptions.chart.height} />);
 }

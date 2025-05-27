@@ -1,3 +1,4 @@
+/* eslint-disable react/no-danger */
 /* eslint-disable import/no-extraneous-dependencies */
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
@@ -12,8 +13,9 @@ import {
   Box,
   Stack,
   Typography,
-  TextField,
-  Radio, RadioGroup, FormControlLabel
+  Radio,
+  RadioGroup,
+  FormControlLabel,
 } from '@mui/material';
 import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
@@ -28,17 +30,20 @@ import TicketHistory from './TicketHistory';
 import TicketWorkLogs from './TicketWorkLogs';
 import FormLabel from '../../components/DocumentForms/FormLabel';
 import { FORMLABELS } from '../../constants/default-constants';
-import FormProvider, { RHFTextField } from '../../components/hook-form';
+import FormProvider, { RHFEditor } from '../../components/hook-form';
 import { CustomAvatar } from '../../components/custom-avatar';
-import { addComment, deleteComment, getComments, resetComments, updateComment } from '../../redux/slices/ticket/ticketComments/ticketComment';
+import {
+  addComment,
+  deleteComment,
+  getComments,
+  updateComment,
+} from '../../redux/slices/ticket/ticketComments/ticketComment';
 import ConfirmDialog from '../../components/confirm-dialog';
 
 dayjs.extend(relativeTime);
 
 const CommentSchema = Yup.object().shape({
-  comment: Yup.string()
-    .required('Comment is required')
-    .max(300, 'Comment must not exceed 300 characters'),
+  comment: Yup.string(),
   isInternal: Yup.boolean(),
 });
 
@@ -73,15 +78,20 @@ const TicketComments = ({ currentUser }) => {
     },
   });
 
-  const { reset, handleSubmit, watch, formState: { isSubmitting } } = methods;
+  const {
+    reset,
+    handleSubmit,
+    watch,
+    formState: { isSubmitting },
+  } = methods;
 
   const commentValue = watch('comment');
 
   const onSubmit = async (data) => {
-    await dispatch(addComment(ticket?._id, data.comment || "", data.isInternal));
+    await dispatch(addComment(ticket?._id, data.comment || '', data.isInternal));
     reset();
     if (error) enqueueSnackbar(error, { variant: 'error' });
-    else enqueueSnackbar("Comment saved successfully", { variant: 'success' });
+    else enqueueSnackbar('Comment saved successfully', { variant: 'success' });
   };
 
   const handleSaveEdit = async (cID) => {
@@ -95,7 +105,7 @@ const TicketComments = ({ currentUser }) => {
     setEditValue('');
     setEditIsInternal(false);
     if (error) enqueueSnackbar(error, { variant: 'error' });
-    else enqueueSnackbar("Comment updated successfully", { variant: 'success' });
+    else enqueueSnackbar('Comment updated successfully', { variant: 'success' });
   };
 
   const handleConfirmDelete = async () => {
@@ -103,7 +113,7 @@ const TicketComments = ({ currentUser }) => {
     setOpenConfirmDelete(false);
     setCommentToDelete(null);
     if (error) enqueueSnackbar(error, { variant: 'error' });
-    else enqueueSnackbar("Comment deleted successfully", { variant: 'success' });
+    else enqueueSnackbar('Comment deleted successfully', { variant: 'success' });
   };
 
   const handleEditClick = (comment) => {
@@ -162,32 +172,34 @@ const TicketComments = ({ currentUser }) => {
           <>
             <FormLabel content={FORMLABELS.COVER.TICKET_COMMENTS} />
             <Box sx={{ py: 2 }}>
-              {/* Wrapping the form with FormProvider to ensure form context is available */}
               <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-              <Stack direction="row" spacing={2}>
+                <Stack direction="row" spacing={2}>
                   <CustomAvatar
                     src={currentUser?.photoURL}
                     alt={currentUser?.displayName}
                     name={currentUser?.displayName}
                   />
                   <Stack sx={{ width: '100%' }}>
-                    <RHFTextField
-                      name="comment"
-                      placeholder="Add a comment..."
-                      multiline
-                      rows={2}
-                      inputProps={{ maxLength: 300 }}
-                      helperText={`${commentValue?.length || 0}/300 characters`}
-                      FormHelperTextProps={{ sx: { textAlign: 'right' } }}
-                    />
-                    <RadioGroup row name="isInternal"
+                    <RHFEditor name="comment" placeholder="Add a comment..." />
+                    <RadioGroup
+                      row
+                      name="isInternal"
                       value={watch('isInternal') ? 'internal' : 'customer'}
                       onChange={(e) => {
-                      const isInternalSelected = e.target.value === 'internal';
-                      methods.setValue('isInternal', isInternalSelected); }}
-                      sx={{ mt: -1.5 }}>
-                      <FormControlLabel value="internal" control={<Radio />} label="Internal Note" />
-                      <FormControlLabel value="customer" control={<Radio />} label="Note to Customer" />
+                        const isInternalSelected = e.target.value === 'internal';
+                        methods.setValue('isInternal', isInternalSelected);
+                      }}
+                    >
+                      <FormControlLabel
+                        value="internal"
+                        control={<Radio />}
+                        label="Internal Note"
+                      />
+                      <FormControlLabel
+                        value="customer"
+                        control={<Radio />}
+                        label="Note to Customer"
+                      />
                     </RadioGroup>
 
                     {!!commentValue?.trim() && (
@@ -218,7 +230,15 @@ const TicketComments = ({ currentUser }) => {
                 </Stack>
               </FormProvider>
 
-              <List sx={{ width: '100%', bgcolor: 'background.paper', maxHeight: 300, overflow: 'auto', mt: 1.5 }}>
+              <List
+                sx={{
+                  width: '100%',
+                  bgcolor: 'background.paper',
+                  maxHeight: 600,
+                  overflow: 'auto',
+                  mt: 1.5,
+                }}
+              >
                 {comments.map((item, index) => (
                   <React.Fragment key={index}>
                     {index > 0 && <Divider component="li" />}
@@ -247,27 +267,31 @@ const TicketComments = ({ currentUser }) => {
                             {editingCommentId === item._id ? (
                               <FormProvider methods={methods} key={item._id}>
                                 <Stack spacing={2}>
-                                  <TextField
-                                    fullWidth
-                                    multiline
-                                    rows={2}
+                                  <RHFEditor
+                                    name="editComment"
                                     value={editValue}
-                                    onChange={(e) => setEditValue(e.target.value)}
-                                    inputProps={{ maxLength: 300 }}
-                                    helperText={`${editValue.length}/300 characters`}
-                                    FormHelperTextProps={{ sx: { textAlign: 'right' } }}
+                                    onChange={setEditValue}
                                   />
-                                  <Stack display="flex" alignItems="start" sx={{ position: 'absolute', transform: 'translateY(185%)' }}>
-                                  <RadioGroup row name="editIsInternal"
+                                  <RadioGroup
+                                    row
+                                    name="editIsInternal"
                                     value={editIsInternal ? 'internal' : 'customer'}
                                     onChange={(e) => {
-                                    const isInternalSelected = e.target.value === 'internal';
-                                    setEditIsInternal(isInternalSelected);
-                                    }}>
-                                    <FormControlLabel value="internal" control={<Radio />} label="Internal Note" />
-                                    <FormControlLabel value="customer" control={<Radio />} label="Note to Customer" />
+                                      const isInternalSelected = e.target.value === 'internal';
+                                      setEditIsInternal(isInternalSelected);
+                                    }}
+                                  >
+                                    <FormControlLabel
+                                      value="internal"
+                                      control={<Radio />}
+                                      label="Internal Note"
+                                    />
+                                    <FormControlLabel
+                                      value="customer"
+                                      control={<Radio />}
+                                      label="Note to Customer"
+                                    />
                                   </RadioGroup>
-                                  </Stack>
 
                                   <Stack direction="row" spacing={1}>
                                     <LoadingButton
@@ -296,10 +320,14 @@ const TicketComments = ({ currentUser }) => {
                             ) : (
                               <>
                                 <Typography component="span" variant="body2" color="text.primary">
-                                {item.comment}
-                                <Typography component="span" variant="caption" sx={{ color: 'text.secondary', ml: 2 }}>
-                                  {item.isInternal ? '(InternalNote)' : '(CustomerNote)'}
-                                </Typography>
+                                  <div dangerouslySetInnerHTML={{ __html: item.comment }} />
+                                  <Typography
+                                    component="span"
+                                    variant="caption"
+                                    sx={{ color: 'text.secondary', ml: 2 }}
+                                  >
+                                    {item.isInternal ? '(InternalNote)' : '(CustomerNote)'}
+                                  </Typography>
 
                                   {item.updatedAt !== item.createdAt && (
                                     <Typography
@@ -344,7 +372,7 @@ const TicketComments = ({ currentUser }) => {
           </>
         )}
         {activeTab === 'History' && <TicketHistory />}
-        {activeTab === 'Work Logs' && (<TicketWorkLogs />)}
+        {activeTab === 'Work Logs' && <TicketWorkLogs />}
       </Paper>
       <ConfirmDialog
         open={openConfirmDelete}

@@ -203,15 +203,13 @@ export function updateDocumentType(Id, params) {
 
 // -----------------------------------Get Document Types-----------------------------------
 
-export function getDocumentTypes() {
+export function getDocumentTypes(isArchived) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}documents/documentType/`,
         {
-          params: {
-            isArchived: false
-          }
+          params: {isArchived:isArchived || false}
         }
       );
       dispatch(slice.actions.getDocumentTypesSuccess(response.data));
@@ -326,7 +324,7 @@ export function getDocumentType(Id) {
 
 // ---------------------------------archive Document Type-------------------------------------
 
-export function deleteDocumentType(Id) {
+export function archiveDocumentType(Id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -334,6 +332,37 @@ export function deleteDocumentType(Id) {
         {
           isArchived: true,
         });
+      dispatch(slice.actions.setResponseMessage(response.data));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+export function restoreDocumentType(Id) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.patch(`${CONFIG.SERVER_URL}documents/documentType/${Id}`,
+        {
+          isArchived: false,
+        });
+      dispatch(slice.actions.setResponseMessage(response.data));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+export function deleteDocumentType(Id) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.delete(`${CONFIG.SERVER_URL}documents/documentType/${Id}`);
       dispatch(slice.actions.setResponseMessage(response.data));
     } catch (error) {
       console.error(error);

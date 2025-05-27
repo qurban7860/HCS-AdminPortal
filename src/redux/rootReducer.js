@@ -79,6 +79,8 @@ import portalRegistrationReducer from './slices/customer/portalRegistration';
 import serviceReportNotesReducer from './slices/products/serviceReportNotes';
 import machineDashboardReducer from './slices/products/machineDashboard';
 import jobsReducer from "./slices/jobs/jobs"
+import articleReducer from "./slices/support/knowledgeBase/article";
+import articleCategoryReducer from "./slices/support/supportSettings/articleCategory";
 
 // ----------------------------------------------------------------------
 
@@ -590,6 +592,19 @@ export const serviceReportNotesPersistConfig = {
   blacklist: ['error', 'initial', 'responseMessage']
 }
 
+export const articlePersistConfig = {
+  key: 'article',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
+
+export const articleCategoryPersistConfig = {
+  key: 'articleCategory',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
 
 const rootReducer = combineReducers({
   user: persistReducer(userPersistConfig, userReducer),
@@ -669,6 +684,8 @@ const rootReducer = combineReducers({
   jira: persistReducer(jiraPersistConfig, jiraReducer),
   portalRegistration: persistReducer( portalRegistrationPersistConfig, portalRegistrationReducer ),
   serviceReportNotes: persistReducer( serviceReportNotesPersistConfig, serviceReportNotesReducer ),
+  article: persistReducer(articlePersistConfig, articleReducer),
+  articleCategory: persistReducer(articleCategoryPersistConfig, articleCategoryReducer),
 });
 
 export default rootReducer;

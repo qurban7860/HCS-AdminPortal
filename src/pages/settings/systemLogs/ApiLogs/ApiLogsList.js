@@ -22,6 +22,7 @@ import Scrollbar from '../../../../components/scrollbar';
 import APILogsTableRow from '../../../../components/machineIntegration/APILogsTableRow';
 import {
   getApiLogs,
+  getApiLogSummary,
   setFilterBy,
   setReportHiddenColumns,
 } from '../../../../redux/slices/logs/apiLogs';
@@ -73,6 +74,7 @@ export default function ApiLogsList() {
   const { dateFrom, dateTo, filteredSearchKey } = watch();
 
   useEffect(() => {
+    
     handleFetchLogs(defaultValues);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [order, orderBy]);
@@ -90,6 +92,8 @@ export default function ApiLogsList() {
       fromDate: new Date(new Date(dateFrom).setHours(0, 0, 0, 0)).toISOString(),
       toDate: new Date(new Date(dateTo).setHours(23, 59, 59, 999)).toISOString(),
     };
+
+    dispatch(getApiLogSummary(query));
 
     if (filteredSearchKey && selectedSearchFilter) {
       if (selectedSearchFilter === 'responseTime') {

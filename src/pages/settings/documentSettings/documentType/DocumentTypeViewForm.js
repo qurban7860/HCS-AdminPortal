@@ -6,8 +6,10 @@ import { useNavigate } from 'react-router-dom';
 import { Card, Grid } from '@mui/material';
 // redux
 import {
+  archiveDocumentType,
   deleteDocumentType,
   getActiveDocumentTypes,
+  restoreDocumentType,
   setMergeDialogVisibility
 } from '../../../../redux/slices/document/documentType';
 // paths
@@ -18,6 +20,7 @@ import ViewFormAudit from '../../../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../../../components/ViewForms/ViewFormField';
 import ViewFormEditDeleteButtons from '../../../../components/ViewForms/ViewFormEditDeleteButtons';
 import MergeDocumentTypeDialog from '../../../../components/Dialog/MergeDocumentTypeDialog';
+import { handleError } from '../../../../utils/errorHandler';
 
 // ----------------------------------------------------------------------
 
@@ -30,10 +33,32 @@ export default function DocumentTypeViewForm() {
   const onDelete = async () => {
     try {
       await dispatch(deleteDocumentType(documentType?._id));
-      navigate(PATH_MACHINE.documents.documentType.list);
-      enqueueSnackbar('Document Type Archive Successfully!');
+      enqueueSnackbar('Document Type deleted successfully!');
+      navigate(PATH_MACHINE.documents.documentType.archived);
     } catch (error) {
-      enqueueSnackbar('Document Type Archive failed!', { variant: `error` });
+      console.error(error);
+      enqueueSnackbar(handleError(error), { variant: `error` });
+    }
+  };
+
+  const onArchive = async () => {
+    try {
+      await dispatch(archiveDocumentType(documentType?._id));
+      enqueueSnackbar('Document Type archived successfully!');
+      navigate(PATH_MACHINE.documents.documentType.list);
+    } catch (error) {
+      console.error(error);
+      enqueueSnackbar(handleError(error), { variant: `error` });
+    }
+  };
+
+  const onRestore = async () => {
+    try {
+      await dispatch(restoreDocumentType(documentType?._id));
+      navigate(PATH_MACHINE.documents.documentType.list);
+      enqueueSnackbar('Document Type restored successfully!');
+    } catch (error) {
+      enqueueSnackbar('Document Type restored failed!', { variant: `error` });
       console.error(error);
     }
   };
@@ -62,10 +87,19 @@ export default function DocumentTypeViewForm() {
       updatedAt: documentType?.updatedAt || '',
       updatedByFullName: documentType?.updatedBy?.name || '',
       updatedIP: documentType?.updatedIP || '',
+      isArchived: documentType?.isArchived,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [documentType]
   );
+
+  const handlebackLink = () => {
+    if(defaultValues.isArchived){
+      navigate(PATH_MACHINE.documents.documentType.archived);
+    }else{
+      navigate(PATH_MACHINE.documents.documentType.list);
+    }
+  };
 
   return (
     <>
@@ -77,11 +111,12 @@ export default function DocumentTypeViewForm() {
             isDefault={defaultValues.isDefault}
             isActive={defaultValues.isActive}
             isPrimary={defaultValues.isPrimaryDrawing}
-            handleEdit={handleEdit}
-            onDelete={onDelete}
-            backLink={() => navigate(PATH_MACHINE.documents.documentType.list)}
+            {...(!defaultValues?.isArchived && { handleEdit })}
+            {...(defaultValues?.isArchived ? { onDelete } : { onArchive })}
+            {...(defaultValues?.isArchived && { onRestore })}
+            backLink={handlebackLink}
             settingPage
-            onMergeDocumentType={handleMergeDialog}
+            {...(!defaultValues?.isArchived && { onMergeDocumentType: handleMergeDialog })}
           />
           <Grid container sx={{ mt: 2 }}>
             <ViewFormField sm={12} heading="Category" param={defaultValues.category} />

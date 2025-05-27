@@ -15,7 +15,7 @@ import { useSnackbar } from '../../../../../components/snackbar';
 import AddFormButtons from '../../../../../components/DocumentForms/AddFormButtons';
 import { TicketCollectionSchema } from '../utils/constant';
 import { handleError } from '../../../../../utils/errorHandler';
-import FormProvider, { RHFTextField, RHFSwitch, RHFColorPicker } from '../../../../../components/hook-form';
+import FormProvider, { RHFTextField, RHFSwitch, RHFColorPicker, RHFEditor } from '../../../../../components/hook-form';
 import { postTicketChangeReason, patchTicketChangeReason, getTicketChangeReason, resetTicketChangeReason } from '../../../../../redux/slices/ticket/ticketSettings/ticketChangeReasons';
 import Iconify from '../../../../../components/iconify';
 
@@ -133,7 +133,7 @@ export default function ChangeReasonForm() {
                     label="Color"
                   />
                 </Box>
-                <RHFTextField name="description" label="Description" minRows={3} multiline />
+                <RHFEditor name="description" label="Description" minRows={3} multiline />
                 <Box
                   rowGap={2}
                   columnGap={2}

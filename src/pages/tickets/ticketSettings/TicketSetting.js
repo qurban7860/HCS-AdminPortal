@@ -29,6 +29,9 @@ export default function TicketSetting() {
   const linkInvestigationReason = () => navigate(PATH_SUPPORT.ticketSettings.investigationReasons.root);
   const linkFault = () => navigate(PATH_SUPPORT.ticketSettings.faults.root);
 
+  const linkArticleCategory = () => navigate(PATH_SUPPORT.supportSettings.articleCategories.root);
+
+
 return (
     <Container maxWidth={false}>
       <StyledCardContainer>
@@ -112,6 +115,11 @@ return (
                     icon={ICONS.PRIORITIES.icon}
                     content={ICONS.PRIORITIES.heading}
                   />
+                  <ListItem
+                    onClick={linkImpact}
+                    icon={ICONS.IMPACTS.icon}
+                    content={ICONS.IMPACTS.heading}
+                  />
                 </List>
               </StyledSettingsCardContainer>
 
@@ -119,22 +127,30 @@ return (
                 <List
                   component="nav"
                   aria-labelledby="nested-list-subheader"
-                  subheader={<ListItemsHeader header={FORMLABELS.OTHERS} />}
+                  subheader={<ListItemsHeader header={FORMLABELS.INVESTIGATION_FAULT_SETTINGS} />}
                 >
-                  <ListItem
-                    onClick={linkImpact}
-                    icon={ICONS.IMPACTS.icon}
-                    content={ICONS.IMPACTS.heading}
-                  />
                   <ListItem
                     onClick={linkInvestigationReason}
                     icon={ICONS.INVESTIGATION_REASONS.icon}
                     content={ICONS.INVESTIGATION_REASONS.heading}
                   />
-                   <ListItem
+                  <ListItem
                     onClick={linkFault}
                     icon={ICONS.FAULTS.icon}
                     content={ICONS.FAULTS.heading}
+                  />
+                </List>
+              </StyledSettingsCardContainer>
+              <StyledSettingsCardContainer>
+                <List
+                  component="nav"
+                  aria-labelledby="nested-list-subheader"
+                  subheader={<ListItemsHeader header='Knowledge Base' />}
+                >
+                  <ListItem
+                    onClick={linkArticleCategory}
+                    icon={ICONS.ARTICLE_CATEGORY.icon}
+                    content={ICONS.ARTICLE_CATEGORY.heading}
                   />
                 </List>
               </StyledSettingsCardContainer>

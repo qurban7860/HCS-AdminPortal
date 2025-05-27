@@ -3,7 +3,7 @@
 import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -23,7 +23,7 @@ import { PATH_MACHINE, PATH_SETTING } from '../../../../routes/paths';
 // components
 import { useSnackbar } from '../../../../components/snackbar';
 import FormProvider, { RHFTextField, RHFAutocomplete, RHFSwitch } from '../../../../components/hook-form';
-import { getDocumentTypes, updateDocumentType } from '../../../../redux/slices/document/documentType';
+import { getDocumentType, getDocumentTypes, resetDocumentType, updateDocumentType } from '../../../../redux/slices/document/documentType';
 import { getActiveDocumentCategories } from '../../../../redux/slices/document/documentCategory';
 import AddFormButtons from '../../../../components/DocumentForms/AddFormButtons';
 import FormHeading from '../../../../components/DocumentForms/FormHeading';
@@ -35,18 +35,24 @@ import { FORMLABELS as formLABELS } from '../../../../constants/document-constan
 // ----------------------------------------------------------------------
 
 export default function DocumentTypeEditForm() {
+
+  
   const { documentType } = useSelector((state) => state.documentType);
   const { activeDocumentCategories } = useSelector((state) => state.documentCategory);
-
+  
   const dispatch = useDispatch();
-
+  
   const { enqueueSnackbar } = useSnackbar();
-
+  const { id } = useParams();
+  
   const navigate = useNavigate();
   useEffect(() => {
+    dispatch(getDocumentType(id));
     dispatch(getActiveDocumentCategories());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch]);
+    return () => {
+      dispatch(resetDocumentType());
+    };
+  }, [id, dispatch]);
 
   const defaultValues = useMemo(
     () => ({
@@ -57,9 +63,9 @@ export default function DocumentTypeEditForm() {
       isPrimaryDrawing: documentType?.isPrimaryDrawing,
       isDefault: documentType?.isDefault || false,
       customerAccess: documentType?.customerAccess,
+      isArchived: documentType?.isArchived,
     }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []);
+    [documentType]);
 
   const methods = useForm({
     resolver: yupResolver(DocumentTypeSchema),
@@ -72,6 +78,12 @@ export default function DocumentTypeEditForm() {
     formState: { isSubmitting },
   } = methods;
 
+  useEffect(() => {
+    if (documentType) {
+      reset(defaultValues);
+    }
+  }, [documentType, reset, defaultValues]);
+
 
   const toggleCancel = () => {
     navigate(PATH_MACHINE.documents.documentType.view(documentType._id));
@@ -80,7 +92,6 @@ export default function DocumentTypeEditForm() {
   const onSubmit = async (data) => {
     try {
       await dispatch(updateDocumentType(documentType._id, data));
-      dispatch(getDocumentTypes(documentType._id));
       navigate(PATH_MACHINE.documents.documentType.view(documentType._id));
       enqueueSnackbar('Document Type updated Successfully!');
       reset();
@@ -93,7 +104,10 @@ export default function DocumentTypeEditForm() {
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
-        <Cover name={documentType?.name} />
+        <Cover
+          name={documentType?.name}
+          backLink={() => navigate(PATH_MACHINE.documents.documentType.view(documentType._id))}
+        />
       </StyledCardContainer>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={4}>
@@ -119,28 +133,14 @@ export default function DocumentTypeEditForm() {
                   multiline
                 />
                 <Grid display='flex' alignItems="center" mt={1} >
-                  <RHFSwitch
-                    name='isActive'
-                    label='Active'
-                  />
-
-                  <RHFSwitch
-                    name='isPrimaryDrawing'
-                    label='Primary'
-                  />
-
-                  <RHFSwitch
-                    name='customerAccess'
-                    label='Customer Access'
-                  />
-
-                  <RHFSwitch
-                    name='isDefault'
-                    label='Default'
-                  />
+                  <RHFSwitch name='isArchived' label='Archived' />
+                  <RHFSwitch name='isActive' label='Active' />
+                  <RHFSwitch name='isPrimaryDrawing' label='Primary' />
+                  <RHFSwitch name='customerAccess' label='Customer Access' />
+                  <RHFSwitch name='isDefault' label='Default' />
                 </Grid>
               </Stack>
-              <AddFormButtons settingPage isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+              <AddFormButtons archived={documentType?.isArchived} settingPage isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
             </Card>
           </Grid>
         </Grid>

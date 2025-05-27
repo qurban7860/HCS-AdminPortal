@@ -25,10 +25,12 @@ import { fDate, fDateTime, GetDifferenceInDays } from '../../utils/formatTime';
 import { useAuthContext } from '../../auth/useAuthContext';
 import { PATH_DASHBOARD } from '../../routes/paths';
 import ViewFormServiceReportApprovalHistoryPopover from './ViewFormServiceReportApprovalHistoryPopover';
+import ContactUsersPopover from './ContactUsersPopover';
 
 function ViewFormEditDeleteButtons({
   backLink,
   isActive,
+  isPrimary,
   isPrimary,
   shareWith,
   isReleased,
@@ -100,7 +102,8 @@ function ViewFormEditDeleteButtons({
   onMergeDocumentType,
   serviceReportStatus,
   invitationStatus,
-  onCancelInvite
+  onCancelInvite,
+  handleViewUser
 }) {
   const { id } = useParams();
   const navigate = useNavigate()
@@ -126,6 +129,7 @@ function ViewFormEditDeleteButtons({
   const [openConfigSubmittedStatuConfirm, setOpenConfigSubmittedStatuConfirm] = useState(false);
   const [openConfigApproveStatuConfirm, setOpenConfigApproveStatuConfirm] = useState(false);
   const { machine } = useSelector((state) => state.machine);
+  const { contactUsers } = useSelector((state) => state.user);
   const [lockUntil, setLockUntil] = useState('');
   const [lockUntilError, setLockUntilError] = useState('');
 
@@ -312,6 +316,16 @@ function ViewFormEditDeleteButtons({
   const [approvedAnchorEl, setApprovedAnchorEl] = useState(null);
   const [approvedBy, setApprovedBy] = useState([]);
 
+  const [contactUsersAnchorEl, setContactUsersAnchorEl] = useState(null);
+
+  const handleContactUsersPopoverOpen = (event) => {
+    setContactUsersAnchorEl(event.currentTarget);
+  };
+
+  const handleContactUsersPopoverClose = () => {
+    setContactUsersAnchorEl(null);
+  };
+
   const handleVerifiedPopoverOpen = (event) => {
     setVerifiedAnchorEl(event.currentTarget);
     setVerifiedBy(verifiers)
@@ -407,6 +421,13 @@ function ViewFormEditDeleteButtons({
               title={isActive ? ICONS.ACTIVE.heading : ICONS.INACTIVE.heading}
               color={isActive ? ICONS.ACTIVE.color : ICONS.INACTIVE.color}
               icon={isActive ? ICONS.ACTIVE.icon : ICONS.INACTIVE.icon}
+            />
+          }
+          {isPrimary !== undefined &&
+            <IconTooltip
+              title={isPrimary ? ICONS.PRIMARY.heading : ICONS.NOTPRIMARY.heading}
+              color={isPrimary ? ICONS.PRIMARY.color : ICONS.NOTPRIMARY.color}
+              icon={isPrimary ? ICONS.PRIMARY.icon : ICONS.NOTPRIMARY.icon}
             />
           }
 
@@ -700,6 +721,23 @@ function ViewFormEditDeleteButtons({
             />
           )}
 
+          {Array.isArray(contactUsers) && contactUsers?.length > 0 &&
+            <Badge badgeContent={contactUsers.length} color="info">
+              <IconTooltip
+                title="Contact Users"
+                color={theme.palette.primary.main}
+                icon={ICONS.USER_VIEW.icon}
+                onClick={handleContactUsersPopoverOpen}
+              />
+            </Badge>
+          }
+
+          <ContactUsersPopover
+            open={contactUsersAnchorEl}
+            onClose={handleContactUsersPopoverClose}
+            onViewUser={handleViewUser}
+          />
+
           {/* map toggle button on mobile */}
           {sites && !isMobile && <IconPopover onMapClick={() => handleMap()} sites={sites} />}
 
@@ -835,6 +873,11 @@ function ViewFormEditDeleteButtons({
             <IconTooltip title="Merge Document" onClick={onMergeDocumentType} icon="mdi:merge" />
           )}
 
+          {/* restore button */}
+          {onRestore && isSecurityUserAccessAllowed && !isSecurityReadOnly && (
+            <IconTooltip title="Restore" onClick={() => { handleOpenConfirm('restore') }} icon="mdi:restore" />
+          )}
+          
           {/* delete button */}
           {id !== userId && !mainSite && (onArchive || onDelete) && !archived && (
             <IconTooltip
@@ -843,15 +886,6 @@ function ViewFormEditDeleteButtons({
               onClick={() => { handleOpenConfirm('delete') }}
               color={(isDisableDelete || disableDeleteButton) ? "#c3c3c3" : "#FF0000"}
               icon={onArchive ? "mdi:archive" : "mdi:delete"}
-            />
-          )}
-          {onRestore && isSecurityUserAccessAllowed && !isSecurityReadOnly && (
-            <IconTooltip
-              title="Restore"
-              disabled={isDisableDelete}
-              onClick={() => { handleOpenConfirm('restore') }}
-              color={isDisableDelete ? "#c3c3c3" : "#FF0000"}
-              icon="mdi:restore"
             />
           )}
 
@@ -1131,5 +1165,6 @@ ViewFormEditDeleteButtons.propTypes = {
   onMergeDocumentType: PropTypes.func,
   serviceReportStatus: PropTypes.object,
   invitationStatus: PropTypes.string,
-  onCancelInvite: PropTypes.func
+  onCancelInvite: PropTypes.func,
+  handleViewUser: PropTypes.func
 };

@@ -21,6 +21,7 @@ const initialState = {
   activeSecurityUsers: [],
   securityUser: null,
   securityUserDialog: false,
+  contactUsers: [],
   user: null,
   userId: null,
   userEmail: null,
@@ -126,6 +127,11 @@ const slice = createSlice({
       state.securityUsers = action.payload;
     },
 
+    getContactUsersSuccess(state, action) {
+      state.isLoading = false;
+      state.contactUsers = action.payload;
+    },
+
     // GET Active users
     getActiveSecurityUsersSuccess(state, action) {
       state.isLoading = false;
@@ -198,6 +204,7 @@ const slice = createSlice({
       state.isLoading = false;
     },
 
+    
     // RESET SECURITY USERS
     resetSecurityUsers(state) {
       state.securityUsers = [];
@@ -205,7 +212,14 @@ const slice = createSlice({
       state.success = false;
       state.isLoading = false;
     },
-
+    
+    // RESET SECURITY USER
+    resetContactUsers(state) {
+      state.contactUsers = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
     // RESET SIGNINLOGS
     resetSignInLogs(state) {
       state.signInLogs = [];
@@ -256,6 +270,7 @@ export const {
   setChangePasswordDialog,
   setSecurityUserProperties,
   resetSecurityUsers,
+  resetContactUsers,
   resetSecurityUser,
   resetLoadingResetPasswordEmail,
   resetSignInLogsSuccess,
@@ -428,7 +443,8 @@ export function getSecurityUsers(param) {
     try {
       const params = {
         isArchived: param?.isArchived || false,
-        invitationStatus: param?.invitationStatus || false
+        invitationStatus: param?.invitationStatus || false,
+        contact: param?.contact || null,
       }
       const response = await axios.get(`${CONFIG.SERVER_URL}security/users`, { params });
       if (regEx.test(response.status)) {
@@ -483,6 +499,27 @@ export function getSecurityUser(id) {
       throw error;
     }
   };
+}
+
+export function getContactUsers(contactID) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const params = {
+        isArchived: false,
+        invitationStatus: false
+      }
+      const response = await axios.get(`${CONFIG.SERVER_URL}security/users/contact/${contactID}`, { params });
+      if (regEx.test(response.status)) {
+        dispatch(slice.actions.getContactUsersSuccess(response.data));
+      }
+      return response;
+    } catch (error) {
+      dispatch(slice.actions.hasError(error.Message));
+      console.error(error);
+      throw error;
+    }
+  }
 }
 
 // ---------------------------SET LoginUser Data -------------------------------------------

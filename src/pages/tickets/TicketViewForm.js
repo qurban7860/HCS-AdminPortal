@@ -134,11 +134,14 @@ export default function TicketViewForm() {
   }, [activeSpContacts])
 
   useEffect(() => {
-    const newSlides = ticket?.files?.map((file) => {
-      if (file?.fileType && file.fileType.startsWith("image")) {
+    const newSlides = ticket?.files?.map(file => {
+      const base64Thumbnail = `data:image/png;base64,${file.thumbnail}`;
+
+      if (file?.fileType?.startsWith('image')) {
         return {
-          thumbnail: `data:image/png;base64, ${file.thumbnail}`,
-          src: `data:image/png;base64, ${file.thumbnail}`,
+          type: 'image',
+          thumbnail: base64Thumbnail,
+          src: base64Thumbnail,
           downloadFilename: `${file?.name}.${file?.extension}`,
           name: file?.name,
           extension: file?.extension,
@@ -147,18 +150,38 @@ export default function TicketViewForm() {
           _id: file?._id,
           width: '100%',
           height: '100%',
-        }
+        };
       }
+
+      if (file?.fileType?.startsWith('video')) {
+        return {
+          type: 'video',
+          sources: [{
+            src: file?.src,
+            type: file.fileType,
+            playsInline: true,
+            autoPlay: true,
+            loop: true,
+            muted: true,
+            preload: 'auto',
+          }],
+          downloadFilename: `${file?.name}.${file?.extension}`,
+          name: file?.name,
+          extension: file?.extension,
+          fileType: file?.fileType,
+          isLoaded: false,
+          _id: file?._id,
+          width: '100%',
+          height: '100%',
+        };
+      }
+
       return null;
-    })?.filter(Boolean)
+    }).filter(Boolean);
+
     setSlides(newSlides || []);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ticket?.files?.length]);
-
-
-  // const handleEdit = () => {
-  //   navigate(PATH_SUPPORT.supportTickets.edit(ticket._id));
-  // };
+  }, [ticket?.files]);
 
   const defaultValues = useMemo(
     () => ({
@@ -249,21 +272,22 @@ export default function TicketViewForm() {
   const handleOpenLightbox = async (index) => {
     setSelectedImage(index);
     const image = slides[index];
-    if (!image?.isLoaded && image?.fileType?.startsWith('image')) {
+    if (!image?.isLoaded && (image?.fileType?.startsWith('image'))) {
       try {
-        const response = await dispatch(getFile(ticket?._id, image?._id));
+        const response = await dispatch(getFile(id, image?._id));
         if (regEx.test(response.status)) {
-          const updatedSlides = [...slides.slice(0, index),
-          {
-            ...slides[index],
-            src: `data:image/png;base64, ${response.data}`,
-            isLoaded: true,
-          }, ...slides.slice(index + 1),
-          ];
+          const base64 = response.data;
+          const updatedSlides = [...slides];
+          updatedSlides[index] = {
+            ...image,
+            src: `data:${image.fileType};base64,${base64}`,
+            isLoaded: true
+          };
           setSlides(updatedSlides);
         }
       } catch (error) {
         console.error('Error loading full file:', error);
+        enqueueSnackbar('File loading failed!', { variant: 'error' });
       }
     }
   };
@@ -283,18 +307,34 @@ export default function TicketViewForm() {
   };
 
   const handleDownloadFile = (fileId, fileName, fileExtension) => {
-    dispatch(getFile(ticket?._id, fileId))
-      .then((res) => {
-        if (regEx.test(res.status)) {
-          download(atob(res.data), `${fileName}.${fileExtension}`, { type: fileExtension });
-          enqueueSnackbar(res.statusText);
-        } else {
-          enqueueSnackbar(res.statusText, { variant: `error` });
-        }
-      })
-      .catch((err) => {
-        enqueueSnackbar(handleError(err), { variant: `error` });
-      });
+    const file = slides.find((item) => item._id === fileId);
+
+    if (!file) {
+      enqueueSnackbar("File not found.", { variant: "error" });
+      return;
+    }
+
+    const isVideo = file.fileType?.startsWith("video");
+    if (isVideo) {
+      try {
+        const signedUrl = file?.sources[0]?.src;
+        window.open(signedUrl, "_blank");
+        enqueueSnackbar("Video download started");
+      } catch (error) {
+        enqueueSnackbar("Video download failed!", { variant: "error" });
+      }
+    } else {
+      dispatch(getFile(ticket?._id, fileId))
+        .then((res) => {
+          if (regEx.test(res.status)) {
+            download(atob(res.data), `${fileName}.${fileExtension}`, { type: fileExtension });
+            enqueueSnackbar("Download failed");
+          }
+        })
+        .catch((err) => {
+          enqueueSnackbar(handleError(err), { variant: `error` });
+        });
+    }
   };
 
   const [pdf, setPDF] = useState(null);
@@ -355,6 +395,13 @@ export default function TicketViewForm() {
             <ViewFormField isLoading={isLoading} sm={4} heading="Request Type"
               node={<DropDownField name="requestType" label='Request Type' value={ticket?.requestType} onSubmit={onSubmit} options={filteredRequestTypes} />}
             />
+            <ViewFormField isLoading={isLoading} sm={2} heading="Status"
+              node={<DropDownField name="status" isNullable label='Status' value={ticket?.status} onSubmit={onSubmit} options={ticketSettings?.statuses} />}
+            />
+            <ViewFormField isLoading={isLoading} sm={2} heading="Priority"
+              node={<DropDownField name="priority" isNullable label='Priority' value={ticket?.priority} onSubmit={onSubmit} options={ticketSettings?.priorities} />}
+            />
+
             {/* <ViewFormField isLoading={isLoading} sm={4} heading=""
               param={
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -374,12 +421,7 @@ export default function TicketViewForm() {
             {/* <ViewFormField isLoading={isLoading} sm={4} heading="Status"
               node={<DropDownMultipleSelection name="status" label='Status' value={ticket?.status} onSubmit={onSubmit} options={ticketSettings?.statuses} multiple={false} isStatus/>}
             /> */}
-            <ViewFormField isLoading={isLoading} sm={2} heading="Status"
-              node={<DropDownField name="status" isNullable label='Status' value={ticket?.status} onSubmit={onSubmit} options={ticketSettings?.statuses} />}
-            />
-            <ViewFormField isLoading={isLoading} sm={2} heading="Priority"
-              node={<DropDownField name="priority" isNullable label='Priority' value={ticket?.priority} onSubmit={onSubmit} options={ticketSettings?.priorities} />}
-            />
+
             <ViewFormField sm={4} variant='h4' heading="Customer" isLoading={isLoading}
               node={defaultValues?.customer && (
                 <>
@@ -428,6 +470,12 @@ export default function TicketViewForm() {
             <ViewFormField isLoading={isLoading} sm={12} heading="Description"
               node={<FilledEditorField name="description" value={defaultValues.description} onSubmit={onSubmit} minRows={4} />}
             />
+            <ViewFormField isLoading={isLoading} sm={10} heading="Fault"
+              node={<DropDownMultipleSelection name="faults" label='Fault' value={ticket?.faults} options={ticketSettings?.faults} onSubmit={onSubmit} isStatus />}
+            />
+            <ViewFormField isLoading={isLoading} sm={2} heading="Impact"
+              node={<DropDownField name="impact" isNullable label='Impact' value={ticket?.impact} options={ticketSettings?.impacts} onSubmit={onSubmit} />}
+            />
             <Grid container sx={{ mt: 4 }}>
               <FormLabel content='Documents' />
             </Grid>
@@ -457,30 +505,27 @@ export default function TicketViewForm() {
                 />
               ))}
 
-              {ticket?.files?.map((file, _index) => {
-                if (!file.fileType.startsWith('image')) {
-                  return <DocumentGalleryItem key={file?._id}
-                    image={{
-                      thumbnail: `data:image/png;base64, ${file.thumbnail}`,
-                      src: `data:image/png;base64, ${file.thumbnail}`,
-                      downloadFilename: `${file?.name}.${file?.extension}`,
-                      name: file?.name,
-                      fileType: file?.fileType,
-                      extension: file?.extension,
-                      isLoaded: false,
-                      id: file?._id,
-                      width: '100%',
-                      height: '100%',
-                    }}
-                    isLoading={isLoading}
-                    onDownloadFile={() => handleDownloadFile(file?._id, file?.name, file?.extension)}
-                    onDeleteFile={() => handleDeleteFile(file?._id)}
-                    onOpenFile={() => handleOpenFile(file?._id, file?.name, file?.extension)}
-                    toolbar
-                  />
-                }
-                return null;
-              }
+              {Array.isArray(ticket?.files) && ticket?.files?.filter(f => !f.fileType.startsWith('image'))?.filter(f => !f.fileType.startsWith('video'))?.map((file, _index) =>
+                <DocumentGalleryItem
+                  key={file?._id}
+                  image={{
+                    thumbnail: `data:image/png;base64, ${file.thumbnail}`,
+                    src: `data:image/png;base64, ${file.thumbnail}`,
+                    downloadFilename: `${file?.name}.${file?.extension}`,
+                    name: file?.name,
+                    fileType: file?.fileType,
+                    extension: file?.extension,
+                    isLoaded: false,
+                    id: file?._id,
+                    width: '100%',
+                    height: '100%',
+                  }}
+                  isLoading={isLoading}
+                  onDownloadFile={() => handleDownloadFile(file?._id, file?.name, file?.extension)}
+                  onDeleteFile={() => handleDeleteFile(file?._id)}
+                  onOpenFile={() => handleOpenFile(file?._id, file?.name, file?.extension)}
+                  toolbar
+                />
               )}
               <ThumbnailDocButton onClick={() => setFileDialog(true)} />
             </Box>
@@ -492,13 +537,9 @@ export default function TicketViewForm() {
               close={handleCloseLightbox}
               onGetCurrentIndex={(index) => handleOpenLightbox(index)}
               disabledSlideshow
+              disabledDownload
             />
-            <ViewFormField isLoading={isLoading} sm={6} heading="Fault"
-              node={<DropDownMultipleSelection name="faults" label='Fault' value={ticket?.faults} options={ticketSettings?.faults} onSubmit={onSubmit}  isStatus/>}
-            />
-            <ViewFormField isLoading={isLoading} sm={2} heading="Impact"
-              node={<DropDownField name="impact" isNullable label='Impact' value={ticket?.impact} options={ticketSettings?.impacts} onSubmit={onSubmit} />}
-            />
+
             {ticket?.issueType?.name === 'Change Request' && (
               <>
                 <ViewFormField isLoading={isLoading} sm={2} heading="Change Type"
@@ -547,18 +588,25 @@ export default function TicketViewForm() {
                 />
               </Grid>
             )}
-            <ViewFormSWitch isLoading={isLoading} sm={2}
-              shareWithHeading="Shared With Organization"
-              shareWith={shareWith}
-              onChange={handleShareWithChange}
-              isEditable
-            />
-            <ViewFormSWitch isLoading={isLoading} sm={2}
-              isActiveHeading="Active"
-              isActive={isActive}
-              onChange={handleIsActiveChange}
-              isEditable
-            />
+
+            <Grid sx={{ pt: 2, alignSelf: 'flex-end', xs: 4 }}>
+              <ViewFormSWitch
+                isLoading={isLoading}
+                shareWithHeading="Shared With Organization"
+                shareWith={shareWith}
+                onChange={handleShareWithChange}
+                isEditable
+              />
+            </Grid>
+
+            <Grid sx={{ pt: 2, alignSelf: 'flex-end' }}>
+              <ViewFormSWitch isLoading={isLoading}
+                isActiveHeading="Active"
+                isActive={isActive}
+                onChange={handleIsActiveChange}
+                isEditable
+              />
+            </Grid>
           </Grid>
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>

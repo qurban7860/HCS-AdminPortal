@@ -591,6 +591,10 @@ export const ICONS = {
     icon: 'mdi:file-exchange-outline',
     heading: 'Faults',
   },
+  ARTICLE_CATEGORY: {
+    icon: 'mdi:book-cog',
+    heading: 'Article Categories',
+  },
 
   MOVE_MACHINE: {
     icon: 'ri:swap-box-line',
@@ -602,7 +606,11 @@ export const ICONS = {
     color: '#909090',
     heading: 'See More',
   },
-
+  USER_VIEW: {
+    icon: 'mingcute:user-2-fill',
+    color: '#008000',
+    heading: 'View User',
+  },
   USER_LOCK: {
     icon: 'mingcute:lock-fill',
     color: '#FF0000',

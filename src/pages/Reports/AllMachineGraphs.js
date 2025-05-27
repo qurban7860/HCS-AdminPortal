@@ -10,7 +10,7 @@ import { getActiveCustomerMachines, resetActiveCustomerMachines } from "../../re
 import { getMachineLogGraphData, resetMachineErpLogRecords, resetMachineLogsGraphData } from "../../redux/slices/products/machineErpLogs";
 import { Cover } from "../../components/Defaults/Cover";
 import { StyledCardContainer, StyledContainedIconButton, StyledTooltip } from "../../theme/styles/default-styles";
-import { RHFAutocomplete, RHFDatePicker } from "../../components/hook-form";
+import { RHFAutocomplete, RHFDatePicker,RHFDateTimePicker } from "../../components/hook-form";
 import ErpProducedLengthLogGraph from "./Graphs/ErpProducedLengthLogGraph";
 import ErpProductionRateLogGraph from "./Graphs/ErpProductionRateLogGraph";
 import Iconify from '../../components/iconify';
@@ -31,8 +31,10 @@ const AllMachineGraphs = () => {
     machine: null,
     logPeriod: 'Daily',
     logGraphType: machineLogGraphTypes[0],
-    dateFrom: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
-    dateTo: new Date(),
+    dateFrom: new Date(new Date().setHours(0, 0, 0, 0)),
+    dateTo: new Date(new Date().setHours(23, 59, 59, 0)),
+    // dateFrom: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+    // dateTo: new Date(),
   };
 
   const methods = useForm({
@@ -160,73 +162,69 @@ const AllMachineGraphs = () => {
                     />
                   </Box>
 
-                  <Stack direction="row" spacing={2} sx={{ width: '100%' }}>
-                    <Box sx={{ width: '50%' }}>
-                      <RHFAutocomplete
-                        name="logPeriod"
-                        label="Period*"
-                        options={['Hourly', 'Daily', 'Monthly', 'Quarterly', 'Yearly']}
-                        size="small"
-                        disableClearable
-                      />
-                    </Box>
-                    <Box sx={{ width: '50%' }}>
-                      <RHFAutocomplete
-                        name="logGraphType"
-                        label="Graph Type*"
-                        options={machineLogGraphTypes}
-                        getOptionLabel={(option) => option.name || ''}
-                        isOptionEqualToValue={(option, value) => option?.key === value?.key}
-                        renderOption={(props, option) => (
-                          <li {...props} key={option?.key}>
-                            {option.name || ''}
-                          </li>
-                        )}
-                        disableClearable
-                        size="small"
-                      />
-                    </Box>
-                  </Stack>
+  <Grid container alignItems="flex-start" gap={1}>
+  <Grid item xs={12} sm={6} md={2.5} xl={3.5} >
+    <RHFAutocomplete
+      name="logGraphType"
+      label="Graph Type*"
+      options={machineLogGraphTypes}
+      getOptionLabel={(option) => option.name || ''}
+      isOptionEqualToValue={(option, value) => option?.key === value?.key}
+      renderOption={(props, option) => (
+        <li {...props} key={option?.key}>
+          {option.name || ''}
+        </li>
+      )}
+      disableClearable
+      size="small"
+      fullWidth
+    />
+  </Grid>
+   <Grid item xs={12} sm={6} md={2.5} xl={3}>
+    <RHFAutocomplete
+      name="logPeriod"
+      label="Period*"
+      options={['Hourly', 'Daily', 'Monthly', 'Quarterly', 'Yearly']}
+      size="small"
+      disableClearable
+      fullWidth
+    />
+  </Grid>
 
-                  <Stack
-                    direction={{ xs: 'column', sm: 'row' }}
-                    spacing={2}
-                    sx={{
-                      justifyContent: 'space-between',
-                      alignItems: 'flex-start',
-                    }}
-                  >
-                    <Box sx={{ flexGrow: 1, width: { xs: '100%', sm: 'auto' } }}>
-                      <RHFDatePicker
-                        label="Date From"
-                        name="dateFrom"
-                        size="small"
-                        onChange={(newValue) => setValue('dateFrom', newValue)}
-                        fullWidth
-                      />
-                    </Box>
-                    <Box sx={{ flexGrow: 1, width: { xs: '100%', sm: 'auto' } }}>
-                      <RHFDatePicker
-                        label="Date To"
-                        name="dateTo"
-                        size="small"
-                        onChange={(newValue) => setValue('dateTo', newValue)}
-                        fullWidth
-                      />
-                    </Box>
-                    <Box sx={{ justifyContent: 'flex-end', display: 'flex' }}>
-                      <StyledTooltip
-                        title="Fetch Graph"
-                        placement="top"
-                        disableFocusListener
-                        tooltipcolor={theme.palette.primary.main}
-                      >
-                        <StyledContainedIconButton type="submit" sx={{ px: 2 }}>
-                          <Iconify sx={{ height: '24px', width: '24px' }} icon="mdi:text-search" />
-                        </StyledContainedIconButton>
-                      </StyledTooltip>
-                    </Box>
-                  </Stack>
+  <Grid item xs={12} sm={6} md={2.5} xl={2}>
+    <RHFDateTimePicker
+      label="Date From"
+      name="dateFrom"
+      size="small"
+      onChange={(newValue) => setValue('dateFrom', newValue)}
+      fullWidth
+    />
+  </Grid>
+
+  <Grid item xs={12} sm={6} md={2.5} xl={2}>
+    <RHFDateTimePicker
+      label="Date To"
+      name="dateTo"
+      size="small"
+      onChange={(newValue) => setValue('dateTo', newValue)}
+      fullWidth
+    />
+  </Grid>
+
+  <Grid item xs={12} sm={12} md={1} sx={{ display: 'flex', justifyContent: 'flex-end' }} >
+    <StyledTooltip
+      title="Fetch Graph"
+      placement="top"
+      disableFocusListener
+      tooltipcolor={theme.palette.primary.main}
+    >
+     <StyledContainedIconButton type="submit" sx={{ px: 2 }}>
+        <Iconify sx={{ height: '24px', width: '24px' }} icon="mdi:text-search" />
+      </StyledContainedIconButton>
+    </StyledTooltip>
+  </Grid>
+</Grid>
+
                 </Stack>
               </Card>
             </Grid>

@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { useCallback, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Dialog, DialogContent, Button, DialogTitle, Divider, DialogActions } from '@mui/material';
+import { Dialog, DialogContent, Button, DialogTitle, Divider, DialogActions, Alert, Typography } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -47,6 +47,16 @@ function DialogTicketAddFile({ open, handleClose }) {
 
   const { files } = watch();
 
+  // Check if any uploaded files have HEIC or HEIF extensions
+  const hasHeicOrHeifFiles = useMemo(() => {
+    if (!files || !Array.isArray(files)) return false;
+    
+    return files.some(file => {
+      const extension = file.name?.split('.').pop()?.toLowerCase();
+      return extension === 'heic' || extension === 'heif';
+    });
+  }, [files]);
+
   const handleDropMultiFile = useCallback(
     async (acceptedFiles) => {
       const docFiles = files || [];
@@ -87,6 +97,16 @@ function DialogTicketAddFile({ open, handleClose }) {
       <DialogTitle variant='h3' sx={{ pb: 1, pt: 2 }}>Add Documents / Images</DialogTitle>
       <Divider orientation="horizontal" flexItem />
       <DialogContent dividers sx={{ pt: 2 }}>
+        {hasHeicOrHeifFiles && (
+          <Alert 
+            severity="info" 
+            sx={{ mb: 2 }}
+          >
+            <Typography variant='body2'>
+              Please note: HEIC/HEIF image files require format conversion during upload, which may result in extended processing times.
+            </Typography>
+          </Alert>
+        )}
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
           <RHFUpload multiple thumbnail name="files" imagesOnly
             onDrop={handleDropMultiFile}

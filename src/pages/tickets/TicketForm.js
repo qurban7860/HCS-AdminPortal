@@ -90,8 +90,7 @@ export default function TicketForm() {
 
   const { reset, setError, handleSubmit, watch, setValue, trigger, formState: { isSubmitting, errors } } = methods;
   const { issueType, customer, machine, files, plannedStartDate, plannedEndDate, description } = watch();
-  console.log(" description  : ", description)
-
+  
   useEffect(() => {
     trigger(["plannedStartDate", "plannedEndDate"]);
   }, [trigger, plannedStartDate, plannedEndDate])
@@ -159,6 +158,7 @@ export default function TicketForm() {
   };
 
   const handleDropMultiFile = useCallback(async (acceptedFiles) => {
+    console.log("acceptedFiles:::",acceptedFiles)
     const hashes = await hashFilesMD5(acceptedFiles);
     const newFiles = (Array.isArray(files) && files?.length > 0) ? [...files] : [];
     acceptedFiles.forEach((file, index) => {
@@ -326,6 +326,10 @@ export default function TicketForm() {
                     isOptionEqualToValue={(option, value) => option._id === value._id}
                     getOptionLabel={(option) => `${option.name || ''}`}
                     renderOption={(props, option) => (<li {...props} key={option?._id}> {option.name || ''} </li>)}
+                    onChange={(event, newValue) => {
+                      setValue('issueType', newValue);
+                      setValue('requestType', null); 
+                    }}
                   />
                   <RHFAutocomplete
                     name="requestType"
@@ -343,7 +347,7 @@ export default function TicketForm() {
                     options={ticketSettings?.faults || []}
                     isOptionEqualToValue={(option, value) => option._id === value._id}
                     getOptionLabel={(option) => `${option.name || ''}`}
-                    renderOption={(props, option) => (<li {...props} key={option?._id}> {option.name || ''} </li>)}
+                    renderOption={(props, option) => (<li {...props} key={option?._id || option?.name}> {option.name || ''} </li>)}
                   />
                 </Box>
               </Stack>
@@ -355,7 +359,7 @@ export default function TicketForm() {
             <Grid item xs={12} md={12}>
               <Card sx={{ p: 3 }}>
                 <Stack spacing={3}>
-                  <RHFTextField name="summary" label="Summary" minRows={1} />
+                  <RHFTextField name="summary" label="Summary*" minRows={1} />
                   <RHFEditor name="description" label="Description" minRows={3} multiline />
                   <Box
                     sx={{
@@ -373,7 +377,6 @@ export default function TicketForm() {
                         multiple
                         thumbnail
                         name="files"
-                        imagesOnly
                         onDrop={handleDropMultiFile}
                         onRemove={handleFileRemove}
                         onRemoveAll={() => setValue('files', '', { shouldValidate: true })}

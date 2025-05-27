@@ -168,18 +168,18 @@ export const allSideBarOptions = {
       ],
     },
   ],
-  jobs: [
-    {
-      subheader: 'Machine Jobs',
-      items: [
-        {
-          title: 'Jobs',
-          path: PATH_JOBS.machineJobs.root,
-          icon: <Iconify icon="mdi:printer" />,
-        },
-      ]
-    }
-  ],
+  // jobs: [
+  //   {
+  //     subheader: 'Machine Jobs',
+  //     items: [
+  //       {
+  //         title: 'Jobs',
+  //         path: PATH_JOBS.machineJobs.root,
+  //         icon: <Iconify icon="mdi:printer" />,
+  //       },
+  //     ]
+  //   }
+  // ],
   support: [
     {
       subheader: 'Support Services',
@@ -205,8 +205,8 @@ export const allSideBarOptions = {
           icon: <Iconify icon="mdi:jira" />,
         },
         {
-          title: 'Knowledge base',
-          path: PATH_SUPPORT.knowledgeBase.root,
+          title: 'Knowledge Base',
+          path: PATH_SUPPORT.knowledgeBase.article.root,
           icon: <Iconify icon="mdi:book-open-variant" />,
         },
         {
@@ -272,6 +272,12 @@ export const allSideBarOptions = {
               title: 'API logs',
               description: 'Review API request and response logs.',
               path: PATH_REPORTS.logs.api.root,
+              icon: <Iconify icon="mdi:api" />,
+            },
+            {
+              title: 'API Log summary',
+              description: 'Review API request and response logs summary.',
+              path: PATH_REPORTS.logs.apiLogSummary,
               icon: <Iconify icon="mdi:api" />,
             },
           ],

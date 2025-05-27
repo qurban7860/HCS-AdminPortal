@@ -452,6 +452,7 @@ import {
 
   // LOGS: API LOGS
   ApiLogsList,
+  ApiLogsSummary,
 
   // ----------------------------------------------------------------
 
@@ -495,6 +496,14 @@ import {
   JiraTickets,
   UnderDevelopment,
   SectionUnderConstruction,
+  ArticleList,
+  ArticleAdd,
+  ArticleEdit,
+  ArticleView,
+  ArticleCategoryList,
+  ArticleCategoryAdd,
+  ArticleCategoryEdit,
+  ArticleCategoryView,
 } from './elements';
 
 // ----------------------------------------------------------------------
@@ -968,7 +977,9 @@ export default function Router() {
                 { path: 'list', element: <DocumentCategoryList /> },
                 { path: 'new', element: <DocumentCategoryAdd /> },
                 { path: ':id/edit', element: <DocumentCategoryEdit /> },
-                { path: ':id/view', element: <DocumentCategoryView /> }
+                { path: ':id/view', element: <DocumentCategoryView /> },
+                { path: 'archived', element: <DocumentCategoryList isArchived /> },
+                { path: 'archived/:id/view', element: <DocumentCategoryView /> },
               ],
             },
             // ------------------------------ document Type ----------------------------------
@@ -978,7 +989,9 @@ export default function Router() {
                 { path: 'list', element: <DocumentTypeList /> },
                 { path: 'new', element: <DocumentTypeAdd /> },
                 { path: ':id/edit', element: <DocumentTypeEdit /> },
-                { path: ':id/view', element: <DocumentTypeView /> }
+                { path: ':id/view', element: <DocumentTypeView /> },
+                { path: 'archived', element: <DocumentTypeList isArchived /> },
+                { path: 'archived/:id/view', element: <DocumentTypeView /> },
               ],
             },
           ],
@@ -1299,8 +1312,38 @@ export default function Router() {
             },
           ],
         },
+        { element: <Navigate to="/support/supportTickets" replace />, index: true },
         { path: 'jiraTickets', element: <JiraTickets /> },
-        { path: 'knowledgeBase', element: <SectionUnderConstruction /> },
+        {
+          path: 'knowledgeBase',
+          children: [
+            { path: 'article', 
+              children: [
+                { element: <ArticleList />, index: true },
+                { path: 'new', element: <ArticleAdd /> },
+                { path: ':id/edit', element: <ArticleEdit /> },
+                { path: ':id/view', element: <ArticleView /> },
+                { path: 'archived', element: <ArticleList isArchived /> },
+                { path: ':id/archived/view', element: <ArticleView /> },
+              ]
+            }
+          ]
+         },
+         {
+          path:'supportSettings',
+          children:[
+            { path: 'articleCategories', 
+              children: [
+                { element: <ArticleCategoryList />, index: true },
+                { path: 'new', element: <ArticleCategoryAdd /> },
+                { path: ':id/edit', element: <ArticleCategoryEdit /> },
+                { path: ':id/view', element: <ArticleCategoryView /> },
+                { path: 'archived', element: <ArticleCategoryList isArchived /> },
+                { path: ':id/archived/view', element: <ArticleCategoryView /> },
+              ]
+            },
+          ]
+         },
         { path: 'manuals', element: <SectionUnderConstruction /> },
       ],
     },
@@ -1355,7 +1398,8 @@ export default function Router() {
               children: [
                 { element: <ApiLogsList />, index: true },
               ]
-            }
+            },
+            { path: 'apiLogSummary', element: <ApiLogsSummary /> },
           ],
         },
       ],
