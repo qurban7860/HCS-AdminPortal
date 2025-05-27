@@ -56,7 +56,7 @@ export default function ArticleListTableRow({
 
   const renderAritcle = (
     <StyledTableRow hover selected={selected} onClick={onViewRow}>
-      <TableCell colSpan={7} sx={{ pl:1.5 }}>
+      <TableCell colSpan={7} sx={{ pl:1.5, py:2}}>
         <Typography 
           variant="subtitle2"
           sx={{
