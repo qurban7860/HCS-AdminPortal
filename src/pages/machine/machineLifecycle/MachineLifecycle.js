@@ -28,23 +28,14 @@ const MachineLifecycle = () => {
     }
   }, [dispatch, machine?._id]);
 
-  const machineActions = useMemo(() => {
-    const actions = [];
-    const currentDate = new Date();
-
+   const machineActions = useMemo(() => {
     if (Array.isArray(machineLifeCycle)) {
-      machineLifeCycle.forEach((item) => {
-        if (item.date && item.type) {
-          const eventDate = new Date(item.date);
-          if (eventDate <= currentDate) {
-            const actionDescription = item.type;
-            actions.push({ sortDate: item.date, action: actionDescription });
-          }
-        }
-      });
+      return machineLifeCycle.map((item) => ({
+        sortDate: item.date,
+        action: item.type,
+      }));
     }
-
-    return actions.sort((a, b) => new Date(b.sortDate) - new Date(a.sortDate));
+    return [];
   }, [machineLifeCycle]);
 
   return (
