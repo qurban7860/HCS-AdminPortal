@@ -11,6 +11,8 @@ import {
   Container,
   IconButton,
   TableContainer,
+  Box,
+  Stack,
   // Stack,
 } from '@mui/material';
 // redux
@@ -32,7 +34,7 @@ import Iconify from '../../../../components/iconify';
 import Scrollbar from '../../../../components/scrollbar';
 import ConfirmDialog from '../../../../components/confirm-dialog';
 // sections
-import ArticleListTableRow from './ArticleListTableRow';
+import ArticleListCard from './ArticleListCard';
 import ArticleListTableToolbar from './ArticleListTableToolbar';
 import {
   getArticles,
@@ -216,31 +218,24 @@ export default function ArticleList({isArchived}) {
             />
           )}
 
-          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            <Scrollbar>
-              <Table stickyHeader size="small" sx={{ minWidth: 360 }}>
-                <TableHeadFilter order={order} orderBy={orderBy} headLabel={TABLE_HEAD} onSort={onSort}/>
-                <TableBody>
-                  {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row, index) =>
-                      row ? (
-                        <ArticleListTableRow
-                          key={row._id}
-                          row={row}
-                          onViewRow={() => handleViewRow(row._id)}
-                          prefix={prefix}
-                        />
-                      ) : (
-                        !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
+          <Scrollbar sx={{borderTop:'1px solid #E0E0E0'}}>
+            <Stack spacing={2} sx={{ p:2 }}>
+              {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((row, index) =>
+                  row ? (
+                    <ArticleListCard
+                      key={row._id}
+                      row={row}
+                      onViewRow={() => handleViewRow(row._id)}
+                      prefix={prefix}
+                    />
+                  ) : (
+                    !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                       )
                     )}
-
-                  <TableNoData isNotFound={isNotFound} />
-                </TableBody>
-              </Table>
-            </Scrollbar>
-          </TableContainer>
+              </Stack>
+          </Scrollbar>
           {!isNotFound && <TablePaginationCustom
             count={ articles?.length || 0 }
             page={page}
