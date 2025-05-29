@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef,useState } from 'react';
 import * as Yup from 'yup';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // form
@@ -7,6 +7,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Link, Stack, Alert } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
+import ReCaptcha from '../../components/captcha/ReCaptcha';
 // routes
 import { PATH_AUTH } from '../../routes/paths';
 // auth
@@ -14,7 +15,9 @@ import { useAuthContext } from '../../auth/useAuthContext';
 // components
 import FormProvider, { RHFTextField, RHFCheckbox, RHFPasswordField } from '../../components/hook-form';
 
+
 // ----------------------------------------------------------------------
+
 
 export default function AuthLoginForm() {
 
@@ -22,6 +25,12 @@ export default function AuthLoginForm() {
   const { login } = useAuthContext();
   const inputRef = useRef(null);
   const regEx = /^[4][0-9][0-9]$/
+
+  const [recaptchaToken, setRecaptchaToken] = useState(null);
+  const [showRecaptcha, setShowRecaptcha] = useState(false);
+
+
+
 
   const LoginSchema = Yup.object().shape({
     email: Yup.string()
@@ -105,6 +114,15 @@ export default function AuthLoginForm() {
       }
     }
   };
+      useEffect(() => {
+          if (password.length >= 6) {
+             setShowRecaptcha(true);
+              } else {
+             setShowRecaptcha(false);
+             setRecaptchaToken(null);
+              }
+          }, [password]);
+
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -127,6 +145,11 @@ export default function AuthLoginForm() {
       </Stack>
 
       <RHFCheckbox name="remember" label="Remember Me"  variant="soft"/>
+    {showRecaptcha && (
+  <ReCaptcha onVerify={(token) => setRecaptchaToken(token)} />
+)}
+
+
 
       <LoadingButton
         fullWidth
@@ -135,7 +158,9 @@ export default function AuthLoginForm() {
         type="submit"
         variant="contained"
         loading={isSubmitSuccessful || isSubmitting}
+       disabled={showRecaptcha ? !recaptchaToken : true}
         sx={{ bgcolor: '#10079F', color: 'white', '&:hover': { bgcolor: '#FFA200' }}}
+        
       >
         Login
       </LoadingButton>
