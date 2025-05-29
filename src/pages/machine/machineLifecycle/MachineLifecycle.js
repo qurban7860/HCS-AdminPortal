@@ -15,7 +15,7 @@ import MachineTabContainer from '../util/MachineTabContainer';
 import { FORMLABELS } from '../../../constants/document-constants';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
 import { fDate } from '../../../utils/formatTime';
-import { getMachineLifeCycle } from '../../../redux/slices/products/machine';
+import { getMachineLifeCycle, resetMachineLifeCycle} from '../../../redux/slices/products/machine';
 import { TableNoData } from '../../../components/table';
 
 const MachineLifecycle = () => {
@@ -25,6 +25,9 @@ const MachineLifecycle = () => {
   useEffect(() => {
     if (machine?._id) {
       dispatch(getMachineLifeCycle(machine._id));
+    }
+    return () => { 
+      dispatch(resetMachineLifeCycle());
     }
   }, [dispatch, machine?._id]);
 
