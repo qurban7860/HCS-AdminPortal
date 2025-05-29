@@ -69,12 +69,12 @@ export const StyledTooltip = styled(({ className, ...props }) => (
   <Tooltip {...props} arrow classes={{ popper: className || "" }} />
 ))(({ theme, tooltipcolor }) => ({
   [`& .${tooltipClasses.arrow}`]: {
-    color: tooltipcolor,
+    color: tooltipcolor || theme.palette.primary.main,
     bottom:'1px !important'
   },
   [`& .${tooltipClasses.tooltip}`]: {
     fontSize: '1rem',
-    backgroundColor: tooltipcolor,
+    backgroundColor: tooltipcolor || theme.palette.primary.main,
   }
 }));
 
