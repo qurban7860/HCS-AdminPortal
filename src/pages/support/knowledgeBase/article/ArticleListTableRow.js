@@ -2,6 +2,9 @@ import PropTypes from 'prop-types';
 // @mui
 import {
   Button,
+  Card,
+  CardContent,
+  CardHeader,
   Collapse,
   Divider,
   Grid,
@@ -10,18 +13,21 @@ import {
   Stack,
   Switch,
   TableCell,
+  TableRow,
   Typography,
 } from '@mui/material';
+import CardActions from '@mui/material/CardActions';
 // utils
 import { fDate } from '../../../../utils/formatTime';
 import LinkTableCell from '../../../../components/ListTableTools/LinkTableCell';
-import { StyledTableRow } from '../../../../theme/styles/default-styles'
 import { useBoolean } from '../../../../hooks/useBoolean';
 import Iconify from '../../../../components/iconify';
 import IconTooltip from '../../../../components/Icons/IconTooltip';
 import { ICONS } from '../../../../constants/icons/default-icons';
 import ArticleInfo from './ArticleInfo';
-
+import { StyledTooltip } from '../../../../theme/styles/default-styles';
+import { PATH_SUPPORT } from '../../../../routes/paths';
+import OpenInNewPage from '../../../../components/Icons/OpenInNewPage';
 // ----------------------------------------------------------------------
 
 ArticleListTableRow.propTypes = {
@@ -40,50 +46,49 @@ export default function ArticleListTableRow({
   onViewRow,
   prefix,
 }) {
-  const { articleNo, title, description, status, category, customerAccess, isActive, updatedAt } = row;
+  const { _id, articleNo, title, description, status, category, customerAccess, isActive, updatedAt } = row;
 
-  const renderPrimary = (
-    <StyledTableRow hover selected={selected}>
-      <LinkTableCell onClick={onViewRow} param={`${prefix}-${articleNo}`} />
-      <TableCell>{title}</TableCell>
-      <TableCell>{category?.name}</TableCell>
-      <TableCell>{status}</TableCell>
-      <TableCell><Switch checked={customerAccess} disabled size="small" /></TableCell>
-      <TableCell><Switch checked={isActive} disabled size="small" /></TableCell>
-      <TableCell align="right">{fDate(updatedAt)}</TableCell>
-    </StyledTableRow>
-  );
+  const handleExternalLink = (event) => {
+    event.stopPropagation(); 
+    const url = PATH_SUPPORT.knowledgeBase.article.view(_id);
+    window.open(url, '_blank');
+  };
+  
+  // const renderPrimary = (
+  //   <StyledTableRow hover selected={selected}>
+  //     <LinkTableCell onClick={onViewRow} param={`${prefix}-${articleNo}`} />
+  //     <TableCell>{title}</TableCell>
+  //     <TableCell>{category?.name}</TableCell>
+  //     <TableCell>{status}</TableCell>
+  //     <TableCell><Switch checked={customerAccess} disabled size="small" /></TableCell>
+  //     <TableCell><Switch checked={isActive} disabled size="small" /></TableCell>
+  //     <TableCell align="right">{fDate(updatedAt)}</TableCell>
+  //   </StyledTableRow>
+  // );
 
   const renderAritcle = (
-    <StyledTableRow hover selected={selected} onClick={onViewRow}>
-      <TableCell colSpan={7} sx={{ pl:1.5, py:2}}>
-        <Typography 
-          variant="subtitle2"
-          sx={{
-            pl: '5px',
-            display: '-webkit-box',
-            WebkitLineClamp: 2,
-            WebkitBoxOrient: 'vertical',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            cursor: 'pointer',
-          }}
-        >
-          {title}
-        </Typography>
-        <Stack direction="row" spacing={2} justifyContent="space-between">
-            <Stack direction="row" spacing={1}>
-              <ArticleInfo label={`${prefix}-${articleNo} (${category?.name})`} />
-              <ArticleInfo label={status} />
-              <ArticleInfo color={customerAccess ? ICONS.ALLOWED.color : ICONS.DISALLOWED.color} icon={customerAccess ? ICONS.ALLOWED.icon : ICONS.DISALLOWED.icon} tooltip={customerAccess ? ICONS.ALLOWED.heading : ICONS.DISALLOWED.heading} />
-              <ArticleInfo color={isActive ? ICONS.ACTIVE.color : ICONS.INACTIVE.color} icon={isActive ? ICONS.ACTIVE.icon : ICONS.INACTIVE.icon} tooltip={isActive ? ICONS.ACTIVE.heading : ICONS.INACTIVE.heading} />
-            </Stack>
-            <Stack direction="row" spacing={2}>
-              <ArticleInfo icon='mdi:clock-outline' label={fDate(updatedAt)} tooltip='Updated At' />
-            </Stack>
-        </Stack>
+    <TableRow selected={selected} onClick={onViewRow} sx={{cursor:'pointer'}}>
+      <TableCell colSpan={7}>
+        <Card sx={{ '&:hover': { backgroundColor: 'background.neutral' } }}>
+          <CardHeader sx={{ pt: 1, px: 2 }} 
+              title={<>{title}<OpenInNewPage onClick={handleExternalLink} /></>} 
+              />
+            <CardActions sx={{ pt: 1, px: 2 }}>
+            <Grid container spacing={2} direction="row" justifyContent="space-between">
+              <Grid item display="flex" gap={1}>
+                <ArticleInfo label={`${prefix}-${articleNo} (${category?.name})`} />
+                <ArticleInfo label={status} />
+                <ArticleInfo color={customerAccess ? ICONS.ALLOWED.color : ICONS.DISALLOWED.color} icon={customerAccess ? ICONS.ALLOWED.icon : ICONS.DISALLOWED.icon} tooltip={customerAccess ? ICONS.ALLOWED.heading : ICONS.DISALLOWED.heading} />
+                <ArticleInfo color={isActive ? ICONS.ACTIVE.color : ICONS.INACTIVE.color} icon={isActive ? ICONS.ACTIVE.icon : ICONS.INACTIVE.icon} tooltip={isActive ? ICONS.ACTIVE.heading : ICONS.INACTIVE.heading} />
+              </Grid>
+              <Grid item display="flex" gap={1}>
+                <ArticleInfo icon='mdi:clock-outline' label={fDate(updatedAt)} tooltip='Updated At' />
+              </Grid>
+            </Grid>
+          </CardActions>
+        </Card>
       </TableCell>
-    </StyledTableRow>
+    </TableRow>
   );
 
   return (renderAritcle);
