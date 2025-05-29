@@ -1,8 +1,7 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect } from 'react';
 import {
   Box,
   Typography,
-  Divider,
   Avatar,
   Paper,
   Fade,
@@ -17,6 +16,7 @@ import { FORMLABELS } from '../../../constants/document-constants';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
 import { fDate } from '../../../utils/formatTime';
 import { getMachineLifeCycle } from '../../../redux/slices/products/machine';
+import { TableNoData } from '../../../components/table';
 
 const MachineLifecycle = () => {
   const dispatch = useDispatch();
@@ -27,16 +27,6 @@ const MachineLifecycle = () => {
       dispatch(getMachineLifeCycle(machine._id));
     }
   }, [dispatch, machine?._id]);
-
-   const machineActions = useMemo(() => {
-    if (Array.isArray(machineLifeCycle)) {
-      return machineLifeCycle.map((item) => ({
-        sortDate: item.date,
-        action: item.type,
-      }));
-    }
-    return [];
-  }, [machineLifeCycle]);
 
   return (
     <Container maxWidth={false}>
@@ -63,30 +53,30 @@ const MachineLifecycle = () => {
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'flex-start', 
-              mb: 6,
+              // mb: 6,
               width: '100%',
             }}
           >
             {/* Vertical Line */}
-            <Box
+            { machineLifeCycle?.length > 0 && <Box
               sx={{
                 position: 'absolute',
                 top: 20,
-                bottom: 20,
+                bottom: 40,
                 left: 150, 
                 width: { xs: 2, md: 4 },
                 bgcolor: 'primary.main',
                 zIndex: 0,
               }}
-            />
+            />}
 
             {/* Timeline Items */}
-            {machineActions.length === 0 ? (
-              <Typography variant="body2" color="text.secondary" mt={3}>
-                No machine lifecycle data available.
-              </Typography>
+            {Array.isArray(machineLifeCycle) && machineLifeCycle?.length === 0 ? (
+              <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <TableNoData isNotFound={!machineLifeCycle?.length} />
+              </Box>
             ) : (
-              machineActions.map((item, index) => (
+              Array.isArray(machineLifeCycle) && machineLifeCycle?.map((item, index) => (
                 <Fade in timeout={500} key={index}>
                   <Box
                     sx={{
@@ -105,7 +95,7 @@ const MachineLifecycle = () => {
                         fontWeight="bold"
                         color="text.secondary"
                       >
-                        {item.sortDate ? fDate(item.sortDate) : 'N/A'}
+                        {item.date ? fDate(item.date) : 'N/A'}
                       </Typography>
                     </Box>
 
@@ -128,7 +118,7 @@ const MachineLifecycle = () => {
                         sx={{ p: 2, backgroundColor: '#fff', borderRadius: 2 }}
                       >
                         <Typography variant="h6" fontWeight={600}>
-                          {item.action}
+                          {item.type}
                         </Typography>
                       </Paper>
                     </Box>
@@ -137,8 +127,6 @@ const MachineLifecycle = () => {
               ))
             )}
           </Box>
-
-          <Divider sx={{ mb: 1, mt: -2 }} />
         </Box>
       </Card>
     </Container>
