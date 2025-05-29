@@ -45,8 +45,10 @@ export default function MachineLogsList({ allMachineLogsType }) {
   const methods = useForm({
     defaultValues: {
       logType: machineLogTypeFormats.find(option => option.type === 'ERP') || null,
-      dateFrom: new Date(new Date().setHours(0, 0, 0, 0)),
-      dateTo: new Date(new Date().setHours(23, 59, 59, 999)),
+      // dateFrom: new Date(new Date().setHours(0, 0, 0, 0)),
+      // dateTo: new Date(new Date().setHours(23, 59, 59, 999)),
+      dateFrom: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+      dateTo: new Date(),
       filteredSearchKey: '',
       activeStatus: 'active',
     },
@@ -160,7 +162,7 @@ export default function MachineLogsList({ allMachineLogsType }) {
                 gridTemplateColumns={{ xs: '1fr', sm: 'repeat(3, 1fr)' }}
                 sx={{ flexGrow: 1 }}
               >
-                <RHFDateTimePicker
+                <RHFDatePicker
                   label="Date From"
                   name="dateFrom"
                   size="small"
@@ -170,7 +172,7 @@ export default function MachineLogsList({ allMachineLogsType }) {
                     trigger(['dateFrom', 'dateTo']);
                   }}
                 />
-                <RHFDateTimePicker
+                <RHFDatePicker
                   label="Date To"
                   name="dateTo"
                   size="small"
