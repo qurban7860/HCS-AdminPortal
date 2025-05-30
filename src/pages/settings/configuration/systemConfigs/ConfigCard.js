@@ -62,19 +62,15 @@ export default function ConfigCard({ config, onClick }) {
       <CardContent sx={{ px:2, py:1, pb:0 }}>
         <Typography variant="body2" sx={{ p: 2, borderRadius: 1.5, backgroundColor: 'background.neutral', fontFamily: 'monospace' }}>{value}</Typography>
         {notes && (
-          <Typography variant="body2" color="text.secondary" sx={{ p: 1 }}>
+          <Typography variant="body2" color="text.secondary" sx={{ p: 1, pb:0 }}>
             Note: {notes}
           </Typography>
         )}
       </CardContent>
       <CardActions sx={{ px: 3, pt:0 }}>
         <Stack spacing={2} direction="row" justifyContent="space-between" sx={{width: '100%'}}>
-          <Typography variant="caption" sx={{ color: 'text.disabled', fontStyle: 'italic' }}>
-            Created by {createdBy?.name} • {fDateTime(createdAt)} 
-          </Typography>
-          <Typography variant="caption" sx={{ color: 'text.disabled', fontStyle: 'italic' }}>
-            Last updated by {updatedBy?.name} • {fDateTime(updatedAt)}
-          </Typography>
+          <Typography variant="caption" sx={{ fontStyle: 'italic', color: 'text.disabled' }}>Created by {createdBy?.name} • {fDateTime(createdAt)} </Typography>
+          <Typography variant="caption" sx={{ fontStyle: 'italic', color: 'text.disabled' }}>Last updated by {updatedBy?.name} • {fDateTime(updatedAt)}</Typography>
         </Stack>
       </CardActions>
     </Card>
