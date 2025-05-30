@@ -36,15 +36,15 @@ import { FORMLABELS as formLABELS } from '../../../../constants/document-constan
 
 export default function DocumentTypeEditForm() {
 
-  
+
   const { documentType } = useSelector((state) => state.documentType);
   const { activeDocumentCategories } = useSelector((state) => state.documentCategory);
-  
+
   const dispatch = useDispatch();
-  
+
   const { enqueueSnackbar } = useSnackbar();
   const { id } = useParams();
-  
+
   const navigate = useNavigate();
   useEffect(() => {
     dispatch(getDocumentType(id));
@@ -135,7 +135,7 @@ export default function DocumentTypeEditForm() {
                 <Grid display='flex' alignItems="center" mt={1} >
                   <RHFSwitch name='isArchived' label='Archived' />
                   <RHFSwitch name='isActive' label='Active' />
-                  <RHFSwitch name='isPrimaryDrawing' label='Primary' />
+                  <RHFSwitch name='isPrimaryDrawing' label='Primary Drawing' />
                   <RHFSwitch name='customerAccess' label='Customer Access' />
                   <RHFSwitch name='isDefault' label='Default' />
                 </Grid>
