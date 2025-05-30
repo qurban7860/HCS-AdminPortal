@@ -10,16 +10,20 @@ import {
 } from '@mui/material';
 import EventIcon from '@mui/icons-material/Event';
 import { useSelector, useDispatch } from 'react-redux';
-
+import { useNavigate, useParams } from 'react-router-dom';
+import { PATH_MACHINE } from '../../../routes/paths';
 import MachineTabContainer from '../util/MachineTabContainer';
 import { FORMLABELS } from '../../../constants/document-constants';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
 import { fDate } from '../../../utils/formatTime';
 import { getMachineLifeCycle, resetMachineLifeCycle} from '../../../redux/slices/products/machine';
+import LinkTableCellWithIconTargetBlank from '../../../components/ListTableTools/LinkTableCellWithIconTargetBlank';
 import { TableNoData } from '../../../components/table';
 
 const MachineLifecycle = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { machineId } = useParams();
   const { machine, machineLifeCycle } = useSelector((state) => state.machine);
 
   useEffect(() => {
@@ -30,6 +34,16 @@ const MachineLifecycle = () => {
       dispatch(resetMachineLifeCycle());
     }
   }, [dispatch, machine?._id]);
+  
+  const handleViewServiceReport = (serviceReportId) => {
+    if (machine?._id && serviceReportId) {
+      navigate(PATH_MACHINE.machines.serviceReports.view(machine._id, serviceReportId));
+    }
+  };
+
+  const openInNewPage = async ( mId, id) => { 
+    window.open(PATH_MACHINE.machines.serviceReports.view( ( machineId || mId ) ,id ), '_blank');
+  }
 
   return (
     <Container maxWidth={false}>
@@ -64,7 +78,7 @@ const MachineLifecycle = () => {
             { machineLifeCycle?.length > 0 && <Box
               sx={{
                 position: 'absolute',
-                top: 20,
+                top: 25,
                 bottom: 40,
                 left: 150, 
                 width: { xs: 2, md: 4 },
@@ -122,6 +136,16 @@ const MachineLifecycle = () => {
                       >
                         <Typography variant="h6" fontWeight={600}>
                           {item.type}
+                          {item?.type === 'Service Report Date' && item?.serviceReportUID && item?.id && (
+                            <Box component="span"> 
+                              <LinkTableCellWithIconTargetBlank
+                                align="left"
+                                onClick={() => openInNewPage(machineId, item.id)} 
+                                onViewRow={() => handleViewServiceReport(item.id)}
+                                param={`${item.serviceReportUID}`}
+                              />                             
+                            </Box>
+                          )}
                         </Typography>
                       </Paper>
                     </Box>
