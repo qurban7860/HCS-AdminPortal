@@ -12,7 +12,7 @@ import { PATH_AUTH } from '../../routes/paths';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
 // components
-import FormProvider, { RHFTextField, RHFCheckbox, RHFPasswordField } from '../../components/hook-form';
+import FormProvider, { RHFTextField, RHFCheckbox, RHFPasswordField, RHFReCaptchaV2 } from '../../components/hook-form';
 
 // ----------------------------------------------------------------------
 
@@ -25,19 +25,21 @@ export default function AuthLoginForm() {
 
   const LoginSchema = Yup.object().shape({
     email: Yup.string()
-    .transform((value, originalValue) => originalValue ? originalValue.toLowerCase() : value)
-    .email()
-    .label('Login/Email Address')
-    .trim()
-    .required('Login/Email address is Required!')
-    .max(200),
+      .transform((value, originalValue) => originalValue ? originalValue.toLowerCase() : value)
+      .email()
+      .label('Login/Email Address')
+      .trim()
+      .required('Login/Email address is Required!')
+      .max(200),
     password: Yup.string().label("Password").required('Password is Required!'),
+    recaptchaToken: Yup.string().label("reCAPTCHA").required('reCAPTCHA is Required!'),
   });
 
   const defaultValues = {
     email: '',
     password: '',
     remember: false,
+    recaptchaToken: ''
   };
 
   const methods = useForm({
@@ -54,22 +56,21 @@ export default function AuthLoginForm() {
     formState: { errors, isSubmitting, isSubmitSuccessful },
   } = methods;
 
-  const { remember, email, password } = watch()
-
+  const { remember, email, password, recaptchaToken } = watch()
   useEffect(() => {
-    const storedEmail =       localStorage.getItem("hcp-login");
-    const storedPassword =    localStorage.getItem("hcp-pass");
-    const storedRemember =    localStorage.getItem("remember");
+    const storedEmail = localStorage.getItem("hcp-login");
+    const storedPassword = localStorage.getItem("hcp-pass");
+    const storedRemember = localStorage.getItem("remember");
     if (storedEmail && storedPassword && storedRemember) {
       const decodedPassword = atob(storedPassword);
-      setValue('email',storedEmail);
-      setValue('password',decodedPassword);
-      setValue('remember',true);
+      setValue('email', storedEmail);
+      setValue('password', decodedPassword);
+      setValue('remember', true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  
+
   const onSubmit = async (data) => {
     try {
       if (remember) {
@@ -83,21 +84,21 @@ export default function AuthLoginForm() {
         localStorage.removeItem("remember");
       }
 
-      await login(data.email, data.password);
-      if(localStorage.getItem("MFA")) {
+      await login(data);
+      if (localStorage.getItem("MFA")) {
         navigate(PATH_AUTH.authenticate);
         localStorage.removeItem("MFA");
       }
       reset();
     } catch (error) {
-      if(regEx.test(error.MessageCode)){
-        console.error("error : ",error?.Message || '');
+      if (regEx.test(error.MessageCode)) {
+        console.error("error : ", error?.Message || '');
         setError('afterSubmit', {
           ...error,
           message: error.Message,
         });
-      }else{
-        console.error("error : ",error || '');
+      } else {
+        console.error("error : ", error || '');
         setError('afterSubmit', {
           ...error,
           message: error,
@@ -106,15 +107,16 @@ export default function AuthLoginForm() {
     }
   };
 
+
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Stack spacing={3} sx={{ mt: 1 }}>
-        {!!errors.afterSubmit && <Alert sx={{width:'380px'}} severity="error">{errors.afterSubmit.message}</Alert>}
-        <RHFTextField 
-          type="email" 
+      <Stack spacing={2} sx={{ mt: 1 }}>
+        {!!errors.afterSubmit && <Alert sx={{ width: '380px' }} severity="error">{errors.afterSubmit.message}</Alert>}
+        <RHFTextField
+          type="email"
           name="email"
-          label="Login/Email address*" 
-          autoComplete="username" 
+          label="Login/Email address*"
+          autoComplete="username"
           inputRef={inputRef}
           inputProps={{ style: { textTransform: 'lowercase' } }}
         />
@@ -124,21 +126,28 @@ export default function AuthLoginForm() {
           label="Password*"
           autoComplete="current-password"
         />
+
+        <RHFCheckbox name="remember" label="Remember Me" variant="soft" />
+
+        {email.trim() && password.trim().length >= 6 && (
+          <RHFReCaptchaV2
+            name='recaptchaToken'
+          />
+        )}
+
+
+        <LoadingButton
+          color="inherit"
+          size="large"
+          type="submit"
+          variant="contained"
+          loading={isSubmitSuccessful || isSubmitting}
+          disabled={!email.trim() || password.trim().length < 6 || !recaptchaToken}
+          sx={{ bgcolor: '#10079F', color: 'white', '&:hover': { bgcolor: '#FFA200' } }}
+        >
+          Login
+        </LoadingButton>
       </Stack>
-
-      <RHFCheckbox name="remember" label="Remember Me"  variant="soft"/>
-
-      <LoadingButton
-        fullWidth
-        color="inherit"
-        size="large"
-        type="submit"
-        variant="contained"
-        loading={isSubmitSuccessful || isSubmitting}
-        sx={{ bgcolor: '#10079F', color: 'white', '&:hover': { bgcolor: '#FFA200' }}}
-      >
-        Login
-      </LoadingButton>
       <Stack alignItems="flex-end" sx={{ my: 2 }}>
         <Link
           component={RouterLink}

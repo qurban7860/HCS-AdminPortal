@@ -422,6 +422,7 @@ function ViewFormEditDeleteButtons({
               icon={isActive ? ICONS.ACTIVE.icon : ICONS.INACTIVE.icon}
             />
           }
+
           {isPrimary !== undefined &&
             <IconTooltip
               title={isPrimary ? ICONS.PRIMARY.heading : ICONS.NOTPRIMARY.heading}
@@ -429,6 +430,7 @@ function ViewFormEditDeleteButtons({
               icon={isPrimary ? ICONS.PRIMARY.icon : ICONS.NOTPRIMARY.icon}
             />
           }
+
 
           {/* Status icons */}
           {invitationStatus === 'PENDING' && (

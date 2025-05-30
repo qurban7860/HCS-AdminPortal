@@ -25,6 +25,7 @@ export { default as RHFChipsInput } from './RHFChipsInput';
 export { default as RHFPasswordField } from './RHFPasswordField';
 export { default as RHFCountryAutocomplete } from './RHFCountryAutocomplete';
 export { default as RHFNumericField } from './RHFNumericTextField';
+export { default as RHFReCaptchaV2 } from './RHFReCaptchaV2';
 
 
 
