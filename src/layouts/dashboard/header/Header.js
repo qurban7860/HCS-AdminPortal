@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 // @mui
 import { useTheme } from '@mui/material/styles';
-import { Stack, AppBar, Toolbar, IconButton, Box, Button, Link } from '@mui/material';
+import { Stack, AppBar, Toolbar, IconButton, Box, Button, Link, Divider } from '@mui/material';
 // utils
 import { bgBlur } from '../../../utils/cssStyles';
 
@@ -24,6 +24,7 @@ import { useWebSocketContext } from '../../../auth/WebSocketContext';
 import { MAIN_CATEGORIES, OTHER_MAIN_CATEGORIES } from '../navigationConstants';
 import { useAuthContext } from '../../../auth/useAuthContext';
 import { StyledTooltip } from '../../../theme/styles/default-styles';
+import IconButtonTooltip from '../../../components/Icons/IconButtonTooltip';
 
 // ----------------------------------------------------------------------
 
@@ -81,45 +82,23 @@ export default function Header({ onOpenNav, selectedCategory, setSelectedCategor
                 </Button>
               </Link>
             ))}
-             
-           
           </Box>
-          <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            flexShrink: 0, 
-            ml: 2,
-          }}
-        >
-          <TimeDisplay/>
-        </Box>
-          {isDesktop && <FullScreenIcon />}
-          <Stack flexGrow={0} direction="row" alignItems="center" spacing={{ xs: 0.5, sm: 1.5 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', borderLeft: `2px solid ${theme.palette.divider}`, borderRight: `2px solid ${theme.palette.divider}`, px: 1 }}>
-              {OTHER_MAIN_CATEGORIES.map((item) =>
-                item?.id === "settings" && !isSettingAccessAllowed ? null : (
-                  <StyledTooltip title={item.title} tooltipcolor='#1976d2' key={item.id}>
-                    <Link
-                      component={RouterLink}
-                      to={item.path}
-                      sx={{ textDecoration: 'none' }}
-                      onClick={() => setSelectedCategory(item)}
-                    >
-                      <Button
-                        variant={item.id === selectedCategory.id ? "contained" : "text"}
-                        sx={{ mx: 0.2 }}
-                      >
-                        <Iconify icon={item.icon} />
-                      </Button>
-                    </Link>
-                  </StyledTooltip>
-                )
-              )}
-            </Box>
-            
+          <Stack direction="row" alignItems="center" sx={{mr:1}}>
+            <TimeDisplay/>
+            {isDesktop && <FullScreenIcon />}
+            <Divider orientation="vertical" flexItem />
+            {OTHER_MAIN_CATEGORIES.map((item) => (
+              <Link key={item.id} component={RouterLink} to={item.path} onClick={() => setSelectedCategory(item)}>
+                <IconButtonTooltip 
+                  icon={item.icon}
+                  title={item.title}
+                  color={selectedCategory.id === item.id ? '#1976d2' : '#808080'}
+                  sx={{cursor: 'pointer'}} 
+                />
+              </Link>
+            ))}
+            <Divider orientation="vertical" flexItem />
           </Stack>
-         
         </>
       )}
       <Stack
