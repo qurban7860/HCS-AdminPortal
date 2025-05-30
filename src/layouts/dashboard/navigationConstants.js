@@ -30,8 +30,8 @@ export const MAIN_CATEGORIES = [
 ];
 
 export const OTHER_MAIN_CATEGORIES = [
-  { title: 'Calendar', id: 'calendar', icon: 'mdi:calendar-month', path: ROOTS_CALENDAR },
-  { title: 'Settings', id: 'settings', icon: 'mdi:settings', path: ROOTS_SETTING },
+  { title: 'Calendar', id: 'calendar', icon: 'fluent:calendar-20-filled', path: ROOTS_CALENDAR },
+  { title: 'Settings', id: 'settings', icon: 'mdi:cog', path: ROOTS_SETTING },
 ];
 
 export const generalSideBarOptions = {
