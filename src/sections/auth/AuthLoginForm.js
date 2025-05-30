@@ -142,7 +142,7 @@ export default function AuthLoginForm() {
           type="submit"
           variant="contained"
           loading={isSubmitSuccessful || isSubmitting}
-          disabled={!recaptchaToken}
+          disabled={!email.trim() || password.trim().length < 6 || !recaptchaToken}
           sx={{ bgcolor: '#10079F', color: 'white', '&:hover': { bgcolor: '#FFA200' } }}
         >
           Login
