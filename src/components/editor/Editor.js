@@ -4,11 +4,10 @@ import '../../utils/highlight';
 import ReactQuill from 'react-quill';
 import { Box, Typography, useTheme, alpha } from '@mui/material';
 
-//
 import { StyledEditor } from './styles';
 import EditorToolbar, { formats } from './EditorToolbar';
 
-// ----------------------------------------------------------------停車
+// ----------------------------------------------------------------
 
 Editor.propTypes = {
   id: PropTypes.string,

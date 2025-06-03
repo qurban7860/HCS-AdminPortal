@@ -2,11 +2,11 @@ import React, { useMemo, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
 import { Box, Button, Stack } from '@mui/material';
-import { yupResolver } from '@hookform/resolvers/yup';
+// import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
-import { ticketSchema } from '../../schemas/ticketSchema';
+// import { ticketSchema } from '../../schemas/ticketSchema';
 import FormProvider, { RHFEditor } from '../../../components/hook-form';
 
 FilledEditorField.propTypes = {
