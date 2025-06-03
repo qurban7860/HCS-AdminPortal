@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect } from 'react'
+import React, { useMemo, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
 import { Box, Button, Stack } from '@mui/material';
@@ -18,7 +18,8 @@ FilledEditorField.propTypes = {
   isEditor: PropTypes.bool,
 };
 
-function FilledEditorField({ name, label, value, onSubmit, minRows, isEditor = true }) {
+function FilledEditorField({ name, label, value, onSubmit, minRows, isEditor = false }) {
+  const [isFocused, setIsFocused] = useState(false);
 
   const defaultValues = useMemo(
     () => ({
@@ -32,19 +33,18 @@ function FilledEditorField({ name, label, value, onSubmit, minRows, isEditor = t
   const { handleSubmit, reset, setError, formState: { isSubmitting, isDirty } } = methods;
 
   useEffect(() => {
-    reset({ [name]: value || "" });
+    reset({ [name]: value || '' });
+    setIsFocused(false); 
   }, [value, name, reset]);
 
   const handleFormSubmit = handleSubmit(async (data) => {
     try {
       await onSubmit(name, data[name]);
-
+      setIsFocused(false);
     } catch (error) {
       console.error(error);
-
       if (Array.isArray(error?.errors) && error?.errors?.length > 0) {
         const fieldError = error?.errors?.find((e) => e?.field === name);
-
         if (fieldError) {
           setError(name, {
             type: "manual",
@@ -52,55 +52,61 @@ function FilledEditorField({ name, label, value, onSubmit, minRows, isEditor = t
           });
         }
       }
-
     }
   });
 
+  const handleReset = () => {
+    reset();
+    setIsFocused(false); 
+  };
+
   return (
-    <Box sx={{ position: "relative", width: "100%" }} >
-      <FormProvider methods={methods} onSubmit={handleFormSubmit} sx={{ width: "100%" }} >
+    <Box sx={{ position: "relative", width: "100%" }}>
+      <FormProvider methods={methods} onSubmit={handleFormSubmit} sx={{ width: "100%" }}>
         <RHFEditor
           name={name}
           label={label}
-          multiline={name !== "summary"}
           minRows={minRows || 1}
           fullWidth
-          readOnly={!isEditor}
-          hideToolbar={!isEditor}
+          isEditor={isEditor}
+          isFocused={isFocused}
+          setIsFocused={setIsFocused}
         />
-        {isDirty && isEditor && <Stack
-          direction="row"
-          spacing={1}
-          sx={{
-            position: 'absolute',
-            bottom: -53,
-            right: 0,
-            transform: 'translateY(-50%)',
-          }}
-        >
-          <LoadingButton
-            variant="contained"
-            color="primary"
-            size="small"
-            type="submit"
-            disabled={isSubmitting}
-            loading={isSubmitting}
-            sx={{ minWidth: 32, padding: '2px', height: 32 }}
+        {(isFocused || isDirty) && (
+          <Stack
+            direction="row"
+            spacing={1}
+            sx={{
+              position: 'absolute',
+              bottom: -53,
+              right: 0,
+              transform: 'translateY(-50%)',
+            }}
           >
-            <CheckRoundedIcon />
-          </LoadingButton>
-          <Button
-            variant="outlined"
-            size="small"
-            onClick={() => reset()}
-            sx={{ minWidth: 32, padding: '2px', height: 32 }}
-          >
-            <ClearRoundedIcon />
-          </Button>
-        </Stack>}
+            <LoadingButton
+              variant="contained"
+              color="primary"
+              size="small"
+              type="submit"
+              disabled={isSubmitting}
+              loading={isSubmitting}
+              sx={{ minWidth: 32, padding: '2px', height: 32 }}
+            >
+              <CheckRoundedIcon />
+            </LoadingButton>
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={handleReset}
+              sx={{ minWidth: 32, padding: '2px', height: 32 }}
+            >
+              <ClearRoundedIcon />
+            </Button>
+          </Stack>
+        )}
       </FormProvider>
     </Box>
-  )
+  );
 }
 
-export default FilledEditorField
+export default FilledEditorField;

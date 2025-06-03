@@ -8,6 +8,7 @@ import {
   Container,
   Card,
 } from '@mui/material';
+import { alpha } from '@mui/material/styles';
 import EventIcon from '@mui/icons-material/Event';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -16,8 +17,8 @@ import MachineTabContainer from '../util/MachineTabContainer';
 import { FORMLABELS } from '../../../constants/document-constants';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
 import { fDate } from '../../../utils/formatTime';
-import { getMachineLifeCycle, resetMachineLifeCycle} from '../../../redux/slices/products/machine';
-import LinkTableCellWithIconTargetBlank from '../../../components/ListTableTools/LinkTableCellWithIconTargetBlank';
+import { getMachineLifeCycle, resetMachineLifeCycle } from '../../../redux/slices/products/machine';
+import OpenInNewPage from '../../../components/Icons/OpenInNewPage';
 import { TableNoData } from '../../../components/table';
 
 const MachineLifecycle = () => {
@@ -134,18 +135,25 @@ const MachineLifecycle = () => {
                         elevation={4}
                         sx={{ p: 2, backgroundColor: '#fff', borderRadius: 2 }}
                       >
-                        <Typography variant="h6" fontWeight={600}>
+                        <Typography variant="h6" fontWeight={600} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                           {item.type}
                           {item?.type === 'Service Report Date' && item?.serviceReportUID && item?.id && (
-                            <Box component="span"> 
-                              <LinkTableCellWithIconTargetBlank
-                                align="left"
-                                onClick={() => openInNewPage(machineId, item.id)} 
-                                onViewRow={() => handleViewServiceReport(item.id)}
-                                param={`${item.serviceReportUID}`}
-                              />                             
-                            </Box>
-                          )}
+                            <Box sx={{ display: 'inline-flex', alignItems: 'center', ml: 1, cursor: 'pointer' }}>
+                          <Typography variant="body2"
+                            onClick={() => handleViewServiceReport(item.id)}
+                            sx={{
+                              cursor: 'pointer',
+                              textDecoration: 'underline',
+                              textDecorationStyle: 'dotted',
+                              fontWeight: 'bold',
+                              '&:hover': {
+                                color: (themes) => alpha(themes.palette.info.main, 0.98),
+                              },
+                            }}>
+                            {item.serviceReportUID}
+                          </Typography>
+                          <OpenInNewPage onClick={() => openInNewPage(machineId, item.id)}/>
+                          </Box> )}
                         </Typography>
                       </Paper>
                     </Box>

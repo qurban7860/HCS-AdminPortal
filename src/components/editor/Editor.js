@@ -1,12 +1,14 @@
 import PropTypes from 'prop-types';
 import '../../utils/highlight';
+
 import ReactQuill from 'react-quill';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, useTheme, alpha } from '@mui/material';
+
 //
 import { StyledEditor } from './styles';
 import EditorToolbar, { formats } from './EditorToolbar';
 
-// ----------------------------------------------------------------------
+// ----------------------------------------------------------------停車
 
 Editor.propTypes = {
   id: PropTypes.string,
@@ -17,8 +19,11 @@ Editor.propTypes = {
   onChange: PropTypes.func,
   helperText: PropTypes.object,
   label: PropTypes.string,
+  isEditor: PropTypes.bool, 
   readOnly: PropTypes.bool,
   hideToolbar: PropTypes.bool,
+  isFocused: PropTypes.bool,
+  setIsFocused: PropTypes.func,
 };
 
 export default function Editor({
@@ -30,10 +35,15 @@ export default function Editor({
   helperText,
   sx,
   label,
+  isEditor = false, 
   readOnly = false,
   hideToolbar = false,
+  isFocused = false,
+  setIsFocused = () => {},
   ...other
-}) {
+}) { 
+  const theme = useTheme();
+
   const modules = {
     toolbar: hideToolbar ? false : { container: `#${id}` },
     history: {
@@ -47,9 +57,58 @@ export default function Editor({
     },
   };
 
+  const handleFocus = () => {
+    if (isEditor) setIsFocused(true);
+  };
+
+  if (isEditor && !isFocused) {
+    return (
+      <StyledEditor
+        sx={{
+          ...(error && {
+            border: `solid 1px ${theme.palette.error.main}`,
+          }),
+          ...sx,
+          border: 'none',
+          '& .ql-container': {
+            border: 'none',
+            ...theme.typography.body1,
+            fontFamily: theme.typography.fontFamily,
+          },
+          '& .ql-editor': {
+            minHeight: 'auto',
+            paddingLeft: 1,
+            cursor: 'pointer',
+            '&.ql-blank::before': {
+              fontStyle: 'normal',
+              color: theme.palette.text.disabled,
+            },
+          },
+          '& .ql-toolbar': {
+            display: 'none',
+          },
+          backgroundColor: alpha(theme.palette.grey[500], 0.08), 
+          '&:hover': {
+            backgroundColor: theme.palette.common.white, 
+          },
+        }}
+        onClick={handleFocus} 
+      >
+        <ReactQuill
+          value={value}
+          readOnly 
+          modules={{ toolbar: false }} 
+          formats={formats}
+          {...other}
+        />
+        {helperText && helperText}
+      </StyledEditor>
+    );
+  }
+
   return (
     <>
-      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
         {label && (
           <Typography variant="subtitle2" sx={{ ml: 1, mb: -2, mt: -1 }}>
             {label}
@@ -59,7 +118,7 @@ export default function Editor({
       <StyledEditor
         sx={{
           ...(error && {
-            border: (theme) => `solid 1px ${theme.palette.error.main}`,
+            border: `solid 1px ${theme.palette.error.main}`,
           }),
           ...sx,
         }}
@@ -74,6 +133,7 @@ export default function Editor({
           modules={modules}
           formats={formats}
           readOnly={readOnly}
+          onFocus={handleFocus} 
           // placeholder="Write something here..."
           {...other}
         />
