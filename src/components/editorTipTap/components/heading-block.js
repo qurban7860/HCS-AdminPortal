@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import Menu from '@mui/material/Menu';
+import { alpha } from '@mui/material/styles';
 import { listClasses } from '@mui/material/List';
 import ButtonBase, { buttonBaseClasses } from '@mui/material/ButtonBase';
 
@@ -49,7 +50,7 @@ export function HeadingBlock({ editor }) {
           borderRadius: 0.75,
           typography: 'body2',
           justifyContent: 'space-between',
-          border: `solid 1px ${theme.palette.grey['500']}`,
+          border: `solid 1px ${alpha(theme.palette.grey[500], 0.32)}`,
         })}
       >
         {(editor.isActive('heading', { level: 1 }) && 'Heading 1') ||

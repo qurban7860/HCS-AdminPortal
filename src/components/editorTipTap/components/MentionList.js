@@ -1,31 +1,36 @@
-import './MentionList.css'
 import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react'
 import PropTypes from 'prop-types'
+import { Paper, MenuList, MenuItem, Typography } from '@mui/material'
 
-const MentionList = forwardRef((props, ref) => {
+const MentionList = forwardRef(({ items, command }, ref) => {
     const [selectedIndex, setSelectedIndex] = useState(0)
-    console.log({ props })
-    const selectItem = index => {
-        const item = props?.items[index]
 
+    const selectItem = (index) => {
+        const item = items[index]
         if (item) {
-            props?.command({ id: item })
+            command({
+                id: item._id,
+                label: `@${item.firstName} ${item?.lastName || ""} (${item.email})`,
+                email: item.email,
+            })
         }
     }
 
     const upHandler = () => {
-        setSelectedIndex((selectedIndex + props.items.length - 1) % props.items.length)
+        setSelectedIndex((prev) => (prev + items.length - 1) % items.length)
     }
 
     const downHandler = () => {
-        setSelectedIndex((selectedIndex + 1) % props.items.length)
+        setSelectedIndex((prev) => (prev + 1) % items.length)
     }
 
     const enterHandler = () => {
         selectItem(selectedIndex)
     }
 
-    useEffect(() => setSelectedIndex(0), [props?.items])
+    useEffect(() => {
+        setSelectedIndex(0)
+    }, [items])
 
     useImperativeHandle(ref, () => ({
         onKeyDown: ({ event }) => {
@@ -45,25 +50,34 @@ const MentionList = forwardRef((props, ref) => {
             }
 
             return false
-        },
+        }
     }))
 
     return (
-        <div className="dropdown-menu">
-            {props?.items?.length
-                ? props?.items.map((item, index) => (
-                    <button
-                        type="button"
-                        className={index === selectedIndex ? 'is-selected' : ''}
-                        key={index}
-                        onClick={() => selectItem(index)}
-                    >
-                        {item}
-                    </button>
-                ))
-                : <div className="item">No result</div>
-            }
-        </div>
+        <Paper sx={{ maxHeight: 300, overflowY: 'auto', width: 'auto' }}>
+            <MenuList autoFocus>
+                {items.length ? items.map((item, index) => {
+                    const fullName = `${item.firstName} ${item.lastName || ''}`.trim()
+                    return (
+                        <MenuItem
+                            key={index}
+                            selected={index === selectedIndex}
+                            onClick={() => selectItem(index)}
+                        >
+                            <Typography variant="body2">
+                                {fullName} {item?.email?.trim() && `(${item?.email})`}
+                            </Typography>
+                        </MenuItem>
+                    )
+                }) : (
+                    <MenuItem disabled>
+                        <Typography variant="body2" color="text.secondary">
+                            No results
+                        </Typography>
+                    </MenuItem>
+                )}
+            </MenuList>
+        </Paper>
     )
 })
 

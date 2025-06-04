@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
+import { alpha } from '@mui/material/styles';
 import { toolbarIcons } from './icons';
 import { editorClasses } from './classes';
 import { LinkBlock } from './components/link-block';
@@ -36,7 +37,7 @@ export function Toolbar({ sx, editor, fullItem, fullScreen, onToggleFullScreen, 
           bgcolor: 'background.paper',
           borderTopLeftRadius: 'inherit',
           borderTopRightRadius: 'inherit',
-          borderBottom: `solid 1px ${theme.palette.grey['500']}`,
+          borderBottom: `solid 1px ${alpha(theme.palette.grey[500], 0.32)}`,
         }),
         ...(Array.isArray(sx) ? sx : [sx]),
       ]}

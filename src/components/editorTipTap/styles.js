@@ -1,4 +1,4 @@
-import { styled } from '@mui/material/styles';
+import { styled, alpha } from '@mui/material/styles';
 import { editorClasses } from './classes';
 
 const MARGIN = '0.75em';
@@ -10,7 +10,7 @@ export const EditorRoot = styled('div', {
   display: 'flex',
   flexDirection: 'column',
   borderRadius: theme.shape.borderRadius,
-  border: `solid 1px ${theme.palette.text.disabled}`,
+  border: `solid 1px ${alpha(theme.palette.grey[500], 0.32)}`,
   scrollbarWidth: 'thin',
   scrollbarColor: `${theme.palette.text.disabled} ${theme.palette.divider}`,
 
@@ -24,7 +24,7 @@ export const EditorRoot = styled('div', {
     maxHeight: 'unset !important',
     width: `calc(100% - 32px)`,
     height: `calc(100% - 32px)`,
-    backgroundColor: theme.palette.background.default,
+    backgroundColor: theme.palette.background.paper,
   }),
 
   [`& .${editorClasses.content.placeholder}`]: {
@@ -45,7 +45,7 @@ export const EditorRoot = styled('div', {
     flexDirection: 'column',
     borderBottomLeftRadius: 'inherit',
     borderBottomRightRadius: 'inherit',
-    backgroundColor: theme.palette.grey[100],
+    backgroundColor: theme.palette.background.paper,
     ...(error && { backgroundColor: theme.palette.error.light }),
 
     '& .tiptap': {
@@ -85,11 +85,12 @@ export const EditorRoot = styled('div', {
       },
 
       '& .mention': {
-        backgroundColor: 'var(--purple-light)',
+        backgroundColor: theme.palette.action.focus,
         borderRadius: '0.4rem',
         boxDecorationBreak: 'clone',
-        color: 'var(--purple)',
+        color: theme.palette.primary.main,
         padding: '0.1rem 0.3rem',
+        fontWeight: 'bold',
 
         '&::after': {
           content: '"\\200B"',
