@@ -14,6 +14,7 @@ const initialState = {
   isAuthenticated: false,
   user: null,
   userId: null,
+  userContacts: [],
   isAllAccessAllowed: false,
   isDisableDelete: true,
   isDashboardAccessLimited: true,
@@ -37,6 +38,7 @@ const reducer = (state, action) => {
         isAuthenticated: action.payload.isAuthenticated,
         user: action.payload.user,
         userId: action.payload.userId,
+        userContacts: action.payload.userContacts,
         isAllAccessAllowed: action.payload.isAllAccessAllowed,
         isDisableDelete: action.payload.isDisableDelete,
         isDashboardAccessLimited: action.payload.isDashboardAccessLimited,
@@ -55,6 +57,7 @@ const reducer = (state, action) => {
       const {
         user,
         userId,
+        userContacts,
         isAllAccessAllowed,
         isDisableDelete,
         isDashboardAccessLimited,
@@ -72,6 +75,7 @@ const reducer = (state, action) => {
         isAuthenticated: true,
         user,
         userId,
+        userContacts,
         isAllAccessAllowed,
         isDisableDelete,
         isDashboardAccessLimited,
@@ -99,6 +103,7 @@ const reducer = (state, action) => {
         isAuthenticated: false,
         user: null,
         userId: null,
+        userContacts: [],
         isAllAccessAllowed: false,
         isDisableDelete: true,
         isDashboardAccessLimited: true,
@@ -141,11 +146,11 @@ export function AuthProvider({ children }) {
       if (accessToken && isValidToken(accessToken)) {
         setSession(accessToken);
         const user = {}
-        user.customer = localStorage.getItem('customer')
-        user.contact = localStorage.getItem('contact')
-        user.email = localStorage.getItem('email')
-        user.displayName = localStorage.getItem('name')
-
+        user.customer = localStorage.getItem('customer');
+        user.contact = localStorage.getItem('contact');
+        user.email = localStorage.getItem('email');
+        user.displayName = localStorage.getItem('name');
+        const userContacts = JSON.parse(localStorage.getItem('userContacts'));
         const userId = localStorage.getItem('userId');
 
         const {
@@ -168,6 +173,7 @@ export function AuthProvider({ children }) {
             isAuthenticated: true,
             user,
             userId,
+            userContacts,
             isAllAccessAllowed,
             isDisableDelete,
             isDashboardAccessLimited,
@@ -188,6 +194,7 @@ export function AuthProvider({ children }) {
           payload: {
             isAuthenticated: false,
             user: null,
+            userContacts: [],
             isAllAccessAllowed: false,
             isDisableDelete: true,
             isDashboardAccessLimited: true,
@@ -210,6 +217,7 @@ export function AuthProvider({ children }) {
         payload: {
           isAuthenticated: false,
           user: null,
+          userContacts: [],
           isAllAccessAllowed: false,
           isDisableDelete: true,
           isDashboardAccessLimited: true,
@@ -259,6 +267,7 @@ export function AuthProvider({ children }) {
       localStorage.removeItem('name');
       localStorage.removeItem('email');
       localStorage.removeItem('userId');
+      localStorage.removeItem('userContacts');
       localStorage.removeItem('customer')
       localStorage.removeItem('contact')
       localStorage.removeItem('userRoles');
@@ -296,7 +305,7 @@ export function AuthProvider({ children }) {
       localStorage.setItem("userId", response.data.userId);
       localStorage.setItem("MFA", true);
     } else {
-      const { accessToken, user, userId } = response.data;
+      const { accessToken, user, userId, userContacts } = response.data;
       localStorage.setItem("customer", user?.customer);
 
       const {
@@ -321,6 +330,7 @@ export function AuthProvider({ children }) {
       localStorage.setItem('dataAccessibilityLevel', user?.dataAccessibilityLevel);
       localStorage.setItem('customer', user?.customer)
       localStorage.setItem('contact', user?.contact)
+      localStorage.setItem('userContacts', JSON.stringify(userContacts))
 
       setSession(accessToken);
       await getConfigs();
@@ -329,6 +339,7 @@ export function AuthProvider({ children }) {
         payload: {
           user,
           userId,
+          userContacts,
           isAllAccessAllowed,
           isDisableDelete,
           isDashboardAccessLimited,
@@ -349,7 +360,7 @@ export function AuthProvider({ children }) {
   // MULTI FACTOR CODE
   const muliFactorAuthentication = useCallback(async (code, userID) => {
     const response = await axios.post(`${CONFIG.SERVER_URL}security/multifactorverifyCode`, { code, userID })
-    const { accessToken, user, userId } = response.data;
+    const { accessToken, user, userContacts, userId } = response.data;
     await setSession(accessToken);
     const {
       isAllAccessAllowed,
@@ -373,12 +384,14 @@ export function AuthProvider({ children }) {
     localStorage.setItem('customer', user?.customer)
     localStorage.setItem('contact', user?.contact)
     localStorage.setItem('dataAccessibilityLevel', user?.dataAccessibilityLevel);
+    localStorage.setItem('userContacts', JSON.stringify(userContacts))
 
     dispatch({
       type: 'LOGIN',
       payload: {
         user,
         userId,
+        userContacts,
         isAllAccessAllowed,
         isDisableDelete,
         isDashboardAccessLimited,
@@ -435,6 +448,7 @@ export function AuthProvider({ children }) {
       isAuthenticated: state.isAuthenticated,
       user: state.user,
       userId: state.userId,
+      userContacts: state.userContacts,
       isAllAccessAllowed: state.isAllAccessAllowed,
       isDisableDelete: state.isDisableDelete,
       isDashboardAccessLimited: state.isDashboardAccessLimited,
@@ -465,7 +479,10 @@ export function AuthProvider({ children }) {
     state.isSecurityUserAccessAllowed,
     state.isEmailAccessAllowed,
     state.isDeveloper,
-    state.user, state.userId, login, logout, register, muliFactorAuthentication, clearStorageAndNaviagteToLogin]
+    state.userContacts,
+    state.userId,
+    state.user,
+      login, logout, register, muliFactorAuthentication, clearStorageAndNaviagteToLogin]
   );
 
   return <AuthContext.Provider value={memoizedValue}>{children}</AuthContext.Provider>;

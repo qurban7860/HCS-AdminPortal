@@ -1,81 +1,64 @@
-import React, { useState } from 'react';
+import { Controller, useFormContext } from 'react-hook-form';
 import PropTypes from 'prop-types';
-import { useFormContext, Controller } from 'react-hook-form';
-// @mui
-import { HexColorPicker } from 'react-colorful';
-import { Popover, TextField, InputAdornment, IconButton } from '@mui/material';
-
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
+import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
 import Iconify from '../iconify';
-// ----------------------------------------------------------------------
 
+// ----------------------------------------------------------------------
 RHFColorPicker.propTypes = {
   name: PropTypes.string,
   helperText: PropTypes.node,
-  Error: PropTypes.bool,
 };
 
-export default function RHFColorPicker({ name, helperText, Error, ...other }) {
-
+export default function RHFColorPicker({ name, helperText, ...other }) {
   const { control } = useFormContext();
-  const [anchorEl, setAnchorEl] = useState(null);
-  const handleClick = (event) => setAnchorEl(event.currentTarget);
-  const handleClose = () => setAnchorEl(null);
-
-  const open = Boolean(anchorEl);
-  const id = open ? 'color-popover' : undefined;
 
   return (
     <Controller
       name={name}
       control={control}
-      render={({ field, fieldState: { error } }) => (
-        <>
+      render={({ field, fieldState: { error } }) => {
+        const value = field.value || '';
+
+        return (
           <TextField
             {...field}
             fullWidth
-            value={typeof field.value === 'number' && field.value === 0 ? '' : field.value}
-            error={!!error || !!Error}
-            helperText={error ? error?.message : helperText}
+            type="text"
+            value={value}
+            onChange={(event) => {
+              const val = event.target.value;
+              field.onChange(val);
+            }}
+            error={!!error}
+            helperText={error?.message ?? helperText}
+            inputProps={{ autoComplete: 'off' }}
             InputProps={{
               startAdornment: (
-                field?.value && !error && <Iconify icon="mdi:square" sx={{ width: '35px', height: '35px' }} color={field?.value || ""} />
+                <InputAdornment position="start">
+                  <Iconify icon="mdi:circle" width={25} sx={{ color: value, border: '1px solid #ccc', borderRadius: '50%' }} />
+                </InputAdornment>
               ),
               endAdornment: (
                 <InputAdornment position="end">
-                  <IconButton onClick={handleClick} edge="end" >
-                    <Iconify icon="mdi:color" sx={{ width: '35px', height: '35px' }} color="Black" />
+                  <IconButton component="label" sx={{ p: 0 }}>
+                    <Box component="input" type="color" value={value}
+                      onChange={(e) => {
+                        field.onChange(e.target.value);
+                      }}
+                      sx={{ width: 30, opacity: 0, position: 'absolute', cursor: 'pointer' }}
+                    />
+                    <Iconify icon="emojione:artist-palette" width={25} sx={{ cursor: 'pointer' }} />
                   </IconButton>
                 </InputAdornment>
-              )
+              ),
             }}
             {...other}
           />
-          <Popover
-            id={id}
-            open={open}
-            anchorEl={anchorEl}
-            onClose={handleClose}
-            anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'right'
-            }}
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'right'
-            }}
-            PaperProps={{
-              sx: {
-                overflow: 'visible', // Prevents scrollbars
-              },
-            }}
-          >
-            <HexColorPicker
-              color={field.value}
-              onChange={(color) => field.onChange(color)}
-            />
-          </Popover>
-        </>
-      )}
+        );
+      }}
     />
   );
 }

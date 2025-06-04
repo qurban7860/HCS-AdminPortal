@@ -1,6 +1,7 @@
 /* eslint-disable react/no-danger */
 /* eslint-disable import/no-extraneous-dependencies */
 import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
   Paper,
@@ -30,7 +31,7 @@ import TicketHistory from './TicketHistory';
 import TicketWorkLogs from './TicketWorkLogs';
 import FormLabel from '../../components/DocumentForms/FormLabel';
 import { FORMLABELS } from '../../constants/default-constants';
-import FormProvider, { RHFEditor } from '../../components/hook-form';
+import FormProvider, { RHFEditorV2 } from '../../components/hook-form';
 import { CustomAvatar } from '../../components/custom-avatar';
 import {
   addComment,
@@ -48,6 +49,7 @@ const CommentSchema = Yup.object().shape({
 });
 
 const TicketComments = ({ currentUser }) => {
+  const { id } = useParams();
   const [editingCommentId, setEditingCommentId] = useState(null);
   const [editValue, setEditValue] = useState('');
   const [editIsInternal, setEditIsInternal] = useState(false);
@@ -65,10 +67,10 @@ const TicketComments = ({ currentUser }) => {
   };
 
   useEffect(() => {
-    if (ticket?._id) {
-      dispatch(getComments({ id: ticket?._id }));
+    if (id) {
+      dispatch(getComments({ id }));
     }
-  }, [dispatch, ticket?._id]);
+  }, [dispatch, id]);
 
   const methods = useForm({
     resolver: yupResolver(CommentSchema),
@@ -88,7 +90,7 @@ const TicketComments = ({ currentUser }) => {
   const commentValue = watch('comment');
 
   const onSubmit = async (data) => {
-    await dispatch(addComment(ticket?._id, data.comment || '', data.isInternal));
+    await dispatch(addComment(id, data.comment || '', data.isInternal));
     reset();
     if (error) enqueueSnackbar(error, { variant: 'error' });
     else enqueueSnackbar('Comment saved successfully', { variant: 'success' });
@@ -96,7 +98,7 @@ const TicketComments = ({ currentUser }) => {
 
   const handleSaveEdit = async (cID) => {
     await dispatch(
-      updateComment(ticket?._id, cID, {
+      updateComment(id, cID, {
         comment: editValue,
         isInternal: editIsInternal,
       })
@@ -180,7 +182,7 @@ const TicketComments = ({ currentUser }) => {
                     name={currentUser?.displayName}
                   />
                   <Stack sx={{ width: '100%' }}>
-                    <RHFEditor name="comment" placeholder="Add a comment..." />
+                    <RHFEditorV2 name="comment" allowMention placeholder="Add a comment..." />
                     <RadioGroup
                       row
                       name="isInternal"
@@ -267,10 +269,11 @@ const TicketComments = ({ currentUser }) => {
                             {editingCommentId === item._id ? (
                               <FormProvider methods={methods} key={item._id}>
                                 <Stack spacing={2}>
-                                  <RHFEditor
+                                  <RHFEditorV2
                                     name="editComment"
                                     value={editValue}
                                     onChange={setEditValue}
+                                    allowMention
                                   />
                                   <RadioGroup
                                     row
