@@ -10,9 +10,12 @@ RHFTextField.propTypes = {
   name: PropTypes.string,
   helperText: PropTypes.node,
   Error: PropTypes.bool,
+  isFocused: PropTypes.bool,
+  onFocus: PropTypes.func,
+  onBlur: PropTypes.func,
 };
 
-export default function RHFTextField({ name, helperText, Error, ...other }) {
+export default function RHFTextField({ name, helperText, Error, isFocused, onFocus, onBlur, ...other }) { 
   const { control } = useFormContext();
 
   return (
@@ -26,6 +29,8 @@ export default function RHFTextField({ name, helperText, Error, ...other }) {
           value={typeof field.value === 'number' && field.value === 0 ? '' : field.value}
           error={!!error || !!Error}
           helperText={error ? error?.message : helperText}
+          onFocus={onFocus} 
+          onBlur={onBlur}  
           {...other}
         />
       )}
