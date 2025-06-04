@@ -33,7 +33,6 @@ export default function DropDownMultipleSelection( { value, name, label, options
   }, [value, name, multiple]);
   
   const methods = useForm({
-    // resolver: yupResolver( ticketSchema ),
     defaultValues,
   });
         

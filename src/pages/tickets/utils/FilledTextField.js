@@ -2,11 +2,9 @@ import React, { useMemo, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
 import { Box, Button, Stack, alpha, useTheme } from '@mui/material';
-import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
-import { ticketSchema } from '../../schemas/ticketSchema';
 import FormProvider, { RHFTextField } from '../../../components/hook-form';
 
 FilledTextField.propTypes = {
@@ -27,7 +25,6 @@ function FilledTextField( { name, label, value, onSubmit, minRows } ) {
   );
 
   const methods = useForm({
-    // resolver: yupResolver( ticketSchema ),
     defaultValues,
   });
   const { handleSubmit, reset, setError, formState: { isSubmitting, isDirty }} = methods;

@@ -130,7 +130,6 @@ export default function Editor({
           formats={formats}
           readOnly={readOnly}
           onFocus={handleFocus} 
-          onBlur={() => setIsFocused(false)}
           // placeholder="Write something here..."
           {...other}
         />
