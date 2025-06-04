@@ -87,9 +87,6 @@ export default function Editor({
             display: 'none',
           },
           backgroundColor: alpha(theme.palette.grey[500], 0.08), 
-          '&:hover': {
-            backgroundColor: theme.palette.common.white, 
-          },
         }}
         onClick={handleFocus} 
       >
@@ -133,6 +130,7 @@ export default function Editor({
           formats={formats}
           readOnly={readOnly}
           onFocus={handleFocus} 
+          onBlur={() => setIsFocused(false)}
           // placeholder="Write something here..."
           {...other}
         />
