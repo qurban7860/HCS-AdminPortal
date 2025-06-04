@@ -148,6 +148,18 @@ export const allSideBarOptions = {
               path: PATH_MACHINE.reports.machineGraphs.root,
               icon: <Iconify icon="mdi:chart-line" />,
             },
+             {
+              title: 'API logs',
+              description: 'Review API request and response logs.',
+              path: PATH_REPORTS.logs.api.root,
+              icon: <Iconify icon="mdi:api" />,
+            },
+            {
+              title: 'API Log summary',
+              description: 'Review API request and response logs summary.',
+              path: PATH_REPORTS.logs.apiLogSummary,
+              icon: <Iconify icon="mdi:api" />,
+            },
           ],
         },
         {
@@ -233,6 +245,18 @@ export const allSideBarOptions = {
           path: PATH_REPORTS.machineGraphs.root,
           icon: <Iconify icon="mdi:chart-line" />,
         },
+        {
+              title: 'API logs',
+              description: 'Review API request and response logs.',
+              path: PATH_REPORTS.logs.api.root,
+              icon: <Iconify icon="mdi:api" />,
+            },
+            {
+              title: 'API Log summary',
+              description: 'Review API request and response logs summary.',
+              path: PATH_REPORTS.logs.apiLogSummary,
+              icon: <Iconify icon="mdi:api" />,
+            },
       ],
     },
     {
@@ -268,18 +292,7 @@ export const allSideBarOptions = {
               path: PATH_REPORTS.logs.dbBackup.root,
               icon: <Iconify icon="mdi:database" />,
             },
-            {
-              title: 'API logs',
-              description: 'Review API request and response logs.',
-              path: PATH_REPORTS.logs.api.root,
-              icon: <Iconify icon="mdi:api" />,
-            },
-            {
-              title: 'API Log summary',
-              description: 'Review API request and response logs summary.',
-              path: PATH_REPORTS.logs.apiLogSummary,
-              icon: <Iconify icon="mdi:api" />,
-            },
+            
           ],
         },
       ],
