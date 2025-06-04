@@ -87,9 +87,6 @@ export default function Editor({
             display: 'none',
           },
           backgroundColor: alpha(theme.palette.grey[500], 0.08), 
-          '&:hover': {
-            backgroundColor: theme.palette.common.white, 
-          },
         }}
         onClick={handleFocus} 
       >

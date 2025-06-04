@@ -425,7 +425,7 @@ export default function TicketViewForm() {
             <ViewFormField sm={4} variant='h4' heading="Customer" isLoading={isLoading}
               node={defaultValues?.customer && (
                 <>
-                  <Link variant='h4' onClick={(event) => handleCustomerDialog(event, defaultValues.customer?._id)} underline="none" sx={{ cursor: 'pointer' }}>
+                  <Link variant='h5' onClick={(event) => handleCustomerDialog(event, defaultValues.customer?._id)} underline="none" sx={{ cursor: 'pointer', fontWeight: 'normal' }}>
                     {defaultValues?.customer?.name}
                   </Link>
                   <OpenInNewPage onClick={() => window.open(PATH_CRM.customers.view(defaultValues.customer?._id), '_blank')} />
@@ -436,10 +436,10 @@ export default function TicketViewForm() {
               node={defaultValues?.customer && (
                 <>
                   <Link
-                    variant='h4'
+                    variant='h5'
                     onClick={(event) => handleMachineDialog(event, defaultValues.machine?._id)}
                     underline="none"
-                    sx={{ cursor: 'pointer' }}
+                    sx={{ cursor: 'pointer', fontWeight: 'normal' }}
                   >
                     {`${defaultValues?.machine?.serialNo || ''} - ${defaultValues?.machine?.machineModel?.name || ''}`}
                   </Link>

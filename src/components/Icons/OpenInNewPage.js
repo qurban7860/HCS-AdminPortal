@@ -13,8 +13,8 @@ export default function OpenInNewPage({ onClick  }) {
           placement="top"
           disableFocusListener
         >
-          <Link onClick={onClick} color="inherit" target="_blank" rel="noopener" sx={{ cursor: 'pointer',mx: 0.5}}>
-            <Iconify icon="fluent:open-12-regular" sx={{position:'relative', bottom:'-5px'}} />
+          <Link onClick={onClick} color="inherit" target="_blank" rel="noopener" sx={{ cursor: 'pointer', mx: 0.5 }}>
+            <Iconify icon="fluent:open-12-regular" sx={{ position: 'relative', bottom:'-3px' }} />
           </Link>
         </StyledTooltip>
   );
