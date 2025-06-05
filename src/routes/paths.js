@@ -313,6 +313,12 @@ export const PATH_MACHINE = {
     machineGraphs: {
       root: path(ROOTS_MACHINE, '/reports/machineGraphs'),
     },
+   machineApiLogs: {
+      root: path(ROOTS_MACHINE, '/reports/apiLogs'),
+},
+  machineApiLogSummary: {
+       root: path(ROOTS_MACHINE, '/reports/apiLogSummary'),
+},
   },
   documents: {
     root: path(ROOTS_MACHINE, '/documents'),
