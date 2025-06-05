@@ -36,7 +36,7 @@ export default function HistoricalConfigurationsTableRow({
   onViewRow,
 }) {
 
-  const { backupid, backupDate, isManufacture, isActive, createdAt, createdBy } = row;
+  const { backupid, backupDate, isManufacture, isActive, createdAt, createdBy, createdByIdentifier } = row;
 
   return (
       <StyledTableRow hover selected={selected}>
@@ -51,7 +51,7 @@ export default function HistoricalConfigurationsTableRow({
         <TableCell align="center">
           <Switch checked={isActive} disabled size="small" />{' '}
         </TableCell>
-        <TableCell align="left">{createdBy?.name || ''}</TableCell>
+        <TableCell align="left">  {createdBy?.name || createdByIdentifier?.name || createdByIdentifier || ''}</TableCell>
         <TableCell align="right">{fDateTime(createdAt)}</TableCell>
       </StyledTableRow>
   );
