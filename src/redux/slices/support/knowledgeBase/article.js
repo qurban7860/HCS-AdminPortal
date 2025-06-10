@@ -81,7 +81,7 @@ const slice = createSlice({
       }
       state.isLoadingArticleFile = false;
     },
-    
+
 
     addArticleFilesSuccess(state, action) {
       state.article = {
@@ -90,7 +90,7 @@ const slice = createSlice({
       }
       state.isLoadingArticleFile = false;
     },
-
+    
     deleteArticleFileSuccess(state, action) {
       const { id } = action.payload;
       const array = state.article.files;
@@ -172,15 +172,19 @@ export function addArticle(params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const data = {
-        articleNo: params.articleNo,
-        title: params.title,
-        description: params.description,
-        category: params.category?._id,
-        customerAccess: params.customerAccess,
-        isActive: params.isActive,
-      }
-      const response = await axios.post(`${CONFIG.SERVER_URL}support/knowledgeBase/article/`, data);
+      const formData = new FormData();
+      formData.append('articleNo', params?.articleNo || '');
+      formData.append('title', params?.title || '');
+      formData.append('description', params?.description || '');
+      formData.append('category', params?.category?._id || null);
+      formData.append('customerAccess', params?.customerAccess );
+      formData.append('isActive', params?.isActive );
+      
+      (params?.files || []).forEach((file, index) => {
+        formData.append(`images`, file);
+      });
+
+      const response = await axios.post(`${CONFIG.SERVER_URL}support/knowledgeBase/article/`, formData);
       dispatch(slice.actions.setResponseMessage('Article saved successfully'));
       dispatch(getArticles());
       return response?.data;

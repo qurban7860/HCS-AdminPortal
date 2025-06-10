@@ -57,7 +57,7 @@ export default function ArticleAddForm() {
       title: '',
       description: '',
       files: article ? manipulateFiles(article?.files) : [],
-      category: null,
+      category: article?.category || null,
       status:'DRAFT',
       customerAccess: false,
       isActive: true,
@@ -169,9 +169,10 @@ export default function ArticleAddForm() {
                 <RHFAutocomplete 
                   name="category" 
                   label="Category" 
-                  options={activeArticleCategories} 
-                  getOptionLabel={(option) => option.name}
+                  options={activeArticleCategories || []} 
+                  getOptionLabel={(option) => `${option.name || ''}`}
                   isOptionEqualToValue={(option, value) => option._id === value._id}
+                  renderOption={(props, option) => (<li {...props} key={option?._id}> {option.name || ''} </li>)}
                 />
                 <RHFTextField name="title" label="Title" inputProps={{ maxLength: 200 }} />
                 <RHFEditor name="description" label="Description" />
