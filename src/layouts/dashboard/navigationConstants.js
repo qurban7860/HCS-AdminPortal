@@ -30,8 +30,8 @@ export const MAIN_CATEGORIES = [
 ];
 
 export const OTHER_MAIN_CATEGORIES = [
-  { title: 'Calendar', id: 'calendar', icon: 'mdi:calendar-month', path: ROOTS_CALENDAR },
-  { title: 'Settings', id: 'settings', icon: 'mdi:settings', path: ROOTS_SETTING },
+  { title: 'Calendar', id: 'calendar', icon: 'fluent:calendar-20-filled', path: ROOTS_CALENDAR },
+  { title: 'Settings', id: 'settings', icon: 'mdi:cog', path: ROOTS_SETTING },
 ];
 
 export const generalSideBarOptions = {
@@ -148,9 +148,19 @@ export const allSideBarOptions = {
               path: PATH_MACHINE.reports.machineGraphs.root,
               icon: <Iconify icon="mdi:chart-line" />,
             },
-          ],
-        },
-        {
+             {
+              title: ' API Logs',
+              path: PATH_MACHINE.reports.machineApiLogs.root,
+              icon: <Iconify icon="mdi:api" />,
+              },
+            {
+              title: 'API Log Summary',
+              path: PATH_MACHINE.reports.machineApiLogSummary.root,
+              icon: <Iconify icon="mdi:api" />,
+              },
+             ],
+             },
+ {
           title: 'Settings',
           path: PATH_MACHINE.machineSettings.root,
           icon: <Iconify icon="mdi:cog" />,
@@ -233,6 +243,18 @@ export const allSideBarOptions = {
           path: PATH_REPORTS.machineGraphs.root,
           icon: <Iconify icon="mdi:chart-line" />,
         },
+       {
+        title: 'API logs',
+        description: 'Review API request and response logs.',
+        path: PATH_REPORTS.api.root,
+        icon: <Iconify icon="mdi:api" />,
+      },
+      {
+        title: 'API Log summary',
+        description: 'Review API request and response logs summary.',
+        path: PATH_REPORTS.apiLogSummary.root,
+        icon: <Iconify icon="mdi:api" />,
+      },
       ],
     },
     {
@@ -268,18 +290,7 @@ export const allSideBarOptions = {
               path: PATH_REPORTS.logs.dbBackup.root,
               icon: <Iconify icon="mdi:database" />,
             },
-            {
-              title: 'API logs',
-              description: 'Review API request and response logs.',
-              path: PATH_REPORTS.logs.api.root,
-              icon: <Iconify icon="mdi:api" />,
-            },
-            {
-              title: 'API Log summary',
-              description: 'Review API request and response logs summary.',
-              path: PATH_REPORTS.logs.apiLogSummary,
-              icon: <Iconify icon="mdi:api" />,
-            },
+            
           ],
         },
       ],

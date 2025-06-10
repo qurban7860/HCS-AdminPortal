@@ -39,10 +39,10 @@ export default function MachineLogsGraphViewForm() {
     () => ({
       logPeriod: 'Daily',
       logGraphType: machineLogGraphTypes[0],
-    dateFrom: new Date(new Date().setHours(0, 0, 0, 0)),
-    dateTo: new Date(new Date().setHours(23, 59, 59, 0)),
-      // dateFrom: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
-      // dateTo: new Date(),
+    // dateFrom: new Date(new Date().setHours(0, 0, 0, 0)),
+    // dateTo: new Date(new Date().setHours(23, 59, 59, 0)),
+      dateFrom: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+      dateTo: new Date(),
     }),
     []
   )
@@ -181,7 +181,7 @@ export default function MachineLogsGraphViewForm() {
                 </Grid>
 
                 <Grid item xs={12} sm={6} md={2} xl={2.5}>
-                <RHFDateTimePicker
+                <RHFDatePicker
                     label="Date From"
                     name="dateFrom"
                     size="small"
@@ -191,7 +191,7 @@ export default function MachineLogsGraphViewForm() {
                 </Grid>
 
                 <Grid item xs={12} sm={6} md={2} xl={2.5}>
-                  <RHFDateTimePicker
+                  <RHFDatePicker
                     label="Date To"
                     name="dateTo"
                     size="small"

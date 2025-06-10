@@ -265,6 +265,7 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
         docCategory?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         docCategory?.versionNo?.toString().indexOf(filterName.toLowerCase()) >= 0 ||
         docCategory?.createdBy?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        docCategory?.createdByIdentifier?.name?.toLowerCase().includes(filterName.toLowerCase()) ||
         docCategory?.backupid?.toString()?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         fDate(docCategory?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );

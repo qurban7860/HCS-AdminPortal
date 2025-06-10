@@ -1,7 +1,7 @@
-import React, { useMemo, useEffect } from 'react'
+import React, { useMemo, useEffect, useState } from 'react'
 import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
-import { Box, Button, Stack, TextField, InputAdornment } from '@mui/material';
+import { Box, Button, Stack, TextField, alpha, useTheme } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
@@ -10,7 +10,7 @@ import CustomAvatar from '../../../components/custom-avatar/CustomAvatar';
 import Iconify from '../../../components/iconify';
 import ChipDialog from '../../../components/Dialog/ChipDialog';
 
-  DropDownMultipleSelection.propTypes = {
+DropDownMultipleSelection.propTypes = {
   value: PropTypes.array, 
   name: PropTypes.string, 
   label: PropTypes.string, 
@@ -22,6 +22,8 @@ import ChipDialog from '../../../components/Dialog/ChipDialog';
 };
 
 export default function DropDownMultipleSelection( { value, name, label, options = [], isLoading, onSubmit, multiple = true, isStatus } ) {
+  const [isFocused, setIsFocused] = useState(false); 
+  const theme = useTheme();
 
   const defaultValues = useMemo(() => {
     const initialValue = multiple ? [] : null; 
@@ -31,7 +33,6 @@ export default function DropDownMultipleSelection( { value, name, label, options
   }, [value, name, multiple]);
   
   const methods = useForm({
-    // resolver: yupResolver( ticketSchema ),
     defaultValues,
   });
         
@@ -126,6 +127,9 @@ export default function DropDownMultipleSelection( { value, name, label, options
               //     </InputAdornment>
               //   ) : null,
               // }}
+              isFocused={isFocused}
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
               sx={{
                 '& .MuiInputBase-root': {
                   padding: '8px',
@@ -133,16 +137,13 @@ export default function DropDownMultipleSelection( { value, name, label, options
                   alignItems: 'center',
                   flexWrap: 'wrap',
                   ...(multiple ? {} : { minHeight: '40px' }),
+                  backgroundColor: isFocused ? 'transparent' : alpha(theme.palette.grey[500], 0.08),
+                  border: isFocused ? `1px solid ${theme.palette.common.black}` : '1px solid transparent',
+                  transition: 'border 0.3s ease-in-out, background-color 0.3s ease-in-out',
+                  '&:hover': !isFocused ? { backgroundColor: `${alpha( theme.palette.grey[500], 0.08)} !important`, border: '1px solid transparent !important' } : {},
                 },
                 '& .MuiInput-underline:before, & .MuiInput-underline:hover:not(.Mui-disabled):before, & .MuiInput-underline.Mui-focused:before':
-                  {
-                    borderBottom: 'none',
-                  },
-                '&:hover .MuiInputBase-root, & .Mui-focused .MuiInputBase-root': {
-                  backgroundColor: 'transparent !important',
-                  borderRadius: '8px',
-                  transition: 'border 0.3s ease-in-out',
-                  outline: '1px solid',
+                  { borderBottom: 'none',
                 },
                 '& .MuiInputBase-input': {
                   padding: '0',

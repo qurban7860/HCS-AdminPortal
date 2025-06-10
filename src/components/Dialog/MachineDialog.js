@@ -27,9 +27,9 @@ function MachineDialog() {
       <DialogContent dividers sx={{width:"1000px", px:3}}>
         <Grid container>
           <ViewFormField sm={6} variant='h4' heading="Serial No" var param={machineForDialog?.serialNo} isLoading={isLoading} />
-          <ViewFormField sm={6} variant='h4' heading="Name" param={machineForDialog?.name} isLoading={isLoading}/>
-          <ViewFormField sm={6} heading="Supplier" param={machineForDialog?.supplier?.name} isLoading={isLoading}/>
           <ViewFormField sm={6} heading="Machine Model" param={machineForDialog?.machineModel?.name} isLoading={isLoading}/>
+          <ViewFormField sm={12} variant='h4' heading="Name" param={machineForDialog?.name} isLoading={isLoading}/>
+          <ViewFormField sm={12} heading="Supplier" param={machineForDialog?.supplier?.name} isLoading={isLoading}/>
           <ViewFormField
             sm={6}
             heading="Installation Site"

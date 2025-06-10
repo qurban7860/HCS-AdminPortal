@@ -215,18 +215,18 @@ export function getMachineLogGraphData(
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      // const startDateUtc = new Date( dateFrom.getFullYear(), dateFrom.getMonth(), dateFrom.getDate(), 0, 0, 0, 0 );
-      // const endDateUtc = new Date( dateTo.getFullYear(), dateTo.getMonth(), dateTo.getDate(), 23, 59, 59, 999 );
-      const startDateUtc =  new Date(dateFrom).toISOString();
-      const endDateUtc =  new Date(dateTo).toISOString();
+      const startDateUtc = new Date( dateFrom.getFullYear(), dateFrom.getMonth(), dateFrom.getDate(), 0, 0, 0, 0 );
+      const endDateUtc = new Date( dateTo.getFullYear(), dateTo.getMonth(), dateTo.getDate(), 23, 59, 59, 999 );
+      // const startDateUtc =  new Date(dateFrom).toISOString();
+      // const endDateUtc =  new Date(dateTo).toISOString();
       const params = {
         customer: customerId,
         machine: machineId,
         type,
         periodType,
         logGraphType,
-        startDate: startDateUtc,
-        endDate: endDateUtc,
+        startDate: startDateUtc.toISOString(),
+        endDate: endDateUtc.toISOString(),
         timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       };
 

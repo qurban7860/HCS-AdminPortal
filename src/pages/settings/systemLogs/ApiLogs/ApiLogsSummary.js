@@ -32,7 +32,9 @@ import MachineDialog from '../../../../components/Dialog/MachineDialog';
 
 export default function ApiLogsSummary() {
   const { order, orderBy, onSort } = useTable({
-    defaultOrderBy: 'lastCallTime',
+    // defaultOrderBy: 'lastCallTime',
+    // defaultOrder: 'desc',
+    defaultOrderBy: 'count',
     defaultOrder: 'desc',
   });
 

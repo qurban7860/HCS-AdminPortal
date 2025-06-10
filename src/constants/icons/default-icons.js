@@ -31,12 +31,12 @@ export const ICONS = {
   PRIMARY: {
     icon: 'mdi:star',
     color: '#008000',
-    heading: 'Primary',
+    heading: 'Primary Drawing',
   },
   NOTPRIMARY: {
     icon: 'mdi:star-remove',
     color: '#FF0000',
-    heading: 'Not Primary',
+    heading: 'Not Primary Drawing',
   },
   // shareWith
   SHARED: {

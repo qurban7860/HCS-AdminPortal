@@ -422,13 +422,6 @@ function ViewFormEditDeleteButtons({
               icon={isActive ? ICONS.ACTIVE.icon : ICONS.INACTIVE.icon}
             />
           }
-          {isPrimary !== undefined &&
-            <IconTooltip
-              title={isPrimary ? ICONS.PRIMARY.heading : ICONS.NOTPRIMARY.heading}
-              color={isPrimary ? ICONS.PRIMARY.color : ICONS.NOTPRIMARY.color}
-              icon={isPrimary ? ICONS.PRIMARY.icon : ICONS.NOTPRIMARY.icon}
-            />
-          }
 
           {isPrimary !== undefined &&
             <IconTooltip
