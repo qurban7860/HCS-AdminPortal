@@ -949,8 +949,11 @@ export default function Router() {
             },
             { path: 'machineLogs', children: [{ element: <AllMachinesLogs />, index: true }] },
             { path: 'machineGraphs', children: [{ element: <AllMachinesGraphs />, index: true }] },
+            { path: 'apiLogs', children: [{ element: <ApiLogsList />, index: true }] },
+            { path: 'apiLogSummary', element: <ApiLogsSummary /> },
           ]
         },
+        
 
         // ------------------------------ DOCUMENNT ----------------------------------
         {
@@ -1360,6 +1363,9 @@ export default function Router() {
         { element: <ReportsIntroduction />, index: true },
         { path: 'machineLogs', children: [{ element: <AllMachinesLogs />, index: true }] },
         { path: 'machineGraphs', children: [{ element: <AllMachinesGraphs />, index: true }] },
+         { path: 'apiLogs', children: [{ element: <ApiLogsList />, index: true }] },
+         { path: 'apiLogSummary', element: <ApiLogsSummary /> },
+        
         {
           path: 'email',
           children: [
