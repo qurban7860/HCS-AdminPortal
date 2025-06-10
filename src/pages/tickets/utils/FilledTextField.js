@@ -98,8 +98,8 @@ function FilledTextField( { name, label, value, onSubmit, minRows } ) {
             '& .MuiInputBase-input': {
               padding: '0',
               margin: '0',
-              fontWeight: isFocused ? 'bold' : 'normal',
-              fontSize: isFocused ? '1.2rem' : 'inherit',
+              fontWeight: name === 'summary' && !isFocused ? 'bold' : 'normal',
+              fontSize: name === 'summary' && !isFocused ? '1.2rem' : 'inherit',
               transition: 'font-weight 0.2s, font-size 0.2s',
             },
           }}
