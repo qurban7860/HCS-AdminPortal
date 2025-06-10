@@ -24,7 +24,7 @@ export default function TicketCommentForm({ commentData, handleEdit }) {
         comment: commentData?.comment || '<p></p>',
         isInternal: commentData?.isInternal,
     }), [commentData])
-    console.log({ commentData })
+    
     const methods = useForm({
         resolver: yupResolver(commentSchema),
         defaultValues
