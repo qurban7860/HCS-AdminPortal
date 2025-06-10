@@ -1,121 +1,236 @@
-// @mui
 import { styled, alpha } from '@mui/material/styles';
+import { markdownClasses } from './classes';
 
 // ----------------------------------------------------------------------
 
-const StyledMarkdown = styled('div')(({ theme }) => {
-  const isLight = theme.palette.mode === 'light';
+const MARGIN = '0.75em';
 
-  return {
-    // List
-    '& ul, & ol': {
-      ...theme.typography.body1,
-      paddingLeft: theme.spacing(5),
-      '& li': {
-        lineHeight: 2,
+export const MarkdownRoot = styled('div')(({ theme }) => ({
+  '> * + *': {
+    marginTop: 0,
+    marginBottom: MARGIN,
+  },
+  /**
+   * @Heading & paragraph
+   */
+  h1: { ...theme.typography.h1, marginTop: 40, marginBottom: 8 },
+  h2: { ...theme.typography.h2, marginTop: 40, marginBottom: 8 },
+  h3: { ...theme.typography.h3, marginTop: 24, marginBottom: 8 },
+  h4: { ...theme.typography.h4, marginTop: 24, marginBottom: 8 },
+  h5: { ...theme.typography.h5, marginTop: 24, marginBottom: 8 },
+  h6: { ...theme.typography.h6, marginTop: 24, marginBottom: 8 },
+  p: { ...theme.typography.body1, marginBottom: '1.25rem' },
+  /**
+   * @Hr divider
+   */
+  hr: {
+    flexShrink: 0,
+    borderWidth: 0,
+    margin: '2em 0',
+    msFlexNegative: 0,
+    WebkitFlexShrink: 0,
+    borderStyle: 'solid',
+    borderBottomWidth: 'thin',
+    borderColor: theme.palette.divider,
+  },
+  th: {
+    fontWeight: theme.typography.fontWeightMedium,
+    backgroundColor: theme.palette.grey[100],
+    textAlign: 'left',
+    verticalAlign: 'top',
+  },
+  td: {
+    textAlign: 'left',
+    verticalAlign: 'top',
+  },
+  /**
+   * @langSelect
+   */
+  [`& .${markdownClasses.content.langSelect}`]: {
+    top: 8,
+    right: 8,
+    zIndex: 1,
+    padding: 4,
+    outline: 'none',
+    borderRadius: 4,
+    position: 'absolute',
+    color: theme.palette.common.white,
+    fontWeight: theme.typography.fontWeightMedium,
+    borderColor: theme.palette.action.disabled,
+    backgroundColor: theme.palette.grey[700],
+  },
+
+  /**
+   * @Image
+   */
+  [`& .${markdownClasses.content.image}`]: {
+    width: '100%',
+    height: 'auto',
+    maxWidth: '100%',
+    margin: 'auto auto 1.25em',
+    borderRadius: theme.shape.borderRadius * 2,
+  },
+  /**
+   * @List
+   */
+  '& ul': {
+    listStyleType: 'disc',
+  },
+  '& ul, & ol': {
+    paddingLeft: 16,
+    '& > li': {
+      lineHeight: 2,
+      '& > p': {
+        margin: 0,
+        display: 'inline-block',
       },
     },
+  },
+  /**
+   * @Blockquote
+   */
+  '& blockquote': {
+    lineHeight: 1.5,
+    fontSize: '1.5em',
+    margin: '24px auto',
+    position: 'relative',
+    fontFamily: 'Georgia, serif',
+    padding: theme.spacing(3, 3, 3, 8),
+    color: theme.palette.text.secondary,
+    borderLeft: `solid 8px ${alpha(theme.palette.grey['500'], 0.08)}`,
+    [theme.breakpoints.up('md')]: { width: '100%', maxWidth: 640 },
+    '& p': { margin: 0, fontSize: 'inherit', fontFamily: 'inherit' },
+    '&::before': {
+      left: 16,
+      top: -8,
+      display: 'block',
+      fontSize: '3em',
+      content: '"\\201C"',
+      position: 'absolute',
+      color: theme.palette.text.disabled,
+    },
+  },
+  /**
+ * @Code Mentioned
+ */
+  '& .mention': {
+    backgroundColor: theme.palette.action.focus,
+    borderRadius: '0.4rem',
+    boxDecorationBreak: 'clone',
+    color: theme.palette.primary.main,
+    padding: '0.1rem 0.3rem',
+    fontWeight: 'bold',
 
-    // Blockquote
-    '& blockquote': {
-      lineHeight: 1.5,
-      fontSize: '1.5em',
-      margin: '40px auto',
-      position: 'relative',
-      fontFamily: 'Georgia, serif',
-      padding: theme.spacing(3, 3, 3, 8),
-      borderRadius: Number(theme.shape.borderRadius) * 2,
-      backgroundColor: theme.palette.background.neutral,
-      color: `${theme.palette.text.secondary} !important`,
-      [theme.breakpoints.up('md')]: {
-        width: '80%',
-      },
-      '& p, & span': {
-        marginBottom: '0 !important',
-        fontSize: 'inherit !important',
-        fontFamily: 'Georgia, serif !important',
-        color: `${theme.palette.text.secondary} !important`,
-      },
-      '&:before': {
-        left: 16,
-        top: -8,
-        display: 'block',
-        fontSize: '3em',
-        content: '"\\201C"',
-        position: 'absolute',
-        color: theme.palette.text.disabled,
-      },
+    '&::after': {
+      content: '"\\200B"',
+    },
+  },
+  /**
+* @Code taskList
+*/
+  '& ul[data-type="taskList"]': {
+    listStyle: 'none',
+    padding: 0,
+    margin: 0,
+
+    '& li': {
+      display: 'flex',
+      gap: '0.7rem',
     },
 
-    // Code Block
-    '& pre, & pre > code': {
-      fontSize: 16,
+    '& > li > label': {
+      display: 'flex',
+      alignItems: 'center',
+      userSelect: 'none',
+      cursor: 'pointer',
+    },
+
+    '& > li > div': {
+      flex: 1,
+    },
+
+  },
+
+  /**
+   * @Code inline
+   */
+  [`& .${markdownClasses.content.codeInline}`]: {
+    padding: theme.spacing(0.25, 0.5),
+    color: theme.palette.text.secondary,
+    fontSize: theme.typography.body2.fontSize,
+    borderRadius: theme.shape.borderRadius / 2,
+    backgroundColor: alpha(theme.palette.grey[500], 0.2),
+  },
+  /**
+   * @Code block
+   */
+  [`& .${markdownClasses.content.codeBlock}`]: {
+    position: 'relative',
+    '& pre': {
       overflowX: 'auto',
-      whiteSpace: 'pre',
-      padding: theme.spacing(2),
+      padding: theme.spacing(3),
       color: theme.palette.common.white,
       borderRadius: theme.shape.borderRadius,
-      backgroundColor: isLight ? theme.palette.grey[900] : alpha(theme.palette.grey[500], 0.16),
+      fontFamily: "'JetBrainsMono', monospace",
+      backgroundColor: theme.palette.grey[900],
+      '& code': { fontSize: theme.typography.body2.fontSize },
+      ...theme.applyStyles('dark', {
+        backgroundColor: theme.palette.grey[800],
+      }),
     },
-    '& code': {
-      fontSize: 14,
-      borderRadius: 4,
-      whiteSpace: 'pre',
-      padding: theme.spacing(0.2, 0.5),
-      color: theme.palette.warning[isLight ? 'darker' : 'lighter'],
-      backgroundColor: theme.palette.warning[isLight ? 'lighter' : 'darker'],
-      '&.hljs': { padding: 0, backgroundColor: 'transparent' },
-    },
-
-    // Table
-    table: {
-      width: '100%',
-      borderCollapse: 'collapse',
+  },
+  /**
+   * @Table
+   */
+  table: {
+    width: '100%',
+    borderCollapse: 'collapse',
+    fontSize: theme.typography.body2.fontSize,
+    border: `1px solid ${theme.palette.divider}`,
+    'th, td': {
+      padding: theme.spacing(1),
       border: `1px solid ${theme.palette.divider}`,
-      'th, td': {
-        padding: theme.spacing(1),
-      },
-      'tbody tr:nth-of-type(odd)': {
-        backgroundColor: theme.palette.background.neutral,
-      },
+    },
+    'tbody tr:nth-of-type(odd)': {
+      backgroundColor: theme.palette.background.paper,
+    },
+  },
+  /**
+   * @Checkbox
+   */
+  [`& .${markdownClasses.content.checkbox}`]: {
+    cursor: 'pointer',
+    position: 'relative',
+    '&:before': {
+      content: '""',
+      top: -2,
+      left: -2,
+      width: 17,
+      height: 17,
+      borderRadius: 3,
+      position: 'absolute',
+      backgroundColor: theme.palette.grey[300],
+      ...theme.applyStyles('dark', {
+        backgroundColor: theme.palette.grey[700],
+      }),
     },
 
-    // Checkbox
-    input: {
-      '&[type=checkbox]': {
-        position: 'relative',
-        cursor: 'pointer',
-        '&:before': {
-          content: '""',
-          top: -2,
-          left: -2,
-          width: 17,
-          height: 17,
-          borderRadius: 3,
-          position: 'absolute',
-          backgroundColor: theme.palette.grey[isLight ? 300 : 700],
-        },
-        '&:checked': {
-          '&:before': {
-            backgroundColor: theme.palette.primary.main,
-          },
-          '&:after': {
-            content: '""',
-            top: 1,
-            left: 5,
-            width: 4,
-            height: 9,
-            position: 'absolute',
-            transform: 'rotate(45deg)',
-            msTransform: 'rotate(45deg)',
-            WebkitTransform: 'rotate(45deg)',
-            border: `solid ${theme.palette.common.white}`,
-            borderWidth: '0 2px 2px 0',
-          },
-        },
+    '&:checked': {
+      '&:before': {
+        backgroundColor: theme.palette.primary.main,
+      },
+      '&:after': {
+        top: 1,
+        left: 5,
+        width: 4,
+        height: 9,
+        content: '""',
+        position: 'absolute',
+        borderStyle: 'solid',
+        transform: 'rotate(45deg)',
+        borderWidth: '0 2px 2px 0',
+        borderColor: theme.palette.common.white,
       },
     },
-  };
-});
-
-export default StyledMarkdown;
+  },
+}));

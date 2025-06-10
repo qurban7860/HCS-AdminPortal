@@ -6,7 +6,7 @@ import ImageExtension from '@tiptap/extension-image';
 import StarterKitExtension from '@tiptap/starter-kit';
 import TextAlignExtension from '@tiptap/extension-text-align';
 import PlaceholderExtension from '@tiptap/extension-placeholder';
-import { useMemo, useState, useEffect, useCallback } from 'react';
+import { useMemo, useState, useEffect, useCallback, forwardRef } from 'react';
 import CodeBlockLowlightExtension from '@tiptap/extension-code-block-lowlight';
 import { useEditor, EditorContent, ReactNodeViewRenderer } from '@tiptap/react';
 import TaskList from '@tiptap/extension-task-list';
@@ -37,7 +37,7 @@ import { CodeHighlightBlock } from './components/code-highlight-block';
 
 // ----------------------------------------------------------------------
 
-export function Editor({
+function Editor({
   sx,
   ref,
   error,
@@ -143,8 +143,11 @@ export function Editor({
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (editor?.isEmpty && content !== '<p></p>') {
-        editor.commands.setContent(content);
+      // if (editor?.isEmpty && content !== '<p></p>') {
+      //   editor.commands.setContent(content);
+      // }
+      if (editor && content !== editor.getHTML()) {
+        editor.commands.setContent(content || '<p></p>');
       }
     }, 100);
     return () => clearTimeout(timer);
@@ -211,6 +214,8 @@ export function Editor({
   );
 }
 
+const EditorWithRef = forwardRef(Editor);
+export { EditorWithRef as Editor };
 
 Editor.propTypes = {
   sx: PropTypes.oneOfType([

@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types';
-import { useEffect } from 'react';
 // form
 import { useFormContext, Controller } from 'react-hook-form';
 // @mui
@@ -16,20 +15,8 @@ RHFEditorV2.propTypes = {
 export default function RHFEditorV2({ name, helperText, ...other }) {
   const {
     control,
-    watch,
-    setValue,
     formState: { isSubmitSuccessful },
   } = useFormContext();
-
-  const values = watch();
-
-  useEffect(() => {
-    if (values[name] === '<p><br></p>') {
-      setValue(name, '', {
-        shouldValidate: !isSubmitSuccessful,
-      });
-    }
-  }, [isSubmitSuccessful, name, setValue, values]);
 
   return (
     <Controller
@@ -37,14 +24,10 @@ export default function RHFEditorV2({ name, helperText, ...other }) {
       control={control}
       render={({ field, fieldState: { error } }) => (
         <Editor
-          sx={{
-            '& .ql-flip': { transform: 'translateX(135px) !important' },
-            '& .ql-editor': { maxHeight: '60vh', overflowY: 'auto' }
-          }}
+          {...field}
           id={name}
-          value={field.value}
-          onChange={field.onChange}
           error={!!error}
+          resetValue={isSubmitSuccessful}
           helperText={
             (!!error || helperText) && (
               <FormHelperText error={!!error} sx={{ px: 2 }}>
@@ -53,8 +36,8 @@ export default function RHFEditorV2({ name, helperText, ...other }) {
             )
           }
           {...other}
-        />
-      )}
+        />)
+      }
     />
   );
 }
