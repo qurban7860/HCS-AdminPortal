@@ -172,11 +172,8 @@ export const MarkdownRoot = styled('div')(({ theme }) => ({
       color: theme.palette.common.white,
       borderRadius: theme.shape.borderRadius,
       fontFamily: "'JetBrainsMono', monospace",
-      backgroundColor: theme.palette.grey[900],
       '& code': { fontSize: theme.typography.body2.fontSize },
-      ...theme.applyStyles('dark', {
-        backgroundColor: theme.palette.grey[800],
-      }),
+      backgroundColor: theme.palette.mode === 'dark' ? theme.palette.grey[800] : theme.palette.grey[900],
     },
   },
   /**
@@ -209,10 +206,9 @@ export const MarkdownRoot = styled('div')(({ theme }) => ({
       height: 17,
       borderRadius: 3,
       position: 'absolute',
-      backgroundColor: theme.palette.grey[300],
-      ...theme.applyStyles('dark', {
-        backgroundColor: theme.palette.grey[700],
-      }),
+      backgroundColor: theme.palette.mode === 'dark'
+        ? theme.palette.grey[700]
+        : theme.palette.grey[300]
     },
 
     '&:checked': {

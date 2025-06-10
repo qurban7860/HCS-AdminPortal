@@ -39,7 +39,7 @@ export default function TicketCommentForm({ commentData, handleEdit }) {
     } = methods;
 
     const { comment } = watch();
-    console.log({ comment })
+
     const onSubmit = async (data) => {
         try {
             if (commentData?._id) {
