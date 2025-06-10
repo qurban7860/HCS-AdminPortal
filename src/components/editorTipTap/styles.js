@@ -34,7 +34,7 @@ export const EditorRoot = styled('div', {
       float: 'left',
       pointerEvents: 'none',
       content: 'attr(data-placeholder)',
-      color: theme.palette.text.disabled,
+      color: theme.palette.text.primary,
     },
   },
 
@@ -50,7 +50,7 @@ export const EditorRoot = styled('div', {
 
     '& .tiptap': {
       '> * + *': { marginTop: 0, marginBottom: MARGIN },
-      '&:first-child': {
+      '&:first-of-type': {
         marginTop: 0,
       },
       '&.ProseMirror': { flex: '1 1 auto', outline: 'none', padding: theme.spacing(0, 2) },
@@ -176,7 +176,7 @@ export const EditorRoot = styled('div', {
           fontSize: '3em',
           content: '"\\201C"',
           position: 'absolute',
-          color: theme.palette.text.disabled,
+          color: theme.palette.text.primary,
         },
       },
 
