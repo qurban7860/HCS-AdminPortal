@@ -559,7 +559,7 @@ export default function TicketViewForm() {
                 />
               </>
             )}
-            {['change request', 'system problem']?.includes(ticket?.issueType?.name?.trim()?.toLowerCase()) && (
+            {['change_request', 'system_problem']?.includes(ticket?.issueType?.slug?.trim()?.toLowerCase()) && (
               <>
                 <ViewFormField isLoading={isLoading} sm={4} heading="Investigation Reason"
                   node={<DropDownField name="investigationReason" isNullable label='Investigation Reason' value={ticket?.investigationReason} options={ticketSettings?.investigationReasons} onSubmit={onSubmit} />}
