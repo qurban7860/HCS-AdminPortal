@@ -13,9 +13,10 @@ FilledTextField.propTypes = {
   value: PropTypes.any,
   onSubmit: PropTypes.func,
   minRows: PropTypes.number,
+  isBold: PropTypes.bool,
 };
 
-function FilledTextField( { name, label, value, onSubmit, minRows } ) {
+function FilledTextField( { name, label, value, onSubmit, minRows, isBold } ) {
   const [isFocused, setIsFocused] = useState(false); 
   const theme = useTheme();
   
@@ -98,8 +99,8 @@ function FilledTextField( { name, label, value, onSubmit, minRows } ) {
             '& .MuiInputBase-input': {
               padding: '0',
               margin: '0',
-              fontWeight: isFocused ? 'bold' : 'normal',
-              fontSize: isFocused ? '1.2rem' : 'inherit',
+              fontWeight: isBold && !isFocused ? 'bold' : 'normal',
+              fontSize: isBold && !isFocused ? '1.2rem' : 'inherit',
               transition: 'font-weight 0.2s, font-size 0.2s',
             },
           }}
