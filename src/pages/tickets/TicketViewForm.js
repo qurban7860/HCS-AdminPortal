@@ -465,7 +465,7 @@ export default function TicketViewForm() {
               node={<DropDownMultipleSelection name="approvers" label='Approvers' value={ticket?.approvers} onSubmit={onSubmit} options={approvers} />}
             />
             <ViewFormField isLoading={isLoading} sm={12} heading="Summary"
-              node={<FilledTextField name="summary" value={defaultValues.summary} onSubmit={onSubmit} />}
+              node={<FilledTextField name="summary" value={defaultValues.summary} onSubmit={onSubmit} isBold />}
             />
             <ViewFormField isLoading={isLoading} sm={12} heading="Description"
               node={<FilledEditorField name="description" value={defaultValues.description} onSubmit={onSubmit} minRows={4} isEditor />}
