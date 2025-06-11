@@ -22,7 +22,7 @@ export default function TicketCommentForm({ commentData, handleEdit }) {
 
     const defaultValues = useMemo(() => ({
         comment: commentData?.comment || '<p></p>',
-        isInternal: commentData?.isInternal ?? true,
+        isInternal: typeof commentData?.isInternal === 'boolean' ? commentData.isInternal : true,
     }), [commentData])
 
     const methods = useForm({
