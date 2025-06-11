@@ -18,7 +18,7 @@ import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
 import { useAuthContext } from '../../auth/useAuthContext';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
-import TicketComments from './TicketComments';
+import TicketTabs from './TicketTabs';
 import { handleError } from '../../utils/errorHandler';
 import Lightbox from '../../components/lightbox/Lightbox';
 import SkeletonPDF from '../../components/skeleton/SkeletonPDF';
@@ -465,10 +465,10 @@ export default function TicketViewForm() {
               node={<DropDownMultipleSelection name="approvers" label='Approvers' value={ticket?.approvers} onSubmit={onSubmit} options={approvers} />}
             />
             <ViewFormField isLoading={isLoading} sm={12} heading="Summary"
-              node={<FilledTextField name="summary" value={defaultValues.summary} onSubmit={onSubmit} />}
+              node={<FilledTextField name="summary" value={defaultValues.summary} onSubmit={onSubmit} isBold />}
             />
             <ViewFormField isLoading={isLoading} sm={12} heading="Description"
-              node={<FilledEditorField name="description" value={defaultValues.description} onSubmit={onSubmit} minRows={4} isEditor/>}
+              node={<FilledEditorField name="description" value={defaultValues.description} onSubmit={onSubmit} minRows={4} isEditor />}
             />
             <ViewFormField isLoading={isLoading} sm={10} heading="Fault"
               node={<DropDownMultipleSelection name="faults" label='Fault' value={ticket?.faults} options={ticketSettings?.faults} onSubmit={onSubmit} isStatus />}
@@ -549,13 +549,13 @@ export default function TicketViewForm() {
                   node={<DropDownField name="changeReason" isNullable label='Change Reason' value={ticket?.changeReason} options={ticketSettings?.changeReasons} onSubmit={onSubmit} />}
                 />
                 <ViewFormField isLoading={isLoading} sm={12} heading="Implementation Plan"
-                  node={<FilledEditorField name="implementationPlan" value={defaultValues.implementationPlan} onSubmit={onSubmit} minRows={4} isEditor/>}
+                  node={<FilledEditorField name="implementationPlan" value={defaultValues.implementationPlan} onSubmit={onSubmit} minRows={4} isEditor />}
                 />
                 <ViewFormField isLoading={isLoading} sm={12} heading="Backout Plan"
-                  node={<FilledEditorField name="backoutPlan" value={defaultValues.backoutPlan} onSubmit={onSubmit} minRows={4} isEditor/>}
+                  node={<FilledEditorField name="backoutPlan" value={defaultValues.backoutPlan} onSubmit={onSubmit} minRows={4} isEditor />}
                 />
                 <ViewFormField isLoading={isLoading} sm={12} heading="Test Plan"
-                  node={<FilledEditorField name="testPlan" value={defaultValues.testPlan} onSubmit={onSubmit} minRows={4} isEditor/>}
+                  node={<FilledEditorField name="testPlan" value={defaultValues.testPlan} onSubmit={onSubmit} minRows={4} isEditor />}
                 />
               </>
             )}
@@ -565,10 +565,10 @@ export default function TicketViewForm() {
                   node={<DropDownField name="investigationReason" isNullable label='Investigation Reason' value={ticket?.investigationReason} options={ticketSettings?.investigationReasons} onSubmit={onSubmit} />}
                 />
                 <ViewFormField isLoading={isLoading} sm={12} heading="Root Cause"
-                  node={<FilledEditorField name="rootCause" value={defaultValues.rootCause} onSubmit={onSubmit} minRows={4} isEditor/>}
+                  node={<FilledEditorField name="rootCause" value={defaultValues.rootCause} onSubmit={onSubmit} minRows={4} isEditor />}
                 />
                 <ViewFormField isLoading={isLoading} sm={12} heading="Workaround"
-                  node={<FilledEditorField name="workaround" value={defaultValues.workaround} onSubmit={onSubmit} minRows={4} isEditor/>}
+                  node={<FilledEditorField name="workaround" value={defaultValues.workaround} onSubmit={onSubmit} minRows={4} isEditor />}
                 />
               </>
             )}
@@ -612,7 +612,7 @@ export default function TicketViewForm() {
         </Grid>
       </Card>
       <Card sx={{ mt: 2 }}>
-        <TicketComments currentUser={{ ...user, userId }} />
+        <TicketTabs />
       </Card>
       {fileDialog && <DialogTicketAddFile open={fileDialog} handleClose={() => setFileDialog(false)} />}
       {PDFViewerDialog && (

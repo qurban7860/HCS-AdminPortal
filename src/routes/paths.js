@@ -313,6 +313,12 @@ export const PATH_MACHINE = {
     machineGraphs: {
       root: path(ROOTS_MACHINE, '/reports/machineGraphs'),
     },
+   machineApiLogs: {
+      root: path(ROOTS_MACHINE, '/reports/apiLogs'),
+},
+  machineApiLogSummary: {
+       root: path(ROOTS_MACHINE, '/reports/apiLogSummary'),
+},
   },
   documents: {
     root: path(ROOTS_MACHINE, '/documents'),
@@ -579,6 +585,14 @@ export const PATH_REPORTS = {
   machineGraphs: {
     root: path(ROOTS_REPORTS, '/machineGraphs'),
   },
+ api: {
+    root: path(ROOTS_REPORTS, '/apiLogs'),
+    view: (id) => path(ROOTS_REPORTS, `/apiLogs/${id}/view`),
+  },
+
+  apiLogSummary: {
+    root: path(ROOTS_REPORTS, '/apiLogSummary'),
+  },
   email: {
     list: path(ROOTS_REPORTS, '/email/list'),
     new: path(ROOTS_REPORTS, '/email/new'),
@@ -599,11 +613,11 @@ export const PATH_REPORTS = {
       search: (search) => path(ROOTS_REPORTS, `/logs/dbBackup/${search}`),
       view: (id) => path(ROOTS_REPORTS, `/logs/dbBackup/${id}/view`),
     },
-    api: {
-      root: path(ROOTS_REPORTS, '/logs/api/'),
-      view: (id) => path(ROOTS_REPORTS, `/logs/api/${id}/view`),
-    },
-    apiLogSummary: path(ROOTS_REPORTS, '/logs/apiLogSummary'),
+    // api: {
+    //   root: path(ROOTS_REPORTS, '/logs/api/'),
+    //   view: (id) => path(ROOTS_REPORTS, `/logs/api/${id}/view`),
+    // },
+    // apiLogSummary: path(ROOTS_REPORTS, '/logs/apiLogSummary'),
   },
 };
 
