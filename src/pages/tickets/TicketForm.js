@@ -90,7 +90,7 @@ export default function TicketForm() {
 
   const { reset, setError, handleSubmit, watch, setValue, trigger, formState: { isSubmitting, errors } } = methods;
   const { issueType, customer, machine, files, plannedStartDate, plannedEndDate, description } = watch();
-  
+
   useEffect(() => {
     trigger(["plannedStartDate", "plannedEndDate"]);
   }, [trigger, plannedStartDate, plannedEndDate])
@@ -158,7 +158,7 @@ export default function TicketForm() {
   };
 
   const handleDropMultiFile = useCallback(async (acceptedFiles) => {
-    console.log("acceptedFiles:::",acceptedFiles)
+    console.log("acceptedFiles:::", acceptedFiles)
     const hashes = await hashFilesMD5(acceptedFiles);
     const newFiles = (Array.isArray(files) && files?.length > 0) ? [...files] : [];
     acceptedFiles.forEach((file, index) => {
@@ -328,7 +328,7 @@ export default function TicketForm() {
                     renderOption={(props, option) => (<li {...props} key={option?._id}> {option.name || ''} </li>)}
                     onChange={(event, newValue) => {
                       setValue('issueType', newValue);
-                      setValue('requestType', null); 
+                      setValue('requestType', null);
                     }}
                   />
                   <RHFAutocomplete
@@ -444,7 +444,7 @@ export default function TicketForm() {
                         <RHFEditor name="testPlan" label="Test Plan" minRows={4} multiline />
                       </>
                     )}
-                    {issueType?.name?.trim()?.toLowerCase() === 'service request' && (
+                    {['change request', 'system problem']?.includes(issueType?.name?.trim()?.toLowerCase()) && (
                       <>
                         <RHFAutocomplete
                           name="investigationReason"
