@@ -444,7 +444,7 @@ export default function TicketForm() {
                         <RHFEditor name="testPlan" label="Test Plan" minRows={4} multiline />
                       </>
                     )}
-                    {['change request', 'system problem']?.includes(issueType?.name?.trim()?.toLowerCase()) && (
+                    {['change_request', 'system_problem']?.includes(issueType?.slug?.trim()?.toLowerCase()) && (
                       <>
                         <RHFAutocomplete
                           name="investigationReason"
