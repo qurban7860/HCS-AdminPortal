@@ -38,6 +38,7 @@ export default function ProfileList() {
     onSort,
   } = useTable({
     defaultOrderBy: 'createdAt',
+    defaultOrder: 'desc',
   });
 
   const navigate = useNavigate();
