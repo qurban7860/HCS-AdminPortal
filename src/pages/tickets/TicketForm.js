@@ -17,8 +17,10 @@ import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import { ticketSchema } from '../schemas/ticketSchema';
 import FormProvider, { RHFTextField, RHFUpload, RHFAutocomplete, RHFDatePicker, RHFTimePicker, RHFSwitch, RHFEditor } from '../../components/hook-form';
 import { getTicket, postTicket, patchTicket, resetTicket, deleteFile, getTicketSettings, resetTicketSettings, getSoftwareVersion, resetSoftwareVersion } from '../../redux/slices/ticket/tickets';
+import { getArticleByNo } from '../../redux/slices/support/knowledgeBase/article';
 import { getActiveCustomerMachines, resetActiveCustomerMachines } from '../../redux/slices/products/machine';
 import { getActiveCustomers, resetActiveCustomers } from '../../redux/slices/customer/customer';
+import HelpSidebar from './utils/HelpSideBar';
 import FormLabel from '../../components/DocumentForms/FormLabel';
 import { FORMLABELS } from '../../constants/default-constants';
 import { manipulateFiles } from '../documents/util/Util';
@@ -34,6 +36,20 @@ export default function TicketForm() {
   const { activeCustomers } = useSelector((state) => state.customer);
   const { ticket, ticketSettings, softwareVersion, isLoadingSoftwareVersion } = useSelector((state) => state.tickets);
   const [filteredRequestTypes, setFilteredRequestTypes] = useState([]);
+  const { article } = useSelector((state) => state.article);
+  const [helpOpen, setHelpOpen] = useState(false);
+
+  useEffect(() => {
+    dispatch(getArticleByNo('00012'));
+  }, [dispatch]);
+
+  const handleHelpClick = () => {
+    setHelpOpen(true);
+  };
+
+  const handleCloseHelp = () => {
+    setHelpOpen(false);
+  };
 
   useEffect(() => {
     if (id)
@@ -223,8 +239,9 @@ export default function TicketForm() {
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
-        <Cover name={ticket?.customer?.name || 'New Support Ticket'} />
+        <Cover name={ticket?.customer?.name || 'New Support Ticket'} onHelpClick={handleHelpClick} />
       </StyledCardContainer>
+      <HelpSidebar open={helpOpen} onClose={handleCloseHelp} article={article} />
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={3}>
           <Grid item xs={12} md={12}>
