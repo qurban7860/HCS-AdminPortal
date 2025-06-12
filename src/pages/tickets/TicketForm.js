@@ -17,7 +17,7 @@ import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import { ticketSchema } from '../schemas/ticketSchema';
 import FormProvider, { RHFTextField, RHFUpload, RHFAutocomplete, RHFDatePicker, RHFTimePicker, RHFSwitch, RHFEditor } from '../../components/hook-form';
 import { getTicket, postTicket, patchTicket, resetTicket, deleteFile, getTicketSettings, resetTicketSettings, getSoftwareVersion, resetSoftwareVersion } from '../../redux/slices/ticket/tickets';
-import { getArticleByNo } from '../../redux/slices/support/knowledgeBase/article';
+import { getArticleByValue } from '../../redux/slices/support/knowledgeBase/article';
 import { getActiveCustomerMachines, resetActiveCustomerMachines } from '../../redux/slices/products/machine';
 import { getActiveCustomers, resetActiveCustomers } from '../../redux/slices/customer/customer';
 import HelpSidebar from './utils/HelpSideBar';
@@ -38,10 +38,13 @@ export default function TicketForm() {
   const [filteredRequestTypes, setFilteredRequestTypes] = useState([]);
   const { article } = useSelector((state) => state.article);
   const [helpOpen, setHelpOpen] = useState(false);
+  const prefix = JSON.parse(localStorage.getItem('configurations'))?.find((config) => config?.name?.toLowerCase() === 'support_ticket_creation_process')?.value?.trim() || '';
 
   useEffect(() => {
-    dispatch(getArticleByNo('00012'));
-  }, [dispatch]);
+  if (prefix) {
+    dispatch(getArticleByValue(prefix));
+  }
+  }, [dispatch, prefix]);
 
   const handleHelpClick = () => {
     setHelpOpen(true);

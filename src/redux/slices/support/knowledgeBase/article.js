@@ -255,7 +255,7 @@ export function getArticle(Id) {
   };
 }
 
-export function getArticleByNo(articleNo = '') {
+export function getArticleByValue(articleNo = '') {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
