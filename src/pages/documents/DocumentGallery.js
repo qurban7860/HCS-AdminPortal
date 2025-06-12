@@ -27,13 +27,13 @@ DocumentGallery.propTypes = {
   machinePage: PropTypes.bool,
 };
 
-export default function DocumentGallery({customerPage, machinePage}) {
-  
+export default function DocumentGallery({ customerPage, machinePage }) {
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { machineId } = useParams();
   const regEx = /^[^2]*/;
-  
+
   const { machine } = useSelector((state) => state.machine);
   const { customer } = useSelector((state) => state.customer);
   const { document, documentGallery, isLoading } = useSelector((state) => state.document);
@@ -43,7 +43,7 @@ export default function DocumentGallery({customerPage, machinePage}) {
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(15);
 
-  const handleChangePage = ( event, newPage ) => {
+  const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
 
@@ -51,49 +51,49 @@ export default function DocumentGallery({customerPage, machinePage}) {
     setPageSize(parseInt(event.target.value, 10));
     setPage(0);
   };
-  
-  useEffect(()=>{
-    if(customerPage){
+
+  useEffect(() => {
+    if (customerPage) {
       dispatch(getDocumentGallery(null, customer?._id, null, page, pageSize))
     }
-    
-    if(machinePage){
+
+    if (machinePage) {
       dispatch(getDocumentGallery(null, null, machine?._id, page, pageSize))
     }
-    
-    if(!machinePage && !customerPage){
+
+    if (!machinePage && !customerPage) {
       dispatch(getDocumentGallery(document?._id, null, null, page, pageSize))
     }
-    
-  },[dispatch, document, customer, machine, customerPage, machinePage, page, pageSize])
 
-  useEffect(()=>{
+  }, [dispatch, document, customer, machine, customerPage, machinePage, page, pageSize])
+
+  useEffect(() => {
     setSlides(documentGallery?.data?.map((img) => ({
-      src:`data:image/png;base64, ${img?.thumbnail}`,
-      thumbnail:`data:image/png;base64, ${img?.thumbnail}`,
-      downloadFilename:`${img?.name}.${img?.extension}`,
-      name:img?.name,
-      category:img?.docCategory?.name,
-      title:<Grid>
-              <Typography variant='h4'>{machine?.serialNo} - {machine?.name}</Typography>
-              <Typography variant='body2'>{img?.displayName}</Typography>
-              <Typography variant='body2'>{img?.docCategory?.name}</Typography>
-            </Grid>,
-      fileType:img?.fileType,
-      extension:img?.extension,
-      isLoaded:false,
-      id:img?._id,
+      src: `data:image/png;base64, ${img?.thumbnail}`,
+      thumbnail: `data:image/png;base64, ${img?.thumbnail}`,
+      downloadFilename: `${img?.name}.${img?.extension}`,
+      name: img?.name,
+      category: img?.docCategory?.name,
+      title: <Grid>
+        <Typography variant='h4'>{machine?.serialNo} - {machine?.name}</Typography>
+        <Typography variant='body2'>{img?.displayName}</Typography>
+        <Typography variant='body2'>{img?.docCategory?.name}</Typography>
+      </Grid>,
+      fileType: img?.fileType,
+      extension: img?.extension,
+      isLoaded: false,
+      id: img?._id,
       width: '100%',
       height: '100%',
-      transform:'scale(10)'
+      transform: 'scale(10)'
     })));
-    
-  },[documentGallery, machine])
+
+  }, [documentGallery, machine])
 
   const handleOpenLightbox = async (index) => {
     setSelectedImage(index);
     const image = slides[index];
-    if(!image?.isLoaded){
+    if (!image?.isLoaded) {
       try {
         const response = await dispatch(downloadFile(image?.id));
         if (regEx.test(response.status)) {
@@ -104,11 +104,11 @@ export default function DocumentGallery({customerPage, machinePage}) {
               ...slides[index],
               src: `data:image/png;base64, ${response.data}`,
               isLoaded: true,
-              rotate:'90deg'
+              rotate: '90deg'
             },
             ...slides.slice(index + 1), // copies slides after the updated slide
           ];
-  
+
           // Update the state with the new array
           setSlides(updatedSlides);
         }
@@ -117,44 +117,44 @@ export default function DocumentGallery({customerPage, machinePage}) {
       }
     }
   };
-  
+
   const handleCloseLightbox = () => {
     setSelectedImage(-1);
   };
 
   const handleBackLink = () => {
-    if( customerPage ){
+    if (customerPage) {
       navigate(PATH_CRM.customers.documents.root(customer?._id))
-    } else if( machinePage ){
+    } else if (machinePage) {
       navigate(PATH_MACHINE.machines.documents.root(machineId))
     }
   };
   return (
-    <Container maxWidth={false} sx={{padding:`${!customerPage && !machinePage?"":"0px !important"}`}} >
+    <Container maxWidth={false} sx={{ padding: `${!customerPage && !machinePage ? "" : "0px !important"}` }} >
       {!customerPage && !machinePage &&
         <StyledCardContainer>
           <Cover name={FORMLABELS.COVER.DOCUMENTS} />
         </StyledCardContainer>
       }
 
-      <Card sx={{p:2}}>
-        <ViewFormEditDeleteButtons backLink={handleBackLink}/>
-        {slides?.length>0 ?(
+      <Card sx={{ p: 2 }}>
+        <ViewFormEditDeleteButtons backLink={handleBackLink} />
+        {slides?.length > 0 ? (
           <>
-            <Grid container sx={{borderTop:'solid 1px rgba(145, 158, 171, 0.24)', borderBottom:'solid 1px rgba(145, 158, 171, 0.24)'}}>
+            <Grid container sx={{ borderTop: 'solid 1px rgba(145, 158, 171, 0.24)', borderBottom: 'solid 1px rgba(145, 158, 171, 0.24)' }}>
               <Grid item md={12} lg={6} >
-                <Typography variant='h4' sx={{mt:2}}>{`${customerPage? "Customer":`${machinePage?"Machine":"Document"}`} Gallery`}</Typography>
+                <Typography variant='h4' sx={{ mt: 2 }}>{`${customerPage ? "Customer" : `${machinePage ? "Machine" : "Document"}`} Gallery`}</Typography>
               </Grid>
               <Grid item md={12} lg={6} >
-                <TablePagination component="div" labelRowsPerPage="Images / Page" sx={{border:'none'}}
-                  rowsPerPageOptions={[15,30]} showLastButton showFirstButton
-                  count={documentGallery?.totalCount} page={page} rowsPerPage={pageSize}  
+                <TablePagination component="div" labelRowsPerPage="Images / Page" sx={{ border: 'none' }}
+                  rowsPerPageOptions={[15, 30]} showLastButton showFirstButton
+                  count={documentGallery?.totalCount} page={page} rowsPerPage={pageSize}
                   onPageChange={handleChangePage} onRowsPerPageChange={handleChangePageSize}
                 />
               </Grid>
             </Grid>
 
-            <Box sx={{mt:2}} gap={2} display="grid"
+            <Box sx={{ mt: 2 }} gap={2} display="grid"
               gridTemplateColumns={{
                 xs: 'repeat(1, 1fr)',
                 sm: 'repeat(2, 1fr)',
@@ -174,7 +174,7 @@ export default function DocumentGallery({customerPage, machinePage}) {
               disabledSlideshow
             />
           </>
-        ):(<EmptyContent title="Empty" sx={{ color: '#DFDFDF'}}/>)}
+        ) : (<EmptyContent title="Empty" sx={{ color: '#DFDFDF' }} />)}
       </Card>
     </Container>
   );
@@ -196,12 +196,12 @@ GalleryItem.propTypes = {
 
 function GalleryItem({ image, onOpenLightbox }) {
   const theme = useTheme();
-  const { src, name, docCat  } = image;
+  const { src, name, docCat } = image;
   return (
     <Card sx={{ cursor: 'pointer', position: 'relative' }}>
-      <Image alt="gallery" ratio="1/1" 
-      src={src}
-      onClick={onOpenLightbox} />
+      <Image alt="gallery" ratio="1/1"
+        src={src}
+        onClick={onOpenLightbox} />
       <Stack
         padding={2}
         sx={{
@@ -216,7 +216,7 @@ function GalleryItem({ image, onOpenLightbox }) {
         }}
       >
         <Typography variant="subtitle2">{name}</Typography>
-        <Typography variant="body2" sx={{ opacity: 0.72, marginTop:'0px'}}>{docCat}</Typography>
+        <Typography variant="body2" sx={{ opacity: 0.72, marginTop: '0px' }}>{docCat}</Typography>
         {/* <Typography variant="body2" sx={{ opacity: 0.72, marginTop:'0px'}}>{docType}</Typography> */}
       </Stack>
     </Card>
