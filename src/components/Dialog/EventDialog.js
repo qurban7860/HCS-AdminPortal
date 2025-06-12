@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React,{ useEffect, useLayoutEffect, useRef, memo, useState, useCallback } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, memo, useState, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { enc, MD5, lib } from 'crypto-js';
@@ -37,30 +37,30 @@ function getTimeObjectFromISOString(dateString) {
   const timeObject = {
     value: formattedValueTime,
     label: `${formattedTime} ${ampm}`
-};
-return timeObject;
+  };
+  return timeObject;
 }
 
 
 const getInitialValues = (selectedEvent, range, contacts) => {
   const initialEvent = {
-    _id: selectedEvent ? selectedEvent?._id : null ,
-    isCustomerEvent: ( selectedEvent?.isCustomerEvent || selectedEvent?.isCustomerEvent === undefined ) && true || false,
-    eventType: selectedEvent && ( selectedEvent?.isCustomerEvent ? "customerVisit" : "InternalTask" ) || "customerVisit",
-    date: selectedEvent ? selectedEvent?.start : (range?.start || new Date() ) ,
-    end_date: selectedEvent ? selectedEvent?.end : (range?.end || new Date() ) ,
+    _id: selectedEvent ? selectedEvent?._id : null,
+    isCustomerEvent: (selectedEvent?.isCustomerEvent || selectedEvent?.isCustomerEvent === undefined) && true || false,
+    eventType: selectedEvent && (selectedEvent?.isCustomerEvent ? "customerVisit" : "InternalTask") || "customerVisit",
+    date: selectedEvent ? selectedEvent?.start : (range?.start || new Date()),
+    end_date: selectedEvent ? selectedEvent?.end : (range?.end || new Date()),
     start: selectedEvent ? getTimeObjectFromISOString(selectedEvent?.start) : { value: '07:30', label: '7:30 AM' },
-    end: selectedEvent ?  getTimeObjectFromISOString(selectedEvent?.end) : { value: '18:00', label: '6:00 PM' },
+    end: selectedEvent ? getTimeObjectFromISOString(selectedEvent?.end) : { value: '18:00', label: '6:00 PM' },
     customer: selectedEvent ? selectedEvent?.customer : null,
     priority: selectedEvent?.priority?.trim() ? selectedEvent?.priority : null,
     status: selectedEvent?.status?.trim() ? selectedEvent?.status : null,
-    machines: selectedEvent ? selectedEvent?.machines :  [],
-    site: selectedEvent ? selectedEvent?.site :  null,
-    jiraTicket: selectedEvent ? selectedEvent?.jiraTicket :  '',
-    primaryTechnician: selectedEvent ? selectedEvent?.primaryTechnician :  null,
-    supportingTechnicians: selectedEvent ? selectedEvent?.supportingTechnicians :  [],
-    notifyContacts: selectedEvent ? selectedEvent?.notifyContacts :  contacts,
-    description: selectedEvent ? selectedEvent?.description :  '',
+    machines: selectedEvent ? selectedEvent?.machines : [],
+    site: selectedEvent ? selectedEvent?.site : null,
+    jiraTicket: selectedEvent ? selectedEvent?.jiraTicket : '',
+    primaryTechnician: selectedEvent ? selectedEvent?.primaryTechnician : null,
+    supportingTechnicians: selectedEvent ? selectedEvent?.supportingTechnicians : [],
+    notifyContacts: selectedEvent ? selectedEvent?.notifyContacts : contacts,
+    description: selectedEvent ? selectedEvent?.description : '',
     files: selectedEvent ? manipulateFiles(selectedEvent?.files) : [],
     createdAt: selectedEvent?.createdAt || '',
     createdByFullName: selectedEvent?.createdBy?.name || '',
@@ -75,7 +75,7 @@ const getInitialValues = (selectedEvent, range, contacts) => {
 
 EventDialog.propTypes = {
   range: PropTypes.object,
-  contacts:PropTypes.array
+  contacts: PropTypes.array
 };
 
 function EventDialog({
@@ -86,19 +86,19 @@ function EventDialog({
   const { user } = useAuthContext();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
-  const { selectedEvent, eventModel, isLoading } = useSelector((state) => state.event );
+  const { selectedEvent, eventModel, isLoading } = useSelector((state) => state.event);
   const { activeCustomers } = useSelector((state) => state.customer);
   const { activeSpContacts } = useSelector((state) => state.contact);
   const { activeSites } = useSelector((state) => state.site);
-  const { activeCustomerMachines } = useSelector( (state) => state.machine );
-  const [ openConfirm, setOpenConfirm ] = useState(false);
+  const { activeCustomerMachines } = useSelector((state) => state.machine);
+  const [openConfirm, setOpenConfirm] = useState(false);
   const dialogRef = useRef(null);
   const defaultValues = getInitialValues(selectedEvent?.extendedProps, range, contacts);
   const methods = useForm({
     resolver: yupResolver(eventSchema(() => methods.clearErrors())),
     defaultValues
   });
-  
+
   const {
     reset,
     watch,
@@ -109,7 +109,7 @@ function EventDialog({
 
   useEffect(() => {
     if (Object.keys(errors).length !== 0 && errors.constructor === Object) {
-      if(dialogRef.current){
+      if (dialogRef.current) {
         dialogRef.current.scrollIntoView({ behavior: 'smooth' });
       }
     }
@@ -118,15 +118,15 @@ function EventDialog({
   const { customer, machines, date, isCustomerEvent, files, priority, status, eventType } = watch();
 
   useEffect(() => {
-    if ( Array.isArray(machines) && machines?.length > 0 && machines?.length < 2 ) {
+    if (Array.isArray(machines) && machines?.length > 0 && machines?.length < 2) {
       setValue("site", machines[0]?.instalationSite)
-    } else if( machines?.length < 1 ){
-      setValue("site", null )
+    } else if (machines?.length < 1) {
+      setValue("site", null)
     }
-  },[ machines, setValue ])
+  }, [machines, setValue])
 
   useEffect(() => {
-    const { end_date  } = watch()
+    const { end_date } = watch()
     if (date && end_date) {
       const startDate = new Date(date);
       const endDate = new Date(end_date);
@@ -135,20 +135,20 @@ function EventDialog({
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[ date ])
+  }, [date])
 
   useLayoutEffect(() => {
     dispatch(getActiveCustomerMachines(selectedEvent?.extendedProps?.customer?._id));
     reset(getInitialValues(selectedEvent?.extendedProps, range, contacts));
-  }, [ dispatch, reset, range, selectedEvent, contacts]);
+  }, [dispatch, reset, range, selectedEvent, contacts]);
 
   const priorityOptions = [
     'High',
     'Medium',
     'Low',
   ];
-  
-  const onSubmit = async ( data ) => {
+
+  const onSubmit = async (data) => {
     try {
       data.priority = priority || '';
       data.status = status || '';
@@ -167,55 +167,55 @@ function EventDialog({
         await dispatch(createEvent(data));
         enqueueSnackbar('Event Created Successfully!');
       }
-      await setValue("isCustomerEvent", true );
+      await setValue("isCustomerEvent", true);
       await reset();
       await dispatch(setEventModel(false));
     } catch (e) {
-      if(typeof e === 'string'){
-        enqueueSnackbar(e, { variant: 'error'});
+      if (typeof e === 'string') {
+        enqueueSnackbar(e, { variant: 'error' });
       }
     }
 
   };
-  
-  const handleCloseModel = ()=> {
-    dispatch(setEventModel(false)) 
+
+  const handleCloseModel = () => {
+    dispatch(setEventModel(false))
     dispatch(resetActiveCustomerMachines())
     dispatch(resetActiveSites())
-    setValue("isCustomerEvent", true );
-    setValue("eventType", "customerVisit" );
+    setValue("isCustomerEvent", true);
+    setValue("eventType", "customerVisit");
     reset()
   };
 
-    const handleCustomerEvent = ( event, val ) => {
-      if( val && val !== eventType && !selectedEvent ){
-        setValue( "jiraTicket", "" );
-        setValue( "customer", null );
-        setValue( "priority", "" );
-        setValue( "status", "" );
-        setValue( "primaryTechnician", null );
-        setValue( "machines", [] );
-        setValue( "site", null );
-        setValue( "supportingTechnicians", [] );
-        setValue( "notifyContacts", [] );
-        setValue( "description", "" );
-        setValue( "files", [] );
-        setValue("eventType", val );
-        setValue("isCustomerEvent", val === "customerVisit" );
-      };
-    }
-  
-    useEffect( () => {
-      if( !isCustomerEvent ){
-        if( Array.isArray( activeCustomers ) && activeCustomers?.length > 0 ){
-          setValue( 'customer', activeCustomers.find(( cus ) => cus?._id === user?.customer ) );
-        }
-        if( !selectedEvent && Array.isArray( activeSpContacts ) && activeSpContacts?.length > 0 ){
-          setValue( 'primaryTechnician', activeSpContacts?.find(( con ) => con?._id === user?.contact ) );
-        }
+  const handleCustomerEvent = (event, val) => {
+    if (val && val !== eventType && !selectedEvent) {
+      setValue("jiraTicket", "");
+      setValue("customer", null);
+      setValue("priority", "");
+      setValue("status", "");
+      setValue("primaryTechnician", null);
+      setValue("machines", []);
+      setValue("site", null);
+      setValue("supportingTechnicians", []);
+      setValue("notifyContacts", []);
+      setValue("description", "");
+      setValue("files", []);
+      setValue("eventType", val);
+      setValue("isCustomerEvent", val === "customerVisit");
+    };
+  }
+
+  useEffect(() => {
+    if (!isCustomerEvent) {
+      if (Array.isArray(activeCustomers) && activeCustomers?.length > 0) {
+        setValue('customer', activeCustomers.find((cus) => cus?._id === user?.customer));
       }
-    }, [ isCustomerEvent, setValue, activeSpContacts, activeCustomers, user, selectedEvent ] );
-    
+      if (!selectedEvent && Array.isArray(activeSpContacts) && activeSpContacts?.length > 0) {
+        setValue('primaryTechnician', activeSpContacts?.find((con) => con?._id === user?.contact));
+      }
+    }
+  }, [isCustomerEvent, setValue, activeSpContacts, activeCustomers, user, selectedEvent]);
+
   const hashFilesMD5 = async (_files) => {
     const hashPromises = _files.map((file) => new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -226,7 +226,7 @@ function EventDialog({
         resolve(hashHex);
       };
       reader.onerror = () => {
-        reject(new Error(`Error reading file: ${file?.name || '' }`));
+        reject(new Error(`Error reading file: ${file?.name || ''}`));
       };
       reader.readAsArrayBuffer(file);
     }));
@@ -241,10 +241,10 @@ function EventDialog({
 
   const handleDropMultiFile = useCallback(async (acceptedFiles) => {
     const hashes = await hashFilesMD5(acceptedFiles);
-    const newFiles = ( Array.isArray(files) && files?.length > 0 ) ? [ ...files ] : [];
+    const newFiles = (Array.isArray(files) && files?.length > 0) ? [...files] : [];
     acceptedFiles.forEach((file, index) => {
       const eTag = hashes[index];
-      if( !newFiles?.some(( el ) => el?.eTag === eTag ) ){
+      if (!newFiles?.some((el) => el?.eTag === eTag)) {
         const newFile = Object.assign(file, {
           preview: URL.createObjectURL(file),
           src: URL.createObjectURL(file),
@@ -257,18 +257,18 @@ function EventDialog({
     setValue('files', newFiles, { shouldValidate: true });
   }, [setValue, files]);
 
-  const handleFileRemove = useCallback( async (inputFile) => {
-    try{
-      setValue('files', files?.filter((el) => ( inputFile?._id ? el?._id !== inputFile?._id : el !== inputFile )), { shouldValidate: true } )
-      if( inputFile?._id ){
-        dispatch(deleteEventFile( inputFile?.event, inputFile?._id))
+  const handleFileRemove = useCallback(async (inputFile) => {
+    try {
+      setValue('files', files?.filter((el) => (inputFile?._id ? el?._id !== inputFile?._id : el !== inputFile)), { shouldValidate: true })
+      if (inputFile?._id) {
+        dispatch(deleteEventFile(inputFile?.event, inputFile?._id))
       }
-    } catch(e){
+    } catch (e) {
       console.error(e)
     }
-  }, [ dispatch, setValue, files ] );
+  }, [dispatch, setValue, files]);
 
-  const handleDeleteEvent =  async (inputFile) => {
+  const handleDeleteEvent = async (inputFile) => {
     try {
       if (selectedEvent && selectedEvent?.extendedProps?._id) {
         await dispatch(deleteEvent(selectedEvent?.extendedProps?._id));
@@ -277,24 +277,24 @@ function EventDialog({
       }
       enqueueSnackbar('Event Deleted Successfully!');
     } catch (error) {
-      enqueueSnackbar('Event Delete Failed!', { variant: 'error'});
+      enqueueSnackbar('Event Delete Failed!', { variant: 'error' });
     }
   };
 
-  const handleChangeCustomer = ( option, newValue ) => {
-    if( newValue ){
-      if( newValue?._id !== customer?._id ){
-        setValue("site", null )
-        setValue("machines", [] )
+  const handleChangeCustomer = (option, newValue) => {
+    if (newValue) {
+      if (newValue?._id !== customer?._id) {
+        setValue("site", null)
+        setValue("machines", [])
         dispatch(resetActiveCustomerMachines())
       }
-      setValue("customer", newValue )
+      setValue("customer", newValue)
       dispatch(getActiveCustomerMachines(newValue?._id))
       dispatch(getActiveSites(newValue?._id))
     } else {
-      setValue("customer", null )
-      setValue("site", null )
-      setValue("machines", [] )
+      setValue("customer", null)
+      setValue("site", null)
+      setValue("machines", [])
       dispatch(resetActiveCustomerMachines())
       dispatch(resetActiveSites())
     }
@@ -322,7 +322,6 @@ function EventDialog({
         <DialogTitle
           display="flex"
           justifyContent="center"
-          alignItems="center"
           variant="h3"
           sx={{ my: -1, mx: 3, position: 'relative' }}
         >
@@ -399,9 +398,8 @@ function EventDialog({
                         `${option?.serialNo || ''} ${option?.name ? '-' : ''} ${option?.name || ''}`
                       }
                       renderOption={(props, option) => (
-                        <li {...props} key={option?._id}>{`${option?.serialNo || ''} ${
-                          option?.name ? '-' : ''
-                        } ${option?.name || ''}`}</li>
+                        <li {...props} key={option?._id}>{`${option?.serialNo || ''} ${option?.name ? '-' : ''
+                          } ${option?.name || ''}`}</li>
                       )}
                     />
                     <RHFAutocomplete
@@ -425,9 +423,8 @@ function EventDialog({
                     `${option?.firstName || ''} ${option?.lastName || ''}`
                   }
                   renderOption={(props, option) => (
-                    <li {...props} key={option?._id}>{`${option?.firstName || ''} ${
-                      option?.lastName || ''
-                    }`}</li>
+                    <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''
+                      }`}</li>
                   )}
                 />
                 {isCustomerEvent && (
@@ -444,9 +441,8 @@ function EventDialog({
                         `${option.firstName || ''} ${option.lastName || ''}`
                       }
                       renderOption={(props, option) => (
-                        <li {...props} key={option?._id}>{`${option?.firstName || ''} ${
-                          option?.lastName || ''
-                        }`}</li>
+                        <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''
+                          }`}</li>
                       )}
                     />
                     <RHFAutocomplete
@@ -461,9 +457,8 @@ function EventDialog({
                         `${option.firstName || ''} ${option.lastName || ''}`
                       }
                       renderOption={(props, option) => (
-                        <li {...props} key={option?._id}>{`${option?.firstName || ''} ${
-                          option?.lastName || ''
-                        }`}</li>
+                        <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''
+                          }`}</li>
                       )}
                     />
                   </>
@@ -475,7 +470,6 @@ function EventDialog({
                     display: 'grid',
                     gap: 2,
                     gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)' },
-                    alignItems: 'center',
                     width: '100%',
                   }}
                 >
@@ -498,13 +492,16 @@ function EventDialog({
                     isOptionEqualToValue={(option, value) => option === value}
                     renderInput={(params) => (
                       <RenderCustomInput
-                       label="Status*"
-                       params={{ ...params, error: !!errors?.status, helperText: errors?.status?.message, 
-                        InputProps: {
-                        ...params.InputProps,
-                        style: { 
-                        ...params.InputProps.style, 
-                        color: StatusColor(params.InputProps.value) }},
+                        label="Status*"
+                        params={{
+                          ...params, error: !!errors?.status, helperText: errors?.status?.message,
+                          InputProps: {
+                            ...params.InputProps,
+                            style: {
+                              ...params.InputProps.style,
+                              color: StatusColor(params.InputProps.value)
+                            }
+                          },
                         }}
                       />
                     )}
@@ -525,7 +522,7 @@ function EventDialog({
                   imagesOnly
                   onDrop={handleDropMultiFile}
                   onRemove={handleFileRemove}
-                  // onRemoveAll={() => setValue('files', '', { shouldValidate: true })}
+                // onRemoveAll={() => setValue('files', '', { shouldValidate: true })}
                 />
 
                 {selectedEvent && (
@@ -592,5 +589,5 @@ function EventDialog({
   );
 }
 
-export default memo( EventDialog );
+export default memo(EventDialog);
 
