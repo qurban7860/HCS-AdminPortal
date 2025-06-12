@@ -317,7 +317,7 @@ export const MachineServiceReportPart3Schema = Yup.object().shape({
   files: Yup.mixed().required(Snacks.fileRequired)
     .test('fileType', fileTypesMessage,
       function (value) {
-        return validateFileType({ _this: this, files: value, doc: true, image: true, video: true, required: true });
+        return validateFileType({ _this: this, files: value, doc: true, image: true, video: true });
       }
     )
     .nullable(true),
