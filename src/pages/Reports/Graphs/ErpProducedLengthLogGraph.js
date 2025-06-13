@@ -38,6 +38,15 @@ const ErpProducedLengthLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
       return null;
     }
   };
+  
+  const getTotalProduction = () => {
+  if (!graphData || graphData.length === 0) return 0;
+  const totalProduced = graphData.reduce(
+    (sum, item) => sum + (item.componentLength || 0) + (item.waste || 0),
+    0
+  );
+  return totalProduced.toFixed(2);
+};
 
   const getEarliestDateFromGraphData = () => {
     if (graphData.length === 0) return new Date(dateFrom); 
@@ -149,9 +158,11 @@ const ErpProducedLengthLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
     } else {
       return null;
     }
-
+   
     const producedLength = labels.map((label) => dataMap.get(label)?.componentLength || 0);
     const wasteLength = labels.map((label) => dataMap.get(label)?.waste || 0);
+
+
 
     return {
       categories: labels,
@@ -187,6 +198,13 @@ const ErpProducedLengthLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
         <Typography variant="h6" color="primary" gutterBottom>
           Produced Length & Waste Over Time
         </Typography>
+       <Typography variant="subtitle1" sx={{ mb: 2 }}>
+        <strong>Total Production:</strong> {getTotalProduction()} m {' '}
+        <span style={{ color: '#666' }}>
+        ({dateFrom.toLocaleDateString('en-GB')} – {dateTo.toLocaleDateString('en-GB')})
+         </span>
+       </Typography>
+
 
         {isLoading ? (
           <Skeleton variant="rectangular" width="100%" height={320} sx={{ borderRadius: 1 }} />
