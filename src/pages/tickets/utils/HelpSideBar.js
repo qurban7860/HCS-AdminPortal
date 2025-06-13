@@ -19,14 +19,14 @@ export default function HelpSidebar({ open, onClose, article }) {
       onClose={onClose}
       PaperProps={{
         sx: {
-          width: { xs: '100%', sm: 400 },
-          p: 2,
+          width: { xs: '100%', sm: '50vw' },
+          p: 3,
           maxHeight: '100vh',
           overflowY: 'auto',
         },
       }}
     >
-      <Box sx={{ display: 'flex', justifyContent: 'flex-start', mb: 1.5 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-start', mb: 1.5, mt: -1.5 }}>
         <IconTooltip
           title="Back"
           onClick={onClose}
