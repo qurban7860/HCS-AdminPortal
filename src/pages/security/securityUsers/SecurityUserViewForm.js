@@ -12,7 +12,10 @@ import {
   archiveSecurityUser,
   sendUserInvite,
   getSecurityUser,
+  getContactUsers,
+  getDialogSecurityUser,
   changeUserStatus,
+  setSecurityUserDialog,
   setChangePasswordByAdminDialog,
 } from '../../../redux/slices/securityUser/securityUser';
 import { getBlockedCustomer } from '../../../redux/slices/securityConfig/blockedCustomers';
@@ -37,7 +40,6 @@ export default function SecurityUserViewForm() {
   const { securityUser, isLoading } = useSelector((state) => state.user);
   const { blockedCustomer } = useSelector((state) => state.blockedCustomer);
   const { blockedUser } = useSelector((state) => state.blockedUser);
-
   const [openConfirm, setOpenConfirm] = useState(false);
   const handleCloseConfirm = () => setOpenConfirm(false);
 
@@ -51,6 +53,7 @@ export default function SecurityUserViewForm() {
     dispatch(setContactDialog(false))
     dispatch(getBlockedCustomer(securityUser?.customer?._id))
     dispatch(getBlockedUser(securityUser?._id))
+    dispatch(getContactUsers(securityUser?.contact?._id))
   }, [dispatch, securityUser]);
 
   useEffect(() => {
@@ -169,6 +172,11 @@ export default function SecurityUserViewForm() {
     [securityUser]
   );
 
+  const handleViewUserDialog = async (s) => {
+    await dispatch(setSecurityUserDialog(true));
+    await dispatch(getDialogSecurityUser(s?._id))
+  }
+
   return (
     <>
       <Grid sx={{ p: 3, mt: -3 }}>
@@ -192,6 +200,7 @@ export default function SecurityUserViewForm() {
             userStatus={userStatus}
             onUserStatusChange={securityUser?.isArchived ? undefined : handleChangeUserStatus}
             securityUserPage
+            handleViewUser={handleViewUserDialog}
           />
           <ConfirmDialog
             open={openConfirm}

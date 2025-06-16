@@ -94,7 +94,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
     formState: { isSubmitting },
   } = methods;
 
-  const { contact, customer } = watch();
+  const { contact, customer, customers } = watch();
 
   useEffect(() => {
     const howickCustomer = allActiveCustomers.find(c => c?.type?.toUpperCase() === "SP")
@@ -294,7 +294,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
                   filterSelectedOptions
                   name="machines"
                   label="Machines"
-                  options={allMachines}
+                  options={allMachines?.filter(m => customers?.some(c => c?._id === m.customer?._id))}
                   getOptionLabel={(option) => `${option?.serialNo || ''} ${option?.name ? '-' : ''} ${option?.name || ''}`}
                   isOptionEqualToValue={(option, value) => option?._id === value?._id}
                   renderOption={(props, option) => (<li {...props} key={option?._id}>{`${option.serialNo || ''} ${option.name ? '-' : ''} ${option.name || ''}`}</li>)}
