@@ -40,7 +40,6 @@ export default function SecurityUserTableRow({
 }) {
   const { login, email, name, roles, phone, updatedAt, contact, isActive, registrationRequest, isOnline,customer } = row;
   const isSPCustomer = customer?.type === 'SP';
-  const statusText = isActive ? 'Yes' : 'No';
   const theme = createTheme({ palette: { success: green } });
  
 
@@ -119,23 +118,6 @@ export default function SecurityUserTableRow({
            </TableCell>
            )}
 
-            {!hiddenColumns?.status && (
-            <TableCell align="left">
-              <StyledTooltip
-               placement="top"
-               title={isActive ? ICONS.ACTIVE.heading : ICONS.INACTIVE.heading}
-               disableFocusListener
-               tooltipcolor={isActive ? ICONS.ACTIVE.color : ICONS.INACTIVE.color}
-               color={isActive ? ICONS.ACTIVE.color : ICONS.INACTIVE.color}
-             >
-              <Iconify
-                icon={isActive ? ICONS.ACTIVE.icon : ICONS.INACTIVE.icon}
-                 sx={{ height: 25, width: 25 }}
-              />
-              </StyledTooltip>
-             </TableCell>
-              )}
-
 
         { !hiddenColumns?.isActive && <TableCell align="left" sx={{ display: "flex", alignItems: 'center'}}>
           <StyledTooltip
@@ -144,7 +126,7 @@ export default function SecurityUserTableRow({
             disableFocusListener tooltipcolor={isActive ? ICONS.ACTIVE.color : ICONS.INACTIVE.color} 
             color={ isActive ? ICONS.ACTIVE.color : ICONS.INACTIVE.color}
           >
-            <Iconify icon={ isActive ? ICONS.ACTIVE.icon : ICONS.INACTIVE.icon } sx={{mr:1, height: 20, width: 20 }}/>
+            <Iconify icon={ isActive ? ICONS.ACTIVE.icon : ICONS.INACTIVE.icon } sx={{mt: 1, height: 25, width: 25 }}/>
           </StyledTooltip>
           { registrationRequest && 
             <IconButtonTooltip title='Portal Request' color='#388e3c' icon="mdi:user-details" onClick={handleRequestDialog} /> 

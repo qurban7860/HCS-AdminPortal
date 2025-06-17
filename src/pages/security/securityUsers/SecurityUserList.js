@@ -52,8 +52,8 @@ const TABLE_HEAD = [
   { id: 'roles.name.[]', visibility: 'md1', label: 'Roles', align: 'left' },
   { id: 'contact.firstName', visibility: 'xl', label: 'Contact', align: 'left' },
   { id: 'accountType', label: 'A/C', align: 'left' }, 
-  { id: 'status', label: 'S', align: 'left' },      
-  { id: 'isActive', label: '   ', align: 'left' },
+  // { id: 'status', label: 'S', align: 'left' },      
+  { id: 'isActive', label: 'S', align: 'left' },
   { id: 'updatedAt', visibility: 'md', label: 'Updated At', align: 'right' },
 ];
 
@@ -338,7 +338,7 @@ function applyFilter({ inputData, comparator, filterName, filterStatus, filterRo
     if (filterByRegion) {
       inputData = inputData.filter((user) => user.regions.some((region) => region === filterByRegion?._id));
     }
-    
+
   if (filterAccountType === 'sp') {
   inputData = inputData.filter(
     (user) => user.customer?.type?.toLowerCase() === 'sp'
