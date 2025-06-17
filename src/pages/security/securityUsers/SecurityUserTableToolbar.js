@@ -28,6 +28,8 @@ SecurityUserTableToolbar.propTypes = {
   onFilterListByRegion: PropTypes.func,
   filterByRegion: PropTypes.object,
   onReload: PropTypes.func,
+  filterAccountType: PropTypes.string,
+  onFilterAccountType: PropTypes.func,
 };
 
 export default function SecurityUserTableToolbar({
@@ -44,7 +46,9 @@ export default function SecurityUserTableToolbar({
   onFilterName,
   onFilterRole,
   onResetFilter,
-  onReload
+  onReload,
+  filterAccountType,          
+  onFilterAccountType, 
 }) {
   
   const navigate = useNavigate();
@@ -78,6 +82,9 @@ export default function SecurityUserTableToolbar({
         inviteButton={BUTTONS.INVITEUSER}
         onReload={onReload}
         securityUserPage
+        filterAccountType={filterAccountType}
+        onFilterAccountType={onFilterAccountType}
+        reduceFilterSize
       />
     </Stack>
   );

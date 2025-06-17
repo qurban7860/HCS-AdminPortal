@@ -45,14 +45,15 @@ import { StyledCardContainer } from '../../../theme/styles/default-styles';
 // ----------------------------------------------------------------------
 
 const ROLE_OPTIONS = ['Administrator', 'Normal User', 'Guest User', 'Restriced User'];
-
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
   { id: 'login', visibility: 'xs1', label: 'Login', align: 'left' },
   { id: 'phone', visibility: 'xs2', label: 'Phone Number', align: 'left' },
   { id: 'roles.name.[]', visibility: 'md1', label: 'Roles', align: 'left' },
   { id: 'contact.firstName', visibility: 'xl', label: 'Contact', align: 'left' },
-  { id: 'isActive', label: "   ", align: 'left' },
+  { id: 'accountType', label: 'A/C', align: 'left' }, 
+  { id: 'status', label: 'S', align: 'left' },      
+  { id: 'isActive', label: '   ', align: 'left' },
   { id: 'updatedAt', visibility: 'md', label: 'Updated At', align: 'right' },
 ];
 
@@ -96,6 +97,7 @@ export default function SecurityUserList() {
   const [ activeFilterListBy, setActiveFilterListBy ] = useState(activeFilterList);
   const [ employeeFilterListBy, setEmployeeFilterListBy ] = useState(employeeFilterList);
   const [ filterByRegion, setFilterByRegion ] = useState(filterRegion);
+  const [filterAccountType, setFilterAccountType] = useState('all');
   const isMobile = useResponsive('down', 'lg');
 
   useLayoutEffect(() => {
@@ -131,6 +133,7 @@ export default function SecurityUserList() {
     activeFilterListBy,
     employeeFilterListBy,
     filterByRegion,
+    filterAccountType,
   });
   
   const denseHeight = 60;
@@ -146,6 +149,10 @@ const handleFilterName = (event) => {
   debouncedSearch.current(event.target.value);
   setFilterName(event.target.value)
   setPage(0);
+};
+const handleFilterAccountType = (event) => {
+  setPage(0);
+  setFilterAccountType(event.target.value);
 };
 
 const debouncedVerified = useRef(debounce((value) => {
@@ -232,6 +239,8 @@ useEffect(()=>{
             filterByRegion={filterByRegion}
             onFilterListByRegion={handleFilterListByRegion}
             onReload={onRefresh}
+            filterAccountType={filterAccountType}
+            onFilterAccountType={handleFilterAccountType}
           />
 
         {!isNotFound && !isMobile && <TablePaginationFilter
@@ -305,7 +314,7 @@ useEffect(()=>{
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName, filterStatus, filterRole, activeFilterListBy, employeeFilterListBy, filterByRegion }) {
+function applyFilter({ inputData, comparator, filterName, filterStatus, filterRole, activeFilterListBy, employeeFilterListBy, filterByRegion,filterAccountType }) {
   const stabilizedThis = inputData.map((el, index) => [el, index]);
 
   stabilizedThis.sort((a, b) => {
@@ -329,6 +338,18 @@ function applyFilter({ inputData, comparator, filterName, filterStatus, filterRo
     if (filterByRegion) {
       inputData = inputData.filter((user) => user.regions.some((region) => region === filterByRegion?._id));
     }
+    
+  if (filterAccountType === 'sp') {
+  inputData = inputData.filter(
+    (user) => user.customer?.type?.toLowerCase() === 'sp'
+  );
+} else if (filterAccountType === 'non-sp') {
+  inputData = inputData.filter(
+    (user) => user.customer?.type?.toLowerCase() !== 'sp'
+  );
+}
+
+
 
   if (filterName) {
     inputData = inputData.filter(
