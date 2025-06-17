@@ -1,10 +1,9 @@
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { yupResolver } from "@hookform/resolvers/yup";
 import { FormProvider, useForm,Controller } from 'react-hook-form';
 // @mui
-
-
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { Card, Container, Stack, Typography, Box, useTheme, Grid } from '@mui/material';
 import { useParams } from 'react-router-dom';
@@ -12,6 +11,7 @@ import { RHFAutocomplete, RHFDatePicker,RHFDateTimePicker } from '../../../compo
 import { machineLogGraphTypes } from '../../../constants/machineLogTypeFormats';
 import MachineTabContainer from '../util/MachineTabContainer';
 import Iconify from '../../../components/iconify';
+import { fetchIndMachineGraphSchema } from "../../schemas/machine";
 import { StyledTooltip, StyledContainedIconButton } from '../../../theme/styles/default-styles';
 import ErpProducedLengthLogGraph from '../../Reports/Graphs/ErpProducedLengthLogGraph';
 import ErpProductionRateLogGraph from '../../Reports/Graphs/ErpProductionRateLogGraph';
@@ -39,8 +39,8 @@ export default function MachineLogsGraphViewForm() {
     () => ({
       logPeriod: 'Daily',
       logGraphType: machineLogGraphTypes[0],
-    // dateFrom: new Date(new Date().setHours(0, 0, 0, 0)),
-    // dateTo: new Date(new Date().setHours(23, 59, 59, 0)),
+      // dateFrom: new Date(new Date().setHours(0, 0, 0, 0)),
+      // dateTo: new Date(new Date().setHours(23, 59, 59, 0)),
       dateFrom: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
       dateTo: new Date(),
     }),
@@ -48,6 +48,7 @@ export default function MachineLogsGraphViewForm() {
   )
 
   const methods = useForm({
+    resolver: yupResolver(fetchIndMachineGraphSchema),
     defaultValues,
   });
 

@@ -1,10 +1,12 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable no-unused-vars */
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Card, Container, Grid, Stack, useTheme } from '@mui/material';
 import { machineLogGraphTypes, machineLogTypeFormats } from "../../constants/machineLogTypeFormats";
-import { AddMachineLogSchema } from "../schemas/machine";
+import { AddMachineGraphSchema } from "../schemas/machine";
 import { getActiveCustomers } from "../../redux/slices/customer/customer";
 import { getActiveCustomerMachines, resetActiveCustomerMachines } from "../../redux/slices/products/machine";
 import { getMachineLogGraphData, resetMachineErpLogRecords, resetMachineLogsGraphData } from "../../redux/slices/products/machineErpLogs";
@@ -14,17 +16,17 @@ import { RHFAutocomplete, RHFDatePicker,RHFDateTimePicker } from "../../componen
 import ErpProducedLengthLogGraph from "./Graphs/ErpProducedLengthLogGraph";
 import ErpProductionRateLogGraph from "./Graphs/ErpProductionRateLogGraph";
 import Iconify from '../../components/iconify';
+import TableNoData from "../../components/table/TableNoData";
 
 const AllMachineGraphs = () => {
   const dispatch = useDispatch();
   const theme = useTheme();
-
+  const graphDataRef = useRef(null); 
+  
   const { activeCustomerMachines } = useSelector((state) => state.machine);
   const { activeCustomers } = useSelector((state) => state.customer);
-
   const [graphLabels, setGraphLabels] = useState({ yaxis: 'Produced Length & Waste (m)', xaxis: 'Daily' });
 
-  const [formData, setFormData] = useState(null);
 
   const defaultValues = {
     customer: null,
@@ -38,11 +40,18 @@ const AllMachineGraphs = () => {
   };
 
   const methods = useForm({
+    resolver: yupResolver(AddMachineGraphSchema),
+    mode: 'onBlur',
     defaultValues
   });
 
   const { setValue, trigger, handleSubmit, getValues, watch } = methods;
+
   const { customer, machine, logPeriod, logGraphType, dateFrom, dateTo } = watch();
+  
+  useEffect(() => {
+    trigger(['dateFrom', 'dateTo']);
+  }, [logPeriod, trigger]);
 
   useEffect(() => {
     dispatch(getActiveCustomers());
@@ -59,8 +68,6 @@ const AllMachineGraphs = () => {
   }, [dispatch, getValues('customer')]);
 
   const onSubmit = (data) => {
-    setFormData(data);
-
     if (data?.logGraphType?.key === 'productionRate') {
       setGraphLabels({
         yaxis: 'Production Rate (m/hr)',
@@ -72,6 +79,8 @@ const AllMachineGraphs = () => {
         xaxis: data?.logPeriod,
       });
     }
+
+    graphDataRef.current = { ...data, graphLabels };
 
     const customerId = data.customer?._id;
     const machineId = data.machine?._id || undefined;
@@ -111,6 +120,8 @@ const AllMachineGraphs = () => {
     [dispatch, setValue, trigger]
   );
 
+  const graphData = graphDataRef.current;
+
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
@@ -135,12 +146,12 @@ const AllMachineGraphs = () => {
                       options={activeCustomers || []}
                       isOptionEqualToValue={(option, value) => option._id === value._id}
                       getOptionLabel={(option) => `${option?.name || ''}`}
-                     renderOption={(props, option) => (
-                      <li {...props} key={option?._id}>
+                      renderOption={(props, option) => (
+                        <li {...props} key={option?._id}>
                         {' '}
                         {option?.name || ''}{' '}
                       </li>
-                    )}
+                      )}
                       onChange={(e, newValue) => handleCustomerChange(newValue)}
                       size="small"
                     />
@@ -162,69 +173,67 @@ const AllMachineGraphs = () => {
                     />
                   </Box>
 
-  <Grid container alignItems="flex-start" gap={1}>
-  <Grid item xs={12} sm={6} md={2.5} xl={3.5} >
-    <RHFAutocomplete
-      name="logGraphType"
-      label="Graph Type*"
-      options={machineLogGraphTypes}
-      getOptionLabel={(option) => option.name || ''}
-      isOptionEqualToValue={(option, value) => option?.key === value?.key}
-      renderOption={(props, option) => (
-        <li {...props} key={option?.key}>
-          {option.name || ''}
-        </li>
-      )}
-      disableClearable
-      size="small"
-      fullWidth
-    />
-  </Grid>
-   <Grid item xs={12} sm={6} md={2.5} xl={3}>
-    <RHFAutocomplete
-      name="logPeriod"
-      label="Period*"
-      options={['Hourly', 'Daily', 'Monthly', 'Quarterly', 'Yearly']}
-      size="small"
-      disableClearable
-      fullWidth
-    />
-  </Grid>
+                  <Grid container alignItems="flex-start" gap={1}>
+                    <Grid item xs={12} sm={6} md={2.5} xl={3.5} >
+                      <RHFAutocomplete
+                        name="logGraphType"
+                        label="Graph Type*"
+                        options={machineLogGraphTypes}
+                        getOptionLabel={(option) => option.name || ''}
+                        isOptionEqualToValue={(option, value) => option?.key === value?.key}
+                        renderOption={(props, option) => (
+                          <li {...props} key={option?.key}>
+                            {option.name || ''}
+                          </li>
+                        )}
+                        disableClearable
+                        size="small"
+                        fullWidth
+                      />
+                    </Grid>
 
-  <Grid item xs={12} sm={6} md={2.5} xl={2}>
-    <RHFDatePicker
-      label="Date From"
-      name="dateFrom"
-      size="small"
-      onChange={(newValue) => setValue('dateFrom', newValue)}
-      fullWidth
-    />
-  </Grid>
+                    <Grid item xs={12} sm={6} md={2.5} xl={3}>
+                      <RHFAutocomplete
+                        name="logPeriod"
+                        label="Period*"
+                        options={['Hourly', 'Daily', 'Monthly', 'Quarterly', 'Yearly']}
+                        size="small"
+                        disableClearable
+                        fullWidth
+                      />
+                    </Grid>
 
-  <Grid item xs={12} sm={6} md={2.5} xl={2}>
-    <RHFDatePicker
-      label="Date To"
-      name="dateTo"
-      size="small"
-      onChange={(newValue) => setValue('dateTo', newValue)}
-      fullWidth
-    />
-  </Grid>
+                    <Grid item xs={12} sm={6} md={2.5} xl={2}>
+                      <RHFDatePicker
+                        label="Date From"
+                        name="dateFrom"
+                        size="small"
+                        fullWidth
+                      />
+                    </Grid>
 
-  <Grid item xs={12} sm={12} md={1} sx={{ display: 'flex', justifyContent: 'flex-end' }} >
-    <StyledTooltip
-      title="Fetch Graph"
-      placement="top"
-      disableFocusListener
-      tooltipcolor={theme.palette.primary.main}
-    >
-     <StyledContainedIconButton type="submit" sx={{ px: 2 }}>
-        <Iconify sx={{ height: '24px', width: '24px' }} icon="mdi:text-search" />
-      </StyledContainedIconButton>
-    </StyledTooltip>
-  </Grid>
-</Grid>
+                    <Grid item xs={12} sm={6} md={2.5} xl={2}>
+                      <RHFDatePicker
+                        label="Date To"
+                        name="dateTo"
+                        size="small"
+                        fullWidth
+                      />
+                    </Grid>
 
+                    <Grid item xs={12} sm={12} md={1} sx={{ display: 'flex', justifyContent: 'flex-end' }} >
+                      <StyledTooltip
+                        title="Fetch Graph"
+                        placement="top"
+                        disableFocusListener
+                        tooltipcolor={theme.palette.primary.main}
+                      >
+                        <StyledContainedIconButton type="submit" sx={{ px: 2 }}>
+                          <Iconify sx={{ height: '24px', width: '24px' }} icon="mdi:text-search" />
+                        </StyledContainedIconButton>
+                      </StyledTooltip>
+                    </Grid>
+                  </Grid>
                 </Stack>
               </Card>
             </Grid>
@@ -232,10 +241,27 @@ const AllMachineGraphs = () => {
         </form>
       </FormProvider>
 
-      {formData?.logGraphType?.key === 'length_and_waste' ? (
-        <ErpProducedLengthLogGraph timePeriod={formData?.logPeriod} customer={formData?.machine?.customer} graphLabels={graphLabels} dateFrom={formData?.dateFrom} dateTo={formData?.dateTo} />
+      {graphData ? (
+        graphData.logGraphType?.key === 'length_and_waste' ? (
+          <ErpProducedLengthLogGraph
+            timePeriod={graphData.logPeriod}
+            customer={graphData.machine?.customer}
+            graphLabels={graphData.graphLabels}
+            dateFrom={graphData.dateFrom}
+            dateTo={graphData.dateTo}
+          />
+        ) : (
+          <ErpProductionRateLogGraph
+            timePeriod={graphData.logPeriod}
+            customer={graphData.machine?.customer}
+            dateFrom={graphData.dateFrom}
+            dateTo={graphData.dateTo}
+          />
+        )
       ) : (
-        <ErpProductionRateLogGraph timePeriod={formData?.logPeriod} customer={formData?.machine?.customer} dateFrom={formData?.dateFrom} dateTo={formData?.dateTo} />
+        <Card sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 2, minHeight: 500 }}>
+          <TableNoData isNotFound />
+        </Card>
       )}
     </Container>
   );

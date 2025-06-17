@@ -4,6 +4,7 @@ import { Snacks } from '../../constants/machine-constants';
 import { allowedExtensions, fileTypesMessage } from '../../constants/document-constants';
 import { NotRequiredValidateFileType } from '../documents/util/Util';
 import validateFileType from '../documents/util/validateFileType';
+import { validateGraphDateRange } from '../Reports/Graphs/utils/util';
 import { future5yearDate, tomorrow, pastDate } from '../machine/util/index';
 import { fDate } from '../../utils/formatTime';
 
@@ -223,6 +224,33 @@ export const AddMachineLogSchema = Yup.object().shape({
     }),
 });
 
+export const AddMachineGraphSchema = Yup.object().shape({ 
+  customer: Yup.object().nullable().required('Customer is required'),
+  machine: Yup.object().nullable(),
+  logGraphType: Yup.object().nullable().required('Graph Type is required'),
+  logPeriod: Yup.string().required('Log Period is required'),
+
+  dateFrom: Yup.date()
+    .nullable()
+    .test('dateFromTest', 'Start Date must be earlier than or equal to End Date', function (value) {
+      const { dateTo } = this.parent;
+      return value && (!dateTo || value <= dateTo);
+    })
+    .test('periodRangeTest', function (value) {
+      const { dateFrom, dateTo, logPeriod } = this.parent;
+      const error = validateGraphDateRange(dateFrom, dateTo, logPeriod);
+      return error ? this.createError({ message: error }) : true;
+    }),
+
+  dateTo: Yup.date()
+    .nullable()
+    .test('dateToTest', 'End Date must be later than or equal to Start Date', function (value) {
+      const { dateFrom } = this.parent;
+      return value && (!dateFrom || value >= dateFrom);
+    })
+    .max(new Date(new Date().setHours(23, 59, 59, 999)), 'End Date cannot be in the future')
+});
+
 export const fetchIndMachineLogSchema = Yup.object().shape({
   logType: Yup.object()
     .nullable()
@@ -242,6 +270,31 @@ export const fetchIndMachineLogSchema = Yup.object().shape({
       const { dateFrom } = this.parent;
       return value && (!dateFrom || value >= dateFrom);
     }),
+});
+
+export const fetchIndMachineGraphSchema = Yup.object().shape({ 
+  logGraphType: Yup.object().nullable().required('Graph Type is required'),
+  logPeriod: Yup.string().required('Log Period is required'),
+
+  dateFrom: Yup.date()
+    .nullable()
+    .test('dateFromTest', 'Start Date must be earlier than or equal to End Date', function (value) {
+      const { dateTo } = this.parent;
+      return value && (!dateTo || value <= dateTo);
+    })
+    .test('periodRangeTest', function (value) {
+      const { dateFrom, dateTo, logPeriod } = this.parent;
+      const error = validateGraphDateRange(dateFrom, dateTo, logPeriod);
+      return error ? this.createError({ message: error }) : true;
+    }),
+
+  dateTo: Yup.date()
+    .nullable()
+    .test('dateToTest', 'End Date must be later than or equal to Start Date', function (value) {
+      const { dateFrom } = this.parent;
+      return value && (!dateFrom || value >= dateFrom);
+    })
+    .max(new Date(new Date().setHours(23, 59, 59, 999)), 'End Date cannot be in the future')
 });
 
 export const AddMachineDocumentSchema = Yup.object().shape({
