@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import PropTypes from 'prop-types';
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
@@ -20,24 +21,6 @@ const ErpProducedLengthLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
       setGraphData(convertedDataToMeters);
     }
   }, [machineLogsGraphData, timePeriod]);
-
-  const parseHourlyDate = (id, baseYear) => {
-    try {
-      const [monthDay, hourStr] = id.split(' ');
-      if (!monthDay || !hourStr) return null;
-
-      const [month, day] = monthDay.split('/');
-      if (!month || !day) return null;
-
-      const hour = parseInt(hourStr, 10);
-      if (Number.isNaN(hour)) return null;
-
-      return new Date(`${baseYear}-${month.padStart(2, '0')}-${day.padStart(2, '0')}T${hour.toString().padStart(2, '0')}:00:00`);
-    } catch (error) {
-      console.warn('Invalid _id format for hourly data:', id);
-      return null;
-    }
-  };
   
   const getTotalProduction = () => {
   if (!graphData || graphData.length === 0) return 0;
@@ -48,37 +31,6 @@ const ErpProducedLengthLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
   return totalProduced.toFixed(2);
 };
 
-  const getEarliestDateFromGraphData = () => {
-    if (graphData.length === 0) return new Date(dateFrom); 
-
-    let minDate = new Date(dateTo); 
-
-    graphData.forEach((item) => {
-      let itemDate;
-      if (timePeriod === 'Hourly') {
-        itemDate = parseHourlyDate(item._id, dateFrom.getFullYear());
-      } else if (timePeriod === 'Daily') {
-        const [day, month] = item._id.split('/');
-        itemDate = new Date(`${dateFrom.getFullYear()}-${month}-${day}`);
-      } else if (timePeriod === 'Monthly') {
-        itemDate = new Date(item._id.replace(/(\w+)\s(\d+)/, (_, m, y) => `${m} 1, 20${y}`));
-      } else if (timePeriod === 'Quarterly') {
-        const [year, quarterStr] = item._id.split('-Q');
-        const month = (parseInt(quarterStr, 10) - 1) * 3;
-        itemDate = new Date(parseInt(year, 10), month);
-      } else if (timePeriod === 'Yearly') {
-        itemDate = new Date(parseInt(item._id, 10), 0);
-      } else {
-        itemDate = new Date(dateFrom);
-      }
-      if (itemDate && !Number.isNaN(itemDate) && itemDate < minDate) {
-        minDate = itemDate;
-      }
-    });
-
-    return minDate;
-  };
-
   const processGraphData = (skipZeroValues) => {
     if (!graphData || graphData.length === 0) return null;
 
@@ -86,77 +38,80 @@ const ErpProducedLengthLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
     graphData.forEach((item) => dataMap.set(item._id, item));
 
     const labels = [];
-    let startDate = new Date(dateFrom);
-    const effectiveEndDate = new Date(dateTo);
-
-    if (!skipZeroValues && graphData.length > 0) {
-      startDate = getEarliestDateFromGraphData();
-    }
+    const current = new Date(dateFrom);
+    const end = new Date(dateTo);
+    const pad = (n) => n.toString().padStart(2, '0');
 
     const addLabel = (label) => {
       if (!labels.includes(label)) labels.push(label);
     };
 
-    if (timePeriod === 'Hourly') {
-      const current = new Date(startDate);
-      effectiveEndDate.setHours(23, 59, 59, 999);
-      let count = 0;
-      while (current <= effectiveEndDate && count < 24) {
-        const label = `${(current.getMonth() + 1).toString().padStart(2, '0')}/${current.getDate().toString().padStart(2, '0')} ${current.getHours().toString().padStart(2, '0')}`;
-        if (dataMap.has(label) || !skipZeroValues) {
-          addLabel(label);
-          count += 1;
+    switch (timePeriod) {
+      case 'Hourly':
+        current.setMinutes(0, 0, 0);
+        if (current.toDateString() === end.toDateString()) {
+          end.setHours(23, 59, 59, 999);
+        } else {
+          end.setMinutes(59, 59, 999); 
         }
-        current.setHours(current.getHours() + 1);
-      }
-    } else if (timePeriod === 'Daily') {
-      const current = new Date(startDate);
-      let count = 0;
-      while (current <= effectiveEndDate && count < 30) {
-        const label = `${current.getDate().toString().padStart(2, '0')}/${(current.getMonth() + 1).toString().padStart(2, '0')}`;
-        if (dataMap.has(label) || !skipZeroValues) {
-          addLabel(label);
-          count += 1;
+
+        while (current <= end) {
+          const label = `${pad(current.getMonth() + 1)}/${pad(current.getDate())} ${pad(current.getHours())}`;
+          if (dataMap.has(label) || !skipZeroValues) addLabel(label);
+          current.setHours(current.getHours() + 1);
         }
-        current.setDate(current.getDate() + 1);
-      }
-    } else if (timePeriod === 'Monthly') {
-      const current = new Date(startDate);
-      let count = 0;
-      while (current <= effectiveEndDate && count < 12) {
-        const label = `${current.toLocaleString('default', { month: 'short' })} ${String(current.getFullYear()).slice(-2)}`;
-        if (dataMap.has(label) || !skipZeroValues) {
-          addLabel(label);
-          count += 1;
+        break;
+
+      case 'Daily':
+        current.setHours(0, 0, 0, 0); 
+        end.setHours(23, 59, 59, 999); 
+
+        while (current <= end) {
+          const label = `${pad(current.getDate())}/${pad(current.getMonth() + 1)}`;
+          if (dataMap.has(label) || !skipZeroValues) addLabel(label);
+          current.setDate(current.getDate() + 1);
         }
-        current.setMonth(current.getMonth() + 1);
-      }
-    } else if (timePeriod === 'Quarterly') {
-      const current = new Date(startDate);
-      let count = 0;
-      while (current <= effectiveEndDate && count < 4) {
-        const year = current.getFullYear();
-        const quarter = Math.floor(current.getMonth() / 3) + 1;
-        const label = `${year}-Q${quarter}`;
-        if (dataMap.has(label) || !skipZeroValues) {
-          addLabel(label);
-          count += 1;
+        break;
+
+      case 'Monthly':
+        {
+          current.setDate(1); 
+          const tempEnd = new Date(end.getFullYear(), end.getMonth() + 1, 0); 
+
+          while (current <= tempEnd) {
+            const label = `${current.toLocaleString('default', { month: 'short' })} ${String(current.getFullYear()).slice(-2)}`;
+            if (dataMap.has(label) || !skipZeroValues) addLabel(label);
+            current.setMonth(current.getMonth() + 1);
+          }
         }
-        current.setMonth(current.getMonth() + 3);
-      }
-    } else if (timePeriod === 'Yearly') {
-      const current = new Date(startDate);
-      let count = 0;
-      while (current <= effectiveEndDate && count < 5) {
-        const label = String(current.getFullYear());
-        if (dataMap.has(label) || !skipZeroValues) {
-          addLabel(label);
-          count += 1;
+        break;
+
+      case 'Quarterly':
+        current.setMonth(Math.floor(current.getMonth() / 3) * 3, 1);
+        current.setHours(0, 0, 0, 0);
+
+        while (current <= end) {
+          const year = current.getFullYear();
+          const quarter = Math.floor(current.getMonth() / 3) + 1;
+          const label = `${year}-Q${quarter}`;
+          if (dataMap.has(label) || !skipZeroValues) addLabel(label);
+          current.setMonth(current.getMonth() + 3);
         }
-        current.setFullYear(current.getFullYear() + 1);
-      }
-    } else {
-      return null;
+        break;
+
+      case 'Yearly':
+        current.setMonth(0, 1); 
+        current.setHours(0, 0, 0, 0);
+
+        while (current <= end) {
+          const label = `${current.getFullYear()}`;
+          if (dataMap.has(label) || !skipZeroValues) addLabel(label);
+          current.setFullYear(current.getFullYear() + 1);
+        }
+        break;
+
+      default:
+        return null;
     }
    
     const producedLength = labels.map((label) => dataMap.get(label)?.componentLength || 0);
@@ -173,23 +128,6 @@ const ErpProducedLengthLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
     };
   };
   
-  const getDataRangeText = () => {
-    switch (timePeriod) {
-      case 'Hourly':
-        return 'last 24 Hours';
-      case 'Daily':
-        return 'last 30 Days';
-      case 'Monthly':
-        return 'last 12 Months';
-      case 'Quarterly':
-        return 'last 4 Quarters';
-      case 'Yearly':
-        return 'last 5 Years';
-      default:
-        return '';
-    }
-  }
-
   const isNotFound = !isLoading && !graphData.length;
 
   return (
@@ -204,7 +142,6 @@ const ErpProducedLengthLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
         ({dateFrom.toLocaleDateString('en-GB')} – {dateTo.toLocaleDateString('en-GB')})
          </span>
        </Typography>
-
 
         {isLoading ? (
           <Skeleton variant="rectangular" width="100%" height={320} sx={{ borderRadius: 1 }} />
