@@ -195,6 +195,7 @@ function SearchBarCombo({
             </FormControl>
           </Stack>
         </Grid>}
+     {onFilterAccountType && 
  <Grid item xs={12} sm={6} md={6} lg={6} xl={2}>
   <FormControl fullWidth size="small">
     <InputLabel>Type</InputLabel>
@@ -208,7 +209,7 @@ function SearchBarCombo({
       <MenuItem value="non-sp">Customer Portal</MenuItem>
     </Select>
   </FormControl>
-</Grid>
+</Grid>}
 
 
 
