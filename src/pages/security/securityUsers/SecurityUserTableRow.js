@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 // @mui
-import { Switch, Stack, TableRow, TableCell, Chip } from '@mui/material';
+import { Switch, Stack, TableRow, TableCell, Chip, createTheme } from '@mui/material';
+import { green } from '@mui/material/colors';
 // components
 import Iconify from '../../../components/iconify';
 import { fDate } from '../../../utils/formatTime';
@@ -12,8 +13,11 @@ import BadgeStatus from '../../../components/badge-status/BadgeStatus';
 import { ICONS } from '../../../constants/icons/default-icons';
 import IconButtonTooltip from '../../../components/Icons/IconButtonTooltip';
 import { StyledTooltip } from '../../../theme/styles/default-styles';
+
 import { getPortalRegistration, setRequestDialog } from '../../../redux/slices/customer/portalRegistration';
+import Logo from '../../../components/logo';
 // ----------------------------------------------------------------------
+
 
 SecurityUserTableRow.propTypes = {
   row: PropTypes.object,
@@ -34,7 +38,11 @@ export default function SecurityUserTableRow({
   onDeleteRow,
   hiddenColumns
 }) {
-  const { login, email, name, roles, phone, updatedAt, contact, isActive, registrationRequest, isOnline } = row;
+  const { login, email, name, roles, phone, updatedAt, contact, isActive, registrationRequest, isOnline,customer } = row;
+  const isSPCustomer = customer?.type === 'SP';
+  const theme = createTheme({ palette: { success: green } });
+ 
+
   const dispatch = useDispatch();
   const smScreen = useScreenSize('sm')
   const lgScreen = useScreenSize('lg')
@@ -55,7 +63,7 @@ export default function SecurityUserTableRow({
             />
             <LinkTableCell align="left" onClick={onViewRow} param={name} />
           </Stack>}
-        { smScreen && !hiddenColumns?.login && <TableCell align="left">
+        { smScreen && !hiddenColumns?.login && <TableCell align="left"sx={{ px: -3 }}>
           {login}
           {email?.trim() !== login?.trim() &&
               <StyledTooltip 
@@ -86,6 +94,31 @@ export default function SecurityUserTableRow({
           </StyledTooltip>}
             {`${contact?.firstName || ''} ${contact?.lastName || '' }`}
         </TableCell>}
+
+
+
+            {!hiddenColumns?.accountType && (
+             <TableCell align="left">
+              {isSPCustomer && (
+               <StyledTooltip
+                title="SP user"
+                placement="top"
+                disableFocusListener
+                tooltipcolor={theme.palette.primary.main}
+                color="#1976d2"
+                 >
+               <span>
+                <Logo
+                 src="/logo/HowickIcon.svg"
+                 sx={{ mx: 'auto', my: 1, width: '30px', height: '30px' }}
+                 />
+               </span>
+              </StyledTooltip>
+              )}
+           </TableCell>
+           )}
+
+
         { !hiddenColumns?.isActive && <TableCell align="left" sx={{ display: "flex", alignItems: 'center'}}>
           <StyledTooltip
             placement="top" 
@@ -93,7 +126,7 @@ export default function SecurityUserTableRow({
             disableFocusListener tooltipcolor={isActive ? ICONS.ACTIVE.color : ICONS.INACTIVE.color} 
             color={ isActive ? ICONS.ACTIVE.color : ICONS.INACTIVE.color}
           >
-            <Iconify icon={ isActive ? ICONS.ACTIVE.icon : ICONS.INACTIVE.icon } sx={{mr:1, height: 20, width: 20 }}/>
+            <Iconify icon={ isActive ? ICONS.ACTIVE.icon : ICONS.INACTIVE.icon } sx={{mt: 1, height: 25, width: 25 }}/>
           </StyledTooltip>
           { registrationRequest && 
             <IconButtonTooltip title='Portal Request' color='#388e3c' icon="mdi:user-details" onClick={handleRequestDialog} /> 
