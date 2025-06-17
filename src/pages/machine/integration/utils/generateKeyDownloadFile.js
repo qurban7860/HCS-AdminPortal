@@ -10,15 +10,11 @@ const generatePortalKeyConfigFileContent = (portalKey, serialNo) => {
   const configLines = [
     `howickportalkey = ${portalKey}\n`,
     `machineserialno = ${serialNo}\n\n`,
-    `ipcserialno = //depreciated in next release\n`, 
-    `computerguid = //depreciated in next release\n\n`,
-    '//configuration of api endpoints.\n',
-    'contenttype = application/json\n\n\n',
-    '//Environment for storing logs\n',
+    'contenttype = application/json\n\n',
     `env = ${env}\n\n`,
     ...Object.entries(extractedConfigs || {}).map(([key, value]) => {
       let toReturn
-      if (key === "machine_portal_server") toReturn = `${key} = ${value}\n// machine_portal_server will be depreciated. only environment variable will be used\n\n`
+      if (key === "machine_portal_server") toReturn = ``
       else toReturn = `${key} = ${value}\n`
       return toReturn
     })
