@@ -52,7 +52,13 @@ export default function MachineLogsGraphViewForm() {
     defaultValues,
   });
 
-  const { setValue, getValues, handleSubmit } = methods;
+  const { setValue, getValues, handleSubmit, trigger, watch } = methods;
+
+  const logPeriodWatched = watch('logPeriod');
+
+  useEffect(() => {
+    trigger(['dateFrom', 'dateTo']);
+  }, [logPeriodWatched, trigger]);
 
   const handleFormSubmit = useCallback(() => {
     const { logPeriod, logGraphType, dateFrom, dateTo } = getValues();
@@ -146,11 +152,9 @@ export default function MachineLogsGraphViewForm() {
               <Typography variant="h5" sx={{ pb: 1 }}>
                 Log Graphs   
               </Typography>
-             
-             
 
-              <Grid container gap={1.5}>
-                <Grid item xs={12} sm={6} md={3} xl={3}>
+              <Grid container alignItems="flex-start" gap={1}>
+                <Grid item xs={12} sm={6} md={2.5} xl={3.5}>
                   <RHFAutocomplete
                     name="logGraphType"
                     label="Graph Type*"
@@ -169,7 +173,7 @@ export default function MachineLogsGraphViewForm() {
                   />
                 </Grid>
 
-                <Grid item xs={12} sm={6} md={2} xl={2.5}>
+                <Grid item xs={12} sm={6} md={2.5} xl={3}>
                   <RHFAutocomplete
                     name="logPeriod"
                     label="Period*"
@@ -181,7 +185,7 @@ export default function MachineLogsGraphViewForm() {
                   />
                 </Grid>
 
-                <Grid item xs={12} sm={6} md={2} xl={2.5}>
+                <Grid item xs={12} sm={6} md={2.5} xl={2}>
                 <RHFDatePicker
                     label="Date From"
                     name="dateFrom"
@@ -191,7 +195,7 @@ export default function MachineLogsGraphViewForm() {
                   />
                 </Grid>
 
-                <Grid item xs={12} sm={6} md={2} xl={2.5}>
+                <Grid item xs={12} sm={6} md={2.5} xl={2}>
                   <RHFDatePicker
                     label="Date To"
                     name="dateTo"
@@ -201,7 +205,7 @@ export default function MachineLogsGraphViewForm() {
                   />
                 </Grid>
 
-                <Grid item xs={12} sm={6} md={2} xl={1}  sx={{ display: 'flex', justifyContent: 'flex-end' }} >
+                <Grid item xs={12} sm={12} md={1} sx={{ display: 'flex', justifyContent: 'flex-end' }} >
                   <StyledTooltip
                     title="Fetch Graph"
                     placement="top"
