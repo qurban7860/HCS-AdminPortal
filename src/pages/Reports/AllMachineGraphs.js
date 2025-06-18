@@ -50,8 +50,52 @@ const AllMachineGraphs = () => {
   const { customer, machine, logPeriod, logGraphType, dateFrom, dateTo } = watch();
   
   useEffect(() => {
+    const now = new Date();
+    const newDateFrom = new Date(now);
+
+    switch (logPeriod) {
+    case 'Hourly':
+      newDateFrom.setHours(0, 0, 0, 0);
+      now.setHours(23, 59, 59, 999);
+      break;
+
+    case 'Daily':
+      newDateFrom.setDate(newDateFrom.getDate() - 30);
+      newDateFrom.setHours(0, 0, 0, 0);
+      now.setHours(23, 59, 59, 999);
+      break;
+
+    case 'Monthly':
+      newDateFrom.setMonth(newDateFrom.getMonth() - 11);
+      newDateFrom.setDate(1);
+      newDateFrom.setHours(0, 0, 0, 0);
+      now.setHours(23, 59, 59, 999);
+      break;
+
+    case 'Quarterly':
+      newDateFrom.setMonth(newDateFrom.getMonth() - 35);
+      newDateFrom.setMonth(Math.floor(newDateFrom.getMonth() / 3) * 3, 1);
+      newDateFrom.setHours(0, 0, 0, 0);
+      now.setHours(23, 59, 59, 999);
+      break;
+
+    case 'Yearly':
+      newDateFrom.setFullYear(newDateFrom.getFullYear() - 9);
+      newDateFrom.setMonth(0, 1);
+      newDateFrom.setHours(0, 0, 0, 0);
+      now.setHours(23, 59, 59, 999);
+      break;
+
+    default:
+      newDateFrom.setDate(newDateFrom.getDate() - 30);
+      newDateFrom.setHours(0, 0, 0, 0);
+      now.setHours(23, 59, 59, 999);
+      break;
+  }
+    setValue('dateTo', now);
+    setValue('dateFrom', newDateFrom);
     trigger(['dateFrom', 'dateTo']);
-  }, [logPeriod, trigger]);
+  }, [logPeriod, setValue, trigger]);
 
   useEffect(() => {
     dispatch(getActiveCustomers());
