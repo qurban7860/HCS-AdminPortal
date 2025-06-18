@@ -59,47 +59,38 @@ export default function MachineLogsGraphViewForm() {
   useEffect(() => {
     const now = new Date();
     const newDateFrom = new Date(now);
-
+    
+    newDateFrom.setHours(0, 0, 0, 0);
+    now.setHours(23, 59, 59, 999);
+  
     switch (logPeriodWatched) {
-    case 'Hourly':
-      newDateFrom.setHours(0, 0, 0, 0);
-      now.setHours(23, 59, 59, 999);
-      break;
-
-    case 'Daily':
-      newDateFrom.setDate(newDateFrom.getDate() - 30);
-      newDateFrom.setHours(0, 0, 0, 0);
-      now.setHours(23, 59, 59, 999);
-      break;
-
-    case 'Monthly':
-      newDateFrom.setMonth(newDateFrom.getMonth() - 11);
-      newDateFrom.setDate(1);
-      newDateFrom.setHours(0, 0, 0, 0);
-      now.setHours(23, 59, 59, 999);
-      break;
-
-    case 'Quarterly':
-      newDateFrom.setMonth(newDateFrom.getMonth() - 35);
-      newDateFrom.setMonth(Math.floor(newDateFrom.getMonth() / 3) * 3, 1);
-      newDateFrom.setHours(0, 0, 0, 0);
-      now.setHours(23, 59, 59, 999);
-      break;
-
-    case 'Yearly':
-      newDateFrom.setFullYear(newDateFrom.getFullYear() - 9);
-      newDateFrom.setMonth(0, 1);
-      newDateFrom.setHours(0, 0, 0, 0);
-      now.setHours(23, 59, 59, 999);
-      break;
-
-    default:
-      newDateFrom.setDate(newDateFrom.getDate() - 30);
-      newDateFrom.setHours(0, 0, 0, 0);
-      now.setHours(23, 59, 59, 999);
-      break;
-  }
-
+      case 'Hourly':
+        break;
+  
+      case 'Daily':
+        newDateFrom.setDate(newDateFrom.getDate() - 30);
+        break;
+  
+      case 'Monthly':
+        newDateFrom.setMonth(newDateFrom.getMonth() - 11);
+        newDateFrom.setDate(1);
+        break;
+  
+      case 'Quarterly':
+        newDateFrom.setMonth(newDateFrom.getMonth() - 35);
+        newDateFrom.setMonth(Math.floor(newDateFrom.getMonth() / 3) * 3, 1);
+        break;
+  
+      case 'Yearly':
+        newDateFrom.setFullYear(newDateFrom.getFullYear() - 9);
+        newDateFrom.setMonth(0, 1);
+        break;
+  
+      default:
+        newDateFrom.setDate(newDateFrom.getDate() - 30);
+        break;
+    }
+  
     setValue('dateTo', now);
     setValue('dateFrom', newDateFrom);
     trigger(['dateFrom', 'dateTo']);
@@ -235,7 +226,10 @@ export default function MachineLogsGraphViewForm() {
                     label="Date From"
                     name="dateFrom"
                     size="small"
-                    onChange={(newValue) => setValue('dateFrom', newValue)}
+                    onChange={(value) => {
+                      setValue('dateFrom', value, { shouldValidate: true });
+                      trigger('dateFrom');
+                    }}
                     fullWidth
                   />
                 </Grid>
@@ -245,7 +239,10 @@ export default function MachineLogsGraphViewForm() {
                     label="Date To"
                     name="dateTo"
                     size="small"
-                    onChange={(newValue) => setValue('dateTo', newValue)}
+                    onChange={(value) => {
+                      setValue('dateTo', value, { shouldValidate: true });
+                      trigger('dateTo');
+                    }}
                     fullWidth
                   />
                 </Grid>
