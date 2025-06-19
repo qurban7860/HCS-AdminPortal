@@ -248,7 +248,7 @@ export const AddMachineGraphSchema = Yup.object().shape({
       const { dateFrom } = this.parent;
       return value && (!dateFrom || value >= dateFrom);
     })
-    .max(new Date(new Date().setHours(23, 59, 59, 999)), 'End Date cannot be in the future')
+    // .max(new Date(new Date().setHours(23, 59, 59, 999)), 'End Date cannot be in the future')
 });
 
 export const fetchIndMachineLogSchema = Yup.object().shape({
@@ -294,7 +294,7 @@ export const fetchIndMachineGraphSchema = Yup.object().shape({
       const { dateFrom } = this.parent;
       return value && (!dateFrom || value >= dateFrom);
     })
-    .max(new Date(new Date().setHours(23, 59, 59, 999)), 'End Date cannot be in the future')
+    // .max(new Date(new Date().setHours(23, 59, 59, 999)), 'End Date cannot be in the future')
 });
 
 export const AddMachineDocumentSchema = Yup.object().shape({

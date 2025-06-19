@@ -2,14 +2,17 @@
 export function validateGraphDateRange(dateFrom, dateTo, periodType) {
   const from = new Date(dateFrom);
   const to = new Date(dateTo);
+
+  from.setHours(0, 0, 0, 0);
+  to.setHours(23, 59, 59, 999);
+
   const diffMs = to - from;
-  const diffDays = diffMs / (1000 * 60 * 60 * 24);
   const diffHours = diffMs / (1000 * 60 * 60);
+  const diffDays = diffMs / (1000 * 60 * 60 * 24);
 
   switch (periodType) {
     case 'Hourly':
-      if (from.toDateString() === to.toDateString()) return null;
-      if (diffHours > 24) return 'For hourly, maximum period length is 24 hours';
+      if (diffHours >= 24) return 'For hourly, maximum period length is 24 hours';
       break;
 
     case 'Daily':
@@ -17,7 +20,7 @@ export function validateGraphDateRange(dateFrom, dateTo, periodType) {
       break;
 
     case 'Monthly':
-      if (diffDays > 366) return 'For monthly, maximum period length is 1 year';
+      if (diffDays > 365) return 'For monthly, maximum period length is 1 year';
       break;
 
     case 'Quarterly':

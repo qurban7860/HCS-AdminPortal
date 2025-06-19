@@ -23,13 +23,14 @@ const ErpProducedLengthLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
   }, [machineLogsGraphData, timePeriod]);
   
   const getTotalProduction = () => {
-  if (!graphData || graphData.length === 0) return 0;
+  if (!graphData || graphData.length === 0) return '0k';
   const totalProduced = graphData.reduce(
     (sum, item) => sum + (item.componentLength || 0) + (item.waste || 0),
     0
   );
-  return totalProduced.toFixed(2);
-};
+  const inThousands = totalProduced / 1000;
+  return `${inThousands.toFixed(2)}k`;
+ };
 
   const processGraphData = (skipZeroValues) => {
     if (!graphData || graphData.length === 0) return null;
@@ -48,12 +49,8 @@ const ErpProducedLengthLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
 
     switch (timePeriod) {
       case 'Hourly':
-        current.setMinutes(0, 0, 0);
-        if (current.toDateString() === end.toDateString()) {
-          end.setHours(23, 59, 59, 999);
-        } else {
-          end.setMinutes(59, 59, 999); 
-        }
+        current.setHours(0, 0, 0, 0);
+        end.setHours(23, 59, 59, 999); 
 
         while (current <= end) {
           const label = `${pad(current.getMonth() + 1)}/${pad(current.getDate())} ${pad(current.getHours())}`;
@@ -117,8 +114,6 @@ const ErpProducedLengthLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
     const producedLength = labels.map((label) => dataMap.get(label)?.componentLength || 0);
     const wasteLength = labels.map((label) => dataMap.get(label)?.waste || 0);
 
-
-
     return {
       categories: labels,
       series: [
@@ -136,19 +131,21 @@ const ErpProducedLengthLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
         <Typography variant="h6" color="primary" gutterBottom>
           Produced Length & Waste Over Time
         </Typography>
-       <Typography variant="subtitle1" sx={{ mb: 2 }}>
-        <strong>Total Production:</strong> {getTotalProduction()} m {' '}
-        <span style={{ color: '#666' }}>
-        ({dateFrom.toLocaleDateString('en-GB')} – {dateTo.toLocaleDateString('en-GB')})
-         </span>
-       </Typography>
 
         {isLoading ? (
           <Skeleton variant="rectangular" width="100%" height={320} sx={{ borderRadius: 1 }} />
         ) : (
           <>
             {graphData?.length > 0 ? (
+              <>
               <LogChartStacked processGraphData={processGraphData} graphLabels={graphLabels} isLoading={isLoading} />
+              <Typography variant="subtitle1" > 
+                <strong>Meterage Production:</strong> {getTotalProduction()} m {' '}
+                <span style={{ color: '#666' }}>
+                  ({dateFrom.toLocaleDateString('en-GB')} – {dateTo.toLocaleDateString('en-GB')})
+                </span>
+              </Typography>
+              </>
             ) : (
               <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 320 }} >
                 <TableNoData isNotFound={isNotFound} />
