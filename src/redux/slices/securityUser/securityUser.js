@@ -214,6 +214,20 @@ const slice = createSlice({
       state.success = false;
       state.isLoading = false;
     },
+    // RESET ACTIVE SECURITY USER
+    resetActiveSecurityUsers(state) {
+      state.activeSecurityUsers = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+    // RESET ASSIGNED SECURITY USER
+    resetAssignedSecurityUsers(state) {
+      state.assignedUsers = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
     // RESET DIALOG SECURITY USER
     resetDialogSecurityUser(state) {
       state.dialogSecurityUser = null;
@@ -287,6 +301,8 @@ export const {
   setChangePasswordDialog,
   setSecurityUserProperties,
   resetSecurityUsers,
+  resetActiveSecurityUsers,
+  resetAssignedSecurityUsers,
   resetContactUsers,
   resetSecurityUser,
   resetLoadingResetPasswordEmail,
@@ -371,68 +387,6 @@ export function updateSecurityUser(param, id) {
   };
 }
 
-// -----------------------------Active Security Users-----------------------------------------
-
-export function getActiveSecurityUsers(type) {
-  return async (dispatch) => {
-    dispatch(slice.actions.startLoading());
-    try {
-
-      const query = {
-        params: {
-          isArchived: false,
-          isActive: true,
-          invitationStatus: false,
-        }
-      }
-
-      Object.assign(query.params, type)
-      const response = await axios.get(`${CONFIG.SERVER_URL}security/users`, query);
-      if (regEx.test(response.status)) {
-        dispatch(slice.actions.getActiveSecurityUsersSuccess(response.data));
-      }
-      return response;
-    } catch (error) {
-      dispatch(slice.actions.hasError(error.Message));
-      console.error(error);
-      throw error;
-    }
-  }
-}
-
-export function getActiveSPTechnicalSecurityUsers(type) {
-  return async (dispatch) => {
-    dispatch(slice.actions.startLoading());
-    try {
-
-      const query = {
-        params: {
-          isArchived: false,
-          isActive: true,
-          invitationStatus: false,
-          customer: {
-            type: "SP"
-          },
-          contact: {
-            department: { departmentType: "Technical" }
-          }
-        }
-      }
-      const fields = { fields: "contact,customer,email,name" }
-      Object.assign(query.params, type, fields)
-      const response = await axios.get(`${CONFIG.SERVER_URL}security/users`, query);
-      if (regEx.test(response.status)) {
-        dispatch(slice.actions.getActiveSPTechnicalSecurityUsersSuccess(response.data));
-      }
-      return response;
-    } catch (error) {
-      dispatch(slice.actions.hasError(error.Message));
-      console.error(error);
-      throw error;
-    }
-  }
-}
-
 // ----------------------------------------------------------------------
 
 export function getValidateUserEmail(login) {
@@ -455,9 +409,12 @@ export function getSecurityUsers(param) {
     dispatch(slice.actions.startLoading());
     try {
       const params = {
+        isActive: param?.isActive,
         isArchived: param?.isArchived || false,
         invitationStatus: param?.invitationStatus || false,
-        contact: param?.contact || null,
+        customer: param?.customer,
+        contact: param?.contact,
+        roleType: param?.roleType,
       }
       const response = await axios.get(`${CONFIG.SERVER_URL}security/users`, { params });
       if (regEx.test(response.status)) {
@@ -472,9 +429,38 @@ export function getSecurityUsers(param) {
   }
 }
 
+
+// -----------------------------Active Security Users-----------------------------------------
+
+export function getActiveSecurityUsers({ contact, customer, type, roleType }) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const params = {
+        isArchived: false,
+        isActive: true,
+        invitationStatus: false,
+        roleType,
+        customer: { type },
+        contact,
+      }
+
+      const response = await axios.get(`${CONFIG.SERVER_URL}security/users`, { params });
+      if (regEx.test(response.status)) {
+        dispatch(slice.actions.getActiveSecurityUsersSuccess(response.data));
+      }
+      return response;
+    } catch (error) {
+      dispatch(slice.actions.hasError(error.Message));
+      console.error(error);
+      throw error;
+    }
+  }
+}
+
 // ----------------------------------------------------------------------
 
-export function getAssignedSecurityUsers(roleId) {
+export function getAssignedSecurityUsers({ isActive, roles, roleType, customer }) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -482,7 +468,10 @@ export function getAssignedSecurityUsers(roleId) {
         {
           params: {
             isArchived: false,
-            roles: roleId,
+            isActive,
+            roles,
+            roleType,
+            customer
           }
         }
       );

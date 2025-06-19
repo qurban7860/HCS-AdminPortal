@@ -1,15 +1,6 @@
 /* eslint-disable no-nested-ternary */
 import React, { useEffect } from 'react';
-import {
-  Box,
-  Typography,
-  Divider,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  CircularProgress,
-} from '@mui/material';
+import { Box, Chip, Typography, Divider, List, ListItem, ListItemAvatar, ListItemText, CircularProgress } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
 import dayjs from 'dayjs';
 import FormLabel from '../../components/DocumentForms/FormLabel';
@@ -135,13 +126,14 @@ const TicketHistory = () => {
                           </span>
                         </Typography>}
                         {(history?.previousReporter?._id || history?.newReporter?._id) && <Typography variant="subtitle2" color="textSecondary">
-                          Reporter: {history.previousReporter?.firstName} {history.previousReporter?.lastName || 'None'} →{' '}
-                          {history.newReporter?.firstName} {history.newReporter?.lastName || 'None'}
+                          Reporter: {history.previousReporter?.name || 'None'} →{' '}
+                          {history.newReporter?.name || 'None'}
                         </Typography>}
-                        {(history?.previousAssignee?._id || history?.newAssignee?._id) && <Typography variant="subtitle2" color="textSecondary">
-                          Assignee: {history.previousAssignee?.firstName} {history.previousAssignee?.lastName || 'None'} →{' '}
-                          {history.newAssignee?.firstName} {history.newAssignee?.lastName || 'None'}
-                        </Typography>}
+                        {(history?.previousAssignees?.length > 0 || history?.newAssignees?.length > 0) &&
+                          <Typography variant="subtitle2" color="textSecondary">
+                            Assignee: {history?.previousAssignees?.length > 0 ? history?.previousAssignees?.map(a => <Chip label={a?.name} sx={{ m: 0.3, backgroundColor: '#fae8e6' }} />) : 'None'} →{' '} {history?.newAssignees?.length > 0 ? history?.newAssignees?.map(a => <Chip label={a?.name} sx={{ m: 0.3, backgroundColor: '#e6fae7' }} />) : 'None'}
+                          </Typography>
+                        }
                       </>
                     }
                   />
