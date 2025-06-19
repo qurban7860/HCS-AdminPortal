@@ -38,7 +38,7 @@ export default function SecurityUserTableRow({
   onDeleteRow,
   hiddenColumns
 }) {
-  const { login, email, name, roles, phone, updatedAt, contact, isActive, registrationRequest, isOnline,customer } = row;
+  const { login, email, name, roles, phone, updatedAt, contact, isActive, registrationRequest, isOnline,customer,currentEmployee } = row;
   const isSPCustomer = customer?.type === 'SP';
   const theme = createTheme({ palette: { success: green } });
  
@@ -90,8 +90,21 @@ export default function SecurityUserTableRow({
             disableFocusListener tooltipcolor={contact?.formerEmployee ? ICONS.FORMEREMPLOYEE.color:ICONS.NOTFORMEREMPLOYEE.color} 
             color={contact?.formerEmployee ? ICONS.FORMEREMPLOYEE.color:ICONS.NOTFORMEREMPLOYEE.color}
           >
-            <Iconify icon={ICONS.FORMEREMPLOYEE.icon} sx={{mr:1, height: 20, width: 20 }}/>
-          </StyledTooltip>}
+              {currentEmployee === true && (
+              <Iconify icon={ICONS.NOTFORMEREMPLOYEE.icon} sx={{ mr: 1, height: 20, width: 20 }} />
+               )}         
+          </StyledTooltip>}      
+          {contact?.formerEmployee === true && (
+           <StyledTooltip
+           title={ICONS.FORMEREMPLOYEE.heading}
+           placement="top"
+           disableFocusListener
+           tooltipcolor={ICONS.FORMEREMPLOYEE.color}
+           color={ICONS.FORMEREMPLOYEE.color}
+           >
+           <Iconify icon={ICONS.FORMEREMPLOYEE.icon} sx={{ mr: 1, height: 20, width: 20 }} />
+           </StyledTooltip>
+            )}
             {`${contact?.firstName || ''} ${contact?.lastName || '' }`}
         </TableCell>}
 
