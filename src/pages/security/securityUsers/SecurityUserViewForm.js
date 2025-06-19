@@ -166,7 +166,7 @@ export default function SecurityUserViewForm() {
       customers: securityUser?.customers || [],
       machines: securityUser?.machines || [],
       isActive: securityUser?.isActive,
-      formerEmployee: securityUser?.contact?.formerEmployee || false,
+      // formerEmployee: securityUser?.contact?.formerEmployee || false,
       multiFactorAuthentication: securityUser?.multiFactorAuthentication,
       createdByFullName: securityUser?.createdBy?.name,
       createdAt: securityUser?.createdAt,
