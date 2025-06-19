@@ -11,46 +11,45 @@ import Iconify from '../../../components/iconify';
 import ChipDialog from '../../../components/Dialog/ChipDialog';
 
 DropDownMultipleSelection.propTypes = {
-  value: PropTypes.array, 
-  name: PropTypes.string, 
-  label: PropTypes.string, 
-  options: PropTypes.array, 
+  value: PropTypes.array,
+  name: PropTypes.string,
+  label: PropTypes.string,
+  options: PropTypes.array,
   onSubmit: PropTypes.func,
   isLoading: PropTypes.bool,
   multiple: PropTypes.bool,
   isStatus: PropTypes.bool,
 };
 
-export default function DropDownMultipleSelection( { value, name, label, options = [], isLoading, onSubmit, multiple = true, isStatus } ) {
-  const [isFocused, setIsFocused] = useState(false); 
+export default function DropDownMultipleSelection({ value, name, label, options = [], isLoading, onSubmit, multiple = true, isStatus }) {
+  const [isFocused, setIsFocused] = useState(false);
   const theme = useTheme();
 
   const defaultValues = useMemo(() => {
-    const initialValue = multiple ? [] : null; 
+    const initialValue = multiple ? [] : null;
     return {
       [name]: value || initialValue,
     };
   }, [value, name, multiple]);
-  
+
   const methods = useForm({
     defaultValues,
   });
-        
-  const { handleSubmit, watch, setValue, reset, formState: { isSubmitting }} = methods;
+
+  const { handleSubmit, watch, setValue, reset, formState: { isSubmitting } } = methods;
 
   useEffect(() => {
     const initialValue = multiple ? [] : null;
     reset({ [name]: value || initialValue });
   }, [value, name, reset, multiple]);
 
-  const val = watch( name )
-
-  const handleOnSubmit = async ( data ) => {
-    try{
-      if( Array.isArray(data[name]) ){
-        await onSubmit( name, data[name] );
+  const val = watch(name)
+  const handleOnSubmit = async (data) => {
+    try {
+      if (Array.isArray(data[name])) {
+        await onSubmit(name, data[name]);
       }
-    } catch(e){
+    } catch (e) {
       console.log(e);
     }
   };
@@ -78,12 +77,7 @@ export default function DropDownMultipleSelection( { value, name, label, options
           size="small"
           options={options}
           isOptionEqualToValue={(option, v) => option?._id === v?._id}
-          // getOptionLabel={(option) => `${option?.firstName || "" } ${option?.lastName || ""}`}
-          getOptionLabel={(option) =>
-            isStatus
-              ? option?.name || `${option?.firstName || ''} ${option?.lastName || ''}`
-              : `${option?.firstName || ''} ${option?.lastName || ''}`
-          }
+          getOptionLabel={(option) => option?.name || ''}
           onChange={handleOnChange}
           renderOption={(props, option) => (
             <li {...props} key={option?._id}>
@@ -96,20 +90,16 @@ export default function DropDownMultipleSelection( { value, name, label, options
                       size="20px"
                       sx={{ mr: 1 }}
                     />
-                    {option?.name
-                      ? option?.name
-                      : `${option?.firstName || ''} ${option?.lastName || ''}` || ''}
+                    {option?.name || ''}
                   </>
                 ) : (
                   <>
                     <CustomAvatar
-                      name={`${option?.firstName || ''} ${option?.lastName || ''}`}
-                      alt={option?.firstName || ''}
+                      name={option?.name || ''}
+                      alt={option?.name || ''}
                       sx={{ m: 0.3, mr: 1, width: '30px', height: '30px' }}
                     />
-                    {`${option?.firstName || ''} ${option?.lastName || ''} (${
-                      option?.email || 'No Email'
-                    })`}
+                    {`${option?.name || ''} (${option?.email || 'No Email'})`}
                   </>
                 )}
               </Box>
@@ -119,14 +109,6 @@ export default function DropDownMultipleSelection( { value, name, label, options
             <TextField
               {...params}
               variant="filled"
-              // InputProps={{
-              //   ...params.InputProps,
-              //   startAdornment: !multiple && val && isStatus ? (
-              //     <InputAdornment position="start">
-              //       <Iconify icon={val.icon} color={val?.color || "inherit"} size="20px" sx={{ mb: 2.5, mr: -1 }} />
-              //     </InputAdornment>
-              //   ) : null,
-              // }}
               isFocused={isFocused}
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
@@ -140,10 +122,11 @@ export default function DropDownMultipleSelection( { value, name, label, options
                   backgroundColor: isFocused ? 'transparent' : alpha(theme.palette.grey[500], 0.08),
                   border: isFocused ? `1px solid ${theme.palette.common.black}` : '1px solid transparent',
                   transition: 'border 0.3s ease-in-out, background-color 0.3s ease-in-out',
-                  '&:hover': !isFocused ? { backgroundColor: `${alpha( theme.palette.grey[500], 0.08)} !important`, border: '1px solid transparent !important' } : {},
+                  '&:hover': !isFocused ? { backgroundColor: `${alpha(theme.palette.grey[500], 0.08)} !important`, border: '1px solid transparent !important' } : {},
                 },
                 '& .MuiInput-underline:before, & .MuiInput-underline:hover:not(.Mui-disabled):before, & .MuiInput-underline.Mui-focused:before':
-                  { borderBottom: 'none',
+                {
+                  borderBottom: 'none',
                 },
                 '& .MuiInputBase-input': {
                   padding: '0',
@@ -166,7 +149,7 @@ export default function DropDownMultipleSelection( { value, name, label, options
                   padding: '0 8px',
                 },
                 '& .MuiChip-deleteIcon': {
-                  fontSize: '18px', 
+                  fontSize: '18px',
                   width: 18,
                   height: 18,
                 },
@@ -176,32 +159,31 @@ export default function DropDownMultipleSelection( { value, name, label, options
           renderTags={
             name === 'faults'
               ? (tagValue, getTagProps) => (
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                    {tagValue.map((option, index) => {
-                      const tagProps = getTagProps({ index });
-                      const selectedOption = options.find((opt) => opt._id === option._id);
-                      const description = selectedOption?.description || 'No description available';
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                  {tagValue.map((option, index) => {
+                    const tagProps = getTagProps({ index });
+                    const selectedOption = options.find((opt) => opt._id === option._id);
+                    const description = selectedOption?.description || 'No description available';
 
-                      return (
-                        <ChipDialog
-                          key={option._id}
-                          label={option.name}
-                          title={`${option.name} Description`}
-                          onDelete={tagProps.onDelete}
-                        >
-                          {description}
-                        </ChipDialog>
-                      );
-                    })}
-                  </Box>
-                )
+                    return (
+                      <ChipDialog
+                        key={option._id}
+                        label={option.name}
+                        title={`${option.name} Description`}
+                        onDelete={tagProps.onDelete}
+                      >
+                        {description}
+                      </ChipDialog>
+                    );
+                  })}
+                </Box>
+              )
               : undefined
           }
         />
         {Array.isArray(val) &&
-          Array.isArray(value) &&
-          (val?.length !== value?.length ||
-            !val?.every((v) => value?.some((vc) => vc?._id === v?._id))) && (
+          // Array.isArray(value) &&
+          (!val?.every((v) => value?.some((vc) => vc?._id === v?._id))) && (
             <Stack
               direction="row"
               spacing={1}
