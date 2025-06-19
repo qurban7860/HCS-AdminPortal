@@ -16,6 +16,7 @@ export const CONFIG = {
   MESSAGE_REGISTER_USER: process.env.REACT_APP_MESSAGE_REGISTER_USER,
   MESSAGE_LOGIN_USER: process.env.REACT_APP_MESSAGE_LOGIN_USER,
   GOOGLE_MAPS_API_KEY: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
+  RECAPTCHA_KEY: process.env.REACT_APP_RECAPTCHA_KEY,
   IDLE_TIME: process.env.REACT_APP_IDLE_TIME,
   JIRA_URL: 'https://howickltd.atlassian.net/jira/servicedesk/projects/HWKSC/queues/custom/3/',
   COMPOSITE_TOOL_CONFIG_MAX_LENGTH: process.env.COMPOSITE_TOOL_CONFIG_MAX_LENGTH = 10,

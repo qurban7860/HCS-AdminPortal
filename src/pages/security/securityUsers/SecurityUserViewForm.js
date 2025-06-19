@@ -2,7 +2,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector, batch } from 'react-redux';
 // @mui
-import { Card, Grid, Link, Button, Chip } from '@mui/material';
+import { format } from 'date-fns'; 
+import { Card, Grid, Link, Button, Stack, Typography, Box, Chip } from '@mui/material';
 import ConfirmDialog from '../../../components/confirm-dialog';
 // routes
 import { PATH_SETTING } from '../../../routes/paths';
@@ -12,7 +13,10 @@ import {
   archiveSecurityUser,
   sendUserInvite,
   getSecurityUser,
+  getContactUsers,
+  getDialogSecurityUser,
   changeUserStatus,
+  setSecurityUserDialog,
   setChangePasswordByAdminDialog,
 } from '../../../redux/slices/securityUser/securityUser';
 import { getBlockedCustomer } from '../../../redux/slices/securityConfig/blockedCustomers';
@@ -34,10 +38,9 @@ import ChangePasswordByAdminDialog from '../../../components/Dialog/ChangePasswo
 
 export default function SecurityUserViewForm() {
 
-  const { securityUser, isLoading } = useSelector((state) => state.user);
+  const { securityUser, isLoading, contactUsers } = useSelector((state) => state.user);
   const { blockedCustomer } = useSelector((state) => state.blockedCustomer);
   const { blockedUser } = useSelector((state) => state.blockedUser);
-
   const [openConfirm, setOpenConfirm] = useState(false);
   const handleCloseConfirm = () => setOpenConfirm(false);
 
@@ -51,6 +54,7 @@ export default function SecurityUserViewForm() {
     dispatch(setContactDialog(false))
     dispatch(getBlockedCustomer(securityUser?.customer?._id))
     dispatch(getBlockedUser(securityUser?._id))
+    dispatch(getContactUsers(securityUser?.contact?._id))
   }, [dispatch, securityUser]);
 
   useEffect(() => {
@@ -100,6 +104,11 @@ export default function SecurityUserViewForm() {
       }
     }
   };
+  const handleViewUser = (user) => {
+      dispatch(setSecurityUserDialog(true));
+      dispatch(getDialogSecurityUser(user._id));
+        };
+
 
   const handleUserInvite = async () => {
     if (securityUser?._id) {
@@ -170,6 +179,10 @@ export default function SecurityUserViewForm() {
   );
 
   const userRoleChips = defaultValues?.roles.map((role,index) => <Chip key={index} title={role.name} label={role.name} color={role.name === 'SuperAdmin' ? 'secondary' : 'default'} sx={{m:0.2}}/>);
+  const handleViewUserDialog = async (s) => {
+    await dispatch(setSecurityUserDialog(true));
+    await dispatch(getDialogSecurityUser(s?._id))
+  }
 
   return (
     <>
@@ -194,6 +207,8 @@ export default function SecurityUserViewForm() {
             userStatus={userStatus}
             onUserStatusChange={securityUser?.isArchived ? undefined : handleChangeUserStatus}
             securityUserPage
+            handleViewUser={handleViewUserDialog}
+            // showContactUsers
           />
           <ConfirmDialog
             open={openConfirm}
@@ -270,10 +285,42 @@ export default function SecurityUserViewForm() {
                             </StyledTooltip>
                           }
                         </Link>)
-                      }
+                      }       
                     </>
                   }
                 />
+           <ViewFormField
+              isLoading={isLoading}
+              sm={12}
+              heading="Contact Users"
+              node={
+              Array.isArray(contactUsers) && contactUsers.length > 0 ? (
+             <Stack spacing={1}>
+              {contactUsers.map((user) => (
+             <Box
+              key={user._id}
+              onClick={() => handleViewUser(user)}
+              sx={{ cursor: 'pointer' }}
+            >
+             <Typography variant="body2">
+              <Box component="span" sx={{ color: 'primary.main', fontWeight: 500 }}>
+                {user.name}
+              </Box>
+              {' — '}
+              <Box component="span">
+                {user.createdAt
+                  ? format(new Date(user.createdAt), 'dd MMM yyyy')
+                  : '—'}
+              </Box>
+            </Typography>
+          </Box>
+        ))}
+      </Stack>
+    ) : (
+      <Typography variant="body2">No contact users</Typography>
+    )
+  }
+/>
               </Grid>
             </Grid>
 

@@ -49,7 +49,7 @@ const slice = createSlice({
       state.success = true;
       state.comments = action.payload;
       state.initial = true;
-       // state.responseMessage = 'Comments loaded successfully';
+      // state.responseMessage = 'Comments loaded successfully';
     },
 
     // ADD  Comments
@@ -151,7 +151,7 @@ export const {
 
 // ----------------------------------------------------------------------
 
-export function getComments({id}) {
+export function getComments({ id }) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -164,11 +164,14 @@ export function getComments({id}) {
     }
   };
 }
-export function addComment( id, comment, isInternal ) {
+export function addComment(id, params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const data = { comment, isInternal };  
+      const data = {
+        comment: params?.comment,
+        isInternal: params?.isInternal
+      };
       const response = await axios.post(`${CONFIG.SERVER_URL}tickets/${id}/comments/`, data);
       dispatch(slice.actions.addCommentsSuccess(response.data?.commentsList));
     } catch (error) {

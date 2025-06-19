@@ -26,6 +26,7 @@ import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 import { Cover } from '../../../../components/Defaults/Cover';
 import LoadingScreen from '../../../../components/loading-screen';
 import { articleStatusOptions } from '../../../../utils/constants';
+import Editor from '../../../../components/editor';
 
 // ----------------------------------------------------------------------
 
@@ -145,15 +146,10 @@ export default function ArticleViewForm() {
               <ViewFormField isLoading={isLoading} sm={4} heading="Status"
                 node={<ViewFormSelect sx={{ width: '150px' }} options={articleStatusOptions} value={defaultValues.status} onChange={handleStatusChange} /> }
               />
-              {/* <ViewFormSelect options={articleStatusOptions} value={defaultValues.status} onChange={(e) => console.log(e.target.value)} /> */}
               <ViewFormField isLoading={isLoading} sm={12} heading="Title" param={defaultValues.title || ''} />
               <ViewFormField isLoading={isLoading} sm={12} 
                 heading="Description" 
-                node={
-                  <div dangerouslySetInnerHTML={{ __html: 
-                    `<style>ul { padding-left: 40px;}</style>${defaultValues.description || ''}` 
-                  }} />
-                } 
+                node={<Editor readOnly hideToolbar sx={{ border: 'none', '& .ql-editor': { padding: '0px' } }} value={defaultValues.description} />}
               />
               <ViewFormAudit defaultValues={defaultValues} />
             </Grid>

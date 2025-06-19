@@ -50,10 +50,10 @@ import useResponsive from '../../../../hooks/useResponsive';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Name', width: 150 },
-  { id: 'description', label: 'Description', },
-  { id: 'isActive', label: 'Active', width: 100 },
-  { id: 'updatedAt', align: 'right', label: 'Updated At', width: 150 },
+  { id: 'name', label: 'Name', width: '40%' },
+  { id: 'description', label: 'Description'},
+  { id: 'isActive', label: 'Active', width: 50 },
+  { id: 'updatedAt', align: 'right', label: 'Updated At', width: 130 },
 ];
 
 // ----------------------------------------------------------------------

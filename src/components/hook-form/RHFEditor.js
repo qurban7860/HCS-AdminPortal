@@ -12,9 +12,19 @@ import Editor from '../editor';
 RHFEditor.propTypes = {
   name: PropTypes.string,
   helperText: PropTypes.node,
+  isEditor: PropTypes.bool,
+  isFocused: PropTypes.bool,
+  setIsFocused: PropTypes.func,
 };
 
-export default function RHFEditor({ name, helperText, ...other }) {
+export default function RHFEditor({
+  name,
+  helperText,
+  isEditor = false,
+  isFocused,
+  setIsFocused,
+  ...other
+}) {
   const {
     control,
     watch,
@@ -38,9 +48,9 @@ export default function RHFEditor({ name, helperText, ...other }) {
       control={control}
       render={({ field, fieldState: { error } }) => (
         <Editor
-          sx={{ 
-            '& .ql-flip': { transform: 'translateX(135px) !important' }, 
-            '& .ql-editor': { maxHeight: '200px', overflowY: 'auto' } 
+          sx={{
+            '& .ql-flip': { transform: 'translateX(135px) !important' },
+            '& .ql-editor': { maxHeight: '60vh', overflowY: 'auto' }
           }}
           id={name}
           value={field.value}
@@ -53,6 +63,9 @@ export default function RHFEditor({ name, helperText, ...other }) {
               </FormHelperText>
             )
           }
+          isEditor={isEditor}
+          isFocused={isFocused}
+          setIsFocused={setIsFocused}
           {...other}
         />
       )}

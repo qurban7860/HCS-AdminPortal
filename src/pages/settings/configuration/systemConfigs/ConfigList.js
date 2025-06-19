@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 // @mui
-import { Container, Box, Typography, Divider } from '@mui/material';
+import { Container, Box, Typography, Divider, Stack } from '@mui/material';
 import debounce from 'lodash/debounce';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
@@ -24,6 +24,7 @@ import { fDate } from '../../../../utils/formatTime';
 // constants
 import TableCard from '../../../../components/ListTableTools/TableCard';
 import { StyledCardContainer } from '../../../../theme/styles/default-styles';
+import Scrollbar from '../../../../components/scrollbar';
 
 // ----------------------------------------------------------------------
 
@@ -165,47 +166,26 @@ export default function ConfigList() {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-            sx={{ px: 2, py: 1 }}
           />
         )}
 
-        <Box sx={{ p: { xs: 1.5, md: 2 } }}>
-          {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
-            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            .map((config, index, array) => (
-              <Box 
-                key={config?.id || index}
-                sx={{
-                  '&:not(:last-child)': {
-                    mb: 2
-                  }
-                }}
-              >
-                {config ? (
-                  <ConfigCard
-                    config={config}
-                    onClick={() => handleViewConfig(config?._id)}
-                  />
-                ) : (
-                  <Box
-                    sx={{
-                      height: 100,
-                      bgcolor: 'background.neutral',
-                      borderRadius: 2,
-                    }}
-                  />
-                )}
-              </Box>
-            ))}
+        <Scrollbar sx={{borderTop:'1px solid #E0E0E0'}}>
+          <Stack spacing={2} sx={{ p:2 }}>
+            {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((config) => config && (
+                <ConfigCard key={config?._id} config={config} onClick={() => handleViewConfig(config?._id)} />
+              ))}
 
-          {isNotFound && (
-            <Box sx={{ py: 3, textAlign: 'center' }}>
-              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                No configs found
-              </Typography>
-            </Box>
-          )}
-        </Box>
+            {isNotFound && (
+              <Box sx={{ py: 3, textAlign: 'center' }}>
+                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                  No configs found
+                </Typography>
+              </Box>
+            )}
+          </Stack>
+        </Scrollbar>
 
         {!isNotFound && (
           <TablePaginationCustom
@@ -214,7 +194,6 @@ export default function ConfigList() {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-            sx={{ px: 2, py: 2 }}
           />
         )}
       </TableCard>

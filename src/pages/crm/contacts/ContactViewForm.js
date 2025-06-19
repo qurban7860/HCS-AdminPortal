@@ -12,7 +12,7 @@ import ViewPhoneComponent from '../../../components/ViewForms/ViewPhoneComponent
 import { getContact, getContacts, resetContact, deleteContact, setIsExpanded, setCardActiveIndex } from '../../../redux/slices/customer/contact';
 import { setMachineTab } from '../../../redux/slices/products/machine';
 import { getMachineServiceReport, setResetFlags } from '../../../redux/slices/products/machineServiceReport';
-import { getContactUsers, resetContactUsers, getSecurityUser, setSecurityUserDialog } from '../../../redux/slices/securityUser/securityUser';
+import { getContactUsers, resetContactUsers, getDialogSecurityUser, setSecurityUserDialog } from '../../../redux/slices/securityUser/securityUser';
 import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../../components/ViewForms/ViewFormField';
 import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
@@ -33,7 +33,7 @@ export default function ContactViewForm({
 }) {
   const { contact, isLoading } = useSelector((state) => state.contact);
   const { customer } = useSelector((state) => state.customer);
-  
+
   const { isAllAccessAllowed } = useAuthContext()
   const { enqueueSnackbar } = useSnackbar();
   const { customerId, id } = useParams()
@@ -115,7 +115,7 @@ export default function ContactViewForm({
   ));
 
   const handleViewUser = (_user) => {
-    dispatch(getSecurityUser(_user?._id));
+    dispatch(getDialogSecurityUser(_user?._id));
     dispatch(setSecurityUserDialog(true));
   };
 

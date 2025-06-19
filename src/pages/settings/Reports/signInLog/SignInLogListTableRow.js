@@ -6,7 +6,7 @@ import { fDateTime } from '../../../../utils/formatTime';
 import { useScreenSize } from '../../../../hooks/useResponsive';
 import { getCustomer, setCustomerDialog } from '../../../../redux/slices/customer/customer';
 import { getContact, setContactDialog } from '../../../../redux/slices/customer/contact';
-import { getSecurityUser, setSecurityUserDialog } from '../../../../redux/slices/securityUser/securityUser';
+import { getDialogSecurityUser, setSecurityUserDialog } from '../../../../redux/slices/securityUser/securityUser';
 import LinkTableCellWithIconTargetBlank from '../../../../components/ListTableTools/LinkTableCellWithIconTargetBlank';
 
 // ----------------------------------------------------------------------
@@ -19,7 +19,7 @@ SignInLogListTableRow.propTypes = {
   onViewRow: PropTypes.func,
   onSelectRow: PropTypes.func,
   onDeleteRow: PropTypes.func,
-  status:PropTypes.object
+  status: PropTypes.object
 };
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -46,42 +46,42 @@ export default function SignInLogListTableRow({
   const dispatch = useDispatch();
 
   const handleSecurityUserDialog = () => {
-    dispatch(getSecurityUser(user?._id))
+    dispatch(getDialogSecurityUser(user?._id))
     dispatch(setSecurityUserDialog(true))
   }
 
-  const handleCustomerDialog = ( ) => {
-    dispatch(getCustomer( user?.customer?._id ))
+  const handleCustomerDialog = () => {
+    dispatch(getCustomer(user?.customer?._id))
     dispatch(setCustomerDialog(true))
   }
 
-  const handleContactDialog = ( ) => {
+  const handleContactDialog = () => {
     dispatch(getContact(user?.customer?._id, user?.contact?._id))
     dispatch(setContactDialog(true))
   }
 
   return (
-      <StyledTableRow hover selected={selected}>
-        { useScreenSize('lg') && <TableCell align="left"> {requestedLogin || ''} </TableCell>}
-        {user?._id ?
+    <StyledTableRow hover selected={selected}>
+      {useScreenSize('lg') && <TableCell align="left"> {requestedLogin || ''} </TableCell>}
+      {user?._id ?
         <LinkTableCellWithIconTargetBlank
           onViewRow={handleSecurityUserDialog}
           // onClick={ !user?._id ? undefined : () => window.open(PATH_SETTING.security.users.view( user?._id ), '_blank') }
-          param={user?.name || "" }
+          param={user?.name || ""}
           align='left'
         />
         : <TableCell align="left" />
-        }
-        { user?.customer?._id ? 
-          <LinkTableCellWithIconTargetBlank
-            onViewRow={handleCustomerDialog}
-            // onClick={ !user?.customer?._id ? undefined : () => window.open(PATH_CRM.customers.view( user?.customer?._id ), '_blank') }
-            param={user?.customer?.name || ""}
-            align='left'
-          />
+      }
+      {user?.customer?._id ?
+        <LinkTableCellWithIconTargetBlank
+          onViewRow={handleCustomerDialog}
+          // onClick={ !user?.customer?._id ? undefined : () => window.open(PATH_CRM.customers.view( user?.customer?._id ), '_blank') }
+          param={user?.customer?.name || ""}
+          align='left'
+        />
         : <TableCell align="left" />
-        }
-        {/* { ( user?.customer?._id && user?.contact?._id )?
+      }
+      {/* { ( user?.customer?._id && user?.contact?._id )?
           <LinkTableCellWithIconTargetBlank
             onViewRow={handleContactDialog}
             // onClick={ !user?.contact?._id ? undefined : () => window.open(PATH_CRM.customers.contacts.view( user?.customer?._id, user?.contact?._id ), '_blank') }
@@ -90,13 +90,13 @@ export default function SignInLogListTableRow({
           />
         : <TableCell align="left" />
         } */}
-        { useScreenSize('lg') && <TableCell align="left"> {loginIP} </TableCell>}
-        <TableCell align="left"> {fDateTime(loginTime)} </TableCell>
-        <TableCell align="left">{fDateTime(logoutTime)}</TableCell>
-        <TableCell align="left">{loggedOutBy}</TableCell>
-        { useScreenSize('sm') && <TableCell align="left" sx={{color: statusCode===200?"green":"red"}}> 
-          {status?.value || '' }{status?.notes || ''}
-        </TableCell>}
-      </StyledTableRow>
+      {useScreenSize('lg') && <TableCell align="left"> {loginIP} </TableCell>}
+      <TableCell align="left"> {fDateTime(loginTime)} </TableCell>
+      <TableCell align="left">{fDateTime(logoutTime)}</TableCell>
+      <TableCell align="left">{loggedOutBy}</TableCell>
+      {useScreenSize('sm') && <TableCell align="left" sx={{ color: statusCode === 200 ? "green" : "red" }}>
+        {status?.value || ''}{status?.notes || ''}
+      </TableCell>}
+    </StyledTableRow>
   );
 }

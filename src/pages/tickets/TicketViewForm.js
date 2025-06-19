@@ -18,7 +18,7 @@ import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
 import { useAuthContext } from '../../auth/useAuthContext';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
-import TicketComments from './TicketComments';
+import TicketTabs from './TicketTabs';
 import { handleError } from '../../utils/errorHandler';
 import Lightbox from '../../components/lightbox/Lightbox';
 import SkeletonPDF from '../../components/skeleton/SkeletonPDF';
@@ -156,27 +156,15 @@ export default function TicketViewForm() {
       if (file?.fileType?.startsWith('video')) {
         return {
           type: 'video',
-          thumbnail: base64Thumbnail,
-          poster: base64Thumbnail,
-          sources: [
-            {
-              src: base64Thumbnail,
-              type: file.fileType,
-              isLoaded: false,
-              controls: true,
-              playsInline: true,
-              autoPlay: true,
-              loop: true,
-              muted: true,
-              preload: 'auto',
-            },
-          ],
-          controls: true,
-          playsInline: true,
-          autoPlay: true,
-          loop: true,
-          muted: true,
-          preload: 'auto',
+          sources: [{
+            src: file?.src,
+            type: file.fileType,
+            playsInline: true,
+            autoPlay: true,
+            loop: true,
+            muted: true,
+            preload: 'auto',
+          }],
           downloadFilename: `${file?.name}.${file?.extension}`,
           name: file?.name,
           extension: file?.extension,
@@ -193,11 +181,7 @@ export default function TicketViewForm() {
 
     setSlides(newSlides || []);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ticket?.files?.length]);
-
-  // const handleEdit = () => {
-  //   navigate(PATH_SUPPORT.supportTickets.edit(ticket._id));
-  // };
+  }, [ticket?.files]);
 
   const defaultValues = useMemo(
     () => ({
@@ -288,31 +272,17 @@ export default function TicketViewForm() {
   const handleOpenLightbox = async (index) => {
     setSelectedImage(index);
     const image = slides[index];
-
-    if (!image?.isLoaded && (image?.fileType?.startsWith('image') || image?.fileType?.startsWith('video'))) {
+    if (!image?.isLoaded && (image?.fileType?.startsWith('image'))) {
       try {
         const response = await dispatch(getFile(id, image?._id));
         if (regEx.test(response.status)) {
           const base64 = response.data;
           const updatedSlides = [...slides];
-
-          if (image.fileType.startsWith('video')) {
-            updatedSlides[index] = {
-              ...image,
-              sources: [{
-                src: `data:${image.fileType};base64,${base64}`,
-                type: image.fileType
-              }],
-              isLoaded: true
-            };
-          } else {
-            updatedSlides[index] = {
-              ...image,
-              src: `data:${image.fileType};base64,${base64}`,
-              isLoaded: true
-            };
-          }
-
+          updatedSlides[index] = {
+            ...image,
+            src: `data:${image.fileType};base64,${base64}`,
+            isLoaded: true
+          };
           setSlides(updatedSlides);
         }
       } catch (error) {
@@ -337,18 +307,34 @@ export default function TicketViewForm() {
   };
 
   const handleDownloadFile = (fileId, fileName, fileExtension) => {
-    dispatch(getFile(ticket?._id, fileId))
-      .then((res) => {
-        if (regEx.test(res.status)) {
-          download(atob(res.data), `${fileName}.${fileExtension}`, { type: fileExtension });
-          enqueueSnackbar(res.statusText);
-        } else {
-          enqueueSnackbar(res.statusText, { variant: `error` });
-        }
-      })
-      .catch((err) => {
-        enqueueSnackbar(handleError(err), { variant: `error` });
-      });
+    const file = slides.find((item) => item._id === fileId);
+
+    if (!file) {
+      enqueueSnackbar("File not found.", { variant: "error" });
+      return;
+    }
+
+    const isVideo = file.fileType?.startsWith("video");
+    if (isVideo) {
+      try {
+        const signedUrl = file?.sources[0]?.src;
+        window.open(signedUrl, "_blank");
+        enqueueSnackbar("Video download started");
+      } catch (error) {
+        enqueueSnackbar("Video download failed!", { variant: "error" });
+      }
+    } else {
+      dispatch(getFile(ticket?._id, fileId))
+        .then((res) => {
+          if (regEx.test(res.status)) {
+            download(atob(res.data), `${fileName}.${fileExtension}`, { type: fileExtension });
+            enqueueSnackbar("Download failed");
+          }
+        })
+        .catch((err) => {
+          enqueueSnackbar(handleError(err), { variant: `error` });
+        });
+    }
   };
 
   const [pdf, setPDF] = useState(null);
@@ -439,7 +425,7 @@ export default function TicketViewForm() {
             <ViewFormField sm={4} variant='h4' heading="Customer" isLoading={isLoading}
               node={defaultValues?.customer && (
                 <>
-                  <Link variant='h4' onClick={(event) => handleCustomerDialog(event, defaultValues.customer?._id)} underline="none" sx={{ cursor: 'pointer' }}>
+                  <Link variant='h5' onClick={(event) => handleCustomerDialog(event, defaultValues.customer?._id)} underline="none" sx={{ cursor: 'pointer', fontWeight: 'normal' }}>
                     {defaultValues?.customer?.name}
                   </Link>
                   <OpenInNewPage onClick={() => window.open(PATH_CRM.customers.view(defaultValues.customer?._id), '_blank')} />
@@ -450,10 +436,10 @@ export default function TicketViewForm() {
               node={defaultValues?.customer && (
                 <>
                   <Link
-                    variant='h4'
+                    variant='h5'
                     onClick={(event) => handleMachineDialog(event, defaultValues.machine?._id)}
                     underline="none"
-                    sx={{ cursor: 'pointer' }}
+                    sx={{ cursor: 'pointer', fontWeight: 'normal' }}
                   >
                     {`${defaultValues?.machine?.serialNo || ''} - ${defaultValues?.machine?.machineModel?.name || ''}`}
                   </Link>
@@ -479,10 +465,10 @@ export default function TicketViewForm() {
               node={<DropDownMultipleSelection name="approvers" label='Approvers' value={ticket?.approvers} onSubmit={onSubmit} options={approvers} />}
             />
             <ViewFormField isLoading={isLoading} sm={12} heading="Summary"
-              node={<FilledTextField name="summary" value={defaultValues.summary} onSubmit={onSubmit} />}
+              node={<FilledTextField name="summary" value={defaultValues.summary} onSubmit={onSubmit} isBold />}
             />
             <ViewFormField isLoading={isLoading} sm={12} heading="Description"
-              node={<FilledEditorField name="description" value={defaultValues.description} onSubmit={onSubmit} minRows={4} />}
+              node={<FilledEditorField name="description" value={defaultValues.description} onSubmit={onSubmit} minRows={4} isEditor />}
             />
             <ViewFormField isLoading={isLoading} sm={10} heading="Fault"
               node={<DropDownMultipleSelection name="faults" label='Fault' value={ticket?.faults} options={ticketSettings?.faults} onSubmit={onSubmit} isStatus />}
@@ -551,6 +537,7 @@ export default function TicketViewForm() {
               close={handleCloseLightbox}
               onGetCurrentIndex={(index) => handleOpenLightbox(index)}
               disabledSlideshow
+              disabledDownload
             />
 
             {ticket?.issueType?.name === 'Change Request' && (
@@ -562,26 +549,26 @@ export default function TicketViewForm() {
                   node={<DropDownField name="changeReason" isNullable label='Change Reason' value={ticket?.changeReason} options={ticketSettings?.changeReasons} onSubmit={onSubmit} />}
                 />
                 <ViewFormField isLoading={isLoading} sm={12} heading="Implementation Plan"
-                  node={<FilledEditorField name="implementationPlan" value={defaultValues.implementationPlan} onSubmit={onSubmit} minRows={4} />}
+                  node={<FilledEditorField name="implementationPlan" value={defaultValues.implementationPlan} onSubmit={onSubmit} minRows={4} isEditor />}
                 />
                 <ViewFormField isLoading={isLoading} sm={12} heading="Backout Plan"
-                  node={<FilledEditorField name="backoutPlan" value={defaultValues.backoutPlan} onSubmit={onSubmit} minRows={4} />}
+                  node={<FilledEditorField name="backoutPlan" value={defaultValues.backoutPlan} onSubmit={onSubmit} minRows={4} isEditor />}
                 />
                 <ViewFormField isLoading={isLoading} sm={12} heading="Test Plan"
-                  node={<FilledEditorField name="testPlan" value={defaultValues.testPlan} onSubmit={onSubmit} minRows={4} />}
+                  node={<FilledEditorField name="testPlan" value={defaultValues.testPlan} onSubmit={onSubmit} minRows={4} isEditor />}
                 />
               </>
             )}
-            {ticket?.issueType?.name?.trim()?.toLowerCase() === 'service request' && (
+            {['change_request', 'system_problem']?.includes(ticket?.issueType?.slug?.trim()?.toLowerCase()) && (
               <>
                 <ViewFormField isLoading={isLoading} sm={4} heading="Investigation Reason"
                   node={<DropDownField name="investigationReason" isNullable label='Investigation Reason' value={ticket?.investigationReason} options={ticketSettings?.investigationReasons} onSubmit={onSubmit} />}
                 />
                 <ViewFormField isLoading={isLoading} sm={12} heading="Root Cause"
-                  node={<FilledEditorField name="rootCause" value={defaultValues.rootCause} onSubmit={onSubmit} minRows={4} />}
+                  node={<FilledEditorField name="rootCause" value={defaultValues.rootCause} onSubmit={onSubmit} minRows={4} isEditor />}
                 />
                 <ViewFormField isLoading={isLoading} sm={12} heading="Workaround"
-                  node={<FilledEditorField name="workaround" value={defaultValues.workaround} onSubmit={onSubmit} minRows={4} />}
+                  node={<FilledEditorField name="workaround" value={defaultValues.workaround} onSubmit={onSubmit} minRows={4} isEditor />}
                 />
               </>
             )}
@@ -625,7 +612,7 @@ export default function TicketViewForm() {
         </Grid>
       </Card>
       <Card sx={{ mt: 2 }}>
-        <TicketComments currentUser={{ ...user, userId }} />
+        <TicketTabs />
       </Card>
       {fileDialog && <DialogTicketAddFile open={fileDialog} handleClose={() => setFileDialog(false)} />}
       {PDFViewerDialog && (

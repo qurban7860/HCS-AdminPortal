@@ -131,7 +131,7 @@ export default function DocumentTypeAddForm({ currentDocument }) {
 
                   <RHFSwitch
                     name='isPrimaryDrawing'
-                    label='Primary'
+                    label='Primary Drawing'
                   />
 
                   <RHFSwitch

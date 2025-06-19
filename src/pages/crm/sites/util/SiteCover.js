@@ -76,7 +76,7 @@ export default function SiteCover({ name, role, cover }) {
             color: 'common.white',
             textAlign: { xs: 'center', md: 'left' },
           }}
-          >
+        >
           <Typography variant="h4">{name}</Typography>
           <Typography sx={{ opacity: 0.72 }}>{role}</Typography>
         </Box>

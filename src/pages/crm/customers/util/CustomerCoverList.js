@@ -51,15 +51,15 @@ CustomerCoverList.propTypes = {
 };
 
 export function CustomerCoverList({ name, role, cover }) {
-//   const { customer } = useAuthContext();
+  //   const { customer } = useAuthContext();
 
   return (
     <StyledRoot>
       <StyledInfo>
         <CustomAvatar
-        //   src={customer?.photoURL}
-        //   alt={name}
-        //   name={name}Ï
+          //   src={customer?.photoURL}
+          //   alt={name}
+          //   name={name}Ï
           sx={{
             mx: 'auto',
             borderWidth: 2,
@@ -70,12 +70,12 @@ export function CustomerCoverList({ name, role, cover }) {
             height: { xs: 80, md: 110 },
           }}
         >
-            <PersonIcon sx={{
-                 width: {xs: 32, md: 48 },
-                 height: {xs: 32, md: 48},
-                 color: 'white'
-                }}
-            />
+          <PersonIcon sx={{
+            width: { xs: 32, md: 48 },
+            height: { xs: 32, md: 48 },
+            color: 'white'
+          }}
+          />
         </CustomAvatar>
 
 

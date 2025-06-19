@@ -171,7 +171,7 @@ export default function LogChartStacked({ processGraphData, graphLabels }) {
   };
 
   return (
-    <Box>
+    <Box sx={{ position: 'relative', '& .apexcharts-menu-icon': { mt: '-20px' } }}>
       <Box sx={{ display: 'flex' }}>
         <FormControlLabel
           control={<Checkbox checked={skipZero} onChange={() => setSkipZero((prev) => !prev)} />}

@@ -29,7 +29,7 @@ import { articleStatusOptions } from '../../../../utils/constants';
 
 export const AddArticleSchema = Yup.object().shape({
   title: Yup.string().min(2, 'Title must be at least 2 characters long').max(200, 'Title must be at most 200 characters long').required('Title is required!'),
-  description: Yup.string().max(10000),
+  description: Yup.string().max(50000),
   category: Yup.object().required().label('Category').nullable(),
   customerAccess: Yup.boolean(),
   isActive: Yup.boolean(),

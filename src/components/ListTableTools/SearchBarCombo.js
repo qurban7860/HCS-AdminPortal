@@ -92,6 +92,8 @@ function SearchBarCombo({
   typeOptions,
   filterType,
   onFilterType,
+  filterAccountType,
+  onFilterAccountType,
   ...other
 }) {
 
@@ -193,25 +195,45 @@ function SearchBarCombo({
             </FormControl>
           </Stack>
         </Grid>}
+     {onFilterAccountType && 
+ <Grid item xs={12} sm={6} md={6} lg={6} xl={2}>
+  <FormControl fullWidth size="small">
+    <InputLabel>Type</InputLabel>
+    <Select
+      label="Account Type"
+      value={filterAccountType}
+      onChange={onFilterAccountType}
+    >
+      <MenuItem value="all">All</MenuItem>
+      <MenuItem value="sp">Admin Portal (SP)</MenuItem>
+      <MenuItem value="non-sp">Customer Portal</MenuItem>
+    </Select>
+  </FormControl>
+</Grid>}
+
+
 
       {onFilterListByRegion &&
-        <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
-          <Autocomplete
-            value={filterByRegion || null}
-            options={activeRegions}
-            isOptionEqualToValue={(option, val) => option?._id === val?._id}
-            getOptionLabel={(option) => option?.name}
-            onChange={(event, newValue) => {
-              if (newValue) {
-                onFilterListByRegion(newValue);
-              } else {
-                onFilterListByRegion(null);
-              }
-            }}
-            renderOption={(props, option) => (<li {...props} key={option?._id}>{option?.name || ''}</li>)}
-            renderInput={(params) => <TextField {...params} size='small' label="Region" />}
-          />
-        </Grid>}
+  <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
+    <Autocomplete
+      value={filterByRegion || { _id: 'all', name: 'All' }}
+      options={[{ _id: 'all', name: 'All' }, ...activeRegions]}
+      isOptionEqualToValue={(option, val) => option?._id === val?._id}
+      getOptionLabel={(option) => option?.name}
+      onChange={(event, newValue) => {
+        if (!newValue || newValue._id === 'all') {
+          onFilterListByRegion(null); 
+        } else {
+          onFilterListByRegion(newValue);
+        }
+      }}
+      renderOption={(props, option) => (
+        <li {...props} key={option?._id}>{option?.name || ''}</li>
+      )}
+      renderInput={(params) => <TextField {...params} size='small' label="Region" />}
+    />
+  </Grid>
+}
 
       {setAccountManagerFilter && isAllAccessAllowed &&
         <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
@@ -679,7 +701,7 @@ function SearchBarCombo({
       }
 
       {onFilterType && typeOptions && 
-        <Grid item xs={12} sm={6} md={4} lg={4} xl={4}>
+        <Grid item xs={12} sm={6} md={3}>
           <Stack alignItems="flex-start">
             <FormControl fullWidth>
               <InputLabel>Type</InputLabel>
@@ -966,6 +988,8 @@ SearchBarCombo.propTypes = {
   typeOptions: PropTypes.array,
   filterType: PropTypes.string,
   onFilterType: PropTypes.func,
+  filterAccountType: PropTypes.string,
+  onFilterAccountType: PropTypes.func,
 };
 
 export default SearchBarCombo;

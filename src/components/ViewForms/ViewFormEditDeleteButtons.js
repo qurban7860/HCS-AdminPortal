@@ -102,7 +102,8 @@ function ViewFormEditDeleteButtons({
   serviceReportStatus,
   invitationStatus,
   onCancelInvite,
-  handleViewUser
+  handleViewUser,
+  showContactUsers = false
 }) {
   const { id } = useParams();
   const navigate = useNavigate()
@@ -422,6 +423,7 @@ function ViewFormEditDeleteButtons({
               icon={isActive ? ICONS.ACTIVE.icon : ICONS.INACTIVE.icon}
             />
           }
+
           {isPrimary !== undefined &&
             <IconTooltip
               title={isPrimary ? ICONS.PRIMARY.heading : ICONS.NOTPRIMARY.heading}
@@ -429,6 +431,7 @@ function ViewFormEditDeleteButtons({
               icon={isPrimary ? ICONS.PRIMARY.icon : ICONS.NOTPRIMARY.icon}
             />
           }
+
 
           {/* Status icons */}
           {invitationStatus === 'PENDING' && (
@@ -711,6 +714,8 @@ function ViewFormEditDeleteButtons({
             />
           )}
 
+          {showContactUsers && (
+            <>
           {Array.isArray(contactUsers) && contactUsers?.length > 0 &&
             <Badge badgeContent={contactUsers.length} color="info">
               <IconTooltip
@@ -727,6 +732,9 @@ function ViewFormEditDeleteButtons({
             onClose={handleContactUsersPopoverClose}
             onViewUser={handleViewUser}
           />
+        </>
+        )}
+      
 
           {/* map toggle button on mobile */}
           {sites && !isMobile && <IconPopover onMapClick={() => handleMap()} sites={sites} />}
@@ -1156,5 +1164,6 @@ ViewFormEditDeleteButtons.propTypes = {
   serviceReportStatus: PropTypes.object,
   invitationStatus: PropTypes.string,
   onCancelInvite: PropTypes.func,
-  handleViewUser: PropTypes.func
+  handleViewUser: PropTypes.func,
+  showContactUsers: PropTypes.bool,
 };

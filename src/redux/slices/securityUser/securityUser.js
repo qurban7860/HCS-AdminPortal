@@ -14,6 +14,7 @@ const initialState = {
   responseMessage: null,
   success: false,
   isLoading: false,
+  isLoadingDialogUser: false,
   isLoadingLogs: false,
   isLoadingResetPasswordEmail: false,
   error: null,
@@ -21,6 +22,7 @@ const initialState = {
   activeSecurityUsers: [],
   securityUser: null,
   securityUserDialog: false,
+  dialogSecurityUser: null,
   contactUsers: [],
   user: null,
   userId: null,
@@ -57,6 +59,10 @@ const slice = createSlice({
     startLoading(state) {
       state.isLoading = true;
     },
+    // START LOADING
+    startLoadingDialogUser(state) {
+      state.isLoadingDialogUser = true;
+    },
     // SET LOADING
     setLoadingLogs(state) {
       state.isLoadingLogs = true;
@@ -74,6 +80,7 @@ const slice = createSlice({
       state.isLoadingResetPasswordEmail = false;
       state.isLoadingLogs = false;
       state.isLoading = false;
+      state.isLoadingDialogUser = false
       state.error = action.payload;
       state.initial = true;
     },
@@ -98,8 +105,6 @@ const slice = createSlice({
     setChangePasswordDialog(state, action) {
       state.changePasswordDialog = action.payload;
     },
-
-
 
     // SET ACTIVE RESTRICTED LIST
     setActiveFilterList(state, action) {
@@ -164,6 +169,11 @@ const slice = createSlice({
     },
 
     // GET user
+    getDialogSecurityUserSuccess(state, action) {
+      state.isLoadingDialogUser = false;
+      state.dialogSecurityUser = action.payload;
+    },
+    // GET user
     getAssignedSecurityUserSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
@@ -196,6 +206,7 @@ const slice = createSlice({
     setSecurityUserDialog(state, action) {
       state.securityUserDialog = action.payload;
     },
+
     // RESET SECURITY USER
     resetSecurityUser(state) {
       state.securityUser = {};
@@ -203,8 +214,14 @@ const slice = createSlice({
       state.success = false;
       state.isLoading = false;
     },
+    // RESET DIALOG SECURITY USER
+    resetDialogSecurityUser(state) {
+      state.dialogSecurityUser = null;
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
 
-    
     // RESET SECURITY USERS
     resetSecurityUsers(state) {
       state.securityUsers = [];
@@ -212,7 +229,7 @@ const slice = createSlice({
       state.success = false;
       state.isLoading = false;
     },
-    
+
     // RESET SECURITY USER
     resetContactUsers(state) {
       state.contactUsers = [];
@@ -274,6 +291,7 @@ export const {
   resetSecurityUser,
   resetLoadingResetPasswordEmail,
   resetSignInLogsSuccess,
+  resetDialogSecurityUser,
   setFilterBy,
   setActiveFilterList,
   setEmployeeFilterList,
@@ -308,11 +326,6 @@ export function addSecurityUser(param) {
         multiFactorAuthentication: param?.multiFactorAuthentication,
       }
       const response = await axios.post(`${CONFIG.SERVER_URL}security/users`, data);
-      // if(regEx.test(response.status) && isInvite){
-      //   await axios.get(`${CONFIG.SERVER_URL}security/invites/sendUserInvite/${response?.data?.user?._id}`);
-      //   dispatch(setSecurityUserFormVisibility(false))
-      //   dispatch(getSecurityUsers());
-      // }
       dispatch(slice.actions.stopLoading());
       return response;
     } catch (error) {
@@ -491,6 +504,25 @@ export function getSecurityUser(id) {
       const response = await axios.get(`${CONFIG.SERVER_URL}security/users/${id}`);
       if (regEx.test(response.status)) {
         dispatch(slice.actions.getSecurityUserSuccess(response.data));
+      }
+      return response;
+    } catch (error) {
+      dispatch(slice.actions.hasError(error.Message));
+      console.error(error);
+      throw error;
+    }
+  };
+}
+
+// ----------------------------------------------------------------------
+
+export function getDialogSecurityUser(id) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoadingDialogUser());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}security/users/${id}`);
+      if (regEx.test(response.status)) {
+        dispatch(slice.actions.getDialogSecurityUserSuccess(response.data));
       }
       return response;
     } catch (error) {
