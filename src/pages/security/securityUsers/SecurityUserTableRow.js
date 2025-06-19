@@ -84,16 +84,14 @@ export default function SecurityUserTableRow({
           </TableCell>
         }
         { !hiddenColumns?.['contact.firstName'] &&<TableCell align="left">
-          {contact?.firstName && <StyledTooltip
+          {contact?.firstName && currentEmployee === true && <StyledTooltip
             placement="top" 
             title={contact?.formerEmployee ? ICONS.FORMEREMPLOYEE.heading:ICONS.NOTFORMEREMPLOYEE.heading} 
             disableFocusListener tooltipcolor={contact?.formerEmployee ? ICONS.FORMEREMPLOYEE.color:ICONS.NOTFORMEREMPLOYEE.color} 
             color={contact?.formerEmployee ? ICONS.FORMEREMPLOYEE.color:ICONS.NOTFORMEREMPLOYEE.color}
           >
-              {currentEmployee === true && (
-              <Iconify icon={ICONS.NOTFORMEREMPLOYEE.icon} sx={{ mr: 1, height: 20, width: 20 }} />
-               )}         
-          </StyledTooltip>}      
+            <Iconify icon={ICONS.NOTFORMEREMPLOYEE.icon} sx={{ mr: 1, height: 20, width: 20 }} />
+          </StyledTooltip>}
           {contact?.formerEmployee === true && (
            <StyledTooltip
            title={ICONS.FORMEREMPLOYEE.heading}
