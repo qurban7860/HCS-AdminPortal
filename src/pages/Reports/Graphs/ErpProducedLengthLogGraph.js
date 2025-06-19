@@ -23,14 +23,13 @@ const ErpProducedLengthLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
   }, [machineLogsGraphData, timePeriod]);
   
   const getTotalProduction = () => {
-  if (!graphData || graphData.length === 0) return '0k';
-  const totalProduced = graphData.reduce(
-    (sum, item) => sum + (item.componentLength || 0) + (item.waste || 0),
-    0
-  );
-  const inThousands = totalProduced / 1000;
-  return `${inThousands.toFixed(2)}k`;
- };
+    if (!graphData || graphData.length === 0) return '0';
+    const totalProduced = graphData.reduce(
+      (sum, item) => sum + (item.componentLength || 0) + (item.waste || 0),
+      0
+    );
+    return totalProduced.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+  };
 
   const processGraphData = (skipZeroValues) => {
     if (!graphData || graphData.length === 0) return null;
@@ -128,24 +127,25 @@ const ErpProducedLengthLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
   return (
     <Grid item xs={12} sm={12} md={12} lg={10} xl={6} sx={{ mt: 3 }}>
       <Card sx={{ p: 4, boxShadow: 3 }}>
-        <Typography variant="h6" color="primary" gutterBottom>
-          Produced Length & Waste Over Time
-        </Typography>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 1 }}>
+          <Typography variant="h6" color="primary" gutterBottom>
+            Produced Length & Waste Over Time
+          </Typography>
+
+          <Typography variant="subtitle1" > 
+            <strong>Meterage Production:</strong> {getTotalProduction()} m {' '}
+              <span style={{ color: '#666' }}>
+                ({dateFrom.toLocaleDateString('en-GB')} – {dateTo.toLocaleDateString('en-GB')})
+              </span>
+          </Typography>
+        </Box>
 
         {isLoading ? (
           <Skeleton variant="rectangular" width="100%" height={320} sx={{ borderRadius: 1 }} />
         ) : (
           <>
             {graphData?.length > 0 ? (
-              <>
               <LogChartStacked processGraphData={processGraphData} graphLabels={graphLabels} isLoading={isLoading} />
-              <Typography variant="subtitle1" > 
-                <strong>Meterage Production:</strong> {getTotalProduction()} m {' '}
-                <span style={{ color: '#666' }}>
-                  ({dateFrom.toLocaleDateString('en-GB')} – {dateTo.toLocaleDateString('en-GB')})
-                </span>
-              </Typography>
-              </>
             ) : (
               <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 320 }} >
                 <TableNoData isNotFound={isNotFound} />
