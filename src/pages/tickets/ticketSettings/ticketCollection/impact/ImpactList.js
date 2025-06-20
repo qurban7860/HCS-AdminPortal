@@ -109,7 +109,7 @@ export default function ImpactList() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 
-  const handleViewRow = (id) => navigate(PATH_SUPPORT.ticketSettings.impacts.view(id));
+  const handleViewRow = (id) => navigate(PATH_SUPPORT.settings.impacts.view(id));
   
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))

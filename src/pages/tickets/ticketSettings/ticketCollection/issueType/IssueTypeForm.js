@@ -80,11 +80,11 @@ export default function IssueTypeForm() {
       if (id) {
         await dispatch(patchTicketIssueType(id, data));
         enqueueSnackbar('Issue Type Updated Successfully!');
-        navigate(PATH_SUPPORT.ticketSettings.issueTypes.view(id));
+        navigate(PATH_SUPPORT.settings.issueTypes.view(id));
       } else {
         await dispatch(postTicketIssueType(data));
         enqueueSnackbar('Issue Type Added Successfully!');
-        navigate(PATH_SUPPORT.ticketSettings.issueTypes.root);
+        navigate(PATH_SUPPORT.settings.issueTypes.root);
       }
       reset();
     } catch (error) {
@@ -95,7 +95,7 @@ export default function IssueTypeForm() {
 
   const toggleCancel = async () => {
     dispatch(resetTicketIssueType())
-    await navigate(PATH_SUPPORT.ticketSettings.issueTypes.root);
+    await navigate(PATH_SUPPORT.settings.issueTypes.root);
   };
 
   return (

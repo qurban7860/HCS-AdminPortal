@@ -74,9 +74,7 @@ export default function NoteViewForm() {
         <ViewFormEditDeleteButtons isActive={defaultValues.isActive} backLink={()=> { if(customerId) navigate(PATH_CRM.customers.notes.root(customerId))}} handleEdit={customer?.isArchived ? undefined : handleEdit} onDelete={customer?.isArchived ? undefined : onDelete} />
         <Grid container sx={{mt:2}}>
           <ViewFormField isLoading={isLoading} sm={6} heading="Site" param={defaultValues?.site_name} />
-          <ViewFormField isLoading={isLoading} sm={6} heading="Contact" param={defaultValues?.contact_firstName}
-            secondParam={defaultValues?.contact_lastName !== '' ? defaultValues.contact_lastName : ''}
-          />
+          <ViewFormField isLoading={isLoading} sm={6} heading="Contact" param={`${defaultValues?.contact_firstName} ${defaultValues?.contact_lastName}`}/>
           <ViewFormField isLoading={isLoading} sm={12} heading="Note" param={defaultValues?.note} />
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>

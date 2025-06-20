@@ -23,7 +23,7 @@ export default function InvestigationReasonListTableToolbar({
   onResetFilter,
 }) {
   const navigate = useNavigate();
-  const toggleAdd = () => navigate(PATH_SUPPORT.ticketSettings.investigationReasons.new);
+  const toggleAdd = () => navigate(PATH_SUPPORT.settings.investigationReasons.new);
   
   return (
     <Stack {...options}>

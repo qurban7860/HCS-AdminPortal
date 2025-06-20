@@ -31,7 +31,7 @@ export default function RequestTypeListTableToolbar({
 }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const toggleAdd = () => navigate(PATH_SUPPORT.ticketSettings.requestTypes.new);
+  const toggleAdd = () => navigate(PATH_SUPPORT.settings.requestTypes.new);
   const { activeTicketIssueTypes } = useSelector((state) => state.ticketIssueTypes); 
   
   useEffect(() => {

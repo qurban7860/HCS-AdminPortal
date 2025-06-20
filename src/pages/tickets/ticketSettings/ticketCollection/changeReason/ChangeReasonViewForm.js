@@ -52,14 +52,14 @@ export default function ChangeReasonViewForm() {
     try {
       await dispatch(deleteTicketChangeReason(id, true));
       enqueueSnackbar('Change Reason Archived Successfully!', { variant: 'success' });
-      navigate(PATH_SUPPORT.ticketSettings.changeReasons.root);
+      navigate(PATH_SUPPORT.settings.changeReasons.root);
     } catch (err) {
       enqueueSnackbar( handleError( err ) || 'Change Reason Archive failed!', { variant: `error` });
       console.log('Error:', err);
     }
   };
 
-  const toggleEdit = () => navigate(PATH_SUPPORT.ticketSettings.changeReasons.edit(id));
+  const toggleEdit = () => navigate(PATH_SUPPORT.settings.changeReasons.edit(id));
 
   return (
   <Grid>
@@ -71,7 +71,7 @@ export default function ChangeReasonViewForm() {
         onArchive={onArchive} 
         backLink={() => {
           dispatch(resetTicketChangeReason());
-          navigate(PATH_SUPPORT.ticketSettings.changeReasons.root);
+          navigate(PATH_SUPPORT.settings.changeReasons.root);
         }}
       />
       <Grid container sx={{mt:2}}>

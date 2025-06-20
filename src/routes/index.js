@@ -393,6 +393,12 @@ import {
   FaultList,
   FaultForm,
   FaultView,
+  
+  // Supports / Release
+  ReleaseList,
+  ReleaseForm,
+  ReleaseView,
+
   // REPORTS / SETTINGS
   Setting,
 
@@ -504,6 +510,12 @@ import {
   ArticleCategoryAdd,
   ArticleCategoryEdit,
   ArticleCategoryView,
+
+  // SUPPORT Projects
+  ProjectList,
+  ProjectAdd,
+  ProjectEdit,
+  ProjectView,
 } from './elements';
 
 // ----------------------------------------------------------------------
@@ -1196,6 +1208,17 @@ export default function Router() {
         </AuthGuard>
       ),
       children: [
+        {
+          path: 'projects',
+          children: [
+            { element: <ProjectList />, index: true },
+            { path: 'new', element: <ProjectAdd /> },
+            { path: ':id/view', element: <ProjectView /> },
+            { path: ':id/edit', element: <ProjectEdit /> },
+            { path: 'archived', element: <ProjectList isArchived /> },
+            { path: ':id/archived/view', element: <ProjectView /> },
+          ],
+        },
         { element: <Navigate to="/support/supportTickets" replace />, index: true },
         {
           path: 'supportDashboard',
@@ -1219,7 +1242,7 @@ export default function Router() {
           ],
         },
         {
-          path: 'ticketSettings',
+          path: 'settings',
           children: [
             { element: <TicketSetting />, index: true },
             // --------------------- Ticket Collection --------------------------------
@@ -1313,6 +1336,16 @@ export default function Router() {
                 { path: ':id/view', element: <FaultView /> },
               ]
             },
+            { path: 'articleCategories', 
+              children: [
+                { element: <ArticleCategoryList />, index: true },
+                { path: 'new', element: <ArticleCategoryAdd /> },
+                { path: ':id/edit', element: <ArticleCategoryEdit /> },
+                { path: ':id/view', element: <ArticleCategoryView /> },
+                { path: 'archived', element: <ArticleCategoryList isArchived /> },
+                { path: ':id/archived/view', element: <ArticleCategoryView /> },
+              ]
+            },
           ],
         },
         { element: <Navigate to="/support/supportTickets" replace />, index: true },
@@ -1331,22 +1364,18 @@ export default function Router() {
               ]
             }
           ]
-         },
-         {
-          path:'supportSettings',
-          children:[
-            { path: 'articleCategories', 
-              children: [
-                { element: <ArticleCategoryList />, index: true },
-                { path: 'new', element: <ArticleCategoryAdd /> },
-                { path: ':id/edit', element: <ArticleCategoryEdit /> },
-                { path: ':id/view', element: <ArticleCategoryView /> },
-                { path: 'archived', element: <ArticleCategoryList isArchived /> },
-                { path: ':id/archived/view', element: <ArticleCategoryView /> },
-              ]
-            },
+        },
+        
+        {
+          path: 'releases',
+          children: [
+            { element: <ReleaseList />, index: true },
+            { path: 'new', element: <ReleaseForm /> },
+            { path: ':id/edit', element: <ReleaseForm /> },
+            { path: ':id/view', element: <ReleaseView /> },
           ]
-         },
+        },
+        
         { path: 'manuals', element: <SectionUnderConstruction /> },
       ],
     },

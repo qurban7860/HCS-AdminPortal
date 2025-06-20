@@ -73,7 +73,7 @@ export default function RegionViewForm() {
         />
         <Grid container sx={{mt:2}}>
           <ViewFormField isLoading={isLoading} sm={6} heading="Name" param={defaultValues.name} />
-          <ViewFormField isLoading={isLoading} sm={12} chips heading="Countries" arrayParam={defaultValues.countries} />
+          <ViewFormField isLoading={isLoading} sm={12} heading="Countries" chips={defaultValues?.countries?.map(country => country?.name)} />
           <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues.description} />
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>

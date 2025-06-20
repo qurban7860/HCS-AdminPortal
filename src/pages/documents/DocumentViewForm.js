@@ -300,7 +300,6 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId, allow
               variant="outlined"
             />
           }
-          // objectParam={`${defaultValues.versionPrefix} ${defaultValues.documentVersion}`}
           ViewAllVersions = {document?.isArchived}
           NewVersion = {document?.isArchived}
           isNewVersion

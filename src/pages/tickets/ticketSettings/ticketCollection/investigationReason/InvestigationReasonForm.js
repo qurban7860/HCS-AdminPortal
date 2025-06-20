@@ -80,11 +80,11 @@ export default function InvestigationReasonForm() {
       if (id) {
         await dispatch(patchTicketInvestigationReason(id, data));
         enqueueSnackbar('Investigation Reason Updated Successfully!');
-        navigate(PATH_SUPPORT.ticketSettings.investigationReasons.view(id));
+        navigate(PATH_SUPPORT.settings.investigationReasons.view(id));
       } else {
         await dispatch(postTicketInvestigationReason(data));
         enqueueSnackbar('Investigation Reason Added Successfully!');
-        navigate(PATH_SUPPORT.ticketSettings.investigationReasons.root);
+        navigate(PATH_SUPPORT.settings.investigationReasons.root);
       }
       reset();
     } catch (error) {
@@ -95,7 +95,7 @@ export default function InvestigationReasonForm() {
 
   const toggleCancel = async () => {
     dispatch(resetTicketInvestigationReason())
-    await navigate(PATH_SUPPORT.ticketSettings.investigationReasons.root);
+    await navigate(PATH_SUPPORT.settings.investigationReasons.root);
   };
 
   return (

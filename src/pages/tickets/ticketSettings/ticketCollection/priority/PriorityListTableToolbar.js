@@ -23,7 +23,7 @@ export default function PriorityListTableToolbar({
   onResetFilter,
 }) {
   const navigate = useNavigate();
-  const toggleAdd = () => navigate(PATH_SUPPORT.ticketSettings.priorities.new);
+  const toggleAdd = () => navigate(PATH_SUPPORT.settings.priorities.new);
   
   return (
     <Stack {...options}>

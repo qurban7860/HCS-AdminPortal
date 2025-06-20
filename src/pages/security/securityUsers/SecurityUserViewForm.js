@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector, batch } from 'react-redux';
 // @mui
 import { format } from 'date-fns'; 
-import { Card, Grid, Link, Button, Stack,Typography,Box } from '@mui/material';
+import { Card, Grid, Link, Button, Stack, Typography, Box, Chip } from '@mui/material';
 import ConfirmDialog from '../../../components/confirm-dialog';
 // routes
 import { PATH_SETTING } from '../../../routes/paths';
@@ -178,6 +178,7 @@ export default function SecurityUserViewForm() {
     [securityUser]
   );
 
+  const userRoleChips = defaultValues?.roles.map((role,index) => <Chip key={index} title={role.name} label={role.name} color={role.name === 'SuperAdmin' ? 'secondary' : 'default'} sx={{m:0.2}}/>);
   const handleViewUserDialog = async (s) => {
     await dispatch(setSecurityUserDialog(true));
     await dispatch(getDialogSecurityUser(s?._id))
@@ -330,7 +331,7 @@ export default function SecurityUserViewForm() {
                 <ViewFormField isLoading={isLoading}
                   sm={12}
                   heading="Roles"
-                  userRolesChips={defaultValues?.roles}
+                  node={<Grid container>{userRoleChips}</Grid>}
                 />
 
                 <ViewFormField isLoading={isLoading}
@@ -342,19 +343,19 @@ export default function SecurityUserViewForm() {
                 <ViewFormField isLoading={isLoading}
                   sm={12}
                   heading="Regions"
-                  arrayParam={defaultValues?.regions}
+                  chips={defaultValues?.regions.map(region => region.name)}
                 />
 
                 <ViewFormField isLoading={isLoading}
                   sm={12}
                   heading="Customers"
-                  arrayParam={defaultValues?.customers}
+                  chips={defaultValues?.customers.map(customer => customer.name)}
                 />
 
                 <ViewFormField isLoading={isLoading}
                   sm={12}
                   heading="Machines"
-                  machineConnectionArrayChip={defaultValues?.machines}
+                  chips={defaultValues?.machines.map(machine => machine.name)}
                 />
 
               </Grid>
