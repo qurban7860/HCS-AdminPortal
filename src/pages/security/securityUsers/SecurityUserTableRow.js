@@ -1,10 +1,11 @@
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 // @mui
-import { Switch, Stack, TableRow, TableCell, Chip, createTheme } from '@mui/material';
+import { Stack, TableRow, TableCell, Chip, createTheme } from '@mui/material';
 import { green } from '@mui/material/colors';
 // components
 import Iconify from '../../../components/iconify';
+import Image from '../../../components/image/Image';
 import { fDate } from '../../../utils/formatTime';
 import CustomAvatar from '../../../components/custom-avatar/CustomAvatar';
 import LinkTableCell from '../../../components/ListTableTools/LinkTableCell';
@@ -15,7 +16,7 @@ import IconButtonTooltip from '../../../components/Icons/IconButtonTooltip';
 import { StyledTooltip } from '../../../theme/styles/default-styles';
 
 import { getPortalRegistration, setRequestDialog } from '../../../redux/slices/customer/portalRegistration';
-import Logo from '../../../components/logo';
+import IconTooltip from '../../../components/Icons/IconTooltip';
 // ----------------------------------------------------------------------
 
 
@@ -110,21 +111,29 @@ export default function SecurityUserTableRow({
 
             {!hiddenColumns?.accountType && (
              <TableCell align="left">
-              {isSPCustomer && (
+              {isSPCustomer ? (
                <StyledTooltip
-                title="SP user"
+                title="SP User"
                 placement="top"
                 disableFocusListener
                 tooltipcolor={theme.palette.primary.main}
                 color="#1976d2"
                  >
-               <span>
-                <Logo
-                 src="/logo/HowickIcon.svg"
-                 sx={{ mx: 'auto', my: 1, width: '30px', height: '30px' }}
-                 />
-               </span>
+                <Image
+                  src="/logo/HowickIcon.svg"
+                  // ratio="1/1"
+                  disabledEffect
+                  sx={{ width: '20px' }}
+                  // sx={{ borderRadius: 50, mb: 1 }}
+                />
               </StyledTooltip>
+              ) : (
+                <IconTooltip
+                  title="Customer User"
+                  color={ICONS.ACTIVE.color}
+                  icon="mdi:user-circle-outline"
+                  iconSx={{ border: 'none', ml: -0.7}}
+                />
               )}
            </TableCell>
            )}

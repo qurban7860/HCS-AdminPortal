@@ -185,7 +185,7 @@ export default function MachineViewForm() {
       id: machine?._id || '',
       name: machine?.name || '',
       generation: machine?.generation || '',
-      efficiency: machine?.efficiency || '',
+      efficiency: machine?.efficiency ? `${machine?.efficiency} m/hr` : '',
       serialNo: machine?.serialNo || '',
       parentMachine: machine?.parentMachine?.name || '',
       alias: machine?.alias || '',
@@ -317,7 +317,7 @@ export default function MachineViewForm() {
                        {/* 1 FULL ROW */}
             <ViewFormField isLoading={isLoading} sm={12} heading="Name" param={defaultValues?.name} />
             <ViewFormField isLoading={isLoading} sm={6} heading="Generation" param={defaultValues?.generation} />
-            <ViewFormField isLoading={isLoading} sm={6} heading="Efficiency" param={`${defaultValues?.efficiency} m/hr`} />
+            <ViewFormField isLoading={isLoading} sm={6} heading="Efficiency" param={defaultValues?.efficiency} />
                        {/* 2 FULL ROW */}
             <ViewFormField isLoading={isLoading} sm={defaultValues?.decommissionedDate ? 6 : 12} heading="Status" 
                   node={ 
