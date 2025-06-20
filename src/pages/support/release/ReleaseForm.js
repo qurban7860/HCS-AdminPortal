@@ -105,7 +105,7 @@ export default function ReleaseForm() {
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
-        <Cover name={release?.name || 'New release'} />
+        <Cover name={release?.name || 'New Release'} />
       </StyledCardContainer>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={3}>

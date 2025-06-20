@@ -50,9 +50,8 @@ import useResponsive from '../../../hooks/useResponsive';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'projectNo', label: 'Project No', align: 'left' },
-  { id: 'name', label: 'Name', width: 150 },
-  { id: 'description', label: 'Description' },
+  { id: 'projectNo', label: 'Project Key', align: 'left' },
+  { id: 'name', label: 'Name', align: 'left' },
   { id: 'isActive', label: 'Active', width: 100 },
   { id: 'updatedAt', align: 'right', label: 'Updated At', width: 150 },
 ];
@@ -222,7 +221,6 @@ function applyFilter({ inputData, comparator, filterName }) {
       (Project) =>
         String(Project?.projectNo)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         String(Project?.name)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        String(Project?.description)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         // (ProjectCategory?.isActive ? "Active" : "InActive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
         String(fDate(Project?.updatedAt))?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
