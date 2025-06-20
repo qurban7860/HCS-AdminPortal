@@ -16,6 +16,8 @@ export const machineSchema = Yup.object().shape({
     .max(6, 'Serial Number at most 6 digits')
     .label('Serial Number'),
   name: Yup.string().max(250),
+  generation: Yup.string().nullable(),
+  efficiency: Yup.number().nullable(),
   parentSerialNo: Yup.object()
     .shape({
       serialNo: Yup.string(),
@@ -142,6 +144,8 @@ export const editMachineSchema = Yup.object().shape({
     .max(6, 'Serial Number at most 6 digits')
     .label('Serial Number'),
   name: Yup.string().max(250),
+  generation: Yup.string().nullable(),
+  efficiency: Yup.number().nullable(),
   parentSerialNo: Yup.object()
     .shape({
       serialNo: Yup.string(),
