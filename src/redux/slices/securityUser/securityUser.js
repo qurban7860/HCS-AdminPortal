@@ -432,7 +432,7 @@ export function getSecurityUsers(param) {
 
 // -----------------------------Active Security Users-----------------------------------------
 
-export function getActiveSecurityUsers({ contact, customer, type, roleType }) {
+export function getActiveSecurityUsers({ contact, customer, type, roleType } = {}) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -441,7 +441,7 @@ export function getActiveSecurityUsers({ contact, customer, type, roleType }) {
         isActive: true,
         invitationStatus: false,
         roleType,
-        customer: { type },
+        customer: type ? { type } : (customer || undefined),
         contact,
       }
 
@@ -460,7 +460,7 @@ export function getActiveSecurityUsers({ contact, customer, type, roleType }) {
 
 // ----------------------------------------------------------------------
 
-export function getAssignedSecurityUsers({ isActive, roles, roleType, customer }) {
+export function getAssignedSecurityUsers({ isActive, roles, roleType, customer } = {}) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {

@@ -56,11 +56,6 @@ export default function TicketViewForm() {
   const configurations = JSON.parse(localStorage.getItem('configurations'));
   const prefix = configurations?.find((config) => config?.name?.toLowerCase() === 'ticket_prefix')?.value || '';
 
-  // const defaultAsssignee = configurations.find((c) => c?.name?.trim() === 'DefaultSupportTicketAssignee'
-  // )?.value?.split(',')?.map((e) => e.trim()?.toLowerCase());
-  // const defaultApprover = configurations.find((c) => c?.name?.trim() === 'DefaultSupportTicketApprover'
-  // )?.value?.split(',')?.map((e) => e.trim()?.toLowerCase());
-
   useEffect(() => {
     // CUSTOMER USERS
     const reportersList = [...assignedUsers];
@@ -81,8 +76,8 @@ export default function TicketViewForm() {
       dispatch(getAssignedSecurityUsers({ customer: ticket?.customer?._id, isActive: true }));
     }
 
-    const asssigneeRoleType = configurations.find((c) => c?.name?.trim() === 'SupportTicketAssigneeRoleType')?.value;
-    const approverRoleType = configurations.find((c) => c?.name?.trim() === 'SupportTicketApproverRoleType')?.value;
+    const asssigneeRoleType = configurations.find((c) => c?.name?.trim() === 'SupportTicketAssigneeRoleType')?.value?.trim();
+    const approverRoleType = configurations.find((c) => c?.name?.trim() === 'SupportTicketApproverRoleType')?.value?.trim();
 
     dispatch(getActiveSecurityUsers({ type: 'SP', roleType: asssigneeRoleType }));
     dispatch(getSecurityUsers({ type: 'SP', roleType: approverRoleType }));
