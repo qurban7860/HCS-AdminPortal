@@ -122,7 +122,8 @@ export default function ContactViewForm({
   return (
     <Grid sx={{ mt: 1 }}>
 
-      <ViewFormEditDeleteButtons
+      <ViewFormEditDeleteButtons 
+        showContactUsers
         moveCustomerContact={!customer?.isArchived && isAllAccessAllowed && handleMoveConatct}
         handleEdit={customer?.isArchived ? undefined : handleEdit}
         onArchive={customer?.isArchived ? undefined : onArchive}
@@ -149,7 +150,7 @@ export default function ContactViewForm({
         <ViewFormField isLoading={isLoading} sm={6} heading="Country" param={defaultValues?.country} />
         <ViewPhoneComponent isLoading={isLoading} sm={6} heading="Phone" value={defaultValues?.phoneNumbers} />
         <ViewFormField isLoading={isLoading} sm={12} heading="Email" param={defaultValues?.email} />
-        <ViewFormField isLoading={isLoading} sm={12} heading="Operator's Trainings" chipDialogArrayParam={operatorTraningsList} />
+        <ViewFormField isLoading={isLoading} sm={12} heading="Operator's Trainings" node={<Grid container>{operatorTraningsList}</Grid>} />
       </Grid>
       <ViewFormAudit defaultValues={defaultValues} />
     </Grid>

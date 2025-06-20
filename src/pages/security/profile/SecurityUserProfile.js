@@ -7,6 +7,7 @@ import {
   Grid,
   Container,
   Link,
+  Chip,
 } from '@mui/material';
 // routes
 import { PATH_SETTING } from '../../../routes/paths';
@@ -93,6 +94,9 @@ export default function SecurityUserProfile() {
     }),
     [securityUser]
   );
+
+  const userRoleChips = defaultValues?.roles.map((role,index) => <Chip key={index} title={role.name} label={role.name} color={role.name === 'SuperAdmin' ? 'secondary' : 'default'} sx={{m:0.2}}/>);
+  
   return (
       <Container maxWidth={false}>
         <Card
@@ -144,28 +148,27 @@ export default function SecurityUserProfile() {
             <ViewFormField
               sm={6}
               heading="Roles"
-              userRolesChips={defaultValues?.roles}
+              node={<Grid container>{userRoleChips}</Grid>}
             />
             <ViewFormField
               sm={12}
               heading="Regions"
-              arrayParam={defaultValues?.regions}
+              chips={defaultValues?.regions.map(region => region.name)}
             />
             <ViewFormField
               sm={12}
               heading="Countries"
-              chipLabel='country_name'
-              arrayParam={defaultValues?.countries}
+              chips={defaultValues?.countries.map(country => country.name)}
             />
             <ViewFormField
               sm={12}
               heading="Customers"
-              arrayParam={defaultValues?.customers}
+              chips={defaultValues?.customers.map(customer => customer.name)}
             />
             <ViewFormField
               sm={12}
               heading="Machines"
-              machineConnectionArrayChip={defaultValues?.machines}
+              chips={defaultValues?.machines.map(machine => machine.name)}
             />
           </Grid>
           <ViewFormField />

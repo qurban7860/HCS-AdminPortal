@@ -92,11 +92,11 @@ export default function RequestTypeForm() {
       if (id) {
         await dispatch(patchTicketRequestType(id, data));
         enqueueSnackbar('Request Type Updated Successfully!');
-        navigate(PATH_SUPPORT.ticketSettings.requestTypes.view(id));
+        navigate(PATH_SUPPORT.settings.requestTypes.view(id));
       } else {
         await dispatch(postTicketRequestType(data));
         enqueueSnackbar('Request Type Added Successfully!');
-        navigate(PATH_SUPPORT.ticketSettings.requestTypes.root);
+        navigate(PATH_SUPPORT.settings.requestTypes.root);
       }
       reset();
     } catch (error) {
@@ -107,7 +107,7 @@ export default function RequestTypeForm() {
 
   const toggleCancel = async () => {
     dispatch(resetTicketRequestType())
-    await navigate(PATH_SUPPORT.ticketSettings.requestTypes.root);
+    await navigate(PATH_SUPPORT.settings.requestTypes.root);
   };
 
   return (

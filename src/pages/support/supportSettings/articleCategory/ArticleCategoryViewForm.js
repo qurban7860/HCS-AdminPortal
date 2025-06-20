@@ -35,7 +35,7 @@ export default function ArticleCategoryViewForm() {
     try {
       await dispatch(deleteArticleCategory(articleCategory?._id));
       enqueueSnackbar('Article Category deleted successfully!');
-      navigate(PATH_SUPPORT.supportSettings.articleCategories.root);
+      navigate(PATH_SUPPORT.settings.articleCategories.root);
     } catch (error) {
       console.error(error);
       enqueueSnackbar(handleError(error), { variant: `error` });
@@ -46,7 +46,7 @@ export default function ArticleCategoryViewForm() {
     try {
       await dispatch(archiveArticleCategory(articleCategory?._id));
       enqueueSnackbar('Article Category archived successfully!');
-      navigate(PATH_SUPPORT.supportSettings.articleCategories.archived);
+      navigate(PATH_SUPPORT.settings.articleCategories.archived);
     } catch (error) {
       console.error(error);
       enqueueSnackbar(handleError(error), { variant: `error` });
@@ -56,7 +56,7 @@ export default function ArticleCategoryViewForm() {
   const onRestore = async () => {
     try {
       await dispatch(restoreArticleCategory(articleCategory?._id));
-      navigate(PATH_SUPPORT.supportSettings.articleCategories.root);
+      navigate(PATH_SUPPORT.settings.articleCategories.root);
       enqueueSnackbar('Article Category restored successfully!');
     } catch (error) {
       enqueueSnackbar('Article Category restored failed!', { variant: `error` });
@@ -65,7 +65,7 @@ export default function ArticleCategoryViewForm() {
   };
 
   const handleEdit = async () => {
-    navigate(PATH_SUPPORT.supportSettings.articleCategories.edit(articleCategory._id));
+    navigate(PATH_SUPPORT.settings.articleCategories.edit(articleCategory._id));
   };
 
   const defaultValues = useMemo(
@@ -87,9 +87,9 @@ export default function ArticleCategoryViewForm() {
 
   const handlebackLink = () => {
     if(defaultValues.isArchived){
-      navigate(PATH_SUPPORT.supportSettings.articleCategories.archived);
+      navigate(PATH_SUPPORT.settings.articleCategories.archived);
     }else{
-      navigate(PATH_SUPPORT.supportSettings.articleCategories.root);
+      navigate(PATH_SUPPORT.settings.articleCategories.root);
     }
   };
 

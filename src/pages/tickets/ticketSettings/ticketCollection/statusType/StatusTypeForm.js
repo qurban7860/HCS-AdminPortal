@@ -81,11 +81,11 @@ export default function StatusTypeForm() {
       if (id) {
         await dispatch(patchTicketStatusType(id, data));
         enqueueSnackbar('Status Type Updated Successfully!');
-        navigate(PATH_SUPPORT.ticketSettings.statusTypes.view(id));
+        navigate(PATH_SUPPORT.settings.statusTypes.view(id));
       } else {
         await dispatch(postTicketStatusType(data));
         enqueueSnackbar('Status Type Added Successfully!');
-        navigate(PATH_SUPPORT.ticketSettings.statusTypes.root);
+        navigate(PATH_SUPPORT.settings.statusTypes.root);
       }
       reset();
     } catch (error) {
@@ -96,7 +96,7 @@ export default function StatusTypeForm() {
 
   const toggleCancel = async () => {
     dispatch(resetTicketStatusType())
-    await navigate(PATH_SUPPORT.ticketSettings.statusTypes.root);
+    await navigate(PATH_SUPPORT.settings.statusTypes.root);
   };
 
   return (

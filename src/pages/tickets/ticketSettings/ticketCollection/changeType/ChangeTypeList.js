@@ -109,7 +109,7 @@ export default function ChangeTypeList() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 
-  const handleViewRow = (id) => navigate(PATH_SUPPORT.ticketSettings.changeTypes.view(id));
+  const handleViewRow = (id) => navigate(PATH_SUPPORT.settings.changeTypes.view(id));
   
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))

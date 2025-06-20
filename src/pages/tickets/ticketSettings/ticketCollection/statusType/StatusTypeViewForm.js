@@ -52,14 +52,14 @@ export default function StatusTypeViewForm() {
     try {
       await dispatch(deleteTicketStatusType(id, true));
       enqueueSnackbar('Status Type Archived Successfully!', { variant: 'success' });
-      navigate(PATH_SUPPORT.ticketSettings.statusTypes.root);
+      navigate(PATH_SUPPORT.settings.statusTypes.root);
     } catch (err) {
       enqueueSnackbar( handleError( err ) || 'Status Type Archive failed!', { variant: `error` } );
       console.log('Error:', err);
     }
   };
 
-  const toggleEdit = () => navigate(PATH_SUPPORT.ticketSettings.statusTypes.edit(id));
+  const toggleEdit = () => navigate(PATH_SUPPORT.settings.statusTypes.edit(id));
 
   return (
   <Grid>
@@ -72,7 +72,7 @@ export default function StatusTypeViewForm() {
         onArchive={onArchive} 
         backLink={() => {
           dispatch(resetTicketStatusType());
-          navigate(PATH_SUPPORT.ticketSettings.statusTypes.root);
+          navigate(PATH_SUPPORT.settings.statusTypes.root);
         }}
       />
       <Grid container sx={{mt:2}}>

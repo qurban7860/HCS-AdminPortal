@@ -1,7 +1,7 @@
 import React, { useEffect, useState, memo } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { Typography, Grid, Chip, createTheme, IconButton, Link } from '@mui/material';
+import { Typography, Grid, Chip, createTheme, IconButton, Link, ListItemText } from '@mui/material';
 import { green } from '@mui/material/colors';
 import IconPopover from '../Icons/IconPopover';
 import ViewFormMenuPopover from './ViewFormMenuPopover';
@@ -18,16 +18,7 @@ function ViewFormField({
   headingIconTooltip,
   headingIconHandler,
   param,
-  objectString,
   node,
-  chipLabel,
-  arrayParam,
-  configArrayParam,
-  toolType,
-  secondParam,
-  objectParam,
-  secondObjectParam,
-  numberParam,
   sm,
   isActive,
   isRequired,
@@ -37,7 +28,6 @@ function ViewFormField({
   machineConnectionArrayChip,
   machineDocumentsArrayChip,
   verified,
-  chipDialogArrayParam,
   customerVerifiedBy,
   machineVerifiedBy,
   customerAccess,
@@ -118,31 +108,12 @@ function ViewFormField({
           />
         )}
         {/* input fields params */}
+        
+        {param && (typeof param === 'string' || typeof param === 'number') && (<Typography variant={variant} >{param}</Typography>)}
         {documentIsActive !== undefined && <IconPopover documentIsActive={documentIsActive} />}
         {multiAuth !== undefined && <IconPopover multiAuth={multiAuth} />}
         {currentEmp !== undefined && <IconPopover currentEmp={currentEmp} />}
         {customerAccess !== undefined && <IconPopover customerAccess={customerAccess} />}
-        <Typography variant={variant} >
-          {param && typeof param === 'string' && param.trim().length > 0 && param}
-          {objectString && typeof objectString === 'string' && objectString.length > 0 && objectString}
-          {param &&
-            typeof param === 'string' &&
-            param.trim().length > 0 &&
-            secondParam &&
-            typeof secondParam === 'string' &&
-            secondParam.trim().length > 0 &&
-            '  '}
-              <Grid container >
-                 {param && typeof param !== 'string' && param}
-              </Grid>
-          {secondParam &&
-          typeof secondParam === 'string' &&
-          secondParam.trim().length > 0 &&
-          secondParam}
-          {objectParam || ''}
-          {secondObjectParam || ''}
-          {numberParam || ''}
-        </Typography>
         {node || ''}
         {ViewAllVersions && 
           <StyledTooltip title={ICONS.VIEW_VERSIONS.heading} placement="top" disableFocusListener tooltipcolor={theme.palette.primary.main} color={theme.palette.primary.main}>
@@ -165,47 +136,9 @@ function ViewFormField({
             </IconButton>
           </StyledTooltip>
         }
-        &nbsp;
       </Grid>
-      {configArrayParam && typeof configArrayParam === 'object' && configArrayParam?.length > 0 && (
-        <Grid container sx={{my:-3, mb:0,
-              display: 'flex',
-              alignItems: 'center',
-              whiteSpace: 'pre-line',
-              wordBreak: 'break-word',
-              }} >
-              {configArrayParam.map(
-                (data, index) =>
-                  data?.reportTitle &&
-                  typeof data?.reportTitle === 'string' &&
-                  data?.reportTitle.trim().length > 0 && <Chip key={index} sx={{m:0.2}} label={<div style={{display:'flex',alignItems:'center'}}  ><Typography variant='body2'>{`${data?.reportTitle || ''}`}</Typography> <Typography variant='subtitle2'>{` - v${data?.docVersionNo}`}</Typography></div>} />
-              )}
-            </Grid>
-      )}
       
-      {arrayParam && typeof arrayParam === 'object' && arrayParam?.length > 0 && (
-            <Grid container sx={{my:-3, mb:0,
-              display: 'flex',
-              alignItems: 'center',
-              whiteSpace: 'pre-line',
-              wordBreak: 'break-word',
-              }} >
-            {chipLabel ?
-            arrayParam.map(
-              (data, index) =>
-                data?.[chipLabel] &&
-                typeof data?.[chipLabel] === 'string' &&
-                data?.[chipLabel].trim().length > 0 && <Chip key={index} label={data?.[chipLabel].length > 50    ? `${data?.[chipLabel]?.substring(0, 50)}...`
-                : data?.[chipLabel]} sx={{m:0.2}} />
-            ) :
-            arrayParam.map(
-              (data, index) =>
-                data?.name &&
-                typeof data?.name === 'string' &&
-                data?.name.trim().length > 0 && <Chip key={index} label={data?.name} sx={{m:0.2}} />
-            )}
-            </Grid>
-        )}
+      
 
             { machineConnectionArrayChip && Array.isArray(machineConnectionArrayChip) && machineConnectionArrayChip.length > 0 && (
               <Grid container sx={{
@@ -238,39 +171,8 @@ function ViewFormField({
               </Grid>
             )}
 
-            {toolType && typeof toolType === 'object' && toolType?.length > 0 && (
-                <Grid container sx={{my:-3, mb:0,
-                  display: 'flex',  alignItems: 'center',
-                  whiteSpace: 'pre-line',  wordBreak: 'break-word',
-                  }} 
-                >
-                    {toolType.map((type, index) => (
-                      type?.tool?.name &&
-                      typeof type.tool.name === 'string' &&
-                      type?.tool?.name.trim().length > 0 && (
-                      <Chip key={index} label={type.tool.name} sx={{ m: 0.2 }} />
-                      )))
-                    }
-                </Grid>
-            )}
-
-            {chipDialogArrayParam && typeof chipDialogArrayParam === 'object' && chipDialogArrayParam?.length > 0 &&
-              <Grid container sx={{my:-3, mb:0,
-                    display: 'flex',  alignItems: 'center',
-                    whiteSpace: 'pre-line',  wordBreak: 'break-word',
-                    }} 
-              >
-                  {chipDialogArrayParam.map((item, index) => (
-                    <React.Fragment key={index}>
-                      {item}
-                      {index !== chipDialogArrayParam.length - 1}
-                    </React.Fragment>)
-                  )}
-              </Grid>
-            }
-
             {chips && typeof chips === 'object' && chips.length > 0 ? (
-              <Grid container sx={{my:-3, mb:0,
+              <Grid container sx={{mb:0,
                   display: 'flex',  alignItems: 'center',
                   whiteSpace: 'pre-line', wordBreak: 'break-word',
                   }} >
@@ -337,15 +239,6 @@ ViewFormField.propTypes = {
   headingIconHandler: PropTypes.func,
   node: PropTypes.node,
   param: PropTypes.string,
-  objectString: PropTypes.string,
-  arrayParam: PropTypes.array,
-  configArrayParam: PropTypes.array,
-  toolType: PropTypes.array,
-  chipLabel: PropTypes.string,
-  numberParam: PropTypes.number,
-  secondParam: PropTypes.string,
-  objectParam: PropTypes.object,
-  secondObjectParam: PropTypes.object,
   sm: PropTypes.number,
   isActive: PropTypes.bool,
   isRequired: PropTypes.bool,
@@ -361,7 +254,6 @@ ViewFormField.propTypes = {
   documentIsActive: PropTypes.bool,
   multiAuth: PropTypes.bool,
   currentEmp: PropTypes.bool,
-  chipDialogArrayParam: PropTypes.array,
   chips: PropTypes.any,
   customerContacts: PropTypes.array,
   userRolesChips: PropTypes.array,

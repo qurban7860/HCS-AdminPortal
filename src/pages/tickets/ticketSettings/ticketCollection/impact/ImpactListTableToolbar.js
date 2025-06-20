@@ -23,7 +23,7 @@ export default function ImpactListTableToolbar({
   onResetFilter,
 }) {
   const navigate = useNavigate();
-  const toggleAdd = () => navigate(PATH_SUPPORT.ticketSettings.impacts.new);
+  const toggleAdd = () => navigate(PATH_SUPPORT.settings.impacts.new);
   
   return (
     <Stack {...options}>

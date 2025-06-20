@@ -109,7 +109,7 @@ export default function ChangeReasonList() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 
-  const handleViewRow = (id) => navigate(PATH_SUPPORT.ticketSettings.changeReasons.view(id));
+  const handleViewRow = (id) => navigate(PATH_SUPPORT.settings.changeReasons.view(id));
   
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))

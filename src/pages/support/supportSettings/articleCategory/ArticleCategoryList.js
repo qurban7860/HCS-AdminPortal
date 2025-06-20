@@ -134,7 +134,7 @@ export default function ArticleCategoryList({isArchived}) {
   },[])
 
   const handleViewRow = (id) => {
-    navigate(PATH_SUPPORT.supportSettings.articleCategories.view(id));
+    navigate(PATH_SUPPORT.settings.articleCategories.view(id));
   };
 
   const handleResetFilter = () => {
@@ -147,9 +147,9 @@ export default function ArticleCategoryList({isArchived}) {
     setPage(0);
     dispatch(setFilterBy(''));
     if(isArchived){
-      navigate(PATH_SUPPORT.supportSettings.articleCategories.root);    
+      navigate(PATH_SUPPORT.settings.articleCategories.root);    
     }else{
-      navigate(PATH_SUPPORT.supportSettings.articleCategories.archived);    
+      navigate(PATH_SUPPORT.settings.articleCategories.archived);    
     }
   }
 

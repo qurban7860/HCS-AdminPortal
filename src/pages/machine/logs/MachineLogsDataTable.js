@@ -8,6 +8,7 @@ import {
   TableHead,
   TableRow,
   TableSortLabel,
+  Tooltip
 } from '@mui/material';
 import PropTypes from 'prop-types';
 import TableCard from '../../../components/ListTableTools/TableCard';
@@ -189,23 +190,28 @@ const MachineLogsDataTable = ({ logType, allMachineLogsPage, dataForApi }) => {
                           sortDirection={orderBy === headCell.id ? order : false}
                           sx={{ width: headCell.width, minWidth: headCell.minWidth }}
                         >
-                          {!onSort &&
-                            (numericalLengthValues.includes(headCell.id)
-                              ? `${headCell.label} (m)`
-                              : headCell.label)}
-                          {onSort && (
-                            <TableSortLabel
-                              hideSortIcon
-                              active={orderBy === headCell.id}
-                              direction={orderBy === headCell.id ? order : 'asc'}
-                              onClick={() => onSort(headCell.id)}
-                              sx={{ textTransform: 'capitalize' }}
+                         {!onSort && headCell.label}
+
+                        {onSort && (
+                           <TableSortLabel
+                            hideSortIcon
+                            active={orderBy === headCell.id}
+                            direction={orderBy === headCell.id ? order : 'asc'}
+                            onClick={() => onSort(headCell.id)}
+                            sx={{ textTransform: 'none' }}
                             >
-                              {numericalLengthValues.includes(headCell.id)
-                                ? `${headCell.label} (m)`
-                                : headCell.label}
-                            </TableSortLabel>
-                          )}
+                          <Tooltip
+                          title={headCell.tooltip && headCell.tooltipText ? headCell.tooltipText : ''}
+                          arrow
+                          placement="top"
+                          disableHoverListener={!headCell.tooltip || !headCell.tooltipText}
+                           >
+                          <span style={{ display: 'inline-block' }}>
+                        {headCell.label}
+                          </span>
+                          </Tooltip>
+                        </TableSortLabel>
+                        )}
                         </TableCell>
                       );
                     })}

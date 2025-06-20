@@ -23,7 +23,7 @@ export default function FaultListTableToolbar({
   onResetFilter,
 }) {
   const navigate = useNavigate();
-  const toggleAdd = () => navigate(PATH_SUPPORT.ticketSettings.faults.new);
+  const toggleAdd = () => navigate(PATH_SUPPORT.settings.faults.new);
   
   return (
     <Stack {...options}>

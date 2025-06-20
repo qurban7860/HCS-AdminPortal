@@ -23,7 +23,7 @@ export default function ChangeTypeListTableToolbar({
   onResetFilter,
 }) {
   const navigate = useNavigate();
-  const toggleAdd = () => navigate(PATH_SUPPORT.ticketSettings.changeTypes.new);
+  const toggleAdd = () => navigate(PATH_SUPPORT.settings.changeTypes.new);
   
   return (
     <Stack {...options}>

@@ -206,7 +206,7 @@ export const allSideBarOptions = {
         },
         {
           title: 'Settings',
-          path: PATH_SUPPORT.ticketSettings.root,
+          path: PATH_SUPPORT.settings.root,
           icon: <Iconify icon="mdi:settings" />,
         },
         {
@@ -225,6 +225,28 @@ export const allSideBarOptions = {
           icon: <Iconify icon="mdi:book-open-page-variant" />,
         },
       ],
+    },
+
+    {
+      subheader: 'Projects & Releases',
+      items: [
+        // {
+        //   title: 'HPS - 1642',
+        //   path: PATH_SUPPORT.projects.root,
+        //   icon: <Iconify icon="eos-icons:project" />,
+        //   stared: true,
+        // },
+        {
+          title: 'Projects',
+          path: PATH_SUPPORT.projects.root,
+          icon: <Iconify icon="solar:list-bold-duotone" />
+        },
+        {
+          title: 'Releases',
+          path: PATH_SUPPORT.releases.root,
+          icon: <Iconify icon="mdi:source-branch" />,
+        },
+      ]
     },
   ],
   reports: [

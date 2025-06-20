@@ -31,7 +31,7 @@ export default function ArticleCategoryListTableToolbar({
 
   const navigate = useNavigate();
   const toggleAdd = () => {
-    navigate(PATH_SUPPORT.supportSettings.articleCategories.new);
+    navigate(PATH_SUPPORT.settings.articleCategories.new);
   };
 
   return (

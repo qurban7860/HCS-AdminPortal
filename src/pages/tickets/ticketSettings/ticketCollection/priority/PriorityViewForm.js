@@ -51,14 +51,14 @@ export default function PriorityViewForm() {
     try {
       await dispatch(deleteTicketPriority(id, true));
       enqueueSnackbar('Priority Archived Successfully!', { variant: 'success' });
-      navigate(PATH_SUPPORT.ticketSettings.priorities.root);
+      navigate(PATH_SUPPORT.settings.priorities.root);
     } catch (err) {
       enqueueSnackbar( handleError( err ) || 'Priority Archive failed!', { variant: `error` });
       console.log('Error:', err);
     }
   };
 
-  const toggleEdit = () => navigate(PATH_SUPPORT.ticketSettings.priorities.edit(id));
+  const toggleEdit = () => navigate(PATH_SUPPORT.settings.priorities.edit(id));
 
   return (
   <Grid>
@@ -70,7 +70,7 @@ export default function PriorityViewForm() {
         onArchive={onArchive} 
         backLink={() => {
           dispatch(resetTicketPriority());
-          navigate(PATH_SUPPORT.ticketSettings.priorities.root);
+          navigate(PATH_SUPPORT.settings.priorities.root);
         }}
       />
       <Grid container sx={{mt:2}}>

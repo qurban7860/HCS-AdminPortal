@@ -80,11 +80,11 @@ export default function PriorityForm() {
       if (id) {
         await dispatch(patchTicketPriority(id, data));
         enqueueSnackbar('Priority Updated Successfully!');
-        navigate(PATH_SUPPORT.ticketSettings.priorities.view(id));
+        navigate(PATH_SUPPORT.settings.priorities.view(id));
       } else {
         await dispatch(postTicketPriority(data));
         enqueueSnackbar('Priority Added Successfully!');
-        navigate(PATH_SUPPORT.ticketSettings.priorities.root);
+        navigate(PATH_SUPPORT.settings.priorities.root);
       }
       reset();
     } catch (error) {
@@ -95,7 +95,7 @@ export default function PriorityForm() {
 
   const toggleCancel = async () => {
     dispatch(resetTicketPriority())
-    await navigate(PATH_SUPPORT.ticketSettings.priorities.root);
+    await navigate(PATH_SUPPORT.settings.priorities.root);
   };
 
   return (

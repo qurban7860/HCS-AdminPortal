@@ -186,7 +186,6 @@ export function addArticle(params) {
 
       const response = await axios.post(`${CONFIG.SERVER_URL}support/knowledgeBase/article/`, formData);
       dispatch(slice.actions.setResponseMessage('Article saved successfully'));
-      dispatch(getArticles());
       return response?.data;
     } catch (error) {
       console.log(error);
