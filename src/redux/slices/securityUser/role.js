@@ -28,7 +28,7 @@ const initialState = {
     { name: 'Sales Manager', value: 'SalesManager' },
     { name: 'Super Admin', value: 'SuperAdmin' },
     { name: 'Technical Manager', value: 'TechnicalManager' },
-    { name: 'Technicial Support', value: 'Technicial Support' },
+    { name: 'Technical Support', value: 'Technical Support' },
   ],
   filterBy: '',
   page: 0,
