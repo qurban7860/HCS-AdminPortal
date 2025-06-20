@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useLayoutEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
@@ -7,33 +7,36 @@ import { Container } from '@mui/material';
 // redux
 import {
   getProject,
+  resetProject
 } from '../../../redux/slices/support/project/project';
-// paths
-import { PATH_SUPPORT } from '../../../routes/paths';
 // components
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import { Cover } from '../../../components/Defaults/Cover';
-import ProjectViewForm from './ProjectViewForm';
+import ProjectEditForm from './ProjectEditForm';
 
 // ----------------------------------------------------------------------
 
-export default function ProjectView() {
+export default function ProjectEdit() {
   const { id } = useParams();
   const dispatch = useDispatch();
 
   const { project } = useSelector((state) => state.project);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     dispatch(getProject(id));
-  }, [id, dispatch]);
 
+    return () => {
+      dispatch(resetProject());
+    };
+  
+  }, [id, dispatch]);
 
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
         <Cover name={project?.name} isArchived={project?.isArchived} />
       </StyledCardContainer>
-      <ProjectViewForm />
+      <ProjectEditForm />
     </Container>
   );
 }

@@ -11,10 +11,10 @@ import { Box, Container, Card, Grid, Stack } from '@mui/material';
 // components
 import { Cover } from '../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
-import { PATH_SUPPORT } from '../../../routes/paths';
+import { PATH_SETTING } from '../../../routes/paths';
 import { useSnackbar } from '../../../components/snackbar';
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
-import FormProvider, { RHFTextField, RHFSwitch, RHFEditor, RHFAutocomplete} from '../../../components/hook-form';
+import FormProvider, { RHFTextField, RHFSwitch, RHFEditor, RHFAutocomplete, RHFDatePicker} from '../../../components/hook-form';
 import { postRelease, patchRelease, getRelease, resetRelease } from '../../../redux/slices/support/release/release';
 import { getActiveProjects, resetActiveProjects } from '../../../redux/slices/support/project/project';
 import { handleError } from '../../../utils/errorHandler';
@@ -38,6 +38,7 @@ export default function ReleaseForm() {
     () => ({
       project: id && release?.project || null,
       name: id && release?.name || '',
+      releaseDate: id && release?.releaseDate || null,
       description: id && release?.description || '',
       isActive: id ? release?.isActive : true,
       createdAt: id && release?.createdAt || '',
@@ -48,6 +49,7 @@ export default function ReleaseForm() {
   const ReleaseSchema = Yup.object().shape({
   project: Yup.object().required().label('Project').nullable(),
   name: Yup.string().min(2).max(50).required('Name is required!'),
+  releaseDate: Yup.mixed().label("Release Date").nullable().notRequired(),
   description: Yup.string().max(5000),
   isActive: Yup.boolean(),
   });
@@ -84,11 +86,11 @@ export default function ReleaseForm() {
       if (id) {
         await dispatch(patchRelease(id, data));
         enqueueSnackbar('Release Updated Successfully!');
-        navigate(PATH_SUPPORT.releases.view(id));
+        navigate(PATH_SETTING.release.view(id));
       } else {
         await dispatch(postRelease(data));
         enqueueSnackbar('Release Added Successfully!');
-        navigate(PATH_SUPPORT.releases.root);
+        navigate(PATH_SETTING.release.root);
       }
       reset();
     } catch (error) {
@@ -99,7 +101,7 @@ export default function ReleaseForm() {
 
   const toggleCancel = async () => {
     dispatch(resetRelease())
-    await navigate(PATH_SUPPORT.releases.root);
+    await navigate(PATH_SETTING.release.root);
   };
 
   return (
@@ -116,7 +118,7 @@ export default function ReleaseForm() {
                   rowGap={2}
                   columnGap={2}
                   display="grid"
-                  gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
+                  gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(3, 1fr)' }}
                 >
                   <RHFAutocomplete 
                     name="project" 
@@ -126,6 +128,10 @@ export default function ReleaseForm() {
                     isOptionEqualToValue={(option, value) => option._id === value._id}
                   />
                   <RHFTextField name="name" label="Name*" />
+                  <RHFDatePicker
+                    label="Release Date"
+                    name="releaseDate"
+                  />
                 </Box>
                 <RHFEditor name="description" label="Description" minRows={3} multiline />
                 <Grid display="flex" alignItems="center">

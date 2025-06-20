@@ -132,6 +132,7 @@ export function postRelease(data) {
         name: data.name,
         releaseNo: data.releaseNo,
         project: data.project?._id,
+        releaseDate: data.releaseDate,
         description: data.description,
         isActive: data.isActive,
       }
@@ -155,6 +156,7 @@ export function patchRelease(id, data) {
         name: data.name,
         releaseNo: data.releaseNo,
         project: data.project?._id,
+        releaseDate: data.releaseDate,
         description: data.description,
         isActive: data.isActive,
       }

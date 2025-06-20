@@ -131,6 +131,8 @@ export function addProject(params) {
       const data = {
         projectNo: params.projectNo,
         name: params.name,
+        startDate: params.startDate,
+        endDate: params.endDate,
         description: params.description,
         customerAccess: params.customerAccess,
         isActive: params.isActive,
@@ -155,6 +157,8 @@ export function updateProject(Id, params) {
       const data = {
         projectNo: params.projectNo,
         name: params.name,
+        startDate: params.startDate,
+        endDate: params.endDate,
         description: params.description,
         customerAccess: params.customerAccess,
         isActive: params.isActive,
