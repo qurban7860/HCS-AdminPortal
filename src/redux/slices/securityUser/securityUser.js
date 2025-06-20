@@ -111,6 +111,10 @@ const slice = createSlice({
       state.activeFilterList = action.payload;
     },
 
+    setEmployeeFilterList(state, action) {
+      state.employeeFilterList = action.payload;
+    },
+
     // SET EMPLOYEE RESTRICTED LIST
     setFilterRegion(state, action) {
       state.filterRegion = action.payload;
@@ -526,6 +530,10 @@ export function getContactUsers(contactID) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
+      if (!contactID) {
+        dispatch(slice.actions.resetContactUsers());
+        return;
+      }
       const params = {
         isArchived: false,
         invitationStatus: false
@@ -534,7 +542,6 @@ export function getContactUsers(contactID) {
       if (regEx.test(response.status)) {
         dispatch(slice.actions.getContactUsersSuccess(response.data));
       }
-      return response;
     } catch (error) {
       dispatch(slice.actions.hasError(error.Message));
       console.error(error);

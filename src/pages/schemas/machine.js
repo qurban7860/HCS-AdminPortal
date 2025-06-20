@@ -17,7 +17,7 @@ export const machineSchema = Yup.object().shape({
     .label('Serial Number'),
   name: Yup.string().max(250),
   generation: Yup.string().nullable(),
-  efficiency: Yup.number().nullable(),
+  efficiency: Yup.string().nullable(),
   parentSerialNo: Yup.object()
     .shape({
       serialNo: Yup.string(),
@@ -145,7 +145,7 @@ export const editMachineSchema = Yup.object().shape({
     .label('Serial Number'),
   name: Yup.string().max(250),
   generation: Yup.string().nullable(),
-  efficiency: Yup.number().nullable(),
+  efficiency: Yup.string().nullable(),
   parentSerialNo: Yup.object()
     .shape({
       serialNo: Yup.string(),

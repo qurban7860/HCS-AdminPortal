@@ -195,24 +195,27 @@ function SearchBarCombo({
             </FormControl>
           </Stack>
         </Grid>}
-     {onFilterAccountType && 
- <Grid item xs={12} sm={6} md={6} lg={6} xl={2}>
-  <FormControl fullWidth size="small">
-    <InputLabel>Type</InputLabel>
-    <Select
-      label="Account Type"
-      value={filterAccountType}
-      onChange={onFilterAccountType}
-    >
-      <MenuItem value="all">All</MenuItem>
-      <MenuItem value="sp">Admin Portal (SP)</MenuItem>
-      <MenuItem value="non-sp">Customer Portal</MenuItem>
-    </Select>
-  </FormControl>
-</Grid>}
-
-
-
+      {onFilterAccountType &&
+        <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
+          <Stack alignItems="flex-start">
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Account Type</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                size='small'
+                name="employee"
+                value={filterAccountType}
+                label="Account Type"
+                onChange={onFilterAccountType}
+              >
+                <MenuItem value="all">All</MenuItem>
+                <MenuItem value="sp">Admin Portal (SP)</MenuItem>
+                <MenuItem value="non-sp">Customer Portal</MenuItem>
+              </Select>
+            </FormControl>
+          </Stack>
+        </Grid>}
       {onFilterListByRegion &&
   <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
     <Autocomplete
