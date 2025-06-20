@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Card, Grid, Stack, TextField } from '@mui/material';
+import { Box, Card, Grid, InputAdornment, Stack, TextField } from '@mui/material';
 // hook
 import { useForm } from 'react-hook-form';
 // routes
@@ -22,7 +22,7 @@ import { getActiveCategories, resetActiveCategories } from '../../redux/slices/p
 // hooks
 import { useSnackbar } from '../../components/snackbar';
 // components
-import FormProvider, { RHFTextField, RHFAutocomplete, RHFSwitch, RHFDatePicker, RHFChipsInput } from '../../components/hook-form';
+import FormProvider, { RHFTextField, RHFAutocomplete, RHFSwitch, RHFDatePicker, RHFChipsInput, RHFNumericField } from '../../components/hook-form';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 // constants
 import { FORMLABELS } from '../../constants/default-constants';
@@ -38,6 +38,8 @@ export default function MachineEditForm() {
   const { user } = useAuthContext()
   const allowedRoles = ['SuperAdmin', 'Sales Manager', 'Technical Manager']
   const { enqueueSnackbar } = useSnackbar();
+  const configs = JSON.parse( localStorage.getItem('configurations'))
+
   const { activeMachines, machine } = useSelector((state) => state.machine);
   const { activeSuppliers } = useSelector((state) => state.supplier);
   const { activeMachineModels } = useSelector((state) => state.machinemodel);
@@ -47,11 +49,18 @@ export default function MachineEditForm() {
   const { machineConnections } = useSelector((state) => state.machineConnections);
   const { activeCategories } = useSelector((state) => state.category);
 
+    const machineGenerations = configs
+    ?.find((item) => item?.name?.trim()?.toLowerCase() === 'machine_generations')
+    ?.value.split(',')
+    .map((type) => type.trim());
+
   const methods = useForm({
     resolver: yupResolver(editMachineSchema),
     defaultValues: {
       serialNo: machine.serialNo || '',
       name: machine.name || '',
+      generation: machine.generation || '',
+      efficiency: machine.efficiency || '',
       alias: machine.alias || [],
       parentSerialNo: machine?.parentMachine || '',
       previousMachine: machine?.parentMachine?.name || '',
@@ -208,6 +217,24 @@ export default function MachineEditForm() {
                     } else {
                       setValue('machineModel', null);
                     }
+                  }}
+                />
+
+                {Array.isArray(machineGenerations) && machineGenerations.length > 0 && (
+                  <RHFAutocomplete 
+                    name="generation"
+                    label="Machine Generation"
+                    options={machineGenerations}
+                    isOptionEqualToValue={(option, value) => option === value}
+                    getOptionLabel={option => option || ''}
+                    renderOption={(props, option) => ( <li {...props} key={option}>{`${option || ''}`}</li> )}
+                  />
+                )}
+                <RHFNumericField
+                  name="efficiency"
+                  label="Efficiency"
+                  InputProps={{
+                    endAdornment: <InputAdornment position="end">m/hr</InputAdornment>,
                   }}
                 />
 
