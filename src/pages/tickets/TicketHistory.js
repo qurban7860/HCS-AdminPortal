@@ -131,7 +131,11 @@ const TicketHistory = () => {
                         </Typography>}
                         {(history?.previousAssignees?.length > 0 || history?.newAssignees?.length > 0) &&
                           <Typography variant="subtitle2" color="textSecondary">
-                            Assignee: {history?.previousAssignees?.length > 0 ? history?.previousAssignees?.map(a => <Chip label={a?.name} sx={{ m: 0.3, backgroundColor: '#fae8e6' }} />) : 'None'} →{' '} {history?.newAssignees?.length > 0 ? history?.newAssignees?.map(a => <Chip label={a?.name} sx={{ m: 0.3, backgroundColor: '#e6fae7' }} />) : 'None'}
+                            Assignee: {history?.previousAssignees?.length > 0 ? history?.previousAssignees?.map(a =>
+                              <Chip size='small' label={a?.name} sx={{ m: 0.3, backgroundColor: '#fae8e6', borderRadius: '5px' }} />
+                            ) : 'None'} →{' '} {history?.newAssignees?.length > 0 ? history?.newAssignees?.map(a =>
+                              <Chip size='small' label={a?.name} sx={{ m: 0.3, backgroundColor: '#e6fae7', borderRadius: '5px' }} />
+                            ) : 'None'}
                           </Typography>
                         }
                       </>
