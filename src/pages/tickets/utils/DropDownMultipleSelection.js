@@ -181,39 +181,38 @@ export default function DropDownMultipleSelection({ value, name, label, options 
               : undefined
           }
         />
-        {Array.isArray(val) &&
-          // Array.isArray(value) &&
-          (!val?.every((v) => value?.some((vc) => vc?._id === v?._id))) && (
-            <Stack
-              direction="row"
-              spacing={1}
-              sx={{
-                position: 'absolute',
-                bottom: -53,
-                right: 0,
-                transform: 'translateY(-50%)',
-              }}
+        {(Array.isArray(val) || Array.isArray(value)) &&
+          (val?.length !== value?.length || !val?.every((v) => value?.some((vc) => vc?._id === v?._id))) &&
+          (<Stack
+            direction="row"
+            spacing={1}
+            sx={{
+              position: 'absolute',
+              bottom: -53,
+              right: 0,
+              transform: 'translateY(-50%)',
+            }}
+          >
+            <LoadingButton
+              variant="contained"
+              color="primary"
+              size="small"
+              type="submit"
+              disabled={isSubmitting}
+              loading={isSubmitting}
+              sx={{ minWidth: 32, padding: '2px', height: 32 }}
             >
-              <LoadingButton
-                variant="contained"
-                color="primary"
-                size="small"
-                type="submit"
-                disabled={isSubmitting}
-                loading={isSubmitting}
-                sx={{ minWidth: 32, padding: '2px', height: 32 }}
-              >
-                <CheckRoundedIcon />
-              </LoadingButton>
-              <Button
-                variant="outlined"
-                size="small"
-                onClick={() => reset()}
-                sx={{ minWidth: 32, padding: '2px', height: 32 }}
-              >
-                <ClearRoundedIcon />
-              </Button>
-            </Stack>
+              <CheckRoundedIcon />
+            </LoadingButton>
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={() => reset()}
+              sx={{ minWidth: 32, padding: '2px', height: 32 }}
+            >
+              <ClearRoundedIcon />
+            </Button>
+          </Stack>
           )}
       </FormProvider>
     </Box>
