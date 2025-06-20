@@ -70,8 +70,10 @@ export default function ProjectViewForm() {
 
   const defaultValues = useMemo(
     () => ({
+      projectNo: project?.projectNo || '',
       name: project?.name || '',
       description: project?.description || '',
+      customerAccess: project?.customerAccess,
       isActive: project?.isActive,
       createdAt: project?.createdAt || '',
       createdByFullName: project?.createdBy?.name || '',
@@ -108,7 +110,8 @@ export default function ProjectViewForm() {
               settingPage
             />
             <Grid container sx={{ mt: 2 }}>
-              <ViewFormField isLoading={isLoading} sm={12} heading="Name" param={defaultValues.name} />
+              <ViewFormField isLoading={isLoading} sm={6} heading="Project No" param={defaultValues.projectNo} />
+              <ViewFormField isLoading={isLoading} sm={6} heading="Name" param={defaultValues.name} />
               <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues.description} />
               <ViewFormAudit defaultValues={defaultValues} />
             </Grid>

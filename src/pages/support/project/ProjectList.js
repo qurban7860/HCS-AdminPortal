@@ -50,8 +50,9 @@ import useResponsive from '../../../hooks/useResponsive';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
+  { id: 'projectNo', label: 'Project No', align: 'left' },
   { id: 'name', label: 'Name', width: 150 },
-  { id: 'description', label: 'Description', },
+  { id: 'description', label: 'Description' },
   { id: 'isActive', label: 'Active', width: 100 },
   { id: 'updatedAt', align: 'right', label: 'Updated At', width: 150 },
 ];
@@ -156,7 +157,7 @@ export default function ProjectList({isArchived}) {
   return (
       <Container maxWidth={false}>
         <StyledCardContainer>
-          <Cover name={isArchived?'Archived Projects':'Projects'} supportTicketSettings 
+          <Cover name={isArchived?'Archived Projects':'Projects'} 
             archivedLink={{
               label:isArchived?'Projects':'Archived Projects', 
               link: handleArchive, 
@@ -219,6 +220,7 @@ function applyFilter({ inputData, comparator, filterName }) {
   if (filterName) {
     inputData = inputData.filter(
       (Project) =>
+        String(Project?.projectNo)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         String(Project?.name)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         String(Project?.description)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         // (ProjectCategory?.isActive ? "Active" : "InActive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||

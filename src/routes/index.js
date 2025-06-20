@@ -393,6 +393,12 @@ import {
   FaultList,
   FaultForm,
   FaultView,
+  
+  // Supports / Release
+  ReleaseList,
+  ReleaseForm,
+  ReleaseView,
+
   // REPORTS / SETTINGS
   Setting,
 
@@ -1209,6 +1215,8 @@ export default function Router() {
             { path: 'new', element: <ProjectAdd /> },
             { path: ':id/view', element: <ProjectView /> },
             { path: ':id/edit', element: <ProjectEdit /> },
+            { path: 'archived', element: <ProjectList isArchived /> },
+            { path: ':id/archived/view', element: <ProjectView /> },
           ],
         },
         { element: <Navigate to="/support/supportTickets" replace />, index: true },
@@ -1356,7 +1364,18 @@ export default function Router() {
               ]
             }
           ]
-         },
+        },
+        
+        {
+          path: 'releases',
+          children: [
+            { element: <ReleaseList />, index: true },
+            { path: 'new', element: <ReleaseForm /> },
+            { path: ':id/edit', element: <ReleaseForm /> },
+            { path: ':id/view', element: <ReleaseView /> },
+          ]
+        },
+        
         { path: 'manuals', element: <SectionUnderConstruction /> },
       ],
     },

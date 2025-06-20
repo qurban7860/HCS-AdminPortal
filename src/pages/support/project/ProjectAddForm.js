@@ -26,8 +26,7 @@ import { handleError } from '../../../utils/errorHandler';
 // ----------------------------------------------------------------------
 
 export const AddProjectSchema = Yup.object().shape({
-  key: Yup.string().min(2).max(5).required('Key is required!'),
-  title: Yup.string().min(2).max(40).required('Title is required!'),
+  name: Yup.string().min(2).max(40).required('Name is required!'),
   description: Yup.string().max(10000),
   customerAccess: Yup.boolean(),
   isActive: Yup.boolean(),
@@ -40,8 +39,7 @@ export default function ProjectAddForm() {
 
   const defaultValues = useMemo(
     () => ({
-      key: '',
-      title: '',
+      name: '',
       description: '',
       customerAccess: false,
       isActive: true,
@@ -94,12 +92,11 @@ export default function ProjectAddForm() {
             <Card sx={{ p: 3 }}>
               <Stack spacing={2}>
                 <Box rowGap={2} columnGap={2} display="grid"
-                  gridTemplateColumns={{ xs: 'repeat(1, 1fr)', md: 'repeat(1, 3fr 10fr)' }}
+                  gridTemplateColumns={{ xs: 'repeat(1, 1fr)', md: 'repeat(1, 1fr)' }}
                 >
-                  <RHFTextField name="key" label="Key" />
-                  <RHFTextField name="title" label="Title" />
+                  <RHFTextField name="name" label="Name*" />
                 </Box>
-                <RHFEditor name="description" label="Description" minRows={3} multiline />
+                <RHFTextField name="description" label="Description" minRows={3} multiline />
                 <Grid display="flex" alignItems="center" mt={1}>
                   <RHFSwitch name='customerAccess' label='Customer Access' />
                   <RHFSwitch name='isActive' label='Active' />

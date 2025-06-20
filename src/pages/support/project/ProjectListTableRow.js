@@ -25,10 +25,11 @@ export default function ProjectListTableRow({
   selected,
   onViewRow,
 }) {
-  const { name, description, isActive, updatedAt } = row;
+  const { projectNo, name, description, isActive, updatedAt } = row;
 
   return (
     <StyledTableRow hover selected={selected}>
+      <LinkTableCell onClick={onViewRow} param={projectNo} />
       <LinkTableCell onClick={onViewRow} param={name} />
       <TableCell>{description}</TableCell>
       <TableCell>

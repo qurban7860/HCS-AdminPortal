@@ -82,6 +82,7 @@ import jobsReducer from "./slices/jobs/jobs"
 import articleReducer from "./slices/support/knowledgeBase/article";
 import articleCategoryReducer from "./slices/support/supportSettings/articleCategory";
 import projectReducer from "./slices/support/project/project";
+import releaseReducer from "./slices/support/release/release";
 
 // ----------------------------------------------------------------------
 
@@ -614,6 +615,13 @@ export const projectPersistConfig = {
   blacklist: ['error', 'initial', 'responseMessage']
 }
 
+export const releasePersistConfig = {
+  key: 'release',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
+
 const rootReducer = combineReducers({
   user: persistReducer(userPersistConfig, userReducer),
   customer: persistReducer(customerPersistConfig, customerReducer),
@@ -695,6 +703,7 @@ const rootReducer = combineReducers({
   article: persistReducer(articlePersistConfig, articleReducer),
   articleCategory: persistReducer(articleCategoryPersistConfig, articleCategoryReducer),
   project: persistReducer(projectPersistConfig, projectReducer),
+  release: persistReducer(releasePersistConfig, releaseReducer)
 });
 
 export default rootReducer;

@@ -21,7 +21,7 @@ import {
 import { PATH_SUPPORT } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import FormProvider, { RHFTextField, RHFSwitch, RHFEditor } from '../../../components/hook-form';
+import FormProvider, { RHFTextField, RHFSwitch } from '../../../components/hook-form';
 import { updateProject } from '../../../redux/slices/support/project/project';
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 import FormHeading from '../../../components/DocumentForms/FormHeading';
@@ -34,8 +34,7 @@ import { handleError } from '../../../utils/errorHandler';
 // ----------------------------------------------------------------------
 
 export const EditProjectSchema = Yup.object().shape({
-  key: Yup.string().min(2).max(5).required('Key is required!'),
-  title: Yup.string().min(2).max(40).required('Title is required!'),
+  name: Yup.string().min(2).max(40).required('Name is required!'),
   description: Yup.string().max(10000),
   customerAccess: Yup.boolean(),
   isActive: Yup.boolean(),
@@ -52,8 +51,7 @@ export default function ProjectEditForm() {
   
   const defaultValues = useMemo(
     () => ({
-      key: project?.key || '',
-      title: project?.title || '',
+      name: project?.name || '',
       description: project?.description || '',
       customerAccess: project?.customerAccess,
       isActive: project?.isActive,
@@ -98,16 +96,13 @@ export default function ProjectEditForm() {
             <Card sx={{ p: 3 }}>
               <Stack spacing={3}>
                 <Box rowGap={2} columnGap={2} display="grid"
-                  gridTemplateColumns={{ xs: 'repeat(1, 1fr)', md: 'repeat(1, 3fr 10fr)' }}
+                  gridTemplateColumns={{ xs: 'repeat(1, 1fr)', md: 'repeat(1, 1fr)' }}
                 >
-                  <RHFTextField name="key" label="Key" />
-                  <RHFTextField name="title" label="Title" />
+                  <RHFTextField name="name" label="Name" />
                 </Box>
-                <RHFEditor name="description" label="Description" minRows={3} multiline />
-                <Grid display='flex' alignItems="center" mt={1} >
+                <RHFTextField name="description" label="Description" minRows={3} multiline />
+                <Grid display="flex" alignItems="center" mt={1}>
                   <RHFSwitch name='customerAccess' label='Customer Access' />
-                </Grid>
-                <Grid display='flex' alignItems="center" mt={1} >
                   <RHFSwitch name='isActive' label='Active' />
                 </Grid>
               </Stack>

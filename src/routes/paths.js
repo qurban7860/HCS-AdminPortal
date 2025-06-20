@@ -481,6 +481,8 @@ export const PATH_SUPPORT = {
     new: path(ROOTS_SUPPORT, '/projects/new'),
     view: (id) => path(ROOTS_SUPPORT, `/projects/${id}/view`),
     edit: (id) => path(ROOTS_SUPPORT, `/projects/${id}/edit`),
+    archived: path(ROOTS_SUPPORT, '/projects/archived'),
+    archivedView: (id) => path(ROOTS_SUPPORT, `/projects/archived/${id}/view`),
   },
   supportTickets: {
     root: path(ROOTS_SUPPORT, '/supportTickets'),
@@ -585,6 +587,14 @@ export const PATH_SUPPORT = {
   //     archivedView: (id) => path(ROOTS_SUPPORT, `/ticketSettings/articleCategories/archived/${id}/view`),
   //   },
   // },
+
+  releases: {
+    root: path(ROOTS_SUPPORT, '/releases'),
+    new: path(ROOTS_SUPPORT, '/releases/new'),
+    view: (id) => path(ROOTS_SUPPORT, `/releases/${id}/view`),
+    edit: (id) => path(ROOTS_SUPPORT, `/releases/${id}/edit`),
+  },
+  
   manuals: {
     root: path(ROOTS_SUPPORT, '/manuals'),
   },

@@ -7,7 +7,7 @@ import { Container } from '@mui/material';
 // redux
 import {
   getProject,
-} from '../../../redux/slices/support/supportSettings/Project';
+} from '../../../redux/slices/support/project/project';
 // paths
 import { PATH_SUPPORT } from '../../../routes/paths';
 // components
@@ -21,7 +21,7 @@ export default function ProjectView() {
   const { id } = useParams();
   const dispatch = useDispatch();
 
-  const { Project } = useSelector((state) => state.Project);
+  const { project } = useSelector((state) => state.project);
 
   useEffect(() => {
     dispatch(getProject(id));
@@ -31,7 +31,7 @@ export default function ProjectView() {
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
-        <Cover name={Project?.name} isArchived={Project?.isArchived} />
+        <Cover name={project?.name} isArchived={project?.isArchived} />
       </StyledCardContainer>
       <ProjectViewForm />
     </Container>

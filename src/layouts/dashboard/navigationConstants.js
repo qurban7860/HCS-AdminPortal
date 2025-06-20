@@ -192,22 +192,6 @@ export const allSideBarOptions = {
   // ],
   support: [
     {
-      subheader: 'Projects',
-      items: [
-        {
-          title: 'HPS - 1642',
-          path: PATH_SUPPORT.projects.root,
-          icon: <Iconify icon="eos-icons:project" />,
-          stared: true,
-        },
-        {
-          title: 'View All',
-          path: PATH_SUPPORT.projects.root,
-          icon: <Iconify icon="solar:list-bold-duotone" />
-        },
-      ]
-    },
-    {
       subheader: 'Support Services',
       items: [
         {
@@ -241,6 +225,28 @@ export const allSideBarOptions = {
           icon: <Iconify icon="mdi:book-open-page-variant" />,
         },
       ],
+    },
+
+    {
+      subheader: 'Projects & Releases',
+      items: [
+        // {
+        //   title: 'HPS - 1642',
+        //   path: PATH_SUPPORT.projects.root,
+        //   icon: <Iconify icon="eos-icons:project" />,
+        //   stared: true,
+        // },
+        {
+          title: 'Projects',
+          path: PATH_SUPPORT.projects.root,
+          icon: <Iconify icon="solar:list-bold-duotone" />
+        },
+        {
+          title: 'Releases',
+          path: PATH_SUPPORT.releases.root,
+          icon: <Iconify icon="mdi:source-branch" />,
+        },
+      ]
     },
   ],
   reports: [
