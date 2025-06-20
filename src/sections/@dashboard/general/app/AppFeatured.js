@@ -114,7 +114,7 @@ function CarouselItem({ item, isActive }) {
         <m.div variants={varFade().inRight}>
           <Link color="inherit" underline="none">
             <Typography variant="h2" noWrap>
-            FRAMA™ 3200
+              FRAMA™ 3200
             </Typography>
           </Link>
         </m.div>

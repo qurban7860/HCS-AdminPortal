@@ -30,7 +30,7 @@ export default function EmptyContent({ title, description, img, sx, ...other }) 
         disabledEffect
         alt="empty content"
         src={img || '/assets/illustrations/illustration_empty_content.svg'}
-        sx={{ height: 240, mb:2 }}
+        sx={{ height: 240, mb: 2 }}
       />
       <Typography variant="h5" gutterBottom>{title}</Typography>
       {description && (

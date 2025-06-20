@@ -1,10 +1,9 @@
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { yupResolver } from "@hookform/resolvers/yup";
 import { FormProvider, useForm,Controller } from 'react-hook-form';
 // @mui
-
-
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { Card, Container, Stack, Typography, Box, useTheme, Grid } from '@mui/material';
 import { useParams } from 'react-router-dom';
@@ -12,6 +11,7 @@ import { RHFAutocomplete, RHFDatePicker,RHFDateTimePicker } from '../../../compo
 import { machineLogGraphTypes } from '../../../constants/machineLogTypeFormats';
 import MachineTabContainer from '../util/MachineTabContainer';
 import Iconify from '../../../components/iconify';
+import { fetchIndMachineGraphSchema } from "../../schemas/machine";
 import { StyledTooltip, StyledContainedIconButton } from '../../../theme/styles/default-styles';
 import ErpProducedLengthLogGraph from '../../Reports/Graphs/ErpProducedLengthLogGraph';
 import ErpProductionRateLogGraph from '../../Reports/Graphs/ErpProductionRateLogGraph';
@@ -39,8 +39,8 @@ export default function MachineLogsGraphViewForm() {
     () => ({
       logPeriod: 'Daily',
       logGraphType: machineLogGraphTypes[0],
-    // dateFrom: new Date(new Date().setHours(0, 0, 0, 0)),
-    // dateTo: new Date(new Date().setHours(23, 59, 59, 0)),
+      // dateFrom: new Date(new Date().setHours(0, 0, 0, 0)),
+      // dateTo: new Date(new Date().setHours(23, 59, 59, 0)),
       dateFrom: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
       dateTo: new Date(),
     }),
@@ -48,10 +48,53 @@ export default function MachineLogsGraphViewForm() {
   )
 
   const methods = useForm({
+    resolver: yupResolver(fetchIndMachineGraphSchema),
     defaultValues,
   });
 
-  const { setValue, getValues, handleSubmit } = methods;
+  const { setValue, getValues, handleSubmit, trigger, watch } = methods;
+
+  const logPeriodWatched = watch('logPeriod');
+
+  useEffect(() => {
+    const now = new Date();
+    const newDateFrom = new Date(now);
+    
+    newDateFrom.setHours(0, 0, 0, 0);
+    now.setHours(23, 59, 59, 999);
+  
+    switch (logPeriodWatched) {
+      case 'Hourly':
+        break;
+  
+      case 'Daily':
+        newDateFrom.setDate(newDateFrom.getDate() - 30);
+        break;
+  
+      case 'Monthly':
+        newDateFrom.setMonth(newDateFrom.getMonth() - 11);
+        newDateFrom.setDate(1);
+        break;
+  
+      case 'Quarterly':
+        newDateFrom.setMonth(newDateFrom.getMonth() - 35);
+        newDateFrom.setMonth(Math.floor(newDateFrom.getMonth() / 3) * 3, 1);
+        break;
+  
+      case 'Yearly':
+        newDateFrom.setFullYear(newDateFrom.getFullYear() - 9);
+        newDateFrom.setMonth(0, 1);
+        break;
+  
+      default:
+        newDateFrom.setDate(newDateFrom.getDate() - 30);
+        break;
+    }
+  
+    setValue('dateTo', now);
+    setValue('dateFrom', newDateFrom);
+    trigger(['dateFrom', 'dateTo']);
+  }, [logPeriodWatched, setValue, trigger]);
 
   const handleFormSubmit = useCallback(() => {
     const { logPeriod, logGraphType, dateFrom, dateTo } = getValues();
@@ -145,11 +188,9 @@ export default function MachineLogsGraphViewForm() {
               <Typography variant="h5" sx={{ pb: 1 }}>
                 Log Graphs   
               </Typography>
-             
-             
 
-              <Grid container gap={1.5}>
-                <Grid item xs={12} sm={6} md={3} xl={3}>
+              <Grid container alignItems="flex-start" gap={1}>
+                <Grid item xs={12} sm={6} md={2.5} xl={3.5}>
                   <RHFAutocomplete
                     name="logGraphType"
                     label="Graph Type*"
@@ -168,7 +209,7 @@ export default function MachineLogsGraphViewForm() {
                   />
                 </Grid>
 
-                <Grid item xs={12} sm={6} md={2} xl={2.5}>
+                <Grid item xs={12} sm={6} md={2.5} xl={3}>
                   <RHFAutocomplete
                     name="logPeriod"
                     label="Period*"
@@ -180,27 +221,33 @@ export default function MachineLogsGraphViewForm() {
                   />
                 </Grid>
 
-                <Grid item xs={12} sm={6} md={2} xl={2.5}>
+                <Grid item xs={12} sm={6} md={2.5} xl={2}>
                 <RHFDatePicker
                     label="Date From"
                     name="dateFrom"
                     size="small"
-                    onChange={(newValue) => setValue('dateFrom', newValue)}
+                    onChange={(value) => {
+                      setValue('dateFrom', value, { shouldValidate: true });
+                      trigger('dateFrom');
+                    }}
                     fullWidth
                   />
                 </Grid>
 
-                <Grid item xs={12} sm={6} md={2} xl={2.5}>
+                <Grid item xs={12} sm={6} md={2.5} xl={2}>
                   <RHFDatePicker
                     label="Date To"
                     name="dateTo"
                     size="small"
-                    onChange={(newValue) => setValue('dateTo', newValue)}
+                    onChange={(value) => {
+                      setValue('dateTo', value, { shouldValidate: true });
+                      trigger('dateTo');
+                    }}
                     fullWidth
                   />
                 </Grid>
 
-                <Grid item xs={12} sm={6} md={2} xl={1}  sx={{ display: 'flex', justifyContent: 'flex-end' }} >
+                <Grid item xs={12} sm={12} md={1} sx={{ display: 'flex', justifyContent: 'flex-end' }} >
                   <StyledTooltip
                     title="Fetch Graph"
                     placement="top"

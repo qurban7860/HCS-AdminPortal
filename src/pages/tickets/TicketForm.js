@@ -17,8 +17,10 @@ import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import { ticketSchema } from '../schemas/ticketSchema';
 import FormProvider, { RHFTextField, RHFUpload, RHFAutocomplete, RHFDatePicker, RHFTimePicker, RHFSwitch, RHFEditor } from '../../components/hook-form';
 import { getTicket, postTicket, patchTicket, resetTicket, deleteFile, getTicketSettings, resetTicketSettings, getSoftwareVersion, resetSoftwareVersion } from '../../redux/slices/ticket/tickets';
+import { getArticleByValue } from '../../redux/slices/support/knowledgeBase/article';
 import { getActiveCustomerMachines, resetActiveCustomerMachines } from '../../redux/slices/products/machine';
 import { getActiveCustomers, resetActiveCustomers } from '../../redux/slices/customer/customer';
+import HelpSidebar from './utils/HelpSideBar';
 import FormLabel from '../../components/DocumentForms/FormLabel';
 import { FORMLABELS } from '../../constants/default-constants';
 import { manipulateFiles } from '../documents/util/Util';
@@ -34,6 +36,23 @@ export default function TicketForm() {
   const { activeCustomers } = useSelector((state) => state.customer);
   const { ticket, ticketSettings, softwareVersion, isLoadingSoftwareVersion } = useSelector((state) => state.tickets);
   const [filteredRequestTypes, setFilteredRequestTypes] = useState([]);
+  const { article } = useSelector((state) => state.article);
+  const [helpOpen, setHelpOpen] = useState(false);
+  const prefix = JSON.parse(localStorage.getItem('configurations'))?.find((config) => config?.name?.toLowerCase() === 'support_ticket_creation_process')?.value?.trim() || '';
+
+  useEffect(() => {
+  if (prefix) {
+    dispatch(getArticleByValue(prefix));
+  }
+  }, [dispatch, prefix]);
+
+  const handleHelpClick = () => {
+    setHelpOpen(true);
+  };
+
+  const handleCloseHelp = () => {
+    setHelpOpen(false);
+  };
 
   useEffect(() => {
     if (id)
@@ -90,7 +109,7 @@ export default function TicketForm() {
 
   const { reset, setError, handleSubmit, watch, setValue, trigger, formState: { isSubmitting, errors } } = methods;
   const { issueType, customer, machine, files, plannedStartDate, plannedEndDate, description } = watch();
-  
+
   useEffect(() => {
     trigger(["plannedStartDate", "plannedEndDate"]);
   }, [trigger, plannedStartDate, plannedEndDate])
@@ -158,7 +177,7 @@ export default function TicketForm() {
   };
 
   const handleDropMultiFile = useCallback(async (acceptedFiles) => {
-    console.log("acceptedFiles:::",acceptedFiles)
+    console.log("acceptedFiles:::", acceptedFiles)
     const hashes = await hashFilesMD5(acceptedFiles);
     const newFiles = (Array.isArray(files) && files?.length > 0) ? [...files] : [];
     acceptedFiles.forEach((file, index) => {
@@ -223,8 +242,9 @@ export default function TicketForm() {
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
-        <Cover name={ticket?.customer?.name || 'New Support Ticket'} />
+        <Cover name={ticket?.customer?.name || 'New Support Ticket'} onHelpClick={handleHelpClick} />
       </StyledCardContainer>
+      <HelpSidebar open={helpOpen} onClose={handleCloseHelp} article={article} />
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={3}>
           <Grid item xs={12} md={12}>
@@ -328,7 +348,7 @@ export default function TicketForm() {
                     renderOption={(props, option) => (<li {...props} key={option?._id}> {option.name || ''} </li>)}
                     onChange={(event, newValue) => {
                       setValue('issueType', newValue);
-                      setValue('requestType', null); 
+                      setValue('requestType', null);
                     }}
                   />
                   <RHFAutocomplete
@@ -444,7 +464,7 @@ export default function TicketForm() {
                         <RHFEditor name="testPlan" label="Test Plan" minRows={4} multiline />
                       </>
                     )}
-                    {issueType?.name?.trim()?.toLowerCase() === 'service request' && (
+                    {['change_request', 'system_problem']?.includes(issueType?.slug?.trim()?.toLowerCase()) && (
                       <>
                         <RHFAutocomplete
                           name="investigationReason"

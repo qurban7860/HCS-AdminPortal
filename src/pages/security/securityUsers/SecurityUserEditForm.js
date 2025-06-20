@@ -84,7 +84,7 @@ export default function SecurityUserEditForm() {
     formState: { isSubmitting },
   } = methods;
 
-  const { customer } = watch();
+  const { customer, customers } = watch();
 
 
   useEffect(() => {
@@ -252,7 +252,7 @@ export default function SecurityUserEditForm() {
                   disabled={isDisabled}
                   name="machines"
                   label="Machines"
-                  options={allMachines}
+                  options={allMachines?.filter(m => customers?.some(c => c?._id === m.customer?._id))}
                   getOptionLabel={(option) => `${option.serialNo} ${option.name ? '-' : ''} ${option?.name || ''}`}
                   isOptionEqualToValue={(option, value) => option?._id === value?._id}
                   renderOption={(props, option) => (<li {...props} key={option?._id}>{`${option.serialNo || ''} ${option.name ? '-' : ''} ${option.name || ''}`}</li>)}

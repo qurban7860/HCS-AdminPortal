@@ -303,6 +303,28 @@ export function getArticle(Id) {
   };
 }
 
+export function getArticleByValue(articleNo = '') {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}support/knowledgeBase/article/list`, {
+        params: {
+          articleNo, 
+          isArchived: false,
+          isActive: true,
+        }
+      });
+      const article = Array.isArray(response.data) && response.data.length > 0 ? response.data[0] : null;
+      dispatch(slice.actions.getArticleSuccess(article || null));
+      dispatch(slice.actions.setResponseMessage('Article loaded successfully'));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.message));
+      throw error;
+    }
+  };
+}
+
 // ---------------------------------archive Article-------------------------------------
 
 export function archiveArticle(Id) {
