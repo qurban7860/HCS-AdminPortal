@@ -5,7 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 // @mui
 import { Card, Grid } from '@mui/material';
 // paths
-import { PATH_SUPPORT } from '../../../routes/paths';
+import { PATH_SETTING } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import { deleteRelease, resetRelease } from '../../../redux/slices/support/release/release';
@@ -14,6 +14,7 @@ import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEdi
 import ViewFormField from '../../../components/ViewForms/ViewFormField';
 import { handleError } from '../../../utils/errorHandler';
 import Editor from '../../../components/editor';
+import { fDate } from '../../../utils/formatTime';
 
 // ----------------------------------------------------------------------
 
@@ -29,6 +30,7 @@ export default function ReleaseViewForm() {
       releaseNo: release?.releaseNo || '',
       name: release?.name || '',
       project: release?.project,
+      releaseDate: release?.releaseDate || null,
       description: release?.description || '',
       isActive: release?.isActive,
       createdByFullName: release?.createdBy?.name || '',
@@ -45,7 +47,7 @@ export default function ReleaseViewForm() {
   const onArchive = async () => {
     try {
       await dispatch(deleteRelease(id, true));
-      navigate(PATH_SUPPORT.releases.root);
+      navigate(PATH_SETTING.release.root);
       enqueueSnackbar('Release Archived Successfully!', { variant: 'success' });
     } catch (err) {
       enqueueSnackbar( handleError( err ) || 'Release Archive failed!', { variant: `error` });
@@ -53,7 +55,7 @@ export default function ReleaseViewForm() {
     }
   };
 
-  const toggleEdit = () => navigate(PATH_SUPPORT.releases.edit(id));
+  const toggleEdit = () => navigate(PATH_SETTING.release.edit(id));
 
   return (
   <Grid>
@@ -64,7 +66,7 @@ export default function ReleaseViewForm() {
         onArchive={onArchive} 
         backLink={() => {
           dispatch(resetRelease());
-          navigate(PATH_SUPPORT.releases.root);
+          navigate(PATH_SETTING.release.root);
         }}
       />
       <Grid container sx={{mt:2}}>
@@ -75,6 +77,7 @@ export default function ReleaseViewForm() {
         />
         <ViewFormField isLoading={isLoading} sm={4} heading="Name" param={defaultValues?.name} />
         <ViewFormField isLoading={isLoading} sm={4} heading="Project" param={defaultValues.project?.name || ''} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Release Date" param={fDate(defaultValues?.releaseDate)} />
 
         <ViewFormField isLoading={isLoading} sm={12} 
           heading="Description" 

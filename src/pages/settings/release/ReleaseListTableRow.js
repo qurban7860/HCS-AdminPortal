@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import {
   TableCell,
+  Switch
 } from '@mui/material';
 // utils
 import { fDate } from '../../../utils/formatTime';
@@ -26,7 +27,7 @@ export default function ReleaseListTableRow({
   const { isActive, name, releaseNo, project, createdAt } = row;
   return (
     <StyledTableRow hover selected={selected}>
-      <TableCell align="left" padding="checkbox"  >
+      {/* <TableCell align="left" padding="checkbox"  >
         <StyledTooltip
           placement="top" 
           title={ isActive ? ICONS.ACTIVE.heading : ICONS.INACTIVE.heading} 
@@ -35,10 +36,13 @@ export default function ReleaseListTableRow({
           >
           <Iconify icon={ isActive ? ICONS.ACTIVE.icon : ICONS.INACTIVE.icon } sx={{mt: 1}} />
         </StyledTooltip>
-      </TableCell>
+      </TableCell> */}
       <LinkTableCell align="left" onClick={onViewRow} param={releaseNo} />
       <LinkTableCell align="left" onClick={onViewRow} param={name} />
       <TableCell align='left' > { project?.name } </TableCell>
+      <TableCell>
+        <Switch checked={isActive} disabled size="small" />
+      </TableCell>
       <TableCell align='right' > { fDate(createdAt) } </TableCell>
     </StyledTableRow>
   );

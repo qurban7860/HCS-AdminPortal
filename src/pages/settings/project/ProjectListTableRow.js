@@ -15,7 +15,8 @@ ProjectListTableRow.propTypes = {
   row: PropTypes.object,
   style: PropTypes.object,
   selected: PropTypes.bool,
-  onViewRow: PropTypes.func
+  onViewRow: PropTypes.func,
+  prefix: PropTypes.string,
 };
 
 
@@ -24,12 +25,13 @@ export default function ProjectListTableRow({
   style,
   selected,
   onViewRow,
+  prefix
 }) {
   const { projectNo, name, isActive, updatedAt } = row;
 
   return (
     <StyledTableRow hover selected={selected}>
-      <LinkTableCell onClick={onViewRow} param={projectNo} />
+      <LinkTableCell onClick={onViewRow} param={`${prefix}-${projectNo}`} />
       <LinkTableCell onClick={onViewRow} param={name} />
       <TableCell>
         <Switch checked={isActive} disabled size="small" />

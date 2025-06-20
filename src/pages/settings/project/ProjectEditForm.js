@@ -18,10 +18,10 @@ import {
   Box,
 } from '@mui/material';
 // routes
-import { PATH_SUPPORT } from '../../../routes/paths';
+import { PATH_SETTING } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import FormProvider, { RHFTextField, RHFSwitch } from '../../../components/hook-form';
+import FormProvider, { RHFTextField, RHFSwitch, RHFDatePicker } from '../../../components/hook-form';
 import { updateProject } from '../../../redux/slices/support/project/project';
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 import FormHeading from '../../../components/DocumentForms/FormHeading';
@@ -35,6 +35,8 @@ import { handleError } from '../../../utils/errorHandler';
 
 export const EditProjectSchema = Yup.object().shape({
   name: Yup.string().min(2).max(40).required('Name is required!'),
+  startDate: Yup.mixed().label("Start Date").nullable().notRequired(),
+  endDate: Yup.mixed().label("End Date").nullable().notRequired(),
   description: Yup.string().max(10000),
   customerAccess: Yup.boolean(),
   isActive: Yup.boolean(),
@@ -52,6 +54,8 @@ export default function ProjectEditForm() {
   const defaultValues = useMemo(
     () => ({
       name: project?.name || '',
+      startDate: project?.startDate || null,
+      endDate: project?.endDate || null,
       description: project?.description || '',
       customerAccess: project?.customerAccess,
       isActive: project?.isActive,
@@ -75,13 +79,13 @@ export default function ProjectEditForm() {
 
 
   const toggleCancel = () => {
-    navigate(PATH_SUPPORT.projects.view(project._id));
+    navigate(PATH_SETTING.projects.view(project._id));
   };
 
   const onSubmit = async (data) => {
     try {
       await dispatch(updateProject(project._id, data));
-      navigate(PATH_SUPPORT.projects.view(project._id));
+      navigate(PATH_SETTING.projects.view(project._id));
       enqueueSnackbar('Project updated successfully!');
     } catch (error) {
       console.log(handleError(error));
@@ -96,9 +100,17 @@ export default function ProjectEditForm() {
             <Card sx={{ p: 3 }}>
               <Stack spacing={3}>
                 <Box rowGap={2} columnGap={2} display="grid"
-                  gridTemplateColumns={{ xs: 'repeat(1, 1fr)', md: 'repeat(1, 1fr)' }}
+                  gridTemplateColumns={{ xs: 'repeat(1, 1fr)', md: 'repeat(3, 1fr)' }}
                 >
                   <RHFTextField name="name" label="Name" />
+                  <RHFDatePicker
+                    label="Start Date"
+                    name="startDate"
+                  />
+                  <RHFDatePicker
+                    label="End Date"
+                    name="endDate"
+                  />
                 </Box>
                 <RHFTextField name="description" label="Description" minRows={3} multiline />
                 <Grid display="flex" alignItems="center" mt={1}>

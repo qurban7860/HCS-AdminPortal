@@ -1208,17 +1208,6 @@ export default function Router() {
         </AuthGuard>
       ),
       children: [
-        {
-          path: 'projects',
-          children: [
-            { element: <ProjectList />, index: true },
-            { path: 'new', element: <ProjectAdd /> },
-            { path: ':id/view', element: <ProjectView /> },
-            { path: ':id/edit', element: <ProjectEdit /> },
-            { path: 'archived', element: <ProjectList isArchived /> },
-            { path: ':id/archived/view', element: <ProjectView /> },
-          ],
-        },
         { element: <Navigate to="/support/supportTickets" replace />, index: true },
         {
           path: 'supportDashboard',
@@ -1366,16 +1355,6 @@ export default function Router() {
           ]
         },
         
-        {
-          path: 'releases',
-          children: [
-            { element: <ReleaseList />, index: true },
-            { path: 'new', element: <ReleaseForm /> },
-            { path: ':id/edit', element: <ReleaseForm /> },
-            { path: ':id/view', element: <ReleaseView /> },
-          ]
-        },
-        
         { path: 'manuals', element: <SectionUnderConstruction /> },
       ],
     },
@@ -1451,6 +1430,29 @@ export default function Router() {
       children: [
         // {element: <Setting  />, index: true },
         { element: <Navigate to="/settings/security" replace />, index: true },
+        
+        {
+          path: 'projects',
+          children: [
+            { element: <ProjectList />, index: true },
+            { path: 'new', element: <ProjectAdd /> },
+            { path: ':id/view', element: <ProjectView /> },
+            { path: ':id/edit', element: <ProjectEdit /> },
+            { path: 'archived', element: <ProjectList isArchived /> },
+            { path: ':id/archived/view', element: <ProjectView /> },
+          ],
+        },
+
+        {
+          path: 'releases',
+          children: [
+            { element: <ReleaseList />, index: true },
+            { path: 'new', element: <ReleaseForm /> },
+            { path: ':id/edit', element: <ReleaseForm /> },
+            { path: ':id/view', element: <ReleaseView /> },
+          ]
+        },
+
         {
           path: 'security',
           children: [
@@ -1598,7 +1600,8 @@ export default function Router() {
             { path: 'list', element: <ReleasesList /> },
             { path: ':id/view', element: <ReleasesView /> },
           ],
-        }
+        },
+
       ],
     },
 

@@ -476,14 +476,6 @@ export const PATH_SUPPORT = {
     statusType: path(ROOTS_SUPPORT, '/supportDashboard/statusType'),
     status: path(ROOTS_SUPPORT, '/supportDashboard/status'),
   },
-  projects: {
-    root: path(ROOTS_SUPPORT, '/projects'),
-    new: path(ROOTS_SUPPORT, '/projects/new'),
-    view: (id) => path(ROOTS_SUPPORT, `/projects/${id}/view`),
-    edit: (id) => path(ROOTS_SUPPORT, `/projects/${id}/edit`),
-    archived: path(ROOTS_SUPPORT, '/projects/archived'),
-    archivedView: (id) => path(ROOTS_SUPPORT, `/projects/archived/${id}/view`),
-  },
   supportTickets: {
     root: path(ROOTS_SUPPORT, '/supportTickets'),
     new: path(ROOTS_SUPPORT, '/supportTickets/new'),
@@ -587,13 +579,6 @@ export const PATH_SUPPORT = {
   //     archivedView: (id) => path(ROOTS_SUPPORT, `/ticketSettings/articleCategories/archived/${id}/view`),
   //   },
   // },
-
-  releases: {
-    root: path(ROOTS_SUPPORT, '/releases'),
-    new: path(ROOTS_SUPPORT, '/releases/new'),
-    view: (id) => path(ROOTS_SUPPORT, `/releases/${id}/view`),
-    edit: (id) => path(ROOTS_SUPPORT, `/releases/${id}/edit`),
-  },
   
   manuals: {
     root: path(ROOTS_SUPPORT, '/manuals'),
@@ -734,6 +719,22 @@ export const PATH_SETTING = {
   releases: {
     list: path(ROOTS_SETTING, '/releases/list'),
     view: (id) => path(ROOTS_SETTING, `/releases/${id}/view`)
+  },
+
+  projects: {
+    root: path(ROOTS_SETTING, '/projects'),
+    new: path(ROOTS_SETTING, '/projects/new'),
+    view: (id) => path(ROOTS_SETTING, `/projects/${id}/view`),
+    edit: (id) => path(ROOTS_SETTING, `/projects/${id}/edit`),
+    archived: path(ROOTS_SETTING, '/projects/archived'),
+    archivedView: (id) => path(ROOTS_SETTING, `/projects/archived/${id}/view`),
+  },
+
+  release: {
+    root: path(ROOTS_SETTING, '/releases'),
+    new: path(ROOTS_SETTING, '/releases/new'),
+    view: (id) => path(ROOTS_SETTING, `/releases/${id}/view`),
+    edit: (id) => path(ROOTS_SETTING, `/releases/${id}/edit`),
   },
 };
 

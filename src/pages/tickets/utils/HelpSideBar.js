@@ -31,7 +31,7 @@ export default function HelpSidebar({ open, onClose, article }) {
           title="Back"
           onClick={onClose}
           color={theme.palette.primary.main}
-          icon="mdi:arrow-left"
+          icon="mdi:arrow-right"
         />
       </Box>
 

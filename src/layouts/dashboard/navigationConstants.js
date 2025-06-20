@@ -227,27 +227,6 @@ export const allSideBarOptions = {
       ],
     },
 
-    {
-      subheader: 'Projects & Releases',
-      items: [
-        // {
-        //   title: 'HPS - 1642',
-        //   path: PATH_SUPPORT.projects.root,
-        //   icon: <Iconify icon="eos-icons:project" />,
-        //   stared: true,
-        // },
-        {
-          title: 'Projects',
-          path: PATH_SUPPORT.projects.root,
-          icon: <Iconify icon="solar:list-bold-duotone" />
-        },
-        {
-          title: 'Releases',
-          path: PATH_SUPPORT.releases.root,
-          icon: <Iconify icon="mdi:source-branch" />,
-        },
-      ]
-    },
   ],
   reports: [
     {
@@ -388,6 +367,27 @@ export const allSideBarOptions = {
           icon: <Iconify icon="mdi:package-variant" />,
         },
       ],
+    },
+    {
+      subheader: 'Projects & Releases',
+      items: [
+        // {
+        //   title: 'HPS - 1642',
+        //   path: PATH_SETTING.projects.root,
+        //   icon: <Iconify icon="eos-icons:project" />,
+        //   stared: true,
+        // },
+        {
+          title: 'Projects',
+          path: PATH_SETTING.projects.root,
+          icon: <Iconify icon="solar:list-bold-duotone" />
+        },
+        {
+          title: 'Releases',
+          path: PATH_SETTING.release.root,
+          icon: <Iconify icon="mdi:source-branch" />,
+        },
+      ]
     },
   ],
 };

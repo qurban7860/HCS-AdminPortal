@@ -1,84 +1,64 @@
 import PropTypes from 'prop-types';
 import debounce from 'lodash/debounce';
 import { useState, useEffect, useLayoutEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
 // @mui
-import {
-  Table,
-  Button,
-  Tooltip,
-  TableBody,
-  Container,
-  IconButton,
-  TableContainer,
-  // Stack,
-} from '@mui/material';
+import { Container, Table, TableBody, TableContainer, Tooltip, Typography} from '@mui/material';
+// routes
+import { useNavigate } from 'react-router-dom';
+import { PATH_SETTING } from '../../../routes/paths';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
-// routes
-import { PATH_SUPPORT } from '../../../routes/paths';
 // components
 import {
   useTable,
   getComparator,
   TableNoData,
   TableSkeleton,
-  TableSelectedAction,
+  TableHeadCustom,
   TablePaginationCustom,
-  TablePaginationFilter,
-  TableHeadFilter,
 } from '../../../components/table';
-import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
-import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
-import ProjectListTableRow from './ProjectListTableRow';
-import ProjectListTableToolbar from './ProjectListTableToolbar';
+import ReleaseListTableRow from './ReleaseListTableRow';
+import ReleaseListTableToolbar from './ReleaseListTableToolbar';
 import {
-  getProjects,
+  getReleases,
+  resetReleases,
   ChangeRowsPerPage,
   ChangePage,
   setFilterBy,
-  deleteProject,
-} from '../../../redux/slices/support/project/project';
-import { Cover } from '../../../components/Defaults/Cover';
+} from '../../../redux/slices/support/release/release';
 import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../../components/ListTableTools/TableCard';
+import { Cover } from '../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
-import useResponsive from '../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'projectNo', label: 'Project Key', align: 'left' },
+  { id: 'releaseNo', label: 'Release No', align: 'left' },
   { id: 'name', label: 'Name', align: 'left' },
+  { id: 'project.name', label: 'Project', align: 'left' },
   { id: 'isActive', label: 'Active', width: 100 },
-  { id: 'updatedAt', align: 'right', label: 'Updated At', width: 150 },
+  { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
 
 // ----------------------------------------------------------------------
 
-ProjectList.propTypes = {
+ReleaseList.propTypes = {
   isArchived: PropTypes.bool,
 };
 
-export default function ProjectList({isArchived}) {
+export default function ReleaseList({isArchived}) {
+  const { releases, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.release);
+  const navigate = useNavigate();
   const {
     order,
     orderBy,
     setPage,
-    //
     selected,
-    setSelected,
-    onSelectRow,
-    onSelectAllRows,
-    //
     onSort,
-    // onChangePage,
-    // onChangeRowsPerPage,
-  } = useTable({
-    defaultOrderBy: 'name',
-  });
+  } = useTable({ defaultOrderBy: 'createdAt' , defaultOrder: 'desc' });
 
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));
@@ -86,32 +66,32 @@ export default function ProjectList({isArchived}) {
   };
 
   const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
-
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
-  const { projects, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.project);
 
-  useEffect(() => {
-    dispatch(getProjects(isArchived));
-  }, [dispatch,isArchived]);
-
+  useLayoutEffect(() => {
+    dispatch(getReleases(isArchived, page, rowsPerPage));
+    return () => {
+      dispatch(resetReleases());
+    }
+  }, [dispatch, isArchived, page, rowsPerPage]);
+  
   useEffect(() => {
     if (initial) {
-      setTableData(projects || []);
+      setTableData(releases?.data || [] );
     }
-  }, [projects, initial]);
+  }, [releases?.data, initial]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(order, orderBy),
     filterName,
   });
-  const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-  const denseHeight = 60;
+
   const isFiltered = filterName !== '';
-  const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
+  const isNotFound = (!dataFiltered?.length && !!filterName) || (!isLoading && !dataFiltered?.length);
+  const denseHeight = 60;
 
   const debouncedSearch = useRef(debounce((value) => {
     dispatch(ChangePage(0))
@@ -125,89 +105,90 @@ export default function ProjectList({isArchived}) {
   };
   
   useEffect(() => {
-      debouncedSearch.current.cancel();
+    debouncedSearch.current.cancel();
   }, [debouncedSearch]);
   
   useEffect(()=>{
-      setFilterName(filterBy)
+    setFilterName(filterBy)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 
-  const handleViewRow = (id) => {
-    navigate(PATH_SUPPORT.projects.view(id));
-  };
-
+  const handleViewRow = (id) => navigate(PATH_SETTING.release.view(id));
+  
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
     setFilterName('');
   };
-
-  const handleArchive = () => {
-    setFilterName('');
-    setPage(0);
-    dispatch(setFilterBy(''));
-    if(isArchived){
-      navigate(PATH_SUPPORT.projects.root);    
-    }else{
-      navigate(PATH_SUPPORT.projects.archived);    
-    }
-  }
-
+  
   return (
-      <Container maxWidth={false}>
-        <StyledCardContainer>
-          <Cover name={isArchived?'Archived Projects':'Projects'} 
-            archivedLink={{
-              label:isArchived?'Projects':'Archived Projects', 
-              link: handleArchive, 
-              icon: 'solar:list-bold-duotone'}}
-            isArchived={isArchived}
-          />
-        </StyledCardContainer>
-
+    <Container maxWidth={false} >
+      <StyledCardContainer>
+       <Cover name="Releases" />
+      </StyledCardContainer>
         <TableCard>
-          <ProjectListTableToolbar
+          <ReleaseListTableToolbar
             filterName={filterName}
             onFilterName={handleFilterName}
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
-            isArchived={isArchived}
           />
+
+          {!isNotFound && <TablePaginationCustom
+            count={ releases?.totalCount || 0 }
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
+          />}
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <Scrollbar>
-              <Table stickyHeader size="small" sx={{ minWidth: 360 }}>
-                <TableHeadFilter order={order} orderBy={orderBy} headLabel={TABLE_HEAD} onSort={onSort}/>
+              <Table size="small" sx={{ minWidth: 360 }}>
+                <TableHeadCustom
+                  order={order}
+                  orderBy={orderBy}
+                  headLabel={TABLE_HEAD}
+                  onSort={onSort}
+                />
                 <TableBody>
                   {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) =>
                       row ? (
-                        <ProjectListTableRow
+                        <ReleaseListTableRow
                           key={row._id}
                           row={row}
                           onViewRow={() => handleViewRow(row._id)}
+                          selected={selected.includes(row._id)}
+                          selectedLength={selected.length}
+                          style={index % 2 ? { background: 'red' } : { background: 'green' }}
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                       )
                     )}
-
                   <TableNoData isNotFound={isNotFound} />
                 </TableBody>
               </Table>
             </Scrollbar>
           </TableContainer>
+          {!isNotFound && <TablePaginationCustom
+            count={ releases?.totalCount || 0 }
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
+          />}
         </TableCard>
       </Container>
-    );
+  );
 }
 
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filterName }) {
 
-  const stabilizedThis = Array.isArray(inputData) ? inputData?.map((el, index) => [el, index]) : [];
+  const stabilizedThis = inputData?.map((el, index) => [el, index]);
+
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
@@ -218,13 +199,12 @@ function applyFilter({ inputData, comparator, filterName }) {
 
   if (filterName) {
     inputData = inputData.filter(
-      (Project) =>
-        String(Project?.projectNo)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        String(Project?.name)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        // (ProjectCategory?.isActive ? "Active" : "InActive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
-        String(fDate(Project?.updatedAt))?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+      (release) =>
+        release?.releaseNo?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        release?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        release?.project?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        fDate(release?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }
-
   return inputData;
 }
