@@ -122,7 +122,8 @@ export default function ContactViewForm({
   return (
     <Grid sx={{ mt: 1 }}>
 
-      <ViewFormEditDeleteButtons
+      <ViewFormEditDeleteButtons 
+        showContactUsers
         moveCustomerContact={!customer?.isArchived && isAllAccessAllowed && handleMoveConatct}
         handleEdit={customer?.isArchived ? undefined : handleEdit}
         onArchive={customer?.isArchived ? undefined : onArchive}
