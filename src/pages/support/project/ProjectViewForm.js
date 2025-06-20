@@ -110,7 +110,7 @@ export default function ProjectViewForm() {
               settingPage
             />
             <Grid container sx={{ mt: 2 }}>
-              <ViewFormField isLoading={isLoading} sm={6} heading="Project No" param={defaultValues.projectNo} />
+              <ViewFormField isLoading={isLoading} sm={6} heading="Project Key" param={defaultValues.projectNo} />
               <ViewFormField isLoading={isLoading} sm={6} heading="Name" param={defaultValues.name} />
               <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues.description} />
               <ViewFormAudit defaultValues={defaultValues} />
