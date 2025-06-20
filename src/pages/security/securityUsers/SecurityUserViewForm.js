@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector, batch } from 'react-redux';
 // @mui
-import { format } from 'date-fns'; 
+import { format } from 'date-fns';
 import { Card, Grid, Link, Button, Stack, Typography, Box, Chip } from '@mui/material';
 import ConfirmDialog from '../../../components/confirm-dialog';
 // routes
@@ -105,9 +105,9 @@ export default function SecurityUserViewForm() {
     }
   };
   const handleViewUser = (user) => {
-      dispatch(setSecurityUserDialog(true));
-      dispatch(getDialogSecurityUser(user._id));
-        };
+    dispatch(setSecurityUserDialog(true));
+    dispatch(getDialogSecurityUser(user._id));
+  };
 
 
   const handleUserInvite = async () => {
@@ -178,7 +178,7 @@ export default function SecurityUserViewForm() {
     [securityUser]
   );
 
-  const userRoleChips = defaultValues?.roles.map((role,index) => <Chip key={index} title={role.name} label={role.name} color={role.name === 'SuperAdmin' ? 'secondary' : 'default'} sx={{m:0.2}}/>);
+  const userRoleChips = defaultValues?.roles?.map((role, index) => <Chip key={index} title={role.name} label={role.name} color={role.name === 'SuperAdmin' ? 'secondary' : 'default'} sx={{ m: 0.2 }} />);
   const handleViewUserDialog = async (s) => {
     await dispatch(setSecurityUserDialog(true));
     await dispatch(getDialogSecurityUser(s?._id))
@@ -208,7 +208,7 @@ export default function SecurityUserViewForm() {
             onUserStatusChange={securityUser?.isArchived ? undefined : handleChangeUserStatus}
             securityUserPage
             handleViewUser={handleViewUserDialog}
-            // showContactUsers
+          // showContactUsers
           />
           <ConfirmDialog
             open={openConfirm}
@@ -285,42 +285,42 @@ export default function SecurityUserViewForm() {
                             </StyledTooltip>
                           }
                         </Link>)
-                      }       
+                      }
                     </>
                   }
                 />
-           <ViewFormField
-              isLoading={isLoading}
-              sm={12}
-              heading="Contact Users"
-              node={
-              Array.isArray(contactUsers) && contactUsers.length > 0 ? (
-             <Stack spacing={1}>
-              {contactUsers.map((user) => (
-             <Box
-              key={user._id}
-              onClick={() => handleViewUser(user)}
-              sx={{ cursor: 'pointer' }}
-            >
-             <Typography variant="body2">
-              <Box component="span" sx={{ color: 'primary.main', fontWeight: 500 }}>
-                {user.name}
-              </Box>
-              {' — '}
-              <Box component="span">
-                {user.createdAt
-                  ? format(new Date(user.createdAt), 'dd MMM yyyy')
-                  : '—'}
-              </Box>
-            </Typography>
-          </Box>
-        ))}
-      </Stack>
-    ) : (
-      <Typography variant="body2">No contact users</Typography>
-    )
-  }
-/>
+                <ViewFormField
+                  isLoading={isLoading}
+                  sm={12}
+                  heading="Contact Users"
+                  node={
+                    Array.isArray(contactUsers) && contactUsers.length > 0 ? (
+                      <Stack spacing={1}>
+                        {contactUsers.map((user) => (
+                          <Box
+                            key={user._id}
+                            onClick={() => handleViewUser(user)}
+                            sx={{ cursor: 'pointer' }}
+                          >
+                            <Typography variant="body2">
+                              <Box component="span" sx={{ color: 'primary.main', fontWeight: 500 }}>
+                                {user.name}
+                              </Box>
+                              {' — '}
+                              <Box component="span">
+                                {user.createdAt
+                                  ? format(new Date(user.createdAt), 'dd MMM yyyy')
+                                  : '—'}
+                              </Box>
+                            </Typography>
+                          </Box>
+                        ))}
+                      </Stack>
+                    ) : (
+                      <Typography variant="body2">No contact users</Typography>
+                    )
+                  }
+                />
               </Grid>
             </Grid>
 
