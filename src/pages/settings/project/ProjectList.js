@@ -23,14 +23,10 @@ import {
   getComparator,
   TableNoData,
   TableSkeleton,
-  TableSelectedAction,
   TablePaginationCustom,
-  TablePaginationFilter,
   TableHeadFilter,
 } from '../../../components/table';
-import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
-import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
 import ProjectListTableRow from './ProjectListTableRow';
 import ProjectListTableToolbar from './ProjectListTableToolbar';
@@ -39,13 +35,12 @@ import {
   ChangeRowsPerPage,
   ChangePage,
   setFilterBy,
-  deleteProject,
+  resetProjects,
 } from '../../../redux/slices/support/project/project';
 import { Cover } from '../../../components/Defaults/Cover';
 import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../../components/ListTableTools/TableCard';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
-import useResponsive from '../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -67,15 +62,8 @@ export default function ProjectList({isArchived}) {
     order,
     orderBy,
     setPage,
-    //
     selected,
-    setSelected,
-    onSelectRow,
-    onSelectAllRows,
-    //
     onSort,
-    // onChangePage,
-    // onChangeRowsPerPage,
   } = useTable({
     defaultOrderBy: 'name',
   });
@@ -95,15 +83,18 @@ export default function ProjectList({isArchived}) {
 
   const prefix = JSON.parse(localStorage.getItem('configurations'))?.find((config) => config?.name?.toLowerCase() === 'project_prefix')?.value?.trim() || ''; 
 
-  useEffect(() => {
-    dispatch(getProjects(isArchived));
-  }, [dispatch,isArchived]);
+  useLayoutEffect(() => {
+      dispatch(getProjects(isArchived, page, rowsPerPage));
+      return () => {
+        dispatch(resetProjects());
+      }
+    }, [dispatch, isArchived, page, rowsPerPage]);
 
   useEffect(() => {
     if (initial) {
-      setTableData(projects || []);
+      setTableData(projects?.data || []);
     }
-  }, [projects, initial]);
+  }, [projects?.data, initial]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -111,7 +102,7 @@ export default function ProjectList({isArchived}) {
     filterName,
     prefix,
   });
-  const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+
   const denseHeight = 60;
   const isFiltered = filterName !== '';
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
@@ -177,6 +168,14 @@ export default function ProjectList({isArchived}) {
             isArchived={isArchived}
           />
 
+          {!isNotFound && <TablePaginationCustom
+            count={ projects?.totalCount || 0 }
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
+          />}
+
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <Scrollbar>
               <Table stickyHeader size="small" sx={{ minWidth: 360 }}>
@@ -190,6 +189,7 @@ export default function ProjectList({isArchived}) {
                           key={row._id}
                           row={row}
                           onViewRow={() => handleViewRow(row._id)}
+                          selected={selected.includes(row._id)}
                           prefix={prefix}
                         />
                       ) : (
@@ -202,6 +202,13 @@ export default function ProjectList({isArchived}) {
               </Table>
             </Scrollbar>
           </TableContainer>
+          {!isNotFound && <TablePaginationCustom
+            count={ projects?.totalCount || 0 }
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
+          />}
         </TableCard>
       </Container>
     );

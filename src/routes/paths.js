@@ -608,10 +608,6 @@ export const PATH_REPORTS = {
     new: path(ROOTS_REPORTS, '/email/new'),
     view: (id) => path(ROOTS_REPORTS, `/email/${id}/view`),
   },
-  // ------------------------ SIGN IN LOGS ----------------------------------------
-  signInLogs: {
-    list: path(ROOTS_REPORTS, '/signInLogs/list'),
-  },
   logs: {
     root: path(ROOTS_REPORTS, '/logs'),
     pm2: {
@@ -714,6 +710,10 @@ export const PATH_SETTING = {
   invite: {
     list: path(ROOTS_SETTING, '/invite/list'),
     view: (id) => path(ROOTS_SETTING, `/invite/${id}/view`)
+  },
+  // ------------------------ SIGN IN LOGS ----------------------------------------
+  signInLogs: {
+    list: path(ROOTS_SETTING, '/signInLogs/list'),
   },
   // ------------------------ RELEASES ----------------------------------------
   releases: {

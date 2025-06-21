@@ -34,6 +34,16 @@ export const OTHER_MAIN_CATEGORIES = [
   { title: 'Settings', id: 'settings', icon: 'mdi:cog', path: ROOTS_SETTING },
 ];
 
+export function getOtherMainCategories(roles) {
+  const isSuperAdminRole = Array.isArray(roles)
+    ? roles.some((r) => r.roleType === 'SuperAdmin')
+    : roles?.roleType === 'SuperAdmin';
+
+  return isSuperAdminRole
+    ? OTHER_MAIN_CATEGORIES
+    : OTHER_MAIN_CATEGORIES.filter((category) => category.id !== 'settings');
+}
+
 export const generalSideBarOptions = {
   subheader: 'General',
   items: [
@@ -268,12 +278,6 @@ export const allSideBarOptions = {
           icon: <Iconify icon="eva:email-fill" />,
         },
         {
-          title: 'Sign-in Logs',
-          description: 'Track user authentication and login activities.',
-          path: PATH_REPORTS.signInLogs.list,
-          icon: <Iconify icon="mdi:login" />,
-        },
-        {
           title: 'System Logs',
           description: 'Access various system-level logs and monitoring data.',
           path: PATH_REPORTS.logs.root,
@@ -318,6 +322,11 @@ export const allSideBarOptions = {
           title: 'Invites',
           path: PATH_SETTING.invite.list,
           icon: <Iconify icon="mdi:email-plus" />,
+        },
+        {
+          title: 'Sign-in Logs',
+          path: PATH_SETTING.signInLogs.list,
+          icon: <Iconify icon="mdi:login" />,
         },
         {
           title: 'User Roles',

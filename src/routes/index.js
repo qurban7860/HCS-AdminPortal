@@ -1381,13 +1381,6 @@ export default function Router() {
             { path: ':id/view', element: <Emailview /> }
           ]
         },
-        // ------------------------------ Sign In Logs ----------------------------------
-        {
-          path: 'signInLogs',
-          children: [
-            { path: 'list', element: <SignInLogList /> },
-          ],
-        },
         {
           path: 'logs',
           children: [
@@ -1591,6 +1584,13 @@ export default function Router() {
           children: [
             { path: 'list', element: <UserInvitationList /> },
             { path: ':id/view', element: <UserInvitationView /> },
+          ],
+        },
+        // ------------------------------ Sign In Logs ----------------------------------
+        {
+          path: 'signInLogs',
+          children: [
+            { path: 'list', element: <SignInLogList /> },
           ],
         },
         // ------------------------------ releases ----------------------------------

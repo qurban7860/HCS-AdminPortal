@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 // @mui
 import { useTheme } from '@mui/material/styles';
@@ -21,7 +21,7 @@ import { useSettingsContext } from '../../../components/settings';
 import AccountPopover from './AccountPopover';
 import NotificationsPopover from './NotificationsPopover';
 import { useWebSocketContext } from '../../../auth/WebSocketContext';
-import { MAIN_CATEGORIES, OTHER_MAIN_CATEGORIES } from '../navigationConstants';
+import { MAIN_CATEGORIES, getOtherMainCategories } from '../navigationConstants';
 import { useAuthContext } from '../../../auth/useAuthContext';
 import { StyledTooltip } from '../../../theme/styles/default-styles';
 import IconButtonTooltip from '../../../components/Icons/IconButtonTooltip';
@@ -43,6 +43,8 @@ export default function Header({ onOpenNav, selectedCategory, setSelectedCategor
   const isOffset = useOffSetTop(HEADER.H_DASHBOARD_DESKTOP) && !isNavHorizontal;
   const { sendJsonMessage } = useWebSocketContext();
   const { isSettingAccessAllowed } = useAuthContext();
+  const { user: currentUser } = useAuthContext();
+  const otherCategories = useMemo(() => getOtherMainCategories(currentUser?.roles), [currentUser?.roles]);
 
   useEffect(() => {
     sendJsonMessage({ eventName: 'getNotifications' });
@@ -87,7 +89,7 @@ export default function Header({ onOpenNav, selectedCategory, setSelectedCategor
             <TimeDisplay/>
             {isDesktop && <FullScreenIcon />}
             <Divider orientation="vertical" flexItem />
-            {OTHER_MAIN_CATEGORIES.map((item) => (
+            {otherCategories.map((item) => (
               <Link key={item.id} component={RouterLink} to={item.path} onClick={() => setSelectedCategory(item)}>
                 <IconButtonTooltip 
                   icon={item.icon}

@@ -192,13 +192,14 @@ export function updateProjectStatus(Id, params) {
 
 // -----------------------------------Get Project-----------------------------------
 
-export function getProjects(isArchived) {
+export function getProjects(isArchived, page, pageSize) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}support/project/list`,
         {
           params: {
+            pagination: { page, pageSize },
             isArchived: isArchived || false
           }
         }

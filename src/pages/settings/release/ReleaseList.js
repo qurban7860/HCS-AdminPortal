@@ -39,6 +39,7 @@ const TABLE_HEAD = [
   { id: 'releaseNo', label: 'Release No', align: 'left' },
   { id: 'name', label: 'Name', align: 'left' },
   { id: 'project.name', label: 'Project', align: 'left' },
+  { id: 'releaseDate', label: 'Release Date', align: 'left' },
   { id: 'isActive', label: 'Active', width: 100 },
   { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
@@ -203,6 +204,7 @@ function applyFilter({ inputData, comparator, filterName }) {
         release?.releaseNo?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         release?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         release?.project?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        fDate(release?.releaseDate)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         fDate(release?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }
