@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 // @mui
 import { Card, Grid, Container } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
@@ -11,7 +11,7 @@ import { fDate } from '../../../../utils/formatTime';
 import ViewFormField from '../../../../components/ViewForms/ViewFormField';
 import ViewFormEditDeleteButtons from '../../../../components/ViewForms/ViewFormEditDeleteButtons';
 import { StyledCardContainer } from '../../../../theme/styles/default-styles';
-import { cancelUserInvite } from '../../../../redux/slices/securityUser/invite';
+import { cancelUserInvite, getUserInvite, resendUserInvite } from '../../../../redux/slices/securityUser/invite';
 
 export default function UserInviteViewForm() {
   const dispatch = useDispatch();
@@ -43,6 +43,16 @@ export default function UserInviteViewForm() {
       enqueueSnackbar(error.message || 'Failed to cancel invitation', { variant: 'error' });
     }
   };
+
+  const handleResendInvite = async () => {
+    try {
+      await dispatch(resendUserInvite(userInvite?._id));
+      enqueueSnackbar('Invitation resent successfully');
+      await dispatch(getUserInvite(userInvite?._id));
+    } catch (error) {
+      enqueueSnackbar(error.message || 'Failed to resend invitation', { variant: 'error' });
+    }
+  };
   
   return (
     <Container maxWidth={false}>
@@ -57,6 +67,7 @@ export default function UserInviteViewForm() {
           settingPage
           invitationStatus={defaultValues.status}
           onCancelInvite={handleCancelInvite}
+          onResendInvite={handleResendInvite}
         />
           <Grid container sx={{mt:2}}>
             <ViewFormField isLoading={isLoading} sm={6} heading="Inveted User" param={defaultValues.username} />

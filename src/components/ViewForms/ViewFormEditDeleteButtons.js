@@ -103,7 +103,8 @@ function ViewFormEditDeleteButtons({
   invitationStatus,
   onCancelInvite,
   handleViewUser,
-  showContactUsers = false
+  showContactUsers = false,
+  onResendInvite,
 }) {
   const { id } = useParams();
   const navigate = useNavigate()
@@ -128,6 +129,7 @@ function ViewFormEditDeleteButtons({
   const [openConfigDraftStatuConfirm, setOpenConfigDraftStatuConfirm] = useState(false);
   const [openConfigSubmittedStatuConfirm, setOpenConfigSubmittedStatuConfirm] = useState(false);
   const [openConfigApproveStatuConfirm, setOpenConfigApproveStatuConfirm] = useState(false);
+  const [openResendInviteConfirm, setOpenResendInviteConfirm] = useState(false);
   const { machine } = useSelector((state) => state.machine);
   const { contactUsers } = useSelector((state) => state.user);
   const [lockUntil, setLockUntil] = useState('');
@@ -237,6 +239,10 @@ function ViewFormEditDeleteButtons({
       setOpenConfigApproveStatuConfirm(true);
     }
 
+    if (dialogType === 'ResendInvite') {
+      setOpenResendInviteConfirm(true);
+    }
+
   };
 
   const handleCloseConfirm = (dialogType) => {
@@ -278,6 +284,10 @@ function ViewFormEditDeleteButtons({
 
     if (dialogType === 'ChangeConfigStatusToApprove') {
       setOpenConfigApproveStatuConfirm(false);
+    }
+
+    if (dialogType === 'ResendInvite') {
+      setOpenResendInviteConfirm(false);
     }
 
   };
@@ -887,6 +897,15 @@ function ViewFormEditDeleteButtons({
             />
           )}
 
+          {(invitationStatus === 'PENDING' || invitationStatus === 'EXPIRED') && onResendInvite && (
+            <IconTooltip
+              title="Resend Invitation"
+              onClick={() => handleOpenConfirm('ResendInvite')}
+              color={theme.palette.primary.main}
+              icon="mdi:email-send-outline"
+            />
+          )}
+
           {invitationStatus === 'PENDING' && onCancelInvite && (
             <IconTooltip
               title="Revoke Invitation"
@@ -1166,4 +1185,5 @@ ViewFormEditDeleteButtons.propTypes = {
   onCancelInvite: PropTypes.func,
   handleViewUser: PropTypes.func,
   showContactUsers: PropTypes.bool,
+  onResendInvite: PropTypes.func,
 };
