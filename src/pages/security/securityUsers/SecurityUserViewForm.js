@@ -69,6 +69,7 @@ export default function SecurityUserViewForm() {
       dispatch(resetContactUsers());
     }
   }, [dispatch, securityUser]);
+ 
 
   useEffect(() => {
     batch(() => {
@@ -169,6 +170,7 @@ export default function SecurityUserViewForm() {
       customer: securityUser?.customer?.name || '',
       contact: securityUser?.contact || null,
       name: securityUser?.name || '',
+      currentEmployee: securityUser?.currentEmployee||null,
       phone: securityUser?.phone || '',
       email: securityUser?.email || '',
       login: securityUser?.login || '',
@@ -288,15 +290,33 @@ export default function SecurityUserViewForm() {
                     <>
                       {defaultValues?.contact && (
                         <>
-                          <StyledTooltip
-                            placement="top"
-                            title={defaultValues?.contact?.formerEmployee ? ICONS.FORMEREMPLOYEE.heading : ICONS.NOTFORMEREMPLOYEE.heading}
-                            disableFocusListener
-                            tooltipcolor={defaultValues?.contact?.formerEmployee ? ICONS.FORMEREMPLOYEE.color : ICONS.NOTFORMEREMPLOYEE.color}
-                            color={defaultValues?.contact?.formerEmployee ? ICONS.FORMEREMPLOYEE.color : ICONS.NOTFORMEREMPLOYEE.color}
-                          >
-                            <Iconify icon={ICONS.FORMEREMPLOYEE.icon} sx={{ mr: 1, height: 20, width: 20 }} />
-                          </StyledTooltip>
+                         {defaultValues?.contact?.formerEmployee && (
+                        <StyledTooltip
+                        placement="top"
+                         title={ICONS.FORMEREMPLOYEE.heading}
+                         disableFocusListener
+                         tooltipcolor={ICONS.FORMEREMPLOYEE.color}
+                         color={ICONS.FORMEREMPLOYEE.color}
+                         >
+                           
+                        <Iconify icon={ICONS.FORMEREMPLOYEE.icon} sx={{ mr: 1, height: 20, width: 20 }} />
+                        
+                        </StyledTooltip>
+                        )}
+
+                       {!defaultValues?.contact?.formerEmployee && defaultValues?.currentEmployee && (
+                             <StyledTooltip
+                              placement="top"
+                              title={ICONS.NOTFORMEREMPLOYEE.heading}
+                              disableFocusListener
+                              tooltipcolor={ICONS.NOTFORMEREMPLOYEE.color}
+                              color={ICONS.NOTFORMEREMPLOYEE.color}
+                                >
+                          
+                        <Iconify icon={ICONS.NOTFORMEREMPLOYEE.icon} sx={{ mr: 1, height: 20, width: 20 }} />
+                        
+                        </StyledTooltip>
+                           )}
                           <Link onClick={handleContactDialog} href="#" underline="none">
                             {defaultValues?.contact?.firstName || ''} {defaultValues?.contact?.lastName || ''}
                             {!defaultValues?.contact?.isActive && (

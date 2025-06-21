@@ -18,7 +18,7 @@ import NavDocs from './NavDocs';
 import NavAccount from './NavAccount';
 import NavToggleButton from './NavToggleButton';
 import { useAuthContext } from '../../../auth/useAuthContext';
-import { MAIN_CATEGORIES, OTHER_MAIN_CATEGORIES } from '../navigationConstants';
+import { MAIN_CATEGORIES, getOtherMainCategories } from '../navigationConstants';
 import VersionBadge from '../../../components/nav-section/VersionBadge';
 
 // ----------------------------------------------------------------------
@@ -31,7 +31,6 @@ NavVertical.propTypes = {
 };
 
 export default function NavVertical({ openNav, onCloseNav, selectedCategory, setSelectedCategory }) {
-
   const {
     isDocumentAccessAllowed,
     isDrawingAccessAllowed,
@@ -40,7 +39,10 @@ export default function NavVertical({ openNav, onCloseNav, selectedCategory, set
     isEmailAccessAllowed,
     isDeveloper,
   } = useAuthContext();
-  
+
+  const { user: currentUser } = useAuthContext();
+  const otherCategories = useMemo(() => getOtherMainCategories(currentUser?.roles), [currentUser?.roles]);
+
   const navConfig = useMemo(() => NavigationConfig({
     selectedCategory,
     isDocumentAccessAllowed,
@@ -57,14 +59,13 @@ export default function NavVertical({ openNav, onCloseNav, selectedCategory, set
 
   const { pathname } = useLocation();
   const isDesktop = useResponsive('up', 'lg');
+
   useEffect(() => {
     if (openNav) {
       onCloseNav();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
-
-  
   const renderContent = useMemo(() => (
     <Scrollbar
       sx={{
@@ -93,13 +94,15 @@ export default function NavVertical({ openNav, onCloseNav, selectedCategory, set
           selectedCategory={selectedCategory}
           setSelectedCategory={setSelectedCategory}
           isSettingAccessAllowed={isSettingAccessAllowed}
+          otherCategories={otherCategories}
         />
       )}
       <NavSectionVertical sx={{ mt: '-50px' }} data={navConfig} />
       <Box sx={{ flexGrow: 1 }} />
       <NavDocs />
     </Scrollbar>
-  ), [isDesktop, selectedCategory, setSelectedCategory, isSettingAccessAllowed, navConfig]);
+  ), [isDesktop, selectedCategory, setSelectedCategory, isSettingAccessAllowed, otherCategories, navConfig]);
+
   return (
     <Box component="nav" sx={{ flexShrink: { lg: 0 }, width: { lg: NAV.W_DASHBOARD }}}>
       <NavToggleButton sx={{top: 22}}/>
@@ -138,15 +141,17 @@ export default function NavVertical({ openNav, onCloseNav, selectedCategory, set
   );
 }
 
-const CategoryDropdown = ({ selectedCategory, setSelectedCategory, isSettingAccessAllowed }) => {
+
+const CategoryDropdown = ({ selectedCategory, setSelectedCategory, isSettingAccessAllowed, otherCategories }) => {
   const navigate = useNavigate();
 
   const categoryMap = useMemo(() => 
-    [...MAIN_CATEGORIES, ...OTHER_MAIN_CATEGORIES].reduce((acc, cat) => {
+    [...MAIN_CATEGORIES, ...otherCategories].reduce((acc, cat) => {
       acc[cat.id] = cat;
       return acc;
     }, {}), 
-  []);
+  [otherCategories]
+  );
 
   const handleCategoryChange = useCallback((event) => {
     const category = categoryMap[event.target.value];
@@ -176,7 +181,7 @@ const CategoryDropdown = ({ selectedCategory, setSelectedCategory, isSettingAcce
         }}
       >
         {MAIN_CATEGORIES.map(renderMenuItem)}
-        {OTHER_MAIN_CATEGORIES.map(renderMenuItem)}
+        {otherCategories.map(renderMenuItem)}
       </Select>
     </FormControl>
   );
@@ -186,4 +191,5 @@ CategoryDropdown.propTypes = {
   selectedCategory: PropTypes.object,
   setSelectedCategory: PropTypes.func,
   isSettingAccessAllowed: PropTypes.bool,
+  otherCategories: PropTypes.array,
 };

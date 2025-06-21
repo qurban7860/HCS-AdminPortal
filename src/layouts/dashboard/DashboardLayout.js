@@ -13,7 +13,9 @@ import NavMini from './nav/NavMini';
 import NavVertical from './nav/NavVertical';
 // import NavHorizontal from './nav/NavHorizontal';
 import { CONFIG } from '../../config-global';
-import { MAIN_CATEGORIES, OTHER_MAIN_CATEGORIES } from './navigationConstants';
+import { MAIN_CATEGORIES, getOtherMainCategories } from './navigationConstants';
+import { useAuthContext } from '../../auth/useAuthContext';
+
 
 // ----------------------------------------------------------------------
 
@@ -23,7 +25,11 @@ export default function DashboardLayout() {
   const { themeLayout } = useSettingsContext();
   const isDesktop = useResponsive('up', 'lg');
   const [open, setOpen] = useState(false);
-  const allCategories = useMemo(() => [...MAIN_CATEGORIES, ...OTHER_MAIN_CATEGORIES], []);
+  const { user: currentUser } = useAuthContext();
+  const allCategories = useMemo(
+    () => [...MAIN_CATEGORIES, ...getOtherMainCategories(currentUser?.roles)],
+    [currentUser?.roles]
+  );
   const [selectedCategory, setSelectedCategory] = useState(allCategories[0] || MAIN_CATEGORIES[0]);
   const location = useLocation();
 
