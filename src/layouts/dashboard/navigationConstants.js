@@ -34,6 +34,16 @@ export const OTHER_MAIN_CATEGORIES = [
   { title: 'Settings', id: 'settings', icon: 'mdi:cog', path: ROOTS_SETTING },
 ];
 
+export function getOtherMainCategories(roles) {
+  const isSuperAdminRole = Array.isArray(roles)
+    ? roles.some((r) => r.roleType === 'SuperAdmin')
+    : roles?.roleType === 'SuperAdmin';
+
+  return isSuperAdminRole
+    ? OTHER_MAIN_CATEGORIES
+    : OTHER_MAIN_CATEGORIES.filter((category) => category.id !== 'settings');
+}
+
 export const generalSideBarOptions = {
   subheader: 'General',
   items: [
