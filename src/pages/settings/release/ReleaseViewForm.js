@@ -8,10 +8,12 @@ import { Card, Grid } from '@mui/material';
 import { PATH_SETTING } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import { deleteRelease, resetRelease } from '../../../redux/slices/support/release/release';
+import { deleteRelease, resetRelease, updateReleaseStatus } from '../../../redux/slices/support/release/release';
 import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
 import ViewFormField from '../../../components/ViewForms/ViewFormField';
+import ViewFormSelect from '../../../components/ViewForms/ViewFormSelect';
+import { releaseStatusOptions } from '../../../utils/constants';
 import { handleError } from '../../../utils/errorHandler';
 import Editor from '../../../components/editor';
 import { fDate } from '../../../utils/formatTime';
@@ -30,6 +32,7 @@ export default function ReleaseViewForm() {
       releaseNo: release?.releaseNo || '',
       name: release?.name || '',
       project: release?.project,
+      status: release?.status,
       releaseDate: release?.releaseDate || null,
       description: release?.description || '',
       isActive: release?.isActive,
@@ -56,6 +59,16 @@ export default function ReleaseViewForm() {
   };
 
   const toggleEdit = () => navigate(PATH_SETTING.release.edit(id));
+  
+  const handleReleaseChange = async (e) => {
+    try {
+      await dispatch(updateReleaseStatus(release._id, { status: e.target.value }));
+      enqueueSnackbar('Release status updated successfully!', { variant: `success` });
+    } catch (error) {
+      enqueueSnackbar(handleError(error), { variant: `error` });
+      console.error(error);
+    }
+  };
 
   return (
   <Grid>
@@ -77,6 +90,9 @@ export default function ReleaseViewForm() {
         />
         <ViewFormField isLoading={isLoading} sm={3} heading="Name" param={defaultValues?.name} />
         <ViewFormField isLoading={isLoading} sm={3} heading="Project" param={defaultValues.project?.name || ''} />
+        <ViewFormField isLoading={isLoading} sm={3} heading="Status"
+          node={<ViewFormSelect sx={{ width: '150px' }} options={releaseStatusOptions} value={defaultValues.status} onChange={handleReleaseChange} />}
+        />
         <ViewFormField isLoading={isLoading} sm={3} heading="Release Date" param={fDate(defaultValues?.releaseDate)} />
 
         <ViewFormField isLoading={isLoading} sm={12} 

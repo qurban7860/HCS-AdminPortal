@@ -171,6 +171,23 @@ export function patchRelease(id, data) {
   };
 }
 
+// ---------------------------------Update Release Status-------------------------------------
+export function updateReleaseStatus(Id, params) {
+  return async (dispatch) => {
+    try {
+      const data = {
+        status: params.status
+      }
+      await axios.patch(`${CONFIG.SERVER_URL}support/release/${Id}`, data,);
+      dispatch(slice.actions.setResponseMessage('Release status updated successfully'));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
 // GET releases
 export function getReleases(isArchived, page, pageSize) {
   return async (dispatch) => {

@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import debounce from 'lodash/debounce';
 import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 // @mui
-import { Container, Table, TableBody, TableContainer, Tooltip, Typography} from '@mui/material';
+import { Container, Table, TableBody, TableContainer } from '@mui/material';
 // routes
 import { useNavigate } from 'react-router-dom';
 import { PATH_SETTING } from '../../../routes/paths';
@@ -39,6 +39,7 @@ const TABLE_HEAD = [
   { id: 'releaseNo', label: 'Release No', align: 'left' },
   { id: 'name', label: 'Name', align: 'left' },
   { id: 'project.name', label: 'Project', align: 'left' },
+  { id: 'status', label: 'Status', align: 'left' },
   { id: 'releaseDate', label: 'Release Date', align: 'left' },
   { id: 'isActive', label: 'Active', width: 100 },
   { id: 'createdAt', label: 'Created At', align: 'right' },
@@ -70,6 +71,7 @@ export default function ReleaseList({isArchived}) {
   const dispatch = useDispatch();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
+  const [statusVal, setStatusVal] = useState(null);
 
   useLayoutEffect(() => {
     dispatch(getReleases(isArchived, page, rowsPerPage));
@@ -88,6 +90,7 @@ export default function ReleaseList({isArchived}) {
     inputData: tableData,
     comparator: getComparator(order, orderBy),
     filterName,
+    statusVal,
   });
 
   const isFiltered = filterName !== '';
@@ -119,8 +122,14 @@ export default function ReleaseList({isArchived}) {
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
     setFilterName('');
+    setStatusVal(null);
   };
   
+  const handleStatusChange = (e) => {
+    setStatusVal(e);
+    setPage(0);
+  };
+
   return (
     <Container maxWidth={false} >
       <StyledCardContainer>
@@ -132,6 +141,8 @@ export default function ReleaseList({isArchived}) {
             onFilterName={handleFilterName}
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
+            statusVal={statusVal}
+            setStatusVal={handleStatusChange}
           />
 
           {!isNotFound && <TablePaginationCustom
@@ -186,7 +197,7 @@ export default function ReleaseList({isArchived}) {
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName }) {
+function applyFilter({ inputData, comparator, filterName, statusVal }) {
 
   const stabilizedThis = inputData?.map((el, index) => [el, index]);
 
@@ -208,5 +219,10 @@ function applyFilter({ inputData, comparator, filterName }) {
         fDate(release?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }
+
+  if(statusVal){
+    inputData = inputData.filter((release) => release?.status === statusVal?.value);
+  }
+
   return inputData;
 }

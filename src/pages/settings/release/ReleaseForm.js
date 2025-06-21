@@ -38,6 +38,7 @@ export default function ReleaseForm() {
     () => ({
       project: id && release?.project || null,
       name: id && release?.name || '',
+      status: id && release?.status || 'To Do',
       releaseDate: id && release?.releaseDate || null,
       description: id && release?.description || '',
       isActive: id ? release?.isActive : true,
