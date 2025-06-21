@@ -48,70 +48,73 @@ export default function ArticleViewForm() {
   const [selectedImage, setSelectedImage] = useState(-1);
   const [fileDialog, setFileDialog] = useState(false);
   const [slides, setSlides] = useState([]);
-  
+
   const { article, isLoading } = useSelector((state) => state.article);
-  const prefix = JSON.parse(localStorage.getItem('configurations'))?.find((config) => config?.name?.toLowerCase() === 'article_prefix')?.value?.trim() || ''; 
+  const prefix = JSON.parse(localStorage.getItem('configurations'))?.find((config) => config?.name?.toLowerCase() === 'article_prefix')?.value?.trim() || '';
 
   useLayoutEffect(() => {
     dispatch(getArticle(id));
+    return () => {
+      dispatch(resetArticle());
+    }
   }, [id, dispatch]);
-  
+
   useEffect(() => {
-      const newSlides = article?.files?.map(file => {
-        const base64Thumbnail = `data:image/png;base64,${file.thumbnail}`;
-  
-        if (file?.fileType?.startsWith('image')) {
-          return {
-            type: 'image',
-            thumbnail: base64Thumbnail,
-            src: base64Thumbnail,
-            downloadFilename: `${file?.name}.${file?.extension}`,
-            name: file?.name,
-            extension: file?.extension,
-            fileType: file?.fileType,
-            isLoaded: false,
-            _id: file?._id,
-            width: '100%',
-            height: '100%',
-          };
-        }
-  
-        if (file?.fileType?.startsWith('video')) {
-          return {
-            type: 'video',
-            sources: [{
-              src: file?.src,
-              type: file.fileType,
-              playsInline: true,
-              autoPlay: true,
-              loop: true,
-              muted: true,
-              preload: 'auto',
-            }],
-            downloadFilename: `${file?.name}.${file?.extension}`,
-            name: file?.name,
-            extension: file?.extension,
-            fileType: file?.fileType,
-            isLoaded: false,
-            _id: file?._id,
-            width: '100%',
-            height: '100%',
-          };
-        }
-  
-        return null;
-      }).filter(Boolean);
-  
-      setSlides(newSlides || []);
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [article?.files]);
+    const newSlides = article?.files?.map(file => {
+      const base64Thumbnail = `data:image/png;base64,${file.thumbnail}`;
+
+      if (file?.fileType?.startsWith('image')) {
+        return {
+          type: 'image',
+          thumbnail: base64Thumbnail,
+          src: base64Thumbnail,
+          downloadFilename: `${file?.name}.${file?.extension}`,
+          name: file?.name,
+          extension: file?.extension,
+          fileType: file?.fileType,
+          isLoaded: false,
+          _id: file?._id,
+          width: '100%',
+          height: '100%',
+        };
+      }
+
+      if (file?.fileType?.startsWith('video')) {
+        return {
+          type: 'video',
+          sources: [{
+            src: file?.src,
+            type: file?.fileType,
+            playsInline: true,
+            autoPlay: true,
+            loop: true,
+            muted: true,
+            preload: 'auto',
+          }],
+          downloadFilename: `${file?.name}.${file?.extension}`,
+          name: file?.name,
+          extension: file?.extension,
+          fileType: file?.fileType,
+          isLoaded: false,
+          _id: file?._id,
+          width: '100%',
+          height: '100%',
+        };
+      }
+
+      return null;
+    }).filter(Boolean);
+
+    setSlides(newSlides || []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [article?.files]);
 
   const onDelete = async () => {
     try {
       await dispatch(deleteArticle(article?._id));
-      if(article?.isArchived){
+      if (article?.isArchived) {
         navigate(PATH_SUPPORT.knowledgeBase.article.archived);
-      }else{
+      } else {
         navigate(PATH_SUPPORT.knowledgeBase.article.root);
       }
       enqueueSnackbar('Article deleted successfully!', { variant: `success` });
@@ -149,7 +152,7 @@ export default function ArticleViewForm() {
 
   const defaultValues = useMemo(
     () => ({
-      articleNo: `${prefix}-${article?.articleNo}`,
+      articleNo: `${prefix || ''}${article?.articleNo || ''}`,
       title: article?.title,
       description: article?.description || '',
       files: article?.files || [],
@@ -170,16 +173,16 @@ export default function ArticleViewForm() {
   );
 
   const handlebackLink = () => {
-    if(defaultValues.isArchived){
+    if (defaultValues.isArchived) {
       navigate(PATH_SUPPORT.knowledgeBase.article.archived);
-    }else{
+    } else {
       navigate(PATH_SUPPORT.knowledgeBase.article.root);
     }
   };
 
   const handleStatusChange = async (e) => {
     try {
-      await dispatch(updateArticleStatus(article._id, {status: e.target.value}));
+      await dispatch(updateArticleStatus(article._id, { status: e.target.value }));
       enqueueSnackbar('Article status updated successfully!', { variant: `success` });
     } catch (error) {
       enqueueSnackbar(handleError(error), { variant: `error` });
@@ -187,102 +190,102 @@ export default function ArticleViewForm() {
     }
 
   };
-  
-   //  ---------------------------------- Files Helper ------------------------------------------
-  
-    const handleOpenLightbox = async (index) => {
-      setSelectedImage(index);
-      const image = slides[index];
-      if (!image?.isLoaded && (image?.fileType?.startsWith('image'))) {
-        try {
-          const response = await dispatch(getFile(id, image?._id));
-          if (regEx.test(response.status)) {
-            const base64 = response.data;
-            const updatedSlides = [...slides];
-            updatedSlides[index] = {
-              ...image,
-              src: `data:${image.fileType};base64,${base64}`,
-              isLoaded: true
-            };
-            setSlides(updatedSlides);
-          }
-        } catch (error) {
-          console.error('Error loading full file:', error);
-          enqueueSnackbar('File loading failed!', { variant: 'error' });
-        }
-      }
-    };
-  
-    const handleCloseLightbox = () => {
-      setSelectedImage(-1);
-    };
-  
-    const handleDeleteFile = async (fileId) => {
+
+  //  ---------------------------------- Files Helper ------------------------------------------
+
+  const handleOpenLightbox = async (index) => {
+    setSelectedImage(index);
+    const image = slides[index];
+    if (!image?.isLoaded && (image?.fileType?.startsWith('image'))) {
       try {
-        await dispatch(deleteFile(article?._id, fileId));
-        enqueueSnackbar('File archived successfully');
-      } catch (err) {
-        console.log(err);
-        enqueueSnackbar('File archive failed!', { variant: `error` });
-      }
-    };
-  
-    const handleDownloadFile = (fileId, fileName, fileExtension) => {
-      const file = slides.find((item) => item._id === fileId);
-  
-      if (!file) {
-        enqueueSnackbar("File not found.", { variant: "error" });
-        return;
-      }
-  
-      const isVideo = file.fileType?.startsWith("video");
-      if (isVideo) {
-        try {
-          const signedUrl = file?.sources[0]?.src;
-          window.open(signedUrl, "_blank");
-          enqueueSnackbar("Video download started");
-        } catch (error) {
-          enqueueSnackbar("Video download failed!", { variant: "error" });
-        }
-      } else {
-        dispatch(getFile(article?._id, fileId))
-          .then((res) => {
-            if (regEx.test(res.status)) {
-              download(atob(res.data), `${fileName}.${fileExtension}`, { type: fileExtension });
-              enqueueSnackbar("Download failed");
-            }
-          })
-          .catch((err) => {
-            enqueueSnackbar(handleError(err), { variant: `error` });
-          });
-      }
-    };
-  
-    const [pdf, setPDF] = useState(null);
-    const [PDFName, setPDFName] = useState('');
-    const [PDFViewerDialog, setPDFViewerDialog] = useState(false);
-  
-    const handleOpenFile = async (fileId, fileName, fileExtension) => {
-      setPDFName(`${fileName}.${fileExtension}`);
-      setPDFViewerDialog(true);
-      setPDF(null);
-      try {
-        const response = await dispatch(getFile(article?._id, fileId));
+        const response = await dispatch(getFile(id, image?._id));
         if (regEx.test(response.status)) {
-          const blob = b64toBlob(encodeURI(response.data), 'application/pdf')
-          const url = URL.createObjectURL(blob);
-          setPDF(url);
-        } else {
-          enqueueSnackbar(response.statusText, { variant: 'error' });
+          const base64 = response.data;
+          const updatedSlides = [...slides];
+          updatedSlides[index] = {
+            ...image,
+            src: `data:${image?.fileType};base64,${base64}`,
+            isLoaded: true
+          };
+          setSlides(updatedSlides);
         }
       } catch (error) {
-        if (error.message) {
-          enqueueSnackbar(error.message, { variant: 'error' });
-        } else {
-          enqueueSnackbar('Something went wrong!', { variant: 'error' });
-        }
+        console.error('Error loading full file:', error);
+        enqueueSnackbar('File loading failed!', { variant: 'error' });
       }
-    };
+    }
+  };
+
+  const handleCloseLightbox = () => {
+    setSelectedImage(-1);
+  };
+
+  const handleDeleteFile = async (fileId) => {
+    try {
+      await dispatch(deleteFile(article?._id, fileId));
+      enqueueSnackbar('File archived successfully');
+    } catch (err) {
+      console.log(err);
+      enqueueSnackbar('File archive failed!', { variant: `error` });
+    }
+  };
+
+  const handleDownloadFile = (fileId, fileName, fileExtension) => {
+    const file = slides.find((item) => item._id === fileId);
+
+    if (!file) {
+      enqueueSnackbar("File not found.", { variant: "error" });
+      return;
+    }
+
+    const isVideo = file?.fileType?.startsWith("video");
+    if (isVideo) {
+      try {
+        const signedUrl = file?.sources[0]?.src;
+        window.open(signedUrl, "_blank");
+        enqueueSnackbar("Video download started");
+      } catch (error) {
+        enqueueSnackbar("Video download failed!", { variant: "error" });
+      }
+    } else {
+      dispatch(getFile(article?._id, fileId))
+        .then((res) => {
+          if (regEx.test(res.status)) {
+            download(atob(res.data), `${fileName}.${fileExtension}`, { type: fileExtension });
+            enqueueSnackbar("Download failed");
+          }
+        })
+        .catch((err) => {
+          enqueueSnackbar(handleError(err), { variant: `error` });
+        });
+    }
+  };
+
+  const [pdf, setPDF] = useState(null);
+  const [PDFName, setPDFName] = useState('');
+  const [PDFViewerDialog, setPDFViewerDialog] = useState(false);
+
+  const handleOpenFile = async (fileId, fileName, fileExtension) => {
+    setPDFName(`${fileName}.${fileExtension}`);
+    setPDFViewerDialog(true);
+    setPDF(null);
+    try {
+      const response = await dispatch(getFile(article?._id, fileId));
+      if (regEx.test(response.status)) {
+        const blob = b64toBlob(encodeURI(response.data), 'application/pdf')
+        const url = URL.createObjectURL(blob);
+        setPDF(url);
+      } else {
+        enqueueSnackbar(response.statusText, { variant: 'error' });
+      }
+    } catch (error) {
+      if (error.message) {
+        enqueueSnackbar(error.message, { variant: 'error' });
+      } else {
+        enqueueSnackbar('Something went wrong!', { variant: 'error' });
+      }
+    }
+  };
 
   return (
     <Container maxWidth={false}>
@@ -292,28 +295,28 @@ export default function ArticleViewForm() {
       <Card sx={{ p: 2 }}>
         <Grid>
           <ViewFormEditDeleteButtons
-              customerAccess={defaultValues?.customerAccess}
-              isActive={defaultValues.isActive}
-              {...(!defaultValues?.isArchived && { handleEdit })}
-              {...(defaultValues?.isArchived ? { onDelete } : { onArchive })}
-              {...(defaultValues?.isArchived && { onRestore })}
-              backLink={handlebackLink}
-              settingPage
+            customerAccess={defaultValues?.customerAccess}
+            isActive={defaultValues.isActive}
+            {...(!defaultValues?.isArchived && { handleEdit })}
+            {...(defaultValues?.isArchived ? { onDelete } : { onArchive })}
+            {...(defaultValues?.isArchived && { onRestore })}
+            backLink={handlebackLink}
+            settingPage
+          />
+          <Grid container sx={{ mt: 2 }}>
+            <ViewFormField isLoading={isLoading} sm={4} heading="Category" param={defaultValues.category?.name || ''} />
+            <ViewFormField isLoading={isLoading} sm={4} heading="Article No" param={defaultValues.articleNo || ''} />
+            <ViewFormField isLoading={isLoading} sm={4} heading="Status"
+              node={<ViewFormSelect sx={{ width: '150px' }} options={articleStatusOptions} value={defaultValues.status} onChange={handleStatusChange} />}
+            />
+            <ViewFormField isLoading={isLoading} sm={12} heading="Title" param={defaultValues.title || ''} />
+            <ViewFormField isLoading={isLoading} sm={12}
+              heading="Description"
+              node={<Editor readOnly hideToolbar sx={{ border: 'none', '& .ql-editor': { padding: '0px' } }} value={defaultValues.description} />}
             />
             <Grid container sx={{ mt: 2 }}>
-              <ViewFormField isLoading={isLoading} sm={4} heading="Category" param={defaultValues.category?.name || ''} />
-              <ViewFormField isLoading={isLoading} sm={4} heading="Article No" param={defaultValues.articleNo || ''} />
-              <ViewFormField isLoading={isLoading} sm={4} heading="Status"
-                node={<ViewFormSelect sx={{ width: '150px' }} options={articleStatusOptions} value={defaultValues.status} onChange={handleStatusChange} /> }
-              />
-              <ViewFormField isLoading={isLoading} sm={12} heading="Title" param={defaultValues.title || ''} />
-              <ViewFormField isLoading={isLoading} sm={12} 
-                heading="Description" 
-                node={<Editor readOnly hideToolbar sx={{ border: 'none', '& .ql-editor': { padding: '0px' } }} value={defaultValues.description} />}
-              />
-              <Grid container sx={{ mt: 2 }}>
-                <FormLabel content='Documents' />
-              </Grid>
+              <FormLabel content='Documents' />
+            </Grid>
             <Box
               sx={{ mt: 2, width: '100%' }}
               gap={1}
@@ -340,7 +343,7 @@ export default function ArticleViewForm() {
                 />
               ))}
 
-              {Array.isArray(article?.files) && article?.files?.filter(f => !f.fileType.startsWith('image'))?.filter(f => !f.fileType.startsWith('video'))?.map((file, _index) =>
+              {Array.isArray(article?.files) && article?.files?.filter(f => !f?.fileType.startsWith('image'))?.filter(f => !f?.fileType.startsWith('video'))?.map((file, _index) =>
                 <DocumentGalleryItem
                   key={file?._id}
                   image={{
@@ -374,25 +377,25 @@ export default function ArticleViewForm() {
               disabledSlideshow
               disabledDownload
             />
-              <ViewFormAudit defaultValues={defaultValues} />
-            </Grid>
+            <ViewFormAudit defaultValues={defaultValues} />
           </Grid>
-        </Card>
-        {fileDialog && <DialogArticleAddFile open={fileDialog} handleClose={() => setFileDialog(false)} />}
-              {PDFViewerDialog && (
-                <Dialog fullScreen open={PDFViewerDialog} onClose={() => setPDFViewerDialog(false)}>
-                  <DialogTitle variant='h3' sx={{ pb: 1, pt: 2, display: 'flex', justifyContent: 'space-between' }}>
-                    PDF View
-                    <Button variant='outlined' onClick={() => setPDFViewerDialog(false)}>Close</Button>
-                  </DialogTitle>
-                  <Divider variant='fullWidth' />
-                  {pdf ? (
-                    <iframe title={PDFName} src={pdf} style={{ paddingBottom: 10 }} width='100%' height='842px' />
-                  ) : (
-                    <SkeletonPDF />
-                  )}
-                </Dialog>
-              )}
-      </Container>
+        </Grid>
+      </Card>
+      {fileDialog && <DialogArticleAddFile open={fileDialog} handleClose={() => setFileDialog(false)} />}
+      {PDFViewerDialog && (
+        <Dialog fullScreen open={PDFViewerDialog} onClose={() => setPDFViewerDialog(false)}>
+          <DialogTitle variant='h3' sx={{ pb: 1, pt: 2, display: 'flex', justifyContent: 'space-between' }}>
+            PDF View
+            <Button variant='outlined' onClick={() => setPDFViewerDialog(false)}>Close</Button>
+          </DialogTitle>
+          <Divider variant='fullWidth' />
+          {pdf ? (
+            <iframe title={PDFName} src={pdf} style={{ paddingBottom: 10 }} width='100%' height='842px' />
+          ) : (
+            <SkeletonPDF />
+          )}
+        </Dialog>
+      )}
+    </Container>
   );
 }

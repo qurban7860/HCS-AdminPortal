@@ -42,7 +42,6 @@ export default function ArticleAddForm() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
-  const { article } = useSelector((state) => state.article);
   const { activeArticleCategories } = useSelector((state) => state.articleCategory);
 
   useEffect(() => {
@@ -56,9 +55,9 @@ export default function ArticleAddForm() {
     () => ({
       title: '',
       description: '',
-      files: article ? manipulateFiles(article?.files) : [],
-      category: article?.category || null,
-      status:'DRAFT',
+      files: [],
+      category: null,
+      status: 'DRAFT',
       customerAccess: false,
       isActive: true,
     }),
@@ -78,61 +77,61 @@ export default function ArticleAddForm() {
     setValue,
     formState: { isSubmitting },
   } = methods;
-  
+
   const { files } = watch();
-  
+
   const hashFilesMD5 = async (_files) => {
-      const hashPromises = _files.map((file) => new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => {
-          const arrayBuffer = reader.result;
-          const wordArray = MD5(lib.WordArray.create(arrayBuffer));
-          const hashHex = wordArray.toString(enc.Hex);
-          resolve(hashHex);
-        };
-        reader.onerror = () => {
-          reject(new Error(`Error reading file: ${file?.name || ''}`));
-        };
-        reader.readAsArrayBuffer(file);
-      }));
-      try {
-        const hashes = await Promise.all(hashPromises);
-        return hashes;
-      } catch (error) {
-        console.error(error);
-        throw error;
+    const hashPromises = _files.map((file) => new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const arrayBuffer = reader.result;
+        const wordArray = MD5(lib.WordArray.create(arrayBuffer));
+        const hashHex = wordArray.toString(enc.Hex);
+        resolve(hashHex);
+      };
+      reader.onerror = () => {
+        reject(new Error(`Error reading file: ${file?.name || ''}`));
+      };
+      reader.readAsArrayBuffer(file);
+    }));
+    try {
+      const hashes = await Promise.all(hashPromises);
+      return hashes;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
+
+  const handleDropMultiFile = useCallback(async (acceptedFiles) => {
+    console.log("acceptedFiles:::", acceptedFiles)
+    const hashes = await hashFilesMD5(acceptedFiles);
+    const newFiles = (Array.isArray(files) && files?.length > 0) ? [...files] : [];
+    acceptedFiles.forEach((file, index) => {
+      const eTag = hashes[index];
+      if (!newFiles?.some((el) => el?.eTag === eTag)) {
+        const newFile = Object.assign(file, {
+          preview: URL.createObjectURL(file),
+          src: URL.createObjectURL(file),
+          isLoaded: true,
+          eTag,
+        });
+        newFiles.push(newFile);
       }
-    };
-  
-    const handleDropMultiFile = useCallback(async (acceptedFiles) => {
-      console.log("acceptedFiles:::",acceptedFiles)
-      const hashes = await hashFilesMD5(acceptedFiles);
-      const newFiles = (Array.isArray(files) && files?.length > 0) ? [...files] : [];
-      acceptedFiles.forEach((file, index) => {
-        const eTag = hashes[index];
-        if (!newFiles?.some((el) => el?.eTag === eTag)) {
-          const newFile = Object.assign(file, {
-            preview: URL.createObjectURL(file),
-            src: URL.createObjectURL(file),
-            isLoaded: true,
-            eTag,
-          });
-          newFiles.push(newFile);
-        }
-      });
-      setValue('files', newFiles, { shouldValidate: true });
-    }, [setValue, files]);
-  
-    const handleFileRemove = useCallback(async (inputFile) => {
-      try {
-        setValue('files', files?.filter((el) => (inputFile?._id ? el?._id !== inputFile?._id : el !== inputFile)), { shouldValidate: true })
-        if (inputFile?._id) {
-          dispatch(deleteFile(inputFile?.articleCategory, inputFile?._id))
-        }
-      } catch (e) {
-        console.error(e)
+    });
+    setValue('files', newFiles, { shouldValidate: true });
+  }, [setValue, files]);
+
+  const handleFileRemove = useCallback(async (inputFile) => {
+    try {
+      setValue('files', files?.filter((el) => (inputFile?._id ? el?._id !== inputFile?._id : el !== inputFile)), { shouldValidate: true })
+      if (inputFile?._id) {
+        dispatch(deleteFile(inputFile?.articleCategory, inputFile?._id))
       }
-    }, [setValue, files, dispatch]);
+    } catch (e) {
+      console.error(e)
+    }
+  }, [setValue, files, dispatch]);
 
   useEffect(() => {
     reset(defaultValues);
@@ -166,10 +165,10 @@ export default function ArticleAddForm() {
           <Grid item xs={18} md={12}>
             <Card sx={{ p: 3 }}>
               <Stack spacing={2}>
-                <RHFAutocomplete 
-                  name="category" 
-                  label="Category" 
-                  options={activeArticleCategories || []} 
+                <RHFAutocomplete
+                  name="category"
+                  label="Category"
+                  options={activeArticleCategories || []}
                   getOptionLabel={(option) => `${option.name || ''}`}
                   isOptionEqualToValue={(option, value) => option._id === value._id}
                   renderOption={(props, option) => (<li {...props} key={option?._id}> {option.name || ''} </li>)}
