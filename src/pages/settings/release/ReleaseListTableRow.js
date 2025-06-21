@@ -24,7 +24,7 @@ export default function ReleaseListTableRow({
   onViewRow,
 }) {
 
-  const { isActive, name, releaseNo, project, releaseDate, createdAt } = row;
+  const { isActive, name, releaseNo, project, status, releaseDate, createdAt } = row;
   return (
     <StyledTableRow hover selected={selected}>
       {/* <TableCell align="left" padding="checkbox"  >
@@ -40,6 +40,7 @@ export default function ReleaseListTableRow({
       <LinkTableCell align="left" onClick={onViewRow} param={releaseNo} />
       <LinkTableCell align="left" onClick={onViewRow} param={name} />
       <TableCell align='left' > { project?.name } </TableCell>
+      <TableCell align='left' > { status } </TableCell>
       <TableCell align='left' > { fDate(releaseDate) } </TableCell>
       <TableCell>
         <Switch checked={isActive} disabled size="small" />
