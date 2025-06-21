@@ -20,6 +20,14 @@ const visuallyHidden = {
   whiteSpace: 'nowrap',
   clip: 'rect(0 0 0 0)',
 };
+const renderLabelWithTooltip = (headCell) =>
+  headCell.tooltip ? (
+    <StyledTooltip title={headCell.tooltip} placement="top">
+      <Box component="span">{headCell.label}</Box>
+    </StyledTooltip>
+  ) : (
+    headCell.label
+  );
 
 // ----------------------------------------------------------------------
 
@@ -86,7 +94,7 @@ export default function TableHeadFilter({
                         onClick={() => onSort(headCell.id)}
                         // sx={{ textTransform: 'capitalize' }}
                       >
-                        {headCell.label}
+                         {renderLabelWithTooltip(headCell)} 
   
                         {orderBy === headCell.id ? (
                           <Box sx={{ ...visuallyHidden }}>
@@ -95,7 +103,7 @@ export default function TableHeadFilter({
                         ) : null}
                       </TableSortLabel>
                     ) : (
-                      headCell.label
+                     renderLabelWithTooltip(headCell)
                     )}
                 </TableCell>
               )
@@ -116,7 +124,7 @@ export default function TableHeadFilter({
                     onClick={() => onSort(headCell.id)}
                     sx={{ textTransform: 'capitalize' }}
                   >
-                    {headCell.label}
+                    {renderLabelWithTooltip(headCell)}
 
                     {orderBy === headCell.id ? (
                       <Box sx={{ ...visuallyHidden }}>
@@ -125,7 +133,7 @@ export default function TableHeadFilter({
                     ) : null}
                   </TableSortLabel>
                 ) : (
-                  headCell.label
+                renderLabelWithTooltip(headCell)
                 )}
             </TableCell>)
             
