@@ -11,11 +11,13 @@ const generatePortalKeyConfigFileContent = (portalKey, serialNo) => {
     `howickportalkey = ${portalKey}\n`,
     `machineserialno = ${serialNo}\n\n`,
     '//Environment like dev/test/prod , default is prod\n',
-    `env = ${env}\n`,
-    '//contenttype is used for header\n',
-    'contenttype = application/json\n',
-    '//endpoint configuration\n',
-    ...Object.entries(extractedConfigs || {}).map(([key, value]) => `${key} = ${value}\n`)
+    `env = ${env}\n\n`,
+    '//Contenttype is used for header\n',
+    'contenttype = application/json\n\n',
+    '//Endpoint configuration\n',
+    ...Object.entries(extractedConfigs || {}).map(([key, value]) => `${key} = ${value}\n`),'\n',
+    '//Logging configuration\n',
+    'maxLogsPerRequest = 100',
   ];
 
   return configLines.join('');

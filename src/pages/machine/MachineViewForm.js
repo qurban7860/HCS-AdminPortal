@@ -184,6 +184,8 @@ export default function MachineViewForm() {
     () => ({
       id: machine?._id || '',
       name: machine?.name || '',
+      generation: machine?.generation || '',
+      efficiency: machine?.efficiency ? `${machine?.efficiency} m/hr` : '',
       serialNo: machine?.serialNo || '',
       parentMachine: machine?.parentMachine?.name || '',
       alias: machine?.alias || '',
@@ -314,15 +316,19 @@ export default function MachineViewForm() {
           <Grid container>
                        {/* 1 FULL ROW */}
             <ViewFormField isLoading={isLoading} sm={12} heading="Name" param={defaultValues?.name} />
+            <ViewFormField isLoading={isLoading} sm={6} heading="Generation" param={defaultValues?.generation} />
+            <ViewFormField isLoading={isLoading} sm={6} heading="Efficiency" param={defaultValues?.efficiency} />
                        {/* 2 FULL ROW */}
-            <ViewFormField isLoading={isLoading} sm={6} heading="Status" 
+            <ViewFormField isLoading={isLoading} sm={defaultValues?.decommissionedDate ? 6 : 12} heading="Status" 
                   node={ 
                     <>
                       <Typography variant='h4' sx={{mr: 1,color: machine?.status?.slug === "transferred" && 'red'  }}>{ defaultValues?.status }</Typography> 
                       { machine?.status?.slug!=='transferred' && !machine?.isArchived && <IconButtonTooltip title='Change Status' icon="grommet-icons:sync" onClick={handleStatusChangeDialog} />}
                     </>
                     } />
-            <ViewFormField isLoading={isLoading} sm={6} heading="De-Commissioned Date" param={fDate(defaultValues?.decommissionedDate)} />
+            {defaultValues?.decommissionedDate ? (
+              <ViewFormField isLoading={isLoading} sm={6} heading="De-Commissioned Date" param={fDate(defaultValues?.decommissionedDate)} />
+            ) : null}
             
             { ( machine?.status?.slug==='transferred' || defaultValues?.transferredFromMachine || defaultValues?.transferredToMachine ) && 
 

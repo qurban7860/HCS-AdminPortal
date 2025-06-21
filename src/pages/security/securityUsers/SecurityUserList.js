@@ -51,7 +51,7 @@ const TABLE_HEAD = [
   { id: 'phone', visibility: 'xs2', label: 'Phone Number', align: 'left' },
   { id: 'roles.name.[]', visibility: 'md1', label: 'Roles', align: 'left' },
   { id: 'contact.firstName', visibility: 'xl', label: 'Contact', align: 'left' },
-  { id: 'accountType', label: 'A/C', align: 'left' }, 
+  { id: 'accountType', label: 'T', align: 'left' }, 
   // { id: 'status', label: 'S', align: 'left' },      
   { id: 'isActive', label: 'S', align: 'left' },
   { id: 'updatedAt', visibility: 'md', label: 'Updated At', align: 'right' },
@@ -330,11 +330,11 @@ function applyFilter({ inputData, comparator, filterName, filterStatus, filterRo
   else if(activeFilterListBy ==='inActive' )
     inputData = inputData.filter((user)=> user.isActive === false );
   
-  if(employeeFilterListBy ==='employee' )
-    inputData = inputData.filter((user)=> user.currentEmployee === true );
-  else if(employeeFilterListBy ==='notEmployee' )
-    inputData = inputData.filter((user)=> user.currentEmployee === false );
-  
+  if (employeeFilterListBy === 'employee') {
+  inputData = inputData.filter((user) => user.currentEmployee === true);
+  } else if (employeeFilterListBy === 'notEmployee') {
+  inputData = inputData.filter((user) => user.currentEmployee === false);
+  }
     if (filterByRegion) {
       inputData = inputData.filter((user) => user.regions.some((region) => region === filterByRegion?._id));
     }

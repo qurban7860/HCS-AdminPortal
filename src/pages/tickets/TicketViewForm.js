@@ -33,14 +33,14 @@ import { getCustomer, setCustomerDialog } from '../../redux/slices/customer/cust
 import { getMachineForDialog, setMachineDialog } from '../../redux/slices/products/machine';
 import OpenInNewPage from '../../components/Icons/OpenInNewPage';
 import DropDownMultipleSelection from './utils/DropDownMultipleSelection';
-import { getContact, getCustomerContacts, getActiveSPContacts, resetContact, resetCustomersContacts, resetActiveSPContacts } from '../../redux/slices/customer/contact';
+import { getAssignedSecurityUsers, resetAssignedSecurityUsers, getSecurityUsers, resetSecurityUser, getActiveSecurityUsers, resetActiveSecurityUsers } from '../../redux/slices/securityUser/securityUser';
 import { resetComments } from '../../redux/slices/ticket/ticketComments/ticketComment';
 import { resetHistories } from '../../redux/slices/ticket/ticketHistories/ticketHistory';
 import { resetWorkLogs } from '../../redux/slices/ticket/ticketWorkLogs/ticketWorkLog';
 
 export default function TicketViewForm() {
   const { ticket, ticketSettings, isLoading } = useSelector((state) => state.tickets);
-  const { contact, customersContacts, activeSpContacts } = useSelector((state) => state.contact);
+  const { assignedUsers, securityUsers, activeSecurityUsers } = useSelector((state) => state.user);
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -50,40 +50,42 @@ export default function TicketViewForm() {
   const [selectedImage, setSelectedImage] = useState(-1);
   const [fileDialog, setFileDialog] = useState(false);
   const [slides, setSlides] = useState([]);
+  const [reporters, setReporters] = useState([]);
   const [approvers, setApprovers] = useState([]);
-  const [reportersList, setReportersList] = useState([]);
   const [filteredRequestTypes, setFilteredRequestTypes] = useState([]);
   const configurations = JSON.parse(localStorage.getItem('configurations'));
   const prefix = configurations?.find((config) => config?.name?.toLowerCase() === 'ticket_prefix')?.value || '';
 
   useEffect(() => {
-    if (Array.isArray(customersContacts)) {
-      const updatedReportersList = [...customersContacts];
+    // CUSTOMER USERS
+    const reportersList = [...assignedUsers];
 
-      if (ticket?.createdBy?.contact?._id && !updatedReportersList.some(c => c?._id === ticket?.createdBy?.contact?._id)) {
-        updatedReportersList.unshift(ticket.createdBy.contact);
-      }
-
-      if (contact?._id && !updatedReportersList.some(c => c?._id === contact?._id)) {
-        updatedReportersList.unshift(contact);
-      }
-
-      setReportersList(updatedReportersList);
-
+    if (reportersList?.some(c => !c?._id?.toString() === ticket?.createdBy?._id)) {
+      reportersList.unshift(ticket.createdBy);
     }
-  }, [customersContacts, ticket, contact]);
+
+    if (reportersList?.some(c => !c?._id === userId)) {
+      reportersList.unshift({ _id: userId, name: user?.displayName, email: user.email });
+    }
+    setReporters(reportersList);
+
+  }, [assignedUsers, ticket, user, userId]);
 
   useEffect(() => {
     if (ticket?.customer?._id) {
-      dispatch(getCustomerContacts(ticket?.customer?._id));
+      dispatch(getAssignedSecurityUsers({ customer: ticket?.customer?._id, isActive: true }));
     }
-    dispatch(getActiveSPContacts());
-    dispatch(getContact(user?.customer, user?.contact));
+
+    const asssigneeRoleType = configurations.find((c) => c?.name?.trim() === 'SupportTicketAssigneeRoleType')?.value?.trim();
+    const approverRoleType = configurations.find((c) => c?.name?.trim() === 'SupportTicketApproverRoleType')?.value?.trim();
+
+    dispatch(getActiveSecurityUsers({ type: 'SP', roleType: asssigneeRoleType }));
+    dispatch(getSecurityUsers({ type: 'SP', roleType: approverRoleType }));
 
     return () => {
-      dispatch(resetContact());
-      dispatch(resetCustomersContacts());
-      dispatch(resetActiveSPContacts());
+      dispatch(resetSecurityUser());
+      dispatch(resetActiveSecurityUsers());
+      dispatch(resetAssignedSecurityUsers());
 
       dispatch(resetComments());
       dispatch(resetHistories());
@@ -104,34 +106,18 @@ export default function TicketViewForm() {
   }, [ticketSettings?.requestTypes, ticket?.issueType]);
 
   useEffect(() => {
-
-    if (configurations?.length > 0 && activeSpContacts?.length > 0) {
-      let approvingContactsArray = [];
-
-      const approvingContactsConfig = configurations.find(
-        (config) => config?.name?.trim()?.toLowerCase() === 'approving_contacts'
-      );
-
-      if (approvingContactsConfig?.value) {
-        const configEmails = approvingContactsConfig.value
-          ?.split(',')
-          ?.map((email) => email.trim()?.toLowerCase());
-
-        approvingContactsArray = activeSpContacts
-          ?.map((activeSpUser) => activeSpUser?.contact)
-          ?.filter((c) => c?.email && configEmails.includes(c.email.toLowerCase()))
-          ?.sort((a, b) => {
-            const nameA = `${a.firstName} ${a.lastName}`.toLowerCase();
-            const nameB = `${b.firstName} ${b.lastName}`.toLowerCase();
-            return nameA.localeCompare(nameB);
-          });
-      } else {
-        approvingContactsArray = activeSpContacts?.map((activeSpUser) => activeSpUser.contact);
-      }
-      setApprovers(approvingContactsArray)
-    }
+    // APPROVING USERS
+    let approversArray = [...securityUsers]?.sort((a, b) => {
+      const nameA = a?.name?.toLowerCase();
+      const nameB = b?.name?.toLowerCase();
+      return nameA.localeCompare(nameB);
+    })
+    const approvingUsers = configurations?.find((c) => c?.name?.trim() === 'SupportTicketApprovingContacts'
+    )?.value?.split(',')?.map((e) => e?.trim()?.toLowerCase());
+    approversArray = approversArray?.filter((c) => c?.email && approvingUsers?.includes(c.email.toLowerCase()));
+    setApprovers(approversArray)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeSpContacts])
+  }, [securityUsers])
 
   useEffect(() => {
     const newSlides = ticket?.files?.map(file => {
@@ -189,9 +175,9 @@ export default function TicketViewForm() {
       customer: id && ticket?.customer || '',
       machine: id && ticket?.machine || '',
       // issueType: id && ticket?.issueType?.name || '',
-      reporter: id && ticket?.reporter && { _id: ticket?.reporter?._id, name: `${ticket.reporter.firstName || ''} ${ticket.reporter.lastName || ''}` } || '',
-      assignee: id && ticket?.assignee && { _id: ticket?.assignee?._id, name: `${ticket.assignee.firstName || ''} ${ticket.assignee.lastName || ''}` } || null,
-      // approvers: id && ticket?.approvers && approvers?.map{ _id: ticket?.assignee?._id, name: `${ticket.assignee.firstName || ''} ${ticket.assignee.lastName || ''}` } || '',
+      // reporter: id && ticket?.reporter && { _id: ticket?.reporter?._id, name: `${ticket.reporter.firstName || ''} ${ticket.reporter.lastName || ''}` } || '',
+      // assignee: id && ticket?.assignees && { _id: ticket?.assignee?._id, name: `${ticket.assignee.firstName || ''} ${ticket.assignee.lastName || ''}` } || null,
+      // approvers: id && ticket?.approvers && approvers?.map( =>{ _id: ticket?.approver?._id, name: ticket?.approver.name }) || [],
       summary: id && ticket?.summary || '',
       description: id && ticket?.description || '',
       files: id && ticket?.files || [],
@@ -456,10 +442,10 @@ export default function TicketViewForm() {
               node={<FilledTextField name="plc" value={defaultValues.plc} onSubmit={onSubmit} />}
             />
             <ViewFormField isLoading={isLoading} sm={4} heading="Raise ticket on behalf of / Reporter"
-              node={<DropDownMultipleSelection name="reporter" isNullable label='Reporter' value={ticket?.reporter} onSubmit={onSubmit} options={reportersList} multiple={false} />}
+              node={<DropDownMultipleSelection name="reporter" isNullable label='Reporter' value={ticket?.reporter} onSubmit={onSubmit} options={reporters} multiple={false} />}
             />
-            <ViewFormField isLoading={isLoading} sm={4} heading="Assignee"
-              node={<DropDownMultipleSelection name="assignee" isNullable label='Assignee' value={ticket?.assignee} onSubmit={onSubmit} options={activeSpContacts} multiple={false} />}
+            <ViewFormField isLoading={isLoading} sm={4} heading="Assignees"
+              node={<DropDownMultipleSelection name="assignees" label='Assignees' value={ticket?.assignees} onSubmit={onSubmit} options={activeSecurityUsers} />}
             />
             <ViewFormField isLoading={isLoading} sm={4} heading="Approvers"
               node={<DropDownMultipleSelection name="approvers" label='Approvers' value={ticket?.approvers} onSubmit={onSubmit} options={approvers} />}

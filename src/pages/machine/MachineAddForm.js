@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Card, styled, Grid, Stack, TextField, Button, Link, lighten, darken } from '@mui/material';
+import { Box, Card, styled, Grid, Stack, TextField, Button, Link, lighten, darken, InputAdornment } from '@mui/material';
 // slice
 import { getActiveSPContacts, resetActiveSPContacts } from '../../redux/slices/customer/contact';
 import { getActiveCustomers, setCustomerTab, setNewMachineCustomer } from '../../redux/slices/customer/customer';
@@ -21,7 +21,7 @@ import { getMachineConnections, resetMachineConnections } from '../../redux/slic
 import { PATH_CRM, PATH_MACHINE } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
-import FormProvider, { RHFTextField, RHFAutocomplete, RHFDatePicker, RHFChipsInput } from '../../components/hook-form';
+import FormProvider, { RHFTextField, RHFAutocomplete, RHFDatePicker, RHFChipsInput, RHFNumericField } from '../../components/hook-form';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 import { FORMLABELS } from '../../constants/default-constants';
@@ -43,6 +43,8 @@ MachineAddForm.propTypes = {
 export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const configs = JSON.parse( localStorage.getItem('configurations'))
+
   const { connectedMachineAddDialog, newConnectedMachines } = useSelector((state) => state.machine);
   const { activeSuppliers } = useSelector((state) => state.supplier);
   const { activeMachineModels } = useSelector((state) => state.machinemodel);
@@ -54,6 +56,11 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   const { activeCategories } = useSelector((state) => state.category);
   const { enqueueSnackbar } = useSnackbar();
   const [ landToCustomerMachinePage, setLandToCustomerMachinePage ] = useState(false);
+
+  const machineGenerations = configs
+    ?.find((item) => item?.name?.trim()?.toLowerCase() === 'machine_generations')
+    ?.value.split(',')
+    .map((type) => type.trim());
 
   useEffect(() => {
     dispatch(getActiveCustomers());
@@ -80,6 +87,8 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     defaultValues: {
       serialNo: '',
       name: '',
+      generation: '',
+      efficiency: '',
       alias: [],
       parentSerialNo: null,
       previousMachine: '',
@@ -255,6 +264,23 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                         }
                       }
                     }
+                    />
+                    {Array.isArray(machineGenerations) && machineGenerations.length > 0 && (
+                      <RHFAutocomplete 
+                        name="generation"
+                        label="Machine Generation"
+                        options={machineGenerations}
+                        isOptionEqualToValue={(option, value) => option === value}
+                        getOptionLabel={option => option || ''}
+                        renderOption={(props, option) => ( <li {...props} key={option}>{`${option || ''}`}</li> )}
+                      />
+                    )}
+                    <RHFNumericField
+                      name="efficiency"
+                      label="Efficiency"
+                      InputProps={{
+                        endAdornment: <InputAdornment position="end">m/hr</InputAdornment>,
+                      }}
                     />
                   <RHFDatePicker inputFormat='dd/MM/yyyy' name="manufactureDate" label="Manufacture Date" />
                   <RHFAutocomplete
