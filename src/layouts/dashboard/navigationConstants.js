@@ -268,12 +268,6 @@ export const allSideBarOptions = {
           icon: <Iconify icon="eva:email-fill" />,
         },
         {
-          title: 'Sign-in Logs',
-          description: 'Track user authentication and login activities.',
-          path: PATH_REPORTS.signInLogs.list,
-          icon: <Iconify icon="mdi:login" />,
-        },
-        {
           title: 'System Logs',
           description: 'Access various system-level logs and monitoring data.',
           path: PATH_REPORTS.logs.root,
@@ -318,6 +312,11 @@ export const allSideBarOptions = {
           title: 'Invites',
           path: PATH_SETTING.invite.list,
           icon: <Iconify icon="mdi:email-plus" />,
+        },
+        {
+          title: 'Sign-in Logs',
+          path: PATH_SETTING.signInLogs.list,
+          icon: <Iconify icon="mdi:login" />,
         },
         {
           title: 'User Roles',
