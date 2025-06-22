@@ -1085,7 +1085,10 @@ function ViewFormEditDeleteButtons({
               variant="contained"
               loading={isSubmitted || isSubmitting || isLoading}
               disabled={isSubmitted || isSubmitting || isLoading}
-              onClick={onResendInvite}
+              onClick={() => {
+                handleCloseConfirm('ResendInvite');
+                onResendInvite();
+              }}
             >
               Resend Invite
             </LoadingButton>
