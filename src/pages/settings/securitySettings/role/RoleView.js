@@ -19,7 +19,7 @@ export default function RoleView() {
   const { id } = useParams();
   useLayoutEffect(() => {
     dispatch(getRole(id));
-    dispatch(getAssignedSecurityUsers(id));
+    dispatch(getAssignedSecurityUsers({ roles: id }));
   }, [id, dispatch]);
 
   const { role } = useSelector((state) => state.role);

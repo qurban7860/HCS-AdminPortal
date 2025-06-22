@@ -99,11 +99,11 @@ export default function FaultForm() {
       if (id) {
         await dispatch(patchTicketFault(id, data));
         enqueueSnackbar('Fault Updated Successfully!');
-        navigate(PATH_SUPPORT.ticketSettings.faults.view(id));
+        navigate(PATH_SUPPORT.settings.faults.view(id));
       } else {
         await dispatch(postTicketFault(data));
         enqueueSnackbar('Fault Added Successfully!');
-        navigate(PATH_SUPPORT.ticketSettings.faults.root);
+        navigate(PATH_SUPPORT.settings.faults.root);
       }
       reset();
     } catch (error) {
@@ -114,7 +114,7 @@ export default function FaultForm() {
 
   const toggleCancel = async () => {
     dispatch(resetTicketFault())
-    await navigate(PATH_SUPPORT.ticketSettings.faults.root);
+    await navigate(PATH_SUPPORT.settings.faults.root);
   };
 
   return (

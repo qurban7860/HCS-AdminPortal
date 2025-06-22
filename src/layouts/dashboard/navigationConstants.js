@@ -34,6 +34,16 @@ export const OTHER_MAIN_CATEGORIES = [
   { title: 'Settings', id: 'settings', icon: 'mdi:cog', path: ROOTS_SETTING },
 ];
 
+export function getOtherMainCategories(roles) {
+  const isSuperAdminRole = Array.isArray(roles)
+    ? roles.some((r) => r.roleType === 'SuperAdmin')
+    : roles?.roleType === 'SuperAdmin';
+
+  return isSuperAdminRole
+    ? OTHER_MAIN_CATEGORIES
+    : OTHER_MAIN_CATEGORIES.filter((category) => category.id !== 'settings');
+}
+
 export const generalSideBarOptions = {
   subheader: 'General',
   items: [
@@ -206,7 +216,7 @@ export const allSideBarOptions = {
         },
         {
           title: 'Settings',
-          path: PATH_SUPPORT.ticketSettings.root,
+          path: PATH_SUPPORT.settings.root,
           icon: <Iconify icon="mdi:settings" />,
         },
         {
@@ -226,6 +236,7 @@ export const allSideBarOptions = {
         },
       ],
     },
+
   ],
   reports: [
     {
@@ -265,12 +276,6 @@ export const allSideBarOptions = {
           description: 'View system email logs and communication history.',
           path: PATH_REPORTS.email.list,
           icon: <Iconify icon="eva:email-fill" />,
-        },
-        {
-          title: 'Sign-in Logs',
-          description: 'Track user authentication and login activities.',
-          path: PATH_REPORTS.signInLogs.list,
-          icon: <Iconify icon="mdi:login" />,
         },
         {
           title: 'System Logs',
@@ -317,6 +322,11 @@ export const allSideBarOptions = {
           title: 'Invites',
           path: PATH_SETTING.invite.list,
           icon: <Iconify icon="mdi:email-plus" />,
+        },
+        {
+          title: 'Sign-in Logs',
+          path: PATH_SETTING.signInLogs.list,
+          icon: <Iconify icon="mdi:login" />,
         },
         {
           title: 'User Roles',
@@ -366,6 +376,27 @@ export const allSideBarOptions = {
           icon: <Iconify icon="mdi:package-variant" />,
         },
       ],
+    },
+    {
+      subheader: 'Projects & Releases',
+      items: [
+        // {
+        //   title: 'HPS - 1642',
+        //   path: PATH_SETTING.projects.root,
+        //   icon: <Iconify icon="eos-icons:project" />,
+        //   stared: true,
+        // },
+        {
+          title: 'Projects',
+          path: PATH_SETTING.projects.root,
+          icon: <Iconify icon="solar:list-bold-duotone" />
+        },
+        {
+          title: 'Releases',
+          path: PATH_SETTING.release.root,
+          icon: <Iconify icon="mdi:source-branch" />,
+        },
+      ]
     },
   ],
 };

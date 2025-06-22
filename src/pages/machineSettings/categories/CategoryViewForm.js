@@ -85,7 +85,7 @@ export default function CategoryViewForm({ currentCategory = null }) {
       <Grid container sx={{mt:2}}>
         <ViewFormField isLoading={isLoading} sm={12} heading="Category Name" param={defaultValues?.name} />
         <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues?.description} />
-        <ViewFormField isLoading={isLoading} sm={12} heading='Models' chipDialogArrayParam={defaultValues.models} />
+        <ViewFormField isLoading={isLoading} sm={12} heading='Models' node={<Grid container>{defaultValues.models}</Grid>} />
         {/* <ViewFormSwitch isLoading={isLoading} sm={12} isActiveHeading='Connect as a child' isActive={defaultValues.connection} /> */}
         <ViewFormAudit defaultValues={defaultValues} />
       </Grid>

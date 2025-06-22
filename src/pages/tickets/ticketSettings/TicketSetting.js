@@ -18,18 +18,18 @@ import { ICONS } from '../../../constants/icons/default-icons';
 export default function TicketSetting() {
 
   const navigate = useNavigate();
-  const linkIssueType = () => navigate(PATH_SUPPORT.ticketSettings.issueTypes.root);
-  const linkRequestType = () => navigate(PATH_SUPPORT.ticketSettings.requestTypes.root);
-  const linkPriority = () => navigate(PATH_SUPPORT.ticketSettings.priorities.root);
-  const linkStatus = () => navigate(PATH_SUPPORT.ticketSettings.statuses.root);
-  const linkStatusType = () => navigate(PATH_SUPPORT.ticketSettings.statusTypes.root);
-  const linkImpact = () => navigate(PATH_SUPPORT.ticketSettings.impacts.root);
-  const linkChangeType = () => navigate(PATH_SUPPORT.ticketSettings.changeTypes.root);
-  const linkChangeReason = () => navigate(PATH_SUPPORT.ticketSettings.changeReasons.root);
-  const linkInvestigationReason = () => navigate(PATH_SUPPORT.ticketSettings.investigationReasons.root);
-  const linkFault = () => navigate(PATH_SUPPORT.ticketSettings.faults.root);
+  const linkIssueType = () => navigate(PATH_SUPPORT.settings.issueTypes.root);
+  const linkRequestType = () => navigate(PATH_SUPPORT.settings.requestTypes.root);
+  const linkPriority = () => navigate(PATH_SUPPORT.settings.priorities.root);
+  const linkStatus = () => navigate(PATH_SUPPORT.settings.statuses.root);
+  const linkStatusType = () => navigate(PATH_SUPPORT.settings.statusTypes.root);
+  const linkImpact = () => navigate(PATH_SUPPORT.settings.impacts.root);
+  const linkChangeType = () => navigate(PATH_SUPPORT.settings.changeTypes.root);
+  const linkChangeReason = () => navigate(PATH_SUPPORT.settings.changeReasons.root);
+  const linkInvestigationReason = () => navigate(PATH_SUPPORT.settings.investigationReasons.root);
+  const linkFault = () => navigate(PATH_SUPPORT.settings.faults.root);
 
-  const linkArticleCategory = () => navigate(PATH_SUPPORT.supportSettings.articleCategories.root);
+  const linkArticleCategory = () => navigate(PATH_SUPPORT.settings.articleCategories.root);
 
 
 return (

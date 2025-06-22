@@ -14,6 +14,7 @@ const initialState = {
   responseMessage: null,
   success: false,
   isLoading: false,
+  isLoadingDialogUser: false,
   isLoadingLogs: false,
   isLoadingResetPasswordEmail: false,
   error: null,
@@ -21,6 +22,7 @@ const initialState = {
   activeSecurityUsers: [],
   securityUser: null,
   securityUserDialog: false,
+  dialogSecurityUser: null,
   contactUsers: [],
   user: null,
   userId: null,
@@ -57,6 +59,10 @@ const slice = createSlice({
     startLoading(state) {
       state.isLoading = true;
     },
+    // START LOADING
+    startLoadingDialogUser(state) {
+      state.isLoadingDialogUser = true;
+    },
     // SET LOADING
     setLoadingLogs(state) {
       state.isLoadingLogs = true;
@@ -74,6 +80,7 @@ const slice = createSlice({
       state.isLoadingResetPasswordEmail = false;
       state.isLoadingLogs = false;
       state.isLoading = false;
+      state.isLoadingDialogUser = false
       state.error = action.payload;
       state.initial = true;
     },
@@ -99,11 +106,13 @@ const slice = createSlice({
       state.changePasswordDialog = action.payload;
     },
 
-
-
     // SET ACTIVE RESTRICTED LIST
     setActiveFilterList(state, action) {
       state.activeFilterList = action.payload;
+    },
+
+    setEmployeeFilterList(state, action) {
+      state.employeeFilterList = action.payload;
     },
 
     // SET EMPLOYEE RESTRICTED LIST
@@ -164,6 +173,11 @@ const slice = createSlice({
     },
 
     // GET user
+    getDialogSecurityUserSuccess(state, action) {
+      state.isLoadingDialogUser = false;
+      state.dialogSecurityUser = action.payload;
+    },
+    // GET user
     getAssignedSecurityUserSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
@@ -196,6 +210,7 @@ const slice = createSlice({
     setSecurityUserDialog(state, action) {
       state.securityUserDialog = action.payload;
     },
+
     // RESET SECURITY USER
     resetSecurityUser(state) {
       state.securityUser = {};
@@ -203,8 +218,28 @@ const slice = createSlice({
       state.success = false;
       state.isLoading = false;
     },
+    // RESET ACTIVE SECURITY USER
+    resetActiveSecurityUsers(state) {
+      state.activeSecurityUsers = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+    // RESET ASSIGNED SECURITY USER
+    resetAssignedSecurityUsers(state) {
+      state.assignedUsers = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+    // RESET DIALOG SECURITY USER
+    resetDialogSecurityUser(state) {
+      state.dialogSecurityUser = null;
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
 
-    
     // RESET SECURITY USERS
     resetSecurityUsers(state) {
       state.securityUsers = [];
@@ -212,7 +247,7 @@ const slice = createSlice({
       state.success = false;
       state.isLoading = false;
     },
-    
+
     // RESET SECURITY USER
     resetContactUsers(state) {
       state.contactUsers = [];
@@ -270,10 +305,13 @@ export const {
   setChangePasswordDialog,
   setSecurityUserProperties,
   resetSecurityUsers,
+  resetActiveSecurityUsers,
+  resetAssignedSecurityUsers,
   resetContactUsers,
   resetSecurityUser,
   resetLoadingResetPasswordEmail,
   resetSignInLogsSuccess,
+  resetDialogSecurityUser,
   setFilterBy,
   setActiveFilterList,
   setEmployeeFilterList,
@@ -308,11 +346,6 @@ export function addSecurityUser(param) {
         multiFactorAuthentication: param?.multiFactorAuthentication,
       }
       const response = await axios.post(`${CONFIG.SERVER_URL}security/users`, data);
-      // if(regEx.test(response.status) && isInvite){
-      //   await axios.get(`${CONFIG.SERVER_URL}security/invites/sendUserInvite/${response?.data?.user?._id}`);
-      //   dispatch(setSecurityUserFormVisibility(false))
-      //   dispatch(getSecurityUsers());
-      // }
       dispatch(slice.actions.stopLoading());
       return response;
     } catch (error) {
@@ -358,68 +391,6 @@ export function updateSecurityUser(param, id) {
   };
 }
 
-// -----------------------------Active Security Users-----------------------------------------
-
-export function getActiveSecurityUsers(type) {
-  return async (dispatch) => {
-    dispatch(slice.actions.startLoading());
-    try {
-
-      const query = {
-        params: {
-          isArchived: false,
-          isActive: true,
-          invitationStatus: false,
-        }
-      }
-
-      Object.assign(query.params, type)
-      const response = await axios.get(`${CONFIG.SERVER_URL}security/users`, query);
-      if (regEx.test(response.status)) {
-        dispatch(slice.actions.getActiveSecurityUsersSuccess(response.data));
-      }
-      return response;
-    } catch (error) {
-      dispatch(slice.actions.hasError(error.Message));
-      console.error(error);
-      throw error;
-    }
-  }
-}
-
-export function getActiveSPTechnicalSecurityUsers(type) {
-  return async (dispatch) => {
-    dispatch(slice.actions.startLoading());
-    try {
-
-      const query = {
-        params: {
-          isArchived: false,
-          isActive: true,
-          invitationStatus: false,
-          customer: {
-            type: "SP"
-          },
-          contact: {
-            department: { departmentType: "Technical" }
-          }
-        }
-      }
-      const fields = { fields: "contact,customer,email,name" }
-      Object.assign(query.params, type, fields)
-      const response = await axios.get(`${CONFIG.SERVER_URL}security/users`, query);
-      if (regEx.test(response.status)) {
-        dispatch(slice.actions.getActiveSPTechnicalSecurityUsersSuccess(response.data));
-      }
-      return response;
-    } catch (error) {
-      dispatch(slice.actions.hasError(error.Message));
-      console.error(error);
-      throw error;
-    }
-  }
-}
-
 // ----------------------------------------------------------------------
 
 export function getValidateUserEmail(login) {
@@ -442,9 +413,12 @@ export function getSecurityUsers(param) {
     dispatch(slice.actions.startLoading());
     try {
       const params = {
+        isActive: param?.isActive,
         isArchived: param?.isArchived || false,
         invitationStatus: param?.invitationStatus || false,
-        contact: param?.contact || null,
+        customer: param?.customer,
+        contact: param?.contact,
+        roleType: param?.roleType,
       }
       const response = await axios.get(`${CONFIG.SERVER_URL}security/users`, { params });
       if (regEx.test(response.status)) {
@@ -459,9 +433,38 @@ export function getSecurityUsers(param) {
   }
 }
 
+
+// -----------------------------Active Security Users-----------------------------------------
+
+export function getActiveSecurityUsers({ contact, customer, type, roleType } = {}) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const params = {
+        isArchived: false,
+        isActive: true,
+        invitationStatus: false,
+        roleType,
+        customer: type ? { type } : (customer || undefined),
+        contact,
+      }
+
+      const response = await axios.get(`${CONFIG.SERVER_URL}security/users`, { params });
+      if (regEx.test(response.status)) {
+        dispatch(slice.actions.getActiveSecurityUsersSuccess(response.data));
+      }
+      return response;
+    } catch (error) {
+      dispatch(slice.actions.hasError(error.Message));
+      console.error(error);
+      throw error;
+    }
+  }
+}
+
 // ----------------------------------------------------------------------
 
-export function getAssignedSecurityUsers(roleId) {
+export function getAssignedSecurityUsers({ isActive, roles, roleType, customer } = {}) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -469,7 +472,10 @@ export function getAssignedSecurityUsers(roleId) {
         {
           params: {
             isArchived: false,
-            roles: roleId,
+            isActive,
+            roles,
+            roleType,
+            customer
           }
         }
       );
@@ -501,10 +507,33 @@ export function getSecurityUser(id) {
   };
 }
 
+// ----------------------------------------------------------------------
+
+export function getDialogSecurityUser(id) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoadingDialogUser());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}security/users/${id}`);
+      if (regEx.test(response.status)) {
+        dispatch(slice.actions.getDialogSecurityUserSuccess(response.data));
+      }
+      return response;
+    } catch (error) {
+      dispatch(slice.actions.hasError(error.Message));
+      console.error(error);
+      throw error;
+    }
+  };
+}
+
 export function getContactUsers(contactID) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
+      if (!contactID) {
+        dispatch(slice.actions.resetContactUsers());
+        return;
+      }
       const params = {
         isArchived: false,
         invitationStatus: false
@@ -513,7 +542,6 @@ export function getContactUsers(contactID) {
       if (regEx.test(response.status)) {
         dispatch(slice.actions.getContactUsersSuccess(response.data));
       }
-      return response;
     } catch (error) {
       dispatch(slice.actions.hasError(error.Message));
       console.error(error);

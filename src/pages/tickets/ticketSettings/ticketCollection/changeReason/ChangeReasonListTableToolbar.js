@@ -23,7 +23,7 @@ export default function ChangeReasonListTableToolbar({
   onResetFilter,
 }) {
   const navigate = useNavigate();
-  const toggleAdd = () => navigate(PATH_SUPPORT.ticketSettings.changeReasons.new);
+  const toggleAdd = () => navigate(PATH_SUPPORT.settings.changeReasons.new);
   
   return (
     <Stack {...options}>

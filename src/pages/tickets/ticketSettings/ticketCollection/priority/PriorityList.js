@@ -109,7 +109,7 @@ export default function PriorityList() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 
-  const handleViewRow = (id) => navigate(PATH_SUPPORT.ticketSettings.priorities.view(id));
+  const handleViewRow = (id) => navigate(PATH_SUPPORT.settings.priorities.view(id));
   
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))

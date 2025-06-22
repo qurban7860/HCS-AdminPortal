@@ -73,7 +73,7 @@ export default function RoleViewForm() {
           <ViewFormField isLoading={isLoading} sm={6} heading="Name" param={defaultValues.name} />
           <ViewFormField isLoading={isLoading} sm={12} heading="Role Type" param={defaultValues.roleType} />
           <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues.description} />
-          <ViewFormField isLoading={isLoading} sm={12} heading="Assigned Users" arrayParam={assignedUsers} />
+          <ViewFormField isLoading={isLoading} sm={12} heading="Assigned Users" chips={assignedUsers?.map((item) => item?.name)} />
           <ViewFormField isLoading={isLoading} sm={12}  />
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>

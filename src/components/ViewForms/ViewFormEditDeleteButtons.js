@@ -102,7 +102,9 @@ function ViewFormEditDeleteButtons({
   serviceReportStatus,
   invitationStatus,
   onCancelInvite,
-  handleViewUser
+  handleViewUser,
+  showContactUsers = false,
+  onResendInvite,
 }) {
   const { id } = useParams();
   const navigate = useNavigate()
@@ -127,6 +129,7 @@ function ViewFormEditDeleteButtons({
   const [openConfigDraftStatuConfirm, setOpenConfigDraftStatuConfirm] = useState(false);
   const [openConfigSubmittedStatuConfirm, setOpenConfigSubmittedStatuConfirm] = useState(false);
   const [openConfigApproveStatuConfirm, setOpenConfigApproveStatuConfirm] = useState(false);
+  const [openResendInviteConfirm, setOpenResendInviteConfirm] = useState(false);
   const { machine } = useSelector((state) => state.machine);
   const { contactUsers } = useSelector((state) => state.user);
   const [lockUntil, setLockUntil] = useState('');
@@ -236,6 +239,10 @@ function ViewFormEditDeleteButtons({
       setOpenConfigApproveStatuConfirm(true);
     }
 
+    if (dialogType === 'ResendInvite') {
+      setOpenResendInviteConfirm(true);
+    }
+
   };
 
   const handleCloseConfirm = (dialogType) => {
@@ -277,6 +284,10 @@ function ViewFormEditDeleteButtons({
 
     if (dialogType === 'ChangeConfigStatusToApprove') {
       setOpenConfigApproveStatuConfirm(false);
+    }
+
+    if (dialogType === 'ResendInvite') {
+      setOpenResendInviteConfirm(false);
     }
 
   };
@@ -713,6 +724,8 @@ function ViewFormEditDeleteButtons({
             />
           )}
 
+          {showContactUsers && (
+            <>
           {Array.isArray(contactUsers) && contactUsers?.length > 0 &&
             <Badge badgeContent={contactUsers.length} color="info">
               <IconTooltip
@@ -729,6 +742,9 @@ function ViewFormEditDeleteButtons({
             onClose={handleContactUsersPopoverClose}
             onViewUser={handleViewUser}
           />
+        </>
+        )}
+      
 
           {/* map toggle button on mobile */}
           {sites && !isMobile && <IconPopover onMapClick={() => handleMap()} sites={sites} />}
@@ -878,6 +894,15 @@ function ViewFormEditDeleteButtons({
               onClick={() => { handleOpenConfirm('delete') }}
               color={(isDisableDelete || disableDeleteButton) ? "#c3c3c3" : "#FF0000"}
               icon={onArchive ? "mdi:archive" : "mdi:delete"}
+            />
+          )}
+
+          {(invitationStatus === 'PENDING' || invitationStatus === 'EXPIRED') && onResendInvite && (
+            <IconTooltip
+              title="Resend Invitation"
+              onClick={() => handleOpenConfirm('ResendInvite')}
+              color={theme.palette.primary.main}
+              icon="mdi:email-send-outline"
             />
           )}
 
@@ -1048,6 +1073,28 @@ function ViewFormEditDeleteButtons({
           }
         />
 
+        <ConfirmDialog
+          open={openResendInviteConfirm}
+          onClose={() => {
+            handleCloseConfirm('ResendInvite');
+          }}
+          title="Resend Invite"
+          content="Are you sure you want to Resend Invite?"
+          action={
+            <LoadingButton
+              variant="contained"
+              loading={isSubmitted || isSubmitting || isLoading}
+              disabled={isSubmitted || isSubmitting || isLoading}
+              onClick={() => {
+                handleCloseConfirm('ResendInvite');
+                onResendInvite();
+              }}
+            >
+              Resend Invite
+            </LoadingButton>
+          }
+        />
+
         <ViewFormMenuPopover
           open={verifiedAnchorEl}
           onClose={handleVerifiedPopoverClose}
@@ -1158,5 +1205,7 @@ ViewFormEditDeleteButtons.propTypes = {
   serviceReportStatus: PropTypes.object,
   invitationStatus: PropTypes.string,
   onCancelInvite: PropTypes.func,
-  handleViewUser: PropTypes.func
+  handleViewUser: PropTypes.func,
+  showContactUsers: PropTypes.bool,
+  onResendInvite: PropTypes.func,
 };

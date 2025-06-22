@@ -36,24 +36,24 @@ function DialogServiceReportComplete({ dialogType }) {
   const [approvingContacts, setApprovingContacts] = useState([]);
   const [allowApproval, setAllowApproval] = useState(false);
   const dispatch = useDispatch();
-  const { machineServiceReport, completeDialog } = useSelector( (state) => state.machineServiceReport );
+  const { machineServiceReport, completeDialog } = useSelector((state) => state.machineServiceReport);
   const { activeSpContacts, isLoading } = useSelector((state) => state.contact);
   const { user } = useAuthContext();
 
   useEffect(() => {
-    const configs = JSON.parse( localStorage.getItem('configurations'))
+    const configs = JSON.parse(localStorage.getItem('configurations'))
 
     if (configs.length > 0 && activeSpContacts.length > 0) {
       let approvingContactsArray = [];
 
       const approvingContactsConfig = configs.find(
-        (config) => config?.name === 'Approving_Contacts'
+        (config) => config?.name === 'Service_Report_Approving_Contacts'
       );
 
       if (approvingContactsConfig?.value) {
         const configEmails = approvingContactsConfig.value
-        ?.split(',')
-        .map((email) => email.trim().toLowerCase());
+          ?.split(',')
+          .map((email) => email.trim().toLowerCase());
 
         approvingContactsArray = activeSpContacts
           .map((activeSpUser) => activeSpUser?.contact)
@@ -68,7 +68,7 @@ function DialogServiceReportComplete({ dialogType }) {
       }
       setApprovingContacts(approvingContactsArray);
     }
-  }, [ activeSpContacts ] );
+  }, [activeSpContacts]);
 
   useEffect(() => {
     if (
@@ -156,7 +156,7 @@ const SendApprovalEmails = ({ isLoading, approvingContacts }) => {
           params
         )
       );
-      
+
       await enqueueSnackbar(`Service Report Approval Email Sent Successfully!`);
       await handleCloseDialog();
     } catch (err) {
@@ -180,9 +180,8 @@ const SendApprovalEmails = ({ isLoading, approvingContacts }) => {
               isOptionEqualToValue={(option, value) => option?._id === value?._id}
               getOptionLabel={(option) => `${option.firstName || ''} ${option.lastName || ''}`}
               renderOption={(props, option) => (
-                <li {...props} key={option?._id}>{`${option?.firstName || ''} ${
-                  option?.lastName || ''
-                }`}</li>
+                <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''
+                  }`}</li>
               )}
             />
           ) : (
@@ -270,12 +269,12 @@ const ApproveSeviceReport = ({ isLoading }) => {
       await enqueueSnackbar(
         `Service Report ${data?.status === 'APPROVED' ? 'Approved' : 'Rejected'} Successfully!`
       );
-    } catch ( err ) {
+    } catch (err) {
       enqueueSnackbar(
         `Service Report ${data?.status === 'APPROVED' ? 'Approval' : 'Rejection'} Failed! `,
         { variant: 'error' }
       );
-      console.error( err );
+      console.error(err);
     } finally {
       setApprovalSubmitting(false);
       setRejectionSubmitting(false);
@@ -314,9 +313,9 @@ const ApproveSeviceReport = ({ isLoading }) => {
               variant="contained"
               color="error"
               sx={{
-                backgroundColor: 'red', 
+                backgroundColor: 'red',
                 '&:hover': {
-                  backgroundColor: 'darkred', 
+                  backgroundColor: 'darkred',
                 },
               }}
               onClick={() => handleStatusChange('REJECTED')}
@@ -328,9 +327,9 @@ const ApproveSeviceReport = ({ isLoading }) => {
               loading={approvalSubmitting}
               variant="contained"
               sx={{
-                backgroundColor: 'green', 
+                backgroundColor: 'green',
                 '&:hover': {
-                  backgroundColor: 'darkgreen', 
+                  backgroundColor: 'darkgreen',
                 },
               }}
               onClick={() => handleStatusChange('APPROVED')}

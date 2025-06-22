@@ -2,7 +2,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector, batch } from 'react-redux';
 // @mui
-import { Card, Grid, Link, Button } from '@mui/material';
+import { format } from 'date-fns';
+import { Card, Grid, Link, Button, Stack, Typography, Box, Chip } from '@mui/material';
 import ConfirmDialog from '../../../components/confirm-dialog';
 // routes
 import { PATH_SETTING } from '../../../routes/paths';
@@ -12,8 +13,12 @@ import {
   archiveSecurityUser,
   sendUserInvite,
   getSecurityUser,
+  getContactUsers,
+  getDialogSecurityUser,
   changeUserStatus,
+  setSecurityUserDialog,
   setChangePasswordByAdminDialog,
+  resetContactUsers,
 } from '../../../redux/slices/securityUser/securityUser';
 import { getBlockedCustomer } from '../../../redux/slices/securityConfig/blockedCustomers';
 import { getBlockedUser } from '../../../redux/slices/securityConfig/blockedUsers';
@@ -29,17 +34,25 @@ import Iconify from '../../../components/iconify';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
 import { ICONS } from '../../../constants/icons/default-icons';
 import ChangePasswordByAdminDialog from '../../../components/Dialog/ChangePasswordByAdminDialog';
+import ContactUsersPopover from '../../../components/ViewForms/ContactUsersPopover';
 
 // ----------------------------------------------------------------------
 
 export default function SecurityUserViewForm() {
 
-  const { securityUser, isLoading } = useSelector((state) => state.user);
+  const { securityUser, isLoading, contactUsers } = useSelector((state) => state.user);
   const { blockedCustomer } = useSelector((state) => state.blockedCustomer);
   const { blockedUser } = useSelector((state) => state.blockedUser);
-
   const [openConfirm, setOpenConfirm] = useState(false);
   const handleCloseConfirm = () => setOpenConfirm(false);
+
+  const [contactUsersAnchorEl, setContactUsersAnchorEl] = useState(null);
+  const handleContactUsersPopoverOpen = (event) => {
+    setContactUsersAnchorEl(event.currentTarget);
+  };
+    const handleContactUsersPopoverClose = () => {
+    setContactUsersAnchorEl(null);
+  };
 
   const { id } = useParams();
   const dispatch = useDispatch();
@@ -51,7 +64,12 @@ export default function SecurityUserViewForm() {
     dispatch(setContactDialog(false))
     dispatch(getBlockedCustomer(securityUser?.customer?._id))
     dispatch(getBlockedUser(securityUser?._id))
+    dispatch(getContactUsers(securityUser?.contact?._id))
+    return () => {
+      dispatch(resetContactUsers());
+    }
   }, [dispatch, securityUser]);
+ 
 
   useEffect(() => {
     batch(() => {
@@ -100,6 +118,11 @@ export default function SecurityUserViewForm() {
       }
     }
   };
+  const handleViewUser = (user) => {
+    dispatch(setSecurityUserDialog(true));
+    dispatch(getDialogSecurityUser(user._id));
+  };
+
 
   const handleUserInvite = async () => {
     if (securityUser?._id) {
@@ -147,6 +170,7 @@ export default function SecurityUserViewForm() {
       customer: securityUser?.customer?.name || '',
       contact: securityUser?.contact || null,
       name: securityUser?.name || '',
+      currentEmployee: securityUser?.currentEmployee||null,
       phone: securityUser?.phone || '',
       email: securityUser?.email || '',
       login: securityUser?.login || '',
@@ -157,7 +181,7 @@ export default function SecurityUserViewForm() {
       customers: securityUser?.customers || [],
       machines: securityUser?.machines || [],
       isActive: securityUser?.isActive,
-      formerEmployee: securityUser?.contact?.formerEmployee || false,
+      // formerEmployee: securityUser?.contact?.formerEmployee || false,
       multiFactorAuthentication: securityUser?.multiFactorAuthentication,
       createdByFullName: securityUser?.createdBy?.name,
       createdAt: securityUser?.createdAt,
@@ -169,6 +193,12 @@ export default function SecurityUserViewForm() {
     [securityUser]
   );
 
+  const userRoleChips = defaultValues?.roles?.map((role, index) => <Chip key={index} title={role.name} label={role.name} color={role.name === 'SuperAdmin' ? 'secondary' : 'default'} sx={{ m: 0.2 }} />);
+  const handleViewUserDialog = async (s) => {
+    await dispatch(setSecurityUserDialog(true));
+    await dispatch(getDialogSecurityUser(s?._id))
+  }
+
   return (
     <>
       <Grid sx={{ p: 3, mt: -3 }}>
@@ -178,7 +208,7 @@ export default function SecurityUserViewForm() {
         <Card sx={{ p: 3 }}>
           <ViewFormEditDeleteButtons
             handleEdit={securityUser?.isArchived ? undefined : handleEdit}
-            handleUserInvite={(securityUser?.invitationStatus && !securityUser?.isArchived) ? handleUserInvite : undefined}
+            handleUserInvite={securityUser?.invitationStatus && !securityUser?.isArchived ? handleUserInvite : undefined}
             handleUpdatePassword={securityUser?.isArchived ? undefined : handleUpdatePassword}
             isLoading={isLoading}
             onArchive={securityUser?.isArchived ? undefined : onArchive}
@@ -192,6 +222,8 @@ export default function SecurityUserViewForm() {
             userStatus={userStatus}
             onUserStatusChange={securityUser?.isArchived ? undefined : handleChangeUserStatus}
             securityUserPage
+            handleViewUser={handleViewUserDialog}
+          // showContactUsers
           />
           <ConfirmDialog
             open={openConfirm}
@@ -204,22 +236,23 @@ export default function SecurityUserViewForm() {
               </Button>
             }
           />
-          <Grid container sx={{ display: { md: 'flex', sm: 'block' }, justifyContent: { md: 'space-between' } }} >
-            <Grid item md={6} sm={12} xs={12} sx={{ p: .5 }}>
+          <Grid container sx={{ display: { md: 'flex', sm: 'block' }, justifyContent: { md: 'space-between' } }}>
+            <Grid item md={6} sm={12} xs={12} sx={{ p: 0.5 }}>
               <Grid sx={{ border: '1px solid lightgrey', borderRadius: 2, px: 1.5, pt: 1.5, height: { md: '100%' } }}>
-                <FormLabel content='Personal Information' />
-                <ViewFormField isLoading={isLoading}
+                <FormLabel content="Personal Information" />
+                <ViewFormField
+                  isLoading={isLoading}
                   sm={12}
                   heading="Full Name"
                   node={
                     defaultValues?.name && (
                       <>
                         {defaultValues?.name}
-                        {blockedUser.length > 0 &&
-                          <StyledTooltip title="User is Blocked" placement='top' disableFocusListener tooltipcolor="#FF0000" color="#FF0000">
-                            <Iconify color="#FF0000" sx={{ height: '24px', width: '24px', verticalAlign: "middle", ml: 1 }} icon="mdi:ban" />
+                        {blockedUser.length > 0 && (
+                          <StyledTooltip title="User is Blocked" placement="top" disableFocusListener tooltipcolor="#FF0000" color="#FF0000">
+                            <Iconify color="#FF0000" sx={{ height: '24px', width: '24px', verticalAlign: 'middle', ml: 1 }} icon="mdi:ban" />
                           </StyledTooltip>
-                        }
+                        )}
                       </>
                     )
                   }
@@ -227,88 +260,123 @@ export default function SecurityUserViewForm() {
                 <ViewFormField isLoading={isLoading} sm={12} heading="Phone" param={defaultValues?.phone} />
                 <ViewFormField isLoading={isLoading} sm={12} heading="email" param={defaultValues?.email} />
                 <ViewFormField isLoading={isLoading} sm={12} heading="Login" param={defaultValues?.login} />
-                <ViewFormField isLoading={isLoading}
+                <ViewFormField
+                  isLoading={isLoading}
                   sm={12}
                   heading="Customer"
                   node={
                     defaultValues?.customer && (
                       <Link onClick={handleCustomerDialog} href="#" underline="none">
                         {defaultValues?.customer}
-                        {blockedCustomer.length > 0 &&
-                          <StyledTooltip title="Customer is Blocked" placement='top' disableFocusListener tooltipcolor="#FF0000" color="#FF0000">
-                            <Iconify color="#FF0000" sx={{ height: '24px', width: '24px', verticalAlign: "middle", ml: 1 }} icon="ooui:block" />
+                        {blockedCustomer.length > 0 && (
+                          <StyledTooltip title="Customer is Blocked" placement="top" disableFocusListener tooltipcolor="#FF0000" color="#FF0000">
+                            <Iconify color="#FF0000" sx={{ height: '24px', width: '24px', verticalAlign: 'middle', ml: 1 }} icon="ooui:block" />
                           </StyledTooltip>
-                        }
-                        {!securityUser?.customer?.isActive &&
-                          <StyledTooltip title="Customer is Inactive" placement='top' disableFocusListener tooltipcolor="#FF0000" color="#FF0000">
-                            <Iconify color="#FF0000" sx={{ height: '24px', width: '24px', verticalAlign: "middle", ml: 1 }} icon="mdi:ban" />
+                        )}
+                        {!securityUser?.customer?.isActive && (
+                          <StyledTooltip title="Customer is Inactive" placement="top" disableFocusListener tooltipcolor="#FF0000" color="#FF0000">
+                            <Iconify color="#FF0000" sx={{ height: '24px', width: '24px', verticalAlign: 'middle', ml: 1 }} icon="mdi:ban" />
                           </StyledTooltip>
-                        }
-                      </Link>)}
+                        )}
+                      </Link>
+                    )
+                  }
                 />
-                <ViewFormField isLoading={isLoading}
+                <ViewFormField
+                  isLoading={isLoading}
                   sm={12}
                   heading="Contact"
                   node={
                     <>
-                      {defaultValues?.contact?.firstName && <StyledTooltip
-                        placement="top"
-                        title={defaultValues?.contact?.formerEmployee ? ICONS.FORMEREMPLOYEE.heading : ICONS.NOTFORMEREMPLOYEE.heading}
-                        disableFocusListener tooltipcolor={defaultValues?.contact?.formerEmployee ? ICONS.FORMEREMPLOYEE.color : ICONS.NOTFORMEREMPLOYEE.color}
-                        color={defaultValues?.contact?.formerEmployee ? ICONS.FORMEREMPLOYEE.color : ICONS.NOTFORMEREMPLOYEE.color}
-                      >
-                        <Iconify icon={ICONS.FORMEREMPLOYEE.icon} sx={{ mr: 1, height: 20, width: 20 }} />
-                      </StyledTooltip>}
                       {defaultValues?.contact && (
-                        <Link onClick={handleContactDialog} href="#" underline="none">
-                          {defaultValues?.contact?.firstName || ''} {defaultValues?.contact?.lastName || ''}
-                          {!defaultValues?.contact?.isActive &&
-                            <StyledTooltip title="Contact is Inactive" placement='top' disableFocusListener tooltipcolor="#FF0000" color="#FF0000">
-                              <Iconify color="#FF0000" sx={{ height: '24px', width: '24px', verticalAlign: "middle", ml: 1 }} icon="mdi:ban" />
-                            </StyledTooltip>
-                          }
-                        </Link>)
-                      }
+                        <>
+                         {defaultValues?.contact?.formerEmployee && (
+                        <StyledTooltip
+                        placement="top"
+                         title={ICONS.FORMEREMPLOYEE.heading}
+                         disableFocusListener
+                         tooltipcolor={ICONS.FORMEREMPLOYEE.color}
+                         color={ICONS.FORMEREMPLOYEE.color}
+                         >
+                           
+                        <Iconify icon={ICONS.FORMEREMPLOYEE.icon} sx={{ mr: 1, height: 20, width: 20 }} />
+                        
+                        </StyledTooltip>
+                        )}
+
+                       {!defaultValues?.contact?.formerEmployee && defaultValues?.currentEmployee && (
+                             <StyledTooltip
+                              placement="top"
+                              title={ICONS.NOTFORMEREMPLOYEE.heading}
+                              disableFocusListener
+                              tooltipcolor={ICONS.NOTFORMEREMPLOYEE.color}
+                              color={ICONS.NOTFORMEREMPLOYEE.color}
+                                >
+                          
+                        <Iconify icon={ICONS.NOTFORMEREMPLOYEE.icon} sx={{ mr: 1, height: 20, width: 20 }} />
+                        
+                        </StyledTooltip>
+                           )}
+                          <Link onClick={handleContactDialog} href="#" underline="none">
+                            {defaultValues?.contact?.firstName || ''} {defaultValues?.contact?.lastName || ''}
+                            {!defaultValues?.contact?.isActive && (
+                              <StyledTooltip title="Contact is Inactive" placement="top" disableFocusListener tooltipcolor="#FF0000" color="#FF0000">
+                                <Iconify color="#FF0000" sx={{ height: '24px', width: '24px', verticalAlign: 'middle', ml: 1 }} icon="mdi:ban" />
+                              </StyledTooltip>
+                            )}
+                          </Link>
+                          {contactUsers?.length > 0 && (
+                            <Link onClick={handleContactUsersPopoverOpen} underline="hover" color="textSecondary" sx={{ ml: 1, cursor: 'pointer' }}>
+                              <Typography variant="body2">
+                                {`(${contactUsers?.length} user${contactUsers?.length > 1 && 's'} associated with this contact)`}
+                              </Typography>
+                            </Link>
+                          )}
+                        </>
+                      )}
                     </>
                   }
                 />
+                {/* <ViewFormField
+                  isLoading={isLoading}
+                  sm={12}
+                  heading="Contact Users"
+                  node={
+                    contactUsers?.length ? (
+                      <Stack spacing={1}>
+                        {contactUsers.map(({ _id, name, createdAt }) => (
+                          <Box key={_id} onClick={() => handleViewUser({ _id, name, createdAt })} sx={{ cursor: 'pointer' }}>
+                            <Typography variant="body2">
+                              <Box component="span" sx={{ color: 'primary.main', fontWeight: 500 }}>
+                                {name}
+                              </Box>
+                              {' — '}
+                              <Box component="span">{createdAt ? format(new Date(createdAt), 'dd MMM yyyy') : '—'}</Box>
+                            </Typography>
+                          </Box>
+                        ))}
+                      </Stack>
+                    ) : (
+                      <Typography variant="body2">No contact users</Typography>
+                    )
+                  }
+                /> */}
               </Grid>
             </Grid>
 
-            <Grid item md={6} sm={12} xs={12} sx={{ p: .5 }}>
+            <Grid item md={6} sm={12} xs={12} sx={{ p: 0.5 }}>
               <Grid sx={{ border: '1px solid lightgrey', borderRadius: 2, px: 1.5, pt: 1.5, height: { md: '100%' } }}>
-                <FormLabel content='Accessibility Information' />
+                <FormLabel content="Accessibility Information" />
 
-                <ViewFormField isLoading={isLoading}
-                  sm={12}
-                  heading="Roles"
-                  userRolesChips={defaultValues?.roles}
-                />
+                <ViewFormField isLoading={isLoading} sm={12} heading="Roles" node={<Grid container>{userRoleChips}</Grid>} />
 
-                <ViewFormField isLoading={isLoading}
-                  sm={12}
-                  heading="Data Accessibility Level"
-                  param={defaultValues?.dataAccessibilityLevel}
-                />
+                <ViewFormField isLoading={isLoading} sm={12} heading="Data Accessibility Level" param={defaultValues?.dataAccessibilityLevel} />
 
-                <ViewFormField isLoading={isLoading}
-                  sm={12}
-                  heading="Regions"
-                  arrayParam={defaultValues?.regions}
-                />
+                <ViewFormField isLoading={isLoading} sm={12} heading="Regions" chips={defaultValues?.regions.map((region) => region.name)} />
 
-                <ViewFormField isLoading={isLoading}
-                  sm={12}
-                  heading="Customers"
-                  arrayParam={defaultValues?.customers}
-                />
+                <ViewFormField isLoading={isLoading} sm={12} heading="Customers" chips={defaultValues?.customers.map((customer) => customer.name)} />
 
-                <ViewFormField isLoading={isLoading}
-                  sm={12}
-                  heading="Machines"
-                  machineConnectionArrayChip={defaultValues?.machines}
-                />
-
+                <ViewFormField isLoading={isLoading} sm={12} heading="Machines" chips={defaultValues?.machines.map((machine) => machine.name)} />
               </Grid>
             </Grid>
           </Grid>
@@ -319,7 +387,7 @@ export default function SecurityUserViewForm() {
         </Card>
       </Grid>
       <ChangePasswordByAdminDialog />
-
+      <ContactUsersPopover open={contactUsersAnchorEl} onClose={handleContactUsersPopoverClose} onViewUser={handleViewUser} />
     </>
   );
 }

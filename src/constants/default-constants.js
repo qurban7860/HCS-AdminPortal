@@ -65,6 +65,7 @@ export const FORMLABELS = {
     TICKET_COMMENTS: 'Notes / Comments',
     TICKET_HISTORY: 'Ticket History',
     TICKET_WORKLOG: 'Ticket WorkLog',
+    ARTICLE_ATTACHMENTS: 'Article Attachments',
     EDIT_DOCUMENT: 'Edit Document',
   },
 

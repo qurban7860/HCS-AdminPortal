@@ -176,9 +176,9 @@ export default function CustomerViewForm() {
         )}
         <Grid container>
           <FormLabel content={FORMLABELS.HOWICK} />
-          <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.CUSTOMER.ACCOUNT} customerContacts={defaultValues?.accountManager} />
-          <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.CUSTOMER.PROJECT} customerContacts={defaultValues?.projectManager} />
-          <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.CUSTOMER.SUPPORT} customerContacts={defaultValues?.supportManager} />
+          <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.CUSTOMER.ACCOUNT} chips={defaultValues?.accountManager?.map(manager => `${manager?.firstName} ${manager?.lastName}`)} />
+          <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.CUSTOMER.PROJECT} chips={defaultValues?.projectManager?.map(manager => `${manager?.firstName} ${manager?.lastName}`)} />
+          <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.CUSTOMER.SUPPORT} chips={defaultValues?.supportManager?.map(manager => `${manager?.firstName} ${manager?.lastName}`)} />
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>
 

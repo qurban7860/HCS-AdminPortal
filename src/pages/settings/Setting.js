@@ -25,7 +25,7 @@ export default function Setting() {
   const linkDocumentType = () => navigate(PATH_MACHINE.documents.documentType.list);
   const linkDocumentCategory = () => navigate(PATH_MACHINE.documents.documentCategory.list);
   const linkRole = () => navigate(PATH_SETTING.role.list);
-  const linkSignInLogs = () => navigate(PATH_REPORTS.signInLogs.list);
+  const linkSignInLogs = () => navigate(PATH_SETTING.signInLogs.list);
   const linkRegions = () => navigate(PATH_SETTING.regions.list);
   const linkConfigs = () => navigate(PATH_SETTING.configs.list);
   const linkEmails = () => navigate(PATH_REPORTS.email.list);

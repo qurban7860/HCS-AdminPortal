@@ -73,13 +73,13 @@ export default function ArticleCategoryEditForm() {
 
 
   const toggleCancel = () => {
-    navigate(PATH_SUPPORT.supportSettings.articleCategories.view(articleCategory._id));
+    navigate(PATH_SUPPORT.settings.articleCategories.view(articleCategory._id));
   };
 
   const onSubmit = async (data) => {
     try {
       await dispatch(updateArticleCategory(articleCategory._id, data));
-      navigate(PATH_SUPPORT.supportSettings.articleCategories.view(articleCategory._id));
+      navigate(PATH_SUPPORT.settings.articleCategories.view(articleCategory._id));
       enqueueSnackbar('Article Category updated successfully!');
     } catch (error) {
       console.log(handleError(error));

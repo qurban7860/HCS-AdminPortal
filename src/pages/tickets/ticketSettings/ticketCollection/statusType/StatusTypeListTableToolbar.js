@@ -23,7 +23,7 @@ export default function StatusTypeListTableToolbar({
   onResetFilter,
 }) {
   const navigate = useNavigate();
-  const toggleAdd = () => navigate(PATH_SUPPORT.ticketSettings.statusTypes.new);
+  const toggleAdd = () => navigate(PATH_SUPPORT.settings.statusTypes.new);
   
   return (
     <Stack {...options}>

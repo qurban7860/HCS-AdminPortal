@@ -81,11 +81,11 @@ export default function ChangeReasonForm() {
       if (id) {
         await dispatch(patchTicketChangeReason(id, data));
         enqueueSnackbar('Change Reason Updated Successfully!');
-        navigate(PATH_SUPPORT.ticketSettings.changeReasons.view(id));
+        navigate(PATH_SUPPORT.settings.changeReasons.view(id));
       } else {
         await dispatch(postTicketChangeReason(data));
         enqueueSnackbar('Change Reason Added Successfully!');
-        navigate(PATH_SUPPORT.ticketSettings.changeReasons.root);
+        navigate(PATH_SUPPORT.settings.changeReasons.root);
       }
       reset();
     } catch (error) {
@@ -96,7 +96,7 @@ export default function ChangeReasonForm() {
 
   const toggleCancel = async () => {
     dispatch(resetTicketChangeReason())
-    await navigate(PATH_SUPPORT.ticketSettings.changeReasons.root);
+    await navigate(PATH_SUPPORT.settings.changeReasons.root);
   };
 
   return (

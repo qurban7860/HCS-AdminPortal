@@ -17,18 +17,18 @@ const initialState = {
   activeRoles: [],
   role: null,
   userRoleTypes: [
-    { name: 'API Access', value: 'APIAccess'},
-    { name: 'Customer', value: 'Customer'},
-    { name: 'Developer', value: 'Developer'},
-    { name: 'Email Access', value: 'EmailAccess'},
+    { name: 'API Access', value: 'APIAccess' },
+    { name: 'Customer', value: 'Customer' },
+    { name: 'Developer', value: 'Developer' },
+    { name: 'Email Access', value: 'EmailAccess' },
     // { name: 'Global Manager', value: 'GlobalManager'},
     // { name: 'Regional Manager', value: 'RegionalManager'},
-    { name: 'Support', value: 'Support'},
-    { name: 'Sales Engineer', value: 'SalesEngineer'},
-    { name: 'Sales Manager', value: 'SalesManager'},
-    { name: 'Super Admin', value: 'SuperAdmin'},
-    { name: 'Technical Manager', value: 'TechnicalManager'},
-    { name: 'Technician', value: 'Technician'},
+    { name: 'Support', value: 'Support' },
+    { name: 'Sales Engineer', value: 'SalesEngineer' },
+    { name: 'Sales Manager', value: 'SalesManager' },
+    { name: 'Super Admin', value: 'SuperAdmin' },
+    { name: 'Technical Manager', value: 'TechnicalManager' },
+    { name: 'Technical Support', value: 'Technical Support' },
   ],
   filterBy: '',
   page: 0,
@@ -52,12 +52,12 @@ const slice = createSlice({
     },
 
     // SET VISIBILITY
-    setRoleFormVisibility(state, action){
+    setRoleFormVisibility(state, action) {
       state.formVisibility = action.payload;
     },
 
     // SET VISIBILITY
-    setRoleEditFormVisibility(state, action){
+    setRoleEditFormVisibility(state, action) {
       state.editFormVisibility = action.payload;
     },
 
@@ -94,7 +94,7 @@ const slice = createSlice({
     },
 
     // RESET ROLE
-    resetRole(state){
+    resetRole(state) {
       state.role = {};
       state.responseMessage = null;
       state.success = false;
@@ -110,13 +110,13 @@ const slice = createSlice({
     },
 
     // RESET ROLES
-    resetRoles(state){
+    resetRoles(state) {
       state.roles = [];
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
     },
-        // Set FilterBy
+    // Set FilterBy
     setFilterBy(state, action) {
       state.filterBy = action.payload;
     },
@@ -203,11 +203,11 @@ export function getRoles() {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}security/roles`,
-      {
-        params: {
-          isArchived: false
+        {
+          params: {
+            isArchived: false
+          }
         }
-      }
       );
       dispatch(slice.actions.getRolesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Roles loaded successfully'));
@@ -225,12 +225,12 @@ export function getActiveRoles() {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}security/roles`,
-      {
-        params: {
-          isArchived: false,
-          isActive: true,
+        {
+          params: {
+            isArchived: false,
+            isActive: true,
+          }
         }
-      }
       );
       dispatch(slice.actions.getActiveRolesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Roles loaded successfully'));
@@ -265,14 +265,14 @@ export function getRole(id) {
 export function deleteRole(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-    try{
+    try {
       const response = await axios.patch(`${CONFIG.SERVER_URL}security/roles/${id}`,
-      {
-        isArchived: true, 
-      }
+        {
+          isArchived: true,
+        }
       );
       // state.responseMessage = response.data;
-      if(regEx.test(response.status)){
+      if (regEx.test(response.status)) {
         dispatch(slice.actions.setResponseMessage(response.data));
         dispatch(resetRole());
       }

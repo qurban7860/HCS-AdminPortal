@@ -32,6 +32,7 @@ Cover.propTypes = {
   addButton: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   buttonIcon: PropTypes.string,
   archivedLink: PropTypes.object,
+  onHelpClick: PropTypes.func,
 };
 
 export function Cover({
@@ -50,11 +51,12 @@ export function Cover({
   SubOnClick,
   addButton,
   buttonIcon,
-  archivedLink
+  archivedLink,
+  onHelpClick,
 }) {
   const navigate = useNavigate();
   const handleSettingsNavigate = () => navigate(PATH_SETTING.root);
-  const handleSupportTicketSettingsNavigate = () => navigate(PATH_SUPPORT.ticketSettings.root);
+  const handleSupportTicketSettingsNavigate = () => navigate(PATH_SUPPORT.settings.root);
   const linkArchivedCustomers = () => navigate(PATH_CRM.customers.archived.root);
   const linkArchivedMachines = () => navigate(PATH_MACHINE.archived.root);
   const handleBackLink = () => window.history.back();
@@ -129,7 +131,7 @@ export function Cover({
               justifyContent: isMobile ? 'center' : 'flex-start',
               textAlign: 'center',
               '& .MuiButton-startIcon': { marginRight: 0 },
-              marginBottom: addButton ? -0.6 : 0,
+              marginBottom: addButton || onHelpClick ? -0.6 : 0,
             }}
           >
             {archivedLink && (
@@ -228,6 +230,25 @@ export function Cover({
                       }
                     }}>
                     <Iconify color="#fff" sx={{ height: '24px', width: '24px' }} icon={buttonIcon || 'eva:plus-fill'} />
+                  </IconButton>
+                </StyledTooltip>
+              </Grid>
+            )}
+            {onHelpClick && (
+              <Grid item >
+                <StyledTooltip title="Need Help" placement="bottom" disableFocusListener tooltipcolor="#103996" color="#fff">
+                  <IconButton onClick={onHelpClick}
+                    sx={{
+                      background: "#2065D1",
+                      borderRadius: 1,
+                      height: '1.7em',
+                      p: '8.5px 14px',
+                      '&:hover': {
+                        background: "#103996",
+                        color: "#fff"
+                      },
+                    }}>
+                    <Iconify icon="clarity:help-line" color="#fff" sx={{ height: '24px', width: '24px' }} />
                   </IconButton>
                 </StyledTooltip>
               </Grid>

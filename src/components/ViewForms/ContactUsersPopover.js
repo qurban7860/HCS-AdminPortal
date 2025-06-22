@@ -26,7 +26,8 @@ function ContactUsersPopover({ open, onClose, onViewUser }) {
                   {user?.name || ''}
                 </Link>
                 <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                  {fDate(user?.createdAt) || ''}
+                  {user?.email || ''}
+                  {/* {fDate(user?.createdAt) || ''} */}
                 </Typography>
               </Grid>
           ))}

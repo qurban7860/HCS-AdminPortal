@@ -193,3 +193,20 @@ export function cancelUserInvite(Id) {
     }
   };
 }
+
+// -------------------------------------------------------------------------
+
+export function resendUserInvite(Id) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.post(`${CONFIG.SERVER_URL}security/invites/resendUserInvite/${Id}`);
+      dispatch(slice.actions.stopLoading());
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}

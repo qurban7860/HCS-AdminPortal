@@ -11,7 +11,7 @@ export const ProfileSchema = Yup.object().shape({
   type: Yup.string(),
   files: Yup.mixed()
     .test('fileType', '', function (value) {
-      return validateFileType({ _this: this, files: value, image: true });
+      return validateFileType({ _this: this, files: value, image: true, doc: true, others: true });
     })
     .nullable(true),
   isActive: Yup.boolean(),

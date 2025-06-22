@@ -393,6 +393,12 @@ import {
   FaultList,
   FaultForm,
   FaultView,
+  
+  // Supports / Release
+  ReleaseList,
+  ReleaseForm,
+  ReleaseView,
+
   // REPORTS / SETTINGS
   Setting,
 
@@ -504,6 +510,12 @@ import {
   ArticleCategoryAdd,
   ArticleCategoryEdit,
   ArticleCategoryView,
+
+  // SUPPORT Projects
+  ProjectList,
+  ProjectAdd,
+  ProjectEdit,
+  ProjectView,
 } from './elements';
 
 // ----------------------------------------------------------------------
@@ -1219,7 +1231,7 @@ export default function Router() {
           ],
         },
         {
-          path: 'ticketSettings',
+          path: 'settings',
           children: [
             { element: <TicketSetting />, index: true },
             // --------------------- Ticket Collection --------------------------------
@@ -1313,6 +1325,16 @@ export default function Router() {
                 { path: ':id/view', element: <FaultView /> },
               ]
             },
+            { path: 'articleCategories', 
+              children: [
+                { element: <ArticleCategoryList />, index: true },
+                { path: 'new', element: <ArticleCategoryAdd /> },
+                { path: ':id/edit', element: <ArticleCategoryEdit /> },
+                { path: ':id/view', element: <ArticleCategoryView /> },
+                { path: 'archived', element: <ArticleCategoryList isArchived /> },
+                { path: ':id/archived/view', element: <ArticleCategoryView /> },
+              ]
+            },
           ],
         },
         { element: <Navigate to="/support/supportTickets" replace />, index: true },
@@ -1331,22 +1353,8 @@ export default function Router() {
               ]
             }
           ]
-         },
-         {
-          path:'supportSettings',
-          children:[
-            { path: 'articleCategories', 
-              children: [
-                { element: <ArticleCategoryList />, index: true },
-                { path: 'new', element: <ArticleCategoryAdd /> },
-                { path: ':id/edit', element: <ArticleCategoryEdit /> },
-                { path: ':id/view', element: <ArticleCategoryView /> },
-                { path: 'archived', element: <ArticleCategoryList isArchived /> },
-                { path: ':id/archived/view', element: <ArticleCategoryView /> },
-              ]
-            },
-          ]
-         },
+        },
+        
         { path: 'manuals', element: <SectionUnderConstruction /> },
       ],
     },
@@ -1372,13 +1380,6 @@ export default function Router() {
             { path: 'list', element: <Email /> },
             { path: ':id/view', element: <Emailview /> }
           ]
-        },
-        // ------------------------------ Sign In Logs ----------------------------------
-        {
-          path: 'signInLogs',
-          children: [
-            { path: 'list', element: <SignInLogList /> },
-          ],
         },
         {
           path: 'logs',
@@ -1422,6 +1423,29 @@ export default function Router() {
       children: [
         // {element: <Setting  />, index: true },
         { element: <Navigate to="/settings/security" replace />, index: true },
+        
+        {
+          path: 'projects',
+          children: [
+            { element: <ProjectList />, index: true },
+            { path: 'new', element: <ProjectAdd /> },
+            { path: ':id/view', element: <ProjectView /> },
+            { path: ':id/edit', element: <ProjectEdit /> },
+            { path: 'archived', element: <ProjectList isArchived /> },
+            { path: ':id/archived/view', element: <ProjectView /> },
+          ],
+        },
+
+        {
+          path: 'releases',
+          children: [
+            { element: <ReleaseList />, index: true },
+            { path: 'new', element: <ReleaseForm /> },
+            { path: ':id/edit', element: <ReleaseForm /> },
+            { path: ':id/view', element: <ReleaseView /> },
+          ]
+        },
+
         {
           path: 'security',
           children: [
@@ -1562,6 +1586,13 @@ export default function Router() {
             { path: ':id/view', element: <UserInvitationView /> },
           ],
         },
+        // ------------------------------ Sign In Logs ----------------------------------
+        {
+          path: 'signInLogs',
+          children: [
+            { path: 'list', element: <SignInLogList /> },
+          ],
+        },
         // ------------------------------ releases ----------------------------------
         {
           path: 'releases',
@@ -1569,7 +1600,8 @@ export default function Router() {
             { path: 'list', element: <ReleasesList /> },
             { path: ':id/view', element: <ReleasesView /> },
           ],
-        }
+        },
+
       ],
     },
 

@@ -80,11 +80,11 @@ export default function ImpactForm() {
       if (id) {
         await dispatch(patchTicketImpact(id, data));
         enqueueSnackbar('Impact Updated Successfully!');
-        navigate(PATH_SUPPORT.ticketSettings.impacts.view(id));
+        navigate(PATH_SUPPORT.settings.impacts.view(id));
       } else {
         await dispatch(postTicketImpact(data));
         enqueueSnackbar('Impact Added Successfully!');
-        navigate(PATH_SUPPORT.ticketSettings.impacts.root);
+        navigate(PATH_SUPPORT.settings.impacts.root);
       }
       reset();
     } catch (error) {
@@ -95,7 +95,7 @@ export default function ImpactForm() {
 
   const toggleCancel = async () => {
     dispatch(resetTicketImpact())
-    await navigate(PATH_SUPPORT.ticketSettings.impacts.root);
+    await navigate(PATH_SUPPORT.settings.impacts.root);
   };
 
   return (

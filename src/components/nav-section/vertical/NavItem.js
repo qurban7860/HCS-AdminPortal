@@ -24,7 +24,7 @@ NavItem.propTypes = {
 
 export default function NavItem({ item, depth, open, active, isExternalLink, ...other }) {
   const { translate } = useLocales();
-  const { title, path, icon, info, children, disabled, caption, roles } = item;
+  const { title, path, icon, info, children, disabled, caption, roles, stared } = item;
   const subItem = depth !== 1;
 
   const renderContent = (
@@ -69,6 +69,10 @@ export default function NavItem({ item, depth, open, active, isExternalLink, ...
           icon={open ? 'eva:arrow-ios-downward-fill' : 'eva:arrow-ios-forward-fill'}
           sx={{ ml: 1, flexShrink: 0 }}
         />
+      )}
+
+      {stared && (
+        <Iconify width={16} icon='eva:star-fill' color="#FFD700" sx={{ ml: 1, flexShrink: 0 }}/>
       )}
     </StyledItem>
   );

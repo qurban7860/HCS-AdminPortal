@@ -13,6 +13,7 @@ const initialState = {
   articles: [],
   activeArticles: [],
   article: null,
+  isLoadingArticleFile: false,
   filterBy: '',
   page: 0,
   rowsPerPage: 100
@@ -27,10 +28,16 @@ const slice = createSlice({
       state.isLoading = true;
       state.error = null;
     },
-    
+
+    // START LOADING File
+    setLoadingFile(state, action) {
+      state.isLoadingArticleFile = action.payload;;
+    },
+
     // HAS ERROR
     hasError(state, action) {
       state.isLoading = false;
+      state.isLoadingArticleFile = false;
       state.error = action.payload;
       state.initial = true;
     },
@@ -57,6 +64,44 @@ const slice = createSlice({
       state.success = true;
       state.article = action.payload;
       state.initial = true;
+    },
+
+    // GET Article File
+    getArticleFileSuccess(state, action) {
+      const { id, data } = action.payload;
+      const fArray = state.article.files;
+      if (Array.isArray(fArray) && fArray.length > 0) {
+        const fIndex = fArray.findIndex(f => f?._id === id);
+        if (fIndex !== -1) {
+          const uFile = { ...fArray[fIndex], src: data };
+          state.article = {
+            ...state.article,
+            files: [...fArray.slice(0, fIndex), uFile, ...fArray.slice(fIndex + 1)],
+          };
+        }
+      }
+      state.isLoadingArticleFile = false;
+    },
+
+
+    addArticleFilesSuccess(state, action) {
+      state.article = {
+        ...state.article,
+        files: [...(state.article?.files || []), ...(action.payload || [])]
+      }
+      state.isLoadingArticleFile = false;
+    },
+
+    deleteArticleFileSuccess(state, action) {
+      const { id } = action.payload;
+      const array = state.article.files;
+      if (Array.isArray(array) && array?.length > 0) {
+        state.article = {
+          ...state.article,
+          files: state.article?.files?.filter(f => f?._id !== id) || []
+        };
+      }
+      state.isLoadingArticleFile = false;
     },
 
     setResponseMessage(state, action) {
@@ -128,17 +173,20 @@ export function addArticle(params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const data = {
-        articleNo: params.articleNo,
-        title: params.title,
-        description: params.description,
-        category: params.category?._id,
-        customerAccess: params.customerAccess,
-        isActive: params.isActive,
-      }
-      const response = await axios.post(`${CONFIG.SERVER_URL}support/knowledgeBase/article/`, data);
+      const formData = new FormData();
+      formData.append('articleNo', params?.articleNo || '');
+      formData.append('title', params?.title || '');
+      formData.append('description', params?.description || '');
+      formData.append('category', params?.category?._id || null);
+      formData.append('customerAccess', params?.customerAccess);
+      formData.append('isActive', params?.isActive);
+
+      (params?.files || []).forEach((file, index) => {
+        formData.append(`images`, file);
+      });
+
+      const response = await axios.post(`${CONFIG.SERVER_URL}support/knowledgeBase/article/`, formData);
       dispatch(slice.actions.setResponseMessage('Article saved successfully'));
-      dispatch(getArticles());
       return response?.data;
     } catch (error) {
       console.log(error);
@@ -255,6 +303,28 @@ export function getArticle(Id) {
   };
 }
 
+export function getArticleByValue(articleNo = '') {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}support/knowledgeBase/article/list`, {
+        params: {
+          articleNo,
+          isArchived: false,
+          isActive: true,
+        }
+      });
+      const article = Array.isArray(response.data) && response.data.length > 0 ? response.data[0] : null;
+      dispatch(slice.actions.getArticleSuccess(article || null));
+      dispatch(slice.actions.setResponseMessage('Article loaded successfully'));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.message));
+      throw error;
+    }
+  };
+}
+
 // ---------------------------------archive Article-------------------------------------
 
 export function archiveArticle(Id) {
@@ -297,6 +367,55 @@ export function deleteArticle(Id) {
     try {
       const response = await axios.delete(`${CONFIG.SERVER_URL}support/knowledgeBase/article/${Id}`);
       dispatch(slice.actions.setResponseMessage(response.data));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+// FILES
+export function getFile(articleId, id) {
+  return async (dispatch) => {
+    dispatch(slice.actions.setLoadingFile(true));
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}support/knowledgeBase/article/${articleId}/files/${id}`);
+      dispatch(slice.actions.getArticleFileSuccess({ id, data: response.data }));
+      return response;
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+export function addFiles(articleId, params) {
+  return async (dispatch) => {
+    dispatch(slice.actions.setLoadingFile(true));
+    try {
+      const formData = new FormData();
+      (params?.files || []).forEach((file, index) => {
+        formData.append(`images`, file);
+      });
+      const response = await axios.post(`${CONFIG.SERVER_URL}support/knowledgeBase/article/${articleId}/files/`, formData);
+      dispatch(slice.actions.addArticleFilesSuccess(response.data));
+      return response;
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+export function deleteFile(articleId, id) {
+  return async (dispatch) => {
+    dispatch(slice.actions.setLoadingFile(true));
+    try {
+      await axios.delete(`${CONFIG.SERVER_URL}support/knowledgeBase/article/${articleId}/files/${id}`);
+      dispatch(slice.actions.deleteArticleFileSuccess({ id }));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));

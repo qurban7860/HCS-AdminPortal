@@ -68,7 +68,7 @@ export default function ArticleCategoryAddForm() {
       await dispatch(addArticleCategory(data));
       reset();
       enqueueSnackbar('Article Category added Successfully!', { variant: `success` });
-      navigate(PATH_SUPPORT.supportSettings.articleCategories.root);
+      navigate(PATH_SUPPORT.settings.articleCategories.root);
     } catch (error) {
       enqueueSnackbar(handleError(error), { variant: `error` });
       console.error(error);
@@ -76,7 +76,7 @@ export default function ArticleCategoryAddForm() {
   };
 
   const toggleCancel = () => {
-    navigate(PATH_SUPPORT.supportSettings.articleCategories.root);
+    navigate(PATH_SUPPORT.settings.articleCategories.root);
   };
 
   return (
