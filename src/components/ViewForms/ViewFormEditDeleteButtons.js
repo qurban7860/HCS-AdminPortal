@@ -1073,6 +1073,25 @@ function ViewFormEditDeleteButtons({
           }
         />
 
+        <ConfirmDialog
+          open={openResendInviteConfirm}
+          onClose={() => {
+            handleCloseConfirm('ResendInvite');
+          }}
+          title="Resend Invite"
+          content="Are you sure you want to Resend Invite?"
+          action={
+            <LoadingButton
+              variant="contained"
+              loading={isSubmitted || isSubmitting || isLoading}
+              disabled={isSubmitted || isSubmitting || isLoading}
+              onClick={onResendInvite}
+            >
+              Resend Invite
+            </LoadingButton>
+          }
+        />
+
         <ViewFormMenuPopover
           open={verifiedAnchorEl}
           onClose={handleVerifiedPopoverClose}
