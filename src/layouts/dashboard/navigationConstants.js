@@ -34,14 +34,12 @@ export const OTHER_MAIN_CATEGORIES = [
   { title: 'Settings', id: 'settings', icon: 'mdi:cog', path: ROOTS_SETTING },
 ];
 
-export function getOtherMainCategories(roles) {
-  const isSuperAdminRole = Array.isArray(roles)
-    ? roles.some((r) => r.roleType === 'SuperAdmin')
-    : roles?.roleType === 'SuperAdmin';
-
+export function getOtherMainCategories() {
+  const roles = JSON.parse(localStorage.getItem('userRoles'));
+  const isSuperAdminRole = Array.isArray(roles) && roles?.some((r) => r?.roleType?.toLowerCase() === 'superadmin')
   return isSuperAdminRole
     ? OTHER_MAIN_CATEGORIES
-    : OTHER_MAIN_CATEGORIES.filter((category) => category.id !== 'settings');
+    : OTHER_MAIN_CATEGORIES?.filter((category) => category?.id !== 'settings');
 }
 
 export const generalSideBarOptions = {
@@ -158,19 +156,19 @@ export const allSideBarOptions = {
               path: PATH_MACHINE.reports.machineGraphs.root,
               icon: <Iconify icon="mdi:chart-line" />,
             },
-             {
+            {
               title: ' API Logs',
               path: PATH_MACHINE.reports.machineApiLogs.root,
               icon: <Iconify icon="mdi:api" />,
-              },
+            },
             {
               title: 'API Log Summary',
               path: PATH_MACHINE.reports.machineApiLogSummary.root,
               icon: <Iconify icon="mdi:api" />,
-              },
-             ],
-             },
- {
+            },
+          ],
+        },
+        {
           title: 'Settings',
           path: PATH_MACHINE.machineSettings.root,
           icon: <Iconify icon="mdi:cog" />,
@@ -254,18 +252,18 @@ export const allSideBarOptions = {
           path: PATH_REPORTS.machineGraphs.root,
           icon: <Iconify icon="mdi:chart-line" />,
         },
-       {
-        title: 'API logs',
-        description: 'Review API request and response logs.',
-        path: PATH_REPORTS.api.root,
-        icon: <Iconify icon="mdi:api" />,
-      },
-      {
-        title: 'API Log summary',
-        description: 'Review API request and response logs summary.',
-        path: PATH_REPORTS.apiLogSummary.root,
-        icon: <Iconify icon="mdi:api" />,
-      },
+        {
+          title: 'API logs',
+          description: 'Review API request and response logs.',
+          path: PATH_REPORTS.api.root,
+          icon: <Iconify icon="mdi:api" />,
+        },
+        {
+          title: 'API Log summary',
+          description: 'Review API request and response logs summary.',
+          path: PATH_REPORTS.apiLogSummary.root,
+          icon: <Iconify icon="mdi:api" />,
+        },
       ],
     },
     {
@@ -295,7 +293,7 @@ export const allSideBarOptions = {
               path: PATH_REPORTS.logs.dbBackup.root,
               icon: <Iconify icon="mdi:database" />,
             },
-            
+
           ],
         },
       ],
