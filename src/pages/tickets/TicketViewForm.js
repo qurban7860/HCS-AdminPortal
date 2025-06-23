@@ -57,19 +57,19 @@ export default function TicketViewForm() {
   const prefix = configurations?.find((config) => config?.name?.toLowerCase() === 'ticket_prefix')?.value || '';
 
   useEffect(() => {
-    // CUSTOMER USERS
     const reportersList = [...assignedUsers];
 
-    if (reportersList?.some(c => !c?._id?.toString() === ticket?.createdBy?._id)) {
+    if (ticket?.createdBy && !reportersList.some(c => c?._id?.toString() === ticket.createdBy._id?.toString())) {
       reportersList.unshift(ticket.createdBy);
     }
 
-    if (reportersList?.some(c => !c?._id === userId)) {
-      reportersList.unshift({ _id: userId, name: user?.displayName, email: user.email });
+    if (userId && !reportersList.some(c => c?._id?.toString() === userId?.toString())) {
+      reportersList.unshift({ _id: userId, name: user?.displayName, email: user?.email });
     }
-    setReporters(reportersList);
 
+    setReporters(reportersList);
   }, [assignedUsers, ticket, user, userId]);
+
 
   useEffect(() => {
     if (ticket?.customer?._id) {

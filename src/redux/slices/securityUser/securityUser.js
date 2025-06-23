@@ -416,7 +416,7 @@ export function getSecurityUsers(param) {
         isActive: param?.isActive,
         isArchived: param?.isArchived || false,
         invitationStatus: param?.invitationStatus || false,
-        customer: param?.customer,
+        customer: param?.type ? { type: param?.type } : param?.customer,
         contact: param?.contact,
         roleType: param?.roleType,
       }
