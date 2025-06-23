@@ -43,8 +43,7 @@ export default function Header({ onOpenNav, selectedCategory, setSelectedCategor
   const isOffset = useOffSetTop(HEADER.H_DASHBOARD_DESKTOP) && !isNavHorizontal;
   const { sendJsonMessage } = useWebSocketContext();
   const { isSettingAccessAllowed } = useAuthContext();
-  const { user: currentUser } = useAuthContext();
-  const otherCategories = useMemo(() => getOtherMainCategories(currentUser?.roles), [currentUser?.roles]);
+  const otherCategories = useMemo(() => getOtherMainCategories(), []);
 
   useEffect(() => {
     sendJsonMessage({ eventName: 'getNotifications' });
@@ -77,25 +76,25 @@ export default function Header({ onOpenNav, selectedCategory, setSelectedCategor
                 onClick={() => setSelectedCategory(item)}
               >
                 <Button
-                  variant={item.id === selectedCategory.id ? "contained" : "text"}
+                  variant={item?.id === selectedCategory?.id ? "contained" : "text"}
                   sx={{ width: '100%', height: '100%' }}
                 >
-                  {item.title}
+                  {item?.title || ''}
                 </Button>
               </Link>
             ))}
           </Box>
-          <Stack direction="row" alignItems="center" sx={{mr:1}}>
-            <TimeDisplay/>
+          <Stack direction="row" alignItems="center" sx={{ mr: 1 }}>
+            <TimeDisplay />
             {isDesktop && <FullScreenIcon />}
             <Divider orientation="vertical" flexItem />
             {otherCategories.map((item) => (
               <Link key={item.id} component={RouterLink} to={item.path} onClick={() => setSelectedCategory(item)}>
-                <IconButtonTooltip 
+                <IconButtonTooltip
                   icon={item.icon}
                   title={item.title}
-                  color={selectedCategory.id === item.id ? '#1976d2' : '#808080'}
-                  sx={{cursor: 'pointer'}} 
+                  color={selectedCategory?.id === item?.id ? '#1976d2' : '#808080'}
+                  sx={{ cursor: 'pointer' }}
                 />
               </Link>
             ))}
@@ -109,12 +108,12 @@ export default function Header({ onOpenNav, selectedCategory, setSelectedCategor
         alignItems="center"
         spacing={{ xs: 0.5, sm: 1.5 }}
         justifyContent={!isDesktop ? 'flex-end' : 'flex-start'}
-      > 
-      {!isDesktop && <TimeDisplay/>}
+      >
+        {!isDesktop && <TimeDisplay />}
         <NotificationsPopover />
         <AccountPopover />
-        
-        
+
+
       </Stack>
     </>
   );
