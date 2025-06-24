@@ -22,6 +22,7 @@ MachineLogsTableRow.propTypes = {
   columnsToShow: PropTypes.array,
   allMachineLogsPage: PropTypes.bool,
   numericalLengthValues: PropTypes.array,
+  unit: PropTypes.string,
 };
 
 export default function MachineLogsTableRow({
@@ -36,6 +37,7 @@ export default function MachineLogsTableRow({
   columnsToShow,
   allMachineLogsPage,
   numericalLengthValues,
+   unit, // <-- ADD THIS
 }) {
   row = { ...row, machineSerialNo: row?.machine?.serialNo };
   const { date } = row;
@@ -54,23 +56,44 @@ export default function MachineLogsTableRow({
         const convertToM = column?.convertToM;
         const isNumerical = column?.numerical;
         let cellValue = columnValue || '';
-        if (convertToM) {
-          cellValue =
-            columnValue !== null && columnValue !== '' && !isNaN(columnValue)
-              ? convertMmToM(columnValue).toLocaleString(undefined, {
-                  minimumFractionDigits: 3,
-                  maximumFractionDigits: 3,
-                })
-              : columnValue || '';
-        } else if (isNumerical) {
-          cellValue =
-            columnValue !== null && columnValue !== '' && !isNaN(columnValue)
-              ? Number(columnValue).toLocaleString(undefined, {
-                  minimumFractionDigits: 3,
-                  maximumFractionDigits: 3,
-                })
-              : columnValue || '';
-        }
+        const value = parseFloat(columnValue);
+
+        if (columnValue !== null && columnValue !== '' && !isNaN(columnValue)) {
+           if (unit && unit !== 'none') {
+             if (unit === 'mm') {
+               // Show in millimeters (raw)
+               cellValue = value.toLocaleString(undefined, {
+               minimumFractionDigits: 3,
+               maximumFractionDigits: 3,
+                });
+           } else if (unit === 'in') {
+      // Convert mm to inches
+               cellValue = (value / 25.4).toLocaleString(undefined, {
+               minimumFractionDigits: 3,
+               maximumFractionDigits: 3,
+               });
+           } else if (unit === 'm') {
+      // Convert mm to meters
+               cellValue = (value / 1000).toLocaleString(undefined, {
+               minimumFractionDigits: 3,
+               maximumFractionDigits: 3,
+               });
+              }
+             } else if (convertToM) {
+      // Default behavior for mm → meters
+                cellValue = convertMmToM(value).toLocaleString(undefined, {
+                minimumFractionDigits: 3,
+                maximumFractionDigits: 3,
+              });
+             } else if (isNumerical) {
+    // Regular number formatting
+                 cellValue = value.toLocaleString(undefined, {
+                 minimumFractionDigits: 3,
+                 maximumFractionDigits: 3,
+                  });
+                }
+             }
+
         return (
           <TableCell
             key={index}

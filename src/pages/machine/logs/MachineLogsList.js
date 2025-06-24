@@ -36,11 +36,12 @@ MachineLogsList.propTypes = {
 
 export default function MachineLogsList({ allMachineLogsType }) {
   const [selectedSearchFilter, setSelectedSearchFilter] = useState('');
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const theme = useTheme();
   const { machineId } = useParams();
+  const [localUnit, setLocalUnit] = useState('none');
+
 
   const methods = useForm({
     defaultValues: {
@@ -51,12 +52,13 @@ export default function MachineLogsList({ allMachineLogsType }) {
       dateTo: new Date(),
       filteredSearchKey: '',
       activeStatus: 'active',
+      unit: 'none', 
     },
     resolver: yupResolver(fetchIndMachineLogSchema),
   });
 
   const { watch, setValue, handleSubmit, trigger } = methods;
-  const { dateFrom, dateTo, logType, filteredSearchKey, activeStatus } = watch();
+  const { dateFrom, dateTo, logType, filteredSearchKey, activeStatus, unit  } = watch();
 
   useEffect(() => {
     handleResetFilter();
@@ -86,6 +88,7 @@ export default function MachineLogsList({ allMachineLogsType }) {
   };
 
   const onSubmit = (data) => {
+    setValue('unit', localUnit);
     dispatch(ChangePage(0));
     dispatch(
       getMachineLogRecords({
@@ -100,6 +103,7 @@ export default function MachineLogsList({ allMachineLogsType }) {
         selectedLogType: logType.type,
         searchKey: filteredSearchKey,
         searchColumn: selectedSearchFilter,
+        unit: localUnit,
       })
     );
   };
@@ -236,6 +240,20 @@ export default function MachineLogsList({ allMachineLogsType }) {
                     <MenuItem value="archived">Archived</MenuItem>
                   </RHFSelect>
                 </Box>
+                <Box sx={{ width: { xs: '100%', sm: 150 } }}>
+                  <RHFSelect
+                    name="unit"
+                    size="small"
+                    label="Unit"
+                    value={localUnit}
+                 onChange={(e) => setLocalUnit(e.target.value)} 
+                  >
+                  <MenuItem value="none">None</MenuItem>
+                  <MenuItem value="mm">Millimeters mm</MenuItem>
+                  <MenuItem value="in">Inches (in)</MenuItem>
+                 </RHFSelect>
+                </Box>
+
                 <Box sx={{ width: { xs: '100%', sm: 'auto' } }}>
                   <StyledTooltip
                     title="Fetch Logs"
@@ -256,7 +274,7 @@ export default function MachineLogsList({ allMachineLogsType }) {
           </Card>
         </form>
       </FormProvider>
-      <MachineLogsDataTable allMachineLogsPage={false} dataForApi={dataForApi} logType={logType} />
+      <MachineLogsDataTable allMachineLogsPage={false} dataForApi={dataForApi} logType={logType} unit={unit} />
     </Container>
   );
 }

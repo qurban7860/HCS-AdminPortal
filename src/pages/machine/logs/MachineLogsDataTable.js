@@ -62,7 +62,7 @@ function tableColumnsReducer(state, action) {
   }
 }
 
-const MachineLogsDataTable = ({ logType, allMachineLogsPage, dataForApi }) => {
+const MachineLogsDataTable = ({ logType, allMachineLogsPage, dataForApi, unit }) => {
   const [openLogDetailsDialog, setOpenLogDetailsDialog] = useState(false);
   const [selectedLog, setSelectedLog] = useState(null);
   const [tableData, setTableData] = useState([]);
@@ -160,6 +160,12 @@ const MachineLogsDataTable = ({ logType, allMachineLogsPage, dataForApi }) => {
     dispatchTableColumns({ type: 'updateColumnCheck', columnId, newCheckState });
   };
 
+   const convertUnit = (value, selectedUnit) => {
+        if (typeof value !== 'number') return value;
+        if (selectedUnit === 'in') return (value / 25.4).toFixed(2);
+          return value.toFixed(2);
+       };
+
   return (
     <>
       <TableCard>
@@ -186,7 +192,8 @@ const MachineLogsDataTable = ({ logType, allMachineLogsPage, dataForApi }) => {
                       return (
                         <TableCell
                           key={headCell.id}
-                          align={headCell?.numerical ? 'right' : 'left'}
+                          // align={headCell?.numerical ? 'right' : 'left'}
+                          align="center"
                           sortDirection={orderBy === headCell.id ? order : false}
                           sx={{ width: headCell.width, minWidth: headCell.minWidth }}
                         >
@@ -230,6 +237,7 @@ const MachineLogsDataTable = ({ logType, allMachineLogsPage, dataForApi }) => {
                       selectedLength={selected.length}
                       style={index % 2 ? { background: 'red' } : { background: 'green' }}
                       numericalLengthValues={numericalLengthValues}
+                      unit={unit}
                     />
                   ) : (
                     isLoading && <TableSkeleton key={index} sx={{ height: denseHeight }} />
@@ -267,6 +275,7 @@ MachineLogsDataTable.propTypes = {
   allMachineLogsPage: PropTypes.bool,
   logType: PropTypes.object,
   dataForApi: PropTypes.object,
+  unit: PropTypes.string,
 };
 
 function applySort({ inputData, comparator }) {
