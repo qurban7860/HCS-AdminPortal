@@ -30,6 +30,9 @@ export const machineLogTypeFormats = [
       { id: 'operator', label: 'Operator', searchable: true },
       { id: 'componentGUID', label: 'GUID', searchable: true, tooltip: true, tooltipText: 'Component GUID' },
       { id: 'componentType', label: 'Type', searchable: true, tooltip:true, tooltipText:'Component Type', defaultShow: true },
+      { id: 'jobGUID', label: 'Job GUID', searchable: true, defaultShow: true},
+      { id: 'cloudComponentId', label: 'Cloud Component', searchable: true, defaultShow: true},
+      { id: 'cloudJobId', label: 'cloud Job',searchable: true, default: true},
     ],
     numericalLengthValues: ["coilLength", "coilWidth", "coilThickness", "flangeHeight", "webWidth", "componentLength", "waste" ]
   },
