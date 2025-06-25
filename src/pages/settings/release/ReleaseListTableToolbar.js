@@ -28,7 +28,7 @@ export default function ReleaseListTableToolbar({
   setStatusVal
 }) {
   const navigate = useNavigate();
-  const toggleAdd = () => navigate(PATH_SETTING.release.new);
+  const toggleAdd = () => navigate(PATH_SETTING.projectReleases.new);
   
     const nodes = [
       <Grid item xs={12} sm={6} md={2}>

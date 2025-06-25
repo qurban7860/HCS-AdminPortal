@@ -120,7 +120,7 @@ export default function MachineLogsGraphViewForm() {
       yaxis:
         logGraphType.key === 'productionRate'
           ? 'Production Rate (m/hr)'
-          : 'Produced Length and Waste (m)',
+          : 'Meterage Produced Graph',
       xaxis: logPeriod,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -156,7 +156,7 @@ export default function MachineLogsGraphViewForm() {
         yaxis:
           logGraphType.key === 'productionRate'
             ? 'Production Rate (m/hr)'
-            : 'Produced Length and Waste (m)',
+            : 'Meterage Produced Graph',
         xaxis: logPeriod,
       });
     }

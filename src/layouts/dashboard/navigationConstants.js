@@ -391,7 +391,7 @@ export const allSideBarOptions = {
         },
         {
           title: 'Releases',
-          path: PATH_SETTING.release.root,
+          path: PATH_SETTING.projectReleases.root,
           icon: <Iconify icon="mdi:source-branch" />,
         },
       ]
