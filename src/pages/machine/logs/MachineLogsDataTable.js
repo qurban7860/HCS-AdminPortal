@@ -1,5 +1,6 @@
 import React, { useEffect, useReducer, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+
 import {
   Table,
   TableBody,
@@ -8,9 +9,14 @@ import {
   TableHead,
   TableRow,
   TableSortLabel,
-  Tooltip
+  Tooltip,
+  Button,
+  Box,
+  MenuItem,
+  Select, FormControl, InputLabel,
 } from '@mui/material';
 import PropTypes from 'prop-types';
+import { RHFSelect } from '../../../components/hook-form';
 import TableCard from '../../../components/ListTableTools/TableCard';
 import {
   useTable,
@@ -62,13 +68,14 @@ function tableColumnsReducer(state, action) {
   }
 }
 
-const MachineLogsDataTable = ({ logType, allMachineLogsPage, dataForApi, unit }) => {
+const MachineLogsDataTable = ({ logType, allMachineLogsPage, dataForApi, unit, onUnitChange }) => {
   const [openLogDetailsDialog, setOpenLogDetailsDialog] = useState(false);
+  const [localUnit, setLocalUnit] = useState(unit || '');
   const [selectedLog, setSelectedLog] = useState(null);
   const [tableData, setTableData] = useState([]);
   const [tableColumns, dispatchTableColumns] = useReducer(
     tableColumnsReducer,
-    machineLogTypeFormats[0]?.tableColumns
+    logType?.tableColumns || []
   );
 
   const numericalLengthValues = machineLogTypeFormats[0]?.numericalLengthValues || [];
@@ -155,16 +162,28 @@ const MachineLogsDataTable = ({ logType, allMachineLogsPage, dataForApi, unit })
       })
     );
   };
+   const handleUnitChange = (event) => {
+     const newUnit = event.target.value;
+     setLocalUnit(newUnit);
+     if (onUnitChange) onUnitChange(newUnit);
+     };
 
   const handleColumnButtonClick = (columnId, newCheckState) => {
     dispatchTableColumns({ type: 'updateColumnCheck', columnId, newCheckState });
   };
 
-   const convertUnit = (value, selectedUnit) => {
-        if (typeof value !== 'number') return value;
-        if (selectedUnit === 'in') return (value / 25.4).toFixed(2);
-          return value.toFixed(2);
-       };
+  const getFormattedLabel = (column, activeUnit) => {
+      const { label, baseUnit } = column;
+  // If the column is not a unit-sensitive column, return the label as-is
+       if (!numericalLengthValues.includes(column.id)) return label;
+  // No baseUnit or no user-selected unit
+       if (!baseUnit) return label;
+       if (!activeUnit) return `${label} (${baseUnit})`;
+  // Same unit — keep it simple
+       if (baseUnit === activeUnit) return `${label} (${activeUnit})`;
+  // Show the conversion direction
+       return `${label} (${baseUnit} → ${activeUnit})`;
+      };
 
   return (
     <>
@@ -178,7 +197,23 @@ const MachineLogsDataTable = ({ logType, allMachineLogsPage, dataForApi, unit })
             onRowsPerPageChange={onChangeRowsPerPage}
             columnFilterButtonData={tableColumns}
             columnButtonClickHandler={handleColumnButtonClick}
-          />
+            customNode={ <Box sx={{ width: 160 }}>
+               <FormControl size="small" sx={{ width: 160 }}>
+               <InputLabel id="unit-select-label">Unit</InputLabel>
+                  <Select
+                   labelId="unit-select-label"
+                   value={localUnit}
+                   label="Unit"
+                   onChange={handleUnitChange}
+                   displayEmpty
+                  >
+                  <MenuItem value="mm">Metric</MenuItem>
+                  <MenuItem value="in">Imperial</MenuItem>
+                 </Select> 
+                 </FormControl>
+                </Box>
+            }
+           />
         )}
 
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
@@ -200,24 +235,22 @@ const MachineLogsDataTable = ({ logType, allMachineLogsPage, dataForApi, unit })
                          {!onSort && headCell.label}
 
                         {onSort && (
-                           <TableSortLabel
-                            hideSortIcon
-                            active={orderBy === headCell.id}
-                            direction={orderBy === headCell.id ? order : 'asc'}
-                            onClick={() => onSort(headCell.id)}
-                            sx={{ textTransform: 'none' }}
-                            >
-                          <Tooltip
+                         <TableSortLabel
+                          hideSortIcon
+                          active={orderBy === headCell.id}
+                          direction={orderBy === headCell.id ? order : 'asc'}
+                          onClick={() => onSort(headCell.id)}
+                          sx={{ textTransform: 'none' }}
+                           >
+                         <Tooltip
                           title={headCell.tooltip && headCell.tooltipText ? headCell.tooltipText : ''}
                           arrow
                           placement="top"
                           disableHoverListener={!headCell.tooltip || !headCell.tooltipText}
-                           >
-                          <span style={{ display: 'inline-block' }}>
-                        {headCell.label}
-                          </span>
-                          </Tooltip>
-                        </TableSortLabel>
+                          >
+                         <span>{getFormattedLabel(headCell, localUnit)}</span>
+                         </Tooltip>
+                       </TableSortLabel>
                         )}
                         </TableCell>
                       );
@@ -237,7 +270,7 @@ const MachineLogsDataTable = ({ logType, allMachineLogsPage, dataForApi, unit })
                       selectedLength={selected.length}
                       style={index % 2 ? { background: 'red' } : { background: 'green' }}
                       numericalLengthValues={numericalLengthValues}
-                      unit={unit}
+                      unit={localUnit}
                     />
                   ) : (
                     isLoading && <TableSkeleton key={index} sx={{ height: denseHeight }} />
@@ -276,6 +309,8 @@ MachineLogsDataTable.propTypes = {
   logType: PropTypes.object,
   dataForApi: PropTypes.object,
   unit: PropTypes.string,
+  onUnitChange: PropTypes.func,
+
 };
 
 function applySort({ inputData, comparator }) {
