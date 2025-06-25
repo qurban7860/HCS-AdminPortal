@@ -112,7 +112,7 @@ const AllMachineGraphs = () => {
       });
     } else {
       setGraphLabels({
-        yaxis: 'Produced Length and Waste (m)',
+        yaxis: 'Meterage Produced Graph',
         xaxis: data?.logPeriod,
       });
     }

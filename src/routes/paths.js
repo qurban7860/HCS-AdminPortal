@@ -730,11 +730,11 @@ export const PATH_SETTING = {
     archivedView: (id) => path(ROOTS_SETTING, `/projects/archived/${id}/view`),
   },
 
-  release: {
-    root: path(ROOTS_SETTING, '/releases'),
-    new: path(ROOTS_SETTING, '/releases/new'),
-    view: (id) => path(ROOTS_SETTING, `/releases/${id}/view`),
-    edit: (id) => path(ROOTS_SETTING, `/releases/${id}/edit`),
+  projectReleases: {
+    root: path(ROOTS_SETTING, '/projectReleases'),
+    new: path(ROOTS_SETTING, '/projectReleases/new'),
+    view: (id) => path(ROOTS_SETTING, `/projectReleases/${id}/view`),
+    edit: (id) => path(ROOTS_SETTING, `/projectReleases/${id}/edit`),
   },
 };
 
