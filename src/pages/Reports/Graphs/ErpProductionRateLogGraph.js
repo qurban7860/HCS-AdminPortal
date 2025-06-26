@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Typography, Card, Grid, Skeleton, Box } from '@mui/material';
-import LogLineBarChart from '../../../components/machineLogs/LogLineChart';
+import LogChartStacked from '../../../components/machineLogs/LogStackedChart';
 import { TableNoData } from '../../../components/table';
 
 const ErpProductionRateLogGraph = ({ timePeriod, customer, graphLabels, dateFrom, dateTo, efficiency }) => {
@@ -19,7 +19,7 @@ const ErpProductionRateLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
     }
   }, [machineLogsGraphData, timePeriod]);
 
-  const processGraphData = (skipZeroValues) => {
+  const processGraphData = (skipZeroValues, withEfficiencyLine) => {
     if (!graphData || graphData.length === 0) {
       return null;
     }
@@ -58,6 +58,17 @@ const ErpProductionRateLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
       return 0;
     });
 
+    if (withEfficiencyLine) {
+      const combinedLength = producedLength.map((length, index) => length + wasteLength[index]);
+      return {
+        categories: labels,
+        series: [
+          { name: 'Total Length (m)', data: combinedLength },
+          { name: 'Efficiency (%)', data: efficiencyData },
+        ],
+      };
+    }
+
     return {
       categories: labels,
       series: [
@@ -82,7 +93,12 @@ const ErpProductionRateLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
         ) : (
           <>
             {graphData?.length > 0 ? (
-              <LogLineBarChart processGraphData={processGraphData} graphLabels={graphLabels} isLoading={isLoading} />
+              <LogChartStacked 
+                processGraphData={(skipZero) => processGraphData(skipZero, true)} 
+                graphLabels={graphLabels} 
+                isLoading={isLoading} 
+                withEfficiencyLine 
+              />
             ) : (
               <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 320 }}>
                 <TableNoData isNotFound={isNotFound} />
