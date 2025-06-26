@@ -46,7 +46,7 @@ function tableColumnsReducer(state, action) {
 
 const MachineLogsDataTable = ({ logType, allMachineLogsPage, dataForApi, onUnitChange }) => {
   const [openLogDetailsDialog, setOpenLogDetailsDialog] = useState(false);
-  const [localUnit, setLocalUnit] = useState('Metric');
+  const [localUnit, setLocalUnit] = useState('metric');
   const [selectedLog, setSelectedLog] = useState(null);
   const [tableData, setTableData] = useState([]);
   const [tableColumns, dispatchTableColumns] = useReducer(tableColumnsReducer, logType?.tableColumns || []);
@@ -176,7 +176,7 @@ const MachineLogsDataTable = ({ logType, allMachineLogsPage, dataForApi, onUnitC
                 <FormControl size="small" sx={{ width: 160 }}>
                   <InputLabel id="unit-select-label">Unit</InputLabel>
                   <Select labelId="unit-select-label" value={localUnit} label="Unit" onChange={handleUnitChange}>
-                    <MenuItem value="Metric">Metric</MenuItem>
+                    <MenuItem value="metric">Metric</MenuItem>
                     <MenuItem value="imperial">Imperial</MenuItem>
                   </Select>
                 </FormControl>
