@@ -129,7 +129,7 @@ const ErpProducedLengthLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
       <Card sx={{ p: 4, boxShadow: 3 }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 1 }}>
           <Typography variant="h6" color="primary" gutterBottom>
-            Meterage Production Over Time
+            Meterage Production
           </Typography>
 
           <Typography variant="subtitle1" > 

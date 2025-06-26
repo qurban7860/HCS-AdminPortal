@@ -58,7 +58,7 @@ const ErpProductionRateLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
       return 0;
     });
 
-    if (withEfficiencyLine) {
+    if (withEfficiencyLine && efficiency > 0) {
       const combinedLength = producedLength.map((length, index) => length + wasteLength[index]);
       return {
         categories: labels,
@@ -74,7 +74,6 @@ const ErpProductionRateLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
       series: [
         { name: 'Produced Length (m)', data: producedLength },
         { name: 'Waste Length (m)', data: wasteLength },
-        { name: 'Efficiency (%)', data: efficiencyData },
       ],
     };
   };
@@ -97,7 +96,7 @@ const ErpProductionRateLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
                 processGraphData={(skipZero) => processGraphData(skipZero, true)} 
                 graphLabels={graphLabels} 
                 isLoading={isLoading} 
-                withEfficiencyLine 
+                withEfficiencyLine={efficiency > 0} 
               />
             ) : (
               <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 320 }}>
