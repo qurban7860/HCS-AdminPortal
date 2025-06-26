@@ -228,7 +228,7 @@ export const AddMachineLogSchema = Yup.object().shape({
     }),
 });
 
-export const AddMachineGraphSchema = Yup.object().shape({ 
+export const AddMachineGraphSchema = Yup.object().shape({
   customer: Yup.object().nullable().required('Customer is required'),
   machine: Yup.object().nullable(),
   logGraphType: Yup.object().nullable().required('Graph Type is required'),
@@ -237,9 +237,11 @@ export const AddMachineGraphSchema = Yup.object().shape({
   dateFrom: Yup.date()
     .nullable()
     .test('dateFromTest', 'Start Date must be earlier than or equal to End Date', function (value) {
-      const { dateTo } = this.parent;
-      return value && (!dateTo || value <= dateTo);
-    })
+        const { dateTo, logGraphType } = this.parent;
+        if (logGraphType?.key === 'productionRate') return true; 
+        return value && (!dateTo || value <= dateTo);
+      }
+    )
     .test('periodRangeTest', function (value) {
       const { dateFrom, dateTo, logPeriod } = this.parent;
       const error = validateGraphDateRange(dateFrom, dateTo, logPeriod);
@@ -248,11 +250,16 @@ export const AddMachineGraphSchema = Yup.object().shape({
 
   dateTo: Yup.date()
     .nullable()
-    .test('dateToTest', 'End Date must be later than or equal to Start Date', function (value) {
-      const { dateFrom } = this.parent;
-      return value && (!dateFrom || value >= dateFrom);
-    })
-    // .max(new Date(new Date().setHours(23, 59, 59, 999)), 'End Date cannot be in the future')
+    .when('logGraphType', {
+      is: (v) => v?.key === 'productionRate',
+      then: (schema) => schema, 
+      otherwise: (schema) =>
+        schema.test('dateToTest', 'End Date must be later than or equal to Start Date', function (value) {
+            const { dateFrom } = this.parent;
+            return value && (!dateFrom || value >= dateFrom);
+          }
+        ),
+    }),
 });
 
 export const fetchIndMachineLogSchema = Yup.object().shape({
@@ -283,9 +290,11 @@ export const fetchIndMachineGraphSchema = Yup.object().shape({
   dateFrom: Yup.date()
     .nullable()
     .test('dateFromTest', 'Start Date must be earlier than or equal to End Date', function (value) {
-      const { dateTo } = this.parent;
-      return value && (!dateTo || value <= dateTo);
-    })
+        const { dateTo, logGraphType } = this.parent;
+        if (logGraphType?.key === 'productionRate') return true; 
+        return value && (!dateTo || value <= dateTo);
+      }
+    )
     .test('periodRangeTest', function (value) {
       const { dateFrom, dateTo, logPeriod } = this.parent;
       const error = validateGraphDateRange(dateFrom, dateTo, logPeriod);
@@ -294,11 +303,16 @@ export const fetchIndMachineGraphSchema = Yup.object().shape({
 
   dateTo: Yup.date()
     .nullable()
-    .test('dateToTest', 'End Date must be later than or equal to Start Date', function (value) {
-      const { dateFrom } = this.parent;
-      return value && (!dateFrom || value >= dateFrom);
-    })
-    // .max(new Date(new Date().setHours(23, 59, 59, 999)), 'End Date cannot be in the future')
+    .when('logGraphType', {
+      is: (v) => v?.key === 'productionRate',
+      then: (schema) => schema, 
+      otherwise: (schema) =>
+        schema.test('dateToTest', 'End Date must be later than or equal to Start Date', function (value) {
+            const { dateFrom } = this.parent;
+            return value && (!dateFrom || value >= dateFrom);
+          }
+        ),
+    }),
 });
 
 export const AddMachineDocumentSchema = Yup.object().shape({
