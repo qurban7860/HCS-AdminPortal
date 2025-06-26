@@ -14,6 +14,7 @@ TablePaginationCustom.propTypes = {
   sx: PropTypes.object,
   columnFilterButtonData: PropTypes.array,
   columnButtonClickHandler: PropTypes.func,
+  customNode: PropTypes.node
 };
 
 function TablePaginationCustom({
@@ -23,6 +24,7 @@ function TablePaginationCustom({
   columnFilterButtonData = [],
   columnButtonClickHandler = () => {},
   sx,
+  customNode=null,
   ...other
 }) {
 
@@ -91,6 +93,7 @@ function TablePaginationCustom({
           </Menu>
         </Box>
       )}
+      {customNode && customNode}
       <TablePagination
         labelRowsPerPage="Rows:"
         colSpan={2}

@@ -1,30 +1,12 @@
 import React, { useEffect, useReducer, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  TableSortLabel,
-  Tooltip
-} from '@mui/material';
+
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableSortLabel, Tooltip, Button, Box, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
 import PropTypes from 'prop-types';
+import { RHFSelect } from '../../../components/hook-form';
 import TableCard from '../../../components/ListTableTools/TableCard';
-import {
-  useTable,
-  getComparator,
-  TableNoData,
-  TableSkeleton,
-  TablePaginationCustom,
-} from '../../../components/table';
-import {
-  getMachineLogRecords,
-  ChangeRowsPerPage,
-  ChangePage,
-  resetMachineErpLogRecords,
-} from '../../../redux/slices/products/machineErpLogs';
+import { useTable, getComparator, TableNoData, TableSkeleton, TablePaginationCustom } from '../../../components/table';
+import { getMachineLogRecords, ChangeRowsPerPage, ChangePage, resetMachineErpLogRecords } from '../../../redux/slices/products/machineErpLogs';
 import Scrollbar from '../../../components/scrollbar';
 import MachineLogsTableRow from './MachineLogsTableRow';
 import DialogViewMachineLogDetails from '../../../components/Dialog/DialogViewMachineLogDetails';
@@ -62,19 +44,15 @@ function tableColumnsReducer(state, action) {
   }
 }
 
-const MachineLogsDataTable = ({ logType, allMachineLogsPage, dataForApi }) => {
+const MachineLogsDataTable = ({ logType, allMachineLogsPage, dataForApi, onUnitChange }) => {
   const [openLogDetailsDialog, setOpenLogDetailsDialog] = useState(false);
+  const [localUnit, setLocalUnit] = useState('metric');
   const [selectedLog, setSelectedLog] = useState(null);
   const [tableData, setTableData] = useState([]);
-  const [tableColumns, dispatchTableColumns] = useReducer(
-    tableColumnsReducer,
-    machineLogTypeFormats[0]?.tableColumns
-  );
+  const [tableColumns, dispatchTableColumns] = useReducer(tableColumnsReducer, logType?.tableColumns || []);
 
   const numericalLengthValues = machineLogTypeFormats[0]?.numericalLengthValues || [];
-  const { machineErpLogs, machineErpLogstotalCount, page, rowsPerPage, isLoading } = useSelector(
-    (state) => state.machineErpLogs
-  );
+  const { machineErpLogs, machineErpLogstotalCount, page, rowsPerPage, isLoading } = useSelector((state) => state.machineErpLogs);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(ChangePage(0));
@@ -155,9 +133,30 @@ const MachineLogsDataTable = ({ logType, allMachineLogsPage, dataForApi }) => {
       })
     );
   };
+  const handleUnitChange = (event) => {
+    const newUnit = event.target.value;
+    setLocalUnit(newUnit);
+    if (onUnitChange) onUnitChange(newUnit);
+  };
 
   const handleColumnButtonClick = (columnId, newCheckState) => {
     dispatchTableColumns({ type: 'updateColumnCheck', columnId, newCheckState });
+  };
+
+  const getFormattedLabel = (column, activeUnit) => {
+    const { label, baseUnit } = column;
+    // If the column is not a numerical length, return label as-is
+    if (!numericalLengthValues.includes(column.id)) return label;
+    // Show base unit for Metric
+    if (activeUnit === 'metric') {
+      return `${label} (${baseUnit})`;
+    }
+    // Show 'in' for Imperial
+    if (activeUnit === 'imperial') {
+      return `${label} (in)`;
+    }
+    // Fallback to baseUnit or just label
+    return baseUnit ? `${label} (${baseUnit})` : label;
   };
 
   return (
@@ -172,6 +171,17 @@ const MachineLogsDataTable = ({ logType, allMachineLogsPage, dataForApi }) => {
             onRowsPerPageChange={onChangeRowsPerPage}
             columnFilterButtonData={tableColumns}
             columnButtonClickHandler={handleColumnButtonClick}
+            customNode={
+              <Box sx={{ width: 160 }}>
+                <FormControl size="small" sx={{ width: 160 }}>
+                  <InputLabel id="unit-select-label">Unit</InputLabel>
+                  <Select labelId="unit-select-label" value={localUnit} label="Unit" onChange={handleUnitChange}>
+                    <MenuItem value="metric">Metric</MenuItem>
+                    <MenuItem value="imperial">Imperial</MenuItem>
+                  </Select>
+                </FormControl>
+              </Box>
+            }
           />
         )}
 
@@ -186,32 +196,31 @@ const MachineLogsDataTable = ({ logType, allMachineLogsPage, dataForApi }) => {
                       return (
                         <TableCell
                           key={headCell.id}
-                          align={headCell?.numerical ? 'right' : 'left'}
+                          // align={headCell?.numerical ? 'right' : 'left'}
+                          align="center"
                           sortDirection={orderBy === headCell.id ? order : false}
                           sx={{ width: headCell.width, minWidth: headCell.minWidth }}
                         >
-                         {!onSort && headCell.label}
+                          {!onSort && headCell.label}
 
-                        {onSort && (
-                           <TableSortLabel
-                            hideSortIcon
-                            active={orderBy === headCell.id}
-                            direction={orderBy === headCell.id ? order : 'asc'}
-                            onClick={() => onSort(headCell.id)}
-                            sx={{ textTransform: 'none' }}
+                          {onSort && (
+                            <TableSortLabel
+                              hideSortIcon
+                              active={orderBy === headCell.id}
+                              direction={orderBy === headCell.id ? order : 'asc'}
+                              onClick={() => onSort(headCell.id)}
+                              sx={{ textTransform: 'none' }}
                             >
-                          <Tooltip
-                          title={headCell.tooltip && headCell.tooltipText ? headCell.tooltipText : ''}
-                          arrow
-                          placement="top"
-                          disableHoverListener={!headCell.tooltip || !headCell.tooltipText}
-                           >
-                          <span style={{ display: 'inline-block' }}>
-                        {headCell.label}
-                          </span>
-                          </Tooltip>
-                        </TableSortLabel>
-                        )}
+                              <Tooltip
+                                title={headCell.tooltip && headCell.tooltipText ? headCell.tooltipText : ''}
+                                arrow
+                                placement="top"
+                                disableHoverListener={!headCell.tooltip || !headCell.tooltipText}
+                              >
+                                <span>{getFormattedLabel(headCell, localUnit)}</span>
+                              </Tooltip>
+                            </TableSortLabel>
+                          )}
                         </TableCell>
                       );
                     })}
@@ -230,6 +239,7 @@ const MachineLogsDataTable = ({ logType, allMachineLogsPage, dataForApi }) => {
                       selectedLength={selected.length}
                       style={index % 2 ? { background: 'red' } : { background: 'green' }}
                       numericalLengthValues={numericalLengthValues}
+                      unit={localUnit}
                     />
                   ) : (
                     isLoading && <TableSkeleton key={index} sx={{ height: denseHeight }} />
@@ -267,6 +277,7 @@ MachineLogsDataTable.propTypes = {
   allMachineLogsPage: PropTypes.bool,
   logType: PropTypes.object,
   dataForApi: PropTypes.object,
+  onUnitChange: PropTypes.func,
 };
 
 function applySort({ inputData, comparator }) {
