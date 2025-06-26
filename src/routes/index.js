@@ -1437,7 +1437,7 @@ export default function Router() {
         },
 
         {
-          path: 'releases',
+          path: 'projectReleases',
           children: [
             { element: <ReleaseList />, index: true },
             { path: 'new', element: <ReleaseForm /> },

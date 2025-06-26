@@ -87,11 +87,11 @@ export default function ReleaseForm() {
       if (id) {
         await dispatch(patchRelease(id, data));
         enqueueSnackbar('Release Updated Successfully!');
-        navigate(PATH_SETTING.release.view(id));
+        navigate(PATH_SETTING.projectReleases.view(id));
       } else {
         await dispatch(postRelease(data));
         enqueueSnackbar('Release Added Successfully!');
-        navigate(PATH_SETTING.release.root);
+        navigate(PATH_SETTING.projectReleases.root);
       }
       reset();
     } catch (error) {
@@ -102,7 +102,7 @@ export default function ReleaseForm() {
 
   const toggleCancel = async () => {
     dispatch(resetRelease())
-    await navigate(PATH_SETTING.release.root);
+    await navigate(PATH_SETTING.projectReleases.root);
   };
 
   return (

@@ -36,12 +36,10 @@ MachineLogsList.propTypes = {
 
 export default function MachineLogsList({ allMachineLogsType }) {
   const [selectedSearchFilter, setSelectedSearchFilter] = useState('');
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const theme = useTheme();
   const { machineId } = useParams();
-
   const methods = useForm({
     defaultValues: {
       logType: machineLogTypeFormats.find(option => option.type === 'ERP') || null,
@@ -54,9 +52,9 @@ export default function MachineLogsList({ allMachineLogsType }) {
     },
     resolver: yupResolver(fetchIndMachineLogSchema),
   });
-
+  
   const { watch, setValue, handleSubmit, trigger } = methods;
-  const { dateFrom, dateTo, logType, filteredSearchKey, activeStatus } = watch();
+  const { dateFrom, dateTo, logType, filteredSearchKey, activeStatus} = watch();
 
   useEffect(() => {
     handleResetFilter();
@@ -99,7 +97,7 @@ export default function MachineLogsList({ allMachineLogsType }) {
         isMachineArchived: machine?.isArchived,
         selectedLogType: logType.type,
         searchKey: filteredSearchKey,
-        searchColumn: selectedSearchFilter,
+        searchColumn: selectedSearchFilter
       })
     );
   };
@@ -235,7 +233,7 @@ export default function MachineLogsList({ allMachineLogsType }) {
                     <MenuItem value="active">Active</MenuItem>
                     <MenuItem value="archived">Archived</MenuItem>
                   </RHFSelect>
-                </Box>
+                </Box>            
                 <Box sx={{ width: { xs: '100%', sm: 'auto' } }}>
                   <StyledTooltip
                     title="Fetch Logs"
@@ -256,6 +254,7 @@ export default function MachineLogsList({ allMachineLogsType }) {
           </Card>
         </form>
       </FormProvider>
+      
       <MachineLogsDataTable allMachineLogsPage={false} dataForApi={dataForApi} logType={logType} />
     </Container>
   );

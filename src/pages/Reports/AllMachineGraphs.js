@@ -5,7 +5,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Card, Container, Grid, Stack, useTheme } from '@mui/material';
-import { machineLogGraphTypes, machineLogTypeFormats } from "../../constants/machineLogTypeFormats";
+import { machineLogTypeFormats } from "../../constants/machineLogTypeFormats";
 import { AddMachineGraphSchema } from "../schemas/machine";
 import { getActiveCustomers } from "../../redux/slices/customer/customer";
 import { getActiveCustomerMachines, resetActiveCustomerMachines } from "../../redux/slices/products/machine";
@@ -26,7 +26,7 @@ const AllMachineGraphs = () => {
   const { activeCustomerMachines } = useSelector((state) => state.machine);
   const { activeCustomers } = useSelector((state) => state.customer);
   const [graphLabels, setGraphLabels] = useState({ yaxis: 'Produced Length & Waste (m)', xaxis: 'Daily' });
-
+  const machineLogGraphTypes = [{ name: "Meterage Produced Graph", key: "length_and_waste" }];
 
   const defaultValues = {
     customer: null,
@@ -48,6 +48,10 @@ const AllMachineGraphs = () => {
   const { setValue, trigger, handleSubmit, getValues, watch } = methods;
 
   const { customer, machine, logPeriod, logGraphType, dateFrom, dateTo } = watch();
+
+  const isProductionRate = logGraphType?.key === 'productionRate';
+
+  const logPeriodOptions = isProductionRate ? ['Hourly'] : ['Hourly', 'Daily', 'Monthly', 'Quarterly', 'Yearly'];
   
   useEffect(() => {
     const now = new Date();
@@ -87,7 +91,7 @@ const AllMachineGraphs = () => {
     setValue('dateTo', now);
     setValue('dateFrom', newDateFrom);
     trigger(['dateFrom', 'dateTo']);
-  }, [logPeriod, setValue, trigger]);
+  }, [logPeriod, logGraphType, setValue, trigger]);
 
 
   useEffect(() => {
@@ -103,21 +107,33 @@ const AllMachineGraphs = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, getValues('customer')]);
+  
+  useEffect(() => {
+    if (isProductionRate && dateFrom) {
+      const to = new Date(dateFrom);
+      to.setHours(23, 59, 59, 999);
+      setValue('dateTo', to, { shouldValidate: false });
+    }
+  }, [isProductionRate, dateFrom, setValue]);
+
+  useEffect(() => {
+    if (isProductionRate) {
+      if (logPeriod !== 'Hourly') {
+        setValue('logPeriod', 'Hourly');
+        trigger('logPeriod');
+      }
+    }
+  }, [isProductionRate, logPeriod, setValue, trigger]);
 
   const onSubmit = (data) => {
-    if (data?.logGraphType?.key === 'productionRate') {
-      setGraphLabels({
-        yaxis: 'Production Rate (m/hr)',
-        xaxis: data?.logPeriod,
-      });
-    } else {
-      setGraphLabels({
-        yaxis: 'Produced Length and Waste (m)',
-        xaxis: data?.logPeriod,
-      });
-    }
+    const currentGraphLabels = {
+      yaxis: data?.logGraphType?.key === 'productionRate' ? 'Production Rate (m/hr)' : 'Meterage Produced Graph',
+      xaxis: data?.logPeriod, 
+    };
 
-    graphDataRef.current = { ...data, graphLabels };
+    setGraphLabels(currentGraphLabels); 
+
+    graphDataRef.current = { ...data, graphLabels: currentGraphLabels };
 
     const customerId = data.customer?._id;
     const machineId = data.machine?._id || undefined;
@@ -211,7 +227,7 @@ const AllMachineGraphs = () => {
                   </Box>
 
                   <Grid container alignItems="flex-start" gap={1}>
-                    <Grid item xs={12} sm={6} md={2.5} xl={3.5} >
+                    <Grid item xs={12} sm={6} md={2.5} xl={isProductionRate ? 6 : 3.5} >
                       <RHFAutocomplete
                         name="logGraphType"
                         label="Graph Type*"
@@ -228,19 +244,19 @@ const AllMachineGraphs = () => {
                         fullWidth
                       />
                     </Grid>
-
+                    {!isProductionRate && (
                     <Grid item xs={12} sm={6} md={2.5} xl={3}>
                       <RHFAutocomplete
                         name="logPeriod"
                         label="Period*"
-                        options={['Hourly', 'Daily', 'Monthly', 'Quarterly', 'Yearly']}
+                        options={logPeriodOptions}
                         size="small"
                         disableClearable
                         fullWidth
                       />
                     </Grid>
-
-                    <Grid item xs={12} sm={6} md={2.5} xl={2}>
+                    )}
+                    <Grid item xs={12} sm={6} md={2.5} xl={isProductionRate ? 4 : 2}>
                       <RHFDatePicker
                         label="Date From"
                         name="dateFrom"
@@ -252,7 +268,7 @@ const AllMachineGraphs = () => {
                         }}
                       />
                     </Grid>
-
+                    {!isProductionRate && (
                     <Grid item xs={12} sm={6} md={2.5} xl={2}>
                       <RHFDatePicker
                         label="Date To"
@@ -264,7 +280,7 @@ const AllMachineGraphs = () => {
                           trigger('dateTo');
                         }}
                       />
-                    </Grid>
+                    </Grid>)}
 
                     <Grid item xs={12} sm={12} md={1} sx={{ display: 'flex', justifyContent: 'flex-end' }} >
                       <StyledTooltip
@@ -299,8 +315,10 @@ const AllMachineGraphs = () => {
           <ErpProductionRateLogGraph
             timePeriod={graphData.logPeriod}
             customer={graphData.machine?.customer}
+            graphLabels={graphData.graphLabels}
             dateFrom={graphData.dateFrom}
             dateTo={graphData.dateTo}
+            efficiency={graphData.machine?.efficiency}
           />
         )
       ) : (

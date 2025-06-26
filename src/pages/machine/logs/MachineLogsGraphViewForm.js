@@ -2,12 +2,11 @@ import PropTypes from 'prop-types';
 import { useCallback, useEffect, useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { yupResolver } from "@hookform/resolvers/yup";
-import { FormProvider, useForm,Controller } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 // @mui
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { Card, Container, Stack, Typography, Box, useTheme, Grid } from '@mui/material';
 import { useParams } from 'react-router-dom';
-import { RHFAutocomplete, RHFDatePicker,RHFDateTimePicker } from '../../../components/hook-form';
+import { RHFAutocomplete, RHFDatePicker } from '../../../components/hook-form';
 import { machineLogGraphTypes } from '../../../constants/machineLogTypeFormats';
 import MachineTabContainer from '../util/MachineTabContainer';
 import Iconify from '../../../components/iconify';
@@ -16,8 +15,6 @@ import { StyledTooltip, StyledContainedIconButton } from '../../../theme/styles/
 import ErpProducedLengthLogGraph from '../../Reports/Graphs/ErpProducedLengthLogGraph';
 import ErpProductionRateLogGraph from '../../Reports/Graphs/ErpProductionRateLogGraph';
 import { getMachineLogGraphData } from '../../../redux/slices/products/machineErpLogs';
-import TimeDisplay from '../../../components/timeZone/TimeZone';
-
 
 MachineLogsGraphViewForm.propTypes = {
   machineId: PropTypes.bool,
@@ -53,8 +50,14 @@ export default function MachineLogsGraphViewForm() {
   });
 
   const { setValue, getValues, handleSubmit, trigger, watch } = methods;
+  
+  const logPeriodData = watch('logPeriod');
+  const logGraphTypeData = watch('logGraphType');
+  const dateFromData = watch('dateFrom');
 
-  const logPeriodWatched = watch('logPeriod');
+
+  const isProductionRate = logGraphTypeData?.key === 'productionRate';
+  const logPeriodOptions = isProductionRate ? ['Hourly'] : ['Hourly', 'Daily', 'Monthly', 'Quarterly', 'Yearly'];
 
   useEffect(() => {
     const now = new Date();
@@ -63,7 +66,7 @@ export default function MachineLogsGraphViewForm() {
     newDateFrom.setHours(0, 0, 0, 0);
     now.setHours(23, 59, 59, 999);
   
-    switch (logPeriodWatched) {
+    switch (logPeriodData) {
       case 'Hourly':
         break;
   
@@ -94,7 +97,24 @@ export default function MachineLogsGraphViewForm() {
     setValue('dateTo', now);
     setValue('dateFrom', newDateFrom);
     trigger(['dateFrom', 'dateTo']);
-  }, [logPeriodWatched, setValue, trigger]);
+  }, [logPeriodData, setValue, trigger]);
+  
+   useEffect(() => {
+    if (isProductionRate && dateFromData) {
+      const to = new Date(dateFromData);
+      to.setHours(23, 59, 59, 999);
+      setValue('dateTo', to, { shouldValidate: false });
+    }
+  }, [isProductionRate, dateFromData, setValue]);
+
+  useEffect(() => {
+    if (isProductionRate) {
+      if (logPeriodData !== 'Hourly') {
+        setValue('logPeriod', 'Hourly');
+        trigger('logPeriod');
+      }
+    }
+  }, [isProductionRate, logPeriodData, setValue, trigger]);
 
   const handleFormSubmit = useCallback(() => {
     const { logPeriod, logGraphType, dateFrom, dateTo } = getValues();
@@ -120,7 +140,7 @@ export default function MachineLogsGraphViewForm() {
       yaxis:
         logGraphType.key === 'productionRate'
           ? 'Production Rate (m/hr)'
-          : 'Produced Length and Waste (m)',
+          : 'Meterage Produced Graph',
       xaxis: logPeriod,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -156,7 +176,7 @@ export default function MachineLogsGraphViewForm() {
         yaxis:
           logGraphType.key === 'productionRate'
             ? 'Production Rate (m/hr)'
-            : 'Produced Length and Waste (m)',
+            : 'Meterage Produced Graph',
         xaxis: logPeriod,
       });
     }
@@ -190,7 +210,7 @@ export default function MachineLogsGraphViewForm() {
               </Typography>
 
               <Grid container alignItems="flex-start" gap={1}>
-                <Grid item xs={12} sm={6} md={2.5} xl={3.5}>
+                <Grid item xs={12} sm={6} md={2.5} xl={isProductionRate ? 6 : 3.5}>
                   <RHFAutocomplete
                     name="logGraphType"
                     label="Graph Type*"
@@ -208,20 +228,21 @@ export default function MachineLogsGraphViewForm() {
                     fullWidth
                   />
                 </Grid>
-
+                
+                {!isProductionRate && (
                 <Grid item xs={12} sm={6} md={2.5} xl={3}>
                   <RHFAutocomplete
                     name="logPeriod"
                     label="Period*"
-                    options={['Hourly', 'Daily', 'Monthly', 'Quarterly', 'Yearly']}
+                    options={logPeriodOptions}
                     onChange={(e, newValue) => handlePeriodChange(newValue)}
                     size="small"
                     disableClearable
                     fullWidth
                   />
-                </Grid>
-
-                <Grid item xs={12} sm={6} md={2.5} xl={2}>
+                </Grid> )}
+         
+                <Grid item xs={12} sm={6} md={2.5} xl={isProductionRate ? 4 : 2}>
                 <RHFDatePicker
                     label="Date From"
                     name="dateFrom"
@@ -233,7 +254,7 @@ export default function MachineLogsGraphViewForm() {
                     fullWidth
                   />
                 </Grid>
-
+                {!isProductionRate && (
                 <Grid item xs={12} sm={6} md={2.5} xl={2}>
                   <RHFDatePicker
                     label="Date To"
@@ -245,7 +266,7 @@ export default function MachineLogsGraphViewForm() {
                     }}
                     fullWidth
                   />
-                </Grid>
+                </Grid>)}
 
                 <Grid item xs={12} sm={12} md={1} sx={{ display: 'flex', justifyContent: 'flex-end' }} >
                   <StyledTooltip
@@ -280,6 +301,7 @@ export default function MachineLogsGraphViewForm() {
           graphLabels={graphLabels}
           dateFrom={triggerFetch?.dateFrom}
           dateTo={triggerFetch?.dateTo}
+          efficiency={machine?.efficiency}
         />
       )}
     </Container>

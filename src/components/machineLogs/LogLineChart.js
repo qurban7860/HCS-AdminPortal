@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import PropTypes from 'prop-types';
 import { useTheme } from '@mui/material';
 import Chart from '../chart';
