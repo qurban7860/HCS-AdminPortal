@@ -122,7 +122,7 @@ const MachineSyncAPILogsTable = ({
                     order={order}
                     orderBy={orderBy}
                     headLabel={TABLE_HEAD}
-                    onSort={onSort}
+                    // onSort={onSort}
                   />
                   <TableBody>
                     {(isLoading ? [...Array(10)] : tableData).map((row, index) =>

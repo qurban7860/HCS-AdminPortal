@@ -56,6 +56,15 @@ export default function MachineLogsGraphViewForm() {
 
   const logPeriodWatched = watch('logPeriod');
 
+  const logGraphTypeWatched = watch('logGraphType');
+  
+  useEffect(() => {
+    if (logGraphTypeWatched?.key === 'productionRate') {
+      setValue('logPeriod', 'Hourly');
+      trigger('logPeriod'); 
+    }
+  }, [logGraphTypeWatched, setValue, trigger]);
+
   useEffect(() => {
     const now = new Date();
     const newDateFrom = new Date(now);
@@ -120,7 +129,7 @@ export default function MachineLogsGraphViewForm() {
       yaxis:
         logGraphType.key === 'productionRate'
           ? 'Production Rate (m/hr)'
-          : 'Produced Length and Waste (m)',
+          : 'Meterage Produced Graph',
       xaxis: logPeriod,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -156,7 +165,7 @@ export default function MachineLogsGraphViewForm() {
         yaxis:
           logGraphType.key === 'productionRate'
             ? 'Production Rate (m/hr)'
-            : 'Produced Length and Waste (m)',
+            : 'Meterage Produced Graph',
         xaxis: logPeriod,
       });
     }
@@ -190,7 +199,7 @@ export default function MachineLogsGraphViewForm() {
               </Typography>
 
               <Grid container alignItems="flex-start" gap={1}>
-                <Grid item xs={12} sm={6} md={2.5} xl={3.5}>
+                <Grid item xs={12} sm={6} md={2.5} xl={logGraphTypeWatched?.key === 'productionRate' ? 6 : 3.5}>
                   <RHFAutocomplete
                     name="logGraphType"
                     label="Graph Type*"
@@ -208,7 +217,8 @@ export default function MachineLogsGraphViewForm() {
                     fullWidth
                   />
                 </Grid>
-
+                
+                {logGraphTypeWatched?.key !== 'productionRate' && (
                 <Grid item xs={12} sm={6} md={2.5} xl={3}>
                   <RHFAutocomplete
                     name="logPeriod"
@@ -219,7 +229,7 @@ export default function MachineLogsGraphViewForm() {
                     disableClearable
                     fullWidth
                   />
-                </Grid>
+                </Grid> )}
 
                 <Grid item xs={12} sm={6} md={2.5} xl={2}>
                 <RHFDatePicker
@@ -280,6 +290,7 @@ export default function MachineLogsGraphViewForm() {
           graphLabels={graphLabels}
           dateFrom={triggerFetch?.dateFrom}
           dateTo={triggerFetch?.dateTo}
+          efficiency={machine?.efficiency || 1000}
         />
       )}
     </Container>

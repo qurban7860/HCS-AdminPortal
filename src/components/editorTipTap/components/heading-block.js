@@ -2,7 +2,7 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import Menu from '@mui/material/Menu';
 import { alpha } from '@mui/material/styles';
-import { listClasses } from '@mui/material/List';
+// import { listClasses } from '@mui/material/List';
 import ButtonBase, { buttonBaseClasses } from '@mui/material/ButtonBase';
 
 import Iconify from '../../iconify';
@@ -72,23 +72,44 @@ export function HeadingBlock({ editor }) {
         anchorEl={anchorEl}
         open={!!anchorEl}
         onClose={handleClose}
-        slotProps={{
-          list: { 'aria-labelledby': 'heading-button' },
-          paper: {
-            sx: {
-              width: 120,
-              [`& .${listClasses.root}`]: { gap: 0.5, display: 'flex', flexDirection: 'column' },
-              [`& .${buttonBaseClasses.root}`]: {
-                px: 1,
-                width: 1,
-                height: 34,
-                borderRadius: 0.75,
-                justifyContent: 'flex-start',
-                '&:hover': { backgroundColor: 'action.hover' },
-              },
+        MenuListProps={{
+          'aria-labelledby': 'heading-button',
+          sx: {
+            gap: 0.5,
+            display: 'flex',
+            flexDirection: 'column',
+          },
+        }}
+        PaperProps={{
+          sx: {
+            width: 120,
+            [`& .${buttonBaseClasses.root}`]: {
+              px: 1,
+              width: 1,
+              height: 34,
+              borderRadius: 0.75,
+              justifyContent: 'flex-start',
+              '&:hover': { backgroundColor: 'action.hover' },
             },
           },
         }}
+      // slotProps={{
+      //   list: { 'aria-labelledby': 'heading-button' },
+      //   paper: {
+      //     sx: {
+      //       width: 120,
+      //       [`& .${listClasses.root}`]: { gap: 0.5, display: 'flex', flexDirection: 'column' },
+      //       [`& .${buttonBaseClasses.root}`]: {
+      //         px: 1,
+      //         width: 1,
+      //         height: 34,
+      //         borderRadius: 0.75,
+      //         justifyContent: 'flex-start',
+      //         '&:hover': { backgroundColor: 'action.hover' },
+      //       },
+      //     },
+      //   },
+      // }}
       >
         <ToolbarItem
           component="li"

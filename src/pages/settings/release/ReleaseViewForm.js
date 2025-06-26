@@ -50,7 +50,7 @@ export default function ReleaseViewForm() {
   const onArchive = async () => {
     try {
       await dispatch(deleteRelease(id, true));
-      navigate(PATH_SETTING.release.root);
+      navigate(PATH_SETTING.projectReleases.root);
       enqueueSnackbar('Release Archived Successfully!', { variant: 'success' });
     } catch (err) {
       enqueueSnackbar( handleError( err ) || 'Release Archive failed!', { variant: `error` });
@@ -58,7 +58,7 @@ export default function ReleaseViewForm() {
     }
   };
 
-  const toggleEdit = () => navigate(PATH_SETTING.release.edit(id));
+  const toggleEdit = () => navigate(PATH_SETTING.projectReleases.edit(id));
   
   const handleReleaseChange = async (e) => {
     try {
@@ -79,7 +79,7 @@ export default function ReleaseViewForm() {
         onArchive={onArchive} 
         backLink={() => {
           dispatch(resetRelease());
-          navigate(PATH_SETTING.release.root);
+          navigate(PATH_SETTING.projectReleases.root);
         }}
       />
       <Grid container sx={{mt:2}}>

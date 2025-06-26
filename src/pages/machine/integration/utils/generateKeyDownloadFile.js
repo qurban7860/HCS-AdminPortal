@@ -11,7 +11,7 @@ const generatePortalKeyConfigFileContent = (portalKey, serialNo) => {
     `howickportalkey = ${portalKey}\n`,
     `machineserialno = ${serialNo}\n\n`,
     '//Environment like dev/test/prod , default is prod\n',
-    `env = ${env}\n\n`,
+    `env = ${env === "live" ? "prod" : env}\n\n`,
     '//Contenttype is used for header\n',
     'contenttype = application/json\n\n',
     '//Endpoint configuration\n',
