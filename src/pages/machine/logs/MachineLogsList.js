@@ -40,9 +40,6 @@ export default function MachineLogsList({ allMachineLogsType }) {
   const navigate = useNavigate();
   const theme = useTheme();
   const { machineId } = useParams();
-  const [localUnit, setLocalUnit] = useState('');
-
-
   const methods = useForm({
     defaultValues: {
       logType: machineLogTypeFormats.find(option => option.type === 'ERP') || null,
@@ -52,13 +49,12 @@ export default function MachineLogsList({ allMachineLogsType }) {
       dateTo: new Date(),
       filteredSearchKey: '',
       activeStatus: 'active',
-      unit: '', 
     },
     resolver: yupResolver(fetchIndMachineLogSchema),
   });
   
   const { watch, setValue, handleSubmit, trigger } = methods;
-  const { dateFrom, dateTo, logType, filteredSearchKey, activeStatus, unit  } = watch();
+  const { dateFrom, dateTo, logType, filteredSearchKey, activeStatus} = watch();
 
   useEffect(() => {
     handleResetFilter();
@@ -88,7 +84,6 @@ export default function MachineLogsList({ allMachineLogsType }) {
   };
 
   const onSubmit = (data) => {
-    setValue('unit', localUnit);
     dispatch(ChangePage(0));
     dispatch(
       getMachineLogRecords({
@@ -102,8 +97,7 @@ export default function MachineLogsList({ allMachineLogsType }) {
         isMachineArchived: machine?.isArchived,
         selectedLogType: logType.type,
         searchKey: filteredSearchKey,
-        searchColumn: selectedSearchFilter,
-        unit: localUnit,
+        searchColumn: selectedSearchFilter
       })
     );
   };
@@ -261,7 +255,7 @@ export default function MachineLogsList({ allMachineLogsType }) {
         </form>
       </FormProvider>
       
-      <MachineLogsDataTable allMachineLogsPage={false} dataForApi={dataForApi} logType={logType} unit={localUnit}/>
+      <MachineLogsDataTable allMachineLogsPage={false} dataForApi={dataForApi} logType={logType} />
     </Container>
   );
 }
