@@ -5,7 +5,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Card, Container, Grid, Stack, useTheme } from '@mui/material';
-import { machineLogGraphTypes, machineLogTypeFormats } from "../../constants/machineLogTypeFormats";
+import { machineLogTypeFormats } from "../../constants/machineLogTypeFormats";
 import { AddMachineGraphSchema } from "../schemas/machine";
 import { getActiveCustomers } from "../../redux/slices/customer/customer";
 import { getActiveCustomerMachines, resetActiveCustomerMachines } from "../../redux/slices/products/machine";
@@ -26,7 +26,7 @@ const AllMachineGraphs = () => {
   const { activeCustomerMachines } = useSelector((state) => state.machine);
   const { activeCustomers } = useSelector((state) => state.customer);
   const [graphLabels, setGraphLabels] = useState({ yaxis: 'Produced Length & Waste (m)', xaxis: 'Daily' });
-
+  const machineLogGraphTypes = [{ name: "Meterage Produced Graph", key: "length_and_waste" }];
 
   const defaultValues = {
     customer: null,
