@@ -2,7 +2,6 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import Menu from '@mui/material/Menu';
 import { alpha } from '@mui/material/styles';
-// import { listClasses } from '@mui/material/List';
 import ButtonBase, { buttonBaseClasses } from '@mui/material/ButtonBase';
 
 import Iconify from '../../iconify';
@@ -93,23 +92,6 @@ export function HeadingBlock({ editor }) {
             },
           },
         }}
-      // slotProps={{
-      //   list: { 'aria-labelledby': 'heading-button' },
-      //   paper: {
-      //     sx: {
-      //       width: 120,
-      //       [`& .${listClasses.root}`]: { gap: 0.5, display: 'flex', flexDirection: 'column' },
-      //       [`& .${buttonBaseClasses.root}`]: {
-      //         px: 1,
-      //         width: 1,
-      //         height: 34,
-      //         borderRadius: 0.75,
-      //         justifyContent: 'flex-start',
-      //         '&:hover': { backgroundColor: 'action.hover' },
-      //       },
-      //     },
-      //   },
-      // }}
       >
         <ToolbarItem
           component="li"
@@ -133,8 +115,7 @@ export function HeadingBlock({ editor }) {
               active={editor.isActive('heading', { level })}
               onClick={() => {
                 handleClose();
-                // editor.chain().focus().setNode({ level }).run();
-                editor.chain().focus().setNodeSelection(editor.state.selection.$from.pos).toggleHeading({ level }).run();
+                editor.chain().focus().toggleHeading({ level }).run();
               }}
               sx={{
                 ...(heading !== 'Paragraph' && {
@@ -157,12 +138,5 @@ HeadingBlock.propTypes = {
     focus: PropTypes.func,
     setParagraph: PropTypes.func,
     toggleHeading: PropTypes.func,
-    state: PropTypes.shape({
-      selection: PropTypes.shape({
-        $from: PropTypes.shape({
-          pos: PropTypes.number.isRequired,
-        }).isRequired,
-      }).isRequired,
-    }),
   }),
 };
