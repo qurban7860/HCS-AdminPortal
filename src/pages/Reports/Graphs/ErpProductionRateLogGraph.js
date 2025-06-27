@@ -5,7 +5,7 @@ import { Typography, Card, Grid, Skeleton, Box } from '@mui/material';
 import LogChartStacked from '../../../components/machineLogs/LogStackedChart';
 import { TableNoData } from '../../../components/table';
 
-const ErpProductionRateLogGraph = ({ timePeriod, customer, graphLabels, dateFrom, dateTo, efficiency }) => {
+const ErpProductionRateLogGraph = ({ timePeriod, customer, graphLabels, dateFrom, dateTo, efficiency, machineSerialNo }) => {
   const [graphData, setGraphData] = useState([]);
   const { isLoading, machineLogsGraphData } = useSelector((state) => state.machineErpLogs);
 
@@ -20,8 +20,8 @@ const ErpProductionRateLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
   }, [machineLogsGraphData, timePeriod]);
 
   const processGraphData = (skipZeroValues, withEfficiencyLine) => {
-    if (!graphData || graphData.length === 0) {
-      return null;
+    if (!Array.isArray(graphData) || graphData.length === 0) {
+      return { categories: [], series: [] }; 
     }
 
     const dataMap = new Map();
@@ -77,15 +77,30 @@ const ErpProductionRateLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
       ],
     };
   };
+  
+
+  const getGraphTitle = () => {
+    let titlePrefix = '';
+    switch (timePeriod) {
+      case 'Hourly':
+        titlePrefix = 'Hourly Production Graph';
+        break;
+      default:
+        titlePrefix = 'Production Graph';
+    }
+    return `${titlePrefix} for Machine ${machineSerialNo || ''}`;
+  };
 
   const isNotFound = !isLoading && !graphData.length;
 
   return (
     <Grid item xs={12} sm={12} md={12} lg={10} xl={6} sx={{ mt: 3 }}>
-      <Card sx={{ p: 4, boxShadow: 3 }}>
-        <Typography variant="h6" color="primary" gutterBottom>
-          Production Rate Over Time
-        </Typography>
+      <Card sx={{ p: 3, boxShadow: 3 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', position: 'relative', mb: -1, mt: -1 }}>
+          <Typography variant="h6" color="primary" gutterBottom>
+            Meterage Production
+          </Typography>
+        </Box>
 
         {isLoading ? (
           <Skeleton variant="rectangular" width="100%" height={320} sx={{ borderRadius: 1 }} />
@@ -97,6 +112,7 @@ const ErpProductionRateLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
                 graphLabels={graphLabels} 
                 isLoading={isLoading} 
                 withEfficiencyLine={efficiency > 0} 
+                machineSerialNo={getGraphTitle()}
               />
             ) : (
               <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 320 }}>
@@ -113,10 +129,11 @@ const ErpProductionRateLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
 export default ErpProductionRateLogGraph;
 
 ErpProductionRateLogGraph.propTypes = {
-  timePeriod: PropTypes.oneOf(['Hourly', 'Daily', 'Weekly', 'Monthly']).isRequired, 
+  timePeriod: PropTypes.oneOf(['Hourly']).isRequired,
   customer: PropTypes.object,
   graphLabels: PropTypes.object,
   dateFrom: PropTypes.instanceOf(Date),
   dateTo: PropTypes.instanceOf(Date),
   efficiency: PropTypes.number.isRequired,
+  machineSerialNo: PropTypes.string,
 };
