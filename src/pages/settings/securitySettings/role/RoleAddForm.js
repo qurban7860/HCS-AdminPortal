@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useMemo, useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
@@ -27,25 +27,34 @@ RoleAddForm.propTypes = {
 
 export default function RoleAddForm({ currentRole }) {
 
-  const { userRoleTypes } = useSelector((state) => state.role);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
+  const [userRoleTypes, setUserRoleTypes] = useState([])
 
   const AddRoleSchema = Yup.object().shape({
     name: Yup.string().min(2).max(50).required('Name Field is required!'),
     description: Yup.string().max(10000),
-    roleType:  Yup.object().nullable().required().label('Role Type'),
+    roleType: Yup.string().nullable().required().label('Role Type'),
     allModules: Yup.boolean(),
     allWriteAccess: Yup.boolean(),
     isActive: Yup.boolean(),
     isDefault: Yup.boolean(),
     disableDelete: Yup.boolean(),
   });
+
+  useEffect(() => {
+    const configurations = JSON.parse(localStorage.getItem('configurations'));
+    const roleTypes = configurations.find((c) => c?.name?.trim() === 'userRoleTypes')?.value?.split(',')?.map(r => r?.trim());
+    if (Array.isArray(roleTypes)) {
+      setUserRoleTypes(roleTypes)
+    }
+  }, [setUserRoleTypes])
+
   const defaultValues = useMemo(
     () => ({
       name: '',
-      roleType: null,
+      roleType: '',
       description: '',
       isActive: true,
       isDefault: false,
@@ -74,9 +83,9 @@ export default function RoleAddForm({ currentRole }) {
       reset();
       enqueueSnackbar('Role Save Successfully!');
       navigate(PATH_SETTING.role.list);
-    } catch ( error ) {
-      enqueueSnackbar( error, { variant: `error` });
-      console.error( error );
+    } catch (error) {
+      enqueueSnackbar(error, { variant: `error` });
+      console.error(error);
     }
   };
 
@@ -96,12 +105,9 @@ export default function RoleAddForm({ currentRole }) {
                 <RHFTextField name="name" label="Name" />
 
                 <RHFAutocomplete
-                  name="roleType" 
+                  name="roleType"
                   label="Role Type"
                   options={userRoleTypes}
-                  getOptionLabel={(option) => option?.name || ''}
-                  isOptionEqualToValue={(option, value) => option.name === value.name}
-                  renderOption={(props, option) => (<li {...props} key={option.key}> {option.name || ''}</li>)}
                 />
 
                 <RHFTextField name="description" label="Description" minRows={8} multiline />
