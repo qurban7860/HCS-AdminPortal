@@ -35,7 +35,7 @@ export default function RoleAddForm({ currentRole }) {
   const AddRoleSchema = Yup.object().shape({
     name: Yup.string().min(2).max(50).required('Name Field is required!'),
     description: Yup.string().max(10000),
-    roleType: Yup.string().required().label('Role Type'),
+    roleType: Yup.string().nullable().required().label('Role Type'),
     allModules: Yup.boolean(),
     allWriteAccess: Yup.boolean(),
     isActive: Yup.boolean(),
@@ -54,7 +54,7 @@ export default function RoleAddForm({ currentRole }) {
   const defaultValues = useMemo(
     () => ({
       name: '',
-      roleType: null,
+      roleType: '',
       description: '',
       isActive: true,
       isDefault: false,

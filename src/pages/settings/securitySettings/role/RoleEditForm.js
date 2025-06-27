@@ -29,7 +29,7 @@ export default function RoleEditForm() {
   const EditRoleSchema = Yup.object().shape({
     name: Yup.string().min(2).max(50).required('Name Field is required!'),
     description: Yup.string().max(10000),
-    roleType: Yup.string().required('Role Type'),
+    roleType: Yup.string().nullable().required().label('Role Type'),
     allModules: Yup.boolean(),
     allWriteAccess: Yup.boolean(),
     isActive: Yup.boolean(),
@@ -48,7 +48,7 @@ export default function RoleEditForm() {
   const defaultValues = useMemo(
     () => ({
       name: role?.name || '',
-      roleType: userRoleTypes.find((uRole) => uRole.value === role.roleType) || null,
+      roleType: role.roleType || '',
       description: role?.description || '',
       isActive: role?.isActive || false,
       isDefault: role?.isDefault || false,
