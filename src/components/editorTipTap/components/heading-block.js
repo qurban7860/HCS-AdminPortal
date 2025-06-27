@@ -133,7 +133,8 @@ export function HeadingBlock({ editor }) {
               active={editor.isActive('heading', { level })}
               onClick={() => {
                 handleClose();
-                editor.chain().focus().toggleHeading({ level }).run();
+                // editor.chain().focus().setNode({ level }).run();
+                editor.chain().focus().setNodeSelection(editor.state.selection.$from.pos).toggleHeading({ level }).run();
               }}
               sx={{
                 ...(heading !== 'Paragraph' && {
@@ -156,5 +157,12 @@ HeadingBlock.propTypes = {
     focus: PropTypes.func,
     setParagraph: PropTypes.func,
     toggleHeading: PropTypes.func,
+    state: PropTypes.shape({
+      selection: PropTypes.shape({
+        $from: PropTypes.shape({
+          pos: PropTypes.number.isRequired,
+        }).isRequired,
+      }).isRequired,
+    }),
   }),
 };
