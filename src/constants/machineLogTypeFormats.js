@@ -91,7 +91,7 @@ export const machineLogGraphTypes = [
     key: "length_and_waste"
   },
   {
-    name: "Production Rate (m/hr)",
+    name: "Production Rate Graph",
     key: "productionRate"
   }
 ]
