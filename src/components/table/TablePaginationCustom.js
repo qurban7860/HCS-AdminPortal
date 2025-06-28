@@ -20,11 +20,11 @@ TablePaginationCustom.propTypes = {
 function TablePaginationCustom({
   dense,
   onChangeDense,
-  rowsPerPageOptions = [10, 20,50,100],
+  rowsPerPageOptions = [10, 20, 50, 100],
   columnFilterButtonData = [],
-  columnButtonClickHandler = () => {},
+  columnButtonClickHandler = () => { },
   sx,
-  customNode=null,
+  customNode = null,
   ...other
 }) {
 
@@ -78,17 +78,17 @@ function TablePaginationCustom({
           >
             {columnFilterButtonData?.map(
               (column) =>
-                (
-                  <MenuItem
-                    dense
-                    sx={{ p: 0 }}
-                    key={column.id}
-                    onClick={() => handleColumnClick(column)}
-                  >
-                    <Checkbox checked={column.checked} disabled={column?.alwaysShow} />
-                    {column.label}
-                  </MenuItem>
-                )
+              (
+                <MenuItem
+                  dense
+                  sx={{ p: 0 }}
+                  key={column.id}
+                  onClick={() => handleColumnClick(column)}
+                >
+                  <Checkbox checked={column.checked} disabled={column?.alwaysShow} />
+                  {column?.label || ''} {column?.baseUnit && <span style={{ paddingLeft: '4px' }}> ({column?.baseUnit || ''})</span>}
+                </MenuItem>
+              )
             )}
           </Menu>
         </Box>
