@@ -43,18 +43,16 @@ export default function MachineLogsList({ allMachineLogsType }) {
   const methods = useForm({
     defaultValues: {
       logType: machineLogTypeFormats.find(option => option.type === 'ERP') || null,
-      // dateFrom: new Date(new Date().setHours(0, 0, 0, 0)),
-      // dateTo: new Date(new Date().setHours(23, 59, 59, 999)),
       dateFrom: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
       dateTo: new Date(),
+      unitType: 'metric',
       filteredSearchKey: '',
-      activeStatus: 'active',
     },
     resolver: yupResolver(fetchIndMachineLogSchema),
   });
-  
+
   const { watch, setValue, handleSubmit, trigger } = methods;
-  const { dateFrom, dateTo, logType, filteredSearchKey, activeStatus} = watch();
+  const { dateFrom, dateTo, unitType, logType, filteredSearchKey } = watch();
 
   useEffect(() => {
     handleResetFilter();
@@ -76,7 +74,6 @@ export default function MachineLogsList({ allMachineLogsType }) {
     pageSize: rowsPerPage,
     fromDate: new Date(new Date(dateFrom).setHours(0, 0, 0, 0)),
     toDate: new Date(new Date(dateTo).setHours(23, 59, 59, 999)),
-    isArchived: activeStatus === 'archived',
     isMachineArchived: false,
     selectedLogType: logType?.type,
     searchKey: filteredSearchKey,
@@ -93,7 +90,6 @@ export default function MachineLogsList({ allMachineLogsType }) {
         pageSize: rowsPerPage,
         fromDate: new Date(new Date(dateFrom).setHours(0, 0, 0, 0)),
         toDate: new Date(new Date(dateTo).setHours(23, 59, 59, 999)),
-        isArchived: activeStatus === "archived",
         isMachineArchived: machine?.isArchived,
         selectedLogType: logType.type,
         searchKey: filteredSearchKey,
@@ -222,18 +218,17 @@ export default function MachineLogsList({ allMachineLogsType }) {
                     fullWidth
                   />
                 </Box>
-                <Box sx={{ width: { xs: '100%', sm: 'auto' } }}>
-                  <RHFSelect
-                    name="activeStatus"
+                <Box sx={{ width: '160px' }}>
+                  <RHFAutocomplete
+                    name="unitType"
                     size="small"
-                    label="Status"
-                    sx={{ width: { xs: '100%', sm: 150 } }}
-                    onChange={(e) => setValue('activeStatus', e.target.value)}
-                  >
-                    <MenuItem value="active">Active</MenuItem>
-                    <MenuItem value="archived">Archived</MenuItem>
-                  </RHFSelect>
-                </Box>            
+                    label="Unit*"
+                    options={['metric', 'imperial']}
+                    disableClearable
+                    autoSelect
+                    openOnFocus
+                  />
+                </Box>
                 <Box sx={{ width: { xs: '100%', sm: 'auto' } }}>
                   <StyledTooltip
                     title="Fetch Logs"
@@ -241,7 +236,7 @@ export default function MachineLogsList({ allMachineLogsType }) {
                     disableFocusListener
                     tooltipcolor={theme.palette.primary.main}
                   >
-                    <StyledContainedIconButton type="submit" sx={{px: 2}}>
+                    <StyledContainedIconButton type="submit" sx={{ px: 2 }}>
                       <Iconify sx={{ height: '24px', width: '24px' }} icon="mdi:text-search" />
                     </StyledContainedIconButton>
                   </StyledTooltip>
@@ -254,8 +249,8 @@ export default function MachineLogsList({ allMachineLogsType }) {
           </Card>
         </form>
       </FormProvider>
-      
-      <MachineLogsDataTable allMachineLogsPage={false} dataForApi={dataForApi} logType={logType} />
+
+      <MachineLogsDataTable allMachineLogsPage={false} dataForApi={dataForApi} logType={logType} unitType={unitType} />
     </Container>
   );
 }

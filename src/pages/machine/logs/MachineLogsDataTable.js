@@ -44,13 +44,11 @@ function tableColumnsReducer(state, action) {
   }
 }
 
-const MachineLogsDataTable = ({ logType, allMachineLogsPage, dataForApi, onUnitChange }) => {
+const MachineLogsDataTable = ({ logType, unitType, allMachineLogsPage, dataForApi, onUnitChange }) => {
   const [openLogDetailsDialog, setOpenLogDetailsDialog] = useState(false);
-  const [localUnit, setLocalUnit] = useState('metric');
   const [selectedLog, setSelectedLog] = useState(null);
   const [tableData, setTableData] = useState([]);
   const [tableColumns, dispatchTableColumns] = useReducer(tableColumnsReducer, logType?.tableColumns || []);
-
   const numericalLengthValues = machineLogTypeFormats[0]?.numericalLengthValues || [];
   const { machineErpLogs, machineErpLogstotalCount, page, rowsPerPage, isLoading } = useSelector((state) => state.machineErpLogs);
   const dispatch = useDispatch();
@@ -133,11 +131,12 @@ const MachineLogsDataTable = ({ logType, allMachineLogsPage, dataForApi, onUnitC
       })
     );
   };
-  const handleUnitChange = (event) => {
-    const newUnit = event.target.value;
-    setLocalUnit(newUnit);
-    if (onUnitChange) onUnitChange(newUnit);
-  };
+
+  useEffect(() => {
+    if (onUnitChange) {
+      onUnitChange(unitType);
+    }
+  }, [unitType, onUnitChange])
 
   const handleColumnButtonClick = (columnId, newCheckState) => {
     dispatchTableColumns({ type: 'updateColumnCheck', columnId, newCheckState });
@@ -148,7 +147,7 @@ const MachineLogsDataTable = ({ logType, allMachineLogsPage, dataForApi, onUnitC
     // If the column is not a numerical length, return label as-is
     if (!numericalLengthValues.includes(column.id)) return label;
     // Show base unit for Metric
-    if (activeUnit === 'metric') {
+    if (activeUnit === 'metric' || !'mm'.includes(baseUnit?.toLowerCase())) {
       return `${label} (${baseUnit})`;
     }
     // Show 'in' for Imperial
@@ -171,17 +170,6 @@ const MachineLogsDataTable = ({ logType, allMachineLogsPage, dataForApi, onUnitC
             onRowsPerPageChange={onChangeRowsPerPage}
             columnFilterButtonData={tableColumns}
             columnButtonClickHandler={handleColumnButtonClick}
-            customNode={
-              <Box sx={{ width: 160 }}>
-                <FormControl size="small" sx={{ width: 160 }}>
-                  <InputLabel id="unit-select-label">Unit</InputLabel>
-                  <Select labelId="unit-select-label" value={localUnit} label="Unit" onChange={handleUnitChange}>
-                    <MenuItem value="metric">Metric</MenuItem>
-                    <MenuItem value="imperial">Imperial</MenuItem>
-                  </Select>
-                </FormControl>
-              </Box>
-            }
           />
         )}
 
@@ -217,7 +205,7 @@ const MachineLogsDataTable = ({ logType, allMachineLogsPage, dataForApi, onUnitC
                                 placement="top"
                                 disableHoverListener={!headCell.tooltip || !headCell.tooltipText}
                               >
-                                <span>{getFormattedLabel(headCell, localUnit)}</span>
+                                <span>{getFormattedLabel(headCell, unitType)}</span>
                               </Tooltip>
                             </TableSortLabel>
                           )}
@@ -239,7 +227,7 @@ const MachineLogsDataTable = ({ logType, allMachineLogsPage, dataForApi, onUnitC
                       selectedLength={selected.length}
                       style={index % 2 ? { background: 'red' } : { background: 'green' }}
                       numericalLengthValues={numericalLengthValues}
-                      unit={localUnit}
+                      unit={unitType}
                     />
                   ) : (
                     isLoading && <TableSkeleton key={index} sx={{ height: denseHeight }} />
@@ -275,6 +263,7 @@ const MachineLogsDataTable = ({ logType, allMachineLogsPage, dataForApi, onUnitC
 };
 MachineLogsDataTable.propTypes = {
   allMachineLogsPage: PropTypes.bool,
+  unitType: PropTypes.string,
   logType: PropTypes.object,
   dataForApi: PropTypes.object,
   onUnitChange: PropTypes.func,
