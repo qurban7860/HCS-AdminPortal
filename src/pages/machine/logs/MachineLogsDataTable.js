@@ -132,11 +132,11 @@ const MachineLogsDataTable = ({ logType, unitType, allMachineLogsPage, dataForAp
     );
   };
 
-  useEffect(() => {
-    if (onUnitChange) {
-      onUnitChange(unitType);
-    }
-  }, [unitType, onUnitChange])
+  // useEffect(() => {
+  //   if (onUnitChange) {
+  //     onUnitChange(unitType);
+  //   }
+  // }, [unitType, onUnitChange])
 
   const handleColumnButtonClick = (columnId, newCheckState) => {
     dispatchTableColumns({ type: 'updateColumnCheck', columnId, newCheckState });
@@ -146,13 +146,17 @@ const MachineLogsDataTable = ({ logType, unitType, allMachineLogsPage, dataForAp
     const { label, baseUnit } = column;
     // If the column is not a numerical length, return label as-is
     if (!numericalLengthValues.includes(column.id)) return label;
-    // Show base unit for Metric
-    if (activeUnit === 'metric' || !'mm'.includes(baseUnit?.toLowerCase())) {
+    // Metric Length
+    if (activeUnit === 'Metric' && 'mm'.includes(baseUnit?.toLowerCase())) {
       return `${label} (${baseUnit})`;
     }
-    // Show 'in' for Imperial
-    if (activeUnit === 'imperial') {
+    // Imperial Length
+    if (activeUnit === 'Imperial' && 'mm'.includes(baseUnit?.toLowerCase())) {
       return `${label} (in)`;
+    }
+    // Imperial Weight
+    if (activeUnit === 'Imperial' && baseUnit?.toLowerCase() === 'kg') {
+      return `${label} (pound)`;
     }
     // Fallback to baseUnit or just label
     return baseUnit ? `${label} (${baseUnit})` : label;

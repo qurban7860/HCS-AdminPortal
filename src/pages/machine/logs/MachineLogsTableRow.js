@@ -37,7 +37,7 @@ export default function MachineLogsTableRow({
   columnsToShow,
   allMachineLogsPage,
   numericalLengthValues,
-  unit, 
+  unit,
 }) {
   row = { ...row, machineSerialNo: row?.machine?.serialNo };
   const { date } = row;
@@ -47,26 +47,36 @@ export default function MachineLogsTableRow({
   });
 
   return (
-    <StyledTableRow hover selected={selected} onClick={onViewRow} sx={{ cursor: 'pointer' }}>
+    <StyledTableRow hover selected={selected} sx={{ cursor: 'pointer' }}>
       <LinkTableCell align="left" onClick={onViewRow} param={fDateTime(date)} />
       {columnsToShow?.map((column, index) => {
         if (['date', 'createdBy.name', 'createdAt'].includes(column.id) || !column?.checked) return null;
         const columnValue = lowercaseRow?.[column.id.toLocaleLowerCase()] || '';
-        const convertToM = column?.convertToM;
+        const isMeter = column?.baseUnit === 'm';
+        const isMiliMeter = column?.baseUnit === 'mm';
+        const isKg = column?.baseUnit === 'kg';
         const isNumerical = column?.numerical;
         let cellValue = columnValue || '';
         const value = parseFloat(columnValue);
 
-        if (columnValue !== null && columnValue !== '' && !isNaN(columnValue)) {
-          if (unit === 'imperial') {
+        if (columnValue && !isNaN(columnValue)) {
+
+
+          if (unit === 'Imperial' && (isMeter || isMiliMeter)) {
             // Convert mm to inches
             cellValue = (value / 25.4).toLocaleString(undefined, {
               minimumFractionDigits: 3,
               maximumFractionDigits: 3,
             });
-          } else if (convertToM) {
+          } else if (unit === 'Metric' && isMeter) {
             // Convert mm to meters
-            cellValue = convertMmToM(value).toLocaleString(undefined, {
+            cellValue = (value / 1000).toLocaleString(undefined, {
+              minimumFractionDigits: 3,
+              maximumFractionDigits: 3,
+            });
+          } else if (unit === 'Imperial' && isKg) {
+            // Convert kg to pounds
+            cellValue = (value * 2.20462).toLocaleString(undefined, {
               minimumFractionDigits: 3,
               maximumFractionDigits: 3,
             });
@@ -80,7 +90,7 @@ export default function MachineLogsTableRow({
         }
 
         return (
-          <TableCell key={index} onClick={onViewRow} sx={{ cursor: 'pointer' }} align={column?.numerical ? 'right' : 'left'}>
+          <TableCell key={index} align={column?.numerical ? 'right' : 'left'}>
             {cellValue}
             {/* {numericalLengthValues.includes(column.id) ? convertMmToM(cellValue) : cellValue} */}
           </TableCell>
