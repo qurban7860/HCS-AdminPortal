@@ -54,9 +54,9 @@ export default function MachineLogsList({ allMachineLogsType }) {
     reValidateMode: 'onChange'
   });
 
-  const { watch, setValue, handleSubmit, trigger } = methods;
+  const { watch, setValue, handleSubmit, trigger, formState: { isSubmitting } } = methods;
   const { dateFrom, dateTo, unitType, logType, filteredSearchKey } = watch();
-
+  console.log({ isSubmitting })
   useEffect(() => {
     handleResetFilter();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -121,7 +121,7 @@ export default function MachineLogsList({ allMachineLogsType }) {
       <MachineTabContainer currentTabValue="logs" />
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Card sx={{ p: 3 }}>
+          <Card sx={{ p: 2 }}>
             <Stack spacing={2}>
               <Stack direction="row" spacing={1} sx={{ justifyContent: 'space-between', mb: 3 }}>
                 <Stack
@@ -240,13 +240,13 @@ export default function MachineLogsList({ allMachineLogsType }) {
                     disableFocusListener
                     tooltipcolor={theme.palette.primary.main}
                   >
-                    <StyledContainedIconButton type="submit" sx={{ px: 2 }}>
-                      <Iconify sx={{ height: '24px', width: '24px' }} icon="mdi:text-search" />
+                    <StyledContainedIconButton type="submit" disabled={isSubmitting} sx={{ px: 2 }} >
+                      <Iconify sx={{ height: '24px', width: '24px' }} icon={isSubmitting ? 'line-md:loading-twotone-loop' : "mdi:reload"} />
                     </StyledContainedIconButton>
                   </StyledTooltip>
                 </Box>
                 <Box sx={{ width: { xs: '100%', sm: 'auto' } }}>
-                  <DownloadMachineLogsIconButton dataForApi={dataForApi} />
+                  <DownloadMachineLogsIconButton dataForApi={dataForApi} isSubmitting={isSubmitting} />
                 </Box>
               </Stack>
             </Stack>
