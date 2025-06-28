@@ -126,7 +126,7 @@ const DownloadMachineLogsIconButton = ({ dataForApi }) => {
         disableFocusListener
         tooltipcolor={theme.palette.primary.main}
       >
-        <StyledContainedIconButton disabled={isLoading} onClick={openDownloadDialog}>
+        <StyledContainedIconButton disabled={isLoading} onClick={openDownloadDialog} sx={{ px: 2 }}>
           <Iconify sx={{ height: '24px', width: '24px' }} icon="mdi:tray-download" />
         </StyledContainedIconButton>
       </StyledTooltip>

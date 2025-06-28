@@ -60,8 +60,6 @@ export default function MachineLogsTableRow({
         const value = parseFloat(columnValue);
 
         if (columnValue && !isNaN(columnValue)) {
-
-
           if (unit === 'Imperial' && (isMeter || isMiliMeter)) {
             // Convert mm to inches
             cellValue = (value / 25.4).toLocaleString(undefined, {
