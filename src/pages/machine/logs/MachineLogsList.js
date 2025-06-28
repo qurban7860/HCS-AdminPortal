@@ -36,6 +36,7 @@ MachineLogsList.propTypes = {
 
 export default function MachineLogsList({ allMachineLogsType }) {
   const [selectedSearchFilter, setSelectedSearchFilter] = useState('');
+  const [unit, setUnit] = useState('Metric');
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const theme = useTheme();
@@ -45,10 +46,12 @@ export default function MachineLogsList({ allMachineLogsType }) {
       logType: machineLogTypeFormats.find(option => option.type === 'ERP') || null,
       dateFrom: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
       dateTo: new Date(),
-      unitType: 'metric',
+      unitType: 'Metric',
       filteredSearchKey: '',
     },
     resolver: yupResolver(fetchIndMachineLogSchema),
+    mode: 'onChange',
+    reValidateMode: 'onChange'
   });
 
   const { watch, setValue, handleSubmit, trigger } = methods;
@@ -82,6 +85,7 @@ export default function MachineLogsList({ allMachineLogsType }) {
 
   const onSubmit = (data) => {
     dispatch(ChangePage(0));
+    setUnit(data.unitType);
     dispatch(
       getMachineLogRecords({
         customerId: machine?.customer?._id,
@@ -223,7 +227,7 @@ export default function MachineLogsList({ allMachineLogsType }) {
                     name="unitType"
                     size="small"
                     label="Unit*"
-                    options={['metric', 'imperial']}
+                    options={['Metric', 'Imperial']}
                     disableClearable
                     autoSelect
                     openOnFocus
@@ -250,7 +254,7 @@ export default function MachineLogsList({ allMachineLogsType }) {
         </form>
       </FormProvider>
 
-      <MachineLogsDataTable allMachineLogsPage={false} dataForApi={dataForApi} logType={logType} unitType={unitType} />
+      <MachineLogsDataTable allMachineLogsPage={false} dataForApi={dataForApi} logType={logType} unitType={unit} />
     </Container>
   );
 }
