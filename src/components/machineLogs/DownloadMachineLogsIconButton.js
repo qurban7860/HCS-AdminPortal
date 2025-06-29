@@ -8,7 +8,6 @@ import {
   DialogContent,
   DialogTitle,
   Divider,
-  Skeleton,
   Slide,
   Typography,
   useTheme,
@@ -17,13 +16,14 @@ import { useDispatch } from 'react-redux';
 import { useSnackbar } from 'notistack';
 
 import { getMachineLogRecords } from '../../redux/slices/products/machineErpLogs';
+import { convertValue } from '../../utils/convertUnits';
 import Iconify from '../iconify';
 import { machineLogTypeFormats } from '../../constants/machineLogTypeFormats';
 import { StyledContainedIconButton, StyledTooltip } from '../../theme/styles/default-styles';
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
-const DownloadMachineLogsIconButton = ({ dataForApi }) => {
+const DownloadMachineLogsIconButton = ({ dataForApi, unit }) => {
   const [openLogsDownloadDialog, setOpenLogsDownloadDialog] = useState(false);
   const [dataForDownload, setDataForDownload] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -57,63 +57,92 @@ const DownloadMachineLogsIconButton = ({ dataForApi }) => {
     }
   };
 
-  const handleDownload = (format) => {
-    if (!Array.isArray(dataForDownload) || dataForDownload.length === 0) return;
+  const handleDownload = format => {
+    if (!Array.isArray(dataForDownload) || dataForDownload.length === 0) return
 
     const headers = ["logId", ...machineLogTypeFormats[0].formats['v1.5.X']];
-    let blob;
-    let filename;
+    const tableColumns = machineLogTypeFormats[0]?.tableColumns;
+
+    let blob
+    let filename
 
     if (format === 'csv') {
-      const csvRows = [headers.join(',')];
+      const csvRows = [headers.join(',')]
 
-      dataForDownload.forEach((row) => {
-        const values = headers.map((header) => {
-          let value = row[header] !== undefined ? row[header] : '';
-          if (header === 'timestamp') value = row.timestamp || row.date;
-          if (header === 'measurementUnit') value = 'mm';
-          if (header === 'logId') value = row._id;
-          const escaped = String(value).replace(/"/g, '""');
-          return escaped;
-        });
-        csvRows.push(values.join(','));
-      });
+      dataForDownload.forEach(row => {
+        const values = headers.map(header => {
+          let value = ''
+          if (row[header]) {
+            value = row[header]
+          }
+          const columnVal = tableColumns?.find(c => c?.id === header);
+          if (columnVal?.baseUnit && !Number.isNaN(parseFloat(value))) {
+            const converted = convertValue(
+              parseFloat(value),
+              columnVal?.baseUnit,
+              unit,
+              false
+            );
+            value = converted.convertedValue;
+          }
+          if (header === 'timestamp') value = row.timestamp || row.date
+          if (header === 'measurementUnit') value = unit === 'Imperial' ? 'in' : 'mm';
+          if (header === 'logId') value = row._id
+          console.log({ value, columnVal, header, unit, row })
+          const escaped = String(value).replace(/"/g, '""')
+          return escaped
+        })
+        csvRows.push(values.join(','))
+      })
 
-      const csvString = csvRows.join('\n');
-      blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
-      filename = 'csv_logs.csv';
+      const csvString = csvRows.join('\n')
+      blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' })
+      filename = 'csv_logs.csv'
     } else if (format === 'json') {
-      const jsonArray = dataForDownload.map((row) => {
-        const jsonObj = {};
-        headers.forEach((header) => {
-          let value = row[header] !== undefined ? row[header] : '';
-          if (header === 'timestamp') value = row.timestamp || row.date;
-          if (header === 'measurementUnit') value = 'mm';
-          if (header === 'logId') value = row._id;
-          jsonObj[header] = value;
-        });
-        return jsonObj;
-      });
+      const jsonArray = dataForDownload.map(row => {
+        const jsonObj = {}
+        headers.forEach(header => {
+          let value = ''
+          if (row[header]) {
+            value = row[header]
+          }
+          const columnVal = tableColumns?.find(c => c?.id === header);
+          if (columnVal?.baseUnit && !Number.isNaN(parseFloat(value))) {
+            const converted = convertValue(
+              parseFloat(value),
+              columnVal?.baseUnit,
+              unit,
+              false
+            );
+            value = converted.convertedValue;
+          }
+          if (header === 'timestamp') value = unit === 'Imperial' ? 'in' : 'mm';
+          if (header === 'measurementUnit') value = 'mm'
+          if (header === 'logId') value = row._id
+          jsonObj[header] = value
+        })
+        return jsonObj
+      })
 
-      const jsonString = JSON.stringify(jsonArray, null, 2);
-      blob = new Blob([jsonString], { type: 'application/json' });
-      filename = 'json_logs.json';
+      const jsonString = JSON.stringify(jsonArray, null, 2)
+      blob = new Blob([jsonString], { type: 'application/json' })
+      filename = 'json_logs.json'
     }
 
-    const link = document.createElement('a');
-    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a')
+    const url = URL.createObjectURL(blob)
 
-    link.setAttribute('href', url);
-    link.setAttribute('download', filename);
-    link.style.visibility = 'hidden';
+    link.setAttribute('href', url)
+    link.setAttribute('download', filename)
+    link.style.visibility = 'hidden'
 
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    URL.revokeObjectURL(url)
 
-    setOpenLogsDownloadDialog(false);
-  };
+    setOpenLogsDownloadDialog(false)
+  }
 
   const handleDownloadCSV = () => handleDownload('csv');
   const handleDownloadJSON = () => handleDownload('json');
@@ -188,4 +217,5 @@ const DownloadMachineLogsIconButton = ({ dataForApi }) => {
 export default DownloadMachineLogsIconButton;
 DownloadMachineLogsIconButton.propTypes = {
   dataForApi: PropTypes.object,
+  unit: PropTypes.string,
 };

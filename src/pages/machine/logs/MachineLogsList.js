@@ -50,13 +50,13 @@ export default function MachineLogsList({ allMachineLogsType }) {
       filteredSearchKey: '',
     },
     resolver: yupResolver(fetchIndMachineLogSchema),
-    mode: 'onChange',
+    mode: 'all',
     reValidateMode: 'onChange'
   });
 
   const { watch, setValue, handleSubmit, trigger, formState: { isSubmitting } } = methods;
   const { dateFrom, dateTo, unitType, logType, filteredSearchKey } = watch();
-  console.log({ isSubmitting })
+
   useEffect(() => {
     handleResetFilter();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -246,7 +246,7 @@ export default function MachineLogsList({ allMachineLogsType }) {
                   </StyledTooltip>
                 </Box>
                 <Box sx={{ width: { xs: '100%', sm: 'auto' } }}>
-                  <DownloadMachineLogsIconButton dataForApi={dataForApi} isSubmitting={isSubmitting} />
+                  <DownloadMachineLogsIconButton dataForApi={dataForApi} unit={unit} />
                 </Box>
               </Stack>
             </Stack>

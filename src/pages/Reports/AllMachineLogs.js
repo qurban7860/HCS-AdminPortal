@@ -25,6 +25,7 @@ function AllMachineLogs() {
   const { activeCustomers } = useSelector((state) => state.customer);
   const { page, rowsPerPage } = useSelector((state) => state.machineErpLogs);
   const [selectedSearchFilter, setSelectedSearchFilter] = useState('');
+  const [unit, setUnit] = useState('Metric');
 
   // const isMobile = useResponsive('down', 'sm');
 
@@ -34,6 +35,7 @@ function AllMachineLogs() {
     logType: machineLogTypeFormats.find(option => option.type === 'ERP') || null,
     // dateFrom: new Date(new Date().setHours(0, 0, 0, 0)),
     // dateTo: new Date(new Date().setHours(23, 59, 59, 999)),
+    unitType: 'Metric',
     dateFrom: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
     dateTo: new Date(),
   };
@@ -44,11 +46,11 @@ function AllMachineLogs() {
   });
 
   const { watch, setValue, handleSubmit, trigger } = methods;
-  const { customer, machine, dateFrom, dateTo, logType, filteredSearchKey } = watch();
+  const { customer, machine, dateFrom, dateTo, logType, filteredSearchKey, unitType } = watch();
 
   useEffect(() => {
     dispatch(getActiveCustomers());
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -60,6 +62,7 @@ function AllMachineLogs() {
   }, [dispatch, customer]);
 
   const onGetLogs = (data) => {
+    setUnit(unitType);
     const customerId = customer._id;
     const machineId = machine?._id || undefined;
     dispatch(ChangePage(0));
@@ -112,7 +115,7 @@ function AllMachineLogs() {
     searchColumn: selectedSearchFilter,
   };
 
-  
+
   const returnSearchFilterColumnOptions = () =>
     logType?.tableColumns.filter((item) => item?.searchable)
 
@@ -156,9 +159,8 @@ function AllMachineLogs() {
                       `${option.serialNo || ''} ${option?.name ? '-' : ''} ${option?.name || ''}`
                     }
                     renderOption={(props, option) => (
-                      <li {...props} key={option?._id}>{`${option.serialNo || ''} ${
-                        option?.name ? '-' : ''
-                      } ${option?.name || ''}`}</li>
+                      <li {...props} key={option?._id}>{`${option.serialNo || ''} ${option?.name ? '-' : ''
+                        } ${option?.name || ''}`}</li>
                     )}
                     onChange={(e, newValue) => handleMachineChange(newValue)}
                     size="small"
@@ -170,7 +172,7 @@ function AllMachineLogs() {
                   gridTemplateColumns={{ xs: '1fr', sm: 'repeat(3, 1fr)' }}
                   sx={{ flexGrow: 1 }}
                 >
-                <RHFDatePicker
+                  <RHFDatePicker
                     label="Date From"
                     name="dateFrom"
                     size="small"
@@ -227,20 +229,31 @@ function AllMachineLogs() {
                       fullWidth
                     />
                   </Box>
-                    <Box sx={{ width: { xs: '100%', sm: 'auto' } }}>
-                      <StyledTooltip
-                        title="Fetch Logs"
-                        placement="top"
-                        disableFocusListener
-                        tooltipcolor={theme.palette.primary.main}
-                      >
-                        <StyledContainedIconButton type="submit" sx={{px: 2}}>
-                          <Iconify sx={{ height: '24px', width: '24px' }} icon="mdi:text-search" />
-                        </StyledContainedIconButton>
-                      </StyledTooltip>
-                    </Box>
+                  <Box sx={{ width: '160px' }}>
+                    <RHFAutocomplete
+                      name="unitType"
+                      size="small"
+                      label="Unit*"
+                      options={['Metric', 'Imperial']}
+                      disableClearable
+                      autoSelect
+                      openOnFocus
+                    />
+                  </Box>
+                  <Box sx={{ width: { xs: '100%', sm: 'auto' } }}>
+                    <StyledTooltip
+                      title="Fetch Logs"
+                      placement="top"
+                      disableFocusListener
+                      tooltipcolor={theme.palette.primary.main}
+                    >
+                      <StyledContainedIconButton type="submit" sx={{ px: 2 }}>
+                        <Iconify sx={{ height: '24px', width: '24px' }} icon="mdi:text-search" />
+                      </StyledContainedIconButton>
+                    </StyledTooltip>
+                  </Box>
                   <Box sx={{ justifyContent: 'flex-end', display: 'flex' }}>
-                    <DownloadMachineLogsIconButton dataForApi={dataForApi} />
+                    <DownloadMachineLogsIconButton dataForApi={dataForApi} unit={unit} />
                   </Box>
                 </Stack>
               </Stack>
