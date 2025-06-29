@@ -6,7 +6,7 @@ import { Typography, Card, Grid, Box, Skeleton } from '@mui/material';
 import LogChartStacked from '../../../components/machineLogs/LogStackedChart';
 import { TableNoData } from '../../../components/table';
 
-const ErpProducedLengthLogGraph = ({ timePeriod, customer, graphLabels, dateFrom, dateTo }) => {
+const ErpProducedLengthLogGraph = ({ timePeriod, customer, graphLabels, dateFrom, dateTo, machineSerialNo }) => {
   const [graphData, setGraphData] = useState([]);
   const { isLoading, machineLogsGraphData } = useSelector((state) => state.machineErpLogs);
 
@@ -19,9 +19,11 @@ const ErpProducedLengthLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
         _id: timePeriod === 'Monthly' ? item._id.replace(/^Sep /, 'Sept ') : item._id,
       }));
       setGraphData(convertedDataToMeters);
+    } else {
+      setGraphData([]); 
     }
   }, [machineLogsGraphData, timePeriod]);
-  
+
   const getTotalProduction = () => {
     if (!graphData || graphData.length === 0) return '0';
     const totalProduced = graphData.reduce(
@@ -32,7 +34,7 @@ const ErpProducedLengthLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
   };
 
   const processGraphData = (skipZeroValues) => {
-    if (!graphData || graphData.length === 0) return null;
+    if (!Array.isArray(graphData) || graphData.length === 0) return { categories: [], series: [] }; 
 
     const dataMap = new Map();
     graphData.forEach((item) => dataMap.set(item._id, item));
@@ -49,7 +51,7 @@ const ErpProducedLengthLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
     switch (timePeriod) {
       case 'Hourly':
         current.setHours(0, 0, 0, 0);
-        end.setHours(23, 59, 59, 999); 
+        end.setHours(23, 59, 59, 999);
 
         while (current <= end) {
           const label = `${pad(current.getMonth() + 1)}/${pad(current.getDate())} ${pad(current.getHours())}`;
@@ -59,8 +61,8 @@ const ErpProducedLengthLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
         break;
 
       case 'Daily':
-        current.setHours(0, 0, 0, 0); 
-        end.setHours(23, 59, 59, 999); 
+        current.setHours(0, 0, 0, 0);
+        end.setHours(23, 59, 59, 999);
 
         while (current <= end) {
           const label = `${pad(current.getDate())}/${pad(current.getMonth() + 1)}`;
@@ -71,8 +73,8 @@ const ErpProducedLengthLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
 
       case 'Monthly':
         {
-          current.setDate(1); 
-          const tempEnd = new Date(end.getFullYear(), end.getMonth() + 1, 0); 
+          current.setDate(1);
+          const tempEnd = new Date(end.getFullYear(), end.getMonth() + 1, 0);
 
           while (current <= tempEnd) {
             const label = `${current.toLocaleString('default', { month: 'short' })} ${String(current.getFullYear()).slice(-2)}`;
@@ -96,7 +98,7 @@ const ErpProducedLengthLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
         break;
 
       case 'Yearly':
-        current.setMonth(0, 1); 
+        current.setMonth(0, 1);
         current.setHours(0, 0, 0, 0);
 
         while (current <= end) {
@@ -107,9 +109,9 @@ const ErpProducedLengthLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
         break;
 
       default:
-        return null;
+        return { categories: [], series: [] }; 
     }
-   
+
     const producedLength = labels.map((label) => dataMap.get(label)?.componentLength || 0);
     const wasteLength = labels.map((label) => dataMap.get(label)?.waste || 0);
 
@@ -121,33 +123,50 @@ const ErpProducedLengthLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
       ],
     };
   };
-  
+
+  const producedData = `Meterage Production: ${getTotalProduction()} m for Period (${dateFrom.toLocaleDateString('en-GB')} – ${dateTo.toLocaleDateString('en-GB')})`;
   const isNotFound = !isLoading && !graphData.length;
 
+  const getGraphTitle = () => {
+    let titlePrefix = '';
+    switch (timePeriod) {
+      case 'Hourly':
+        titlePrefix = 'Hourly Production Graph';
+        break;
+      case 'Daily':
+        titlePrefix = 'Daily Production Graph';
+        break;
+      case 'Monthly':
+        titlePrefix = 'Monthly Production Graph';
+        break;
+      case 'Quarterly':
+        titlePrefix = 'Quarterly Production Graph';
+        break;
+      case 'Yearly':
+        titlePrefix = 'Yearly Production Graph';
+        break;
+      default:
+        titlePrefix = 'Production Graph';
+    }
+    return `${titlePrefix} for Machine ${machineSerialNo || ''}`;
+  };
+
   return (
-    <Grid item xs={12} sm={12} md={12} lg={10} xl={6} sx={{ mt: 3 }}>
-      <Card sx={{ p: 4, boxShadow: 3 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 1 }}>
+    <Grid item xs={12} sm={12} md={12} lg={10} xl={6} sx={{ mt: 2 }}>
+      <Card sx={{ p: 3, boxShadow: 3 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', position: 'relative', mb: -1, mt: -1 }}>
           <Typography variant="h6" color="primary" gutterBottom>
             Meterage Production
           </Typography>
-
-          <Typography variant="subtitle1" > 
-            <strong>Meterage Production:</strong> {getTotalProduction()} m {' '}
-              <span style={{ color: '#666' }}>
-                ({dateFrom.toLocaleDateString('en-GB')} – {dateTo.toLocaleDateString('en-GB')})
-              </span>
-          </Typography>
         </Box>
-
         {isLoading ? (
-          <Skeleton variant="rectangular" width="100%" height={320} sx={{ borderRadius: 1 }} />
+          <Skeleton variant="rectangular" width="100%" height={450} sx={{ borderRadius: 1 }} />
         ) : (
           <>
             {graphData?.length > 0 ? (
-              <LogChartStacked processGraphData={processGraphData} graphLabels={graphLabels} isLoading={isLoading} />
+              <LogChartStacked processGraphData={processGraphData} graphLabels={graphLabels} isLoading={isLoading} producedData={producedData} machineSerialNo={getGraphTitle()} />
             ) : (
-              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 320 }} >
+              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 450 }} >
                 <TableNoData isNotFound={isNotFound} />
               </Box>
             )}
@@ -166,6 +185,7 @@ ErpProducedLengthLogGraph.propTypes = {
   graphLabels: PropTypes.object,
   dateFrom: PropTypes.instanceOf(Date),
   dateTo: PropTypes.instanceOf(Date),
+  machineSerialNo: PropTypes.string, 
 };
 
 // import PropTypes from 'prop-types';

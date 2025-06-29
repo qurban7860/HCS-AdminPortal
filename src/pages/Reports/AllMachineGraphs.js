@@ -21,8 +21,8 @@ import TableNoData from "../../components/table/TableNoData";
 const AllMachineGraphs = () => {
   const dispatch = useDispatch();
   const theme = useTheme();
-  const graphDataRef = useRef(null); 
-  
+  const graphDataRef = useRef(null);
+
   const { activeCustomerMachines } = useSelector((state) => state.machine);
   const { activeCustomers } = useSelector((state) => state.customer);
   const [graphLabels, setGraphLabels] = useState({ yaxis: 'Produced Length & Waste (m)', xaxis: 'Daily' });
@@ -41,7 +41,8 @@ const AllMachineGraphs = () => {
 
   const methods = useForm({
     resolver: yupResolver(AddMachineGraphSchema),
-    mode: 'onBlur',
+    mode: 'onChange',
+    reValidateMode: 'onChange',
     defaultValues
   });
 
@@ -52,11 +53,11 @@ const AllMachineGraphs = () => {
   const isProductionRate = logGraphType?.key === 'productionRate';
 
   const logPeriodOptions = isProductionRate ? ['Hourly'] : ['Hourly', 'Daily', 'Monthly', 'Quarterly', 'Yearly'];
-  
+
   useEffect(() => {
     const now = new Date();
     const newDateFrom = new Date(now);
-  
+
     newDateFrom.setHours(0, 0, 0, 0);
     now.setHours(23, 59, 59, 999);
 
@@ -107,7 +108,7 @@ const AllMachineGraphs = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, getValues('customer')]);
-  
+
   useEffect(() => {
     if (isProductionRate && dateFrom) {
       const to = new Date(dateFrom);
@@ -127,13 +128,13 @@ const AllMachineGraphs = () => {
 
   const onSubmit = (data) => {
     const currentGraphLabels = {
-      yaxis: data?.logGraphType?.key === 'productionRate' ? 'Production Rate (m/hr)' : 'Meterage Produced Graph',
-      xaxis: data?.logPeriod, 
+      yaxis: data?.logGraphType?.key === 'productionRate' ? 'Production Rate (m/hr)' : 'Meterage Produced',
+      xaxis: data?.logPeriod,
     };
 
-    setGraphLabels(currentGraphLabels); 
+    setGraphLabels(currentGraphLabels);
 
-    graphDataRef.current = { ...data, graphLabels: currentGraphLabels };
+    graphDataRef.current = { ...data, graphLabels: currentGraphLabels, machineSerialNo: data.machine?.serialNo };
 
     const customerId = data.customer?._id;
     const machineId = data.machine?._id || undefined;
@@ -201,16 +202,16 @@ const AllMachineGraphs = () => {
                       getOptionLabel={(option) => `${option?.name || ''}`}
                       renderOption={(props, option) => (
                         <li {...props} key={option?._id}>
-                        {' '}
-                        {option?.name || ''}{' '}
-                      </li>
+                          {' '}
+                          {option?.name || ''}{' '}
+                        </li>
                       )}
                       onChange={(e, newValue) => handleCustomerChange(newValue)}
                       size="small"
                     />
                     <RHFAutocomplete
                       name="machine"
-                      label="Machine"
+                      label="Machine*"
                       options={activeCustomerMachines || []}
                       isOptionEqualToValue={(option, value) => option._id === value._id}
                       getOptionLabel={(option) =>
@@ -310,6 +311,7 @@ const AllMachineGraphs = () => {
             graphLabels={graphData.graphLabels}
             dateFrom={graphData.dateFrom}
             dateTo={graphData.dateTo}
+            machineSerialNo={graphData.machineSerialNo} 
           />
         ) : (
           <ErpProductionRateLogGraph
@@ -319,6 +321,7 @@ const AllMachineGraphs = () => {
             dateFrom={graphData.dateFrom}
             dateTo={graphData.dateTo}
             efficiency={graphData.machine?.efficiency}
+            machineSerialNo={graphData.machineSerialNo} 
           />
         )
       ) : (

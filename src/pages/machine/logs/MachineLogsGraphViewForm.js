@@ -47,6 +47,8 @@ export default function MachineLogsGraphViewForm() {
   const methods = useForm({
     resolver: yupResolver(fetchIndMachineGraphSchema),
     defaultValues,
+    mode: 'onChange',
+    reValidateMode: 'onChange'
   });
 
   const { setValue, getValues, handleSubmit, trigger, watch } = methods;
@@ -140,7 +142,7 @@ export default function MachineLogsGraphViewForm() {
       yaxis:
         logGraphType.key === 'productionRate'
           ? 'Production Rate (m/hr)'
-          : 'Meterage Produced Graph',
+          : 'Meterage Produced',
       xaxis: logPeriod,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -176,7 +178,7 @@ export default function MachineLogsGraphViewForm() {
         yaxis:
           logGraphType.key === 'productionRate'
             ? 'Production Rate (m/hr)'
-            : 'Meterage Produced Graph',
+            : 'Meterage Produced',
         xaxis: logPeriod,
       });
     }
@@ -293,6 +295,7 @@ export default function MachineLogsGraphViewForm() {
           graphLabels={graphLabels}
           dateFrom={triggerFetch?.dateFrom}
           dateTo={triggerFetch?.dateTo}
+          machineSerialNo={machine?.serialNo}
         />
       ) : (
         <ErpProductionRateLogGraph
@@ -302,6 +305,7 @@ export default function MachineLogsGraphViewForm() {
           dateFrom={triggerFetch?.dateFrom}
           dateTo={triggerFetch?.dateTo}
           efficiency={machine?.efficiency}
+          machineSerialNo={machine?.serialNo}
         />
       )}
     </Container>

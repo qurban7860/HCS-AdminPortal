@@ -1,9 +1,8 @@
 import { memo, useState } from 'react'
 import PropTypes from 'prop-types';
 // @mui
-import { Box, Switch, TablePagination, FormControlLabel, Button, MenuItem, Checkbox, Menu, IconButton } from '@mui/material';
+import { Box, Switch, TablePagination, FormControlLabel, Button, MenuItem, Checkbox, Menu, Divider } from '@mui/material';
 import Iconify from '../iconify';
-import { StyledTooltip } from '../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
 
@@ -14,17 +13,19 @@ TablePaginationCustom.propTypes = {
   sx: PropTypes.object,
   columnFilterButtonData: PropTypes.array,
   columnButtonClickHandler: PropTypes.func,
+  allColumnsSelectHandler: PropTypes.func,
   customNode: PropTypes.node
 };
 
 function TablePaginationCustom({
   dense,
   onChangeDense,
-  rowsPerPageOptions = [10, 20,50,100],
+  rowsPerPageOptions = [10, 20, 50, 100],
   columnFilterButtonData = [],
   columnButtonClickHandler = () => {},
+  allColumnsSelectHandler = () => {},
   sx,
-  customNode=null,
+  customNode = null,
   ...other
 }) {
 
@@ -36,9 +37,19 @@ function TablePaginationCustom({
     }
   };
 
+  const handleSelectAllColumns = () => {
+    if (allColumnsSelectHandler) {
+      allColumnsSelectHandler();
+    }
+  };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  // Check if all selectable columns are checked
+  const selectableColumns = columnFilterButtonData.filter(col => !col.alwaysShow);
+  const allSelectableChecked = selectableColumns.length > 0 && selectableColumns.every(col => col.checked);
 
   return (
     <Box
@@ -76,19 +87,32 @@ function TablePaginationCustom({
               },
             }}
           >
+            {allColumnsSelectHandler && (
+              <>
+                <MenuItem
+                  dense
+                  sx={{ p: 0 }}
+                  onClick={handleSelectAllColumns}
+                >
+                  <Checkbox checked={allSelectableChecked} />
+                  Select All
+                </MenuItem>
+                <Divider />
+              </>
+            )}
             {columnFilterButtonData?.map(
               (column) =>
-                (
-                  <MenuItem
-                    dense
-                    sx={{ p: 0 }}
-                    key={column.id}
-                    onClick={() => handleColumnClick(column)}
-                  >
-                    <Checkbox checked={column.checked} disabled={column?.alwaysShow} />
-                    {column.label}
-                  </MenuItem>
-                )
+              (
+                <MenuItem
+                  dense
+                  sx={{ p: 0 }}
+                  key={column.id}
+                  onClick={() => handleColumnClick(column)}
+                >
+                  <Checkbox checked={column.checked} disabled={column?.alwaysShow} />
+                  {column?.fullLabel || column?.label || ''} {column?.baseUnit && <span style={{ paddingLeft: '4px' }}> ({column?.baseUnit || ''})</span>}
+                </MenuItem>
+              )
             )}
           </Menu>
         </Box>

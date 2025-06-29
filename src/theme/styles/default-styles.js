@@ -70,7 +70,7 @@ export const StyledTooltip = styled(({ className, ...props }) => (
 ))(({ theme, tooltipcolor }) => ({
   [`& .${tooltipClasses.arrow}`]: {
     color: tooltipcolor || theme.palette.primary.main,
-    bottom:'1px !important'
+    bottom: '1px !important'
   },
   [`& .${tooltipClasses.tooltip}`]: {
     fontSize: '1rem',
@@ -160,13 +160,13 @@ export const StyledPopover = styled(Popover)(({ theme }) => ({
 export const StyledTableRow = styled(TableRow)(({ theme }) => ({
   '&:nth-of-type(odd)': {
     backgroundColor: 'white',
-    '&:hover':{
+    '&:hover': {
       backgroundColor: '#2065d114',
     }
   },
   '&:nth-of-type(even)': {
     backgroundColor: '#f4f6f866',
-    '&:hover':{
+    '&:hover': {
       backgroundColor: '#2065d114',
     }
   },
@@ -192,8 +192,8 @@ export const StyledContainer = styled(Container)(({ theme }) => ({
   padding: 0,
   alignContent: 'center',
   color: 'text.primary',
-  paddingRight:24,
-  paddingLeft:24
+  paddingRight: 24,
+  paddingLeft: 24
 }));
 
 export const StyledGlobalCard = styled(Card)(({ theme }) => ({
@@ -226,8 +226,8 @@ export const StyledCardContainer = styled(Card)(({ theme }) => ({
   marginBottom: theme.spacing(3),
   height: 160,
   position: 'sticky',
-  top:'60px',
-  zIndex:'2',
+  top: '60px',
+  zIndex: '2',
   [theme.breakpoints.down('sm')]: { height: 140 },
 }));
 
@@ -253,11 +253,11 @@ export const GroupHeader = styled('div')(({ theme }) => ({
   position: 'sticky',
   top: '0px',
   padding: '5px 16px',
-  marginTop:'5px',
+  marginTop: '5px',
   color: '#707070',
-  borderRadius:'10px',
-  fontSize:'small',
-  backgroundColor:'#ededed',
+  borderRadius: '10px',
+  fontSize: 'small',
+  backgroundColor: '#ededed',
 }));
 
 export const GroupItems = styled('ul')({
@@ -299,13 +299,13 @@ const ColorlibStepIconRoot = styled('div')(({ theme, ownerState }) => ({
   borderRadius: '10px',
   justifyContent: 'center',
   alignItems: 'center',
-  fontSize:14,
+  fontSize: 14,
   ...(ownerState.active && {
-    background:'#2065d1',
+    background: '#2065d1',
     // boxShadow: '0 4px 10px 0 rgba(0,0,0,.25)',
   }),
   ...(ownerState.completed && {
-    background:'#2065d1',
+    background: '#2065d1',
   }),
 }));
 

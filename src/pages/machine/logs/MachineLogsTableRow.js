@@ -6,6 +6,7 @@ import { TableCell } from '@mui/material';
 import { fDateTime } from '../../../utils/formatTime';
 // components
 import LinkTableCell from '../../../components/ListTableTools/LinkTableCell';
+import { convertValue } from '../../../utils/convertUnits';
 import { StyledTableRow } from '../../../theme/styles/default-styles';
 import { convertMmToM } from '../../../components/Utils/measurementHelpers';
 // ----------------------------------------------------------------------
@@ -37,7 +38,7 @@ export default function MachineLogsTableRow({
   columnsToShow,
   allMachineLogsPage,
   numericalLengthValues,
-  unit, 
+  unit,
 }) {
   row = { ...row, machineSerialNo: row?.machine?.serialNo };
   const { date } = row;
@@ -47,40 +48,24 @@ export default function MachineLogsTableRow({
   });
 
   return (
-    <StyledTableRow hover selected={selected} onClick={onViewRow} sx={{ cursor: 'pointer' }}>
+    <StyledTableRow hover selected={selected}>
       <LinkTableCell align="left" onClick={onViewRow} param={fDateTime(date)} />
       {columnsToShow?.map((column, index) => {
         if (['date', 'createdBy.name', 'createdAt'].includes(column.id) || !column?.checked) return null;
-        const columnValue = lowercaseRow?.[column.id.toLocaleLowerCase()] || '';
-        const convertToM = column?.convertToM;
-        const isNumerical = column?.numerical;
-        let cellValue = columnValue || '';
-        const value = parseFloat(columnValue);
+        const rawValue = lowercaseRow?.[column.id.toLocaleLowerCase()] || ''
+        let cellValue = rawValue;
 
-        if (columnValue !== null && columnValue !== '' && !isNaN(columnValue)) {
-          if (unit === 'imperial') {
-            // Convert mm to inches
-            cellValue = (value / 25.4).toLocaleString(undefined, {
-              minimumFractionDigits: 3,
-              maximumFractionDigits: 3,
-            });
-          } else if (convertToM) {
-            // Convert mm to meters
-            cellValue = convertMmToM(value).toLocaleString(undefined, {
-              minimumFractionDigits: 3,
-              maximumFractionDigits: 3,
-            });
-          } else if (isNumerical) {
-            // Keep as-is with formatting
-            cellValue = value.toLocaleString(undefined, {
-              minimumFractionDigits: 3,
-              maximumFractionDigits: 3,
-            });
-          }
+        if (rawValue && column?.baseUnit && !isNaN(rawValue)) {
+          const { formattedValue } = convertValue(
+            parseFloat(rawValue),
+            column?.baseUnit,
+            unit,
+            true
+          );
+          cellValue = formattedValue;
         }
-
         return (
-          <TableCell key={index} onClick={onViewRow} sx={{ cursor: 'pointer' }} align={column?.numerical ? 'right' : 'left'}>
+          <TableCell key={index} align={column?.numerical ? 'right' : 'left'}>
             {cellValue}
             {/* {numericalLengthValues.includes(column.id) ? convertMmToM(cellValue) : cellValue} */}
           </TableCell>

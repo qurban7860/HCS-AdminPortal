@@ -9,7 +9,7 @@ import contactReducer from './slices/customer/contact';
 import customerNoteReducer from './slices/customer/customerNote';
 import machineReducer from './slices/products/machine';
 import supplierReducer from './slices/products/supplier';
-import licenseReducer from './slices/products/license'; 
+import licenseReducer from './slices/products/license';
 import profileReducer from './slices/products/profile';
 import groupReducer from './slices/products/group';
 import categoryReducer from './slices/products/category';
@@ -252,7 +252,7 @@ export const userRolesPersistConfig = {
   key: 'role',
   storage,
   keyPrefix: 'redux-',
-  blacklist: ['error', 'initial', 'responseMessage', 'userRoleTypes']
+  blacklist: ['error', 'initial', 'responseMessage']
 };
 export const configPersistConfig = {
   key: 'config',
@@ -302,112 +302,112 @@ export const documentFilePersistConfig = {
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 };
-export const machineConnectionsPersistConfig={
+export const machineConnectionsPersistConfig = {
   key: 'machineConnections',
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 }
-export const documentVersionPersistConfig={
+export const documentVersionPersistConfig = {
   key: 'documentVersion',
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 }
-export const regionPersistConfig={
+export const regionPersistConfig = {
   key: 'region',
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 }
 
-export const releasesPersistConfig={
+export const releasesPersistConfig = {
   key: 'releases',
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 }
 
-export const modulePersistConfig={
+export const modulePersistConfig = {
   key: 'module',
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 }
-export const drawingPersistConfig={
+export const drawingPersistConfig = {
   key: 'drawing',
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 }
-export const checkItemsPersistConfig={
+export const checkItemsPersistConfig = {
   key: 'checkItems',
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 }
-export const machineServiceReportPersistConfig={
+export const machineServiceReportPersistConfig = {
   key: 'machineServiceReport',
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage', 'machineServiceReport', 'machineServiceReports']
 }
-export const serviceReportTemplatePersistConfig={
+export const serviceReportTemplatePersistConfig = {
   key: 'serviceReportTemplate',
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 }
-export const serviceCategoryPersistConfig={
+export const serviceCategoryPersistConfig = {
   key: 'serviceCategory',
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 }
 
-export const userInvitePersistConfig={
+export const userInvitePersistConfig = {
   key: 'userInvite',
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 }
 
-export const blockedCustomerPersistConfig={
+export const blockedCustomerPersistConfig = {
   key: 'blockedCustomer',
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 }
 
-export const blockedUserPersistConfig={
+export const blockedUserPersistConfig = {
   key: 'blockedUser',
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 }
 
-export const blacklistIPPersistConfig={
+export const blacklistIPPersistConfig = {
   key: 'blacklistIP',
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 }
 
-export const whitelistIPPersistConfig={
+export const whitelistIPPersistConfig = {
   key: 'whitelistIP',
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 }
 
-export const departmentPersistConfig={
+export const departmentPersistConfig = {
   key: 'department',
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 }
 
-export const historicalConfigurationPersistConfig={
+export const historicalConfigurationPersistConfig = {
   key: 'historicalConfiguration',
   storage,
   keyPrefix: 'redux-',
@@ -629,13 +629,13 @@ const rootReducer = combineReducers({
   contact: persistReducer(contactPersistConfig, contactReducer),
   customerNote: persistReducer(customerNotePersistConfig, customerNoteReducer),
   machine: persistReducer(machinePersistConfig, machineReducer),
-  supplier: persistReducer(suppplierPersistConfig,supplierReducer),
-  license: persistReducer(licensePersistConfig,licenseReducer),
-  profile: persistReducer(profilePersistConfig,profileReducer),
-  category: persistReducer(categoryPersistConfig,categoryReducer),
-  group: persistReducer(groupPersistConfig,groupReducer),
-  tool: persistReducer(toolPersistConfig,toolReducer),
-  techparamcategory: persistReducer(techparamcategoryPersistConfig,techparamcategoryReducer),
+  supplier: persistReducer(suppplierPersistConfig, supplierReducer),
+  license: persistReducer(licensePersistConfig, licenseReducer),
+  profile: persistReducer(profilePersistConfig, profileReducer),
+  category: persistReducer(categoryPersistConfig, categoryReducer),
+  group: persistReducer(groupPersistConfig, groupReducer),
+  tool: persistReducer(toolPersistConfig, toolReducer),
+  techparamcategory: persistReducer(techparamcategoryPersistConfig, techparamcategoryReducer),
   machineNote: persistReducer(machineNotePersistConfig, machinenoteReducer),
   machineDashboard: persistReducer(machineDashboardPersistConfig, machineDashboardReducer),
   serviceReportComments: persistReducer(serviceReportCommentsPersistConfig, serviceReportCommentsReducer),
@@ -698,8 +698,8 @@ const rootReducer = combineReducers({
   ticketReports: persistReducer(ticketReportsPersistConfig, ticketReportsReducer),
   customerJira: persistReducer(customerJiraPersistConfig, customerJiraReducer),
   jira: persistReducer(jiraPersistConfig, jiraReducer),
-  portalRegistration: persistReducer( portalRegistrationPersistConfig, portalRegistrationReducer ),
-  serviceReportNotes: persistReducer( serviceReportNotesPersistConfig, serviceReportNotesReducer ),
+  portalRegistration: persistReducer(portalRegistrationPersistConfig, portalRegistrationReducer),
+  serviceReportNotes: persistReducer(serviceReportNotesPersistConfig, serviceReportNotesReducer),
   article: persistReducer(articlePersistConfig, articleReducer),
   articleCategory: persistReducer(articleCategoryPersistConfig, articleCategoryReducer),
   project: persistReducer(projectPersistConfig, projectReducer),

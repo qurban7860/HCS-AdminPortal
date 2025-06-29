@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import {  useMemo } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Card, Grid, Stack, Container } from '@mui/material';
-import {  PATH_SETTING } from '../../../../routes/paths';
+import { PATH_SETTING } from '../../../../routes/paths';
 // components
 import { useSnackbar } from '../../../../components/snackbar';
 import FormProvider, { RHFTextField, RHFSwitch, RHFAutocomplete } from '../../../../components/hook-form';
@@ -20,15 +20,16 @@ import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 
 export default function RoleEditForm() {
 
-  const { role, userRoleTypes } = useSelector((state) => state.role);;
+  const { role } = useSelector((state) => state.role);;
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
+  const [userRoleTypes, setUserRoleTypes] = useState([])
 
   const EditRoleSchema = Yup.object().shape({
     name: Yup.string().min(2).max(50).required('Name Field is required!'),
     description: Yup.string().max(10000),
-    roleType: Yup.object().nullable().required('Role Type'),
+    roleType: Yup.string().nullable().required().label('Role Type'),
     allModules: Yup.boolean(),
     allWriteAccess: Yup.boolean(),
     isActive: Yup.boolean(),
@@ -36,10 +37,18 @@ export default function RoleEditForm() {
     disableDelete: Yup.boolean(),
   });
 
+  useEffect(() => {
+    const configurations = JSON.parse(localStorage.getItem('configurations'));
+    const roleTypes = configurations.find((c) => c?.name?.trim()?.toLowerCase() === 'userroletypes')?.value?.split(',')?.map(r => r?.trim());
+    if (Array.isArray(roleTypes)) {
+      setUserRoleTypes(roleTypes)
+    }
+  }, [setUserRoleTypes])
+
   const defaultValues = useMemo(
     () => ({
       name: role?.name || '',
-      roleType: userRoleTypes.find((uRole)=> uRole.value === role.roleType ) || null, 
+      roleType: role.roleType || '',
       description: role?.description || '',
       isActive: role?.isActive || false,
       isDefault: role?.isDefault || false,
@@ -71,9 +80,9 @@ export default function RoleEditForm() {
       navigate(PATH_SETTING.role.view(role._id));
       enqueueSnackbar('Role updated Successfully!');
       reset();
-    } catch ( err ) {
-      enqueueSnackbar( err, { variant: `error` });
-      console.error( err );
+    } catch (err) {
+      enqueueSnackbar(err, { variant: `error` });
+      console.error(err);
     }
   };
 
@@ -91,12 +100,9 @@ export default function RoleEditForm() {
                 <RHFTextField name="name" label="Name*" />
 
                 <RHFAutocomplete
-                  name="roleType" 
+                  name="roleType"
                   label="Role Type*"
                   options={userRoleTypes}
-                  getOptionLabel={(option) => option.name}
-                  isOptionEqualToValue={(option, value) => option.name === value.name}
-                  renderOption={(props, option) => ( <li {...props} key={option.key}>{option?.name || ''} </li>)}
                 />
 
                 <RHFTextField name="description" label="Description" minRows={8} multiline />

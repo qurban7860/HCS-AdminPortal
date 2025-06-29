@@ -351,7 +351,8 @@ export function getMachineLogRecords({
         ...(!returnResponse && { pagination: { page, pageSize } }),
         ...(isMachineArchived && { archivedByMachine: true }),
         ...(!!isCreatedAt && { isCreatedAt }),
-        ...(searchKey?.length > 0 && { searchKey, searchColumn })
+        ...(searchKey?.length > 0 && searchColumn.length > 0 && { searchKey, searchColumn }),
+        ...(searchKey?.length > 0 && Array.isArray(searchColumn) && searchColumn.length > 1 && { multiColumnSearch: true })
       };
       const response = await axios.get(`${CONFIG.SERVER_URL}productLogs/`, { params });
       

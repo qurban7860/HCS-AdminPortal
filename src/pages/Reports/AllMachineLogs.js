@@ -13,10 +13,11 @@ import { AddMachineLogSchema } from '../schemas/machine';
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer, StyledContainedIconButton, StyledTooltip } from '../../theme/styles/default-styles';
 import { machineLogTypeFormats } from '../../constants/machineLogTypeFormats';
-import RHFFilteredSearchBar from '../../components/hook-form/RHFFilteredSearchBar';
+// import RHFFilteredSearchBar from '../../components/hook-form/RHFFilteredSearchBar';
 import MachineLogsDataTable from '../machine/logs/MachineLogsDataTable';
 import DownloadMachineLogsIconButton from '../../components/machineLogs/DownloadMachineLogsIconButton';
 import Iconify from '../../components/iconify';
+import RHFMultiFilteredSearchBar from '../../components/hook-form/RHFMultiFilteredSearchBar';
 
 function AllMachineLogs() {
   const dispatch = useDispatch();
@@ -24,7 +25,9 @@ function AllMachineLogs() {
   const { activeCustomerMachines } = useSelector((state) => state.machine);
   const { activeCustomers } = useSelector((state) => state.customer);
   const { page, rowsPerPage } = useSelector((state) => state.machineErpLogs);
-  const [selectedSearchFilter, setSelectedSearchFilter] = useState('');
+  // const [selectedSearchFilter, setSelectedSearchFilter] = useState('');
+  const [selectedMultiSearchFilter, setSelectedMultiSearchFilter] = useState([]);
+  const [unit, setUnit] = useState('Metric');
 
   // const isMobile = useResponsive('down', 'sm');
 
@@ -34,6 +37,7 @@ function AllMachineLogs() {
     logType: machineLogTypeFormats.find(option => option.type === 'ERP') || null,
     // dateFrom: new Date(new Date().setHours(0, 0, 0, 0)),
     // dateTo: new Date(new Date().setHours(23, 59, 59, 999)),
+    unitType: 'Metric',
     dateFrom: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
     dateTo: new Date(),
   };
@@ -44,11 +48,11 @@ function AllMachineLogs() {
   });
 
   const { watch, setValue, handleSubmit, trigger } = methods;
-  const { customer, machine, dateFrom, dateTo, logType, filteredSearchKey } = watch();
+  const { customer, machine, dateFrom, dateTo, logType, filteredSearchKey, unitType } = watch();
 
   useEffect(() => {
     dispatch(getActiveCustomers());
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -59,7 +63,16 @@ function AllMachineLogs() {
     }
   }, [dispatch, customer]);
 
+  const convertToMmForSendingData = (data, columnsSelected) => {
+    // eslint-disable-next-line no-restricted-globals
+    if (!isNaN(data) && columnsSelected.every(col => logType?.tableColumns?.some(c => c.id === col && c.baseUnit === "m"))) {
+      return (data * 1000).toString()
+    }
+    return data
+  }
+
   const onGetLogs = (data) => {
+    setUnit(unitType);
     const customerId = customer._id;
     const machineId = machine?._id || undefined;
     dispatch(ChangePage(0));
@@ -74,8 +87,8 @@ function AllMachineLogs() {
         isMachineArchived: machine?.isArchived,
         isArchived: false,
         selectedLogType: logType.type,
-        searchKey: filteredSearchKey,
-        searchColumn: selectedSearchFilter,
+        searchKey: convertToMmForSendingData(filteredSearchKey, selectedMultiSearchFilter),
+        searchColumn: selectedMultiSearchFilter,
       })
     );
   };
@@ -108,11 +121,11 @@ function AllMachineLogs() {
     isArchived: false,
     isMachineArchived: false,
     selectedLogType: logType?.type,
-    searchKey: filteredSearchKey,
-    searchColumn: selectedSearchFilter,
+    searchKey: convertToMmForSendingData(filteredSearchKey, selectedMultiSearchFilter),
+    searchColumn: selectedMultiSearchFilter,
   };
 
-  
+
   const returnSearchFilterColumnOptions = () =>
     logType?.tableColumns.filter((item) => item?.searchable)
 
@@ -156,9 +169,8 @@ function AllMachineLogs() {
                       `${option.serialNo || ''} ${option?.name ? '-' : ''} ${option?.name || ''}`
                     }
                     renderOption={(props, option) => (
-                      <li {...props} key={option?._id}>{`${option.serialNo || ''} ${
-                        option?.name ? '-' : ''
-                      } ${option?.name || ''}`}</li>
+                      <li {...props} key={option?._id}>{`${option.serialNo || ''} ${option?.name ? '-' : ''
+                        } ${option?.name || ''}`}</li>
                     )}
                     onChange={(e, newValue) => handleMachineChange(newValue)}
                     size="small"
@@ -170,7 +182,7 @@ function AllMachineLogs() {
                   gridTemplateColumns={{ xs: '1fr', sm: 'repeat(3, 1fr)' }}
                   sx={{ flexGrow: 1 }}
                 >
-                <RHFDatePicker
+                  <RHFDatePicker
                     label="Date From"
                     name="dateFrom"
                     size="small"
@@ -218,29 +230,51 @@ function AllMachineLogs() {
                   }}
                 >
                   <Box sx={{ flexGrow: 1, width: { xs: '100%', sm: 'auto' } }}>
-                    <RHFFilteredSearchBar
+                    <RHFMultiFilteredSearchBar
+                      name="filteredSearchKey"
+                      filterOptions={returnSearchFilterColumnOptions()}
+                      setSelectedFilters={setSelectedMultiSearchFilter}
+                      selectedFilters={selectedMultiSearchFilter}
+                      maxSelections={5}
+                      maxSelectedDisplay={2}
+                      autoSelectFirst={false}
+                      placeholder="Search across selected columns..."
+                      helperText="In case of number values, please input whole values and use same unit columns for search."
+                    />
+                    {/* <RHFFilteredSearchBar
                       name="filteredSearchKey"
                       filterOptions={returnSearchFilterColumnOptions()}
                       setSelectedFilter={setSelectedSearchFilter}
                       selectedFilter={selectedSearchFilter}
                       placeholder="Enter Search here..."
                       fullWidth
+                    /> */}
+                  </Box>
+                  <Box sx={{ width: '160px' }}>
+                    <RHFAutocomplete
+                      name="unitType"
+                      size="small"
+                      label="Unit*"
+                      options={['Metric', 'Imperial']}
+                      disableClearable
+                      autoSelect
+                      openOnFocus
                     />
                   </Box>
-                    <Box sx={{ width: { xs: '100%', sm: 'auto' } }}>
-                      <StyledTooltip
-                        title="Fetch Logs"
-                        placement="top"
-                        disableFocusListener
-                        tooltipcolor={theme.palette.primary.main}
-                      >
-                        <StyledContainedIconButton type="submit" sx={{px: 2}}>
-                          <Iconify sx={{ height: '24px', width: '24px' }} icon="mdi:text-search" />
-                        </StyledContainedIconButton>
-                      </StyledTooltip>
-                    </Box>
+                  <Box sx={{ width: { xs: '100%', sm: 'auto' } }}>
+                    <StyledTooltip
+                      title="Fetch Logs"
+                      placement="top"
+                      disableFocusListener
+                      tooltipcolor={theme.palette.primary.main}
+                    >
+                      <StyledContainedIconButton type="submit" sx={{ px: 2 }}>
+                        <Iconify sx={{ height: '24px', width: '24px' }} icon="mdi:text-search" />
+                      </StyledContainedIconButton>
+                    </StyledTooltip>
+                  </Box>
                   <Box sx={{ justifyContent: 'flex-end', display: 'flex' }}>
-                    <DownloadMachineLogsIconButton dataForApi={dataForApi} />
+                    <DownloadMachineLogsIconButton dataForApi={dataForApi} unit={unitType} />
                   </Box>
                 </Stack>
               </Stack>
@@ -248,7 +282,7 @@ function AllMachineLogs() {
           </Grid>
         </Grid>
       </FormProvider>
-      <MachineLogsDataTable allMachineLogsPage dataForApi={dataForApi} logType={logType} />
+      <MachineLogsDataTable allMachineLogsPage dataForApi={dataForApi} logType={logType} unitType={unit} />
     </Container>
   );
 }

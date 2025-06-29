@@ -16,20 +16,6 @@ const initialState = {
   roles: [],
   activeRoles: [],
   role: null,
-  userRoleTypes: [
-    { name: 'API Access', value: 'APIAccess' },
-    { name: 'Customer', value: 'Customer' },
-    { name: 'Developer', value: 'Developer' },
-    { name: 'Email Access', value: 'EmailAccess' },
-    // { name: 'Global Manager', value: 'GlobalManager'},
-    // { name: 'Regional Manager', value: 'RegionalManager'},
-    { name: 'Support', value: 'Support' },
-    { name: 'Sales Engineer', value: 'SalesEngineer' },
-    { name: 'Sales Manager', value: 'SalesManager' },
-    { name: 'Super Admin', value: 'SuperAdmin' },
-    { name: 'Technical Manager', value: 'TechnicalManager' },
-    { name: 'Technical Support', value: 'Technical Support' },
-  ],
   filterBy: '',
   page: 0,
   rowsPerPage: 100,
@@ -153,7 +139,7 @@ export function addRole(params) {
     try {
       const data = {
         name: params.name,
-        roleType: params?.roleType?.value,
+        roleType: params?.roleType,
         description: params.description,
         // allModules:  params.allModules,
         // allWriteAccess: params.allWriteAccess,
@@ -179,7 +165,7 @@ export function updateRole(id, params) {
     try {
       const data = {
         name: params.name,
-        roleType: params.roleType.value,
+        roleType: params.roleType,
         description: params.description,
         // allModules:  params.allModules,
         // allWriteAccess: params.allWriteAccess,

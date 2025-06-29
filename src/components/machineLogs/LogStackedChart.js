@@ -9,9 +9,11 @@ LogChartStacked.propTypes = {
   graphLabels: PropTypes.object,
   withEfficiencyLine: PropTypes.bool,
   isLoading: PropTypes.bool,
+  producedData: PropTypes.string,
+  machineSerialNo: PropTypes.string,
 };
 
-export default function LogChartStacked({ processGraphData, graphLabels, withEfficiencyLine = false, isLoading }) {
+export default function LogChartStacked({ processGraphData, graphLabels, withEfficiencyLine = false, isLoading, producedData = '', machineSerialNo }) {
   const [skipZero, setSkipZero] = useState(true);
   const [chart, setChart] = useState({ categories: [], series: [] });
   const [isChartReady, setIsChartReady] = useState(false);
@@ -48,7 +50,7 @@ export default function LogChartStacked({ processGraphData, graphLabels, withEff
   const chartOptions = {
     chart: {
       type: withEfficiencyLine ? 'line' : 'bar',
-      height: 350,
+      height: 450,
       stacked: true,
       animations: { 
         enabled: false,
@@ -106,7 +108,7 @@ export default function LogChartStacked({ processGraphData, graphLabels, withEff
           ? ''
           : fShortenNumber(total);
       },
-      offsetY: -25,
+      offsetY: -35,
       style: {
         fontSize: '12px',
         colors: ['#304758']
@@ -126,8 +128,8 @@ export default function LogChartStacked({ processGraphData, graphLabels, withEff
         show: false,
       },
       title: {
-        text: graphLabels?.xaxis,
-        offsetX: 0,
+        text: `${machineSerialNo}${producedData ? `, ${producedData}` : ''}`,
+        offsetX: -10,
         offsetY: -12,
         style: {
           fontSize: '12px',
@@ -142,7 +144,7 @@ export default function LogChartStacked({ processGraphData, graphLabels, withEff
             axisBorder: { show: false },
             axisTicks: { show: false },
             labels: {
-              formatter: (val) => val.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+              formatter: (val) => fShortenNumber(val),
             },
             title: {
               text: graphLabels?.yaxis,
@@ -173,12 +175,11 @@ export default function LogChartStacked({ processGraphData, graphLabels, withEff
           axisBorder: { show: false },
           axisTicks: { show: false },
           labels: {
-            formatter: (value) =>
-              value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+            formatter: (val) => fShortenNumber(val),
           },
           title: {
             text: graphLabels?.yaxis,
-            offsetX: -5,
+            offsetX: 0,
             offsetY: 0,
             style: {
               fontSize: '12px',
@@ -252,7 +253,7 @@ export default function LogChartStacked({ processGraphData, graphLabels, withEff
 
   return (
     <Box sx={{ position: 'relative', '& .apexcharts-menu-icon': { mt: '-20px' } }}>
-      <Box sx={{ display: 'flex' }}>
+      <Box sx={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)', mt: -4 }}>
         <FormControlLabel
           control={<Checkbox checked={skipZero} onChange={() => setSkipZero((prev) => !prev)} />}
           label="Empty or zero values skipped"
