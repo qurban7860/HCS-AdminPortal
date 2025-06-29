@@ -11,7 +11,7 @@ export const machineLogTypeFormats = [
     tableColumns: [
       { id: 'date', label: 'Date', alwaysShow: true, defaultShow: true },
       { id: 'machineSerialNo', label: 'Machine', alwaysShow: true, defaultShow: true, page: 'allMachineLogs', searchable: true },
-      { id: '_id', label: 'Log ID', searchable: true },
+      { id: '_id', label: 'Log ID' },
       { id: 'componentLabel', label: 'Label', defaultShow: true, tooltip: true, tooltipText: 'Component Label', searchable: true },
       { id: 'frameSet', label: 'Frame Set', defaultShow: true, searchable: true },
       { id: 'componentLength', label: 'Length', baseUnit: 'm', alwaysShow: true, tooltip: true, tooltipText: 'Produced Length', defaultShow: true, searchable: true, numerical: true },

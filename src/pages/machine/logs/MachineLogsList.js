@@ -27,6 +27,7 @@ import { StyledTooltip, StyledContainedIconButton } from '../../../theme/styles/
 import { PATH_MACHINE } from '../../../routes/paths';
 import MachineLogsDataTable from './MachineLogsDataTable';
 import DownloadMachineLogsIconButton from '../../../components/machineLogs/DownloadMachineLogsIconButton';
+import RHFMultiFilteredSearchBar from '../../../components/hook-form/RHFMultiFilteredSearchBar';
 
 // ----------------------------------------------------------------------
 
@@ -36,6 +37,7 @@ MachineLogsList.propTypes = {
 
 export default function MachineLogsList({ allMachineLogsType }) {
   const [selectedSearchFilter, setSelectedSearchFilter] = useState('');
+  const [selectedMultiSearchFilter, setSelectedMultiSearchFilter] = useState([]);
   const [unit, setUnit] = useState('Metric');
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -249,6 +251,19 @@ export default function MachineLogsList({ allMachineLogsType }) {
                   <DownloadMachineLogsIconButton dataForApi={dataForApi} unit={unitType} />
                 </Box>
               </Stack>
+                              <Box sx={{ flexGrow: 1, width: { xs: '100%', sm: 'auto' } }}>
+                  <RHFMultiFilteredSearchBar
+                    name="multiFilteredSearchKey"
+                    filterOptions={returnSearchFilterColumnOptions()}
+                    setSelectedFilters={setSelectedMultiSearchFilter}
+                    selectedFilters={selectedMultiSearchFilter}
+                    maxSelections={5}
+                    maxSelectedDisplay={2}
+                    autoSelectFirst={false}
+                    showChips={false}
+                    placeholder="Search across selected columns..."
+                  />
+                </Box>
             </Stack>
           </Card>
         </form>
