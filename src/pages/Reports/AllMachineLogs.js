@@ -261,7 +261,7 @@ function AllMachineLogs() {
           </Grid>
         </Grid>
       </FormProvider>
-      <MachineLogsDataTable allMachineLogsPage dataForApi={dataForApi} logType={logType} />
+      <MachineLogsDataTable allMachineLogsPage dataForApi={dataForApi} logType={logType} unitType={unit} />
     </Container>
   );
 }
