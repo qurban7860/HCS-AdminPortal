@@ -67,7 +67,6 @@ export default function RHFMultiFilteredSearchBar({
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-  // Memoized computations
   const isSearchDisabled = useMemo(() => 
     disabled || selectedFilters.length === 0, 
     [disabled, selectedFilters.length]
@@ -85,14 +84,14 @@ export default function RHFMultiFilteredSearchBar({
     [maxSelections, selectedFilters.length]
   );
 
-  // Auto-select first option if none selected
+  // for auto-selecting first option if none selected
   useEffect(() => {
     if (autoSelectFirst && selectedFilters.length === 0 && filterOptions.length > 0) {
       setSelectedFilters([filterOptions[0].id]);
     }
   }, [selectedFilters.length, filterOptions, setSelectedFilters, autoSelectFirst]);
 
-  // Handle search change with debouncing option
+  // for incase debounce is enabled
   useEffect(() => {
     if (searchOnType && searchKey) {
       const timeoutId = setTimeout(() => {
@@ -120,23 +119,28 @@ export default function RHFMultiFilteredSearchBar({
     const {value} = event.target;
     const newFilters = typeof value === 'string' ? value.split(',') : value;
     
-    // Check max selections limit
+    // max selections limit
     if (maxSelections && newFilters.length > maxSelections) {
       setShowMaxSelectionWarning(true);
       setTimeout(() => setShowMaxSelectionWarning(false), 3000);
       return;
     }
     
+    // clear search if no filters left
+    if (newFilters.length === 0) {
+      setValue(name, '');
+    }
+    
     setSelectedFilters(newFilters);
     setError('');
     setShowMaxSelectionWarning(false);
-  }, [maxSelections, setSelectedFilters]);
+  }, [maxSelections, name, setSelectedFilters, setValue]);
 
   const removeFilter = useCallback((filterToRemove) => {
     const newFilters = selectedFilters.filter(filter => filter !== filterToRemove);
     setSelectedFilters(newFilters);
     
-    // Clear search if no filters left
+    // clear search if no filters left
     if (newFilters.length === 0) {
       setValue(name, '');
     }
@@ -183,7 +187,6 @@ export default function RHFMultiFilteredSearchBar({
       control={control}
       render={({ field, fieldState: { error: fieldError } }) => (
         <Stack spacing={1}>
-          {/* Main search input */}
           <TextField
             {...field}
             fullWidth
@@ -208,7 +211,7 @@ export default function RHFMultiFilteredSearchBar({
               startAdornment: (
                 <InputAdornment position="start">
                   <Iconify 
-                    icon="eva:search-fill" 
+                    icon="mdi:search" 
                     sx={{ 
                       color: isSearchDisabled ? 'text.disabled' : 'text.secondary',
                       transition: 'color 0.2s ease',
@@ -219,7 +222,6 @@ export default function RHFMultiFilteredSearchBar({
               endAdornment: (
                 <InputAdornment position="end">
                   <Stack direction="row" spacing={1} alignItems="center">
-                    {/* Clear buttons */}
                     {searchKey?.length > 0 && (
                       <Tooltip title="Clear search">
                         <Button
@@ -227,8 +229,8 @@ export default function RHFMultiFilteredSearchBar({
                           color="warning"
                           size="small"
                           variant="outlined"
-                          startIcon={<Iconify icon="eva:close-outline" />}
-                          sx={{ minWidth: 'auto', px: 1 }}
+                          startIcon={<Iconify icon="mdi:close" />}
+                          sx={{ minWidth: 'auto' }}
                         >
                           Search
                         </Button>
@@ -242,7 +244,7 @@ export default function RHFMultiFilteredSearchBar({
                           color="error"
                           size="small"
                           variant="outlined"
-                          startIcon={<Iconify icon="eva:trash-2-outline" />}
+                          startIcon={<Iconify icon="mdi:trash-can-outline" />}
                           sx={{ minWidth: 'auto', px: 1 }}
                         >
                           All
@@ -250,7 +252,6 @@ export default function RHFMultiFilteredSearchBar({
                       </Tooltip>
                     )}
 
-                    {/* Column selector */}
                     <Divider orientation="vertical" flexItem sx={{my: 0.5}} />
                     <FormControl size={size}>
                       <Select
@@ -292,7 +293,6 @@ export default function RHFMultiFilteredSearchBar({
                           },
                         }}
                       >
-                        {/* Header with selection info */}
                         <MenuItem disabled sx={{ 
                           justifyContent: 'space-between',
                           fontWeight: 'bold',
@@ -338,7 +338,6 @@ export default function RHFMultiFilteredSearchBar({
             }}
           />
 
-          {/* Max selection warning */}
           <Collapse in={showMaxSelectionWarning}>
             <Alert severity="warning" size="small">
               Maximum {maxSelections} column{maxSelections !== 1 ? 's' : ''} can be selected
@@ -373,21 +372,23 @@ export default function RHFMultiFilteredSearchBar({
                 />
               ))}
               
-              {/* Clear all chips button */}
               {selectedFilters.length > 1 && (
                 <Chip
                   label="Clear All"
                   size="small"
-                  onClick={() => setSelectedFilters([])}
+                  onClick={() => {
+                    setSelectedFilters([]);
+                    setValue(name, '');
+                    afterClearHandler();
+                  }}
                   color="error"
                   variant="outlined"
-                  icon={<Iconify icon="eva:trash-2-outline" />}
+                  icon={<Iconify icon="mdi:trash-can-outline" />}
                 />
               )}
             </Box>
           )}
 
-          {/* Helper text and errors */}
           <Box sx={{ minHeight: '20px' }}>
             {(fieldError || error || helperText) && (
               <Typography variant="caption" color="text.disabled" sx={{ ml: 1 }}>
@@ -395,7 +396,6 @@ export default function RHFMultiFilteredSearchBar({
               </Typography>
             )}
             
-            {/* Selection count info */}
             {maxSelections && (
               <Typography variant="caption" color="text.secondary" sx={{ ml: 1, display: 'block' }}>
                 {selectedFilters.length}/{maxSelections} columns selected

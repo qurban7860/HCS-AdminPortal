@@ -56,27 +56,19 @@ export default function MachineLogsList({ allMachineLogsType }) {
   });
 
   const { watch, setValue, handleSubmit, trigger, formState: { isSubmitting } } = methods;
-<<<<<<< ours
-  const { dateFrom, dateTo, logType, filteredSearchKey } = watch();
-  console.log({ isSubmitting })
-||||||| ancestor
-  const { dateFrom, dateTo, unitType, logType, filteredSearchKey } = watch();
-  console.log({ isSubmitting })
-  useEffect(() => {
-    handleResetFilter();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-=======
   const { dateFrom, dateTo, unitType, logType, filteredSearchKey } = watch();
 
   useEffect(() => {
     handleResetFilter();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
->>>>>>> theirs
 
   const { page, rowsPerPage } = useSelector((state) => state.machineErpLogs);
   const { machine } = useSelector((state) => state.machine);
+
+    const handleResetFilter = () => {
+    setValue(filteredSearchKey, '')
+  };
 
   const dataForApi = {
     customerId: machine?.customer?._id,

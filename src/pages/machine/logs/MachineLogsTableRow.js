@@ -48,7 +48,7 @@ export default function MachineLogsTableRow({
   });
 
   return (
-    <StyledTableRow hover selected={selected} sx={{ cursor: 'pointer' }}>
+    <StyledTableRow hover selected={selected}>
       <LinkTableCell align="left" onClick={onViewRow} param={fDateTime(date)} />
       {columnsToShow?.map((column, index) => {
         if (['date', 'createdBy.name', 'createdAt'].includes(column.id) || !column?.checked) return null;
