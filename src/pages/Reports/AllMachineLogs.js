@@ -63,6 +63,14 @@ function AllMachineLogs() {
     }
   }, [dispatch, customer]);
 
+  const convertToMmForSendingData = (data, columnsSelected) => {
+    // eslint-disable-next-line no-restricted-globals
+    if (!isNaN(data) && columnsSelected.every(col => logType?.tableColumns?.some(c => c.id === col && c.convertToM))) {
+      return (data * 1000).toString()
+    }
+    return data
+  }
+
   const onGetLogs = (data) => {
     setUnit(unitType);
     const customerId = customer._id;
@@ -116,14 +124,6 @@ function AllMachineLogs() {
     searchKey: convertToMmForSendingData(filteredSearchKey, selectedMultiSearchFilter),
     searchColumn: selectedMultiSearchFilter,
   };
-
-  const convertToMmForSendingData = (data, columnsSelected) => {
-    // eslint-disable-next-line no-restricted-globals
-    if (!isNaN(data) && columnsSelected.every(col => logType?.tableColumns?.some(c => c.id === col && c.convertToM))) {
-      return (data * 1000).toString()
-    }
-    return data
-  }
 
 
   const returnSearchFilterColumnOptions = () =>

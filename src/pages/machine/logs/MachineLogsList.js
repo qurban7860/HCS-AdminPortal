@@ -66,9 +66,17 @@ export default function MachineLogsList({ allMachineLogsType }) {
   const { page, rowsPerPage } = useSelector((state) => state.machineErpLogs);
   const { machine } = useSelector((state) => state.machine);
 
-    const handleResetFilter = () => {
+  const handleResetFilter = () => {
     setValue(filteredSearchKey, '')
   };
+
+      const convertToMmForSendingData = (data, columnsSelected) => {
+    // eslint-disable-next-line no-restricted-globals
+    if (!isNaN(data) && columnsSelected.every(col => logType?.tableColumns?.some(c => c.id === col && c.convertToM))) {
+      return (data * 1000).toString()
+    }
+    return data
+  }
 
   const dataForApi = {
     customerId: machine?.customer?._id,
@@ -112,14 +120,6 @@ export default function MachineLogsList({ allMachineLogsType }) {
     if (machine?.isArchived) return false;
     return BUTTONS.ADD_MACHINE_LOGS;
   };
-
-    const convertToMmForSendingData = (data, columnsSelected) => {
-    // eslint-disable-next-line no-restricted-globals
-    if (!isNaN(data) && columnsSelected.every(col => logType?.tableColumns?.some(c => c.id === col && c.convertToM))) {
-      return (data * 1000).toString()
-    }
-    return data
-  }
 
   const returnSearchFilterColumnOptions = () =>
     logType?.tableColumns.filter((item) => item?.searchable && item?.page !== "allMachineLogs")
