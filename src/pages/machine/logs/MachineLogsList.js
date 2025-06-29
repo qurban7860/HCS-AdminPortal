@@ -84,8 +84,8 @@ export default function MachineLogsList({ allMachineLogsType }) {
   };
 
   const onSubmit = (data) => {
+    setUnit(unitType);
     dispatch(ChangePage(0));
-    setUnit(data.unitType);
     dispatch(
       getMachineLogRecords({
         customerId: machine?.customer?._id,
@@ -246,7 +246,7 @@ export default function MachineLogsList({ allMachineLogsType }) {
                   </StyledTooltip>
                 </Box>
                 <Box sx={{ width: { xs: '100%', sm: 'auto' } }}>
-                  <DownloadMachineLogsIconButton dataForApi={dataForApi} unit={unit} />
+                  <DownloadMachineLogsIconButton dataForApi={dataForApi} unit={unitType} />
                 </Box>
               </Stack>
             </Stack>
