@@ -17,6 +17,7 @@ import { useDispatch } from 'react-redux';
 import { useSnackbar } from 'notistack';
 
 import { getMachineLogRecords } from '../../redux/slices/products/machineErpLogs';
+import { convertValue } from '../../utils/convertUnits';
 import Iconify from '../iconify';
 import { machineLogTypeFormats } from '../../constants/machineLogTypeFormats';
 import { StyledContainedIconButton, StyledTooltip } from '../../theme/styles/default-styles';

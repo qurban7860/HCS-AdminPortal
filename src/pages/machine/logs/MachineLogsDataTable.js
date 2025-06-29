@@ -154,10 +154,10 @@ const MachineLogsDataTable = ({ logType, unitType, allMachineLogsPage, dataForAp
     if (activeUnit === 'Imperial' && 'mm'.includes(baseUnit?.toLowerCase())) {
       return `${label} (in)`;
     }
-    // Imperial Weight
-    if (activeUnit === 'Imperial' && baseUnit?.toLowerCase() === 'kg') {
-      return `${label} (pound)`;
-    }
+    // // Imperial Weight
+    // if (activeUnit === 'Imperial' && baseUnit?.toLowerCase() === 'kg') {
+    //   return `${label} (lbs)`;
+    // }
     // Fallback to baseUnit or just label
     return baseUnit ? `${label} (${baseUnit})` : label;
   };

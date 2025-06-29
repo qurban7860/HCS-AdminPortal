@@ -50,7 +50,7 @@ export default function MachineLogsList({ allMachineLogsType }) {
       filteredSearchKey: '',
     },
     resolver: yupResolver(fetchIndMachineLogSchema),
-    mode: 'onChange',
+    mode: 'all',
     reValidateMode: 'onChange'
   });
 
