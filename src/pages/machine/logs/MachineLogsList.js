@@ -79,7 +79,7 @@ export default function MachineLogsList({ allMachineLogsType }) {
     toDate: new Date(new Date(dateTo).setHours(23, 59, 59, 999)),
     isMachineArchived: false,
     selectedLogType: logType?.type,
-    searchKey: filteredSearchKey,
+    searchKey: convertToMmForSendingData(filteredSearchKey, selectedMultiSearchFilter),
     searchColumn: selectedMultiSearchFilter,
   };
 
@@ -96,7 +96,7 @@ export default function MachineLogsList({ allMachineLogsType }) {
         toDate: new Date(new Date(dateTo).setHours(23, 59, 59, 999)),
         isMachineArchived: machine?.isArchived,
         selectedLogType: logType.type,
-        searchKey: filteredSearchKey,
+        searchKey: convertToMmForSendingData(filteredSearchKey, selectedMultiSearchFilter),
         searchColumn: selectedMultiSearchFilter
       })
     );
@@ -112,6 +112,14 @@ export default function MachineLogsList({ allMachineLogsType }) {
     if (machine?.isArchived) return false;
     return BUTTONS.ADD_MACHINE_LOGS;
   };
+
+    const convertToMmForSendingData = (data, columnsSelected) => {
+    // eslint-disable-next-line no-restricted-globals
+    if (!isNaN(data) && columnsSelected.every(col => logType?.tableColumns?.some(c => c.id === col && c.convertToM))) {
+      return (data * 1000).toString()
+    }
+    return data
+  }
 
   const returnSearchFilterColumnOptions = () =>
     logType?.tableColumns.filter((item) => item?.searchable && item?.page !== "allMachineLogs")
