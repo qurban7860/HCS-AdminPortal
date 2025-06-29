@@ -84,7 +84,6 @@ const DownloadMachineLogsIconButton = ({ dataForApi, unit }) => {
               false
             );
             value = converted.convertedValue;
-            console.log({ baseUnit: columnVal?.baseUnit, value })
           }
           if (header === 'timestamp') {
             value = row.timestamp || row.date
@@ -95,7 +94,6 @@ const DownloadMachineLogsIconButton = ({ dataForApi, unit }) => {
           if (header === 'logId') {
             value = row._id
           }
-          console.log({ value, columnVal, header, unit, row })
           const escaped = String(value).replace(/"/g, '""')
           return escaped
         })
