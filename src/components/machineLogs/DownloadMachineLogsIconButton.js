@@ -24,7 +24,7 @@ import { StyledContainedIconButton, StyledTooltip } from '../../theme/styles/def
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
-const DownloadMachineLogsIconButton = ({ dataForApi }) => {
+const DownloadMachineLogsIconButton = ({ dataForApi, unit }) => {
   const [openLogsDownloadDialog, setOpenLogsDownloadDialog] = useState(false);
   const [dataForDownload, setDataForDownload] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -72,7 +72,7 @@ const DownloadMachineLogsIconButton = ({ dataForApi }) => {
         const values = headers.map((header) => {
           let value = row[header] !== undefined ? row[header] : '';
           if (header === 'timestamp') value = row.timestamp || row.date;
-          if (header === 'measurementUnit') value = 'mm';
+          if (header === 'measurementUnit') value = unit === 'Imperial' ? 'in' : 'mm';
           if (header === 'logId') value = row._id;
           const escaped = String(value).replace(/"/g, '""');
           return escaped;
@@ -89,7 +89,7 @@ const DownloadMachineLogsIconButton = ({ dataForApi }) => {
         headers.forEach((header) => {
           let value = row[header] !== undefined ? row[header] : '';
           if (header === 'timestamp') value = row.timestamp || row.date;
-          if (header === 'measurementUnit') value = 'mm';
+          if (header === 'measurementUnit') value = unit === 'Imperial' ? 'in' : 'mm';
           if (header === 'logId') value = row._id;
           jsonObj[header] = value;
         });
@@ -189,4 +189,5 @@ const DownloadMachineLogsIconButton = ({ dataForApi }) => {
 export default DownloadMachineLogsIconButton;
 DownloadMachineLogsIconButton.propTypes = {
   dataForApi: PropTypes.object,
+  unit: PropTypes.string,
 };

@@ -246,7 +246,7 @@ export default function MachineLogsList({ allMachineLogsType }) {
                   </StyledTooltip>
                 </Box>
                 <Box sx={{ width: { xs: '100%', sm: 'auto' } }}>
-                  <DownloadMachineLogsIconButton dataForApi={dataForApi} isSubmitting={isSubmitting} />
+                  <DownloadMachineLogsIconButton dataForApi={dataForApi} isSubmitting={isSubmitting} unit={unit} />
                 </Box>
               </Stack>
             </Stack>
