@@ -84,10 +84,17 @@ const DownloadMachineLogsIconButton = ({ dataForApi, unit }) => {
               false
             );
             value = converted.convertedValue;
+            console.log({ baseUnit: columnVal?.baseUnit, value })
           }
-          if (header === 'timestamp') value = row.timestamp || row.date
-          if (header === 'measurementUnit') value = unit === 'Imperial' ? 'in' : 'mm';
-          if (header === 'logId') value = row._id
+          if (header === 'timestamp') {
+            value = row.timestamp || row.date
+          }
+          if (header === 'measurementUnit') {
+            value = unit === 'Imperial' ? 'in' : 'mm';
+          }
+          if (header === 'logId') {
+            value = row._id
+          }
           console.log({ value, columnVal, header, unit, row })
           const escaped = String(value).replace(/"/g, '""')
           return escaped
@@ -116,9 +123,15 @@ const DownloadMachineLogsIconButton = ({ dataForApi, unit }) => {
             );
             value = converted.convertedValue;
           }
-          if (header === 'timestamp') value = unit === 'Imperial' ? 'in' : 'mm';
-          if (header === 'measurementUnit') value = 'mm'
-          if (header === 'logId') value = row._id
+          if (header === 'timestamp') {
+            value = row.timestamp || row.date
+          }
+          if (header === 'measurementUnit') {
+            value = unit === 'Imperial' ? 'in' : 'mm';
+          }
+          if (header === 'logId') {
+            value = row._id
+          }
           jsonObj[header] = value
         })
         return jsonObj

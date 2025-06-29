@@ -253,7 +253,7 @@ function AllMachineLogs() {
                     </StyledTooltip>
                   </Box>
                   <Box sx={{ justifyContent: 'flex-end', display: 'flex' }}>
-                    <DownloadMachineLogsIconButton dataForApi={dataForApi} unit={unit} />
+                    <DownloadMachineLogsIconButton dataForApi={dataForApi} unit={unitType} />
                   </Box>
                 </Stack>
               </Stack>

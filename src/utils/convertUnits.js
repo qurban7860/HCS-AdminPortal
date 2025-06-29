@@ -35,7 +35,9 @@ export function convertValue(value, baseUnit, unitSystem, forDisplay = false) {
     // }
   } else if (unitSystem === 'Metric') {
     if (baseUnit === 'm') {
-      convertedValue = value / 1000;
+      if (forDisplay) {
+        convertedValue = value / 1000;
+      }
       measurementUnit = 'm';
     }
     // mm stays mm
