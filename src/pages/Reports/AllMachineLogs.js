@@ -65,7 +65,7 @@ function AllMachineLogs() {
 
   const convertToMmForSendingData = (data, columnsSelected) => {
     // eslint-disable-next-line no-restricted-globals
-    if (!isNaN(data) && columnsSelected.every(col => logType?.tableColumns?.some(c => c.id === col && c.convertToM))) {
+    if (!isNaN(data) && columnsSelected.every(col => logType?.tableColumns?.some(c => c.id === col && c.baseUnit === "m"))) {
       return (data * 1000).toString()
     }
     return data
@@ -239,6 +239,7 @@ function AllMachineLogs() {
                       maxSelectedDisplay={2}
                       autoSelectFirst={false}
                       placeholder="Search across selected columns..."
+                      helperText="In case of number values, please input whole values and use same unit columns for search."
                     />
                     {/* <RHFFilteredSearchBar
                       name="filteredSearchKey"
