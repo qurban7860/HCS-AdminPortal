@@ -6,7 +6,7 @@ export function convertValue(value, baseUnit, unitSystem, forDisplay = false) {
   if (unitSystem === 'Imperial') {
     if (baseUnit === 'mm' || baseUnit === 'm') {
       // convert everything to inches
-      convertedValue = value / 25.4;
+      convertedValue = (value / 25.4).toFixed(3);
       measurementUnit = 'in';
 
       if (forDisplay) {
