@@ -19,6 +19,7 @@ import {
   Tooltip,
   Alert,
   Collapse,
+  Divider,
 } from '@mui/material';
 import Iconify from '../iconify';
 
@@ -101,6 +102,7 @@ export default function RHFMultiFilteredSearchBar({
     }
     return undefined;
   }, [searchKey, selectedFilters, searchOnType, onSearchChange]);
+
   const clearAll = useCallback(() => {
     setValue(name, '');
     setSelectedFilters([]);
@@ -185,7 +187,7 @@ export default function RHFMultiFilteredSearchBar({
           <TextField
             {...field}
             fullWidth
-            placeholder={placeholder}
+            placeholder={selectedFilters?.length > 0 ? placeholder : "Select filters first..."}
             error={!!fieldError}
             size={size}
             label="Search"
@@ -249,6 +251,7 @@ export default function RHFMultiFilteredSearchBar({
                     )}
 
                     {/* Column selector */}
+                    <Divider orientation="vertical" flexItem sx={{my: 0.5}} />
                     <FormControl size={size}>
                       <Select
                         multiple
@@ -261,13 +264,13 @@ export default function RHFMultiFilteredSearchBar({
                         sx={{
                           minWidth: isMobile ? 150 : 220,
                           '& .MuiOutlinedInput-notchedOutline': { 
-                            borderColor: 'divider',
+                            border: 'none',
                           },
                           '&:hover .MuiOutlinedInput-notchedOutline': { 
-                            borderColor: 'primary.main',
+                            border: 'none',
                           },
-                          '&.Mui-focused .MuiOutlinedInput-notchedOutline': { 
-                            borderColor: 'primary.main',
+                          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                            border: 'none',
                           },
                           '& .MuiSelect-select': {
                             color: selectedFilters.length === 0 ? 'text.secondary' : 'text.primary',
@@ -350,10 +353,6 @@ export default function RHFMultiFilteredSearchBar({
               gap: 0.5,
               maxHeight: 100,
               overflowY: 'auto',
-              p: 0.5,
-              border: '1px solid',
-              borderColor: 'divider',
-              borderRadius: 1,
               bgcolor: 'background.paper',
             }}>
               {selectedFilterOptions.map((option) => (

@@ -1,14 +1,13 @@
 import PropTypes from 'prop-types';
 import { useState, useEffect, useCallback } from 'react';
 // @mui
-import { Container, Card, Stack, Box, Typography, IconButton, MenuItem } from '@mui/material';
+import { Container, Card, Stack, Box, Typography } from '@mui/material';
 import { FormProvider, useForm } from 'react-hook-form';
-import { LoadingButton } from '@mui/lab';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 // routes
 import { useNavigate, useParams } from 'react-router-dom';
-import { styled, useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // components
@@ -18,8 +17,8 @@ import {
 } from '../../../redux/slices/products/machineErpLogs';
 import MachineTabContainer from '../util/MachineTabContainer';
 import { machineLogTypeFormats } from '../../../constants/machineLogTypeFormats';
-import { RHFAutocomplete, RHFDatePicker, RHFDateTimePicker, RHFSelect } from '../../../components/hook-form';
-import RHFFilteredSearchBar from '../../../components/hook-form/RHFFilteredSearchBar';
+import { RHFAutocomplete, RHFDatePicker} from '../../../components/hook-form';
+// import RHFFilteredSearchBar from '../../../components/hook-form/RHFFilteredSearchBar';
 import { fetchIndMachineLogSchema } from '../../schemas/machine';
 import { BUTTONS } from '../../../constants/default-constants';
 import Iconify from '../../../components/iconify';
@@ -36,7 +35,7 @@ MachineLogsList.propTypes = {
 };
 
 export default function MachineLogsList({ allMachineLogsType }) {
-  const [selectedSearchFilter, setSelectedSearchFilter] = useState('');
+  // const [selectedSearchFilter, setSelectedSearchFilter] = useState('');
   const [selectedMultiSearchFilter, setSelectedMultiSearchFilter] = useState([]);
   const [unit, setUnit] = useState('Metric');
   const dispatch = useDispatch();
@@ -57,20 +56,27 @@ export default function MachineLogsList({ allMachineLogsType }) {
   });
 
   const { watch, setValue, handleSubmit, trigger, formState: { isSubmitting } } = methods;
+<<<<<<< ours
+  const { dateFrom, dateTo, logType, filteredSearchKey } = watch();
+  console.log({ isSubmitting })
+||||||| ancestor
+  const { dateFrom, dateTo, unitType, logType, filteredSearchKey } = watch();
+  console.log({ isSubmitting })
+  useEffect(() => {
+    handleResetFilter();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+=======
   const { dateFrom, dateTo, unitType, logType, filteredSearchKey } = watch();
 
   useEffect(() => {
     handleResetFilter();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+>>>>>>> theirs
 
   const { page, rowsPerPage } = useSelector((state) => state.machineErpLogs);
   const { machine } = useSelector((state) => state.machine);
-
-  const handleResetFilter = () => {
-    setValue(filteredSearchKey, '')
-    setSelectedSearchFilter('')
-  };
 
   const dataForApi = {
     customerId: machine?.customer?._id,
@@ -82,7 +88,7 @@ export default function MachineLogsList({ allMachineLogsType }) {
     isMachineArchived: false,
     selectedLogType: logType?.type,
     searchKey: filteredSearchKey,
-    searchColumn: selectedSearchFilter,
+    searchColumn: selectedMultiSearchFilter,
   };
 
   const onSubmit = (data) => {
@@ -99,7 +105,7 @@ export default function MachineLogsList({ allMachineLogsType }) {
         isMachineArchived: machine?.isArchived,
         selectedLogType: logType.type,
         searchKey: filteredSearchKey,
-        searchColumn: selectedSearchFilter
+        searchColumn: selectedMultiSearchFilter
       })
     );
   };
@@ -210,7 +216,17 @@ export default function MachineLogsList({ allMachineLogsType }) {
                 }}
               >
                 <Box sx={{ flexGrow: 1, width: { xs: '100%', sm: 'auto' } }}>
-                  <RHFFilteredSearchBar
+                  <RHFMultiFilteredSearchBar
+                    name="filteredSearchKey"
+                    filterOptions={returnSearchFilterColumnOptions()}
+                    setSelectedFilters={setSelectedMultiSearchFilter}
+                    selectedFilters={selectedMultiSearchFilter}
+                    maxSelections={5}
+                    maxSelectedDisplay={2}
+                    autoSelectFirst={false}
+                    placeholder="Search across selected columns..."
+                  />
+                  {/* <RHFFilteredSearchBar
                     name="filteredSearchKey"
                     filterOptions={returnSearchFilterColumnOptions()}
                     setSelectedFilter={setSelectedSearchFilter}
@@ -222,7 +238,7 @@ export default function MachineLogsList({ allMachineLogsType }) {
                         : ''
                     }
                     fullWidth
-                  />
+                  /> */}
                 </Box>
                 <Box sx={{ width: '160px' }}>
                   <RHFAutocomplete
@@ -251,19 +267,6 @@ export default function MachineLogsList({ allMachineLogsType }) {
                   <DownloadMachineLogsIconButton dataForApi={dataForApi} unit={unitType} />
                 </Box>
               </Stack>
-                              <Box sx={{ flexGrow: 1, width: { xs: '100%', sm: 'auto' } }}>
-                  <RHFMultiFilteredSearchBar
-                    name="multiFilteredSearchKey"
-                    filterOptions={returnSearchFilterColumnOptions()}
-                    setSelectedFilters={setSelectedMultiSearchFilter}
-                    selectedFilters={selectedMultiSearchFilter}
-                    maxSelections={5}
-                    maxSelectedDisplay={2}
-                    autoSelectFirst={false}
-                    showChips={false}
-                    placeholder="Search across selected columns..."
-                  />
-                </Box>
             </Stack>
           </Card>
         </form>
