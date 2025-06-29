@@ -317,7 +317,7 @@ export default function RHFMultiFilteredSearchBar({
                               color="primary"
                             />
                             <ListItemText 
-                              primary={option.label}
+                              primary={option.fullLabel || option.label}
                               secondary={option.description}
                             />
                           </MenuItem>

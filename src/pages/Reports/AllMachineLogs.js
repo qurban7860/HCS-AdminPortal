@@ -13,10 +13,11 @@ import { AddMachineLogSchema } from '../schemas/machine';
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer, StyledContainedIconButton, StyledTooltip } from '../../theme/styles/default-styles';
 import { machineLogTypeFormats } from '../../constants/machineLogTypeFormats';
-import RHFFilteredSearchBar from '../../components/hook-form/RHFFilteredSearchBar';
+// import RHFFilteredSearchBar from '../../components/hook-form/RHFFilteredSearchBar';
 import MachineLogsDataTable from '../machine/logs/MachineLogsDataTable';
 import DownloadMachineLogsIconButton from '../../components/machineLogs/DownloadMachineLogsIconButton';
 import Iconify from '../../components/iconify';
+import RHFMultiFilteredSearchBar from '../../components/hook-form/RHFMultiFilteredSearchBar';
 
 function AllMachineLogs() {
   const dispatch = useDispatch();
@@ -24,7 +25,8 @@ function AllMachineLogs() {
   const { activeCustomerMachines } = useSelector((state) => state.machine);
   const { activeCustomers } = useSelector((state) => state.customer);
   const { page, rowsPerPage } = useSelector((state) => state.machineErpLogs);
-  const [selectedSearchFilter, setSelectedSearchFilter] = useState('');
+  // const [selectedSearchFilter, setSelectedSearchFilter] = useState('');
+  const [selectedMultiSearchFilter, setSelectedMultiSearchFilter] = useState([]);
   const [unit, setUnit] = useState('Metric');
 
   // const isMobile = useResponsive('down', 'sm');
@@ -78,7 +80,7 @@ function AllMachineLogs() {
         isArchived: false,
         selectedLogType: logType.type,
         searchKey: filteredSearchKey,
-        searchColumn: selectedSearchFilter,
+        searchColumn: selectedMultiSearchFilter,
       })
     );
   };
@@ -112,7 +114,7 @@ function AllMachineLogs() {
     isMachineArchived: false,
     selectedLogType: logType?.type,
     searchKey: filteredSearchKey,
-    searchColumn: selectedSearchFilter,
+    searchColumn: selectedMultiSearchFilter,
   };
 
 
@@ -220,14 +222,24 @@ function AllMachineLogs() {
                   }}
                 >
                   <Box sx={{ flexGrow: 1, width: { xs: '100%', sm: 'auto' } }}>
-                    <RHFFilteredSearchBar
+                    <RHFMultiFilteredSearchBar
+                      name="filteredSearchKey"
+                      filterOptions={returnSearchFilterColumnOptions()}
+                      setSelectedFilters={setSelectedMultiSearchFilter}
+                      selectedFilters={selectedMultiSearchFilter}
+                      maxSelections={5}
+                      maxSelectedDisplay={2}
+                      autoSelectFirst={false}
+                      placeholder="Search across selected columns..."
+                    />
+                    {/* <RHFFilteredSearchBar
                       name="filteredSearchKey"
                       filterOptions={returnSearchFilterColumnOptions()}
                       setSelectedFilter={setSelectedSearchFilter}
                       selectedFilter={selectedSearchFilter}
                       placeholder="Enter Search here..."
                       fullWidth
-                    />
+                    /> */}
                   </Box>
                   <Box sx={{ width: '160px' }}>
                     <RHFAutocomplete
