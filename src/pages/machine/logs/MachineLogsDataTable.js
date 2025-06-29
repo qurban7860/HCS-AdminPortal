@@ -30,6 +30,15 @@ function tableColumnsReducer(state, action) {
       }
       return [...columns];
     }
+    case 'selectAllColumns': {
+      const columns = [...state];
+      columns.forEach((column) => {
+        if (!column.alwaysShow) {
+          column.checked = true;
+        }
+      });
+      return [...columns];
+    }
     case 'handleLogTypeChange': {
       let columns = action.newColumns;
       if (!action.allMachineLogsPage) {
@@ -142,6 +151,10 @@ const MachineLogsDataTable = ({ logType, unitType, allMachineLogsPage, dataForAp
     dispatchTableColumns({ type: 'updateColumnCheck', columnId, newCheckState });
   };
 
+  const handleAllColumnSelection = () => {
+    dispatchTableColumns({ type: 'selectAllColumns' });
+  }
+
   const getFormattedLabel = (column, activeUnit) => {
     const { label, baseUnit } = column;
     // If the column is not a numerical length, return label as-is
@@ -174,6 +187,7 @@ const MachineLogsDataTable = ({ logType, unitType, allMachineLogsPage, dataForAp
             onRowsPerPageChange={onChangeRowsPerPage}
             columnFilterButtonData={tableColumns}
             columnButtonClickHandler={handleColumnButtonClick}
+            allColumnsSelectHandler={handleAllColumnSelection}
           />
         )}
 
@@ -204,10 +218,10 @@ const MachineLogsDataTable = ({ logType, unitType, allMachineLogsPage, dataForAp
                               sx={{ textTransform: 'none' }}
                             >
                               <Tooltip
-                                title={headCell.tooltip && headCell.tooltipText ? headCell.tooltipText : ''}
+                                title={headCell.tooltip && headCell.fullLabel ? headCell.fullLabel : ''}
                                 arrow
                                 placement="top"
-                                disableHoverListener={!headCell.tooltip || !headCell.tooltipText}
+                                disableHoverListener={!headCell.tooltip || !headCell.fullLabel}
                               >
                                 <span>{getFormattedLabel(headCell, unitType)}</span>
                               </Tooltip>
