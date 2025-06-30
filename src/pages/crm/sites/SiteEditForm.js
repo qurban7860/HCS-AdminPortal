@@ -73,7 +73,7 @@ export default function SiteEditForm() {
       city: site?.address?.city || '',
       region: site?.address?.region || '',
       postcode: site?.address?.postcode || '',
-      country: countries.find((contry) => contry?.label?.toLocaleLowerCase() === site?.address?.country?.toLocaleLowerCase()) || null,
+      country: countries?.find((contry) => contry?.label?.toLocaleLowerCase() === site?.address?.country?.toLocaleLowerCase()) || null,
       isActive: site?.isActive,
       primaryBillingContact: site?.primaryBillingContact || null,
       updateAddressPrimaryBillingContact: site?.updateAddressPrimaryBillingContact || false,
@@ -159,7 +159,7 @@ export default function SiteEditForm() {
                 <RHFTextField name="city" label="City" />
                 <RHFTextField name="region" label="Region" />
                 <RHFTextField name="postcode" label="Post Code" />
-                <RHFCountryAutocomplete name="country" label="Country" />
+                <RHFCountryAutocomplete name="country" label="Country" disableDefaultValue />
                 <RHFTextField name="lat" label="Latitude" />
                 <RHFTextField name="long" label="Longitude" />
               </Box>
