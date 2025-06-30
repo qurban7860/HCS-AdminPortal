@@ -18,7 +18,6 @@ import ViewFormField from '../../../components/ViewForms/ViewFormField';
 import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
 import { PATH_MACHINE, PATH_CRM } from '../../../routes/paths';
 import SecurityUserDialog from '../../../components/Dialog/SecurityUserDialog';
-import { useBoolean } from '../../../hooks/useBoolean';
 
 ContactViewForm.propTypes = {
   currentContact: PropTypes.object,
@@ -51,7 +50,7 @@ export default function ContactViewForm({
       dispatch(resetContact());
       dispatch(setIsExpanded(false));
       dispatch(setCardActiveIndex(null));
-      // dispatch(resetContactUsers());
+      dispatch(resetContactUsers());
     }
   }, [dispatch, customerId, id])
 
@@ -77,7 +76,7 @@ export default function ContactViewForm({
       firstName: contact?.firstName || '',
       lastName: contact?.lastName || '',
       title: contact?.title || '',
-      contactTypes: contact?.contactTypes || [],
+      contactTypes: Array.isArray(contact?.contactTypes) && contact?.contactTypes || [],
       phoneNumbers: contact ? contact.phoneNumbers : contact?.phoneNumbers || '',
       email: contact?.email || '',
       reportingTo: contact?.reportingTo || {},
@@ -122,7 +121,7 @@ export default function ContactViewForm({
   return (
     <Grid sx={{ mt: 1 }}>
 
-      <ViewFormEditDeleteButtons 
+      <ViewFormEditDeleteButtons
         showContactUsers
         moveCustomerContact={!customer?.isArchived && isAllAccessAllowed && handleMoveConatct}
         handleEdit={customer?.isArchived ? undefined : handleEdit}

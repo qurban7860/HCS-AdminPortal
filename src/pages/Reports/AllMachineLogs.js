@@ -237,9 +237,8 @@ function AllMachineLogs() {
                       selectedFilters={selectedMultiSearchFilter}
                       maxSelections={5}
                       maxSelectedDisplay={2}
-                      autoSelectFirst={false}
+                      autoSelectFirst
                       placeholder="Search across selected columns..."
-                      helperText="In case of number values, please input whole values and use same unit columns for search."
                     />
                     {/* <RHFFilteredSearchBar
                       name="filteredSearchKey"

@@ -39,6 +39,7 @@ function ViewFormEditDeleteButtons({
   isManufacture,
   isDeleteDisabled,
   customerAccess,
+  customerAccessLabel,
   forCustomer,
   formerEmployee,
   isRequired,
@@ -585,7 +586,7 @@ function ViewFormEditDeleteButtons({
 
           {customerAccess !== undefined &&
             <IconTooltip
-              title={customerAccess ? ICONS.ALLOWED.heading : ICONS.DISALLOWED.heading}
+              title={customerAccessLabel || (customerAccess ? ICONS.ALLOWED.heading : ICONS.DISALLOWED.heading)}
               color={customerAccess ? ICONS.ALLOWED.color : ICONS.DISALLOWED.color}
               icon={customerAccess ? ICONS.ALLOWED.icon : ICONS.DISALLOWED.icon}
             />
@@ -726,25 +727,25 @@ function ViewFormEditDeleteButtons({
 
           {showContactUsers && (
             <>
-          {Array.isArray(contactUsers) && contactUsers?.length > 0 &&
-            <Badge badgeContent={contactUsers.length} color="info">
-              <IconTooltip
-                title="Contact Users"
-                color={theme.palette.primary.main}
-                icon={ICONS.USER_VIEW.icon}
-                onClick={handleContactUsersPopoverOpen}
-              />
-            </Badge>
-          }
+              {Array.isArray(contactUsers) && contactUsers?.length > 0 &&
+                <Badge badgeContent={contactUsers.length} color="info">
+                  <IconTooltip
+                    title="Contact Users"
+                    color={theme.palette.primary.main}
+                    icon={ICONS.USER_VIEW.icon}
+                    onClick={handleContactUsersPopoverOpen}
+                  />
+                </Badge>
+              }
 
-          <ContactUsersPopover
-            open={contactUsersAnchorEl}
-            onClose={handleContactUsersPopoverClose}
-            onViewUser={handleViewUser}
-          />
-        </>
-        )}
-      
+              <ContactUsersPopover
+                open={contactUsersAnchorEl}
+                onClose={handleContactUsersPopoverClose}
+                onViewUser={handleViewUser}
+              />
+            </>
+          )}
+
 
           {/* map toggle button on mobile */}
           {sites && !isMobile && <IconPopover onMapClick={() => handleMap()} sites={sites} />}
@@ -885,7 +886,7 @@ function ViewFormEditDeleteButtons({
           {onRestore && isSecurityUserAccessAllowed && !isSecurityReadOnly && (
             <IconTooltip title="Restore" onClick={() => { handleOpenConfirm('restore') }} icon="mdi:restore" />
           )}
-          
+
           {/* delete button */}
           {id !== userId && !mainSite && (onArchive || onDelete) && !archived && (
             <IconTooltip
@@ -1155,6 +1156,7 @@ ViewFormEditDeleteButtons.propTypes = {
   isSubmitted: PropTypes.func,
   returnToSubmitted: PropTypes.func,
   customerAccess: PropTypes.bool,
+  customerAccessLabel: PropTypes.string,
   forCustomer: PropTypes.bool,
   formerEmployee: PropTypes.bool,
   multiAuth: PropTypes.bool,

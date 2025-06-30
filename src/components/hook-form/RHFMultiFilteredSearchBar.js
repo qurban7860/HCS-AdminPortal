@@ -223,21 +223,19 @@ export default function RHFMultiFilteredSearchBar({
                 <InputAdornment position="end">
                   <Stack direction="row" spacing={1} alignItems="center">
                     {searchKey?.length > 0 && (
-                      <Tooltip title="Clear search">
-                        <Button
-                          onClick={clearSearchOnly}
-                          color="warning"
-                          size="small"
-                          variant="outlined"
-                          startIcon={<Iconify icon="mdi:close" />}
-                          sx={{ minWidth: 'auto' }}
-                        >
-                          Search
-                        </Button>
-                      </Tooltip>
+                      <Button
+                        onClick={clearSearchOnly}
+                        color="warning"
+                        size="small"
+                        variant="outlined"
+                        startIcon={<Iconify icon="mdi:close" />}
+                        sx={{ minWidth: 'auto' }}
+                      >
+                        Clear search
+                      </Button>
                     )}
                     
-                    {(searchKey?.length > 0 || selectedFilters.length > 0) && (
+                    {/* {(searchKey?.length > 0 || selectedFilters.length > 0) && (
                       <Tooltip title="Clear all">
                         <Button
                           onClick={clearAll}
@@ -250,7 +248,7 @@ export default function RHFMultiFilteredSearchBar({
                           All
                         </Button>
                       </Tooltip>
-                    )}
+                    )} */}
 
                     <Divider orientation="vertical" flexItem sx={{my: 0.5}} />
                     <FormControl size={size}>
@@ -396,11 +394,11 @@ export default function RHFMultiFilteredSearchBar({
               </Typography>
             )}
             
-            {maxSelections && (
+            {/* {maxSelections && (
               <Typography variant="caption" color="text.secondary" sx={{ ml: 1, display: 'block' }}>
                 {selectedFilters.length}/{maxSelections} columns selected
               </Typography>
-            )}
+            )} */}
           </Box>
         </Stack>
       )}

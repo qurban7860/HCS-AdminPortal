@@ -55,6 +55,11 @@ const AllMachineGraphs = () => {
   const logPeriodOptions = isProductionRate ? ['Hourly'] : ['Hourly', 'Daily', 'Monthly', 'Quarterly', 'Yearly'];
 
   useEffect(() => {
+    graphDataRef.current = null;
+    dispatch(resetMachineLogsGraphData());
+  }, [customer, machine, logGraphType, logPeriod, dateFrom, dateTo, dispatch]);
+
+  useEffect(() => {
     const now = new Date();
     const newDateFrom = new Date(now);
 
@@ -246,16 +251,16 @@ const AllMachineGraphs = () => {
                       />
                     </Grid>
                     {!isProductionRate && (
-                    <Grid item xs={12} sm={6} md={2.5} xl={3}>
-                      <RHFAutocomplete
-                        name="logPeriod"
-                        label="Period*"
-                        options={logPeriodOptions}
-                        size="small"
-                        disableClearable
-                        fullWidth
-                      />
-                    </Grid>
+                      <Grid item xs={12} sm={6} md={2.5} xl={3}>
+                        <RHFAutocomplete
+                          name="logPeriod"
+                          label="Period*"
+                          options={logPeriodOptions}
+                          size="small"
+                          disableClearable
+                          fullWidth
+                        />
+                      </Grid>
                     )}
                     <Grid item xs={12} sm={6} md={2.5} xl={isProductionRate ? 4 : 2}>
                       <RHFDatePicker
@@ -264,25 +269,31 @@ const AllMachineGraphs = () => {
                         size="small"
                         fullWidth
                         onChange={(value) => {
-                          setValue('dateFrom', value, { shouldValidate: true });
-                          trigger('dateFrom');
+                          setValue('dateFrom', value, { shouldValidate: true, shouldDirty: true });
+                          if(logPeriod==='Hourly'){
+                            setValue('dateTo', value, { shouldValidate: true, shouldDirty: true });
+                          }
+                          trigger(['dateFrom', 'dateTo']);   
                         }}
                       />
                     </Grid>
                     {!isProductionRate && (
-                    <Grid item xs={12} sm={6} md={2.5} xl={2}>
-                      <RHFDatePicker
-                        label="Date To"
-                        name="dateTo"
-                        size="small"
-                        fullWidth
-                        onChange={(value) => {
-                          setValue('dateTo', value, { shouldValidate: true });
-                          trigger('dateTo');
+                      <Grid item xs={12} sm={6} md={2.5} xl={2}>
+                        <RHFDatePicker
+                          label="Date To"
+                          name="dateTo"
+                          size="small"
+                          fullWidth
+                          onChange={(value) => {
+                          setValue('dateTo', value, { shouldValidate: true, shouldDirty: true });
+                          if(logPeriod==='Hourly'){
+                            setValue('dateFrom', value, { shouldValidate: true, shouldDirty: true });
+                          }
+                          trigger(['dateFrom', 'dateTo']);   
                         }}
-                      />
-                    </Grid>)}
-
+                        />
+                      </Grid>
+                    )}
                     <Grid item xs={12} sm={12} md={1} sx={{ display: 'flex', justifyContent: 'flex-end' }} >
                       <StyledTooltip
                         title="Fetch Graph"
@@ -311,7 +322,7 @@ const AllMachineGraphs = () => {
             graphLabels={graphData.graphLabels}
             dateFrom={graphData.dateFrom}
             dateTo={graphData.dateTo}
-            machineSerialNo={graphData.machineSerialNo} 
+            machineSerialNo={graphData.machineSerialNo}
           />
         ) : (
           <ErpProductionRateLogGraph
@@ -321,7 +332,7 @@ const AllMachineGraphs = () => {
             dateFrom={graphData.dateFrom}
             dateTo={graphData.dateTo}
             efficiency={graphData.machine?.efficiency}
-            machineSerialNo={graphData.machineSerialNo} 
+            machineSerialNo={graphData.machineSerialNo}
           />
         )
       ) : (

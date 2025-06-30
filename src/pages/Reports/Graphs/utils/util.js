@@ -1,4 +1,3 @@
-
 export function validateGraphDateRange(dateFrom, dateTo, periodType) {
   const from = new Date(dateFrom);
   const to = new Date(dateTo);
@@ -9,6 +8,7 @@ export function validateGraphDateRange(dateFrom, dateTo, periodType) {
   const diffMs = to - from;
   const diffHours = diffMs / (1000 * 60 * 60);
   const diffDays = diffMs / (1000 * 60 * 60 * 24);
+  const diffYears = to.getFullYear() - from.getFullYear();
 
   switch (periodType) {
     case 'Hourly':
@@ -24,11 +24,15 @@ export function validateGraphDateRange(dateFrom, dateTo, periodType) {
       break;
 
     case 'Quarterly':
-      if (diffDays > 1095) return 'For quarterly, maximum period length is 3 years';
+      if (diffYears >= 3 && to.getMonth() > from.getMonth()) {
+        return 'For quarterly, maximum period is 3 years';
+      }
       break;
 
     case 'Yearly':
-      if (diffDays > 3650) return 'For yearly, maximum period length is 10 years';
+      if (diffYears > 10 || (diffYears === 10 && to.getMonth() > from.getMonth())) {
+        return 'For yearly, maximum period is 10 years';
+      }
       break;
 
     default:
