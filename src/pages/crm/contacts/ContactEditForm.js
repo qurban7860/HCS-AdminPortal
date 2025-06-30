@@ -90,7 +90,7 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
       firstName: contact?.firstName || '',
       lastName: contact?.lastName || '',
       title: contact?.title || '',
-      contactTypes: contact?.contactTypes || [],
+      contactTypes: Array.isArray(contact?.contactTypes) && contact?.contactTypes || [],
       phoneNumbers: Array.isArray(contact?.phoneNumbers) && contact.phoneNumbers.length ? contact.phoneNumbers : [{ type: '', countryCode: '64' }, { type: 'Fax', countryCode: '64' }],
       email: contact?.email || '',
       reportingTo: contact?.reportingTo || null,
