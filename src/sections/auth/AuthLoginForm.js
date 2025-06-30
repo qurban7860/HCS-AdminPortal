@@ -11,6 +11,8 @@ import { LoadingButton } from '@mui/lab';
 import { PATH_AUTH } from '../../routes/paths';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
+import { CONFIG } from '../../config-global'
+
 // components
 import FormProvider, { RHFTextField, RHFCheckbox, RHFPasswordField, RHFReCaptchaV2 } from '../../components/hook-form';
 
@@ -32,7 +34,11 @@ export default function AuthLoginForm() {
       .required('Login/Email address is Required!')
       .max(200),
     password: Yup.string().label("Password").required('Password is Required!'),
-    recaptchaToken: Yup.string().label("reCAPTCHA").required('reCAPTCHA is Required!'),
+    recaptchaToken: Yup.string().label("reCAPTCHA").when([], {
+      is: () => !!CONFIG?.RECAPTCHA_KEY,
+      then: (schema) => schema.required("reCAPTCHA is Required!"),
+      otherwise: (schema) => schema.notRequired(),
+    })
   });
 
   const defaultValues = {
@@ -129,7 +135,7 @@ export default function AuthLoginForm() {
 
         <RHFCheckbox name="remember" label="Remember Me" variant="soft" />
 
-        {email.trim() && password.trim().length >= 6 && (
+        {email.trim() && password.trim().length >= 6 && CONFIG?.RECAPTCHA_KEY && (
           <RHFReCaptchaV2
             name='recaptchaToken'
           />
@@ -142,7 +148,7 @@ export default function AuthLoginForm() {
           type="submit"
           variant="contained"
           loading={isSubmitSuccessful || isSubmitting}
-          disabled={!email.trim() || password.trim().length < 6 || !recaptchaToken}
+          disabled={CONFIG?.RECAPTCHA_KEY && (!email.trim() || password.trim().length < 6 || !recaptchaToken)}
           sx={{ bgcolor: '#10079F', color: 'white', '&:hover': { bgcolor: '#FFA200' } }}
         >
           Login

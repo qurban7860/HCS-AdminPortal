@@ -380,7 +380,29 @@ function DocumentHistoryViewForm({ customerPage, machinePage, machineDrawingPage
               customerPage={customerPage}
               machinePage={machinePage}
               drawingPage={machineDrawingPage}
-              customerAccess={defaultValues?.customerAccess}
+              customerAccess={defaultValues?.customerAccess || documentHistory?.docType?.customerAccess || documentHistory?.docCategory?.customerAccess || false}
+              customerAccessLabel={
+                [
+                  documentHistory?.customerAccess && ((machineDrawingPage || machineDrawings) ? 'Drawings' : 'Document'),
+                  documentHistory?.docType?.customerAccess && 'Type',
+                  documentHistory?.documentType?.customerAccess && 'Type',
+                  documentHistory?.docCategory?.customerAccess && 'Category',
+                  documentHistory?.documentCategory?.customerAccess && 'Category',
+                ]
+                  .filter(Boolean)
+                  .join(', ')
+                  .trim()
+                  ? `Customer allowed from ${[
+                    documentHistory?.customerAccess && 'Document',
+                    documentHistory?.docType?.customerAccess && 'Type',
+                    documentHistory?.documentType?.customerAccess && 'Type',
+                    documentHistory?.docCategory?.customerAccess && 'Category',
+                    documentHistory?.documentCategory?.customerAccess && 'Category',
+                  ]
+                    .filter(Boolean)
+                    .join(', ')}`
+                  : ''
+              }
               isActive={defaultValues.isActive}
               handleEdit={(machineDrawingPage || (machineDrawings && !documentHistory?.machine && documentHistory?.productDrawings?.length === 0)) && !allowActions && handleEditDrawing}
               onDelete={machineDrawingPage ? !allowActions && handleDeleteDrawing : !((!machinePage && documentHistory?.machine?._id) || (!customerPage && documentHistory?.customer?._id) || (machineDrawings && documentHistory?.productDrawings?.length > 0)) && !allowActions && handleDelete || undefined}

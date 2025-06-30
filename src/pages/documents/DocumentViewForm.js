@@ -44,22 +44,22 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId, allow
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  useLayoutEffect(()=>{
-    if( machinePage || customerPage ){
+  useLayoutEffect(() => {
+    if (machinePage || customerPage) {
       dispatch(getDocument(id))
     }
     return () => {
       dispatch(resetDocument())
     }
-  },[ dispatch, id, machinePage, customerPage ]);
+  }, [dispatch, id, machinePage, customerPage]);
 
   const onDelete = async () => {
     try {
       await dispatch(deleteDocument(id));
-      if( customerPage ) {
-        navigate(PATH_CRM.customers.documents.root( customer?._id ));
-      }else if( machinePage ){
-        navigate(PATH_MACHINE.machines.documents.root( machineId ));;
+      if (customerPage) {
+        navigate(PATH_CRM.customers.documents.root(customer?._id));
+      } else if (machinePage) {
+        navigate(PATH_MACHINE.machines.documents.root(machineId));;
       }
       enqueueSnackbar(Snacks.deletedDoc, { variant: `success` });
     } catch (err) {
@@ -69,18 +69,18 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId, allow
   };
 
   const handleEdit = async () => {
-    if( customerPage ){
-      navigate(PATH_CRM.customers.documents.edit( customerId, id ));
-    } else if( machinePage ){
-      navigate(PATH_MACHINE.machines.documents.edit( machineId, id ));
+    if (customerPage) {
+      navigate(PATH_CRM.customers.documents.edit(customerId, id));
+    } else if (machinePage) {
+      navigate(PATH_MACHINE.machines.documents.edit(machineId, id));
     }
   };
 
   const linkDocumentView = async () => {
-    if( customerPage ){
-      navigate(PATH_CRM.customers.documents.history.root( customerId, document?._id ));
-    } else if( machinePage ){
-      navigate(PATH_MACHINE.machines.documents.history.root( machineId, document?._id ));
+    if (customerPage) {
+      navigate(PATH_CRM.customers.documents.history.root(customerId, document?._id));
+    } else if (machinePage) {
+      navigate(PATH_MACHINE.machines.documents.history.root(machineId, document?._id));
     }
   };
 
@@ -103,7 +103,7 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId, allow
         document?.documentVersions && document?.documentVersions?.length > 0
           ? document?.documentVersions[0]?.versionNo
           : '',
-      documentVersionLength: document?.documentVersions?.length > 1 ,
+      documentVersionLength: document?.documentVersions?.length > 1,
       versionPrefix: document?.versionPrefix || '',
       description: document?.description,
       isActive: document?.isActive,
@@ -119,20 +119,20 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId, allow
   );
 
   const handleNewVersion = async () => {
-      await dispatch(resetDocumentHistory());
-      if( customerPage && customerId && id ){
-        await navigate(PATH_CRM.customers.documents.view.newVersion( customerId, id ));
-      }else if( machinePage && machineId && id ){
-        await navigate(PATH_MACHINE.machines.documents.view.newVersion( machineId, id ));
-      }
+    await dispatch(resetDocumentHistory());
+    if (customerPage && customerId && id) {
+      await navigate(PATH_CRM.customers.documents.view.newVersion(customerId, id));
+    } else if (machinePage && machineId && id) {
+      await navigate(PATH_MACHINE.machines.documents.view.newVersion(machineId, id));
+    }
   }
 
   const handleNewFile = async () => {
     await dispatch(resetDocumentHistory());
-    if( customerPage && customerId && id ){
-      await navigate(PATH_CRM.customers.documents.view.addFile( customerId, id ));
-    } else if( machinePage && machineId && id ){
-      await navigate(PATH_MACHINE.machines.documents.view.addFile( machineId, id ));
+    if (customerPage && customerId && id) {
+      await navigate(PATH_CRM.customers.documents.view.addFile(customerId, id));
+    } else if (machinePage && machineId && id) {
+      await navigate(PATH_MACHINE.machines.documents.view.addFile(machineId, id));
     }
   }
 
@@ -144,29 +144,29 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId, allow
     // Assuming documentHistory is fetched or updated asynchronously
     if (document?.documentVersions) {
       const newSlides = document?.documentVersions[0]?.files?.map((file) => {
-          if (file?.fileType && file.fileType.startsWith("image")) {
-            return{
-              thumbnail: `data:image/png;base64, ${file.thumbnail}`,
-              src: `data:image/png;base64, ${file.thumbnail}`,
-              downloadFilename: `${file?.name}.${file?.extension}`,
-              name: file?.name,
-              title:<Grid>
-                <Typography variant='h4'>{document?.machine?.serialNo} - {document?.machine?.name}</Typography>
-                <Typography variant='body2'>{document?.displayName}</Typography>
-                <Typography variant='body2'>{document?.docCategory?.name}</Typography>
-              </Grid>,
-              extension: file?.extension,
-              category: file?.docCategory?.name,
-              fileType: file?.fileType,
-              isLoaded: false,
-              _id: file?._id,
-              width: '100%',
-              height: '100%',
-            }
+        if (file?.fileType && file.fileType.startsWith("image")) {
+          return {
+            thumbnail: `data:image/png;base64, ${file.thumbnail}`,
+            src: `data:image/png;base64, ${file.thumbnail}`,
+            downloadFilename: `${file?.name}.${file?.extension}`,
+            name: file?.name,
+            title: <Grid>
+              <Typography variant='h4'>{document?.machine?.serialNo} - {document?.machine?.name}</Typography>
+              <Typography variant='body2'>{document?.displayName}</Typography>
+              <Typography variant='body2'>{document?.docCategory?.name}</Typography>
+            </Grid>,
+            extension: file?.extension,
+            category: file?.docCategory?.name,
+            fileType: file?.fileType,
+            isLoaded: false,
+            _id: file?._id,
+            width: '100%',
+            height: '100%',
           }
-          return null;
-        }).filter(Boolean) // Remove null entries from the array
-  
+        }
+        return null;
+      }).filter(Boolean) // Remove null entries from the array
+
       setSlides(newSlides);
     }
   }, [document]);
@@ -176,7 +176,7 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId, allow
     setSelectedImage(index);
     const image = slides[index];
 
-    if(!image?.isLoaded && image?.fileType?.startsWith('image')){
+    if (!image?.isLoaded && image?.fileType?.startsWith('image')) {
       try {
         const response = await dispatch(downloadFile(image?._id));
         if (regEx.test(response.status)) {
@@ -263,92 +263,113 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId, allow
     }
   };
 
-  const handleBackLink = ()=>{
-    if(customerPage) {
-      navigate(PATH_CRM.customers.documents.root( customerId ));
-    } else if( machinePage ){
-      navigate(PATH_MACHINE.machines.documents.root(machineId)) 
+  const handleBackLink = () => {
+    if (customerPage) {
+      navigate(PATH_CRM.customers.documents.root(customerId));
+    } else if (machinePage) {
+      navigate(PATH_MACHINE.machines.documents.root(machineId))
     }
   }
 
   return (
     <>
-    <Card sx={{ p: 2 }}>
-      <ViewFormEditDeleteButtons isActive={defaultValues.isActive} 
-        customerAccess={defaultValues?.customerAccess} 
-        handleEdit={ !allowActions && handleEdit}
-        onDelete={ !allowActions && onDelete}
-        isLoading={isLoading}
-        disableDeleteButton={machinePage && machine?.status?.slug==="transferred"}
-        backLink={ handleBackLink} 
-        disableEditButton={machine?.status?.slug==='transferred'}
-        // drawingPage={ !customerPage || !machinePage }
-        archived={customer?.isArchived}
-        customerPage={customerPage} machinePage={machinePage} drawingPage={drawingPage}
-      />
-      <Grid container>
-        <ViewFormField isLoading={isLoading} sm={6} heading="Name" param={defaultValues?.displayName} />
-        <ViewFormField isLoading={isLoading}
-          sm={6}
-          heading="Version"
-          handleAllVersion={linkDocumentView}
-          handleNewVersion={ !allowActions && handleNewVersion}
-          node={
-            <StyledVersionChip
-              label={defaultValues.versionPrefix + defaultValues.documentVersion}
-              size="small"
-              variant="outlined"
-            />
+      <Card sx={{ p: 2 }}>
+        <ViewFormEditDeleteButtons isActive={defaultValues.isActive}
+          customerAccess={defaultValues?.customerAccess || document?.docType?.customerAccess || document?.docCategory?.customerAccess || false}
+          customerAccessLabel={
+            [
+              document?.customerAccess && (drawingPage ? 'Drawings' : 'Document'),
+              document?.docType?.customerAccess && 'Type',
+              document?.documentType?.customerAccess && 'Type',
+              document?.docCategory?.customerAccess && 'Category',
+              document?.documentCategory?.customerAccess && 'Category',
+            ]
+              .filter(Boolean)
+              .join(', ')
+              .trim()
+              ? `Customer allowed from ${[
+                document?.customerAccess && 'Document',
+                document?.docType?.customerAccess && 'Type',
+                document?.documentType?.customerAccess && 'Type',
+                document?.docCategory?.customerAccess && 'Category',
+                document?.documentCategory?.customerAccess && 'Category',
+              ]
+                .filter(Boolean)
+                .join(', ')}`
+              : ''
           }
-          ViewAllVersions = {document?.isArchived}
-          NewVersion = {document?.isArchived}
-          isNewVersion
+          handleEdit={!allowActions && handleEdit}
+          onDelete={!allowActions && onDelete}
+          isLoading={isLoading}
+          disableDeleteButton={machinePage && machine?.status?.slug === "transferred"}
+          backLink={handleBackLink}
+          disableEditButton={machine?.status?.slug === 'transferred'}
+          // drawingPage={ !customerPage || !machinePage }
+          archived={customer?.isArchived}
+          customerPage={customerPage} machinePage={machinePage} drawingPage={drawingPage}
         />
-        <ViewFormField isLoading={isLoading} sm={6} heading="Document Category" param={defaultValues?.docCategory} />
-        <ViewFormField isLoading={isLoading} sm={6} heading="Document Type" param={defaultValues?.docType} />
-        <ViewFormField isLoading={isLoading} sm={6} heading="Reference Number" param={defaultValues?.referenceNumber} />
-        <ViewFormField isLoading={isLoading} sm={6} heading="Stock Number" param={defaultValues?.stockNumber} />
-        {!customerPage && !machinePage && (
-          <>
-            <ViewFormField isLoading={isLoading} sm={6} variant='h4' heading="Customer" param={defaultValues?.customer} />
-            <ViewFormField isLoading={isLoading} sm={6} variant='h4' heading="Machine" param={defaultValues?.machine} />
-          </>
-        )}
-        <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues?.description} />
+        <Grid container>
+          <ViewFormField isLoading={isLoading} sm={6} heading="Name" param={defaultValues?.displayName} />
+          <ViewFormField isLoading={isLoading}
+            sm={6}
+            heading="Version"
+            handleAllVersion={linkDocumentView}
+            handleNewVersion={!allowActions && handleNewVersion}
+            node={
+              <StyledVersionChip
+                label={defaultValues.versionPrefix + defaultValues.documentVersion}
+                size="small"
+                variant="outlined"
+              />
+            }
+            ViewAllVersions={document?.isArchived}
+            NewVersion={document?.isArchived}
+            isNewVersion
+          />
+          <ViewFormField isLoading={isLoading} sm={6} heading="Document Category" param={defaultValues?.docCategory} />
+          <ViewFormField isLoading={isLoading} sm={6} heading="Document Type" param={defaultValues?.docType} />
+          <ViewFormField isLoading={isLoading} sm={6} heading="Reference Number" param={defaultValues?.referenceNumber} />
+          <ViewFormField isLoading={isLoading} sm={6} heading="Stock Number" param={defaultValues?.stockNumber} />
+          {!customerPage && !machinePage && (
+            <>
+              <ViewFormField isLoading={isLoading} sm={6} variant='h4' heading="Customer" param={defaultValues?.customer} />
+              <ViewFormField isLoading={isLoading} sm={6} variant='h4' heading="Machine" param={defaultValues?.machine} />
+            </>
+          )}
+          <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues?.description} />
 
-        <Grid container sx={{ mt: 2 }}>
-          <ViewFormAudit defaultValues={defaultValues} />
-        </Grid>
+          <Grid container sx={{ mt: 2 }}>
+            <ViewFormAudit defaultValues={defaultValues} />
+          </Grid>
 
-        <FormLabel content='Documents' />
-        <Box
-          sx={{mt:2, width:'100%'}}
-          gap={1}
-          display="grid"
-          gridTemplateColumns={{
-            xs: 'repeat(1, 1fr)',
-            sm: 'repeat(3, 1fr)',
-            md: 'repeat(5, 1fr)',
-            lg: 'repeat(6, 1fr)',
-            xl: 'repeat(8, 1fr)',
-          }}
-        >
+          <FormLabel content='Documents' />
+          <Box
+            sx={{ mt: 2, width: '100%' }}
+            gap={1}
+            display="grid"
+            gridTemplateColumns={{
+              xs: 'repeat(1, 1fr)',
+              sm: 'repeat(3, 1fr)',
+              md: 'repeat(5, 1fr)',
+              lg: 'repeat(6, 1fr)',
+              xl: 'repeat(8, 1fr)',
+            }}
+          >
 
-          {slides?.map((file, _index) => (
-            <DocumentGalleryItem isLoading={isLoading} key={file?._id} image={file} 
-              onOpenLightbox={()=> handleOpenLightbox(_index)}
-              onDownloadFile={()=> handleDownloadFile(document._id, document?.documentVersions[0]._id, file._id, file?.name, file?.extension)}
-              onDeleteFile={()=> handleDeleteFile(document._id, document?.documentVersions[0]._id, file._id)}
-              toolbar
-              isArchived={customer?.isArchived || machine?.isArchived }
-              size={150}
-            />
-          ))}
+            {slides?.map((file, _index) => (
+              <DocumentGalleryItem isLoading={isLoading} key={file?._id} image={file}
+                onOpenLightbox={() => handleOpenLightbox(_index)}
+                onDownloadFile={() => handleDownloadFile(document._id, document?.documentVersions[0]._id, file._id, file?.name, file?.extension)}
+                onDeleteFile={() => handleDeleteFile(document._id, document?.documentVersions[0]._id, file._id)}
+                toolbar
+                isArchived={customer?.isArchived || machine?.isArchived}
+                size={150}
+              />
+            ))}
 
-          {document?.documentVersions &&
-              document?.documentVersions[0]?.files?.map((file, _index) =>  
-              {
-                if(!file.fileType.startsWith('image')){
+            {document?.documentVersions &&
+              document?.documentVersions[0]?.files?.map((file, _index) => {
+                if (!file.fileType.startsWith('image')) {
                   return <DocumentGalleryItem key={file?._id} image={{
                     thumbnail: `data:image/png;base64, ${file.thumbnail}`,
                     src: `data:image/png;base64, ${file.thumbnail}`,
@@ -361,45 +382,45 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId, allow
                     id: file?._id,
                     width: '100%',
                     height: '100%',
-                  }} isLoading={isLoading} 
-                  onDownloadFile={()=> handleDownloadFile(document._id, document?.documentVersions[0]._id, file._id, file?.name, file?.extension)}
-                  onDeleteFile={()=> customerPage && !customer?.isArchived && handleDeleteFile(document._id, document?.documentVersions[0]._id, file._id)}
-                  onOpenFile={()=> handleOpenFile(document._id, document?.documentVersions[0]._id, file._id, file?.name, file?.extension)}
-                  toolbar
-                  isArchived={customer?.isArchived || machine?.isArchived }
+                  }} isLoading={isLoading}
+                    onDownloadFile={() => handleDownloadFile(document._id, document?.documentVersions[0]._id, file._id, file?.name, file?.extension)}
+                    onDeleteFile={() => customerPage && !customer?.isArchived && handleDeleteFile(document._id, document?.documentVersions[0]._id, file._id)}
+                    onOpenFile={() => handleOpenFile(document._id, document?.documentVersions[0]._id, file._id, file?.name, file?.extension)}
+                    toolbar
+                    isArchived={customer?.isArchived || machine?.isArchived}
                   />
                 }
                 return null;
               }
-          )}
+              )}
 
-          {!customer?.isArchived && <ThumbnailDocButton onClick={handleNewFile}/>}
-        </Box>
-        
-        <Lightbox
-          index={selectedImage}
-          slides={slides}
-          open={selectedImage >= 0}
-          close={handleCloseLightbox}
-          onGetCurrentIndex={(index) => handleOpenLightbox(index)}
-          disabledSlideshow
-        />
-      </Grid>
-    </Card>
-    {PDFViewerDialog && (
-      <Dialog fullScreen open={PDFViewerDialog} onClose={()=> setPDFViewerDialog(false)}>
-        <DialogTitle variant='h3' sx={{pb:1, pt:2, display:'flex', justifyContent:'space-between'}}>
+            {!customer?.isArchived && <ThumbnailDocButton onClick={handleNewFile} />}
+          </Box>
+
+          <Lightbox
+            index={selectedImage}
+            slides={slides}
+            open={selectedImage >= 0}
+            close={handleCloseLightbox}
+            onGetCurrentIndex={(index) => handleOpenLightbox(index)}
+            disabledSlideshow
+          />
+        </Grid>
+      </Card>
+      {PDFViewerDialog && (
+        <Dialog fullScreen open={PDFViewerDialog} onClose={() => setPDFViewerDialog(false)}>
+          <DialogTitle variant='h3' sx={{ pb: 1, pt: 2, display: 'flex', justifyContent: 'space-between' }}>
             PDF View
-              <Button variant='outlined' onClick={()=> setPDFViewerDialog(false)}>Close</Button>
-        </DialogTitle>
-        <Divider variant='fullWidth' />
-          {pdf?(
-              <iframe title={PDFName} src={pdf} style={{paddingBottom:10}} width='100%' height='842px'/>
-            ):(
-              <SkeletonPDF />
-            )}
-      </Dialog>
-    )}
+            <Button variant='outlined' onClick={() => setPDFViewerDialog(false)}>Close</Button>
+          </DialogTitle>
+          <Divider variant='fullWidth' />
+          {pdf ? (
+            <iframe title={PDFName} src={pdf} style={{ paddingBottom: 10 }} width='100%' height='842px' />
+          ) : (
+            <SkeletonPDF />
+          )}
+        </Dialog>
+      )}
     </>
   );
 }
