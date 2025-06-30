@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -15,6 +16,7 @@ import { StyledTooltip, StyledContainedIconButton } from '../../../theme/styles/
 import ErpProducedLengthLogGraph from '../../Reports/Graphs/ErpProducedLengthLogGraph';
 import ErpProductionRateLogGraph from '../../Reports/Graphs/ErpProductionRateLogGraph';
 import { getMachineLogGraphData } from '../../../redux/slices/products/machineErpLogs';
+import TableNoData from "../../../components/table/TableNoData";
 
 MachineLogsGraphViewForm.propTypes = {
   machineId: PropTypes.bool,
@@ -56,10 +58,15 @@ export default function MachineLogsGraphViewForm() {
   const logPeriodData = watch('logPeriod');
   const logGraphTypeData = watch('logGraphType');
   const dateFromData = watch('dateFrom');
+  const dateToData = watch('dateTo');
 
 
   const isProductionRate = logGraphTypeData?.key === 'productionRate';
   const logPeriodOptions = isProductionRate ? ['Hourly'] : ['Hourly', 'Daily', 'Monthly', 'Quarterly', 'Yearly'];
+  
+  useEffect(() => {
+    setTriggerFetch(null);
+  }, [logGraphTypeData, logPeriodData, dateFromData, dateToData]);
 
   useEffect(() => {
     const now = new Date();
@@ -294,7 +301,8 @@ export default function MachineLogsGraphViewForm() {
         </form>
       </FormProvider>
 
-      {triggerFetch?.logGraphType?.key === 'length_and_waste' ? (
+    {triggerFetch ? (
+      triggerFetch?.logGraphType?.key === 'length_and_waste' ? (
         <ErpProducedLengthLogGraph
           timePeriod={graphLabels?.xaxis}
           customer={machine?.customer}
@@ -313,7 +321,12 @@ export default function MachineLogsGraphViewForm() {
           efficiency={machine?.efficiency}
           machineSerialNo={machine?.serialNo}
         />
-      )}
+      )
+    ) : (
+      <Card sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 2, minHeight: 500 }}>
+        <TableNoData isNotFound />
+      </Card>
+    )}
     </Container>
   );
 }
