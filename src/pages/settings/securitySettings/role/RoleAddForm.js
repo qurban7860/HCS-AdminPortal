@@ -45,7 +45,7 @@ export default function RoleAddForm({ currentRole }) {
 
   useEffect(() => {
     const configurations = JSON.parse(localStorage.getItem('configurations'));
-    const roleTypes = configurations.find((c) => c?.name?.trim() === 'userRoleTypes')?.value?.split(',')?.map(r => r?.trim());
+    const roleTypes = configurations.find((c) => c?.name?.trim()?.toLowerCase() === 'userroletypes')?.value?.split(',')?.map(r => r?.trim());
     if (Array.isArray(roleTypes)) {
       setUserRoleTypes(roleTypes)
     }
