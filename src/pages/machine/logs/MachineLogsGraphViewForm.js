@@ -250,8 +250,11 @@ export default function MachineLogsGraphViewForm() {
                     name="dateFrom"
                     size="small"
                     onChange={(value) => {
-                      setValue('dateFrom', value, { shouldValidate: true });
-                      trigger('dateFrom');
+                      setValue('dateFrom', value, { shouldValidate: true, shouldDirty: true });
+                      if(logPeriodData==='Hourly'){
+                        setValue('dateTo', value, { shouldValidate: true, shouldDirty: true });
+                      }
+                      trigger(['dateFrom', 'dateTo']);   
                     }}
                     fullWidth
                   />
@@ -263,8 +266,11 @@ export default function MachineLogsGraphViewForm() {
                     name="dateTo"
                     size="small"
                     onChange={(value) => {
-                      setValue('dateTo', value, { shouldValidate: true });
-                      trigger('dateTo');
+                      setValue('dateTo', value, { shouldValidate: true, shouldDirty: true });
+                      if(logPeriodData==='Hourly'){
+                        setValue('dateFrom', value, { shouldValidate: true, shouldDirty: true });
+                      }
+                      trigger(['dateFrom', 'dateTo']);   
                     }}
                     fullWidth
                   />

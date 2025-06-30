@@ -264,8 +264,11 @@ const AllMachineGraphs = () => {
                         size="small"
                         fullWidth
                         onChange={(value) => {
-                          setValue('dateFrom', value, { shouldValidate: true });
-                          trigger('dateFrom');
+                          setValue('dateFrom', value, { shouldValidate: true, shouldDirty: true });
+                          if(logPeriod==='Hourly'){
+                            setValue('dateTo', value, { shouldValidate: true, shouldDirty: true });
+                          }
+                          trigger(['dateFrom', 'dateTo']);   
                         }}
                       />
                     </Grid>
@@ -277,8 +280,11 @@ const AllMachineGraphs = () => {
                         size="small"
                         fullWidth
                         onChange={(value) => {
-                          setValue('dateTo', value, { shouldValidate: true });
-                          trigger('dateTo');
+                          setValue('dateTo', value, { shouldValidate: true, shouldDirty: true });
+                          if(logPeriod==='Hourly'){
+                            setValue('dateFrom', value, { shouldValidate: true, shouldDirty: true });
+                          }
+                          trigger(['dateFrom', 'dateTo']);   
                         }}
                       />
                     </Grid>)}
