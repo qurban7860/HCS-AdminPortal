@@ -91,7 +91,7 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
       lastName: contact?.lastName || '',
       title: contact?.title || '',
       contactTypes: contact?.contactTypes || [],
-      phoneNumbers: Array.isArray(contact?.phoneNumbers) && contact.phoneNumbers.length ? contact.phoneNumbers : [ { type: '', countryCode: '64' }, { type: 'Fax', countryCode: '64' } ],
+      phoneNumbers: Array.isArray(contact?.phoneNumbers) && contact.phoneNumbers.length ? contact.phoneNumbers : [{ type: '', countryCode: '64' }, { type: 'Fax', countryCode: '64' }],
       email: contact?.email || '',
       reportingTo: contact?.reportingTo || null,
       department: contact?.department || null,
@@ -102,7 +102,7 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
       postcode: contact?.address?.postcode || '',
       isActive: contact?.isActive,
       formerEmployee: contact?.formerEmployee || false,
-      country: countries.find((contry) => contry?.label?.toLocaleLowerCase() === contact?.address?.country?.toLocaleLowerCase()) || null,
+      country: countries?.find((contry) => contry?.label?.toLocaleLowerCase() === contact?.address?.country?.toLocaleLowerCase()) || null,
     }),
     [contact]
   );
@@ -251,7 +251,7 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
                 <RHFTextField name={FORMLABELS.CITY.name} label={FORMLABELS.CITY.label} />
                 <RHFTextField name={FORMLABELS.REGION.name} label={FORMLABELS.REGION.label} />
                 <RHFTextField name={FORMLABELS.POSTCODE.name} label={FORMLABELS.POSTCODE.label} />
-                <RHFCountryAutocomplete name={FORMLABELS.COUNTRY.name} label={FORMLABELS.COUNTRY.label} />
+                <RHFCountryAutocomplete disableDefaultValue name={FORMLABELS.COUNTRY.name} label={FORMLABELS.COUNTRY.label} />
 
               </Box>
               <Box display="flex" alignItems="center" gridTemplateColumns={{ sm: 'repeat(1, 1fr)' }} >
