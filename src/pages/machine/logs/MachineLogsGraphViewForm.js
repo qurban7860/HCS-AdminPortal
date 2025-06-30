@@ -27,8 +27,8 @@ export default function MachineLogsGraphViewForm() {
     yaxis: 'Produced Length & Waste (m)',
     xaxis: 'Daily',
   });
-  const [triggerFetch, setTriggerFetch] = useState(null);
 
+  const [triggerFetch, setTriggerFetch] = useState(null);
   const dispatch = useDispatch();
   const { machineId } = useParams();
   const { machine } = useSelector((state) => state.machine);
@@ -54,61 +54,54 @@ export default function MachineLogsGraphViewForm() {
   });
 
   const { setValue, getValues, handleSubmit, trigger, watch } = methods;
-  
+
   const logPeriodData = watch('logPeriod');
   const logGraphTypeData = watch('logGraphType');
   const dateFromData = watch('dateFrom');
   const dateToData = watch('dateTo');
-
-
   const isProductionRate = logGraphTypeData?.key === 'productionRate';
   const logPeriodOptions = isProductionRate ? ['Hourly'] : ['Hourly', 'Daily', 'Monthly', 'Quarterly', 'Yearly'];
-  
+
   useEffect(() => {
-    setTriggerFetch(null);
+    if (triggerFetch) setTriggerFetch(null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [logGraphTypeData, logPeriodData, dateFromData, dateToData]);
 
   useEffect(() => {
     const now = new Date();
     const newDateFrom = new Date(now);
-    
     newDateFrom.setHours(0, 0, 0, 0);
     now.setHours(23, 59, 59, 999);
-  
+
     switch (logPeriodData) {
       case 'Hourly':
         break;
-  
       case 'Daily':
         newDateFrom.setDate(newDateFrom.getDate() - 30);
         break;
-  
       case 'Monthly':
         newDateFrom.setMonth(newDateFrom.getMonth() - 11);
         newDateFrom.setDate(1);
         break;
-  
       case 'Quarterly':
         newDateFrom.setMonth(newDateFrom.getMonth() - 35);
         newDateFrom.setMonth(Math.floor(newDateFrom.getMonth() / 3) * 3, 1);
         break;
-  
       case 'Yearly':
         newDateFrom.setFullYear(newDateFrom.getFullYear() - 9);
         newDateFrom.setMonth(0, 1);
         break;
-  
       default:
         newDateFrom.setDate(newDateFrom.getDate() - 30);
         break;
     }
-  
+
     setValue('dateTo', now);
     setValue('dateFrom', newDateFrom);
     trigger(['dateFrom', 'dateTo']);
   }, [logPeriodData, setValue, trigger]);
-  
-   useEffect(() => {
+
+  useEffect(() => {
     if (isProductionRate && dateFromData) {
       const to = new Date(dateFromData);
       to.setHours(23, 59, 59, 999);
@@ -117,11 +110,9 @@ export default function MachineLogsGraphViewForm() {
   }, [isProductionRate, dateFromData, setValue]);
 
   useEffect(() => {
-    if (isProductionRate) {
-      if (logPeriodData !== 'Hourly') {
-        setValue('logPeriod', 'Hourly');
-        trigger('logPeriod');
-      }
+    if (isProductionRate && logPeriodData !== 'Hourly') {
+      setValue('logPeriod', 'Hourly');
+      trigger('logPeriod');
     }
   }, [isProductionRate, logPeriodData, setValue, trigger]);
 
@@ -152,46 +143,20 @@ export default function MachineLogsGraphViewForm() {
           : 'Meterage Produced',
       xaxis: logPeriod,
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [getValues, machine?.customer?._id, machineId]);
+  }, [getValues, machine?.customer?._id, machineId, dispatch]);
 
   useEffect(() => {
     if (
+      machine?.customer?._id &&
       defaultValues?.logGraphType &&
       defaultValues?.logPeriod &&
       defaultValues?.dateFrom &&
-      defaultValues?.dateTo &&
-      machine?.customer?._id
+      defaultValues?.dateTo
     ) {
-      const { logPeriod, logGraphType, dateFrom, dateTo } = defaultValues;
-      const customerId = machine?.customer?._id;
-
-      const payload = { logPeriod, logGraphType, dateFrom, dateTo };
-      setTriggerFetch(payload);
-
-      dispatch(
-        getMachineLogGraphData(
-          customerId,
-          machineId,
-          'erp',
-          logPeriod,
-          logGraphType.key,
-          dateFrom,
-          dateTo
-        )
-      );
-
-      setGraphLabels({
-        yaxis:
-          logGraphType.key === 'productionRate'
-            ? 'Production Rate (m/hr)'
-            : 'Meterage Produced',
-        xaxis: logPeriod,
-      });
+      handleFormSubmit();
     }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [defaultValues, machine?.customer?._id, machineId]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [machine?.customer?._id, machineId]); 
 
   const handlePeriodChange = useCallback(
     (newPeriod) => {
@@ -215,7 +180,7 @@ export default function MachineLogsGraphViewForm() {
           <Card sx={{ p: 3 }}>
             <Stack spacing={2}>
               <Typography variant="h5" sx={{ pb: 1 }}>
-                Log Graphs   
+                Log Graphs
               </Typography>
 
               <Grid container alignItems="flex-start" gap={1}>
@@ -237,53 +202,54 @@ export default function MachineLogsGraphViewForm() {
                     fullWidth
                   />
                 </Grid>
-                
+
                 {!isProductionRate && (
-                <Grid item xs={12} sm={6} md={2.5} xl={3}>
-                  <RHFAutocomplete
-                    name="logPeriod"
-                    label="Period*"
-                    options={logPeriodOptions}
-                    onChange={(e, newValue) => handlePeriodChange(newValue)}
-                    size="small"
-                    disableClearable
-                    fullWidth
-                  />
-                </Grid> )}
-         
+                  <Grid item xs={12} sm={6} md={2.5} xl={3}>
+                    <RHFAutocomplete
+                      name="logPeriod"
+                      label="Period*"
+                      options={logPeriodOptions}
+                      onChange={(e, newValue) => handlePeriodChange(newValue)}
+                      size="small"
+                      disableClearable
+                      fullWidth
+                    />
+                  </Grid>
+                )}
+
                 <Grid item xs={12} sm={6} md={2.5} xl={isProductionRate ? 4 : 2}>
-                <RHFDatePicker
+                  <RHFDatePicker
                     label="Date From"
                     name="dateFrom"
                     size="small"
                     onChange={(value) => {
                       setValue('dateFrom', value, { shouldValidate: true, shouldDirty: true });
-                      if(logPeriodData==='Hourly'){
+                      if (logPeriodData === 'Hourly') {
                         setValue('dateTo', value, { shouldValidate: true, shouldDirty: true });
                       }
-                      trigger(['dateFrom', 'dateTo']);   
+                      trigger(['dateFrom', 'dateTo']);
                     }}
                     fullWidth
                   />
                 </Grid>
                 {!isProductionRate && (
-                <Grid item xs={12} sm={6} md={2.5} xl={2}>
-                  <RHFDatePicker
-                    label="Date To"
-                    name="dateTo"
-                    size="small"
-                    onChange={(value) => {
-                      setValue('dateTo', value, { shouldValidate: true, shouldDirty: true });
-                      if(logPeriodData==='Hourly'){
-                        setValue('dateFrom', value, { shouldValidate: true, shouldDirty: true });
-                      }
-                      trigger(['dateFrom', 'dateTo']);   
-                    }}
-                    fullWidth
-                  />
-                </Grid>)}
-
-                <Grid item xs={12} sm={12} md={1} sx={{ display: 'flex', justifyContent: 'flex-end' }} >
+                  <Grid item xs={12} sm={6} md={2.5} xl={2}>
+                    <RHFDatePicker
+                      label="Date To"
+                      name="dateTo"
+                      size="small"
+                      onChange={(value) => {
+                        setValue('dateTo', value, { shouldValidate: true, shouldDirty: true });
+                        if (logPeriodData === 'Hourly') {
+                          setValue('dateFrom', value, { shouldValidate: true, shouldDirty: true });
+                        }
+                        trigger(['dateFrom', 'dateTo']);
+                      }}
+                      fullWidth
+                    />
+                  </Grid>
+                )}
+                <Grid item xs={12} sm={12} md={1} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                   <StyledTooltip
                     title="Fetch Graph"
                     placement="top"
@@ -301,32 +267,32 @@ export default function MachineLogsGraphViewForm() {
         </form>
       </FormProvider>
 
-    {triggerFetch ? (
-      triggerFetch?.logGraphType?.key === 'length_and_waste' ? (
-        <ErpProducedLengthLogGraph
-          timePeriod={graphLabels?.xaxis}
-          customer={machine?.customer}
-          graphLabels={graphLabels}
-          dateFrom={triggerFetch?.dateFrom}
-          dateTo={triggerFetch?.dateTo}
-          machineSerialNo={machine?.serialNo}
-        />
+      {triggerFetch ? (
+        triggerFetch?.logGraphType?.key === 'length_and_waste' ? (
+          <ErpProducedLengthLogGraph
+            timePeriod={graphLabels?.xaxis}
+            customer={machine?.customer}
+            graphLabels={graphLabels}
+            dateFrom={triggerFetch?.dateFrom}
+            dateTo={triggerFetch?.dateTo}
+            machineSerialNo={machine?.serialNo}
+          />
+        ) : (
+          <ErpProductionRateLogGraph
+            timePeriod={graphLabels?.xaxis}
+            customer={machine?.customer}
+            graphLabels={graphLabels}
+            dateFrom={triggerFetch?.dateFrom}
+            dateTo={triggerFetch?.dateTo}
+            efficiency={machine?.efficiency}
+            machineSerialNo={machine?.serialNo}
+          />
+        )
       ) : (
-        <ErpProductionRateLogGraph
-          timePeriod={graphLabels?.xaxis}
-          customer={machine?.customer}
-          graphLabels={graphLabels}
-          dateFrom={triggerFetch?.dateFrom}
-          dateTo={triggerFetch?.dateTo}
-          efficiency={machine?.efficiency}
-          machineSerialNo={machine?.serialNo}
-        />
-      )
-    ) : (
-      <Card sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 2, minHeight: 500 }}>
-        <TableNoData isNotFound />
-      </Card>
-    )}
+            <Card sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 2, minHeight: 500 }}>
+          <TableNoData isNotFound />
+        </Card>
+      )}
     </Container>
   );
 }
