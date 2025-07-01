@@ -129,8 +129,9 @@ export const allowedExtensions = [
   'ott',
   'rtf',
   'txt',
-  'json',
   'xlsm',
+  // others
+  'zip', 'rar', '7z', 'log', 'config', 'conf', 'ini', 'json', 'xml'
 ];
 
 export const imagesExtensions = [
@@ -281,7 +282,7 @@ export const FORMLABELS = {
   ACCOUNT: 'Account Manager',
   PROJECT: 'Project Manager',
   SUPPORT: 'Support Manager',
-  MACHINE_LIFECYCLE : 'Machine Life Cycle',
+  MACHINE_LIFECYCLE: 'Machine Life Cycle',
 
   // @root - DocumentCategoryAddForm - documents dashboard
   CATEGORY: {
