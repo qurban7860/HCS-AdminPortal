@@ -380,7 +380,7 @@ function DocumentHistoryViewForm({ customerPage, machinePage, machineDrawingPage
               customerPage={customerPage}
               machinePage={machinePage}
               drawingPage={machineDrawingPage}
-              customerAccess={defaultValues?.customerAccess || documentHistory?.docType?.customerAccess || documentHistory?.docCategory?.customerAccess || false}
+              customerAccess={defaultValues?.customerAccess || documentHistory?.documentType?.customerAccess || documentHistory?.docType?.customerAccess || documentHistory?.docCategory?.customerAccess || documentHistory?.documentCategory?.customerAccess || false}
               customerAccessLabel={
                 [
                   documentHistory?.customerAccess && ((machineDrawingPage || machineDrawings) ? 'Drawings' : 'Document'),
