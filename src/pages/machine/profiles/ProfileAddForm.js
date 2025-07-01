@@ -22,6 +22,7 @@ import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 import FormProvider, { RHFSwitch, RHFTextField, RHFChipsInput, RHFUpload } from '../../../components/hook-form';
 import MachineTabContainer from '../util/MachineTabContainer';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
+import { handleError } from '../../../utils/errorHandler';
 
 // ----------------------------------------------------------------------
 
@@ -55,7 +56,7 @@ export default function ProfileAddForm() {
   );
 
   const methods = useForm({
-    resolver: yupResolver(ProfileSchema),
+    // resolver: yupResolver(ProfileSchema),
     defaultValues,
   });
 
@@ -106,8 +107,8 @@ export default function ProfileAddForm() {
 
       await navigate(PATH_MACHINE.machines.profiles.root(machineId))
 
-    } catch (err) {
-      enqueueSnackbar(err, { variant: 'error' });
+    } catch (error) {
+      enqueueSnackbar(handleError(error), { variant: 'error' });
     }
   };
 
