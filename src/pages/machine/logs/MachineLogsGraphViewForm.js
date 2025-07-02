@@ -222,7 +222,7 @@ export default function MachineLogsGraphViewForm() {
                   </Grid>
                 )}
 
-                <Grid item xs={12} sm={6} md={2} xl={isProductionRate ? 4 : 2}>
+                <Grid item xs={12} sm={6} md={2} xl={isProductionRate ? 3 : 2}>
                   <RHFDatePicker
                     label="Date From"
                     name="dateFrom"
@@ -254,7 +254,6 @@ export default function MachineLogsGraphViewForm() {
                     />
                   </Grid>
                 )}
-                {!isProductionRate && (
                 <Grid item xs={12} sm={6} md={1.5}>
                   <RHFAutocomplete
                     name="unitType"
@@ -265,7 +264,7 @@ export default function MachineLogsGraphViewForm() {
                     autoSelect
                     openOnFocus
                   />
-                </Grid> )}
+                </Grid>
                 <Grid item xs={12} sm={12} md={1} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                   <StyledTooltip
                     title="Fetch Graph"
