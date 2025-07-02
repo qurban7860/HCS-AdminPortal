@@ -2,26 +2,37 @@ import PropTypes from 'prop-types';
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Typography, Card, Grid, Skeleton, Box } from '@mui/material';
+import LogLineBarChart from '../../../components/machineLogs/LogLineBarChart';
 import LogChartStacked from '../../../components/machineLogs/LogStackedChart';
 import { TableNoData } from '../../../components/table';
+import { convertValue } from '../../../utils/convertUnits';
 
-const ErpProductionRateLogGraph = ({ timePeriod, customer, graphLabels, dateFrom, dateTo, efficiency, machineSerialNo }) => {
+const ErpProductionRateLogGraph = ({ timePeriod, customer, graphLabels, dateFrom, dateTo, efficiency, machineSerialNo, unitType = 'Metric' }) => {
   const [graphData, setGraphData] = useState([]);
   const { isLoading, machineLogsGraphData } = useSelector((state) => state.machineErpLogs);
 
   useEffect(() => {
     if (machineLogsGraphData) {
-      const convertedData = machineLogsGraphData.map((item) => ({
-        ...item,
-        _id: timePeriod === 'Monthly' ? item._id.replace(/^Sep /, 'Sept ') : item._id,
-      }));
+      const convertedData = machineLogsGraphData.map((item) => {
+        const componentLength = parseFloat(convertValue(item.componentLength, 'mm', unitType)?.convertedValue || 0);
+        const waste = parseFloat(convertValue(item.waste, 'mm', unitType)?.convertedValue || 0);
+          return {
+            ...item,
+            componentLength,
+            waste,
+            _id: timePeriod === 'Monthly' ? item._id.replace(/^Sep /, 'Sept ') : item._id,
+          };
+      });
+  
       setGraphData(convertedData);
+    } else {
+      setGraphData([]);
     }
-  }, [machineLogsGraphData, timePeriod]);
+  }, [machineLogsGraphData, timePeriod, unitType]);
 
-  const processGraphData = (skipZeroValues, withEfficiencyLine) => {
+  const processGraphData = (skipZeroValues) => {
     if (!Array.isArray(graphData) || graphData.length === 0) {
-      return { categories: [], series: [] }; 
+      return { categories: [], series: [] };
     }
 
     const dataMap = new Map();
@@ -49,35 +60,26 @@ const ErpProductionRateLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
 
     const producedLength = labels.map(label => dataMap.get(label)?.componentLength || 0);
     const wasteLength = labels.map(label => dataMap.get(label)?.waste || 0);
+    const unitLabel = unitType === 'Imperial' ? 'in' : 'm';
 
-    const efficiencyData = labels.map(label => {
-      const item = dataMap.get(label);
-      if (item && efficiency > 0) {
-        return (((item.componentLength || 0) + (item.waste || 0)) / efficiency) * 100;
-      }
-      return 0;
-    });
+    const series = [
+      { name: `Produced Length (${unitLabel})`, data: producedLength },
+      { name: `Waste Length (${unitLabel})`, data: wasteLength },
+    ];
 
-    if (withEfficiencyLine && efficiency > 0) {
-      const combinedLength = producedLength.map((length, index) => length + wasteLength[index]);
-      return {
-        categories: labels,
-        series: [
-          { name: 'Total Length (m)', data: combinedLength },
-          { name: 'Efficiency (%)', data: efficiencyData },
-        ],
-      };
+    if (efficiency) {
+      const efficiencyLine = labels.map((label, i) => {
+        const total = producedLength[i] + wasteLength[i];
+        return total > 0 ? (total / efficiency) * 100 : null;
+      });
+      series.push({ name: 'Efficiency Line (%)', type: 'line', data: efficiencyLine });
     }
 
     return {
       categories: labels,
-      series: [
-        { name: 'Produced Length (m)', data: producedLength },
-        { name: 'Waste Length (m)', data: wasteLength },
-      ],
+      series
     };
   };
-  
 
   const getGraphTitle = () => {
     let titlePrefix = '';
@@ -107,12 +109,13 @@ const ErpProductionRateLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
         ) : (
           <>
             {graphData?.length > 0 ? (
-              <LogChartStacked 
-                processGraphData={(skipZero) => processGraphData(skipZero, true)} 
+              <LogLineBarChart 
+                processGraphData={(skipZero) => processGraphData(skipZero)} 
                 graphLabels={graphLabels} 
                 isLoading={isLoading} 
-                withEfficiencyLine={efficiency > 0} 
                 machineSerialNo={getGraphTitle()}
+                efficiency={efficiency}
+                unitType={unitType}
               />
             ) : (
               <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 320 }}>
@@ -134,6 +137,7 @@ ErpProductionRateLogGraph.propTypes = {
   graphLabels: PropTypes.object,
   dateFrom: PropTypes.instanceOf(Date),
   dateTo: PropTypes.instanceOf(Date),
-  efficiency: PropTypes.number.isRequired,
+  efficiency: PropTypes.number,
   machineSerialNo: PropTypes.string,
+  unitType: PropTypes.oneOf(['Metric', 'Imperial']),
 };
