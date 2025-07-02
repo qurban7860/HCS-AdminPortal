@@ -18,27 +18,38 @@ export function convertValue(value, baseUnit, unitSystem, forDisplay = false) {
         };
       }
     }
-    // else if (baseUnit === 'kg') {
-    //   convertedValue = value * 2.20462;
-    //   measurementUnit = 'lbs';
+    if (baseUnit === 'kg') {
+      // convert kg to lbs
+      convertedValue = (value * 2.20462).toFixed(3);
+      measurementUnit = 'lbs';
 
-    //   if (forDisplay) {
-    //     return {
-    //       convertedValue,
-    //       formattedValue: convertedValue.toLocaleString(undefined, {
-    //         minimumFractionDigits: 3,
-    //         maximumFractionDigits: 3
-    //       }),
-    //       measurementUnit
-    //     };
-    //   }
-    // }
+      if (forDisplay) {
+        return {
+          convertedValue,
+          formattedValue: convertedValue.toLocaleString(undefined, {
+            minimumFractionDigits: 3,
+            maximumFractionDigits: 3
+          }),
+          measurementUnit
+        };
+      }
+    }
+    if (baseUnit === '%') {
+      // percentage stays percentage
+      convertedValue = value; // no conversion needed
+      return { formattedValue: convertedValue }
+    }
   } else if (unitSystem === 'Metric') {
     if (baseUnit === 'm') {
       if (forDisplay) {
         convertedValue = value / 1000;
       }
       measurementUnit = 'm';
+    }
+    if (baseUnit === '%') {
+      // percentage stays percentage
+      convertedValue = value; // no conversion needed
+      return { formattedValue: convertedValue }
     }
     // mm stays mm
     // kg stays kg

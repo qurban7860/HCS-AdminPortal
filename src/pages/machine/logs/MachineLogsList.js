@@ -226,19 +226,6 @@ export default function MachineLogsList({ allMachineLogsType }) {
                     autoSelectFirst
                     placeholder="Search across selected columns..."
                   />
-                  {/* <RHFFilteredSearchBar
-                    name="filteredSearchKey"
-                    filterOptions={returnSearchFilterColumnOptions()}
-                    setSelectedFilter={setSelectedSearchFilter}
-                    selectedFilter={selectedSearchFilter}
-                    placeholder="Enter Search here..."
-                    helperText={
-                      selectedSearchFilter === '_id'
-                        ? 'To search by ID, you must enter the complete Log ID'
-                        : ''
-                    }
-                    fullWidth
-                  /> */}
                 </Box>
                 <Box sx={{ width: '160px' }}>
                   <RHFAutocomplete

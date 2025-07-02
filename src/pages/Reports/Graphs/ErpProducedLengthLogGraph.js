@@ -5,24 +5,30 @@ import { useSelector } from 'react-redux';
 import { Typography, Card, Grid, Box, Skeleton } from '@mui/material';
 import LogChartStacked from '../../../components/machineLogs/LogStackedChart';
 import { TableNoData } from '../../../components/table';
+import { convertValue } from '../../../utils/convertUnits';
 
-const ErpProducedLengthLogGraph = ({ timePeriod, customer, graphLabels, dateFrom, dateTo, machineSerialNo }) => {
+const ErpProducedLengthLogGraph = ({ timePeriod, customer, graphLabels, dateFrom, dateTo, machineSerialNo, unitType = 'Metric' }) => {
   const [graphData, setGraphData] = useState([]);
   const { isLoading, machineLogsGraphData } = useSelector((state) => state.machineErpLogs);
 
   useEffect(() => {
     if (machineLogsGraphData) {
-      const convertedDataToMeters = machineLogsGraphData.map((item) => ({
-        ...item,
-        componentLength: item.componentLength / 1000,
-        waste: item.waste / 1000,
-        _id: timePeriod === 'Monthly' ? item._id.replace(/^Sep /, 'Sept ') : item._id,
-      }));
-      setGraphData(convertedDataToMeters);
+      const convertedData = machineLogsGraphData.map((item) => {
+        const componentLength = parseFloat(convertValue(item.componentLength, 'mm', unitType)?.convertedValue || 0);
+        const waste = parseFloat(convertValue(item.waste, 'mm', unitType)?.convertedValue || 0);
+        return {
+          ...item,
+          componentLength,
+          waste,
+          _id: timePeriod === 'Monthly' ? item._id.replace(/^Sep /, 'Sept ') : item._id,
+        };
+      });
+
+      setGraphData(convertedData);
     } else {
-      setGraphData([]); 
+      setGraphData([]);
     }
-  }, [machineLogsGraphData, timePeriod]);
+  }, [machineLogsGraphData, timePeriod, unitType]);
 
   const getTotalProduction = () => {
     if (!graphData || graphData.length === 0) return '0';
@@ -114,16 +120,17 @@ const ErpProducedLengthLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
 
     const producedLength = labels.map((label) => dataMap.get(label)?.componentLength || 0);
     const wasteLength = labels.map((label) => dataMap.get(label)?.waste || 0);
+    const unitLabel = unitType === 'Imperial' ? 'in' : 'm';
 
     return {
       categories: labels,
       series: [
-        { name: 'Produced Length (m)', data: producedLength },
-        { name: 'Waste Length (m)', data: wasteLength },
+        { name: `Produced Length (${unitLabel})`, data: producedLength },
+        { name: `Waste Length (${unitLabel})`, data: wasteLength },
       ],
     };
   };
-
+  
   const producedData = `Meterage Production: ${getTotalProduction()} m for Period (${dateFrom.toLocaleDateString('en-GB')} – ${dateTo.toLocaleDateString('en-GB')})`;
   const isNotFound = !isLoading && !graphData.length;
 
@@ -164,7 +171,7 @@ const ErpProducedLengthLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
         ) : (
           <>
             {graphData?.length > 0 ? (
-              <LogChartStacked processGraphData={processGraphData} graphLabels={graphLabels} isLoading={isLoading} producedData={producedData} machineSerialNo={getGraphTitle()} />
+              <LogChartStacked processGraphData={processGraphData} graphLabels={graphLabels} isLoading={isLoading} producedData={producedData} machineSerialNo={getGraphTitle()} unitType={unitType} />
             ) : (
               <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 450 }} >
                 <TableNoData isNotFound={isNotFound} />
@@ -186,6 +193,7 @@ ErpProducedLengthLogGraph.propTypes = {
   dateFrom: PropTypes.instanceOf(Date),
   dateTo: PropTypes.instanceOf(Date),
   machineSerialNo: PropTypes.string, 
+  unitType: PropTypes.oneOf(['Metric', 'Imperial']),
 };
 
 // import PropTypes from 'prop-types';

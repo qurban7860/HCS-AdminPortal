@@ -11,10 +11,11 @@ LogChartStacked.propTypes = {
   isLoading: PropTypes.bool,
   producedData: PropTypes.string,
   machineSerialNo: PropTypes.string,
+  unitType: PropTypes.oneOf(['Metric', 'Imperial']),
 };
 
-export default function LogChartStacked({ processGraphData, graphLabels, withEfficiencyLine = false, isLoading, producedData = '', machineSerialNo }) {
-  const [skipZero, setSkipZero] = useState(true);
+export default function LogChartStacked({ processGraphData, graphLabels, withEfficiencyLine = false, isLoading, producedData = '', machineSerialNo, unitType = 'Metric' }) {
+  const [skipZero, setSkipZero] = useState(false);
   const [chart, setChart] = useState({ categories: [], series: [] });
   const [isChartReady, setIsChartReady] = useState(false);
 
@@ -27,9 +28,10 @@ export default function LogChartStacked({ processGraphData, graphLabels, withEff
       setChart({ categories: [], series: [] });
       setIsChartReady(false);
     }
-  }, [skipZero, processGraphData]);
+  }, [skipZero, processGraphData, unitType]);
 
   const { categories, series } = chart;
+  const unitLabel = unitType === 'Imperial' ? 'in' : 'm';
 
   const colors = ['#A9E0FC', '#FCB49F', '#1976d2'];
 
@@ -110,7 +112,7 @@ export default function LogChartStacked({ processGraphData, graphLabels, withEff
       },
       offsetY: -35,
       style: {
-        fontSize: '12px',
+        fontSize: '9px',
         colors: ['#304758']
       },
     },
@@ -200,7 +202,10 @@ export default function LogChartStacked({ processGraphData, graphLabels, withEff
           const label = w?.globals?.seriesNames?.[seriesIndex] || '';
           return label.includes('Efficiency')
             ? `${val.toFixed(2)}%`
-            : val.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            : `${val.toLocaleString(undefined, {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })} ${unitLabel}`;
         },
       },
       custom: ({ series: tooltipSeries, dataPointIndex, w }) => {
@@ -240,7 +245,7 @@ export default function LogChartStacked({ processGraphData, graphLabels, withEff
         tooltipContent += `
           <div class="apexcharts-tooltip-series-group apexcharts-active" style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid #e0e0e0; padding-top: 4px; margin-top: 4px;">
             <div style="width: 100%; display: flex; justify-content: space-between;">
-              <span class="apexcharts-tooltip-text-y-label" style="font-weight: bold;">Total Length (m):</span>
+              <span class="apexcharts-tooltip-text-y-label" style="font-weight: bold;">Total Length (${unitLabel}):</span>
               <span class="apexcharts-tooltip-text-y-value" style="font-weight: bold;">${totalText}</span>
             </div>
           </div>`;

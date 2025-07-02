@@ -11,6 +11,7 @@ import Scrollbar from '../../../components/scrollbar';
 import MachineLogsTableRow from './MachineLogsTableRow';
 import DialogViewMachineLogDetails from '../../../components/Dialog/DialogViewMachineLogDetails';
 import { machineLogTypeFormats } from '../../../constants/machineLogTypeFormats';
+import MachineLogsDataTablePaginationCustom from './MachineLogsDataTablePaginationCustom';
 
 function tableColumnsReducer(state, action) {
   switch (action.type) {
@@ -53,7 +54,7 @@ function tableColumnsReducer(state, action) {
   }
 }
 
-const MachineLogsDataTable = ({ logType, unitType, allMachineLogsPage, dataForApi, onUnitChange }) => {
+const MachineLogsDataTable = ({ logType, unitType, allMachineLogsPage, dataForApi }) => {
   const [openLogDetailsDialog, setOpenLogDetailsDialog] = useState(false);
   const [selectedLog, setSelectedLog] = useState(null);
   const [tableData, setTableData] = useState([]);
@@ -141,12 +142,6 @@ const MachineLogsDataTable = ({ logType, unitType, allMachineLogsPage, dataForAp
     );
   };
 
-  // useEffect(() => {
-  //   if (onUnitChange) {
-  //     onUnitChange(unitType);
-  //   }
-  // }, [unitType, onUnitChange])
-
   const handleColumnButtonClick = (columnId, newCheckState) => {
     dispatchTableColumns({ type: 'updateColumnCheck', columnId, newCheckState });
   };
@@ -168,9 +163,9 @@ const MachineLogsDataTable = ({ logType, unitType, allMachineLogsPage, dataForAp
       return `${label} (in)`;
     }
     // // Imperial Weight
-    // if (activeUnit === 'Imperial' && baseUnit?.toLowerCase() === 'kg') {
-    //   return `${label} (lbs)`;
-    // }
+    if (activeUnit === 'Imperial' && baseUnit?.toLowerCase() === 'kg') {
+      return `${label} (lbs)`;
+    }
     // Fallback to baseUnit or just label
     return baseUnit ? `${label} (${baseUnit})` : label;
   };
@@ -179,7 +174,7 @@ const MachineLogsDataTable = ({ logType, unitType, allMachineLogsPage, dataForAp
     <>
       <TableCard>
         {!isNotFound && (
-          <TablePaginationCustom
+          <MachineLogsDataTablePaginationCustom
             count={machineErpLogstotalCount || 0}
             page={page}
             rowsPerPage={rowsPerPage}
@@ -188,6 +183,7 @@ const MachineLogsDataTable = ({ logType, unitType, allMachineLogsPage, dataForAp
             columnFilterButtonData={tableColumns}
             columnButtonClickHandler={handleColumnButtonClick}
             allColumnsSelectHandler={handleAllColumnSelection}
+            unitType={unitType}
           />
         )}
 
@@ -284,7 +280,6 @@ MachineLogsDataTable.propTypes = {
   unitType: PropTypes.string,
   logType: PropTypes.object,
   dataForApi: PropTypes.object,
-  onUnitChange: PropTypes.func,
 };
 
 function applySort({ inputData, comparator }) {
