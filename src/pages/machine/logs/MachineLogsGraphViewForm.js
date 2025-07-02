@@ -42,6 +42,7 @@ export default function MachineLogsGraphViewForm() {
       // dateTo: new Date(new Date().setHours(23, 59, 59, 0)),
       dateFrom: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
       dateTo: new Date(),
+      unitType: 'Metric',
     }),
     []
   )
@@ -59,13 +60,14 @@ export default function MachineLogsGraphViewForm() {
   const logGraphTypeData = watch('logGraphType');
   const dateFromData = watch('dateFrom');
   const dateToData = watch('dateTo');
+  const unitTypeData = watch('unitType');
   const isProductionRate = logGraphTypeData?.key === 'productionRate';
   const logPeriodOptions = isProductionRate ? ['Hourly'] : ['Hourly', 'Daily', 'Monthly', 'Quarterly', 'Yearly'];
 
   useEffect(() => {
     if (triggerFetch) setTriggerFetch(null);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [logGraphTypeData, logPeriodData, dateFromData, dateToData]);
+  }, [logGraphTypeData, logPeriodData, dateFromData, dateToData, unitTypeData]);
 
   useEffect(() => {
     const now = new Date();
@@ -117,11 +119,11 @@ export default function MachineLogsGraphViewForm() {
   }, [isProductionRate, logPeriodData, setValue, trigger]);
 
   const handleFormSubmit = useCallback(() => {
-    const { logPeriod, logGraphType, dateFrom, dateTo } = getValues();
+    const { logPeriod, logGraphType, dateFrom, dateTo, unitType } = getValues();
     const customerId = machine?.customer?._id;
     if (!customerId || !logGraphType?.key) return;
 
-    const payload = { logPeriod, logGraphType, dateFrom, dateTo };
+    const payload = { logPeriod, logGraphType, dateFrom, dateTo, unitType };
     setTriggerFetch(payload);
 
     dispatch(
@@ -136,11 +138,13 @@ export default function MachineLogsGraphViewForm() {
       )
     );
 
+    const unitLabel = unitType === 'Imperial' ? 'in' : 'm';
+
     setGraphLabels({
       yaxis:
         logGraphType.key === 'productionRate'
-          ? 'Production Rate (m/hr)'
-          : 'Meterage Produced',
+          ? `Production Rate (${unitLabel}/hr)`
+          : `Meterage Produced (${unitLabel})`,
       xaxis: logPeriod,
     });
   }, [getValues, machine?.customer?._id, machineId, dispatch]);
@@ -151,7 +155,8 @@ export default function MachineLogsGraphViewForm() {
       defaultValues?.logGraphType &&
       defaultValues?.logPeriod &&
       defaultValues?.dateFrom &&
-      defaultValues?.dateTo
+      defaultValues?.dateTo &&
+      defaultValues?.unitType 
     ) {
       handleFormSubmit();
     }
@@ -171,7 +176,7 @@ export default function MachineLogsGraphViewForm() {
     },
     [setValue]
   );
-
+  
   return (
     <Container maxWidth={false}>
       <MachineTabContainer currentTabValue="graphs" />
@@ -184,7 +189,7 @@ export default function MachineLogsGraphViewForm() {
               </Typography>
 
               <Grid container alignItems="flex-start" gap={1}>
-                <Grid item xs={12} sm={6} md={2.5} xl={isProductionRate ? 6 : 3.5}>
+                <Grid item xs={12} sm={6} md={2.5} xl={isProductionRate ? 6 : 3}>
                   <RHFAutocomplete
                     name="logGraphType"
                     label="Graph Type*"
@@ -204,7 +209,7 @@ export default function MachineLogsGraphViewForm() {
                 </Grid>
 
                 {!isProductionRate && (
-                  <Grid item xs={12} sm={6} md={2.5} xl={3}>
+                  <Grid item xs={12} sm={6} md={2.5} xl={2.5}>
                     <RHFAutocomplete
                       name="logPeriod"
                       label="Period*"
@@ -249,6 +254,18 @@ export default function MachineLogsGraphViewForm() {
                     />
                   </Grid>
                 )}
+                {!isProductionRate && (
+                <Box sx={{ width: '160px' }}>
+                  <RHFAutocomplete
+                    name="unitType"
+                    size="small"
+                    label="Unit*"
+                    options={['Metric', 'Imperial']}
+                    disableClearable
+                    autoSelect
+                    openOnFocus
+                  />
+                </Box> )}
                 <Grid item xs={12} sm={12} md={1} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                   <StyledTooltip
                     title="Fetch Graph"
@@ -276,6 +293,7 @@ export default function MachineLogsGraphViewForm() {
             dateFrom={triggerFetch?.dateFrom}
             dateTo={triggerFetch?.dateTo}
             machineSerialNo={machine?.serialNo}
+            unitType={triggerFetch?.unitType}
           />
         ) : (
           <ErpProductionRateLogGraph
@@ -284,8 +302,9 @@ export default function MachineLogsGraphViewForm() {
             graphLabels={graphLabels}
             dateFrom={triggerFetch?.dateFrom}
             dateTo={triggerFetch?.dateTo}
-            efficiency={machine?.efficiency}
+            efficiency={Number(machine?.efficiency)}
             machineSerialNo={machine?.serialNo}
+            unitType={triggerFetch?.unitType}
           />
         )
       ) : (

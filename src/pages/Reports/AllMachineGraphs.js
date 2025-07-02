@@ -37,6 +37,7 @@ const AllMachineGraphs = () => {
     // dateTo: new Date(new Date().setHours(23, 59, 59, 0)),
     dateFrom: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
     dateTo: new Date(),
+    unitType: 'Metric',
   };
 
   const methods = useForm({
@@ -48,7 +49,7 @@ const AllMachineGraphs = () => {
 
   const { setValue, trigger, handleSubmit, getValues, watch } = methods;
 
-  const { customer, machine, logPeriod, logGraphType, dateFrom, dateTo } = watch();
+  const { customer, machine, logPeriod, logGraphType, dateFrom, dateTo, unitType } = watch();
 
   const isProductionRate = logGraphType?.key === 'productionRate';
 
@@ -57,7 +58,7 @@ const AllMachineGraphs = () => {
   useEffect(() => {
     graphDataRef.current = null;
     dispatch(resetMachineLogsGraphData());
-  }, [customer, machine, logGraphType, logPeriod, dateFrom, dateTo, dispatch]);
+  }, [customer, machine, logGraphType, logPeriod, dateFrom, dateTo, unitType, dispatch]);
 
   useEffect(() => {
     const now = new Date();
@@ -132,8 +133,10 @@ const AllMachineGraphs = () => {
   }, [isProductionRate, logPeriod, setValue, trigger]);
 
   const onSubmit = (data) => {
+    const unitLabel = data.unitType === 'Imperial' ? 'in' : 'm';
+
     const currentGraphLabels = {
-      yaxis: data?.logGraphType?.key === 'productionRate' ? 'Production Rate (m/hr)' : 'Meterage Produced',
+      yaxis: data?.logGraphType?.key === 'productionRate' ? `Production Rate (${unitLabel}/hr)` : `Meterage Produced (${unitLabel})`,
       xaxis: data?.logPeriod,
     };
 
@@ -233,7 +236,7 @@ const AllMachineGraphs = () => {
                   </Box>
 
                   <Grid container alignItems="flex-start" gap={1}>
-                    <Grid item xs={12} sm={6} md={2.5} xl={isProductionRate ? 6 : 3.5} >
+                    <Grid item xs={12} sm={6} md={2.5} xl={isProductionRate ? 6 : 3} >
                       <RHFAutocomplete
                         name="logGraphType"
                         label="Graph Type*"
@@ -251,7 +254,7 @@ const AllMachineGraphs = () => {
                       />
                     </Grid>
                     {!isProductionRate && (
-                      <Grid item xs={12} sm={6} md={2.5} xl={3}>
+                      <Grid item xs={12} sm={6} md={2.5} xl={2.5}>
                         <RHFAutocomplete
                           name="logPeriod"
                           label="Period*"
@@ -294,6 +297,17 @@ const AllMachineGraphs = () => {
                         />
                       </Grid>
                     )}
+                    <Box sx={{ width: '160px' }}>
+                      <RHFAutocomplete
+                        name="unitType"
+                        size="small"
+                        label="Unit*"
+                        options={['Metric', 'Imperial']}
+                        disableClearable
+                        autoSelect
+                        openOnFocus
+                      />
+                    </Box>
                     <Grid item xs={12} sm={12} md={1} sx={{ display: 'flex', justifyContent: 'flex-end' }} >
                       <StyledTooltip
                         title="Fetch Graph"
@@ -323,6 +337,7 @@ const AllMachineGraphs = () => {
             dateFrom={graphData.dateFrom}
             dateTo={graphData.dateTo}
             machineSerialNo={graphData.machineSerialNo}
+            unitType={graphData.unitType}
           />
         ) : (
           <ErpProductionRateLogGraph
@@ -333,6 +348,7 @@ const AllMachineGraphs = () => {
             dateTo={graphData.dateTo}
             efficiency={graphData.machine?.efficiency}
             machineSerialNo={graphData.machineSerialNo}
+            unitType={graphData.unitType}
           />
         )
       ) : (
