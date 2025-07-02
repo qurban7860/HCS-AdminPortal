@@ -102,8 +102,8 @@ function MachineLogsDataTablePaginationCustom({
             onClose={handleClose}
             PaperProps={{
               style: {
-                width: '20ch',
-                maxHeight: 300,
+                width: '25ch',
+                maxHeight: 320,
                 overflowY: 'auto',
               },
             }}
