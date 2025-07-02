@@ -112,7 +112,7 @@ export default function LogChartStacked({ processGraphData, graphLabels, withEff
       },
       offsetY: -35,
       style: {
-        fontSize: '12px',
+        fontSize: '9px',
         colors: ['#304758']
       },
     },

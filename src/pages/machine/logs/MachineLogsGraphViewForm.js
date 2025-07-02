@@ -189,7 +189,7 @@ export default function MachineLogsGraphViewForm() {
               </Typography>
 
               <Grid container alignItems="flex-start" gap={1}>
-                <Grid item xs={12} sm={6} md={2.5} xl={isProductionRate ? 6 : 3}>
+                <Grid item xs={12} sm={6} md={2.5} xl={isProductionRate ? 6 : 2.5}>
                   <RHFAutocomplete
                     name="logGraphType"
                     label="Graph Type*"
@@ -209,7 +209,7 @@ export default function MachineLogsGraphViewForm() {
                 </Grid>
 
                 {!isProductionRate && (
-                  <Grid item xs={12} sm={6} md={2.5} xl={2.5}>
+                  <Grid item xs={12} sm={6} md={2} xl={2.5}>
                     <RHFAutocomplete
                       name="logPeriod"
                       label="Period*"
@@ -222,7 +222,7 @@ export default function MachineLogsGraphViewForm() {
                   </Grid>
                 )}
 
-                <Grid item xs={12} sm={6} md={2.5} xl={isProductionRate ? 4 : 2}>
+                <Grid item xs={12} sm={6} md={2} xl={isProductionRate ? 4 : 2}>
                   <RHFDatePicker
                     label="Date From"
                     name="dateFrom"
@@ -238,7 +238,7 @@ export default function MachineLogsGraphViewForm() {
                   />
                 </Grid>
                 {!isProductionRate && (
-                  <Grid item xs={12} sm={6} md={2.5} xl={2}>
+                  <Grid item xs={12} sm={6} md={2} xl={2}>
                     <RHFDatePicker
                       label="Date To"
                       name="dateTo"
@@ -255,7 +255,7 @@ export default function MachineLogsGraphViewForm() {
                   </Grid>
                 )}
                 {!isProductionRate && (
-                <Box sx={{ width: '160px' }}>
+                <Grid item xs={12} sm={6} md={1.5}>
                   <RHFAutocomplete
                     name="unitType"
                     size="small"
@@ -265,7 +265,7 @@ export default function MachineLogsGraphViewForm() {
                     autoSelect
                     openOnFocus
                   />
-                </Box> )}
+                </Grid> )}
                 <Grid item xs={12} sm={12} md={1} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                   <StyledTooltip
                     title="Fetch Graph"

@@ -200,7 +200,7 @@ const AllMachineGraphs = () => {
                     rowGap={2}
                     columnGap={2}
                     display="grid"
-                    gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
+                    gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(3, 1fr)' }}
                   >
                     <RHFAutocomplete
                       name="customer"
@@ -233,28 +233,26 @@ const AllMachineGraphs = () => {
                       onChange={(e, newValue) => handleMachineChange(newValue)}
                       size="small"
                     />
+                    <RHFAutocomplete
+                      name="logGraphType"
+                      label="Graph Type*"
+                      options={machineLogGraphTypes}
+                      getOptionLabel={(option) => option.name || ''}
+                      isOptionEqualToValue={(option, value) => option?.key === value?.key}
+                      renderOption={(props, option) => (
+                        <li {...props} key={option?.key}>
+                          {option.name || ''}
+                        </li>
+                      )}
+                      disableClearable
+                      size="small"
+                      fullWidth
+                    />
                   </Box>
 
                   <Grid container alignItems="flex-start" gap={1}>
-                    <Grid item xs={12} sm={6} md={2.5} xl={isProductionRate ? 6 : 3} >
-                      <RHFAutocomplete
-                        name="logGraphType"
-                        label="Graph Type*"
-                        options={machineLogGraphTypes}
-                        getOptionLabel={(option) => option.name || ''}
-                        isOptionEqualToValue={(option, value) => option?.key === value?.key}
-                        renderOption={(props, option) => (
-                          <li {...props} key={option?.key}>
-                            {option.name || ''}
-                          </li>
-                        )}
-                        disableClearable
-                        size="small"
-                        fullWidth
-                      />
-                    </Grid>
                     {!isProductionRate && (
-                      <Grid item xs={12} sm={6} md={2.5} xl={2.5}>
+                      <Grid item xs={12} sm={6} md={3} xl={3}>
                         <RHFAutocomplete
                           name="logPeriod"
                           label="Period*"
@@ -297,7 +295,7 @@ const AllMachineGraphs = () => {
                         />
                       </Grid>
                     )}
-                    <Box sx={{ width: '160px' }}>
+                    <Grid item xs={12} sm={6} md={1.5}>
                       <RHFAutocomplete
                         name="unitType"
                         size="small"
@@ -307,7 +305,7 @@ const AllMachineGraphs = () => {
                         autoSelect
                         openOnFocus
                       />
-                    </Box>
+                    </Grid>
                     <Grid item xs={12} sm={12} md={1} sx={{ display: 'flex', justifyContent: 'flex-end' }} >
                       <StyledTooltip
                         title="Fetch Graph"
