@@ -51,7 +51,6 @@ export default function TicketViewForm() {
   const [fileDialog, setFileDialog] = useState(false);
   const [slides, setSlides] = useState([]);
   const [reporters, setReporters] = useState([]);
-  const [approvers, setApprovers] = useState([]);
   const [filteredRequestTypes, setFilteredRequestTypes] = useState([]);
   const configurations = JSON.parse(localStorage.getItem('configurations'));
   const prefix = configurations?.find((config) => config?.name?.toLowerCase() === 'ticket_prefix')?.value || '';
@@ -104,20 +103,6 @@ export default function TicketViewForm() {
       setFilteredRequestTypes([]);
     }
   }, [ticketSettings?.requestTypes, ticket?.issueType]);
-
-  useEffect(() => {
-    // APPROVING USERS
-    let approversArray = [...securityUsers]?.sort((a, b) => {
-      const nameA = a?.name?.toLowerCase();
-      const nameB = b?.name?.toLowerCase();
-      return nameA.localeCompare(nameB);
-    })
-    const approvingUsers = configurations?.find((c) => c?.name?.trim() === 'SupportTicketApprovingContacts'
-    )?.value?.split(',')?.map((e) => e?.trim()?.toLowerCase());
-    approversArray = approversArray?.filter((c) => c?.email && approvingUsers?.includes(c.email.toLowerCase()));
-    setApprovers(approversArray)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [securityUsers])
 
   useEffect(() => {
     const newSlides = ticket?.files?.map(file => {
@@ -448,7 +433,7 @@ export default function TicketViewForm() {
               node={<DropDownMultipleSelection name="assignees" label='Assignees' value={ticket?.assignees} onSubmit={onSubmit} options={activeSecurityUsers} />}
             />
             <ViewFormField isLoading={isLoading} sm={4} heading="Approvers"
-              node={<DropDownMultipleSelection name="approvers" label='Approvers' value={ticket?.approvers} onSubmit={onSubmit} options={approvers} />}
+              node={<DropDownMultipleSelection name="approvers" label='Approvers' value={ticket?.approvers} onSubmit={onSubmit} options={securityUsers} />}
             />
             <ViewFormField isLoading={isLoading} sm={12} heading="Summary"
               node={<FilledTextField name="summary" value={defaultValues.summary} onSubmit={onSubmit} isBold />}
