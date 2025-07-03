@@ -13,30 +13,26 @@ const ErpProducedLengthLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
 
   useEffect(() => {
     if (machineLogsGraphData) {
-      const convertedData = machineLogsGraphData.map((item) => {
-        const componentLength = parseFloat(convertValue(item.componentLength, 'mm', unitType)?.convertedValue || 0);
-        const waste = parseFloat(convertValue(item.waste, 'mm', unitType)?.convertedValue || 0);
-        return {
-          ...item,
-          componentLength,
-          waste,
-          _id: timePeriod === 'Monthly' ? item._id.replace(/^Sep /, 'Sept ') : item._id,
-        };
-      });
-
-      setGraphData(convertedData);
+      const convertedDataToMeters = machineLogsGraphData.map((item) => ({
+        ...item,
+        componentLength: item.componentLength / 1000,
+        waste: item.waste / 1000,
+        _id: timePeriod === 'Monthly' ? item._id.replace(/^Sep /, 'Sept ') : item._id,
+      }));
+      setGraphData(convertedDataToMeters);
     } else {
-      setGraphData([]);
+      setGraphData([]); 
     }
-  }, [machineLogsGraphData, timePeriod, unitType]);
+  }, [machineLogsGraphData, timePeriod]);
 
   const getTotalProduction = () => {
     if (!graphData || graphData.length === 0) return '0';
-    const totalProduced = graphData.reduce(
-      (sum, item) => sum + (item.componentLength || 0) + (item.waste || 0),
-      0
-    );
-    return totalProduced.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+      const totalProduced = graphData.reduce(
+        (sum, item) => sum + (item.componentLength || 0) + (item.waste || 0),
+        0
+      );
+      const { formattedValue, measurementUnit } = convertValue(totalProduced, 'm', unitType, true);
+    return `${formattedValue} ${measurementUnit}`;
   };
 
   const processGraphData = (skipZeroValues) => {
@@ -118,9 +114,17 @@ const ErpProducedLengthLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
         return { categories: [], series: [] }; 
     }
 
-    const producedLength = labels.map((label) => dataMap.get(label)?.componentLength || 0);
-    const wasteLength = labels.map((label) => dataMap.get(label)?.waste || 0);
-    const unitLabel = unitType === 'Imperial' ? 'in' : 'm';
+    const producedLength = labels.map((label) => {
+      const val = dataMap.get(label)?.componentLength || 0;
+      return Number(convertValue(val, 'm', unitType).convertedValue);
+    });
+
+    const wasteLength = labels.map((label) => {
+      const val = dataMap.get(label)?.waste || 0;
+      return Number(convertValue(val, 'm', unitType).convertedValue);
+    });
+
+    const unitLabel = convertValue(0, 'm', unitType).measurementUnit.toLowerCase();
 
     return {
       categories: labels,
@@ -131,7 +135,7 @@ const ErpProducedLengthLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
     };
   };
   
-  const producedData = `Meterage Production: ${getTotalProduction()} m for Period (${dateFrom.toLocaleDateString('en-GB')} – ${dateTo.toLocaleDateString('en-GB')})`;
+  const producedData = `Meterage Production: ${getTotalProduction()} for Period (${dateFrom.toLocaleDateString('en-GB')} – ${dateTo.toLocaleDateString('en-GB')})`;
   const isNotFound = !isLoading && !graphData.length;
 
   const getGraphTitle = () => {

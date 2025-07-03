@@ -10,25 +10,20 @@ import { convertValue } from '../../../utils/convertUnits';
 const ErpProductionRateLogGraph = ({ timePeriod, customer, graphLabels, dateFrom, dateTo, efficiency, machineSerialNo, unitType = 'Metric' }) => {
   const [graphData, setGraphData] = useState([]);
   const { isLoading, machineLogsGraphData } = useSelector((state) => state.machineErpLogs);
-
+  
   useEffect(() => {
     if (machineLogsGraphData) {
-      const convertedData = machineLogsGraphData.map((item) => {
-        const componentLength = parseFloat(convertValue(item.componentLength, 'mm', unitType)?.convertedValue || 0);
-        const waste = parseFloat(convertValue(item.waste, 'mm', unitType)?.convertedValue || 0);
-          return {
-            ...item,
-            componentLength,
-            waste,
-            _id: timePeriod === 'Monthly' ? item._id.replace(/^Sep /, 'Sept ') : item._id,
-          };
-      });
-  
-      setGraphData(convertedData);
+      const convertedDataToMeters = machineLogsGraphData.map((item) => ({
+        ...item,
+        componentLength: item.componentLength / 1000,
+        waste: item.waste / 1000,
+        _id: timePeriod === 'Monthly' ? item._id.replace(/^Sep /, 'Sept ') : item._id,
+      }));
+      setGraphData(convertedDataToMeters);
     } else {
-      setGraphData([]);
+      setGraphData([]); 
     }
-  }, [machineLogsGraphData, timePeriod, unitType]);
+  }, [machineLogsGraphData, timePeriod]);
 
   const processGraphData = (skipZeroValues) => {
     if (!Array.isArray(graphData) || graphData.length === 0) {
@@ -57,10 +52,18 @@ const ErpProductionRateLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
         current.setHours(current.getHours() + 1);
       }
     }
-
-    const producedLength = labels.map(label => dataMap.get(label)?.componentLength || 0);
-    const wasteLength = labels.map(label => dataMap.get(label)?.waste || 0);
-    const unitLabel = unitType === 'Imperial' ? 'in' : 'm';
+    
+    const producedLength = labels.map((label) => {
+      const val = dataMap.get(label)?.componentLength || 0;
+      return Number(convertValue(val, 'm', unitType).convertedValue);
+    });
+    
+    const wasteLength = labels.map((label) => {
+      const val = dataMap.get(label)?.waste || 0;
+      return Number(convertValue(val, 'm', unitType).convertedValue);
+    });
+    
+    const unitLabel = convertValue(0, 'm', unitType).measurementUnit;
 
     const series = [
       { name: `Produced Length (${unitLabel})`, data: producedLength },
@@ -92,7 +95,18 @@ const ErpProductionRateLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
     }
     return `${titlePrefix} for Machine ${machineSerialNo || ''}`;
   };
+  
+  const getTotalProduction = () => {
+    if (!graphData || graphData.length === 0) return '0';
+      const totalProduced = graphData.reduce(
+        (sum, item) => sum + (item.componentLength || 0) + (item.waste || 0),
+        0
+      );
+      const { formattedValue, measurementUnit } = convertValue(totalProduced, 'm', unitType, true);
+    return `${formattedValue} ${measurementUnit}`;
+  };
 
+  const producedData = `Meterage Production: ${getTotalProduction()} for Period (${dateFrom.toLocaleDateString('en-GB')} – ${dateTo.toLocaleDateString('en-GB')})`;
   const isNotFound = !isLoading && !graphData.length;
 
   return (
@@ -114,6 +128,7 @@ const ErpProductionRateLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
                 graphLabels={graphLabels} 
                 isLoading={isLoading} 
                 machineSerialNo={getGraphTitle()}
+                producedData={producedData}
                 efficiency={efficiency}
                 unitType={unitType}
               />

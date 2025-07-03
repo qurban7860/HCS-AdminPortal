@@ -8,6 +8,7 @@ LogLineBarChart.propTypes = {
   processGraphData: PropTypes.func.isRequired,
   graphLabels: PropTypes.object,
   isLoading: PropTypes.bool,
+  producedData: PropTypes.string,
   machineSerialNo: PropTypes.string,
   efficiency: PropTypes.number, 
   unitType: PropTypes.oneOf(['Metric', 'Imperial']),
@@ -17,6 +18,7 @@ export default function LogLineBarChart({
   processGraphData,
   graphLabels,
   isLoading,
+  producedData,
   machineSerialNo,
   efficiency, 
   unitType = 'Metric',
@@ -132,7 +134,7 @@ export default function LogLineBarChart({
         show: false,
       },
       title: {
-        text: `${machineSerialNo}`,
+        text: `${machineSerialNo}${producedData ? `, ${producedData}` : ''}`,
         offsetX: -10,
         offsetY: -12,
         style: {
@@ -240,7 +242,7 @@ export default function LogLineBarChart({
   };
 
   return (
-    <Box sx={{ position: 'relative', '& .apexcharts-menu-icon': { mt: '-20px' } }}>
+    <Box sx={{ position: 'relative', '& .apexcharts-menu-icon': { mt: '-20px' }, '& .apexcharts-legend-text': { textTransform: 'lowercase !important' } }}>
       <Box sx={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)', mt: -4 }}>
         <FormControlLabel
           control={<Checkbox checked={skipZero} onChange={() => setSkipZero((prev) => !prev)} />}
