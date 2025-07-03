@@ -99,13 +99,19 @@ export default function LogLineBarChart({
     dataLabels: {
       enabled: true,
       orientation: "vertical",
-      formatter(val, { seriesIndex, w }) {
-        const seriesName = w.config.series[seriesIndex].name;
-        if (seriesName === `Produced Length (${unitLabel})` || seriesName === `Waste Length (${unitLabel})`) {
-          return val === 0 ? '' : fShortenNumber(val);
-        }
-        return ''; 
-      },
+      formatter(val, { seriesIndex, dataPointIndex, w }) {
+      const seriesNames = w.config.series.map(s => s.name);
+      const producedIndex = seriesNames.findIndex(name => name.includes('Produced Length'));
+      const wasteIndex = seriesNames.findIndex(name => name.includes('Waste Length'));
+
+      if (seriesIndex === wasteIndex) {
+        const producedVal = w.config.series[producedIndex]?.data?.[dataPointIndex] || 0;
+        const wasteVal = w.config.series[wasteIndex]?.data?.[dataPointIndex] || 0;
+        const total = producedVal + wasteVal;
+        return total === 0 ? '' : fShortenNumber(total);
+      }
+      return '';
+    },
       offsetY: -15,
       style: {
         fontSize: '12px',
