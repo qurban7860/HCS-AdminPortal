@@ -122,5 +122,10 @@ function decimalToArchitecturalFraction(decimal) {
     { numerator: 0, denominator: 1, minDiff: Infinity }
   );
 
-  return numerator > 0 ? ` ${numerator}/${denominator}` : '';
+  // Simplify the fraction
+  const gcd = (a, b) => b === 0 ? a : gcd(b, a % b);
+  const simplifiedNumerator = numerator / gcd(numerator, denominator);
+  const simplifiedDenominator = denominator / gcd(numerator, denominator);
+
+  return simplifiedNumerator > 0 ? ` ${simplifiedNumerator}/${simplifiedDenominator}` : '';
 }
