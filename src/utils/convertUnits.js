@@ -37,7 +37,7 @@ export function convertValue(value, baseUnit, unitSystem, forDisplay = false) {
     if (baseUnit === '%') {
       // percentage stays percentage
       convertedValue = value; // no conversion needed
-      return { formattedValue: convertedValue }
+      return { convertedValue, formattedValue: convertedValue, measurementUnit: '%'}
     }
   } else if (unitSystem === 'Metric') {
     if (baseUnit === 'm') {
@@ -49,7 +49,7 @@ export function convertValue(value, baseUnit, unitSystem, forDisplay = false) {
     if (baseUnit === '%') {
       // percentage stays percentage
       convertedValue = value; // no conversion needed
-      return { formattedValue: convertedValue }
+      return { convertedValue, formattedValue: convertedValue, measurementUnit: '%'}
     }
     // mm stays mm
     // kg stays kg
@@ -122,5 +122,10 @@ function decimalToArchitecturalFraction(decimal) {
     { numerator: 0, denominator: 1, minDiff: Infinity }
   );
 
-  return numerator > 0 ? ` ${numerator}/${denominator}` : '';
+  // Simplify the fraction
+  const gcd = (a, b) => b === 0 ? a : gcd(b, a % b);
+  const simplifiedNumerator = numerator / gcd(numerator, denominator);
+  const simplifiedDenominator = denominator / gcd(numerator, denominator);
+
+  return simplifiedNumerator > 0 ? ` ${simplifiedNumerator}/${simplifiedDenominator}` : '';
 }

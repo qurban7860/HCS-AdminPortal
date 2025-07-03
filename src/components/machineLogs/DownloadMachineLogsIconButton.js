@@ -101,7 +101,10 @@ const DownloadMachineLogsIconButton = ({ dataForApi, unit }) => {
       })
 
       const csvString = csvRows.join('\n')
-      blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' })
+      const weightUnit = unit === 'Imperial' ? 'lbs' : 'kg';
+      let finalcsvString = csvString.replace("lineSpeed", "lineSpeed (%)")
+      finalcsvString = finalcsvString.replace("componentWeight", `componentWeight (${weightUnit})`);
+      blob = new Blob([finalcsvString], { type: 'text/csv;charset=utf-8;' })
       filename = 'csv_logs.csv'
     } else if (format === 'json') {
       const jsonArray = dataForDownload.map(row => {

@@ -4,18 +4,26 @@ import { Box, FormControlLabel, Checkbox, CircularProgress, Typography } from '@
 import Chart from '../chart';
 import { fShortenNumber } from '../../utils/formatNumber';
 
-LogChartStacked.propTypes = {
+LogLineBarChart.propTypes = {
   processGraphData: PropTypes.func.isRequired,
   graphLabels: PropTypes.object,
-  withEfficiencyLine: PropTypes.bool,
   isLoading: PropTypes.bool,
   producedData: PropTypes.string,
   machineSerialNo: PropTypes.string,
+  efficiency: PropTypes.number, 
   unitType: PropTypes.oneOf(['Metric', 'Imperial']),
 };
 
-export default function LogChartStacked({ processGraphData, graphLabels, withEfficiencyLine = false, isLoading, producedData = '', machineSerialNo, unitType = 'Metric' }) {
-  const [skipZero, setSkipZero] = useState(false);
+export default function LogLineBarChart({
+  processGraphData,
+  graphLabels,
+  isLoading,
+  producedData,
+  machineSerialNo,
+  efficiency, 
+  unitType = 'Metric',
+}) {
+  const [skipZero, setSkipZero] = useState(true);
   const [chart, setChart] = useState({ categories: [], series: [] });
   const [isChartReady, setIsChartReady] = useState(false);
 
@@ -35,26 +43,18 @@ export default function LogChartStacked({ processGraphData, graphLabels, withEff
 
   const colors = ['#A9E0FC', '#FCB49F', '#1976d2'];
 
-  const chartSeries = useMemo(() => {
-    const defaultSeries = series.map(s => ({ ...s, type: 'column', yaxisIndex: 0 }));
-
-    if (!withEfficiencyLine) {
-      return defaultSeries;
-    }
-
-    return defaultSeries.map((s) =>
-      s.name.includes('Efficiency')
-        ? { ...s, type: 'line', yaxisIndex: 1 }
-        : { ...s, type: 'column', yaxisIndex: 0 }
-    );
-  }, [series, withEfficiencyLine]);
+  const chartSeries = useMemo(() => series.map((s) => ({
+      ...s,
+      type: s.name.includes('Efficiency') ? 'line' : 'column',
+      yaxisIndex: s.name.includes('Efficiency') ? 1 : 0, 
+    })), [series]);
 
   const chartOptions = {
     chart: {
-      type: withEfficiencyLine ? 'line' : 'bar',
+      type: 'line',
       height: 450,
       stacked: true,
-      animations: { 
+      animations: {
         enabled: false,
       },
       toolbar: {
@@ -71,15 +71,13 @@ export default function LogChartStacked({ processGraphData, graphLabels, withEff
       },
     },
     colors,
-    ...(withEfficiencyLine && {
-      stroke: {
-        width: chartSeries.map(s => s.type === 'line' ? 3 : 0),
-        curve: 'straight',
-      },
-      markers: {
-        size: chartSeries.map(s => s.type === 'line' ? 4 : 0),
-      },
-    }),
+    stroke: {
+      width: series.map((s) => (s.name.includes('Efficiency') ? 3 : 0)),
+      curve: 'straight',
+    },
+    markers: {
+      size: series.map((s) => (s.name.includes('Efficiency') ? 4 : 0)),
+    },
     plotOptions: {
       bar: {
         horizontal: false,
@@ -104,16 +102,22 @@ export default function LogChartStacked({ processGraphData, graphLabels, withEff
       enabled: true,
       orientation: "vertical",
       formatter(val, { seriesIndex, dataPointIndex, w }) {
-        if (seriesIndex === 1) return '';
-        const total = Number(val) + Number(w.config.series[1].data[dataPointIndex]);
-        return total === 0
-          ? ''
-          : fShortenNumber(total);
-      },
-      offsetY: -35,
+      const seriesNames = w.config.series.map(s => s.name);
+      const producedIndex = seriesNames.findIndex(name => name.includes('Produced Length'));
+      const wasteIndex = seriesNames.findIndex(name => name.includes('Waste Length'));
+
+      if (seriesIndex === wasteIndex) {
+        const producedVal = w.config.series[producedIndex]?.data?.[dataPointIndex] || 0;
+        const wasteVal = w.config.series[wasteIndex]?.data?.[dataPointIndex] || 0;
+        const total = producedVal + wasteVal;
+        return total === 0 ? '' : fShortenNumber(total);
+      }
+      return '';
+    },
+      offsetY: -15,
       style: {
-        fontSize: '9px',
-        colors: ['#304758']
+        fontSize: '12px',
+        colors: ['#304758'],
       },
     },
     xaxis: {
@@ -140,63 +144,44 @@ export default function LogChartStacked({ processGraphData, graphLabels, withEff
         },
       },
     },
-    yaxis: withEfficiencyLine
-      ? [
-          {
-            axisBorder: { show: false },
-            axisTicks: { show: false },
-            labels: {
-              formatter: (val) => fShortenNumber(val),
-            },
-            title: {
-              text: graphLabels?.yaxis,
-              offsetX: -5,
-              offsetY: 0,
-              style: {
-                fontSize: '12px',
-                fontWeight: 600,
-                cssClass: 'apexcharts-yaxis-title',
-              },
-            },
-          },
-          {
-            opposite: true,
-            min: 0,
-            max: 100,
-            tickAmount: 5,
-            labels: {
-              formatter: (v) => `${v.toFixed(0)}%`,
-            },
-            title: {
-              text: '% Efficiency',
-              style: { fontSize: '12px', fontWeight: 600 },
-            },
-          },
-        ]
-      : {
-          axisBorder: { show: false },
-          axisTicks: { show: false },
-          labels: {
-            formatter: (val) => fShortenNumber(val),
-          },
-          title: {
-            text: graphLabels?.yaxis,
-            offsetX: 0,
-            offsetY: 0,
-            style: {
-              fontSize: '12px',
-              fontWeight: 600,
-              cssClass: 'apexcharts-yaxis-title',
-            },
+    yaxis: [
+      {
+        axisBorder: { show: false },
+        axisTicks: { show: false },
+        labels: {
+          formatter: (val) => (val !== null ? fShortenNumber(val) : ''),
+        },
+        title: {
+          text: graphLabels?.yaxis,
+          offsetX: -5,
+          offsetY: 0,
+          style: {
+            fontSize: '12px',
+            fontWeight: 600,
+            cssClass: 'apexcharts-yaxis-title',
           },
         },
+      },
+      {
+        opposite: true, 
+        title: {
+          text: 'Efficiency (%)', 
+          style: {
+            fontSize: '12px',
+            fontWeight: 600,
+          },
+        },
+        labels: {
+          formatter: (val) => fShortenNumber(val), 
+        },
+        show: !!efficiency, 
+      }
+    ],
     legend: {
       onItemClick: { toggleDataSeries: false },
     },
     tooltip: {
       followCursor: true,
-      // shared: true,
-      // intersect: false,
       y: {
         formatter: (val, { seriesIndex, w }) => {
           const label = w?.globals?.seriesNames?.[seriesIndex] || '';
@@ -218,7 +203,7 @@ export default function LogChartStacked({ processGraphData, graphLabels, withEff
           const value = s[dataPointIndex];
 
           const isEfficiency = legend.includes('Efficiency');
-          if (!isEfficiency) total += value;
+          if (!isEfficiency) total += value || 0;
 
           const valueText = isEfficiency
             ? `${value.toFixed(2)}%`
@@ -272,14 +257,8 @@ export default function LogChartStacked({ processGraphData, graphLabels, withEff
           </Typography>
         </Box>
       ) : (
-        <Chart
-          type={withEfficiencyLine ? 'line' : 'bar'}
-          series={chartSeries}
-          options={chartOptions}
-          height={chartOptions.chart.height}
-        />
+        <Chart type="line" series={chartSeries} options={chartOptions} height={chartOptions.chart.height} />
       )}
     </Box>
   );
-    // return (<Chart type="bar" series={filteredSeries} options={chartOptions} height={chartOptions.chart.height} />);
 }

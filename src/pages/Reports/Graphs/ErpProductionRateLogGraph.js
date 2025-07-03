@@ -2,26 +2,32 @@ import PropTypes from 'prop-types';
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Typography, Card, Grid, Skeleton, Box } from '@mui/material';
+import LogLineBarChart from '../../../components/machineLogs/LogLineBarChart';
 import LogChartStacked from '../../../components/machineLogs/LogStackedChart';
 import { TableNoData } from '../../../components/table';
+import { convertValue } from '../../../utils/convertUnits';
 
-const ErpProductionRateLogGraph = ({ timePeriod, customer, graphLabels, dateFrom, dateTo, efficiency, machineSerialNo }) => {
+const ErpProductionRateLogGraph = ({ timePeriod, customer, graphLabels, dateFrom, dateTo, efficiency, machineSerialNo, unitType = 'Metric' }) => {
   const [graphData, setGraphData] = useState([]);
   const { isLoading, machineLogsGraphData } = useSelector((state) => state.machineErpLogs);
-
+  
   useEffect(() => {
     if (machineLogsGraphData) {
-      const convertedData = machineLogsGraphData.map((item) => ({
+      const convertedDataToMeters = machineLogsGraphData.map((item) => ({
         ...item,
+        componentLength: item.componentLength / 1000,
+        waste: item.waste / 1000,
         _id: timePeriod === 'Monthly' ? item._id.replace(/^Sep /, 'Sept ') : item._id,
       }));
-      setGraphData(convertedData);
+      setGraphData(convertedDataToMeters);
+    } else {
+      setGraphData([]); 
     }
   }, [machineLogsGraphData, timePeriod]);
 
-  const processGraphData = (skipZeroValues, withEfficiencyLine) => {
+  const processGraphData = (skipZeroValues) => {
     if (!Array.isArray(graphData) || graphData.length === 0) {
-      return { categories: [], series: [] }; 
+      return { categories: [], series: [] };
     }
 
     const dataMap = new Map();
@@ -46,38 +52,37 @@ const ErpProductionRateLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
         current.setHours(current.getHours() + 1);
       }
     }
-
-    const producedLength = labels.map(label => dataMap.get(label)?.componentLength || 0);
-    const wasteLength = labels.map(label => dataMap.get(label)?.waste || 0);
-
-    const efficiencyData = labels.map(label => {
-      const item = dataMap.get(label);
-      if (item && efficiency > 0) {
-        return (((item.componentLength || 0) + (item.waste || 0)) / efficiency) * 100;
-      }
-      return 0;
+    
+    const producedLength = labels.map((label) => {
+      const val = dataMap.get(label)?.componentLength || 0;
+      return Number(convertValue(val, 'm', unitType).convertedValue);
     });
+    
+    const wasteLength = labels.map((label) => {
+      const val = dataMap.get(label)?.waste || 0;
+      return Number(convertValue(val, 'm', unitType).convertedValue);
+    });
+    
+    const unitLabel = convertValue(0, 'm', unitType).measurementUnit;
 
-    if (withEfficiencyLine && efficiency > 0) {
-      const combinedLength = producedLength.map((length, index) => length + wasteLength[index]);
-      return {
-        categories: labels,
-        series: [
-          { name: 'Total Length (m)', data: combinedLength },
-          { name: 'Efficiency (%)', data: efficiencyData },
-        ],
-      };
+    const series = [
+      { name: `Produced Length (${unitLabel})`, data: producedLength },
+      { name: `Waste Length (${unitLabel})`, data: wasteLength },
+    ];
+
+    if (efficiency) {
+      const efficiencyLine = labels.map((label, i) => {
+        const total = producedLength[i] + wasteLength[i];
+        return total > 0 ? (total / efficiency) * 100 : null;
+      });
+      series.push({ name: 'Efficiency (%)', type: 'line', data: efficiencyLine });
     }
 
     return {
       categories: labels,
-      series: [
-        { name: 'Produced Length (m)', data: producedLength },
-        { name: 'Waste Length (m)', data: wasteLength },
-      ],
+      series
     };
   };
-  
 
   const getGraphTitle = () => {
     let titlePrefix = '';
@@ -90,7 +95,18 @@ const ErpProductionRateLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
     }
     return `${titlePrefix} for Machine ${machineSerialNo || ''}`;
   };
+  
+  const getTotalProduction = () => {
+    if (!graphData || graphData.length === 0) return '0';
+      const totalProduced = graphData.reduce(
+        (sum, item) => sum + (item.componentLength || 0) + (item.waste || 0),
+        0
+      );
+      const { formattedValue, measurementUnit } = convertValue(totalProduced, 'm', unitType, true);
+    return `${formattedValue} ${measurementUnit}`;
+  };
 
+  const producedData = `Production Rate: ${getTotalProduction()} for Period (${dateFrom.toLocaleDateString('en-GB')} – ${dateTo.toLocaleDateString('en-GB')})`;
   const isNotFound = !isLoading && !graphData.length;
 
   return (
@@ -98,7 +114,7 @@ const ErpProductionRateLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
       <Card sx={{ p: 3, boxShadow: 3 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', position: 'relative', mb: -1, mt: -1 }}>
           <Typography variant="h6" color="primary" gutterBottom>
-            Meterage Production
+            Production Rate
           </Typography>
         </Box>
 
@@ -107,12 +123,14 @@ const ErpProductionRateLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
         ) : (
           <>
             {graphData?.length > 0 ? (
-              <LogChartStacked 
-                processGraphData={(skipZero) => processGraphData(skipZero, true)} 
+              <LogLineBarChart 
+                processGraphData={(skipZero) => processGraphData(skipZero)} 
                 graphLabels={graphLabels} 
                 isLoading={isLoading} 
-                withEfficiencyLine={efficiency > 0} 
                 machineSerialNo={getGraphTitle()}
+                producedData={producedData}
+                efficiency={efficiency}
+                unitType={unitType}
               />
             ) : (
               <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 320 }}>
@@ -134,6 +152,7 @@ ErpProductionRateLogGraph.propTypes = {
   graphLabels: PropTypes.object,
   dateFrom: PropTypes.instanceOf(Date),
   dateTo: PropTypes.instanceOf(Date),
-  efficiency: PropTypes.number.isRequired,
+  efficiency: PropTypes.number,
   machineSerialNo: PropTypes.string,
+  unitType: PropTypes.oneOf(['Metric', 'Imperial']),
 };

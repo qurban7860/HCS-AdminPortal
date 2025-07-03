@@ -99,7 +99,7 @@ export default function DropDownMultipleSelection({ value, name, label, options 
                       alt={option?.name || ''}
                       sx={{ m: 0.3, mr: 1, width: '30px', height: '30px' }}
                     />
-                    {`${option?.name || ''} (${option?.email || 'No Email'})`}
+                    {`${option?.name || ''} (${option?.login || 'No Login'})`}
                   </>
                 )}
               </Box>
