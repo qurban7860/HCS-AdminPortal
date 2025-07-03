@@ -75,7 +75,7 @@ const ErpProductionRateLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
         const total = producedLength[i] + wasteLength[i];
         return total > 0 ? (total / efficiency) * 100 : null;
       });
-      series.push({ name: 'Efficiency Line (%)', type: 'line', data: efficiencyLine });
+      series.push({ name: 'Efficiency (%)', type: 'line', data: efficiencyLine });
     }
 
     return {
@@ -106,7 +106,7 @@ const ErpProductionRateLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
     return `${formattedValue} ${measurementUnit}`;
   };
 
-  const producedData = `Meterage Production: ${getTotalProduction()} for Period (${dateFrom.toLocaleDateString('en-GB')} – ${dateTo.toLocaleDateString('en-GB')})`;
+  const producedData = `Production Rate: ${getTotalProduction()} for Period (${dateFrom.toLocaleDateString('en-GB')} – ${dateTo.toLocaleDateString('en-GB')})`;
   const isNotFound = !isLoading && !graphData.length;
 
   return (
@@ -114,7 +114,7 @@ const ErpProductionRateLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
       <Card sx={{ p: 3, boxShadow: 3 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', position: 'relative', mb: -1, mt: -1 }}>
           <Typography variant="h6" color="primary" gutterBottom>
-            Meterage Production
+            Production Rate
           </Typography>
         </Box>
 
