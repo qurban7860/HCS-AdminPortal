@@ -37,7 +37,7 @@ export function convertValue(value, baseUnit, unitSystem, forDisplay = false) {
     if (baseUnit === '%') {
       // percentage stays percentage
       convertedValue = value; // no conversion needed
-      return { formattedValue: convertedValue }
+      return { convertedValue, formattedValue: convertedValue, measurementUnit: '%'}
     }
   } else if (unitSystem === 'Metric') {
     if (baseUnit === 'm') {
@@ -49,7 +49,7 @@ export function convertValue(value, baseUnit, unitSystem, forDisplay = false) {
     if (baseUnit === '%') {
       // percentage stays percentage
       convertedValue = value; // no conversion needed
-      return { formattedValue: convertedValue }
+      return { convertedValue, formattedValue: convertedValue, measurementUnit: '%'}
     }
     // mm stays mm
     // kg stays kg
