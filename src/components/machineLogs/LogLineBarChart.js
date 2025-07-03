@@ -45,8 +45,8 @@ export default function LogLineBarChart({
 
   const chartSeries = useMemo(() => series.map((s) => ({
       ...s,
-      type: s.name.includes('Efficiency Line') ? 'line' : 'column',
-      yaxisIndex: s.name.includes('Efficiency Line') ? 1 : 0, 
+      type: s.name.includes('Efficiency') ? 'line' : 'column',
+      yaxisIndex: s.name.includes('Efficiency') ? 1 : 0, 
     })), [series]);
 
   const chartOptions = {
@@ -72,11 +72,11 @@ export default function LogLineBarChart({
     },
     colors,
     stroke: {
-      width: series.map((s) => (s.name.includes('Efficiency Line') ? 3 : 0)),
+      width: series.map((s) => (s.name.includes('Efficiency') ? 3 : 0)),
       curve: 'straight',
     },
     markers: {
-      size: series.map((s) => (s.name.includes('Efficiency Line') ? 4 : 0)),
+      size: series.map((s) => (s.name.includes('Efficiency') ? 4 : 0)),
     },
     plotOptions: {
       bar: {
@@ -185,7 +185,7 @@ export default function LogLineBarChart({
       y: {
         formatter: (val, { seriesIndex, w }) => {
           const label = w?.globals?.seriesNames?.[seriesIndex] || '';
-          return label.includes('Efficiency Line')
+          return label.includes('Efficiency')
             ? `${val.toFixed(2)}%`
             : `${val.toLocaleString(undefined, {
             minimumFractionDigits: 2,
