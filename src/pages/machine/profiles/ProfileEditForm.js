@@ -153,7 +153,7 @@ export default function ProfileEditForm() {
         }
       }
     } catch (error) {
-      console.error('Error loading full file:', error);
+      console.error('Error loading full file:', handleError(error));
     }
   };
 
