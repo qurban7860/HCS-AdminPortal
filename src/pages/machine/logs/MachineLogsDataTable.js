@@ -1,16 +1,14 @@
 import React, { useEffect, useReducer, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableSortLabel, Tooltip, Button, Box, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableSortLabel, Tooltip } from '@mui/material';
 import PropTypes from 'prop-types';
-import { RHFSelect } from '../../../components/hook-form';
 import TableCard from '../../../components/ListTableTools/TableCard';
 import { useTable, getComparator, TableNoData, TableSkeleton, TablePaginationCustom } from '../../../components/table';
 import { getMachineLogRecords, ChangeRowsPerPage, ChangePage, resetMachineErpLogRecords } from '../../../redux/slices/products/machineErpLogs';
 import Scrollbar from '../../../components/scrollbar';
 import MachineLogsTableRow from './MachineLogsTableRow';
 import DialogViewMachineLogDetails from '../../../components/Dialog/DialogViewMachineLogDetails';
-import { machineLogTypeFormats } from '../../../constants/machineLogTypeFormats';
 import MachineLogsDataTablePaginationCustom from './MachineLogsDataTablePaginationCustom';
 
 function tableColumnsReducer(state, action) {
@@ -33,6 +31,14 @@ function tableColumnsReducer(state, action) {
     }
     case 'selectAllColumns': {
       const columns = [...state];
+      if (columns.every(column => column.checked)) {
+        columns.forEach((column) => {
+          if (!column.alwaysShow) {
+            column.checked = false;
+          }
+        });
+        return [...columns];
+      }
       columns.forEach((column) => {
         if (!column.alwaysShow) {
           column.checked = true;
@@ -59,7 +65,6 @@ const MachineLogsDataTable = ({ logType, unitType, allMachineLogsPage, dataForAp
   const [selectedLog, setSelectedLog] = useState(null);
   const [tableData, setTableData] = useState([]);
   const [tableColumns, dispatchTableColumns] = useReducer(tableColumnsReducer, logType?.tableColumns || []);
-  const numericalLengthValues = machineLogTypeFormats[0]?.numericalLengthValues || [];
   const { machineErpLogs, machineErpLogstotalCount, page, rowsPerPage, isLoading } = useSelector((state) => state.machineErpLogs);
   const dispatch = useDispatch();
   useEffect(() => {
@@ -150,21 +155,23 @@ const MachineLogsDataTable = ({ logType, unitType, allMachineLogsPage, dataForAp
     dispatchTableColumns({ type: 'selectAllColumns' });
   }
 
-  const getFormattedLabel = (column, activeUnit) => {
+  const getFormattedLabel = (column, activeUnitSystem) => {
     const { label, baseUnit } = column;
-    // If the column is not a numerical length, return label as-is
-    if (!numericalLengthValues.includes(column.id)) return label;
+    if (!column.convertable) return label;
     // Metric Length
-    if (activeUnit === 'Metric' && 'mm'.includes(baseUnit?.toLowerCase())) {
+    if (activeUnitSystem === 'Metric' && ['m', 'mm'].includes(baseUnit?.toLowerCase())) {
       return `${label} (${baseUnit})`;
     }
     // Imperial Length
-    if (activeUnit === 'Imperial' && 'mm'.includes(baseUnit?.toLowerCase())) {
+    if (activeUnitSystem === 'Imperial' && ['m', 'mm'].includes(baseUnit?.toLowerCase())) {
       return `${label} (in)`;
     }
-    // // Imperial Weight
-    if (activeUnit === 'Imperial' && baseUnit?.toLowerCase() === 'kg') {
+    // Imperial Weight
+    if (activeUnitSystem === 'Imperial' && baseUnit?.toLowerCase() === 'kg') {
       return `${label} (lbs)`;
+    }
+    if (baseUnit?.toLowerCase() === 'msec') {
+      return `${label} (s)`;
     }
     // Fallback to baseUnit or just label
     return baseUnit ? `${label} (${baseUnit})` : label;
@@ -198,7 +205,6 @@ const MachineLogsDataTable = ({ logType, unitType, allMachineLogsPage, dataForAp
                       return (
                         <TableCell
                           key={headCell.id}
-                          // align={headCell?.numerical ? 'right' : 'left'}
                           align="center"
                           sortDirection={orderBy === headCell.id ? order : false}
                           sx={{ width: headCell.width, minWidth: headCell.minWidth }}
@@ -240,7 +246,6 @@ const MachineLogsDataTable = ({ logType, unitType, allMachineLogsPage, dataForAp
                       selected={selected.includes(row._id)}
                       selectedLength={selected.length}
                       style={index % 2 ? { background: 'red' } : { background: 'green' }}
-                      numericalLengthValues={numericalLengthValues}
                       unit={unitType}
                     />
                   ) : (
