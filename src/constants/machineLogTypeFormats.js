@@ -24,7 +24,7 @@ export const machineLogTypeFormats = [
       { id: 'coilBatchName', label: 'C.Batch', tooltip: true, fullLabel: 'Coil Batch Name', searchable: true },
       { id: 'coilThickness', label: 'C.Thickness', baseUnit: 'mm', tooltip: true, fullLabel: 'Coil Thickness', numerical: true, convertable: true },
       { id: 'coilWidth', label: 'C.Width', baseUnit: 'mm', tooltip: true, fullLabel: 'Coil Width', numerical: true, convertable: true },
-      { id: 'lineSpeed', label: 'L.S (%)', baseUnit: '%', tooltip: true, fullLabel: 'Line Speed' },
+      { id: 'lineSpeed', label: 'L.S (%)', baseUnit: '%', tooltip: true, fullLabel: 'Line Speed', numerical: true, },
       { id: 'mode', label: 'Mode', searchable: true },
       { id: 'time', label: 'Time', baseUnit: 'msec', numerical: true, convertable: true },
       { id: 'operator', label: 'Operator', searchable: true },
