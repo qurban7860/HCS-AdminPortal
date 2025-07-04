@@ -14,19 +14,19 @@ export const machineLogTypeFormats = [
       { id: '_id', label: 'Log ID' },
       { id: 'componentLabel', label: 'Label', defaultShow: true, tooltip: true, fullLabel: 'Component Label', searchable: true },
       { id: 'frameSet', label: 'Frame Set', defaultShow: true, searchable: true },
-      { id: 'componentLength', label: 'Length', baseUnit: 'm', alwaysShow: true, tooltip: true, fullLabel: 'Produced Length', defaultShow: true, numerical: true },
-      { id: 'waste', label: 'Waste', baseUnit: 'm', alwaysShow: true, defaultShow: true, numerical: true },
-      { id: 'coilLength', label: 'Rem. Coil', baseUnit: 'm', defaultShow: true, tooltip: true, fullLabel: 'Remaining Coil Length', numerical: true },
-      { id: 'flangeHeight', label: 'Flange', baseUnit: 'mm', defaultShow: true, tooltip: true, fullLabel: 'Flange Height', numerical: true },
-      { id: 'webWidth', label: 'Web', baseUnit: 'mm', defaultShow: true, tooltip: true, fullLabel: 'Web Width', numerical: true },
+      { id: 'componentLength', label: 'Length', baseUnit: 'm', alwaysShow: true, tooltip: true, fullLabel: 'Produced Length', defaultShow: true, numerical: true, convertable: true },
+      { id: 'waste', label: 'Waste', baseUnit: 'm', alwaysShow: true, defaultShow: true, numerical: true, convertable: true },
+      { id: 'coilLength', label: 'Rem. Coil', baseUnit: 'm', defaultShow: true, tooltip: true, fullLabel: 'Remaining Coil Length', numerical: true, convertable: true },
+      { id: 'flangeHeight', label: 'Flange', baseUnit: 'mm', defaultShow: true, tooltip: true, fullLabel: 'Flange Height', numerical: true, convertable: true },
+      { id: 'webWidth', label: 'Web', baseUnit: 'mm', defaultShow: true, tooltip: true, fullLabel: 'Web Width', numerical: true, convertable: true },
       { id: 'profileShape', label: 'P.S', defaultShow: true, tooltip: true, fullLabel: 'Profile Shape', searchable: true },
-      { id: 'componentWeight', label: 'Weight', baseUnit: 'kg', tooltip: true, fullLabel: 'Component Weight', numerical: true },
+      { id: 'componentWeight', label: 'Weight', baseUnit: 'kg', tooltip: true, fullLabel: 'Component Weight', numerical: true, convertable: true },
       { id: 'coilBatchName', label: 'C.Batch', tooltip: true, fullLabel: 'Coil Batch Name', searchable: true },
-      { id: 'coilThickness', label: 'C.Thickness', baseUnit: 'mm', tooltip: true, fullLabel: 'Coil Thickness', numerical: true },
-      { id: 'coilWidth', label: 'C.Width', baseUnit: 'mm', tooltip: true, fullLabel: 'Coil Width', numerical: true },
-      { id: 'lineSpeed', label: 'L.S', baseUnit: '%', tooltip: true, fullLabel: 'Line Speed' },
+      { id: 'coilThickness', label: 'C.Thickness', baseUnit: 'mm', tooltip: true, fullLabel: 'Coil Thickness', numerical: true, convertable: true },
+      { id: 'coilWidth', label: 'C.Width', baseUnit: 'mm', tooltip: true, fullLabel: 'Coil Width', numerical: true, convertable: true },
+      { id: 'lineSpeed', label: 'L.S (%)', baseUnit: '%', tooltip: true, fullLabel: 'Line Speed' },
       { id: 'mode', label: 'Mode', searchable: true },
-      { id: 'time', label: 'Time (s)', numerical: true },
+      { id: 'time', label: 'Time', baseUnit: 'msec', numerical: true, convertable: true },
       { id: 'operator', label: 'Operator', searchable: true },
       { id: 'componentGUID', label: 'GUID', searchable: true, tooltip: true, fullLabel: 'Component GUID' },
       { id: 'componentType', label: 'Type', searchable: true, tooltip: true, fullLabel: 'Component Type', defaultShow: true },
@@ -34,7 +34,6 @@ export const machineLogTypeFormats = [
       { id: 'cloudComponentId', label: 'Cloud Component', searchable: true },
       { id: 'cloudJobId', label: 'Cloud Job', searchable: true },
     ],
-    numericalLengthValues: ["coilLength", "coilWidth", "coilThickness", "lineSpeed", "componentWeight", "flangeHeight", "webWidth", "componentLength", "waste"]
   },
   {
     type: "PRODUCTION",
@@ -53,7 +52,6 @@ export const machineLogTypeFormats = [
       { id: 'webWidth', label: 'Web Width', numerical: true },
       { id: 'muClassifier', label: 'MU Classifier' },
     ],
-    numericalLengthValues: ["flangeHeight", "webWidth", "componentLength", "waste"]
   },
   {
     type: "COIL",
@@ -73,7 +71,6 @@ export const machineLogTypeFormats = [
       { id: 'coilDensity', label: 'Coil Density', numerical: true },
       { id: 'operator', label: 'Oerator' },
     ],
-    numericalLengthValues: ["coilLength", "coilWidth", "coilThickness"]
   },
   {
     type: "TOOLCOUNT",

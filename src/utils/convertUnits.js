@@ -1,68 +1,62 @@
 
 export function convertValue(value, baseUnit, unitSystem, forDisplay = false) {
-  let convertedValue = value;
-  let measurementUnit = baseUnit;
-
-  if (unitSystem === 'Imperial') {
-    if (baseUnit === 'mm' || baseUnit === 'm') {
-      // convert everything to inches
-      convertedValue = (value / 25.4).toFixed(3);
-      measurementUnit = 'in';
-
-      if (forDisplay) {
-        // architectural format: e.g. 4' 5 3/8"
-        return {
-          convertedValue,
-          formattedValue: formatArchitecturalInches(convertedValue),
-          measurementUnit
-        };
-      }
-    }
-    if (baseUnit === 'kg') {
-      // convert kg to lbs
-      convertedValue = (value * 2.20462).toFixed(3);
-      measurementUnit = 'lbs';
-
-      if (forDisplay) {
-        return {
-          convertedValue,
-          formattedValue: convertedValue.toLocaleString(undefined, {
-            minimumFractionDigits: 3,
-            maximumFractionDigits: 3
-          }),
-          measurementUnit
-        };
-      }
-    }
-    if (baseUnit === '%') {
-      // percentage stays percentage
-      convertedValue = value; // no conversion needed
-      return { convertedValue, formattedValue: convertedValue, measurementUnit: '%'}
-    }
-  } else if (unitSystem === 'Metric') {
-    if (baseUnit === 'm') {
-      if (forDisplay) {
-        convertedValue = value / 1000;
-      }
-      measurementUnit = 'm';
-    }
-    if (baseUnit === '%') {
-      // percentage stays percentage
-      convertedValue = value; // no conversion needed
-      return { convertedValue, formattedValue: convertedValue, measurementUnit: '%'}
-    }
-    // mm stays mm
-    // kg stays kg
+  // Early return for percentage - same for both systems
+  if (baseUnit === '%') {
+    return { convertedValue: value, formattedValue: value, measurementUnit: '%' };
   }
 
-  return {
+  // Conversion configurations
+  const conversions = {
+    Imperial: {
+      mm: { factor: 1/25.4, unit: 'in', hasArchitectural: true },
+      m: { factor: 1/25.4, unit: 'in', hasArchitectural: true },
+      kg: { factor: 2.20462, unit: 'lbs' },
+      msec: { factor: 1/1000, unit: 's' }
+    },
+    Metric: {
+      m: { factor: forDisplay ? 1/1000 : 1, unit: 'm' },
+      msec: { factor: 1/1000, unit: 's' }
+    }
+  };
+
+  const conversion = conversions[unitSystem]?.[baseUnit];
+  
+  if (!conversion) {
+    // No conversion needed, return original values
+    return {
+      convertedValue: value,
+      formattedValue: value.toLocaleString(undefined, {
+        minimumFractionDigits: 3,
+        maximumFractionDigits: 3
+      }),
+      measurementUnit: baseUnit
+    };
+  }
+
+  const convertedValue = (value * conversion.factor).toFixed(3);
+  const result = {
     convertedValue,
-    formattedValue: convertedValue.toLocaleString(undefined, {
+    measurementUnit: conversion.unit
+  };
+
+  // Handle display formatting
+  if (forDisplay) {
+    if (conversion.hasArchitectural) {
+      result.formattedValue = formatArchitecturalInches(convertedValue);
+    } else {
+      result.formattedValue = convertedValue.toLocaleString(undefined, {
+        minimumFractionDigits: 3,
+        maximumFractionDigits: 3
+      });
+    }
+  } else {
+    result.formattedValue = convertedValue.toLocaleString(undefined, {
       minimumFractionDigits: 3,
       maximumFractionDigits: 3
-    }),
-    measurementUnit
-  };
+    });
+  }
+
+  return result;
 }
 
 /**
@@ -86,7 +80,7 @@ function formatArchitecturalInches(decimalInches) {
 
   let inchesStr = '';
   if (wholeInches > 0 || fractionStr) {
-    inchesStr = `${wholeInches}${fractionStr}"`;
+    inchesStr = `${wholeInches || ''}${fractionStr}"`;
   }
   let result = '0"';
   if (feetStr && inchesStr) {

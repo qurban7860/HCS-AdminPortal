@@ -34,6 +34,8 @@ export default function MachineLogsGraphViewForm() {
   const { machine } = useSelector((state) => state.machine);
   const theme = useTheme();
 
+  const showProductionRateGraph = process.env.REACT_APP_ENV.toLowerCase() !== "live"
+
   const defaultValues = useMemo(
     () => ({
       logPeriod: 'Daily',
@@ -193,7 +195,10 @@ export default function MachineLogsGraphViewForm() {
                   <RHFAutocomplete
                     name="logGraphType"
                     label="Graph Type*"
-                    options={machineLogGraphTypes}
+                    options={machineLogGraphTypes.filter((type) => {
+                      if (type.key === 'productionRate' && !showProductionRateGraph) return false
+                      return true;
+                    })}
                     onChange={(e, newValue) => handleGraphTypeChange(newValue)}
                     getOptionLabel={(option) => option.name || ''}
                     isOptionEqualToValue={(option, value) => option?.key === value?.key}

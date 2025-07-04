@@ -22,7 +22,6 @@ MachineLogsTableRow.propTypes = {
   onDeleteRow: PropTypes.func,
   columnsToShow: PropTypes.array,
   allMachineLogsPage: PropTypes.bool,
-  numericalLengthValues: PropTypes.array,
   unit: PropTypes.string,
 };
 
@@ -37,7 +36,6 @@ export default function MachineLogsTableRow({
   onViewRow,
   columnsToShow,
   allMachineLogsPage,
-  numericalLengthValues,
   unit,
 }) {
   row = { ...row, machineSerialNo: row?.machine?.serialNo };
@@ -67,7 +65,6 @@ export default function MachineLogsTableRow({
         return (
           <TableCell key={index} align={column?.numerical ? 'right' : 'left'}>
             {cellValue}
-            {/* {numericalLengthValues.includes(column.id) ? convertMmToM(cellValue) : cellValue} */}
           </TableCell>
         );
       })}

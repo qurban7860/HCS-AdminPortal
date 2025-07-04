@@ -31,7 +31,6 @@ function MachineLogsDataTablePaginationCustom({
 }) {
 
   const [anchorEl, setAnchorEl] = useState(null);
-  const numericalLengthValues = machineLogTypeFormats[0]?.numericalLengthValues || [];
   const handleColumnClick = (column) => {
     if (!column.alwaysShow) {
       columnButtonClickHandler(column.id, !column.checked);
@@ -50,19 +49,21 @@ function MachineLogsDataTablePaginationCustom({
 
     const getFormattedLabel = (column, activeUnit) => {
       const { fullLabel, label, baseUnit } = column;
-      // If the column is not a numerical length, return label as-is
-      if (!numericalLengthValues.includes(column.id)) return fullLabel || label;
+      if (!column.convertable) return fullLabel || label;
       // Metric Length
-      if (activeUnit === 'Metric' && 'mm'.includes(baseUnit?.toLowerCase())) {
+      if (activeUnit === 'Metric' && ['m', 'mm'].includes(baseUnit?.toLowerCase())) {
         return `${fullLabel || label} (${baseUnit})`;
       }
       // Imperial Length
-      if (activeUnit === 'Imperial' && 'mm'.includes(baseUnit?.toLowerCase())) {
+      if (activeUnit === 'Imperial' && ['m', 'mm'].includes(baseUnit?.toLowerCase())) {
         return `${fullLabel || label} (in)`;
       }
       // // Imperial Weight
       if (activeUnit === 'Imperial' && baseUnit?.toLowerCase() === 'kg') {
         return `${fullLabel || label} (lbs)`;
+      }
+      if (baseUnit?.toLowerCase() === 'msec') {
+        return `${label} (s)`;
       }
       // Fallback to baseUnit or just label
       return baseUnit ? `${fullLabel || label} (${baseUnit})` : (fullLabel || label);
