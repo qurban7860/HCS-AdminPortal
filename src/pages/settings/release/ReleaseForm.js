@@ -128,16 +128,16 @@ export default function ReleaseForm() {
                     getOptionLabel={(option) => option.name}
                     isOptionEqualToValue={(option, value) => option._id === value._id}
                   />
-                  <RHFTextField name="name" label="Name*" />
+                  <RHFTextField name="name" label="Title*" />
                   <RHFDatePicker
                     label="Release Date"
                     name="releaseDate"
                   />
                 </Box>
                 <RHFEditor name="description" label="Description" minRows={3} multiline />
-                <Grid display="flex" alignItems="center">
+                {/* <Grid display="flex" alignItems="center">
                   <RHFSwitch name="isActive" label="Active" />
-                </Grid>
+                </Grid> */}
                 <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Stack>
             </Card>
