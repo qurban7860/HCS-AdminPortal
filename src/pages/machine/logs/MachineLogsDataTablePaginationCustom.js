@@ -49,6 +49,7 @@ function MachineLogsDataTablePaginationCustom({
 
     const getFormattedLabel = (column, activeUnit) => {
       const { fullLabel, label, baseUnit } = column;
+      if (baseUnit === "%") return `${fullLabel || label} (%)`;
       if (!column.convertable) return fullLabel || label;
       // Metric Length
       if (activeUnit === 'Metric' && ['m', 'mm'].includes(baseUnit?.toLowerCase())) {
