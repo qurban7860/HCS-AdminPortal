@@ -94,6 +94,9 @@ const DownloadMachineLogsIconButton = ({ dataForApi, unit }) => {
           if (header === 'logId') {
             value = row._id
           }
+          if (header === 'time') {
+            value = row.time || '';
+          }
           const escaped = String(value).replace(/"/g, '""')
           return escaped
         })
@@ -102,8 +105,10 @@ const DownloadMachineLogsIconButton = ({ dataForApi, unit }) => {
 
       const csvString = csvRows.join('\n')
       const weightUnit = unit === 'Imperial' ? 'lbs' : 'kg';
-      let finalcsvString = csvString.replace("lineSpeed", "lineSpeed (%)")
-      finalcsvString = finalcsvString.replace("componentWeight", `componentWeight (${weightUnit})`);
+      const finalcsvString = csvString
+        .replace(/\blineSpeed\b/, 'lineSpeed (%)')
+        .replace(/\bcomponentWeight\b/, `componentWeight (${weightUnit})`)
+        .replace(/\btime\b/, 'time (msec)');
       blob = new Blob([finalcsvString], { type: 'text/csv;charset=utf-8;' })
       filename = 'csv_logs.csv'
     } else if (format === 'json') {

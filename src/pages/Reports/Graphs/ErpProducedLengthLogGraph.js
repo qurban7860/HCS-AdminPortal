@@ -5,7 +5,6 @@ import { useSelector } from 'react-redux';
 import { Typography, Card, Grid, Box, Skeleton } from '@mui/material';
 import LogChartStacked from '../../../components/machineLogs/LogStackedChart';
 import { TableNoData } from '../../../components/table';
-import { convertValue } from '../../../utils/convertUnits';
 
 const ErpProducedLengthLogGraph = ({ timePeriod, customer, graphLabels, dateFrom, dateTo, machineSerialNo, unitType = 'Metric' }) => {
   const [graphData, setGraphData] = useState([]);
@@ -27,12 +26,12 @@ const ErpProducedLengthLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
 
   const getTotalProduction = () => {
     if (!graphData || graphData.length === 0) return '0';
-      const totalProduced = graphData.reduce(
-        (sum, item) => sum + (item.componentLength || 0) + (item.waste || 0),
-        0
-      );
-      const { formattedValue, measurementUnit } = convertValue(totalProduced, 'm', unitType, true);
-    return `${formattedValue} ${measurementUnit}`;
+    const totalProduced = graphData.reduce((sum, item) => sum + (item.componentLength || 0) + (item.waste || 0), 0);
+    const toDisplay = unitConvertedValues(totalProduced, unitType).toLocaleString(undefined, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 3,
+    });
+    return `${toDisplay} (${unitType === 'Imperial' ? 'in' : 'm'})`;
   };
 
   const processGraphData = (skipZeroValues) => {
@@ -116,15 +115,15 @@ const ErpProducedLengthLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
 
     const producedLength = labels.map((label) => {
       const val = dataMap.get(label)?.componentLength || 0;
-      return Number(convertValue(val, 'm', unitType).convertedValue);
+      return unitConvertedValues(val, unitType);
     });
 
     const wasteLength = labels.map((label) => {
       const val = dataMap.get(label)?.waste || 0;
-      return Number(convertValue(val, 'm', unitType).convertedValue);
+      return unitConvertedValues(val, unitType);
     });
 
-    const unitLabel = convertValue(0, 'm', unitType).measurementUnit.toLowerCase();
+    const unitLabel = unitType === 'Imperial' ? 'in' : 'm';
 
     return {
       categories: labels,
@@ -135,7 +134,7 @@ const ErpProducedLengthLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
     };
   };
   
-  const producedData = `Meterage Production: ${getTotalProduction()} for Period (${dateFrom.toLocaleDateString('en-GB')} – ${dateTo.toLocaleDateString('en-GB')})`;
+  const producedData = `Meterage Production: ${getTotalProduction()} for Period (${dateFrom.toLocaleDateString('en-GB')} - ${dateTo.toLocaleDateString('en-GB')})`;
   const isNotFound = !isLoading && !graphData.length;
 
   const getGraphTitle = () => {
@@ -200,7 +199,13 @@ ErpProducedLengthLogGraph.propTypes = {
   unitType: PropTypes.oneOf(['Metric', 'Imperial']),
 };
 
-// import PropTypes from 'prop-types';
+const unitConvertedValues = (valueInMeters, selectedSystem) => {
+  if (selectedSystem === 'Imperial') {
+    const convertedValue = valueInMeters * 39.37;
+    return Number(convertedValue.toFixed(2));
+  }
+  return Number(valueInMeters.toFixed(2));
+}
 // import React, { useState, useEffect } from 'react';
 // import { useSelector } from 'react-redux';
 // import { Typography, Card, Grid, Skeleton } from '@mui/material';

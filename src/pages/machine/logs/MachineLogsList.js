@@ -70,14 +70,6 @@ export default function MachineLogsList({ allMachineLogsType }) {
     setValue(filteredSearchKey, '')
   };
 
-    const convertToMmForSendingData = useCallback((data, columnsSelected) => {
-      // eslint-disable-next-line no-restricted-globals
-      if (!isNaN(data) && columnsSelected.every(col => logType?.tableColumns?.some(c => c.id === col && c.baseUnit === "m"))) {
-        return (data * 1000).toString()
-      }
-      return data
-    }, [logType?.tableColumns])
-
   const dataForApi = {
     customerId: machine?.customer?._id,
     machineId,
@@ -87,7 +79,7 @@ export default function MachineLogsList({ allMachineLogsType }) {
     toDate: new Date(new Date(dateTo).setHours(23, 59, 59, 999)),
     isMachineArchived: false,
     selectedLogType: logType?.type,
-    searchKey: convertToMmForSendingData(filteredSearchKey, selectedMultiSearchFilter),
+    searchKey: filteredSearchKey,
     searchColumn: selectedMultiSearchFilter,
   };
 
@@ -104,7 +96,7 @@ export default function MachineLogsList({ allMachineLogsType }) {
         toDate: new Date(new Date(dateTo).setHours(23, 59, 59, 999)),
         isMachineArchived: machine?.isArchived,
         selectedLogType: logType.type,
-        searchKey: convertToMmForSendingData(filteredSearchKey, selectedMultiSearchFilter),
+        searchKey: filteredSearchKey,
         searchColumn: selectedMultiSearchFilter
       })
     );
