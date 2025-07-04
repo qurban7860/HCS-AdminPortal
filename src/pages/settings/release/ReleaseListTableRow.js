@@ -44,9 +44,9 @@ export default function ReleaseListTableRow({ row, selected, onViewRow }) {
       </TableCell>
 
       <TableCell align="left"> {fDate(releaseDate)} </TableCell>
-      <TableCell>
+      {/* <TableCell>
         <Switch checked={isActive} disabled size="small" />
-      </TableCell>
+      </TableCell> */}
       <TableCell align="right"> {fDate(createdAt)} </TableCell>
     </StyledTableRow>
   );

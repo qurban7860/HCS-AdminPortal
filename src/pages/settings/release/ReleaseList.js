@@ -36,13 +36,13 @@ import { StyledCardContainer } from '../../../theme/styles/default-styles';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'releaseNo', label: 'Release No', align: 'left' },
-  { id: 'name', label: 'Title', align: 'left' },
-  { id: 'project.name', label: 'Project', align: 'left' },
-  { id: 'status', label: 'Status', align: 'left' },
-  { id: 'releaseDate', label: 'Release Date', align: 'left' },
-  { id: 'isActive', label: 'Active', width: 100 },
-  { id: 'createdAt', label: 'Created At', align: 'right' },
+  { id: 'releaseNo', label: 'Release No', align: 'left',width: '16.66%' },
+  { id: 'name', label: 'Title', align: 'left', width: '16.66%' },
+  { id: 'project.name', label: 'Project', align: 'left', width: '16.66%' },
+  { id: 'status', label: 'Status', align: 'left', width: '16.66%' },
+  { id: 'releaseDate', label: 'Release Date', align: 'left', width: '16.66%' },
+  // { id: 'isActive', label: 'Active', width: 100 },
+  { id: 'createdAt', label: 'Created At', align: 'right', width: '16.66%' },
 ];
 
 // ----------------------------------------------------------------------
