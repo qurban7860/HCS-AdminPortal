@@ -1,10 +1,8 @@
 import PropTypes from 'prop-types';
 // @mui
 import {
-  Button,
+  Box,
   Card,
-  CardHeader,
-  Grid,
   Stack,
   Typography,
   useTheme,
@@ -18,6 +16,7 @@ import OpenInNewPage from '../../../../components/Icons/OpenInNewPage';
 import IconTooltip from '../../../../components/Icons/IconTooltip';
 import { articleStatusOptions } from '../../../../utils/constants';
 import Iconify from '../../../../components/iconify';
+
 // ----------------------------------------------------------------------
 
 ArticleListCard.propTypes = {
@@ -38,50 +37,52 @@ export default function ArticleListCard({
   const { _id, articleNo, title, description, status, category, customerAccess, isActive, updatedAt } = row;
 
   const handleExternalLink = (event) => {
-    event.stopPropagation(); 
+    event.stopPropagation();
     const url = PATH_SUPPORT.knowledgeBase.article.view(_id);
     window.open(url, '_blank');
   };
-  
-
   const theme = useTheme();
 
   const statusOption = articleStatusOptions.find((option) => option.value === status);
-    
 
-  const renderAritcle = (
+  const renderArticle = (
     <Card sx={{ cursor: 'pointer', '&:hover': { boxShadow: theme.customShadows.z24 } }} onClick={onViewRow}>
-      <CardHeader sx={{ pt: 1, px: 2 }} 
-          title={<>
-                  {title}
-                  <IconTooltip title='Open in New Tab' icon='fluent:open-12-regular' onClick={handleExternalLink} iconSx={{ border: 'none', width: '30px' }} />
-              </>} 
-          action={
-            <>
-              <IconTooltip 
-                title={statusOption?.label} 
-                icon={statusOption?.icon} 
-                color={statusOption?.color} 
-                onClick={(event) => event.stopPropagation()} 
-                iconSx={{ border: 'none' }} 
-              />
-              <IconTooltip 
-                onClick={(event) => event.stopPropagation()}
-                title={customerAccess ? ICONS.ALLOWED.heading : ICONS.DISALLOWED.heading} 
-                color={customerAccess ? ICONS.ALLOWED.color : ICONS.DISALLOWED.color}
-                icon={customerAccess ? ICONS.ALLOWED.icon : ICONS.DISALLOWED.icon}
-                iconSx={{ border: 'none' }}
-              />
-              <IconTooltip
-                onClick={(event) => event.stopPropagation()}
-                title={isActive ? ICONS.ACTIVE.heading : ICONS.INACTIVE.heading} 
-                color={isActive ? ICONS.ACTIVE.color : ICONS.INACTIVE.color}
-                icon={isActive ? ICONS.ACTIVE.icon : ICONS.INACTIVE.icon}
-                iconSx={{ border: 'none' }}
-              />
-            </>
-          }
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', px: 2, pt: 1 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', overflow: 'hidden', minWidth: 0, flexGrow: 1 }}>
+          <Typography variant="body1" noWrap
+            sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontWeight: 'normal', minWidth: 0 }}>
+             {title}
+          </Typography>
+          <Box sx={{ ml: 0.5, flexShrink: 0 }}>
+            <IconTooltip title="Open in New Tab" icon="fluent:open-12-regular" onClick={handleExternalLink} iconSx={{ border: 'none', width: '30px' }}/>
+          </Box>
+        </Box>
+
+        <Stack direction="row" spacing={1} sx={{ ml: 2, flexShrink: 0 }}>
+          <IconTooltip 
+            title={statusOption?.label} 
+            icon={statusOption?.icon} 
+            color={statusOption?.color} 
+            onClick={(event) => event.stopPropagation()} 
+            iconSx={{ border: 'none' }} 
           />
+          <IconTooltip
+            onClick={(event) => event.stopPropagation()}
+            title={customerAccess ? ICONS.ALLOWED.heading : ICONS.DISALLOWED.heading}
+            color={customerAccess ? ICONS.ALLOWED.color : ICONS.DISALLOWED.color}
+            icon={customerAccess ? ICONS.ALLOWED.icon : ICONS.DISALLOWED.icon}
+            iconSx={{ border: 'none' }}
+          />
+          <IconTooltip
+            onClick={(event) => event.stopPropagation()}
+            title={isActive ? ICONS.ACTIVE.heading : ICONS.INACTIVE.heading}
+            color={isActive ? ICONS.ACTIVE.color : ICONS.INACTIVE.color}
+            icon={isActive ? ICONS.ACTIVE.icon : ICONS.INACTIVE.icon}
+            iconSx={{ border: 'none' }}
+          />
+        </Stack>
+      </Box>
+
       <CardActions sx={{ px: 2, pt:0 }}>
         <Stack direction="row" spacing={2} justifyContent="space-between" width="100%">
           <Typography variant="caption" sx={{ fontStyle: 'italic', color: 'text.disabled' }}>{`${prefix}-${articleNo} (${category?.name})`}</Typography>
@@ -91,7 +92,5 @@ export default function ArticleListCard({
     </Card>
   );
 
-  
-
-  return (renderAritcle);
+  return renderArticle;
 }
