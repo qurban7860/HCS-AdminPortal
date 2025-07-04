@@ -26,7 +26,7 @@ export function convertValue(value, baseUnit, unitSystem, forDisplay = false) {
     return {
       convertedValue: value,
       formattedValue: value.toLocaleString(undefined, {
-        minimumFractionDigits: 3,
+        minimumFractionDigits: 2,
         maximumFractionDigits: 3
       }),
       measurementUnit: baseUnit
@@ -45,13 +45,13 @@ export function convertValue(value, baseUnit, unitSystem, forDisplay = false) {
       result.formattedValue = formatArchitecturalInches(convertedValue);
     } else {
       result.formattedValue = convertedValue.toLocaleString(undefined, {
-        minimumFractionDigits: 3,
+        minimumFractionDigits: 2,
         maximumFractionDigits: 3
       });
     }
   } else {
     result.formattedValue = convertedValue.toLocaleString(undefined, {
-      minimumFractionDigits: 3,
+      minimumFractionDigits: 2,
       maximumFractionDigits: 3
     });
   }
