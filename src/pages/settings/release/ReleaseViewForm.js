@@ -91,7 +91,7 @@ export default function ReleaseViewForm() {
         <ViewFormField isLoading={isLoading} sm={3} heading="Name" param={defaultValues?.name} />
         <ViewFormField isLoading={isLoading} sm={3} heading="Project" param={defaultValues.project?.name || ''} />
         <ViewFormField isLoading={isLoading} sm={3} heading="Status"
-          node={<ViewFormSelect sx={{ width: '150px' }} options={releaseStatusOptions} value={defaultValues.status} onChange={handleReleaseChange} />}
+          node={<ViewFormSelect sx={{ width: '180px' }} options={releaseStatusOptions} value={defaultValues.status} onChange={handleReleaseChange} />}
         />
         <ViewFormField isLoading={isLoading} sm={3} heading="Release Date" param={fDate(defaultValues?.releaseDate)} />
 

@@ -37,7 +37,7 @@ import { StyledCardContainer } from '../../../theme/styles/default-styles';
 
 const TABLE_HEAD = [
   { id: 'releaseNo', label: 'Release No', align: 'left' },
-  { id: 'name', label: 'Name', align: 'left' },
+  { id: 'name', label: 'Title', align: 'left' },
   { id: 'project.name', label: 'Project', align: 'left' },
   { id: 'status', label: 'Status', align: 'left' },
   { id: 'releaseDate', label: 'Release Date', align: 'left' },
