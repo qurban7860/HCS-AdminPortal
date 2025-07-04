@@ -475,7 +475,7 @@ export default function TicketForm() {
                           renderOption={(props, option) => (<li {...props} key={option?._id}> {option.name && option.name} </li>)}
                         />
                         <RHFEditor name="rootCause" label="Root Cause" minRows={4} multiline />
-                        <RHFEditor name="workaround" label="Workaround" minRows={4} multiline />
+                        <RHFEditor name="workaround" label="Resolution" minRows={4} multiline />
                       </>
                     )}
                   </Box>

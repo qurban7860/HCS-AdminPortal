@@ -538,7 +538,7 @@ export default function TicketViewForm() {
                 <ViewFormField isLoading={isLoading} sm={12} heading="Root Cause"
                   node={<FilledEditorField name="rootCause" value={defaultValues.rootCause} onSubmit={onSubmit} minRows={4} isEditor />}
                 />
-                <ViewFormField isLoading={isLoading} sm={12} heading="Workaround"
+                <ViewFormField isLoading={isLoading} sm={12} heading="resolution"
                   node={<FilledEditorField name="workaround" value={defaultValues.workaround} onSubmit={onSubmit} minRows={4} isEditor />}
                 />
               </>
