@@ -52,9 +52,9 @@ export default function LogLineBarChart({
 
   const chartOptions = {
     chart: {
-      type: 'line',
-      height: 450,
+      type: 'bar',
       stacked: true,
+      height: 450,
       animations: {
         enabled: false,
       },
@@ -181,17 +181,15 @@ export default function LogLineBarChart({
         // },
         labels: {
           formatter: (val) => {
-            let convertedVal = val;
             let convertedEfficiency = efficiency;
 
             if (unitType === 'Imperial') {
-              convertedVal = val * 39.37;
               convertedEfficiency = efficiency * 39.37;
             }
 
             if (!convertedEfficiency || convertedEfficiency === 0) return '0%';
 
-            const percent = (convertedVal / convertedEfficiency) * 100;
+            const percent = (val / convertedEfficiency) * 100;
             return `${percent.toFixed(0)}%`;
           }
         },
@@ -278,7 +276,7 @@ export default function LogLineBarChart({
           </Typography>
         </Box>
       ) : (
-        <Chart type="line" series={chartSeries} options={chartOptions} height={chartOptions.chart.height} />
+        <Chart type='line' series={chartSeries} options={chartOptions} height={chartOptions.chart.height} />
       )}
     </Box>
   );
