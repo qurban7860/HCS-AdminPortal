@@ -69,29 +69,32 @@ export default function TicketViewForm() {
     setReporters(reportersList);
   }, [assignedUsers, ticket, user, userId]);
 
-
   useEffect(() => {
     if (ticket?.customer?._id) {
       dispatch(getAssignedSecurityUsers({ customer: ticket?.customer?._id, isActive: true }));
     }
+    return () => {
+      dispatch(resetAssignedSecurityUsers());
+    };
+  }, [dispatch, ticket?.customer?._id]);
+
+  useEffect(() => {
 
     const asssigneeRoleType = configurations.find((c) => c?.name?.trim() === 'SupportTicketAssigneeRoleType')?.value?.trim();
     const approverRoleType = configurations.find((c) => c?.name?.trim() === 'SupportTicketApproverRoleType')?.value?.trim();
 
     dispatch(getActiveSecurityUsers({ type: 'SP', roleType: asssigneeRoleType }));
-    dispatch(getSecurityUsers({ type: 'SP', roleType: approverRoleType }));
+    dispatch(getSecurityUsers({ isActive: true, type: 'SP', roleType: approverRoleType }));
 
     return () => {
       dispatch(resetSecurityUser());
       dispatch(resetActiveSecurityUsers());
-      dispatch(resetAssignedSecurityUsers());
-
       dispatch(resetComments());
       dispatch(resetHistories());
       dispatch(resetWorkLogs());
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, ticket?.customer?._id]);
+  }, [dispatch]);
 
   useEffect(() => {
     if (ticketSettings?.requestTypes && ticket?.issueType) {
