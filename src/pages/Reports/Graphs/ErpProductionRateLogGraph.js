@@ -63,12 +63,12 @@ const ErpProductionRateLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
 
     const producedLength = labels.map((label) => {
       const val = dataMap.get(label)?.componentLength || 0;
-      return Number(convertValue(val, 'm', unitType).convertedValue);
+      return Number(unitConvertedValues(val, unitType));
     });
 
     const wasteLength = labels.map((label) => {
       const val = dataMap.get(label)?.waste || 0;
-      return Number(convertValue(val, 'm', unitType).convertedValue);
+      return Number(unitConvertedValues(val, unitType));
     });
 
     const unitLabel = convertValue(0, 'm', unitType).measurementUnit;

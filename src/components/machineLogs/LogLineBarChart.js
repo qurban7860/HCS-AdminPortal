@@ -147,11 +147,12 @@ export default function LogLineBarChart({
     },
     yaxis: [
       {
-        ...(efficiency && { max: efficiency }),
+        ...(efficiency && { max: unitType === 'Imperial' ? efficiency * 39.37 : efficiency }),
+        min: 0,
         axisBorder: { show: false },
         axisTicks: { show: false },
         labels: {
-          formatter: (val) => (val !== null ? fShortenNumber(val) : ''),
+          formatter: (val) => (val && fShortenNumber(val) || 0),
         },
         title: {
           text: graphLabels?.yaxis,
@@ -166,8 +167,8 @@ export default function LogLineBarChart({
       },
       {
         opposite: true,
-        ...(efficiency && { max: efficiency }),
-
+        ...(efficiency && { max: unitType === 'Imperial' ? efficiency * 39.37 : efficiency }),
+        min: 0,
         title: {
           text: 'Efficiency (%)',
           style: {
@@ -180,9 +181,19 @@ export default function LogLineBarChart({
         // },
         labels: {
           formatter: (val) => {
-            const percent = (val / efficiency) * 100;
+            let convertedVal = val;
+            let convertedEfficiency = efficiency;
+
+            if (unitType === 'Imperial') {
+              convertedVal = val * 39.37;
+              convertedEfficiency = efficiency * 39.37;
+            }
+
+            if (!convertedEfficiency || convertedEfficiency === 0) return '0%';
+
+            const percent = (convertedVal / convertedEfficiency) * 100;
             return `${percent.toFixed(0)}%`;
-          },
+          }
         },
         show: !!efficiency,
       }
