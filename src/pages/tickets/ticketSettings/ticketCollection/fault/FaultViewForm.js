@@ -76,7 +76,7 @@ export default function FaultViewForm() {
       />
       <Grid container sx={{mt:2}}>
         <ViewFormField isLoading={isLoading} sm={6} heading="Name" param={defaultValues?.name} />
-        <ViewFormField isLoading={isLoading} sm={6} heading="Icon" param={
+        <ViewFormField isLoading={isLoading} sm={6} heading="Icon" node={
           <StyledTooltip 
            placement="top" 
            title={defaultValues?.name || ''} 

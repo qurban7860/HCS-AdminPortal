@@ -14,7 +14,7 @@ import { PATH_SUPPORT } from '../../../../../routes/paths';
 import { useSnackbar } from '../../../../../components/snackbar';
 import { TicketCollectionSchema } from '../utils/constant';
 import AddFormButtons from '../../../../../components/DocumentForms/AddFormButtons';
-import FormProvider, { RHFTextField, RHFSwitch, RHFColorPicker, RHFEditor } from '../../../../../components/hook-form';
+import FormProvider, { RHFTextField, RHFSwitch, RHFColorPicker, RHFEditor, RHFIconPicker } from '../../../../../components/hook-form';
 import { postTicketIssueType, patchTicketIssueType, getTicketIssueType, resetTicketIssueType } from '../../../../../redux/slices/ticket/ticketSettings/ticketIssueTypes';
 import Iconify from '../../../../../components/iconify';
 import { handleError } from '../../../../../utils/errorHandler';
@@ -54,7 +54,6 @@ export default function IssueTypeForm() {
     watch,
     formState: { isSubmitting }
   } = methods;
-
   const { icon, color } = watch();
 
   useEffect(() => {
@@ -116,7 +115,7 @@ export default function IssueTypeForm() {
                 >
                   <RHFTextField name="name" label="Name*" />
                   <RHFTextField name="slug" label="Slug" />
-                  <RHFTextField
+                  {/* <RHFTextField
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="start" >
@@ -126,7 +125,8 @@ export default function IssueTypeForm() {
                     }}
                     name="icon"
                     label="Icon*"
-                  />
+                  /> */}
+                  <RHFIconPicker name="icon" label="Icon*" color={color || 'black'} />
                   <RHFColorPicker
                     name="color"
                     label="Color"

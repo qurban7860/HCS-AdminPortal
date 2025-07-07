@@ -15,7 +15,7 @@ import { PATH_SUPPORT } from '../../../../../routes/paths';
 import { useSnackbar } from '../../../../../components/snackbar';
 import AddFormButtons from '../../../../../components/DocumentForms/AddFormButtons';
 import { handleError } from '../../../../../utils/errorHandler';
-import FormProvider, { RHFTextField, RHFSwitch, RHFColorPicker, RHFEditor } from '../../../../../components/hook-form';
+import FormProvider, { RHFTextField, RHFSwitch, RHFColorPicker, RHFEditor, RHFIconPicker } from '../../../../../components/hook-form';
 import { postTicketFault, patchTicketFault, getTicketFault, resetTicketFault } from '../../../../../redux/slices/ticket/ticketSettings/ticketFaults';
 import Iconify from '../../../../../components/iconify';
 
@@ -135,7 +135,7 @@ export default function FaultForm() {
                 >
                   <RHFTextField name="name" label="Name*" />
                   <RHFTextField name="slug" label="Slug" />
-                  <RHFTextField
+                  {/* <RHFTextField
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="start" >
@@ -145,7 +145,9 @@ export default function FaultForm() {
                     }}
                     name="icon"
                     label="Icon"
-                  />
+                  /> */}
+                  <RHFIconPicker name="icon" label="Icon*" color={color || 'black'} />
+
                   <RHFColorPicker
                     name="color"
                     label="Color"
