@@ -14,7 +14,7 @@ import { StyledCardContainer } from '../../../../../theme/styles/default-styles'
 import { PATH_SUPPORT } from '../../../../../routes/paths';
 import { useSnackbar } from '../../../../../components/snackbar';
 import AddFormButtons from '../../../../../components/DocumentForms/AddFormButtons';
-import FormProvider, { RHFTextField, RHFSwitch, RHFAutocomplete, RHFColorPicker, RHFEditor } from '../../../../../components/hook-form';
+import FormProvider, { RHFTextField, RHFSwitch, RHFAutocomplete, RHFColorPicker, RHFEditor, RHFIconPicker } from '../../../../../components/hook-form';
 import { postTicketRequestType, patchTicketRequestType, getTicketRequestType, resetTicketRequestType } from '../../../../../redux/slices/ticket/ticketSettings/ticketRequestTypes';
 import { getActiveTicketIssueTypes, resetActiveTicketIssueTypes } from '../../../../../redux/slices/ticket/ticketSettings/ticketIssueTypes';
 import Iconify from '../../../../../components/iconify';
@@ -136,7 +136,7 @@ export default function RequestTypeForm() {
                     renderOption={(props, option) => (<li {...props} key={option?._id}> {option.name && option.name} </li>)}
                   />
 
-                  <RHFTextField
+                  {/* <RHFTextField
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="start" >
@@ -146,7 +146,9 @@ export default function RequestTypeForm() {
                     }}
                     name="icon"
                     label="Icon*"
-                  />
+                  /> */}
+                  <RHFIconPicker name="icon" label="Icon*" color={color || 'black'} />
+
                   <RHFColorPicker
                     name="color"
                     label="Color"

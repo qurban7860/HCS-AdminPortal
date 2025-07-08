@@ -10,7 +10,7 @@ import { convertValue } from '../../../utils/convertUnits';
 const ErpProductionRateLogGraph = ({ timePeriod, customer, graphLabels, dateFrom, dateTo, efficiency, machineSerialNo, unitType = 'Metric' }) => {
   const [graphData, setGraphData] = useState([]);
   const { isLoading, machineLogsGraphData } = useSelector((state) => state.machineErpLogs);
-  
+
   useEffect(() => {
     if (machineLogsGraphData) {
       const convertedDataToMeters = machineLogsGraphData.map((item) => ({
@@ -21,9 +21,17 @@ const ErpProductionRateLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
       }));
       setGraphData(convertedDataToMeters);
     } else {
-      setGraphData([]); 
+      setGraphData([]);
     }
   }, [machineLogsGraphData, timePeriod]);
+
+  const unitConvertedValues = (valueInMeters, selectedSystem) => {
+    if (selectedSystem === 'Imperial') {
+      const convertedValue = valueInMeters * 39.37;
+      return Number(convertedValue.toFixed(2));
+    }
+    return Number(valueInMeters.toFixed(2));
+  }
 
   const processGraphData = (skipZeroValues) => {
     if (!Array.isArray(graphData) || graphData.length === 0) {
@@ -52,17 +60,17 @@ const ErpProductionRateLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
         current.setHours(current.getHours() + 1);
       }
     }
-    
+
     const producedLength = labels.map((label) => {
       const val = dataMap.get(label)?.componentLength || 0;
-      return Number(convertValue(val, 'm', unitType).convertedValue);
+      return Number(unitConvertedValues(val, unitType));
     });
-    
+
     const wasteLength = labels.map((label) => {
       const val = dataMap.get(label)?.waste || 0;
-      return Number(convertValue(val, 'm', unitType).convertedValue);
+      return Number(unitConvertedValues(val, unitType));
     });
-    
+
     const unitLabel = convertValue(0, 'm', unitType).measurementUnit;
 
     const series = [
@@ -73,9 +81,9 @@ const ErpProductionRateLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
     if (efficiency) {
       const efficiencyLine = labels.map((label, i) => {
         const total = producedLength[i] + wasteLength[i];
-        return total > 0 ? (total / efficiency) * 100 : null;
+        return total > 0 ? (total / (unitType === 'Imperial' ? efficiency * 39.37 : efficiency)) * 100 : null;
       });
-      series.push({ name: 'Efficiency (%)', type: 'line', data: efficiencyLine });
+      series.push({ name: 'Efficiency (%)', type: 'line', yaxisIndex: 1, data: efficiencyLine });
     }
 
     return {
@@ -95,14 +103,15 @@ const ErpProductionRateLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
     }
     return `${titlePrefix} for Machine ${machineSerialNo || ''}`;
   };
-  
+
   const getTotalProduction = () => {
     if (!graphData || graphData.length === 0) return '0';
-      const totalProduced = graphData.reduce(
-        (sum, item) => sum + (item.componentLength || 0) + (item.waste || 0),
-        0
-      );
-      const { formattedValue, measurementUnit } = convertValue(totalProduced, 'm', unitType, true);
+    const totalProduced = graphData.reduce(
+      (sum, item) => sum + (item.componentLength || 0) + (item.waste || 0),
+      0
+    );
+    const measurementUnit = unitType === 'Imperial' ? 'in' : 'm';
+    const formattedValue = unitConvertedValues(totalProduced, unitType)
     return `${formattedValue} ${measurementUnit}`;
   };
 
@@ -123,10 +132,10 @@ const ErpProductionRateLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
         ) : (
           <>
             {graphData?.length > 0 ? (
-              <LogLineBarChart 
-                processGraphData={(skipZero) => processGraphData(skipZero)} 
-                graphLabels={graphLabels} 
-                isLoading={isLoading} 
+              <LogLineBarChart
+                processGraphData={(skipZero) => processGraphData(skipZero)}
+                graphLabels={graphLabels}
+                isLoading={isLoading}
                 machineSerialNo={getGraphTitle()}
                 producedData={producedData}
                 efficiency={efficiency}

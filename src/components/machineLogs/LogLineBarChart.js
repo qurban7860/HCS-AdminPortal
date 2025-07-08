@@ -10,7 +10,7 @@ LogLineBarChart.propTypes = {
   isLoading: PropTypes.bool,
   producedData: PropTypes.string,
   machineSerialNo: PropTypes.string,
-  efficiency: PropTypes.number, 
+  efficiency: PropTypes.number,
   unitType: PropTypes.oneOf(['Metric', 'Imperial']),
 };
 
@@ -20,9 +20,10 @@ export default function LogLineBarChart({
   isLoading,
   producedData,
   machineSerialNo,
-  efficiency, 
+  efficiency,
   unitType = 'Metric',
 }) {
+
   const [skipZero, setSkipZero] = useState(true);
   const [chart, setChart] = useState({ categories: [], series: [] });
   const [isChartReady, setIsChartReady] = useState(false);
@@ -44,16 +45,16 @@ export default function LogLineBarChart({
   const colors = ['#A9E0FC', '#FCB49F', '#1976d2'];
 
   const chartSeries = useMemo(() => series.map((s) => ({
-      ...s,
-      type: s.name.includes('Efficiency') ? 'line' : 'column',
-      yaxisIndex: s.name.includes('Efficiency') ? 1 : 0, 
-    })), [series]);
+    ...s,
+    type: s.name.includes('Efficiency') ? 'line' : 'column',
+    yaxisIndex: s.name.includes('Efficiency') ? 1 : 0,
+  })), [series]);
 
   const chartOptions = {
     chart: {
-      type: 'line',
-      height: 450,
+      type: 'bar',
       stacked: true,
+      height: 450,
       animations: {
         enabled: false,
       },
@@ -102,18 +103,18 @@ export default function LogLineBarChart({
       enabled: true,
       orientation: "vertical",
       formatter(val, { seriesIndex, dataPointIndex, w }) {
-      const seriesNames = w.config.series.map(s => s.name);
-      const producedIndex = seriesNames.findIndex(name => name.includes('Produced Length'));
-      const wasteIndex = seriesNames.findIndex(name => name.includes('Waste Length'));
+        const seriesNames = w.config.series.map(s => s.name);
+        const producedIndex = seriesNames.findIndex(name => name.includes('Produced Length'));
+        const wasteIndex = seriesNames.findIndex(name => name.includes('Waste Length'));
 
-      if (seriesIndex === wasteIndex) {
-        const producedVal = w.config.series[producedIndex]?.data?.[dataPointIndex] || 0;
-        const wasteVal = w.config.series[wasteIndex]?.data?.[dataPointIndex] || 0;
-        const total = producedVal + wasteVal;
-        return total === 0 ? '' : fShortenNumber(total);
-      }
-      return '';
-    },
+        if (seriesIndex === wasteIndex) {
+          const producedVal = w.config.series[producedIndex]?.data?.[dataPointIndex] || 0;
+          const wasteVal = w.config.series[wasteIndex]?.data?.[dataPointIndex] || 0;
+          const total = producedVal + wasteVal;
+          return total === 0 ? '' : fShortenNumber(total);
+        }
+        return '';
+      },
       offsetY: -15,
       style: {
         fontSize: '12px',
@@ -146,10 +147,12 @@ export default function LogLineBarChart({
     },
     yaxis: [
       {
+        ...(efficiency && { max: unitType === 'Imperial' ? efficiency * 39.37 : efficiency }),
+        min: 0,
         axisBorder: { show: false },
         axisTicks: { show: false },
         labels: {
-          formatter: (val) => (val !== null ? fShortenNumber(val) : ''),
+          formatter: (val) => (val && fShortenNumber(val) || 0),
         },
         title: {
           text: graphLabels?.yaxis,
@@ -163,18 +166,34 @@ export default function LogLineBarChart({
         },
       },
       {
-        opposite: true, 
+        opposite: true,
+        ...(efficiency && { max: unitType === 'Imperial' ? efficiency * 39.37 : efficiency }),
+        min: 0,
         title: {
-          text: 'Efficiency (%)', 
+          text: 'Efficiency (%)',
           style: {
             fontSize: '12px',
             fontWeight: 600,
           },
         },
+        // labels: {
+        //   formatter: (val) => fShortenNumber(val),
+        // },
         labels: {
-          formatter: (val) => fShortenNumber(val), 
+          formatter: (val) => {
+            let convertedEfficiency = efficiency;
+
+            if (unitType === 'Imperial') {
+              convertedEfficiency = efficiency * 39.37;
+            }
+
+            if (!convertedEfficiency || convertedEfficiency === 0) return '0%';
+
+            const percent = (val / convertedEfficiency) * 100;
+            return `${percent.toFixed(0)}%`;
+          }
         },
-        show: !!efficiency, 
+        show: !!efficiency,
       }
     ],
     legend: {
@@ -185,12 +204,12 @@ export default function LogLineBarChart({
       y: {
         formatter: (val, { seriesIndex, w }) => {
           const label = w?.globals?.seriesNames?.[seriesIndex] || '';
-          return label.includes('Efficiency')
-            ? `${val.toFixed(2)}%`
-            : `${val.toLocaleString(undefined, {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          })} ${unitLabel}`;
+          return label.includes('Efficiency') && val
+            ? `${val?.toFixed(2)}%`
+            : `${val?.toLocaleString(undefined, {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })} ${unitLabel}`;
         },
       },
       custom: ({ series: tooltipSeries, dataPointIndex, w }) => {
@@ -205,12 +224,12 @@ export default function LogLineBarChart({
           const isEfficiency = legend.includes('Efficiency');
           if (!isEfficiency) total += value || 0;
 
-          const valueText = isEfficiency
-            ? `${value.toFixed(2)}%`
-            : value.toLocaleString(undefined, {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              });
+          const valueText = isEfficiency && value
+            ? `${value?.toFixed(2)}%`
+            : value?.toLocaleString(undefined, {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            });
 
           tooltipContent += `
             <div class="apexcharts-tooltip-series-group apexcharts-active" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
@@ -222,7 +241,7 @@ export default function LogLineBarChart({
             </div>`;
         });
 
-        const totalText = total.toLocaleString(undefined, {
+        const totalText = total?.toLocaleString(undefined, {
           minimumFractionDigits: 2,
           maximumFractionDigits: 2,
         });
@@ -257,7 +276,7 @@ export default function LogLineBarChart({
           </Typography>
         </Box>
       ) : (
-        <Chart type="line" series={chartSeries} options={chartOptions} height={chartOptions.chart.height} />
+        <Chart type='line' series={chartSeries} options={chartOptions} height={chartOptions.chart.height} />
       )}
     </Box>
   );

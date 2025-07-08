@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Card, Grid, Container, Box } from '@mui/material';
+import { Card, Grid, Container, Box, Typography } from '@mui/material';
 // ROUTES
 import { PATH_SETTING } from '../../../../routes/paths';
 // slice
@@ -17,6 +17,7 @@ import FormProvider, { RHFTextField } from '../../../../components/hook-form';
 import AddFormButtons from '../../../../components/DocumentForms/AddFormButtons';
 import { Cover } from '../../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../../theme/styles/default-styles';
+import Iconify from '../../../../components/iconify';
 
 
 export default function WhitelistIPAddForm() {
@@ -74,7 +75,13 @@ export default function WhitelistIPAddForm() {
                   inputProps={{
                     pattern:"^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\/(3[0-2]|[12]?[0-9])$|^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$"
                   }} />
-                </Box>
+              </Box>
+              <Box display="flex" alignItems="center" sx={{ mb: 3 }}>
+                <Iconify icon="eva:info-outline" sx={{ color: 'text.secondary', mr: 1 }} />
+                <Typography variant="body2" color="text.secondary">
+                  All IPs in whitelists are allowed third party API access from Customer Portal
+                </Typography>
+              </Box>
               <AddFormButtons settingPage isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
             </Card>
           </Grid>
