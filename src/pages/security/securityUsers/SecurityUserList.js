@@ -332,10 +332,11 @@ function applyFilter({ inputData, comparator, filterName, filterStatus, filterRo
     inputData = inputData.filter((user)=> user.isActive === false );
   
   if (employeeFilterListBy === 'employee') {
-  inputData = inputData.filter((user) => user.currentEmployee === true);
+  inputData = inputData.filter((user) => user?.contact && !user?.contact?.formerEmployee);
   } else if (employeeFilterListBy === 'notEmployee') {
-  inputData = inputData.filter((user) => user.currentEmployee === false);
+  inputData = inputData.filter((user) => user?.contact?.formerEmployee === true);
   }
+
     if (filterByRegion) {
       inputData = inputData.filter((user) => user.regions.some((region) => region === filterByRegion?._id));
     }
