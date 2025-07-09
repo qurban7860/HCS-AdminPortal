@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 import PropTypes from 'prop-types';
 import Iconify from '../iconify';
-import IconPickerPopover from './IconPickerPopover';
+import IconPickerDialog from '../Dialog/IconPickerDialog';
 
 RHFIconPicker.propTypes = {
   name: PropTypes.string.isRequired,
@@ -18,10 +18,10 @@ RHFIconPicker.propTypes = {
 
 export default function RHFIconPicker({ name, label, color = 'inherit' }) {
   const { control } = useFormContext();
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
-  const openPicker = (e) => setAnchorEl(e.currentTarget);
-  const closePicker = () => setAnchorEl(null);
+  const openDialog = () => setDialogOpen(true);
+  const closeDialog = () => setDialogOpen(false);
 
   return (
     <Controller
@@ -35,34 +35,41 @@ export default function RHFIconPicker({ name, label, color = 'inherit' }) {
             fullWidth
             error={!!error}
             helperText={error?.message}
-            onChange={(e) => field.onChange(e.target.value)}
             InputProps={{
-              startAdornment: (
+              startAdornment: field.value && (
                 <InputAdornment position="start">
-                  {field.value && (
-                    <Iconify
-                      icon={field.value}
-                      sx={{ mr: 1, width: 24, height: 24, color }}
-                    />
-                  )}
+                  <Iconify
+                    icon={field.value}
+                    sx={{ width: 24, height: 24, color, mr: 1 }}
+                  />
                 </InputAdornment>
               ),
               endAdornment: (
                 <InputAdornment position="end">
-                  <IconButton edge="end" onClick={openPicker} size="small">
+                  <IconButton 
+                    edge="end" 
+                    onClick={openDialog}
+                    size="small"
+                  >
                     <Iconify icon="mdi:dots-grid" width={25} sx={{ cursor: 'pointer' }} />
                   </IconButton>
                 </InputAdornment>
-              )
+              ),
+              sx: {
+                '& input': {
+                  cursor: 'pointer'
+                }
+              }
             }}
+            onClick={openDialog}
           />
 
-          <IconPickerPopover
-            anchorEl={anchorEl}
-            onClose={closePicker}
+          <IconPickerDialog
+            open={dialogOpen}
+            onClose={closeDialog}
             onSelect={(icon) => {
               field.onChange(icon);
-              closePicker();
+              closeDialog();
             }}
           />
         </Stack>
