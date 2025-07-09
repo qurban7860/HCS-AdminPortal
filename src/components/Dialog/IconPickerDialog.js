@@ -1,4 +1,5 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect} from 'react';
+import debounce from 'lodash/debounce';
 import PropTypes from 'prop-types';
 import { Dialog, DialogTitle, DialogContent, Box, InputBase, Typography, Divider, Tabs, Tab, Stack } from '@mui/material';
 import { Icon } from '@iconify/react';
@@ -35,9 +36,16 @@ const ICON_SETS = {
 
 export default function IconPickerDialog({ open, onClose, onSelect }) {
   const [query, setQuery] = useState('');
+  const [inputValue, setInputValue] = useState('');
   const [activeTab, setActiveTab] = useState('Common');
 
   const allIcons = useMemo(() => Object.values(ICON_SETS).flat(), []);
+  
+  const debouncedSetQuery = useMemo( () => debounce((value) => setQuery(value), 300), [] );
+
+  useEffect(() => {
+    debouncedSetQuery(inputValue);
+  }, [inputValue, debouncedSetQuery]);
 
   const filteredIcons = useMemo(() => {
     if (query.trim()) {
@@ -71,8 +79,8 @@ export default function IconPickerDialog({ open, onClose, onSelect }) {
           <SearchIcon fontSize="small" />
           <InputBase
             placeholder="Search icons..."
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
             sx={{ 
               ml: 1, 
               flex: 1,
