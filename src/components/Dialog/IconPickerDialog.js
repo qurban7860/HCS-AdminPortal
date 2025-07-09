@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { Dialog, DialogTitle, DialogContent, Box, InputBase, Typography, Divider, Tabs, Tab, Stack, Button } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, Box, InputBase, Typography, Divider, Tabs, Tab, Stack } from '@mui/material';
 import { Icon } from '@iconify/react';
 import SearchIcon from '@mui/icons-material/Search';
 
@@ -60,7 +60,7 @@ export default function IconPickerDialog({ open, onClose, onSelect }) {
       fullWidth
       PaperProps={{
         sx: {
-          height: '75vh',
+          height: '70vh',
           maxHeight: 600,
           borderRadius: 2
         }
@@ -77,7 +77,7 @@ export default function IconPickerDialog({ open, onClose, onSelect }) {
               ml: 1, 
               flex: 1,
               '& input': { 
-                fontSize: '0.875rem',
+                fontSize: '1.1rem',
                 py: 1
               }
             }}
@@ -163,11 +163,6 @@ export default function IconPickerDialog({ open, onClose, onSelect }) {
           </Box>
         )}
       </DialogContent>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', px: 3, pb: 1.5, pt: 1.5 }}>
-        <Button variant="outlined" onClick={onClose}>
-          Close
-        </Button>
-      </Box>
     </Dialog>
   );
 }
