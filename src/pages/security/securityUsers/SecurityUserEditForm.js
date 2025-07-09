@@ -188,7 +188,7 @@ export default function SecurityUserEditForm() {
                   disableCloseOnSelect
                   filterSelectedOptions
                   name="roles"
-                  label="Roles*"
+                  label="Roles"
                   options={activeRoles.filter(role =>
                     (customer?.type?.toLowerCase() === 'sp' ? role?.roleType?.toLowerCase() !== 'customer' : (role?.roleType?.toLowerCase() === 'customer'))
                   )}
