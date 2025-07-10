@@ -27,12 +27,21 @@ import { getActiveArticleCategories, resetActiveArticleCategories } from '../../
 import FormLabel from '../../../../components/DocumentForms/FormLabel';
 import { manipulateFiles } from '../../../documents/util/Util';
 import { articleStatusOptions } from '../../../../utils/constants';
+import validateFileType from '../../../documents/util/validateFileType';
+import { allowedExtensions } from '../../../../constants/document-constants';
 
 // ----------------------------------------------------------------------
 
 export const AddArticleSchema = Yup.object().shape({
   title: Yup.string().min(2, 'Title must be at least 2 characters long').max(200, 'Title must be at most 200 characters long').required('Title is required!'),
   description: Yup.string().max(50000),
+  files: Yup.mixed().label('Files')
+    .test(
+      'fileType', allowedExtensions,
+      function (value) {
+       return validateFileType({ _this: this, files: value, doc: true, image: true, video: true, others: true });
+    }
+  ).nullable(),
   category: Yup.object().required().label('Category').nullable(),
   customerAccess: Yup.boolean(),
   isActive: Yup.boolean(),
