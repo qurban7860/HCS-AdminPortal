@@ -234,7 +234,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
                   disableCloseOnSelect
                   filterSelectedOptions
                   name="roles"
-                  label="Roles*"
+                  label="Roles"
                   options={activeRoles.filter(role =>
                   (customer?.type?.toLowerCase() === 'sp' ?
                     role?.roleType?.toLowerCase() !== 'customer'

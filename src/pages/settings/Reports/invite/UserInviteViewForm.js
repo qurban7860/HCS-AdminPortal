@@ -27,6 +27,7 @@ export default function UserInviteViewForm() {
       code:userInvite?.inviteCode|| '', 
       expiry:userInvite?.inviteExpireTime|| '', 
       status:userInvite?.invitationStatus || '',
+      customerName: userInvite?.customer?.name || '', 
       isActive:userInvite?.isActive,
       createdAt:userInvite?.createdAt || '',
       updatedAt:userInvite?.updatedAt || ''
@@ -70,9 +71,10 @@ export default function UserInviteViewForm() {
           onResendInvite={handleResendInvite}
         />
           <Grid container sx={{mt:2}}>
-            <ViewFormField isLoading={isLoading} sm={6} heading="Inveted User" param={defaultValues.username} />
-            <ViewFormField isLoading={isLoading} sm={6} heading="Inveted User Email" param={defaultValues.useremail} />
+            <ViewFormField isLoading={isLoading} sm={6} heading="Invited User" param={defaultValues.username} />
+            <ViewFormField isLoading={isLoading} sm={6} heading="Invited User Email" param={defaultValues.useremail} />
             <ViewFormField isLoading={isLoading} sm={6} heading="Invited By " param={defaultValues.sender} />
+            <ViewFormField isLoading={isLoading} sm={6} heading="Customer Name" param={defaultValues.customerName} />
             <ViewFormField isLoading={isLoading} sm={6} heading="Status " param={defaultValues.status} />
             <ViewFormField isLoading={isLoading} sm={6} heading="Invitation Time " param={fDate(defaultValues.createdAt)} />
             <ViewFormField isLoading={isLoading} sm={6} heading="Expiry Time " param={fDate(defaultValues.expiry)} />

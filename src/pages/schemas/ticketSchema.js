@@ -1,5 +1,6 @@
 import * as Yup from 'yup';
 import validateFileType from '../documents/util/validateFileType';
+import { allowedExtensions } from '../../constants/document-constants';
 
 export const ticketSchema = (reqType) => {
   const isNewRequest = reqType === 'new';
@@ -40,10 +41,9 @@ export const ticketSchema = (reqType) => {
 
     files: Yup.mixed().label('Files')
       .test(
-        'fileType',
-        'Only the following formats are accepted: .jpeg, .jpg, gif, .bmp, .webp, .pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx',
+        'fileType', allowedExtensions,
         function (value) {
-          return validateFileType({ _this: this, files: value, doc: true, image: true });
+          return validateFileType({ _this: this, files: value, doc: true, image: true, video: true, others: true });
         }
       ).nullable(),
     hlc: Yup.string().label('HLC').trim().max(500).nullable(),
