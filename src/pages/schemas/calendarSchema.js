@@ -1,6 +1,7 @@
 
 import * as Yup from 'yup';
 import validateFileType from '../documents/util/validateFileType';
+import { allowedExtensions } from '../../constants/document-constants';
 
 export const eventSchema = (clearErrors) => Yup.object().shape({
   date: Yup.date().nullable().label('Event Date').typeError('End Time should be a valid Date').required(),
@@ -48,10 +49,9 @@ export const eventSchema = (clearErrors) => Yup.object().shape({
   description: Yup.string().max(500).label('Description'),
   files: Yup.mixed().label('Files')
     .test(
-      'fileType',
-      'Only the following formats are accepted: .jpeg, .jpg, gif, .bmp, .webp, .pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx',
+      'fileType', allowedExtensions,
       function (value) {
-        return validateFileType({ _this: this, files: value, doc: true, image: true });
+        return validateFileType({ _this: this, files: value, doc: true, image: true, video: true, others: true });
       }
     ).nullable(),
 });

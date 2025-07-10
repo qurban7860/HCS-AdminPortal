@@ -40,10 +40,9 @@ export const documentSchema = ( selectedValue ) => Yup.object().shape({
   files: Yup.mixed()
   .required('File is required!')
   .test(
-    'fileType',
-    'Only the following formats are accepted: .jpeg, .jpg, gif, .bmp, .webp, .pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx',
+    'fileType', allowedExtensions,
     function (value) {
-      return validateFileType({ _this:this, files:value, doc:true, image:true, required:true });
+      return validateFileType({ _this: this, files: value, doc: true, image: true, video: true, required: true, others: true }); 
     }
   ).nullable(true),
   referenceNumber: Yup.string().max( 200 )

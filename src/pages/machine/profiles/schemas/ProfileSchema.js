@@ -1,5 +1,6 @@
 import * as Yup from 'yup';
 import validateFileType from '../../../documents/util/validateFileType';
+import { allowedExtensions } from '../../../../constants/document-constants';
 
 export const ProfileSchema = Yup.object().shape({
   defaultName: Yup.string().trim().required('Default name is required'),
@@ -10,8 +11,8 @@ export const ProfileSchema = Yup.object().shape({
   thicknessEnd: Yup.string(),
   type: Yup.string(),
   files: Yup.mixed()
-    .test('fileType', '', function (value) {
-      return validateFileType({ _this: this, files: value, image: true, doc: true, others: true });
+    .test('fileType', allowedExtensions, function (value) {
+      return validateFileType({ _this: this, files: value, image: true, doc: true, video: true, others: true });
     })
     .nullable(true),
   isActive: Yup.boolean(),
