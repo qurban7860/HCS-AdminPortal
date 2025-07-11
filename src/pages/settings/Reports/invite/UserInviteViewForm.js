@@ -27,8 +27,8 @@ export default function UserInviteViewForm() {
       code: userInvite?.inviteCode || '',
       expiry: userInvite?.inviteExpireTime || '',
       status: userInvite?.invitationStatus || '',
-      customerName: userInvite?.customer?.name || '',
-      contactName: userInvite?.contact ? `${userInvite.contact.firstName} ${userInvite.contact.lastName}` : '',
+      customer: userInvite?.customer?.name || '',
+      contact: userInvite?.contact ? `${userInvite.contact.firstName || ''} ${userInvite.contact.lastName || ''}` : '',
       isActive: userInvite?.isActive,
       createdAt: userInvite?.createdAt || '',
       updatedAt: userInvite?.updatedAt || '',
@@ -75,8 +75,8 @@ export default function UserInviteViewForm() {
             <ViewFormField isLoading={isLoading} sm={6} heading="Invited User" param={defaultValues.username} />
             <ViewFormField isLoading={isLoading} sm={6} heading="Invited User Email" param={defaultValues.useremail} />
             <ViewFormField isLoading={isLoading} sm={6} heading="Invited By " param={defaultValues.sender} />
-            <ViewFormField isLoading={isLoading} sm={6} heading="Customer" param={defaultValues.customerName} />
-            <ViewFormField isLoading={isLoading} sm={6} heading="Contact" param={defaultValues.contactName} />
+            <ViewFormField isLoading={isLoading} sm={6} heading="Customer" param={defaultValues.customer} />
+            <ViewFormField isLoading={isLoading} sm={6} heading="Contact" param={defaultValues.contact} />
             <ViewFormField isLoading={isLoading} sm={6} heading="Status " param={defaultValues.status} />
             <ViewFormField isLoading={isLoading} sm={6} heading="Invitation Time " param={fDate(defaultValues.createdAt)} />
             <ViewFormField isLoading={isLoading} sm={6} heading="Expiry Time " param={fDate(defaultValues.expiry)} />
