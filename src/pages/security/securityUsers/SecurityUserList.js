@@ -48,13 +48,12 @@ const ROLE_OPTIONS = ['Administrator', 'Normal User', 'Guest User', 'Restriced U
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
+  { id: 'isActive', label: 'S', align: 'left', tooltip: 'Status' },
   { id: 'login', visibility: 'xs1', label: 'Login', align: 'left' },
   { id: 'phone', visibility: 'xs2', label: 'Phone Number', align: 'left' },
   { id: 'roles.name.[]', visibility: 'md1', label: 'Roles', align: 'left' },
   { id: 'contact.firstName', visibility: 'xl', label: 'Contact', align: 'left' },
   { id: 'accountType', label: 'T', align: 'left', tooltip: 'User Type' }, 
-  // { id: 'status', label: 'S', align: 'left' },      
-  { id: 'isActive', label: 'S', align: 'left', tooltip: 'Status' },
   { id: 'updatedAt', visibility: 'md', label: 'Updated At', align: 'right' },
 ];
 

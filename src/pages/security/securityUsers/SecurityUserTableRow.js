@@ -52,6 +52,7 @@ export default function SecurityUserTableRow({
   return (
     <TableRow hover selected={selected} >
       {!hiddenColumns?.name && (
+       <TableCell align="left">
         <Stack direction="row" alignItems="center">
           <CustomAvatar
             name={name}
@@ -59,10 +60,25 @@ export default function SecurityUserTableRow({
             BadgeProps={{
               badgeContent: <BadgeStatus status={isOnline ? 'online' : 'offline'} />,
             }}
-            sx={{ ml: 1, my: 0.5, width: '30px', height: '30px' }}
+            sx={{ width: '30px', height: '30px' }}
           />
           <LinkTableCell align="left" onClick={onViewRow} param={name} />
         </Stack>
+        </TableCell>
+      )}
+      {!hiddenColumns?.isActive && (
+        <TableCell align="left" sx={{ display: 'flex', alignItems: 'center', ml: -1 }}>
+          <StyledTooltip
+            placement="top"
+            title={isActive ? ICONS.ACTIVE.heading : ICONS.INACTIVE.heading}
+            disableFocusListener
+            tooltipcolor={isActive ? ICONS.ACTIVE.color : ICONS.INACTIVE.color}
+            color={isActive ? ICONS.ACTIVE.color : ICONS.INACTIVE.color}
+          >
+            <Iconify icon={isActive ? ICONS.ACTIVE.icon : ICONS.INACTIVE.icon} sx={{ mt: 1, height: 25, width: 25 }} />
+          </StyledTooltip>
+          {registrationRequest && <IconButtonTooltip title="Portal Request" color="#388e3c" icon="mdi:user-details" onClick={handleRequestDialog} />}
+        </TableCell>
       )}
       {smScreen && !hiddenColumns?.login && (
         <TableCell align="left" sx={{ px: -3 }}>
@@ -123,20 +139,6 @@ export default function SecurityUserTableRow({
         </TableCell>
       )}
 
-      {!hiddenColumns?.isActive && (
-        <TableCell align="left" sx={{ display: 'flex', alignItems: 'center' }}>
-          <StyledTooltip
-            placement="top"
-            title={isActive ? ICONS.ACTIVE.heading : ICONS.INACTIVE.heading}
-            disableFocusListener
-            tooltipcolor={isActive ? ICONS.ACTIVE.color : ICONS.INACTIVE.color}
-            color={isActive ? ICONS.ACTIVE.color : ICONS.INACTIVE.color}
-          >
-            <Iconify icon={isActive ? ICONS.ACTIVE.icon : ICONS.INACTIVE.icon} sx={{ mt: 1, height: 25, width: 25 }} />
-          </StyledTooltip>
-          {registrationRequest && <IconButtonTooltip title="Portal Request" color="#388e3c" icon="mdi:user-details" onClick={handleRequestDialog} />}
-        </TableCell>
-      )}
       {useScreenSize('lg') && !hiddenColumns?.createdAt && <TableCell align="right">{fDate(updatedAt)}</TableCell>}
     </TableRow>
   );
