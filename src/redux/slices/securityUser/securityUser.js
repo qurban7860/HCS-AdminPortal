@@ -46,7 +46,7 @@ const initialState = {
     "requestURL": false,
     "roles.name.[]": false,
     "contact.firstName": false,
-    "isActive": true,
+    "isActive": false,
     "createdAt": false,
   },
 };
