@@ -23,9 +23,9 @@ const visuallyHidden = {
 };
 
 const renderLabelWithTooltip = (headCell) => {
-  const display = headCell.title ?? headCell.label;
+  const display = headCell?.title || headCell?.label || " ";
 
-  return headCell.tooltip ? (
+  return headCell?.tooltip ? (
     <StyledTooltip title={headCell.tooltip} placement="top">
       <Box component="span">{display}</Box>
     </StyledTooltip>
