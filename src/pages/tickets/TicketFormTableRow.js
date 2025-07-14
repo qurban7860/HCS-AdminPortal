@@ -1,8 +1,11 @@
 import PropTypes from 'prop-types';
+import React, { useState } from 'react';
+
 import { useDispatch } from 'react-redux';
 import {
   TableCell,
   Stack,
+  Tooltip,
 } from '@mui/material';
 import { PATH_SUPPORT } from '../../routes/paths';
 // utils
@@ -11,6 +14,8 @@ import { getMachineForDialog, setMachineDialog } from '../../redux/slices/produc
 import { StyledTableRow, StyledTooltip } from '../../theme/styles/default-styles'
 import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
 import Iconify from '../../components/iconify';
+import IconButtonTooltip from '../../components/Icons/IconButtonTooltip';
+import { ICONS } from '../../constants/icons/default-icons';
 import LinkDialogTableCell from '../../components/ListTableTools/LinkDialogTableCell';
 import LinkTableCellWithIconTargetBlank from '../../components/ListTableTools/LinkTableCellWithIconTargetBlank';
 // import { useScreenSize } from '../../hooks/useResponsive';
@@ -37,7 +42,7 @@ export default function TicketFormTableRow({
   prefix = '',
 }) {
   const dispatch = useDispatch();
-  const { ticketNo, customer, machine, issueType, summary, priority, status, createdAt, _id } = row;
+  const { ticketNo, customer, machine, issueType, summary, priority, status, createdAt, _id, assignees, reporter } = row;
   
   const handleMachineDialog = async ( event, MachineID ) => {
     event.preventDefault(); 
@@ -47,62 +52,73 @@ export default function TicketFormTableRow({
   
   return (
     <StyledTableRow hover selected={selected}>
-      { !hiddenColumns?.['issueType.name'] && (
+      {!hiddenColumns?.['issueType.name'] && (
         <TableCell align="left" padding="checkbox">
-          <Stack direction="row" alignItems="center" >
-            <StyledTooltip placement="top" title={issueType?.name || ''} 
-              tooltipcolor={issueType?.color} >
-              <Iconify
-               icon={issueType?.icon}
-               color={issueType?.color}
-               onClick={() => onViewRow(ticketNo)}
-               style={{ cursor: 'pointer' }}
-              />
+          <Stack direction="row" alignItems="center">
+            <StyledTooltip placement="top" title={issueType?.name || ''} tooltipcolor={issueType?.color}>
+              <Iconify icon={issueType?.icon} color={issueType?.color} onClick={() => onViewRow(ticketNo)} style={{ cursor: 'pointer' }} />
             </StyledTooltip>
           </Stack>
         </TableCell>
       )}
       {!hiddenColumns?.ticketNo && (
-        <LinkTableCellWithIconTargetBlank 
-        onViewRow={() => onViewRow(ticketNo)} 
-        onClick={() => window.open(PATH_SUPPORT.supportTickets.view(ticketNo), '_blank')}
-        param={`${prefix || ''} - ${ticketNo || ''}`} />
+        <LinkTableCellWithIconTargetBlank
+          onViewRow={() => onViewRow(ticketNo)}
+          onClick={() => window.open(PATH_SUPPORT.supportTickets.view(ticketNo), '_blank')}
+          param={`${prefix || ''} - ${ticketNo || ''}`}
+        />
       )}
-      { !hiddenColumns?.summary && (
-          <LinkTableCell align="left" onClick={onViewRow} param={summary || ''} /> 
-      )}
-      { !hiddenColumns?.['machine.serialNo'] && (
-        <LinkTableCell align="left" onClick={(event) => handleMachineDialog(event, row.machine?._id)} param={machine?.serialNo || ''} />
-      )}
-      { !hiddenColumns?.['machine.machineModel.name'] && (
-        <TableCell align='left' > { machine?.machineModel?.name || ''} </TableCell>
-      )}
-      { !hiddenColumns?.['customer.name'] && (
-        <LinkDialogTableCell onClick={handleCustomerDialog} align='center' param={customer?.name || ''}/>
-      )}
-      { !hiddenColumns?.['status.name'] && (
+      {!hiddenColumns?.summary && <LinkTableCell align="left" onClick={onViewRow} param={summary || ''} />}
+      {!hiddenColumns?.['machine.serialNo'] && <LinkTableCell align="left" onClick={(event) => handleMachineDialog(event, row.machine?._id)} param={machine?.serialNo || ''} />}
+      {!hiddenColumns?.['machine.machineModel.name'] && <TableCell align="left"> {machine?.machineModel?.name || ''} </TableCell>}
+      {!hiddenColumns?.['customer.name'] && <LinkDialogTableCell onClick={handleCustomerDialog} align="center" param={customer?.name || ''} />}
+      {!hiddenColumns?.['reporter.name'] && <TableCell align="left">{reporter?.name || ''}</TableCell>}
+      {!hiddenColumns?.['status.name'] && (
         <TableCell align="left" padding="checkbox">
-          <StyledTooltip 
-            placement="top" 
-            title={status?.name || ''} 
-            tooltipcolor={status?.color} >
+          <StyledTooltip placement="top" title={status?.name || ''} tooltipcolor={status?.color}>
             <Iconify icon={status?.icon} color={status?.color} />
           </StyledTooltip>
         </TableCell>
       )}
-      { !hiddenColumns?.['priority.name'] && (
+      {!hiddenColumns?.['priority.name'] && (
         <TableCell align="left" padding="checkbox">
-          <StyledTooltip 
-            placement="top" 
-            title={priority?.name || ''} 
-            tooltipcolor={priority?.color} >
+          <StyledTooltip placement="top" title={priority?.name || ''} tooltipcolor={priority?.color}>
             <Iconify icon={priority?.icon} color={priority?.color} />
           </StyledTooltip>
         </TableCell>
       )}
-      { !hiddenColumns?.createdAt && (
-        <TableCell align='right' > { fDate(createdAt) } </TableCell>
+      {!hiddenColumns?.['assignees.name'] && (
+        <TableCell>
+          {assignees.length > 1 ? (
+            <Tooltip
+              title={assignees.map((a) => a.name).join(', ')}
+              placement="left"
+              arrow
+              componentsProps={{
+                tooltip: {
+                  sx: {
+                    backgroundColor: '#fff',
+                    color: '#000',
+                    border: '1px solid #ddd',
+                    fontSize: '14px',
+                  },
+                },
+                arrow: {
+                  sx: {
+                    color: '#fff',
+                  },
+                },
+              }}
+            >
+              <span>{assignees[0].name}, ...</span>
+            </Tooltip>
+          ) : (
+            assignees?.[0]?.name || ''
+          )}
+        </TableCell>
       )}
+
+      {!hiddenColumns?.createdAt && <TableCell align="right"> {fDate(createdAt)} </TableCell>}
     </StyledTableRow>
   );
 }
