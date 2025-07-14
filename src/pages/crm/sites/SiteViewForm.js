@@ -6,7 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Grid } from '@mui/material';
 // redux
 import {
-  deleteSite,
+  archiveSite,
   getSite,
   getSites,
   resetSite,
@@ -49,14 +49,14 @@ export default function SiteViewForm({ handleMap, isCustomerSitePage }) {
   }, [dispatch, customerId, id])
 
   const backLink = () => navigate(PATH_CRM.customers.sites.root(customerId, id));
-
+  
   const onArchive = async () => {
     try {
-      await dispatch(deleteSite(customerId, id));
-      enqueueSnackbar('Site Archived Successfully!');
-      await dispatch(setIsExpanded(false));
+      await dispatch(archiveSite(customerId, id));
       await dispatch(getSites(customerId));
-      await navigate(PATH_CRM.customers.sites.root(customerId))
+      await dispatch(setIsExpanded(false));
+      enqueueSnackbar('Site Archived Successfully!');
+      navigate(PATH_CRM.customers.archivedSites.root);
     } catch (err) {
       enqueueSnackbar(err, { variant: `error` });
       console.log(err);

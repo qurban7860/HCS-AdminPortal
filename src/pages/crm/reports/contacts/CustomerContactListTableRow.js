@@ -10,6 +10,7 @@ import { StyledTableRow } from '../../../../theme/styles/default-styles';
 import LinkTableCellWithIconTargetBlank from '../../../../components/ListTableTools/LinkTableCellWithIconTargetBlank';
 import IconButtonTooltip from '../../../../components/Icons/IconButtonTooltip';
 import { ICONS } from '../../../../constants/icons/default-icons';
+import ViewFormEditDeleteButtons from '../../../../components/ViewForms/ViewFormEditDeleteButtons';
 
 // ----------------------------------------------------------------------
 
@@ -24,6 +25,7 @@ CustomerContactListTableRow.propTypes = {
   handleContactViewInNewPage: PropTypes.func,
   onSelectRow: PropTypes.func,
   onDeleteRow: PropTypes.func,
+  onRestoreRow: PropTypes.func,
   isCustomerContactPage: PropTypes.bool,
   hiddenColumns: PropTypes.object,
 };
@@ -34,6 +36,7 @@ export default function CustomerContactListTableRow({
   selected,
   onSelectRow,
   onDeleteRow,
+  onRestoreRow,
   onEditRow,
   onViewRow,
   openInNewPage,
@@ -42,7 +45,7 @@ export default function CustomerContactListTableRow({
   isCustomerContactPage,
   hiddenColumns
 }) {
-  const { _id, customer, firstName, title, lastName, phoneNumbers, email, address, isActive, formerEmployee, updatedAt } = row;
+  const { _id, customer, firstName, title, lastName, phoneNumbers, email, address, isActive, isArchived, formerEmployee, updatedAt } = row;
   const contactName = `${firstName || ''} ${lastName || ''}`;
   const [showAllPhones, setShowAllPhones] = useState(false);
 
@@ -58,11 +61,17 @@ export default function CustomerContactListTableRow({
       {!useScreenSize('sm') && (
         <StyledTableRow hover selected={selected} style={{ display: 'block' }} >
           {!hiddenColumns?.firstName && !hiddenColumns?.lastName && (
+            <>
+            {!isArchived ? (
             <LinkTableCellWithIconTargetBlank style={{ width: '100%', display: 'inline-block' }}
               onViewRow={() => handleContactView(customer?._id, _id)}
               onClick={() => handleContactViewInNewPage(customer?._id, _id)}
               param={contactName}
             />
+            ) : (
+              <TableCell>{contactName}</TableCell>
+            )}
+            </>
           )}
           {!isCustomerContactPage && customer?.name && <TableCell style={{ width: '100%', display: 'inline-block' }} >{customer?.name || '' } </TableCell> }
           {title && <TableCell style={{ width: '100%', display: 'inline-block' }} >{title}</TableCell> }
@@ -113,11 +122,17 @@ export default function CustomerContactListTableRow({
             <Switch checked={isActive} disabled size="small" />
           </TableCell>)}
           {!hiddenColumns?.firstName && !hiddenColumns?.lastName && (
+            <>
+            {!isArchived ? (
             <LinkTableCellWithIconTargetBlank style={{ width: '100%', display: 'inline-block' }}
               onViewRow={() => handleContactView(customer?._id, _id)}
               onClick={() => handleContactViewInNewPage(customer?._id, _id)}
               param={contactName}
             />
+            ) : (
+              <TableCell>{contactName}</TableCell>
+            )}
+            </>
           )}
           {isCustomerContactPage &&  !hiddenColumns?.title && (
             <TableCell>{title}</TableCell>
@@ -154,6 +169,14 @@ export default function CustomerContactListTableRow({
           { !hiddenColumns?.updatedAt && (
             <TableCell align="right">{fDate(updatedAt)}</TableCell>
           )}
+          {isArchived && (
+          <TableCell>
+            <ViewFormEditDeleteButtons
+              onDelete={() => onDeleteRow(row)}
+              onRestore={() => onRestoreRow(row)}
+            />
+          </TableCell>
+        )}
         </StyledTableRow>
       )}
     </>

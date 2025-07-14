@@ -29,7 +29,7 @@ import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 // sections
 import CustomerSiteListTableRow from './CustomerSiteListTableRow';
 import CustomerSiteListTableToolbar from './CustomerSiteListTableToolbar';
-import { getAllSites, resetAllSites, ChangePage, ChangeRowsPerPage, setFilterBy, setIsExpanded, setCardActiveIndex, setReportHiddenColumns } from '../../../../redux/slices/customer/site';
+import { getAllSites, resetAllSites, ChangePage, ChangeRowsPerPage, setFilterBy, setIsExpanded, setCardActiveIndex, setReportHiddenColumns, deleteSite, restoreSite } from '../../../../redux/slices/customer/site';
 import { getCustomer } from '../../../../redux/slices/customer/customer';
 import { Cover } from '../../../../components/Defaults/Cover';
 import TableCard from '../../../../components/ListTableTools/TableCard';
@@ -41,9 +41,10 @@ import { exportCSV } from '../../../../utils/exportCSV';
 
 CustomerSiteList.propTypes = {
   isCustomerSitePage: PropTypes.bool,
+  isArchived: PropTypes.bool,
 };
 
-export default function CustomerSiteList({ isCustomerSitePage = false }) {
+export default function CustomerSiteList({ isCustomerSitePage = false, isArchived}) {
   const {
     order,
     orderBy,
@@ -75,6 +76,7 @@ export default function CustomerSiteList({ isCustomerSitePage = false }) {
     { id: 'primaryBillingContact.firstName', label: 'Billing Contact', align: 'left' },
     ...(isCustomerSitePage ? [] : [{ id: 'customer.name', label: 'Customer', align: 'left' }]),
     { id: 'updatedAt', label: 'Updated At', align: 'right' },
+    ...(isArchived ? [{ id: 'actions', label: 'Actions', align: 'center' }] : []),
   ];
 
   // ----------------------------------------------------------------------
@@ -88,10 +90,12 @@ export default function CustomerSiteList({ isCustomerSitePage = false }) {
 
   useEffect(() => {
     if (!isCustomerSitePage) {
-      dispatch(getAllSites());
-      return () => { dispatch(resetAllSites()) };
-    } return undefined;
-  }, [dispatch, isCustomerSitePage]);
+      dispatch(getAllSites(isArchived));
+    }
+    return () => { 
+      dispatch(resetAllSites());
+    }
+  }, [dispatch, isCustomerSitePage, isArchived]);
 
   useEffect(() => {
     setTableData(isCustomerSitePage ? sites : allSites || []);
@@ -160,11 +164,36 @@ export default function CustomerSiteList({ isCustomerSitePage = false }) {
     dispatch(setReportHiddenColumns(arg));
   };
 
+  const onDeleteRow = async (row) => {
+    try {
+      await dispatch(deleteSite(row.customer._id, row._id));
+      enqueueSnackbar('Site deleted successfully!');
+      await dispatch(getAllSites(isArchived)); 
+    } catch (error) {
+      enqueueSnackbar('Failed to delete site.', { variant: 'error' });
+      console.error(error);
+    }
+  };
+
+  const onRestoreRow = async (row) => {
+    try {
+      await dispatch(restoreSite(row.customer._id, row._id));
+      enqueueSnackbar('Site restored successfully!');
+      await dispatch(getAllSites(isArchived)); 
+    } catch (error) {
+      enqueueSnackbar('Failed to restore site.', { variant: 'error' });
+      console.error(error);
+    }
+  };
+
   return (
     <Container maxWidth={false}>
       {!isCustomerSitePage ? (
         <StyledCardContainer>
-          <Cover name='Sites' backLink customerContacts />
+          <Cover name={isArchived ? 'Archived Sites' : 'Sites'} {...(!isArchived && { backLink: true })} 
+            customerContacts 
+            isArchived={isArchived}
+          />
         </StyledCardContainer>
       ) : null}
       <TableCard >
@@ -175,6 +204,7 @@ export default function CustomerSiteList({ isCustomerSitePage = false }) {
           onResetFilter={handleResetFilter}
           onExportCSV={!isCustomerSitePage ? onExportCSV : undefined}
           onExportLoading={exportingCSV}
+          isArchived={isArchived}
         />
 
         {!isNotFound && (
@@ -216,6 +246,8 @@ export default function CustomerSiteList({ isCustomerSitePage = false }) {
                         handleSiteView={handleViewSite}
                         handleSiteViewInNewPage={handleViewSiteInNewPage}
                         isCustomerSitePage={isCustomerSitePage}
+                        onDeleteRow={onDeleteRow}
+                        onRestoreRow={onRestoreRow}
                         style={index % 2 ? { background: 'red' } : { background: 'green' }}
                       />
                     ) : (

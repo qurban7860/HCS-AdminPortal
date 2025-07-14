@@ -85,9 +85,25 @@ export const allSideBarOptions = {
           icon: <Iconify icon="mdi:map-marker" />,
         },
         {
-          title: 'Archived Customers',
-          path: PATH_CRM.customers.archived.root,
+          title: 'Archived Data',
           icon: <Iconify icon="mdi:archive" />,
+          children: [
+            {
+              title: 'Customers',
+              path: PATH_CRM.customers.archived.root,
+              icon: <Iconify icon="mdi:account-group" />,
+            },
+            {
+              title: 'Sites',
+              path: PATH_CRM.customers.archivedSites.root,
+              icon: <Iconify icon="mdi:office-building" />,
+            },
+            {
+              title: 'Contacts',
+              path: PATH_CRM.customers.archivedContacts.root,
+              icon: <Iconify icon="mdi:contacts" />,
+            },
+          ],
         },
       ],
     },
