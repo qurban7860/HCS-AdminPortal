@@ -49,8 +49,8 @@ const TABLE_HEAD = [
   { id: 'machine.machineModel.name', label: 'Model', align: 'left', allowColumn: true },
   { id: 'customer.name', label: 'Customer', align: 'left', allowColumn: true },
   { id: 'reporter.name', label: 'Reporter', align: 'left', allowColumn: true },
-  { id: 'status.name', label: 'Status', title: "S", align: 'left', allowColumn: true },
-  { id: 'priority.name', label: 'Priority', title: "P", align: 'left', allowColumn: true },
+  { id: 'status.name', label: 'Status', title: "S", align: 'left', tooltip: 'Status', allowColumn: true },
+  { id: 'priority.name', label: 'Priority', title: "P", align: 'left', tooltip: 'Priority', allowColumn: true },
   { id: 'assignees.name', label: 'Assignees', align: 'left', allowColumn: true },
   { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
