@@ -29,7 +29,7 @@ import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 // sections
 import CustomerContactListTableRow from './CustomerContactListTableRow';
 import CustomerContactListTableToolbar from './CustomerContactListTableToolbar';
-import { getAllContacts, resetAllContacts, ChangePage, ChangeRowsPerPage, setFilterBy, setCardActiveIndex, setIsExpanded, setReportHiddenColumns } from '../../../../redux/slices/customer/contact';
+import { getAllContacts, resetAllContacts, ChangePage, ChangeRowsPerPage, setFilterBy, setCardActiveIndex, setIsExpanded, setReportHiddenColumns, restoreContact, deleteContact } from '../../../../redux/slices/customer/contact';
 import { Cover } from '../../../../components/Defaults/Cover';
 import TableCard from '../../../../components/ListTableTools/TableCard';
 import { fDate } from '../../../../utils/formatTime';
@@ -41,9 +41,10 @@ import { exportCSV } from '../../../../utils/exportCSV';
 CustomerContactList.propTypes = {
   isCustomerContactPage: PropTypes.bool,
   filterFormer: PropTypes.string,
+  isArchived: PropTypes.bool,
 };
 
-export default function CustomerContactList({ isCustomerContactPage = false, filterFormer }) {
+export default function CustomerContactList({ isCustomerContactPage = false, filterFormer, isArchived }) {
   const {
     order,
     orderBy,
@@ -75,6 +76,7 @@ export default function CustomerContactList({ isCustomerContactPage = false, fil
     { id: 'address.country', label: 'Country', align: 'left' },
     ...(!isCustomerContactPage ? [{ id: 'customer.name', label: 'Customer', align: 'left' }] : []),
     { id: 'updatedAt', label: 'Updated At', align: 'right' },
+    ...(isArchived ? [{ id: 'actions', label: <span style={{ paddingLeft: '2rem'}}>Actions</span>, align: 'center' }] : []),
   ];
 
 
@@ -89,13 +91,12 @@ export default function CustomerContactList({ isCustomerContactPage = false, fil
 
   useEffect(() => {
     if (!isCustomerContactPage) {
-      dispatch(getAllContacts());
-      return () => {
-        dispatch(resetAllContacts());
-      };
+      dispatch(getAllContacts(isArchived));
     }
-    return undefined;
-  }, [dispatch, isCustomerContactPage]);
+    return () => { 
+      dispatch(resetAllContacts());
+    }
+  }, [dispatch, isCustomerContactPage, isArchived]);
   
   useEffect(() => {
     setTableData(isCustomerContactPage ? contacts : allContacts || []);
@@ -165,11 +166,38 @@ export default function CustomerContactList({ isCustomerContactPage = false, fil
     dispatch(setReportHiddenColumns(arg))
   };
 
+  const onDeleteRow = async (row) => {
+    try {
+      await dispatch(deleteContact(row.customer._id, row._id));
+      enqueueSnackbar('Contact deleted successfully!');
+      await dispatch(getAllContacts(isArchived)); 
+    } catch (error) {
+      enqueueSnackbar('Failed to delete Contact.', { variant: 'error' });
+      console.error(error);
+    }
+  };
+
+  const onRestoreRow = async (row) => {
+    try {
+      await dispatch(restoreContact(row.customer._id, row._id));
+      enqueueSnackbar('Contact restored successfully!');
+      await dispatch(getAllContacts(isArchived)); 
+    } catch (error) {
+      enqueueSnackbar('Failed to restore Contact.', { variant: 'error' });
+      console.error(error);
+    }
+  };
+
   return (
     <Container maxWidth={false}>
       {!isCustomerContactPage ? (
         <StyledCardContainer>
-          <Cover name='Contacts' backLink customerSites />
+          <Cover 
+            name={isArchived ? 'Archived Contacts' : 'Contacts'} 
+            {...(!isArchived && { backLink: true })}
+            customerSites
+            isArchived={isArchived}
+          />
         </StyledCardContainer>
       ) : null}
       <TableCard >
@@ -180,6 +208,7 @@ export default function CustomerContactList({ isCustomerContactPage = false, fil
           onResetFilter={handleResetFilter}
           onExportCSV={!isCustomerContactPage ? onExportCSV : undefined}
           onExportLoading={exportingCSV}
+          isArchived={isArchived}
         />
 
         {!isNotFound && (
@@ -221,6 +250,8 @@ export default function CustomerContactList({ isCustomerContactPage = false, fil
                         handleContactView={handleViewContact}
                         handleContactViewInNewPage={handleViewContactInNewPage}
                         isCustomerContactPage={isCustomerContactPage}
+                        onDeleteRow={onDeleteRow}
+                        onRestoreRow={onRestoreRow}
                         style={index % 2 ? { background: 'red' } : { background: 'green' }}
                       />
                     ) : (

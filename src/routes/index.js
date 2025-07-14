@@ -646,7 +646,8 @@ export default function Router() {
                 { element: <CustomerSiteDynamicList />, index: true },
                 { path: 'new', element: <CustomerSiteDynamicList siteAddForm /> },
                 { path: ':id/edit', element: <CustomerSiteDynamicList siteEditForm /> },
-                { path: ':id/view', element: <CustomerSiteDynamicList siteViewForm /> }
+                { path: ':id/view', element: <CustomerSiteDynamicList siteViewForm /> },
+                { path: ':id/archived/view', element: <CustomerSiteDynamicList siteViewForm isArchived/> },
               ],
             },
             {
@@ -657,6 +658,7 @@ export default function Router() {
                 { path: ':id/edit', element: <CustomerContactDynamicList contactEditForm /> },
                 { path: ':id/view', element: <CustomerContactDynamicList contactViewForm /> },
                 { path: ':id/move', element: <CustomerContactDynamicList contactMoveForm /> },
+                { path: ':id/archived/view', element: <CustomerContactDynamicList contactViewForm isArchived/> },
               ],
             },
             {
@@ -727,6 +729,20 @@ export default function Router() {
           children: [
             { element: <CustomerList isArchived />, index: true },
             { path: ':id/view', element: <CustomerView isArchived /> },
+          ],
+        },
+        // ------------------------------ ARCHIVED SITES ----------------------------------
+        {
+          path: 'archived-sites',
+          children: [
+            { element: <CustomerSiteList isArchived />, index: true },
+          ],
+        },
+        // ------------------------------ ARCHIVED CONTACTS ----------------------------------
+        {
+          path: 'archived-contacts',
+          children: [
+            { element: <CustomerContactList isArchived />, index: true },
           ],
         },
         {

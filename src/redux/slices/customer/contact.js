@@ -425,15 +425,15 @@ export function getCustomerContacts(customerID, isCustomerArchived) {
 
 // ----------------------------------------------------------------------
 
-export function getAllContacts() {
+export function getAllContacts(isArchived) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const params = {
+        isArchived: isArchived || false,
         orderBy: {
           firstName: 1
         },
-        isArchived: false
       }
       const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/contacts/all`, { params });
       dispatch(slice.actions.getAllContactsSuccess(response.data));
@@ -569,16 +569,14 @@ export function getContact(customerID, id) {
 
 // ----------------------------------------------------------------------
 
-export function deleteContact(customerID, id) {
+export function archiveContact(customerID, id) {
   return async (dispatch) => {
-    dispatch(slice.actions.startLoading());
+    // dispatch(slice.actions.startLoading());
     try {
-      const data = {
-        isArchived: true,
-      };
       const response = await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${customerID}/contacts/${id}`,
-        data
-      );
+        {
+          isArchived: true,
+        });
       dispatch(slice.actions.setResponseMessage(response.data));
     } catch (error) {
       console.error(error);
@@ -588,6 +586,38 @@ export function deleteContact(customerID, id) {
   };
 }
 
+export function restoreContact(customerID, id) {
+  return async (dispatch) => {
+    // dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${customerID}/contacts/${id}`,
+        {
+          isArchived: false,
+        });
+      dispatch(slice.actions.setResponseMessage(response.data));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+// ----------------------------------------------------------------------
+
+export function deleteContact(customerID, id) {
+  return async (dispatch) => {
+    // dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.delete(`${CONFIG.SERVER_URL}crm/customers/${customerID}/contacts/${id}`);
+      dispatch(slice.actions.setResponseMessage(response.data));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
 
 export function moveCustomerContact(params) {
   return async (dispatch) => {

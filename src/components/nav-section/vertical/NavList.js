@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 // @mui
 import { Collapse } from '@mui/material';
@@ -18,24 +18,22 @@ NavList.propTypes = {
 
 export default function NavList({ data, depth, hasChild }) {
   const { pathname } = useLocation();
-
   const { active, isExternalLink } = useActiveLink(data.path);
 
-  const [open, setOpen] = useState(active);
+  const hasActiveChild = useMemo(
+    () => checkChildActive(pathname, data?.children),
+    [pathname, data?.children]
+  );
+
+  const [open, setOpen] = useState(active || hasActiveChild);
 
   useEffect(() => {
-    if (!active) {
-      handleClose();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname]);
+    const shouldOpen = active || hasActiveChild;
+    setOpen(shouldOpen);
+  }, [active, hasActiveChild]);
 
   const handleToggle = () => {
-    setOpen(!open);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
+    setOpen((prev) => !prev);
   };
 
   return (
@@ -50,7 +48,7 @@ export default function NavList({ data, depth, hasChild }) {
         onClick={handleToggle}
       />
 
-      {hasChild && (
+      {hasChild && data.children && (
         <Collapse in={open} unmountOnExit>
           <NavSubList data={data.children} depth={depth} />
         </Collapse>
@@ -79,4 +77,18 @@ function NavSubList({ data, depth }) {
       ))}
     </>
   );
+}
+
+// ----------------------------------------------------------------------
+
+function checkChildActive(pathname, children = []) {
+  return children?.some((child) => {
+    if (pathname === child.path || pathname.startsWith(child.path)) {
+      return true;
+    }
+    if (child.children) {
+      return checkChildActive(pathname, child.children);
+    }
+    return false;
+  });
 }

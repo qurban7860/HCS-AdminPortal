@@ -12,7 +12,8 @@ CustomerContactListTableToolbar.propTypes = {
   onFilterName: PropTypes.func,
   onResetFilter: PropTypes.func,
   onExportCSV: PropTypes.func,
-  onExportLoading: PropTypes.bool
+  onExportLoading: PropTypes.bool,
+  isArchived: PropTypes.bool,
 };
 
 export default function CustomerContactListTableToolbar({
@@ -21,7 +22,8 @@ export default function CustomerContactListTableToolbar({
   onFilterName,
   onResetFilter,
   onExportCSV,
-  onExportLoading
+  onExportLoading,
+  isArchived
 }) {
 
 
@@ -37,7 +39,8 @@ export default function CustomerContactListTableToolbar({
         value={filterName}
         onChange={onFilterName}
         onClick={onResetFilter}
-        onExportCSV={onExportCSV}
+        // onExportCSV={onExportCSV}
+        {...(!isArchived && {onExportCSV})}
         onExportLoading={onExportLoading}
       />
     </Stack>
