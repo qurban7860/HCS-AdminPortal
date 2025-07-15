@@ -184,5 +184,6 @@ export const NoteSchema = Yup.object().shape({
   site: Yup.object().nullable(),
   contact: Yup.object().nullable(),
   note: Yup.string().max(5000).required('Note Field is required!'),
+  isInternal: Yup.boolean(),
   isActive: Yup.boolean(),
 });
