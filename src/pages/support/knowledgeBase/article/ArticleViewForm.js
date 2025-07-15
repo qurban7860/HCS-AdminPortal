@@ -113,7 +113,7 @@ export default function ArticleViewForm() {
     try {
       await dispatch(deleteArticle(article?._id));
       if (article?.isArchived) {
-        navigate(PATH_SUPPORT.knowledgeBase.article.archived);
+        navigate(PATH_SUPPORT.archivedArticles.root);
       } else {
         navigate(PATH_SUPPORT.knowledgeBase.article.root);
       }
@@ -127,7 +127,7 @@ export default function ArticleViewForm() {
   const onArchive = async () => {
     try {
       await dispatch(archiveArticle(article?._id));
-      navigate(PATH_SUPPORT.knowledgeBase.article.archived);
+      navigate(PATH_SUPPORT.archivedArticles.root);
       enqueueSnackbar('Article archived successfully!', { variant: `success` });
     } catch (error) {
       console.error(error);
@@ -174,7 +174,7 @@ export default function ArticleViewForm() {
 
   const handlebackLink = () => {
     if (defaultValues.isArchived) {
-      navigate(PATH_SUPPORT.knowledgeBase.article.archived);
+      navigate(PATH_SUPPORT.archivedArticles.root);
     } else {
       navigate(PATH_SUPPORT.knowledgeBase.article.root);
     }

@@ -590,6 +590,16 @@ export const PATH_SUPPORT = {
   //   },
   // },
   
+  // ------------------------ ARCHIVED Tickets ----------------------------------------
+  archivedTickets: {
+    root: path(ROOTS_SUPPORT, '/archived-tickets'),
+  },
+
+  // ------------------------ ARCHIVED Articles ----------------------------------------
+  archivedArticles: {
+    root: path(ROOTS_SUPPORT, '/archived-articles'),
+  },
+
   manuals: {
     root: path(ROOTS_SUPPORT, '/manuals'),
   },

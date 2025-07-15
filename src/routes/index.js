@@ -1370,6 +1370,18 @@ export default function Router() {
             }
           ]
         },
+        {
+          path: 'archived-tickets',
+          children: [
+            { element: <TicketFormList isArchived />, index: true },
+          ],
+        },
+        {
+          path: 'archived-articles',
+          children: [
+            { element: <ArticleList isArchived />, index: true },
+          ],
+        },
         
         { path: 'manuals', element: <SectionUnderConstruction /> },
       ],
