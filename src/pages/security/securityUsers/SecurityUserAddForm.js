@@ -41,6 +41,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+  const [isGlobal, setIsGlobal] = useState(false);
 
   useLayoutEffect(() => {
     dispatch(getAllActiveCustomers());
@@ -94,7 +95,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
     formState: { isSubmitting },
   } = methods;
 
-  const { contact, customer, customers } = watch();
+  const { contact, customer, customers, dataAccessibilityLevel } = watch();
 
   useEffect(() => {
     const howickCustomer = allActiveCustomers.find(c => c?.type?.toUpperCase() === "SP")
@@ -135,6 +136,17 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
       setValue('email', '');
     }
   }, [dispatch, contact, setValue]);
+
+  useEffect(() => {
+    if (dataAccessibilityLevel === 'GLOBAL') {
+       setValue('regions', []);
+       setValue('customers', []);
+       setValue('machines', []);
+       setIsGlobal(true)
+     } else {
+       setIsGlobal(false)
+     }
+  }, [dataAccessibilityLevel, setValue]);
 
   const onSubmit = async (data) => {
     try {
@@ -261,7 +273,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
               >
                 <RHFAutocomplete
                   multiple
-                  disabled={isDisabled}
+                  disabled={isDisabled || isGlobal}
                   disableCloseOnSelect
                   filterSelectedOptions
                   name="regions"
@@ -275,7 +287,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
 
                 <RHFAutocomplete
                   multiple
-                  disabled={isDisabled}
+                  disabled={isDisabled || isGlobal}
                   disableCloseOnSelect
                   filterSelectedOptions
                   name="customers"
@@ -289,7 +301,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
 
                 <RHFAutocomplete
                   multiple
-                  disabled={isDisabled}
+                  disabled={isDisabled || isGlobal}
                   disableCloseOnSelect
                   filterSelectedOptions
                   name="machines"
