@@ -94,7 +94,7 @@ function TablePaginationFilter({
           {columns.map((column) => column?.hideable !== false && (
             <MenuItem dense sx={{ p: 0 }} key={column.id} onClick={() => handleColumnClick(column)}>
               <Checkbox checked={!selectedColumns.some((col) => col.id === column.id)} />
-              {column.label}
+              {column?.tooltip || column?.label ||""}
             </MenuItem>
           ))}
         </Menu>
