@@ -15,7 +15,7 @@ import groupReducer from './slices/products/group';
 import categoryReducer from './slices/products/category';
 import toolReducer from './slices/products/tools';
 import techparamcategoryReducer from './slices/products/machineTechParamCategory';
-import machinenoteReducer from './slices/products/machineNote';
+import machinenotesReducer from './slices/products/machineNote';
 import serviceReportCommentsReducer from './slices/products/machineServiceReportComments';
 import machinestatusReducer from './slices/products/statuses';
 import machinemodelReducer from './slices/products/model';
@@ -185,8 +185,8 @@ export const techparamcategoryPersistConfig = {
   blacklist: ['error', 'initial', 'responseMessage']
 };
 
-export const machineNotePersistConfig = {
-  key: 'machineNote',
+export const machineNotesPersistConfig = {
+  key: 'machineNotes',
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
@@ -636,7 +636,7 @@ const rootReducer = combineReducers({
   group: persistReducer(groupPersistConfig, groupReducer),
   tool: persistReducer(toolPersistConfig, toolReducer),
   techparamcategory: persistReducer(techparamcategoryPersistConfig, techparamcategoryReducer),
-  machineNote: persistReducer(machineNotePersistConfig, machinenoteReducer),
+  machineNotes: persistReducer(machineNotesPersistConfig, machinenotesReducer),
   machineDashboard: persistReducer(machineDashboardPersistConfig, machineDashboardReducer),
   serviceReportComments: persistReducer(serviceReportCommentsPersistConfig, serviceReportCommentsReducer),
   machinestatus: persistReducer(machinestatusPersistConfig, machinestatusReducer),
