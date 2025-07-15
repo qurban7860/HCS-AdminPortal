@@ -14,7 +14,7 @@ const initialState = {
   success: false,
   isLoading: false,
   error: null,
-  comment: {},
+  note: {},
   notes: [],
   filterBy: '',
   page: 0,
@@ -22,7 +22,7 @@ const initialState = {
 };
 
 const slice = createSlice({
-  name: 'machineNote',
+  name: 'machineNotes',
   initialState,
   reducers: {
     // START LOADING
@@ -45,7 +45,6 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // GET  Notes
     // GET  Notes
     getNotesSuccess(state, action) {
       state.isLoading = false;
@@ -71,7 +70,6 @@ const slice = createSlice({
       state.notes = action.payload;
       state.initial = true;
       state.responseMessage = 'Note updated successfully';
-       // state.responseMessage = 'Comments loaded successfully';
     },
 
     // GET Note
@@ -87,6 +85,7 @@ const slice = createSlice({
       state.isLoading = false;
       state.success = true;
       state.notes = action.payload;
+      state.initial = true;
       state.responseMessage = 'Note deleted successfully';
     },
     
@@ -110,14 +109,12 @@ const slice = createSlice({
 
     // RESET LICENSE
     resetNotes(state) {
-      state.notes = [];  // Keep this to clear old data on unmount
+      state.notes = [];  
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
-      state.error = null;
     },
     
-
     backStep(state) {
       state.checkout.activeStep -= 1;
     },
@@ -126,18 +123,15 @@ const slice = createSlice({
       state.checkout.activeStep += 1;
     },
 
-
     // Set FilterBy
     setFilterBy(state, action) {
       state.filterBy = action.payload;
     },
 
-
     // Set PageRowCount
     ChangeRowsPerPage(state, action) {
       state.rowsPerPage = action.payload;
     },
-
 
     // Set PageNo
     ChangePage(state, action) {
@@ -170,18 +164,23 @@ export function getNotes(machineId) {
     try {
       const data = { isArchived: false };
       const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/notes`, { params: data });
-      dispatch(slice.actions.getNotesSuccess(response.data)); // Ensure response structure is correct
+      dispatch(slice.actions.getNotesSuccess(response.data)); 
     } catch (error) {
-      dispatch(slice.actions.hasError(error.response?.data?.message || "Failed to fetch notes"));
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
 
-export function addNote(machineId, note) {
+export function addNote(machineId, params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const data = {note,isArchived: false };  // Ensure new notes are not archived
+      const data = {
+        note: params?.note,
+        isInternal: params?.isInternal,
+      }; 
       const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/notes`, data);
       dispatch(slice.actions.addNotesSuccess(response.data?.notesList));
     } catch (error) {
@@ -197,7 +196,8 @@ export function updateNote(machineId, noteId, params) {
     dispatch(slice.actions.startLoading());
     try {
       const data = {
-        note: params.note
+        note: params?.note,
+        isInternal: params?.isInternal,
       };
       const response = await axios.patch(
         `${CONFIG.SERVER_URL}products/machines/${machineId}/notes/${noteId}`,
@@ -216,7 +216,6 @@ export function getNote(machineId,noteId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      
       const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/notes/${noteId}`);
       dispatch(slice.actions.getNoteSuccess(response.data));
     } catch (error) {
@@ -235,7 +234,6 @@ export function deleteNote(machineId, noteId) {
         isArchived: true,
       };
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/notes/${noteId}`, data);
-      console.log("Deleted note success:",response.data.notesList)
       dispatch(slice.actions.deleteNoteSuccess(response.data?.notesList));
     } catch (error) {
       console.error(error);
