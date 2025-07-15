@@ -32,7 +32,7 @@ const initialState = {
     "priority.name": false,
     "createdAt": false,
     "reporter.name": true,
-    "assignees.name.[]": true,
+    "assignees.name.[]": false,
   },
 };
 
