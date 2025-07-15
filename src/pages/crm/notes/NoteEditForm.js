@@ -5,7 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Container, Box, Card, Grid, Stack, Typography } from '@mui/material';
+import { Container, Box, Card, Grid, Stack, Typography, RadioGroup, FormControlLabel, Radio } from '@mui/material';
 import { updateNote, getNote } from '../../../redux/slices/customer/customerNote';
 import { getActiveSites, resetActiveSites } from '../../../redux/slices/customer/site';
 import { getActiveContacts, resetActiveContacts } from '../../../redux/slices/customer/contact';
@@ -50,6 +50,7 @@ export default function NoteEditForm() {
       contact: note?.contact || null,
       note: note?.note || '',
       isActive: note?.isActive,
+      isInternal: note?.isInternal || false, 
     }),
     [ note ]
   );
@@ -63,6 +64,7 @@ export default function NoteEditForm() {
     reset,
     handleSubmit,
     formState: { isSubmitting },
+    watch, 
   } = methods;
   
   useEffect(()=>{
@@ -121,6 +123,27 @@ export default function NoteEditForm() {
                 />
               </Box>
               <RHFTextField name="note" label="Note*" minRows={8} multiline />
+              <RadioGroup
+                row
+                name="isInternal"
+                value={watch('isInternal') ? 'internal' : 'customer'}
+                onChange={(e) => {
+                  const isInternalSelected = e.target.value === 'internal';
+                  methods.setValue('isInternal', isInternalSelected);
+                }}
+                sx={{ mt: -2, mb: 1 }}
+              >
+                <FormControlLabel
+                  value="internal"
+                  control={<Radio />}
+                  label="Internal Note"
+                />
+                <FormControlLabel
+                  value="customer"
+                  control={<Radio />}
+                  label="Note to Customer"
+                />
+              </RadioGroup>
             </Stack>
             <RHFSwitch  name="isActive" label="Active" />
 

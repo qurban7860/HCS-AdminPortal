@@ -139,8 +139,9 @@ export function addNote (customerId, params){
       const data = {
         site: params?.site?._id || null,
         contact: params?.contact?._id || null,
-        note: params.note,
-        isActive: params.isActive,
+        note: params?.note,
+        isInternal: params?.isInternal,
+        isActive: params?.isActive,
       }
       const response = await axios.post(`${CONFIG.SERVER_URL}crm/customers/${customerId}/notes/`, data);
       return response
@@ -159,8 +160,9 @@ export function updateNote(customerId,noteId,params) {
       const data = {
         site: params?.site?._id || null,
         contact: params?.contact?._id || null,
-        note: params.note,
-        isActive: params.isActive,
+        note: params?.note,
+        isInternal: params?.isInternal,
+        isActive: params?.isActive,
       }
       await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${customerId}/notes/${noteId}`, data);
       dispatch(slice.actions.setResponseMessage('Note updated successfully'));

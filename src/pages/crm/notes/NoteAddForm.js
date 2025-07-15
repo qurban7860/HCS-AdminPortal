@@ -5,7 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Container, Box,Card, Grid, Stack, Typography } from '@mui/material';
+import { Container, Box,Card, Grid, Stack, Typography, RadioGroup, FormControlLabel, Radio } from '@mui/material';
 // slice
 import { addNote } from '../../../redux/slices/customer/customerNote';
 import { getActiveSites, resetActiveSites } from '../../../redux/slices/customer/site';
@@ -44,6 +44,7 @@ export default function NoteAddForm() {
       site: null,
       contact: null,
       note: '',
+      isInternal: false,
       isActive: true,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -59,6 +60,7 @@ export default function NoteAddForm() {
     reset,
     handleSubmit,
     formState: { isSubmitting },
+    watch,
   } = methods;
 
   const onSubmit = async (data) => {
@@ -116,6 +118,28 @@ export default function NoteAddForm() {
                 />
               </Box>
               <RHFTextField name="note" label="Note*" minRows={8} multiline />
+              
+              <RadioGroup
+                row
+                name="isInternal"
+                value={watch('isInternal') ? 'internal' : 'customer'}
+                onChange={(e) => {
+                  const isInternalSelected = e.target.value === 'internal';
+                  methods.setValue('isInternal', isInternalSelected);
+                }}
+                sx={{ mt: -2, mb: 1 }}
+              >
+              <FormControlLabel
+                value="internal"
+                control={<Radio />}
+                label="Internal Note"
+              />
+              <FormControlLabel
+                value="customer"
+                control={<Radio />}
+                label="Note to Customer"
+              />
+              </RadioGroup>
 
               <Box rowGap={5} columnGap={4} display="grid" 
                 gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(4, 1fr)' }}

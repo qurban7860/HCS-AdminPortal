@@ -55,6 +55,7 @@ export default function NoteViewForm() {
       contact_firstName:note.contact === undefined || note.contact === null ? '': note.contact.firstName,
       contact_lastName: note.contact === undefined || note.contact === null ? '': note.contact.lastName,
       note: note?.note || '',
+      isInternal: note?.isInternal ?? false,
       isActive: note.isActive,
       createdAt: note?.createdAt || '',
       createdByFullName: note?.createdBy?.name || '',
@@ -76,6 +77,12 @@ export default function NoteViewForm() {
           <ViewFormField isLoading={isLoading} sm={6} heading="Site" param={defaultValues?.site_name} />
           <ViewFormField isLoading={isLoading} sm={6} heading="Contact" param={`${defaultValues?.contact_firstName} ${defaultValues?.contact_lastName}`}/>
           <ViewFormField isLoading={isLoading} sm={12} heading="Note" param={defaultValues?.note} />
+          <ViewFormField
+            isLoading={isLoading}
+            sm={6}
+            heading="Note Type"
+            param={defaultValues?.isInternal ? 'Internal Note' : 'Note to Customer'}
+          />
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>
       </Card>
