@@ -32,6 +32,8 @@ export default function SecurityUserEditForm() {
   const { allActiveCustomers } = useSelector((state) => state.customer);
   const { activeContacts } = useSelector((state) => state.contact);
   const [isDisabled, setIsDisabled] = useState(false);
+  const [isGlobal, setIsGlobal] = useState(false);
+  
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -84,9 +86,8 @@ export default function SecurityUserEditForm() {
     formState: { isSubmitting },
   } = methods;
 
-  const { customer, customers } = watch();
-
-
+  const { customer, customers, dataAccessibilityLevel } = watch();
+  
   useEffect(() => {
     if (customer?._id) {
       dispatch(getActiveContacts(customer?._id));
@@ -94,6 +95,17 @@ export default function SecurityUserEditForm() {
       dispatch(resetActiveContacts());
     }
   }, [dispatch, customer?._id]);
+
+  useEffect(() => {
+    if (dataAccessibilityLevel === 'GLOBAL') {
+       setValue('regions', []);
+       setValue('customers', []);
+       setValue('machines', []);
+       setIsGlobal(true)
+     } else {
+       setIsGlobal(false)
+     }
+  }, [dataAccessibilityLevel, setValue]);
 
   useEffect(() => {
     if (customer && customer?.type?.toUpperCase() !== 'SP') {
@@ -221,7 +233,7 @@ export default function SecurityUserEditForm() {
                   multiple
                   disableCloseOnSelect
                   filterSelectedOptions
-                  disabled={isDisabled}
+                  disabled={isDisabled || isGlobal}
                   name="regions"
                   label="Regions"
                   options={activeRegions}
@@ -235,7 +247,7 @@ export default function SecurityUserEditForm() {
                   multiple
                   disableCloseOnSelect
                   filterSelectedOptions
-                  disabled={isDisabled}
+                  disabled={isDisabled || isGlobal}
                   name="customers"
                   label="Customers"
                   options={allActiveCustomers}
@@ -249,7 +261,7 @@ export default function SecurityUserEditForm() {
                   multiple
                   disableCloseOnSelect
                   filterSelectedOptions
-                  disabled={isDisabled}
+                  disabled={isDisabled || isGlobal}
                   name="machines"
                   label="Machines"
                   options={allMachines?.filter(m => customers?.some(c => c?._id === m.customer?._id))}
