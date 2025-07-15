@@ -179,14 +179,14 @@ export default function ArticleList({isArchived}) {
     if(isArchived){
       navigate(PATH_SUPPORT.knowledgeBase.article.root);    
     }else{
-      navigate(PATH_SUPPORT.knowledgeBase.article.archived);    
+      navigate(PATH_SUPPORT.archivedArticles.root);    
     }
   }
 
   return (
       <Container maxWidth={false}>
         <StyledCardContainer>
-          <Cover name={isArchived?'Archived Articles':'Articles'} supportTicketSettings 
+          <Cover name={isArchived?'Archived Articles':'Articles'} 
             archivedLink={{
               label:isArchived?'Articles':'Archived Articles', 
               link: handleArchive, 

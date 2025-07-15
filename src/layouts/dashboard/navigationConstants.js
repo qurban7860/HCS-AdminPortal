@@ -195,9 +195,15 @@ export const allSideBarOptions = {
           icon: <Iconify icon="mdi:map-marker" />,
         },
         {
-          title: 'Archived Machines',
-          path: PATH_MACHINE.archived.root,
+          title: 'Archived Data',
           icon: <Iconify icon="mdi:archive" />,
+          children: [
+            {
+              title: 'Machines',
+              path: PATH_MACHINE.archived.root,
+              icon: <MachineIcon key="machine" />,
+            },
+          ],
         },
       ],
     },
@@ -247,6 +253,22 @@ export const allSideBarOptions = {
           title: 'Manuals',
           path: PATH_SUPPORT.manuals.root,
           icon: <Iconify icon="mdi:book-open-page-variant" />,
+        },
+        {
+          title: 'Archived Data',
+          icon: <Iconify icon="mdi:archive" />,
+          children: [
+            // {
+            //   title: 'Support Tickets',
+            //   path: PATH_SUPPORT.archivedTickets.root,
+            //   icon: <Iconify icon="icomoon-free:ticket" />,
+            // },
+            {
+              title: 'Articles',
+              path: PATH_SUPPORT.archivedArticles.root,
+              icon: <Iconify icon="mdi:book-open-variant" />,
+            },
+          ],
         },
       ],
     },
