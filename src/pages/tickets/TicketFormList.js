@@ -350,6 +350,7 @@ function applyFilter({ inputData, comparator, filterName, prefix = '' }) {
         ticket?.summary,
         ticket?.status?.name,
         ticket?.priority?.name,
+        ticket?.reporter?.name,
         fDate(ticket?.createdAt),
       ];
       return fieldsToFilter.some((field) =>
