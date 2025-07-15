@@ -51,7 +51,7 @@ const TABLE_HEAD = [
   { id: 'reporter.name', label: 'Reporter', align: 'left', allowColumn: true },
   { id: 'status.name', label: 'S', align: 'left', tooltip: 'Status', allowColumn: true },
   { id: 'priority.name', label: 'P',align: 'left', tooltip: 'Priority', allowColumn: true },
-  { id: 'assignees.name', label: 'Assignees', align: 'left', allowColumn: true },
+  { id: 'assignees.name.[]', label: 'Assignees', align: 'left', allowColumn: true },
   { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
 
@@ -339,7 +339,7 @@ function applyFilter({ inputData, comparator, filterName, prefix = '' }) {
   });
 
   inputData = stabilizedThis.map((el) => el[0]);
-
+ 
   if (filterName) {
     inputData = inputData.filter((ticket) => {
       const fieldsToFilter = [
