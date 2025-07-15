@@ -61,19 +61,7 @@ export default function TicketFormTableRow({
           </Stack>
         </TableCell>
       )}
-      {!hiddenColumns?.ticketNo && (
-        <LinkTableCellWithIconTargetBlank
-          onViewRow={() => onViewRow(ticketNo)}
-          onClick={() => window.open(PATH_SUPPORT.supportTickets.view(ticketNo), '_blank')}
-          param={`${prefix || ''} - ${ticketNo || ''}`}
-        />
-      )}
-      {!hiddenColumns?.summary && <LinkTableCell align="left" onClick={onViewRow} param={summary || ''} />}
-      {!hiddenColumns?.['machine.serialNo'] && <LinkTableCell align="left" onClick={(event) => handleMachineDialog(event, row.machine?._id)} param={machine?.serialNo || ''} />}
-      {!hiddenColumns?.['machine.machineModel.name'] && <TableCell align="left"> {machine?.machineModel?.name || ''} </TableCell>}
-      {!hiddenColumns?.['customer.name'] && <LinkDialogTableCell onClick={handleCustomerDialog} align="center" param={customer?.name || ''} />}
-      {!hiddenColumns?.['reporter.name'] && <TableCell align="left">{reporter?.name || ''}</TableCell>}
-      {!hiddenColumns?.['status.name'] && (
+        {!hiddenColumns?.['status.name'] && (
         <TableCell align="left" padding="checkbox">
           <StyledTooltip placement="top" title={status?.name || ''} tooltipcolor={status?.color}>
             <Iconify icon={status?.icon} color={status?.color} />
@@ -87,7 +75,19 @@ export default function TicketFormTableRow({
           </StyledTooltip>
         </TableCell>
       )}
-      {!hiddenColumns?.['assignees.name'] && (
+      {!hiddenColumns?.ticketNo && (
+        <LinkTableCellWithIconTargetBlank
+          onViewRow={() => onViewRow(ticketNo)}
+          onClick={() => window.open(PATH_SUPPORT.supportTickets.view(ticketNo), '_blank')}
+          param={`${prefix || ''} - ${ticketNo || ''}`}
+        />
+      )}
+      {!hiddenColumns?.summary && <LinkTableCell align="left" onClick={onViewRow} param={summary || ''} />}
+      {!hiddenColumns?.['machine.serialNo'] && <LinkTableCell align="left" onClick={(event) => handleMachineDialog(event, row.machine?._id)} param={machine?.serialNo || ''} />}
+      {!hiddenColumns?.['machine.machineModel.name'] && <TableCell align="left"> {machine?.machineModel?.name || ''} </TableCell>}
+      {!hiddenColumns?.['customer.name'] && <LinkDialogTableCell onClick={handleCustomerDialog} align="center" param={customer?.name || ''} />}
+      {!hiddenColumns?.['reporter.name'] && <TableCell align="left">{reporter?.name || ''}</TableCell>}
+      {!hiddenColumns?.['assignees.name.[]'] && (
         <TableCell>
           {assignees.length > 1 ? (
             <Tooltip

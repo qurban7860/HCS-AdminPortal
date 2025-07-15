@@ -43,14 +43,14 @@ import { BUTTONS } from '../../constants/default-constants';
 
 const TABLE_HEAD = [
   { id: 'issueType.name', label: <span style={{ marginLeft: 4 }}>T</span>, align: 'left' },
+  { id: 'status.name', label: 'S', align: 'left', tooltip: 'Status', allowColumn: true },
+  { id: 'priority.name', label: 'P',align: 'left', tooltip: 'Priority', allowColumn: true },
   { id: 'ticketNo', label: 'Ticket No.', align: 'left' },
   { id: 'summary', label: 'Summary', align: 'left', allowColumn: true },
   { id: 'machine.serialNo', label: 'Machine', align: 'left', allowColumn: true },
   { id: 'machine.machineModel.name', label: 'Model', align: 'left', allowColumn: true },
   { id: 'customer.name', label: 'Customer', align: 'left', allowColumn: true },
   { id: 'reporter.name', label: 'Reporter', align: 'left', allowColumn: true },
-  { id: 'status.name', label: 'S', align: 'left', tooltip: 'Status', allowColumn: true },
-  { id: 'priority.name', label: 'P',align: 'left', tooltip: 'Priority', allowColumn: true },
   { id: 'assignees.name.[]', label: 'Assignees', align: 'left', allowColumn: true },
   { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
