@@ -10,12 +10,13 @@ import { StyledTooltip } from '../../theme/styles/default-styles';
 ThumbnailDocButton.propTypes = {
   onClick: PropTypes.func,
   size:PropTypes.number,
+  disabled: PropTypes.bool,
 };
 
-export default function ThumbnailDocButton({ onClick, size=150 }) {
+export default function ThumbnailDocButton({ onClick, size=150, disabled }) {
   return (
     <StyledTooltip placement="top" title={size>=150?"":"Add File"}>
-      <Button onClick={onClick} variant='outlined' sx={{display:'block', height:size, width:'100%'}} >
+      <Button onClick={onClick} variant='outlined' sx={{display:'block', height:size, width:'100%'}} disabled={disabled} >
         <Iconify icon="mdi:plus" width={50} />
         <Typography variant="subtitle2">Add / Upload File</Typography>
       </Button>

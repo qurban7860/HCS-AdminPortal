@@ -4,7 +4,7 @@ import { Select, MenuItem } from '@mui/material';
 import Iconify from '../iconify';
 import SkeletonViewFormField from '../skeleton/SkeletonViewFormField';
 
-export default function ViewFormSelect({ isLoading=false, value, onChange, options, sx }) {
+export default function ViewFormSelect({ isLoading=false, value, onChange, options, disabled, sx }) {
 
   const [selectedValue, setSelectedValue] = useState(value);
 
@@ -22,6 +22,7 @@ export default function ViewFormSelect({ isLoading=false, value, onChange, optio
       value={selectedValue}
       onChange={handleChange}
       variant="filled"
+      disabled={disabled}
     >
       {options.map((option) => (
         <MenuItem
@@ -42,5 +43,6 @@ ViewFormSelect.propTypes = {
   value: PropTypes.string,
   onChange: PropTypes.func,
   options: PropTypes.array,
+  disabled: PropTypes.bool,
   sx: PropTypes.object,
 };

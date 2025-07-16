@@ -307,7 +307,7 @@ export default function ArticleViewForm() {
             <ViewFormField isLoading={isLoading} sm={4} heading="Category" param={defaultValues.category?.name || ''} />
             <ViewFormField isLoading={isLoading} sm={4} heading="Article No" param={defaultValues.articleNo || ''} />
             <ViewFormField isLoading={isLoading} sm={4} heading="Status"
-              node={<ViewFormSelect sx={{ width: '150px' }} options={articleStatusOptions} value={defaultValues.status} onChange={handleStatusChange} />}
+              node={<ViewFormSelect sx={{ width: '150px' }} options={articleStatusOptions} value={defaultValues.status} onChange={handleStatusChange} disabled={defaultValues.isArchived}/>}
             />
             <ViewFormField isLoading={isLoading} sm={12} heading="Title" param={defaultValues.title || ''} />
             <ViewFormField isLoading={isLoading} sm={12}
@@ -365,7 +365,7 @@ export default function ArticleViewForm() {
                   toolbar
                 />
               )}
-              <ThumbnailDocButton onClick={() => setFileDialog(true)} />
+              <ThumbnailDocButton onClick={() => setFileDialog(true)} disabled={defaultValues.isArchived}/>
             </Box>
 
             <Lightbox

@@ -39,6 +39,8 @@ import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
 import useResponsive from '../../hooks/useResponsive';
 import { BUTTONS } from '../../constants/default-constants';
+import { getArticleByValue } from '../../redux/slices/support/knowledgeBase/article';
+import HelpSidebar from './utils/HelpSideBar';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -59,6 +61,7 @@ const TABLE_HEAD = [
 
 export default function TicketFormList() {
   const { tickets, filterBy, page, rowsPerPage, isLoading, reportHiddenColumns } = useSelector((state) => state.tickets);
+  const { article } = useSelector((state) => state.article);
   const navigate = useNavigate();
   const methods = useForm();
 
@@ -88,8 +91,16 @@ export default function TicketFormList() {
   const [selectedStatusType, setSelectedStatusType] = useState(null);
   const [selectedResolvedStatus, setSelectedResolvedStatus] = useState('unresolved');
   const [selectedPriority, setSelectedPriority] = useState(null);
+  const [helpOpen, setHelpOpen] = useState(false);
   const isMobile = useResponsive('down', 'sm');
-  const prefix = JSON.parse(localStorage.getItem('configurations'))?.find((config) => config?.name?.toLowerCase() === 'ticket_prefix')?.value?.trim() || ''; 
+  const prefix = JSON.parse(localStorage.getItem('configurations'))?.find((config) => config?.name?.toLowerCase() === 'ticket_prefix')?.value?.trim() || '';
+  const helpPrefix = JSON.parse(localStorage.getItem('configurations'))?.find((config) => config?.name?.toLowerCase() === 'support_ticket_creation_process')?.value?.trim() || '';
+
+  useEffect(() => {
+  if (helpPrefix) {
+    dispatch(getArticleByValue(helpPrefix));
+  }
+  }, [dispatch, helpPrefix]); 
 
   // Effect to fetch tickets when page or rowsPerPage changes
   // useLayoutEffect(() => {
@@ -175,6 +186,14 @@ export default function TicketFormList() {
     }));
   };
 
+  const handleHelpClick = () => {
+    setHelpOpen(true);
+  };
+
+  const handleCloseHelp = () => {
+    setHelpOpen(false);
+  };
+
   useEffect(() => {
     setFilterName(filterBy);
   }, [filterBy]);
@@ -231,8 +250,11 @@ export default function TicketFormList() {
       <StyledCardContainer>
         <Cover name="Support Tickets" icon="ph:users-light" 
         SubOnClick={toggleAdd} 
-        addButton={BUTTONS.ADDTICKET}/>
+        addButton={BUTTONS.ADDTICKET}
+        onHelpClick={handleHelpClick}
+      />
       </StyledCardContainer>
+      <HelpSidebar open={helpOpen} onClose={handleCloseHelp} article={article} />
       <FormProvider {...methods}>
         <TableCard>
           <TicketFormTableToolbar
