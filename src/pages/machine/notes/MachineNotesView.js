@@ -23,13 +23,14 @@ export default function MachineNotesView({ note }) {
     try {
       await dispatch(deleteNote(machineId, note?._id));
       enqueueSnackbar('Note deleted successfully', { variant: 'success' });
+      setIsDelete(false);
     } catch (error) {
       enqueueSnackbar(handleError(error), { variant: 'error' });
     }
   };
 
   const handleEdit = async () => setIsEdit(!isEdit);
-  const handleDelete = async () => setIsDelete(!isDelete);
+  const handleDelete = () => setIsDelete(true);
 
   return (
     <>
@@ -69,7 +70,7 @@ export default function MachineNotesView({ note }) {
       </>
       <ConfirmDialog
         open={isDelete}
-        onClose={handleDelete}
+        onClose={() => setIsDelete(false)}
         title="Delete Note"
         content="Are you sure you want to delete this Note?"
         action={
