@@ -384,16 +384,16 @@ export const allSideBarOptions = {
           path: PATH_SETTING.restrictions.root,
           icon: <Iconify icon="mdi:shield-lock" />,
           children: [
-            {
-              title: 'Blocked Customers',
-              path: PATH_SETTING.restrictions.blockedCustomer.list,
-              icon: <Iconify icon="tabler:home-off" />,
-            },
-            {
-              title: 'Blocked Users',
-              path: PATH_SETTING.restrictions.blockedUser.list,
-              icon: <Iconify icon="fluent:people-lock-20-regular" />,
-            },
+            // {
+            //   title: 'Blocked Customers',
+            //   path: PATH_SETTING.restrictions.blockedCustomer.list,
+            //   icon: <Iconify icon="tabler:home-off" />,
+            // },
+            // {
+            //   title: 'Blocked Users',
+            //   path: PATH_SETTING.restrictions.blockedUser.list,
+            //   icon: <Iconify icon="fluent:people-lock-20-regular" />,
+            // },
             {
               title: "Blacklist IP's",
               path: PATH_SETTING.restrictions.blacklistIP.list,
