@@ -412,6 +412,7 @@ export const BlacklistIPAdd = Loadable(lazy(() => import('../pages/settings/secu
 // REPORTS: Whitelist IP
 export const WhitelistIPList = Loadable(lazy(() => import('../pages/settings/securitySettings/whitelist_IP/WhitelistIPList')));
 export const WhitelistIPAdd = Loadable(lazy(() => import('../pages/settings/securitySettings/whitelist_IP/WhitelistIPAddForm')));
+export const WhitelistViewForm = Loadable(lazy(() => import('../pages/settings/securitySettings/whitelist_IP/WhitelistViewForm')));
 
 // REPORTS: Signin Logs
 export const SignInLogList = Loadable(lazy(() => import('../pages/settings/Reports/signInLog/SignInLogList')));

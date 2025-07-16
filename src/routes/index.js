@@ -434,6 +434,7 @@ import {
   // REPORTS: Whitelist IP
   WhitelistIPList,
   WhitelistIPAdd,
+  WhitelistViewForm,
 
   // REPORTS: Signin Logs
   SignInLogList,
@@ -1524,6 +1525,8 @@ export default function Router() {
               children: [
                 { path: 'list', element: <WhitelistIPList /> },
                 { path: 'new', element: <WhitelistIPAdd /> },
+                { path: ':id/view', element: <WhitelistViewForm />},
+                { path: ':id/edit', element: <WhitelistIPAdd /> },
               ],
             },
           ]
