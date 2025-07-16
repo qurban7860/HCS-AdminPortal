@@ -6,7 +6,7 @@ import userReducer from './slices/securityUser/securityUser';
 import customerReducer from './slices/customer/customer';
 import siteReducer from './slices/customer/site';
 import contactReducer from './slices/customer/contact';
-import customerNoteReducer from './slices/customer/customerNote';
+import customerNotesReducer from './slices/customer/customerNote';
 import machineReducer from './slices/products/machine';
 import supplierReducer from './slices/products/supplier';
 import licenseReducer from './slices/products/license';
@@ -128,8 +128,8 @@ export const sitePersistConfig = {
   blacklist: ['error', 'initial', 'responseMessage', 'sites', 'site']
 };
 
-export const customerNotePersistConfig = {
-  key: 'customerNote',
+export const customerNotesPersistConfig = {
+  key: 'customerNotes',
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage', 'notes']
@@ -627,7 +627,7 @@ const rootReducer = combineReducers({
   customer: persistReducer(customerPersistConfig, customerReducer),
   site: persistReducer(sitePersistConfig, siteReducer),
   contact: persistReducer(contactPersistConfig, contactReducer),
-  customerNote: persistReducer(customerNotePersistConfig, customerNoteReducer),
+  customerNotes: persistReducer(customerNotesPersistConfig, customerNotesReducer),
   machine: persistReducer(machinePersistConfig, machineReducer),
   supplier: persistReducer(suppplierPersistConfig, supplierReducer),
   license: persistReducer(licensePersistConfig, licenseReducer),
