@@ -6,9 +6,6 @@ import { CONFIG } from '../../../config-global';
 // ----------------------------------------------------------------------
 const initialState = {
   initial: false,
-  noteFormVisibility: false,
-  noteViewFormVisibility: false,
-  noteEditFormVisibility: false,
   responseMessage: null,
   success: false,
   isLoading: false,
@@ -21,38 +18,47 @@ const initialState = {
 };
 
 const slice = createSlice({
-  name: 'customerNote',
+  name: 'customerNotes',
   initialState,
   reducers: {
     // START LOADING
     startLoading(state) {
       state.isLoading = true;
     },
-
-    // SET ADD FORM TOGGLE
-    setNoteFormVisibility(state, action){
-      state.noteFormVisibility = action.payload;
-    },
-
-    // SET EDIT FORM TOGGLE
-    setNoteEditFormVisibility(state, action){
-      state.noteEditFormVisibility = action.payload;
-    },
-
-    // SET VIEW TOGGLE
-    setNoteViewFormVisibility(state, action){
-      state.noteViewFormVisibility = action.payload;
+    
+    updateNotesFromSSE(state, action) {
+      state.notes = action.payload;
+      state.isLoading = false;
+      state.success = true;
+      state.initial = true;
     },
 
     // HAS ERROR
     hasError(state, action) {
       state.isLoading = false;
       state.error = action.payload;
+      state.success = false;
       state.initial = true;
     },
 
-    // GET  Note
+    // GET  Notes
     getNotesSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.notes = action.payload;
+      state.initial = true;
+    },
+    
+    // ADD  Notes
+    addNotesSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.notes = action.payload;
+      state.initial = true;
+    },
+
+    // UPDATE  Notes
+    updateNotesSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
       state.notes = action.payload;
@@ -66,6 +72,15 @@ const slice = createSlice({
       state.note = action.payload;
       state.initial = true;
     },
+    
+    // DELETE Note
+    deleteNoteSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.notes = action.payload;
+      state.initial = true;
+      state.responseMessage = 'Note deleted successfully';
+    },
 
     setResponseMessage(state, action) {
       state.responseMessage = action.payload;
@@ -73,7 +88,6 @@ const slice = createSlice({
       state.success = true;
       state.initial = true;
     },
-
 
     // RESET NOTE
     resetNote(state){
@@ -119,9 +133,7 @@ export default slice.reducer;
 
 // Actions
 export const {
-  setNoteFormVisibility,
-  setNoteEditFormVisibility,
-  setNoteViewFormVisibility,
+  updateNotesFromSSE,
   resetNote,
   resetNotes,
   setResponseMessage,
@@ -131,20 +143,16 @@ export const {
 } = slice.actions;
 
 
-export function addNote (customerId, params){
-
+export function addNote(customerId, params){
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const data = {
-        site: params?.site?._id || null,
-        contact: params?.contact?._id || null,
         note: params?.note,
         isInternal: params?.isInternal,
-        isActive: params?.isActive,
       }
       const response = await axios.post(`${CONFIG.SERVER_URL}crm/customers/${customerId}/notes/`, data);
-      return response
+      dispatch(slice.actions.addNotesSuccess(response.data));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -158,14 +166,11 @@ export function updateNote(customerId,noteId,params) {
     dispatch(slice.actions.startLoading());
     try {
       const data = {
-        site: params?.site?._id || null,
-        contact: params?.contact?._id || null,
         note: params?.note,
         isInternal: params?.isInternal,
-        isActive: params?.isActive,
       }
-      await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${customerId}/notes/${noteId}`, data);
-      dispatch(slice.actions.setResponseMessage('Note updated successfully'));
+      const response = await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${customerId}/notes/${noteId}`, data);
+      dispatch(slice.actions.updateNotesSuccess(response.data));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -174,27 +179,13 @@ export function updateNote(customerId,noteId,params) {
   }
 }
 
-export function getNotes(id, isCustomerArchived) {
+export function getNotes(customerId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const params = {
-        orderBy : {
-          createdAt: -1
-        }
-      }
-
-      if(isCustomerArchived){
-        params.archivedByCustomer = true;
-        params.isArchived = true;
-      }else{
-        params.isArchived = false;
-      }
-
-      const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${id}/notes` , { params } );
+      const data = { isArchived: false };
+      const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerId}/notes` , { params: data } );
       dispatch(slice.actions.getNotesSuccess(response.data));
-      dispatch(slice.actions.setResponseMessage('Notes loaded successfully'));
-
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -240,16 +231,15 @@ export function getNote(customerId,noteId) {
   };
 }
 
-export function deleteNote(customerId,id) {
+export function deleteNote(customerId,noteId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      // const response = await axios.delete(`${CONFIG.SERVER_URL}customers/notes/${id}`,
-      const response = await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${customerId}/notes/${id}` , 
-      {
-          isArchived: true, 
-      });
-      dispatch(slice.actions.setResponseMessage(response.data));
+      const data = {
+        isArchived: true,
+      };
+      const response = await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${customerId}/notes/${noteId}` , data );
+      dispatch(slice.actions.deleteNoteSuccess(response.data));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));

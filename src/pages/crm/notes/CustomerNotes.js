@@ -15,31 +15,31 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
 import { FORMLABELS } from '../../../constants/default-constants';
 import { CustomAvatar } from '../../../components/custom-avatar';
-import MachineNotesForm from './MachineNotesForm';
-import MachineNotesView from './MachineNotesView';
-import { getNotes } from '../../../redux/slices/products/machineNote';
+import CustomerNotesForm from './CustomerNotesForm';
+import CustomerNotesView from './CustomerNotesView';
+import { getNotes } from '../../../redux/slices/customer/customerNote';
 
 dayjs.extend(relativeTime);
 
-export default function MachineNotes() {
-  const { machineId } = useParams();
+export default function CustomerNotes() {
+  const { customerId } = useParams();
   const dispatch = useDispatch();
-  const { notes } = useSelector((state) => state.machineNotes);
+  const { notes } = useSelector((state) => state.customerNotes);
 
   useEffect(() => {
-    if (machineId) {
-      dispatch(getNotes(machineId));
+    if (customerId) {
+      dispatch(getNotes(customerId));
     }
-  }, [dispatch, machineId]);
+  }, [dispatch, customerId]);
 
 
   return (
     <Box >
       <Box sx={{ p: 2, pb: 0 }}>
-      <FormLabel content={FORMLABELS.COVER.MACHINE_NOTES} />
+      <FormLabel content={FORMLABELS.COVER.CUSTOMER_NOTES} />
       </Box>
       <Box sx={{ mt: 1 }}>
-        <MachineNotesForm />
+        <CustomerNotesForm />
       </Box>
       <List
         sx={{
@@ -49,7 +49,7 @@ export default function MachineNotes() {
           p: 2,
         }}
       >
-        {notes.map((note, index) => (
+        {(Array.isArray(notes) ? notes : []).map((note, index) => (
           <React.Fragment key={index}>
             {index > 0 && <Divider component="li" />}
             <ListItem alignItems="flex-start" sx={{ padding: '8px 0' }}>
@@ -74,7 +74,7 @@ export default function MachineNotes() {
                 }
                 secondary={
                   <Box>
-                    <MachineNotesView note={note} />
+                    <CustomerNotesView note={note} />
                   </Box>
                 }
               />
