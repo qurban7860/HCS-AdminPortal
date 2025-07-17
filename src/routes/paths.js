@@ -695,7 +695,9 @@ export const PATH_SETTING = {
     // ------------------------ WHITE LIST IP ----------------------------------------
     whitelistIP: {
       list: path(ROOTS_SETTING, '/restrictions/whitelistIP/list'),
-      new: path(ROOTS_SETTING, `/restrictions/whitelistIP/new`)
+      new: path(ROOTS_SETTING, `/restrictions/whitelistIP/new`),    
+      view: (id) => path(ROOTS_SETTING, `/restrictions/whitelistIP/${id}/view`),
+      edit: (id) => path(ROOTS_SETTING, `/restrictions/whitelistIP/${id}/edit`),
     },
   },
   // ------------------------ SECURITY USER ROLE ----------------------------------------
