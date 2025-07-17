@@ -5,28 +5,22 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Card, Grid, Container, Box, Typography } from '@mui/material';
+import { isActive } from '@tiptap/core';
 
 import { PATH_SETTING } from '../../../../routes/paths';
 import { useSnackbar } from '../../../../components/snackbar';
 
-import FormProvider, {
-  RHFTextField,
-  RHFAutocomplete,
-} from '../../../../components/hook-form';
+import FormProvider, { RHFTextField, RHFAutocomplete, RHFSwitch } from '../../../../components/hook-form';
 
 import AddFormButtons from '../../../../components/DocumentForms/AddFormButtons';
 import { Cover } from '../../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 import Iconify from '../../../../components/iconify';
 
-import {
-  getWhitelistIPs,
-  getWhitelistIP,
-  addWhitelistIPs,
-  patchWhitelistIP,
-  resetCurrentWhitelistIP,
-} from '../../../../redux/slices/securityConfig/whitelistIP';
+import { getWhitelistIPs, getWhitelistIP, addWhitelistIPs, patchWhitelistIP, resetCurrentWhitelistIP } from '../../../../redux/slices/securityConfig/whitelistIP';
+
 import { getActiveCustomers } from '../../../../redux/slices/customer/customer';
+import { getActiveSecurityUsers, resetSecurityUsers } from '../../../../redux/slices/securityUser/securityUser';
 
 export default function WhitelistIPForm() {
   const navigate = useNavigate();
@@ -38,6 +32,7 @@ export default function WhitelistIPForm() {
 
   const { currentWhitelistIP, whitelistIPs } = useSelector((state) => state.whitelistIP);
   const { activeCustomers } = useSelector((state) => state.customer);
+  const { activeSecurityUsers } = useSelector((state) => state.user);
 
   useEffect(() => {
     if (!whitelistIPs.length) dispatch(getWhitelistIPs());
@@ -50,32 +45,34 @@ export default function WhitelistIPForm() {
     }
   }, [dispatch, id, isEdit]);
 
-  useEffect(() => () => {
-  dispatch(resetCurrentWhitelistIP());
-}, [dispatch]);
-
+  useEffect(
+    () => () => {
+      dispatch(resetCurrentWhitelistIP());
+    },
+    [dispatch]
+  );
 
   const currentIP = currentWhitelistIP;
 
   const defaultValues = useMemo(
     () => ({
-      whiteListIP: currentIP?.whiteListIP || '',
-      customer: currentIP?.customer || '',
-      user: currentIP?.user || '',
+      ipAddress: currentIP?.ipAddress || '',
+      customer: currentIP?.customer || null,
+      user: currentIP?.user || null,
       description: currentIP?.description || '',
       application: currentIP?.application || '',
+      isActive: currentIP?.isActive || true,
     }),
     [currentIP]
   );
 
   const WhitelistIPSchema = Yup.object().shape({
-    whiteListIP: Yup.string().required('IP is required to whitelist!'),
+    ipAddress: Yup.string().required('IP is required to whitelist!'),
     customer: Yup.object().nullable().required('Customer is required'),
-    user: Yup.string().required('User is required'),
+    user: Yup.object().nullable().required('User is required'),
     description: Yup.string(),
-    application: Yup.string()
-      .oneOf(['AdminPortal', 'CustomerPortal', 'APIAccess'], 'Invalid Application')
-      .required('Application is required'),
+    application: Yup.string().oneOf(['AdminPortal', 'CustomerPortal', 'APIAccess'], 'Invalid Application').required('Application is required'),
+    isActive: Yup.boolean(),
   });
 
   const methods = useForm({
@@ -98,15 +95,17 @@ export default function WhitelistIPForm() {
   const onSubmit = async (data) => {
     try {
       const payload = {
-        whiteListIP: data.whiteListIP,
+        ipAddress: data.ipAddress,
         customer: data.customer._id,
-        user: data.user,
+        user: data.user._id,
         description: data.description,
         application: data.application,
+        isActive: data.isActive,
       };
 
       if (isEdit) {
         await dispatch(patchWhitelistIP(id, payload));
+        await dispatch(getWhitelistIPs());
         enqueueSnackbar('Whitelist IP updated successfully!');
         navigate(PATH_SETTING.restrictions.whitelistIP.view(id));
       } else {
@@ -135,25 +134,18 @@ export default function WhitelistIPForm() {
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
-        <Cover name={isEdit ? currentIP?.whiteListIP : 'Add Whitelist IP'} />
+        <Cover name={isEdit ? currentIP?.ipAddress : 'Add Whitelist IP'} />
       </StyledCardContainer>
 
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={3}>
           <Grid item xs={12}>
             <Card sx={{ p: 3 }}>
-              <Box
-                rowGap={2}
-                columnGap={2}
-                display="grid"
-                sx={{ mb: 3 }}
-                gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
-              >
+              <Box rowGap={2} columnGap={2} display="grid" sx={{ mb: 3 }} gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}>
                 <RHFTextField
-                  name="whiteListIP"
-                  label="WhiteList IPs"
+                  name="ipAddress"
+                  label="IP Address*"
                   size="small"
-                  fullWidth
                   inputProps={{
                     pattern:
                       '^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\/(3[0-2]|[12]?[0-9])$|^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$',
@@ -162,7 +154,7 @@ export default function WhitelistIPForm() {
 
                 <RHFAutocomplete
                   name="customer"
-                  label="Customer"
+                  label="Customer*"
                   options={activeCustomers || []}
                   size="small"
                   isOptionEqualToValue={(option, value) => option?._id === value?._id}
@@ -175,35 +167,42 @@ export default function WhitelistIPForm() {
                   fullWidth
                 />
 
-                <RHFTextField name="user" label="User" size="small" fullWidth />
-
-                <RHFTextField
-                  name="application"
-                  label="Application"
+                <RHFAutocomplete
+                  name="user"
+                  label="User*"
+                  options={activeSecurityUsers || []}
                   size="small"
-                  select
+                  isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                  getOptionLabel={(option) => option?.name || ''}
+                  renderOption={(props, option) => (
+                    <li {...props} key={option?._id}>
+                      {option?.name}
+                    </li>
+                  )}
                   fullWidth
-                  SelectProps={{ native: true }}
-                >
-                  <option value="" disabled>
-                    .
-                  </option>
-                  <option value="AdminPortal">AdminPortal</option>
-                  <option value="CustomerPortal">CustomerPortal</option>
-                  <option value="APIAccess">APIAccess</option>
-                </RHFTextField>
+                />
+
+                <RHFAutocomplete
+                  name="application"
+                  label="Application*"
+                  options={['AdminPortal', 'CustomerPortal', 'APIAccess']}
+                  size="small"
+                  fullWidth
+                  getOptionLabel={(option) => option || ''}
+                  isOptionEqualToValue={(option, value) => option === value}
+                  renderOption={(props, option) => (
+                    <li {...props} key={option}>
+                      {option}
+                    </li>
+                  )}
+                />
 
                 <Box sx={{ gridColumn: { sm: 'span 2' } }}>
-                  <RHFTextField
-                    name="description"
-                    label="Description"
-                    size="small"
-                    fullWidth
-                    multiline
-                    rows={3}
-                  />
+                  <RHFTextField name="description" label="Description" size="small" fullWidth multiline rows={3} />
                 </Box>
               </Box>
+
+              <RHFSwitch name="isActive" label="Active" />
 
               <Box display="flex" alignItems="center" sx={{ mb: 3 }}>
                 <Iconify icon="eva:info-outline" sx={{ color: 'text.secondary', mr: 1 }} />

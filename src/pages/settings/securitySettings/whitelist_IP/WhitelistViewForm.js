@@ -2,16 +2,19 @@ import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Card, Grid, Container } from '@mui/material';
+
 import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 import { Cover } from '../../../../components/Defaults/Cover';
-
 import { PATH_SETTING } from '../../../../routes/paths';
 import { useSnackbar } from '../../../../components/snackbar';
+
 import { getWhitelistIPs, deleteWhitelistIP } from '../../../../redux/slices/securityConfig/whitelistIP';
+
 import ViewFormAudit from '../../../../components/ViewForms/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../../../../components/ViewForms/ViewFormEditDeleteButtons';
 import ViewFormField from '../../../../components/ViewForms/ViewFormField';
 import Editor from '../../../../components/editor';
+
 import { fDateTime } from '../../../../utils/formatTime';
 import { handleError } from '../../../../utils/errorHandler';
 
@@ -33,9 +36,9 @@ export default function WhitelistViewForm() {
 
   const defaultValues = useMemo(
     () => ({
-      whiteListIP: ipData?.whiteListIP || '',
+      ipAddress: ipData?.ipAddress || '',
       customer: ipData?.customer?.name || '',
-      user: ipData?.user || '',
+      user: ipData?.user?.name || '',
       description: ipData?.description || '',
       application: ipData?.application || '',
       createdByFullName: ipData?.createdBy?.name || '',
@@ -44,6 +47,7 @@ export default function WhitelistViewForm() {
       updatedByFullName: ipData?.updatedBy?.name || '',
       updatedAt: ipData?.updatedAt || '',
       updatedIP: ipData?.updatedIP || '',
+      isActive: ipData?.isActive || '',
     }),
     [ipData]
   );
@@ -58,7 +62,9 @@ export default function WhitelistViewForm() {
       enqueueSnackbar('Whitelist IP removed successfully!', { variant: 'success' });
       navigate(PATH_SETTING.restrictions.whitelistIP.list);
     } catch (err) {
-      enqueueSnackbar(handleError(err) || 'Failed to remove IP!', { variant: 'error' });
+      enqueueSnackbar(handleError(err) || 'Failed to remove IP!', {
+        variant: 'error',
+      });
     }
   };
 
@@ -69,14 +75,20 @@ export default function WhitelistViewForm() {
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
-        <Cover name={ipData?.whiteListIP} />
+        <Cover name={defaultValues.ipAddress} />
       </StyledCardContainer>
+
       <Grid>
         <Card sx={{ p: 2 }}>
-          <ViewFormEditDeleteButtons handleEdit={toggleEdit} onArchive={onDelete} backLink={goBack} />
+          <ViewFormEditDeleteButtons
+            handleEdit={toggleEdit}
+            isActive={defaultValues.isActive}
+            // onArchive={onDelete}
+            backLink={goBack}
+          />
 
           <Grid container spacing={2} sx={{ mt: 2 }}>
-            <ViewFormField isLoading={isLoading} sm={3} heading="Whitelist IP" param={defaultValues.whiteListIP} />
+            <ViewFormField isLoading={isLoading} sm={3} heading="Whitelist IP" param={defaultValues.ipAddress} />
             <ViewFormField isLoading={isLoading} sm={3} heading="Customer" param={defaultValues.customer} />
             <ViewFormField isLoading={isLoading} sm={3} heading="User" param={defaultValues.user} />
             <ViewFormField isLoading={isLoading} sm={3} heading="Application" param={defaultValues.application} />
@@ -88,7 +100,7 @@ export default function WhitelistViewForm() {
               node={<Editor readOnly hideToolbar sx={{ border: 'none', '& .ql-editor': { padding: '0px' } }} value={defaultValues.description} />}
             />
 
-            <Grid container>
+            <>
               <ViewFormAudit
                 defaultValues={{
                   createdByFullName: defaultValues.createdByFullName,
@@ -99,7 +111,7 @@ export default function WhitelistViewForm() {
                   updatedIP: defaultValues.updatedIP,
                 }}
               />
-            </Grid>
+            </>
           </Grid>
         </Card>
       </Grid>

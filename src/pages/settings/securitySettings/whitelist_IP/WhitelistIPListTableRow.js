@@ -21,11 +21,12 @@ WhitelistIPListTableRow.propTypes = {
 };
 
 export default function WhitelistIPListTableRow({ row, style, selected, onSelectRow, onDeleteRow, onEditRow, onViewRow }) {
-  const { whiteListIP, createdBy, createdAt } = row;
+  const { ipAddress, createdBy, createdAt, customer } = row;
   return (
-    <StyledTableRow hover selected={selected} onClick={onViewRow} sx={{ cursor: 'pointer' }}>
-      <LinkTableCell align="left" onClick={onViewRow} param={whiteListIP} />
+    <StyledTableRow hover selected={selected} sx={{ cursor: 'pointer' }}>
+      <LinkTableCell align="left" onClick={onViewRow} param={ipAddress} />
       {/* <TableCell align="center"><Switch checked={isActive} disabled size="small" /></TableCell> */}
+      <TableCell align="left">{customer?.name || ''}</TableCell>
       <TableCell align="left"> {createdBy?.name} </TableCell>
       <TableCell align="left" sx={{ width: '200px' }}>
         {fDateTime(createdAt)}
