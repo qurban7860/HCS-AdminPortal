@@ -8,11 +8,11 @@ import {
 import { fDate } from '../../../../utils/formatTime';
 // components
 import LinkTableCellWithIconTargetBlank from '../../../../components/ListTableTools/LinkTableCellWithIconTargetBlank';
-import { StyledTableRow } from '../../../../theme/styles/default-styles';
+import { StyledTableRow, StyledTooltip } from '../../../../theme/styles/default-styles';
 import { TableAddressRow } from '../../../../components/table';
 import useLimitString from '../../../../hooks/useLimitString';
 import { useScreenSize } from '../../../../hooks/useResponsive';
-import ViewFormEditDeleteButtons from '../../../../components/ViewForms/ViewFormEditDeleteButtons';
+import Iconify from '../../../../components/iconify';
 // ----------------------------------------------------------------------
 
 CustomerSiteListTableRow.propTypes = {
@@ -29,6 +29,7 @@ CustomerSiteListTableRow.propTypes = {
   onRestoreRow: PropTypes.func,
   isCustomerSitePage: PropTypes.bool,
   hiddenColumns: PropTypes.object,
+  isArchived: PropTypes.bool
 };
 
 export default function CustomerSiteListTableRow({
@@ -44,10 +45,11 @@ export default function CustomerSiteListTableRow({
   handleSiteView,
   handleSiteViewInNewPage,
   isCustomerSitePage,
-  hiddenColumns
+  hiddenColumns,
+  isArchived
 }) {
   const { _id, customer, name, email, phoneNumbers, address, lat, long,
-    primaryBillingContact, primaryTechnicalContact, isActive, isArchived, updatedAt } = row;
+    primaryBillingContact, primaryTechnicalContact, isActive, updatedAt } = row;
   const phone = phoneNumbers[0];
   const limitedName = useLimitString(customer?.name, 35);
   const isSmallScreen = useScreenSize('sm');
@@ -89,15 +91,17 @@ export default function CustomerSiteListTableRow({
         {!isCustomerSitePage && !hiddenColumns?.["customer.name"] && (
           <TableCell>{limitedName || ''}</TableCell>
         )}
-        {!hiddenColumns?.createdAt && (
+        {!hiddenColumns?.updatedAt && (
           <TableCell align='right' sx={{ whiteSpace: 'nowrap' }}>{fDate(updatedAt)}</TableCell>
         )}
-        {isArchived && (
-          <TableCell>
-            <ViewFormEditDeleteButtons
-              onDelete={() => onDeleteRow(row)}
-              onRestore={() => onRestoreRow(row)}
-            />
+        { isArchived && !hiddenColumns?.isArchived && (
+          <TableCell sx={{width:'100px'}} align='right'>
+            <StyledTooltip onClick={() => onRestoreRow(row)} title='Restore Contact' placement="top" tooltipcolor='green'>
+              <Iconify icon='mdi:restore' color='green' width="1.7em" sx={{ mb: -0.5, mr: 1, cursor:"pointer"}}/>
+            </StyledTooltip>
+            <StyledTooltip onClick={() => onDeleteRow(row)} title='Delete Contact' placement="top" tooltipcolor='red'>
+              <Iconify icon='solar:trash-bin-trash-outline' color='red' width="1.7em" sx={{ mb: -0.5, mr: 0.5, cursor:"pointer"}}/>
+            </StyledTooltip>
           </TableCell>
         )}
       </StyledTableRow>

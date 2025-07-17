@@ -363,6 +363,7 @@ export default function ArticleViewForm() {
                   onDeleteFile={() => handleDeleteFile(file?._id)}
                   onOpenFile={() => handleOpenFile(file?._id, file?.name, file?.extension)}
                   toolbar
+                  isArchived={defaultValues.isArchived}
                 />
               )}
               <ThumbnailDocButton onClick={() => setFileDialog(true)} disabled={defaultValues.isArchived}/>

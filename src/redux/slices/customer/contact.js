@@ -37,6 +37,7 @@ const initialState = {
     "email": false,
     "address.country": false,
     "createdAt": false,
+    "isArchived": false,
   },
 };
 

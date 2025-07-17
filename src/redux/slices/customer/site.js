@@ -34,7 +34,8 @@ const initialState = {
     "primaryTechnicalContact.firstName": false,
     "primaryBillingContact.firstName": false,
     "isActive": false,
-    "createdAt": false
+    "createdAt": false,
+    "isArchived": false,
   },
 };
 
