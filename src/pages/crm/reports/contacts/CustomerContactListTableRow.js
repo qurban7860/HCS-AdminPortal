@@ -6,12 +6,11 @@ import { Switch, TableCell } from '@mui/material';
 import { fDate } from '../../../../utils/formatTime';
 // components
 import { useScreenSize } from '../../../../hooks/useResponsive';
-import { StyledTableRow } from '../../../../theme/styles/default-styles';
+import { StyledTableRow, StyledTooltip } from '../../../../theme/styles/default-styles';
 import LinkTableCellWithIconTargetBlank from '../../../../components/ListTableTools/LinkTableCellWithIconTargetBlank';
 import IconButtonTooltip from '../../../../components/Icons/IconButtonTooltip';
 import { ICONS } from '../../../../constants/icons/default-icons';
-import ViewFormEditDeleteButtons from '../../../../components/ViewForms/ViewFormEditDeleteButtons';
-
+import Iconify from '../../../../components/iconify';
 // ----------------------------------------------------------------------
 
 CustomerContactListTableRow.propTypes = {
@@ -28,6 +27,7 @@ CustomerContactListTableRow.propTypes = {
   onRestoreRow: PropTypes.func,
   isCustomerContactPage: PropTypes.bool,
   hiddenColumns: PropTypes.object,
+  isArchived: PropTypes.bool,
 };
 
 export default function CustomerContactListTableRow({
@@ -43,9 +43,10 @@ export default function CustomerContactListTableRow({
   handleContactView,
   handleContactViewInNewPage,
   isCustomerContactPage,
-  hiddenColumns
+  hiddenColumns,
+  isArchived
 }) {
-  const { _id, customer, firstName, title, lastName, phoneNumbers, email, address, isActive, isArchived, formerEmployee, updatedAt } = row;
+  const { _id, customer, firstName, title, lastName, phoneNumbers, email, address, isActive, formerEmployee, updatedAt } = row;
   const contactName = `${firstName || ''} ${lastName || ''}`;
   const [showAllPhones, setShowAllPhones] = useState(false);
 
@@ -169,14 +170,16 @@ export default function CustomerContactListTableRow({
           { !hiddenColumns?.updatedAt && (
             <TableCell align="right">{fDate(updatedAt)}</TableCell>
           )}
-          {isArchived && (
-          <TableCell>
-            <ViewFormEditDeleteButtons
-              onDelete={() => onDeleteRow(row)}
-              onRestore={() => onRestoreRow(row)}
-            />
-          </TableCell>
-        )}
+          { isArchived && !hiddenColumns?.isArchived && (
+            <TableCell sx={{width:'100px'}} align='right'>
+              <StyledTooltip onClick={() => onRestoreRow(row)} title='Restore Contact' placement="top" tooltipcolor='green'>
+                <Iconify icon='mdi:restore' color='green' width="1.7em" sx={{ mb: -0.5, mr: 1, cursor:"pointer"}}/>
+              </StyledTooltip>
+              <StyledTooltip onClick={() => onDeleteRow(row)} title='Delete Contact' placement="top" tooltipcolor='red'>
+                <Iconify icon='solar:trash-bin-trash-outline' color='red' width="1.7em" sx={{ mb: -0.5, mr: 0.5, cursor:"pointer"}}/>
+              </StyledTooltip>
+            </TableCell>
+          )}
         </StyledTableRow>
       )}
     </>
