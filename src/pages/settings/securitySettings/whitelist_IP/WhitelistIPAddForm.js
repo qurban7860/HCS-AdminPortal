@@ -37,6 +37,7 @@ export default function WhitelistIPForm() {
   useEffect(() => {
     if (!whitelistIPs.length) dispatch(getWhitelistIPs());
     dispatch(getActiveCustomers());
+    dispatch(getActiveSecurityUsers());
   }, [dispatch, whitelistIPs.length]);
 
   useEffect(() => {
