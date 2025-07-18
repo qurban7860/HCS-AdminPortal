@@ -17,6 +17,7 @@ import WhitelistIPListTableToolbar from './WhitelistIPListTableToolbar';
 import { getWhitelistIPs, deleteWhitelistIP, ChangeRowsPerPage, ChangePage, setFilterBy } from '../../../../redux/slices/securityConfig/whitelistIP';
 import { Cover } from '../../../../components/Defaults/Cover';
 import { fDate } from '../../../../utils/formatTime';
+import { handleError } from '../../../../utils/errorHandler';
 import TableCard from '../../../../components/ListTableTools/TableCard';
 import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 
@@ -94,7 +95,6 @@ export default function WhitelistIPList() {
   };
 
   const handleCloseConfirm = () => {
-    // setSelectedUser('');
     setOpenConfirm(false);
   };
 
@@ -136,15 +136,9 @@ export default function WhitelistIPList() {
           setPage(page - 1);
         }
       }
+      enqueueSnackbar("IP removed successfully!");
     } catch (error) {
-      if (error.Message) {
-        enqueueSnackbar(error.Message, { variant: `error` });
-      } else if (error.message) {
-        enqueueSnackbar(error.message, { variant: `error` });
-      } else {
-        enqueueSnackbar('Something went wrong!', { variant: `error` });
-      }
-      console.log('Error:', error);
+      enqueueSnackbar(handleError(error), { variant: `error` });
     }
   };
 

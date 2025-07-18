@@ -25,7 +25,7 @@ const slice = createSlice({
     startLoading(state) {
       state.isLoading = true;
     },
-    
+
     updateNotesFromSSE(state, action) {
       state.notes = action.payload;
       state.isLoading = false;
@@ -48,7 +48,7 @@ const slice = createSlice({
       state.notes = action.payload;
       state.initial = true;
     },
-    
+
     // ADD  Notes
     addNotesSuccess(state, action) {
       state.isLoading = false;
@@ -72,7 +72,7 @@ const slice = createSlice({
       state.note = action.payload;
       state.initial = true;
     },
-    
+
     // DELETE Note
     deleteNoteSuccess(state, action) {
       state.isLoading = false;
@@ -90,7 +90,7 @@ const slice = createSlice({
     },
 
     // RESET NOTE
-    resetNote(state){
+    resetNote(state) {
       state.note = {};
       state.responseMessage = null;
       state.success = false;
@@ -98,7 +98,7 @@ const slice = createSlice({
     },
 
     // RESET NOTE
-    resetNotes(state){
+    resetNotes(state) {
       state.notes = [];
       state.responseMessage = null;
       state.success = false;
@@ -143,7 +143,7 @@ export const {
 } = slice.actions;
 
 
-export function addNote(customerId, params){
+export function addNote(customerId, params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -152,7 +152,7 @@ export function addNote(customerId, params){
         isInternal: params?.isInternal,
       }
       const response = await axios.post(`${CONFIG.SERVER_URL}crm/customers/${customerId}/notes/`, data);
-      dispatch(slice.actions.addNotesSuccess(response.data));
+      dispatch(slice.actions.getNotesSuccess(response.data?.notesList));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -161,7 +161,7 @@ export function addNote(customerId, params){
   };
 }
 
-export function updateNote(customerId,noteId,params) {
+export function updateNote(customerId, noteId, params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -170,7 +170,7 @@ export function updateNote(customerId,noteId,params) {
         isInternal: params?.isInternal,
       }
       const response = await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${customerId}/notes/${noteId}`, data);
-      dispatch(slice.actions.updateNotesSuccess(response.data));
+      dispatch(slice.actions.getNotesSuccess(response.data?.notesList));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -184,7 +184,7 @@ export function getNotes(customerId) {
     dispatch(slice.actions.startLoading());
     try {
       const data = { isArchived: false };
-      const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerId}/notes` , { params: data } );
+      const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerId}/notes`, { params: data });
       dispatch(slice.actions.getNotesSuccess(response.data));
     } catch (error) {
       console.log(error);
@@ -198,13 +198,13 @@ export function getActiveNotes(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${id}/notes` , 
-      {
-        params: {
-          isActive: true,
-          isArchived: false
+      const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${id}/notes`,
+        {
+          params: {
+            isActive: true,
+            isArchived: false
+          }
         }
-      }
       );
       dispatch(slice.actions.getActiveNotesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Notes loaded successfully'));
@@ -217,7 +217,7 @@ export function getActiveNotes(id) {
   };
 }
 
-export function getNote(customerId,noteId) {
+export function getNote(customerId, noteId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -231,14 +231,14 @@ export function getNote(customerId,noteId) {
   };
 }
 
-export function deleteNote(customerId,noteId) {
+export function deleteNote(customerId, noteId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const data = {
         isArchived: true,
       };
-      const response = await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${customerId}/notes/${noteId}` , data );
+      const response = await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${customerId}/notes/${noteId}`, data);
       dispatch(slice.actions.deleteNoteSuccess(response.data));
     } catch (error) {
       console.error(error);

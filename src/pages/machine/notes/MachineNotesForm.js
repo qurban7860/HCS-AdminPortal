@@ -69,7 +69,7 @@ export default function MachineNotesForm({ noteData, handleEdit }) {
       <Stack direction="row" spacing={2} sx={{ p: 2 }}>
         {!noteData?._id && <CustomAvatar src={user?.photoURL} alt={user?.displayName} name={user?.displayName} />}
         <Stack sx={{ width: '100%' }}>
-          <RHFEditorV2 name="note" allowMention placeholder="Add a Note..." />
+          <RHFEditorV2 name="note" placeholder="Add a Note..." />
           <RadioGroup
             row
             name="isInternal"
