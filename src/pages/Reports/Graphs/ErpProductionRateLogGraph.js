@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Typography, Card, Grid, Skeleton, Box } from '@mui/material';
+import LogLineBarChartv2 from '../../../components/machineLogs/LogLineBarChartv2';
 import LogLineBarChart from '../../../components/machineLogs/LogLineBarChart';
 import LogChartStacked from '../../../components/machineLogs/LogStackedChart';
 import { TableNoData } from '../../../components/table';
@@ -132,7 +133,7 @@ const ErpProductionRateLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
         ) : (
           <>
             {graphData?.length > 0 ? (
-              <LogLineBarChart
+              <LogLineBarChartv2
                 processGraphData={(skipZero) => processGraphData(skipZero)}
                 graphLabels={graphLabels}
                 isLoading={isLoading}
