@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FormProvider, useForm } from 'react-hook-form';
 // @mui
-import { Card, Container, Stack, Typography, Box, useTheme, Grid } from '@mui/material';
+import { Card, Container, Stack, Typography, useTheme, Grid } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import { RHFAutocomplete, RHFDatePicker } from '../../../components/hook-form';
 import { machineLogGraphTypes } from '../../../constants/machineLogTypeFormats';
@@ -33,8 +33,6 @@ export default function MachineLogsGraphViewForm() {
   const { machineId } = useParams();
   const { machine } = useSelector((state) => state.machine);
   const theme = useTheme();
-
-  const showProductionRateGraph = process.env.REACT_APP_ENV.toLowerCase() !== "live"
 
   const defaultValues = useMemo(
     () => ({
@@ -158,12 +156,12 @@ export default function MachineLogsGraphViewForm() {
       defaultValues?.logPeriod &&
       defaultValues?.dateFrom &&
       defaultValues?.dateTo &&
-      defaultValues?.unitType 
+      defaultValues?.unitType
     ) {
       handleFormSubmit();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [machine?.customer?._id, machineId]); 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [machine?.customer?._id, machineId]);
 
   const handlePeriodChange = useCallback(
     (newPeriod) => {
@@ -178,7 +176,7 @@ export default function MachineLogsGraphViewForm() {
     },
     [setValue]
   );
-  
+
   return (
     <Container maxWidth={false}>
       <MachineTabContainer currentTabValue="graphs" />
@@ -195,10 +193,7 @@ export default function MachineLogsGraphViewForm() {
                   <RHFAutocomplete
                     name="logGraphType"
                     label="Graph Type*"
-                    options={machineLogGraphTypes.filter((type) => {
-                      if (type.key === 'productionRate' && !showProductionRateGraph) return false
-                      return true;
-                    })}
+                    options={machineLogGraphTypes}
                     onChange={(e, newValue) => handleGraphTypeChange(newValue)}
                     getOptionLabel={(option) => option.name || ''}
                     isOptionEqualToValue={(option, value) => option?.key === value?.key}
@@ -312,7 +307,7 @@ export default function MachineLogsGraphViewForm() {
           />
         )
       ) : (
-            <Card sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 2, minHeight: 500 }}>
+        <Card sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 2, minHeight: 500 }}>
           <TableNoData isNotFound />
         </Card>
       )}
