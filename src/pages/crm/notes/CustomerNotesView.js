@@ -22,6 +22,7 @@ export default function CustomerNotesView({ note }) {
   const onDelete = async () => {
     try {
       await dispatch(deleteNote(customerId, note?._id));
+      setIsDelete(false);
       enqueueSnackbar('Note deleted successfully', { variant: 'success' });
     } catch (error) {
       enqueueSnackbar(handleError(error), { variant: 'error' });
