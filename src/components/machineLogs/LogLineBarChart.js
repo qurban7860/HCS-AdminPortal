@@ -176,9 +176,6 @@ export default function LogLineBarChart({
             fontWeight: 600,
           },
         },
-        // labels: {
-        //   formatter: (val) => fShortenNumber(val),
-        // },
         labels: {
           formatter: (val) => {
             let convertedEfficiency = efficiency;
@@ -225,7 +222,7 @@ export default function LogLineBarChart({
           if (!isEfficiency) total += value || 0;
 
           const valueText = isEfficiency && value
-            ? `${value?.toFixed(2)}%`
+            ? `${((value / (unitType === 'Imperial' ? efficiency * 39.37 : efficiency)) * 100)?.toFixed(2)}%`
             : value?.toLocaleString(undefined, {
               minimumFractionDigits: 2,
               maximumFractionDigits: 2,

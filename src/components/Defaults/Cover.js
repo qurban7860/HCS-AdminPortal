@@ -219,7 +219,7 @@ export function Cover({
               </Button>
             )}
             {addButton && SubOnClick && (
-              <Grid item >
+              <Grid item sx={{ mr: onHelpClick ? 1 : 0 }}>
                 <StyledTooltip title={addButton} placement="bottom" disableFocusListener tooltipcolor="#103996" color="#fff">
                   <IconButton color="#fff" onClick={SubOnClick}
                     sx={{

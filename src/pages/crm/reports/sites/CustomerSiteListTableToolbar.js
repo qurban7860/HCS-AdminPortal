@@ -12,7 +12,8 @@ CustomerSiteListTableToolbar.propTypes = {
   onFilterName: PropTypes.func,
   onResetFilter: PropTypes.func,
   onExportCSV: PropTypes.func,
-  onExportLoading: PropTypes.bool
+  onExportLoading: PropTypes.bool,
+  isArchived: PropTypes.bool,
 };
 
 export default function CustomerSiteListTableToolbar({
@@ -21,7 +22,8 @@ export default function CustomerSiteListTableToolbar({
   onFilterName,
   onResetFilter,
   onExportCSV,
-  onExportLoading
+  onExportLoading,
+  isArchived
 }) {
 
 
@@ -37,7 +39,8 @@ export default function CustomerSiteListTableToolbar({
         value={filterName}
         onChange={onFilterName}
         onClick={onResetFilter}
-        onExportCSV={onExportCSV}
+        // onExportCSV={onExportCSV}
+        {...(!isArchived && {onExportCSV})}
         onExportLoading={onExportLoading}
       />
     </Stack>

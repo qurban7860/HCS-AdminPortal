@@ -9,7 +9,7 @@ import { useSnackbar } from '../../../components/snackbar';
 import { fDateTime } from '../../../utils/formatTime';
 import { useAuthContext } from '../../../auth/useAuthContext';
 import ViewPhoneComponent from '../../../components/ViewForms/ViewPhoneComponent';
-import { getContact, getContacts, resetContact, deleteContact, setIsExpanded, setCardActiveIndex } from '../../../redux/slices/customer/contact';
+import { getContact, getContacts, resetContact, setIsExpanded, setCardActiveIndex, archiveContact } from '../../../redux/slices/customer/contact';
 import { setMachineTab } from '../../../redux/slices/products/machine';
 import { getMachineServiceReport, setResetFlags } from '../../../redux/slices/products/machineServiceReport';
 import { getContactUsers, resetContactUsers, getDialogSecurityUser, setSecurityUserDialog } from '../../../redux/slices/securityUser/securityUser';
@@ -56,15 +56,16 @@ export default function ContactViewForm({
 
   const handleEdit = () => navigate(PATH_CRM.customers.contacts.edit(customerId, id));
   const handleMoveConatct = () => navigate(PATH_CRM.customers.contacts.move(customerId, id));
+
   const backLink = () => navigate(PATH_CRM.customers.contacts.root(customerId, id));
 
   const onArchive = async () => {
     try {
-      await dispatch(deleteContact(customerId, id));
+      await dispatch(archiveContact(customerId, id));
       dispatch(setIsExpanded(false));
-      enqueueSnackbar('Contact Archived Successfully!');
       await dispatch(getContacts(customerId))
-      navigate(PATH_CRM.customers.contacts.root(customerId))
+      enqueueSnackbar('Contact Archived Successfully!');
+      navigate(PATH_CRM.customers.archivedContacts.root);
     } catch (err) {
       enqueueSnackbar(err, { variant: `error` });
       console.log('Error:', err);

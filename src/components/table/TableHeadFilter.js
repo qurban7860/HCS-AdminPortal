@@ -19,15 +19,19 @@ const visuallyHidden = {
   position: 'absolute',
   whiteSpace: 'nowrap',
   clip: 'rect(0 0 0 0)',
+
 };
-const renderLabelWithTooltip = (headCell) =>
-  headCell.tooltip ? (
-    <StyledTooltip title={headCell.tooltip} placement="top">
-      <Box component="span">{headCell.label}</Box>
+
+const renderLabelWithTooltip = (headCell) => {
+  const display = headCell?.label || "";
+    return headCell?.tooltip ? (
+    <StyledTooltip title={headCell?.tooltip} placement="top">
+      <Box component="span">{display}</Box>
     </StyledTooltip>
   ) : (
-    headCell.label
+    display
   );
+};
 
 // ----------------------------------------------------------------------
 

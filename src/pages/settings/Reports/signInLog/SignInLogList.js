@@ -40,6 +40,7 @@ const TABLE_HEAD = [
   { id: 'user.name', label: 'User', align: 'left', allowSearch: true },
   { id: 'user.customer.name', label: 'Customer', align: 'left', allowSearch: true },
   { id: 'loginIP', visibility: 'md2', label: 'IP', align: 'left' },
+  { id: 'loginSource', visibility: 'md2', label: 'Source', align: 'left' },
   { id: 'loginTime', label: 'Login Time', align: 'left' },
   { id: 'logoutTime', label: 'Logout Time', align: 'left' },
   { id: 'loggedOutBy', label: 'Logout By', align: 'left' },

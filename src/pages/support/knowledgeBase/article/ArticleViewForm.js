@@ -113,7 +113,7 @@ export default function ArticleViewForm() {
     try {
       await dispatch(deleteArticle(article?._id));
       if (article?.isArchived) {
-        navigate(PATH_SUPPORT.knowledgeBase.article.archived);
+        navigate(PATH_SUPPORT.archivedArticles.root);
       } else {
         navigate(PATH_SUPPORT.knowledgeBase.article.root);
       }
@@ -127,7 +127,7 @@ export default function ArticleViewForm() {
   const onArchive = async () => {
     try {
       await dispatch(archiveArticle(article?._id));
-      navigate(PATH_SUPPORT.knowledgeBase.article.archived);
+      navigate(PATH_SUPPORT.archivedArticles.root);
       enqueueSnackbar('Article archived successfully!', { variant: `success` });
     } catch (error) {
       console.error(error);
@@ -174,7 +174,7 @@ export default function ArticleViewForm() {
 
   const handlebackLink = () => {
     if (defaultValues.isArchived) {
-      navigate(PATH_SUPPORT.knowledgeBase.article.archived);
+      navigate(PATH_SUPPORT.archivedArticles.root);
     } else {
       navigate(PATH_SUPPORT.knowledgeBase.article.root);
     }
@@ -307,7 +307,7 @@ export default function ArticleViewForm() {
             <ViewFormField isLoading={isLoading} sm={4} heading="Category" param={defaultValues.category?.name || ''} />
             <ViewFormField isLoading={isLoading} sm={4} heading="Article No" param={defaultValues.articleNo || ''} />
             <ViewFormField isLoading={isLoading} sm={4} heading="Status"
-              node={<ViewFormSelect sx={{ width: '150px' }} options={articleStatusOptions} value={defaultValues.status} onChange={handleStatusChange} />}
+              node={<ViewFormSelect sx={{ width: '150px' }} options={articleStatusOptions} value={defaultValues.status} onChange={handleStatusChange} disabled={defaultValues.isArchived}/>}
             />
             <ViewFormField isLoading={isLoading} sm={12} heading="Title" param={defaultValues.title || ''} />
             <ViewFormField isLoading={isLoading} sm={12}
@@ -363,9 +363,10 @@ export default function ArticleViewForm() {
                   onDeleteFile={() => handleDeleteFile(file?._id)}
                   onOpenFile={() => handleOpenFile(file?._id, file?.name, file?.extension)}
                   toolbar
+                  isArchived={defaultValues.isArchived}
                 />
               )}
-              <ThumbnailDocButton onClick={() => setFileDialog(true)} />
+              <ThumbnailDocButton onClick={() => setFileDialog(true)} disabled={defaultValues.isArchived}/>
             </Box>
 
             <Lightbox

@@ -39,17 +39,21 @@ import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
 import useResponsive from '../../hooks/useResponsive';
 import { BUTTONS } from '../../constants/default-constants';
+import { getArticleByValue } from '../../redux/slices/support/knowledgeBase/article';
+import HelpSidebar from './utils/HelpSideBar';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: 'issueType.name', label: <span style={{ marginLeft: 4 }}>T</span>, align: 'left' },
+  { id: 'status.name', label: 'S', align: 'left', tooltip: 'Status', allowColumn: true },
+  { id: 'priority.name', label: 'P',align: 'left', tooltip: 'Priority', allowColumn: true },
   { id: 'ticketNo', label: 'Ticket No.', align: 'left' },
   { id: 'summary', label: 'Summary', align: 'left', allowColumn: true },
   { id: 'machine.serialNo', label: 'Machine', align: 'left', allowColumn: true },
   { id: 'machine.machineModel.name', label: 'Model', align: 'left', allowColumn: true },
   { id: 'customer.name', label: 'Customer', align: 'left', allowColumn: true },
-  { id: 'status.name', label: 'S', align: 'left', allowColumn: true },
-  { id: 'priority.name', label: 'P', align: 'left', allowColumn: true },
+  { id: 'reporter.name', label: 'Reporter', align: 'left', allowColumn: true },
+  { id: 'assignees.name.[]', label: 'Assignees', align: 'left', allowColumn: true },
   { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
 
@@ -57,6 +61,7 @@ const TABLE_HEAD = [
 
 export default function TicketFormList() {
   const { tickets, filterBy, page, rowsPerPage, isLoading, reportHiddenColumns } = useSelector((state) => state.tickets);
+  const { article } = useSelector((state) => state.article);
   const navigate = useNavigate();
   const methods = useForm();
 
@@ -86,8 +91,16 @@ export default function TicketFormList() {
   const [selectedStatusType, setSelectedStatusType] = useState(null);
   const [selectedResolvedStatus, setSelectedResolvedStatus] = useState('unresolved');
   const [selectedPriority, setSelectedPriority] = useState(null);
+  const [helpOpen, setHelpOpen] = useState(false);
   const isMobile = useResponsive('down', 'sm');
-  const prefix = JSON.parse(localStorage.getItem('configurations'))?.find((config) => config?.name?.toLowerCase() === 'ticket_prefix')?.value?.trim() || ''; 
+  const prefix = JSON.parse(localStorage.getItem('configurations'))?.find((config) => config?.name?.toLowerCase() === 'ticket_prefix')?.value?.trim() || '';
+  const helpPrefix = JSON.parse(localStorage.getItem('configurations'))?.find((config) => config?.name?.toLowerCase() === 'support_ticket_creation_process')?.value?.trim() || '';
+
+  useEffect(() => {
+  if (helpPrefix) {
+    dispatch(getArticleByValue(helpPrefix));
+  }
+  }, [dispatch, helpPrefix]); 
 
   // Effect to fetch tickets when page or rowsPerPage changes
   // useLayoutEffect(() => {
@@ -173,6 +186,14 @@ export default function TicketFormList() {
     }));
   };
 
+  const handleHelpClick = () => {
+    setHelpOpen(true);
+  };
+
+  const handleCloseHelp = () => {
+    setHelpOpen(false);
+  };
+
   useEffect(() => {
     setFilterName(filterBy);
   }, [filterBy]);
@@ -229,8 +250,11 @@ export default function TicketFormList() {
       <StyledCardContainer>
         <Cover name="Support Tickets" icon="ph:users-light" 
         SubOnClick={toggleAdd} 
-        addButton={BUTTONS.ADDTICKET}/>
+        addButton={BUTTONS.ADDTICKET}
+        onHelpClick={handleHelpClick}
+      />
       </StyledCardContainer>
+      <HelpSidebar open={helpOpen} onClose={handleCloseHelp} article={article} />
       <FormProvider {...methods}>
         <TableCard>
           <TicketFormTableToolbar
@@ -337,7 +361,7 @@ function applyFilter({ inputData, comparator, filterName, prefix = '' }) {
   });
 
   inputData = stabilizedThis.map((el) => el[0]);
-
+ 
   if (filterName) {
     inputData = inputData.filter((ticket) => {
       const fieldsToFilter = [
@@ -348,6 +372,7 @@ function applyFilter({ inputData, comparator, filterName, prefix = '' }) {
         ticket?.summary,
         ticket?.status?.name,
         ticket?.priority?.name,
+        ticket?.reporter?.name,
         fDate(ticket?.createdAt),
       ];
       return fieldsToFilter.some((field) =>

@@ -179,18 +179,17 @@ export default function ArticleList({isArchived}) {
     if(isArchived){
       navigate(PATH_SUPPORT.knowledgeBase.article.root);    
     }else{
-      navigate(PATH_SUPPORT.knowledgeBase.article.archived);    
+      navigate(PATH_SUPPORT.archivedArticles.root);    
     }
   }
 
   return (
       <Container maxWidth={false}>
         <StyledCardContainer>
-          <Cover name={isArchived?'Archived Articles':'Articles'} supportTicketSettings 
-            archivedLink={{
-              label:isArchived?'Articles':'Archived Articles', 
-              link: handleArchive, 
-              icon: isArchived?'mdi:book-open-variant':'mdi:book-variant'}}
+          <Cover name={isArchived ? 'Archived Articles' : 'Articles'}
+            archivedLink={
+              !isArchived ? { label: 'Archived Articles', link: handleArchive, icon: 'mdi:book-variant' } : null
+            }
             isArchived={isArchived}
           />
         </StyledCardContainer>

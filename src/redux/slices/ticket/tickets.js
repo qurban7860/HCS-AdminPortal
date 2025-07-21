@@ -31,6 +31,8 @@ const initialState = {
     "status.name": false,
     "priority.name": false,
     "createdAt": false,
+    "reporter.name": true,
+    "assignees.name.[]": false,
   },
 };
 

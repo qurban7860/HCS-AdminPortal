@@ -8,8 +8,9 @@ import {
   TableBody,
   Container,
   TableContainer,
-  // Stack,
 } from '@mui/material';
+import { LoadingButton } from '@mui/lab'; 
+
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
 // routes
@@ -29,21 +30,23 @@ import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 // sections
 import CustomerSiteListTableRow from './CustomerSiteListTableRow';
 import CustomerSiteListTableToolbar from './CustomerSiteListTableToolbar';
-import { getAllSites, resetAllSites, ChangePage, ChangeRowsPerPage, setFilterBy, setIsExpanded, setCardActiveIndex, setReportHiddenColumns } from '../../../../redux/slices/customer/site';
+import { getAllSites, resetAllSites, ChangePage, ChangeRowsPerPage, setFilterBy, setIsExpanded, setCardActiveIndex, setReportHiddenColumns, deleteSite, restoreSite } from '../../../../redux/slices/customer/site';
 import { getCustomer } from '../../../../redux/slices/customer/customer';
 import { Cover } from '../../../../components/Defaults/Cover';
 import TableCard from '../../../../components/ListTableTools/TableCard';
 import { fDate } from '../../../../utils/formatTime';
 import { useSnackbar } from '../../../../components/snackbar';
 import { exportCSV } from '../../../../utils/exportCSV';
+import ConfirmDialog from '../../../../components/confirm-dialog'; 
 
 // ----------------------------------------------------------------------
 
 CustomerSiteList.propTypes = {
   isCustomerSitePage: PropTypes.bool,
+  isArchived: PropTypes.bool,
 };
 
-export default function CustomerSiteList({ isCustomerSitePage = false }) {
+export default function CustomerSiteList({ isCustomerSitePage = false, isArchived}) {
   const {
     order,
     orderBy,
@@ -65,6 +68,11 @@ export default function CustomerSiteList({ isCustomerSitePage = false }) {
   const [tableData, setTableData] = useState([]);
   const [filterName, setFilterName] = useState(filterBy);
 
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const [dialogType, setDialogType] = useState(''); 
+  const [selectedSiteRow, setSelectedSiteRow] = useState(null); 
+  const [isSubmittingAction, setIsSubmittingAction] = useState(false); 
+
   const TABLE_HEAD = [
     { id: 'isActive', label: 'Active', align: 'center' },
     { id: 'name', label: 'Site', align: 'left' },
@@ -75,6 +83,7 @@ export default function CustomerSiteList({ isCustomerSitePage = false }) {
     { id: 'primaryBillingContact.firstName', label: 'Billing Contact', align: 'left' },
     ...(isCustomerSitePage ? [] : [{ id: 'customer.name', label: 'Customer', align: 'left' }]),
     { id: 'updatedAt', label: 'Updated At', align: 'right' },
+    ...(isArchived ? [{ id: 'isArchived', label: 'Actions', align: 'center' }] : []),
   ];
 
   // ----------------------------------------------------------------------
@@ -84,14 +93,18 @@ export default function CustomerSiteList({ isCustomerSitePage = false }) {
     dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10)));
   };
 
-  const onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
+  const onChangePage = (event, newPage) => {
+    dispatch(ChangePage(newPage))
+  };
 
   useEffect(() => {
     if (!isCustomerSitePage) {
-      dispatch(getAllSites());
-      return () => { dispatch(resetAllSites()) };
-    } return undefined;
-  }, [dispatch, isCustomerSitePage]);
+      dispatch(getAllSites(isArchived));
+    }
+    return () => {
+      dispatch(resetAllSites());
+    }
+  }, [dispatch, isCustomerSitePage, isArchived]);
 
   useEffect(() => {
     setTableData(isCustomerSitePage ? sites : allSites || []);
@@ -110,7 +123,6 @@ export default function CustomerSiteList({ isCustomerSitePage = false }) {
     dispatch(ChangePage(0))
     dispatch(setFilterBy(value))
   }, 500))
-
 
   const handleFilterName = (event) => {
     debouncedSearch.current(event.target.value)
@@ -160,11 +172,69 @@ export default function CustomerSiteList({ isCustomerSitePage = false }) {
     dispatch(setReportHiddenColumns(arg));
   };
 
+  const handleOpenConfirm = (type, row) => {
+    setDialogType(type);
+    setSelectedSiteRow(row);
+    setOpenConfirm(true);
+  };
+
+  const handleCloseConfirm = () => {
+    setOpenConfirm(false);
+    setDialogType('');
+    setSelectedSiteRow(null);
+  };
+
+  const handleDeleteSite = async () => {
+    if (selectedSiteRow) {
+      setIsSubmittingAction(true); 
+      try {
+        await dispatch(deleteSite(selectedSiteRow.customer._id, selectedSiteRow._id));
+        enqueueSnackbar('Site deleted successfully!');
+        await dispatch(getAllSites(isArchived));
+      } catch (error) {
+        enqueueSnackbar('Failed to delete site.', { variant: 'error' });
+        console.error(error);
+      } finally {
+        setIsSubmittingAction(false); 
+        handleCloseConfirm();
+      }
+    }
+  };
+
+  const handleRestoreSite = async () => {
+    if (selectedSiteRow) {
+      setIsSubmittingAction(true); 
+      try {
+        await dispatch(restoreSite(selectedSiteRow.customer._id, selectedSiteRow._id));
+        enqueueSnackbar('Site restored successfully!');
+        await dispatch(getAllSites(isArchived));
+      } catch (error) {
+        enqueueSnackbar('Failed to restore site.', { variant: 'error' });
+        console.error(error);
+      } finally {
+        setIsSubmittingAction(false); 
+        handleCloseConfirm();
+      }
+    }
+  };
+
+  const handleArchive = () => {
+    navigate(PATH_CRM.customers.archivedSites.root);
+  };
+
   return (
     <Container maxWidth={false}>
       {!isCustomerSitePage ? (
         <StyledCardContainer>
-          <Cover name='Sites' backLink customerContacts />
+          <Cover
+            name={isArchived ? 'Archived Sites' : 'Sites'}
+            {...(!isArchived && { backLink: true })}
+            customerContacts
+            archivedLink={
+              !isArchived ? { label: 'Archived Sites', link: handleArchive, icon: 'mdi:book-variant' } : null
+            }
+            isArchived={isArchived}
+          />
         </StyledCardContainer>
       ) : null}
       <TableCard >
@@ -175,6 +245,7 @@ export default function CustomerSiteList({ isCustomerSitePage = false }) {
           onResetFilter={handleResetFilter}
           onExportCSV={!isCustomerSitePage ? onExportCSV : undefined}
           onExportLoading={exportingCSV}
+          isArchived={isArchived}
         />
 
         {!isNotFound && (
@@ -216,6 +287,9 @@ export default function CustomerSiteList({ isCustomerSitePage = false }) {
                         handleSiteView={handleViewSite}
                         handleSiteViewInNewPage={handleViewSiteInNewPage}
                         isCustomerSitePage={isCustomerSitePage}
+                        onDeleteRow={(siteRow) => handleOpenConfirm('delete', siteRow)}
+                        onRestoreRow={(siteRow) => handleOpenConfirm('restore', siteRow)}
+                        isArchived={isArchived}
                         style={index % 2 ? { background: 'red' } : { background: 'green' }}
                       />
                     ) : (
@@ -236,6 +310,38 @@ export default function CustomerSiteList({ isCustomerSitePage = false }) {
           onRowsPerPageChange={onChangeRowsPerPage}
         />}
       </TableCard>
+
+      <ConfirmDialog
+        open={openConfirm}
+        onClose={handleCloseConfirm}
+        title={dialogType === 'delete' ? 'Delete Site' : 'Restore Site'}
+        content={
+          dialogType === 'delete' ? 'Are you sure you want to delete this contact?' : 'Are you sure you want to restore this contact?'
+        }
+        action={
+          dialogType === 'delete' ? (
+            <LoadingButton 
+              variant="contained"
+              color="error"
+              loading={isSubmittingAction} 
+              disabled={isSubmittingAction} 
+              onClick={handleDeleteSite}
+            >
+              Delete
+            </LoadingButton>
+          ) : (
+            <LoadingButton 
+              variant="contained"
+              color="success"
+              loading={isSubmittingAction} 
+              disabled={isSubmittingAction} 
+              onClick={handleRestoreSite}
+            >
+              Restore
+            </LoadingButton>
+          )
+        }
+      />
     </Container>
   );
 }
@@ -243,7 +349,6 @@ export default function CustomerSiteList({ isCustomerSitePage = false }) {
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filterName }) {
-
   const stabilizedThis = inputData.map((el, index) => [el, index]);
 
   stabilizedThis.sort((a, b) => {

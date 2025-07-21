@@ -83,9 +83,6 @@ export const CustomerContactDynamicList = Loadable(lazy(() => import('../pages/c
 
 // CUSTOMER NOTE
 export const CustomerNoteList = Loadable(lazy(() => import('../pages/crm/notes/NoteList')));
-export const CustomerNoteAdd = Loadable(lazy(() => import('../pages/crm/notes/NoteAddForm')));
-export const CustomerNoteEdit = Loadable(lazy(() => import('../pages/crm/notes/NoteEditForm')));
-export const CustomerNoteView = Loadable(lazy(() => import('../pages/crm/notes/NoteViewForm')));
 
 // CUSTOMER DOCUMENTS
 export const CustomerDocumentList = Loadable(lazy(() => import('../pages/crm/documents/CustomerDocumentList')));
@@ -165,9 +162,6 @@ export const MachineJobsList = Loadable(lazy(() => import('../pages/machine/jobs
 // --------------------------- Machine Notes -------------------------------------
 
 export const MachineNoteList = Loadable(lazy(() => import('../pages/machine/notes/NoteList')));
-export const MachineNoteAdd = Loadable(lazy(() => import('../pages/machine/notes/NoteAddForm')));
-export const MachineNoteView = Loadable(lazy(() => import('../pages/machine/notes/NoteViewForm')));
-export const MachineNoteEdit = Loadable(lazy(() => import('../pages/machine/notes/NoteEditForm')));
 
 // --------------------------- MACHINE Drawings  -------------------------------------
 
@@ -412,6 +406,7 @@ export const BlacklistIPAdd = Loadable(lazy(() => import('../pages/settings/secu
 // REPORTS: Whitelist IP
 export const WhitelistIPList = Loadable(lazy(() => import('../pages/settings/securitySettings/whitelist_IP/WhitelistIPList')));
 export const WhitelistIPAdd = Loadable(lazy(() => import('../pages/settings/securitySettings/whitelist_IP/WhitelistIPAddForm')));
+export const WhitelistViewForm = Loadable(lazy(() => import('../pages/settings/securitySettings/whitelist_IP/WhitelistViewForm')));
 
 // REPORTS: Signin Logs
 export const SignInLogList = Loadable(lazy(() => import('../pages/settings/Reports/signInLog/SignInLogList')));

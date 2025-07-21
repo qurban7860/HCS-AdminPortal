@@ -83,6 +83,7 @@ export const PATH_CRM = {
       new: (customerId) => path(ROOTS_CRM, `/customers/${customerId}/sites/new`),
       view: (customerId, id) => path(ROOTS_CRM, `/customers/${customerId}/sites/${id}/view`),
       edit: (customerId, id) => path(ROOTS_CRM, `/customers/${customerId}/sites/${id}/edit`),
+      archivedView: (customerId, id) => path(ROOTS_CRM, `/customers/${customerId}/sites/archived/${id}/view`),
     },
     // --------------------- Customer Contacts -----------------------
     contacts: {
@@ -91,6 +92,7 @@ export const PATH_CRM = {
       view: (customerId, id) => path(ROOTS_CRM, `/customers/${customerId}/contacts/${id}/view`),
       edit: (customerId, id) => path(ROOTS_CRM, `/customers/${customerId}/contacts/${id}/edit`),
       move: (customerId, id) => path(ROOTS_CRM, `/customers/${customerId}/contacts/${id}/move`),
+      archivedView: (customerId, id) => path(ROOTS_CRM, `/customers/${customerId}/contacts/archived/${id}/view`),
     },
     // --------------------- Customer Notes -----------------------
     notes: {
@@ -137,6 +139,14 @@ export const PATH_CRM = {
     archived: {
       root: path(ROOTS_CRM, '/archived-customers'),
       view: (id) => path(ROOTS_CRM, `/archived-customers/${id}/view`),
+    },
+    // ------------------------ ARCHIVED SITES ----------------------------------------
+    archivedSites: {
+      root: path(ROOTS_CRM, '/archived-sites'),
+    },
+     // ------------------------ ARCHIVED CONTACTS ----------------------------------------
+    archivedContacts: {
+      root: path(ROOTS_CRM, '/archived-contacts'),
     },
   },
   sitesMap: {
@@ -580,6 +590,16 @@ export const PATH_SUPPORT = {
   //   },
   // },
   
+  // ------------------------ ARCHIVED Tickets ----------------------------------------
+  archivedTickets: {
+    root: path(ROOTS_SUPPORT, '/archived-tickets'),
+  },
+
+  // ------------------------ ARCHIVED Articles ----------------------------------------
+  archivedArticles: {
+    root: path(ROOTS_SUPPORT, '/archived-articles'),
+  },
+
   manuals: {
     root: path(ROOTS_SUPPORT, '/manuals'),
   },
@@ -675,7 +695,9 @@ export const PATH_SETTING = {
     // ------------------------ WHITE LIST IP ----------------------------------------
     whitelistIP: {
       list: path(ROOTS_SETTING, '/restrictions/whitelistIP/list'),
-      new: path(ROOTS_SETTING, `/restrictions/whitelistIP/new`)
+      new: path(ROOTS_SETTING, `/restrictions/whitelistIP/new`),    
+      view: (id) => path(ROOTS_SETTING, `/restrictions/whitelistIP/${id}/view`),
+      edit: (id) => path(ROOTS_SETTING, `/restrictions/whitelistIP/${id}/edit`),
     },
   },
   // ------------------------ SECURITY USER ROLE ----------------------------------------

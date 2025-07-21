@@ -71,6 +71,7 @@ export default function ReleaseList({isArchived}) {
   const dispatch = useDispatch();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
+  const [projectVal, setProjectVal] = useState(null);
   const [statusVal, setStatusVal] = useState(null);
 
   useLayoutEffect(() => {
@@ -90,6 +91,7 @@ export default function ReleaseList({isArchived}) {
     inputData: tableData,
     comparator: getComparator(order, orderBy),
     filterName,
+    projectVal,
     statusVal,
   });
 
@@ -125,6 +127,11 @@ export default function ReleaseList({isArchived}) {
     setStatusVal(null);
   };
   
+  const handleProjectChange = (e) => {
+    setProjectVal(e);
+    setPage(0);
+  };
+
   const handleStatusChange = (e) => {
     setStatusVal(e);
     setPage(0);
@@ -141,6 +148,8 @@ export default function ReleaseList({isArchived}) {
             onFilterName={handleFilterName}
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
+            projectVal={projectVal}
+            setProjectVal={handleProjectChange}
             statusVal={statusVal}
             setStatusVal={handleStatusChange}
           />
@@ -197,7 +206,7 @@ export default function ReleaseList({isArchived}) {
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName, statusVal }) {
+function applyFilter({ inputData, comparator, filterName, projectVal, statusVal }) {
 
   const stabilizedThis = inputData?.map((el, index) => [el, index]);
 
@@ -219,7 +228,11 @@ function applyFilter({ inputData, comparator, filterName, statusVal }) {
         fDate(release?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }
-
+  
+  if (projectVal) {
+    inputData = inputData.filter((release) => release?.project?._id === projectVal?._id);
+  }
+  
   if(statusVal){
     inputData = inputData.filter((release) => release?.status === statusVal?.value);
   }

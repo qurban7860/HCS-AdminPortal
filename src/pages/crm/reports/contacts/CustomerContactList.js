@@ -8,8 +8,9 @@ import {
   TableBody,
   Container,
   TableContainer,
-  // Stack,
 } from '@mui/material';
+import { LoadingButton } from '@mui/lab'; 
+
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
 // routes
@@ -29,21 +30,23 @@ import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 // sections
 import CustomerContactListTableRow from './CustomerContactListTableRow';
 import CustomerContactListTableToolbar from './CustomerContactListTableToolbar';
-import { getAllContacts, resetAllContacts, ChangePage, ChangeRowsPerPage, setFilterBy, setCardActiveIndex, setIsExpanded, setReportHiddenColumns } from '../../../../redux/slices/customer/contact';
+import { getAllContacts, resetAllContacts, ChangePage, ChangeRowsPerPage, setFilterBy, setCardActiveIndex, setIsExpanded, setReportHiddenColumns, restoreContact, deleteContact } from '../../../../redux/slices/customer/contact';
 import { Cover } from '../../../../components/Defaults/Cover';
 import TableCard from '../../../../components/ListTableTools/TableCard';
 import { fDate } from '../../../../utils/formatTime';
 import { useSnackbar } from '../../../../components/snackbar';
 import { exportCSV } from '../../../../utils/exportCSV';
+import ConfirmDialog from '../../../../components/confirm-dialog'; 
 
 // ----------------------------------------------------------------------
 
 CustomerContactList.propTypes = {
   isCustomerContactPage: PropTypes.bool,
   filterFormer: PropTypes.string,
+  isArchived: PropTypes.bool,
 };
 
-export default function CustomerContactList({ isCustomerContactPage = false, filterFormer }) {
+export default function CustomerContactList({ isCustomerContactPage = false, filterFormer, isArchived }) {
   const {
     order,
     orderBy,
@@ -62,6 +65,12 @@ export default function CustomerContactList({ isCustomerContactPage = false, fil
   const [tableData, setTableData] = useState([]);
   const [filterName, setFilterName] = useState(filterBy);
   const [exportingCSV, setExportingCSV] = useState(false);
+
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const [dialogType, setDialogType] = useState(''); 
+  const [selectedContactRow, setSelectedContactRow] = useState(null);
+  const [isSubmittingAction, setIsSubmittingAction] = useState(false); 
+
   // ----------------------------------------------------------------------
 
   const TABLE_HEAD = [
@@ -75,8 +84,8 @@ export default function CustomerContactList({ isCustomerContactPage = false, fil
     { id: 'address.country', label: 'Country', align: 'left' },
     ...(!isCustomerContactPage ? [{ id: 'customer.name', label: 'Customer', align: 'left' }] : []),
     { id: 'updatedAt', label: 'Updated At', align: 'right' },
+    ...(isArchived ? [{ id: 'isArchived', label: 'Actions', align: 'center' }] : []),
   ];
-
 
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));
@@ -84,19 +93,18 @@ export default function CustomerContactList({ isCustomerContactPage = false, fil
   };
 
   const onChangePage = (event, newPage) => {
-    dispatch(ChangePage(newPage))
+    dispatch(ChangePage(newPage));
   }
 
   useEffect(() => {
     if (!isCustomerContactPage) {
-      dispatch(getAllContacts());
-      return () => {
-        dispatch(resetAllContacts());
-      };
+      dispatch(getAllContacts(isArchived));
     }
-    return undefined;
-  }, [dispatch, isCustomerContactPage]);
-  
+    return () => {
+      dispatch(resetAllContacts());
+    }
+  }, [dispatch, isCustomerContactPage, isArchived]);
+
   useEffect(() => {
     setTableData(isCustomerContactPage ? contacts : allContacts || []);
   }, [allContacts, isCustomerContactPage, contacts]);
@@ -114,8 +122,8 @@ export default function CustomerContactList({ isCustomerContactPage = false, fil
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
   const debouncedSearch = useRef(debounce((value) => {
-    dispatch(ChangePage(0))
-    dispatch(setFilterBy(value))
+    dispatch(ChangePage(0));
+    dispatch(setFilterBy(value));
   }, 500))
 
   const handleFilterName = (event) => {
@@ -165,11 +173,69 @@ export default function CustomerContactList({ isCustomerContactPage = false, fil
     dispatch(setReportHiddenColumns(arg))
   };
 
+  const handleOpenConfirm = (type, row) => {
+    setDialogType(type);
+    setSelectedContactRow(row);
+    setOpenConfirm(true);
+  };
+
+  const handleCloseConfirm = () => {
+    setOpenConfirm(false);
+    setDialogType('');
+    setSelectedContactRow(null);
+  };
+
+  const handleDeleteContact = async () => {
+    if (selectedContactRow) {
+      setIsSubmittingAction(true); 
+      try {
+        await dispatch(deleteContact(selectedContactRow.customer._id, selectedContactRow._id));
+        enqueueSnackbar('Contact deleted successfully!');
+        await dispatch(getAllContacts(isArchived));
+      } catch (error) {
+        enqueueSnackbar('Failed to delete Contact.', { variant: 'error' });
+        console.error(error);
+      } finally {
+        setIsSubmittingAction(false); 
+        handleCloseConfirm();
+      }
+    }
+  };
+
+  const handleRestoreContact = async () => {
+    if (selectedContactRow) {
+      setIsSubmittingAction(true);
+      try {
+        await dispatch(restoreContact(selectedContactRow.customer._id, selectedContactRow._id));
+        enqueueSnackbar('Contact restored successfully!');
+        await dispatch(getAllContacts(isArchived));
+      } catch (error) {
+        enqueueSnackbar('Failed to restore Contact.', { variant: 'error' });
+        console.error(error);
+      } finally {
+        setIsSubmittingAction(false); 
+        handleCloseConfirm();
+      }
+    }
+  };
+
+  const handleArchive = () => {
+    navigate(PATH_CRM.customers.archivedContacts.root);
+  };
+
   return (
     <Container maxWidth={false}>
       {!isCustomerContactPage ? (
         <StyledCardContainer>
-          <Cover name='Contacts' backLink customerSites />
+          <Cover
+            name={isArchived ? 'Archived Contacts' : 'Contacts'}
+            {...(!isArchived && { backLink: true })}
+            archivedLink={
+              !isArchived ? { label: 'Archived Contacts', link: handleArchive, icon: 'mdi:book-variant' } : null
+            }
+            customerSites
+            isArchived={isArchived}
+          />
         </StyledCardContainer>
       ) : null}
       <TableCard >
@@ -180,6 +246,7 @@ export default function CustomerContactList({ isCustomerContactPage = false, fil
           onResetFilter={handleResetFilter}
           onExportCSV={!isCustomerContactPage ? onExportCSV : undefined}
           onExportLoading={exportingCSV}
+          isArchived={isArchived}
         />
 
         {!isNotFound && (
@@ -221,6 +288,9 @@ export default function CustomerContactList({ isCustomerContactPage = false, fil
                         handleContactView={handleViewContact}
                         handleContactViewInNewPage={handleViewContactInNewPage}
                         isCustomerContactPage={isCustomerContactPage}
+                        onDeleteRow={(contactRow) => handleOpenConfirm('delete', contactRow)}
+                        onRestoreRow={(contactRow) => handleOpenConfirm('restore', contactRow)}
+                        isArchived={isArchived}
                         style={index % 2 ? { background: 'red' } : { background: 'green' }}
                       />
                     ) : (
@@ -240,6 +310,38 @@ export default function CustomerContactList({ isCustomerContactPage = false, fil
           onRowsPerPageChange={onChangeRowsPerPage}
         />}
       </TableCard>
+
+      <ConfirmDialog
+        open={openConfirm}
+        onClose={handleCloseConfirm}
+        title={dialogType === 'delete' ? 'Delete Contact' : 'Restore Contact'}
+        content={
+          dialogType === 'delete' ? 'Are you sure you want to delete this contact?' : 'Are you sure you want to restore this contact?'
+        }
+        action={
+          dialogType === 'delete' ? (
+            <LoadingButton 
+              variant="contained"
+              color="error"
+              loading={isSubmittingAction}
+              disabled={isSubmittingAction} 
+              onClick={handleDeleteContact}
+            >
+              Delete
+            </LoadingButton>
+          ) : (
+            <LoadingButton 
+              variant="contained"
+              color="success"
+              loading={isSubmittingAction} 
+              disabled={isSubmittingAction} 
+              onClick={handleRestoreContact}
+            >
+              Restore
+            </LoadingButton>
+          )
+        }
+      />
     </Container>
   );
 }

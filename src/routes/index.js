@@ -59,9 +59,6 @@ import {
 
   // Customer Notes
   CustomerNoteList,
-  CustomerNoteAdd,
-  CustomerNoteEdit,
-  CustomerNoteView,
 
   // customer Documents
   CustomerDocumentList,
@@ -129,9 +126,6 @@ import {
 
   // --------------------------- Machine Notes -------------------------------------
   MachineNoteList,
-  MachineNoteAdd,
-  MachineNoteView,
-  MachineNoteEdit,
 
   // --------------------------- MACHINE Drawings  -------------------------------------
   MachineDrawingList,
@@ -393,7 +387,7 @@ import {
   FaultList,
   FaultForm,
   FaultView,
-  
+
   // Supports / Release
   ReleaseList,
   ReleaseForm,
@@ -434,6 +428,7 @@ import {
   // REPORTS: Whitelist IP
   WhitelistIPList,
   WhitelistIPAdd,
+  WhitelistViewForm,
 
   // REPORTS: Signin Logs
   SignInLogList,
@@ -646,7 +641,8 @@ export default function Router() {
                 { element: <CustomerSiteDynamicList />, index: true },
                 { path: 'new', element: <CustomerSiteDynamicList siteAddForm /> },
                 { path: ':id/edit', element: <CustomerSiteDynamicList siteEditForm /> },
-                { path: ':id/view', element: <CustomerSiteDynamicList siteViewForm /> }
+                { path: ':id/view', element: <CustomerSiteDynamicList siteViewForm /> },
+                { path: ':id/archived/view', element: <CustomerSiteDynamicList siteViewForm isArchived /> },
               ],
             },
             {
@@ -657,15 +653,13 @@ export default function Router() {
                 { path: ':id/edit', element: <CustomerContactDynamicList contactEditForm /> },
                 { path: ':id/view', element: <CustomerContactDynamicList contactViewForm /> },
                 { path: ':id/move', element: <CustomerContactDynamicList contactMoveForm /> },
+                { path: ':id/archived/view', element: <CustomerContactDynamicList contactViewForm isArchived /> },
               ],
             },
             {
               path: ':customerId/notes',
               children: [
                 { element: <CustomerNoteList />, index: true },
-                { path: 'new', element: <CustomerNoteAdd /> },
-                { path: ':id/edit', element: <CustomerNoteEdit /> },
-                { path: ':id/view', element: <CustomerNoteView /> }
               ],
             },
             {
@@ -727,6 +721,20 @@ export default function Router() {
           children: [
             { element: <CustomerList isArchived />, index: true },
             { path: ':id/view', element: <CustomerView isArchived /> },
+          ],
+        },
+        // ------------------------------ ARCHIVED SITES ----------------------------------
+        {
+          path: 'archived-sites',
+          children: [
+            { element: <CustomerSiteList isArchived />, index: true },
+          ],
+        },
+        // ------------------------------ ARCHIVED CONTACTS ----------------------------------
+        {
+          path: 'archived-contacts',
+          children: [
+            { element: <CustomerContactList isArchived />, index: true },
           ],
         },
         {
@@ -821,9 +829,6 @@ export default function Router() {
               path: ':machineId/notes',
               children: [
                 { element: <MachineNoteList />, index: true },
-                { path: 'new', element: <MachineNoteAdd /> },
-                { path: ':id/view', element: <MachineNoteView /> },
-                { path: ':id/edit', element: <MachineNoteEdit /> },
               ]
             },
             {
@@ -965,7 +970,7 @@ export default function Router() {
             { path: 'apiLogSummary', element: <ApiLogsSummary /> },
           ]
         },
-        
+
 
         // ------------------------------ DOCUMENNT ----------------------------------
         {
@@ -1325,7 +1330,8 @@ export default function Router() {
                 { path: ':id/view', element: <FaultView /> },
               ]
             },
-            { path: 'articleCategories', 
+            {
+              path: 'articleCategories',
               children: [
                 { element: <ArticleCategoryList />, index: true },
                 { path: 'new', element: <ArticleCategoryAdd /> },
@@ -1342,7 +1348,8 @@ export default function Router() {
         {
           path: 'knowledgeBase',
           children: [
-            { path: 'article', 
+            {
+              path: 'article',
               children: [
                 { element: <ArticleList />, index: true },
                 { path: 'new', element: <ArticleAdd /> },
@@ -1354,7 +1361,19 @@ export default function Router() {
             }
           ]
         },
-        
+        {
+          path: 'archived-tickets',
+          children: [
+            { element: <TicketFormList isArchived />, index: true },
+          ],
+        },
+        {
+          path: 'archived-articles',
+          children: [
+            { element: <ArticleList isArchived />, index: true },
+          ],
+        },
+
         { path: 'manuals', element: <SectionUnderConstruction /> },
       ],
     },
@@ -1371,9 +1390,9 @@ export default function Router() {
         { element: <ReportsIntroduction />, index: true },
         { path: 'machineLogs', children: [{ element: <AllMachinesLogs />, index: true }] },
         { path: 'machineGraphs', children: [{ element: <AllMachinesGraphs />, index: true }] },
-         { path: 'apiLogs', children: [{ element: <ApiLogsList />, index: true }] },
-         { path: 'apiLogSummary', element: <ApiLogsSummary /> },
-        
+        { path: 'apiLogs', children: [{ element: <ApiLogsList />, index: true }] },
+        { path: 'apiLogSummary', element: <ApiLogsSummary /> },
+
         {
           path: 'email',
           children: [
@@ -1423,7 +1442,7 @@ export default function Router() {
       children: [
         // {element: <Setting  />, index: true },
         { element: <Navigate to="/settings/security" replace />, index: true },
-        
+
         {
           path: 'projects',
           children: [
@@ -1496,6 +1515,8 @@ export default function Router() {
               children: [
                 { path: 'list', element: <WhitelistIPList /> },
                 { path: 'new', element: <WhitelistIPAdd /> },
+                { path: ':id/view', element: <WhitelistViewForm /> },
+                { path: ':id/edit', element: <WhitelistIPAdd /> },
               ],
             },
           ]

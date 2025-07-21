@@ -34,7 +34,8 @@ const initialState = {
     "primaryTechnicalContact.firstName": false,
     "primaryBillingContact.firstName": false,
     "isActive": false,
-    "createdAt": false
+    "createdAt": false,
+    "isArchived": false,
   },
 };
 
@@ -376,7 +377,7 @@ export function getSites(customerID, isCustomerArchived) {
   };
 }
 
-export function getAllSites() {
+export function getAllSites(isArchived) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -384,7 +385,7 @@ export function getAllSites() {
         orderBy: {
           createdAt: -1
         },
-        isArchived: false
+        isArchived: isArchived || false,
       }
 
       const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/sites/all`, { params });
@@ -470,18 +471,48 @@ export function getSite(customerID, id) {
   };
 }
 
+
+export function archiveSite(customerID, id) {
+  return async (dispatch) => {
+    // dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${customerID}/sites/${id}`,
+        {
+          isArchived: true,
+        });
+      dispatch(slice.actions.setResponseMessage(response.data));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+export function restoreSite(customerID, id) {
+  return async (dispatch) => {
+    // dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${customerID}/sites/${id}`,
+        {
+          isArchived: false,
+        });
+      dispatch(slice.actions.setResponseMessage(response.data));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
 // ----------------------------------------------------------------------
 
 export function deleteSite(customerID, id) {
   return async (dispatch) => {
-    dispatch(slice.actions.startLoading());
+    // dispatch(slice.actions.startLoading());
     try {
-      const data = {
-        isArchived: true,
-      };
-      const response = await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${customerID}/sites/${id}`,
-        data
-      );
+      const response = await axios.delete(`${CONFIG.SERVER_URL}crm/customers/${customerID}/sites/${id}`);
       dispatch(slice.actions.setResponseMessage(response.data));
     } catch (error) {
       console.error(error);

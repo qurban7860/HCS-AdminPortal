@@ -41,6 +41,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+  const [isGlobal, setIsGlobal] = useState(false);
 
   useLayoutEffect(() => {
     dispatch(getAllActiveCustomers());
@@ -94,7 +95,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
     formState: { isSubmitting },
   } = methods;
 
-  const { contact, customer, customers } = watch();
+  const { contact, customer, customers, dataAccessibilityLevel } = watch();
 
   useEffect(() => {
     const howickCustomer = allActiveCustomers.find(c => c?.type?.toUpperCase() === "SP")
@@ -108,21 +109,27 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
     if (customer && customer?.type?.toUpperCase() !== 'SP') {
       setIsDisabled(true);
       setValue('dataAccessibilityLevel', 'RESTRICTED');
-      setValue('customers', [{ _id: customer?._id, name: customer?.name }]);
+      setValue('customers', (prev = []) => {
+        const exists = prev.some((c) => c._id === customer._id);
+        return exists ? prev : [...prev, { _id: customer._id, name: customer.name }];
+      });
     } else {
       setIsDisabled(false);
       setValue('customers', []);
       setValue('dataAccessibilityLevel', 'RESTRICTED');
     }
+
     if (customer?._id !== contact?.customer?._id) {
       setValue('name', '');
       setValue('phone', '');
       setValue('email', '');
     }
+
     setValue('machines', []);
     setValue('regions', []);
     setValue('roles', []);
-  }, [customer, contact, setValue])
+  }, [customer, contact, setValue]);
+
 
   useEffect(() => {
     if (contact?._id) {
@@ -135,6 +142,17 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
       setValue('email', '');
     }
   }, [dispatch, contact, setValue]);
+
+  useEffect(() => {
+    if (dataAccessibilityLevel === 'GLOBAL') {
+       setValue('regions', []);
+       setValue('customers', []);
+       setValue('machines', []);
+       setIsGlobal(true)
+     } else {
+       setIsGlobal(false)
+     }
+  }, [dataAccessibilityLevel, setValue]);
 
   const onSubmit = async (data) => {
     try {
@@ -261,7 +279,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
               >
                 <RHFAutocomplete
                   multiple
-                  disabled={isDisabled}
+                  disabled={isDisabled || isGlobal}
                   disableCloseOnSelect
                   filterSelectedOptions
                   name="regions"
@@ -275,7 +293,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
 
                 <RHFAutocomplete
                   multiple
-                  disabled={isDisabled}
+                  disabled={isDisabled || isGlobal}
                   disableCloseOnSelect
                   filterSelectedOptions
                   name="customers"
@@ -289,7 +307,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
 
                 <RHFAutocomplete
                   multiple
-                  disabled={isDisabled}
+                  disabled={isDisabled || isGlobal}
                   disableCloseOnSelect
                   filterSelectedOptions
                   name="machines"
