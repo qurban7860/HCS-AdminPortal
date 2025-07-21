@@ -207,6 +207,10 @@ export default function LogLineBarChartv2({
       x: {
         stacked: true,
         ticks: { autoSkip: false, maxRotation: 45, minRotation: 45 },
+        grid: {
+          display: false, 
+          drawTicks: false, 
+        },
       },
       y: {
         stacked: true,
