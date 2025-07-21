@@ -306,13 +306,27 @@ export default function LogLineBarChartv2({
 
     else if (format === 'png' || format === 'jpeg') {
       if (chartInstance) {
+        const {canvas} = chartInstance;
+        const {width} = canvas;
+        const {height} = canvas;
+
+        const whiteCanvas = document.createElement('canvas');
+        whiteCanvas.width = width;
+        whiteCanvas.height = height;
+
+        const color = whiteCanvas.getContext('2d');
+
+        color.fillStyle = '#ffffff';
+        color.fillRect(0, 0, width, height);
+
+        color.drawImage(canvas, 0, 0);
+
         const link = document.createElement('a');
-        link.href = chartInstance.toBase64Image(format === 'jpeg' ? 'image/jpeg' : 'image/png');
+        link.href = whiteCanvas.toDataURL(`image/${format}`);
         link.download = `chart.${format}`;
         link.click();
       }
     }
-
     handleMenuClose();
   };
 
