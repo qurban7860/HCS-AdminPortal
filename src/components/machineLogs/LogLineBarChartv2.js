@@ -257,12 +257,58 @@ export default function LogLineBarChartv2({
 
   const handleDownload = (format = 'png') => {
     const chartInstance = chartRef.current;
-    if (chartInstance) {
+
+    if (format === 'csv') {
+      if (!chartInstance) return;
+
+      const { data } = chartInstance.config;
+      const { labels, datasets } = data;
+
+      const efficiencyDataset = datasets.find((ds) => ds.label.includes('Efficiency'));
+
+      let csvContent = `Category,${  datasets
+        .filter(ds => !ds.label.includes('Efficiency'))
+        .map(ds => ds.label).join(',')  },Efficiency (%)\n`;
+
+      labels.forEach((label, i) => {
+        const row = [label];
+
+      datasets.forEach((ds) => {
+        if (!ds.label.includes('Efficiency')) {
+          row.push(ds.data[i] != null ? ds.data[i] : '');
+        }
+      });
+
+      if (efficiencyDataset) {
+        const rawValue = efficiencyDataset.data[i];
+        const denominator = unitType === 'Imperial' ? efficiency * 39.37 : efficiency;
+
+        const percent = denominator && rawValue != null
+          ? (rawValue / denominator) * 100
+          : 0;
+
+        row.push(`${percent.toFixed(2)}%`);
+      }
+
+      csvContent += `${row.join(',')  }\n`;
+    });
+
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
       const link = document.createElement('a');
-      link.href = chartInstance.toBase64Image(`image/${format}`);
-      link.download = `chart.${format}`;
+      link.href = URL.createObjectURL(blob);
+      link.download = `chart.csv`;
       link.click();
     }
+
+    else if (format === 'png' || format === 'jpeg') {
+      if (chartInstance) {
+        const link = document.createElement('a');
+        link.href = chartInstance.toBase64Image(format === 'jpeg' ? 'image/jpeg' : 'image/png');
+        link.download = `chart.${format}`;
+        link.click();
+      }
+    }
+
     handleMenuClose();
   };
 
@@ -272,10 +318,25 @@ export default function LogLineBarChartv2({
         <IconButton onClick={handleMenuClick}>
           <MenuIcon />
         </IconButton>
-        <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
-          <MenuItem onClick={() => handleDownload('png')}>Download PNG</MenuItem>
-          <MenuItem onClick={() => handleDownload('jpeg')}>Download JPEG</MenuItem>
-        </Menu>
+        <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}
+          PaperProps={{
+            sx: {
+              boxShadow: '0px 4px 10px rgba(0,0,0,0.05)',
+              borderRadius: 1,
+              minWidth: 100,
+              mt: 1,
+              '& .MuiMenuItem-root': {
+                fontSize: 12,
+              },
+            },
+          }}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        >
+        <MenuItem onClick={() => handleDownload('png')}>Download PNG</MenuItem>
+        <MenuItem onClick={() => handleDownload('jpeg')}>Download JPEG</MenuItem>
+        <MenuItem onClick={() => handleDownload('csv')}>Download CSV</MenuItem>
+      </Menu>
       </Box>
       <Box sx={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)', mt: -4 }}>
         <FormControlLabel
