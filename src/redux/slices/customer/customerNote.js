@@ -239,7 +239,7 @@ export function deleteNote(customerId, noteId) {
         isArchived: true,
       };
       const response = await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${customerId}/notes/${noteId}`, data);
-      dispatch(slice.actions.deleteNoteSuccess(response.data));
+      dispatch(slice.actions.getNotesSuccess(response.data?.notesList));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
