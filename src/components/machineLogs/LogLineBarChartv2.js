@@ -16,6 +16,7 @@ import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
+  LineController,
   BarElement,
   PointElement,
   LineElement,
@@ -25,7 +26,7 @@ import {
 } from 'chart.js';
 import { fShortenNumber } from '../../utils/formatNumber';
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, PointElement, LineElement, Title, Tooltip, Legend);
+ChartJS.register(CategoryScale, LinearScale, LineController, BarElement, PointElement, LineElement, Title, Tooltip, Legend);
 
 LogLineBarChartv2.propTypes = {
   processGraphData: PropTypes.func.isRequired,
@@ -109,7 +110,7 @@ export default function LogLineBarChartv2({
     plugins: {
       legend: {
         position: 'bottom',
-        onClick: () => {},
+        onClick: () => { },
         labels: {
           usePointStyle: true,
           pointStyle: 'circle',
@@ -175,7 +176,7 @@ export default function LogLineBarChartv2({
 
           if (efficiencyDataset) {
             const efficiencyValue = efficiencyDataset.data[dataIndex];
-            const efficiencyPercent = efficiencyValue/( unitType === 'Imperial' ? efficiency * 39.37 : efficiency) *100;
+            const efficiencyPercent = efficiencyValue / (unitType === 'Imperial' ? efficiency * 39.37 : efficiency) * 100;
 
             html += `
               <div style="display:flex;align-items:center;margin-bottom:4px;">
@@ -220,31 +221,31 @@ export default function LogLineBarChartv2({
         },
       },
       ...(efficiency && {
-      y1: {
-        position: 'right',
-        title: {
-          display: true,
-          text: 'Efficiency (%)',
-          font: { size: 12, weight: 'bold' },
-        },
-        suggestedMin: 0,
-        ...(efficiency && { max: unitType === 'Imperial' ? efficiency * 39.37 : efficiency }),
-        ticks: {
-          callback: (val) => {
-            let convertedEfficiency = efficiency;
-
-            if (unitType === 'Imperial') {
-              convertedEfficiency = efficiency * 39.37;
-            }
-
-            if (!convertedEfficiency || convertedEfficiency === 0) return '0%';
-
-            const percent = (val / convertedEfficiency) * 100;
-            return `${percent.toFixed(0)}%`;
+        y1: {
+          position: 'right',
+          title: {
+            display: true,
+            text: 'Efficiency (%)',
+            font: { size: 12, weight: 'bold' },
           },
+          suggestedMin: 0,
+          ...(efficiency && { max: unitType === 'Imperial' ? efficiency * 39.37 : efficiency }),
+          ticks: {
+            callback: (val) => {
+              let convertedEfficiency = efficiency;
+
+              if (unitType === 'Imperial') {
+                convertedEfficiency = efficiency * 39.37;
+              }
+
+              if (!convertedEfficiency || convertedEfficiency === 0) return '0%';
+
+              const percent = (val / convertedEfficiency) * 100;
+              return `${percent.toFixed(0)}%`;
+            },
+          },
+          grid: { drawOnChartArea: false },
         },
-        grid: { drawOnChartArea: false },
-      },
       }),
     },
     animation: { duration: 0 },
