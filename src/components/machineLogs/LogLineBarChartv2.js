@@ -18,6 +18,7 @@ import {
   LinearScale,
   LineController,
   BarElement,
+  BarController,
   PointElement,
   LineElement,
   Title,
@@ -26,7 +27,7 @@ import {
 } from 'chart.js';
 import { fShortenNumber } from '../../utils/formatNumber';
 
-ChartJS.register(CategoryScale, LinearScale, LineController, BarElement, PointElement, LineElement, Title, Tooltip, Legend);
+ChartJS.register(CategoryScale, LinearScale, LineController, BarElement, BarController, PointElement, LineElement, Title, Tooltip, Legend);
 
 LogLineBarChartv2.propTypes = {
   processGraphData: PropTypes.func.isRequired,
