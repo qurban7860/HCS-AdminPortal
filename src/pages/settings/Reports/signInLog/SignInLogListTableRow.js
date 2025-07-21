@@ -41,7 +41,7 @@ export default function SignInLogListTableRow({
   onViewRow,
   status
 }) {
-  const { loginTime, user, loginIP, requestedLogin, logoutTime, loggedOutBy, statusCode } = row;
+  const { loginTime, user, loginIP, loginSource, requestedLogin, logoutTime, loggedOutBy, statusCode } = row;
 
   const dispatch = useDispatch();
 
@@ -91,6 +91,7 @@ export default function SignInLogListTableRow({
         : <TableCell align="left" />
         } */}
       {useScreenSize('lg') && <TableCell align="left"> {loginIP} </TableCell>}
+      <TableCell align="left">{loginSource}</TableCell>
       <TableCell align="left"> {fDateTime(loginTime)} </TableCell>
       <TableCell align="left">{fDateTime(logoutTime)}</TableCell>
       <TableCell align="left">{loggedOutBy}</TableCell>
