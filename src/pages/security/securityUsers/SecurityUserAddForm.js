@@ -109,21 +109,27 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
     if (customer && customer?.type?.toUpperCase() !== 'SP') {
       setIsDisabled(true);
       setValue('dataAccessibilityLevel', 'RESTRICTED');
-      setValue('customers', [{ _id: customer?._id, name: customer?.name }]);
+      setValue('customers', (prev = []) => {
+        const exists = prev.some((c) => c._id === customer._id);
+        return exists ? prev : [...prev, { _id: customer._id, name: customer.name }];
+      });
     } else {
       setIsDisabled(false);
       setValue('customers', []);
       setValue('dataAccessibilityLevel', 'RESTRICTED');
     }
+
     if (customer?._id !== contact?.customer?._id) {
       setValue('name', '');
       setValue('phone', '');
       setValue('email', '');
     }
+
     setValue('machines', []);
     setValue('regions', []);
     setValue('roles', []);
-  }, [customer, contact, setValue])
+  }, [customer, contact, setValue]);
+
 
   useEffect(() => {
     if (contact?._id) {

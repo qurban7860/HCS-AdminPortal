@@ -84,27 +84,31 @@ export const allSideBarOptions = {
           path: PATH_CRM.sitesMap.root,
           icon: <Iconify icon="mdi:map-marker" />,
         },
-        {
-          title: 'Archived Data',
-          icon: <Iconify icon="mdi:archive" />,
-          children: [
-            {
-              title: 'Customers',
-              path: PATH_CRM.customers.archived.root,
-              icon: <Iconify icon="mdi:account-group" />,
-            },
-            {
-              title: 'Sites',
-              path: PATH_CRM.customers.archivedSites.root,
-              icon: <Iconify icon="mdi:office-building" />,
-            },
-            {
-              title: 'Contacts',
-              path: PATH_CRM.customers.archivedContacts.root,
-              icon: <Iconify icon="mdi:contacts" />,
-            },
-          ],
-        },
+        ...(JSON.parse(localStorage.getItem('userRoles') || '[]')?.some((r) => r?.roleType?.toLowerCase() === 'superadmin')
+          ? [
+              {
+                title: 'Archived Data',
+                icon: <Iconify icon="mdi:archive" />,
+                children: [
+                  {
+                    title: 'Customers',
+                    path: PATH_CRM.customers.archived.root,
+                    icon: <Iconify icon="mdi:account-group" />,
+                  },
+                  {
+                    title: 'Sites',
+                    path: PATH_CRM.customers.archivedSites.root,
+                    icon: <Iconify icon="mdi:office-building" />,
+                  },
+                  {
+                    title: 'Contacts',
+                    path: PATH_CRM.customers.archivedContacts.root,
+                    icon: <Iconify icon="mdi:contacts" />,
+                  },
+                ],
+              },
+            ]
+          : []),
       ],
     },
   ],
@@ -172,39 +176,52 @@ export const allSideBarOptions = {
               path: PATH_MACHINE.reports.machineGraphs.root,
               icon: <Iconify icon="mdi:chart-line" />,
             },
-            {
-              title: ' API Logs',
-              path: PATH_MACHINE.reports.machineApiLogs.root,
-              icon: <Iconify icon="mdi:api" />,
-            },
-            {
-              title: 'API Log Summary',
-              path: PATH_MACHINE.reports.machineApiLogSummary.root,
-              icon: <Iconify icon="mdi:api" />,
-            },
+            ...(JSON.parse(localStorage.getItem('userRoles') || '[]')?.some((r) => r?.roleType?.toLowerCase() === 'superadmin')
+              ? [
+                  {
+                    title: 'API Logs',
+                    path: PATH_MACHINE.reports.machineApiLogs.root,
+                    icon: <Iconify icon="mdi:api" />,
+                  },
+                  {
+                    title: 'API Log Summary',
+                    path: PATH_MACHINE.reports.machineApiLogSummary.root,
+                    icon: <Iconify icon="mdi:api" />,
+                  },
+                ]
+              : []),
           ],
         },
-        {
-          title: 'Settings',
-          path: PATH_MACHINE.machineSettings.root,
-          icon: <Iconify icon="mdi:cog" />,
-        },
+        ...(JSON.parse(localStorage.getItem('userRoles') || '[]')?.some((r) => r?.roleType?.toLowerCase() === 'superadmin')
+          ? [
+              {
+                title: 'Settings',
+                path: PATH_MACHINE.machineSettings.root,
+                icon: <Iconify icon="mdi:cog" />,
+              },
+            ]
+          : []),
+
         {
           title: 'Sites Map',
           path: PATH_MACHINE.sitesMap.root,
           icon: <Iconify icon="mdi:map-marker" />,
         },
-        {
-          title: 'Archived Data',
-          icon: <Iconify icon="mdi:archive" />,
-          children: [
-            {
-              title: 'Machines',
-              path: PATH_MACHINE.archived.root,
-              icon: <MachineIcon key="machine" />,
-            },
-          ],
-        },
+        ...(JSON.parse(localStorage.getItem('userRoles') || '[]')?.some((r) => r?.roleType?.toLowerCase() === 'superadmin')
+          ? [
+              {
+                title: 'Archived Data',
+                icon: <Iconify icon="mdi:archive" />,
+                children: [
+                  {
+                    title: 'Machines',
+                    path: PATH_MACHINE.archived.root,
+                    icon: <MachineIcon key="machine" />,
+                  },
+                ],
+              },
+            ]
+          : []),
       ],
     },
   ],
@@ -227,7 +244,7 @@ export const allSideBarOptions = {
         {
           title: 'Support Dashboard',
           path: PATH_SUPPORT.supportDashboard.root,
-          icon: <Iconify icon="fluent-mdl2:b-i-dashboard" />
+          icon: <Iconify icon="fluent-mdl2:b-i-dashboard" />,
         },
         {
           title: 'Support Tickets',
@@ -254,25 +271,28 @@ export const allSideBarOptions = {
           path: PATH_SUPPORT.manuals.root,
           icon: <Iconify icon="mdi:book-open-page-variant" />,
         },
-        {
-          title: 'Archived Data',
-          icon: <Iconify icon="mdi:archive" />,
-          children: [
-            // {
-            //   title: 'Support Tickets',
-            //   path: PATH_SUPPORT.archivedTickets.root,
-            //   icon: <Iconify icon="icomoon-free:ticket" />,
-            // },
-            {
-              title: 'Articles',
-              path: PATH_SUPPORT.archivedArticles.root,
-              icon: <Iconify icon="mdi:book-open-variant" />,
-            },
-          ],
-        },
+        ...(JSON.parse(localStorage.getItem('userRoles') || '[]')?.some((r) => r?.roleType?.toLowerCase() === 'superadmin')
+          ? [
+              {
+                title: 'Archived Data',
+                icon: <Iconify icon="mdi:archive" />,
+                children: [
+                  // {
+                  //   title: 'Support Tickets',
+                  //   path: PATH_SUPPORT.archivedTickets.root,
+                  //   icon: <Iconify icon="icomoon-free:ticket" />,
+                  // },
+                  {
+                    title: 'Articles',
+                    path: PATH_SUPPORT.archivedArticles.root,
+                    icon: <Iconify icon="mdi:book-open-variant" />,
+                  },
+                ],
+              },
+            ]
+          : []),
       ],
     },
-
   ],
   reports: [
     {
@@ -290,18 +310,23 @@ export const allSideBarOptions = {
           path: PATH_REPORTS.machineGraphs.root,
           icon: <Iconify icon="mdi:chart-line" />,
         },
-        {
-          title: 'API logs',
-          description: 'Review API request and response logs.',
-          path: PATH_REPORTS.api.root,
-          icon: <Iconify icon="mdi:api" />,
-        },
-        {
-          title: 'API Log summary',
-          description: 'Review API request and response logs summary.',
-          path: PATH_REPORTS.apiLogSummary.root,
-          icon: <Iconify icon="mdi:api" />,
-        },
+
+        ...(JSON.parse(localStorage.getItem('userRoles') || '[]')?.some((r) => r?.roleType?.toLowerCase() === 'superadmin')
+          ? [
+              {
+                title: 'API logs',
+                description: 'Review API request and response logs.',
+                path: PATH_REPORTS.api.root,
+                icon: <Iconify icon="mdi:api" />,
+              },
+              {
+                title: 'API Log summary',
+                description: 'Review API request and response logs summary.',
+                path: PATH_REPORTS.apiLogSummary.root,
+                icon: <Iconify icon="mdi:api" />,
+              },
+            ]
+          : []),
       ],
     },
     {
@@ -331,7 +356,6 @@ export const allSideBarOptions = {
               path: PATH_REPORTS.logs.dbBackup.root,
               icon: <Iconify icon="mdi:database" />,
             },
-
           ],
         },
       ],
@@ -340,9 +364,7 @@ export const allSideBarOptions = {
   calendar: [
     {
       subheader: 'Calendar',
-      items: [
-        { title: 'Calendar', path: PATH_CALENDAR.root, icon: <Iconify icon="mdi:calendar" /> },
-      ],
+      items: [{ title: 'Calendar', path: PATH_CALENDAR.root, icon: <Iconify icon="mdi:calendar" /> }],
     },
   ],
   settings: [
@@ -425,14 +447,14 @@ export const allSideBarOptions = {
         {
           title: 'Projects',
           path: PATH_SETTING.projects.root,
-          icon: <Iconify icon="solar:list-bold-duotone" />
+          icon: <Iconify icon="solar:list-bold-duotone" />,
         },
         {
           title: 'Releases',
           path: PATH_SETTING.projectReleases.root,
           icon: <Iconify icon="mdi:source-branch" />,
         },
-      ]
+      ],
     },
   ],
 };
