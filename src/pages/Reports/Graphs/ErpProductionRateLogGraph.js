@@ -81,7 +81,7 @@ const ErpProductionRateLogGraph = ({ timePeriod, customer, graphLabels, dateFrom
     if (efficiency) {
       const efficiencyLine = labels.map((label, i) => {
         const total = producedLength[i] + wasteLength[i];
-        return total > 0 ? (total / (unitType === 'Imperial' ? efficiency * 39.37 : efficiency)) * 100 : null;
+        return total;
       });
       series.push({ name: 'Efficiency (%)', type: 'line', yaxisIndex: 1, data: efficiencyLine });
     }
