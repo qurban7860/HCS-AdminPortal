@@ -176,9 +176,6 @@ export default function LogLineBarChart({
             fontWeight: 600,
           },
         },
-        // labels: {
-        //   formatter: (val) => fShortenNumber(val),
-        // },
         labels: {
           formatter: (val) => {
             let convertedEfficiency = efficiency;
