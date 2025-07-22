@@ -7,6 +7,7 @@ import { fDate } from '../../../../../utils/formatTime';
 import { StyledTableRow, StyledTooltip} from '../../../../../theme/styles/default-styles';
 import Iconify from '../../../../../components/iconify';
 import { ICONS } from '../../../../../constants/icons/default-icons';
+import { isValidColor, normalizeColor } from '../utils/constant';
 import LinkTableCell from '../../../../../components/ListTableTools/LinkTableCell';
 
 // ----------------------------------------------------------------------
@@ -44,7 +45,7 @@ export default function ChangeReasonListTableRow({
           placement="top" 
           title={name || ''} 
           tooltipcolor={color} >
-          <Iconify icon={icon} color={color} />
+          <Iconify icon={icon} color={isValidColor(normalizeColor(color)) ? normalizeColor(color) : 'black'} />
         </StyledTooltip>
       </TableCell>
       <TableCell align="right">{fDate(updatedAt)}</TableCell>

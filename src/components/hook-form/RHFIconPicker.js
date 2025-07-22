@@ -55,13 +55,7 @@ export default function RHFIconPicker({ name, label, color = 'inherit' }) {
                   </IconButton>
                 </InputAdornment>
               ),
-              sx: {
-                '& input': {
-                  cursor: 'pointer'
-                }
-              }
             }}
-            onClick={openDialog}
           />
 
           <IconPickerDialog

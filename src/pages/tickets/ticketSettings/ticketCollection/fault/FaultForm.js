@@ -13,6 +13,7 @@ import { Cover } from '../../../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../../../theme/styles/default-styles';
 import { PATH_SUPPORT } from '../../../../../routes/paths';
 import { useSnackbar } from '../../../../../components/snackbar';
+import { TicketCollectionSchema, isValidColor, normalizeColor } from '../utils/constant';
 import AddFormButtons from '../../../../../components/DocumentForms/AddFormButtons';
 import { handleError } from '../../../../../utils/errorHandler';
 import FormProvider, { RHFTextField, RHFSwitch, RHFColorPicker, RHFEditor, RHFIconPicker } from '../../../../../components/hook-form';
@@ -40,27 +41,9 @@ export default function FaultForm() {
     }),
     [id, ticketFault]
   );
-  
-  const FaultSchema = Yup.object().shape({
-    name: Yup.string().min(2).max(50).required('Name is required!'),
-    icon: Yup.string().max(50),
-    color: Yup.string().nullable().notRequired().matches(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/,
-      {
-        message: 'Invalid color!',
-        excludeEmptyString: true,
-      }),
-    description: Yup.string().max(5000),
-    isActive: Yup.boolean(),
-    // isDefault: Yup.boolean(),
-    displayOrderNo: Yup.number()
-      .typeError('Display Order No. must be a number')
-      .nullable()
-      .transform((_, val) => (val !== '' ? Number(val) : null)),
-    slug: Yup.string().min(0).max(50).matches(/^(?!.*\s)[\S\s]{0,50}$/, 'Slug field cannot contain blankspaces'),
-  });
 
   const methods = useForm({
-    resolver: yupResolver(FaultSchema),
+    resolver: yupResolver(TicketCollectionSchema),
     defaultValues,
     mode: 'onChange',
     reValidateMode: 'onChange'
@@ -146,7 +129,7 @@ export default function FaultForm() {
                     name="icon"
                     label="Icon"
                   /> */}
-                  <RHFIconPicker name="icon" label="Icon*" color={color || 'black'} />
+                  <RHFIconPicker name="icon" label="Icon*" color={isValidColor(normalizeColor(color)) ? normalizeColor(color) : 'black'} />
 
                   <RHFColorPicker
                     name="color"

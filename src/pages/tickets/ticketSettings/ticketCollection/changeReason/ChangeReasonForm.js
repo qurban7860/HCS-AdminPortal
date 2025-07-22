@@ -13,7 +13,7 @@ import { StyledCardContainer } from '../../../../../theme/styles/default-styles'
 import { PATH_SUPPORT } from '../../../../../routes/paths';
 import { useSnackbar } from '../../../../../components/snackbar';
 import AddFormButtons from '../../../../../components/DocumentForms/AddFormButtons';
-import { TicketCollectionSchema } from '../utils/constant';
+import { TicketCollectionSchema, isValidColor, normalizeColor } from '../utils/constant';
 import { handleError } from '../../../../../utils/errorHandler';
 import FormProvider, { RHFTextField, RHFSwitch, RHFColorPicker, RHFEditor, RHFIconPicker } from '../../../../../components/hook-form';
 import { postTicketChangeReason, patchTicketChangeReason, getTicketChangeReason, resetTicketChangeReason } from '../../../../../redux/slices/ticket/ticketSettings/ticketChangeReasons';
@@ -128,7 +128,7 @@ export default function ChangeReasonForm() {
                     name="icon"
                     label="Icon*"
                   /> */}
-                  <RHFIconPicker name="icon" label="Icon*" color={color || 'black'} />
+                  <RHFIconPicker name="icon" label="Icon*" color={isValidColor(normalizeColor(color)) ? normalizeColor(color) : 'black'} />
 
                   <RHFColorPicker
                     name="color"

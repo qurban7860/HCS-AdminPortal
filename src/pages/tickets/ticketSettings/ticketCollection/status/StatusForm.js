@@ -19,7 +19,7 @@ import { postTicketStatus, patchTicketStatus, resetTicketStatus, getTicketStatus
 import { getActiveTicketStatusTypes, resetActiveTicketStatusTypes } from '../../../../../redux/slices/ticket/ticketSettings/ticketStatusTypes';
 import Iconify from '../../../../../components/iconify';
 import { handleError } from '../../../../../utils/errorHandler';
-import { TicketCollectionSchema } from '../utils/constant';
+import { TicketCollectionSchema, isValidColor, normalizeColor } from '../utils/constant';
 
 export default function StatusForm() {
   const navigate = useNavigate();
@@ -145,7 +145,7 @@ export default function StatusForm() {
                     name="icon"
                     label="Icon*"
                   /> */}
-                  <RHFIconPicker name="icon" label="Icon*" color={color || 'black'} />
+                  <RHFIconPicker name="icon" label="Icon*" color={isValidColor(normalizeColor(color)) ? normalizeColor(color) : 'black'} />
 
                   <RHFColorPicker
                     name="color"
