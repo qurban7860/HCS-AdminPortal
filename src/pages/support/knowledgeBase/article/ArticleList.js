@@ -170,26 +170,10 @@ export default function ArticleList({isArchived}) {
     setPage(0);
   };
 
-  const handleArchive = () => {
-    setFilterName('');
-    setPage(0);
-    dispatch(setFilterBy(''));
-    setCategoryVal(null);
-    setStatusVal(null);
-    if(isArchived){
-      navigate(PATH_SUPPORT.knowledgeBase.article.root);    
-    }else{
-      navigate(PATH_SUPPORT.archivedArticles.root);    
-    }
-  }
-
   return (
       <Container maxWidth={false}>
         <StyledCardContainer>
           <Cover name={isArchived ? 'Archived Articles' : 'Articles'}
-            archivedLink={
-              !isArchived ? { label: 'Archived Articles', link: handleArchive, icon: 'mdi:book-variant' } : null
-            }
             isArchived={isArchived}
           />
         </StyledCardContainer>
