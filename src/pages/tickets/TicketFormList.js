@@ -351,7 +351,6 @@ export default function TicketFormList() {
 }
 
 // ----------------------------------------------------------------------
-
 function applyFilter({ inputData, comparator, filterName, prefix = '' }) {
   const stabilizedThis = inputData?.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
@@ -361,9 +360,11 @@ function applyFilter({ inputData, comparator, filterName, prefix = '' }) {
   });
 
   inputData = stabilizedThis.map((el) => el[0]);
- 
+
   if (filterName) {
     inputData = inputData.filter((ticket) => {
+      const assigneesNames = ticket?.assignees?.map((a) => a?.name).join(', ') || '';
+
       const fieldsToFilter = [
         `${prefix} - ${ticket?.ticketNo}`.trim(),
         ticket?.machine?.serialNo,
@@ -373,8 +374,10 @@ function applyFilter({ inputData, comparator, filterName, prefix = '' }) {
         ticket?.status?.name,
         ticket?.priority?.name,
         ticket?.reporter?.name,
+        assigneesNames,
         fDate(ticket?.createdAt),
       ];
+
       return fieldsToFilter.some((field) =>
         field?.toLowerCase().includes(filterName.toLowerCase())
       );
