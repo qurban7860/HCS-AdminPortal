@@ -4,15 +4,13 @@ import { useNavigate } from 'react-router';
 import { Button, Grid, Typography, Box, IconButton } from '@mui/material';
 import { StyledRoot, StyledInfo, StyledTooltip } from '../../theme/styles/default-styles';
 // utils
-import { PATH_CRM, PATH_MACHINE, PATH_REPORTS, PATH_SETTING, PATH_SUPPORT } from '../../routes/paths';
+import { PATH_REPORTS, PATH_SETTING, PATH_SUPPORT } from '../../routes/paths';
 // auth
 import CoverSettingsIcons from './CoverSettingsIcons';
 import CoverTitles from './CoverTitles';
 import useResponsive from '../../hooks/useResponsive';
 import CoverAvatar from './CoverAvatar';
 import Iconify from '../iconify';
-import { useAuthContext } from '../../auth/useAuthContext';
-
 // ----------------------------------------------------------------------
 
 Cover.propTypes = {
@@ -57,12 +55,9 @@ export function Cover({
   const navigate = useNavigate();
   const handleSettingsNavigate = () => navigate(PATH_SETTING.root);
   const handleSupportTicketSettingsNavigate = () => navigate(PATH_SUPPORT.settings.root);
-  const linkArchivedCustomers = () => navigate(PATH_CRM.customers.archived.root);
-  const linkArchivedMachines = () => navigate(PATH_MACHINE.archived.root);
   const handleBackLink = () => window.history.back();
   const handleCoilLog = () => navigate(PATH_REPORTS.machineLogs.CoilLogs);
   const handleProductionLog = () => navigate(PATH_REPORTS.machineLogs.ProductionLogs);
-  const { isAllAccessAllowed, isSettingReadOnly } = useAuthContext();
   const isMobile = useResponsive('down', 'sm');
   const [expandedButton, setExpandedButton] = useState(null);
 
@@ -150,35 +145,6 @@ export function Cover({
                     {archivedLink.label}
                   </Typography>
                 )}
-              </Button>
-            )}
-            {isAllAccessAllowed && !isSettingReadOnly && isArchivedCustomers && (
-              <Button
-                size="small"
-                startIcon={<Iconify icon="fa6-solid:users-slash" sx={{ mr: 0.5 }} />}
-                variant="outlined"
-                onClick={() => handleOnClick('archivedCustomers', linkArchivedCustomers)}
-              >
-                {' '}
-                {(!isMobile || expandedButton === 'archivedCustomers') && (
-                  <Typography
-                    variant="caption"
-                    sx={{ fontWeight: 'bold', fontSize: { xs: '0.65rem', sm: '0.75rem' } }}
-                  >
-                    Archived Customers
-                  </Typography>
-                )}
-              </Button>
-            )}
-            {isAllAccessAllowed && !isSettingReadOnly && isArchivedMachines && (
-              <Button
-                size="small"
-                startIcon={<Iconify icon="fluent:table-delete-column-16-filled" sx={{ mr: 0.3 }} />}
-                variant="outlined"
-                sx={{ ml: 2 }}
-                onClick={linkArchivedMachines}
-              >
-                Archived Machines
               </Button>
             )}
             {coilLogs && (
