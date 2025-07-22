@@ -5,6 +5,7 @@ import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import Iconify from '../iconify';
+import { isValidColor, normalizeColor } from '../../pages/tickets/ticketSettings/ticketCollection/utils/constant';
 
 // ----------------------------------------------------------------------
 RHFColorPicker.propTypes = {
@@ -21,6 +22,9 @@ export default function RHFColorPicker({ name, helperText, ...other }) {
       control={control}
       render={({ field, fieldState: { error } }) => {
         const value = field.value || '';
+        const normalizedValue = normalizeColor(value);
+        const isValid = isValidColor(normalizedValue);
+        const displayColor = isValid ? normalizedValue : '';
 
         return (
           <TextField
@@ -38,13 +42,13 @@ export default function RHFColorPicker({ name, helperText, ...other }) {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <Iconify icon="mdi:circle" width={25} sx={{ color: value, border: '1px solid #ccc', borderRadius: '50%' }} />
+                  <Iconify icon="mdi:circle" width={25} sx={{ color: displayColor, border: '1px solid #ccc', borderRadius: '50%' }} />
                 </InputAdornment>
               ),
               endAdornment: (
                 <InputAdornment position="end">
                   <IconButton component="label" sx={{ p: 0 }}>
-                    <Box component="input" type="color" value={value}
+                    <Box component="input" type="color" value={displayColor}
                       onChange={(e) => {
                         field.onChange(e.target.value);
                       }}
