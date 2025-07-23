@@ -3,10 +3,7 @@ import { styled, alpha } from '@mui/material/styles';
 import { Popover, Stack, Card, Chip, Container, TableRow, Badge, StepConnector, stepConnectorClasses, IconButton } from '@mui/material';
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import { bgBlur } from '../../utils/cssStyles';
-
-/**
- * @cover :components ____________________________________________________________________________________________
- */
+import Iconify from '../../components/iconify';
 
 export const StyledRoot = styled('div')(({ theme, isArchived }) => ({
   '&:before': {
@@ -78,6 +75,42 @@ export const StyledTooltip = styled(({ className, ...props }) => (
   }
 }));
 
+
+export const StyledTooltipIconButton = ({
+  icon,
+  tooltip,
+  color,
+  tooltipColor,
+  loading = false,
+  disabled = false,
+  onClick,
+  placement = 'top',
+}) => {
+  
+  console.log({loading})
+  return (
+    <StyledTooltip title={tooltip} placement={placement} tooltipcolor={tooltipColor} disableFocusListener color={color} >
+      <span> 
+        <IconButton
+          onClick={( disabled || loading ) ? undefined : onClick}
+                          sx={{
+                  background: "#2065D1", borderRadius: 1, height: '1.7em', p: '8.5px 14px',
+                  '&:hover': {
+                    background: "#103996",
+                    color: "#fff"
+                  }
+                }}
+        >
+          {loading ? (
+            <Iconify icon="eos-icons:loading" sx={{ color: '#fff', height: 24, width: 24 }} />
+          ) : (
+            <Iconify icon={icon} sx={{ color: '#fff', height: 24, width: 24 }} />
+          )}
+        </IconButton>
+      </span>
+    </StyledTooltip>
+)};
+
 export const StyledTooltipSliding = styled(({ className, ...props }) => (
   <Tooltip {...props} arrow classes={{ popper: className }} />
 ))(({ theme, tooltipcolor }) => ({
@@ -90,6 +123,7 @@ export const StyledTooltipSliding = styled(({ className, ...props }) => (
     backgroundColor: 'transparent',
   },
 }));
+
 export const StyledContainedIconButton = styled(IconButton)(({ theme }) => ({
   backgroundColor: theme.palette.primary.main,
   borderRadius: '8px',
@@ -98,6 +132,7 @@ export const StyledContainedIconButton = styled(IconButton)(({ theme }) => ({
     backgroundColor: theme.palette.primary.dark,
   },
 }));
+
 export const StyledVersionChip = styled(Chip)(({ theme, pointer }) => ({
   margin: theme.spacing(0.2),
   backgroundColor: alpha(theme.palette.primary.main, 0.08),
@@ -112,6 +147,7 @@ export const StyledVersionChip = styled(Chip)(({ theme, pointer }) => ({
   paddingTop: theme.spacing(0.5),
   paddingBottom: theme.spacing(0.5),
 }));
+
 export const StyledStack = styled(Stack)(({ theme }) => ({
   justifyContent: 'flex-end',
   flexDirection: 'row',
@@ -323,4 +359,15 @@ ColorlibStepIcon.propTypes = {
   className: PropTypes.string,
   completed: PropTypes.bool,
   icon: PropTypes.node,
+};
+
+StyledTooltipIconButton.propTypes = {
+  icon: PropTypes.string,
+  tooltip: PropTypes.string,
+  color: PropTypes.string,
+  tooltipColor: PropTypes.string,
+  loading: PropTypes.bool,
+  disabled: PropTypes.bool,
+  onClick: PropTypes.func,
+  placement: PropTypes.string
 };
