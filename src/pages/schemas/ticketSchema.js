@@ -87,3 +87,13 @@ export const ticketSchema = (reqType) => {
 
   });
 };
+
+
+export const ticketControllerSchema =  Yup.object().shape({
+    issueType: Yup.object().label('Issue Type').nullable(),
+    requestType: Yup.object().label('Request Type').nullable(),
+    isResolve: Yup.boolean().label('Open').nullable(),
+    statusType: Yup.object().nullable().label('Status Type'),
+    status: Yup.array().nullable().label('Status'),
+    priority: Yup.object().nullable().label('Priority')
+});

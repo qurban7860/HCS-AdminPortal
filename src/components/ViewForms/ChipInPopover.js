@@ -11,7 +11,7 @@ function ChipInPopover({ open, onClose, ListArr, ListTitle }) {
         <Box sx={{ flexGrow: 1 }}>
           <Typography variant="subtitle1">{ListTitle}</Typography>
           <Divider  sx={{ borderStyle: 'solid', mb:1 }} />
-          {ListArr?.map(( el ) => (<Chip label={el?.defaultName || "" } sx={{m:0.2}} />))}
+          {ListArr?.map(( el, index ) => (<Chip key={index} label={el?.defaultName || "" } sx={{m:0.2}} />))}
         </Box>
       </Box>
     </MenuPopover>
