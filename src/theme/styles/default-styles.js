@@ -86,30 +86,53 @@ export const StyledTooltipIconButton = ({
   onClick,
   placement = 'top',
 }) => {
-  
-  console.log({loading})
+  const isInactive = loading || disabled;
+  const buttonBg = isInactive ? "#ccc" : "#2065D1";
+  const buttonHoverBg = isInactive ? "#ccc" : "#103996";
+
   return (
-    <StyledTooltip title={tooltip} placement={placement} tooltipcolor={tooltipColor} disableFocusListener color={color} >
-      <span> 
+    <StyledTooltip
+      title={tooltip}
+      placement={placement}
+      tooltipcolor={tooltipColor}
+      disableFocusListener
+      color={color}
+    >
+      <span>
         <IconButton
-          onClick={( disabled || loading ) ? undefined : onClick}
-                          sx={{
-                  background: "#2065D1", borderRadius: 1, height: '1.7em', p: '8.5px 14px',
-                  '&:hover': {
-                    background: "#103996",
-                    color: "#fff"
-                  }
-                }}
+          disabled={isInactive}
+          onClick={onClick}
+          sx={{
+            background: buttonBg,
+            borderRadius: 1,
+            height: '1.7em',
+            p: '8.5px 14px',
+            color: '#fff',
+            '&:hover': {
+              background: buttonHoverBg,
+              color: '#fff',
+            },
+          }}
         >
           {loading ? (
-            <Iconify icon="eos-icons:loading" sx={{ color: '#fff', height: 24, width: 24 }} />
+            <Iconify
+              key="loading"
+              icon="eos-icons:loading"
+              sx={{ color: '#fff', height: 24, width: 24 }}
+            />
           ) : (
-            <Iconify icon={icon} sx={{ color: '#fff', height: 24, width: 24 }} />
+            <Iconify
+              key="icon"
+              icon={icon}
+              sx={{ color: '#fff', height: 24, width: 24 }}
+            />
           )}
         </IconButton>
       </span>
     </StyledTooltip>
-)};
+  );
+};
+
 
 export const StyledTooltipSliding = styled(({ className, ...props }) => (
   <Tooltip {...props} arrow classes={{ popper: className }} />
