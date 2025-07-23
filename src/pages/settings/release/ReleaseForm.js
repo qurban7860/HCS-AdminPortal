@@ -128,7 +128,7 @@ export default function ReleaseForm() {
                     getOptionLabel={(option) => option.name}
                     isOptionEqualToValue={(option, value) => option._id === value._id}
                   />
-                  <RHFTextField name="name" label="Title*" />
+                  <RHFTextField name="name" label="Version*" />
                   <RHFDatePicker
                     label="Release Date"
                     name="releaseDate"

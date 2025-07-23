@@ -20,6 +20,7 @@ import {
 import Scrollbar from '../../../components/scrollbar';
 // sections
 import ReleaseListTableRow from './ReleaseListTableRow';
+import ReleaseListCard from './ReleaseListCard';
 import ReleaseListTableToolbar from './ReleaseListTableToolbar';
 import {
   getReleases,
@@ -36,12 +37,11 @@ import { StyledCardContainer } from '../../../theme/styles/default-styles';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'releaseNo', label: 'Release No', align: 'left',width: "160px"  },
-  { id: 'name', label: 'Title', align: 'left'},
+  { id: 'releaseNo', label: 'Serial No', align: 'left',width: "160px"  },
+  { id: 'name', label: 'Version', align: 'left'},
   { id: 'project.name', label: 'Project', align: 'left'},
   { id: 'status', label: 'Status', align: 'left', width: "140px" },
   { id: 'releaseDate', label: 'Release Date', align: 'left', width: "140px" },
-  // { id: 'isActive', label: 'Active', width: 100 },
   { id: 'createdAt', label: 'Created At', align: 'right', width: "160px" },
 ];
 
@@ -73,6 +73,7 @@ export default function ReleaseList({isArchived}) {
   const [tableData, setTableData] = useState([]);
   const [projectVal, setProjectVal] = useState(null);
   const [statusVal, setStatusVal] = useState(null);
+  const [isListView, setIsListView] = useState(true);
 
   useLayoutEffect(() => {
     dispatch(getReleases(isArchived, page, rowsPerPage));
@@ -152,6 +153,8 @@ export default function ReleaseList({isArchived}) {
             setProjectVal={handleProjectChange}
             statusVal={statusVal}
             setStatusVal={handleStatusChange}
+            isListView={isListView}
+            setIsListView={setIsListView}
           />
 
           {!isNotFound && <TablePaginationCustom
@@ -165,12 +168,14 @@ export default function ReleaseList({isArchived}) {
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <Scrollbar>
               <Table size="small" sx={{ minWidth: 360 }}>
+                {isListView && (
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
                   onSort={onSort}
-                />
+                /> )}
+                {isListView ? (
                 <TableBody>
                   {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
                     .map((row, index) =>
@@ -189,6 +194,22 @@ export default function ReleaseList({isArchived}) {
                     )}
                   <TableNoData isNotFound={isNotFound} />
                 </TableBody>
+                ) : (
+                  <TableBody>
+                    {(isLoading ? [...Array(rowsPerPage)] : dataFiltered).map((row, index) =>
+                    row ? (
+                    <ReleaseListCard
+                      key={row._id}
+                      row={row}
+                      onViewRow={() => handleViewRow(row._id)}
+                      selected={selected.includes(row._id)}
+                    />
+                    ) : (
+                      !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
+                    ) )}
+                    <TableNoData isNotFound={isNotFound} />
+                  </TableBody>
+                )}
               </Table>
             </Scrollbar>
           </TableContainer>
@@ -224,6 +245,7 @@ function applyFilter({ inputData, comparator, filterName, projectVal, statusVal 
         release?.releaseNo?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         release?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         release?.project?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        release?.description?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         fDate(release?.releaseDate)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         fDate(release?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
