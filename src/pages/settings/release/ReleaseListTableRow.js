@@ -17,20 +17,10 @@ ReleaseListTableRow.propTypes = {
 };
 
 export default function ReleaseListTableRow({ row, selected, onViewRow }) {
-  const { isActive, name, releaseNo, project, status, releaseDate, createdAt } = row;
+  const { name, releaseNo, project, status, releaseDate, createdAt } = row;
   const statusOption = releaseStatusOptions.find((opt) => opt.value === status);
   return (
     <StyledTableRow hover selected={selected}>
-      {/* <TableCell align="left" padding="checkbox"  >
-        <StyledTooltip
-          placement="top" 
-          title={ isActive ? ICONS.ACTIVE.heading : ICONS.INACTIVE.heading} 
-          disableFocusListener tooltipcolor={isActive ? ICONS.ACTIVE.color : ICONS.INACTIVE.color} 
-          color={ isActive ? ICONS.ACTIVE.color : ICONS.INACTIVE.color}
-          >
-          <Iconify icon={ isActive ? ICONS.ACTIVE.icon : ICONS.INACTIVE.icon } sx={{mt: 1}} />
-        </StyledTooltip>
-      </TableCell> */}
       <LinkTableCell align="left" onClick={onViewRow} param={releaseNo} />
       <LinkTableCell align="left" onClick={onViewRow} param={name} />
       <TableCell align="left"> {project?.name} </TableCell>
@@ -44,9 +34,6 @@ export default function ReleaseListTableRow({ row, selected, onViewRow }) {
       </TableCell>
 
       <TableCell align="left"> {fDate(releaseDate)} </TableCell>
-      {/* <TableCell>
-        <Switch checked={isActive} disabled size="small" />
-      </TableCell> */}
       <TableCell align="right"> {fDate(createdAt)} </TableCell>
     </StyledTableRow>
   );
