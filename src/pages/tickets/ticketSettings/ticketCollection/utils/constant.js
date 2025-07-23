@@ -1,12 +1,30 @@
 import * as Yup from 'yup';
 
+export const normalizeColor = (color) => {
+  if (!color) return '';
+  const trimmed = color.trim().toLowerCase();
+  return trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
+};
+
+export const isValidColor = (color) => {
+  if (!color) return false;
+  const s = new Option().style;
+  const normalized = normalizeColor(color);
+  s.color = '';
+  s.color = normalized;
+  return s.color !== '';
+};
+
 export const TicketCollectionSchema = Yup.object().shape({
   name: Yup.string().min(2).max(50).required('Name is required!'),
   icon: Yup.string().max(50).required('Icon is required!'),
-  color: Yup.string().nullable().notRequired().matches(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/,
-    {
-      message: 'Invalid color!',
-      excludeEmptyString: true,
+  color: Yup.string()
+    .nullable()
+    .notRequired()
+    .test('is-valid-color', 'Invalid color!', (value) => {
+      if (!value) return true;
+      const normalized = normalizeColor(value);
+      return /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(value) || isValidColor(normalized);
     }),
   description: Yup.string().max(5000),
   isActive: Yup.boolean(),

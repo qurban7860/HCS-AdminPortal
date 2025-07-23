@@ -1,11 +1,9 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import debounce from 'lodash/debounce';
-import { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import { useState, useEffect, useRef, memo, useMemo, useCallback } from 'react';
 // @mui
 import { Container, Table, TableBody, TableContainer } from '@mui/material';
 // routes
 import { useNavigate } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
 import { PATH_SUPPORT } from '../../routes/paths';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
@@ -19,20 +17,11 @@ import {
   TablePaginationFilter,
   TableHeadFilter,
 } from '../../components/table';
-import { getCustomer, setCustomerDialog } from '../../redux/slices/customer/customer';
 import Scrollbar from '../../components/scrollbar';
-import FormProvider from '../../components/hook-form';
 // sections
-import TicketFormTableRow from './TicketFormTableRow';
-import TicketFormTableToolbar from './TicketFormTableToolbar';
-import {
-  ChangeRowsPerPage,
-  ChangePage,
-  setFilterBy,
-  getTickets,
-  resetTickets,
-  setReportHiddenColumns,
-} from '../../redux/slices/ticket/tickets';
+import TicketFormTableRow from './TicketTableRow';
+import TicketTableController from './TicketTableController';
+import { ChangeRowsPerPage, ChangePage, setFilterBy, getTickets, resetTickets, getTicketSettings, resetTicketSettings, setReportHiddenColumns } from '../../redux/slices/ticket/tickets';
 import { fDate } from '../../utils/formatTime';
 import TableCard from '../../components/ListTableTools/TableCard';
 import { Cover } from '../../components/Defaults/Cover';
@@ -41,10 +30,11 @@ import useResponsive from '../../hooks/useResponsive';
 import { BUTTONS } from '../../constants/default-constants';
 import { getArticleByValue } from '../../redux/slices/support/knowledgeBase/article';
 import HelpSidebar from './utils/HelpSideBar';
+
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'issueType.name', label: <span style={{ marginLeft: 4 }}>T</span>, align: 'left' },
+  { id: 'issueType.name', label: 'T', tooltip: 'Issue Type', align: 'left' },
   { id: 'status.name', label: 'S', align: 'left', tooltip: 'Status', allowColumn: true },
   { id: 'priority.name', label: 'P',align: 'left', tooltip: 'Priority', allowColumn: true },
   { id: 'ticketNo', label: 'Ticket No.', align: 'left' },
@@ -59,191 +49,112 @@ const TABLE_HEAD = [
 
 // ----------------------------------------------------------------------
 
-export default function TicketFormList() {
+function TicketList() {
   const { tickets, filterBy, page, rowsPerPage, isLoading, reportHiddenColumns } = useSelector((state) => state.tickets);
   const { article } = useSelector((state) => state.article);
   const navigate = useNavigate();
-  const methods = useForm();
-
   const {
     order,
     orderBy,
     setPage,
-    selected,
     onSort,
-    onSelectRow,
   } = useTable({ defaultOrderBy: 'createdAt', defaultOrder: 'desc' });
-
-  const onChangeRowsPerPage = (event) => {
-    dispatch(ChangePage(0));
-    dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10)));
-  };
-  
-  const onChangePage = (event, newPage) => { 
-    dispatch(ChangePage(newPage)); 
-  };
 
   const dispatch = useDispatch();
   const [filterName, setFilterName] = useState('');
-  const [selectedIssueType, setSelectedIssueType] = useState(null);
-  const [selectedRequestType, setSelectedRequestType] = useState(null);
-  const [selectedStatus, setSelectedStatus] = useState([]);
-  const [selectedStatusType, setSelectedStatusType] = useState(null);
-  const [selectedResolvedStatus, setSelectedResolvedStatus] = useState('unresolved');
-  const [selectedPriority, setSelectedPriority] = useState(null);
   const [helpOpen, setHelpOpen] = useState(false);
   const isMobile = useResponsive('down', 'sm');
-  const prefix = JSON.parse(localStorage.getItem('configurations'))?.find((config) => config?.name?.toLowerCase() === 'ticket_prefix')?.value?.trim() || '';
-  const helpPrefix = JSON.parse(localStorage.getItem('configurations'))?.find((config) => config?.name?.toLowerCase() === 'support_ticket_creation_process')?.value?.trim() || '';
+
+  const prefix = useMemo(() =>
+    JSON.parse(localStorage.getItem('configurations'))?.find((config) => config?.name?.toLowerCase() === 'ticket_prefix')?.value?.trim() || ''
+  , []);
 
   useEffect(() => {
+    const helpPrefix = JSON.parse(localStorage.getItem('configurations'))?.find((config) => 
+      config?.name?.toLowerCase() === 'support_ticket_creation_process'
+    )?.value?.trim() || ''
   if (helpPrefix) {
     dispatch(getArticleByValue(helpPrefix));
   }
-  }, [dispatch, helpPrefix]); 
-
-  // Effect to fetch tickets when page or rowsPerPage changes
-  // useLayoutEffect(() => {
-  //   dispatch(getTickets({ page, rowsPerPage }));
-  //   return () => {
-  //     dispatch(resetTickets());
-  //   };
-  // }, [dispatch, page, rowsPerPage]);
-
-  // // Trigger data fetch when any of the filters change
-
-  // useEffect(() => {
-  //   // Only reset page to 0 if filters actually changed (not on every page/row change)
-  //   if (
-  //     selectedIssueType || selectedRequestType || selectedStatus.length || 
-  //     selectedStatusType || selectedResolvedStatus || selectedPriority
-  //   ) {
-  //     dispatch(ChangePage(0));
-  //   }
-  
-  //   dispatch(getTickets({
-  //     page,
-  //     rowsPerPage,
-  //     issueType: selectedIssueType?._id,
-  //     requestType: selectedRequestType?._id,
-  //     isResolved: selectedResolvedStatus,
-  //     statusType: selectedStatusType?._id,
-  //     status: selectedStatus.map(s => s._id),
-  //     priority: selectedPriority?._id,
-  //   }));
-  // }, [
-  //   dispatch,
-  //   page,
-  //   rowsPerPage,
-  //   selectedIssueType,
-  //   selectedRequestType,
-  //   selectedStatus,
-  //   selectedStatusType,
-  //   selectedResolvedStatus,
-  //   selectedPriority
-  // ]);
+  }, [dispatch]); 
 
   useEffect(() => {
-    const fetchData = () => {
       dispatch(getTickets({
         page,
         pageSize: rowsPerPage,
-        issueType: selectedIssueType?._id,
-        requestType: selectedRequestType?._id,
-        isResolved: selectedResolvedStatus,
-        statusType: selectedStatusType?._id,
-        status: selectedStatus.map(s => s._id),
-        priority: selectedPriority?._id,
       }));
-    };
-    fetchData();
+      dispatch(getTicketSettings());
     return () => {
       dispatch(resetTickets());
+      dispatch(resetTicketSettings());
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     dispatch,
     page,
     rowsPerPage,
-    selectedIssueType?._id,
-    selectedRequestType?._id,
-    selectedResolvedStatus,
-    selectedStatusType?._id,
-    selectedStatus.map(s => s._id).join(','), 
-    selectedPriority?._id,
   ]);
 
-  const onRefresh = () => {
-    dispatch(ChangePage(0));
-    dispatch(getTickets({
-      page: 0,
-      pageSize: rowsPerPage,
-      issueType: selectedIssueType?._id,
-      requestType: selectedRequestType?._id,
-      isResolved: selectedResolvedStatus,
-      statusType: selectedStatusType?._id,
-      status: selectedStatus.map(s => s._id),
-      priority: selectedPriority?._id,
-    }));
-  };
-
-  const handleHelpClick = () => {
-    setHelpOpen(true);
-  };
-
-  const handleCloseHelp = () => {
-    setHelpOpen(false);
-  };
-
-  useEffect(() => {
-    setFilterName(filterBy);
-  }, [filterBy]);
-
-  const dataFiltered = applyFilter({
+  const dataFiltered = useMemo(() => applyFilter({
     comparator: getComparator(order, orderBy),
     inputData: tickets?.data || [],
     filterName,
     prefix,
-  });
+  }), [tickets, filterName, order, orderBy, prefix]);
 
   const isFiltered = filterName !== '';
   const isNotFound = (!dataFiltered?.length && !!filterName) || (!isLoading && !dataFiltered?.length);
   const denseHeight = 60;
+
+  const onChangeRowsPerPage = useCallback((e) => {
+    dispatch(ChangePage(0));
+    dispatch(ChangeRowsPerPage(parseInt(e.target.value, 10)));
+  }, [dispatch]);
+
+  const onChangePage = useCallback((e, newPage) => {
+    dispatch(ChangePage(newPage));
+  }, [dispatch]);
+
+  const onReload = useCallback(({ issueType, requestType, isResolved, statusType, status, priority }) => {
+    dispatch(ChangePage(0));
+    dispatch(getTickets({
+      page: 0,
+      pageSize: rowsPerPage,
+      issueType, 
+      requestType, 
+      isResolved, 
+      statusType, 
+      status, 
+      priority
+    }));
+  }, [dispatch, rowsPerPage ]);
+
+  const handleHelpClick = useCallback(() => setHelpOpen((prev) => !prev), []);
 
   const debouncedSearch = useRef(debounce((value) => {
     dispatch(ChangePage(0));
     dispatch(setFilterBy(value)); 
   }, 500));
 
-  const handleFilterName = (event) => {
-    debouncedSearch.current(event.target.value);
-    setFilterName(event.target.value);
-    setPage(0); 
-  };
+  const handleFilterName = useCallback((e) => {
+    debouncedSearch.current(e.target.value);
+    setFilterName(e.target.value);
+    setPage(0);
+  }, [setPage]);
 
-  const handleCustomerDialog = (e, id) => {
-    dispatch(getCustomer(id));
-    dispatch(setCustomerDialog(true));
+  useEffect(() => {
+    const cancelFn = debouncedSearch.current?.cancel;
+    return () => cancelFn?.();
+  }, []);
 
-  };
-
-  const handleResetFilter = () => {
-    dispatch(setFilterBy(''))
+  const handleResetFilter = useCallback(() => {
+    dispatch(setFilterBy(''));
     setFilterName('');
-    setSelectedIssueType(null);
-    setSelectedPriority(null);
-    setSelectedRequestType(null);
-    setSelectedStatus([]);
-    setSelectedStatusType(null);
-    setSelectedResolvedStatus(null);
-  };
+  }, [dispatch]);
 
-  const handleHiddenColumns = async (arg) => {
-    dispatch(setReportHiddenColumns(arg));
-  };
+  const handleHiddenColumns = useCallback((arg) => dispatch(setReportHiddenColumns(arg)), [dispatch]);
 
-  const toggleAdd = () => {
-    navigate(PATH_SUPPORT.supportTickets.new);
-  };
+  const toggleAdd = useCallback(() => navigate(PATH_SUPPORT.supportTickets.new), [navigate]);
 
   return (
     <Container maxWidth={false}>
@@ -254,27 +165,14 @@ export default function TicketFormList() {
         onHelpClick={handleHelpClick}
       />
       </StyledCardContainer>
-      <HelpSidebar open={helpOpen} onClose={handleCloseHelp} article={article} />
-      <FormProvider {...methods}>
+      <HelpSidebar open={helpOpen} onClose={handleHelpClick} article={article} />
         <TableCard>
-          <TicketFormTableToolbar
+          <TicketTableController
             filterName={filterName}
             onFilterName={handleFilterName}
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
-            filterIssueType={selectedIssueType}
-            onFilterIssueType={setSelectedIssueType}
-            filterRequestType={selectedRequestType}
-            onFilterRequestType={setSelectedRequestType}
-            filterStatus={selectedStatus}
-            onFilterStatus={setSelectedStatus}
-            filterStatusType={selectedStatusType}
-            onFilterStatusType={setSelectedStatusType}
-            filterResolvedStatus={selectedResolvedStatus} 
-            onFilterResolvedStatus={setSelectedResolvedStatus} 
-            filterPriority={selectedPriority}
-            onFilterPriority={setSelectedPriority}
-            onReload={onRefresh}
+            onReload={onReload}
           />
             {!isNotFound && !isMobile && (
             <TablePaginationFilter
@@ -311,19 +209,11 @@ export default function TicketFormList() {
                 <TableBody>
                   {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
                     .map((row, index) =>
-                      row ? (
+                      row ? (                       
                         <TicketFormTableRow
                           key={row._id}
                           row={row}
                           hiddenColumns={reportHiddenColumns}
-                          onSelectRow={() => onSelectRow(row._id)}
-                          onViewRow={() => navigate(PATH_SUPPORT.supportTickets.view(row._id))}
-                          selected={selected.includes(row._id)}
-                          selectedLength={selected.length}
-                          handleCustomerDialog={(e) =>
-                            row?.customer && handleCustomerDialog(e, row?.customer?._id)
-                          }
-
                           style={index % 2 ? { background: 'red' } : { background: 'green' }}
                           prefix={prefix}
                         />
@@ -345,13 +235,11 @@ export default function TicketFormList() {
             onRowsPerPageChange={onChangeRowsPerPage}
           />}
         </TableCard>
-      </FormProvider>
     </Container>
   );
 }
 
 // ----------------------------------------------------------------------
-
 function applyFilter({ inputData, comparator, filterName, prefix = '' }) {
   const stabilizedThis = inputData?.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
@@ -361,9 +249,11 @@ function applyFilter({ inputData, comparator, filterName, prefix = '' }) {
   });
 
   inputData = stabilizedThis.map((el) => el[0]);
- 
+
   if (filterName) {
     inputData = inputData.filter((ticket) => {
+      const assigneesNames = ticket?.assignees?.map((a) => a?.name).join(', ') || '';
+
       const fieldsToFilter = [
         `${prefix} - ${ticket?.ticketNo}`.trim(),
         ticket?.machine?.serialNo,
@@ -373,8 +263,10 @@ function applyFilter({ inputData, comparator, filterName, prefix = '' }) {
         ticket?.status?.name,
         ticket?.priority?.name,
         ticket?.reporter?.name,
+        assigneesNames,
         fDate(ticket?.createdAt),
       ];
+
       return fieldsToFilter.some((field) =>
         field?.toLowerCase().includes(filterName.toLowerCase())
       );
@@ -383,3 +275,5 @@ function applyFilter({ inputData, comparator, filterName, prefix = '' }) {
 
   return inputData;
 }
+
+export default memo(TicketList);

@@ -218,21 +218,13 @@ export default function CustomerSiteList({ isCustomerSitePage = false, isArchive
     }
   };
 
-  const handleArchive = () => {
-    navigate(PATH_CRM.customers.archivedSites.root);
-  };
-
   return (
     <Container maxWidth={false}>
       {!isCustomerSitePage ? (
         <StyledCardContainer>
           <Cover
             name={isArchived ? 'Archived Sites' : 'Sites'}
-            {...(!isArchived && { backLink: true })}
             customerContacts
-            archivedLink={
-              !isArchived ? { label: 'Archived Sites', link: handleArchive, icon: 'mdi:book-variant' } : null
-            }
             isArchived={isArchived}
           />
         </StyledCardContainer>

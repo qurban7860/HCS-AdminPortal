@@ -363,21 +363,22 @@ export function updateTicketField(id, name, value) {
 }
 
 // GET Tickets
-export function getTickets({ page, pageSize, issueType, requestType, isResolved = null, statusType, status,priority, createdAt}) {
+export function getTickets({ page, pageSize, issueType, requestType, isResolved = false, statusType, status, priority, createdAt}) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
+
       const params = {
         orderBy: { createdAt: -1 },
         pagination: { page, pageSize },
         isArchived: false,
-        ...(createdAt && { createdAt }),
-        ...(issueType && { issueType }),
-        ...(requestType && { requestType }),
-        ...(isResolved && { isResolved: isResolved === 'resolved' }),
-        ...(statusType && { statusType }),
-        ...(status && { status }),
-        ...(priority && {priority}),
+        createdAt,
+        issueType,
+        requestType,
+        isResolved,
+        statusType,
+        status,
+        priority,
       };
       
       if (isResolved === 'unresolved') {

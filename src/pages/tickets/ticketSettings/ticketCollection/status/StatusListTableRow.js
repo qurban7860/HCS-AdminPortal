@@ -8,6 +8,7 @@ import { StyledTableRow, StyledTooltip } from '../../../../../theme/styles/defau
 import Iconify from '../../../../../components/iconify';
 import { ICONS } from '../../../../../constants/icons/default-icons';
 import LinkTableCell from '../../../../../components/ListTableTools/LinkTableCell';
+import { isValidColor, normalizeColor } from '../utils/constant';
 
 // ----------------------------------------------------------------------
 
@@ -44,7 +45,7 @@ export default function StatusListTableRow({
           placement="top" 
           title={name || ''} 
           tooltipcolor={color} >
-          <Iconify icon={icon} color={color} />
+          <Iconify icon={icon} color={isValidColor(normalizeColor(color)) ? normalizeColor(color) : 'black'} />
         </StyledTooltip>
       </TableCell>
       <TableCell align='right' > { fDate(createdAt) } </TableCell>

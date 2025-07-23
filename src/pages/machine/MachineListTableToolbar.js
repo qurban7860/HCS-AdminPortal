@@ -32,7 +32,7 @@ MachineListTableToolbar.propTypes = {
   onExportCSV: PropTypes.func,
   onExportLoading: PropTypes.bool,
   setAccountManagerFilter: PropTypes.func,
-  accountManagerFilter: PropTypes.object,
+  accountManagerFilter: PropTypes.array,
   setSupportManagerFilter: PropTypes.func,
   supportManagerFilter: PropTypes.object,
   isArchived: PropTypes.bool,

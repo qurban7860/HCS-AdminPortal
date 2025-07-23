@@ -474,7 +474,7 @@ export const TicketStatusTypeView = Loadable(lazy(() => import('../pages/tickets
 export const TicketStatusView = Loadable(lazy(() => import('../pages/tickets/dashboard/TicketStatusViewForm')));
 
 // --------------------------- Tickets List -------------------------------------
-export const TicketFormList = Loadable(lazy(() => import('../pages/tickets/TicketFormList')));
+export const TicketFormList = Loadable(lazy(() => import('../pages/tickets/TicketList')));
 export const TicketForm = Loadable(lazy(() => import('../pages/tickets/TicketForm')));
 export const TicketView = Loadable(lazy(() => import('../pages/tickets/TicketView')));
 

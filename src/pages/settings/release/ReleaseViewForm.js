@@ -85,10 +85,10 @@ export default function ReleaseViewForm() {
       <Grid container sx={{mt:2}}>
         <ViewFormField isLoading={isLoading}
           sm={3}
-          heading="Release No."
+          heading="Serial No."
           param={defaultValues?.releaseNo?.toString()}
         />
-        <ViewFormField isLoading={isLoading} sm={3} heading="Title" param={defaultValues?.name} />
+        <ViewFormField isLoading={isLoading} sm={3} heading="Version" param={defaultValues?.name} />
         <ViewFormField isLoading={isLoading} sm={3} heading="Project" param={defaultValues.project?.name || ''} />
         <ViewFormField isLoading={isLoading} sm={3} heading="Status"
           node={<ViewFormSelect sx={{ width: '180px' }} options={releaseStatusOptions} value={defaultValues.status} onChange={handleReleaseChange} />}
