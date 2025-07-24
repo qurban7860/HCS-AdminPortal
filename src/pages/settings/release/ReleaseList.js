@@ -73,7 +73,7 @@ export default function ReleaseList({isArchived}) {
   const [tableData, setTableData] = useState([]);
   const [projectVal, setProjectVal] = useState(null);
   const [statusVal, setStatusVal] = useState(null);
-  const [isListView, setIsListView] = useState(true);
+  const [isListView, setIsListView] = useState(false);
 
   useLayoutEffect(() => {
     dispatch(getReleases(isArchived, page, rowsPerPage));

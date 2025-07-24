@@ -81,7 +81,7 @@ export default function ReleaseListTableToolbar({
           renderInput={(params) => <TextField {...params} size='small' label="Status" />}
         />
       </Grid>
-      <Grid item xs={12} sm={6} md={1.5}>
+      <Grid item xs={12} sm={6} md={3.5}>
         <ButtonGroup variant="outlined" sx={{ mt: 0.4, ml: 1, alignSelf: 'flex-end' }}>
           <Button onClick={() => setIsListView(false)} startIcon={<Iconify icon="mdi:view-grid" />}
             sx={{
@@ -90,7 +90,7 @@ export default function ReleaseListTableToolbar({
               '&:hover': { color: 'rgba(0, 0, 0, 0.7)' },
             }}
           >
-            Card
+            Detail View
           </Button>
           <Button onClick={() => setIsListView(true)} startIcon={<Iconify icon="mdi:view-list" />}
             sx={{
@@ -99,7 +99,7 @@ export default function ReleaseListTableToolbar({
               '&:hover': { color: 'rgba(0, 0, 0, 0.7)' },
             }}
           >
-            List
+            List View
           </Button>
         </ButtonGroup>
       </Grid>
