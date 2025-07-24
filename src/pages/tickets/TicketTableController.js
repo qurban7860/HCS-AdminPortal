@@ -93,7 +93,7 @@ const resolutionStatusOptions = [
     <Stack {...options}>
       <Grid container spacing={1} sx={{ display: 'flex', width: '100%' }} >
     <Grid container spacing={1} sx={{ display: 'flex' }} >
-      <Grid item xs={12} sm={4} md={3} lg={1.5}>
+      <Grid item xs={12} sm={4} md={3} lg={2}>
         <RHFAutocomplete
           name="isResolved"
           label="Resolution"
@@ -150,7 +150,7 @@ const resolutionStatusOptions = [
       </Grid>
 
       {/* Status (Multi) */}
-      <Grid item xs={12} sm={4} md={4} lg={2.5}>
+      <Grid item xs={12} sm={4} md={4} lg={2}>
         <RHFAutocomplete
           name="status"
           label="Status"
