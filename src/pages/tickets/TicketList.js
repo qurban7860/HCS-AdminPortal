@@ -22,6 +22,7 @@ import Scrollbar from '../../components/scrollbar';
 import TicketFormTableRow from './TicketTableRow';
 import TicketTableController from './TicketTableController';
 import { ChangeRowsPerPage, ChangePage, setFilterBy, getTickets, resetTickets, getTicketSettings, resetTicketSettings, setReportHiddenColumns } from '../../redux/slices/ticket/tickets';
+import { getActiveSecurityUsers, resetActiveSecurityUsers } from '../../redux/slices/securityUser/securityUser';
 import { fDate } from '../../utils/formatTime';
 import TableCard from '../../components/ListTableTools/TableCard';
 import { Cover } from '../../components/Defaults/Cover';
@@ -65,18 +66,22 @@ function TicketList() {
   const [helpOpen, setHelpOpen] = useState(false);
   const isMobile = useResponsive('down', 'sm');
 
-  const prefix = useMemo(() =>
-    JSON.parse(localStorage.getItem('configurations'))?.find((config) => config?.name?.toLowerCase() === 'ticket_prefix')?.value?.trim() || ''
+  const configurations = useMemo(() =>
+    JSON.parse(localStorage.getItem('configurations')) || []
   , []);
 
+  const prefix = useMemo(() =>
+    configurations?.find((config) => config?.name?.toLowerCase() === 'ticket_prefix')?.value?.trim() || ''
+  , [configurations]);
+
   useEffect(() => {
-    const helpPrefix = JSON.parse(localStorage.getItem('configurations'))?.find((config) => 
+    const helpPrefix = configurations?.find((config) => 
       config?.name?.toLowerCase() === 'support_ticket_creation_process'
     )?.value?.trim() || ''
   if (helpPrefix) {
     dispatch(getArticleByValue(helpPrefix));
   }
-  }, [dispatch]); 
+  }, [dispatch, configurations]); 
 
   useEffect(() => {
       dispatch(getTickets({
@@ -84,9 +89,12 @@ function TicketList() {
         pageSize: rowsPerPage,
       }));
       dispatch(getTicketSettings());
+    const asssigneeRoleType = configurations?.find((c) => c?.name?.trim() === 'SupportTicketAssigneeRoleType')?.value?.trim();
+      dispatch(getActiveSecurityUsers({ type: 'SP', roleType: asssigneeRoleType }));
     return () => {
       dispatch(resetTickets());
       dispatch(resetTicketSettings());
+      dispatch(resetActiveSecurityUsers());
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
@@ -115,7 +123,7 @@ function TicketList() {
     dispatch(ChangePage(newPage));
   }, [dispatch]);
 
-  const onReload = useCallback(({ issueType, requestType, isResolved, statusType, status, priority }) => {
+  const onReload = useCallback(({ issueType, requestType, isResolved, statusType, status, priority, assignees, faults }) => {
     dispatch(ChangePage(0));
     dispatch(getTickets({
       page: 0,
@@ -125,7 +133,9 @@ function TicketList() {
       isResolved, 
       statusType, 
       status, 
-      priority
+      priority,
+      assignees,
+      faults
     }));
   }, [dispatch, rowsPerPage ]);
 

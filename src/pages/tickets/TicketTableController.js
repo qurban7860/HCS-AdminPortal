@@ -31,15 +31,18 @@ function TicketTableController({
 }) {
 
     const { ticketSettings } = useSelector((state) => state.tickets);
+    const { activeSecurityUsers } = useSelector((state) => state.user);
 
     const defaultValues = useMemo(
       () => ({
-        isResolved: false,
+        isResolved: { label: 'Open', value: false },
         statusType: null,
         status: [],
         issueType: null,
         requestType: null,
         priority: null,
+        assignees: null,
+        faults: null
       }),
       []
     );
@@ -52,17 +55,19 @@ function TicketTableController({
   });
 
   const { setError, setValue, handleSubmit, watch, formState: { isSubmitting } } = methods;
-  const { issueType, requestType, isResolved, statusType, status, priority } = watch();
+  const { issueType, requestType, isResolved, statusType, status, priority, assignees, faults } = watch();
 
     const onSubmit = async (data) => {
       try {
         await onReload({ 
           issueType: issueType?._id, 
           requestType: requestType?._id, 
-          isResolved, 
+          isResolved: isResolved?.value, 
           statusType: statusType?._id , 
           status: status?.map(s=>s?._id), 
-          priority: priority?._id
+          priority: priority?._id,
+          faults: faults?._id && [faults?._id],
+          assignees: assignees?._id && [assignees?._id]
         })
       } catch (err) {
         if (err?.errors && Array.isArray(err?.errors)) {
@@ -91,9 +96,10 @@ const resolutionStatusOptions = [
       <Grid item xs={12} sm={4} md={3} lg={1.5}>
         <RHFAutocomplete
           name="isResolved"
-          label="Resolution Status"
+          label="Resolution"
           size="small"
           options={resolutionStatusOptions}
+          disableClearable
           isOptionEqualToValue={(option, value) => option?.value === value?.value}
           getOptionLabel={(option) => option?.label || ''}
           renderOption={(props, option) => (
@@ -102,7 +108,6 @@ const resolutionStatusOptions = [
             </li>
           )}
           onChange={(event, newValue) => {
-            console.log({newValue})
             if (newValue) {
               setValue('isResolved', newValue);
               if (newValue.value !== statusType?.isResolved) {
@@ -130,11 +135,22 @@ const resolutionStatusOptions = [
           renderOption={(props, option) => (
             <li {...props} key={option?._id}>{option?.name || ''}</li>
           )}
+          onChange={(event, newValue) => {
+            if (newValue) {
+              setValue('statusType', newValue);
+              if (status?.every( s => s?.statusType?._id !== newValue?._id)) {
+                setValue('status', []);
+              }
+            } else {
+              setValue('statusType', null);
+              setValue('status', []);
+            }
+          }}
         />
       </Grid>
 
       {/* Status (Multi) */}
-      <Grid item xs={12} sm={4} md={4} lg={2}>
+      <Grid item xs={12} sm={4} md={4} lg={2.5}>
         <RHFAutocomplete
           name="status"
           label="Status"
@@ -145,9 +161,7 @@ const resolutionStatusOptions = [
           filterSelectedOptions
           isOptionEqualToValue={(option, value) => option?._id === value?._id}
           getOptionLabel={(option) => option?.name}
-          renderOption={(props, option) => (
-            <li {...props} key={option?._id}>{option?.name || ''}</li>
-          )}
+          renderOption={(props, option) => ( <li {...props} key={option?._id}>{option?.name || ''}</li> )}
         />
       </Grid>
       {/* Issue Type */}
@@ -159,9 +173,18 @@ const resolutionStatusOptions = [
           options={ticketSettings?.issueTypes || []}
           isOptionEqualToValue={(option, value) => option?._id === value?._id}
           getOptionLabel={(option) => option?.name}
-          renderOption={(props, option) => (
-            <li {...props} key={option?._id}>{option?.name || ''}</li>
-          )}
+          renderOption={(props, option) => ( <li {...props} key={option?._id}>{option?.name || ''}</li> )}
+          onChange={(event, newValue) => {
+            if (newValue) {
+              setValue('issueType', newValue);
+              if (newValue?._id !== requestType?.issueType?._id) {
+                setValue('requestType', null);
+              }
+            } else {
+              setValue('issueType', null);
+              setValue('requestType', null);
+            }
+          }}
         />
       </Grid>
 
@@ -180,13 +203,43 @@ const resolutionStatusOptions = [
         />
       </Grid>
 
+      {/* Assignees */}
+      <Grid item xs={12} sm={6} md={3} lg={2}>
+        <RHFAutocomplete
+          name="assignees"
+          label="Assignee"
+          size="small"
+          options={activeSecurityUsers}
+          isOptionEqualToValue={(option, value) => option?._id === value?._id}
+          getOptionLabel={(option) => option?.name}
+          renderOption={(props, option) => (
+            <li {...props} key={option?._id}>{option?.name || ''}</li>
+          )}
+        />
+      </Grid>
+
       {/* Priority */}
-      <Grid item xs={12} sm={4} md={3} lg={1.5} >
+      <Grid item xs={12} sm={4} md={3} lg={2} >
         <RHFAutocomplete
           name="priority"
           label="Priority"
           size="small"
           options={ticketSettings?.priorities || []}
+          isOptionEqualToValue={(option, value) => option?._id === value?._id}
+          getOptionLabel={(option) => option?.name}
+          renderOption={(props, option) => (
+            <li {...props} key={option?._id}>{option?.name || ''}</li>
+          )}
+        />
+      </Grid>
+
+            {/* Faults */}
+      <Grid item xs={12} sm={4} md={3} lg={2} >
+        <RHFAutocomplete
+          name="faults"
+          label="Fault"
+          size="small"
+          options={ticketSettings?.faults || []}
           isOptionEqualToValue={(option, value) => option?._id === value?._id}
           getOptionLabel={(option) => option?.name}
           renderOption={(props, option) => (
