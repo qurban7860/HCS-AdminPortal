@@ -67,21 +67,21 @@ const isVisible = useCallback((key) => !hiddenColumns?.[key], [hiddenColumns]);
   return (
 <StyledTableRow hover >
       {isVisible('issueType.name') && (
-        <TableCell align="left" padding="checkbox">
+        <TableCell align="center" padding="none">
             <StyledTooltip placement="top" title={issueType?.name || ''} tooltipcolor={issueType?.color}>
               <Iconify icon={issueType?.icon} color={issueType?.color} onClick={() => onViewRow(ticketNo)} style={{ cursor: 'pointer' }} />
             </StyledTooltip>
         </TableCell>
       )}
         {isVisible('status.name') && (
-        <TableCell align="left" padding="checkbox">
+        <TableCell align="center" padding="none">
             <StyledTooltip placement="top" title={status?.name || ''} tooltipcolor={status?.color}>
             <Iconify icon={status?.icon} color={status?.color} />
           </StyledTooltip>
         </TableCell>
       )}
       {isVisible('priority.name') && (
-        <TableCell align="left" padding="checkbox">
+        <TableCell align="center" padding="none">
             <StyledTooltip placement="top" title={priority?.name || ''} tooltipcolor={priority?.color}>
             <Iconify icon={priority?.icon} color={priority?.color} />
           </StyledTooltip>

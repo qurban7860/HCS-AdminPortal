@@ -10,12 +10,12 @@ import { useDispatch, useSelector } from '../../redux/store';
 // components
 import {
   useTable,
-  getComparator,
   TableNoData,
   TableSkeleton,
+  getComparator,
+  TableHeadFilter,
   TablePaginationCustom,
   TablePaginationFilter,
-  TableHeadFilter,
 } from '../../components/table';
 import Scrollbar from '../../components/scrollbar';
 // sections
@@ -35,9 +35,9 @@ import HelpSidebar from './utils/HelpSideBar';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'issueType.name', label: 'T', tooltip: 'Issue Type', align: 'left' },
-  { id: 'status.name', label: 'S', align: 'left', tooltip: 'Status', allowColumn: true },
-  { id: 'priority.name', label: 'P',align: 'left', tooltip: 'Priority', allowColumn: true },
+  { id: 'issueType.name', label: 'T', tooltip: 'Issue Type', align: "center", disablePadding: true },
+  { id: 'status.name', label: 'S', disablePadding: true, tooltip: 'Status', align: "center", allowColumn: true },
+  { id: 'priority.name', label: 'P', disablePadding: true, tooltip: 'Priority', align: "center", allowColumn: true },
   { id: 'ticketNo', label: 'Ticket No.', align: 'left' },
   { id: 'summary', label: 'Summary', align: 'left', allowColumn: true },
   { id: 'machine.serialNo', label: 'Machine', align: 'left', allowColumn: true },
