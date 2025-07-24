@@ -112,7 +112,7 @@ const isVisible = useCallback((key) => !hiddenColumns?.[key], [hiddenColumns]);
       {isVisible('summary') && <LinkTableCell align="left" onClick={() => onViewRow(ticketNo)} param={summary || ''} />}
       {isVisible('machine.serialNo') && <LinkTableCell align="left" onClick={(event) => handleMachineDialog(event, row.machine?._id)} param={machine?.serialNo || ''} />}
       {isVisible('machine.machineModel.name') && <TableCell align="left"> {machine?.machineModel?.name || ''} </TableCell>}
-      {isVisible('customer.name') && <LinkTableCell onClick={(event) => handleCustomerDialog(event, customer?._id )} align="center" param={customer?.name || ''} />}
+      {isVisible('customer.name') && <LinkTableCell onClick={(event) => handleCustomerDialog(event, customer?._id )} align="left" param={customer?.name || ''} />}
       {isVisible('reporter.name') && <TableCell align="left">{reporter?.name || ''}</TableCell>}
       {isVisible('assignees.name.[]')&& (
         <TableCell>
