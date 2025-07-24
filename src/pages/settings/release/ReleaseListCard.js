@@ -34,7 +34,7 @@ export default function ReleaseListCard({ row, onViewRow, selected }) {
             <Iconify icon={ICONS.RELEASE.icon} sx={{ ml: 1.5, height: 20, width: 20 }} />
           </StyledTooltip>
           {project?.name && (
-            <Typography variant="body2" sx={{ ml: 0.5, color: 'text.secondary', display: 'inline' }}>
+            <Typography variant="body2" sx={{ ml: 0.5, color: 'text.secondary', fontWeight: 'bold', display: 'inline' }}>
              {project.name}
             </Typography>
           )}
