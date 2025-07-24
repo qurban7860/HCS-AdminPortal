@@ -53,7 +53,7 @@ export default function ReleaseListTableToolbar({
 
   const nodes = [
     <>
-      <Grid item xs={12} sm={6} md={2}>
+      <Grid item xs={12} sm={6} md={1.5}>
         <Autocomplete
           fullWidth
           value={projectVal || null}
@@ -67,7 +67,7 @@ export default function ReleaseListTableToolbar({
           renderInput={(params) => <TextField {...params} size='small' label="Project" />}
         />
       </Grid>,
-      <Grid item xs={12} sm={6} md={2}>
+      <Grid item xs={12} sm={6} md={1.5}>
         <Autocomplete
           fullWidth
           value={statusVal || null}
@@ -81,7 +81,7 @@ export default function ReleaseListTableToolbar({
           renderInput={(params) => <TextField {...params} size='small' label="Status" />}
         />
       </Grid>
-      <Grid item xs={12} sm={6} md={3.5}>
+      <Grid item xs={12} sm={6} md={2.5}>
         <ButtonGroup variant="outlined" sx={{ mt: 0.4, ml: 1, alignSelf: 'flex-end' }}>
           <Button onClick={() => setIsListView(false)} startIcon={<Iconify icon="mdi:view-grid" />}
             sx={{
