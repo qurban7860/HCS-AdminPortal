@@ -87,6 +87,7 @@ function TicketList() {
       dispatch(getTickets({
         page,
         pageSize: rowsPerPage,
+        isResolved: false
       }));
       dispatch(getTicketSettings());
     const asssigneeRoleType = configurations?.find((c) => c?.name?.trim() === 'SupportTicketAssigneeRoleType')?.value?.trim();
