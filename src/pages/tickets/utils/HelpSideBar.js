@@ -17,7 +17,6 @@ export default function HelpSidebar({ open, onClose, article }) {
       anchor="right"
       open={open}
       onClose={onClose}
-      hideBackdrop
       PaperProps={{
         sx: {
           width: { xs: '100%', sm: '50vw' },

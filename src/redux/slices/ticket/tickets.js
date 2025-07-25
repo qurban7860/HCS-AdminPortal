@@ -363,7 +363,7 @@ export function updateTicketField(id, name, value) {
 }
 
 // GET Tickets
-export function getTickets({ page, pageSize, issueType, requestType, isResolved = false, statusType, status, priority, createdAt}) {
+export function getTickets({ page, pageSize, issueType, requestType, isResolved, statusType, status, priority, createdAt, assignees, faults }) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -379,8 +379,9 @@ export function getTickets({ page, pageSize, issueType, requestType, isResolved 
         statusType,
         status,
         priority,
+        assignees,
+        faults
       };
-      
       if (isResolved === 'unresolved') {
         params.isResolved = false; 
       }

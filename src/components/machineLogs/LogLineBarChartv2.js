@@ -27,7 +27,34 @@ import {
 } from 'chart.js';
 import { fShortenNumber } from '../../utils/formatNumber';
 
-ChartJS.register(CategoryScale, LinearScale, LineController, BarElement, BarController, PointElement, LineElement, Title, Tooltip, Legend);
+const totalLengthLabelPlugin = {
+  id: 'totalLengthLabel',
+  afterDatasetsDraw(chart) {
+    const { ctx, data } = chart;
+    
+    const barDatasets = data.datasets.filter(ds => ds.type === 'bar');
+    
+    for (let i = 0; i < data.labels.length; i += 1) {
+      const total = barDatasets.reduce((sum, ds) => sum + (ds.data[i] || 0), 0);
+      
+      if (total > 0) {
+        const meta = chart.getDatasetMeta(0);
+        const bar = meta.data[i];
+        
+        const xPos = bar.x;
+        const yPos = bar.y - 15; 
+        ctx.font = 'bold 12px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'bottom';
+        ctx.fillStyle = '#333';
+        
+        ctx.fillText(fShortenNumber(total), xPos, yPos);
+      }
+    }
+  }
+};
+
+ChartJS.register(CategoryScale, LinearScale, LineController, BarElement, BarController, PointElement, LineElement, Title, Tooltip, Legend, totalLengthLabelPlugin);
 
 LogLineBarChartv2.propTypes = {
   processGraphData: PropTypes.func.isRequired,

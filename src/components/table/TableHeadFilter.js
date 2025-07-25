@@ -85,6 +85,7 @@ export default function TableHeadFilter({
                   key={headCell.id}
                   align={headCell.align || 'left'}
                   sortDirection={orderBy === headCell.id ? order : false}
+                  padding={headCell?.disablePadding ? 'none' : 'normal'}
                   sx={{ width: headCell.width, 
                   minWidth: headCell.minWidth,
                   display: displayHeadIs ? 'none' : 'table-cell',

@@ -10,18 +10,19 @@ import { useDispatch, useSelector } from '../../redux/store';
 // components
 import {
   useTable,
-  getComparator,
   TableNoData,
   TableSkeleton,
+  getComparator,
+  TableHeadFilter,
   TablePaginationCustom,
   TablePaginationFilter,
-  TableHeadFilter,
 } from '../../components/table';
 import Scrollbar from '../../components/scrollbar';
 // sections
 import TicketFormTableRow from './TicketTableRow';
 import TicketTableController from './TicketTableController';
 import { ChangeRowsPerPage, ChangePage, setFilterBy, getTickets, resetTickets, getTicketSettings, resetTicketSettings, setReportHiddenColumns } from '../../redux/slices/ticket/tickets';
+import { getActiveSecurityUsers, resetActiveSecurityUsers } from '../../redux/slices/securityUser/securityUser';
 import { fDate } from '../../utils/formatTime';
 import TableCard from '../../components/ListTableTools/TableCard';
 import { Cover } from '../../components/Defaults/Cover';
@@ -34,9 +35,9 @@ import HelpSidebar from './utils/HelpSideBar';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'issueType.name', label: 'T', tooltip: 'Issue Type', align: 'left' },
-  { id: 'status.name', label: 'S', align: 'left', tooltip: 'Status', allowColumn: true },
-  { id: 'priority.name', label: 'P',align: 'left', tooltip: 'Priority', allowColumn: true },
+  { id: 'issueType.name', label: 'T', tooltip: 'Issue Type', align: "center", disablePadding: true },
+  { id: 'status.name', label: 'S', disablePadding: true, tooltip: 'Status', align: "center", allowColumn: true },
+  { id: 'priority.name', label: 'P', disablePadding: true, tooltip: 'Priority', align: "center", allowColumn: true },
   { id: 'ticketNo', label: 'Ticket No.', align: 'left' },
   { id: 'summary', label: 'Summary', align: 'left', allowColumn: true },
   { id: 'machine.serialNo', label: 'Machine', align: 'left', allowColumn: true },
@@ -65,28 +66,36 @@ function TicketList() {
   const [helpOpen, setHelpOpen] = useState(false);
   const isMobile = useResponsive('down', 'sm');
 
-  const prefix = useMemo(() =>
-    JSON.parse(localStorage.getItem('configurations'))?.find((config) => config?.name?.toLowerCase() === 'ticket_prefix')?.value?.trim() || ''
+  const configurations = useMemo(() =>
+    JSON.parse(localStorage.getItem('configurations')) || []
   , []);
 
+  const prefix = useMemo(() =>
+    configurations?.find((config) => config?.name?.toLowerCase() === 'ticket_prefix')?.value?.trim() || ''
+  , [configurations]);
+
   useEffect(() => {
-    const helpPrefix = JSON.parse(localStorage.getItem('configurations'))?.find((config) => 
+    const helpPrefix = configurations?.find((config) => 
       config?.name?.toLowerCase() === 'support_ticket_creation_process'
     )?.value?.trim() || ''
   if (helpPrefix) {
     dispatch(getArticleByValue(helpPrefix));
   }
-  }, [dispatch]); 
+  }, [dispatch, configurations]); 
 
   useEffect(() => {
       dispatch(getTickets({
         page,
         pageSize: rowsPerPage,
+        isResolved: false
       }));
       dispatch(getTicketSettings());
+    const asssigneeRoleType = configurations?.find((c) => c?.name?.trim() === 'SupportTicketAssigneeRoleType')?.value?.trim();
+      dispatch(getActiveSecurityUsers({ type: 'SP', roleType: asssigneeRoleType }));
     return () => {
       dispatch(resetTickets());
       dispatch(resetTicketSettings());
+      dispatch(resetActiveSecurityUsers());
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
@@ -115,7 +124,7 @@ function TicketList() {
     dispatch(ChangePage(newPage));
   }, [dispatch]);
 
-  const onReload = useCallback(({ issueType, requestType, isResolved, statusType, status, priority }) => {
+  const onReload = useCallback(({ issueType, requestType, isResolved, statusType, status, priority, assignees, faults }) => {
     dispatch(ChangePage(0));
     dispatch(getTickets({
       page: 0,
@@ -125,7 +134,9 @@ function TicketList() {
       isResolved, 
       statusType, 
       status, 
-      priority
+      priority,
+      assignees,
+      faults
     }));
   }, [dispatch, rowsPerPage ]);
 

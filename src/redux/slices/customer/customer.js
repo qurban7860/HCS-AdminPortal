@@ -13,6 +13,7 @@ const initialState = {
   error: null,
   customers: [],
   activeCustomers: [],
+  lightCustomers: [],
   financialCompanies: [],
   allActiveCustomers: [],
   spCustomers: [],
@@ -103,6 +104,14 @@ const slice = createSlice({
       state.initial = true;
     },
 
+        // GET Active Customers
+    getLightCustomersSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.lightCustomers = action.payload;
+      state.initial = true;
+    },
+
     // GET Active Customers
     getFinancialCompaniesSuccess(state, action) {
       state.isLoading = false;
@@ -160,6 +169,14 @@ const slice = createSlice({
     // RESET Active CUSTOMERS
     resetActiveCustomers(state) {
       state.activeCustomers = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+
+    // RESET Light CUSTOMERS
+    resetLightCustomers(state) {
+      state.lightCustomers = [];
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
@@ -233,6 +250,7 @@ export const {
   resetCustomers,
   resetActiveCustomers,
   resetAllActiveCustomers,
+  resetLightCustomers,
   resetFinancingCompanies,
   setResponseMessage,
   setFilterBy,
@@ -301,6 +319,29 @@ export function getActiveCustomers(cancelToken) {
     }
   };
 }
+
+// ---------------------------- get Active Customers------------------------------------------
+
+export function getLightCustomers() {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/light`,
+        { params: {
+            isActive: true,
+            isArchived: false,
+          }
+        });
+      dispatch(slice.actions.getLightCustomersSuccess(response.data));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+// ---------------------------- get Financial Companies ------------------------------------------
 
 export function getFinancialCompanies(cancelToken) {
   return async (dispatch) => {
