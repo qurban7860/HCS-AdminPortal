@@ -99,7 +99,6 @@ const resolutionStatusOptions = [
           label="Resolution"
           size="small"
           options={resolutionStatusOptions}
-          disableClearable
           isOptionEqualToValue={(option, value) => option?.value === value?.value}
           getOptionLabel={(option) => option?.label || ''}
           renderOption={(props, option) => (
@@ -150,7 +149,7 @@ const resolutionStatusOptions = [
       </Grid>
 
       {/* Status (Multi) */}
-      <Grid item xs={12} sm={4} md={4} lg={2}>
+      { statusType?._id && <Grid item xs={12} sm={4} md={4} lg={2}>
         <RHFAutocomplete
           name="status"
           label="Status"
@@ -163,7 +162,7 @@ const resolutionStatusOptions = [
           getOptionLabel={(option) => option?.name}
           renderOption={(props, option) => ( <li {...props} key={option?._id}>{option?.name || ''}</li> )}
         />
-      </Grid>
+      </Grid>}
       {/* Issue Type */}
       <Grid item xs={12} sm={4} md={3} lg={2}>
         <RHFAutocomplete
@@ -189,7 +188,7 @@ const resolutionStatusOptions = [
       </Grid>
 
       {/* Request Type */}
-      <Grid item xs={12} sm={6} md={3} lg={2}>
+      {issueType?._id && <Grid item xs={12} sm={6} md={3} lg={2}>
         <RHFAutocomplete
           name="requestType"
           label="Request Type"
@@ -201,7 +200,7 @@ const resolutionStatusOptions = [
             <li {...props} key={option?._id}>{option?.name || ''}</li>
           )}
         />
-      </Grid>
+      </Grid>}
 
       {/* Assignees */}
       <Grid item xs={12} sm={6} md={3} lg={2}>

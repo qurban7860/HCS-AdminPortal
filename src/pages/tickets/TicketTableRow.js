@@ -69,7 +69,7 @@ const isVisible = useCallback((key) => !hiddenColumns?.[key], [hiddenColumns]);
       {isVisible('issueType.name') && (
         <TableCell align="center" padding="none">
             <StyledTooltip placement="top" title={issueType?.name || ''} tooltipcolor={issueType?.color}>
-              <Iconify icon={issueType?.icon} color={issueType?.color} onClick={() => onViewRow(ticketNo)} style={{ cursor: 'pointer' }} />
+              <Iconify icon={issueType?.icon} color={issueType?.color} />
             </StyledTooltip>
         </TableCell>
       )}
