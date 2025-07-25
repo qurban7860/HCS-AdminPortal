@@ -19,7 +19,7 @@ import FormProvider, { RHFTextField, RHFUpload, RHFAutocomplete, RHFDatePicker, 
 import { getTicket, postTicket, patchTicket, resetTicket, deleteFile, getTicketSettings, resetTicketSettings, getSoftwareVersion, resetSoftwareVersion } from '../../redux/slices/ticket/tickets';
 import { getArticleByValue } from '../../redux/slices/support/knowledgeBase/article';
 import { getActiveCustomerMachines, resetActiveCustomerMachines } from '../../redux/slices/products/machine';
-import { getActiveCustomers, resetActiveCustomers } from '../../redux/slices/customer/customer';
+import { getLightCustomers, resetLightCustomers } from '../../redux/slices/customer/customer';
 import HelpSidebar from './utils/HelpSideBar';
 import FormLabel from '../../components/DocumentForms/FormLabel';
 import { FORMLABELS } from '../../constants/default-constants';
@@ -33,7 +33,7 @@ export default function TicketForm() {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const { activeCustomerMachines } = useSelector((state) => state.machine);
-  const { activeCustomers } = useSelector((state) => state.customer);
+  const { lightCustomers } = useSelector((state) => state.customer);
   const { ticket, ticketSettings, softwareVersion, isLoadingSoftwareVersion } = useSelector((state) => state.tickets);
   const [filteredRequestTypes, setFilteredRequestTypes] = useState([]);
   const { article } = useSelector((state) => state.article);
@@ -56,14 +56,13 @@ export default function TicketForm() {
 
   useEffect(() => {
     if (id)
-      dispatch(getTicket(id));
-    dispatch(resetActiveCustomers());
-    dispatch(getActiveCustomers());
+    dispatch(getTicket(id));
+    dispatch(getLightCustomers());
     dispatch(getTicketSettings());
     return () => {
       dispatch(resetTicketSettings());
       dispatch(resetActiveCustomerMachines());
-      dispatch(resetActiveCustomers());
+      dispatch(resetLightCustomers());
     }
   }, [dispatch, id]);
 
@@ -107,8 +106,8 @@ export default function TicketForm() {
     reValidateMode: 'onChange'
   });
 
-  const { reset, setError, handleSubmit, watch, setValue, trigger, formState: { isSubmitting, errors } } = methods;
-  const { issueType, customer, machine, files, plannedStartDate, plannedEndDate, description } = watch();
+  const { reset, setError, handleSubmit, watch, setValue, trigger, formState: { isSubmitting } } = methods;
+  const { issueType, customer, machine, files, plannedStartDate, plannedEndDate } = watch();
 
   useEffect(() => {
     trigger(["plannedStartDate", "plannedEndDate"]);
@@ -177,7 +176,6 @@ export default function TicketForm() {
   };
 
   const handleDropMultiFile = useCallback(async (acceptedFiles) => {
-    console.log("acceptedFiles:::", acceptedFiles)
     const hashes = await hashFilesMD5(acceptedFiles);
     const newFiles = (Array.isArray(files) && files?.length > 0) ? [...files] : [];
     acceptedFiles.forEach((file, index) => {
@@ -268,7 +266,7 @@ export default function TicketForm() {
                       <RHFAutocomplete
                         name="customer"
                         label="Customer*"
-                        options={activeCustomers || []}
+                        options={lightCustomers || []}
                         isOptionEqualToValue={(option, value) => option._id === value._id}
                         getOptionLabel={(option) => `${option?.name || ''}`}
                         renderOption={(props, option) => (

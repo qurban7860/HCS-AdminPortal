@@ -1,14 +1,14 @@
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 // @mui
-import { Stack, Grid, Autocomplete, TextField, Button, ButtonGroup } from '@mui/material';
+import { Stack, Grid, Autocomplete, TextField, Button, ButtonGroup, IconButton } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import SearchBarCombo from '../../../components/ListTableTools/SearchBarCombo';
 // routes
 import { PATH_SETTING } from '../../../routes/paths';
 // constants
-import { options } from '../../../theme/styles/default-styles';
+import { options, StyledTooltip } from '../../../theme/styles/default-styles';
 import { releaseStatusOptions } from '../../../utils/constants';
 import { getActiveProjects, resetActiveProjects } from '../../../redux/slices/support/project/project';
 import Iconify from '../../../components/iconify';
@@ -81,8 +81,8 @@ export default function ReleaseListTableToolbar({
           renderInput={(params) => <TextField {...params} size='small' label="Status" />}
         />
       </Grid>
-      <Grid item xs={12} sm={6} md={1.5}>
-        <ButtonGroup variant="outlined" sx={{ mt: 0.4, ml: 1, alignSelf: 'flex-end' }}>
+      <Grid item >
+        <ButtonGroup variant="outlined" sx={{ mt: 0.4, ml: 1 }}>
           <Button onClick={() => setIsListView(false)} startIcon={<Iconify icon="mdi:view-grid" />}
             sx={{
               backgroundColor: !isListView ? 'primary.main' : 'grey.300',
@@ -90,7 +90,7 @@ export default function ReleaseListTableToolbar({
               '&:hover': { color: 'rgba(0, 0, 0, 0.7)' },
             }}
           >
-            Card
+            Detail View
           </Button>
           <Button onClick={() => setIsListView(true)} startIcon={<Iconify icon="mdi:view-list" />}
             sx={{
@@ -99,9 +99,23 @@ export default function ReleaseListTableToolbar({
               '&:hover': { color: 'rgba(0, 0, 0, 0.7)' },
             }}
           >
-            List
+            List View
           </Button>
         </ButtonGroup>
+      </Grid>
+      <Grid item sx={{ ml: 'auto' }}>
+        <StyledTooltip title='New Release' placement="top" disableFocusListener tooltipcolor="#103996" color="#fff">
+          <IconButton color="#fff" onClick={toggleAdd}
+            sx={{
+              background: "#2065D1", borderRadius: 1, height: '1.7em', p: '8.5px 14px',
+              '&:hover': {
+                background: "#103996",
+                color: "#fff"
+              }
+            }}>
+            <Iconify color="#fff" sx={{ height: '24px', width: '24px' }} icon='eva:plus-fill' />
+          </IconButton>
+        </StyledTooltip>
       </Grid>
     </>
   ];
@@ -114,8 +128,6 @@ export default function ReleaseListTableToolbar({
         value={filterName}
         onChange={onFilterName}
         onClick={onResetFilter}
-        SubOnClick={toggleAdd}
-        addButton='New Release'
         nodes={nodes}
       />
     </Stack>

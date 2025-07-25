@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { memo, useMemo, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
-import { TableCell, Tooltip } from '@mui/material';
+import { TableCell } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { PATH_SUPPORT } from '../../routes/paths';
 import { fDate } from '../../utils/formatTime';
@@ -28,21 +28,6 @@ function TicketTableRow({
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { ticketNo, customer, machine, issueType, summary, priority, status, createdAt, _id, assignees, reporter } = row;
-  const tooltipProps = useMemo(() => ({
-  tooltip: {
-    sx: {
-      backgroundColor: '#fff',
-      color: '#000',
-      border: '1px solid #ddd',
-      fontSize: '14px',
-    },
-  },
-  arrow: {
-    sx: {
-      color: '#fff',
-    },
-  },
-}), []);
 
 const isVisible = useCallback((key) => !hiddenColumns?.[key], [hiddenColumns]);
 
@@ -82,21 +67,21 @@ const isVisible = useCallback((key) => !hiddenColumns?.[key], [hiddenColumns]);
   return (
 <StyledTableRow hover >
       {isVisible('issueType.name') && (
-        <TableCell align="left" padding="checkbox">
+        <TableCell align="center" padding="none">
             <StyledTooltip placement="top" title={issueType?.name || ''} tooltipcolor={issueType?.color}>
-              <Iconify icon={issueType?.icon} color={issueType?.color} onClick={() => onViewRow(ticketNo)} style={{ cursor: 'pointer' }} />
+              <Iconify icon={issueType?.icon} color={issueType?.color} />
             </StyledTooltip>
         </TableCell>
       )}
         {isVisible('status.name') && (
-        <TableCell align="left" padding="checkbox">
+        <TableCell align="center" padding="none">
             <StyledTooltip placement="top" title={status?.name || ''} tooltipcolor={status?.color}>
             <Iconify icon={status?.icon} color={status?.color} />
           </StyledTooltip>
         </TableCell>
       )}
       {isVisible('priority.name') && (
-        <TableCell align="left" padding="checkbox">
+        <TableCell align="center" padding="none">
             <StyledTooltip placement="top" title={priority?.name || ''} tooltipcolor={priority?.color}>
             <Iconify icon={priority?.icon} color={priority?.color} />
           </StyledTooltip>
@@ -112,19 +97,18 @@ const isVisible = useCallback((key) => !hiddenColumns?.[key], [hiddenColumns]);
       {isVisible('summary') && <LinkTableCell align="left" onClick={() => onViewRow(ticketNo)} param={summary || ''} />}
       {isVisible('machine.serialNo') && <LinkTableCell align="left" onClick={(event) => handleMachineDialog(event, row.machine?._id)} param={machine?.serialNo || ''} />}
       {isVisible('machine.machineModel.name') && <TableCell align="left"> {machine?.machineModel?.name || ''} </TableCell>}
-      {isVisible('customer.name') && <LinkTableCell onClick={(event) => handleCustomerDialog(event, customer?._id )} align="center" param={customer?.name || ''} />}
+      {isVisible('customer.name') && <LinkTableCell onClick={(event) => handleCustomerDialog(event, customer?._id )} align="left" param={customer?.name || ''} />}
       {isVisible('reporter.name') && <TableCell align="left">{reporter?.name || ''}</TableCell>}
       {isVisible('assignees.name.[]')&& (
         <TableCell>
           {assignees?.length > 0 && (
-            <Tooltip
+            assignees?.length === 1 ? <span>{assignees[0]?.name || ''}</span> :
+            <StyledTooltip
               title={tooltipNames}
-              placement="left"
-              arrow
-              componentsProps={tooltipProps}
+              placement="top"
             >
               <span>{assignees[0]?.name || ''}, ...</span>
-            </Tooltip>
+            </StyledTooltip>
           )}
         </TableCell>
       )}
