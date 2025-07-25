@@ -59,10 +59,7 @@ const isVisible = useCallback((key) => !hiddenColumns?.[key], [hiddenColumns]);
     [_id, navigate]
   );
 
-  const onOpenNewTab = (tNo) => {
-    console.log({tNo})
-    window.open(PATH_SUPPORT.supportTickets.view(tNo), '_blank')
-  }
+  const onOpenNewTab = (tNo) => window.open(PATH_SUPPORT.supportTickets.view(tNo), '_blank');
   
   return (
 <StyledTableRow hover >
