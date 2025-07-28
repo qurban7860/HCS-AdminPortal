@@ -179,7 +179,7 @@ export default function SecurityUserViewForm() {
       isGlobal: securityUser?.dataAccessibilityLevel?.toLowerCase() === 'global' || '',
       regions: securityUser?.regions || [],
       countries: securityUser?.regions ? securityUser.regions.flatMap(region => region.countries) : [],
-      customers: securityUser?.customers?.filter(s=>s?._id !== securityUser?.customer?._id ) || [],
+      customers: securityUser?.customers || [],
       machines: securityUser?.machines || [],
       isActive: securityUser?.isActive,
       // formerEmployee: securityUser?.contact?.formerEmployee || false,
