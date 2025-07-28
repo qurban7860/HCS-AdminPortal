@@ -176,9 +176,10 @@ export default function SecurityUserViewForm() {
       login: securityUser?.login || '',
       roles: securityUser?.roles,
       dataAccessibilityLevel: securityUser?.dataAccessibilityLevel || '',
+      isGlobal: securityUser?.dataAccessibilityLevel?.toLowerCase() === 'global' || '',
       regions: securityUser?.regions || [],
       countries: securityUser?.regions ? securityUser.regions.flatMap(region => region.countries) : [],
-      customers: securityUser?.customers || [],
+      customers: securityUser?.customers?.filter(s=>s?._id !== securityUser?.customer?._id ) || [],
       machines: securityUser?.machines || [],
       isActive: securityUser?.isActive,
       // formerEmployee: securityUser?.contact?.formerEmployee || false,
@@ -194,6 +195,7 @@ export default function SecurityUserViewForm() {
   );
 
   const userRoleChips = defaultValues?.roles?.map((role, index) => <Chip key={index} title={role.name} label={role.name} color={role.name === 'SuperAdmin' ? 'secondary' : 'default'} sx={{ m: 0.2 }} />);
+  const isGlobal = defaultValues?.isGlobal;
   const handleViewUserDialog = async (s) => {
     await dispatch(setSecurityUserDialog(true));
     await dispatch(getDialogSecurityUser(s?._id))
@@ -357,11 +359,11 @@ export default function SecurityUserViewForm() {
 
                 <ViewFormField isLoading={isLoading} sm={12} heading="Data Accessibility Level" param={defaultValues?.dataAccessibilityLevel} />
 
-                <ViewFormField isLoading={isLoading} sm={12} heading="Regions" chips={defaultValues?.regions.map((region) => region.name)} />
+                <ViewFormField isLoading={isLoading} sm={12} heading="Regions" chips={ isGlobal ? [] : defaultValues?.regions.map((region) => region.name)} />
 
-                <ViewFormField isLoading={isLoading} sm={12} heading="Customers" chips={defaultValues?.customers.map((customer) => customer.name)} />
+                <ViewFormField isLoading={isLoading} sm={12} heading="Customers" chips={ isGlobal ? [] : defaultValues?.customers.map((customer) => customer.name)} />
 
-                <ViewFormField isLoading={isLoading} sm={12} heading="Machines" chips={defaultValues?.machines.map((machine) => machine.name)} />
+                <ViewFormField isLoading={isLoading} sm={12} heading="Machines" chips={ isGlobal ? [] : defaultValues?.machines.map((machine) => machine.name)} />
               </Grid>
             </Grid>
           </Grid>

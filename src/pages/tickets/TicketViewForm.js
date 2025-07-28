@@ -364,16 +364,16 @@ export default function TicketViewForm() {
           />
           <Grid container >
             <ViewFormField isLoading={isLoading} sm={4} heading="Ticket No."
-              node={<DropDownField name="issueType" iconButton label='Issue Type' value={{ ...(ticket?.issueType || {}), ticketNo: defaultValues.ticketNo }} onSubmit={onSubmit} options={ticketSettings?.issueTypes} />}
+              node={<DropDownField name="issueType" isLoading={isLoading} iconButton label='Issue Type' value={{ ...(ticket?.issueType || {}), ticketNo: defaultValues.ticketNo }} onSubmit={onSubmit} options={ticketSettings?.issueTypes} />}
             />
             <ViewFormField isLoading={isLoading} sm={4} heading="Request Type"
-              node={<DropDownField name="requestType" label='Request Type' value={ticket?.requestType} onSubmit={onSubmit} options={filteredRequestTypes} />}
+              node={<DropDownField name="requestType" isLoading={isLoading} label='Request Type' value={ticket?.requestType} onSubmit={onSubmit} options={filteredRequestTypes} />}
             />
             <ViewFormField isLoading={isLoading} sm={2} heading="Status"
-              node={<DropDownField name="status" isNullable label='Status' value={ticket?.status} onSubmit={onSubmit} options={ticketSettings?.statuses} />}
+              node={<DropDownField name="status" isLoading={isLoading} isNullable label='Status' value={ticket?.status} onSubmit={onSubmit} options={ticketSettings?.statuses} />}
             />
             <ViewFormField isLoading={isLoading} sm={2} heading="Priority"
-              node={<DropDownField name="priority" isNullable label='Priority' value={ticket?.priority} onSubmit={onSubmit} options={ticketSettings?.priorities} />}
+              node={<DropDownField name="priority" isLoading={isLoading} isNullable label='Priority' value={ticket?.priority} onSubmit={onSubmit} options={ticketSettings?.priorities} />}
             />
 
             {/* <ViewFormField isLoading={isLoading} sm={4} heading=""
@@ -424,31 +424,31 @@ export default function TicketViewForm() {
             {/* <ViewFormField isLoading={isLoading} sm={4} heading="Customer" param={defaultValues.customer} /> */}
             {/* <ViewFormField isLoading={isLoading} sm={4} heading="Machine" param={defaultValues.machine} /> */}
             <ViewFormField isLoading={isLoading} sm={2} heading="HLC"
-              node={<FilledTextField name="hlc" value={defaultValues.hlc} onSubmit={onSubmit} />}
+              node={<FilledTextField name="hlc" isLoading={isLoading} value={defaultValues.hlc} onSubmit={onSubmit} />}
             />
             <ViewFormField isLoading={isLoading} sm={2} heading="PLC"
-              node={<FilledTextField name="plc" value={defaultValues.plc} onSubmit={onSubmit} />}
+              node={<FilledTextField name="plc" isLoading={isLoading} value={defaultValues.plc} onSubmit={onSubmit} />}
             />
             <ViewFormField isLoading={isLoading} sm={4} heading="Raise ticket on behalf of / Reporter"
-              node={<DropDownMultipleSelection name="reporter" isNullable label='Reporter' value={ticket?.reporter} onSubmit={onSubmit} options={reporters} multiple={false} />}
+              node={<DropDownMultipleSelection name="reporter" isLoading={isLoading} isNullable label='Reporter' value={ticket?.reporter} onSubmit={onSubmit} options={reporters} multiple={false} />}
             />
             <ViewFormField isLoading={isLoading} sm={4} heading="Assignees"
-              node={<DropDownMultipleSelection name="assignees" label='Assignees' value={ticket?.assignees} onSubmit={onSubmit} options={activeSecurityUsers} />}
+              node={<DropDownMultipleSelection name="assignees" isLoading={isLoading} label='Assignees' value={ticket?.assignees} onSubmit={onSubmit} options={activeSecurityUsers} />}
             />
             <ViewFormField isLoading={isLoading} sm={4} heading="Approvers"
-              node={<DropDownMultipleSelection name="approvers" label='Approvers' value={ticket?.approvers} onSubmit={onSubmit} options={securityUsers} />}
+              node={<DropDownMultipleSelection name="approvers" isLoading={isLoading} label='Approvers' value={ticket?.approvers} onSubmit={onSubmit} options={securityUsers} />}
             />
             <ViewFormField isLoading={isLoading} sm={12} heading="Summary"
-              node={<FilledTextField name="summary" value={defaultValues.summary} onSubmit={onSubmit} isBold />}
+              node={<FilledTextField name="summary" isLoading={isLoading} value={defaultValues.summary} onSubmit={onSubmit} isBold />}
             />
             <ViewFormField isLoading={isLoading} sm={12} heading="Description"
-              node={<FilledEditorField name="description" value={defaultValues.description} onSubmit={onSubmit} minRows={4} isEditor />}
+              node={<FilledEditorField name="description" isLoading={isLoading} value={defaultValues.description} onSubmit={onSubmit} minRows={4} isEditor />}
             />
             <ViewFormField isLoading={isLoading} sm={10} heading="Fault"
-              node={<DropDownMultipleSelection name="faults" label='Fault' value={ticket?.faults} options={ticketSettings?.faults} onSubmit={onSubmit} isStatus />}
+              node={<DropDownMultipleSelection name="faults" isLoading={isLoading} label='Fault' value={ticket?.faults} options={ticketSettings?.faults} onSubmit={onSubmit} isStatus />}
             />
             <ViewFormField isLoading={isLoading} sm={2} heading="Impact"
-              node={<DropDownField name="impact" isNullable label='Impact' value={ticket?.impact} options={ticketSettings?.impacts} onSubmit={onSubmit} />}
+              node={<DropDownField name="impact" isNullable isLoading={isLoading} label='Impact' value={ticket?.impact} options={ticketSettings?.impacts} onSubmit={onSubmit} />}
             />
             <Grid container sx={{ mt: 4 }}>
               <FormLabel content='Documents' />
@@ -517,48 +517,48 @@ export default function TicketViewForm() {
             {ticket?.issueType?.name === 'Change Request' && (
               <>
                 <ViewFormField isLoading={isLoading} sm={2} heading="Change Type"
-                  node={<DropDownField name="changeType" isNullable label='Change Type' value={ticket?.changeType} options={ticketSettings?.changeTypes} onSubmit={onSubmit} />}
+                  node={<DropDownField name="changeType" isLoading={isLoading} isNullable label='Change Type' value={ticket?.changeType} options={ticketSettings?.changeTypes} onSubmit={onSubmit} />}
                 />
                 <ViewFormField isLoading={isLoading} sm={2} heading="Change Reason"
-                  node={<DropDownField name="changeReason" isNullable label='Change Reason' value={ticket?.changeReason} options={ticketSettings?.changeReasons} onSubmit={onSubmit} />}
+                  node={<DropDownField name="changeReason" isLoading={isLoading} isNullable label='Change Reason' value={ticket?.changeReason} options={ticketSettings?.changeReasons} onSubmit={onSubmit} />}
                 />
                 <ViewFormField isLoading={isLoading} sm={12} heading="Implementation Plan"
-                  node={<FilledEditorField name="implementationPlan" value={defaultValues.implementationPlan} onSubmit={onSubmit} minRows={4} isEditor />}
+                  node={<FilledEditorField name="implementationPlan" isLoading={isLoading} value={defaultValues.implementationPlan} onSubmit={onSubmit} minRows={4} isEditor />}
                 />
                 <ViewFormField isLoading={isLoading} sm={12} heading="Backout Plan"
-                  node={<FilledEditorField name="backoutPlan" value={defaultValues.backoutPlan} onSubmit={onSubmit} minRows={4} isEditor />}
+                  node={<FilledEditorField name="backoutPlan" isLoading={isLoading} value={defaultValues.backoutPlan} onSubmit={onSubmit} minRows={4} isEditor />}
                 />
                 <ViewFormField isLoading={isLoading} sm={12} heading="Test Plan"
-                  node={<FilledEditorField name="testPlan" value={defaultValues.testPlan} onSubmit={onSubmit} minRows={4} isEditor />}
+                  node={<FilledEditorField name="testPlan" isLoading={isLoading} value={defaultValues.testPlan} onSubmit={onSubmit} minRows={4} isEditor />}
                 />
               </>
             )}
             {['change_request', 'system_problem']?.includes(ticket?.issueType?.slug?.trim()?.toLowerCase()) && (
               <>
                 <ViewFormField isLoading={isLoading} sm={4} heading="Investigation Reason"
-                  node={<DropDownField name="investigationReason" isNullable label='Investigation Reason' value={ticket?.investigationReason} options={ticketSettings?.investigationReasons} onSubmit={onSubmit} />}
+                  node={<DropDownField name="investigationReason" isLoading={isLoading} isNullable label='Investigation Reason' value={ticket?.investigationReason} options={ticketSettings?.investigationReasons} onSubmit={onSubmit} />}
                 />
                 <ViewFormField isLoading={isLoading} sm={12} heading="Root Cause"
-                  node={<FilledEditorField name="rootCause" value={defaultValues.rootCause} onSubmit={onSubmit} minRows={4} isEditor />}
+                  node={<FilledEditorField name="rootCause" isLoading={isLoading} value={defaultValues.rootCause} onSubmit={onSubmit} minRows={4} isEditor />}
                 />
                 <ViewFormField isLoading={isLoading} sm={12} heading="resolution"
-                  node={<FilledEditorField name="workaround" value={defaultValues.workaround} onSubmit={onSubmit} minRows={4} isEditor />}
+                  node={<FilledEditorField name="workaround" isLoading={isLoading} value={defaultValues.workaround} onSubmit={onSubmit} minRows={4} isEditor />}
                 />
               </>
             )}
             {ticket?.issueType?.name?.trim()?.toLowerCase() === 'change request' && (
               <Grid container sx={{ pb: 3 }}>
                 <ViewFormField isLoading={isLoading} sm={3} heading="Planned Start Date"
-                  node={<FilledDateField name="plannedStartDate" value={defaultValues.plannedStartDate} onSubmit={onSubmit} />}
+                  node={<FilledDateField name="plannedStartDate" isLoading={isLoading} value={defaultValues.plannedStartDate} onSubmit={onSubmit} />}
                 />
                 <ViewFormField isLoading={isLoading} sm={3} heading="Planned Start Time"
-                  node={<FilledTimeField name="startTime" value={defaultValues.startTime} onSubmit={onSubmit} />}
+                  node={<FilledTimeField name="startTime" isLoading={isLoading} value={defaultValues.startTime} onSubmit={onSubmit} />}
                 />
                 <ViewFormField isLoading={isLoading} sm={3} heading="Planned End Date"
-                  node={<FilledDateField name="plannedEndDate" value={defaultValues.plannedEndDate} onSubmit={onSubmit} />}
+                  node={<FilledDateField name="plannedEndDate" isLoading={isLoading} value={defaultValues.plannedEndDate} onSubmit={onSubmit} />}
                 />
                 <ViewFormField isLoading={isLoading} sm={3} heading="Planned End Time"
-                  node={<FilledTimeField name="endTime" value={defaultValues.endTime} onSubmit={onSubmit} />}
+                  node={<FilledTimeField name="endTime" isLoading={isLoading} value={defaultValues.endTime} onSubmit={onSubmit} />}
                 />
               </Grid>
             )}

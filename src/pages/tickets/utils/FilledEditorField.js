@@ -16,9 +16,10 @@ FilledEditorField.propTypes = {
   onSubmit: PropTypes.func,
   minRows: PropTypes.number,
   isEditor: PropTypes.bool,
+  isLoading: PropTypes.bool,
 };
 
-function FilledEditorField({ name, label, value, onSubmit, minRows, isEditor = false }) {
+function FilledEditorField({ name, label, value, onSubmit, isLoading, minRows, isEditor = false }) {
   const [isFocused, setIsFocused] = useState(false);
 
   const defaultValues = useMemo(
