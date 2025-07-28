@@ -354,16 +354,15 @@ export default function SecurityUserViewForm() {
             <Grid item md={6} sm={12} xs={12} sx={{ p: 0.5 }}>
               <Grid sx={{ border: '1px solid lightgrey', borderRadius: 2, px: 1.5, pt: 1.5, height: { md: '100%' } }}>
                 <FormLabel content="Accessibility Information" />
-
                 <ViewFormField isLoading={isLoading} sm={12} heading="Roles" node={<Grid container>{userRoleChips}</Grid>} />
-
                 <ViewFormField isLoading={isLoading} sm={12} heading="Data Accessibility Level" param={defaultValues?.dataAccessibilityLevel} />
-
-                <ViewFormField isLoading={isLoading} sm={12} heading="Regions" chips={ isGlobal ? [] : defaultValues?.regions.map((region) => region.name)} />
-
-                <ViewFormField isLoading={isLoading} sm={12} heading="Customers" chips={ isGlobal ? [] : defaultValues?.customers.map((customer) => customer.name)} />
-
-                <ViewFormField isLoading={isLoading} sm={12} heading="Machines" chips={ isGlobal ? [] : defaultValues?.machines.map((machine) => machine.name)} />
+                {!isGlobal &&
+                  <>
+                    <ViewFormField isLoading={isLoading} sm={12} heading="Regions" chips={defaultValues?.regions.map((region) => region.name)} />
+                    <ViewFormField isLoading={isLoading} sm={12} heading="Customers" chips={defaultValues?.customers.map((customer) => customer.name)} />
+                    <ViewFormField isLoading={isLoading} sm={12} heading="Machines" chips={defaultValues?.machines.map((machine) => machine.name)} />
+                  </>
+                }
               </Grid>
             </Grid>
           </Grid>
