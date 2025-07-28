@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Card, Grid, Stack, Checkbox } from '@mui/material';
+import { Box, Card, Grid, Stack, Checkbox, Collapse } from '@mui/material';
 // routes
 import { PATH_SETTING } from '../../../routes/paths';
 // assets
@@ -274,52 +274,52 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
                 />
 
               </Box>
-              <Box rowGap={2} columnGap={2} display="grid"
-                gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
-              >
-                <RHFAutocomplete
-                  multiple
-                  disabled={isDisabled || isGlobal}
-                  disableCloseOnSelect
-                  filterSelectedOptions
-                  name="regions"
-                  label="Regions"
-                  options={activeRegions}
-                  getOptionLabel={(option) => option?.name || ''}
-                  isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                  renderOption={(props, option) => (<li {...props} key={option?._id}> {option?.name || ''} </li>)}
-                  ChipProps={{ size: 'small' }}
-                />
+              <Collapse in={!isGlobal} timeout="auto">
+                <Stack spacing={2} >
+                  <RHFAutocomplete
+                    multiple
+                    disableCloseOnSelect
+                    filterSelectedOptions
+                    disabled={isDisabled || isGlobal}
+                    name="regions"
+                    label="Regions"
+                    options={activeRegions}
+                    getOptionLabel={(option) => option.name}
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                    renderOption={(props, option) => (<li {...props} key={option?._id}> {option?.name || ''} </li>)}
+                    ChipProps={{ size: 'small' }}
+                  />
 
-                <RHFAutocomplete
-                  multiple
-                  disabled={isDisabled || isGlobal}
-                  disableCloseOnSelect
-                  filterSelectedOptions
-                  name="customers"
-                  label="Customers"
-                  options={allActiveCustomers}
-                  getOptionLabel={(option) => option?.name || ''}
-                  isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                  renderOption={(props, option) => (<li {...props} key={option?._id}> {option?.name || ''} </li>)}
-                  ChipProps={{ size: 'small' }}
-                />
+                  <RHFAutocomplete
+                    multiple
+                    disableCloseOnSelect
+                    filterSelectedOptions
+                    disabled={isDisabled || isGlobal}
+                    name="customers"
+                    label="Customers"
+                    options={allActiveCustomers}
+                    getOptionLabel={(option) => option.name}
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                    renderOption={(props, option) => (<li {...props} key={option?._id}> {option?.name || ''} </li>)}
+                    ChipProps={{ size: 'small' }}
+                  />
 
-                <RHFAutocomplete
-                  multiple
-                  disabled={isDisabled || isGlobal}
-                  disableCloseOnSelect
-                  filterSelectedOptions
-                  name="machines"
-                  label="Machines"
-                  options={allMachines?.filter(m => customers?.some(c => c?._id === m.customer?._id))}
-                  getOptionLabel={(option) => `${option?.serialNo || ''} ${option?.name ? '-' : ''} ${option?.name || ''}`}
-                  isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                  renderOption={(props, option) => (<li {...props} key={option?._id}>{`${option.serialNo || ''} ${option.name ? '-' : ''} ${option.name || ''}`}</li>)}
-                  ChipProps={{ size: 'small' }}
-                />
-
-              </Box>
+                  <RHFAutocomplete
+                    multiple
+                    disableCloseOnSelect
+                    filterSelectedOptions
+                    disabled={isDisabled || isGlobal}
+                    name="machines"
+                    label="Machines"
+                    options={allMachines?.filter(m => customers?.some(c => c?._id === m.customer?._id))}
+                    getOptionLabel={(option) => `${option.serialNo} ${option.name ? '-' : ''} ${option?.name || ''}`}
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                    renderOption={(props, option) => (<li {...props} key={option?._id}>{`${option.serialNo || ''} ${option.name ? '-' : ''} ${option.name || ''}`}</li>)}
+                    ChipProps={{ size: 'small' }}
+                  />
+                </Stack>
+              </Collapse>
+              
               <Grid item md={12} display="flex">
                 {(!isInvite && (
                   <>

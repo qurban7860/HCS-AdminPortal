@@ -176,6 +176,7 @@ export default function SecurityUserViewForm() {
       login: securityUser?.login || '',
       roles: securityUser?.roles,
       dataAccessibilityLevel: securityUser?.dataAccessibilityLevel || '',
+      isGlobal: securityUser?.dataAccessibilityLevel?.toLowerCase() === 'global' || '',
       regions: securityUser?.regions || [],
       countries: securityUser?.regions ? securityUser.regions.flatMap(region => region.countries) : [],
       customers: securityUser?.customers || [],
@@ -194,6 +195,7 @@ export default function SecurityUserViewForm() {
   );
 
   const userRoleChips = defaultValues?.roles?.map((role, index) => <Chip key={index} title={role.name} label={role.name} color={role.name === 'SuperAdmin' ? 'secondary' : 'default'} sx={{ m: 0.2 }} />);
+  const isGlobal = defaultValues?.isGlobal;
   const handleViewUserDialog = async (s) => {
     await dispatch(setSecurityUserDialog(true));
     await dispatch(getDialogSecurityUser(s?._id))
@@ -352,16 +354,15 @@ export default function SecurityUserViewForm() {
             <Grid item md={6} sm={12} xs={12} sx={{ p: 0.5 }}>
               <Grid sx={{ border: '1px solid lightgrey', borderRadius: 2, px: 1.5, pt: 1.5, height: { md: '100%' } }}>
                 <FormLabel content="Accessibility Information" />
-
                 <ViewFormField isLoading={isLoading} sm={12} heading="Roles" node={<Grid container>{userRoleChips}</Grid>} />
-
                 <ViewFormField isLoading={isLoading} sm={12} heading="Data Accessibility Level" param={defaultValues?.dataAccessibilityLevel} />
-
-                <ViewFormField isLoading={isLoading} sm={12} heading="Regions" chips={defaultValues?.regions.map((region) => region.name)} />
-
-                <ViewFormField isLoading={isLoading} sm={12} heading="Customers" chips={defaultValues?.customers.map((customer) => customer.name)} />
-
-                <ViewFormField isLoading={isLoading} sm={12} heading="Machines" chips={defaultValues?.machines.map((machine) => machine.name)} />
+                {!isGlobal &&
+                  <>
+                    <ViewFormField isLoading={isLoading} sm={12} heading="Regions" chips={defaultValues?.regions.map((region) => region.name)} />
+                    <ViewFormField isLoading={isLoading} sm={12} heading="Customers" chips={defaultValues?.customers.map((customer) => customer.name)} />
+                    <ViewFormField isLoading={isLoading} sm={12} heading="Machines" chips={defaultValues?.machines.map((machine) => machine.name)} />
+                  </>
+                }
               </Grid>
             </Grid>
           </Grid>

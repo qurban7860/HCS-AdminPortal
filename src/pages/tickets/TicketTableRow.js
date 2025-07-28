@@ -36,11 +36,6 @@ const isVisible = useCallback((key) => !hiddenColumns?.[key], [hiddenColumns]);
     [assignees]
   );
 
-  const onViewRow = useCallback(
-    () => navigate(PATH_SUPPORT.supportTickets.view(_id)),
-    [_id, navigate]
-  );
-
   const handleCustomerDialog = useCallback(
     (event, id) => {
       event.preventDefault();
@@ -59,10 +54,12 @@ const isVisible = useCallback((key) => !hiddenColumns?.[key], [hiddenColumns]);
     [dispatch]
   );
 
-  const onOpenNewTab = useCallback(
-    () => window.open(PATH_SUPPORT.supportTickets.view(ticketNo), '_blank'),
-    [ticketNo]
+  const onViewRow = useCallback(
+    () => navigate(PATH_SUPPORT.supportTickets.view(_id)),
+    [_id, navigate]
   );
+
+  const onOpenNewTab = (tNo) => window.open(PATH_SUPPORT.supportTickets.view(tNo), '_blank');
   
   return (
 <StyledTableRow hover >
@@ -89,8 +86,8 @@ const isVisible = useCallback((key) => !hiddenColumns?.[key], [hiddenColumns]);
       )}
       {isVisible('ticketNo') && (
         <LinkTableCellWithIconTargetBlank
-          onViewRow={() => onViewRow(ticketNo)}
-          onClick={() => onOpenNewTab}
+          onViewRow={() => onViewRow(_id)}
+          onClick={() => onOpenNewTab(_id)}
           param={`${prefix || ''} - ${ticketNo || ''}`}
         />
       )}
