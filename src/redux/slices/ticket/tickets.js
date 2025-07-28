@@ -61,6 +61,8 @@ const slice = createSlice({
       state.isLoadingSoftwareVersion = false;
       state.error = action.payload;
       state.initial = true;
+      state.ticket = {};
+      state.ticket = tickets: [],
     },
    
     // GET Tickets Success

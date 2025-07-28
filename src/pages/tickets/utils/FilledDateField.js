@@ -15,9 +15,10 @@ FilledTextField.propTypes = {
   value: PropTypes.any,
   onSubmit: PropTypes.func,
   minRows: PropTypes.number,
+  isLoading: PropTypes.bool,
 };
 
-function FilledTextField( { name, label, value, onSubmit, minRows } ) {
+function FilledTextField( { name, label, value, isLoading, onSubmit, minRows } ) {
 
       const defaultValues = useMemo(
         () => ({
