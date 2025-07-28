@@ -211,7 +211,6 @@ export default function CustomerList({ isArchived }) {
             name={isArchived ? FORMLABELS.COVER.ARCHIVED_CUSTOMERS : FORMLABELS.COVER.CUSTOMERS}
             customerSites
             customerContacts
-            isArchivedCustomers={!isArchived}
             isArchived={isArchived}
           />
         </StyledCardContainer>
