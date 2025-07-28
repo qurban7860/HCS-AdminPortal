@@ -62,7 +62,7 @@ const slice = createSlice({
       state.error = action.payload;
       state.initial = true;
       state.ticket = {};
-      state.ticket = tickets: [],
+      state.tickets = [];
     },
    
     // GET Tickets Success
@@ -403,6 +403,7 @@ export function getTickets({ page, pageSize, issueType, requestType, isResolved,
 export function getTicket(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
+    dispatch(resetTicket());
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}tickets/${id}`);
       dispatch(slice.actions.getTicketSuccess(response.data));

@@ -179,7 +179,7 @@ export default function SecurityUserViewForm() {
       isGlobal: securityUser?.dataAccessibilityLevel?.toLowerCase() === 'global' || '',
       regions: securityUser?.regions || [],
       countries: securityUser?.regions ? securityUser.regions.flatMap(region => region.countries) : [],
-      customers: securityUser?.customers?.filter(s=>s?._id != securityUser?.customer?._id ) || [],
+      customers: securityUser?.customers?.filter(s=>s?._id !== securityUser?.customer?._id ) || [],
       machines: securityUser?.machines || [],
       isActive: securityUser?.isActive,
       // formerEmployee: securityUser?.contact?.formerEmployee || false,
@@ -195,6 +195,7 @@ export default function SecurityUserViewForm() {
   );
 
   const userRoleChips = defaultValues?.roles?.map((role, index) => <Chip key={index} title={role.name} label={role.name} color={role.name === 'SuperAdmin' ? 'secondary' : 'default'} sx={{ m: 0.2 }} />);
+  const isGlobal = defaultValues?.isGlobal;
   const handleViewUserDialog = async (s) => {
     await dispatch(setSecurityUserDialog(true));
     await dispatch(getDialogSecurityUser(s?._id))

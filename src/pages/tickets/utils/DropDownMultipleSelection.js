@@ -23,6 +23,7 @@ DropDownMultipleSelection.propTypes = {
 
 export default function DropDownMultipleSelection({ value, name, label, options = [], isLoading, onSubmit, multiple = true, isStatus }) {
   const [isFocused, setIsFocused] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const theme = useTheme();
 
   const defaultValues = useMemo(() => {
@@ -48,17 +49,25 @@ export default function DropDownMultipleSelection({ value, name, label, options 
     try {
       if (Array.isArray(data[name])) {
         await onSubmit(name, data[name]);
+        setIsEditing(false);
       }
     } catch (e) {
       console.log(e);
     }
   };
 
+  const handleCancel = () => {
+    reset();
+    setIsEditing(false); 
+  };
+
   const handleOnChange = (event, newValue) => {
     setValue(name, newValue);
     if (!multiple) {
       onSubmit(name, newValue);
-    }
+    } else {
+    setIsEditing(true); 
+  }
   };
 
   return (
@@ -181,7 +190,7 @@ export default function DropDownMultipleSelection({ value, name, label, options 
               : undefined
           }
         />
-        {(Array.isArray(val) || Array.isArray(value)) &&
+        { isEditing && (Array.isArray(val) || Array.isArray(value)) &&
           (val?.length !== value?.length || !val?.every((v) => value?.some((vc) => vc?._id === v?._id))) &&
           (<Stack
             direction="row"
@@ -207,7 +216,7 @@ export default function DropDownMultipleSelection({ value, name, label, options 
             <Button
               variant="outlined"
               size="small"
-              onClick={() => reset()}
+              onClick={handleCancel}
               sx={{ minWidth: 32, padding: '2px', height: 32 }}
             >
               <ClearRoundedIcon />
