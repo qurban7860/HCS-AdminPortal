@@ -67,6 +67,7 @@ const ComponentDialogBox = ({
 
   const onSubmit = async (data) => {
     if (csvVersion === '1.0') {
+      const {profileShape, webWidth, flangeHeight, materialThickness, materialGrade, position, ...rest}=data;
       handleSaveComponent(rest, componentIndex);
     } else {
       handleSaveComponent(data, componentIndex);
