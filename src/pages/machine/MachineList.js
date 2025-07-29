@@ -18,8 +18,7 @@ import {
 } from '../../components/table';
 import Scrollbar from '../../components/scrollbar';
 import MachineListTableRow from './MachineListTableRow';
-import MachineListTableToolbar from './MachineListTableToolbar';
-
+import MachineTableController from './MachineTableController';
 
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
@@ -266,12 +265,11 @@ export default function MachineList({ isArchived }) {
       <Cover name={ isArchived ? "Archived Machines" : "Machines" } icon="arcticons:materialistic" isArchived={isArchived} />
       </StyledCardContainer>
       <TableCard>
-        <MachineListTableToolbar
+        <MachineTableController
           filterName={filterName}
           onFilterName={handleFilterName}
           filterVerify={ isArchived ? undefined : filterVerify}
           onFilterVerify={ isArchived ? undefined : handleFilterVerify}
-          
           filterStatus={ isArchived ? undefined : filterStatus}
           onFilterStatus={ isArchived ? undefined : handleFilterStatus}
           isFiltered={isFiltered}

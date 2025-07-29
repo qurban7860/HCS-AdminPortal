@@ -9,7 +9,7 @@ import Iconify from '../../../../components/iconify';
 import { PATH_CRM } from '../../../../routes/paths';
 // constants
 import { options, StyledTooltip } from '../../../../theme/styles/default-styles';
-import TextSearchField from '../../../../components/ListTableTools/TextSearchField';
+import { TextSearchField } from '../../../../components/ListTableTools';
 // ----------------------------------------------------------------------
 
 CustomerTableController.propTypes = {
