@@ -42,7 +42,7 @@ function DialogProfileAddFile({ open, handleClose }) {
     watch,
     setValue,
     handleSubmit,
-    formState: { isSubmitting, errors },
+    formState: { isSubmitting },
   } = methods;
   const { files } = watch();
 

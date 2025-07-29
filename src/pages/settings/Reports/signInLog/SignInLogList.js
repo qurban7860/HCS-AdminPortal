@@ -14,7 +14,7 @@ import {
   TableNoData,
   TableSkeleton,
   TableHeadCustom,
-  TablePaginationCustom,
+  TablePaginationFilter,
 } from '../../../../components/table';
 import Scrollbar from '../../../../components/scrollbar';
 // sections
@@ -203,7 +203,7 @@ export default function SignInLogList() {
       </FormProvider>
 
       <TableCard>
-        {!isNotFound && <TablePaginationCustom
+        {!isNotFound && <TablePaginationFilter
           count={signInLogs.totalCount}
           page={page}
           rowsPerPage={rowsPerPage}
@@ -243,7 +243,7 @@ export default function SignInLogList() {
           </Scrollbar>
         </TableContainer>
 
-        {!isNotFound && <TablePaginationCustom
+        {!isNotFound && <TablePaginationFilter
           count={signInLogs.totalCount}
           page={page}
           rowsPerPage={rowsPerPage}

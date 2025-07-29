@@ -6,7 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Container, Card, Grid, Stack, InputAdornment } from '@mui/material';
+import { Box, Container, Card, Grid, Stack } from '@mui/material';
 // components
 import { Cover } from '../../../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../../../theme/styles/default-styles';
@@ -16,7 +16,6 @@ import { TicketCollectionSchema, isValidColor, normalizeColor } from '../utils/c
 import AddFormButtons from '../../../../../components/DocumentForms/AddFormButtons';
 import FormProvider, { RHFTextField, RHFSwitch, RHFColorPicker, RHFEditor, RHFIconPicker } from '../../../../../components/hook-form';
 import { postTicketStatusType, patchTicketStatusType, getTicketStatusType, resetTicketStatusType } from '../../../../../redux/slices/ticket/ticketSettings/ticketStatusTypes';
-import Iconify from '../../../../../components/iconify';
 import { handleError } from '../../../../../utils/errorHandler';
 
 export default function StatusTypeForm() {
@@ -56,7 +55,7 @@ export default function StatusTypeForm() {
     formState: { isSubmitting }
   } = methods;
 
-  const { icon, color } = watch();
+  const { color } = watch();
 
   useEffect(() => {
     if (id) {

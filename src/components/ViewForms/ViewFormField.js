@@ -1,7 +1,7 @@
 import React, { useEffect, useState, memo } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { Typography, Grid, Chip, createTheme, IconButton, Link, ListItemText } from '@mui/material';
+import { Typography, Grid, Chip, createTheme, IconButton, Link } from '@mui/material';
 import { green } from '@mui/material/colors';
 import IconPopover from '../Icons/IconPopover';
 import ViewFormMenuPopover from './ViewFormMenuPopover';
@@ -9,7 +9,6 @@ import SkeletonViewFormField from '../skeleton/SkeletonViewFormField';
 import { StyledTooltip } from '../../theme/styles/default-styles';
 import Iconify from '../iconify';
 import { ICONS } from '../../constants/icons/default-icons';
-import { fDateTime } from '../../utils/formatTime';
 
 function ViewFormField({
   backLink,
@@ -49,7 +48,6 @@ function ViewFormField({
 }) {
   const [verifiedAnchorEl, setVerifiedAnchorEl] = useState(null);
   const [verifiedBy, setVerifiedBy] = useState([]);
-  const { machineServiceReport } = useSelector((state) => state.machineServiceReport);
   const theme = createTheme({
     palette: {
       success: green,

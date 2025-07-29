@@ -10,7 +10,7 @@ import { useSnackbar } from '../../../../components/snackbar';
 // schema
 import { DocumentCategorySchema } from '../../../schemas/document';
 // routes
-import { PATH_MACHINE, PATH_SETTING } from '../../../../routes/paths';
+import { PATH_MACHINE } from '../../../../routes/paths';
 // components
 import FormProvider, { RHFTextField } from '../../../../components/hook-form';
 import {

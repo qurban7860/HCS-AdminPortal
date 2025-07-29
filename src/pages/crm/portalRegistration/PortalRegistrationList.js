@@ -20,7 +20,6 @@ import {
   TableNoData,
   TableSkeleton,
   TablePaginationFilter,
-  TablePaginationCustom,
   TableHeadFilter,
 } from '../../../components/table';
 import Scrollbar from '../../../components/scrollbar';
@@ -217,7 +216,7 @@ useEffect(() => {
         </TableContainer>
 
         {!isNotFound && (
-          <TablePaginationCustom
+          <TablePaginationFilter
             count={ portalRegistrations?.totalCount ? portalRegistrations?.totalCount : 0 }
             page={ page }
             rowsPerPage={ rowsPerPage }

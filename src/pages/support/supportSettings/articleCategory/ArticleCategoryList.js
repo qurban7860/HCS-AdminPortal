@@ -24,8 +24,6 @@ import {
   TableNoData,
   TableSkeleton,
   TableSelectedAction,
-  TablePaginationCustom,
-  TablePaginationFilter,
   TableHeadFilter,
 } from '../../../../components/table';
 import Iconify from '../../../../components/iconify';

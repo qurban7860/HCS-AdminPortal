@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import debounce from 'lodash/debounce';
 // @mui
-import { Table, TableBody, TableContainer, Container, Card } from '@mui/material';
+import { Table, TableBody, TableContainer, Container } from '@mui/material';
 import { useNavigate } from 'react-router';
 import { PATH_SETTING } from '../../../../routes/paths';
 import { Cover } from '../../../../components/Defaults/Cover';
@@ -16,7 +16,7 @@ import {
   TableNoData,
   TableSkeleton,
   TableHeadCustom,
-  TablePaginationCustom,
+  TablePaginationFilter,
 } from '../../../../components/table';
 import Scrollbar from '../../../../components/scrollbar';
 // sections
@@ -136,7 +136,7 @@ export default function UserInviteList() {
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
           />
-            {!isNotFound && <TablePaginationCustom
+            {!isNotFound && <TablePaginationFilter
               count={dataFiltered.length}
               page={page}
               rowsPerPage={rowsPerPage}
@@ -174,7 +174,7 @@ export default function UserInviteList() {
             </Scrollbar>
           </TableContainer>
 
-          <TablePaginationCustom
+          <TablePaginationFilter
             count={dataFiltered.length}
             page={page}
             rowsPerPage={rowsPerPage}

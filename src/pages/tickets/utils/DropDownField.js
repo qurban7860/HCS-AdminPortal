@@ -5,7 +5,6 @@ import { useForm } from 'react-hook-form';
 import { Box, Button, Menu, MenuItem, Typography, IconButton } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import Iconify from '../../../components/iconify';
-import IconButtonTooltip from '../../../components/Icons/IconButtonTooltip';
 import { StyledTooltip } from '../../../theme/styles/default-styles';
 
 const StyledMenu = styled((props) => (

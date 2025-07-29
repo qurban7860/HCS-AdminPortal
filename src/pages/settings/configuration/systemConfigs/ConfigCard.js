@@ -1,16 +1,12 @@
 import PropTypes from 'prop-types';
 import {
-  Paper,
-  Switch,
   Stack,
   Typography,
-  Box,
   useTheme,
   Card,
   CardHeader,
   CardContent,
-  CardActions,
-  Divider,
+  CardActions
 } from '@mui/material';
 import { useNavigate } from 'react-router';
 

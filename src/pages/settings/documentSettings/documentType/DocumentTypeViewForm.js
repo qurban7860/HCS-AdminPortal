@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-
 // @mui
 import { Card, Grid } from '@mui/material';
 // redux
@@ -13,7 +12,7 @@ import {
   setMergeDialogVisibility
 } from '../../../../redux/slices/document/documentType';
 // paths
-import { PATH_MACHINE, PATH_SETTING } from '../../../../routes/paths';
+import { PATH_MACHINE } from '../../../../routes/paths';
 // components
 import { useSnackbar } from '../../../../components/snackbar';
 import ViewFormAudit from '../../../../components/ViewForms/ViewFormAudit';

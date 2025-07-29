@@ -1,15 +1,20 @@
 import React, { useEffect, useReducer, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableSortLabel, Tooltip } from '@mui/material';
 import PropTypes from 'prop-types';
 import TableCard from '../../../components/ListTableTools/TableCard';
-import { useTable, getComparator, TableNoData, TableSkeleton, TablePaginationCustom } from '../../../components/table';
+import { 
+  useTable, 
+  getComparator, 
+  TableNoData, 
+  TableSkeleton, 
+  TablePaginationFilter 
+} from '../../../components/table';
 import { getMachineLogRecords, ChangeRowsPerPage, ChangePage, resetMachineErpLogRecords } from '../../../redux/slices/products/machineErpLogs';
 import Scrollbar from '../../../components/scrollbar';
 import MachineLogsTableRow from './MachineLogsTableRow';
 import DialogViewMachineLogDetails from '../../../components/Dialog/DialogViewMachineLogDetails';
-import MachineLogsDataTablePaginationCustom from './MachineLogsDataTablePaginationCustom';
+import MachineLogsDataTablePaginationFilter from './MachineLogsDataTablePaginationCustom';
 
 function tableColumnsReducer(state, action) {
   switch (action.type) {
@@ -181,7 +186,7 @@ const MachineLogsDataTable = ({ logType, unitType, allMachineLogsPage, dataForAp
     <>
       <TableCard>
         {!isNotFound && (
-          <MachineLogsDataTablePaginationCustom
+          <MachineLogsDataTablePaginationFilter
             count={machineErpLogstotalCount || 0}
             page={page}
             rowsPerPage={rowsPerPage}
@@ -258,7 +263,7 @@ const MachineLogsDataTable = ({ logType, unitType, allMachineLogsPage, dataForAp
           </Scrollbar>
         </TableContainer>
         {!isNotFound && (
-          <TablePaginationCustom
+          <TablePaginationFilter
             count={machineErpLogstotalCount || 0}
             page={page}
             rowsPerPage={rowsPerPage}

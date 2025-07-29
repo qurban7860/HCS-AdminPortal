@@ -29,7 +29,7 @@ import {
   TableNoData,
   TableSkeleton,
   TableHeadCustom,
-  TablePaginationCustom,
+  TablePaginationFilter,
 } from '../../../components/table';
 // import Iconify from '../../../components/iconify/Iconify';
 import Scrollbar from '../../../components/scrollbar';
@@ -195,7 +195,7 @@ export default function StatusList() {
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
           />
-          {!isNotFound && <TablePaginationCustom
+          {!isNotFound && <TablePaginationFilter
             count={dataFiltered.length}
             page={page}
             rowsPerPage={rowsPerPage}
@@ -262,7 +262,7 @@ export default function StatusList() {
             </Scrollbar>
           </TableContainer>
 
-          {!isNotFound && <TablePaginationCustom
+          {!isNotFound && <TablePaginationFilter
             count={dataFiltered.length}
             page={page}
             rowsPerPage={rowsPerPage}

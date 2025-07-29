@@ -1,12 +1,12 @@
 import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import debounce from 'lodash/debounce';
 // @mui
-import { Card, Table, Button, TableBody, Container, TableContainer } from '@mui/material';
+import { Table, Button, TableBody, Container, TableContainer } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
 // components
 import { useSnackbar } from '../../../../components/snackbar';
-import { useTable, getComparator, TableNoData, TableSkeleton, TableHeadCustom, TablePaginationCustom } from '../../../../components/table';
+import { useTable, getComparator, TableNoData, TableSkeleton, TableHeadCustom, TablePaginationFilter } from '../../../../components/table';
 import Scrollbar from '../../../../components/scrollbar';
 import ConfirmDialog from '../../../../components/confirm-dialog';
 // sections
@@ -159,7 +159,7 @@ export default function BlacklistIPList() {
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
           />
-          {!isNotFound && <TablePaginationCustom
+          {!isNotFound && <TablePaginationFilter
             count={dataFiltered.length}
             page={page}
             rowsPerPage={rowsPerPage}
@@ -197,7 +197,7 @@ export default function BlacklistIPList() {
             </Scrollbar>
           </TableContainer>
 
-          {!isNotFound && <TablePaginationCustom
+          {!isNotFound && <TablePaginationFilter
             count={dataFiltered.length}
             page={page}
             rowsPerPage={rowsPerPage}

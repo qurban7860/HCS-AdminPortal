@@ -15,7 +15,7 @@ import {
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
 // routes
-import { PATH_MACHINE, PATH_SETTING } from '../../../../routes/paths';
+import { PATH_MACHINE } from '../../../../routes/paths';
 // components
 import {
   useTable,
@@ -23,7 +23,6 @@ import {
   TableNoData,
   TableSkeleton,
   TableSelectedAction,
-  TablePaginationCustom,
   TablePaginationFilter,
   TableHeadFilter,
 } from '../../../../components/table';
@@ -45,7 +44,6 @@ import { Cover } from '../../../../components/Defaults/Cover';
 import { fDate } from '../../../../utils/formatTime';
 import TableCard from '../../../../components/ListTableTools/TableCard';
 import { StyledCardContainer } from '../../../../theme/styles/default-styles';
-import useResponsive from '../../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -100,8 +98,6 @@ export default function DocumentCategoryList({ isArchived = false }) {
   const { documentCategories, filterBy, page, rowsPerPage, isLoading, initial, reportHiddenColumns } = useSelector(
     (state) => state.documentCategory
   );
-
-  const isMobile = useResponsive('down', 'sm');
 
   useLayoutEffect(() => {
     dispatch(getDocumentCategories(isArchived));
@@ -248,21 +244,11 @@ export default function DocumentCategoryList({ isArchived = false }) {
             isArchived={isArchived}
           />
 
-          {!isNotFound && !isMobile && (
+          {!isNotFound && (
             <TablePaginationFilter
               columns={TABLE_HEAD}
               hiddenColumns={reportHiddenColumns}
               handleHiddenColumns={handleHiddenColumns}
-              count={dataFiltered.length}
-              page={page}
-              rowsPerPage={rowsPerPage}
-              onPageChange={onChangePage}
-              onRowsPerPageChange={onChangeRowsPerPage}
-            />
-          )}
-
-          {!isNotFound && isMobile && (
-            <TablePaginationCustom
               count={dataFiltered.length}
               page={page}
               rowsPerPage={rowsPerPage}
@@ -327,7 +313,7 @@ export default function DocumentCategoryList({ isArchived = false }) {
             </Scrollbar>
           </TableContainer>
           {!isNotFound &&  (
-            <TablePaginationCustom
+            <TablePaginationFilter
               count={dataFiltered.length}
               page={page}
               rowsPerPage={rowsPerPage}

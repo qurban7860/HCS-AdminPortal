@@ -5,7 +5,6 @@ import { useDispatch } from '../../../../redux/store';
 import { fDateTime } from '../../../../utils/formatTime';
 import { useScreenSize } from '../../../../hooks/useResponsive';
 import { getCustomer, setCustomerDialog } from '../../../../redux/slices/customer/customer';
-import { getContact, setContactDialog } from '../../../../redux/slices/customer/contact';
 import { getDialogSecurityUser, setSecurityUserDialog } from '../../../../redux/slices/securityUser/securityUser';
 import LinkTableCellWithIconTargetBlank from '../../../../components/ListTableTools/LinkTableCellWithIconTargetBlank';
 
@@ -53,11 +52,6 @@ export default function SignInLogListTableRow({
   const handleCustomerDialog = () => {
     dispatch(getCustomer(user?.customer?._id))
     dispatch(setCustomerDialog(true))
-  }
-
-  const handleContactDialog = () => {
-    dispatch(getContact(user?.customer?._id, user?.contact?._id))
-    dispatch(setContactDialog(true))
   }
 
   return (

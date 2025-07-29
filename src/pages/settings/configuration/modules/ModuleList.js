@@ -17,7 +17,7 @@ import {
   TableNoData,
   TableHeadCustom,
   TableSelectedAction,
-  TablePaginationCustom,
+  TablePaginationFilter,
 } from '../../../../components/table';
 // sections
 import ModuleListTableToolbar from './ModuleListTableTolbar';
@@ -167,7 +167,7 @@ export default function ModuleList() {
             onFilterRole={handleFilterRole}
             onResetFilter={handleResetFilter}
           />
-          {!isNotFound && <TablePaginationCustom
+          {!isNotFound && <TablePaginationFilter
             count={dataFiltered.length}
             page={page}
             rowsPerPage={rowsPerPage}
@@ -206,7 +206,7 @@ export default function ModuleList() {
             <TableNoData isNotFound={isNotFound} />
           </TableContainer>
 
-          {!isNotFound && <TablePaginationCustom
+          {!isNotFound && <TablePaginationFilter
             count={dataFiltered.length}
             page={page}
             rowsPerPage={rowsPerPage}

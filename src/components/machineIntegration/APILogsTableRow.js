@@ -31,7 +31,6 @@ export default function APILogsTableRow({ row, style, selected, onViewRow, hidde
     customer,
     updatedAt,
     responseMessage,
-    requestHeaders = {},
     response,
     createdIP = '',
     createdBy = '',

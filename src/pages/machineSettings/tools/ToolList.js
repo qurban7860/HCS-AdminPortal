@@ -20,7 +20,7 @@ import {
   TableNoData,
   TableSkeleton,
   TableHeadCustom,
-  TablePaginationCustom,
+  TablePaginationFilter,
 } from '../../../components/table';
 import Scrollbar from '../../../components/scrollbar';
 import ConfirmDialog from '../../../components/confirm-dialog/ConfirmDialog';
@@ -170,7 +170,7 @@ export default function ToolList() {
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
           />
-          {!isNotFound && <TablePaginationCustom
+          {!isNotFound && <TablePaginationFilter
             count={dataFiltered.length}
             page={page}
             rowsPerPage={rowsPerPage}
@@ -211,7 +211,7 @@ export default function ToolList() {
             </Scrollbar>
           </TableContainer>
 
-          {!isNotFound && <TablePaginationCustom
+          {!isNotFound && <TablePaginationFilter
             count={dataFiltered.length}
             page={page}
             rowsPerPage={rowsPerPage}

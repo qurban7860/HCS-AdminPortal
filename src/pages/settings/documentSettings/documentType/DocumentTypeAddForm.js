@@ -10,7 +10,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // import { LoadingButton } from '@mui/lab';
 import { Card, Grid, Stack, Container } from '@mui/material';
 // routes
-import { PATH_MACHINE, PATH_SETTING } from '../../../../routes/paths';
+import { PATH_MACHINE } from '../../../../routes/paths';
 // schema
 import { DocumentTypeSchema } from '../../../schemas/document';
 // slice

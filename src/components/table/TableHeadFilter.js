@@ -1,10 +1,8 @@
 import PropTypes from 'prop-types';
 // @mui
 import { Box, TableRow, TableCell, TableHead, TableSortLabel } from '@mui/material';
-import { createTheme } from '@mui/material/styles';
 import { green } from '@mui/material/colors';
 import { useWidth } from '../../hooks/useResponsive';
-import Iconify from '../iconify';
 import { StyledTooltip } from '../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
@@ -58,9 +56,6 @@ export default function TableHeadFilter({
   const mdNone = " md: |  md1 md2 md3 md4 md5 | ";
   const smNone = " md: |  md1 md2 md3 md4 md5 | sm: | sm1 sm2 sm3 sm4 sm5| "
   const xsNone = " md: |  md1 md2 md3 md4 md5 | sm: | sm2 sm3 sm4 sm5 | xs: | xs1 xs2 xs3 xs4 xs5 |"
-
-  const theme = createTheme({ palette: { success: green } });
-
   let displayHeadIs
 
   return (

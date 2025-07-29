@@ -6,7 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Container, Card, Grid, Stack, InputAdornment } from '@mui/material';
+import { Box, Container, Card, Grid, Stack } from '@mui/material';
 // components
 import { Cover } from '../../../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../../../theme/styles/default-styles';
@@ -17,7 +17,6 @@ import { TicketCollectionSchema, isValidColor, normalizeColor } from '../utils/c
 import { handleError } from '../../../../../utils/errorHandler';
 import FormProvider, { RHFTextField, RHFSwitch, RHFColorPicker, RHFEditor, RHFIconPicker } from '../../../../../components/hook-form';
 import { postTicketChangeReason, patchTicketChangeReason, getTicketChangeReason, resetTicketChangeReason } from '../../../../../redux/slices/ticket/ticketSettings/ticketChangeReasons';
-import Iconify from '../../../../../components/iconify';
 
 export default function ChangeReasonForm() {
   const navigate = useNavigate();
@@ -56,7 +55,7 @@ export default function ChangeReasonForm() {
     formState: { isSubmitting }
   } = methods;
 
-  const { icon, color } = watch()
+  const { color } = watch()
 
   useEffect(() => {
     if (id) {
@@ -117,17 +116,6 @@ export default function ChangeReasonForm() {
                 >
                   <RHFTextField name="name" label="Name*" />
                   <RHFTextField name="slug" label="Slug" />
-                  {/* <RHFTextField
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="start" >
-                          <Iconify icon={icon} sx={{ width: 25, height: 25, color: color || 'black' }} />
-                        </InputAdornment>
-                      )
-                    }}
-                    name="icon"
-                    label="Icon*"
-                  /> */}
                   <RHFIconPicker name="icon" label="Icon*" color={isValidColor(normalizeColor(color)) ? normalizeColor(color) : 'black'} />
 
                   <RHFColorPicker

@@ -1,37 +1,28 @@
-// import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { useNavigate, useParams } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-
 // @mui
-// import { LoadingButton } from '@mui/lab';
 import {
   Card,
   Grid,
   Stack,
-  Container,
-  Box,
-  MenuItem,
+  Container
 } from '@mui/material';
 // routes
 import { PATH_SUPPORT } from '../../../../routes/paths';
 // components
 import { useSnackbar } from '../../../../components/snackbar';
-import FormProvider, { RHFTextField, RHFSwitch, RHFEditor, RHFAutocomplete, RHFSelect } from '../../../../components/hook-form';
-import { getArticle, resetArticle, updateArticle } from '../../../../redux/slices/support/knowledgeBase/article';
+import FormProvider, { RHFTextField, RHFSwitch, RHFEditor, RHFAutocomplete } from '../../../../components/hook-form';
+import { updateArticle } from '../../../../redux/slices/support/knowledgeBase/article';
 import { getActiveArticleCategories, resetArticleCategory } from '../../../../redux/slices/support/supportSettings/articleCategory';
 import AddFormButtons from '../../../../components/DocumentForms/AddFormButtons';
 import { Cover } from '../../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../../theme/styles/default-styles';
-import { FORMLABELS } from '../../../../constants/default-constants';
-import { FORMLABELS as formLABELS } from '../../../../constants/document-constants';
 import { handleError } from '../../../../utils/errorHandler';
-import { articleStatusOptions } from '../../../../utils/constants';
 
 // ----------------------------------------------------------------------
 
@@ -45,12 +36,11 @@ export const EditArticleSchema = Yup.object().shape({
 
 export default function ArticleEditForm() {
   
-  const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
-  const { article, isLoading } = useSelector((state) => state.article); 
+  const { article } = useSelector((state) => state.article); 
   const { activeArticleCategories } = useSelector((state) => state.articleCategory); 
   
   useEffect(() => {

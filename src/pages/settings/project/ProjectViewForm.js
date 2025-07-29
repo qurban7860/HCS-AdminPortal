@@ -1,16 +1,14 @@
-import { useLayoutEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 // @mui
-import { Card, Container, Grid } from '@mui/material';
+import { Card, Grid } from '@mui/material';
 // redux
 import {
   archiveProject,
   deleteProject,
-  getProject,
   restoreProject,
-  resetProject
 } from '../../../redux/slices/support/project/project';
 // paths
 import { PATH_SETTING } from '../../../routes/paths';
@@ -20,7 +18,6 @@ import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../../components/ViewForms/ViewFormField';
 import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
 import { handleError } from '../../../utils/errorHandler';
-import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import { fDate } from '../../../utils/formatTime';
 
 // ----------------------------------------------------------------------

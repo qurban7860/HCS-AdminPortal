@@ -30,7 +30,6 @@ export const Page500 = Loadable(lazy(() => import('../pages/Page500')));
 export const Page403 = Loadable(lazy(() => import('../pages/Page403')));
 export const Page404 = Loadable(lazy(() => import('../pages/Page404')));
 export const MachineNotFoundPage = Loadable(lazy(() => import('../pages/MachineNotFoundPage')));
-export const HomePage = Loadable(lazy(() => import('../pages/HomePage')));
 export const ComingSoonPage = Loadable(lazy(() => import('../pages/ComingSoonPage')));
 export const MaintenancePage = Loadable(lazy(() => import('../pages/MaintenancePage')));
 export const ErrorPage = Loadable(lazy(() => import('../pages/ErrorPage')));

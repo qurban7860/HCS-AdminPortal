@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 import { Stack, Button, TextField, InputAdornment, Grid } from '@mui/material';
 // components
 import Iconify from '../../../../components/iconify';
-import SearchBarCombo from '../../../../components/ListTableTools/SearchBarCombo';
-import { options } from '../../../../theme/styles/default-styles';
 
 UserInviteListTableToolbar.propTypes = {
   isFiltered: PropTypes.bool,

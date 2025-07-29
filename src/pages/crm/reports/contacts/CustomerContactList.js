@@ -22,7 +22,6 @@ import {
   TableNoData,
   TableSkeleton,
   TablePaginationFilter,
-  TablePaginationCustom,
   TableHeadFilter,
 } from '../../../../components/table';
 import Scrollbar from '../../../../components/scrollbar';
@@ -294,7 +293,7 @@ export default function CustomerContactList({ isCustomerContactPage = false, fil
             </Table>
           </Scrollbar>
         </TableContainer>
-        {!isNotFound && <TablePaginationCustom
+        {!isNotFound && <TablePaginationFilter
           count={tableData ? tableData.length : 0}
           page={page}
           rowsPerPage={rowsPerPage}

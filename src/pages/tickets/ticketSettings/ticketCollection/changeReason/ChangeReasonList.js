@@ -14,7 +14,7 @@ import {
   TableNoData,
   TableSkeleton,
   TableHeadCustom,
-  TablePaginationCustom,
+  TablePaginationFilter,
 } from '../../../../../components/table';
 import Scrollbar from '../../../../../components/scrollbar';
 // sections
@@ -129,7 +129,7 @@ export default function ChangeReasonList() {
             onResetFilter={handleResetFilter}
           />
 
-          {!isNotFound && <TablePaginationCustom
+          {!isNotFound && <TablePaginationFilter
             count={ ticketChangeReasons?.totalCount || 0 }
             page={page}
             rowsPerPage={rowsPerPage}
@@ -167,7 +167,7 @@ export default function ChangeReasonList() {
               </Table>
             </Scrollbar>
           </TableContainer>
-          {!isNotFound && <TablePaginationCustom
+          {!isNotFound && <TablePaginationFilter
             count={ ticketChangeReasons?.totalCount || 0 }
             page={page}
             rowsPerPage={rowsPerPage}

@@ -1,8 +1,5 @@
-import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Card, Typography } from '@mui/material';
-// styles
-import { useTheme } from '@mui/material/styles';
+import { Button, Typography } from '@mui/material';
 // components
 import Iconify from '../iconify/Iconify';
 import { StyledTooltip } from '../../theme/styles/default-styles';

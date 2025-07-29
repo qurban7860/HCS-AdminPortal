@@ -1,10 +1,9 @@
 import PropTypes from 'prop-types';
-import { TableCell, Switch } from '@mui/material';
+import { TableCell } from '@mui/material';
 // utils
 import { fDate } from '../../../utils/formatTime';
 import { StyledTableRow, StyledTooltip } from '../../../theme/styles/default-styles';
 import Iconify from '../../../components/iconify';
-import { ICONS } from '../../../constants/icons/default-icons';
 import LinkTableCell from '../../../components/ListTableTools/LinkTableCell';
 import { releaseStatusOptions } from '../../../utils/constants';
 

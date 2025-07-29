@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import debounce from 'lodash/debounce';
-import { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 // @mui
 import {
@@ -16,7 +16,7 @@ import {
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
 // routes
-import { PATH_MACHINE, PATH_SETTING } from '../../../../routes/paths';
+import { PATH_MACHINE } from '../../../../routes/paths';
 // components
 import {
   useTable,
@@ -24,7 +24,6 @@ import {
   TableNoData,
   TableSkeleton,
   TableSelectedAction,
-  TablePaginationCustom,
   TablePaginationFilter,
   TableHeadFilter,
 } from '../../../../components/table';
@@ -47,7 +46,6 @@ import { Cover } from '../../../../components/Defaults/Cover';
 import { fDate } from '../../../../utils/formatTime';
 import TableCard from '../../../../components/ListTableTools/TableCard';
 import { StyledCardContainer } from '../../../../theme/styles/default-styles';
-import useResponsive from '../../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -98,7 +96,6 @@ export default function DocumentTypeList({ isArchived = false }) {
   const [tableData, setTableData] = useState([]);
   const [filterCategory, setFilterCategory] = useState(null);
   const [openConfirm, setOpenConfirm] = useState(false);
-  const isMobile = useResponsive('down', 'sm');
   const { documentTypes, filterBy, page, rowsPerPage, isLoading, initial, reportHiddenColumns } = useSelector(
     (state) => state.documentType
   );
@@ -245,21 +242,11 @@ export default function DocumentTypeList({ isArchived = false }) {
             isArchived={isArchived}
           />
 
-          {!isNotFound && !isMobile && (
+          {!isNotFound && (
             <TablePaginationFilter
               columns={TABLE_HEAD}
               hiddenColumns={reportHiddenColumns}
               handleHiddenColumns={handleHiddenColumns}
-              count={dataFiltered.length}
-              page={page}
-              rowsPerPage={rowsPerPage}
-              onPageChange={onChangePage}
-              onRowsPerPageChange={onChangeRowsPerPage}
-            />
-          )}
-
-          {!isNotFound && isMobile && (
-            <TablePaginationCustom
               count={dataFiltered.length}
               page={page}
               rowsPerPage={rowsPerPage}
