@@ -17,7 +17,7 @@ import {
   TableSkeleton,
   TableHeadCustom,
   TableSelectedAction,
-  TablePaginationCustom,
+  TablePaginationFilter,
 } from '../../../components/table';
 import Scrollbar from '../../../components/scrollbar';
 // sections
@@ -164,7 +164,7 @@ export default function HistoricalConfigurationsList() {
             onCompareINI={dataFiltered.length >0? handleCompareINIs:null}
           />
 
-          {!isNotFound && <TablePaginationCustom
+          {!isNotFound && <TablePaginationFilter
             count={dataFiltered.length}
             page={page}
             rowsPerPage={rowsPerPage}
@@ -228,7 +228,7 @@ export default function HistoricalConfigurationsList() {
             </Scrollbar>
           </TableContainer>
 
-          {!isNotFound && <TablePaginationCustom
+          {!isNotFound && <TablePaginationFilter
             count={dataFiltered.length}
             page={page}
             rowsPerPage={rowsPerPage}

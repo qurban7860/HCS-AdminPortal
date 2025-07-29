@@ -1,4 +1,4 @@
-import { Box, Button, Card, Grid, MenuItem, Typography } from '@mui/material';
+import { Box, Button, Card, Grid, MenuItem } from '@mui/material';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
@@ -41,7 +41,7 @@ const AddNewJobForm = ({ machine }) => {
     handleSubmit,
     watch,
     control,
-    formState: { isSubmitting, errors },
+    formState: { errors },
   } = methods;
 
   const { append, update, remove } = useFieldArray({

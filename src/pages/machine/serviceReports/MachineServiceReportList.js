@@ -15,7 +15,6 @@ import {
   getComparator,
   TableNoData,
   TableSkeleton,
-  TablePaginationCustom,
   TablePaginationFilter,
   TableHeadFilter,
 } from '../../../components/table';
@@ -270,22 +269,12 @@ export default function MachineServiceReportList( { reportsPage }) {
           />
 
 
-{!isNotFound && !isMobile &&(
+        {!isNotFound && (
           <TablePaginationFilter
             columns={TABLE_HEAD}
             hiddenColumns={reportHiddenColumns}
             handleHiddenColumns={handleHiddenColumns}
             count={machineServiceReports?.totalCount || 0}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-          />
-        )}
-
-        {!isNotFound && isMobile && (
-          <TablePaginationCustom
-            count={machineServiceReports ? machineServiceReports.length : 0}
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
@@ -328,7 +317,7 @@ export default function MachineServiceReportList( { reportsPage }) {
             </Scrollbar>
           </TableContainer>
 
-          {!isNotFound && <TablePaginationCustom
+          {!isNotFound && <TablePaginationFilter
             count={ machineServiceReports?.totalCount || 0 }
             page={ machineServiceReports?.currentPage || 0 }
             rowsPerPage={rowsPerPage}

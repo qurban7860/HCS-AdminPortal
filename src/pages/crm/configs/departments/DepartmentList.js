@@ -20,7 +20,6 @@ import {
   TableNoData,
   TableSkeleton,
   TablePaginationFilter,
-  TablePaginationCustom,
   TableHeadFilter,
 
 } from '../../../../components/table';
@@ -216,14 +215,13 @@ export default function DepartmentList() {
             </Scrollbar>
           </TableContainer>
            {!isNotFound && (
-                    <TablePaginationCustom
-                      count={dataFiltered.length}
-                      page={page}
-                      rowsPerPage={rowsPerPage}
-                      onPageChange={onChangePage}
-                      onRowsPerPageChange={onChangeRowsPerPage}
-                    />
-                  )}
+            <TablePaginationFilter
+              count={dataFiltered.length}
+              page={page}
+              rowsPerPage={rowsPerPage}
+              onPageChange={onChangePage}
+              onRowsPerPageChange={onChangeRowsPerPage}
+            />)}
                 </TableCard>
       
       </Container>

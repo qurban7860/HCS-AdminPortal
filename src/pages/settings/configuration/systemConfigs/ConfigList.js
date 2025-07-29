@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 // @mui
-import { Container, Box, Typography, Divider, Stack } from '@mui/material';
+import { Container, Box, Typography, Stack } from '@mui/material';
 import debounce from 'lodash/debounce';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from '../../../../redux/store';
 import { PATH_SETTING } from '../../../../routes/paths';
 // components
 import { Cover } from '../../../../components/Defaults/Cover';
-import { TablePaginationCustom } from '../../../../components/table';
+import { TablePaginationFilter } from '../../../../components/table';
 // sections
 import ConfigListTableToolbar from './ConfigListTableToolbar';
 import ConfigCard from './ConfigCard';
@@ -160,7 +160,7 @@ export default function ConfigList() {
         />
         
         {!isNotFound && (
-          <TablePaginationCustom
+          <TablePaginationFilter
             count={dataFiltered.length}
             page={page}
             rowsPerPage={rowsPerPage}
@@ -188,7 +188,7 @@ export default function ConfigList() {
         </Scrollbar>
 
         {!isNotFound && (
-          <TablePaginationCustom
+          <TablePaginationFilter
             count={dataFiltered.length}
             page={page}
             rowsPerPage={rowsPerPage}

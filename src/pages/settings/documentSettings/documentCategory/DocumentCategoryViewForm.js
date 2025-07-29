@@ -8,7 +8,7 @@ import { Card, Chip, Grid } from '@mui/material';
 // redux
 import { deleteDocumentCategory, archiveDocumentCategory, restoreDocumentCategory } from '../../../../redux/slices/document/documentCategory';
 // paths
-import { PATH_MACHINE, PATH_SETTING } from '../../../../routes/paths';
+import { PATH_MACHINE } from '../../../../routes/paths';
 // components
 import { useSnackbar } from '../../../../components/snackbar';
 import ViewFormAudit from '../../../../components/ViewForms/ViewFormAudit';

@@ -5,11 +5,8 @@ import { useNavigate } from 'react-router-dom';
 // @mui
 import {
   Table,
-  Button,
-  Tooltip,
   TableBody,
   Container,
-  IconButton,
   TableContainer,
   // Stack,
 } from '@mui/material';
@@ -23,7 +20,7 @@ import {
   getComparator,
   TableNoData,
   TableSkeleton,
-  TablePaginationCustom,
+  TablePaginationFilter,
   TableHeadFilter,
 } from '../../../components/table';
 import Scrollbar from '../../../components/scrollbar';
@@ -168,7 +165,7 @@ export default function ProjectList({isArchived}) {
             isArchived={isArchived}
           />
 
-          {!isNotFound && <TablePaginationCustom
+          {!isNotFound && <TablePaginationFilter
             count={ projects?.totalCount || 0 }
             page={page}
             rowsPerPage={rowsPerPage}
@@ -202,7 +199,7 @@ export default function ProjectList({isArchived}) {
               </Table>
             </Scrollbar>
           </TableContainer>
-          {!isNotFound && <TablePaginationCustom
+          {!isNotFound && <TablePaginationFilter
             count={ projects?.totalCount || 0 }
             page={page}
             rowsPerPage={rowsPerPage}

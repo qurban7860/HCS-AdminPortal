@@ -35,9 +35,6 @@ import {
 
   // Visits
   Visits,
-  NewVisits,
-  EditVisits,
-  ViewVisits,
 
   // Customer
   CustomerList,
@@ -393,9 +390,6 @@ import {
   ReleaseForm,
   ReleaseView,
 
-  // REPORTS / SETTINGS
-  Setting,
-
   // modules
   ModuleList,
   ModuleAdd,
@@ -495,7 +489,7 @@ import {
   BlankPage,
   PermissionDeniedPage,
   JiraTickets,
-  UnderDevelopment,
+  // UnderDevelopment,
   SectionUnderConstruction,
   ArticleList,
   ArticleAdd,

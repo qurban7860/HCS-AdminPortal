@@ -11,7 +11,7 @@ import {
   getComparator,
   TableNoData,
   TableSkeleton,
-  TablePaginationCustom,
+  TablePaginationFilter,
 } from '../../../../components/table';
 import Scrollbar from '../../../../components/scrollbar';
 // sections
@@ -107,7 +107,7 @@ export default function ReleasesList() {
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
           />
-            <TablePaginationCustom
+            <TablePaginationFilter
               count={dataFiltered?.length}
               page={page}
               rowsPerPage={rowsPerPage}
@@ -140,7 +140,7 @@ export default function ReleasesList() {
             </Scrollbar>
           </TableContainer>
 
-          <TablePaginationCustom
+          <TablePaginationFilter
             count={dataFiltered?.length}
             page={page}
             rowsPerPage={rowsPerPage}

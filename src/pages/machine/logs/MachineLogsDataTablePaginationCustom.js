@@ -7,7 +7,7 @@ import { machineLogTypeFormats } from '../../../constants/machineLogTypeFormats'
 
 // ----------------------------------------------------------------------
 
-MachineLogsDataTablePaginationCustom.propTypes = {
+MachineLogsDataTablePaginationFilter.propTypes = {
   dense: PropTypes.bool,
   onChangeDense: PropTypes.func,
   rowsPerPageOptions: PropTypes.arrayOf(PropTypes.number),
@@ -18,7 +18,7 @@ MachineLogsDataTablePaginationCustom.propTypes = {
   unitType: PropTypes.string,
 };
 
-function MachineLogsDataTablePaginationCustom({
+function MachineLogsDataTablePaginationFilter({
   dense,
   onChangeDense,
   rowsPerPageOptions = [10, 20, 50, 100],
@@ -173,4 +173,4 @@ function MachineLogsDataTablePaginationCustom({
     </Box>
   );
 }
-export default memo(MachineLogsDataTablePaginationCustom)
+export default memo(MachineLogsDataTablePaginationFilter)

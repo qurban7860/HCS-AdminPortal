@@ -14,7 +14,7 @@ import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import { PATH_SETTING } from '../../../routes/paths';
 import { useSnackbar } from '../../../components/snackbar';
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
-import FormProvider, { RHFTextField, RHFSwitch, RHFEditor, RHFAutocomplete, RHFDatePicker} from '../../../components/hook-form';
+import FormProvider, { RHFTextField, RHFEditor, RHFAutocomplete, RHFDatePicker} from '../../../components/hook-form';
 import { postRelease, patchRelease, getRelease, resetRelease } from '../../../redux/slices/support/release/release';
 import { getActiveProjects, resetActiveProjects } from '../../../redux/slices/support/project/project';
 import { handleError } from '../../../utils/errorHandler';

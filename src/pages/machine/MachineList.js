@@ -13,7 +13,6 @@ import {
   TableNoData,
   TableSkeleton,
   TableHeadFilter,
-  TablePaginationCustom,
   TablePaginationFilter
 } from '../../components/table';
 import Scrollbar from '../../components/scrollbar';
@@ -290,9 +289,9 @@ export default function MachineList({ isArchived }) {
             columns={TABLE_HEAD}
             hiddenColumns={reportHiddenColumns}
             handleHiddenColumns={handleHiddenColumns}
+
             count={machines? machines.length : 0}
             page={page}
-
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
@@ -336,7 +335,7 @@ export default function MachineList({ isArchived }) {
           </Scrollbar>
         </TableContainer>
 
-        {!isNotFound && <TablePaginationCustom
+        {!isNotFound && <TablePaginationFilter
             count={machines? machines.length : 0}
             page={page}
             rowsPerPage={rowsPerPage}

@@ -1,6 +1,5 @@
 import dayjs from 'dayjs';
-import { useState, useEffect, useRef } from 'react';
-import debounce from 'lodash/debounce';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 // @mui
@@ -14,7 +13,6 @@ import {
   useTable,
   TableNoData,
   TableSkeleton,
-  TablePaginationFilter,
   TableHeadFilter,
   getComparator,
 } from '../../../../components/table';
@@ -24,22 +22,17 @@ import Scrollbar from '../../../../components/scrollbar';
 import { getApiLogSummary, resetApiLogSummary } from '../../../../redux/slices/logs/apiLogs';
 import { getMachineForDialog, setMachineDialog } from '../../../../redux/slices/products/machine';
 import TableCard from '../../../../components/ListTableTools/TableCard';
-import SearchBarCombo from '../../../../components/ListTableTools/SearchBarCombo';
-import RHFFilteredSearchBar from '../../../../components/hook-form/RHFFilteredSearchBar';
 import { apiTypeOptions } from '../../../../utils/constants';
 import APILogsSummaryTableRow from './APILogsSummaryTableRow';
 import MachineDialog from '../../../../components/Dialog/MachineDialog';
 
 export default function ApiLogsSummary() {
   const { order, orderBy, onSort } = useTable({
-    // defaultOrderBy: 'lastCallTime',
-    // defaultOrder: 'desc',
     defaultOrderBy: 'count',
     defaultOrder: 'desc',
   });
 
   const dispatch = useDispatch();
-  const { machineId } = useParams();
   const [tableData, setTableData] = useState([]);
   
   const { apiLogSummary, isLoading } = useSelector((state) => state.apiLogs);

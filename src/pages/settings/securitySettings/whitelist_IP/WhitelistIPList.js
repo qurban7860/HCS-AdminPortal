@@ -2,12 +2,12 @@ import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import debounce from 'lodash/debounce';
 import { useNavigate } from 'react-router-dom';
 // @mui
-import { Card, Table, Button, TableBody, Container, TableContainer } from '@mui/material';
+import { Table, Button, TableBody, Container, TableContainer } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
 // components
 import { useSnackbar } from '../../../../components/snackbar';
-import { useTable, getComparator, TableNoData, TableSkeleton, TableHeadCustom, TablePaginationCustom } from '../../../../components/table';
+import { useTable, getComparator, TableNoData, TableSkeleton, TableHeadCustom, TablePaginationFilter } from '../../../../components/table';
 import Scrollbar from '../../../../components/scrollbar';
 import ConfirmDialog from '../../../../components/confirm-dialog';
 import { PATH_SETTING } from '../../../../routes/paths';
@@ -165,7 +165,7 @@ export default function WhitelistIPList() {
             onResetFilter={handleResetFilter}
           />
           {!isNotFound && (
-            <TablePaginationCustom count={dataFiltered.length} page={page} rowsPerPage={rowsPerPage} onPageChange={onChangePage} onRowsPerPageChange={onChangeRowsPerPage} />
+            <TablePaginationFilter count={dataFiltered.length} page={page} rowsPerPage={rowsPerPage} onPageChange={onChangePage} onRowsPerPageChange={onChangeRowsPerPage} />
           )}
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <Scrollbar>
@@ -196,7 +196,7 @@ export default function WhitelistIPList() {
           </TableContainer>
 
           {!isNotFound && (
-            <TablePaginationCustom count={dataFiltered.length} page={page} rowsPerPage={rowsPerPage} onPageChange={onChangePage} onRowsPerPageChange={onChangeRowsPerPage} />
+            <TablePaginationFilter count={dataFiltered.length} page={page} rowsPerPage={rowsPerPage} onPageChange={onChangePage} onRowsPerPageChange={onChangeRowsPerPage} />
           )}
         </TableCard>
       </Container>
