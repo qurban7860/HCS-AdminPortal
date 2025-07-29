@@ -36,7 +36,7 @@ import { FORMLABELS } from '../../../../constants/default-constants';
 
 // sections
 import CustomerListTableRow from './CustomerListTableRow';
-import CustomerListTableToolbar from './CustomerListTableToolbar';
+import CustomerTableController from './CustomerTableController';
 import { getCustomers, 
   resetCustomers, 
   resetCustomer, 
@@ -215,23 +215,18 @@ export default function CustomerList({ isArchived }) {
           />
         </StyledCardContainer>
         <TableCard>
-          <CustomerListTableToolbar
+          <CustomerTableController
             filterName={filterName}
             onFilterName={handleFilterName}
             filterVerify={isArchived ? undefined : filterVerify}
             onFilterVerify={isArchived ? undefined : handleFilterVerify}
-            filterStatus={isArchived ? undefined : filterStatus}
-            onFilterStatus={isArchived ? undefined : handleFilterStatus}
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
-            customerDocList
-            machineDocList
             onExportCSV={onExportCSV}
             onExportLoading={exportingCSV}
             filterExcludeRepoting={isArchived ? undefined : filterExcludeRepoting}
             handleExcludeRepoting={isArchived ? undefined : handleExcludeRepoting}
             isArchived={isArchived}
-            handleFullScreen={handleFullScreenOpen}
           />
 
           {!isNotFound && (
