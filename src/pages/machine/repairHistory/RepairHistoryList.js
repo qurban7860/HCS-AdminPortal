@@ -29,7 +29,7 @@ import {
   TableEmptyRows,
   TableHeadCustom,
   TableSelectedAction,
-  TablePaginationCustom,
+  TablePaginationFilter,
 } from '../../../components/table';
 import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
@@ -264,7 +264,7 @@ export default function RepairHistoryList() {
             </Scrollbar>
           </TableContainer>
 
-          <TablePaginationCustom
+          <TablePaginationFilter
             count={dataFiltered.length}
             page={page}
             rowsPerPage={rowsPerPage}

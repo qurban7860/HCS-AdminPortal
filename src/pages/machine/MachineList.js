@@ -13,13 +13,11 @@ import {
   TableNoData,
   TableSkeleton,
   TableHeadFilter,
-  TablePaginationCustom,
   TablePaginationFilter
 } from '../../components/table';
 import Scrollbar from '../../components/scrollbar';
 import MachineListTableRow from './MachineListTableRow';
-import MachineListTableToolbar from './MachineListTableToolbar';
-
+import MachineTableController from './MachineTableController';
 
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
@@ -266,12 +264,11 @@ export default function MachineList({ isArchived }) {
       <Cover name={ isArchived ? "Archived Machines" : "Machines" } icon="arcticons:materialistic" isArchived={isArchived} />
       </StyledCardContainer>
       <TableCard>
-        <MachineListTableToolbar
+        <MachineTableController
           filterName={filterName}
           onFilterName={handleFilterName}
           filterVerify={ isArchived ? undefined : filterVerify}
           onFilterVerify={ isArchived ? undefined : handleFilterVerify}
-          
           filterStatus={ isArchived ? undefined : filterStatus}
           onFilterStatus={ isArchived ? undefined : handleFilterStatus}
           isFiltered={isFiltered}
@@ -290,9 +287,9 @@ export default function MachineList({ isArchived }) {
             columns={TABLE_HEAD}
             hiddenColumns={reportHiddenColumns}
             handleHiddenColumns={handleHiddenColumns}
+
             count={machines? machines.length : 0}
             page={page}
-
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
@@ -336,7 +333,7 @@ export default function MachineList({ isArchived }) {
           </Scrollbar>
         </TableContainer>
 
-        {!isNotFound && <TablePaginationCustom
+        {!isNotFound && <TablePaginationFilter
             count={machines? machines.length : 0}
             page={page}
             rowsPerPage={rowsPerPage}

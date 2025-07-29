@@ -38,7 +38,7 @@ export default function SecurityUserTableRow({
   onDeleteRow,
   hiddenColumns
 }) {
-  const { login, email, name, roles, phone, updatedAt, contact, isActive, registrationRequest, isOnline, customer, currentEmployee } = row;
+  const { login, email, name, roles, phone, updatedAt, contact, isActive, registrationRequest, isOnline, customer } = row;
   const isSPCustomer = customer?.type === 'SP';
   const theme = createTheme({ palette: { success: green } });
 

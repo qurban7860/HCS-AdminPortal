@@ -10,7 +10,7 @@ import RoleBasedGuard from '../../../auth/RoleBasedGuard';
 //
 import Iconify from '../../iconify';
 //
-import { StyledItem, StyledIcon, StyledDotIcon } from './styles';
+import { StyledItem, StyledIcon } from './styles';
 
 // ----------------------------------------------------------------------
 

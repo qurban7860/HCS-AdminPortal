@@ -17,7 +17,6 @@ import {
   TableHeadCustom,
   TableHeadFilter,
   TableSelectedAction,
-  TablePaginationCustom,
   TablePaginationFilter,
 } from '../../components/table';
 // sections
@@ -279,7 +278,7 @@ export default function JiraList() {
             </Scrollbar>
           </TableContainer>
 
-          {!isNotFound && <TablePaginationCustom
+          {!isNotFound && <TablePaginationFilter
             count={dataFiltered?.length}
             page={page}
             rowsPerPage={rowsPerPage}

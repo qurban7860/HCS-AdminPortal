@@ -26,7 +26,6 @@ import {
   TableNoData,
   TableSkeleton,
   TableSelectedAction,
-  TablePaginationCustom,
   TablePaginationFilter,
   TableHeadFilter,
 } from '../../../../components/table';
@@ -192,7 +191,7 @@ export default function ArticleList({isArchived}) {
           />
 
           {!isNotFound && (
-            <TablePaginationCustom
+            <TablePaginationFilter
               count={articles?.length || 0}
               page={page}
               rowsPerPage={rowsPerPage}
@@ -219,7 +218,7 @@ export default function ArticleList({isArchived}) {
                     )}
               </Stack>
           </Scrollbar>
-          {!isNotFound && <TablePaginationCustom
+          {!isNotFound && <TablePaginationFilter
             count={ articles?.length || 0 }
             page={page}
             rowsPerPage={rowsPerPage}

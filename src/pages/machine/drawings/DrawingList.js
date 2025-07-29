@@ -19,7 +19,7 @@ import {
   TableNoData,
   TableSkeleton,
   TableHeadCustom,
-  TablePaginationCustom,
+  TablePaginationFilter,
 } from '../../../components/table';
 import Scrollbar from '../../../components/scrollbar';
 // sections
@@ -176,7 +176,7 @@ export default function DrawingList() {
           drawing
         />
         {!isNotFound && (
-          <TablePaginationCustom
+          <TablePaginationFilter
             count={dataFiltered.length}
             page={page}
             rowsPerPage={rowsPerPage}
@@ -215,7 +215,7 @@ export default function DrawingList() {
           </Scrollbar>
         </TableContainer>
 
-        <TablePaginationCustom
+        <TablePaginationFilter
           count={dataFiltered.length}
           page={page}
           rowsPerPage={rowsPerPage}

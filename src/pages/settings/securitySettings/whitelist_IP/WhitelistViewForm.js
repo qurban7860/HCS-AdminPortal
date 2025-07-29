@@ -8,7 +8,7 @@ import { Cover } from '../../../../components/Defaults/Cover';
 import { PATH_SETTING } from '../../../../routes/paths';
 import { useSnackbar } from '../../../../components/snackbar';
 
-import { getWhitelistIPs, deleteWhitelistIP } from '../../../../redux/slices/securityConfig/whitelistIP';
+import { getWhitelistIPs } from '../../../../redux/slices/securityConfig/whitelistIP';
 
 import ViewFormAudit from '../../../../components/ViewForms/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../../../../components/ViewForms/ViewFormEditDeleteButtons';
@@ -56,18 +56,6 @@ export default function WhitelistViewForm() {
     navigate(PATH_SETTING.restrictions.whitelistIP.edit(id));
   };
 
-  const onDelete = async () => {
-    try {
-      await dispatch(deleteWhitelistIP(id));
-      enqueueSnackbar('Whitelist IP removed successfully!', { variant: 'success' });
-      navigate(PATH_SETTING.restrictions.whitelistIP.list);
-    } catch (err) {
-      enqueueSnackbar(handleError(err) || 'Failed to remove IP!', {
-        variant: 'error',
-      });
-    }
-  };
-
   const goBack = () => {
     navigate(PATH_SETTING.restrictions.whitelistIP.list);
   };
@@ -99,8 +87,6 @@ export default function WhitelistViewForm() {
               heading="Description"
               node={<Editor readOnly hideToolbar sx={{ border: 'none', '& .ql-editor': { padding: '0px' } }} value={defaultValues.description} />}
             />
-
-            <>
               <ViewFormAudit
                 defaultValues={{
                   createdByFullName: defaultValues.createdByFullName,
@@ -111,7 +97,6 @@ export default function WhitelistViewForm() {
                   updatedIP: defaultValues.updatedIP,
                 }}
               />
-            </>
           </Grid>
         </Card>
       </Grid>

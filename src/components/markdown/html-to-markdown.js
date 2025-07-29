@@ -5,9 +5,6 @@ import { htmlTags } from './html-tags';
 const excludeTags = ['pre', 'code'];
 
 const turndownService = new TurndownService({ codeBlockStyle: 'fenced', fence: '```' });
-
-const filterTags = htmlTags.filter((item) => !excludeTags.includes(item));
-
 /**
  * Custom rule
  * https://github.com/mixmark-io/turndown/issues/241#issuecomment-400591362

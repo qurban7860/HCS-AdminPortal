@@ -14,7 +14,7 @@ import {
   TableNoData,
   TableSkeleton,
   TableHeadCustom,
-  TablePaginationCustom,
+  TablePaginationFilter,
 } from '../../../../../components/table';
 import Scrollbar from '../../../../../components/scrollbar';
 // sections
@@ -134,7 +134,7 @@ export default function RequestTypeList() {
             onFilterIssueType={setSelectedIssueType}
           />
 
-          {!isNotFound && <TablePaginationCustom
+          {!isNotFound && <TablePaginationFilter
             count={ ticketRequestTypes?.totalCount || 0 }
             page={page}
             rowsPerPage={rowsPerPage}
@@ -172,7 +172,7 @@ export default function RequestTypeList() {
               </Table>
             </Scrollbar>
           </TableContainer>
-          {!isNotFound && <TablePaginationCustom
+          {!isNotFound && <TablePaginationFilter
             count={ ticketRequestTypes?.totalCount || 0 }
             page={page}
             rowsPerPage={rowsPerPage}

@@ -6,7 +6,6 @@ import { useId, useMemo } from 'react';
 import ReactMarkdown from 'react-markdown';
 import rehypeHighlight from 'rehype-highlight';
 import Link from '@mui/material/Link';
-import { Link as RouterDomLink } from 'react-router';
 import { MarkdownRoot } from './styles';
 import Image from '../image';
 import { markdownClasses } from './classes';

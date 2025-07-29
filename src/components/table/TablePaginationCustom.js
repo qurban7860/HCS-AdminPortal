@@ -6,7 +6,7 @@ import Iconify from '../iconify';
 
 // ----------------------------------------------------------------------
 
-TablePaginationCustom.propTypes = {
+TablePaginationFilter.propTypes = {
   dense: PropTypes.bool,
   onChangeDense: PropTypes.func,
   rowsPerPageOptions: PropTypes.arrayOf(PropTypes.number),
@@ -17,7 +17,7 @@ TablePaginationCustom.propTypes = {
   customNode: PropTypes.node
 };
 
-function TablePaginationCustom({
+function TablePaginationFilter({
   dense,
   onChangeDense,
   rowsPerPageOptions = [10, 20, 50, 100],
@@ -151,4 +151,4 @@ function TablePaginationCustom({
     </Box>
   );
 }
-export default memo(TablePaginationCustom)
+export default memo(TablePaginationFilter)

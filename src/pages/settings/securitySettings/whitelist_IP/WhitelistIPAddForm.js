@@ -6,7 +6,6 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Card, Grid, Container, Box, Typography } from '@mui/material';
 import { isActive } from '@tiptap/core';
-
 import { PATH_SETTING } from '../../../../routes/paths';
 import { useSnackbar } from '../../../../components/snackbar';
 
@@ -19,7 +18,7 @@ import Iconify from '../../../../components/iconify';
 
 import { getWhitelistIPs, getWhitelistIP, addWhitelistIPs, patchWhitelistIP, resetCurrentWhitelistIP } from '../../../../redux/slices/securityConfig/whitelistIP';
 
-import { getActiveCustomers } from '../../../../redux/slices/customer/customer';
+import { getActiveCustomers, resetActiveCustomers } from '../../../../redux/slices/customer/customer';
 import { getActiveSecurityUsers, resetSecurityUsers } from '../../../../redux/slices/securityUser/securityUser';
 
 export default function WhitelistIPForm() {
@@ -38,6 +37,10 @@ export default function WhitelistIPForm() {
     if (!whitelistIPs.length) dispatch(getWhitelistIPs());
     dispatch(getActiveCustomers());
     dispatch(getActiveSecurityUsers());
+    return () => {
+    dispatch(resetActiveCustomers());
+    dispatch(resetSecurityUsers());
+    }
   }, [dispatch, whitelistIPs.length]);
 
   useEffect(() => {

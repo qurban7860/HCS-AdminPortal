@@ -1,7 +1,7 @@
 import { useLayoutEffect } from 'react';
 import { useParams } from 'react-router-dom';
 // @mui
-import { Card, Container } from '@mui/material';
+import { Container } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 // redux
 import { getRole } from '../../../../redux/slices/securityUser/role';

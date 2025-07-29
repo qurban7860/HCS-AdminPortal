@@ -7,7 +7,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Container, Card, Grid, Stack, InputAdornment } from '@mui/material';
+import { Box, Container, Card, Grid, Stack } from '@mui/material';
 // components
 import { Cover } from '../../../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../../../theme/styles/default-styles';
@@ -18,7 +18,6 @@ import AddFormButtons from '../../../../../components/DocumentForms/AddFormButto
 import { handleError } from '../../../../../utils/errorHandler';
 import FormProvider, { RHFTextField, RHFSwitch, RHFColorPicker, RHFEditor, RHFIconPicker } from '../../../../../components/hook-form';
 import { postTicketFault, patchTicketFault, getTicketFault, resetTicketFault } from '../../../../../redux/slices/ticket/ticketSettings/ticketFaults';
-import Iconify from '../../../../../components/iconify';
 
 export default function FaultForm() {
   const navigate = useNavigate();
@@ -57,7 +56,7 @@ export default function FaultForm() {
     formState: { isSubmitting }
   } = methods;
 
-  const { icon, color } = watch()
+  const { color } = watch()
 
   useEffect(() => {
     if (id) {
@@ -118,17 +117,6 @@ export default function FaultForm() {
                 >
                   <RHFTextField name="name" label="Name*" />
                   <RHFTextField name="slug" label="Slug" />
-                  {/* <RHFTextField
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="start" >
-                          <Iconify icon={icon} sx={{ width: 25, height: 25, color: color || 'black' }} />
-                        </InputAdornment>
-                      )
-                    }}
-                    name="icon"
-                    label="Icon"
-                  /> */}
                   <RHFIconPicker name="icon" label="Icon*" color={isValidColor(normalizeColor(color)) ? normalizeColor(color) : 'black'} />
 
                   <RHFColorPicker
@@ -148,7 +136,6 @@ export default function FaultForm() {
                     {id && (
                       <RHFSwitch name="isActive" label="Active" />
                     )}
-                    {/* <RHFSwitch name="isDefault" label="Default" /> */}
                   </Grid>
                 </Box>
                 <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />

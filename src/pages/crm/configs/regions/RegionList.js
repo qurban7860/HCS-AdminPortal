@@ -16,7 +16,7 @@ import {
   TableNoData,
   TableSkeleton,
   TableHeadCustom,
-  TablePaginationCustom,
+  TablePaginationFilter
 } from '../../../../components/table';
 // sections
 import RegionTableRow from './RegionTableRow'
@@ -134,7 +134,7 @@ export default function RegionList() {
             onFilterRole={handleFilterRole}
             onResetFilter={handleResetFilter}
           />
-          {!isNotFound && <TablePaginationCustom
+          {!isNotFound && <TablePaginationFilter
             count={dataFiltered.length}
             page={page}
             rowsPerPage={rowsPerPage}
@@ -173,7 +173,7 @@ export default function RegionList() {
             </Scrollbar>
           </TableContainer>
 
-          <TablePaginationCustom
+          <TablePaginationFilter
             count={dataFiltered.length}
             page={page}
             rowsPerPage={rowsPerPage}

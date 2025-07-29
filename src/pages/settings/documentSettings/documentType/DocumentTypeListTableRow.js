@@ -35,7 +35,6 @@ export default function DocumentTypeListTableRow({
   hiddenColumns,
 }) {
   const { name, docCategory, customerAccess, isActive, isDefault, updatedAt } = row;
-  const smScreen = useScreenSize('sm');
 
   return (
     <StyledTableRow hover selected={selected}>

@@ -9,7 +9,7 @@ import { Card, Grid, Stack, Container} from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { useSnackbar } from '../../../../components/snackbar';
 // routes
-import { PATH_MACHINE, PATH_SETTING } from '../../../../routes/paths';
+import { PATH_MACHINE } from '../../../../routes/paths';
 // schema
 import { DocumentCategorySchema } from '../../../schemas/document';
 // slice

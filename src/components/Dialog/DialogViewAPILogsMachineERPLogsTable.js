@@ -84,11 +84,6 @@ const formatMachineLogToShow = (log) => {
     archivedByMachine,
     batchId,
     apiLogId,
-    __v,
-    type,
-    version,
-    createdByIdentifier,
-    updatedByIdentifier,
     ...rest
   } = log;
 

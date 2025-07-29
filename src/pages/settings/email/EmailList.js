@@ -13,7 +13,6 @@ import {
   getComparator,
   TableNoData,
   TableSkeleton,
-  TablePaginationCustom,
   TablePaginationFilter,
   TableHeadFilter,
 } from '../../../components/table';
@@ -203,7 +202,7 @@ export default function EmailList() {
           </Scrollbar>
         </TableContainer>
         {!isNotFound && (
-          <TablePaginationCustom
+          <TablePaginationFilter
             count={emails?.totalCount || 0}
             page={page}
             rowsPerPage={rowsPerPage}

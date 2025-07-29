@@ -3,7 +3,6 @@ import {  useNavigate } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 // @mui
 import {
-  Card,
   Table,
   Button,
   Tooltip,
@@ -25,7 +24,7 @@ import {
   TableSkeleton,
   TableHeadCustom,
   TableSelectedAction,
-  TablePaginationCustom,
+  TablePaginationFilter,
 } from '../../../../components/table';
 import Iconify from '../../../../components/iconify';
 import Scrollbar from '../../../../components/scrollbar';
@@ -210,7 +209,7 @@ export default function RoleList() {
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
           />
-          {!isNotFound && <TablePaginationCustom
+          {!isNotFound && <TablePaginationFilter
             count={dataFiltered.length}
             page={page}
             rowsPerPage={rowsPerPage}
@@ -278,7 +277,7 @@ export default function RoleList() {
             </Scrollbar>
           </TableContainer>
 
-          {!isNotFound && <TablePaginationCustom
+          {!isNotFound && <TablePaginationFilter
             count={dataFiltered.length}
             page={page}
             rowsPerPage={rowsPerPage}

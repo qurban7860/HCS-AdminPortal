@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Box, Grid, Typography, Link } from '@mui/material';
 import MenuPopover from '../menu-popover/MenuPopover';
-import { fDate } from '../../utils/formatTime';
 
 function ContactUsersPopover({ open, onClose, onViewUser }) {
 
