@@ -267,18 +267,18 @@ export default function MachineList({ isArchived }) {
         <MachineTableController
           filterName={filterName}
           onFilterName={handleFilterName}
-          filterVerify={ isArchived ? undefined : filterVerify}
-          onFilterVerify={ isArchived ? undefined : handleFilterVerify}
-          filterStatus={ isArchived ? undefined : filterStatus}
-          onFilterStatus={ isArchived ? undefined : handleFilterStatus}
+          filterVerify={filterVerify}
+          onFilterVerify={handleFilterVerify}
+          filterStatus={filterStatus}
+          onFilterStatus={handleFilterStatus}
           isFiltered={isFiltered}
           onResetFilter={handleResetFilter}
           onExportCSV={onExportCSV}
           onExportLoading={exportingCSV}
           accountManagerFilter={accountManagers}
-          setAccountManagerFilter={ isArchived ? undefined : setAccountManagerFilter}
+          setAccountManagerFilter={setAccountManagerFilter}
           supportManagerFilter={supportManager}
-          setSupportManagerFilter={ isArchived ? undefined : setSupportManagerFilter}
+          setSupportManagerFilter={setSupportManagerFilter}
           isArchived={isArchived}
         />
 
