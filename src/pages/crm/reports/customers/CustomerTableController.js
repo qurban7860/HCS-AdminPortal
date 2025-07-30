@@ -95,24 +95,24 @@ function CustomerTableController({
               </FormControl>
             </Stack>
           </Grid>
-
+          {!isArchived && (
           <Grid item xs="auto" sx={{ ml: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
             <LoadingButton onClick={() => onExportCSV(false, false)} variant="contained" sx={{ p: 0, minWidth: '24px' }} loading={onExportLoading}>
               <StyledTooltip title={BUTTONS.EXPORT.label} placement="top" disableFocusListener tooltipcolor="#103996" color="#103996">
                 <Iconify color="#fff" sx={{ height: '41px', width: '55px', p: '8px' }} icon={BUTTONS.EXPORT.icon} />
               </StyledTooltip>
             </LoadingButton>
-          </Grid>
-
+          </Grid> )}
+          {!isArchived && (
           <Grid item>
-            <StyledTooltip title={!isArchived ? BUTTONS.ADDCUSTOMER : undefined} placement="top" disableFocusListener tooltipcolor="#103996" color="#fff">
+            <StyledTooltip title={BUTTONS.ADDCUSTOMER} placement="top" disableFocusListener tooltipcolor="#103996" color="#fff">
               <IconButton
                 color="#fff"
-                onClick={!isArchived ? toggleAdd : undefined}
+                onClick={toggleAdd}
                 sx={{
                   background: '#2065D1',
                   borderRadius: 1,
-                  height: '1.7em',
+                  height: '1.7em',  
                   p: '8.5px 14px',
                   '&:hover': {
                     background: '#103996',
@@ -123,7 +123,7 @@ function CustomerTableController({
                 <Iconify color="#fff" sx={{ height: '24px', width: '24px' }} icon="eva:plus-fill" />
               </IconButton>
             </StyledTooltip>
-          </Grid>
+          </Grid> )}
         </Grid>
       </Grid>
     </Stack>

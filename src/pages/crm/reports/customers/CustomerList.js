@@ -203,7 +203,6 @@ export default function CustomerList({ isArchived }) {
   };
 
   return (
-    <>
       <Container maxWidth={false}>
         <StyledCardContainer>
           <Cover
@@ -217,14 +216,14 @@ export default function CustomerList({ isArchived }) {
           <CustomerTableController
             filterName={filterName}
             onFilterName={handleFilterName}
-            filterVerify={isArchived ? undefined : filterVerify}
-            onFilterVerify={isArchived ? undefined : handleFilterVerify}
+            filterVerify={filterVerify}
+            onFilterVerify={handleFilterVerify}
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
             onExportCSV={onExportCSV}
             onExportLoading={exportingCSV}
-            filterExcludeRepoting={isArchived ? undefined : filterExcludeRepoting}
-            handleExcludeRepoting={isArchived ? undefined : handleExcludeRepoting}
+            filterExcludeRepoting={filterExcludeRepoting}
+            handleExcludeRepoting={handleExcludeRepoting}
             isArchived={isArchived}
           />
 
@@ -288,7 +287,6 @@ export default function CustomerList({ isArchived }) {
           )}
         </TableCard>
       </Container>
-    </>
   );
 }
 
