@@ -14,7 +14,6 @@ import {
   TableSkeleton,
   getComparator,
   TableHeadFilter,
-  TablePaginationCustom,
   TablePaginationFilter,
 } from '../../components/table';
 import Scrollbar from '../../components/scrollbar';
@@ -84,21 +83,23 @@ function TicketList() {
       dispatch(getArticleByValue(helpPrefix));
     }
   }, [dispatch, configurations]);
-
+  
   useEffect(() => {
+    if(tickets?.data?.length <  1 ){
       dispatch(getTickets({
         page,
         pageSize: rowsPerPage,
         isResolved: false
       }));
       dispatch(getTicketSettings());
-    const asssigneeRoleType = configurations?.find((c) => c?.name?.trim() === 'SupportTicketAssigneeRoleType')?.value?.trim();
+      const asssigneeRoleType = configurations?.find((c) => c?.name?.trim() === 'SupportTicketAssigneeRoleType')?.value?.trim();
       dispatch(getActiveSecurityUsers({ type: 'SP', roleType: asssigneeRoleType }));
-    return () => {
-      dispatch(resetTickets());
-      dispatch(resetTicketSettings());
-      dispatch(resetActiveSecurityUsers());
-    };
+    }
+    // return () => {
+    //   dispatch(resetTickets());
+    //   dispatch(resetTicketSettings());
+    //   dispatch(resetActiveSecurityUsers());
+    // };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     dispatch,
@@ -213,16 +214,6 @@ function TicketList() {
             onRowsPerPageChange={onChangeRowsPerPage}
           />
         )}
-
-        {!isNotFound && isMobile && (
-          <TablePaginationCustom
-            count={tickets?.totalCount || 0}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-          />
-        )}
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
           <Scrollbar>
             <Table stickyHeader size="small" sx={{ minWidth: 360 }}>
@@ -254,7 +245,7 @@ function TicketList() {
           </Scrollbar>
         </TableContainer>
 
-        {!isNotFound && <TablePaginationCustom
+        {!isNotFound && <TablePaginationFilter
           count={ tickets?.totalCount || 0 }
           page={page}
           rowsPerPage={rowsPerPage}
