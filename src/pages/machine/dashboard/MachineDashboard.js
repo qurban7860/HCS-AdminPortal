@@ -128,14 +128,14 @@ export default function MachineDashboard() {
             </Box>
           </Grid>
 
-          <Grid item xs={12} md={6}>
+          {/* <Grid item xs={12} md={6}>
             <Box sx={{ mb: 3 }}>
               <Typography variant="subtitle2" sx={{ mb: 1 }}>
                 Production Totals
               </Typography>
               {renderTableSkeleton(totalColumns, 4)}
             </Box>
-          </Grid>
+          </Grid> */}
 
           <Grid item xs={12} md={6}>
             <Box sx={{ mb: 3 }}>
@@ -172,7 +172,7 @@ export default function MachineDashboard() {
             )}
           </Grid>
 
-          <Grid item xs={12} md={6}>
+          {/* <Grid item xs={12} md={6}>
             {dashboardStatistics.totalData && (
               <DataTable
                 title="Production Totals"
@@ -180,7 +180,7 @@ export default function MachineDashboard() {
                 columns={totalColumns}
               />
             )}
-          </Grid>
+          </Grid> */}
 
           <Grid item xs={12} md={6}>
             {dashboardStatistics.wasteData && (
@@ -224,45 +224,68 @@ export default function MachineDashboard() {
     </Container>
   );
 }
+const DataTable = ({ title, data, columns }) => {
+  // Calculate totals for numeric columns
+  const totals = {};
+  columns.forEach((column) => {
+    if (column.id !== 'label') {
+      totals[column.id] = data.reduce((acc, row) => acc + (Number(row[column.id]) || 0), 0);
+    }
+  });
 
-const DataTable = ({ title, data, columns }) => (
-  <Box sx={{ mb: 3 }}>
-    <Typography variant="subtitle2" sx={{ mb: 1 }}>
-      {title}
-    </Typography>
-    <TableContainer component={Paper} sx={{ boxShadow: 1 }}>
-      <Table size="small">
-        <TableHead>
-          <TableRow sx={{ backgroundColor: 'primary.lighter' }}>
-            {columns.map((column) => (
-              <TableCell key={column.id} align={column.align || 'left'}>
-                <Typography variant="subtitle2">{column.label}</Typography>
-              </TableCell>
-            ))}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {data.map((row, index) => (
-            <TableRow key={index} hover>
+  return (
+    <Box sx={{ mb: 3 }}>
+      <Typography variant="subtitle2" sx={{ mb: 1 }}>
+        {title}
+      </Typography>
+      <TableContainer component={Paper} sx={{ boxShadow: 1 }}>
+        <Table size="small">
+          <TableHead>
+            <TableRow sx={{ backgroundColor: 'primary.lighter' }}>
               {columns.map((column) => (
                 <TableCell key={column.id} align={column.align || 'left'}>
-                  {
-                    // eslint-disable-next-line no-nested-ternary
-                    row[column.id] === null
-                      ? ''
-                      : column.format
-                      ? column.format(row[column.id])
-                      : row[column.id]
-                  }
+                  <Typography variant="subtitle2">{column.label}</Typography>
                 </TableCell>
               ))}
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  </Box>
-);
+          </TableHead>
+          <TableBody>
+            {/* Data rows */}
+            {data.map((row, index) => (
+              <TableRow key={index} hover>
+                {columns.map((column) => (
+                  <TableCell key={column.id} align={column.align || 'left'}>
+                    {(() => {
+                      const value = row[column.id];
+                      if (value === null) return '';
+                      if (column.format) return column.format(value);
+                      return value;
+                    })()}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+
+            {/* Totals row */}
+            <TableRow sx={{ backgroundColor: 'grey.100' }}>
+              {columns.map((column, colIndex) => (
+                <TableCell key={column.id} align={column.align || 'left'}>
+                  {(() => {
+                    if (colIndex === 0) return <strong>Total</strong>;
+                    const totalValue = totals[column.id];
+                    if (column.format && totalValue !== undefined) return <strong>{column.format(totalValue)}</strong>;
+                    return <strong>{totalValue ?? ''}</strong>;
+                  })()}
+                </TableCell>
+              ))}
+            </TableRow>
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Box>
+  );
+};
+
 DataTable.propTypes = {
   title: PropTypes.string,
   data: PropTypes.array,
