@@ -74,7 +74,7 @@ function TablePaginationFilter({
       px: 1, py: 0
     }}>
       {columns?.length > 0 && <Box>
-        <Button size='small' startIcon={<Iconify icon='flowbite:column-solid' />} variant='text' onClick={handleClick}>Columns</Button>
+        <Button size='small' startIcon={<Iconify icon='flowbite:column-solid' />} variant='text' disableRipple onClick={handleClick}>Columns</Button>
         <Menu
           id="long-menu"
           MenuListProps={{
@@ -107,6 +107,7 @@ function TablePaginationFilter({
             minHeight: 36,
             height: 36,
             px: 1,
+            overflowY: 'hidden'
           },
         }}
       />}
