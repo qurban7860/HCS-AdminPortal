@@ -4,12 +4,13 @@ import { Button } from '@mui/material';
 import ConfirmDialog from '../confirm-dialog';
 import { DIALOGS, BUTTONS } from '../../constants/default-constants';
 
-DefaultConfirmDialog.propTypes = {
+DeleteConfirmDialog.propTypes = {
   open: PropTypes.bool,
   onClose: PropTypes.func,
+  content: PropTypes.string
 };
 
-function DefaultConfirmDialog({ open, onClose }) {
+function DeleteConfirmDialog({ open, onClose, content }) {
   const [openDialog, setOpenDialog] = useState(false);
 
   const handleCloseDialog = () => {
@@ -21,7 +22,7 @@ function DefaultConfirmDialog({ open, onClose }) {
       open={openDialog}
       onClose={handleCloseDialog}
       title={DIALOGS.DELETE.title}
-      content={DIALOGS.DELETE.content}
+      content={content || DIALOGS.DELETE.content}
       action={
         <Button
           variant="contained"
@@ -38,4 +39,4 @@ function DefaultConfirmDialog({ open, onClose }) {
   );
 }
 
-export default DefaultConfirmDialog;
+export default DeleteConfirmDialog;

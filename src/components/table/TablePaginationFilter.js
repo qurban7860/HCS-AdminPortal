@@ -71,10 +71,10 @@ function TablePaginationFilter({
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
-      px: 1,
+      px: 1, py: 0
     }}>
       {columns?.length > 0 && <Box>
-        <Button size='small' startIcon={<Iconify icon='flowbite:column-solid' />} variant="outlined" onClick={handleClick}>Columns</Button>
+        <Button size='small' startIcon={<Iconify icon='flowbite:column-solid' />} variant='outlined' onClick={handleClick}>Columns</Button>
         <Menu
           id="long-menu"
           MenuListProps={{
@@ -102,9 +102,11 @@ function TablePaginationFilter({
         sx={{
           ml: 'auto',
           borderTop: 'none !important',
+          minHeight: '36px',
           '.MuiTablePagination-toolbar': {
-            height: '15px',
-            width: '!important 200px',
+            minHeight: 36,
+            height: 36,
+            px: 1,
           },
         }}
       />}

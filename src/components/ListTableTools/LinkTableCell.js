@@ -26,7 +26,7 @@ export default function LinkTableCell({ align, onClick, param, node, stringLengt
             textOverflow: 'ellipsis', // Add ellipsis for overflowed text
             maxWidth: '400px',   
             '&:hover': {
-              color: () => alpha(theme.palette.info.main, 0.98),
+              color: () => alpha(theme.palette.mode === 'light' ? theme.palette.info.main : theme.palette.info.light, 0.98)
             },
           }}
           >

@@ -15,7 +15,7 @@ export default function LinkDialogTableCellTargetBlank({ align,   onViewRow,  on
                 textDecorationStyle: 'dotted',
                 fontWeight: 'bold',
                 '&:hover': {
-                    color: (themes) => alpha(themes.palette.info.main, 0.98),
+                    color: (theme) => alpha(theme.palette.mode === 'light' ? theme.palette.info.main : theme.palette.info.light, 0.98)
                 },
                 }}
             >
@@ -36,7 +36,7 @@ export default function LinkDialogTableCellTargetBlank({ align,   onViewRow,  on
             m:0,
             width:'100%',
             '&:hover': {
-              color: (theme) => alpha(theme.palette.info.main, 0.98),
+              color: (theme) => alpha(theme.palette.info.dark, 0.98),
               textDecoration: 'underline',
               textDecorationStyle: 'dotted',
               background:'none',

@@ -22,7 +22,7 @@ import TicketTabs from './TicketTabs';
 import { handleError } from '../../utils/errorHandler';
 import Lightbox from '../../components/lightbox/Lightbox';
 import SkeletonPDF from '../../components/skeleton/SkeletonPDF';
-import DialogTicketAddFile from '../../components/Dialog/DialogTicketAddFile';
+import DialogTicketAddFile from '../../components/Dialog/TicketAddFileDialog';
 import DropDownField from './utils/DropDownField';
 import FilledTextField from './utils/FilledTextField';
 import FilledEditorField from './utils/FilledEditorField';

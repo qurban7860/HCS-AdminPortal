@@ -44,7 +44,7 @@ const extraInfo = [
 ]
 
 
-DialogViewMachineLogDetails.propTypes = {
+MachineLogDetailsDialog.propTypes = {
   logDetails: PropTypes.object,
   openLogDetailsDialog: PropTypes.bool,
   setOpenLogDetailsDialog: PropTypes.func,
@@ -53,7 +53,7 @@ DialogViewMachineLogDetails.propTypes = {
   allMachineLogsPage: PropTypes.bool,
 };
 
-function DialogViewMachineLogDetails({
+function MachineLogDetailsDialog({
   logDetails,
   logType,
   openLogDetailsDialog,
@@ -258,7 +258,7 @@ function DialogViewMachineLogDetails({
     </>
   );
 }
-export default DialogViewMachineLogDetails;
+export default MachineLogDetailsDialog;
 
 EditMachineLogDetails.propTypes = {
   logsToEdit: PropTypes.object,

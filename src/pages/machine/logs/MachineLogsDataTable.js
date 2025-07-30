@@ -13,7 +13,7 @@ import {
 import { getMachineLogRecords, ChangeRowsPerPage, ChangePage, resetMachineErpLogRecords } from '../../../redux/slices/products/machineErpLogs';
 import Scrollbar from '../../../components/scrollbar';
 import MachineLogsTableRow from './MachineLogsTableRow';
-import DialogViewMachineLogDetails from '../../../components/Dialog/DialogViewMachineLogDetails';
+import DialogViewMachineLogDetails from '../../../components/Dialog/MachineLogDetailsDialog';
 import MachineLogsDataTablePaginationFilter from './MachineLogsDataTablePaginationCustom';
 
 function tableColumnsReducer(state, action) {

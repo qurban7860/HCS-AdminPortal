@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { useEffect, useMemo } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 // @mui
-import { useTheme } from '@mui/material/styles';
+import { useTheme, alpha } from '@mui/material/styles';
 import { Stack, AppBar, Toolbar, IconButton, Box, Button, Link, Divider } from '@mui/material';
 // utils
 import { bgBlur } from '../../../utils/cssStyles';
@@ -76,8 +76,7 @@ export default function Header({ onOpenNav, selectedCategory, setSelectedCategor
                 onClick={() => setSelectedCategory(item)}
               >
                 <Button
-                  variant={item?.id === selectedCategory?.id ? "contained" : "text"}
-                  sx={{ width: '100%', height: '100%' }}
+                  variant={item?.id === selectedCategory?.id ? "contained" : "text"} size='small'
                 >
                   {item?.title || ''}
                 </Button>
@@ -149,7 +148,7 @@ export default function Header({ onOpenNav, selectedCategory, setSelectedCategor
         }),
       }}
     >
-      <Toolbar sx={{ height: 1, px: { lg: 5 }, color: 'text.primary', position: 'sticky' }} >{renderContent}</Toolbar>
+      <Toolbar sx={{ height: 1, px: { lg: 5 }, position: 'sticky' }} >{renderContent}</Toolbar>
     </AppBar>
   );
 }

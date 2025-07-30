@@ -28,20 +28,20 @@ export const StyledItem = styled(ListItemButton, {
   return {
     position: 'relative',
     textTransform: 'capitalize',
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(1.5),
+    paddingLeft: theme.spacing(1),
+    paddingRight: theme.spacing(1),
     marginBottom: theme.spacing(0.5),
-    color: 'black',
+    color: theme.palette.text.primary,
     borderRadius: theme.shape.borderRadius,
-    height: NAV.H_DASHBOARD_ITEM,
+    // height: NAV.H_DASHBOARD_ITEM,
     // Sub item
     ...(subItem && {
-      height: NAV.H_DASHBOARD_ITEM_SUB,
+      // height: NAV.H_DASHBOARD_ITEM_SUB,
       ...(depth > 2 && {
         paddingLeft: theme.spacing(depth),
       }),
       ...(caption && {
-        height: NAV.H_DASHBOARD_ITEM,
+        // height: NAV.H_DASHBOARD_ITEM,
       }),
     }),
     // Active item

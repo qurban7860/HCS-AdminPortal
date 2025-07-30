@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Divider } from '@mui/material';
 import CodeMirror from '../CodeMirror/JsonEditor'; 
 
-function DialogViewApiLogDetails({ open, onClose, logDetails }) {
+function ApiLogDetailsDialog({ open, onClose, logDetails }) {
   if (logDetails.response) {
     try {
       logDetails.response = JSON.parse(logDetails.response);
@@ -32,10 +32,10 @@ function DialogViewApiLogDetails({ open, onClose, logDetails }) {
   );
 }
 
-DialogViewApiLogDetails.propTypes = {
+ApiLogDetailsDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   logDetails: PropTypes.object,
 };
 
-export default DialogViewApiLogDetails;
+export default ApiLogDetailsDialog;

@@ -22,7 +22,7 @@ import SkeletonPDF from '../../../components/skeleton/SkeletonPDF';
 import { ThumbnailDocButton } from '../../../components/Thumbnails';
 import { DocumentGalleryItem } from '../../../components/gallery/DocumentGalleryItem';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
-import DialogProfileAddFile from '../../../components/Dialog/DialogProfileAddFile';
+import DialogProfileAddFile from '../../../components/Dialog/ProfileAddFileDialog';
 
 export default function ProfileViewForm() {
   const { profile, isLoading } = useSelector((state) => state.profile);

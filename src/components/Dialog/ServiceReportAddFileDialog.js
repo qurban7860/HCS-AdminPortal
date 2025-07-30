@@ -11,7 +11,7 @@ import { RHFUpload } from '../hook-form';
 import { useServiceReportParams } from '../../hooks/useServiceReportParams';
 import { MachineServiceReportPart3Schema } from '../../pages/schemas/machine';
 
-function DialogServiceReportAddFile( ) {
+function ServiceReportAddFileDialog( ) {
   const { machineId, id } = useServiceReportParams() 
   
   const dispatch = useDispatch();
@@ -112,4 +112,4 @@ function DialogServiceReportAddFile( ) {
   );
 }
 
-export default DialogServiceReportAddFile;
+export default ServiceReportAddFileDialog;
