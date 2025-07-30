@@ -21,10 +21,10 @@ export default function TicketView() {
   useLayoutEffect(() => {
     dispatch(getTicket(id));
     dispatch(getTicketSettings());
-    // return () => {
-    //   dispatch(resetTicket());
-    //   dispatch(resetTicketSettings());
-    // }
+    return () => {
+      dispatch(resetTicket());
+      // dispatch(resetTicketSettings());
+    }
   }, [id, dispatch]);
 
   const { ticket } = useSelector((state) => state.tickets);
