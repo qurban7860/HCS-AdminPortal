@@ -218,16 +218,20 @@ export const StyledPopover = styled(Popover)(({ theme }) => ({
 // @root - StyledTableRow -
 export const StyledTableRow = styled(TableRow)(({ theme }) => ({
   '&:nth-of-type(odd)': {
-    backgroundColor: 'white',
+    backgroundColor: theme.palette.mode === 'light' 
+      ? theme.palette.background.paper 
+      : theme.palette.action.hover,
     '&:hover': {
-      backgroundColor: '#2065d114',
-    }
+      backgroundColor: alpha(theme.palette.primary.main, 0.08)
+    },
   },
   '&:nth-of-type(even)': {
-    backgroundColor: '#f4f6f866',
+    backgroundColor: theme.palette.mode === 'light' 
+      ? theme.palette.grey[100] 
+      : theme.palette.background.default,
     '&:hover': {
-      backgroundColor: '#2065d114',
-    }
+      backgroundColor: alpha(theme.palette.primary.main, 0.08)
+    },
   },
 }));
 

@@ -14,12 +14,11 @@ import {
   TableSkeleton,
   getComparator,
   TableHeadFilter,
-  TablePaginationCustom,
   TablePaginationFilter,
 } from '../../components/table';
 import Scrollbar from '../../components/scrollbar';
 // sections
-import TicketFormTableRow from './TicketTableRow';
+import TicketTableRow from './TicketTableRow';
 import TicketTableController from './TicketTableController';
 import { ChangeRowsPerPage, ChangePage, setFilterBy, getTickets, resetTickets, getTicketSettings, resetTicketSettings, setReportHiddenColumns } from '../../redux/slices/ticket/tickets';
 import { getActiveSecurityUsers, resetActiveSecurityUsers } from '../../redux/slices/securityUser/securityUser';
@@ -185,7 +184,7 @@ function TicketList() {
             onResetFilter={handleResetFilter}
             onReload={onReload}
           />
-            {!isNotFound && !isMobile && (
+            {!isNotFound && (
             <TablePaginationFilter
               columns={TABLE_HEAD.filter((item) => item?.allowColumn)} 
               hiddenColumns={reportHiddenColumns}
@@ -197,19 +196,9 @@ function TicketList() {
               onRowsPerPageChange={onChangeRowsPerPage}
             />
           )}
-
-          {!isNotFound && isMobile && (
-            <TablePaginationCustom
-              count={tickets?.totalCount || 0}
-              page={page}
-              rowsPerPage={rowsPerPage}
-              onPageChange={onChangePage}
-              onRowsPerPageChange={onChangeRowsPerPage}
-            />
-          )}
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <Scrollbar>
-              <Table stickyHeader size="small" sx={{ minWidth: 360 }}>
+              <Table stickyHeader size="small" aria-label="a dense table" sx={{ minWidth: 360 }}>
                 <TableHeadFilter
                   order={order}
                   orderBy={orderBy}
@@ -221,7 +210,7 @@ function TicketList() {
                   {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
                     .map((row, index) =>
                       row ? (                       
-                        <TicketFormTableRow
+                        <TicketTableRow
                           key={row._id}
                           row={row}
                           hiddenColumns={reportHiddenColumns}
@@ -238,7 +227,7 @@ function TicketList() {
             </Scrollbar>
           </TableContainer>
 
-          {!isNotFound && <TablePaginationCustom
+          {!isNotFound && <TablePaginationFilter
             count={ tickets?.totalCount || 0 }
             page={page}
             rowsPerPage={rowsPerPage}

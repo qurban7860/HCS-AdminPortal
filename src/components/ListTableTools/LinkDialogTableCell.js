@@ -11,17 +11,17 @@ export default function LinkDialogTableCell({ align, onClick, param, width }) {
         textDecoration: 'underline',
         textDecorationStyle: 'dotted',
         fontWeight: 'bold',
-        whiteSpace: 'nowrap',      // Prevent text from wrapping
-        overflow: 'hidden',       // Hide any overflow
-        textOverflow: 'ellipsis', // Add ellipsis for overflowed text
+        whiteSpace: 'nowrap', 
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
         background: 'none',
-        color: 'black',
+        color: (theme) => alpha(theme.palette.text.primary, 0.98),
         justifyContent: 'flex-start',
         p: 0,
         m: 0,
         width: width || '100%',
         '&:hover': {
-          color: (theme) => alpha(theme.palette.info.main, 0.98),
+          color: (theme) => alpha(theme.palette.mode === 'light' ? theme.palette.info.main : theme.palette.info.light, 0.98),
           textDecoration: 'underline',
           textDecorationStyle: 'dotted',
           background: 'none',

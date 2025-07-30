@@ -29,7 +29,7 @@ export default function LinkTableCellWithIconTargetBlank({ align, onViewRow, onC
               textDecorationStyle: 'dotted',
               fontWeight: 'bold',
               '&:hover': {
-                color: (themes) => alpha(themes.palette.info.main, 0.98),
+                color: (theme) => alpha(theme.palette.mode === 'light' ? theme.palette.info.main : theme.palette.info.light, 0.98),
               },
             }}
           >
@@ -47,7 +47,7 @@ export default function LinkTableCellWithIconTargetBlank({ align, onViewRow, onC
             textDecorationStyle: 'dotted',
             fontWeight: 'bold',
             '&:hover': {
-              color: (themes) => alpha(themes.palette.info.main, 0.98),
+              color: (themes) => alpha(themes.palette.info.dark, 0.98),
             },
           }}
         >

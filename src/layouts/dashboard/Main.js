@@ -50,11 +50,10 @@ export default function Main({ children, sx, ...other }) {
       component="main"
       sx={{
         flexGrow: 1,
-        backgroundColor:"#63738114",
-        // background: (theme) => theme.palette.background.default,
+        background: (theme) => theme.palette.background.default,
         pt: `${HEADER.H_MOBILE + SPACING}px`,
         pb: 2,
-        // height: '100vh',
+        height: '100vh',
         ...(isDesktop && {
           px: 2,
           pt: `${HEADER.H_DASHBOARD_DESKTOP + SPACING}px`,
