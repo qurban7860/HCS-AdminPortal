@@ -91,6 +91,8 @@ export default function SecurityUserProfile() {
       updatedByFullName: securityUser?.updatedBy?.name || '',
       updatedAt: securityUser?.updatedAt || '',
       updatedIP: securityUser?.updatedIP || '',
+      dataAccessibilityLevel: securityUser?.dataAccessibilityLevel || 'RESTRICTED',
+
     }),
     [securityUser]
   );
@@ -143,7 +145,8 @@ export default function SecurityUserProfile() {
             />
             <ViewFormField sm={6} heading="Full Name" param={defaultValues?.name} />
             <ViewFormField sm={6} heading="Phone" param={defaultValues?.phone} />
-            <ViewFormField sm={12} heading="email" param={defaultValues?.email} />
+            <ViewFormField sm={6} heading="email" param={defaultValues?.email} />
+            <ViewFormField sm={6} heading="Data Accessibility" param={defaultValues?.dataAccessibilityLevel || ''}/>
             <ViewFormField sm={6} heading="Login" param={defaultValues?.login} />
             <ViewFormField
               sm={6}
