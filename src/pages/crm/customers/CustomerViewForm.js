@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 // @mui
-import { Card, Grid } from '@mui/material';
+import { Card, Grid, Chip } from '@mui/material';
 // routes
 import { PATH_CRM } from '../../../routes/paths';
 // hooks
@@ -22,6 +22,7 @@ import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEdi
 import FormLabel from '../../../components/DocumentForms/FormLabel';
 import { FORMLABELS } from '../../../constants/default-constants';
 import { FORMLABELS as formLABELS } from '../../../constants/customer-constants';
+import { StyledTooltip } from '../../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
 
@@ -126,28 +127,30 @@ export default function CustomerViewForm() {
           onRestore={customer?.isArchived ? onRestore : undefined}
           onDelete={customer?.isArchived ? onDelete : undefined}
           supportSubscription={customer?.isArchived ? undefined : defaultValues.supportSubscription}
-          backLink={() => customer?.isArchived ? navigate(PATH_CRM.customers.archived.root) : navigate(PATH_CRM.customers.list)}
+          backLink={() => (customer?.isArchived ? navigate(PATH_CRM.customers.archived.root) : navigate(PATH_CRM.customers.list))}
           excludeReports={customer?.isArchived ? undefined : defaultValues.excludeReports}
         />
 
         <Grid container>
-          <ViewFormField isLoading={isLoading} variant='h4' sm={6} md={6} heading={formLABELS.CUSTOMER.NAME.label} param={defaultValues?.name} />
-          <ViewFormField isLoading={isLoading} variant='h4' sm={6} md={6} heading={formLABELS.CUSTOMER.CODE.label} param={defaultValues?.code} />
+          <ViewFormField isLoading={isLoading} variant="h4" sm={6} md={6} heading={formLABELS.CUSTOMER.NAME.label} param={defaultValues?.name} />
+          <ViewFormField isLoading={isLoading} variant="h4" sm={6} md={6} heading={formLABELS.CUSTOMER.CODE.label} param={defaultValues?.code} />
           <ViewFormField isLoading={isLoading} sm={6} md={6} heading={formLABELS.CUSTOMER.TRADING_NAME.label} chips={defaultValues?.tradingName} />
-          <ViewFormField isLoading={isLoading} sm={6} md={6} heading='Group Customer' param={defaultValues?.groupCustomer?.name} />
-          <ViewFormField isLoading={isLoading} md={6} heading='Reference ID' param={defaultValues?.ref} />
+          <ViewFormField isLoading={isLoading} sm={6} md={6} heading="Group Customer" param={defaultValues?.groupCustomer?.name} />
+          <ViewFormField isLoading={isLoading} md={6} heading="Reference ID" param={defaultValues?.ref} />
 
-          <ViewFormField isLoading={isLoading} sm={6}
+          <ViewFormField
+            isLoading={isLoading}
+            sm={6}
             heading={formLABELS.CUSTOMER.BILLING_CONTACT}
-            param={`${defaultValues?.primaryBillingContact?.firstName || ""} ${defaultValues?.primaryBillingContact?.lastName || ""}`}
+            param={`${defaultValues?.primaryBillingContact?.firstName || ''} ${defaultValues?.primaryBillingContact?.lastName || ''}`}
           />
-          <ViewFormField isLoading={isLoading}
+          <ViewFormField
+            isLoading={isLoading}
             sm={6}
             heading={formLABELS.CUSTOMER.TECHNICAL_CONTACT}
-            param={`${defaultValues?.primaryTechnicalContact?.firstName || ""} ${defaultValues?.primaryTechnicalContact?.lastName || ""}`}
+            param={`${defaultValues?.primaryTechnicalContact?.firstName || ''} ${defaultValues?.primaryTechnicalContact?.lastName || ''}`}
           />
         </Grid>
-
 
         {defaultValues.mainSite && (
           <Grid container>
@@ -176,12 +179,45 @@ export default function CustomerViewForm() {
         )}
         <Grid container>
           <FormLabel content={FORMLABELS.HOWICK} />
-          <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.CUSTOMER.ACCOUNT} chips={defaultValues?.accountManager?.map(manager => `${manager?.firstName} ${manager?.lastName}`)} />
-          <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.CUSTOMER.PROJECT} chips={defaultValues?.projectManager?.map(manager => `${manager?.firstName} ${manager?.lastName}`)} />
-          <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.CUSTOMER.SUPPORT} chips={defaultValues?.supportManager?.map(manager => `${manager?.firstName} ${manager?.lastName}`)} />
+          <Grid container spacing={2}>
+            <Grid item sm={6}>
+              <StyledTooltip title={defaultValues?.accountManager?.map((manager) => manager?.email).join(', ') || 'No email'} placement="left">
+                <div>
+                  <ViewFormField
+                    isLoading={isLoading}
+                    heading={formLABELS.CUSTOMER.ACCOUNT}
+                    chips={defaultValues?.accountManager?.map((manager) => `${manager?.firstName} ${manager?.lastName}`)}
+                  />
+                </div>
+              </StyledTooltip>
+            </Grid>
+
+            <Grid item sm={6}>
+              <StyledTooltip title={defaultValues?.projectManager?.map((manager) => manager?.email).join(', ') || 'No email'} placement="left">
+                <div>
+                  <ViewFormField
+                    isLoading={isLoading}
+                    heading={formLABELS.CUSTOMER.PROJECT}
+                    chips={defaultValues?.projectManager?.map((manager) => `${manager?.firstName} ${manager?.lastName}`)}
+                  />
+                </div>
+              </StyledTooltip>
+            </Grid>
+
+            <Grid item sm={6}>
+              <StyledTooltip title={defaultValues?.supportManager?.map((manager) => manager?.email).join(', ') || 'No email'} placement="left">
+                <div>
+                  <ViewFormField
+                    isLoading={isLoading}
+                    heading={formLABELS.CUSTOMER.SUPPORT}
+                    chips={defaultValues?.supportManager?.map((manager) => `${manager?.firstName} ${manager?.lastName}`)}
+                  />
+                </div>
+              </StyledTooltip>
+            </Grid>
+          </Grid>
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>
-
       </Card>
     </Grid>
   );
