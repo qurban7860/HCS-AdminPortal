@@ -7,7 +7,7 @@ const CustomerDialog = lazy(() => import('./CustomerDialog'));
 const ContactDialog = lazy(() => import('./ContactDialog'));
 const MachineDialog = lazy(() => import('./MachineDialog'));
 const PortalRequestDialog = lazy(() => import('./PortalRequestDialog'));
-const DialogServiceReportAddFile = lazy(() => import('./DialogServiceReportAddFile'));
+const DialogServiceReportAddFile = lazy(() => import('./ServiceReportAddFileDialog'));
 
 function DialogManager() {
     const { securityUserDialog } = useSelector((state) => state.user);

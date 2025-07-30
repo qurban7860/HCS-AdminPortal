@@ -1,27 +1,25 @@
 import PropTypes from 'prop-types';
 import { useCallback, useMemo } from 'react';
-import { useDispatch } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import { Dialog, DialogContent, Button, DialogTitle, Divider, DialogActions } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
+import { Dialog, DialogContent, Button, DialogTitle, Divider, DialogActions, Alert, Typography } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useSnackbar } from 'notistack';
-import { addFiles } from '../../redux/slices/products/profile';
+import { addFiles } from '../../redux/slices/ticket/tickets';
 import FormProvider from '../hook-form/FormProvider';
 import { RHFUpload } from '../hook-form';
-import { filesValidations } from '../../pages/schemas/machine';
+import { MachineServiceReportPart3Schema } from '../../pages/schemas/machine';
 
-DialogProfileAddFile.propTypes = {
+TicketAddFileDialog.propTypes = {
   open: PropTypes.bool,
   handleClose: PropTypes.func
 };
 
-function DialogProfileAddFile({ open, handleClose }) {
-  const { machineId, id } = useParams()
+function TicketAddFileDialog({ open, handleClose }) {
 
   const dispatch = useDispatch();
-
+  const { ticket } = useSelector((state) => state.tickets);
   const { enqueueSnackbar } = useSnackbar();
 
   const defaultValues = useMemo(
@@ -33,8 +31,10 @@ function DialogProfileAddFile({ open, handleClose }) {
   );
 
   const methods = useForm({
-    resolver: yupResolver(filesValidations),
-    defaultValues
+    resolver: yupResolver(MachineServiceReportPart3Schema),
+    defaultValues,
+    mode: 'onChange',
+    reValidateMode: 'onChange'
   });
 
   const {
@@ -42,9 +42,20 @@ function DialogProfileAddFile({ open, handleClose }) {
     watch,
     setValue,
     handleSubmit,
-    formState: { isSubmitting },
+    formState: { isSubmitting, },
   } = methods;
+
   const { files } = watch();
+
+  // Check if any uploaded files have HEIC or HEIF extensions
+  const hasHeicOrHeifFiles = useMemo(() => {
+    if (!files || !Array.isArray(files)) return false;
+    
+    return files.some(file => {
+      const extension = file.name?.split('.').pop()?.toLowerCase();
+      return extension === 'heic' || extension === 'heif';
+    });
+  }, [files]);
 
   const handleDropMultiFile = useCallback(
     async (acceptedFiles) => {
@@ -66,18 +77,16 @@ function DialogProfileAddFile({ open, handleClose }) {
 
   const onSubmit = async (data) => {
     try {
-      if (id && data?.files.length > 0) {
-        await dispatch(addFiles(machineId, id, data))
+      if (ticket?._id) {
+        await dispatch(addFiles(ticket?._id, data))
         await handleClose();
         await reset();
         await enqueueSnackbar('Files uploaded successfully!');
-      } else if (!data?.files.length > 0) {
-        enqueueSnackbar('Documents required!', { variant: `error` });
       } else {
-        enqueueSnackbar('Upload document failed!, parameters missing!', { variant: `error` });
+        enqueueSnackbar('File upload failed, parameters missing!', { variant: `error` });
       }
     } catch (error) {
-      enqueueSnackbar('Upload document failed! Please try again.', { variant: `error` });
+      enqueueSnackbar('Failed to upload files. Please try again.', { variant: `error` });
       console.error(error);
     }
   };
@@ -88,6 +97,16 @@ function DialogProfileAddFile({ open, handleClose }) {
       <DialogTitle variant='h3' sx={{ pb: 1, pt: 2 }}>Add Documents / Images</DialogTitle>
       <Divider orientation="horizontal" flexItem />
       <DialogContent dividers sx={{ pt: 2 }}>
+        {hasHeicOrHeifFiles && (
+          <Alert 
+            severity="info" 
+            sx={{ mb: 2 }}
+          >
+            <Typography variant='body2'>
+              Please note: HEIC/HEIF image files require format conversion during upload, which may result in extended processing times.
+            </Typography>
+          </Alert>
+        )}
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
           <RHFUpload multiple thumbnail name="files" imagesOnly
             onDrop={handleDropMultiFile}
@@ -112,4 +131,4 @@ function DialogProfileAddFile({ open, handleClose }) {
   );
 }
 
-export default DialogProfileAddFile;
+export default TicketAddFileDialog;

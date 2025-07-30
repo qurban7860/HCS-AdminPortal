@@ -6,20 +6,20 @@ import { LoadingButton } from '@mui/lab';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useSnackbar } from 'notistack';
-import { addFiles } from '../../redux/slices/ticket/tickets';
+import { addFiles } from '../../redux/slices/support/knowledgeBase/article';
 import FormProvider from '../hook-form/FormProvider';
 import { RHFUpload } from '../hook-form';
 import { MachineServiceReportPart3Schema } from '../../pages/schemas/machine';
 
-DialogTicketAddFile.propTypes = {
+ArticleAddFileDialog.propTypes = {
   open: PropTypes.bool,
   handleClose: PropTypes.func
 };
 
-function DialogTicketAddFile({ open, handleClose }) {
+function ArticleAddFileDialog({ open, handleClose }) {
 
   const dispatch = useDispatch();
-  const { ticket } = useSelector((state) => state.tickets);
+  const { article } = useSelector((state) => state.article);
   const { enqueueSnackbar } = useSnackbar();
 
   const defaultValues = useMemo(
@@ -77,8 +77,8 @@ function DialogTicketAddFile({ open, handleClose }) {
 
   const onSubmit = async (data) => {
     try {
-      if (ticket?._id) {
-        await dispatch(addFiles(ticket?._id, data))
+      if (article?._id) {
+        await dispatch(addFiles(article?._id, data))
         await handleClose();
         await reset();
         await enqueueSnackbar('Files uploaded successfully!');
@@ -131,4 +131,4 @@ function DialogTicketAddFile({ open, handleClose }) {
   );
 }
 
-export default DialogTicketAddFile;
+export default ArticleAddFileDialog;

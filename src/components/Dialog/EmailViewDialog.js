@@ -19,7 +19,7 @@ import { fDateTime } from '../../utils/formatTime';
 import { PATH_SUPPORT, PATH_CRM, PATH_MACHINE, PATH_REPORTS, PATH_SETTING, PATH_CALENDAR } from '../../routes/paths';
 import LinkTableCellWithIconTargetBlank from '../ListTableTools/LinkTableCellWithIconTargetBlank';
 
-function DialogEmailViewDetails({ open, setOpenDialog, emailId }) {
+function EmailViewDialog({ open, setOpenDialog, emailId }) {
   const [showFullBody, setShowFullBody] = useState(false);
   const { email, isLoading } = useSelector((state) => state.emails);
   const dispatch = useDispatch();
@@ -206,9 +206,9 @@ function DialogEmailViewDetails({ open, setOpenDialog, emailId }) {
   );
 }
 
-export default DialogEmailViewDetails;
+export default EmailViewDialog;
 
-DialogEmailViewDetails.propTypes = {
+EmailViewDialog.propTypes = {
   open: PropTypes.bool,
   setOpenDialog: PropTypes.func,
   emailId: PropTypes.string.isRequired,

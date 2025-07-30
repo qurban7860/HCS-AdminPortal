@@ -32,7 +32,7 @@ import { fDateTime } from '../../../utils/formatTime';
 import TableCard from '../../../components/ListTableTools/TableCard';
 import { Cover } from '../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
-import DialogEmailViewDetails from '../../../components/Dialog/DialogEmailViewDetails';
+import DialogEmailViewDetails from '../../../components/Dialog/EmailViewDialog';
 
 // ----------------------------------------------------------------------
 

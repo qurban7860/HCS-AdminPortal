@@ -28,11 +28,11 @@ import { useAuthContext } from '../../auth/useAuthContext';
 import SkeletonLine from '../skeleton/SkeletonLine';
 import Iconify from '../iconify';
 
-DialogServiceReportComplete.propTypes = {
+ServiceReportCompleteDialog.propTypes = {
   dialogType: PropTypes.string,
 };
 
-function DialogServiceReportComplete({ dialogType }) {
+function ServiceReportCompleteDialog({ dialogType }) {
   const [approvingContacts, setApprovingContacts] = useState([]);
   const [allowApproval, setAllowApproval] = useState(false);
   const dispatch = useDispatch();
@@ -110,7 +110,7 @@ function DialogServiceReportComplete({ dialogType }) {
   );
 }
 
-export default DialogServiceReportComplete;
+export default ServiceReportCompleteDialog;
 
 const SendApprovalEmails = ({ isLoading, approvingContacts }) => {
   const dispatch = useDispatch();

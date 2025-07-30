@@ -227,7 +227,7 @@ TableContent.propTypes = {
 };
 
 // Main component
-export default function DialogViewAPILogsMachineERPLogsTable({ open, onClose, apiId, logType }) {
+export default function APILogsMachineERPLogsTableDialog({ open, onClose, apiId, logType }) {
   const dispatch = useDispatch();
   const { machineErpLogs, isLoading } = useSelector((state) => state.machineErpLogs);
   const [tableData, setTableData] = useState([]);
@@ -290,7 +290,7 @@ export default function DialogViewAPILogsMachineERPLogsTable({ open, onClose, ap
   );
 }
 
-DialogViewAPILogsMachineERPLogsTable.propTypes = {
+APILogsMachineERPLogsTableDialog.propTypes = {
   open: PropTypes.bool,
   onClose: PropTypes.func,
   apiId: PropTypes.string,

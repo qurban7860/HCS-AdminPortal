@@ -23,7 +23,7 @@ import { useSnackbar } from '../../../../components/snackbar';
 import ViewFormAudit from '../../../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../../../components/ViewForms/ViewFormField';
 import ViewFormEditDeleteButtons from '../../../../components/ViewForms/ViewFormEditDeleteButtons';
-import DialogArticleAddFile from '../../../../components/Dialog/DialogArticleAddFile';
+import DialogArticleAddFile from '../../../../components/Dialog/ArticleAddFileDialog';
 import ViewFormSelect from '../../../../components/ViewForms/ViewFormSelect';
 import { handleError } from '../../../../utils/errorHandler';
 import { StyledCardContainer } from '../../../../theme/styles/default-styles';
