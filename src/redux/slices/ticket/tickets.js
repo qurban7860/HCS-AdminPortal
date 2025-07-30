@@ -11,9 +11,13 @@ const initialState = {
   softwareVersion: null,
   filterBy: '',
   filterIssueType: null,
+  filterRequestType: null,
   filterStatus: [],
+  filterPriority: null,
   filterStatusType: null,
   filterResolvedStatus: null,
+  filterAssignee: null,
+  filterFault: null,
   page: 0,
   rowsPerPage: 100,
   initial: false,
@@ -194,8 +198,16 @@ const slice = createSlice({
       state.filterIssueType = action.payload;
     },
 
+    setFilterRequestType(state, action) {
+      state.filterRequestType = action.payload;
+    },
+
     setFilterStatus(state, action) {
       state.filterStatus = action.payload;
+    },
+    
+    setFilterPriority(state, action) {
+      state.filterPriority = action.payload;
     },
 
     setFilterStatusType(state, action) {
@@ -204,6 +216,14 @@ const slice = createSlice({
 
     setFilterResolvedStatus(state, action) {
       state.filterResolvedStatus = action.payload;
+    },
+
+    setFilterAssignee(state, action) {
+      state.filterAssignee = action.payload;
+    },
+
+    setFilterFault(state, action) {
+      state.filterFault = action.payload;
     },
 
     // SET PAGE ROW COUNT
@@ -236,9 +256,13 @@ export const {
   ChangePage,
   setReportHiddenColumns,
   setFilterIssueType,
+  setFilterRequestType,
   setFilterStatus,
+  setFilterPriority,
   setFilterStatusType,
-  setFilterResolvedStatus
+  setFilterAssignee,
+  setFilterResolvedStatus,
+  setFilterFault
 } = slice.actions;
 
 // ----------------------------------------------------------------------
