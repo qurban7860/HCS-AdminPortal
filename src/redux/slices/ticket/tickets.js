@@ -300,6 +300,14 @@ export function postTicket(params) {
       formData.append('endTime', params?.endTime || '');
       formData.append('hlc', params?.hlc || '');
       formData.append('plc', params?.plc || '');
+      
+      (params?.assignees || []).forEach(user => {
+        formData.append('assignees[]', user._id);
+      });
+
+      (params?.approvers || []).forEach(user => {
+        formData.append('approvers[]', user._id);
+      });
 
       (params?.files || []).forEach((file, index) => {
         formData.append(`images`, file);
@@ -349,7 +357,15 @@ export function patchTicket(id, params) {
       formData.append('endTime', params?.endTime || '');
       formData.append('hlc', params?.hlc || '');
       formData.append('plc', params?.plc || '');
+      
+      (params?.assignees || []).forEach(user => {
+        formData.append('assignees[]', user._id);
+      });
 
+      (params?.approvers || []).forEach(user => {
+        formData.append('approvers[]', user._id);
+      });
+      
       (params?.files || []).forEach((file, index) => {
         formData.append(`images`, file);
       });
