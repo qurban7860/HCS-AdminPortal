@@ -4,7 +4,6 @@ import { useState, useEffect, useRef, memo, useMemo, useCallback } from 'react';
 import { Container, Table, TableBody, TableContainer } from '@mui/material';
 // routes
 import { useNavigate } from 'react-router-dom';
-import { PATH_SUPPORT } from '../../routes/paths';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 // components
@@ -20,17 +19,15 @@ import Scrollbar from '../../components/scrollbar';
 // sections
 import TicketFormTableRow from './TicketTableRow';
 import TicketTableController from './TicketTableController';
-import { ChangeRowsPerPage, ChangePage, setFilterBy, getTickets, resetTickets, getTicketSettings, resetTicketSettings, setReportHiddenColumns } from '../../redux/slices/ticket/tickets';
-import { getActiveSecurityUsers, resetActiveSecurityUsers } from '../../redux/slices/securityUser/securityUser';
+import { ChangeRowsPerPage, ChangePage, setFilterBy, setReportHiddenColumns } from '../../redux/slices/ticket/tickets';
 import { fDate } from '../../utils/formatTime';
 import TableCard from '../../components/ListTableTools/TableCard';
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
 import useResponsive from '../../hooks/useResponsive';
-import { BUTTONS } from '../../constants/default-constants';
+// import { BUTTONS } from '../../constants/default-constants';
 import { getArticleByValue } from '../../redux/slices/support/knowledgeBase/article';
 import HelpSidebar from './utils/HelpSideBar';
-import { useAuthContext } from '../../auth/useAuthContext';
 
 // ----------------------------------------------------------------------
 
@@ -51,10 +48,9 @@ const TABLE_HEAD = [
 // ----------------------------------------------------------------------
 
 function TicketList() {
-  const { tickets, filterBy, page, rowsPerPage, isLoading, reportHiddenColumns, filterResolvedStatus, filterIssueType, filterRequestType, filterStatusType, filterStatus, filterAssignee, filterFault, filterPriority } = useSelector((state) => state.tickets);
+  const { tickets, filterBy, page, rowsPerPage, isLoading, reportHiddenColumns } = useSelector((state) => state.tickets);
   const { article } = useSelector((state) => state.article);
-  const navigate = useNavigate();
-  const { user: currentUser } = useAuthContext(); 
+
   const {
     order,
     orderBy,
@@ -63,7 +59,7 @@ function TicketList() {
   } = useTable({ defaultOrderBy: 'createdAt', defaultOrder: 'desc' });
 
   const dispatch = useDispatch();
-  const [filterName, setFilterName] = useState('');
+  const [filterName, setFilterName] = useState(filterBy);
   const [helpOpen, setHelpOpen] = useState(false);
   const isMobile = useResponsive('down', 'sm');
 
@@ -83,27 +79,6 @@ function TicketList() {
       dispatch(getArticleByValue(helpPrefix));
     }
   }, [dispatch, configurations]);
-  
-  useEffect(() => {
-    dispatch(getTickets({
-      page,
-      pageSize: rowsPerPage,
-      isResolved: false
-    }));
-    dispatch(getTicketSettings());
-    const asssigneeRoleType = configurations?.find((c) => c?.name?.trim() === 'SupportTicketAssigneeRoleType')?.value?.trim();
-    dispatch(getActiveSecurityUsers({ type: 'SP', roleType: asssigneeRoleType }));
-    return () => {
-      dispatch(resetTickets());
-      dispatch(resetTicketSettings());
-      dispatch(resetActiveSecurityUsers());
-    };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    dispatch,
-    page,
-    rowsPerPage,
-  ]);
 
   const dataFiltered = useMemo(() => applyFilter({
     comparator: getComparator(order, orderBy),
@@ -124,22 +99,6 @@ function TicketList() {
   const onChangePage = useCallback((e, newPage) => {
     dispatch(ChangePage(newPage));
   }, [dispatch]);
-
-  const onReload = useCallback(({ issueType, requestType, isResolved, statusType, status, priority, assignees, faults }) => {
-    dispatch(ChangePage(0));
-    dispatch(getTickets({
-      page: 0,
-      pageSize: rowsPerPage,
-      issueType,
-      requestType,
-      isResolved,
-      statusType,
-      status,
-      priority,
-      assignees,
-      faults
-    }));
-  }, [dispatch, rowsPerPage ]);
 
   const handleHelpClick = useCallback(() => setHelpOpen((prev) => !prev), []);
 
@@ -163,15 +122,8 @@ function TicketList() {
     dispatch(setFilterBy(''));
     setFilterName('');
   }, [dispatch]);
-  
-  useEffect(()=>{
-    setFilterName(filterBy)
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[])
 
   const handleHiddenColumns = useCallback((arg) => dispatch(setReportHiddenColumns(arg)), [dispatch]);
-
-  const toggleAdd = useCallback(() => navigate(PATH_SUPPORT.supportTickets.new), [navigate]);
 
   return (
     <Container maxWidth={false}>
@@ -189,16 +141,6 @@ function TicketList() {
           onFilterName={handleFilterName}
           isFiltered={isFiltered}
           onResetFilter={handleResetFilter}
-          onReload={onReload}
-          currentUser={currentUser} 
-          filterPriority={filterPriority}
-          filterIssueType={filterIssueType}
-          filterRequestType={filterRequestType}
-          filterStatusType={filterStatusType}
-          filterStatus={filterStatus}
-          filterResolvedStatus={filterResolvedStatus}
-          filterAssignee={filterAssignee}
-          filterFault={filterFault}
         />
         {!isNotFound && !isMobile && (
           <TablePaginationFilter
