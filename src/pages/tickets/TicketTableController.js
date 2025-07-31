@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // @mui
 import { Stack, Grid, TextField, InputAdornment, Button, IconButton } from '@mui/material';
-import { useForm, useWatch } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { PATH_SUPPORT } from '../../routes/paths';
 import { ticketControllerSchema } from '../schemas/ticketSchema';
@@ -14,8 +14,9 @@ import { BUTTONS } from '../../constants/default-constants';
 import Iconify from '../../components/iconify';
 // constants
 import { options, StyledTooltipIconButton, StyledTooltip } from '../../theme/styles/default-styles';
-import { setFilterPriority, setFilterIssueType, setFilterRequestType, setFilterStatusType, setFilterStatus, setFilterResolvedStatus, setFilterAssignee, setFilterFault } from '../../redux/slices/ticket/tickets';
-
+import { getTickets, getTicketSettings, setTicketController } from '../../redux/slices/ticket/tickets';
+import { useAuthContext } from '../../auth/useAuthContext';
+import { getActiveSecurityUsers } from '../../redux/slices/securityUser/securityUser';
 // ----------------------------------------------------------------------
 
 TicketTableController.propTypes = {
@@ -24,15 +25,6 @@ TicketTableController.propTypes = {
   onFilterName: PropTypes.func,
   onResetFilter: PropTypes.func,
   onReload: PropTypes.func,
-  currentUser: PropTypes.object, 
-  filterPriority: PropTypes.object,
-  filterIssueType: PropTypes.object,
-  filterRequestType: PropTypes.object,
-  filterStatusType: PropTypes.object,
-  filterStatus: PropTypes.array,
-  filterResolvedStatus: PropTypes.object,
-  filterAssignee: PropTypes.object,
-  filterFault: PropTypes.object,
 };
 
 function TicketTableController({
@@ -40,29 +32,29 @@ function TicketTableController({
   filterName,
   onFilterName,
   onResetFilter,
-  onReload,
-  currentUser,
-  filterPriority, filterIssueType, filterRequestType, filterStatusType, filterStatus, filterResolvedStatus, filterAssignee, filterFault
 }) {
 
-    const { ticketSettings } = useSelector((state) => state.tickets);
-    const { activeSecurityUsers } = useSelector((state) => state.user);
+    const { user } = useAuthContext(); 
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
+    const { ticketSettings, page, rowsPerPage, ticketController } = useSelector((state) => state.tickets);
+    const { activeSecurityUsers } = useSelector((state) => state.user);
+    const configurations = useMemo(() => JSON.parse(localStorage.getItem('configurations')) || [] , []);
+
     const defaultValues = useMemo(
       () => ({
-        isResolved: filterResolvedStatus || { label: 'Open', value: false },
-        statusType: filterStatusType || null,
-        status: filterStatus || [],
-        issueType: filterIssueType || null,
-        requestType: filterRequestType || null,
-        priority: filterPriority || null,
-        assignees: filterAssignee || null,
-        faults: filterFault || null,
-        assignedToMe: false
+        isResolved:  { label: 'Open', value: false } || null,
+        statusType: ticketController?.statusType || null,
+        status: ticketController?.status || [],
+        issueType: ticketController?.issueType || null,
+        requestType: ticketController?.requestType || null,
+        priority: ticketController?.priority || null,
+        assignees: ticketController?.assignees || null,
+        faults: ticketController?.faults || null,
+        assignedToMe: ticketController || false
       }),
-      [filterPriority, filterIssueType, filterRequestType, filterStatusType, filterStatus, filterResolvedStatus, filterAssignee, filterFault]
+      [ ticketController ]
     );
 
   const methods = useForm({
@@ -73,28 +65,11 @@ function TicketTableController({
   });
 
   const { setError, setValue, handleSubmit, watch, formState: { isSubmitting } } = methods;
-  const { issueType, requestType, isResolved, statusType, status, priority, assignees, faults, assignedToMe } = watch();
+  const { issueType, requestType, isResolved, statusType, status, assignees, assignedToMe, priority, faults } = watch();
 
     const onSubmit = async (data) => {
       try {
-        await onReload({ 
-          issueType: issueType?._id, 
-          requestType: requestType?._id, 
-          isResolved: isResolved?.value, 
-          statusType: statusType?._id , 
-          status: status?.map(s=>s?._id), 
-          priority: priority?._id,
-          faults: faults?._id && [faults?._id],
-          assignees: assignees?._id && [assignees?._id]
-        })
-        dispatch(setFilterIssueType(issueType || null));
-        dispatch(setFilterRequestType(requestType || null));
-        dispatch(setFilterResolvedStatus(isResolved || null));
-        dispatch(setFilterStatusType(statusType || null));
-        dispatch(setFilterStatus(status || []));
-        dispatch(setFilterAssignee(assignees || null));
-        dispatch(setFilterPriority(priority || null));
-        dispatch(setFilterFault(faults || null));
+        await dispatch(getTickets({ page: 0, pageSize: rowsPerPage, ...data }))
       } catch (err) {
         if (err?.errors && Array.isArray(err?.errors)) {
           err?.errors?.forEach((error) => {
@@ -109,30 +84,41 @@ function TicketTableController({
       }
     };
 
-    const handleChange = (event) => {
-      const {checked} = event.target;
+    const handleChange = (checked) => {
       setValue('assignedToMe', checked, { shouldDirty: true });
-
+      dispatch(setTicketController({ ...ticketController, assignedToMe: checked }));
       if (checked) {
-        const val = activeSecurityUsers.find(
-          (user) => user?.contact?._id?.toString() === currentUser?.contact?.toString()
-        );
+        const val = activeSecurityUsers.find( (u) => u?.contact?._id?.toString() === user?.contact?.toString() );
         setValue('assignees', val || null, { shouldDirty: true });
       } else {
         setValue('assignees', null, { shouldDirty: true });
       }
+      handleSubmit(onSubmit)();
     };
 
-    useEffect(() => {
-      if (assignedToMe !== undefined) {
-        handleSubmit(onSubmit)();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [assignedToMe]); 
-
     const isCurrentUserAssignable = useMemo(() => activeSecurityUsers?.some(
-      (user) => user?.contact?._id?.toString() === currentUser?.contact?.toString()
-    ), [activeSecurityUsers, currentUser]);
+      (u) => u?.contact?._id?.toString() === user?.contact?.toString()
+    ), [activeSecurityUsers, user]);
+
+  useEffect(() => {
+    dispatch(getTickets({
+      page,
+      pageSize: rowsPerPage,
+      issueType, 
+      requestType, 
+      isResolved, 
+      statusType, 
+      status, 
+      assignees, 
+      assignedToMe, 
+      priority, 
+      faults
+    }));
+    dispatch(getTicketSettings());
+    const asssigneeRoleType = configurations?.find((c) => c?.name?.trim() === 'SupportTicketAssigneeRoleType')?.value?.trim();
+    dispatch(getActiveSecurityUsers({ type: 'SP', roleType: asssigneeRoleType }));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ dispatch, page, rowsPerPage ]);
 
   const resolutionStatusOptions = [
     { label: 'Open', value: false },
@@ -154,28 +140,21 @@ function TicketTableController({
           options={resolutionStatusOptions}
           isOptionEqualToValue={(option, value) => option?.value === value?.value}
           getOptionLabel={(option) => option?.label || ''}
-          renderOption={(props, option) => (
-            <li {...props} key={option.value}>
-              {option.label}
-            </li>
-          )}
+          renderOption={(props, option) => (<li {...props} key={option.value}> {option.label} </li> )}
           onChange={(event, newValue) => {
             if (newValue) {
               setValue('isResolved', newValue);
-              dispatch(setFilterResolvedStatus(newValue));
+              dispatch(setTicketController({ ...ticketController, isResolved: newValue }));
               if (newValue.value !== statusType?.isResolved) {
                 setValue('statusType', null);
                 setValue('status', []);
-                dispatch(setFilterStatusType(null));
-                dispatch(setFilterStatus([]));
+                dispatch(setTicketController({ ...ticketController, statusType: null, status: [] }));
               }
             } else {
-              dispatch(setFilterStatusType(null));
-              dispatch(setFilterStatus([]));
-              dispatch(setFilterResolvedStatus(null));
               setValue('isResolved', null);
               setValue('statusType', null);
               setValue('status', []);
+              dispatch(setTicketController({ ...ticketController, isResolved: null ,statusType: null, status: [] }));
             }
           }}
         />
@@ -183,7 +162,7 @@ function TicketTableController({
 
       {/* Status Type */}
       <Grid item xs={12} sm={4} md={3} lg={2}>
-        <RHFAutocomplete
+        {isResolved && <RHFAutocomplete
           name="statusType"
           label="Status Type"
           size="small"
@@ -196,19 +175,18 @@ function TicketTableController({
           onChange={(event, newValue) => {
             if (newValue) {
               setValue('statusType', newValue);
-              dispatch(setFilterStatusType(newValue));
+              dispatch(setTicketController({ ...ticketController, statusType: newValue }));
               if (status?.every( s => s?.statusType?._id !== newValue?._id)) {
                 setValue('status', []);
-                dispatch(setFilterStatus([]));
+                dispatch(setTicketController({ ...ticketController, status: [] }));
               }
             } else {
               setValue('statusType', null);
-              dispatch(setFilterStatusType(null));
               setValue('status', []);
-              dispatch(setFilterStatus([]));
+              dispatch(setTicketController({ ...ticketController, statusType: null, status: [] }));
             }
           }}
-        />
+        />}
       </Grid>
 
       {/* Status (Multi) */}
@@ -226,7 +204,7 @@ function TicketTableController({
           renderOption={(props, option) => ( <li {...props} key={option?._id}> <Iconify icon={option?.icon} sx={{ color: option?.color, mr: 1 }} /> {option?.name || ''}</li> )}
           onChange={(event, newValue) => {
             setValue('status', newValue);
-            dispatch(setFilterStatus(newValue));
+            dispatch(setTicketController({ ...ticketController, status: newValue || null }));
           }}
         />
       </Grid>}
@@ -243,16 +221,15 @@ function TicketTableController({
           onChange={(event, newValue) => {
             if (newValue) {
               setValue('issueType', newValue);
-              dispatch(setFilterIssueType(newValue));
+              dispatch(setTicketController({ ...ticketController, issueType: newValue || null }));
               if (newValue?._id !== requestType?.issueType?._id) {
                 setValue('requestType', null);
-                dispatch(setFilterRequestType(null));
+                dispatch(setTicketController({ ...ticketController, requestType: null }));
               }
             } else {
               setValue('issueType', null);
-              dispatch(setFilterIssueType(null));
               setValue('requestType', null);
-              dispatch(setFilterRequestType(null));
+              dispatch(setTicketController({ ...ticketController, issueType: null, requestType: null }));
             }
           }}
         />
@@ -272,7 +249,7 @@ function TicketTableController({
           )}
           onChange={(event, newValue) => {
             setValue('requestType', newValue);
-            dispatch(setFilterRequestType(newValue));
+            dispatch(setTicketController({ ...ticketController, requestType: newValue || null }));
           }}
         />
       </Grid>}
@@ -289,24 +266,30 @@ function TicketTableController({
           renderOption={(props, option) => (
             <li {...props} key={option?._id}>{option?.name || ''}</li>
           )}
-          onChange={(event, val) => {
-            if (!assignedToMe) {
-              setValue('assignees', val);
-              dispatch(setFilterAssignee(val));
+          onChange={(event, newValue) => {
+            if (newValue) {
+              if(newValue?._id !== assignees?._id ){
+              setValue('assignedToMe', false);
+              }
+              setValue('assignees', newValue);
+              dispatch(setTicketController({ ...ticketController, assignees: newValue }));
+            } else {
+              setValue('assignees', null);
+              setValue('assignedToMe', false);
+              dispatch(setTicketController({ ...ticketController, assignees: null, assignedToMe: false }));
             }
           }}
-          disabled={assignedToMe}
           renderInput={(params) => (
             <TextField {...params} size="small" label="Assignee"
               InputProps={{ ...params.InputProps,
                 endAdornment: (
                 <>
                 {params.InputProps.endAdornment}
-                {isCurrentUserAssignable && (
+                {isCurrentUserAssignable && !assignedToMe && (
                 <InputAdornment position="end">
-                  <StyledTooltip title={assignedToMe ? 'All Tickets' : 'My Tickets'} placement="top" tooltipcolor="#2e7d32" color="#2e7d32">
-                    <IconButton onClick={() => handleChange({ target: { checked: !assignedToMe } }) }
-                      sx={{ height: 35, width: 35, color: assignedToMe ? '#2e7d32' : 'text.secondary' }}>
+                  <StyledTooltip title={assignedToMe ? 'All Tickets' : 'My Tickets'} placement="top" >
+                    <IconButton onClick={() => handleChange( !assignedToMe ) }
+                      sx={{ height: 35, width: 35 }}>
                       <Iconify icon="mdi:ticket-account" width={20} height={20} />
                     </IconButton>
                   </StyledTooltip>
@@ -331,7 +314,7 @@ function TicketTableController({
           )}
           onChange={(event, newValue) => {
             setValue('priority', newValue);
-            dispatch(setFilterPriority(newValue));
+            dispatch(setTicketController({ ...ticketController, priority: newValue || null }));
           }}
         />
       </Grid>
@@ -350,7 +333,7 @@ function TicketTableController({
           )}
           onChange={(event, newValue) => {
             setValue('faults', newValue);
-            dispatch(setFilterFault(newValue));
+            dispatch(setTicketController({ ...ticketController, faults: newValue || null }));
           }}
         />
       </Grid>

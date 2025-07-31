@@ -10,14 +10,7 @@ const initialState = {
   ticketSettings:[],
   softwareVersion: null,
   filterBy: '',
-  filterIssueType: null,
-  filterRequestType: null,
-  filterStatus: [],
-  filterPriority: null,
-  filterStatusType: null,
-  filterResolvedStatus: null,
-  filterAssignee: null,
-  filterFault: null,
+  ticketController: { isResolved: { label: 'Open', value: false }},
   page: 0,
   rowsPerPage: 100,
   initial: false,
@@ -194,36 +187,8 @@ const slice = createSlice({
       state.filterBy = action.payload;
     },
     
-    setFilterIssueType(state, action) {
-      state.filterIssueType = action.payload;
-    },
-
-    setFilterRequestType(state, action) {
-      state.filterRequestType = action.payload;
-    },
-
-    setFilterStatus(state, action) {
-      state.filterStatus = action.payload;
-    },
-    
-    setFilterPriority(state, action) {
-      state.filterPriority = action.payload;
-    },
-
-    setFilterStatusType(state, action) {
-      state.filterStatusType = action.payload;
-    },
-
-    setFilterResolvedStatus(state, action) {
-      state.filterResolvedStatus = action.payload;
-    },
-
-    setFilterAssignee(state, action) {
-      state.filterAssignee = action.payload;
-    },
-
-    setFilterFault(state, action) {
-      state.filterFault = action.payload;
+    setTicketController(state, action) {
+      state.ticketController = action.payload;
     },
 
     // SET PAGE ROW COUNT
@@ -255,14 +220,7 @@ export const {
   ChangeRowsPerPage,
   ChangePage,
   setReportHiddenColumns,
-  setFilterIssueType,
-  setFilterRequestType,
-  setFilterStatus,
-  setFilterPriority,
-  setFilterStatusType,
-  setFilterAssignee,
-  setFilterResolvedStatus,
-  setFilterFault
+  setTicketController
 } = slice.actions;
 
 // ----------------------------------------------------------------------
@@ -415,14 +373,14 @@ export function getTickets({ page, pageSize, issueType, requestType, isResolved,
         pagination: { page, pageSize },
         isArchived: false,
         createdAt,
-        issueType,
-        requestType,
-        isResolved,
-        statusType,
-        status,
-        priority,
-        assignees,
-        faults
+        issueType: issueType?._id,
+        requestType: requestType?._id,
+        isResolved: isResolved?._id,
+        statusType: statusType?._id,
+        status: status?._id,
+        priority: priority?._id,
+        assignees: assignees?._id && [assignees?._id],
+        faults: faults?._id && [faults?._id],
       };
       if (isResolved === 'unresolved') {
         params.isResolved = false; 
