@@ -85,22 +85,20 @@ function TicketList() {
   }, [dispatch, configurations]);
   
   useEffect(() => {
-    if(tickets?.data?.length <  1 ){
-      dispatch(getTickets({
-        page,
-        pageSize: rowsPerPage,
-        isResolved: false
-      }));
-      dispatch(getTicketSettings());
-      const asssigneeRoleType = configurations?.find((c) => c?.name?.trim() === 'SupportTicketAssigneeRoleType')?.value?.trim();
-      dispatch(getActiveSecurityUsers({ type: 'SP', roleType: asssigneeRoleType }));
-    }
-    // return () => {
-    //   dispatch(resetTickets());
-    //   dispatch(resetTicketSettings());
-    //   dispatch(resetActiveSecurityUsers());
-    // };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    dispatch(getTickets({
+      page,
+      pageSize: rowsPerPage,
+      isResolved: false
+    }));
+    dispatch(getTicketSettings());
+    const asssigneeRoleType = configurations?.find((c) => c?.name?.trim() === 'SupportTicketAssigneeRoleType')?.value?.trim();
+    dispatch(getActiveSecurityUsers({ type: 'SP', roleType: asssigneeRoleType }));
+    return () => {
+      dispatch(resetTickets());
+      dispatch(resetTicketSettings());
+      dispatch(resetActiveSecurityUsers());
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     dispatch,
     page,
