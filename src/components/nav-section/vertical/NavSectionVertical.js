@@ -20,7 +20,7 @@ export default function NavSectionVertical({ data, sx, ...other }) {
   return (
     <Stack sx={sx} {...other}>
           {data && data.length > 0 && data.map((group) => (
-            <List key={group.subheader} disablePadding sx={{ px: 2 }}>
+            <List key={group.subheader} disablePadding sx={{ px: 1 }}>
               {group.subheader && (
                 <StyledSubheader disableSticky>{`${translate(group.subheader)}`}</StyledSubheader>
               )}

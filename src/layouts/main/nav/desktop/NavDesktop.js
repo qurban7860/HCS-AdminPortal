@@ -13,7 +13,7 @@ NavDesktop.propTypes = {
 
 export default function NavDesktop({ isOffset, data }) {
   return (
-    <Stack component="nav" direction="row" spacing={5} sx={{ mr: 5, height: 1 }}>
+    <Stack component="nav" direction="row" spacing={2} sx={{ mr: 2, height: 1 }}>
       {data.map((link) => (
         <NavList key={link.title} item={link} isOffset={isOffset} />
       ))}

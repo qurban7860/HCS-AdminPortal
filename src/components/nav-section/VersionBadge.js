@@ -21,11 +21,10 @@ const VersionBadge = () => {
   }, []);
 
   return (
-    <Grid sx={{ margin: '0 auto', mb: 2, display: 'flex', alignItems: 'baseline' }}>
+    <Grid sx={{ mx: 'auto', display: 'flex', alignItems: 'baseline' }}>
       <Link
         sx={{
-          margin: '0 auto',
-          mb: 2,
+          mx: 'auto',
           display: 'flex',
           alignItems: 'baseline',
           textDecoration: 'none',

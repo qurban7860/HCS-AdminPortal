@@ -29,6 +29,7 @@ const NavItem = forwardRef(({ item, depth, open, active, isExternalLink, ...othe
         primaryTypographyProps={{
           noWrap: true,
           sx: {
+            p:0.5,
             width: 72,
             fontSize: 10,
             lineHeight: '16px',
