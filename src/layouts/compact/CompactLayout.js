@@ -10,8 +10,8 @@ export default function CompactLayout() {
     <Container component="main">
       <Stack
         sx={{
-          py: 12,
-          m: 'auto',
+          py: 1,
+          // m: 'auto',
           maxWidth: 400,
           minHeight: '100vh',
           textAlign: 'center',

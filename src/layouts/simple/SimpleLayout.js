@@ -9,7 +9,7 @@ export default function SimpleLayout() {
       <Container component="main">
         <Stack
           sx={{
-            py: 12,
+            py: 1,
             padding:0,
             m: 'auto',
             maxWidth: 500,

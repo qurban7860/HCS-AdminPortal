@@ -64,7 +64,6 @@ function Items({ items, isLastGroup }) {
             width: 24,
             height: '1px',
             bgcolor: 'divider',
-            my: '8px !important',
           }}
         />
       )}

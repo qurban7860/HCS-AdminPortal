@@ -67,7 +67,7 @@ export default function NavMini({selectedCategory}) {
 
       <Stack
         sx={{
-          pb: 2,
+          pb: 1,
           height: 1,
           position: 'fixed',
           width: NAV.W_DASHBOARD_MINI,
@@ -77,12 +77,12 @@ export default function NavMini({selectedCategory}) {
       >
         <Logo
           src="/logo/HowickIcon.svg"
-          sx={{ mx: 'auto', my: 1, width: '50px', height: '50px' }}
+          sx={{ mx: 'auto', mt: 2, width: '50px', height: '50px' }}
         />
         <Link
           sx={{
-            margin: '0 auto',
-            mb: 2,
+            my: 1,
+            mx: 'auto',
             display: 'flex',
             alignItems: 'baseline',
             textDecoration: 'none',
