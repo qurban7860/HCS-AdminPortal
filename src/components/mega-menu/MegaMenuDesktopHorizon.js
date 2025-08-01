@@ -77,9 +77,9 @@ function MegaMenuItem({ parent }) {
               boxShadow: (theme) => theme.customShadows.z20,
             }}
           >
-            <Masonry columns={3} spacing={2}>
+            <Masonry columns={1} spacing={1}>
               {children.map((list) => (
-                <Stack key={list.subheader} spacing={1.25} sx={{ mb: 2.5 }}>
+                <Stack key={list.subheader} spacing={1} sx={{ mb: 1 }}>
                   <Typography variant="subtitle1" sx={{ fontWeight: 'fontWeightBold' }} noWrap>
                     {list.subheader}
                   </Typography>

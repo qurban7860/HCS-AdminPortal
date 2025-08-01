@@ -2,14 +2,12 @@ import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector, batch } from 'react-redux';
 // @mui
-import { format } from 'date-fns';
-import { Card, Grid, Link, Button, Stack, Typography, Box, Chip } from '@mui/material';
+import { Card, Grid, Link, Button, Typography, Chip } from '@mui/material';
 import ConfirmDialog from '../../../components/confirm-dialog';
 // routes
 import { PATH_SETTING } from '../../../routes/paths';
 // slices
 import {
-  deleteSecurityUser,
   archiveSecurityUser,
   sendUserInvite,
   getSecurityUser,
@@ -136,17 +134,6 @@ export default function SecurityUserViewForm() {
     }
   };
 
-  const onDelete = async () => {
-    try {
-      await dispatch(deleteSecurityUser(id, { isArchived: true }));
-      await navigate(PATH_SETTING.security.root);
-      // await dispatch(getSecurityUsers());
-    } catch (error) {
-      enqueueSnackbar('User Delete failed!', { variant: `error` });
-      console.log('Error:', error);
-    }
-  };
-
   const onArchive = async () => {
     try {
       await dispatch(archiveSecurityUser(id, { isArchived: true }));
@@ -215,7 +202,6 @@ export default function SecurityUserViewForm() {
             isLoading={isLoading}
             onArchive={securityUser?.isArchived ? undefined : onArchive}
             onRestore={securityUser?.isArchived ? onRestore : undefined}
-            // onDelete={ securityUser?.isArchived ? onDelete : undefined }
             isInviteLoading={isLoading}
             backLink={() => navigate(PATH_SETTING.security.root)}
             isActive={defaultValues.isActive}

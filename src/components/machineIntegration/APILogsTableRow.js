@@ -5,8 +5,8 @@ import { useNavigate } from 'react-router';
 import { fDateTime } from '../../utils/formatTime';
 import { StyledTableRow } from '../../theme/styles/default-styles';
 import LinkTableCell from '../ListTableTools/LinkTableCell';
-import DialogViewApiLogDetails from '../Dialog/DialogViewApiLogDetails';
-import DialogViewAPILogsMachineERPLogsTable from '../Dialog/DialogViewAPILogsMachineERPLogsTable';
+import DialogViewApiLogDetails from '../Dialog/ApiLogDetailsDialog';
+import DialogViewAPILogsMachineERPLogsTable from '../Dialog/APILogsMachineERPLogsTableDialog';
 import { PATH_MACHINE } from '../../routes/paths';
 
 APILogsTableRow.propTypes = {
@@ -31,7 +31,6 @@ export default function APILogsTableRow({ row, style, selected, onViewRow, hidde
     customer,
     updatedAt,
     responseMessage,
-    requestHeaders = {},
     response,
     createdIP = '',
     createdBy = '',

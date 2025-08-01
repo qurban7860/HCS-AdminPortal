@@ -13,7 +13,6 @@ import {
   getComparator,
   TableNoData,
   TableSkeleton,
-  TablePaginationCustom,
   TablePaginationFilter,
   TableHeadFilter,
 } from '../../../components/table';
@@ -33,7 +32,7 @@ import { fDateTime } from '../../../utils/formatTime';
 import TableCard from '../../../components/ListTableTools/TableCard';
 import { Cover } from '../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
-import DialogEmailViewDetails from '../../../components/Dialog/DialogEmailViewDetails';
+import DialogEmailViewDetails from '../../../components/Dialog/EmailViewDialog';
 
 // ----------------------------------------------------------------------
 
@@ -203,7 +202,7 @@ export default function EmailList() {
           </Scrollbar>
         </TableContainer>
         {!isNotFound && (
-          <TablePaginationCustom
+          <TablePaginationFilter
             count={emails?.totalCount || 0}
             page={page}
             rowsPerPage={rowsPerPage}

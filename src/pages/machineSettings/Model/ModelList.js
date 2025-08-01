@@ -28,7 +28,7 @@ import {
   TableNoData,
   TableSkeleton,
   TableHeadCustom,
-  TablePaginationCustom,
+  TablePaginationFilter,
 } from '../../../components/table';
 import Scrollbar from '../../../components/scrollbar';
 import ConfirmDialog from '../../../components/confirm-dialog/ConfirmDialog';
@@ -192,7 +192,7 @@ export default function ModelList() {
             selectedCategory={selectedCategory}
             setSelectedCategory={setSelectedCategory}
           />
-          {!isNotFound && <TablePaginationCustom
+          {!isNotFound && <TablePaginationFilter
             count={dataFiltered.length}
             page={page}
             rowsPerPage={rowsPerPage}
@@ -230,7 +230,7 @@ export default function ModelList() {
               </Table>
             </Scrollbar>
           </TableContainer>
-          {!isNotFound && <TablePaginationCustom
+          {!isNotFound && <TablePaginationFilter
             count={dataFiltered.length}
             page={page}
             rowsPerPage={rowsPerPage}

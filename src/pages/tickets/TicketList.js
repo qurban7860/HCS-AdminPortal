@@ -4,7 +4,6 @@ import { useState, useEffect, useRef, memo, useMemo, useCallback } from 'react';
 import { Container, Table, TableBody, TableContainer } from '@mui/material';
 // routes
 import { useNavigate } from 'react-router-dom';
-import { PATH_SUPPORT } from '../../routes/paths';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 // components
@@ -14,21 +13,19 @@ import {
   TableSkeleton,
   getComparator,
   TableHeadFilter,
-  TablePaginationCustom,
   TablePaginationFilter,
 } from '../../components/table';
 import Scrollbar from '../../components/scrollbar';
 // sections
 import TicketFormTableRow from './TicketTableRow';
 import TicketTableController from './TicketTableController';
-import { ChangeRowsPerPage, ChangePage, setFilterBy, getTickets, resetTickets, getTicketSettings, resetTicketSettings, setReportHiddenColumns } from '../../redux/slices/ticket/tickets';
-import { getActiveSecurityUsers, resetActiveSecurityUsers } from '../../redux/slices/securityUser/securityUser';
+import { ChangeRowsPerPage, ChangePage, setFilterBy, setReportHiddenColumns } from '../../redux/slices/ticket/tickets';
 import { fDate } from '../../utils/formatTime';
 import TableCard from '../../components/ListTableTools/TableCard';
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
 import useResponsive from '../../hooks/useResponsive';
-import { BUTTONS } from '../../constants/default-constants';
+// import { BUTTONS } from '../../constants/default-constants';
 import { getArticleByValue } from '../../redux/slices/support/knowledgeBase/article';
 import HelpSidebar from './utils/HelpSideBar';
 
@@ -53,7 +50,7 @@ const TABLE_HEAD = [
 function TicketList() {
   const { tickets, filterBy, page, rowsPerPage, isLoading, reportHiddenColumns } = useSelector((state) => state.tickets);
   const { article } = useSelector((state) => state.article);
-  const navigate = useNavigate();
+
   const {
     order,
     orderBy,
@@ -62,47 +59,26 @@ function TicketList() {
   } = useTable({ defaultOrderBy: 'createdAt', defaultOrder: 'desc' });
 
   const dispatch = useDispatch();
-  const [filterName, setFilterName] = useState('');
+  const [filterName, setFilterName] = useState(filterBy);
   const [helpOpen, setHelpOpen] = useState(false);
   const isMobile = useResponsive('down', 'sm');
 
   const configurations = useMemo(() =>
     JSON.parse(localStorage.getItem('configurations')) || []
-  , []);
+    , []);
 
   const prefix = useMemo(() =>
     configurations?.find((config) => config?.name?.toLowerCase() === 'ticket_prefix')?.value?.trim() || ''
-  , [configurations]);
+    , [configurations]);
 
   useEffect(() => {
-    const helpPrefix = configurations?.find((config) => 
+    const helpPrefix = configurations?.find((config) =>
       config?.name?.toLowerCase() === 'support_ticket_creation_process'
     )?.value?.trim() || ''
-  if (helpPrefix) {
-    dispatch(getArticleByValue(helpPrefix));
-  }
-  }, [dispatch, configurations]); 
-
-  useEffect(() => {
-      dispatch(getTickets({
-        page,
-        pageSize: rowsPerPage,
-        isResolved: false
-      }));
-      dispatch(getTicketSettings());
-    const asssigneeRoleType = configurations?.find((c) => c?.name?.trim() === 'SupportTicketAssigneeRoleType')?.value?.trim();
-      dispatch(getActiveSecurityUsers({ type: 'SP', roleType: asssigneeRoleType }));
-    return () => {
-      dispatch(resetTickets());
-      dispatch(resetTicketSettings());
-      dispatch(resetActiveSecurityUsers());
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    dispatch,
-    page,
-    rowsPerPage,
-  ]);
+    if (helpPrefix) {
+      dispatch(getArticleByValue(helpPrefix));
+    }
+  }, [dispatch, configurations]);
 
   const dataFiltered = useMemo(() => applyFilter({
     comparator: getComparator(order, orderBy),
@@ -124,27 +100,11 @@ function TicketList() {
     dispatch(ChangePage(newPage));
   }, [dispatch]);
 
-  const onReload = useCallback(({ issueType, requestType, isResolved, statusType, status, priority, assignees, faults }) => {
-    dispatch(ChangePage(0));
-    dispatch(getTickets({
-      page: 0,
-      pageSize: rowsPerPage,
-      issueType, 
-      requestType, 
-      isResolved, 
-      statusType, 
-      status, 
-      priority,
-      assignees,
-      faults
-    }));
-  }, [dispatch, rowsPerPage ]);
-
   const handleHelpClick = useCallback(() => setHelpOpen((prev) => !prev), []);
 
   const debouncedSearch = useRef(debounce((value) => {
     dispatch(ChangePage(0));
-    dispatch(setFilterBy(value)); 
+    dispatch(setFilterBy(value));
   }, 500));
 
   const handleFilterName = useCallback((e) => {
@@ -162,90 +122,82 @@ function TicketList() {
     dispatch(setFilterBy(''));
     setFilterName('');
   }, [dispatch]);
-
+  
+  useEffect(()=>{
+    setFilterName(filterBy)
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[])
+  
   const handleHiddenColumns = useCallback((arg) => dispatch(setReportHiddenColumns(arg)), [dispatch]);
-
-  const toggleAdd = useCallback(() => navigate(PATH_SUPPORT.supportTickets.new), [navigate]);
 
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
-        <Cover name="Support Tickets" icon="ph:users-light" 
-        SubOnClick={toggleAdd} 
-        addButton={BUTTONS.ADDTICKET}
-        onHelpClick={handleHelpClick}
-      />
+        <Cover name="Support Tickets" icon="ph:users-light"
+          // SubOnClick={toggleAdd}
+          // addButton={BUTTONS.ADDTICKET}
+          onHelpClick={handleHelpClick}
+        />
       </StyledCardContainer>
       <HelpSidebar open={helpOpen} onClose={handleHelpClick} article={article} />
-        <TableCard>
-          <TicketTableController
-            filterName={filterName}
-            onFilterName={handleFilterName}
-            isFiltered={isFiltered}
-            onResetFilter={handleResetFilter}
-            onReload={onReload}
-          />
-            {!isNotFound && !isMobile && (
-            <TablePaginationFilter
-              columns={TABLE_HEAD.filter((item) => item?.allowColumn)} 
-              hiddenColumns={reportHiddenColumns}
-              handleHiddenColumns={handleHiddenColumns}
-              count={tickets?.totalCount || 0}
-              page={page}
-              rowsPerPage={rowsPerPage}
-              onPageChange={onChangePage}
-              onRowsPerPageChange={onChangeRowsPerPage}
-            />
-          )}
-
-          {!isNotFound && isMobile && (
-            <TablePaginationCustom
-              count={tickets?.totalCount || 0}
-              page={page}
-              rowsPerPage={rowsPerPage}
-              onPageChange={onChangePage}
-              onRowsPerPageChange={onChangeRowsPerPage}
-            />
-          )}
-          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            <Scrollbar>
-              <Table stickyHeader size="small" sx={{ minWidth: 360 }}>
-                <TableHeadFilter
-                  order={order}
-                  orderBy={orderBy}
-                  headLabel={TABLE_HEAD}
-                  hiddenColumns={reportHiddenColumns}
-                  onSort={onSort}
-                />
-                <TableBody>
-                  {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
-                    .map((row, index) =>
-                      row ? (                       
-                        <TicketFormTableRow
-                          key={row._id}
-                          row={row}
-                          hiddenColumns={reportHiddenColumns}
-                          style={index % 2 ? { background: 'red' } : { background: 'green' }}
-                          prefix={prefix}
-                        />
-                      ) : (
-                        !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
-                      )
-                    )}
-                  <TableNoData isNotFound={isNotFound} />
-                </TableBody>
-              </Table>
-            </Scrollbar>
-          </TableContainer>
-
-          {!isNotFound && <TablePaginationCustom
-            count={ tickets?.totalCount || 0 }
+      <TableCard>
+        <TicketTableController
+          filterName={filterName}
+          onFilterName={handleFilterName}
+          isFiltered={isFiltered}
+          onResetFilter={handleResetFilter}
+        />
+        {!isNotFound && !isMobile && (
+          <TablePaginationFilter
+            columns={TABLE_HEAD.filter((item) => item?.allowColumn)}
+            hiddenColumns={reportHiddenColumns}
+            handleHiddenColumns={handleHiddenColumns}
+            count={tickets?.totalCount || 0}
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-          />}
-        </TableCard>
+          />
+        )}
+        <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+          <Scrollbar>
+            <Table stickyHeader size="small" sx={{ minWidth: 360 }}>
+              <TableHeadFilter
+                order={order}
+                orderBy={orderBy}
+                headLabel={TABLE_HEAD}
+                hiddenColumns={reportHiddenColumns}
+                onSort={onSort}
+              />
+              <TableBody>
+                {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
+                  .map((row, index) =>
+                    row ? (
+                      <TicketFormTableRow
+                        key={row._id}
+                        row={row}
+                        hiddenColumns={reportHiddenColumns}
+                        style={index % 2 ? { background: 'red' } : { background: 'green' }}
+                        prefix={prefix}
+                      />
+                    ) : (
+                      !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
+                    )
+                  )}
+                <TableNoData isNotFound={isNotFound} />
+              </TableBody>
+            </Table>
+          </Scrollbar>
+        </TableContainer>
+
+        {!isNotFound && <TablePaginationFilter
+          count={ tickets?.totalCount || 0 }
+          page={page}
+          rowsPerPage={rowsPerPage}
+          onPageChange={onChangePage}
+          onRowsPerPageChange={onChangeRowsPerPage}
+        />}
+      </TableCard>
     </Container>
   );
 }

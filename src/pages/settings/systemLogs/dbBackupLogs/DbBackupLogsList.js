@@ -2,8 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import debounce from 'lodash/debounce';
 // @mui
 import { Table, TableBody, TableContainer, Container, Card } from '@mui/material';
-import { useNavigate, useParams } from 'react-router';
-import { PATH_SETTING } from '../../../../routes/paths';
+import { useParams } from 'react-router';
 import { Cover } from '../../../../components/Defaults/Cover';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
@@ -14,7 +13,7 @@ import {
   TableNoData,
   TableSkeleton,
   TableHeadCustom,
-  TablePaginationCustom,
+  TablePaginationFilter,
 } from '../../../../components/table';
 import Scrollbar from '../../../../components/scrollbar';
 // sections
@@ -40,7 +39,6 @@ export default function DbBackupLogsList() {
 
   const { search } = useParams();
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   console.log('search : ', search)
@@ -129,7 +127,7 @@ export default function DbBackupLogsList() {
           isFiltered={isFiltered}
           onResetFilter={handleResetFilter}
         />
-        <TablePaginationCustom
+        <TablePaginationFilter
           count={dbBackupLogs?.totalCount || 0}
           page={page}
           rowsPerPage={rowsPerPage}
@@ -169,7 +167,7 @@ export default function DbBackupLogsList() {
           </Scrollbar>
         </TableContainer>
 
-        <TablePaginationCustom
+        <TablePaginationFilter
           count={dbBackupLogs?.totalCount || 0}
           page={page}
           rowsPerPage={rowsPerPage}

@@ -9,7 +9,6 @@ import { LinkBlock } from './components/link-block';
 import { ImageBlock } from './components/image-block';
 import { ToolbarItem } from './components/toolbar-item';
 import { HeadingBlock } from './components/heading-block';
-import { TableMenu } from './components/TableMenu';
 
 // ----------------------------------------------------------------------
 

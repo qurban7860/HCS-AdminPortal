@@ -1,13 +1,12 @@
 import { useMemo, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import * as Yup from 'yup';
 // routes
 import { useNavigate, useParams } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Container, Card, Grid, Stack, InputAdornment } from '@mui/material';
+import { Box, Container, Card, Grid, Stack } from '@mui/material';
 // components
 import { Cover } from '../../../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../../../theme/styles/default-styles';
@@ -17,7 +16,6 @@ import AddFormButtons from '../../../../../components/DocumentForms/AddFormButto
 import FormProvider, { RHFTextField, RHFSwitch, RHFAutocomplete, RHFColorPicker, RHFEditor, RHFIconPicker } from '../../../../../components/hook-form';
 import { postTicketStatus, patchTicketStatus, resetTicketStatus, getTicketStatus } from '../../../../../redux/slices/ticket/ticketSettings/ticketStatuses';
 import { getActiveTicketStatusTypes, resetActiveTicketStatusTypes } from '../../../../../redux/slices/ticket/ticketSettings/ticketStatusTypes';
-import Iconify from '../../../../../components/iconify';
 import { handleError } from '../../../../../utils/errorHandler';
 import { TicketCollectionSchema, isValidColor, normalizeColor } from '../utils/constant';
 
@@ -66,7 +64,7 @@ export default function StatusForm() {
     formState: { isSubmitting }
   } = methods;
 
-  const { icon, color } = watch()
+  const { color } = watch()
 
   useEffect(() => {
     if (id) {
@@ -134,17 +132,7 @@ export default function StatusForm() {
                     getOptionLabel={(option) => `${option.name || ''}`}
                     renderOption={(props, option) => (<li {...props} key={option?._id}> {option.name && option.name} </li>)}
                   />
-                  {/* <RHFTextField
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="start" >
-                          <Iconify icon={icon} sx={{ width: 25, height: 25, color: color || 'black' }} />
-                        </InputAdornment>
-                      )
-                    }}
-                    name="icon"
-                    label="Icon*"
-                  /> */}
+
                   <RHFIconPicker name="icon" label="Icon*" color={isValidColor(normalizeColor(color)) ? normalizeColor(color) : 'black'} />
 
                   <RHFColorPicker

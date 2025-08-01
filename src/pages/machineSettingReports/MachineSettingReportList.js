@@ -11,7 +11,6 @@ import {
   TableNoData,
   TableSkeleton,
   TableHeadFilter,
-  TablePaginationCustom,
   TablePaginationFilter
 } from '../../components/table';
 import { RHFAutocomplete } from '../../components/hook-form';
@@ -292,7 +291,7 @@ export default function MachineSettingReportList({ isArchived }) {
             </Scrollbar>
           </TableContainer>
           {!isNotFound && (
-            <TablePaginationCustom
+            <TablePaginationFilter
               count={machineSettingReportstotalCount || 0}
               page={page}
               rowsPerPage={rowsPerPage}

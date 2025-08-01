@@ -46,7 +46,7 @@ import { useAuthContext } from '../../../auth/useAuthContext';
 import { handleError } from '../../../utils/errorHandler';
 import Lightbox from '../../../components/lightbox/Lightbox';
 import SkeletonLine from '../../../components/skeleton/SkeletonLine';
-import DialogServiceReportComplete from '../../../components/Dialog/DialogServiceReportComplete';
+import DialogServiceReportComplete from '../../../components/Dialog/ServiceReportCompleteDialog';
 import SkeletonPDF from '../../../components/skeleton/SkeletonPDF';
 import IconButtonTooltip from '../../../components/Icons/IconButtonTooltip';
 import ServiceReportsFormComments from '../../../components/machineServiceReports/ServiceReportsFormComments';

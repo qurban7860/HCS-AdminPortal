@@ -12,20 +12,17 @@ import {
 // routes
 // auth
 import { useAuthContext } from '../../../auth/useAuthContext';
+import { useSettingsContext } from '../../../components/settings';
 // components
 import { CustomAvatar } from '../../../components/custom-avatar';
 import { useSnackbar } from '../../../components/snackbar';
 import MenuPopover from '../../../components/menu-popover';
 import { IconButtonAnimate } from '../../../components/animate';
 // import Drawer
-import { useSettingsContext } from '../../../components/settings';
 import { TITLES } from '../../../constants/default-constants';
 import { OPTIONS } from './util/OptionsListItems';
 import { setChangePasswordDialog } from '../../../redux/slices/securityUser/securityUser';
 import ChangePasswordDialog from '../../../components/Dialog/ChangePasswordDialog';
-
-// ----------------------------------------------------------------------
-const SPACING = 2.5;
 
 // ----------------------------------------------------------------------
 
@@ -37,7 +34,7 @@ export default function AccountPopover() {
   const displayName = localStorage.getItem('name')
   const { enqueueSnackbar } = useSnackbar();
   const [openPopover, setOpenPopover] = useState(null);
-  // const { onChangeDrawer } = useSettingsContext();
+  const { onChangeDrawer } = useSettingsContext();
   const handleOpenPopover = (event) => {
     setOpenPopover(event.currentTarget);
   };
@@ -50,6 +47,10 @@ export default function AccountPopover() {
     dispatch(setChangePasswordDialog(true));
   };
 
+  const handleToggle = () => {
+    handleClosePopover();
+  };
+
   const handleLogout = async () => {
     try {
       await logout();
@@ -58,10 +59,6 @@ export default function AccountPopover() {
       console.error(error);
       enqueueSnackbar('Unable to logout!', { variant: 'error' });
     }
-  };
-
-  const handleToggle = () => {
-    handleClosePopover();
   };
 
   const handleClickItem = (path) => {
@@ -111,13 +108,13 @@ export default function AccountPopover() {
               {option.label}
             </MenuItem>
           ))}
-          {/* <MenuItem onClick={() => { 
+          <MenuItem onClick={() => { 
               handleToggle(); 
               onChangeDrawer(); 
             }} 
           >
             <Typography variant="body2" noWrap>{TITLES.CUSTOMIZE}</Typography>
-          </MenuItem> */}
+          </MenuItem>
         </Stack>
 
         <Divider sx={{ borderStyle: 'solid' }} />

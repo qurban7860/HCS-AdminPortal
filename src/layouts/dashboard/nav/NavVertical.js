@@ -79,13 +79,10 @@ export default function NavVertical({ openNav, onCloseNav, selectedCategory, set
     >
       <Stack
         sx={{
-          pt: 3,
-          pb: 2,
-          px: 2.5,
           flexShrink: 0,
         }}
       >
-        <Logo sx={{ width: '70%', margin: '0 auto' }} />
+        <Logo sx={{ width: '70%', mx: 'auto', mt: 2 }} />
         <VersionBadge />
         <NavAccount />
       </Stack>
@@ -97,7 +94,7 @@ export default function NavVertical({ openNav, onCloseNav, selectedCategory, set
           otherCategories={otherCategories}
         />
       )}
-      <NavSectionVertical sx={{ mt: '-50px' }} data={navConfig} />
+      <NavSectionVertical data={navConfig} />
       <Box sx={{ flexGrow: 1 }} />
       <NavDocs />
     </Scrollbar>
@@ -171,14 +168,11 @@ const CategoryDropdown = ({ selectedCategory, setSelectedCategory, isSettingAcce
   };
 
   return (
-    <FormControl fullWidth sx={{ px: 2, mb: 5 }}>
+    <FormControl fullWidth sx={{ p:1 }} size="small" >
       <Select
         value={selectedCategory.id}
         onChange={handleCategoryChange}
-        sx={{ 
-          backgroundColor: 'background.paper',
-          '& .MuiSelect-select': { py: 1 }
-        }}
+        size='small'
       >
         {MAIN_CATEGORIES.map(renderMenuItem)}
         {otherCategories.map(renderMenuItem)}

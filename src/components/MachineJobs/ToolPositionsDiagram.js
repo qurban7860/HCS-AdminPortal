@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { memo, useMemo } from 'react';
+import { useMemo } from 'react';
 import { Box, Typography, useTheme } from '@mui/material';
 import { useFormContext, useWatch } from 'react-hook-form';
 
@@ -20,7 +20,7 @@ const generateRandomColor = (seed) => {
 
 const ToolPositionsDiagram = ({ tools, unitOfLength }) => {
   const theme = useTheme();
-  const { control, watch } = useFormContext();
+  const { control } = useFormContext();
 
   const toolColorMap = useMemo(() => {
     if (!tools?.length) return {};

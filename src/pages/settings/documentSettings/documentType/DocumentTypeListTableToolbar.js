@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Stack } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { PATH_MACHINE, PATH_SETTING } from '../../../../routes/paths';
+import { PATH_MACHINE } from '../../../../routes/paths';
 import { resetActiveDocumentCategories } from '../../../../redux/slices/document/documentCategory';
 // components
 import SearchBarCombo from '../../../../components/ListTableTools/SearchBarCombo';

@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 // @mui
 import {
-  Card,
   Table,
   Button,
   TableBody,
@@ -22,7 +21,7 @@ import {
   TableNoData,
   TableSkeleton,
   TableHeadCustom,
-  TablePaginationCustom,
+  TablePaginationFilter,
 } from '../../../../components/table';
 import Scrollbar from '../../../../components/scrollbar';
 import ConfirmDialog from '../../../../components/confirm-dialog';
@@ -180,7 +179,7 @@ export default function BlockedCustomerList() {
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
           />
-          {!isNotFound && <TablePaginationCustom
+          {!isNotFound && <TablePaginationFilter
             count={dataFiltered.length}
             page={page}
             rowsPerPage={rowsPerPage}
@@ -219,7 +218,7 @@ export default function BlockedCustomerList() {
             </Scrollbar>
           </TableContainer>
 
-          {!isNotFound && <TablePaginationCustom
+          {!isNotFound && <TablePaginationFilter
             count={dataFiltered.length}
             page={page}
             rowsPerPage={rowsPerPage}

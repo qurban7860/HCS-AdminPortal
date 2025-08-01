@@ -1,10 +1,8 @@
 import {  useLayoutEffect } from 'react';
 import { useParams } from 'react-router-dom';
 // @mui
-import {  Card, Container } from '@mui/material';
+import { Container } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-// routes
-import { PATH_SETTING } from '../../../../routes/paths';
 // redux
 
 import { getDocumentCategory } from '../../../../redux/slices/document/documentCategory';

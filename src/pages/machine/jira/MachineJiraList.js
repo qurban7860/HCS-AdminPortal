@@ -13,7 +13,7 @@ import {
   TableNoData,
   TableSkeleton,
   TableHeadCustom,
-  TablePaginationCustom,
+  TablePaginationFilter,
 } from '../../../components/table';
 import Scrollbar from '../../../components/scrollbar';
 // sections
@@ -129,7 +129,7 @@ export default function MachineJiraList(){
             onResetFilter={handleResetFilter}
           />
 
-          {!isNotFound && <TablePaginationCustom
+          {!isNotFound && <TablePaginationFilter
             count={ dataFiltered?.length }
             page={page}
             rowsPerPage={rowsPerPage}
@@ -167,7 +167,7 @@ export default function MachineJiraList(){
               </Table>
             </Scrollbar>
           </TableContainer>
-          {!isNotFound && <TablePaginationCustom
+          {!isNotFound && <TablePaginationFilter
             count={ dataFiltered?.length }
             page={page}
             rowsPerPage={rowsPerPage}

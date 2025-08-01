@@ -19,11 +19,11 @@ import {
 // schema
 import { DocumentTypeSchema } from '../../../schemas/document';
 // routes
-import { PATH_MACHINE, PATH_SETTING } from '../../../../routes/paths';
+import { PATH_MACHINE } from '../../../../routes/paths';
 // components
 import { useSnackbar } from '../../../../components/snackbar';
 import FormProvider, { RHFTextField, RHFAutocomplete, RHFSwitch } from '../../../../components/hook-form';
-import { getDocumentType, getDocumentTypes, resetDocumentType, updateDocumentType } from '../../../../redux/slices/document/documentType';
+import { getDocumentType, resetDocumentType, updateDocumentType } from '../../../../redux/slices/document/documentType';
 import { getActiveDocumentCategories } from '../../../../redux/slices/document/documentCategory';
 import AddFormButtons from '../../../../components/DocumentForms/AddFormButtons';
 import FormHeading from '../../../../components/DocumentForms/FormHeading';

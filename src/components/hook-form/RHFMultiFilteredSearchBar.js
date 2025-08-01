@@ -16,7 +16,6 @@ import {
   FormControl,
   ListItemText,
   Checkbox,
-  Tooltip,
   Alert,
   Collapse,
   Divider,
@@ -101,14 +100,6 @@ export default function RHFMultiFilteredSearchBar({
     }
     return undefined;
   }, [searchKey, selectedFilters, searchOnType, onSearchChange]);
-
-  const clearAll = useCallback(() => {
-    setValue(name, '');
-    setSelectedFilters([]);
-    setError('');
-    setShowMaxSelectionWarning(false);
-    afterClearHandler();
-  }, [setValue, name, setSelectedFilters, afterClearHandler]);
 
   const clearSearchOnly = useCallback(() => {
     setValue(name, '');

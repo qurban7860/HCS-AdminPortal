@@ -18,26 +18,9 @@ import {
   allowedImageExtensions,
   allowedDocumentExtension,
 } from '../../constants/document-constants';
-import { ThumbnailDocButton } from '../Thumbnails';
 // ----------------------------------------------------------------------
 
 const StyledDropZone = styled('div')(({ theme }) => ({
-  outline: 'none',
-  cursor: 'pointer',
-  overflow: 'hidden',
-  position: 'relative',
-  padding: theme.spacing(5),
-  borderRadius: theme.shape.borderRadius,
-  transition: theme.transitions.create('padding'),
-  backgroundColor: theme.palette.background.neutral,
-  height: 'auto',
-  border: `1px solid ${alpha(theme.palette.grey[500], 0.32)}`,
-  '&:hover': {
-    opacity: 0.72,
-  },
-}));
-
-const StyledDropSmall = styled('div')(({ theme }) => ({
   outline: 'none',
   cursor: 'pointer',
   overflow: 'hidden',

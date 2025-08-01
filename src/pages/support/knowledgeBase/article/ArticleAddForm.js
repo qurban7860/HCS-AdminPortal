@@ -8,14 +8,14 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 // import { LoadingButton } from '@mui/lab';
-import { Card, Grid, Stack, Container, Box, MenuItem } from '@mui/material';
+import { Card, Grid, Stack, Container, Box } from '@mui/material';
 // routes
 import { PATH_SUPPORT } from '../../../../routes/paths';
 // slice
 import { addArticle, deleteFile } from '../../../../redux/slices/support/knowledgeBase/article';
 // components
 import { useSnackbar } from '../../../../components/snackbar';
-import FormProvider, { RHFTextField, RHFSwitch, RHFEditor, RHFAutocomplete, RHFSelect, RHFUpload } from '../../../../components/hook-form';
+import FormProvider, { RHFTextField, RHFSwitch, RHFEditor, RHFAutocomplete, RHFUpload } from '../../../../components/hook-form';
 import AddFormButtons from '../../../../components/DocumentForms/AddFormButtons';
 import { Cover } from '../../../../components/Defaults/Cover';
 // constants
@@ -25,8 +25,6 @@ import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 import { handleError } from '../../../../utils/errorHandler';
 import { getActiveArticleCategories, resetActiveArticleCategories } from '../../../../redux/slices/support/supportSettings/articleCategory';
 import FormLabel from '../../../../components/DocumentForms/FormLabel';
-import { manipulateFiles } from '../../../documents/util/Util';
-import { articleStatusOptions } from '../../../../utils/constants';
 import validateFileType from '../../../documents/util/validateFileType';
 import { allowedExtensions } from '../../../../constants/document-constants';
 

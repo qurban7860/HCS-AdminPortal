@@ -22,7 +22,7 @@ import TicketTabs from './TicketTabs';
 import { handleError } from '../../utils/errorHandler';
 import Lightbox from '../../components/lightbox/Lightbox';
 import SkeletonPDF from '../../components/skeleton/SkeletonPDF';
-import DialogTicketAddFile from '../../components/Dialog/DialogTicketAddFile';
+import DialogTicketAddFile from '../../components/Dialog/TicketAddFileDialog';
 import DropDownField from './utils/DropDownField';
 import FilledTextField from './utils/FilledTextField';
 import FilledEditorField from './utils/FilledEditorField';
@@ -73,9 +73,9 @@ export default function TicketViewForm() {
     if (ticket?.customer?._id) {
       dispatch(getAssignedSecurityUsers({ customer: ticket?.customer?._id, isActive: true }));
     }
-    return () => {
-      dispatch(resetAssignedSecurityUsers());
-    };
+    // return () => {
+    //   dispatch(resetAssignedSecurityUsers());
+    // };
   }, [dispatch, ticket?.customer?._id]);
 
   useEffect(() => {
@@ -87,8 +87,8 @@ export default function TicketViewForm() {
     dispatch(getSecurityUsers({ isActive: true, type: 'SP', roleType: approverRoleType }));
 
     return () => {
-      dispatch(resetSecurityUser());
-      dispatch(resetActiveSecurityUsers());
+      // dispatch(resetSecurityUser());
+      // dispatch(resetActiveSecurityUsers());
       dispatch(resetComments());
       dispatch(resetHistories());
       dispatch(resetWorkLogs());

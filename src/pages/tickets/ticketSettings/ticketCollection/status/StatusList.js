@@ -14,7 +14,7 @@ import {
   TableNoData,
   TableSkeleton,
   TableHeadCustom,
-  TablePaginationCustom,
+  TablePaginationFilter,
 } from '../../../../../components/table';
 import Scrollbar from '../../../../../components/scrollbar';
 // sections
@@ -139,7 +139,7 @@ export default function StatusList() {
             onFilterResolvedStatus={setSelectedResolvedStatus} 
           />
 
-          {!isNotFound && <TablePaginationCustom
+          {!isNotFound && <TablePaginationFilter
             count={ ticketStatuses?.totalCount || 0 }
             page={page}
             rowsPerPage={rowsPerPage}
@@ -177,7 +177,7 @@ export default function StatusList() {
               </Table>
             </Scrollbar>
           </TableContainer>
-          {!isNotFound && <TablePaginationCustom
+          {!isNotFound && <TablePaginationFilter
             count={ ticketStatuses?.totalCount || 0 }
             page={page}
             rowsPerPage={rowsPerPage}

@@ -17,8 +17,6 @@ import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFTextField, RHFSwitch, RHFDatePicker } from '../../../components/hook-form';
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 import { Cover } from '../../../components/Defaults/Cover';
-// constants
-import { FORMLABELS } from '../../../constants/default-constants';
 // styles
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import { handleError } from '../../../utils/errorHandler';

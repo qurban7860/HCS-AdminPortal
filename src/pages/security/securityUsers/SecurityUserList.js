@@ -15,11 +15,9 @@ import {
   getComparator,
   TableNoData,
   TableSkeleton,
-  TableHeadCustom,
   TableHeadFilter,
   TableSelectedAction,
   TablePaginationFilter,
-  TablePaginationCustom,
 } from '../../../components/table';
 // sections
 import SecurityUserTableToolbar from './SecurityUserTableToolbar';
@@ -35,7 +33,6 @@ import {
   setFilterRegion,
   setReportHiddenColumns,
 } from '../../../redux/slices/securityUser/securityUser';
-import useResponsive from '../../../hooks/useResponsive';
 import { getActiveRegions, resetActiveRegions } from '../../../redux/slices/region/region';
 import { fDate } from '../../../utils/formatTime';
 // constants
@@ -98,7 +95,6 @@ export default function SecurityUserList() {
   const [ employeeFilterListBy, setEmployeeFilterListBy ] = useState(employeeFilterList);
   const [ filterByRegion, setFilterByRegion ] = useState(filterRegion);
   const [filterAccountType, setFilterAccountType] = useState('all');
-  const isMobile = useResponsive('down', 'lg');
 
   useLayoutEffect(() => {
     dispatch(getActiveRegions());
@@ -243,7 +239,7 @@ useEffect(()=>{
             onFilterAccountType={handleFilterAccountType}
           />
 
-        {!isNotFound && !isMobile && <TablePaginationFilter
+        {!isNotFound && <TablePaginationFilter
             columns={TABLE_HEAD}
             hiddenColumns={reportHiddenColumns}
             handleHiddenColumns={handleHiddenColumns}
@@ -253,13 +249,7 @@ useEffect(()=>{
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
           />}
-           {!isNotFound && isMobile && <TablePaginationCustom
-            count={dataFiltered.length}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-          />}
+
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <TableSelectedAction
               dense={dense}
@@ -300,7 +290,7 @@ useEffect(()=>{
             </Scrollbar>
           </TableContainer>
 
-          {!isNotFound && <TablePaginationCustom
+          {!isNotFound && <TablePaginationFilter
             count={dataFiltered.length}
             page={page}
             rowsPerPage={rowsPerPage}

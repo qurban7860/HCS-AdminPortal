@@ -108,7 +108,6 @@ export default function DashboardLayout() {
       <Box
         sx={{
           display: { lg: 'flex' },
-          minHeight: { lg: 1 },
         }}
       >
         <NavVertical openNav={open} onCloseNav={handleClose} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />

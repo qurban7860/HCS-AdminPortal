@@ -31,7 +31,8 @@ export const ticketSchema = (reqType) => {
       }),
 
     reporter: Yup.object().nullable().label('Reporter'),
-    assignee: Yup.object().nullable().label('Assignee'),
+    assignees: Yup.array().of(Yup.object()).nullable().label('Assignees'),
+    approvers: Yup.array().of(Yup.object()).nullable().label('Approvers'),
     changeType: Yup.object().nullable().label('Change Type'),
     impact: Yup.object().nullable().label('Impact'),
     priority: Yup.object().nullable().label('Priority'),

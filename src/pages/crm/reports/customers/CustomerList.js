@@ -25,7 +25,6 @@ import {
   getComparator,
   TableNoData,
   TableSkeleton,
-  TablePaginationCustom,
   TablePaginationFilter,
   TableHeadFilter,
 } from '../../../../components/table';
@@ -36,7 +35,7 @@ import { FORMLABELS } from '../../../../constants/default-constants';
 
 // sections
 import CustomerListTableRow from './CustomerListTableRow';
-import CustomerListTableToolbar from './CustomerListTableToolbar';
+import CustomerTableController from './CustomerTableController';
 import { getCustomers, 
   resetCustomers, 
   resetCustomer, 
@@ -204,7 +203,6 @@ export default function CustomerList({ isArchived }) {
   };
 
   return (
-    <>
       <Container maxWidth={false}>
         <StyledCardContainer>
           <Cover
@@ -215,23 +213,18 @@ export default function CustomerList({ isArchived }) {
           />
         </StyledCardContainer>
         <TableCard>
-          <CustomerListTableToolbar
+          <CustomerTableController
             filterName={filterName}
             onFilterName={handleFilterName}
-            filterVerify={isArchived ? undefined : filterVerify}
-            onFilterVerify={isArchived ? undefined : handleFilterVerify}
-            filterStatus={isArchived ? undefined : filterStatus}
-            onFilterStatus={isArchived ? undefined : handleFilterStatus}
+            filterVerify={filterVerify}
+            onFilterVerify={handleFilterVerify}
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
-            customerDocList
-            machineDocList
             onExportCSV={onExportCSV}
             onExportLoading={exportingCSV}
-            filterExcludeRepoting={isArchived ? undefined : filterExcludeRepoting}
-            handleExcludeRepoting={isArchived ? undefined : handleExcludeRepoting}
+            filterExcludeRepoting={filterExcludeRepoting}
+            handleExcludeRepoting={handleExcludeRepoting}
             isArchived={isArchived}
-            handleFullScreen={handleFullScreenOpen}
           />
 
           {!isNotFound && (
@@ -284,7 +277,7 @@ export default function CustomerList({ isArchived }) {
           </TableContainer>
 
           {!isNotFound && (
-            <TablePaginationCustom
+            <TablePaginationFilter
               count={customers ? customers.length : 0}
               page={page}
               rowsPerPage={rowsPerPage}
@@ -294,59 +287,6 @@ export default function CustomerList({ isArchived }) {
           )}
         </TableCard>
       </Container>
-
-      <Dialog open={openFullScreen} onClose={handleFullScreenClose} fullWidth maxWidth="lg">
-        <DialogTitle onClose={handleFullScreenClose}>Full Screen View</DialogTitle>
-        <DialogContent>
-          <TablePaginationFilter
-            columns={TABLE_HEAD}
-            hiddenColumns={reportHiddenColumns}
-            handleHiddenColumns={handleHiddenColumns}
-            count={customers ? customers.length : 0}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-          />
-          <TableContainer>
-            <Scrollbar>
-              <Table stickyHeader size="small" sx={{ minWidth: 360 }}>
-                <TableHeadFilter
-                  order={order}
-                  orderBy={orderBy}
-                  headLabel={TABLE_HEAD}
-                  hiddenColumns={reportHiddenColumns}
-                  onSort={onSort}
-                />
-
-                <TableBody>
-                  {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row, index) =>
-                      row ? (
-                        <CustomerListTableRow
-                          hiddenColumns={reportHiddenColumns}
-                          key={row._id}
-                          row={row}
-                          selected={selected.includes(row._id)}
-                          onSelectRow={() => onSelectRow(row._id)}
-                          onViewRow={() => handleViewRow(row._id)}
-                          onViewGroupCustomer={() => handleCustomerDialog(row?.groupCustomer?._id)}
-                          style={index % 2 ? { background: 'red' } : { background: 'green' }}
-                          isArchived={isArchived}
-                        />
-                      ) : (
-                        !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
-                      )
-                    )}
-                  <TableNoData isNotFound={isNotFound} />
-                </TableBody>
-              </Table>
-            </Scrollbar>
-          </TableContainer>
-        </DialogContent>
-      </Dialog>
-    </>
   );
 }
 

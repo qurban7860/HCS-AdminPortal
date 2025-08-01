@@ -1,8 +1,7 @@
 import React, { memo } from 'react';
 import PropTypes from 'prop-types';
-import { Box, Divider, Grid, Typography, Chip } from '@mui/material';
+import { Box, Divider, Typography, Chip } from '@mui/material';
 import MenuPopover from '../menu-popover/MenuPopover';
-import { fDate } from '../../utils/formatTime';
 
 function ChipInPopover({ open, onClose, ListArr, ListTitle }) {
   return (

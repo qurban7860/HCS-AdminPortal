@@ -21,7 +21,7 @@ export default function LinkTableCellWithIcon({ align, onClick, param, isVerifie
             fontWeight: 'bold',
             color: main ? (themes) => alpha(  themes.palette.primary.dark, 0.98) : 'black',
             '&:hover': {
-              color: (themes) => alpha( main ? themes.palette.primary.main : themes.palette.info.main, 0.98),
+              color: (theme) => alpha(theme.palette.mode === 'light' ? theme.palette.info.main : theme.palette.info.light, 0.98),
             },
           }}
         >

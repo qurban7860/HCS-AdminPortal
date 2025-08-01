@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, IconButton, alpha } from '@mui/material';
+import { IconButton, alpha } from '@mui/material';
 import { StyledTooltip } from '../../theme/styles/default-styles';
 import Iconify from '../iconify';
 // import theme from '../../../theme';

@@ -10,10 +10,7 @@ const initialState = {
   ticketSettings:[],
   softwareVersion: null,
   filterBy: '',
-  filterIssueType: null,
-  filterStatus: [],
-  filterStatusType: null,
-  filterResolvedStatus: null,
+  ticketController: { isResolved: { label: 'Open', value: false }},
   page: 0,
   rowsPerPage: 100,
   initial: false,
@@ -190,20 +187,8 @@ const slice = createSlice({
       state.filterBy = action.payload;
     },
     
-    setFilterIssueType(state, action) {
-      state.filterIssueType = action.payload;
-    },
-
-    setFilterStatus(state, action) {
-      state.filterStatus = action.payload;
-    },
-
-    setFilterStatusType(state, action) {
-      state.filterStatusType = action.payload;
-    },
-
-    setFilterResolvedStatus(state, action) {
-      state.filterResolvedStatus = action.payload;
+    setTicketController(state, action) {
+      state.ticketController = action.payload;
     },
 
     // SET PAGE ROW COUNT
@@ -235,10 +220,7 @@ export const {
   ChangeRowsPerPage,
   ChangePage,
   setReportHiddenColumns,
-  setFilterIssueType,
-  setFilterStatus,
-  setFilterStatusType,
-  setFilterResolvedStatus
+  setTicketController
 } = slice.actions;
 
 // ----------------------------------------------------------------------
@@ -276,6 +258,14 @@ export function postTicket(params) {
       formData.append('endTime', params?.endTime || '');
       formData.append('hlc', params?.hlc || '');
       formData.append('plc', params?.plc || '');
+      
+      (params?.assignees || []).forEach(user => {
+        formData.append('assignees[]', user._id);
+      });
+
+      (params?.approvers || []).forEach(user => {
+        formData.append('approvers[]', user._id);
+      });
 
       (params?.files || []).forEach((file, index) => {
         formData.append(`images`, file);
@@ -325,7 +315,15 @@ export function patchTicket(id, params) {
       formData.append('endTime', params?.endTime || '');
       formData.append('hlc', params?.hlc || '');
       formData.append('plc', params?.plc || '');
+      
+      (params?.assignees || []).forEach(user => {
+        formData.append('assignees[]', user._id);
+      });
 
+      (params?.approvers || []).forEach(user => {
+        formData.append('approvers[]', user._id);
+      });
+      
       (params?.files || []).forEach((file, index) => {
         formData.append(`images`, file);
       });
@@ -375,19 +373,17 @@ export function getTickets({ page, pageSize, issueType, requestType, isResolved,
         pagination: { page, pageSize },
         isArchived: false,
         createdAt,
-        issueType,
-        requestType,
-        isResolved,
-        statusType,
-        status,
-        priority,
-        assignees,
-        faults
+        issueType: issueType?._id,
+        requestType: requestType?._id,
+        statusType: statusType?._id,
+        status: status?._id,
+        priority: priority?._id,
+        assignees: assignees?._id && [assignees?._id],
+        faults: faults?._id && [faults?._id],
       };
-      if (isResolved === 'unresolved') {
-        params.isResolved = false; 
+      if (typeof isResolved?.value === 'boolean') {
+        params.isResolved = isResolved.value;
       }
-
       const response = await axios.get(`${CONFIG.SERVER_URL}tickets`, { params });
       dispatch(slice.actions.getTicketsSuccess(response.data));
       return response;

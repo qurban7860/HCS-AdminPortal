@@ -1,17 +1,24 @@
 import PropTypes from 'prop-types';
-import { memo, useMemo } from 'react';
-import { useSelector } from 'react-redux';
+import { memo, useMemo, useCallback, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+// routes
+import { useNavigate } from 'react-router-dom';
 // @mui
-import { Stack, Grid, TextField, InputAdornment, Button } from '@mui/material';
+import { Stack, Grid, TextField, InputAdornment, Button, IconButton } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+
+import { PATH_SUPPORT } from '../../routes/paths';
 import { ticketControllerSchema } from '../schemas/ticketSchema';
 import FormProvider, { RHFAutocomplete } from '../../components/hook-form';
 import { BUTTONS } from '../../constants/default-constants';
 import Iconify from '../../components/iconify';
 // constants
-import { options, StyledTooltipIconButton } from '../../theme/styles/default-styles';
+import { options, StyledTooltipIconButton, StyledTooltip } from '../../theme/styles/default-styles';
+import { getTickets, getTicketSettings, setTicketController } from '../../redux/slices/ticket/tickets';
 
+import { useAuthContext } from '../../auth/useAuthContext';
+import { getActiveSecurityUsers } from '../../redux/slices/securityUser/securityUser';
 // ----------------------------------------------------------------------
 
 TicketTableController.propTypes = {
@@ -27,25 +34,29 @@ function TicketTableController({
   filterName,
   onFilterName,
   onResetFilter,
-  onReload
 }) {
+  const { user } = useAuthContext();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-    const { ticketSettings } = useSelector((state) => state.tickets);
-    const { activeSecurityUsers } = useSelector((state) => state.user);
+  const { ticketSettings, page, rowsPerPage, ticketController } = useSelector((state) => state.tickets);
+  const { activeSecurityUsers } = useSelector((state) => state.user);
+  const configurations = useMemo(() => JSON.parse(localStorage.getItem('configurations')) || [] , []);
 
-    const defaultValues = useMemo(
-      () => ({
-        isResolved: { label: 'Open', value: false },
-        statusType: null,
-        status: [],
-        issueType: null,
-        requestType: null,
-        priority: null,
-        assignees: null,
-        faults: null
-      }),
-      []
-    );
+  const defaultValues = useMemo(
+    () => ({
+      isResolved: ticketController?.isResolved ?? { label: 'Open', value: false },
+      statusType: ticketController?.statusType || null,
+      status: ticketController?.status || [],
+      issueType: ticketController?.issueType || null,
+      requestType: ticketController?.requestType || null,
+      priority: ticketController?.priority || null,
+      assignees: ticketController?.assignees || null,
+      faults: ticketController?.faults || null,
+      assignedToMe: ticketController?.assignedToMe || false,
+    }),
+    [ ticketController ]
+  );
 
   const methods = useForm({
     resolver: yupResolver(ticketControllerSchema),
@@ -55,43 +66,75 @@ function TicketTableController({
   });
 
   const { setError, setValue, handleSubmit, watch, formState: { isSubmitting } } = methods;
-  const { issueType, requestType, isResolved, statusType, status, priority, assignees, faults } = watch();
-
-    const onSubmit = async (data) => {
-      try {
-        await onReload({ 
-          issueType: issueType?._id, 
-          requestType: requestType?._id, 
-          isResolved: isResolved?.value, 
-          statusType: statusType?._id , 
-          status: status?.map(s=>s?._id), 
-          priority: priority?._id,
-          faults: faults?._id && [faults?._id],
-          assignees: assignees?._id && [assignees?._id]
-        })
-      } catch (err) {
-        if (err?.errors && Array.isArray(err?.errors)) {
-          err?.errors?.forEach((error) => {
-            if (error?.field && error?.message) {
-              setError(error?.field, {
-                type: 'manual',
-                message: error?.message
-              });
-            }
-          });
-        }
+  const { issueType, requestType, isResolved, statusType, status, assignees, assignedToMe, priority, faults } = watch();
+  const onSubmit = async (data) => {
+    try {
+      await dispatch(getTickets({ page: 0, pageSize: rowsPerPage, ...data }))
+    } catch (err) {
+      if (err?.errors && Array.isArray(err?.errors)) {
+        err?.errors?.forEach((error) => {
+          if (error?.field && error?.message) {
+            setError(error?.field, {
+              type: 'manual',
+              message: error?.message
+            });
+          }
+        });
       }
-    };
+    }
+  };
 
-const resolutionStatusOptions = [
-  { label: 'Open', value: false },
-  { label: 'Resolved', value: true },
-];
+  const handleChange = (checked) => {
+    setValue('assignedToMe', checked, { shouldDirty: true });
+    dispatch(setTicketController({ ...ticketController, assignedToMe: checked }));
+
+    if (checked) {
+      const val = activeSecurityUsers.find( (u) => u?.contact?._id?.toString() === user?.contact?.toString() );
+      setValue('assignees', val || null, { shouldDirty: true });
+    } else {
+      setValue('assignees', null, { shouldDirty: true });
+    }
+
+    handleSubmit(onSubmit)();
+  };
+
+  const isCurrentUserAssignable = useMemo(() => activeSecurityUsers?.some(
+      (u) => u?.contact?._id?.toString() === user?.contact?.toString()
+    ), [activeSecurityUsers, user]);
+
+  useEffect(() => {
+    dispatch(getTickets({
+      page,
+      pageSize: rowsPerPage,
+      issueType,
+      requestType,
+      isResolved,
+      statusType,
+      status,
+      assignees,
+      assignedToMe,
+      priority,
+      faults
+    }));
+
+    dispatch(getTicketSettings());
+    const assigneeRoleType = configurations?.find((c) => c?.name?.trim() === 'SupportTicketAssigneeRoleType')?.value?.trim();
+
+    dispatch(getActiveSecurityUsers({ type: 'SP', roleType: assigneeRoleType }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ dispatch, page, rowsPerPage ]);
+
+  const resolutionStatusOptions = [
+    { label: 'Open', value: false },
+    { label: 'Resolved', value: true },
+  ];
+
+  const toggleAdd = useCallback(() => navigate(PATH_SUPPORT.supportTickets.new), [navigate]);
 
   return (
-  <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-    <Stack {...options}>
-      <Grid container spacing={1} sx={{ display: 'flex', width: '100%' }} >
+    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+      <Stack {...options}>
+        <Grid container spacing={1} sx={{ display: 'flex', width: '100%' }} >
     <Grid container spacing={1} sx={{ display: 'flex' }} >
       <Grid item xs={12} sm={4} md={3} lg={2}>
         <RHFAutocomplete
@@ -101,28 +144,18 @@ const resolutionStatusOptions = [
           options={resolutionStatusOptions}
           isOptionEqualToValue={(option, value) => option?.value === value?.value}
           getOptionLabel={(option) => option?.label || ''}
-          renderOption={(props, option) => (
-            <li {...props} key={option.value}>
-              {option.label}
-            </li>
-          )}
+          renderOption={(props, option) => (<li {...props} key={option.value}> {option.label} </li> )}
           onChange={(event, newValue) => {
-            if (newValue) {
-              setValue('isResolved', newValue);
-              if (newValue.value !== statusType?.isResolved) {
-                setValue('statusType', null);
-                setValue('status', []);
-              }
-            } else {
-              setValue('isResolved', null);
-              setValue('statusType', null);
-              setValue('status', []);
-            }
+            setValue('isResolved', newValue);
+            setValue('statusType', null);
+            setValue('status', []);
+            dispatch(setTicketController({ ...ticketController, isResolved: newValue, statusType: null, status: [] }));
           }}
         />
       </Grid>
 
       {/* Status Type */}
+      {isResolved?.value !== undefined && (
       <Grid item xs={12} sm={4} md={3} lg={2}>
         <RHFAutocomplete
           name="statusType"
@@ -132,21 +165,15 @@ const resolutionStatusOptions = [
           isOptionEqualToValue={(option, value) => option?._id === value?._id}
           getOptionLabel={(option) => option?.name}
           renderOption={(props, option) => (
-            <li {...props} key={option?._id}>{option?.name || ''}</li>
+           <li {...props} key={option?._id}> <Iconify icon={option?.icon} sx={{ color: option?.color, mr: 1 }} /> {option?.name} </li>
           )}
           onChange={(event, newValue) => {
-            if (newValue) {
-              setValue('statusType', newValue);
-              if (status?.every( s => s?.statusType?._id !== newValue?._id)) {
-                setValue('status', []);
-              }
-            } else {
-              setValue('statusType', null);
-              setValue('status', []);
-            }
+            setValue('statusType', newValue);
+            setValue('status', []);
+            dispatch(setTicketController({ ...ticketController, statusType: newValue, status: [] }));
           }}
         />
-      </Grid>
+      </Grid>)}
 
       {/* Status (Multi) */}
       { statusType?._id && <Grid item xs={12} sm={4} md={4} lg={2}>
@@ -160,7 +187,11 @@ const resolutionStatusOptions = [
           filterSelectedOptions
           isOptionEqualToValue={(option, value) => option?._id === value?._id}
           getOptionLabel={(option) => option?.name}
-          renderOption={(props, option) => ( <li {...props} key={option?._id}>{option?.name || ''}</li> )}
+          renderOption={(props, option) => ( <li {...props} key={option?._id}> <Iconify icon={option?.icon} sx={{ color: option?.color, mr: 1 }} /> {option?.name || ''}</li> )}
+          onChange={(event, newValue) => {
+            setValue('status', newValue);
+            dispatch(setTicketController({ ...ticketController, status: newValue || null }));
+          }}
         />
       </Grid>}
       {/* Issue Type */}
@@ -172,17 +203,11 @@ const resolutionStatusOptions = [
           options={ticketSettings?.issueTypes || []}
           isOptionEqualToValue={(option, value) => option?._id === value?._id}
           getOptionLabel={(option) => option?.name}
-          renderOption={(props, option) => ( <li {...props} key={option?._id}>{option?.name || ''}</li> )}
+          renderOption={(props, option) => ( <li {...props} key={option?._id}> <Iconify icon={option?.icon} sx={{ color: option?.color, mr: 1 }} /> {option?.name || ''}</li> )}
           onChange={(event, newValue) => {
-            if (newValue) {
-              setValue('issueType', newValue);
-              if (newValue?._id !== requestType?.issueType?._id) {
-                setValue('requestType', null);
-              }
-            } else {
-              setValue('issueType', null);
-              setValue('requestType', null);
-            }
+            setValue('issueType', newValue);
+            setValue('requestType', null);
+            dispatch(setTicketController({...ticketController, issueType: newValue, requestType: null})) 
           }}
         />
       </Grid>
@@ -197,8 +222,12 @@ const resolutionStatusOptions = [
           isOptionEqualToValue={(option, value) => option?._id === value?._id}
           getOptionLabel={(option) => option?.name}
           renderOption={(props, option) => (
-            <li {...props} key={option?._id}>{option?.name || ''}</li>
+            <li {...props} key={option?._id}> <Iconify icon={option?.icon} sx={{ color: option?.color, mr: 1 }} /> {option?.name || ''}</li>
           )}
+          onChange={(event, newValue) => {
+            setValue('requestType', newValue);
+            dispatch(setTicketController({ ...ticketController, requestType: newValue || null }));
+          }}
         />
       </Grid>}
 
@@ -208,15 +237,46 @@ const resolutionStatusOptions = [
           name="assignees"
           label="Assignee"
           size="small"
-          options={activeSecurityUsers}
+          options={activeSecurityUsers || []}
           isOptionEqualToValue={(option, value) => option?._id === value?._id}
-          getOptionLabel={(option) => option?.name}
+          getOptionLabel={(option) => option?.name || ''}
           renderOption={(props, option) => (
             <li {...props} key={option?._id}>{option?.name || ''}</li>
           )}
+          onChange={(event, newValue) => {
+            if (newValue) {
+              if(newValue?._id !== assignees?._id ){
+              setValue('assignedToMe', false);
+              }
+              setValue('assignees', newValue);
+              dispatch(setTicketController({ ...ticketController, assignees: newValue }));
+            } else {
+              setValue('assignees', null);
+              setValue('assignedToMe', false);
+              dispatch(setTicketController({ ...ticketController, assignees: null, assignedToMe: false }));
+            }
+          }}
+          renderInput={(params) => (
+            <TextField {...params} size="small" label="Assignee"
+              InputProps={{ ...params.InputProps,
+                endAdornment: (
+                <>
+                {params.InputProps.endAdornment}
+                {isCurrentUserAssignable && !assignedToMe && (
+                <InputAdornment position="end">
+                  <StyledTooltip title={assignedToMe ? 'All Tickets' : 'My Tickets'} placement="top" >
+                    <IconButton onClick={() => handleChange( !assignedToMe ) }
+                      sx={{ height: 35, width: 35 }}>
+                      <Iconify icon="mdi:ticket-account" width={20} height={20} />
+                    </IconButton>
+                  </StyledTooltip>
+                </InputAdornment> )}
+                </> ),
+              }}
+            />
+          )}
         />
       </Grid>
-
       {/* Priority */}
       <Grid item xs={12} sm={4} md={3} lg={2} >
         <RHFAutocomplete
@@ -227,8 +287,12 @@ const resolutionStatusOptions = [
           isOptionEqualToValue={(option, value) => option?._id === value?._id}
           getOptionLabel={(option) => option?.name}
           renderOption={(props, option) => (
-            <li {...props} key={option?._id}>{option?.name || ''}</li>
+            <li {...props} key={option?._id}> <Iconify icon={option?.icon} sx={{ color: option?.color, mr: 1 }} /> {option?.name || ''}</li>
           )}
+          onChange={(event, newValue) => {
+            setValue('priority', newValue);
+            dispatch(setTicketController({ ...ticketController, priority: newValue || null }));
+          }}
         />
       </Grid>
 
@@ -242,37 +306,40 @@ const resolutionStatusOptions = [
           isOptionEqualToValue={(option, value) => option?._id === value?._id}
           getOptionLabel={(option) => option?.name}
           renderOption={(props, option) => (
-            <li {...props} key={option?._id}>{option?.name || ''}</li>
+            <li {...props} key={option?._id}> <Iconify icon={option?.icon} sx={{ color: option?.color, mr: 1 }} /> {option?.name || ''}</li>
           )}
+          onChange={(event, newValue) => {
+            setValue('faults', newValue);
+            dispatch(setTicketController({ ...ticketController, faults: newValue || null }));
+          }}
         />
       </Grid>
 
       {/* Search Bar */}
         <Grid item xs={12} sm={6} md={6} lg={6} >
-                  <TextField
-                    fullWidth
-                    value={filterName}
-                    onChange={onFilterName}
-                    size="small"
-                    placeholder="Search..."
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
-                        </InputAdornment>
-                      ),
-                      endAdornment: (isFiltered && (
-                        <InputAdornment position="end">
-                          <Button fullWidth onClick={onResetFilter} color='error' size='small' startIcon={<Iconify icon='eva:trash-2-outline' />}>
-                            {BUTTONS.CLEAR}
-                          </Button>
-                        </InputAdornment>
-                      )
-                      ),
-                    }}
-                  />
+          <TextField
+            fullWidth
+            value={filterName}
+            onChange={onFilterName}
+            size="small"
+            placeholder="Search..."
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+                </InputAdornment>
+              ),
+              endAdornment: (isFiltered && (
+                <InputAdornment position="end">
+                  <Button fullWidth onClick={onResetFilter} color='error' size='small' startIcon={<Iconify icon='eva:trash-2-outline' />}>
+                    {BUTTONS.CLEAR}
+                  </Button>
+                </InputAdornment>
+              )),
+            }}
+          />
         </Grid>
-              <Grid item xs="auto" sx={{  ml: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
+        <Grid item xs="auto" sx={{  ml: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
         <StyledTooltipIconButton 
           placement="top"
           tooltip="Reload"
@@ -284,10 +351,24 @@ const resolutionStatusOptions = [
           disabled={isSubmitting}
         />
       </Grid>
+      <Grid item>
+        <StyledTooltip title={BUTTONS.ADDTICKET} placement="top" disableFocusListener tooltipcolor="#103996" color="#fff">
+          <IconButton color="#fff" onClick={toggleAdd}
+            sx={{ background: '#2065D1', borderRadius: 1, height: '1.7em', p: '8.5px 14px',
+              '&:hover': {
+                background: '#103996',
+                color: '#fff',
+              },
+            }}
+          >
+            <Iconify color="#fff" sx={{ height: '24px', width: '24px' }} icon="eva:plus-fill" />
+          </IconButton>
+        </StyledTooltip>
+      </Grid> 
        </Grid>
     </Grid>
-  </Stack>
-  </FormProvider>
+      </Stack>
+    </FormProvider>
   );
 }
 

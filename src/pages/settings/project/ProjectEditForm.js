@@ -1,9 +1,7 @@
-// import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -14,7 +12,6 @@ import {
   Card,
   Grid,
   Stack,
-  Container,
   Box,
 } from '@mui/material';
 // routes
@@ -24,11 +21,6 @@ import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFTextField, RHFSwitch, RHFDatePicker } from '../../../components/hook-form';
 import { updateProject } from '../../../redux/slices/support/project/project';
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
-import FormHeading from '../../../components/DocumentForms/FormHeading';
-import { Cover } from '../../../components/Defaults/Cover';
-import { StyledCardContainer } from '../../../theme/styles/default-styles';
-import { FORMLABELS } from '../../../constants/default-constants';
-import { FORMLABELS as formLABELS } from '../../../constants/document-constants';
 import { handleError } from '../../../utils/errorHandler';
 
 // ----------------------------------------------------------------------
@@ -68,15 +60,9 @@ export default function ProjectEditForm() {
   });
 
   const {
-    reset,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
-
-  // useEffect(() => {
-  //   reset(defaultValues);
-  // }, [reset, defaultValues]);
-
 
   const toggleCancel = () => {
     navigate(PATH_SETTING.projects.view(project._id));

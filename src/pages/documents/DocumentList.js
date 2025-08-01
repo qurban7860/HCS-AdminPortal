@@ -26,7 +26,6 @@ import {
   getComparator,
   TableNoData,
   TableSkeleton,
-  TablePaginationCustom,
   TablePaginationFilter,
   TableHeadFilter,
 } from '../../components/table';
@@ -598,7 +597,7 @@ function DocumentList({ customerPage, machinePage, machineDrawingPage, machineDr
           </TableContainer>
 
           {(!isNotFound || machinePage || customerPage) && (
-            <TablePaginationCustom
+            <TablePaginationFilter
               count={totalRows}
               page={page}
               rowsPerPage={rowsPerPage}

@@ -21,7 +21,6 @@ import {
   getComparator,
   TableNoData,
   TableSkeleton,
-  TablePaginationCustom,
   TablePaginationFilter,
   TableHeadFilter,
 } from '../../../../components/table';
@@ -294,7 +293,7 @@ export default function CustomerSiteList({ isCustomerSitePage = false, isArchive
             </Table>
           </Scrollbar>
         </TableContainer>
-        {!isNotFound && <TablePaginationCustom
+        {!isNotFound && <TablePaginationFilter
           count={tableData ? tableData.length : 0}
           page={page}
           rowsPerPage={rowsPerPage}

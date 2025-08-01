@@ -17,6 +17,7 @@ import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import { ticketSchema } from '../schemas/ticketSchema';
 import FormProvider, { RHFTextField, RHFUpload, RHFAutocomplete, RHFDatePicker, RHFTimePicker, RHFSwitch, RHFEditor } from '../../components/hook-form';
 import { getTicket, postTicket, patchTicket, resetTicket, deleteFile, getTicketSettings, resetTicketSettings, getSoftwareVersion, resetSoftwareVersion } from '../../redux/slices/ticket/tickets';
+import { getSecurityUsers, getActiveSecurityUsers } from '../../redux/slices/securityUser/securityUser';
 import { getArticleByValue } from '../../redux/slices/support/knowledgeBase/article';
 import { getActiveCustomerMachines, resetActiveCustomerMachines } from '../../redux/slices/products/machine';
 import { getLightCustomers, resetLightCustomers } from '../../redux/slices/customer/customer';
@@ -35,9 +36,11 @@ export default function TicketForm() {
   const { activeCustomerMachines } = useSelector((state) => state.machine);
   const { lightCustomers } = useSelector((state) => state.customer);
   const { ticket, ticketSettings, softwareVersion, isLoadingSoftwareVersion } = useSelector((state) => state.tickets);
+  const { securityUsers, activeSecurityUsers } = useSelector((state) => state.user);
   const [filteredRequestTypes, setFilteredRequestTypes] = useState([]);
   const { article } = useSelector((state) => state.article);
   const [helpOpen, setHelpOpen] = useState(false);
+  const configurations = JSON.parse(localStorage.getItem('configurations'));
   const prefix = JSON.parse(localStorage.getItem('configurations'))?.find((config) => config?.name?.toLowerCase() === 'support_ticket_creation_process')?.value?.trim() || '';
 
   useEffect(() => {
@@ -79,6 +82,8 @@ export default function TicketForm() {
       status: id && ticket?.status || null,
       impact: id && ticket?.impact || null,
       files: id && ticket ? manipulateFiles(ticket?.files) : [],
+      assignees: id && ticket?.assignees || [],
+      approvers: id && ticket?.approvers || [],
       changeType: id && ticket?.changeType || null,
       changeReason: id && ticket?.changeReason || null,
       implementationPlan: id && ticket?.implementationPlan || '',
@@ -105,7 +110,7 @@ export default function TicketForm() {
     mode: 'onChange',
     reValidateMode: 'onChange'
   });
-
+  
   const { reset, setError, handleSubmit, watch, setValue, trigger, formState: { isSubmitting } } = methods;
   const { issueType, customer, machine, files, plannedStartDate, plannedEndDate } = watch();
 
@@ -151,6 +156,15 @@ export default function TicketForm() {
       setValue('plc', softwareVersion?.plc || '');
     }
   }, [softwareVersion, setValue]);
+
+  useEffect(() => {
+    const asssigneeRoleType = configurations.find((c) => c?.name?.trim() === 'SupportTicketAssigneeRoleType')?.value?.trim();
+    const approverRoleType = configurations.find((c) => c?.name?.trim() === 'SupportTicketApproverRoleType')?.value?.trim();
+
+    dispatch(getActiveSecurityUsers({ type: 'SP', roleType: asssigneeRoleType }));
+    dispatch(getSecurityUsers({ isActive: true, type: 'SP', roleType: approverRoleType }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch]);
 
   const hashFilesMD5 = async (_files) => {
     const hashPromises = _files.map((file) => new Promise((resolve, reject) => {
@@ -398,6 +412,41 @@ export default function TicketForm() {
                         onDrop={handleDropMultiFile}
                         onRemove={handleFileRemove}
                         onRemoveAll={() => setValue('files', '', { shouldValidate: true })}
+                      />
+                    </Box>
+                    <Box
+                      rowGap={2}
+                      columnGap={2}
+                      display="grid"
+                      gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
+                    >
+                      <RHFAutocomplete
+                        multiple
+                        disableCloseOnSelect
+                        name="assignees"
+                        label="Assignees"
+                        options={activeSecurityUsers || []}
+                        isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                        getOptionLabel={(option) => `${option?.displayName || option?.name || ''}`}
+                        renderOption={(props, option) => (
+                          <li {...props} key={option?._id}>
+                            {option?.displayName || option?.name || ''}
+                          </li>
+                        )}
+                      />
+                      <RHFAutocomplete
+                        multiple
+                        disableCloseOnSelect
+                        name="approvers"
+                        label="Approvers"
+                        options={securityUsers || []}
+                        isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                        getOptionLabel={(option) => `${option?.displayName || option?.name || ''}`}
+                        renderOption={(props, option) => (
+                          <li {...props} key={option?._id}>
+                            {option?.displayName || option?.name || ''}
+                          </li>
+                        )}
                       />
                     </Box>
                     <Box

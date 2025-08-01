@@ -14,7 +14,7 @@ import {
   TableNoData,
   TableSkeleton,
   TableHeadCustom,
-  TablePaginationCustom,
+  TablePaginationFilter,
 } from '../../../../components/table';
 import Scrollbar from '../../../../components/scrollbar';
 // sections
@@ -146,7 +146,7 @@ export default function MachineList() {
           transferStatus={transferStatus}
           handleTransferStatus={handleTransferStatus}
         />
-          {!isNotFound && <TablePaginationCustom
+          {!isNotFound && <TablePaginationFilter
             count={dataFiltered.length}
             page={page}
             rowsPerPage={rowsPerPage}
@@ -184,7 +184,7 @@ export default function MachineList() {
             </Table>
           </Scrollbar>
         </TableContainer>
-        <TablePaginationCustom
+        <TablePaginationFilter
           count={dataFiltered.length}
           page={page}
           rowsPerPage={rowsPerPage}

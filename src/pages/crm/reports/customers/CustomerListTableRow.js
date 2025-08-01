@@ -62,7 +62,7 @@ export default function CustomerListTableRow({
       {!hiddenColumns?.tradingName && <TableCell>
         {tradingName.map((value, index) =>
           typeof value === 'string'
-            ? value.trim() !== '' && <Chip key={index} label={value} sx={{ m: 0.2 }} />
+            ? value.trim() !== '' && <Chip size='small' key={index} label={value} sx={{ m: 0.2 }} />
             : ''
         )}
       </TableCell>}

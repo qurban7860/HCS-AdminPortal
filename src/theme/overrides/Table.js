@@ -33,6 +33,7 @@ export default function Table(theme) {
       styleOverrides: {
         root: {
           borderBottom: 'none',
+          padding: '2px 2px',
         },
         head: {
           color: theme.palette.text.black,

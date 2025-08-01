@@ -64,7 +64,7 @@ const MachineSyncAPILogsTable = ({
     setTableData(apiLogs || []);
   }, [apiLogs]);
 
-  const { order, orderBy, onSort } = useTable({
+  const { order, orderBy } = useTable({
     defaultOrderBy: 'createdAt',
     defaultOrder: 'desc',
   });
