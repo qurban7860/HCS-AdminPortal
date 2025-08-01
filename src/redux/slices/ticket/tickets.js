@@ -375,17 +375,15 @@ export function getTickets({ page, pageSize, issueType, requestType, isResolved,
         createdAt,
         issueType: issueType?._id,
         requestType: requestType?._id,
-        isResolved: isResolved?._id,
         statusType: statusType?._id,
         status: status?._id,
         priority: priority?._id,
         assignees: assignees?._id && [assignees?._id],
         faults: faults?._id && [faults?._id],
       };
-      if (isResolved === 'unresolved') {
-        params.isResolved = false; 
+      if (typeof isResolved?.value === 'boolean') {
+        params.isResolved = isResolved.value;
       }
-
       const response = await axios.get(`${CONFIG.SERVER_URL}tickets`, { params });
       dispatch(slice.actions.getTicketsSuccess(response.data));
       return response;
