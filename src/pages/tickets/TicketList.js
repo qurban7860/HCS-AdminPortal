@@ -122,7 +122,12 @@ function TicketList() {
     dispatch(setFilterBy(''));
     setFilterName('');
   }, [dispatch]);
-
+  
+  useEffect(()=>{
+    setFilterName(filterBy)
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[])
+  
   const handleHiddenColumns = useCallback((arg) => dispatch(setReportHiddenColumns(arg)), [dispatch]);
 
   return (
